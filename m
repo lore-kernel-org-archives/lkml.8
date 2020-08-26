@@ -2,129 +2,106 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03260C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E5CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D084C2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD2402078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgHZPGQ (ORCPT
+        id S1728000AbgHZPG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:06:16 -0400
-Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:3158 "EHLO
-        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727835AbgHZPGP (ORCPT
+        Wed, 26 Aug 2020 11:06:59 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:22694 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726947AbgHZPG4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:06:15 -0400
-Subject: Re: [RFC PATCH] selinux: Add denied trace with permssion filter
-To:     Paul Moore <paul@paul-moore.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>
-References: <CAHC9VhRuvK55JVyHOxckThbRQ7sCwkeZsudwCaBo2f5G4g11VA@mail.gmail.com>
- <20200824132252.31261-1-peter.enderborg@sony.com>
- <20200824132252.31261-2-peter.enderborg@sony.com>
- <CAHC9VhR8PscKpA5BrgTNj8cq_eQ6svqru6UXidc=v5+Ha+PM7Q@mail.gmail.com>
- <6cbe5d27-ebb2-70a6-bad4-31c9f310eff2@sony.com>
- <CAHC9VhRGaE4FwE8iXo_zeAPdimE9ryMR+r4Jcq=ZpF_2aTJxzQ@mail.gmail.com>
-From:   peter enderborg <peter.enderborg@sony.com>
-Message-ID: <59fa190f-37c0-79f3-ea46-8f821d820e1c@sony.com>
-Date:   Wed, 26 Aug 2020 17:06:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 26 Aug 2020 11:06:56 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-261-ph5PWed-PFGPcuia_f9y9w-1; Wed, 26 Aug 2020 16:06:52 +0100
+X-MC-Unique: ph5PWed-PFGPcuia_f9y9w-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 26 Aug 2020 16:06:51 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 26 Aug 2020 16:06:51 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Lukasz Stelmach' <l.stelmach@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>
+Subject: RE: [PATCH 1/3] net: ax88796c: ASIX AX88796C SPI Ethernet Adapter
+ Driver
+Thread-Topic: [PATCH 1/3] net: ax88796c: ASIX AX88796C SPI Ethernet Adapter
+ Driver
+Thread-Index: AQHWe7mj43dSzPFWakSayEhKlD9dNqlKfEsw
+Date:   Wed, 26 Aug 2020 15:06:51 +0000
+Message-ID: <1efebb42c30a4c40bf91649d83d60e1c@AcuMS.aculab.com>
+References: <20200825184413.GA2693@kozik-lap>
+        <CGME20200826145929eucas1p1367c260edb8fa003869de1da527039c0@eucas1p1.samsung.com>
+ <dleftja6yhv4g2.fsf%l.stelmach@samsung.com>
+In-Reply-To: <dleftja6yhv4g2.fsf%l.stelmach@samsung.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-In-Reply-To: <CAHC9VhRGaE4FwE8iXo_zeAPdimE9ryMR+r4Jcq=ZpF_2aTJxzQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=dtal9Go4 c=1 sm=1 tr=0 a=kIrCkORFHx6JeP9rmF/Kww==:117 a=IkcTkHD0fZMA:10 a=y4yBn9ojGxQA:10 a=z6gsHLkEAAAA:8 a=D19gQVrFAAAA:8 a=K-nJozlINqW-tucNYmoA:9 a=QEXdDO2ut3YA:10 a=d-OLMTCWyvARjPbQ-enb:22 a=W4TVW4IDbPiebHqcZpNg:22
-X-SEG-SpamProfiler-Score: 0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/20 4:45 PM, Paul Moore wrote:
-> On Wed, Aug 26, 2020 at 10:34 AM peter enderborg
-> <peter.enderborg@sony.com> wrote:
->> On 8/26/20 3:42 PM, Paul Moore wrote:
->>> On Mon, Aug 24, 2020 at 9:23 AM Peter Enderborg
->>> <peter.enderborg@sony.com> wrote:
->>>> This adds tracing of all denies. They are grouped with trace_seq for
->>>> each audit.
->>>>
->>>> A filter can be inserted with a write to it's filter section.
->>>>
->>>> echo "permission==\"entrypoint\"" > events/avc/selinux_denied/filter
->>>>
->>>> A output will be like:
->>>>           runcon-1046  [002] .N..   156.351738: selinux_denied:
->>>>           trace_seq=2 result=-13
->>>>           scontext=system_u:system_r:cupsd_t:s0-s0:c0.
->>>>           c1023 tcontext=system_u:object_r:bin_t:s0
->>>>           tclass=file permission=entrypoint
->>>>
->>>> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
->>>> ---
->>>>  include/trace/events/avc.h | 37 +++++++++++++++++++++++++++++++++++++
->>>>  security/selinux/avc.c     | 27 +++++++++++++++++++++++++--
->>>>  2 files changed, 62 insertions(+), 2 deletions(-)
->>> My most significant comment is that I don't think we want, or need,
->>> two trace points in the avc_audit_post_callback() function.  Yes, I
->>> understand they are triggered slightly differently, but from my
->>> perspective there isn't enough difference between the two tracepoints
->>> to warrant including both.  However, while the tracepoints may be
->> We tried that but that was problematic too.
-> My apologies if I was on that thread, but can you remind me why it was
-> a problem?  Why can't we use a single tracepoint to capture the AVC
-> information?
-
-The problem is parsing the event.
-
-https://lkml.org/lkml/2020/8/18/842
-
-https://lkml.org/lkml/2020/8/21/526
-
-and the "single list" version
-
-https://lkml.org/lkml/2020/8/17/1346
-
-With this patch we follow standard message format so no plugin should be needed.
-
-
->> Having partly overlapping traces is not unheard off.  Check
->> compaction.c where we have a     trace_mm_compaction_begin
->> and a more detailed trace_mm_compaction_migratepages.
->> (And a  trace_mm_compaction_end)
-> It may not be unique to SELinux, but that doesn't mean I like it :)
->
-> One of my concerns with adding tracepoints is that the code would get
-> littered with tracepoints; I accepted that it the AVC decision
-> codepath was an obvious place for one, so we added a tracepoint.
-> Having two tracepoints here is getting awfully close to my original
-> fears.
->
->>> redundant in my mind, this new event does do the permission lookup in
->>> the kernel so that the contexts/class/permissions are all available as
->>> a string which is a good thing.
->>>
->>> Without going into the details, would the tracing folks be okay with
->>> doing something similar with the existing selinux_audited tracepoint?
->>> It's extra work in the kernel, but since it would only be triggered
->>> when the tracepoint was active it seems bearable to me.
->> I think the method for expanding lists is what we tried first on
->> suggestion from Steven Rostedt.  Maybe we can do a trace_event
->> from a TP_prink but that would be recursive.
-> Wait, why would you be adding a trace event to a trace event, or am I
-> misunderstanding you?
->
-> All I was talking about was adding the permission resolution code to
-> the already existing SELinux AVC tracepoint.
->
+RnJvbTogTHVrYXN6IFN0ZWxtYWNoDQo+IFNlbnQ6IDI2IEF1Z3VzdCAyMDIwIDE1OjU5DQo+IA0K
+PiBJdCB3YXMgPDIwMjAtMDgtMjUgd3RvIDIwOjQ0Piwgd2hlbiBLcnp5c3p0b2YgS296bG93c2tp
+IHdyb3RlOg0KPiA+IE9uIFR1ZSwgQXVnIDI1LCAyMDIwIGF0IDA3OjAzOjA5UE0gKzAyMDAsIMWB
+dWthc3ogU3RlbG1hY2ggd3JvdGU6DQo+ID4+IEFTSVggQVg4ODc5NlsxXSBpcyBhIHZlcnNhdGls
+ZSBldGhlcm5ldCBhZGFwdGVyIGNoaXAsIHRoYXQgY2FuIGJlDQo+ID4+IGNvbm5lY3RlZCB0byBh
+IENQVSB3aXRoIGEgOC8xNi1iaXQgYnVzIG9yIHdpdGggYW4gU1BJLiBUaGlzIGRyaXZlcg0KPiA+
+PiBzdXBwb3J0cyBTUEkgY29ubmVjdGlvbi4NCi4uLg0KPiA+PiArKysgYi9kcml2ZXJzL25ldC9l
+dGhlcm5ldC9hc2l4L0tjb25maWcNCj4gPj4gQEAgLTAsMCArMSwyMCBAQA0KPiA+PiArIw0KPiA+
+PiArIyBBc2l4IG5ldHdvcmsgZGV2aWNlIGNvbmZpZ3VyYXRpb24NCj4gPj4gKyMNCj4gPj4gKw0K
+PiA+PiArY29uZmlnIE5FVF9WRU5ET1JfQVNJWA0KPiA+PiArCWJvb2wgIkFzaXggZGV2aWNlcyIN
+Cj4gPj4gKwlkZXBlbmRzIG9uIFNQSQ0KPiA+PiArCWhlbHANCj4gPj4gKwkgIElmIHlvdSBoYXZl
+IGEgbmV0d29yayAoRXRoZXJuZXQpIGludGVyZmFjZSBiYXNlZCBvbiBhIGNoaXAgZnJvbSBBU0lY
+LCBzYXkgWQ0KPiA+DQo+ID4gTG9va3MgbGlrZSB0b28gbG9uZywgZGlkIGl0IHBhc3MgY2hlY2tw
+YXRjaD8NCj4gDQo+IFllcz8gTGV0IG1lIHRyeSBhZ2Fpbi4gWWVzLCB0aGlzIG9uZSBwYXNzZWQs
+IGJ1dCBJIG1pc3NlZCBhIGZldyBvdGhlcg0KPiBwcm9ibGVtcy4gVGhhbmsgeW91Lg0KPiANCj4g
+Pj4gKw0KPiA+PiAraWYgTkVUX1ZFTkRPUl9BU0lYDQo+ID4+ICsNCj4gPj4gK2NvbmZpZyBTUElf
+QVg4ODc5NkMNCj4gPj4gKwl0cmlzdGF0ZSAiQXNpeCBBWDg4Nzk2Qy1TUEkgc3VwcG9ydCINCj4g
+Pj4gKwlkZXBlbmRzIG9uIFNQSQ0KPiA+PiArCWRlcGVuZHMgb24gR1BJT0xJQg0KPiA+PiArCWhl
+bHANCj4gPj4gKwkgIFNheSBZIGhlcmUgaWYgeW91IGludGVuZCB0byBhdHRhY2ggYSBBc2l4IEFY
+ODg3OTZDIGFzIFNQSSBtb2RlDQo+ID4+ICsNCj4gPj4gK2VuZGlmICMgTkVUX1ZFTkRPUl9BU0lY
+DQoNClRoZXJlIGFyZSBwbGVudHkgb2Ygb3RoZXIgZXRoZXJuZXQgZGV2aWNlcyBtYWRlIGJ5IEFT
+SVggKGVnIFVTQiBvbmVzKQ0KdGhhdCBoYXZlIG5vdGhpbmcgYXQgYWxsIHRvIGRvIHdpdGggdGhp
+cyBkcml2ZXIuDQpTbyB0aG9zZSBxdWVzdGlvbnMgYXJlIHRvbyBicm9hZC4NCg0KVGhlIGZpcnN0
+IG9uZSBzaG91bGQgcHJvYmFibGUgYmUgZm9yIEFTSVggU1BJIG5ldHdvcmsgZGV2aWNlcy4NCg0K
+KEkgY2FuJ3QgaW1hZ2luZSBTUEkgYmVpbmcgZmFzdCBlbm91Z2ggdG8gYmUgdXNlZnVsIGZvciBl
+dGhlcm5ldC4uLikNCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwg
+QnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVn
+aXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
