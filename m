@@ -2,129 +2,75 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B752C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA047C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF3620825
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:03:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598457784;
-	bh=h3fIf4z4D1YyCBjQF6b/vrzBAOnh0DKZ4ogd6VWYNBc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eU398q/7cEmsKlpc5SfDR+IF7SlPFKsyMfGx99r0Noi0nnDpqTodo9Ru5DkCVQZEI
-	 UfPhOtl2ZyoU6pPSyC5DuVEWLtg+ix6nj18/YMUTWiNtGaTi+Lx3UE9mWaGlAr63tP
-	 jId2aX+DUwvloZ6m+PvLy+qa4WwQdQnvkwVy1wtg=
+	by mail.kernel.org (Postfix) with ESMTP id A5B5020825
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgHZQDB (ORCPT
+        id S1727878AbgHZQDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:03:01 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34276 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbgHZQCO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:02:14 -0400
-Received: by mail-oi1-f196.google.com with SMTP id z22so1966813oid.1;
-        Wed, 26 Aug 2020 09:02:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z4U9g9jf07dgLfcUFJqNvcoW1b70TKrvlWnyXzf8TcY=;
-        b=DiouNkdCkWbxAQNfLzFhTn/D+TTwZBbTkeHy0vivkLwllwwv83p5hNSO2n1LrPrDWQ
-         5IvYg/8ZEDBpvYjNuNproW/PePGZ1ztcPwjj3dJm7B9J5H2yFC0vqEVwc9QaZwjOoeYW
-         /YiMN/tVMWI29IhYAYF9A4AB4zx1FdElBuiSSTN1szWLN5yhpQm9JR6d8ku4y3yqun9S
-         Ojl+ctUOrthMh5o/gmpeFbTBhapNQEbPqRY4pQ+ECCY9kTx9fUdmWDoP5cIrSsxElMkE
-         t63rXz+ORJafMSfNCdam3xu7PGEohek8sERQ7tJ3HPhRrkOK3qWLpblVz//ONcudDuz8
-         7FFg==
-X-Gm-Message-State: AOAM533vLM9E0adl3Om/1IaBhcPvMLLQVcz4L2jle5Wquq9FgrLsz6Qy
-        ZYXpP2bfGAbbLQKThkYzgNnyLffqtbILlrBZCN8=
-X-Google-Smtp-Source: ABdhPJym8nVQ2esE+9JbqCwt7qPyZZTboKxS/f2UKwBR6gzZin1etfhHn6ZOAwvRuYrIe52l+IQfv1042GoBqNXmgoQ=
-X-Received: by 2002:aca:3e8b:: with SMTP id l133mr1445381oia.110.1598457733101;
- Wed, 26 Aug 2020 09:02:13 -0700 (PDT)
+        Wed, 26 Aug 2020 12:03:18 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:53116 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726990AbgHZQCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:02:38 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kAxsY-00Bxyy-Vd; Wed, 26 Aug 2020 18:02:26 +0200
+Date:   Wed, 26 Aug 2020 18:02:26 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, m.szyprowski@samsung.com,
+        b.zolnierkie@samsung.com
+Subject: Re: [PATCH 1/3] net: ax88796c: ASIX AX88796C SPI Ethernet Adapter
+ Driver
+Message-ID: <20200826160226.GU2403519@lunn.ch>
+References: <20200825184413.GA2693@kozik-lap>
+ <CGME20200826145929eucas1p1367c260edb8fa003869de1da527039c0@eucas1p1.samsung.com>
+ <dleftja6yhv4g2.fsf%l.stelmach@samsung.com>
 MIME-Version: 1.0
-References: <20200826120421.44356-1-guilhem@barpilot.io> <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
- <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
- <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
- <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
- <CAGX5Wg0LrzPwf=2pGrQHAbFMVkOoYDxOoFa+ZmLBYshPvZQUXg@mail.gmail.com>
- <8fa7622dacc03f2fbd67e810f53389e3ede544e8.camel@intel.com> <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com>
-In-Reply-To: <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 26 Aug 2020 18:02:02 +0200
-Message-ID: <CAJZ5v0j4FXH26rZCjM9Csd56skPVbRpM7iFcKYAFMmLFX54+bg@mail.gmail.com>
-Subject: Re: [PATCH] intel_idle: Add ICL support
-To:     Guilhem Lettron <guilhem@barpilot.io>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dleftja6yhv4g2.fsf%l.stelmach@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 4:04 PM Guilhem Lettron <guilhem@barpilot.io> wrote:
->
-> On Wed, 26 Aug 2020 at 15:41, Zhang Rui <rui.zhang@intel.com> wrote:
+> >> +module_param(comp, int, 0);
+> >> +MODULE_PARM_DESC(comp, "0=Non-Compression Mode, 1=Compression Mode");
+> >> +
+> >> +module_param(ps_level, int, 0);
+> >> +MODULE_PARM_DESC(ps_level,
+> >> +	"Power Saving Level (0:disable 1:level 1 2:level 2)");
+> >> +
+> >> +module_param(msg_enable, int, 0);
+> >> +MODULE_PARM_DESC(msg_enable, "Message mask (see linux/netdevice.h for bitmap)");
+> >> +
+> >> +static char *macaddr;
+> >> +module_param(macaddr, charp, 0);
+> >> +MODULE_PARM_DESC(macaddr, "MAC address");
 > >
+> > I think MAC address as param is not accepted in mainline...
 > >
-> > This is really hard to read.
-> > can you please attach the two turbostat output as attachments?
->
-> of course :)
+> 
+> $ git grep MODULE_PARM_DESC\(macaddr -- drivers/net | wc -l
+> 6
 
-Thanks!
+Yes, they exist. But still it is considered back practice, don't do
+it, use device tree for MAC addresses. 
 
-A couple of things happen here AFAICS.
-
-First, your processor seems to be unable to enter package C-states
-below PC3, so probably there is a device (most likely a PCI one)
-preventing it from doing that in the system.  If all goes well, it
-should be able to get to at least PC8 without suspending the whole
-system.  That needs to be dealt with in the first place before we can
-draw meaningful conclusions regarding which set of C-states to expose
-and whether or not the one exposed via ACPI is sufficient.
-
-To that end, I would try to upgrade the graphics firmware and see if
-you can get some nonzero PC8 residency then.
-
-Second, ACPI exposes C1, C7s and C10 only and so you don't get any
-CPU-C6 residency without the patch, but instead you get more CPU-C7
-residency and more CPU-C1 residency.  It is hard to say which is
-better in principle, but if you look at what is asked for by the
-governor, it turns out that deep C-states (C8-C10) are requested
-around 54% of the time with the patch, whereas without it the ACPI_C3
-state (corresponding to C10) is requested approximately 24% of the
-time, which is much less often.  That appears to translate to the
-difference in PC2 residency (~30% with the patch vs ~17% without it).
-
-Note, however, that (with the patch) C10 itself is asked for around
-11% of the time which in turn is much less than the ~24% for the
-corresponding ACPI_C3 (without the patch).
-
-Overall, it looks like exposing C8 is beneficial from the energy usage
-perspective, because (in the future, when the "blocking" device is
-taken care of and the system can enter PC8 and deeper package
-C-states) it may allow PC8 to be entered more often in principle, even
-though it may reduce the amount of time spent in PC10 too (PC10 may be
-generally difficult to enter, though).  [Here I'm assuming that the
-processor enters PC3 or PC2 instead of PC8 or deeper which cannot be
-entered due to some resource dependency.]
-
-OTOH exposing C1E doesn't seem to make much of a difference and
-exposing C6 only causes it to be asked for instead of C7s, so exposing
-the latter alone should be sufficient in theory.
-
-So IMO the set of C-states exposed by ACPI looks almost enough, but
-the jury is out until you can make the system be able to enter at
-least PC8.
-
-Cheers!
+    Andrew
