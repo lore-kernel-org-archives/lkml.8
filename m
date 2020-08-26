@@ -2,103 +2,118 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07676C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24FE52071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:30:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skogtun.org header.i=@skogtun.org header.b="Rk7ZuCod"
+	by mail.kernel.org (Postfix) with ESMTP id C8CF92071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598434341;
+	bh=1uKAtHgq/9N9ximK/Z3MWdo14t/JYBeezQuBCqsx+Xg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=uqwg5Ju1J5zNR7S8g6aIAS3aygQN4J/MgcggY3JYfi4UrdoiAePOcZmj/jhEaMcyp
+	 U88AK5zDtrny1nEgSKJqLJgSKc2Tz0nyk5gwHR/AIYWe1+iArsjJycAnxjS3ByBwob
+	 UG2i05vsDJnFdAw3ZxmrzYnfeRHZVhCWCAvZDa2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgHZJaw (ORCPT
+        id S1728060AbgHZJcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:30:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727854AbgHZJat (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:30:49 -0400
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5470C061574
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:30:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=skogtun.org
-        ; s=ds201912; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=D7+Jx+ipRXUNSqtp8iDy27VRNb+YHLhYEj4OX0r9Vfs=; b=Rk7ZuCodIYXFFCOwuBS6hpeYhA
-        4P72/AO7wyRNaTUHm01GfeG18wjvM6DkWx94dFq8eKmmpfUd5obekOWUQ+YW42AV8hYJRUCoOC188
-        ZJcK5W0r458APqDQJCFI3L0IRbiUJVFj0buzMbEui2wossq0bacnRd0WEx39dbmvmKBNrglPd91OD
-        Bi8VT1ClpxjiFFvaEgb5Kb61oTrjuy7WbQ8I+CJbkPcAJcTLU9syfl3HwxSNkejgZtPgTzx5C3BnQ
-        6oo1hq1BQFPegEfJFZ7exVW4VouDnvj5wNDUytQXYm21A+iwYBrdzrYUaEZZKOwivk5xmzo2sdvkb
-        qPotAq8A==;
-Received: from [2a01:79c:cebf:7fb0:de97:df61:fecc:46bb] (port=45730)
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <harald@skogtun.org>)
-        id 1kArlX-00069R-1v; Wed, 26 Aug 2020 11:30:47 +0200
-Subject: Re: [Intel-gfx] 5.9-rc1: graphics regression moved from -next to
- mainline
-From:   Harald Arnesen <harald@skogtun.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Pavel Machek <pavel@ucw.cz>, Dave Airlie <airlied@gmail.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.auld@intel.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-References: <20200817161132.GA4711@amd>
- <CAHk-=wh6_eWwvpL=AhOeY0btf_dkpu+0joNzPZWfbBWgAeAhMA@mail.gmail.com>
- <CAPM=9tw8LVWsuA6m_nkUDgm00iz2txYRNZY0b0WWZbyiUVzLEw@mail.gmail.com>
- <CAHk-=wg34bw1ude07nC_XCPOJHZ21-v6117p4574d5S7iP4gxw@mail.gmail.com>
- <20200820092349.GA3792@amd>
- <CAHk-=wjX=ck_u8uvp=PjGCQ3M9igE-yqyRPsJ54th1gQWpwMnA@mail.gmail.com>
- <20200821091900.hzbivycs5ky5d3iw@duo.ucw.cz> <87tuwr59te.fsf@intel.com>
- <7efa547d-b7a4-b873-f1aa-4f19eb849fa3@skogtun.org>
- <CAHk-=wj3WskPCtHncCWLdaP6xVecLp8bDBTT57vyiU-0=Ld6QQ@mail.gmail.com>
- <d4db4a52-3001-cb02-4888-a9dfd55cdd7c@skogtun.org>
-Message-ID: <656b8f9f-d696-c75d-aef6-2b8b5170f2f6@skogtun.org>
-Date:   Wed, 26 Aug 2020 11:30:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 26 Aug 2020 05:32:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60120 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727956AbgHZJcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 05:32:18 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58A6D2071E;
+        Wed, 26 Aug 2020 09:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598434337;
+        bh=1uKAtHgq/9N9ximK/Z3MWdo14t/JYBeezQuBCqsx+Xg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=zeaFssWIXmjAn2szjpkPkY3GWdKnO7C9aPjh4eih7wLsYCQ0ug4Llt63UuK1BPdKh
+         MMy41Ikb2PKjN2PQa2p2XGS+uh8yVLv8YkcLc/oN8qrmraK+FyucdLKyKa0xmWmyLO
+         L58xJ3ZLGoSPjQGKepgSL5lfYIUXHmKd61eO5mKE=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kArmx-002BZN-6P; Wed, 26 Aug 2020 11:32:15 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        devel@driverdev.osuosl.org
+Subject: [PATCH RFC] staging: hikey9xx: update references inside the yaml files
+Date:   Wed, 26 Aug 2020 11:32:12 +0200
+Message-Id: <809bce085b0a9a9ede74d619d160e1e04723709d.1598434228.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <d4db4a52-3001-cb02-4888-a9dfd55cdd7c@skogtun.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Harald Arnesen [26.08.2020 10:36]:
+The references inside those files were not assuming that
+they would end at the staging tree.
 
-> I was wrong about ssh working. The whole machine locks up when X starts.
-> 
-> A strange thing, sometimes I can log in from lightdm before it locks up,
-> sometimes I cannot even use the login screen. Timing related?
-> 
-> If I don't start X, console login seems to work fine, and I see nothing
-> obvious in the logs or kernel messages.
-> 
-> I will try to start just a window manager with startx instead of going
-> through lightdm.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
 
-Disabled lightdm, started DE or WM from .xinitrc:
+Greg,
 
-xfce4-session: Machine locks up
-enlightenment: Machine works
+I noticed this when running ./scripts/documentation-file-ref-check.
 
-Somehow related to lightdm or xfce4? However, it is a regression, since
-kernel 5.8 works.
+Not sure if it is worth applying this patch, as this should be
+reverted when moving those files out of staging. 
+
+That's why I'm sending it as RFC.
+
+ drivers/staging/hikey9xx/hisilicon,hi6421-spmi-pmic.yaml     | 2 +-
+ drivers/staging/hikey9xx/hisilicon,hisi-spmi-controller.yaml | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/staging/hikey9xx/hisilicon,hi6421-spmi-pmic.yaml b/drivers/staging/hikey9xx/hisilicon,hi6421-spmi-pmic.yaml
+index c76093f320f1..80e74c261e05 100644
+--- a/drivers/staging/hikey9xx/hisilicon,hi6421-spmi-pmic.yaml
++++ b/drivers/staging/hikey9xx/hisilicon,hi6421-spmi-pmic.yaml
+@@ -17,7 +17,7 @@ description: |
+   node.
+ 
+   The SPMI controller part is provided by
+-  Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml.
++  drivers/staging/hikey9xx/hisilicon,hisi-spmi-controller.yaml.
+ 
+ properties:
+   $nodename:
+diff --git a/drivers/staging/hikey9xx/hisilicon,hisi-spmi-controller.yaml b/drivers/staging/hikey9xx/hisilicon,hisi-spmi-controller.yaml
+index b1cfa9c3aca6..f2a56fa4e78e 100644
+--- a/drivers/staging/hikey9xx/hisilicon,hisi-spmi-controller.yaml
++++ b/drivers/staging/hikey9xx/hisilicon,hisi-spmi-controller.yaml
+@@ -14,7 +14,7 @@ description: |
+   It is a MIPI System Power Management (SPMI) controller.
+ 
+   The PMIC part is provided by
+-  Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml.
++  drivers/staging/hikey9xx/hisilicon,hi6421-spmi-pmic.yaml.
+ 
+ properties:
+   $nodename:
+@@ -41,7 +41,7 @@ patternProperties:
+       PMIC properties, which are specific to the used SPMI PMIC device(s).
+       When used in combination with HiSilicon 6421v600, the properties
+       are documented at
+-      Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml.
++      drivers/staging/hikey9xx/hisilicon,hi6421-spmi-pmic.yaml.
+ 
+ examples:
+   - |
 -- 
-Hilsen Harald
+2.26.2
+
+
