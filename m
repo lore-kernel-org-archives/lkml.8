@@ -2,107 +2,129 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E101C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03260C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1250E207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D084C2078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:06:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgHZPF2 (ORCPT
+        id S1727963AbgHZPGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:05:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45004 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727814AbgHZPFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:05:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 511F9AC46;
-        Wed, 26 Aug 2020 15:05:50 +0000 (UTC)
-Date:   Wed, 26 Aug 2020 17:05:17 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Xunlei Pang <xlpang@linux.alibaba.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2] mm: memcg: Fix memcg reclaim soft lockup
-Message-ID: <20200826150517.GS22869@dhcp22.suse.cz>
-References: <1598449622-108748-1-git-send-email-xlpang@linux.alibaba.com>
+        Wed, 26 Aug 2020 11:06:16 -0400
+Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:3158 "EHLO
+        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727835AbgHZPGP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 11:06:15 -0400
+Subject: Re: [RFC PATCH] selinux: Add denied trace with permssion filter
+To:     Paul Moore <paul@paul-moore.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>
+References: <CAHC9VhRuvK55JVyHOxckThbRQ7sCwkeZsudwCaBo2f5G4g11VA@mail.gmail.com>
+ <20200824132252.31261-1-peter.enderborg@sony.com>
+ <20200824132252.31261-2-peter.enderborg@sony.com>
+ <CAHC9VhR8PscKpA5BrgTNj8cq_eQ6svqru6UXidc=v5+Ha+PM7Q@mail.gmail.com>
+ <6cbe5d27-ebb2-70a6-bad4-31c9f310eff2@sony.com>
+ <CAHC9VhRGaE4FwE8iXo_zeAPdimE9ryMR+r4Jcq=ZpF_2aTJxzQ@mail.gmail.com>
+From:   peter enderborg <peter.enderborg@sony.com>
+Message-ID: <59fa190f-37c0-79f3-ea46-8f821d820e1c@sony.com>
+Date:   Wed, 26 Aug 2020 17:06:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1598449622-108748-1-git-send-email-xlpang@linux.alibaba.com>
+In-Reply-To: <CAHC9VhRGaE4FwE8iXo_zeAPdimE9ryMR+r4Jcq=ZpF_2aTJxzQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=dtal9Go4 c=1 sm=1 tr=0 a=kIrCkORFHx6JeP9rmF/Kww==:117 a=IkcTkHD0fZMA:10 a=y4yBn9ojGxQA:10 a=z6gsHLkEAAAA:8 a=D19gQVrFAAAA:8 a=K-nJozlINqW-tucNYmoA:9 a=QEXdDO2ut3YA:10 a=d-OLMTCWyvARjPbQ-enb:22 a=W4TVW4IDbPiebHqcZpNg:22
+X-SEG-SpamProfiler-Score: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 26-08-20 21:47:02, Xunlei Pang wrote:
-> We've met softlockup with "CONFIG_PREEMPT_NONE=y", when
-> the target memcg doesn't have any reclaimable memory.
-> 
-> It can be easily reproduced as below:
->  watchdog: BUG: soft lockup - CPU#0 stuck for 111s![memcg_test:2204]
->  CPU: 0 PID: 2204 Comm: memcg_test Not tainted 5.9.0-rc2+ #12
->  Call Trace:
->   shrink_lruvec+0x49f/0x640
->   shrink_node+0x2a6/0x6f0
->   do_try_to_free_pages+0xe9/0x3e0
->   try_to_free_mem_cgroup_pages+0xef/0x1f0
->   try_charge+0x2c1/0x750
->   mem_cgroup_charge+0xd7/0x240
->   __add_to_page_cache_locked+0x2fd/0x370
->   add_to_page_cache_lru+0x4a/0xc0
->   pagecache_get_page+0x10b/0x2f0
->   filemap_fault+0x661/0xad0
->   ext4_filemap_fault+0x2c/0x40
->   __do_fault+0x4d/0xf9
->   handle_mm_fault+0x1080/0x1790
-> 
-> It only happens on our 1-vcpu instances, because there's no chance
-> for oom reaper to run to reclaim the to-be-killed process.
-> 
-> Add cond_resched() at the upper shrink_node_memcgs() to solve this
-> issue, and any other possible issue like meomry.min protection.
+On 8/26/20 4:45 PM, Paul Moore wrote:
+> On Wed, Aug 26, 2020 at 10:34 AM peter enderborg
+> <peter.enderborg@sony.com> wrote:
+>> On 8/26/20 3:42 PM, Paul Moore wrote:
+>>> On Mon, Aug 24, 2020 at 9:23 AM Peter Enderborg
+>>> <peter.enderborg@sony.com> wrote:
+>>>> This adds tracing of all denies. They are grouped with trace_seq for
+>>>> each audit.
+>>>>
+>>>> A filter can be inserted with a write to it's filter section.
+>>>>
+>>>> echo "permission==\"entrypoint\"" > events/avc/selinux_denied/filter
+>>>>
+>>>> A output will be like:
+>>>>           runcon-1046  [002] .N..   156.351738: selinux_denied:
+>>>>           trace_seq=2 result=-13
+>>>>           scontext=system_u:system_r:cupsd_t:s0-s0:c0.
+>>>>           c1023 tcontext=system_u:object_r:bin_t:s0
+>>>>           tclass=file permission=entrypoint
+>>>>
+>>>> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
+>>>> ---
+>>>>  include/trace/events/avc.h | 37 +++++++++++++++++++++++++++++++++++++
+>>>>  security/selinux/avc.c     | 27 +++++++++++++++++++++++++--
+>>>>  2 files changed, 62 insertions(+), 2 deletions(-)
+>>> My most significant comment is that I don't think we want, or need,
+>>> two trace points in the avc_audit_post_callback() function.  Yes, I
+>>> understand they are triggered slightly differently, but from my
+>>> perspective there isn't enough difference between the two tracepoints
+>>> to warrant including both.  However, while the tracepoints may be
+>> We tried that but that was problematic too.
+> My apologies if I was on that thread, but can you remind me why it was
+> a problem?  Why can't we use a single tracepoint to capture the AVC
+> information?
 
-I would just add
-"
-This will mean that we will get a scheduling point for each memcg in the
-reclaimed hierarchy without any dependency on the reclaimable memory in
-that memcg thus making it more predictable.
-" 
-> Suggested-by: Michal Hocko <mhocko@suse.com>
-> Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
+The problem is parsing the event.
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+https://lkml.org/lkml/2020/8/18/842
 
-Thanks!
+https://lkml.org/lkml/2020/8/21/526
 
-> ---
->  mm/vmscan.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 99e1796..bbdc38b 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -2617,6 +2617,8 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
->  
->  		mem_cgroup_calculate_protection(target_memcg, memcg);
->  
-> +		cond_resched();
-> +
->  		if (mem_cgroup_below_min(memcg)) {
->  			/*
->  			 * Hard protection.
-> -- 
-> 1.8.3.1
+and the "single list" version
 
--- 
-Michal Hocko
-SUSE Labs
+https://lkml.org/lkml/2020/8/17/1346
+
+With this patch we follow standard message format so no plugin should be needed.
+
+
+>> Having partly overlapping traces is not unheard off.  Check
+>> compaction.c where we have a     trace_mm_compaction_begin
+>> and a more detailed trace_mm_compaction_migratepages.
+>> (And a  trace_mm_compaction_end)
+> It may not be unique to SELinux, but that doesn't mean I like it :)
+>
+> One of my concerns with adding tracepoints is that the code would get
+> littered with tracepoints; I accepted that it the AVC decision
+> codepath was an obvious place for one, so we added a tracepoint.
+> Having two tracepoints here is getting awfully close to my original
+> fears.
+>
+>>> redundant in my mind, this new event does do the permission lookup in
+>>> the kernel so that the contexts/class/permissions are all available as
+>>> a string which is a good thing.
+>>>
+>>> Without going into the details, would the tracing folks be okay with
+>>> doing something similar with the existing selinux_audited tracepoint?
+>>> It's extra work in the kernel, but since it would only be triggered
+>>> when the tracepoint was active it seems bearable to me.
+>> I think the method for expanding lists is what we tried first on
+>> suggestion from Steven Rostedt.  Maybe we can do a trace_event
+>> from a TP_prink but that would be recursive.
+> Wait, why would you be adding a trace event to a trace event, or am I
+> misunderstanding you?
+>
+> All I was talking about was adding the permission resolution code to
+> the already existing SELinux AVC tracepoint.
+>
+
