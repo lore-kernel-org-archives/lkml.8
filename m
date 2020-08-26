@@ -2,177 +2,93 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0FCC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D354EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93CCF2224D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598452823;
-	bh=kSOZjgsKoINzoi95AcLDM3iSpV9pQwpFhCwaD8Qr76Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NWXr9uz3lR54880fNgGtplzr7sI2KMF7xYdTpaXiqAiBB9FBp4aM7/fkFU4mmfD0J
-	 uAFPB96Pd/TdUandRfFxnFiv2UwkCkOAACZPKKPmUUZ3Dzw0oFh+fsQZT7A5O3RWIR
-	 yKcYOJN1quVM5yUdOOurewqlw0WrZoim8LdSlxbI=
+	by mail.kernel.org (Postfix) with ESMTP id BDE68214F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:40:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbgHZOkW (ORCPT
+        id S1726934AbgHZOkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:40:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50464 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 10:40:25 -0400
+Received: from mga11.intel.com ([192.55.52.93]:3727 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbgHZOkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726734AbgHZOkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Aug 2020 10:40:20 -0400
-Received: from earth.universe (unknown [95.33.152.255])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3565E214F1;
-        Wed, 26 Aug 2020 14:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598452819;
-        bh=kSOZjgsKoINzoi95AcLDM3iSpV9pQwpFhCwaD8Qr76Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hbMrgJPOgg7sIpnTXuip5BVUq4csu3DUDLz1ft+2iiUovoI5VVxYGzGZN3CRgzF91
-         wlKVf4VboPu7tE6QZBD6JdoEhOUiGX5QU15irvJwd8wgYLubiwDKokxysFyi9kmkAy
-         HwqtnBbdp2+00Q9Kdl+DdgYHwInQmfyIm5bJLS+w=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 96D353C0C82; Wed, 26 Aug 2020 16:40:17 +0200 (CEST)
-Date:   Wed, 26 Aug 2020 16:40:17 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Heidelberg <david@ixit.cz>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Bruce E . Robertson" <bruce.e.robertson@intel.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Jonghwa Lee <jonghwa3.lee@samsung.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v3 00/10] Summit SMB3xx driver & device-tree
-Message-ID: <20200826144017.nolqvzu2exchmdn2@earth.universe>
-References: <20200813213409.24222-1-digetx@gmail.com>
+IronPort-SDR: nXjjw/d8Vf8jd0NiEb1r3ofsuQDuWCiNSWUCc6b7aChm4Vb61pwxWR0SIO/eK9TX0kH1kavBg+
+ M3mWWRhERO6g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="153869856"
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="153869856"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 07:40:20 -0700
+IronPort-SDR: uwrE/m7OJxY2wgP0ERnHQlSOIMq0Fak51rD/ut8OuryPrAsM34MBNqt2K0CCynweGLzV4+3tDo
+ T5go1EsNN8Cw==
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="299494855"
+Received: from gillelas-mobl1.amr.corp.intel.com (HELO [10.255.231.51]) ([10.255.231.51])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 07:40:18 -0700
+Subject: Re: [PATCH 05/11] soundwire: bus: update multi-link definition with
+ hw sync details
+To:     Vinod Koul <vkoul@kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, mengdong.lin@intel.com, sanyog.r.kale@intel.com,
+        rander.wang@linux.intel.com, bard.liao@intel.com
+References: <20200818024120.20721-1-yung-chuan.liao@linux.intel.com>
+ <20200818024120.20721-6-yung-chuan.liao@linux.intel.com>
+ <20200826094420.GA2639@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <d534afc3-3c38-275e-2f62-0432ffd91a36@linux.intel.com>
+Date:   Wed, 26 Aug 2020 09:09:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nrlaoi7slsg5rmx7"
-Content-Disposition: inline
-In-Reply-To: <20200813213409.24222-1-digetx@gmail.com>
+In-Reply-To: <20200826094420.GA2639@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---nrlaoi7slsg5rmx7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+>> + * @hw_sync_min_links: Number of links used by a stream above which
+>> + * hardware-based synchronization is required. This value is only
+>> + * meaningful if multi_link is set. If set to 1, hardware-based
+>> + * synchronization will be used even if a stream only uses a single
+>> + * SoundWire segment.
+> 
+> Soundwire spec does not say anything about multi-link so this is left to
+> implementer. Assuming that value of 1 would mean hw based sync will
+> be used even for single stream does not make sense in generic terms.
+> Maybe yes for Intel but may not be true for everyone?
 
-I queued patches 1-8 (so everything besides the DTS changes). I
-would like to see some more cleanups and will send a separate
-patchset for them in a jiffy. Please test them, since I do not
-have the hardware.
+hw-based sync is required for Intel even for single stream. It's been 
+part of the recommended programming flows since the beginning but 
+ignored so far.
 
--- Sebastian
+That said, this value is set by each master implementation, no one 
+forces non-Intel users to implement an Intel-specific requirement.
 
-On Fri, Aug 14, 2020 at 12:33:59AM +0300, Dmitry Osipenko wrote:
-> We gathered existing patches, fixed and improved what we could and
-> final result is an working charging driver with device-tree support
-> for Nexus 7.
->=20
-> At this moment charging works with:
->  - Nexus 7 2012 (grouper and tilapia)
->  - Nexus 7 2013 (flo and deb)
->  - ... and there are more devices equipped with these chargers.
->=20
-> Changelog:
->=20
-> v3: - The uint32 type now isn't specified for standard units in the SMB
->       DT binding because standard units already have a type.
->       Thanks to Rob Herring for the suggestion!
->=20
->     - The battery binding changes are rebased on top of the new battery.y=
-aml
->=20
->     - The new battery temperature DT properties now have shorter names
->       and use <min max> format. Thanks to Rob Herring for the suggestion!
->=20
->     - Added new patch that adds SMB charger node to the new Nexus 7 2012
->       device-tree which has been merged into v5.9 kernel.
->=20
-> v2: - Addressed v1 review comments from Rob Herring and Sebastian Reichel
->       by moving out common battery properties from the charger node into =
-the
->       battery-cell node.
->=20
->     - power_supply_register() of the SMB driver converted to resource-man=
-aged
->       API variant.
->=20
->     - Improved DT property names of the SMB binding by making them to fol=
-low
->       the generic power-supply naming scheme (-microvolts at the end, etc=
-).
->=20
-> David Heidelberg (7):
->   dt-bindings: power: supply: Add device-tree binding for Summit SMB3xx
->   power: supply: smb347-charger: Use resource-managed API
->   power: supply: smb347-charger: Implement device-tree support
->   power: supply: smb347-charger: Support SMB345 and SMB358
->   power: supply: smb347-charger: Remove virtual smb347-battery
->   ARM: dts: qcom: apq8064-nexus7: Add SMB345 battery charger
->   ARM: tegra: nexus7: Add SMB347 battery charger
->=20
-> Dmitry Osipenko (3):
->   dt-bindings: battery: Add temperature properties
->   power: supply: Support battery temperature device-tree properties
->   power: supply: smb347-charger: Replace mutex with IRQ disable/enable
->=20
->  .../bindings/power/supply/battery.yaml        |  24 +
->  .../power/supply/summit,smb347-charger.yaml   | 152 +++++
->  .../boot/dts/qcom-apq8064-asus-nexus7-flo.dts |  24 +
->  .../tegra30-asus-nexus7-grouper-common.dtsi   |  24 +-
->  drivers/power/supply/Kconfig                  |   6 +-
->  drivers/power/supply/power_supply_core.c      |  19 +
->  drivers/power/supply/smb347-charger.c         | 565 +++++++++---------
->  .../dt-bindings/power/summit,smb347-charger.h |  19 +
->  include/linux/power_supply.h                  |   6 +
->  9 files changed, 568 insertions(+), 271 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/summit=
-,smb347-charger.yaml
->  create mode 100644 include/dt-bindings/power/summit,smb347-charger.h
->=20
-> --=20
-> 2.27.0
->=20
+> We already use m_rt_count in code for this, so the question is why is
+> that not sufficient?
 
---nrlaoi7slsg5rmx7
-Content-Type: application/pgp-signature; name="signature.asc"
+Because as you rightly said above, Intel requires the hw_sync to be used 
+even for single stream, but we didn't want others to be forced to use 
+the hw-sync for single stream. the m_rt_count is not sufficient for Intel.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9GdEIACgkQ2O7X88g7
-+ppOHhAApWb5+TGOBlDwodu7HLrx3L067TxMJB7uIWhYAdsxn5X1d6O7CWViJTz4
-itwiGPD1DjDngpQvk5KPttLBjk1z8zcvg3obV2Z1GX9ekyBR19eOyDGfuTDt7c0k
-BfcaQ3fsefLcfZxad016XavYVbMeOHoRYEK+ett6U4KypUdCr7cxiGF537vfzmqz
-D5tCvx5URgD7+hklWjV50MOA3W+V9hr51p+0ERVqSHWUZOBB+pB+F48U+3pX9Tjw
-dcs5Yo54+KDRS5G0ZfRGoq++h4c+ypn+jkGt6rgEBaUTQbzRQAfXUVSVHhDi3Stw
-h8gg8t0IG8r4CHZlDkcmOGNLFz/6tXyfktc5OSWJf7+Prof+UVlnhR/116ixEYHw
-krkSaGCGz2U/+4DzsZpaVmihm8ysgY1qkP0Ey6/tvWuTNGQTCmipNDWD+MMTWBHN
-NZEV4PfT71H1Ko4+fiOHTMC8iKy83FLgsgfZAs2qtlpCuw3aFjYRU+uBSCZuP2aF
-kv1AqJ27tInH4nzxkHhgciCxZ96zoCP4vDch2Mdd1kDhJjBVCDeQZuMxzfjNh8RE
-sz1LGmqfaLDCMo6sPlroLtuhG+Jh5e3nCrgKC4Z4E7DbBnpv2yoh3fvqFPiZjg0c
-C7eVJa6RcNymMMity+VsrnfafBx+HPDg5W/FHBh4N5nSQecMdd4=
-=iD6g
------END PGP SIGNATURE-----
-
---nrlaoi7slsg5rmx7--
+I think we are in agreement on not forcing everyone to follow what is 
+required by Intel, and that's precisely why we added this setting. If 
+you set it to two you would only use hw_sync when two masters are used.
