@@ -2,98 +2,79 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F0DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 23:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6179BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 23:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6DA920678
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 23:10:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Sr7J5md8"
+	by mail.kernel.org (Postfix) with ESMTP id 4095820678
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 23:12:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgHZXKO (ORCPT
+        id S1726845AbgHZXMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 19:10:14 -0400
-Received: from ozlabs.org ([203.11.71.1]:39269 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbgHZXKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 19:10:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BcM5Z11lMz9sTg;
-        Thu, 27 Aug 2020 09:10:10 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1598483410;
-        bh=z5ctlCqfpQSiaaUKhhW3pm7OPm/2TmtJuwJi1Rv8Ufw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Sr7J5md8r6piGynzMzHZybOXBaT9XnvSMRz5slWVrfefUev98iL/dK3363+z6DFZx
-         nxKX2a81DtgPCAt181hfG3/x2TiVIjFzoifWbhVmPVqBZcWH5pmdNUqH54iij1v6GR
-         tICKhxdmXFLY9OpMHi/uUtygb+keb2pHkLB/3kY9jbRKq3a6iF2rfMLxZwkSPl/WeZ
-         3c+n//QfbKoQtLKyUfFOF4BNrBQALWo0OPMRCyzwUV9Hpfh5CLTaShy1IwMsQWUhu8
-         6cMQoKOuaAplok+mSqO/QIV0ZhyiIyLTVWE7ASvQsjA6sv//V61aKYwYtG667LVTQd
-         YJTV9xfZanyDw==
-Date:   Thu, 27 Aug 2020 09:10:09 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warnings from perf build in Linus' tree
-Message-ID: <20200827091009.54789c17@canb.auug.org.au>
-In-Reply-To: <20200827083839.276cc0d0@canb.auug.org.au>
-References: <20200827083839.276cc0d0@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/sh0yxupyRf/2dvxaYK2bPMO";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Wed, 26 Aug 2020 19:12:30 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:28567 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726077AbgHZXM2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 19:12:28 -0400
+Date:   27 Aug 2020 08:12:27 +0900
+X-IronPort-AV: E=Sophos;i="5.76,357,1592838000"; 
+   d="scan'208";a="55403578"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 27 Aug 2020 08:12:27 +0900
+Received: from mercury.renesas.com (unknown [10.166.252.133])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 3B1234103C32;
+        Thu, 27 Aug 2020 08:12:27 +0900 (JST)
+Message-ID: <87eentvwab.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <robh+dt@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <alsa-devel@alsa-project.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
+        <mkumard@nvidia.com>, <viswanathl@nvidia.com>,
+        <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <atalambedu@nvidia.com>, <nwartikar@nvidia.com>,
+        <swarren@nvidia.com>, <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v2 3/9] ASoC: audio-graph: Identify 'no_pcm' DAI links for DPCM
+In-Reply-To: <f3724be2-c79d-0815-6ff5-460a4f6c10cc@nvidia.com>
+References: <1596605064-27748-1-git-send-email-spujar@nvidia.com>
+        <1596605064-27748-4-git-send-email-spujar@nvidia.com>
+        <87pn7ofs19.wl-kuninori.morimoto.gx@renesas.com>
+        <97f325a6-96cc-11c5-8027-8c0a159e3da0@nvidia.com>
+        <2d3aa11e-3c56-1f7a-3d41-2457f973d55b@nvidia.com>
+        <87sgcbwcnf.wl-kuninori.morimoto.gx@renesas.com>
+        <14691a05-cb29-a030-0e72-eca900d8eb7e@nvidia.com>
+        <87o8mzwajg.wl-kuninori.morimoto.gx@renesas.com>
+        <e9698ac3-0a2e-08a2-3f78-b0be0069d6ee@nvidia.com>
+        <87lfi3w7hj.wl-kuninori.morimoto.gx@renesas.com>
+        <f3724be2-c79d-0815-6ff5-460a4f6c10cc@nvidia.com>
+User-Agent: Wanderlust/2.15.9 Emacs/26.3 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/sh0yxupyRf/2dvxaYK2bPMO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hi Sameer
 
-On Thu, 27 Aug 2020 08:38:39 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> /home/sfr/next/next/tools/perf/util/namespaces.c: In function 'nsinfo__ne=
-w':
-> /home/sfr/next/next/tools/perf/util/namespaces.c:139:12: note: the layout=
- of aggregates containing vectors with 8-byte alignment has changed in GCC 5
->   139 |   nsi->pid =3D pid;
->       |   ~~~~~~~~~^~~~~
->=20
-> I assume they are because I have changed all my toolcahins to gcc
-> v10 today.
+> Sure. BTW, there are more such candidates which require 'lock' version
+> of these helpers.
+> For example: soc_find_component(), snd_soc_add/remove_pcm_runtime()
+> and snd_soc_register_dai().
 
-=46rom gcc v9, so I have no idea what the GGC 5 note is about.
---=20
-Cheers,
-Stephen Rothwell
+soc_find_component() is static function, no need to care about mutex.
+other functions are indeed exported function, but is used from
+topology.c which is calling it under mutex.
 
---Sig_/sh0yxupyRf/2dvxaYK2bPMO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thank you for your help !!
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9G69EACgkQAVBC80lX
-0GxNOgf/T5P7hf3R7SSGlGzduko4UfMAL/zp/p6R5+8ICzxDqs6IXJr4fcCDbjXp
-4ajuf3ZNCdEsEI2lL9PNfGJpMx/57lR/q6Fe5HrdT1EnZ+1Bif1xFX23vNPm1/Mf
-8NCxechKgNHvbPxAp/pjc/j8AvOMQlQWF5scQ56LeZa2pPU18KjwOcQGSgJYgMPQ
-2uxhkgS4GFou98mQ5iMwHk8VzkSekwFu7A+bi8oQHfSoG9PKvrJ16VQCZElT8pNE
-MgXKS0Cr0CvudVeV5FZPXSmGJTmmfpffmSswz0+6UAjlHKyXckpKtYYcDYBCVBFR
-IyNb1piBQhllMeFpyi39NDXMFnOQPw==
-=xhtC
------END PGP SIGNATURE-----
-
---Sig_/sh0yxupyRf/2dvxaYK2bPMO--
+Best regards
+---
+Kuninori Morimoto
