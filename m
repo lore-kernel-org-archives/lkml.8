@@ -2,84 +2,112 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3594AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C29C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 121172080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15EAB2080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:16:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730174AbgHZNQY (ORCPT
+        id S1730184AbgHZNQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:16:24 -0400
-Received: from mga18.intel.com ([134.134.136.126]:7576 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729177AbgHZNQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:16:23 -0400
-IronPort-SDR: XX3+JDuVw15eJTYxVi53cVFFpjhoZ+bzppdrwhD/wx4xZHBL9WHVw005OesBM9pIEA3WZFwyjo
- TRdqNpzhGHBQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="143949317"
-X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
-   d="scan'208";a="143949317"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 06:16:22 -0700
-IronPort-SDR: NWV84qiBbzuGF6u+v34yNbY3wZEIE7Blm4wTVprLCU/eHyE7uHEVhGWI5MfL1TLAgkvLGnUV5/
- KLQkSKGbq0Pg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
-   d="scan'208";a="499719031"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 26 Aug 2020 06:16:22 -0700
-Received: from abityuts-desk1.fi.intel.com (abityuts-desk1.fi.intel.com [10.237.72.186])
-        by linux.intel.com (Postfix) with ESMTP id 4FAC05806C4;
-        Wed, 26 Aug 2020 06:16:20 -0700 (PDT)
-Message-ID: <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
-Subject: Re: [PATCH] intel_idle: Add ICL support
-From:   Artem Bityutskiy <dedekind1@gmail.com>
-Reply-To: dedekind1@gmail.com
-To:     Guilhem Lettron <guilhem@barpilot.io>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 26 Aug 2020 16:16:19 +0300
-In-Reply-To: <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
-References: <20200826120421.44356-1-guilhem@barpilot.io>
-         <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
-         <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Wed, 26 Aug 2020 09:16:32 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:59488 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729177AbgHZNQc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:16:32 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U6w.nFU_1598447788;
+Received: from xunleideMacBook-Pro.local(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0U6w.nFU_1598447788)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 26 Aug 2020 21:16:28 +0800
+Reply-To: xlpang@linux.alibaba.com
+Subject: Re: [PATCH] mm: memcg: Fix memcg reclaim soft lockup
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <1598426822-93737-1-git-send-email-xlpang@linux.alibaba.com>
+ <20200826081102.GM22869@dhcp22.suse.cz>
+ <99efed0e-050a-e313-46ab-8fe6228839d5@linux.alibaba.com>
+ <20200826110015.GO22869@dhcp22.suse.cz>
+ <f0122b2d-4740-2caf-3c4f-009a513426e3@linux.alibaba.com>
+ <20200826120740.GP22869@dhcp22.suse.cz>
+ <19eb48db-7d5e-0f55-5dfc-6a71274fd896@linux.alibaba.com>
+ <20200826124810.GQ22869@dhcp22.suse.cz>
+From:   xunlei <xlpang@linux.alibaba.com>
+Message-ID: <061e8600-e162-6ac9-2f4f-bf161435a5b2@linux.alibaba.com>
+Date:   Wed, 26 Aug 2020 21:16:28 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200826124810.GQ22869@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-26 at 15:03 +0200, Guilhem Lettron wrote:
-> On Wed, 26 Aug 2020 at 14:43, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > On Wed, Aug 26, 2020 at 2:05 PM Guilhem Lettron <guilhem@barpilot.io> wrote:
-> > > Use the same C-states as SKL
-> > 
-> > Why is this change needed?
+On 2020/8/26 下午8:48, Michal Hocko wrote:
+> On Wed 26-08-20 20:21:39, xunlei wrote:
+>> On 2020/8/26 下午8:07, Michal Hocko wrote:
+>>> On Wed 26-08-20 20:00:47, xunlei wrote:
+>>>> On 2020/8/26 下午7:00, Michal Hocko wrote:
+>>>>> On Wed 26-08-20 18:41:18, xunlei wrote:
+>>>>>> On 2020/8/26 下午4:11, Michal Hocko wrote:
+>>>>>>> On Wed 26-08-20 15:27:02, Xunlei Pang wrote:
+>>>>>>>> We've met softlockup with "CONFIG_PREEMPT_NONE=y", when
+>>>>>>>> the target memcg doesn't have any reclaimable memory.
+>>>>>>>
+>>>>>>> Do you have any scenario when this happens or is this some sort of a
+>>>>>>> test case?
+>>>>>>
+>>>>>> It can happen on tiny guest scenarios.
+>>>>>
+>>>>> OK, you made me more curious. If this is a tiny guest and this is a hard
+>>>>> limit reclaim path then we should trigger an oom killer which should
+>>>>> kill the offender and that in turn bail out from the try_charge lopp
+>>>>> (see should_force_charge). So how come this repeats enough in your setup
+>>>>> that it causes soft lockups?
+>>>>>
+>>>>
+>>>> should_force_charge() is false, the current trapped in endless loop is
+>>>> not the oom victim.
+>>>
+>>> How is that possible? If the oom killer kills a task and that doesn't
+>>> resolve the oom situation then it would go after another one until all
+>>> tasks are killed. Or is your task living outside of the memcg it tries
+>>> to charge?
+>>>
+>>
+>> All tasks are in memcgs. Looks like the first oom victim is not finished
+>> (unable to schedule), later mem_cgroup_oom()->...->oom_evaluate_task()
+>> will set oc->chosen to -1 and abort.
 > 
-> On my laptop, a Dell XPS 13 7390 2-in-1 with i7-1065G7, ACPI only
-> report "C1_ACPI", "C2_ACPI" and "C3_ACPI".
+> This shouldn't be possible for too long because oom_reaper would
+> make it invisible to the oom killer so it should proceed. Also
+> mem_cgroup_out_of_memory takes a mutex and that is an implicit
+> scheduling point already.
+> 
+> Which kernel version is this?
+> 
 
-Also, if you could runt turbostat - we could see which _actual_ HW C-
-states are used on your system, which Package C-states are reached.
+I reproduced it on "5.9.0-rc2".
 
-Just get a reasonably new turbostat (it is part of the kernel tree, you
-can compile it yourself) and run it for few seconds (like 'turbostat
-sleep 10'), get the output (will be a lot of it), and we can check what
-is actually going on with regards to C-states.
+oom_reaper also can't get scheduled because of 1-cpu, and the mutex
+uses might_sleep() which is noop in case of "CONFIG_PREEMPT_VOLUNTARY is
+not set" I mentioned in the commit log.
 
-Artem.
-
+> And just for the clarification. I am not against the additional
+> cond_resched. That sounds like a good thing in general because we do
+> want to have a predictable scheduling during reclaim which is
+> independent on reclaimability as much as possible. But I would like to
+> drill down to why you are seeing the lockup because those shouldn't
+> really happen.
+> 
