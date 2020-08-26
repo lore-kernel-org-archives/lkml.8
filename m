@@ -2,171 +2,178 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C77BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CCEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE91020786
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D4FC20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:22:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RTM9eSha"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nLSKDQaB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbgHZLVB (ORCPT
+        id S1728924AbgHZLWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:21:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56828 "EHLO
+        Wed, 26 Aug 2020 07:22:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728718AbgHZLQ7 (ORCPT
+        with ESMTP id S1728902AbgHZLVZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:16:59 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E5B4C061574;
-        Wed, 26 Aug 2020 04:16:58 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id o5so884204pgb.2;
-        Wed, 26 Aug 2020 04:16:58 -0700 (PDT)
+        Wed, 26 Aug 2020 07:21:25 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C4A1C061799;
+        Wed, 26 Aug 2020 04:19:46 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id y26so782934lfe.2;
+        Wed, 26 Aug 2020 04:19:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=9BLb5SG/442AGlteVEU+VMTqxtoAM2EGD3L4sUWx4Zo=;
-        b=RTM9eShaWBULpfiCRgbWc2dfnQ8mzP3UIe6PD9REcR2jFelRuQgY09d5O441gFQ6VO
-         D9oO87xWRZNIVvhOanS8SIn4qAUSIE5hSC0QV9OZr/R1PGgA70tXR1XXT2yxGoDCCVh8
-         k9DcqEJCygohr8Tp+SAGy4k6aq/7yODQ+f3HKMYSPE9HNJNCUURn96Zzn/ZEuuJ+HdwN
-         lFKP+ic/cFUz/eJIsM3GX3eDZ6Lb2LRk/2cydMrII6CYeh5fuBkansErTfOtBjKTm7lo
-         eHN8vdd7HPcLirjZpABpPEhp8zbHXq9ZFgG/ZyN+IW9LrDyM1EGCJXO685nidCgwtov2
-         zTfg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Uu4WskBztKVUoVSil4cy4MR9LWqcw8xk2hr+l0UQ5ho=;
+        b=nLSKDQaBmzQREFSjfYHKCqFSUKm9X0iKZKktP8MRR7TUCwjXuSJJQWe4LWG8yLQR5B
+         6ya721Xer1i/YscNwBz3wTajvo9dCz7ieCkXcXzy4pLGrwOxfu2LJ4wCam9Tacykvw5i
+         RHga6ZekM3QBEWrT0WnzqT3K73yNX+D/45UWy5PUzN3iQeEMNBieoWxxtND4qaSYXy2H
+         O1SMNuSUhs2bbLEusZUxwdWD9wrryrVS9yA34iQ/p/dnOVnRDpuTq2N/erfwBHywv+Wx
+         GO8s99zdB/EYGMwGsdhphInw4RWcHUmk2wNPyfSxs/Pon7KfXSW4mfBiqDnQBE839FX/
+         Z/Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=9BLb5SG/442AGlteVEU+VMTqxtoAM2EGD3L4sUWx4Zo=;
-        b=m7jtrtcFNJ+vlZcWgIBV8DDc5KY1iKAIWOtfazRQhrf47mCwnMZEmGLpbin1Yl6pwu
-         Pf26IQbjssEQs+UMA40pGXDb5dsJR3jQh1UVpNRS0IdwIQlHEx8tZIk5cXuSjUh49A+6
-         UJ+O3iyD1Jdw5bd0JKGYWSJcVwLRxJ4aIChuC64dzjo9++Hy0tYLlc7FIQ9H02OD0TAo
-         SmFkPtWNSAM9ybxcyALOsXHGpY1+DBlqoXmBN5g9bzZKNLdOy9jLhdOaiCiecc8X732X
-         WpvlK+qIec+g99ofUcdH2VYsDBPwLUDU+g00pT4H6pG7oOKU8PP6EWzHKVKTId0inPMZ
-         95iA==
-X-Gm-Message-State: AOAM531yh22QgnLngV0NjJAy7PlTIcCqkreqLkcbgRWwsakzOF8I7Ap5
-        dsSvVdbcaC8HRLDSDpvSLzDYnA7lVXzYEw==
-X-Google-Smtp-Source: ABdhPJwxUqjX5J9QraoEj7Vzj2jbbfcOOIZC6fx+JhfutgFaUIROtDcRQOSSk3ooISjmDYHh8woMpA==
-X-Received: by 2002:a63:6f02:: with SMTP id k2mr10069642pgc.191.1598440617709;
-        Wed, 26 Aug 2020 04:16:57 -0700 (PDT)
-Received: from localhost.localdomain ([2402:7500:464:1646:7076:aae7:15f:eca9])
-        by smtp.gmail.com with ESMTPSA id g129sm2628872pfb.33.2020.08.26.04.16.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Aug 2020 04:16:57 -0700 (PDT)
-From:   cy_huang <u0084500@gmail.com>
-To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        matthias.bgg@gmail.com, linux@roeck-us.net,
-        heikki.krogerus@linux.intel.com
-Cc:     cy_huang@richtek.com, gene_chen@richtek.com,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] usb typec: mt6360: Add MT6360 Type-C DT binding documentation
-Date:   Wed, 26 Aug 2020 19:16:42 +0800
-Message-Id: <1598440602-8648-2-git-send-email-u0084500@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598440602-8648-1-git-send-email-u0084500@gmail.com>
-References: <1598440602-8648-1-git-send-email-u0084500@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Uu4WskBztKVUoVSil4cy4MR9LWqcw8xk2hr+l0UQ5ho=;
+        b=uTuCaSNhOkJwnKb2eS65M5aK7RC+RS1dUb4Cdf0f3t6zh+mdOaaudwy47F1yQA851T
+         qQBBu7GQ+sBn2Bq0Kntbt6CQv6yxq+v7nv4gOnQs4a4uaVzABK9HpO3ufc8nJBiwNzN+
+         G5dSTQA6dYzSdnvKo5kcLoi797MLFByEXzQ8BUObZXhVnLsUS1sD2TT6bUb13FfFFvAZ
+         H9hpvx1CYnBVJDh0fnqfW+sOYstPQ7c7g03/VfMHKzW9Q6JPXV2r+qDsdMaMHlcRfR1d
+         wd4ZWajFZBvRbONMP4GkX2UMozZDNXN9EJVeKAN3MVd4kMxKF10uF1Q1Pq9t27Ngoirn
+         cRwg==
+X-Gm-Message-State: AOAM531e4eOgD/T1SxnaDFp7xAksEAnaBWBvMOm/ZdTzAR5y1otQFgmE
+        /goc6Lg3UCeTuyp40r7cKXzS3ZBheU/eR6Ko+RU=
+X-Google-Smtp-Source: ABdhPJxuVHbetnc2ILjUr/BDvb4NcfasRruvdoGDD4w183KvosLLP3yazMpa2v2J3UgwEYKy/joOCyF1a6VogES9xps=
+X-Received: by 2002:ac2:5a0c:: with SMTP id q12mr2905449lfn.173.1598440784506;
+ Wed, 26 Aug 2020 04:19:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200825145556.637323-1-gnurou@gmail.com> <20200825145556.637323-3-gnurou@gmail.com>
+ <CAAEAJfD1kUJODa+-STV6Q+=9qWH8v2=KZzAA4ppgfbQxstO+Mg@mail.gmail.com>
+In-Reply-To: <CAAEAJfD1kUJODa+-STV6Q+=9qWH8v2=KZzAA4ppgfbQxstO+Mg@mail.gmail.com>
+From:   Alexandre Courbot <gnurou@gmail.com>
+Date:   Wed, 26 Aug 2020 20:19:33 +0900
+Message-ID: <CAAVeFuJgBqN7KYhNi=mMNxy6wHTZOn5E1=pHP3q=n8X++b5pmg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] media: v4l2-mem2mem: simplify poll logic a bit
+To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ChiYuan Huang <cy_huang@richtek.com>
+Hi Ezequiel, thanks for the review!
 
-Add a devicetree binding documentation for the MT6360 Type-C driver.
+On Wed, Aug 26, 2020 at 1:15 PM Ezequiel Garcia
+<ezequiel@vanguardiasur.com.ar> wrote:
+>
+> Hi Alexandre,
+>
+> On Tue, 25 Aug 2020 at 11:56, Alexandre Courbot <gnurou@gmail.com> wrote:
+> >
+> > Factorize redundant checks into a single code block, remove the early
+> > return, and declare variables in their innermost block. Hopefully this
+> > makes this code a little bit easier to follow.
+> >
+>
+> This _definitely_ makes the poll handling more readable.
+>
+> Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+>
+> See below a nitpick.
+>
+> > Signed-off-by: Alexandre Courbot <gnurou@gmail.com>
+> > ---
+> >  drivers/media/v4l2-core/v4l2-mem2mem.c | 35 +++++++++++---------------
+> >  1 file changed, 15 insertions(+), 20 deletions(-)
+> >
+> > diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
+> > index 0d0192119af20..aeac9707123d0 100644
+> > --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
+> > +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
+> > @@ -841,7 +841,6 @@ static __poll_t v4l2_m2m_poll_for_data(struct file *file,
+> >                                        struct poll_table_struct *wait)
+> >  {
+> >         struct vb2_queue *src_q, *dst_q;
+> > -       struct vb2_buffer *src_vb = NULL, *dst_vb = NULL;
+> >         __poll_t rc = 0;
+> >         unsigned long flags;
+> >
+> > @@ -863,33 +862,29 @@ static __poll_t v4l2_m2m_poll_for_data(struct file *file,
+> >                 return EPOLLERR;
+> >
+> >         spin_lock_irqsave(&src_q->done_lock, flags);
+> > -       if (!list_empty(&src_q->done_list))
+> > -               src_vb = list_first_entry(&src_q->done_list, struct vb2_buffer,
+> > -                                               done_entry);
+> > -       if (src_vb && (src_vb->state == VB2_BUF_STATE_DONE
+> > -                       || src_vb->state == VB2_BUF_STATE_ERROR))
+> > -               rc |= EPOLLOUT | EPOLLWRNORM;
+> > +       if (!list_empty(&src_q->done_list)) {
+> > +               struct vb2_buffer *src_vb = list_first_entry(
+> > +                       &src_q->done_list, struct vb2_buffer, done_entry);
+> > +               if (src_vb->state == VB2_BUF_STATE_DONE ||
+> > +                   src_vb->state == VB2_BUF_STATE_ERROR)
+> > +                       rc |= EPOLLOUT | EPOLLWRNORM;
+> > +       }
+> >         spin_unlock_irqrestore(&src_q->done_lock, flags);
+> >
+> >         spin_lock_irqsave(&dst_q->done_lock, flags);
+> > -       if (list_empty(&dst_q->done_list)) {
+> > +       if (!list_empty(&dst_q->done_list)) {
+> > +               struct vb2_buffer *dst_vb = list_first_entry(
+> > +                       &dst_q->done_list, struct vb2_buffer, done_entry);
+> > +               if (dst_vb->state == VB2_BUF_STATE_DONE ||
+> > +                   dst_vb->state == VB2_BUF_STATE_ERROR)
+> > +                       rc |= EPOLLIN | EPOLLRDNORM;
+> > +       } else if (dst_q->last_buffer_dequeued) {
+> >                 /*
+> >                  * If the last buffer was dequeued from the capture queue,
+> >                  * return immediately. DQBUF will return -EPIPE.
+> >                  */
+>
+> The part about "returning immediately" doesn't make
+> much sense now. Could we rephrase this, keeping the -EPIPE
+> comment?
 
-Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
----
- .../bindings/usb/mediatek,mt6360-tcpc.yaml         | 73 ++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/mediatek,mt6360-tcpc.yaml
+I understood this sentence as referring to the system call and not
+just this function, but maybe we can rephrase this as "... make
+user-space wake up immediately"?
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,mt6360-tcpc.yaml b/Documentation/devicetree/bindings/usb/mediatek,mt6360-tcpc.yaml
-new file mode 100644
-index 00000000..9e8ab0d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mt6360-tcpc.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/usb/mediatek,mt6360-tcpc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Mediatek MT6360 Type-C Port Switch and Power Delivery controller DT bindings
-+
-+maintainers:
-+  - ChiYuan Huang <cy_huang@richtek.com>
-+
-+description: |
-+  Mediatek MT6360 is a multi-functional device. It integrates charger, ADC, flash, RGB indicators,
-+  regulators (BUCKs/LDOs), and TypeC Port Switch with Power Delivery controller.
-+  This document only describes MT6360 Type-C Port Switch and Power Delivery controller.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - mediatek,mt6360-tcpc
-+
-+  interrupts-extended:
-+    maxItems: 1
-+
-+  interrupt-names:
-+    items:
-+      - const: PD_IRQB
-+
-+patternProperties:
-+  "connector":
-+    type: object
-+    $ref: ../connector/usb-connector.yaml#
-+    description:
-+      Properties for usb c connector.
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - interrupts-extended
-+  - interrupt-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/usb/pd.h>
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        mt6360@34 {
-+            compatible = "mediatek,mt6360";
-+            reg = <0x34>;
-+
-+            tcpc {
-+                compatible = "mediatek,mt6360-tcpc";
-+                interrupts-extended = <&gpio26 3 IRQ_TYPE_LEVEL_LOW>;
-+                interrupt-names = "PD_IRQB";
-+
-+                connector {
-+                        compatible = "usb-c-connector";
-+                        label = "USB-C";
-+                        data-role = "dual";
-+                        power-role = "dual";
-+                        try-power-role = "sink";
-+                        source-pdos = <PDO_FIXED(5000, 1000, PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP)>;
-+                        sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP)>;
-+                        op-sink-microwatt = <10000000>;
-+                };
-+            };
-+        };
-+    };
-+...
--- 
-2.7.4
-
+>
+> Thanks,
+> Ezequiel
+>
+> > -               if (dst_q->last_buffer_dequeued) {
+> > -                       spin_unlock_irqrestore(&dst_q->done_lock, flags);
+> > -                       rc |= EPOLLIN | EPOLLRDNORM;
+> > -                       return rc;
+> > -               }
+> > -       }
+> > -
+> > -       if (!list_empty(&dst_q->done_list))
+> > -               dst_vb = list_first_entry(&dst_q->done_list, struct vb2_buffer,
+> > -                                               done_entry);
+> > -       if (dst_vb && (dst_vb->state == VB2_BUF_STATE_DONE
+> > -                       || dst_vb->state == VB2_BUF_STATE_ERROR))
+> >                 rc |= EPOLLIN | EPOLLRDNORM;
+> > +       }
+> >         spin_unlock_irqrestore(&dst_q->done_lock, flags);
+> >
+> >         return rc;
+> > --
+> > 2.28.0
+> >
