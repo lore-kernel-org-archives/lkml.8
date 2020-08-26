@@ -2,217 +2,88 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E36C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA16C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83EC420707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:53:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iLeRXvJD"
+	by mail.kernel.org (Postfix) with ESMTP id B0D6520707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgHZHxH (ORCPT
+        id S1726783AbgHZHzQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 03:53:07 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:35534 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726125AbgHZHxF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 03:53:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598428384; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=K8hws+Wc56ot1KHmF6pUD/aHPtRYJTckBNu4n1VnB3Y=;
- b=iLeRXvJDkOxmE0qcgOU58e5OuY2GmBQcNxHCx+o9cAhBn/Fc5Ci4grBugzRoXoNqIhDDWrhR
- iEjItkfis1z2mzUSrpJF4+aDeGu+bBi/ylT3jx9TGDFAnp7BkmoRASEYnzktQVxYuh87Gwse
- PWt9D+P/QrA14dfl7CIKW2c70Xk=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 5f4614d23525716afdb538a0 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 26 Aug 2020 07:52:50
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 38BAFC43391; Wed, 26 Aug 2020 07:52:49 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkrishn)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 32128C433CA;
-        Wed, 26 Aug 2020 07:52:48 +0000 (UTC)
+        Wed, 26 Aug 2020 03:55:16 -0400
+Received: from smtp.h3c.com ([60.191.123.56]:38647 "EHLO h3cspam01-ex.h3c.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726016AbgHZHzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 03:55:15 -0400
+Received: from h3cspam01-ex.h3c.com (localhost [127.0.0.2] (may be forged))
+        by h3cspam01-ex.h3c.com with ESMTP id 07Q63jcv060453;
+        Wed, 26 Aug 2020 14:03:45 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from DAG2EX08-IDC.srv.huawei-3com.com ([10.8.0.71])
+        by h3cspam01-ex.h3c.com with ESMTPS id 07Q62tCU058786
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Aug 2020 14:02:56 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) by
+ DAG2EX08-IDC.srv.huawei-3com.com (10.8.0.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 26 Aug 2020 14:02:58 +0800
+Received: from DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074])
+ by DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074%7]) with
+ mapi id 15.01.1713.004; Wed, 26 Aug 2020 14:02:58 +0800
+From:   Tianxianting <tian.xianting@h3c.com>
+To:     Ming Lei <ming.lei@redhat.com>
+CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] [v2] blk-mq: use BLK_MQ_NO_TAG for no tag
+Thread-Topic: [PATCH] [v2] blk-mq: use BLK_MQ_NO_TAG for no tag
+Thread-Index: AQHWe06EoNdwEm3z5kubymyHs5tnf6lJRjMAgACeIyA=
+Date:   Wed, 26 Aug 2020 06:02:57 +0000
+Message-ID: <3321aa16ad214cb1a0a5cda1309f0e45@h3c.com>
+References: <20200826020651.9856-1-tian.xianting@h3c.com>
+ <20200826042918.GA116347@T590>
+In-Reply-To: <20200826042918.GA116347@T590>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.99.141.128]
+x-sender-location: DAG2
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 26 Aug 2020 13:22:48 +0530
-From:   mkrishn@codeaurora.org
-To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: Re: [PATCH 1/2] dt-bindings: msm: disp: add yaml schemas for DPU and
- DSI bindings
-In-Reply-To: <20200824225702.GA3460018@bogus>
-References: <1597066683-6044-1-git-send-email-mkrishn@codeaurora.org>
- <20200824225702.GA3460018@bogus>
-Message-ID: <3016838fedcdd9f34515a74438ea8154@codeaurora.org>
-X-Sender: mkrishn@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-DNSRBL: 
+X-MAIL: h3cspam01-ex.h3c.com 07Q62tCU058786
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-25 04:27, Rob Herring wrote:
-> On Mon, Aug 10, 2020 at 07:08:02PM +0530, Krishna Manikandan wrote:
->> MSM Mobile Display Subsytem (MDSS) encapsulates sub-blocks
->> like DPU display controller, DSI etc. Add YAML schema
->> for the device tree bindings for the same.
->> 
->> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
->> 
->> Changes in v2:
->>     - Changed dpu to DPU (Sam Ravnborg)
->>     - Fixed indentation issues (Sam Ravnborg)
->>     - Added empty line between different properties (Sam Ravnborg)
->>     - Replaced reference txt files with  their corresponding
->>       yaml files (Sam Ravnborg)
->>     - Modified the file to use "|" only when it is
->>       necessary (Sam Ravnborg)
->> 
->> Changes in v3:
->>     - Corrected the license used (Rob Herring)
->>     - Added maxItems for properties (Rob Herring)
->>     - Dropped generic descriptions (Rob Herring)
->>     - Added ranges property (Rob Herring)
->>     - Corrected the indendation (Rob Herring)
->>     - Added additionalProperties (Rob Herring)
->>     - Split dsi file into two, one for dsi controller
->>       and another one for dsi phy per target (Rob Herring)
->>     - Corrected description for pinctrl-names (Rob Herring)
->>     - Corrected the examples used in yaml file (Rob Herring)
->>     - Delete dsi.txt and dpu.txt (Rob Herring)
->> 
->> Changes in v4:
->>     - Move schema up by one level (Rob Herring)
->>     - Add patternProperties for mdp node (Rob Herring)
->>     - Corrected description of some properties (Rob Herring)
->> 
->> Changes in v5:
->>     - Correct the indentation (Rob Herring)
->>     - Remove unnecessary description from properties (Rob Herring)
->>     - Correct the number of interconnect entries (Rob Herring)
->>     - Add interconnect names for sc7180 (Rob Herring)
->>     - Add description for ports (Rob Herring)
->>     - Remove common properties (Rob Herring)
->>     - Add unevalutatedProperties (Rob Herring)
->>     - Reference existing dsi controller yaml in the common
->>       dsi controller file (Rob Herring)
->>     - Correct the description of clock names to include only the
->>       clocks that are required (Rob Herring)
->>     - Remove properties which are already covered under the common
->>       binding (Rob Herring)
->>     - Add dsi phy supply nodes which are required for sc7180 and
->>       sdm845 targets (Rob Herring)
->>     - Add type ref for syscon-sfpb (Rob Herring)
->> 
->> Changes in v6:
->>     - Fixed errors during dt_binding_check (Rob Herring)
->>     - Add maxItems for phys and phys-names (Rob Herring)
->>     - Use unevaluatedProperties wherever required (Rob Herring)
->>     - Removed interrupt controller from required properties for
->>       dsi controller (Rob Herring)
->>     - Add constraints for dsi-phy reg-names based on the compatible
->>       phy version (Rob Herring)
->>     - Add constraints for dsi-phy supply nodes based on the
->>       compatible phy version (Rob Herring)
->> 
->> Changes in v7:
->>     - Add default value for qcom,mdss-mdp-transfer-time-us (Rob 
->> Herring)
->>     - Modify the schema for data-lanes (Rob Herring)
->>     - Split the phy schema into separate schemas based on
->>       the phy version (Rob Herring)
->> 
->> Changes in v8:
->>     - Resolve merge conflicts with latest dsi.txt file
->>     - Include dp yaml change also in the same series
-> 
-> I'm done reviewing this because I'm tired of repeating myself and 
-> you're
-> just throwing crap at the wall and seeing what sticks. Get someone else
-> working on QCom stuff to review because I'm done until someone I know
-> and trust reviews it.
-> 
->> ---
->>  .../bindings/display/msm/dpu-sc7180.yaml           | 236 
->> +++++++++++++++++++
->>  .../bindings/display/msm/dpu-sdm845.yaml           | 216 
->> ++++++++++++++++++
->>  .../devicetree/bindings/display/msm/dpu.txt        | 141 ------------
->>  .../display/msm/dsi-common-controller.yaml         | 249 
->> +++++++++++++++++++++
->>  .../display/msm/dsi-controller-sc7180.yaml         | 120 ++++++++++
->>  .../display/msm/dsi-controller-sdm845.yaml         | 120 ++++++++++
-> 
-> Once again, what's the difference between dsi-controller-sc7180.yaml 
-> and
-> dsi-controller-sdm845.yaml? I don't see one. If there's not a
-> difference, why do we have msm/dsi-common-controller.yaml? If there is 
-> a
-> difference dsi-controller-sc7180.yaml and dsi-controller-sdm845.yaml
-> should *only* have what's different because
-> msm/dsi-common-controller.yaml should have everything that is the same.
+Hi Ming Lei
+Thanks for your quick comment.
+As the function request_to_qc_t() in 'include/linux/blk-mq.h ' used the magic '-1',
+Seems it is hard to replace it with BLK_MQ_NO_TAG :(
 
-Rob, The dsi yaml files were split into dsi controller and dsi phy based 
-on your comments on patch v2.
-As per the comments, I added one common yaml file for controller with 
-all the mandatory and optional properties along with their constraints 
-and only the required properties for each target is mentioned in the 
-target specific dsi-controller yaml file.
+-----Original Message-----
+From: Ming Lei [mailto:ming.lei@redhat.com] 
+Sent: Wednesday, August 26, 2020 12:29 PM
+To: tianxianting (RD) <tian.xianting@h3c.com>
+Cc: axboe@kernel.dk; linux-block@vger.kernel.org; linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v2] blk-mq: use BLK_MQ_NO_TAG for no tag
+
+On Wed, Aug 26, 2020 at 10:06:51AM +0800, Xianting Tian wrote:
+> Replace various magic -1 constants for tags with BLK_MQ_NO_TAG.
+> And move the definition of BLK_MQ_NO_TAG from 'block/blk-mq-tag.h'
+> to 'include/linux/blk-mq.h'
+
+All three symbols are supposed for block core internal code only, so looks you shouldn't move them to public header.
+
 
 Thanks,
-Krishna
+Ming
 
->>  .../bindings/display/msm/dsi-phy-10nm.yaml         |  62 +++++
->>  .../bindings/display/msm/dsi-phy-14nm.yaml         |  62 +++++
->>  .../bindings/display/msm/dsi-phy-20nm.yaml         |  66 ++++++
->>  .../bindings/display/msm/dsi-phy-28nm.yaml         |  62 +++++
->>  .../bindings/display/msm/dsi-phy-sc7180.yaml       |  80 +++++++
->>  .../bindings/display/msm/dsi-phy-sdm845.yaml       |  82 +++++++
->>  .../devicetree/bindings/display/msm/dsi.txt        | 247 
->> --------------------
->>  13 files changed, 1355 insertions(+), 388 deletions(-)
->>  create mode 100644 
->> Documentation/devicetree/bindings/display/msm/dpu-sc7180.yaml
->>  create mode 100644 
->> Documentation/devicetree/bindings/display/msm/dpu-sdm845.yaml
->>  delete mode 100644 
->> Documentation/devicetree/bindings/display/msm/dpu.txt
->>  create mode 100644 
->> Documentation/devicetree/bindings/display/msm/dsi-common-controller.yaml
->>  create mode 100644 
->> Documentation/devicetree/bindings/display/msm/dsi-controller-sc7180.yaml
->>  create mode 100644 
->> Documentation/devicetree/bindings/display/msm/dsi-controller-sdm845.yaml
->>  create mode 100644 
->> Documentation/devicetree/bindings/display/msm/dsi-phy-10nm.yaml
->>  create mode 100644 
->> Documentation/devicetree/bindings/display/msm/dsi-phy-14nm.yaml
->>  create mode 100644 
->> Documentation/devicetree/bindings/display/msm/dsi-phy-20nm.yaml
->>  create mode 100644 
->> Documentation/devicetree/bindings/display/msm/dsi-phy-28nm.yaml
->>  create mode 100644 
->> Documentation/devicetree/bindings/display/msm/dsi-phy-sc7180.yaml
->>  create mode 100644 
->> Documentation/devicetree/bindings/display/msm/dsi-phy-sdm845.yaml
->>  delete mode 100644 
->> Documentation/devicetree/bindings/display/msm/dsi.txt
