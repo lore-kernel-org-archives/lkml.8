@@ -2,135 +2,151 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CF9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D949C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32AF42078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F22F02078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:48:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fgr2FDPu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j/pjIvXd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbgHZUs1 (ORCPT
+        id S1726998AbgHZUs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 16:48:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33394 "EHLO
+        Wed, 26 Aug 2020 16:48:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbgHZUsZ (ORCPT
+        with ESMTP id S1726784AbgHZUs5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 16:48:25 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85F70C061756
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 13:48:25 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id v6so3563195iow.11
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 13:48:25 -0700 (PDT)
+        Wed, 26 Aug 2020 16:48:57 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EADF4C061574;
+        Wed, 26 Aug 2020 13:48:56 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id m8so1695938pfh.3;
+        Wed, 26 Aug 2020 13:48:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GYZ/IYnL+Ejk8On59DCFq1qjJvZujhshbpaYtFkE1R8=;
-        b=fgr2FDPuuOFPfNtfWqDsufpkMYmHHkvJqPJqR9DYQu2fBa6a8i94cTveYLvPe8rwPB
-         cBJKNqx5qPeAgOo5uNPQaI1rQeHzy4HiIdcioANP2/qrPeBMye11kYFHf8lkqhxYfS93
-         rlzwWk51dEw7macHuYgBf8aYM0cyMW00LF6iPKzr0pgqf331i1XC/qAm8sF6FH5STsik
-         jqo4ibr1DA6OjUZHdisZKVD9djHc7K2gYcCX8SExQXoWdmcMlVMDKV3/sZ0uGECvjFT0
-         VBvno0Qd9SEtJP1haonwQTmPrbsnw0ZMFeXFC1miWd1ZCtach4LnN24ujGEzXa1nuMet
-         eUcA==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tv0E7VEXIkQxRxC2tyGVkZwz5WNoEXRqgSzsj3/ZwkI=;
+        b=j/pjIvXdy0U6X2AoFct7fKM9qcZP0zYIKCTMmOyGHHm+493V+xErPYnmAGvO1hlhv9
+         ZhOyrwNlNblk1IaTuKHfjLUNpn58fTi2+dweuwlPV3nNXBD2h5sNV0PPth5Mf9MM07E3
+         Iqlujkhs/3QSb+LmhJGK21XbWpsn4vgWGEUeBqq257kvAuaEmXYRkoqR8KsQLUsNToQ+
+         Ac5rt5LgChqRHOEuY5dCc4Q4/HoYI6bGljJVCyzGeTteD5fDHSDBA2aldaXLt2O0+SmH
+         ZcnAe20fdcRlYxXtoXiuQyaI23UoSCzD0tF/aQtnm2WOrx3JnIwc/mAtKFbhdiUrCVSg
+         +NQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GYZ/IYnL+Ejk8On59DCFq1qjJvZujhshbpaYtFkE1R8=;
-        b=iSpY9ydFAqLm6K6wayaakoUAxBtFOYzo7uzfca4aP9I4mMgesAnNeW1lxQYnOlIXzQ
-         VMhrS+29/mfOLtU8WZsJc2mSApPd82tqlR+xQmW8svDToJQlyOQLngKY5gGn1FW/iHGR
-         FwyV3h1WOA8stP+8krojYO1UdwUalGpXfPzHEixm0R5+I1WZvSUPJThbzddSepuv4YxY
-         ow+JymEQXZZlGuhar4/WmmmFEqGils88C+pN//WutFx573LM//YOH3TL6OGRdP2oWbjf
-         luk/9Gi52/Hbc60kUe24a5Zt6DHhLO6HzINQLSw7wmzC2Fvex/7Vain06Lnaw85acOPr
-         JwhA==
-X-Gm-Message-State: AOAM530S+tbF2jj960Bt2IicjVvAl5yBoJzjXGjdVWfoDWxKGFJYvD1Z
-        US/2koeJ6lTW5tyMp7iQ6yYLjQ==
-X-Google-Smtp-Source: ABdhPJyjH+VPjhzGpxN1j0RJJ5T32c17PK5Hy829DQuYywUr8Sqy6bzaiccBnyyeSJ1SgTbObhl/sw==
-X-Received: by 2002:a05:6638:2a3:: with SMTP id d3mr3127575jaq.0.1598474903204;
-        Wed, 26 Aug 2020 13:48:23 -0700 (PDT)
-Received: from google.com ([2601:285:8380:9270::f2a2])
-        by smtp.gmail.com with ESMTPSA id i144sm75064ioa.55.2020.08.26.13.48.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 13:48:22 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 14:48:19 -0600
-From:   Ross Zwisler <zwisler@google.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org,
-        Mattias Nissler <mnissler@chromium.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Gordon <bmgordon@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Micah Morton <mortonm@google.com>,
-        Raul Rangel <rrangel@google.com>, Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH v8 1/2] Add a "nosymfollow" mount option.
-Message-ID: <20200826204819.GA4414@google.com>
-References: <20200819164317.637421-1-zwisler@google.com>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=tv0E7VEXIkQxRxC2tyGVkZwz5WNoEXRqgSzsj3/ZwkI=;
+        b=czwF9wYLMIyEmR1XnW+bQ1Ogx9cSB/Tdi/wpkTTwLPmb7e2Ss0+ROMG1U6w+eyXmwz
+         CqLOqv0VXqvpBZNjC4PEQxPJ6HGb+JIMWBnmqQUg4N25guUYfijL/jEHZegRICYEjteW
+         XvhjpU3CIqj7fr+LEEl1lBjkvMtOIVmwGrtm3pxxL8ges46p9hYwwlsvir8gnrpIUA0w
+         qJkHiEtH7la5pw4uOdbQH7Z/v9+Bb4LaayUr0EBFmh2dfO2duFJ1pMRl8Ml4TTaFO6ci
+         i+b+NLH6Y0SkzxUUfadiOj/esdDzok9yqdBwAsGBxBG5xsuInXmyktCqFPxuUZAtUagH
+         hkOw==
+X-Gm-Message-State: AOAM533OpgGKj6TxOczqW6jijKBoO0qLfYVLPEqOVbR2B1xNv+OL4E4b
+        7BD3zxEzj4Eytcn45A+s2mF4eEWZybE=
+X-Google-Smtp-Source: ABdhPJwt/SD17mxaDWp5u2cU7pWiSlYBVdKBrMAAo1t79R8GN0oTAgexNbN0gIOfXmfCoBrhV+X0sw==
+X-Received: by 2002:aa7:854f:: with SMTP id y15mr13504447pfn.298.1598474936340;
+        Wed, 26 Aug 2020 13:48:56 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d4sm2861388pju.56.2020.08.26.13.48.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Aug 2020 13:48:55 -0700 (PDT)
+Subject: Re: [PATCH 5.7 00/15] 5.7.19-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200826114849.295321031@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <d62c438f-3f04-5e94-c158-cd5f77f26ece@roeck-us.net>
+Date:   Wed, 26 Aug 2020 13:48:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819164317.637421-1-zwisler@google.com>
+In-Reply-To: <20200826114849.295321031@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-O Wed, Aug 19, 2020 at 10:43:16AM -0600, Ross Zwisler wrote:
-> From: Mattias Nissler <mnissler@chromium.org>
+On 8/26/20 5:02 AM, Greg Kroah-Hartman wrote:
+> -------------------
+> Note, ok, this is really going to be the final 5.7.y kernel release.  I
+> mean it this time....
+> -------------------
 > 
-> For mounts that have the new "nosymfollow" option, don't follow symlinks
-> when resolving paths. The new option is similar in spirit to the
-> existing "nodev", "noexec", and "nosuid" options, as well as to the
-> LOOKUP_NO_SYMLINKS resolve flag in the openat2(2) syscall. Various BSD
-> variants have been supporting the "nosymfollow" mount option for a long
-> time with equivalent implementations.
+> This is the start of the stable review cycle for the 5.7.19 release.
+> There are 15 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Note that symlinks may still be created on file systems mounted with
-> the "nosymfollow" option present. readlink() remains functional, so
-> user space code that is aware of symlinks can still choose to follow
-> them explicitly.
+> Responses should be made by Fri, 28 Aug 2020 11:48:35 +0000.
+> Anything received after that time might be too late.
 > 
-> Setting the "nosymfollow" mount option helps prevent privileged
-> writers from modifying files unintentionally in case there is an
-> unexpected link along the accessed path. The "nosymfollow" option is
-> thus useful as a defensive measure for systems that need to deal with
-> untrusted file systems in privileged contexts.
-> 
-> More information on the history and motivation for this patch can be
-> found here:
-> 
-> https://sites.google.com/a/chromium.org/dev/chromium-os/chromiumos-design-docs/hardening-against-malicious-stateful-data#TOC-Restricting-symlink-traversal
-> 
-> Signed-off-by: Mattias Nissler <mnissler@chromium.org>
-> Signed-off-by: Ross Zwisler <zwisler@google.com>
-> Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
-> ---
-> Changes since v7 [1]:
->  * Rebased onto v5.9-rc1.
->  * Added selftest in second patch.
->  * Added Aleska's Reviewed-By tag.  Thank you for the review!
-> 
-> After this lands I will upstream changes to util-linux[2] and man-pages
-> [3].
-> 
-> [1]: https://lkml.org/lkml/2020/8/11/896
-> [2]: https://github.com/rzwisler/util-linux/commit/7f8771acd85edb70d97921c026c55e1e724d4e15
-> [3]: https://github.com/rzwisler/man-pages/commit/b8fe8079f64b5068940c0144586e580399a71668
-> ---
 
-Friendly ping on this.
+Build results:
+	total: 158 pass: 158 fail: 0
+Qemu test results:
+	total: 431 pass: 431 fail: 0
 
-Al, now that the changes to fs/namei.c have landed and we're past the merge
-window for v5.9, what are your thoughts on this patch and the associated test?
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+
+Guenter
