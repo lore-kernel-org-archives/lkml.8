@@ -2,123 +2,112 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72441C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66071C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5015520838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:15:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dUiCUdbm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HQTmvGI7"
+	by mail.kernel.org (Postfix) with ESMTP id 3BE1B2080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:15:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729907AbgHZMPS (ORCPT
+        id S1729982AbgHZMPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:15:18 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57084 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729373AbgHZMBB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:01:01 -0400
-Message-Id: <20200826112330.928952181@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598443258;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=GJq1CEkWcaKs7Em2GYlhCtoVPP5Bukhfi2C/MO87oqU=;
-        b=dUiCUdbmQOpMkybm8iOwgllxN+rbWKXHIOv8xVx9P0CYcEvTrFfH+U510MWl4oVPJ0gtga
-        ahqCxi9ahMWxjIEsaydAa/rKy2pLoS0XfR5K4IDb4uihwE2PQKBjV4F9A8pFZYgGN7PuxQ
-        EOB1SaNvp8dPe4VJ46qh1GtqJBzaIwyAez52Agf9f+0VgyaCndFq+l56XNDg+v6HO0uzx9
-        KwoWueh6GMvJjAnouk8aSNrY7sJJRDuvX4Ynt2UCn35woH/JnJXgQKrYdLfLlaCEBkFk9c
-        Y7WVHB/k+RUE/B1QV9Xa55mz4IiFTHSC1D8o3oA/1GFewMJzkzQ+YqY5c8skRQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598443258;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=GJq1CEkWcaKs7Em2GYlhCtoVPP5Bukhfi2C/MO87oqU=;
-        b=HQTmvGI7KkXeaCWVTYGHuxhaaAjsX1BJNwh3dDUbNFgWHKVDFEbHlgJXRMU0uVeDi8WgHM
-        cnjckdDSNiedpnBg==
-Date:   Wed, 26 Aug 2020 13:16:31 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [patch V2 03/46] PCI: vmd: Dont abuse vector irqomain as parent
-References: <20200826111628.794979401@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
+        Wed, 26 Aug 2020 08:15:43 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:47994 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729373AbgHZMPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:15:41 -0400
+Received: from localhost.localdomain (unknown [210.32.144.184])
+        by mail-app3 (Coremail) with SMTP id cC_KCgCXP6gxUkZfNt8_Aw--.39637S4;
+        Wed, 26 Aug 2020 20:14:44 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ericsson.com>,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] EDAC: i5100_edac: Fix error handling code in i5100_init_one
+Date:   Wed, 26 Aug 2020 20:14:37 +0800
+Message-Id: <20200826121437.31606-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgCXP6gxUkZfNt8_Aw--.39637S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7KF4rCrWrXFyUuw17WFW8Xrb_yoW8Gr4xpr
+        9xG34fAry8WayY9r1UAr18XF15tFWqva43KFWxC3yag3ZxZFyktFWSqay7CFnFvFWkJFW3
+        Xwn7ta48uF18AF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxE
+        wVAFwVW5JwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I
+        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+        GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
+        rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r
+        4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU5rWrDUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0EBlZdtPrBDAAKsP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VMD has it's own PCI/MSI interrupt domain which is not in any way depending
-on the x86 vector domain. PCI devices behind VMD share the VMD MSIX vector
-entries via a VMD specific message translation to the actual VMD MSIX
-vector. The VMD device interrupt handler for the VMD MSIX vectors invokes
-all interrupt handlers of the devices which share a vector.
+When pci_get_device_func() fails, we don't need to execute
+pci_dev_put(). But mci should be freed to prevent memleak.
+When pci_enable_device() fails, we don't need to disable
+einj either.
 
-Making the x86 vector domain the actual parent of the VMD irq domain is
-pointless and actually counterproductive. When a device interrupt is
-requested then it will activate the interrupt which traverses down the
-hierarchy and consumes an interrupt vector in the vector domain which is
-never used.
-
-The domain is self contained and has no parent dependencies, so just hand
-in NULL for the parent and be done with it.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jonathan Derrick <jonathan.derrick@intel.com>
-Cc: linux-pci@vger.kernel.org
+Fixes: 52608ba205461 ("i5100_edac: probe for device 19 function 0")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
-V2: New patch.
----
- drivers/pci/controller/vmd.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/edac/i5100_edac.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -573,7 +573,8 @@ static int vmd_enable_domain(struct vmd_
- 		return -ENODEV;
+diff --git a/drivers/edac/i5100_edac.c b/drivers/edac/i5100_edac.c
+index 191aa7c19ded..410bbe55cd3f 100644
+--- a/drivers/edac/i5100_edac.c
++++ b/drivers/edac/i5100_edac.c
+@@ -1061,13 +1061,13 @@ static int i5100_init_one(struct pci_dev *pdev, const struct pci_device_id *id)
+ 				    PCI_DEVICE_ID_INTEL_5100_19, 0);
+ 	if (!einj) {
+ 		ret = -ENODEV;
+-		goto bail_einj;
++		goto bail_free;
+ 	}
  
- 	vmd->irq_domain = pci_msi_create_irq_domain(fn, &vmd_msi_domain_info,
--						    x86_vector_domain);
-+						    NULL);
+ 	rc = pci_enable_device(einj);
+ 	if (rc < 0) {
+ 		ret = rc;
+-		goto bail_disable_einj;
++		goto bail_einj;
+ 	}
+ 
+ 
+@@ -1136,14 +1136,14 @@ static int i5100_init_one(struct pci_dev *pdev, const struct pci_device_id *id)
+ bail_scrub:
+ 	priv->scrub_enable = 0;
+ 	cancel_delayed_work_sync(&(priv->i5100_scrubbing));
+-	edac_mc_free(mci);
+-
+-bail_disable_einj:
+ 	pci_disable_device(einj);
+ 
+ bail_einj:
+ 	pci_dev_put(einj);
+ 
++bail_free:
++	edac_mc_free(mci);
 +
- 	if (!vmd->irq_domain) {
- 		irq_domain_free_fwnode(fn);
- 		return -ENODEV;
+ bail_disable_ch1:
+ 	pci_disable_device(ch1mm);
+ 
+-- 
+2.17.1
 
