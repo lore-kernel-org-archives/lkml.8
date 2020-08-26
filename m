@@ -2,109 +2,103 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5849C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE1CC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81A542078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DD5B22B40
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598453637;
-	bh=v/Zb3PmGpo5l2DvxNKoEoZ/zVbV6OtENUtPofNroKvs=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WNCdRBAtwgqWwJE1Z2y03hQO2W9vDTFQT4bINZ/QZRvvpC0zBPa7S4HT3XRu788K4
-	 ekVoQrZOGdjf+m0Weu+At7MNEZLhsW92sW5SC6U3MZGis92a3FR8sVjVJUUsRGVM81
-	 84DP2jTl95W5DlYSvuC3bC2gubK7uvdgrZYjvJHQ=
+	s=default; t=1598453643;
+	bh=2keurcFsfkeACh52+4p5T0ngZFhF0/cvWdgnziyfZAU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1HPup5GBz+buyRi/F+JQLWNPRprb0nBZ5p3Uuc/Mfc27aP42LFMotywwsE/ZWM3k4
+	 iVaeFeqjhAYUxrNXBKPzRZJRLDs3p0WlZ4lQ76EApzKNC/TzfUB25aeIkNqJ4nuwLi
+	 Zo5+Hm9aEk/BzWkzPIOCU0rW6itRCOo83xSLdYUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgHZOxy (ORCPT
+        id S1728334AbgHZOyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:53:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41056 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 10:54:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727840AbgHZOxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:53:36 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727944AbgHZOxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:53:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06B9A2177B;
-        Wed, 26 Aug 2020 14:53:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAB98221E2;
+        Wed, 26 Aug 2020 14:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598453615;
-        bh=v/Zb3PmGpo5l2DvxNKoEoZ/zVbV6OtENUtPofNroKvs=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=G1yTKeODAnBmqu0tCCEEeOyfX9WSgWuaRVB3SQP1H4qDRVlOSt+hpoRkjYlGCBeok
-         gmAK8tht/DTIU8dviczhNyYxIUUm3LiA3INTKD5WTXuyCsmJyzN0tD+pJ8COzkkiWo
-         7i/+1mvilt2zqVD/ofW0B8ni0jFzO+qcRjHUi2ro=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Beniamin Bia <beniamin.bia@analog.com>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH 16/16] iio: magnetometer: ak8974: Simplify with dev_err_probe()
-Date:   Wed, 26 Aug 2020 16:51:53 +0200
-Message-Id: <20200826145153.10444-16-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200826145153.10444-1-krzk@kernel.org>
-References: <20200826145153.10444-1-krzk@kernel.org>
+        s=default; t=1598453616;
+        bh=2keurcFsfkeACh52+4p5T0ngZFhF0/cvWdgnziyfZAU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W+jQFBX9Y2cFQQnnBpOO8pRXn7pkU3ktYS6fim4jFRisgluZ5eT/WDBaaLAjzeXDT
+         WvB6ehRk9ClWtUh6A8MwBFdceThH+yepXYWz0ahlL0dj01Yciozp4zN36CSyrhd+W2
+         3+ktczweQwjZoa/4RGN1dY0ACA98suwt+CZGrbFY=
+Date:   Wed, 26 Aug 2020 16:53:51 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "David K. Kahurani" <k.kahurani@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, admin@rapidseedbox.com,
+        gichini.ngaruiya@gmail.com
+Subject: Re: [PATCH 5.7 00/15] 5.7.19-rc1 review
+Message-ID: <20200826145351.GA4181729@kroah.com>
+References: <20200826114849.295321031@linuxfoundation.org>
+ <20200826144915.GD16589@metal>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826144915.GD16589@metal>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and also it prints the error value.
+On Wed, Aug 26, 2020 at 05:49:15PM +0300, David K. Kahurani wrote:
+> On Wed, Aug 26, 2020 at 02:02:28PM +0200, Greg Kroah-Hartman wrote:
+> > -------------------
+> > Note, ok, this is really going to be the final 5.7.y kernel release.  I
+> > mean it this time....
+> > -------------------
+> 
+> Hello,
+> 
+> This is probably not very relevant but let me just bring this up here
+> since your manner of posting mail on the list seems to differ quite a
+> bit from what most people on the list are doing.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/iio/magnetometer/ak8974.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+It's not all that relevant as what I am doing here is not what anyone
+else on this list is doing :)
 
-diff --git a/drivers/iio/magnetometer/ak8974.c b/drivers/iio/magnetometer/ak8974.c
-index cbb44e401c0a..fa6a8e1a815c 100644
---- a/drivers/iio/magnetometer/ak8974.c
-+++ b/drivers/iio/magnetometer/ak8974.c
-@@ -843,15 +843,9 @@ static int ak8974_probe(struct i2c_client *i2c,
- 	ret = devm_regulator_bulk_get(&i2c->dev,
- 				      ARRAY_SIZE(ak8974->regs),
- 				      ak8974->regs);
--	if (ret < 0) {
--		if (ret != -EPROBE_DEFER)
--			dev_err(&i2c->dev, "cannot get regulators: %d\n", ret);
--		else
--			dev_dbg(&i2c->dev,
--				"regulators unavailable, deferring probe\n");
--
--		return ret;
--	}
-+	if (ret < 0)
-+		return dev_err_probe(&i2c->dev, ret,
-+				     "cannot get regulators\n");
- 
- 	ret = regulator_bulk_enable(ARRAY_SIZE(ak8974->regs), ak8974->regs);
- 	if (ret < 0) {
--- 
-2.17.1
+> From my understanding, an email regarding to a certain patch or kernel
+> issue should be sent to a list and not to a maintainer. This is
+> however not the habit that people are in, though but instead, most
+> people will send the email to the maintainers, then cc a few probably
+> random mailing lists. This leads to emails flooding on the mailing
+> list and consequently, beats the purpose of one ever having sent the
+> mail to a list because lists will get increasingly difficult to
+> follow.
 
+So is the complaint that these stable -rc emails are drowning out seeing
+other patches that are relevant?
+
+If so, there are some wonderfully helpfuly headers that I add to all of
+these emails so you can easily filter them away to /dev/null if you so
+desire.
+
+If not, then I don't understand the complaint.
+
+> Is it just me who has made this observation? From your mail, it
+> clearly looks and seems like you are following the above. Not
+> following the above could make it very hard for a new kernel developer
+> to pick up working on the kernel.
+
+Have you read the Documentation/process/1.Intro.rst file?  If not,
+please start there, as trying to read the firehose that is lkml all at
+once is _not_ how anyone does kernel development.
+
+thanks,
+
+greg k-h
