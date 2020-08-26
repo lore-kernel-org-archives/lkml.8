@@ -2,77 +2,55 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BD9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F487C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73A1D20707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:02:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHJVO8Qm"
+	by mail.kernel.org (Postfix) with ESMTP id 7AA8E20707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:03:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730163AbgHZNCS (ORCPT
+        id S1730104AbgHZNDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:02:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730145AbgHZNBv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:01:51 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 533B7C061574;
-        Wed, 26 Aug 2020 06:01:51 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id n18so1281230qtw.0;
-        Wed, 26 Aug 2020 06:01:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qMvYEDeiSbnOhgtPNg0miqtr2M/qecacoqZoySra/pk=;
-        b=XHJVO8QmzjKKjmw/EYpEKsONJyfpKooco0CE3OGx6Jf4IYBu74HKWmTq6SWo78ns6V
-         q0K9g7nBr/UGfsippnFYhWPotRmAKAairvquUJX3mHojRVuCdUQb7syN4eka094pQRhd
-         pqlq440OIekHL9GFTLFU2vcei5c6bxo3jXSdZq2jEG9HDoSr8pGiWEeHU7dCu4/NVUKh
-         WI+C8NCq36ExWLNuNcL2S+yzIPwm49m2inXaRU56CHw1hmyYLEnvfPH8OiQP5qTM+qg+
-         nUamudlTnGEYH+UwYN68tpjv96LTgNkTdIiMeCFyRiGu8L/FQp05ledRJiTniOV/7oPR
-         bS/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qMvYEDeiSbnOhgtPNg0miqtr2M/qecacoqZoySra/pk=;
-        b=KN2JRGy7VmyHv6L8jf1GY2FxnN+HPRObTmU0sFiSTGkW2KT1X5Hi6CBkKlrIR+PQDE
-         Da88XNKe+x1rRFnlGHaY5LuraoepxKTPy82UILhhmYY8KY4kSBGCu866pE2g9fJQVUdR
-         yVVbrOgRXRPdyehXF8I+oUMH1ppKrZMBLG8tjNdK5T1C3vSxtORagFmYktpdU18XhxHr
-         AnnLcWkxraCoamCkscf6vETj6lYg3UHFgQw7aYFTEZYXuVKV21iKHa6imf9PrsOUjtgW
-         7YwPiKyS83hHzlE7cQlkLS7eKPjVOB/IzaBxxE7U3AKhWl1VlYu1jr9QkrWFmLD07OZ3
-         4HGA==
-X-Gm-Message-State: AOAM533jqh+yADXz99lk2saBR/b4khGC9tr5Ku2YPU32jfQ+mHYlCs3p
-        AUYo9HEcG/biwGvT8VLoA9ZOv4u8TO4K0A==
-X-Google-Smtp-Source: ABdhPJwxHfbMHpa7HkpnJcjx55MDVEdhI/f1ua38mzX3T0BYfZiUsPS8SvJmKdr+rCOig8/RJhreOw==
-X-Received: by 2002:ac8:60c5:: with SMTP id i5mr14285987qtm.268.1598446910606;
-        Wed, 26 Aug 2020 06:01:50 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id x88sm1971364qtd.1.2020.08.26.06.01.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Aug 2020 06:01:49 -0700 (PDT)
-Subject: Re: [PATCH] of: skip disabled CPU nodes
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200826120254.8902-1-matthias.schiffer@ew.tq-group.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <4dd06b79-1402-d7cf-9676-1f9a9526da12@gmail.com>
-Date:   Wed, 26 Aug 2020 08:01:49 -0500
+        Wed, 26 Aug 2020 09:03:34 -0400
+Received: from mga11.intel.com ([192.55.52.93]:58717 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729382AbgHZNDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:03:32 -0400
+IronPort-SDR: ldbRKTFT8cx94CiaAGay96V0daLphAi4irkOhXS6ZzXvLbjlhbM8pJS/T8ZpewKglvVYvazjk6
+ hvuxpJOyU1Bw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="153855434"
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="153855434"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 06:03:17 -0700
+IronPort-SDR: 6TFAJWSJNDf8nkx7WvkeBy4UVUL7d4iJyIpV2fZm7gb/Kv16JpikrZCEdwoZJkFmaTdyE/NUi4
+ LNYnveybnF3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="331772377"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by fmsmga002.fm.intel.com with ESMTP; 26 Aug 2020 06:03:10 -0700
+Subject: Re: Ftrace regression in v5.9-rc1 due to commit fc0ea795f53c
+ ("ftrace: Add symbols for ftrace trampolines")
+To:     Miroslav Benes <mbenes@suse.cz>, peterz@infradead.org,
+        rostedt@goodmis.org
+Cc:     linux-kernel@vger.kernel.org
+References: <alpine.LSU.2.21.2008261104180.7835@pobox.suse.cz>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <3a00c25a-0df0-6d55-2053-14fbd06af1e7@intel.com>
+Date:   Wed, 26 Aug 2020 16:02:35 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200826120254.8902-1-matthias.schiffer@ew.tq-group.com>
+In-Reply-To: <alpine.LSU.2.21.2008261104180.7835@pobox.suse.cz>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -81,42 +59,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-26 07:02, Matthias Schiffer wrote:
-> Allow disabling CPU nodes using status = "disabled".
+On 26/08/20 12:30 pm, Miroslav Benes wrote:
+> Hi,
 > 
-> This allows a bootloader to change the number of available CPUs (for
-> example when a common DTS is used for SoC variants with different numbers
-> of cores) without deleting the nodes altogether (which may require
-> additional fixups where the CPU nodes are referenced, e.g. a cooling
-> map).
+> during v5.9-rc1 testing I ran into an issue (BUG dump at the end of the 
+> email). I suspected commit fc0ea795f53c ("ftrace: Add symbols for ftrace 
+> trampolines") (which git bisect later confirmed) and a missing call to 
+> ftrace_remove_trampoline_from_kallsyms() somewhere. And indeed there is an 
+> unhandled place in ftrace_startup(). __register_ftrace_function() creates 
+> a trampoline and adds its ops to new ftrace_ops_trampoline_list. If 
+> ftrace_hash_ipmodify_enable() fails, the ops is not removed from the list. 
 > 
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> Moreover, the trampoline is not freed anywhere in this case if I am not 
+> missing something, which is not a problem of the mentioned patch.
+> 
+> If that's the case, something like
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 275441254bb5..656d7cb5a78c 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -2862,6 +2862,8 @@ int ftrace_startup(struct ftrace_ops *ops, int command)
+>                 __unregister_ftrace_function(ops);
+>                 ftrace_start_up--;
+>                 ops->flags &= ~FTRACE_OPS_FL_ENABLED;
+> +               if (ops->flags & FTRACE_OPS_FL_DYNAMIC)
+> +                       ftrace_trampoline_free(ops);
+
+FWIW it looks ok to me, because AFAICT the trampoline will not be in use
+before the call to ftrace_startup_enable(), so it should be safe to free it
+here.
+
+>                 return ret;
+>         }
+> 
+> could do the trick. At least it fixes the issue for me, but I tend to get 
+> lost in ftrace code, so it might not be a good approach generally.
+> 
+> If no one sees a problem anywhere, I'll prepare a proper patch and will 
+> run some more testing.
+> 
+> Regards
+> Miroslav
+> 
 > ---
->  drivers/of/base.c | 2 ++
->  1 file changed, 2 insertions(+)
+> BUG: unable to handle page fault for address: fffffffffffffff0
+> #PF: supervisor read access in kernel mode
+> #PF: error_code(0x0000) - not-present page
+> PGD 2216067 P4D 2216067 PUD 2218067 PMD 0 
+> Oops: 0000 [#1] SMP PTI
+> CPU: 1 PID: 2430 Comm: cat Tainted: G           O  K   5.9.0-rc2-dirty #44
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-48-gd9c812d-rebuilt.opensuse.org 04/01/2014
+> RIP: 0010:ftrace_mod_get_kallsym+0xd4/0x150
+> Code: 40 38 39 f8 0f 87 7b ff ff ff eb e1 0f 0b 4c 8b 0d 21 95 0d 01 b8 de ff ff ff 49 81 f9 80 6d 29 82 4d 8d 81 60 fe ff ff 74 2e <49> 8b 80 90 01 00 00 48 85 c0 740
+> RSP: 0018:ffffc90000373e00 EFLAGS: 00010203
+> RAX: 0000000000000000 RBX: ffff888072952900 RCX: ffff888072952935
+> RDX: ffff888072952934 RSI: ffff888072952928 RDI: 0000000000000000
+> RBP: ffff8880729529b5 R08: fffffffffffffe60 R09: ffff888037180fc0
+> R10: 0000000000000000 R11: 00000000ff6d59b3 R12: ffff8880729529f0
+> R13: ffff888072952928 R14: ffff888072952934 R15: ffff8880729529b5
+> FS:  00007f543f339500(0000) GS:ffff88807d200000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: fffffffffffffff0 CR3: 000000007a09e000 CR4: 00000000000006e0
+> Call Trace:
+>  update_iter+0x189/0x1e0
+>  s_next+0x1f/0x30
+>  seq_read+0x238/0x420
+>  proc_reg_read+0x56/0x70
+>  vfs_read+0xb7/0x1c0
+>  ksys_read+0xa7/0xe0
+>  do_syscall_64+0x33/0x80
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x7f543ee621a1
+> Code: fe ff ff 48 8d 3d 67 a1 09 00 48 83 ec 08 e8 e6 03 02 00 66 0f 1f 44 00 00 8b 05 0a d2 2c 00 48 63 ff 85 c0 75 13 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 57 f3 c3 0f9
+> RSP: 002b:00007ffd9b8691d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+> RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f543ee621a1
+> RDX: 0000000000020000 RSI: 00007f543f196000 RDI: 0000000000000003
+> RBP: 0000000000020000 R08: ffffffffffffffff R09: 0000000000000000
+> R10: 000000000000089f R11: 0000000000000246 R12: 00007f543f196000
+> R13: 0000000000000003 R14: 0000000000000fe3 R15: 0000000000020000
+> Modules linked in: af_packet iscsi_ibft iscsi_boot_sysfs rfkill ppdev bochs_drm drm_vram_helper drm_ttm_helper ttm drm_kms_helper joydev i2c_piix4 drm pcspkr parport_]
+> CR2: fffffffffffffff0
+> ---[ end trace 2ad43a0bbf68c2e2 ]---
+> RIP: 0010:ftrace_mod_get_kallsym+0xd4/0x150
+> Code: 40 38 39 f8 0f 87 7b ff ff ff eb e1 0f 0b 4c 8b 0d 21 95 0d 01 b8 de ff ff ff 49 81 f9 80 6d 29 82 4d 8d 81 60 fe ff ff 74 2e <49> 8b 80 90 01 00 00 48 85 c0 740
+> RSP: 0018:ffffc90000373e00 EFLAGS: 00010203
+> RAX: 0000000000000000 RBX: ffff888072952900 RCX: ffff888072952935
+> RDX: ffff888072952934 RSI: ffff888072952928 RDI: 0000000000000000
+> RBP: ffff8880729529b5 R08: fffffffffffffe60 R09: ffff888037180fc0
+> R10: 0000000000000000 R11: 00000000ff6d59b3 R12: ffff8880729529f0
+> R13: ffff888072952928 R14: ffff888072952934 R15: ffff8880729529b5
+> FS:  00007f543f339500(0000) GS:ffff88807d200000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: fffffffffffffff0 CR3: 000000007a09e000 CR4: 00000000000006e0
+> note: cat[2430] exited with preempt_count 1
+> BUG: sleeping function called from invalid context at ./include/linux/percpu-rwsem.h:49
+> in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 2430, name: cat
+> INFO: lockdep is turned off.
+> irq event stamp: 530598
+> hardirqs last  enabled at (530597): [<ffffffff819c9a10>] syscall_enter_from_user_mode+0x20/0x250
+> hardirqs last disabled at (530598): [<ffffffff819c9ebd>] irqentry_enter+0x1d/0x50
+> softirqs last  enabled at (522266): [<ffffffff81c00343>] __do_softirq+0x343/0x463
+> softirqs last disabled at (522259): [<ffffffff81a010d2>] asm_call_on_stack+0x12/0x20
+> CPU: 1 PID: 2430 Comm: cat Tainted: G      D    O  K   5.9.0-rc2-dirty #44
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-48-gd9c812d-rebuilt.opensuse.org 04/01/2014
+> Call Trace:
+>  dump_stack+0x96/0xdb
+>  ___might_sleep+0x16c/0x260
+>  exit_signals+0x30/0x2f0
+>  do_exit+0xd4/0xc50
+>  ? ksys_read+0xa7/0xe0
+>  rewind_stack_do_exit+0x17/0x20
+> RIP: 0033:0x7f543ee621a1
+> Code: fe ff ff 48 8d 3d 67 a1 09 00 48 83 ec 08 e8 e6 03 02 00 66 0f 1f 44 00 00 8b 05 0a d2 2c 00 48 63 ff 85 c0 75 13 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 57 f3 c3 0f9
+> RSP: 002b:00007ffd9b8691d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+> RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f543ee621a1
+> RDX: 0000000000020000 RSI: 00007f543f196000 RDI: 0000000000000003
+> RBP: 0000000000020000 R08: ffffffffffffffff R09: 0000000000000000
+> R10: 000000000000089f R11: 0000000000000246 R12: 00007f543f196000
+> R13: 0000000000000003 R14: 0000000000000fe3 R15: 0000000000020000
 > 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index ea44fea99813..d547e9deced1 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -796,6 +796,8 @@ struct device_node *of_get_next_cpu_node(struct device_node *prev)
->  		of_node_put(node);
->  	}
->  	for (; next; next = next->sibling) {
-> +		if (!__of_device_is_available(next))
-> +			continue;
->  		if (!(of_node_name_eq(next, "cpu") ||
->  		      __of_node_is_type(next, "cpu")))
->  			continue;
 > 
 
-The original implementation of of_get_next_cpu_node() had
-that check, but status disabled for cpu nodes has different
-semantics than other nodes, and the check broke some systems.
-The check was removed by c961cb3be906 "of: Fix cpu node
-iterator to not ignore disabled cpu nodes".
-
-It would be useful to document that difference in the
-header comment of of_get_next_cpu_node().
-
--Frank
