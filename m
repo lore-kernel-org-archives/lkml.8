@@ -2,99 +2,172 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6ADC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29241C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4DC12071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:20:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598437233;
-	bh=I0i2q5/JqUekGhzJe594DvzcUM3i+my4rruJmCWxWeY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CCvUDAdBplJ/09wLLyg0KhMPsir7uwQkx3W//uS+k4u1PnycQf5bIZW/OR21Jq+YP
-	 +QtMcy8KrZ6xxX4XcY/yCgJ9/UdKRQbvcitGLo3u7j+OwKIBZMIo3u7YevhBfXUCg8
-	 Mc6YogJLUSgIWyKaAcmRx61DsTNwFNyDtqorKV1g=
+	by mail.kernel.org (Postfix) with ESMTP id 053D12071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:22:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XIDAmlXH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbgHZKUc (ORCPT
+        id S1728382AbgHZKV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 06:20:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42574 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 06:21:59 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:12113 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728161AbgHZKUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:20:30 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728132AbgHZKV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 06:21:59 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598437317; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=MkBteFA49aiDVrV3uQvOo1CKvWxeAW0hpmXtiWdWsqg=;
+ b=XIDAmlXHVjfrmzZ4T0KxyW6VTgxiNakXqFvvm+KuOejGW51OD3yC4JdXIgtBIecdbA8MjaQb
+ JyGdWdOB3pla96MJHd58JHpciI0MRJyD35AolApdf09BmWpQLs53SEEaG+IBE+5ULRvx6GU9
+ smwsJAoJjow9r3Wvm1OXWFYsvqU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f4637c2e2d4d29fc898b68c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 26 Aug 2020 10:21:54
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B653AC433CA; Wed, 26 Aug 2020 10:21:54 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B08352071E;
-        Wed, 26 Aug 2020 10:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598437230;
-        bh=I0i2q5/JqUekGhzJe594DvzcUM3i+my4rruJmCWxWeY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KvjqRbONInpcWqBDaQcpXLXdf7/ssIOhM++ISKq2qwrU7IDsH5HRQAfbJu8/hHbH7
-         1YpZXrgRtxv53dgb6kD7MFF0tXw6gvqZYI7EjFmyjPi4eCgf7pSCOQFAbTrf1U+CFS
-         OnQeDDI5a+yaKtSGiIIiyLc0w+g9ta82YCulmo74=
-Date:   Wed, 26 Aug 2020 11:19:54 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Qiang Zhao <qiang.zhao@nxp.com>
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        kuldip dwivedi <kuldip.dwivedi@puresoftware.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        Tanveer Alam <tanveer.alam@puresoftware.com>
-Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
-Message-ID: <20200826101954.GD4965@sirena.org.uk>
-References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
- <20200821140718.GH4870@sirena.org.uk>
- <c810740d75f64e308fd362e6c6a5f437@mail.gmail.com>
- <20200822152118.rlwbcgfk4abjldtg@skbuf>
- <20200824112505.GD4676@sirena.org.uk>
- <VE1PR04MB6768E050B97AAA33501B6D6891540@VE1PR04MB6768.eurprd04.prod.outlook.com>
+        (Authenticated sender: merez)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id ACA26C433C6;
+        Wed, 26 Aug 2020 10:21:53 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cHMo6Wbp1wrKhbfi"
-Content-Disposition: inline
-In-Reply-To: <VE1PR04MB6768E050B97AAA33501B6D6891540@VE1PR04MB6768.eurprd04.prod.outlook.com>
-X-Cookie: Should I do my BOBBIE VINTON medley?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 26 Aug 2020 13:21:53 +0300
+From:   merez@codeaurora.org
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, wil6210@qti.qualcomm.com
+Subject: Re: [PATCH 25/32] wireless: ath: wil6210: wmi: Fix formatting and
+ demote non-conforming function headers
+In-Reply-To: <20200821071644.109970-26-lee.jones@linaro.org>
+References: <20200821071644.109970-1-lee.jones@linaro.org>
+ <20200821071644.109970-26-lee.jones@linaro.org>
+Message-ID: <330bc340a4d16f383c9adef2324db60e@codeaurora.org>
+X-Sender: merez@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-08-21 10:16, Lee Jones wrote:
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  drivers/net/wireless/ath/wil6210/wmi.c:52: warning: Incorrect use of
+> kernel-doc format:  * Addressing - theory of operations
+>  drivers/net/wireless/ath/wil6210/wmi.c:70: warning: Incorrect use of
+> kernel-doc format:  * @sparrow_fw_mapping provides memory remapping
+> table for sparrow
+>  drivers/net/wireless/ath/wil6210/wmi.c:80: warning: cannot understand
+> function prototype: 'const struct fw_map sparrow_fw_mapping[] = '
+>  drivers/net/wireless/ath/wil6210/wmi.c:107: warning: Cannot
+> understand  * @sparrow_d0_mac_rgf_ext - mac_rgf_ext section for
+> Sparrow D0
+>  drivers/net/wireless/ath/wil6210/wmi.c:115: warning: Cannot
+> understand  * @talyn_fw_mapping provides memory remapping table for
+> Talyn
+>  drivers/net/wireless/ath/wil6210/wmi.c:158: warning: Cannot
+> understand  * @talyn_mb_fw_mapping provides memory remapping table for
+> Talyn-MB
+>  drivers/net/wireless/ath/wil6210/wmi.c:236: warning: Function
+> parameter or member 'x' not described in 'wmi_addr_remap'
+>  drivers/net/wireless/ath/wil6210/wmi.c:255: warning: Function
+> parameter or member 'section' not described in 'wil_find_fw_mapping'
+>  drivers/net/wireless/ath/wil6210/wmi.c:278: warning: Function
+> parameter or member 'wil' not described in 'wmi_buffer_block'
+>  drivers/net/wireless/ath/wil6210/wmi.c:278: warning: Function
+> parameter or member 'ptr_' not described in 'wmi_buffer_block'
+>  drivers/net/wireless/ath/wil6210/wmi.c:278: warning: Function
+> parameter or member 'size' not described in 'wmi_buffer_block'
+>  drivers/net/wireless/ath/wil6210/wmi.c:307: warning: Function
+> parameter or member 'wil' not described in 'wmi_addr'
+>  drivers/net/wireless/ath/wil6210/wmi.c:307: warning: Function
+> parameter or member 'ptr' not described in 'wmi_addr'
+>  drivers/net/wireless/ath/wil6210/wmi.c:1589: warning: Function
+> parameter or member 'wil' not described in 'wil_find_cid_ringid_sta'
+>  drivers/net/wireless/ath/wil6210/wmi.c:1589: warning: Function
+> parameter or member 'vif' not described in 'wil_find_cid_ringid_sta'
+>  drivers/net/wireless/ath/wil6210/wmi.c:1589: warning: Function
+> parameter or member 'cid' not described in 'wil_find_cid_ringid_sta'
+>  drivers/net/wireless/ath/wil6210/wmi.c:1589: warning: Function
+> parameter or member 'ringid' not described in
+> 'wil_find_cid_ringid_sta'
+>  drivers/net/wireless/ath/wil6210/wmi.c:1876: warning: Function
+> parameter or member 'vif' not described in 'wmi_evt_ignore'
+>  drivers/net/wireless/ath/wil6210/wmi.c:1876: warning: Function
+> parameter or member 'id' not described in 'wmi_evt_ignore'
+>  drivers/net/wireless/ath/wil6210/wmi.c:1876: warning: Function
+> parameter or member 'd' not described in 'wmi_evt_ignore'
+>  drivers/net/wireless/ath/wil6210/wmi.c:1876: warning: Function
+> parameter or member 'len' not described in 'wmi_evt_ignore'
+>  drivers/net/wireless/ath/wil6210/wmi.c:2588: warning: Function
+> parameter or member 'wil' not described in 'wmi_rxon'
+> 
+> Cc: Maya Erez <merez@codeaurora.org>
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: wil6210@qti.qualcomm.com
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/net/wireless/ath/wil6210/wmi.c | 28 ++++++++++++++------------
+>  1 file changed, 15 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/ath/wil6210/wmi.c
+> b/drivers/net/wireless/ath/wil6210/wmi.c
+> index c7136ce567eea..3a6ee85acf6c7 100644
+> --- a/drivers/net/wireless/ath/wil6210/wmi.c
+> +++ b/drivers/net/wireless/ath/wil6210/wmi.c
+> @@ -31,7 +31,7 @@ MODULE_PARM_DESC(led_id,
+>  #define WIL_WAIT_FOR_SUSPEND_RESUME_COMP 200
+>  #define WIL_WMI_PCP_STOP_TO_MS 5000
+> 
+> -/**
+> +/*
+>   * WMI event receiving - theory of operations
+>   *
+>   * When firmware about to report WMI event, it fills memory area
 
---cHMo6Wbp1wrKhbfi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The correct format for such documentation blocks is:
+/**
+  * DOC: Theory of Operation
 
-On Wed, Aug 26, 2020 at 08:19:41AM +0000, Qiang Zhao wrote:
-> On Mon, Aug 24, 2020 at 19:25, Mark Brown <broonie@kernel.org> wrote:
+This comment is also applicable for the rest of such documentation 
+blocks changed in this patch.
 
-> > Yes, it's a legacy from bad board file conversions and shouldn't be used at all.
-
-> I saw a lot of driver assign spi_controller -> num_chipselect directly, should we do like that?
-
-Yes, you should know the number of chip selects based on the controller.
-
---cHMo6Wbp1wrKhbfi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9GN0kACgkQJNaLcl1U
-h9CfaQf/cFN7Z+7Su3oU98AYqh3AS6StbT42NYYmfMw0bX/Ymf4mNxqFU4DR+fsU
-hINOEiBo8SVc4p9GMRK7hSCqOuLFrViWewEPcnfr3D4VISJ7bLAAP8SjOGa5YgTZ
-WDcXJ4STYGrR3dgxbMjyL/f1JKfMuMRYoTw2uc+uNZe4mnBIkfCGoocxdA2ZGGUc
-Qx+MrNEDTmi1xNhMFhorO/uKKNsdNLKycljcdZ3swOHOs7L064bgeICJmnpK0n3Z
-MRKyT+C3jvkcnojv55s9wI2xqcI2jtRioTAZkeZOfP+4bqqf1jCDs7xJkKMMRZwO
-idSiTyw6bsDFEL/CwcKiU1yKpG10Uw==
-=1dzn
------END PGP SIGNATURE-----
-
---cHMo6Wbp1wrKhbfi--
+> @@ -66,7 +66,7 @@ MODULE_PARM_DESC(led_id,
+>   * AHB address must be used.
+>   */
+> 
+> -/**
+> +/*
+>   * @sparrow_fw_mapping provides memory remapping table for sparrow
+>   *
+>   * array size should be in sync with the declaration in the wil6210.h
+For files in net/ and drivers/net/ the preferred style for long 
+(multi-line) comments is a different and
+the text should be in the same line as /*, as follows:
+/* sparrow_fw_mapping provides memory remapping table for sparrow
+I would also remove the @ from @sparrow_fw_mapping.
+This comment is also applicable for the rest of such documentation 
+blocks changed in this patch.
