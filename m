@@ -2,101 +2,99 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A30FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A880C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68B0E2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C2C208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:24:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730186AbgHZNXi (ORCPT
+        id S1730225AbgHZNYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:23:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47064 "EHLO mx2.suse.de"
+        Wed, 26 Aug 2020 09:24:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:46302 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728132AbgHZNXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:23:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 0E079ABCC;
-        Wed, 26 Aug 2020 13:24:03 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 33FB61E12AF; Wed, 26 Aug 2020 15:23:30 +0200 (CEST)
-Date:   Wed, 26 Aug 2020 15:23:30 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Xianting Tian <xianting_tian@126.com>
-Cc:     bcrl@kvack.org, viro@zeniv.linux.org.uk, linux-aio@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] aio: use wait_for_completion_io() when waiting for
- completion of io
-Message-ID: <20200826132330.GD15126@quack2.suse.cz>
-References: <1596634551-27526-1-git-send-email-xianting_tian@126.com>
+        id S1728132AbgHZNYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:24:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BE35101E;
+        Wed, 26 Aug 2020 06:24:01 -0700 (PDT)
+Received: from [10.57.5.66] (unknown [10.57.5.66])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1E74D3F68F;
+        Wed, 26 Aug 2020 06:23:59 -0700 (PDT)
+Subject: Re: [PATCH] perf inject: correct event attribute sizes
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acme@redhat.com, Denis Nikitin <denik@google.com>
+References: <b5f9e19c-6adb-ccdd-3dbd-df8e1b82ee93@foss.arm.com>
+ <20200826112745.GB43491@C02TD0UTHF1T.local>
+From:   Al Grant <al.grant@foss.arm.com>
+Message-ID: <9a48bd74-42ad-4498-7f38-aed560031c4e@foss.arm.com>
+Date:   Wed, 26 Aug 2020 14:23:59 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.0.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596634551-27526-1-git-send-email-xianting_tian@126.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200826112745.GB43491@C02TD0UTHF1T.local>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 05-08-20 09:35:51, Xianting Tian wrote:
-> When waiting for the completion of io, we need account iowait time. As
-> wait_for_completion() calls schedule_timeout(), which doesn't account
-> iowait time. While wait_for_completion_io() calls io_schedule_timeout(),
-> which will account iowait time.
+On 26/08/2020 12:27, Mark Rutland wrote:
+> On Wed, Aug 26, 2020 at 10:42:04AM +0100, Al Grant wrote:
+>> When perf inject reads a perf.data file from an older version of perf,
+>> it writes event attributes into the output with the original size field,
+>> but lays them out as if they had the size currently used. Readers see
+>> a corrupt file. Update the size field to match the layout.
+>>
+>> From: Denis Nikitin <denik@google.com>
+>> Signed-off-by: Al Grant <al.grant@foss.arm.com>
 > 
-> So using wait_for_completion_io() instead of wait_for_completion()
-> when waiting for completion of io before exit_aio and io_destroy.
+> Did Denis write this patch?
+
+Joint work - I fixed the sizes in the event attributes section,
+but Denis noticed that the copies in HEADER_EVENT_DESC also need
+fixing, so the final text is his.
+
+> If so, we need an S-o-B line from them.
+
+I have his approval to upstream this, so:
+
+Signed-off-by: Denis Nikitin <denik@google.com>
+
+Al
+
+
 > 
-> Signed-off-by: Xianting Tian <xianting_tian@126.com>
-
-Thanks for the patch! It looks good to me but IMO this is just scratching
-the surface.  E.g. for AIO we are mostly going to wait in read_events() by
-wait_event_interruptible_hrtimeout() and *that* doesn't account as IO wait
-either? Which is IMO far bigger misaccounting... The two case you fix seem
-to be just rare cornercases so what they do isn't a big deal either way.
-
-So I agree it may be worth it to properly account waiting for AIO but if
-you want to do that, then please handle mainly the common cases in AIO
-code.
-
-								Honza
-
-> ---
->  fs/aio.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Mark.
 > 
-> diff --git a/fs/aio.c b/fs/aio.c
-> index 91e7cc4..498b8a0 100644
-> --- a/fs/aio.c
-> +++ b/fs/aio.c
-> @@ -892,7 +892,7 @@ void exit_aio(struct mm_struct *mm)
->  
->  	if (!atomic_sub_and_test(skipped, &wait.count)) {
->  		/* Wait until all IO for the context are done. */
-> -		wait_for_completion(&wait.comp);
-> +		wait_for_completion_io(&wait.comp);
->  	}
->  
->  	RCU_INIT_POINTER(mm->ioctx_table, NULL);
-> @@ -1400,7 +1400,7 @@ static long read_events(struct kioctx *ctx, long min_nr, long nr,
->  		 * is destroyed.
->  		 */
->  		if (!ret)
-> -			wait_for_completion(&wait.comp);
-> +			wait_for_completion_io(&wait.comp);
->  
->  		return ret;
->  	}
-> -- 
-> 1.8.3.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+>>   tools/perf/util/header.c | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+>> index 9cf4efdcbbbd..762eb94bd532 100644
+>> --- a/tools/perf/util/header.c
+>> +++ b/tools/perf/util/header.c
+>> @@ -3326,6 +3326,14 @@ int perf_session__write_header(struct
+>> perf_session *session,
+>>          attr_offset = lseek(ff.fd, 0, SEEK_CUR);
+>>
+>>          evlist__for_each_entry(evlist, evsel) {
+>> +               if (evsel->core.attr.size < sizeof(evsel->core.attr)) {
+>> +                       /*
+>> +                        * We are likely in "perf inject" and have read +
+>> * from an older file. Update attr size so that
+>> +                        * reader gets the right offset to the ids.
+>> +                        */
+>> +                       evsel->core.attr.size = sizeof(evsel->core.attr);
+>> +               }
+>>                  f_attr = (struct perf_file_attr){
+>>                          .attr = evsel->core.attr,
+>>                          .ids  = {
