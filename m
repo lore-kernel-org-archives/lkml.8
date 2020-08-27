@@ -2,113 +2,96 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A566BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6932A22B40
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B5D2177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:39:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GDQ1TKl2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="hWVPBlho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729104AbgH0Miw (ORCPT
+        id S1728903AbgH0Mjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 08:38:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728955AbgH0MOF (ORCPT
+        Thu, 27 Aug 2020 08:39:46 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:16044 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729035AbgH0MPK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 08:14:05 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 002FFC06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 05:14:04 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id c18so620943wrm.9
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 05:14:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=ekjfb6Sf6mANsgF0KqhEnPQMEOzKt6dtLU96j3CPtgg=;
-        b=GDQ1TKl2/iDAzJxhE1Z5lMfgwiQlwWjbf09jpTl2+AuUDzQ/wJheaaCy3mYuelKJca
-         qhRxSWX09KbStDspCwPlp1EJRTJ56oycoh97ud+3Ctd4QTV/cFH7r0zoDOglv8RV1N22
-         eJIaiDXU9hFKuFYwjuxcXgVO6ZEyXectjOH1txFrysGx+gQjqLlxGZhVE9V2ficAsh89
-         52cnO2neBd5hSLef6IfzxWlmU6qJQZZkI1FzE5FSAMCMzRlkeoxH1USuvwQIJCh+5thJ
-         qFxCkow5jLYNFOI+36aJ3LiaZzNDQX5Z2P5/802qs43HA7OhBwpA48MZ3SxfUHJWXm0y
-         caCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=ekjfb6Sf6mANsgF0KqhEnPQMEOzKt6dtLU96j3CPtgg=;
-        b=XXQWvA34SLP7ibYNOYigLXFJ/Uc0LWuZqib02zCz82hPjCGtQkBBf6icVABc9vYsy8
-         /bWmVzEpYVudJiZSHFzjokNbRt+q7WNu/PCkVsreVbw15LIGO08Mvx0qaAZ+MNVFqTPo
-         gJlbcBI8Sv6cOwKQGpL6YimJgqKqNof+frvbLUAqz/v9Rfata3NLAxEWFucWks2mh7pS
-         O1TVR45kCJSbKJ6LO4v9NGb1Ea7a2Cg94yI7oYYTfWRFiKRWv/z2sCUQ8Hqi8iQ3G2Dg
-         jJfLXtcyAwccE1nX1UXJiv4dYIDMk9ST5Mp8Mr7HDIxYF+Tg9ax8fdUv/gfkbwNxr9x0
-         xACw==
-X-Gm-Message-State: AOAM531dQ/UGgFiudUFuKNcIctukkoMqRBS6ATFHx+ahlKg6VAXoQMze
-        Os5KoRgpKRgK9ct/98NbgdXHgw==
-X-Google-Smtp-Source: ABdhPJzomTvDIDWXCuEcyS33gAAp/nwPzZVLkwg48iNvf3HKA7HDg+tln7igV6uhPtB69oGfCXuhAQ==
-X-Received: by 2002:adf:e78b:: with SMTP id n11mr2056985wrm.256.1598530443604;
-        Thu, 27 Aug 2020 05:14:03 -0700 (PDT)
-Received: from dell ([91.110.221.141])
-        by smtp.gmail.com with ESMTPSA id 3sm4533378wms.36.2020.08.27.05.14.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 05:14:02 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 13:14:01 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 00/30] Set 3: Rid W=1 warnings in Wireless
-Message-ID: <20200827121401.GD1627017@dell>
-References: <20200826093401.1458456-1-lee.jones@linaro.org>
- <87y2m09tye.fsf@codeaurora.org>
+        Thu, 27 Aug 2020 08:15:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598530497;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=s0ziZsW1eWa4IKIjQ+u0Ec5vtYjwpjgOTZnjWgtRR/0=;
+        b=hWVPBlho+RqUPiCjIcp/n+U6qUknoD4aNeLbaWMan9QlOVa4FcpfMc0OqsP9mHptgK
+        WEN9Eoyx1PxncYz3xh8KCuRWlfwf7+zFJ7QUgmw93Q+LMw4M0OMXVW5OGHZjd3qKz/xO
+        hWekvibgsSItzb+5NiEJnrdDCwzvk8xEqkJi9Vy6hKpE5YGlfRPS+yhr/xbDmFZLHcci
+        u2sdDPugEE30CuFWaHtxgSesLhmGkLegCkU6fa/A33hoSv4X4Ej0X8+RNXSO9Cxql7VQ
+        MnjfGk7ZwwmewtGNrSStbPGlOPgwhfRchljZKFtIIfkxfstdktPiITPmdIwxV8srzv/c
+        ubTw==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7Ic/Fboo="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
+        with ESMTPSA id g0b6c1w7RCEutYs
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Thu, 27 Aug 2020 14:14:56 +0200 (CEST)
+Date:   Thu, 27 Aug 2020 14:14:49 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] opp: Drop unnecessary check frmo
+ dev_pm_opp_attach_genpd()
+Message-ID: <20200827121449.GA21147@gerhold.net>
+References: <88c8522b556d15bd44b8388d47cf25ac6f06b057.1598522635.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87y2m09tye.fsf@codeaurora.org>
+In-Reply-To: <88c8522b556d15bd44b8388d47cf25ac6f06b057.1598522635.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020, Kalle Valo wrote:
-
-> Lee Jones <lee.jones@linaro.org> writes:
+On Thu, Aug 27, 2020 at 03:35:15PM +0530, Viresh Kumar wrote:
+> Since commit c0ab9e0812da ("opp: Allocate genpd_virt_devs from
+> dev_pm_opp_attach_genpd()"), the allocation of the virtual devices is
+> moved to dev_pm_opp_attach_genpd() and this check isn't required anymore
+> as it will always fail. Drop it.
 > 
-> > This set is part of a larger effort attempting to clean-up W=1
-> > kernel builds, which are currently overwhelmingly riddled with
-> > niggly little warnings.
-> >
-> > There are quite a few W=1 warnings in the Wireless.  My plan
-> > is to work through all of them over the next few weeks.
-> > Hopefully it won't be too long before drivers/net/wireless
-> > builds clean with W=1 enabled.
-> 
-> How much patches are there going to be? I was first positive about the
-> idea but now I am really starting to wonder if this is worth the effort,
-> these patches are spamming my patchwork significantly and taking too
-> much time. At least please hold of on any new patches for at least a
-> week so I can catch up with all patches I have.
 
-1 more set to go.  drivers/wireless was pretty dirty in this regard
-starting with over 6000 warnings.
+Only partially related to this patch, but actually I noticed that
+dev_pm_opp_attach_genpd() does not work correctly if it is called
+multiple times.
 
-> And like I said already before, follow the title style we use so that I
-> don't need to edit every patch myself:
-> 
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#commit_title_is_wrong
+For example, qcom-cpufreq-nvmem calls this for every CPU because it is
+not aware that the OPP table is shared between the CPUs.
+dev_pm_opp_attach_genpd() does not check if opp_table->genpd_virt_devs
+is already set, so when it is called again for other CPUs we will:
 
-Sure.
+  - Cause a memory leak (opp_table->genpd_virt_devs is just replaced
+    with new memory)
+  - Attach the power domains multiple times
+  - Never detach the power domains from earlier calls
+  - Crash when dev_pm_opp_detach_genpd() is called the second time
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Oh well. :)
+
+I think the function should just return and do nothing if the power
+domains were already attached, just like dev_pm_opp_set_supported_hw()
+etc. But this is a bit complicated to implement with the "virt_devs"
+parameter, since callers will probably assume that to be valid if we
+return success.
+
+Another advantage of my proposal to remove the virt_devs parameter [1] :)
+
+Stephan
