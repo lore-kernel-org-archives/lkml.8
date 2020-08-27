@@ -2,112 +2,119 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82837C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DC2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4022087D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A1F72087D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:42:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4apR4B/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbgH0Olm (ORCPT
+        id S1726878AbgH0OmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:41:42 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2698 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728024AbgH0ODq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 10:42:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53970 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728127AbgH0ODq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 10:03:46 -0400
-Received: from lhreml717-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 1A92147605A1880C8E57;
-        Thu, 27 Aug 2020 15:02:28 +0100 (IST)
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml717-chm.china.huawei.com (10.201.108.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Thu, 27 Aug 2020 15:02:27 +0100
-Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
- lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1913.007;
- Thu, 27 Aug 2020 15:02:27 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "rrichter@marvell.com" <rrichter@marvell.com>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH 1/1] EDAC/ghes: Fix for NULL pointer dereference in
- ghes_edac_register()
-Thread-Topic: [PATCH 1/1] EDAC/ghes: Fix for NULL pointer dereference in
- ghes_edac_register()
-Thread-Index: AQHWeuBKuvdPb5JTBkWflf4agAVi66lKBfCAgAH3gwA=
-Date:   Thu, 27 Aug 2020 14:02:27 +0000
-Message-ID: <cd947c4ec6044521a92e2cc39eae5406@huawei.com>
-References: <20200825130108.2132-1-shiju.jose@huawei.com>
- <20200826085229.GB22390@zn.tnic>
-In-Reply-To: <20200826085229.GB22390@zn.tnic>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.87.119]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1EB6C0611E2;
+        Thu, 27 Aug 2020 07:02:07 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id 2so2672043pjx.5;
+        Thu, 27 Aug 2020 07:02:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mL4xScgLpm6GZnT5ws/9FIwwZ74rEqIv1N27JN7upQo=;
+        b=X4apR4B//8lGTz4JOK1BB3c9HouQiXw6zDBOEnLp1G3RBtqM/1rNn25hbIvvyCyWEc
+         SD8csXQRRS/pQlJfn/KAIElO13CKPLtqz83CDRkgOH03XUT9zyQ17e4SWCPbgoyb6scp
+         3P58vJFjMOBjNxC01VwTD2SM7ExaTY/19NJa/6PTuGlgkzJGPwhtTzvR7y446Gya9iRN
+         MKKoMVLKZIe360xl/jnataGlH7pkU6JLZW3sZsMX2kg4iJvYifmRvWjOJaySZIdEEyx5
+         kkqdqIpEfPGhO5OeMNTgbmh5r+Jl37OrWnFBifWR1CdGkzawemaBw+BnaQBZmTAmVPa/
+         Z53A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mL4xScgLpm6GZnT5ws/9FIwwZ74rEqIv1N27JN7upQo=;
+        b=idcCGYmIT7wy2YBPc12oZbK9cRdUiKy0U0tSRY87voUfxZOF6uK/JWdSfc5G8kLqVy
+         Hy6troDojkWyeG8Vo/bbhA3iAL7nfpqBNyl2m0VvdlegCBLCb2zHtMC7e8qkpW1RsnGe
+         9ImW1vf0wH7lLxXqfUwzd2XgED08PFCx5v9KPOhjtLtNtAg7bB9UUZ9lkXyvPCHOYnBi
+         +D0cppcWYsFENQEtXMd2ACFQcOQ4/ozLzyL6KG3VsdNOB1qTriMG39OlLAvl+a04Zu18
+         LhCJHDsVBXbGRjqP/PUiQJapI/03pKv6iKvwJTmpOT0x2PczgYiarX+kC/bwxuPRHQdP
+         r2+Q==
+X-Gm-Message-State: AOAM530FnqKSSk6S9cf+jzj//nywob0JR5Z3CwUyf4OUhFvlnxhUu4bU
+        xgwYfqtxrGnE42I3pYWDUj6rrqXVXKc=
+X-Google-Smtp-Source: ABdhPJxycp3ZEidz+QyXimUL7Vj0YcVmXgcncrMbBCfAb4vsa8/B5X+dEmxWJJszYWemsh3DV3J+pw==
+X-Received: by 2002:a17:90b:1b45:: with SMTP id nv5mr11154625pjb.35.1598536926957;
+        Thu, 27 Aug 2020 07:02:06 -0700 (PDT)
+Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id fs12sm2371092pjb.21.2020.08.27.07.02.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 07:02:05 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v5 06/20] gpiolib: add build option for CDEV v1 ABI
+Date:   Thu, 27 Aug 2020 22:00:06 +0800
+Message-Id: <20200827140020.159627-7-warthog618@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200827140020.159627-1-warthog618@gmail.com>
+References: <20200827140020.159627-1-warthog618@gmail.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gQm9yaXMsDQoNClRoYW5rcyBmb3IgcmV2aWV3aW5nLg0KDQo+LS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCj5Gcm9tOiBsaW51eC1lZGFjLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFp
-bHRvOmxpbnV4LWVkYWMtDQo+b3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgQm9y
-aXNsYXYgUGV0a292DQo+U2VudDogMjYgQXVndXN0IDIwMjAgMDk6NTINCj5UbzogU2hpanUgSm9z
-ZSA8c2hpanUuam9zZUBodWF3ZWkuY29tPg0KPkNjOiBsaW51eC1lZGFjQHZnZXIua2VybmVsLm9y
-ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj5tY2hlaGFiQGtlcm5lbC5vcmc7IHRv
-bnkubHVja0BpbnRlbC5jb207IGphbWVzLm1vcnNlQGFybS5jb207DQo+cnJpY2h0ZXJAbWFydmVs
-bC5jb207IExpbnV4YXJtIDxsaW51eGFybUBodWF3ZWkuY29tPg0KPlN1YmplY3Q6IFJlOiBbUEFU
-Q0ggMS8xXSBFREFDL2doZXM6IEZpeCBmb3IgTlVMTCBwb2ludGVyIGRlcmVmZXJlbmNlIGluDQo+
-Z2hlc19lZGFjX3JlZ2lzdGVyKCkNCj4NCj5PbiBUdWUsIEF1ZyAyNSwgMjAyMCBhdCAwMjowMTow
-OFBNICswMTAwLCBTaGlqdSBKb3NlIHdyb3RlOg0KPj4gQWZ0ZXIgdGhlICdjb21taXQgYjljYWUy
-NzcyOGQxICgiRURBQy9naGVzOiBTY2FuIHRoZSBzeXN0ZW0gb25jZSBvbg0KPmRyaXZlciBpbml0
-IiknDQo+PiBhcHBsaWVkLCBmb2xsb3dpbmcgZXJyb3IgaGFzIG9jY3VycmVkIGluIGdoZXNfZWRh
-Y19yZWdpc3RlcigpIHdoZW4NCj4+IENPTkZJR19ERUJVR19URVNUX0RSSVZFUl9SRU1PVkUgaXMg
-ZW5hYmxlZC4gVGhlIG51bGwNCj5naGVzX2h3LmRpbW1zDQo+PiBwb2ludGVyIGluIHRoZSBtY2lf
-Zm9yX2VhY2hfZGltbSgpIG9mIGdoZXNfZWRhY19yZWdpc3RlcigpIGNhdXNlZCB0aGUNCj5lcnJv
-ci4NCj4+DQo+PiBUaGUgZXJyb3Igb2NjdXJzIHdoZW4gYWxsIHRoZSBwcmV2aW91c2x5IGluaXRp
-YWxpemVkIGdoZXMgaW5zdGFuY2VzDQo+PiBhcmUgcmVtb3ZlZCBhbmQgdGhlbiBwcm9iZSBhIG5l
-dyBnaGVzIGluc3RhbmNlLiBJbiB0aGlzIGNhc2UsIHRoZQ0KPj4gZ2hlc19yZWZjb3VudCB3b3Vs
-ZCBiZSAwLCBnaGVzX2h3LmRpbW1zIGFuZCBtY2kgYWxyZWFkeSBmcmVlZC4gVGhlDQo+PiBnaGVz
-X2h3LmRpbW1zIHdvdWxkIGJlIG51bGwgYmVjYXVzZSBnaGVzX3NjYW5fc3lzdGVtKCkgd291bGQg
-bm90IGNhbGwNCj5lbnVtZXJhdGVfZGltbXMoKSBhZ2Fpbi4NCj4NCj5UcnkgdGhlIGJlbG93IGlu
-c3RlYWQgYW5kIHNlZSBpZiBpdCBmaXhlcyB0aGUgaXNzdWUgZm9yIHlvdSB0b28uDQo+DQo+SWYg
-aXQgZG9lcywgcGxzIHNlbmQgaXQgYXMgdjIgYnV0IGRvIG5vdCBhZGQgdGhlIHNwbGF0IHRvIHRo
-ZSBjb21taXQgbWVzc2FnZSAtDQo+dGhhdCdzIGEgbG90IG9mIG5vaXNlIGZvciBzb21ldGhpbmcg
-d2hpY2ggaXMgY2xlYXIgd2h5IGl0IGhhcHBlbnMgYW5kIHlvdQ0KPmV4cGxhaW4gaXQgcHJvcGVy
-bHkgaW4gdGV4dCBhbnl3YXkuDQoNCkkgdGVzdGVkIHdpdGggeW91ciBjaGFuZ2VzIGFuZCBpdCBm
-aXhlcyB0aGUgaXNzdWUuICBJIHdpbGwgc2VuZCB2Mi4NCiANCj4NCj5UaHguDQo+DQo+LS0tDQo+
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZWRhYy9naGVzX2VkYWMuYyBiL2RyaXZlcnMvZWRhYy9naGVz
-X2VkYWMuYyBpbmRleA0KPmRhNjBjMjk0NjhhNy4uNTRlYmM4YWZjNmIxIDEwMDY0NA0KPi0tLSBh
-L2RyaXZlcnMvZWRhYy9naGVzX2VkYWMuYw0KPisrKyBiL2RyaXZlcnMvZWRhYy9naGVzX2VkYWMu
-Yw0KPkBAIC01NSw2ICs1NSw4IEBAIHN0YXRpYyBERUZJTkVfU1BJTkxPQ0soZ2hlc19sb2NrKTsg
-IHN0YXRpYyBib29sDQo+X19yZWFkX21vc3RseSBmb3JjZV9sb2FkOyAgbW9kdWxlX3BhcmFtKGZv
-cmNlX2xvYWQsIGJvb2wsIDApOw0KPg0KPitzdGF0aWMgYm9vbCBzeXN0ZW1fc2Nhbm5lZDsNCj4r
-DQo+IC8qIE1lbW9yeSBEZXZpY2UgLSBUeXBlIDE3IG9mIFNNQklPUyBzcGVjICovICBzdHJ1Y3Qg
-bWVtZGV2X2RtaV9lbnRyeSB7DQo+IAl1OCB0eXBlOw0KPkBAIC0yMjUsMTQgKzIyNywxMiBAQCBz
-dGF0aWMgdm9pZCBlbnVtZXJhdGVfZGltbXMoY29uc3Qgc3RydWN0DQo+ZG1pX2hlYWRlciAqZGgs
-IHZvaWQgKmFyZykNCj4NCj4gc3RhdGljIHZvaWQgZ2hlc19zY2FuX3N5c3RlbSh2b2lkKQ0KPiB7
-DQo+LQlzdGF0aWMgYm9vbCBzY2FubmVkOw0KPi0NCj4tCWlmIChzY2FubmVkKQ0KPisJaWYgKHN5
-c3RlbV9zY2FubmVkKQ0KPiAJCXJldHVybjsNCj4NCj4gCWRtaV93YWxrKGVudW1lcmF0ZV9kaW1t
-cywgJmdoZXNfaHcpOw0KPg0KPi0Jc2Nhbm5lZCA9IHRydWU7DQo+KwlzeXN0ZW1fc2Nhbm5lZCA9
-IHRydWU7DQo+IH0NCj4NCj4gdm9pZCBnaGVzX2VkYWNfcmVwb3J0X21lbV9lcnJvcihpbnQgc2V2
-LCBzdHJ1Y3QgY3Blcl9zZWNfbWVtX2Vycg0KPiptZW1fZXJyKSBAQCAtNjMxLDYgKzYzMSw4IEBA
-IHZvaWQgZ2hlc19lZGFjX3VucmVnaXN0ZXIoc3RydWN0IGdoZXMNCj4qZ2hlcykNCj4NCj4gCW11
-dGV4X2xvY2soJmdoZXNfcmVnX211dGV4KTsNCj4NCj4rCXN5c3RlbV9zY2FubmVkID0gZmFsc2U7
-DQo+Kw0KPiAJaWYgKCFyZWZjb3VudF9kZWNfYW5kX3Rlc3QoJmdoZXNfcmVmY291bnQpKQ0KPiAJ
-CWdvdG8gdW5sb2NrOw0KPg0KPg0KPi0tDQo+UmVnYXJkcy9HcnVzcywNCj4gICAgQm9yaXMuDQo+
-DQo+aHR0cHM6Ly9wZW9wbGUua2VybmVsLm9yZy90Z2x4L25vdGVzLWFib3V0LW5ldGlxdWV0dGUN
-Cg0KVGhhbmtzLA0KU2hpanUNCg==
+Add a build option to allow the removal of the CDEV v1 ABI.
+
+Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+
+This patch is before the v2 implementation, and is non-functional until
+that patch, as some parts of that patch would be written slightly
+differently if removing v1 was not considered.
+Adding this patch after that would necessitate revisiting the v2 changes,
+so this ordering results in two simpler patches.
+
+ drivers/gpio/Kconfig | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 8e409b9c33dc..0c62e35cf3a6 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -82,6 +82,18 @@ config GPIO_CDEV
+ 
+ 	  If unsure, say Y.
+ 
++config GPIO_CDEV_V1
++	bool "Support GPIO ABI Version 1"
++	default y
++	depends on GPIO_CDEV
++	help
++	  Say Y here to support version 1 of the GPIO CDEV ABI.
++
++	  This ABI version is deprecated and will be removed in the future.
++	  Please use the latest ABI for new developments.
++
++	  If unsure, say Y.
++
+ config GPIO_GENERIC
+ 	depends on HAS_IOMEM # Only for IOMEM drivers
+ 	tristate
+-- 
+2.28.0
+
