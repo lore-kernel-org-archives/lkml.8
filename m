@@ -2,213 +2,113 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C40FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8746C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E659522BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EF1022B4E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:56:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OgcUHaNC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PnhVEzGx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgH0G4p (ORCPT
+        id S1727921AbgH0G4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:56:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43458 "EHLO
+        Thu, 27 Aug 2020 02:56:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgH0G4o (ORCPT
+        with ESMTP id S1726157AbgH0G4v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:56:44 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A90FC061264;
-        Wed, 26 Aug 2020 23:56:43 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id d139so4985147qke.11;
-        Wed, 26 Aug 2020 23:56:43 -0700 (PDT)
+        Thu, 27 Aug 2020 02:56:51 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC689C061264
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 23:56:50 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id x9so4109262wmi.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 23:56:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Er7pC6f9+6BD8gyr18V3D1Q73tbNxSRhAqtmI2X6nOM=;
-        b=OgcUHaNClZd1MpBt8rFyLzlXstxAAa1Z+jCH7sIZO2a3IlNY/xVHwS0aGv9DT0rKlU
-         JidU1D7MJIGsUthNMqBINoEJwMVj89mi8MJZvJIpHsHIqDIA+/5gGzH/UIIyJt8A03TC
-         lbXOXaRHS0X7EV9VBBXRZMPQ/iF1l8lAC8FkcELQdkO8SBBXhXgnRkGQqlQW8sipX+IG
-         5a9cusVomBE0RJLtmcBRnJKnHzkO8EFsbOua5XVlK+UjVb8yknZKgIh1UDOQKyDfseHW
-         TJOjGBEbOCty3JKm3h+NTFTzLfX8ClfmrmuQHKqp5tZuTSXorh+nr5K37La0NDQgyCSv
-         haPw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=3ayGOk+/JeyND85yxkj/Uc7Hasftwa3oWJIsR7xqt2A=;
+        b=PnhVEzGxDTQFTvuXit58KCH5pHeByiCiMtsaEd7SQWtAlnH1E1dEt0zc7ya5r5hehe
+         n7h2/Z95m162pbqJOIYAiujp+NQLMbeqGEeFlsPv0+gBkg+N7yiBv8fFtXQGld4aulWb
+         I9VNTfCHqwGxYIsWJDK83a88n25cTAZwfU8uRjCwEIstEbPZOzqB+70m8KaRcAIoE06H
+         fdFlHI8a91hJoyxF106tGoFF2152jNwVjK5PRfyD4I33bOMKTPvdvADWIKSk0PuVDOqs
+         BuaUE6WAw8S5VJ/ZtJVvKUSgjTznNSg20LOcgEiv1g+XUWQK/4q9qH+T2f0yL3pF/Ku+
+         UcDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Er7pC6f9+6BD8gyr18V3D1Q73tbNxSRhAqtmI2X6nOM=;
-        b=IULWFmLfQy1/FPgvtZE2qy2URjfJ+p3GFOoTxdaBDBF6Kz8spa5wFbJQ+N+LTTllIO
-         j7s/mpF5iPVGGK4KDPPsi2jHoerzSa2LCVZUf7kFU1i3mMgRxtFixGKR1OSMoAsFko5D
-         nuupLa1DOimzMJ7U819HAuSDc5eNX/IskAhor/0zwtOMspPi4s8osMI9rqiFrUFQegJO
-         acWU1IBqhQ/c9A1yIr9PVqZPnEgFf0nD+CW8YASN9o1zMiKMYYole/NmBQgiz37k/mMX
-         3QSNZne2/pfbtgCeCfz1faSU6r4xuqQ5AqNNVsgHogoKO1knHH/aihVTDEeXMShE7M8y
-         zJug==
-X-Gm-Message-State: AOAM533VbrAn485x4OQcyxgd1giNG/XOkBjco6Xly4Ah/c3TFguDn3iy
-        L542eWNhayq5j6pMEmw7nebqQ2fsL8/9suWc72A=
-X-Google-Smtp-Source: ABdhPJyQCl8Bfu3PWHi2CM66Yt+36l6Yois8pTCGVHF7JpLJw+3maHbONVuc1bdp/7DywNuMIzsBkrqC39EZVEpVKUo=
-X-Received: by 2002:a37:b482:: with SMTP id d124mr16796862qkf.98.1598511402861;
- Wed, 26 Aug 2020 23:56:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=3ayGOk+/JeyND85yxkj/Uc7Hasftwa3oWJIsR7xqt2A=;
+        b=VhHVchdfbkqyuJ/mKghkeBFT+T6ItDsjM9hy1chl7ggz5C8CpUlSFq+i/cTlLWAiv7
+         w85L5uiqha87796Le/RqvuW0ZEY9O42jYZ8iqI7B1tyRvzLCDMz9KJrBG9RLL/LpCF/G
+         OE4uiRQc0VdGpC3pRW+t2sN59T0Q4PWEP4FkMQ/Nivt/BXbtH9LNrk8q58lk/+7HwuX1
+         LjPXTWDDVFQqtbdiIuT6PtmyhuO6xnMfvW7+LZpDFWQjBONqnYdEh8MWhadrWsty2uok
+         2z/ilwIhc9mQamPQFiS4uj4AdlcPXKLmHiG30ivUjSQv14jaDpWAoSuH++fTaG9i/m+Z
+         dRJA==
+X-Gm-Message-State: AOAM533Yp7fVHDtM9BHvwEsEn+8mFUnaC1P+JtOAoL9Ut6Z+WHeVnhZh
+        5/DXrl1nVqI8x6E69i2On0UxZA==
+X-Google-Smtp-Source: ABdhPJylJz+xCjJvYyR6cHS82cUS96H4jeycbPF9Jp3y8JG4trgkt/CYwZ7N79D5ftT4IFWH9/RC9w==
+X-Received: by 2002:a1c:cc0c:: with SMTP id h12mr9954278wmb.57.1598511409365;
+        Wed, 26 Aug 2020 23:56:49 -0700 (PDT)
+Received: from dell ([91.110.221.141])
+        by smtp.gmail.com with ESMTPSA id g14sm2871587wmk.37.2020.08.26.23.56.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 23:56:48 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 07:56:47 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Xu Yilun <yilun.xu@intel.com>,
+        hao.wu@intel.com, lgoncalv@redhat.com,
+        matthew.gerlach@linux.intel.com, trix@redhat.com,
+        russell.h.weight@intel.com
+Subject: Re: [PATCH v4 0/2] add regmap-spi-avmm & Intel Max10 BMC chip support
+Message-ID: <20200827065647.GQ3248864@dell>
+References: <1597822497-25107-1-git-send-email-yilun.xu@intel.com>
+ <159846941049.39902.15220563960562003689.b4-ty@kernel.org>
 MIME-Version: 1.0
-References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
- <20200623134259.8197-1-mzhivich@akamai.com> <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
- <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
- <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
- <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com> <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
- <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com> <CANE52Ki8rZGDPLZkxY--RPeEG+0=wFeyCD6KKkeG1WREUwramw@mail.gmail.com>
- <20200822032800.16296-1-hdanton@sina.com> <CACS=qqKhsu6waaXndO5tQL_gC9TztuUQpqQigJA2Ac0y12czMQ@mail.gmail.com>
- <20200825032312.11776-1-hdanton@sina.com> <CACS=qqK-5g-QM_vczjY+A=3fi3gChei4cAkKweZ4Sn2L537DQA@mail.gmail.com>
- <20200825162329.11292-1-hdanton@sina.com> <CACS=qqKgiwdCR_5+z-vkZ0X8DfzOPD7_ooJ_imeBnx+X1zw2qg@mail.gmail.com>
- <CACS=qqKptAQQGiMoCs1Zgs9S4ZppHhasy1AK4df2NxnCDR+vCw@mail.gmail.com> <5f46032e.1c69fb81.9880c.7a6cSMTPIN_ADDED_MISSING@mx.google.com>
-In-Reply-To: <5f46032e.1c69fb81.9880c.7a6cSMTPIN_ADDED_MISSING@mx.google.com>
-From:   Kehuan Feng <kehuan.feng@gmail.com>
-Date:   Thu, 27 Aug 2020 14:56:31 +0800
-Message-ID: <CACS=qq+Yw734DWhETNAULyBZiy_zyjuzzOL-NO30AB7fd2vUOQ@mail.gmail.com>
-Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Jike Song <albcamus@gmail.com>, Josh Hunt <johunt@akamai.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jonas Bonn <jonas.bonn@netrounds.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Michael Zhivich <mzhivich@akamai.com>,
-        David Miller <davem@davemloft.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <159846941049.39902.15220563960562003689.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hillf,
+On Wed, 26 Aug 2020, Mark Brown wrote:
 
-> Let=E2=80=99s see if TCQ_F_NOLOC is making fq_codel different in your tes=
-ting.
+> On Wed, 19 Aug 2020 15:34:55 +0800, Xu Yilun wrote:
+> > This patchset adds the regmap-spi-avmm to support the Intel SPI Slave to
+> > AVMM Bus Bridge (spi-avmm) IP block. It also implements the usercase - the
+> > driver of Intel Max10 BMC chip which integrates this IP block.
+> > 
+> > Patch #1 implements the regmap-spi-avmm.
+> > Patch #2 implements the mfd driver of Intel Max10 BMC chip.
+> > 
+> > [...]
+> 
+> Applied to
+> 
+>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-next
+> 
+> Thanks!
+> 
+> [1/2] regmap: add Intel SPI Slave to AVMM Bus Bridge support
+>       commit: 7f9fb67358a2bcaacbdfeee12e0f19e98c8bdf55
 
-I assume you meant disabling NOLOCK for pfifo_fast.
+> [2/2] mfd: intel-m10-bmc: add Max10 BMC chip support for Intel FPGA PAC
+>       commit: 53be8bbc2f4058d4a6bfff3dadf34164bcaafa87
 
-Here is the modification,
+Que?  This is yet to be reviewed.
 
---- ./net/sched/sch_generic.c.orig      2020-08-24 22:02:04.589830751 +0800
-+++ ./net/sched/sch_generic.c   2020-08-27 10:17:10.148977195 +0800
-@@ -792,7 +792,7 @@
-        .dump           =3D       pfifo_fast_dump,
-        .change_tx_queue_len =3D  pfifo_fast_change_tx_queue_len,
-        .owner          =3D       THIS_MODULE,
--       .static_flags   =3D       TCQ_F_NOLOCK | TCQ_F_CPUSTATS,
-+       .static_flags   =3D       TCQ_F_CPUSTATS,
-
-The issue never happen again with it for over 3 hours stressing. And I
-restarted the test for two times. No any surprising. Quite stable...
-
-
-Hillf Danton <hdanton@sina.com> =E4=BA=8E2020=E5=B9=B48=E6=9C=8826=E6=97=A5=
-=E5=91=A8=E4=B8=89 =E4=B8=8B=E5=8D=882:37=E5=86=99=E9=81=93=EF=BC=9A
->
-> Hi Feng,
->
->
->
-> On Wed, 26 Aug 2020 11:12:38 +0800 Fengkehuan Feng wrote:
->
-> >Hi Hillf,
-> >
-> >I just gave more tries on the patch, and it seems not that good as what =
-I told in last email.
->
-> >I could see more packets getting stuck now...
->
-> We have more to learn here:P
->
-> >
-> >Let me explain what I am facing in detail in case we are not aligning to=
- fix the same problem.
-> >
-> >Our application is in deep learning scenario and it's based on NVIDIA NC=
-CL to do
->
-> >collective communication intra-node or inter-node (to be more specific, =
-it's data
->
-> > all-reduce on two servers witch 8 GPU nodes each).
-> >NCCL can support data transmission through TCP/RDMA/GDR. In normal, it t=
-akes
->
-> > about 1000 us for TCP or less for RDMA/GDR to transmit 512KB packet, bu=
-t
->
-> > sometimes it tooks hundreds of millisecond or several seconds to get co=
-mpleted.
-> >
->
-> >When we change the default qdisc from pfifo_fast to fq_codel, the issue =
-never
->
-> > happen, so we suspect it's something wrong within the networking stack =
-(but
->
-> > it's a bit strange that RDMA or GDR has the same problem)
->
-> Let=E2=80=99s see if TCQ_F_NOLOC is making fq_codel different in your tes=
-ting.
->
->
->
-> --- a/net/sched/sch_generic.c
->
-> +++ b/net/sched/sch_generic.c
->
-> @@ -791,7 +791,7 @@ struct Qdisc_ops pfifo_fast_ops __read_m
->
->       .dump           =3D    pfifo_fast_dump,
->
->       .change_tx_queue_len =3D  pfifo_fast_change_tx_queue_len,
->
->       .owner          =3D    THIS_MODULE,
->
-> -     .static_flags   =3D    TCQ_F_NOLOCK | TCQ_F_CPUSTATS,
->
-> +    .static_flags   =3D    TCQ_F_CPUSTATS,
->
-> };
->
-> EXPORT_SYMBOL(pfifo_fast_ops);
->
-> --
->
->
->
-> >
-> >Here is the log print from our test application,
-> >
-> >size: 512KB, use_time: 1118us, speed: 0.436745GB/s
-> >size: 512KB, use_time: 912us, speed: 0.535396GB/s
-> >size: 512KB, use_time: 1023us, speed: 0.477303GB/s
-> >size: 512KB, use_time: 919us, speed: 0.531318GB/s
-> >size: 512KB, use_time: 1129us, speed: 0.432490GB/s
-> >size: 512KB, use_time: 2098748us, speed: 0.000233GB/s
-> >size: 512KB, use_time: 1018us, speed: 0.479648GB/s
-> >size: 512KB, use_time: 1120us, speed: 0.435965GB/s
-> >size: 512KB, use_time: 1071us, speed: 0.455912GB/
->
->
->
->
->
-> JFYI I failed to find this message at lore.kernel.org perhaps
->
-> because of pure text mail.
->
->
->
-> Thanks
->
-> Hillf
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
