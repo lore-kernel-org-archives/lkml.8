@@ -2,90 +2,75 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5EDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B475DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA8922BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01B422BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgH0SW1 (ORCPT
+        id S1726995AbgH0SXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:22:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34154 "EHLO mx2.suse.de"
+        Thu, 27 Aug 2020 14:23:11 -0400
+Received: from mga03.intel.com ([134.134.136.65]:30618 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbgH0SW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:22:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 8B5EAACE3;
-        Thu, 27 Aug 2020 18:22:55 +0000 (UTC)
-Date:   Thu, 27 Aug 2020 19:22:21 +0100
-From:   Mel Gorman <mgorman@suse.de>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sched/numa: use runnable_avg to classify node
-Message-ID: <20200827182221.GG3033@suse.de>
-References: <20200825121818.30260-1-vincent.guittot@linaro.org>
- <20200827153534.GF3033@suse.de>
- <CAKfTPtCRmts+qH+hexKbhZ7595zGs1U3Q5V4-XzHgpU0dJd+1Q@mail.gmail.com>
+        id S1726234AbgH0SXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 14:23:10 -0400
+IronPort-SDR: OqdWtoJvHCp+yCu+HUM28FY9wO+YPDXSpmrsLqkn4+88XOQw188Cn2ItD93CR1+TYfEXAOxyyn
+ 6fbSJJTn74pA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="156549283"
+X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
+   d="scan'208";a="156549283"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 11:23:00 -0700
+IronPort-SDR: jzuRTxtrC9WjUaNjQ3tT2P+/zIovQmjsSHpC1Q3xP2+AQ9BS0JuUQ3REE4NY6AaFYZb69CG3Hz
+ QQ6s/MvnSSZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
+   d="scan'208";a="475331231"
+Received: from cjahne-mobl.amr.corp.intel.com (HELO [10.254.85.141]) ([10.254.85.141])
+  by orsmga005.jf.intel.com with ESMTP; 27 Aug 2020 11:22:59 -0700
+Subject: Re: [PATCH v8 0/5] Simplify PCIe native ownership detection logic
+To:     bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+References: <cover.1595649348.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <4a6d3ed0-e1e8-71e3-9d16-e2838115f8c5@linux.intel.com>
+Date:   Thu, 27 Aug 2020 11:22:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtCRmts+qH+hexKbhZ7595zGs1U3Q5V4-XzHgpU0dJd+1Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <cover.1595649348.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 05:43:11PM +0200, Vincent Guittot wrote:
-> > The testing was a mixed bag of wins and losses but wins more than it
-> > loses. Biggest loss was a 9.04% regression on nas-SP using openmp for
-> > parallelisation on Zen1. Biggest win was around 8% gain running
-> > specjbb2005 on Zen2 (with some major gains of up to 55% for some thread
-> > counts). Most workloads were stable across multiple Intel and AMD
-> > machines.
-> >
-> > There were some oddities in changes in NUMA scanning rate but that is
-> > likely a side-effect because the locality over time for the same loads
-> > did not look obviously worse. There was no negative result I could point
-> > at that was not offset by a positive result elsewhere. Given it's not
-> > a univeral win or loss, matching numa and lb balancing as closely as
-> > possible is best so
-> >
-> > Reviewed-by: Mel Gorman <mgorman@suse.de>
+Hi Bjorn,
+
+On 7/24/20 8:58 PM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> Thanks.
-> 
-> I will try to reproduce the nas-SP test on my setup to see what is going one
+> Currently, PCIe capabilities ownership status is detected by
+> verifying the status of pcie_ports_native, pcie_ports_dpc_native
+> and _OSC negotiated results (cached in  struct pci_host_bridge
+> ->native_* members). But this logic can be simplified, and we can
+> use only struct pci_host_bridge ->native_* members to detect it.
 > 
 
-You can try but you might be chasing ghosts. Please note that this nas-SP
-observation was only on zen1 and only for C-class and OMP. The other
-machines tested for the same class and OMP were fine (including zen2). Even
-D-class on the same machine with OMP was fine as was MPI in both cases. The
-bad result indicated that NUMA scanning and faulting was higher but that
-is more likely to be a problem with NUMA balancing than your patch.
-
-In the five iterations, two iterations showed a large spike in scan rate
-towards the end of an iteration but not the other three. The scan rate
-was also not consistently high so there is a degree of luck involved with
-SP specifically and there is not a consistently penalty as a result of
-your patch.
-
-The only thing to be aware of is that this patch might show up in
-bisections once it's merged for both performance gains and losses.
+Any comments on this patch set?
 
 -- 
-Mel Gorman
-SUSE Labs
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
