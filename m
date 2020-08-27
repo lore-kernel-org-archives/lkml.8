@@ -2,85 +2,113 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E25A9C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E23D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C35F12075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB65C2075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:27:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oYMYeWcS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jqbBmBmr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728484AbgH0J1i (ORCPT
+        id S1728573AbgH0J1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:27:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727030AbgH0J1h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:27:37 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ABEAC061264;
-        Thu, 27 Aug 2020 02:27:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Cbkbj9n8n3AMTxZpJL8iKP1ExJYrvJSewIYwEkXDWlc=; b=oYMYeWcS5GPq0zqTS9H03jKfiM
-        ZS8DT+uU2qnSvCgVslIG2rxMlkmBNIabvCnRj/S+CNFX3j5TacjM53XNqoP5Vii8r4lvSSH6nakdE
-        EGhwk1zfbNJcfAswUfjtPnca9kR7WceFtdvJZCZBY2zaX0a2+nNQy0niMsS8Sz9dEK+cCt2O6lcct
-        R0kTZpy0dKZp9EmOplkDhfomirTSKEsxQS5T8ncWqeuY6GI4Q/wwJO80PegSsXB5O1wBI4vwlI7IL
-        xWKtznPrRceAblMEbDrxnI/stnU7a6pJwP49WJjfFh9snBYBWvupfs0AlM3lzjHVp+jcDuUmNoJsp
-        KGputAPQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBEBw-0005mz-5D; Thu, 27 Aug 2020 09:27:32 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5C4CE301A66;
-        Thu, 27 Aug 2020 11:27:30 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1FE122C30F37F; Thu, 27 Aug 2020 11:27:30 +0200 (CEST)
-Date:   Thu, 27 Aug 2020 11:27:30 +0200
-From:   peterz@infradead.org
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tip-commits@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        x86 <x86@kernel.org>
-Subject: Re: [tip: sched/core] sched/topology: Move sd_flag_debug out of
- linux/sched/topology.h
-Message-ID: <20200827092730.GI1362448@hirez.programming.kicks-ass.net>
-References: <20200825133216.9163-1-valentin.schneider@arm.com>
- <159851487090.20229.14835640470330793284.tip-bot2@tip-bot2>
- <CAHp75VfJumPP=wKuU=OjFB11RUhPp0_5_+ogupQLFeEWKfbybA@mail.gmail.com>
+        Thu, 27 Aug 2020 05:27:45 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:38150 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727793AbgH0J1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:27:43 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598520462; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=QWdQHQuPvLrCO8rowzZZm4QHVqIRVrvYDpdAOb7yDRk=; b=jqbBmBmrHHyXOC4YYQEzjLHqgaXb0LAhEJcHrv2YNgBhG0vIC3bKiUvT4D9R5k8qukRt0j37
+ hckqFZm5hB+EUBwTXyBUJc9Fr4HiJXCCd0SQv8FvvnUNTD7nmOgyki0Y7vKWjrOi/r7PuXPQ
+ jgM7SpUvB//r3ITlJw3GY34cpjs=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f477c89c598aced542063f2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 09:27:37
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 41AC8C433C6; Thu, 27 Aug 2020 09:27:37 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B735FC433A0;
+        Thu, 27 Aug 2020 09:27:34 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B735FC433A0
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Larry Finger <Larry.Finger@lwfinger.net>
+Cc:     Joe Perches <joe@perches.com>, Pkshih <pkshih@realtek.com>,
+        "linux-wireless\@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "davem\@davemloft.net" <davem@davemloft.net>,
+        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuba\@kernel.org" <kuba@kernel.org>
+Subject: Re: [PATCH 2/6] rtlwifi: Remove unnecessary parenthese in rtl_dbg uses
+References: <cover.1595706419.git.joe@perches.com>
+        <9b2eaedb7ea123ea766a379459b20a9486d1cd41.1595706420.git.joe@perches.com>
+        <1595830034.12227.7.camel@realtek.com>
+        <ae9d562ec9ef765dddd1491d4cfb5f6d18f7025f.camel@perches.com>
+        <1595840670.17671.4.camel@realtek.com>
+        <6e0c07bc3d2f48d4a62a9e270366c536cfe56783.camel@perches.com>
+        <374359f9-8199-f4b9-0596-adc41c8c664f@lwfinger.net>
+Date:   Thu, 27 Aug 2020 12:27:32 +0300
+In-Reply-To: <374359f9-8199-f4b9-0596-adc41c8c664f@lwfinger.net> (Larry
+        Finger's message of "Mon, 27 Jul 2020 11:25:21 -0500")
+Message-ID: <87v9h4bfqz.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfJumPP=wKuU=OjFB11RUhPp0_5_+ogupQLFeEWKfbybA@mail.gmail.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 11:50:07AM +0300, Andy Shevchenko wrote:
-> On Thu, Aug 27, 2020 at 10:57 AM tip-bot2 for Valentin Schneider
-> <tip-bot2@linutronix.de> wrote:
-> >
-> > The following commit has been merged into the sched/core branch of tip:
-> 
-> > Fixes: b6e862f38672 ("sched/topology: Define and assign sched_domain flag metadata")
-> > Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Link: https://lkml.kernel.org/r/20200825133216.9163-1-valentin.schneider@arm.com
-> 
-> Hmm... I'm wondering if this bot is aware of tags given afterwards in
-> the thread?
+Larry Finger <Larry.Finger@lwfinger.net> writes:
 
-Sorry, your tag came in after I'd already queued the lot.
+> On 7/27/20 9:52 AM, Joe Perches wrote:
+>> On Mon, 2020-07-27 at 09:04 +0000, Pkshih wrote:
+>>> So, I think you would like to have parenthesis intentionally.
+>>> If so,
+>>> test1 ? : (test2 ? :)
+>>> would be better.
+>>>
+>>>
+>>> If not,
+>>> test1 ? : test2 ? :
+>>> may be what you want (without any parenthesis).
+>>
+>> Use whatever style you like, it's unimportant to me
+>> and it's not worth spending any real time on it.
+>
+> If you are so busy, why did you jump in with patches that you knew I
+> was already working on? You knew because you critiqued my first
+> submission.
+
+Yeah, I don't understand this either. First stepping on Larry's work and
+when after getting review comments claiming being busy and not caring is
+contradicting.
+
+> @Kalle: Please drop my contributions in the sequence "PATCH v2 00/15]
+> rtlwifi: Change RT_TRACE into rtl_dbg for all drivers".
+
+Is there a technical reason for that? I prefer that patchset more,
+nicely split in smaller patches and it's fully available from patchwork.
+
+Patch 15 had a build problem but I can drop that for now, it can be
+resent separately:
+
+https://patchwork.kernel.org/patch/11681621/
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
