@@ -2,171 +2,146 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6999C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9A8207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E013207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:55:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgH0Jyj (ORCPT
+        id S1728422AbgH0JzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:54:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728303AbgH0Jye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:54:34 -0400
-Received: from gaia (unknown [46.69.195.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 27 Aug 2020 05:55:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbgH0JzK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:55:10 -0400
+Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FE70C061264;
+        Thu, 27 Aug 2020 02:55:08 -0700 (PDT)
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD3A0207CD;
-        Thu, 27 Aug 2020 09:54:31 +0000 (UTC)
-Date:   Thu, 27 Aug 2020 10:54:29 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        kasan-dev@googlegroups.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 21/35] arm64: mte: Add in-kernel tag fault handler
-Message-ID: <20200827095429.GC29264@gaia>
-References: <cover.1597425745.git.andreyknvl@google.com>
- <f173aacd755e4644485c551198549ac52d1eb650.1597425745.git.andreyknvl@google.com>
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id DFFEA634C87;
+        Thu, 27 Aug 2020 12:54:56 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1kBEcT-0000Wi-9P; Thu, 27 Aug 2020 12:54:57 +0300
+Date:   Thu, 27 Aug 2020 12:54:57 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v10 1/4] media: open.rst: better document device node
+ naming
+Message-ID: <20200827095457.GB851@valkosipuli.retiisi.org.uk>
+References: <cover.1598512802.git.mchehab+huawei@kernel.org>
+ <b2eec3a6928660ca6a0f18580725026771669787.1598512802.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <f173aacd755e4644485c551198549ac52d1eb650.1597425745.git.andreyknvl@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b2eec3a6928660ca6a0f18580725026771669787.1598512802.git.mchehab+huawei@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 07:27:03PM +0200, Andrey Konovalov wrote:
-> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-> index 5e832b3387f1..c62c8ba85c0e 100644
-> --- a/arch/arm64/mm/fault.c
-> +++ b/arch/arm64/mm/fault.c
-> @@ -33,6 +33,7 @@
->  #include <asm/debug-monitors.h>
->  #include <asm/esr.h>
->  #include <asm/kprobes.h>
-> +#include <asm/mte.h>
->  #include <asm/processor.h>
->  #include <asm/sysreg.h>
->  #include <asm/system_misc.h>
-> @@ -222,6 +223,20 @@ int ptep_set_access_flags(struct vm_area_struct *vma,
->  	return 1;
->  }
+Hi Mauro,
+
+Thanks for working on this!
+
+On Thu, Aug 27, 2020 at 09:21:45AM +0200, Mauro Carvalho Chehab wrote:
+> Right now, only kAPI documentation describes the device naming.
+> However, such description is needed at the uAPI too. Add it,
+> and describe how to get an unique identifier for a given device.
+> 
+> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  .../userspace-api/media/v4l/open.rst          | 43 +++++++++++++++++--
+>  1 file changed, 40 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/userspace-api/media/v4l/open.rst b/Documentation/userspace-api/media/v4l/open.rst
+> index 38046ef20141..332763053292 100644
+> --- a/Documentation/userspace-api/media/v4l/open.rst
+> +++ b/Documentation/userspace-api/media/v4l/open.rst
+> @@ -14,12 +14,14 @@ Opening and Closing Devices
+>  ***************************
 >  
-> +static bool is_el1_mte_sync_tag_check_fault(unsigned int esr)
-> +{
-> +	unsigned int ec = ESR_ELx_EC(esr);
-> +	unsigned int fsc = esr & ESR_ELx_FSC;
-> +
-> +	if (ec != ESR_ELx_EC_DABT_CUR)
-> +		return false;
-> +
-> +	if (fsc == ESR_ELx_FSC_MTE)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
->  static bool is_el1_instruction_abort(unsigned int esr)
->  {
->  	return ESR_ELx_EC(esr) == ESR_ELx_EC_IABT_CUR;
-> @@ -294,6 +309,18 @@ static void die_kernel_fault(const char *msg, unsigned long addr,
->  	do_exit(SIGKILL);
->  }
 >  
-> +static void report_tag_fault(unsigned long addr, unsigned int esr,
-> +			     struct pt_regs *regs)
-> +{
-> +	bool is_write = ((esr & ESR_ELx_WNR) >> ESR_ELx_WNR_SHIFT) != 0;
+> -Device Naming
+> -=============
+> +.. _v4l2_device_naming:
 > +
-> +	pr_alert("Memory Tagging Extension Fault in %pS\n", (void *)regs->pc);
-> +	pr_alert("  %s at address %lx\n", is_write ? "Write" : "Read", addr);
-> +	pr_alert("  Pointer tag: [%02x], memory tag: [%02x]\n",
-> +			mte_get_ptr_tag(addr),
-> +			mte_get_mem_tag((void *)addr));
-> +}
-> +
->  static void __do_kernel_fault(unsigned long addr, unsigned int esr,
->  			      struct pt_regs *regs)
->  {
-> @@ -317,12 +344,16 @@ static void __do_kernel_fault(unsigned long addr, unsigned int esr,
->  			msg = "execute from non-executable memory";
->  		else
->  			msg = "read from unreadable memory";
-> +	} else if (is_el1_mte_sync_tag_check_fault(esr)) {
-> +		report_tag_fault(addr, esr, regs);
-> +		msg = "memory tagging extension fault";
-
-IIUC, that's dead code. See my comment below on do_tag_check_fault().
-
->  	} else if (addr < PAGE_SIZE) {
->  		msg = "NULL pointer dereference";
->  	} else {
->  		msg = "paging request";
->  	}
+> +V4L2 Device Node Naming
+> +=======================
 >  
-> +
-
-Unnecessary empty line.
-
->  	die_kernel_fault(msg, addr, esr, regs);
->  }
+>  V4L2 drivers are implemented as kernel modules, loaded manually by the
+>  system administrator or automatically when a device is first discovered.
+> -The driver modules plug into the "videodev" kernel module. It provides
+> +The driver modules plug into the ``videodev`` kernel module. It provides
+>  helper functions and a common application interface specified in this
+>  document.
 >  
-> @@ -658,10 +689,27 @@ static int do_sea(unsigned long addr, unsigned int esr, struct pt_regs *regs)
->  	return 0;
->  }
+> @@ -30,6 +32,41 @@ option CONFIG_VIDEO_FIXED_MINOR_RANGES. In that case minor numbers
+>  are allocated in ranges depending on the device node type (video, radio,
+>  etc.).
 >  
-> +static int do_tag_recovery(unsigned long addr, unsigned int esr,
-> +			   struct pt_regs *regs)
-> +{
-> +	report_tag_fault(addr, esr, regs);
+> +The device nodes supported by the Video4Linux subsystem are:
 > +
-> +	/* Skip over the faulting instruction and continue: */
-> +	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
+> +======================== ====================================================
+> +Default device node name Usage
+> +======================== ====================================================
+> +``/dev/videoX``		 Video and metadata for capture/output devices
+> +``/dev/vbiX``		 Vertical blank data (i.e. closed captions, teletext)
+> +``/dev/radioX``		 Radio tuners and modulators
+> +``/dev/swradioX``	 Software Defined Radio tuners and modulators
+> +``/dev/v4l-touchX``	 Touch sensors
+> +``/dev/v4l-subdevX``	 Video sub-devices (used by sensors and other
+> +			 components of the hardware peripheral)\ [#]_
+> +======================== ====================================================
+> +
+> +Where ``X`` is a non-negative number.
 
-Ooooh, do we expect the kernel to still behave correctly after this? I
-thought the recovery means disabling tag checking altogether and
-restarting the instruction rather than skipping over it. We only skip if
-we emulated it.
+s/number/integer/
+
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
 > +
-> +	return 0;
-> +}
+> +.. note::
 > +
+> +   1. The actual device node name is system-dependent, as udev rules may apply.
+> +   2. There is no guarantee that ``X`` will remain the same for the same
+> +      device, as the number depends on the device driver's probe order.
+> +      If you need an unique name, udev default rules produce
+> +      ``/dev/v4l/by-id/`` and ``/dev/v4l/by-path/`` directories containing
+> +      links that can be used uniquely to identify a V4L2 device node::
 > +
->  static int do_tag_check_fault(unsigned long addr, unsigned int esr,
->  			      struct pt_regs *regs)
->  {
-> -	do_bad_area(addr, esr, regs);
-> +	/* The tag check fault (TCF) is per TTBR */
-> +	if (is_ttbr0_addr(addr))
-> +		do_bad_area(addr, esr, regs);
-> +	else
-> +		do_tag_recovery(addr, esr, regs);
-
-So we never invoke __do_kernel_fault() for a synchronous tag check in
-the kernel. What's with all the is_el1_mte_sync_tag_check_fault() check
-above?
+> +	$ tree /dev/v4l
+> +	/dev/v4l
+> +	├── by-id
+> +	│   └── usb-OmniVision._USB_Camera-B4.04.27.1-video-index0 -> ../../video0
+> +	└── by-path
+> +	    └── pci-0000:00:14.0-usb-0:2:1.0-video-index0 -> ../../video0
+> +
+> +.. [#] **V4L2 sub-device nodes** (e. g. ``/dev/v4l-subdevX``) use a different
+> +       set of system calls, as covered at :ref:`subdev`.
+> +
+>  Many drivers support "video_nr", "radio_nr" or "vbi_nr" module
+>  options to select specific video/radio/vbi node numbers. This allows the
+>  user to request that the device node is named e.g. /dev/video5 instead
+> 
 
 -- 
-Catalin
+Sakari Ailus
