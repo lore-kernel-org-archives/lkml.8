@@ -2,93 +2,99 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1704C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7897122B47
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3778720707
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:35:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CvNfU05L"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QW3Qe/Nl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgH0IfL (ORCPT
+        id S1728179AbgH0Ifz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:35:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58886 "EHLO
+        Thu, 27 Aug 2020 04:35:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726938AbgH0IfK (ORCPT
+        with ESMTP id S1726826AbgH0Ify (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:35:10 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CDD8C06121A
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 01:35:09 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id w14so5487480ljj.4
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 01:35:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oeswVPmekzmrrw6bRiSTb13WJGBSyw0xgU+PLohXfnY=;
-        b=CvNfU05L4UH4U9C8Y7pwFszf3RS+zbqVqpGxDQK6st1Z5FllZUXgW/w5SNOJkn07aI
-         nTixyXOVzKptL9HbxOmPCPJEuCRNKFbdGVVwublPgEyKgNBggESPsSYmf42QuRp1Z4PZ
-         BrdBLn4cU4ZJXShj26WJ0VtpmKNtGeU6erjxAADm83FSEViQqsgvpUp55p/IPbnc3kCp
-         PtwvMSqH49V0mTUOjhkPMrgG+/o0bRypl5VsQYzgG47Rmq19CQNkiNZPlWKDHKq5BQt9
-         /0F+JC7Wa2AKpQqi1+ZtkWP0voViKHVTlaE41aJMz11P2obocHVsEbmytkEnajbj4wDW
-         oEQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oeswVPmekzmrrw6bRiSTb13WJGBSyw0xgU+PLohXfnY=;
-        b=bYePYTTJmOs/rJmMVqHIAuZQPxS3e0JXLzcozkTEx9n7/AWh+cjN/uhJ/JnX2VPjH0
-         9EPUeccpm6el9tcJZKfWsJZDED/X+GkUgRHs8csUpbOvmq78G/JYimShueEwVLPdHcTL
-         bICPOJ1MIUD7UrEtGzGo4hTcsHViGhzqSkRBRAv/rZm6kXNikZAKt/ir/9a0Ln3Swh3E
-         Qt7mDaRrKgekdy/gE6im+LiqbqpNH6xsBrEpvMK7Wfz0CHHmnCOmqwDSF8J+P1huH8Pp
-         4E34e5AgJ8eA36zhnJ+H/qFn5zVHBBJlX73wv+pNB+DBL1KWWQ9e8642WV8cRnQULwuE
-         juKw==
-X-Gm-Message-State: AOAM5339KuJCN5CAF91u+ELDY5es8duUTmWf0haMBgWqi6jrEvSzwNXx
-        TB64EBmOXxn27KpNw/KJENt4D3eCRfd5+Ve/6UAx4w==
-X-Google-Smtp-Source: ABdhPJzBTV2ftMYdAO96/aOUVuCaLn+hcnBdlrjN9wc36CQ9lpQwV/DwhVtwg4J6WmHxNcwGLJiDOsoXWWjUp8nEo1o=
-X-Received: by 2002:a2e:558:: with SMTP id 85mr1876049ljf.293.1598517308097;
- Thu, 27 Aug 2020 01:35:08 -0700 (PDT)
+        Thu, 27 Aug 2020 04:35:54 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F180BC061264;
+        Thu, 27 Aug 2020 01:35:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1MBOvjB+9m0M7w4PQdZ2NOCfksOiohzbEbMFMspbqoc=; b=QW3Qe/NlFGPNasZPafhuJ7jcdn
+        8OHUxL+KZ3L/ZK90HAdySeBpBxqH+oQMwUYY2ybWhjl6ySP4LXESV9Ky+fFPP+kBPufC5QuRsX5Op
+        5WS0EzX3egRn8JFShjXtd9q1PF9BfDdMq/HKI5ZtUVspNwVs6O38Dw2b/zGCBgxyOE9rLkxAGk0Wk
+        gUt+9/HB0x5wLyg0ZnvHLDuG58nqnVFFeVCqcdILhDiVP/ndQEh4jmuyz/h+vUhmO+F4X6mjFKca/
+        JuBA8ecVSCcH+nbv/AtSxmFZgBKgl/bK58IBvsF1yDv77smtLkq3766whaoQMmr9pLSG/3+LBnYfW
+        JSQ2cCyQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBDNw-0003ns-Gs; Thu, 27 Aug 2020 08:35:52 +0000
+Date:   Thu, 27 Aug 2020 09:35:52 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] iomap: Convert read_count to byte count
+Message-ID: <20200827083552.GC11067@infradead.org>
+References: <20200824145511.10500-1-willy@infradead.org>
+ <20200824145511.10500-7-willy@infradead.org>
 MIME-Version: 1.0
-References: <1598070473-46624-1-git-send-email-dingtianhong@huawei.com>
- <20200825095726.yvg34q74xy57qhrx@mobilestation> <CAHp75VfnCRFPQ19tdQb46PvnBV3RActKn4+hSivPN8e122Q1Aw@mail.gmail.com>
-In-Reply-To: <CAHp75VfnCRFPQ19tdQb46PvnBV3RActKn4+hSivPN8e122Q1Aw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 27 Aug 2020 10:34:57 +0200
-Message-ID: <CACRpkda+AMsAzeFQXatzL-sRnFGW5r2YYyXa3a_VO-N92pEt5Q@mail.gmail.com>
-Subject: Re: [PATCH] gpio: dwapb: add support for new hisilicon ascend soc
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Ding Tianhong <dingtianhong@huawei.com>,
-        Hoan Tran <hoan@os.amperecomputing.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel.openeuler@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824145511.10500-7-willy@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 10:20 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Tue, Aug 25, 2020 at 12:58 PM Serge Semin <fancer.lancer@gmail.com> wrote:
-> > On Sat, Aug 22, 2020 at 12:27:53PM +0800, Ding Tianhong wrote:
->
-> > BTW Linus, could you take a look at my series? Andy and Rob have finished reviewing
-> > it almost a month ago.
->
-> I was wondering the same, but in normal cases (not closer to the merge
-> window) Bart is taking care of drivers/gpio (AFAIU).
+> @@ -269,20 +263,17 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+>  	if (ctx->bio && bio_end_sector(ctx->bio) == sector)
+>  		is_contig = true;
+>  
+> -
+>  	/*
+> -	 * If we start a new segment we need to increase the read count, and we
+> -	 * need to do so before submitting any previous full bio to make sure
+> -	 * that we don't prematurely unlock the page.
+> +	 * We need to increase the read count before submitting any
+> +	 * previous bio to make sure that we don't prematurely unlock
+> +	 * the page.
+>  	 */
+>  	if (iop)
+> -		atomic_inc(&iop->read_count);
+> +		atomic_add(plen, &iop->read_count);
+> +
+> +	if (is_contig &&
+> +	    __bio_try_merge_page(ctx->bio, page, plen, poff, &same_page))
+> +		goto done;
+>  
+>  	if (!ctx->bio || !is_contig || bio_full(ctx->bio, plen)) {
 
-I just had too much to do, sorry folks :/
-It is queued now.
+I think we can simplify this a bit by reordering the checks:
 
-Yours,
-Linus Walleij
+ 	if (iop)
+		atomic_add(plen, &iop->read_count);
+
+  	if (ctx->bio && bio_end_sector(ctx->bio) == sector)
+		if (__bio_try_merge_page(ctx->bio, page, plen, poff,
+				&same_page))
+			goto done;
+		is_contig = true;
+	}
+
+	if (!is_contig || bio_full(ctx->bio, plen)) {
+		// the existing case to allocate a new bio
+	}
+
+Also I think read_count should be renamed to be more descriptive,
+something like read_bytes_pending?  Same for the write side.
