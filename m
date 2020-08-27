@@ -2,69 +2,143 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FB1C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A74C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96F6E2087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3905120825
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:59:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjsVfQcb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgH0T5k (ORCPT
+        id S1726929AbgH0T7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:57:40 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33583 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbgH0T5k (ORCPT
+        Thu, 27 Aug 2020 15:59:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53408 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgH0T7v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:57:40 -0400
-Received: by mail-io1-f65.google.com with SMTP id g14so7172016iom.0;
-        Thu, 27 Aug 2020 12:57:39 -0700 (PDT)
+        Thu, 27 Aug 2020 15:59:51 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1224DC061264;
+        Thu, 27 Aug 2020 12:59:51 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id i13so3210424pjv.0;
+        Thu, 27 Aug 2020 12:59:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BtW/ozpx4qaFKtR4WdRiyJH+a5pa+/rdp0E0zYCBtiw=;
+        b=AjsVfQcbbs8m2CmFrHV0gwxOPDDFel6Dtuz0EVsMe9pOvePSe2KyCjg5R54J213aA0
+         dYs7dOdAsqUXhUKoWNElRVtmUGHCALn0WOiQUKE3W6V6pIo5TVmtY5wvgoJScOJBWpF2
+         ZwroeOfqHbSXgH9NOC4gFVc4jTWoND5bcI6V09T8yOcf2ohLyiHpQVEaPEZNqdAIqkPI
+         UeZlWWC0M/SJWy9F5wyNplXtqhJHSmtWHVsSFfV7wIy865aw2DytyMKKrm30aAaK0iG0
+         tmW4yhgyhYPR7janwCUFLJmWVHIfAqhea6q549D12zbhnsK/fJvsZeTjhzSky3l/gGR3
+         9QZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mw0guraU922S6MNBxpmTvWKEzmeYw8ef+s1RqnYSqcc=;
-        b=qaqmu3sQ7/jMwtZ3rYPCGM1kNq0sO3BYVuRhoNUUUtcln1IN0/V3l4gLcsMvsQ3q9g
-         IWA7A6ajUEXXt9S6C5pd2g5vtst3qAKZ4ct+zk+A+HEdaNRdQyzslj3/wKpbohty8/cI
-         Zfpy/KjoGWZ+uiwJSH5lj5BxpGfC9CUdzN4n5Ee6elxMyFCW0LzabtYI8dzhjZPtOGYR
-         USY+1Tsvk2/8u/xSDnOv0ITkKaPRsSf02o+el45ptcRbEpeoomhSnC9VVFUHOPhz7cD/
-         F6LULWudhx5fsCGU4TIWogJo/pBxmzKef41MIICltGksRO+IA8WaWN9IsWGvia4C9nMr
-         4dXg==
-X-Gm-Message-State: AOAM5304GEYSuz/i2qz3VIlpPGapd3nmHRF2lmgtU+66URNEJtvNq3XS
-        ySJLg9/C2geWoHfE2NQLb1gZHWUSJ4QZIqJcRSg=
-X-Google-Smtp-Source: ABdhPJzj9g4Bi6z6ehNaMrgbd7yprxWAIe9eAWz1heNeg9PvMDqAD3QXkJo8GsOVVzCW9BspJWjCRntAj0rCDls+Fh0=
-X-Received: by 2002:a6b:8dc7:: with SMTP id p190mr5176853iod.209.1598558258904;
- Thu, 27 Aug 2020 12:57:38 -0700 (PDT)
+        bh=BtW/ozpx4qaFKtR4WdRiyJH+a5pa+/rdp0E0zYCBtiw=;
+        b=Kwd7yYFMwfiuNdfmp+yz5o1rncNWB9qPDyZtWExxlxb8jfMZz6V4ugrZG3gNDlc2Lu
+         WOP+6v7QVSuSsS2jhlV5ts3tcjxnw9hPpiU8BDYAmdO5Fxbu/SEKxLAVHnoxF0IrjO/K
+         fYqjVuI1F3I59QYY74je8A8sFKay/8fSYOgbYnWsiM8Y7qNzmXm+diQK4PlIjiMVvvkA
+         z2H+Rl7pVmDotZo9pQVnvFehHvxceSbo2XCjvkxxrWCE19vb2Ev130tTFR1lvbvpXyUv
+         OGx5aaQrrxZqel8ktyH2n2cmSUS30mOD9M0gX4Yd0fx5fDArqMupcXRW5ldyVkxDamRW
+         U/JQ==
+X-Gm-Message-State: AOAM531i0WXafupecX5sW+1tC695hmyZXBdKSlnhHGvDscXKaPjmbUaB
+        n+f660MrNuQojTSJd59GiLmX1iqtbg5j75Rw0hE=
+X-Google-Smtp-Source: ABdhPJztdvx7l/Bma3wdHdw/Knt4y7nn4/yOSwjk8CneJT6blQkPrpb2KiIZIrG26U/H2iMIqzfbq2Fkdjt5j2df1p0=
+X-Received: by 2002:a17:90a:2c06:: with SMTP id m6mr433859pjd.129.1598558390619;
+ Thu, 27 Aug 2020 12:59:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200827161237.889877377@infradead.org> <20200827161754.535381269@infradead.org>
- <20200827190804.GA128237@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-In-Reply-To: <20200827190804.GA128237@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-From:   Cameron <cameron@moodycamel.com>
-Date:   Thu, 27 Aug 2020 15:57:22 -0400
-Message-ID: <CAFCw3do_4TrZSQ6kYQ7Y1RYTuD+PfXRyZFp7gSDs2oUXrBZGqQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 6/7] freelist: Lock less freelist
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
-        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
-        oleg@redhat.com, will@kernel.org, paulmck@kernel.org
+References: <20200827192642.1725-1-krzk@kernel.org> <20200827192642.1725-13-krzk@kernel.org>
+In-Reply-To: <20200827192642.1725-13-krzk@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 27 Aug 2020 22:59:34 +0300
+Message-ID: <CAHp75VfByooMDK0bMGG-EiYg=x5NtYaweAyeJ3CXH38j_xPw9A@mail.gmail.com>
+Subject: Re: [PATCH v2 13/18] iio: imu: inv_mpu6050: Simplify with dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 3:08 PM Boqun Feng <boqun.feng@gmail.com> wrote:
-> So if try_cmpxchg_acquire() fails, we don't have ACQUIRE semantics on
-> read of the new list->head, right? Then probably a
-> smp_mb__after_atomic() is needed in that case?
+On Thu, Aug 27, 2020 at 10:28 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
 
-Yes, there needs to be an acquire on the head after a failed cmpxchg;
-does the atomic_fetch_add following that not have acquire semantics?
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Cameron
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 20 ++++++--------------
+>  1 file changed, 6 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+> index 3fee3947f772..18a1898e3e34 100644
+> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+> @@ -1475,22 +1475,14 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
+>         }
+>
+>         st->vdd_supply = devm_regulator_get(dev, "vdd");
+> -       if (IS_ERR(st->vdd_supply)) {
+> -               if (PTR_ERR(st->vdd_supply) != -EPROBE_DEFER)
+> -                       dev_err(dev, "Failed to get vdd regulator %d\n",
+> -                               (int)PTR_ERR(st->vdd_supply));
+> -
+> -               return PTR_ERR(st->vdd_supply);
+> -       }
+> +       if (IS_ERR(st->vdd_supply))
+> +               return dev_err_probe(dev, PTR_ERR(st->vdd_supply),
+> +                                    "Failed to get vdd regulator\n");
+>
+>         st->vddio_supply = devm_regulator_get(dev, "vddio");
+> -       if (IS_ERR(st->vddio_supply)) {
+> -               if (PTR_ERR(st->vddio_supply) != -EPROBE_DEFER)
+> -                       dev_err(dev, "Failed to get vddio regulator %d\n",
+> -                               (int)PTR_ERR(st->vddio_supply));
+> -
+> -               return PTR_ERR(st->vddio_supply);
+> -       }
+> +       if (IS_ERR(st->vddio_supply))
+> +               return dev_err_probe(dev, PTR_ERR(st->vddio_supply),
+> +                                    "Failed to get vddio regulator\n");
+>
+>         result = regulator_enable(st->vdd_supply);
+>         if (result) {
+> --
+> 2.17.1
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
