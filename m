@@ -2,98 +2,121 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA031C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCF3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEF6620738
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:33:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598520799;
-	bh=hj3WI8IjaMyp0FgWAa0QJ/wRxCb+fiu5gxIPrEPEPQ8=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lgovlxmFoux5N9Y5u5oQS2goQaSt2UdxgyoQ/h9ZvsgKdQsXr3bqLXAg3lefK6skl
-	 k6nrsyX4+Yl1pNI1B9w5FObl2wCzEnoTzitMJ/F/QLiTbtwLgGS8ZtYjnkspFpUFVQ
-	 N3lqZuZee96Du5VpBQtI3MhDzJsQWf7k4uD4lVPU=
+	by mail.kernel.org (Postfix) with ESMTP id 1DB0D20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:33:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ddAY1fb9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgH0JdS (ORCPT
+        id S1728400AbgH0JdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:33:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726826AbgH0JdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:33:13 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07105207CD;
-        Thu, 27 Aug 2020 09:33:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598520793;
-        bh=hj3WI8IjaMyp0FgWAa0QJ/wRxCb+fiu5gxIPrEPEPQ8=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=h75oHKk9C5JRAOyvDpGW+zA2Vz77XGTqhV0jO6IJ3CYDr3O/1lLSvSWW7tuZ+3B5k
-         cClAj2yxblsYOdsI6wxTn2NhkL3BOeIOihR0BgcU11rpkOlDP/9G4J8fIKbBK2ZAmi
-         kH1lvVYuqhHbPXHDl0YZGiUfKhETvNEmmbNqPF14=
-Date:   Thu, 27 Aug 2020 11:33:10 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] HID: core: Sanitize event code and type when mapping
- input
-In-Reply-To: <20200826134658.1046338-1-maz@kernel.org>
-Message-ID: <nycvar.YFH.7.76.2008271132050.27422@cbobk.fhfr.pm>
-References: <20200826134658.1046338-1-maz@kernel.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Thu, 27 Aug 2020 05:33:25 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:43919 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726851AbgH0JdO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:33:14 -0400
+X-UUID: d56d71e04f374e5a8d0e659889c3b18c-20200827
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=sOsx+/Ixg/H533GD9DuoQ2e+BVG8OHUWraoXKvxGaVM=;
+        b=ddAY1fb9gsdG55Iau0UxKuq5MXY4ZuY4ZXmYZxpmfUKMTwHei30ED9qft498qqU9svQVDLC0N9pDiKGfV/A9R15y+S/gXsTmo3SsMhYGNJBUWm+f9H1MUkOxaZVJ0iu/7Y1TklEIENV9OW5WLItJbVDsHkPCoq0opZZHV+qjZi8=;
+X-UUID: d56d71e04f374e5a8d0e659889c3b18c-20200827
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chun-hung.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 876698712; Thu, 27 Aug 2020 17:33:09 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 27 Aug 2020 17:33:07 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 27 Aug 2020 17:33:08 +0800
+From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
+To:     <mirq-linux@rere.qmqm.pl>, Jonathan Hunter <jonathanh@nvidia.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        Mao Yong <yong.mao@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Ritesh Harjani <riteshh@codeaurora.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>
+CC:     <kernel-team@android.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Subject: [PATCH v1 1/2] mmc: cqhci: add new cqhci_host_ops pre_enable() and post_disable()
+Date:   Thu, 27 Aug 2020 17:33:02 +0800
+Message-ID: <1598520783-25250-2-git-send-email-chun-hung.wu@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1598520783-25250-1-git-send-email-chun-hung.wu@mediatek.com>
+References: <1598520783-25250-1-git-send-email-chun-hung.wu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 1A51BED8B7CD5237DD2E95BA511B67CCBDB8EA47EF3D2DB61BDEFA5BDD9EBA022000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020, Marc Zyngier wrote:
-
-> When calling into hid_map_usage(), the passed event code is
-> blindly stored as is, even if it doesn't fit in the associated bitmap.
-> 
-> This event code can come from a variety of sources, including devices
-> masquerading as input devices, only a bit more "programmable".
-> 
-> Instead of taking the event code at face value, check that it actually
-> fits the corresponding bitmap, and if it doesn't:
-> - spit out a warning so that we know which device is acting up
-> - NULLify the bitmap pointer so that we catch unexpected uses
-> 
-> Code paths that can make use of untrusted inputs can now check
-> that the mapping was indeed correct and bail out if not.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
-> * From v1:
->   - Dropped the input.c changes, and turned hid_map_usage() into
->     the validation primitive.
->   - Handle mapping failures in hidinput_configure_usage() and
->     mt_touch_input_mapping() (on top of hid_map_usage_clear() which
->     was already handled)
-
-Benjamin, could you please run this through your regression testing 
-machinery?
-
-It's a non-trivial core change, at the same time I'd like not to postpone 
-it for 5.10 due to its nature.
-
-Thanks,
-
--- 
-Jiri Kosina
-SUSE Labs
+QWRkIHByZV9lbmFibGUoKSBhbmQgcG9zdF9kaXNhYmxlKCkgZm9yIGNxaGNpX2hvc3Rfb3BzLg0K
+QWRkIGhvb2sgZnVuY3Rpb25zIGJlZm9yZSBjcWhjaSBlbmFibGUgYW5kDQphZnRlciBjcWhjaSBk
+aXNhYmxlIGZvciBwbGF0Zm9ybXMgbmVlZCB0aGVtLg0KDQpTaWduZWQtb2ZmLWJ5OiBDaHVuLUh1
+bmcgV3UgPGNodW4taHVuZy53dUBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL21tYy9ob3N0
+L2NxaGNpLmMgfCAgICA2ICsrKysrKw0KIGRyaXZlcnMvbW1jL2hvc3QvY3FoY2kuaCB8ICAgIDIg
+KysNCiAyIGZpbGVzIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9tbWMvaG9zdC9jcWhjaS5jIGIvZHJpdmVycy9tbWMvaG9zdC9jcWhjaS5jDQppbmRleCBj
+ZmE4N2RmLi42OTdmZTQwIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9tbWMvaG9zdC9jcWhjaS5jDQor
+KysgYi9kcml2ZXJzL21tYy9ob3N0L2NxaGNpLmMNCkBAIC0zNzYsNiArMzc2LDkgQEAgc3RhdGlj
+IHZvaWQgY3FoY2lfb2ZmKHN0cnVjdCBtbWNfaG9zdCAqbW1jKQ0KIAllbHNlDQogCQlwcl9kZWJ1
+ZygiJXM6IGNxaGNpOiBDUUUgb2ZmXG4iLCBtbWNfaG9zdG5hbWUobW1jKSk7DQogDQorCWlmIChj
+cV9ob3N0LT5vcHMtPnBvc3RfZGlzYWJsZSkNCisJCWNxX2hvc3QtPm9wcy0+cG9zdF9kaXNhYmxl
+KG1tYyk7DQorDQogCW1tYy0+Y3FlX29uID0gZmFsc2U7DQogfQ0KIA0KQEAgLTU4MCw2ICs1ODMs
+OSBAQCBzdGF0aWMgaW50IGNxaGNpX3JlcXVlc3Qoc3RydWN0IG1tY19ob3N0ICptbWMsIHN0cnVj
+dCBtbWNfcmVxdWVzdCAqbXJxKQ0KIAkJX19jcWhjaV9lbmFibGUoY3FfaG9zdCk7DQogDQogCWlm
+ICghbW1jLT5jcWVfb24pIHsNCisJCWlmIChjcV9ob3N0LT5vcHMtPnByZV9lbmFibGUpDQorCQkJ
+Y3FfaG9zdC0+b3BzLT5wcmVfZW5hYmxlKG1tYyk7DQorDQogCQljcWhjaV93cml0ZWwoY3FfaG9z
+dCwgMCwgQ1FIQ0lfQ1RMKTsNCiAJCW1tYy0+Y3FlX29uID0gdHJ1ZTsNCiAJCXByX2RlYnVnKCIl
+czogY3FoY2k6IENRRSBvblxuIiwgbW1jX2hvc3RuYW1lKG1tYykpOw0KZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvbW1jL2hvc3QvY3FoY2kuaCBiL2RyaXZlcnMvbW1jL2hvc3QvY3FoY2kuaA0KaW5kZXgg
+NDM3NzAwMS4uODliZjZhZCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbW1jL2hvc3QvY3FoY2kuaA0K
+KysrIGIvZHJpdmVycy9tbWMvaG9zdC9jcWhjaS5oDQpAQCAtMjA2LDYgKzIwNiw4IEBAIHN0cnVj
+dCBjcWhjaV9ob3N0X29wcyB7DQogCXZvaWQgKCpkaXNhYmxlKShzdHJ1Y3QgbW1jX2hvc3QgKm1t
+YywgYm9vbCByZWNvdmVyeSk7DQogCXZvaWQgKCp1cGRhdGVfZGNtZF9kZXNjKShzdHJ1Y3QgbW1j
+X2hvc3QgKm1tYywgc3RydWN0IG1tY19yZXF1ZXN0ICptcnEsDQogCQkJCSB1NjQgKmRhdGEpOw0K
+Kwl2b2lkICgqcHJlX2VuYWJsZSkoc3RydWN0IG1tY19ob3N0ICptbWMpOw0KKwl2b2lkICgqcG9z
+dF9kaXNhYmxlKShzdHJ1Y3QgbW1jX2hvc3QgKm1tYyk7DQogfTsNCiANCiBzdGF0aWMgaW5saW5l
+IHZvaWQgY3FoY2lfd3JpdGVsKHN0cnVjdCBjcWhjaV9ob3N0ICpob3N0LCB1MzIgdmFsLCBpbnQg
+cmVnKQ0KLS0gDQoxLjcuOS41DQo=
 
