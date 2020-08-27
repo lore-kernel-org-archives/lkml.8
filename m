@@ -2,129 +2,174 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBE8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CACA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6CF72087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA10D2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:55:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SCcrh3qe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNz8+bhT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbgH0SyZ (ORCPT
+        id S1726947AbgH0SzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:54:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43210 "EHLO
+        Thu, 27 Aug 2020 14:55:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgH0SyZ (ORCPT
+        with ESMTP id S1726197AbgH0SzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:54:25 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE107C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:54:24 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id m4so1461898oos.6
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:54:24 -0700 (PDT)
+        Thu, 27 Aug 2020 14:55:00 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A4F1C061264;
+        Thu, 27 Aug 2020 11:55:00 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id d11so9024928ejt.13;
+        Thu, 27 Aug 2020 11:55:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BWqUveoeKZMIhm3GjalPyEQmnfCWpI1alLQjjqHt+NU=;
-        b=SCcrh3qeuy5Pqm6KFI/xAj5Y/ENojt7/jYbC4IkRyQsWuyYTXztzy3Y/JwrtY3NGfK
-         VJA5M/PFjjZNQZgCL4ipJNIe/29Icg2ojlK0A2jBoN2fPMa3Ljmy6wP/gwYIhQzI5LFf
-         x0xQLnuGiXjWg1XJngPFxg+N/oncHwtwyx/QJ1d2o4CCgIWvNNh2YmvscoicgdTapmkx
-         Avigv/QQopdYQ8XfX6SK5xvTrgHlbrIT1J7hzhJtXLWN6NpzInoHSkk2n5mDMmDHnKXh
-         nYZv6OIfmGztUzuVBFq6FpcWumyGQO5lvbRrUQpmA06r767ZOPzu2PJXJZFndd22/MmJ
-         50mw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LHHKRlpGcLJvCKpegwxUOUmIDZhAqnwwqQX2kkQlM7s=;
+        b=QNz8+bhTuuSkmXiGILO4+og6Sl1O4SV5ipW6T/vNZSvL9MXrAJy7C07y5OxL0U3W9f
+         X8UpK761iwRZR/2m/xhmNila1tS7nUqofK1sHe1vm1aJC1wbIPL8/Q7/ZKwXB3zQOfNV
+         HYuz5T0vULxgCZKFHsQ9DdJ2NV1N4bjw656Z+TMM7bJ5Rf9Y5nNuOGtEKh5UmhP1G9vx
+         kP1YpVSFFvLoCgMDJVhU38/5hNmoA99DXrdSMFN1jYXJ1YFQcfDpOe8Vqh54/DzbPTfs
+         +dNgdhkFt23twviXTBwdovKxmBKjYj1LWkvhMkp1CxVx84UKdnRybvsaU2/XsM9R84Js
+         YO6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BWqUveoeKZMIhm3GjalPyEQmnfCWpI1alLQjjqHt+NU=;
-        b=FpeM8uc6Xfkunl5aBENdbjVBAwuq6O3e+OLQ6wIvA3CILJdLSeTrQDpvXNBjHU6hZf
-         oKDo8x1a2neKy6Czz3zxQlo0MqM4aljI4nDfifXKKCKsSXQR2esBRWWAHM3tDWMlajrK
-         y2Qqhs4ehP71w4zLfGVDLHMoRZfX94qt8QFnmLUvbjrXnEUelSMt4e96fukQWWl9xPTI
-         cQfqV5heB46Y1qHc0p0Z0jQymUUJgMC0nCLP25QBI9+rj2MWLxcLSoyZSQEovzzx65/j
-         eQ0xy7s0uimDvkW/e+46kCCbtJ1cLS+75pW6r/ZDJR8Ae/4+6tXjuTn2A5TNCqo4Zt/h
-         pSBA==
-X-Gm-Message-State: AOAM530/tP89+r2InS1r0Xtvj4iyce+vnsxIbeRR/0C+X1ZRt15KblUj
-        rn8OL8b3GYwfcNPGnUM8n4x6c0z0iNw3ODVtuRz6ZA==
-X-Google-Smtp-Source: ABdhPJy8T8ttMmxpmzdBmMLZEkAuTLQvD2G2liKWH2H+Jb7ky01tXVyV7oYkkXZ8NroZL6tIlOl+3FM2CROEfwK+7xM=
-X-Received: by 2002:a4a:aa42:: with SMTP id y2mr9682938oom.88.1598554463803;
- Thu, 27 Aug 2020 11:54:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LHHKRlpGcLJvCKpegwxUOUmIDZhAqnwwqQX2kkQlM7s=;
+        b=SQ2Dw0LBKAyJP0xlKIPy+n9N4PFMVf8eq2+MRqWuXkSLoY9f+61L74nA0KSOvb+2hl
+         y2KhuTHvjlGnUDsdgV/LxyH4ripSctTW1mtlC176s5T9ZyYozO8SXa4u/BrqyvOpb8cA
+         Qoakv4L+KlYKgqTnASXSEpNNn9rIusmRyJfahBET/d3fvDukYsq/vlT/gu86yn/1Wqwp
+         7nZg/lSO3mFw6wK6c978Sqq3iZOcZIQa4HeABjRT5KCapmMaWOyU55ziOx1IyQ30EyAs
+         HhpDDy2Isgodei/AaOjaB6jak5TUYP2RrI9EfGh9kw+gbld1/JZX0D/pGZg/GXsn7ebF
+         XP9g==
+X-Gm-Message-State: AOAM531eDEXms3SlM/PuMdd1TXivB/oEmQ1YbRZUXhqTQO7v0QMYPQ1x
+        efAIw2C+9UFtLuOkjjzWlZc=
+X-Google-Smtp-Source: ABdhPJzAisnvpJNwmg6E75pm+Dss0ilEJO1mrAtf34l/Azy1U3zXvkxujPh0hP3H2R4xka8Ms08ijg==
+X-Received: by 2002:a17:906:22d6:: with SMTP id q22mr14495824eja.242.1598554499144;
+        Thu, 27 Aug 2020 11:54:59 -0700 (PDT)
+Received: from BV030612LT ([188.24.159.61])
+        by smtp.gmail.com with ESMTPSA id g11sm2100748edt.88.2020.08.27.11.54.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 11:54:58 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 21:54:56 +0300
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH v5 1/3] dt-bindings: interrupt-controller: Add Actions
+ SIRQ controller binding
+Message-ID: <20200827185456.GA2475396@BV030612LT>
+References: <cover.1597852360.git.cristian.ciocaltea@gmail.com>
+ <6bd99d4a7e50904b57bb3ad050725fbb418874b7.1597852360.git.cristian.ciocaltea@gmail.com>
+ <20200825220913.GA1423455@bogus>
+ <20200826214220.GA2444747@BV030612LT>
+ <CAL_JsqLvXDFL6vFooPYLJ1QnZ7L756fNesXo-LW_scs9rV-zPA@mail.gmail.com>
+ <20200827100629.GA2451538@BV030612LT>
+ <64580e3b9acada6ff4ae9fdef02ac304@kernel.org>
+ <20200827152428.GA2467154@BV030612LT>
+ <7de137f820d5a3b7921bda0751509f85@kernel.org>
 MIME-Version: 1.0
-References: <20200827123627.538189-1-gregkh@linuxfoundation.org>
- <3d8de519-65b3-123b-8ace-e820982884e0@labbott.name> <20200827160506.GC684514@kroah.com>
- <CAMi1Hd1Ch1RWvOTnON3tsrucaKThTuGQnwNFo94GqUjufVmnOg@mail.gmail.com> <20200827171745.GA701089@kroah.com>
-In-Reply-To: <20200827171745.GA701089@kroah.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 27 Aug 2020 11:54:12 -0700
-Message-ID: <CALAqxLVOEBaLtkbL-OENYSK0dUc_PBo-oC=BOBFQbPh-bkWTgQ@mail.gmail.com>
-Subject: Re: [PATCH] staging: ion: remove from the tree
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Amit Pundir <amit.pundir@linaro.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Laura Abbott <laura@labbott.name>,
-        Shuah Khan <shuah@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian Brauner <christian@brauner.io>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7de137f820d5a3b7921bda0751509f85@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 10:17 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> On Thu, Aug 27, 2020 at 10:31:41PM +0530, Amit Pundir wrote:
-> > I don't know what is the right thing to do here. I just want to
-> > highlight that AOSP's audio (codec2) HAL depends on the ION system
-> > heap and it will break AOSP for people who boot mainline on their
-> > devices, even for just testing purpose like we do in Linaro. Right now
-> > we need only 1 (Android specific out-of-tree) patch to boot AOSP with
-> > mainline and Sumit is already trying to upstream that vma naming
-> > patch. Removal of in-kernel ION, will just add more to that delta.
->
-> As AOSP will continue to rely on ION after December of this year, all
-> you are doing is postponing the inevitable a few more months.
->
-> Push back on the Android team to fix up the code to not use ION, they
-> know this needs to happen.
+On Thu, Aug 27, 2020 at 04:42:04PM +0100, Marc Zyngier wrote:
+> Cristian,
+> 
+> On 2020-08-27 16:24, Cristian Ciocaltea wrote:
+> > Hi Marc,
+> > 
+> > On Thu, Aug 27, 2020 at 11:35:06AM +0100, Marc Zyngier wrote:
+> > > On 2020-08-27 11:06, Cristian Ciocaltea wrote:
+> > > > On Wed, Aug 26, 2020 at 04:48:38PM -0600, Rob Herring wrote:
+> > > > > On Wed, Aug 26, 2020 at 3:42 PM Cristian Ciocaltea
+> > > > > <cristian.ciocaltea@gmail.com> wrote:
+> > > 
+> > > [...]
+> > > 
+> > > > > Ultimately the GIC trigger type has to be
+> > > > > something. Is it fixed or passed thru? If the latter, just use 0
+> > > > > (IRQ_TYPE_NONE) if the GIC trigger mode is not fixed. Having some sort
+> > > > > of translation of the trigger is pretty common.
+> > > >
+> > > > Yes, as explained above, the SIRQ controller performs indeed the
+> > > > translation of the incoming signal. So if I understand correctly, your
+> > > > suggestion would be to use the following inside the sirq node:
+> > > >
+> > > > interrupts = <GIC_SPI 13 IRQ_TYPE_NONE>, /* SIRQ0 */
+> > > >              [...]
+> > > 
+> > > Please don't. If you are describing a GIC interrupt, use a
+> > > trigger that actually exists. Given that you have a 1:1
+> > > mapping between input and output, just encode the output
+> > > trigger that matches the input.
+> > 
+> > Understood, the only remark here is that internally, the driver will
+> > not use this information and instead will continue to rely on the input
+> > to properly set the trigger type for the output.
+> 
+> It's fine. The binding has to be consistent on its own, but
+> doesn't dictate the way the driver does thing.
+> 
+> > The question is if the driver should also emit a warning (or error?)
+> > when the trigger type supplied via DT doesn't match the expected value.
+> 
+> Rob will tell you that the kernel isn't a validation tool for broken
+> DTs. Shout if you want, but you are allowed to simply ignore the
+> output trigger for example
+> 
+> > If yes, we should also clarify what the user is supposed to provide in
+> > the controller node: the trigger type before the conversion (the input)
+> > or the one after the conversion (the output).
+> 
+> The output of a SIRQ should be compatible with the GIC input it is
+> attached to. You can have:
+> 
+>         device (LEVEL_LOW) -> SIRQ (LEVEL_HIGH) -> GIC
+> 
+> but you can't have:
+> 
+>         device (LEVEL_LOW) -> SIRQ (EDGE_RISING) -> GIC
+> 
+> because that's not an acceptable transformation for the SIRQ,
+> nor can you have:
+> 
+>         device (EDGE_FALLING) -> SIRQ (EDGE_FALLING) -> GIC
+> 
+> because EDGE_FALLING isn't a valid input for the GIC.
+> 
+> In both of the invalid cases, you would be free to apply
+> which ever transformation actually makes sense, and shout
+> at the user if you want to help them debugging their turf.
+> The later part is definitely optional.
+> 
+> Hope this helps,
 
-The point though, is your main premise that no one is using this isn't true.
+This certainly helps a lot, now I have a clear understanding of what is
+to be done next.
 
-I'm actively working with Hridya and folks on the codec2 HAL side to
-transition this on the userland side:
-  https://android-review.googlesource.com/c/platform/frameworks/av/+/1368918/3
+>         M.
+> -- 
+> Jazz is not dead. It just smells funny...
 
-I'd like AOSP to not use ION after September (though being external I
-can't promise anything), much less continuing after December.
-
-I want this migration to happen as much as anyone.  But I'd prefer to
-keep ION in staging until after the LTS is announced. Having both
-around helps development for the transition, which helps us have a
-reliable solution, which helps vendors to migrate and be able to do
-comparative performance testing.
-
-I do appreciate that keeping it isn't free, but I also don't feel the
-chaos-monkey approach here is really motivational in the way you
-intend.
-
-thanks
--john
+Many thanks for the detailed explanations,
+Cristi
