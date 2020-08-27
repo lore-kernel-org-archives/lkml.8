@@ -2,82 +2,84 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A451C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EE5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F38952177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C444A2177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:54:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbgH0Mxj (ORCPT
+        id S1729161AbgH0My0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 08:53:39 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:50104 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729135AbgH0Mv0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 08:51:26 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04392;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U7.HW59_1598532682;
-Received: from B-455UMD6M-2027.local(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0U7.HW59_1598532682)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 27 Aug 2020 20:51:23 +0800
-Subject: Re: [PATCH v6 5/5] KVM: MIPS: clean up redundant kvm_run parameters
- in assembly
-To:     pbonzini@redhat.com
-Cc:     kvm@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>, chenhuacai@gmail.com
-References: <20200623131418.31473-1-tianjia.zhang@linux.alibaba.com>
- <20200623131418.31473-6-tianjia.zhang@linux.alibaba.com>
- <e447bb5c-8b83-dfb1-a293-f2e9e586c2ec@flygoat.com>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <fdc4635f-7e44-3227-ea65-db28abde42d6@linux.alibaba.com>
-Date:   Thu, 27 Aug 2020 20:51:22 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.1.1
+        Thu, 27 Aug 2020 08:54:26 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36498 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729089AbgH0MyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 08:54:03 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 48D11DC603F684ED7B2A;
+        Thu, 27 Aug 2020 20:53:45 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Thu, 27 Aug 2020
+ 20:53:38 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <rogerq@ti.com>, <tony@atomide.com>, <krzk@kernel.org>,
+        <ladis@linux-mips.org>, <bbrezillon@kernel.org>,
+        <peter.ujfalusi@ti.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v3] memory: omap-gpmc: Fix build error without CONFIG_OF
+Date:   Thu, 27 Aug 2020 20:53:16 +0800
+Message-ID: <20200827125316.20780-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20200826125919.22172-1-yuehaibing@huawei.com>
+References: <20200826125919.22172-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <e447bb5c-8b83-dfb1-a293-f2e9e586c2ec@flygoat.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Paolo
+If CONFIG_OF is n, gcc fails:
+
+drivers/memory/omap-gpmc.o: In function `gpmc_omap_onenand_set_timings':
+omap-gpmc.c:(.text+0x2a88): undefined reference to `gpmc_read_settings_dt'
+
+Add gpmc_read_settings_dt() helper function, which zero the gpmc_settings
+so the caller doesn't proceed with random/invalid settings.
+
+Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v3: zero gpmc_settings
+v2: add gpmc_read_settings_dt() stub
+---
+ drivers/memory/omap-gpmc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+index cd9e80748591..e026b4cd3612 100644
+--- a/drivers/memory/omap-gpmc.c
++++ b/drivers/memory/omap-gpmc.c
+@@ -2310,6 +2310,10 @@ static void gpmc_probe_dt_children(struct platform_device *pdev)
+ 	}
+ }
+ #else
++void gpmc_read_settings_dt(struct device_node *np, struct gpmc_settings *p)
++{
++	memset(p, 0, sizeof(struct gpmc_settings));
++}
+ static int gpmc_probe_dt(struct platform_device *pdev)
+ {
+ 	return 0;
+-- 
+2.17.1
 
 
-Do you need any other comments on this patch?
-
-
-Thanks,
-
-Tianjia
-
-
-On 7/16/20 10:10 AM, Jiaxun Yang wrote:
->
->
-> ÔÚ 2020/6/23 21:14, Tianjia Zhang Ð´µÀ:
->> In the current kvm version, 'kvm_run' has been included in the 
->> 'kvm_vcpu'
->> structure. For historical reasons, many kvm-related function parameters
->> retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time. This
->> patch does a unified cleanup of these remaining redundant parameters.
->>
->> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
->> Reviewed-by: Huacai Chen <chenhc@lemote.com>
->
-> Tested-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->
-> Can confirm it works on Loongson-3A4000.
->
-> Thanks!
->
->> ---
->
