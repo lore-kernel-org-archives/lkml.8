@@ -2,195 +2,120 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCFAC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FC1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1DBA206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BB02206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:13:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wWGTwH6r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZwwRrgcx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgH0JMn (ORCPT
+        id S1728274AbgH0JNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:12:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36534 "EHLO
+        Thu, 27 Aug 2020 05:13:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbgH0JMm (ORCPT
+        with ESMTP id S1726266AbgH0JNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:12:42 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F9C8C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 02:12:42 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id z12so1435956uam.12
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 02:12:42 -0700 (PDT)
+        Thu, 27 Aug 2020 05:13:06 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A123C061264;
+        Thu, 27 Aug 2020 02:13:06 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mt12so2295152pjb.4;
+        Thu, 27 Aug 2020 02:13:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=genBMQ0a0FJW4bbCFUIpD9NvnERWSoYFNlijRZogzqE=;
-        b=wWGTwH6rDBLBUPsoZPSY8zLf+v4FaY000pUyfkrjQsbk5ndSya7swAwCjx+PBxyLd2
-         8w7VqQt0JeOfkVO1g9KmsaGJ0KCbIeH1j2XZAIecfsDoObi3OXEHHLBeBSFXbDiiKYIk
-         FZk0aSvKgHnfcjjmRdkAbSS8O0/3Nis5nDKyhunZd7syVxgAN7xmqFE0hMA0GX4AuK1x
-         olDTrvMXmqwY7u1HjykdCwBhPRbPZJx2YB21nOw9zLRSl3BzPWLAhGiNMJV7ktSsHGaU
-         WGBP0xG6aBADPd8HKhpLzs6sz69xUc32vNKefXqooN9i0pXVqB+2CRid2KpYdbX3X1hX
-         Z8zw==
+        bh=Z0H+L9UPSd/5Nu2wIneYTHQhHhgEl54jJSjInRrKpcg=;
+        b=ZwwRrgcx0BCZjQmIMWLsESg08YIGYglCC8a1OtDOVI2JFGl93NfDumD2LZfcXl/W6f
+         In0XzWihsI2Q+7BNKeCBULtVamXhWfLRfWzM9G/f4LmwlwoTDBrXWyxGxRj036uP1wkv
+         V7sD2rE9CmsrL8LjUAuN+RfLp18eqKDVuKT9khk4MIvjGLks3US8agjk5W/zoha+IExh
+         eA7FMb7GFqKO4UGCyivZCQZCNZBQWjkPJTBV8wYF5pm7U1WsGli7IDN6jWqEGBu6yAG0
+         CIUjnJv0hvIxwjZNoixU9c4Ii5K/MskOkBjshCoDRn7Hdx3HC6F/WncO2m7khkUBsQ6z
+         kI4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=genBMQ0a0FJW4bbCFUIpD9NvnERWSoYFNlijRZogzqE=;
-        b=GgSHSIXrU2UDv4ZfVAINKW1DtWWYbhXVxzyyiwp5uufxh3DOEQYPL6Q2GzJB3ZeuNx
-         0nukdIsNvPAvD5g8hO68qsPWlkeZj+W0hWhoM8DaXKEQsjdSoJNqgxVgHUYmfOPQjfpU
-         oxInHCZK55xRoG1rgdly184OQWZ8KdRJIjZFfLI4aRef/sh/tAhy+KgFh/eI6ZIV+lJz
-         2oWphhHd1ZVsqPiBr4M0FlniNFpOnu7Y1lw4XhlETwvFCkms/KgRHvIvokoHT3He9n0P
-         cqxmUOFTE1WtYuMzPiebbhxteNpI7uqljZH3uXVTHH8JduAilsxZjDCnootRX1b4Sh4N
-         PdeQ==
-X-Gm-Message-State: AOAM5317k3FQYBkuYcVnq7usIlKi41LmIUURanKiVXW4WDKZZHAg5L9z
-        f67p6LZAsdMPn1YijPIjXcBJWFzDUXFC1wBdEAI04IYKA5ZWLXUG
-X-Google-Smtp-Source: ABdhPJz/w7KnfMyCLw7D++/e98PHxfOdwJ7I+TNih3N8LYOWe6N67z2J4HWLIxIxyXEUTk8EOT1pxUvHsR2haz0mGY8=
-X-Received: by 2002:ab0:142e:: with SMTP id b43mr11615047uae.7.1598519560755;
- Thu, 27 Aug 2020 02:12:40 -0700 (PDT)
+        bh=Z0H+L9UPSd/5Nu2wIneYTHQhHhgEl54jJSjInRrKpcg=;
+        b=nTbtdIw9cHc8S0rDLS5AoWCDchEKgaXa4DsSuDUSIoWTAsC+/cOUwofxV5skWo9tc0
+         9479BOT6hata4Qm0mmk6NVukqiRqsxpcVFV88Y3k8iGccyTpqMk69V/GV0XdQ3MrhybO
+         6Iqrawee3w+rQ/h+/ciVjt9r0AY51YcGxuWdtjjY3SlSB85sRfHZAN82bHNMEAjJayVL
+         4IHTD8ItJmIQCO4XLj81h6Nevg6j8itp6Px3U8nc0ppMkhRBagYg4R66auzvblvxv99N
+         wHKBNUQhGE31Ksgaqo6WhgZtaJ6ZXoWSndMtHjfhGrDYnCqtbJwhS+GaDRAOgWksTprB
+         kk7A==
+X-Gm-Message-State: AOAM531edoBa/SHfNjNFYGtd2YHoNfBtuI5Ur1cON8k+bpOw07NfpFyL
+        f7wjVF+T5BKU7lhneSiENGdGLf9MCMUQ4hIXLa4=
+X-Google-Smtp-Source: ABdhPJwxcCaatopEQ9znxqP8R7e1+a0UiPdVoUvjwTFkdz/8fLS8TblEgK+YVFqejRWQEQ7wtfHtNSvrgch3VD6FbKA=
+X-Received: by 2002:a17:90a:e7cb:: with SMTP id kb11mr9451816pjb.181.1598519585863;
+ Thu, 27 Aug 2020 02:13:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <CA+G9fYvUwH2FA9GOeA_7GYpLA31uOmEpg32VKnJ8-d5QSK4PdQ@mail.gmail.com>
-In-Reply-To: <CA+G9fYvUwH2FA9GOeA_7GYpLA31uOmEpg32VKnJ8-d5QSK4PdQ@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 27 Aug 2020 14:42:29 +0530
-Message-ID: <CA+G9fYtq=+TAh57y-N-ngwDqs8ZbPbJs3cVF96gVXmZkq0xdYQ@mail.gmail.com>
-Subject: Re: Kernel panic : Unable to handle kernel paging request at virtual
- address - dead address between user and kernel address ranges
-To:     open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-clk <linux-clk@vger.kernel.org>, linux-mmc@vger.kernel.org,
-        lkft-triage@lists.linaro.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, lars.povlsen@microchip.com,
-        madhuparnabhowmik10@gmail.com,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
+References: <20200826181706.11098-1-krzk@kernel.org> <20200826181706.11098-14-krzk@kernel.org>
+In-Reply-To: <20200826181706.11098-14-krzk@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 27 Aug 2020 12:12:49 +0300
+Message-ID: <CAHp75Vf2=qM4nvYMRQccJgHhZytXt9GU4KCBv8HwHnW+EcPvnw@mail.gmail.com>
+Subject: Re: [PATCH 14/24] Input: ektf2127 - Simplify with dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-input <linux-input@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 at 14:02, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+On Wed, Aug 26, 2020 at 9:21 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
-> arm64 dragonboard db410c boot failed while running linux next 20200827 kernel.
->
-> metadata:
->   git branch: master
->   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
->   git commit: 88abac0b753dfdd85362a26d2da8277cb1e0842b
->   git describe: next-20200827
->   make_kernelversion: 5.9.0-rc2
->   kernel-config:
-> https://builds.tuxbuild.com/vThV35pOF_GMlWdiTs3Bdw/kernel.config
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
 
-The reported issue is started from linux next tag next-20200825.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-BAD:  next-20200825
-GOOD:  next-20200824
-
-We are working on git bisect and boot testing on db410c and get back to you.
-
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/input/touchscreen/ektf2127.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
 >
-> Boot log,
+> diff --git a/drivers/input/touchscreen/ektf2127.c b/drivers/input/touchscreen/ektf2127.c
+> index eadd389cf81f..cd41483cfae5 100644
+> --- a/drivers/input/touchscreen/ektf2127.c
+> +++ b/drivers/input/touchscreen/ektf2127.c
+> @@ -237,12 +237,8 @@ static int ektf2127_probe(struct i2c_client *client,
 >
-> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd030]
-> [    0.000000] Linux version 5.9.0-rc2-next-20200827
-> (TuxBuild@12963d21faa5) (aarch64-linux-gnu-gcc (Debian 9.3.0-8) 9.3.0,
-> GNU ld (GNU Binutils for Debian) 2.34) #1 SMP PREEMPT Thu Aug 27
-> 05:19:00 UTC 2020
-> [    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
-> [    0.000000] efi: UEFI not found.
-> [    0.000000] [Firmware Bug]: Kernel image misaligned at boot, please
-> fix your bootloader!
-> <trmi>
-> [    3.451425] i2c_qup 78ba000.i2c: using default clock-frequency 100000
-> [    3.451491] i2c_qup 78ba000.i2c:
-> [    3.451491]  tx channel not available
-> [    3.493455] sdhci: Secure Digital Host Controller Interface driver
-> [    3.493508] sdhci: Copyright(c) Pierre Ossman
-> [    3.500902] Synopsys Designware Multimedia Card Interface Driver
-> [    3.507441] sdhci-pltfm: SDHCI platform and OF driver helper
-> [    3.514308] Unable to handle kernel paging request at virtual
-> address dead000000000108
-> [    3.514695] Mem abort info:
-> [    3.522421]   ESR = 0x96000044
-> [    3.525096]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [    3.528236]   SET = 0, FnV = 0
-> [    3.533703]   EA = 0, S1PTW = 0
-> [    3.536561] Data abort info:
-> [    3.539601]   ISV = 0, ISS = 0x00000044
-> [    3.542727]   CM = 0, WnR = 1
-> [    3.546287] [dead000000000108] address between user and kernel address ranges
-> [    3.549414] Internal error: Oops: 96000044 [#1] PREEMPT SMP
-> [    3.556520] Modules linked in:
-> [    3.561901] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-> 5.9.0-rc2-next-20200827 #1
-> [    3.565034] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-> [    3.572584] pstate: 60000005 (nZCv daif -PAN -UAO BTYPE=--)
-> [    3.579271] pc : __clk_put+0x40/0x140
-> [    3.584556] lr : __clk_put+0x2c/0x140
-> [    3.588373] sp : ffff80001002bb00
-> [    3.592016] x29: ffff80001002bb00 x28: 000000000000002e
-> [    3.595320] x27: ffff000009f7ba68 x26: ffff80001146d878
-> [    3.600703] x25: ffff00003fcfd8f8 x24: ffff00003d0bc410
-> [    3.605999] x23: ffff80001146d0e0 x22: ffff000009f7ba40
-> [    3.611293] x21: ffff00003d0bc400 x20: ffff000009f7b580
-> [    3.616588] x19: ffff00003bccc780 x18: 0000000007824000
-> [    3.621883] x17: ffff000009f7ba00 x16: ffff000009f7b5d0
-> [    3.627177] x15: ffff800011966cf8 x14: ffffffffffffffff
-> [    3.632472] x13: ffff800012917000 x12: ffff800012917000
-> [    3.637769] x11: 0000000000000020 x10: 0101010101010101
-> [    3.643063] x9 : ffff8000107a984c x8 : 7f7f7f7f7f7f7f7f
-> [    3.648358] x7 : ffff000009fd8000 x6 : ffff80001237a000
-> [    3.653653] x5 : 0000000000000000 x4 : ffff000009fd8000
-> [    3.658949] x3 : ffff8000124e6768 x2 : ffff000009fd8000
-> [    3.664243] x1 : ffff00003bccca80 x0 : dead000000000100
-> [    3.669539] Call trace:
-> [    3.674830]  __clk_put+0x40/0x140
-> [    3.677003]  clk_put+0x18/0x28
-> [    3.680477]  dev_pm_opp_put_clkname+0x30/0x58
-> [    3.683431]  sdhci_msm_probe+0x284/0x9a0
-> [    3.687857]  platform_drv_probe+0x5c/0xb0
-> [    3.691847]  really_probe+0xf0/0x4d8
-> [    3.695753]  driver_probe_device+0xfc/0x168
-> [    3.699399]  device_driver_attach+0x7c/0x88
-> [    3.703306]  __driver_attach+0xac/0x178
-> [    3.707472]  bus_for_each_dev+0x78/0xc8
-> [    3.711291]  driver_attach+0x2c/0x38
-> [    3.715110]  bus_add_driver+0x14c/0x230
-> [    3.718929]  driver_register+0x6c/0x128
-> [    3.722489]  __platform_driver_register+0x50/0x60
-> [    3.726312]  sdhci_msm_driver_init+0x24/0x30
-> [    3.731173]  do_one_initcall+0x4c/0x2c0
-> [    3.735511]  kernel_init_freeable+0x21c/0x284
-> [    3.739072]  kernel_init+0x1c/0x120
-> [    3.743582]  ret_from_fork+0x10/0x30
-> [    3.746885] Code: 35000720 a9438660 f9000020 b4000040 (f9000401)
-> [    3.750720] ---[ end trace a8d4100497387a2e ]---
-> [    3.756736] Kernel panic - not syncing: Attempted to kill init!
-> exitcode=0x0000000b
-> [    3.761392] SMP: stopping secondary CPUs
-> [    3.768877] Kernel Offset: 0x80000 from 0xffff800010000000
-> [    3.772924] PHYS_OFFSET: 0x80000000
-> [    3.778216] CPU features: 0x0240002,24802005
-> [    3.781602] Memory Limit: none
+>         /* This requests the gpio *and* turns on the touchscreen controller */
+>         ts->power_gpios = devm_gpiod_get(dev, "power", GPIOD_OUT_HIGH);
+> -       if (IS_ERR(ts->power_gpios)) {
+> -               error = PTR_ERR(ts->power_gpios);
+> -               if (error != -EPROBE_DEFER)
+> -                       dev_err(dev, "Error getting power gpio: %d\n", error);
+> -               return error;
+> -       }
+> +       if (IS_ERR(ts->power_gpios))
+> +               return dev_err_probe(dev, PTR_ERR(ts->power_gpios), "Error getting power gpio\n");
 >
-> full test log,
-> https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200827/testrun/3123101/suite/linux-log-parser/test/check-kernel-oops-1714695/log
->
+>         input = devm_input_allocate_device(dev);
+>         if (!input)
 > --
-> Linaro LKFT
-> https://lkft.linaro.org
+> 2.17.1
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
