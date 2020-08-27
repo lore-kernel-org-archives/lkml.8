@@ -2,238 +2,225 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816C9C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B74C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 550F72075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A24207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:10:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZwVP72Wy"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l05Z2XNw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbgH0KGg (ORCPT
+        id S1728386AbgH0KKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:06:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45076 "EHLO
+        Thu, 27 Aug 2020 06:10:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgH0KGe (ORCPT
+        with ESMTP id S1726938AbgH0KK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:06:34 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D675DC061264;
-        Thu, 27 Aug 2020 03:06:33 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id o18so6853158eje.7;
-        Thu, 27 Aug 2020 03:06:33 -0700 (PDT)
+        Thu, 27 Aug 2020 06:10:29 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18186C061232
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:10:29 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id u24so4139901oic.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:10:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=H5b7vH/Mm3tUXXI+YL/JUy2ooYJLh277NmvDbO34a90=;
-        b=ZwVP72WyTO8UGptv0QVO5pjPiiQxg3QQS7Gv/qsfr7frOnlHhnafxMvJ8GUvauUwiy
-         uLalmuljZwpayEuok0FSqKxa3vNn3g9hbEurMvRAEEt9YK4xMSqhF007MB8FOS8k+neX
-         MrQNRIYxhZSENGn4U1CHf1keMtchPVHuE9FmnnSN5gu4LZs9Z/N8b9gtgsWQRoS7ItP4
-         NVK7W2+VyAfHr0FKGGHjtf7WV+CPvJi/uK0F7APbInCebpnB0qY37oDwnt9xzrdLCpv6
-         VWgOzd0sLDg0vqc/ojtdllNADxIgE2hEd7nV4JB1/1L9C6ZeZdOO5ZSztGXoo8XXV8eJ
-         EqaQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xffebcZYdssVBz8b/QGkKBNNZIu8AR2B8ONx8ST79Rg=;
+        b=l05Z2XNwo9iN0IeRxk31CvVymxJLIWzAvOT2mBoYkYYzTJymUK9sjFd12SkKSAiz38
+         u4xyukMukt4+GYw0oe/HkZIXaoF182cC8VkEA3gTeGYzK3qsZWk31w38wCmo56FMGsvk
+         3jdbM2vEmwhPHGW/6+wrbMhD4hzf+RrIX6lKk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=H5b7vH/Mm3tUXXI+YL/JUy2ooYJLh277NmvDbO34a90=;
-        b=DlJrSr+dcRhebKPEmKJEkBOwd+JTKmG5TyX5NS6c+OIy4LGgVVRF3O79DnsxpiRDdx
-         MWyyrFxjc/DFgY0/jnlJBeqvoHpVINTS/slzbSVLCONsiOh8cR7nYUe8mdLrn/K5BkBS
-         jPzOz2fF+SIPGc2xXpQJERWAIda0xgwR3BVTYC1g6ZW2eskGhfkA0rH9SzarZ5gjyobD
-         as/hhWcMrSTSumDIQdXOxtWfFQqmqoDdhT0QsYcQzLGMrNbMTB0JHlBKwm9/ChUVgJWb
-         gt0/90DVZAJnyPrPKuGuMwNfHNZW+zSQFii9LVowIIjyeuDhDWxYMFioza8m6xqYlniM
-         ASJw==
-X-Gm-Message-State: AOAM532nQhCmumrIETveTWxLJoZ1FfbjBW3lQm8M6onvKvdCtNxXcoph
-        T6dyE2JY8utOJtGwLjz9u5U=
-X-Google-Smtp-Source: ABdhPJwYe3czk57emax7/H0cocpDsdNj6ermBTHkChVY5+jGk5Ax7YgihFrLjoGyeAX88M/oCzwkVg==
-X-Received: by 2002:a17:906:af41:: with SMTP id ly1mr19513097ejb.418.1598522792401;
-        Thu, 27 Aug 2020 03:06:32 -0700 (PDT)
-Received: from BV030612LT ([188.24.159.61])
-        by smtp.gmail.com with ESMTPSA id cz21sm1191148edb.45.2020.08.27.03.06.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 03:06:31 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 13:06:29 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH v5 1/3] dt-bindings: interrupt-controller: Add Actions
- SIRQ controller binding
-Message-ID: <20200827100629.GA2451538@BV030612LT>
-References: <cover.1597852360.git.cristian.ciocaltea@gmail.com>
- <6bd99d4a7e50904b57bb3ad050725fbb418874b7.1597852360.git.cristian.ciocaltea@gmail.com>
- <20200825220913.GA1423455@bogus>
- <20200826214220.GA2444747@BV030612LT>
- <CAL_JsqLvXDFL6vFooPYLJ1QnZ7L756fNesXo-LW_scs9rV-zPA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xffebcZYdssVBz8b/QGkKBNNZIu8AR2B8ONx8ST79Rg=;
+        b=TATVNdhxk0YuOJN7bMmhcT5owa9RMY45ntsjNDsn45Fn6XLol2BDXozysGZT9vSnkO
+         gLsZN2vK5BwDHR4FihLh/foLIBwGoIkozmcFYvkP2jFMiuXDRQoRIAO/JFsULEjjoEf/
+         BiA54JQFBdfgkQ9z/E8DRpG7P8KpkNIo1YtQA00Hu4/lhal7tgra8aFl+aEjt0GE1qYc
+         9yMIKZF8OkNdRpQ53AXvfBFMcI5c83nm6cU5UfswHS/NlqcnNV1B9rtQ9mQE4p2gjalX
+         WI/ySvxBaxDZowax/IGyqO4/pkEThDVdy5lWop0b5ZtV8cYbWtSKSgR5nSBwTlbVdGRI
+         stPA==
+X-Gm-Message-State: AOAM531jxtfXyPIDG4LrG2C6okLkrwfGqrZ4cQ8q2flSkmrhFD3J9ZB0
+        H1VaWuJFV2YdsBLIybII2jtYKzmrvRsAag==
+X-Google-Smtp-Source: ABdhPJwOh34XlJWBEocdp7lQanlJmMiMkBKtl+6nZiAGns3/6D4EBxTGMhuQMk/oYeQjBFqZP729KA==
+X-Received: by 2002:aca:bf09:: with SMTP id p9mr6538381oif.157.1598523027014;
+        Thu, 27 Aug 2020 03:10:27 -0700 (PDT)
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com. [209.85.161.44])
+        by smtp.gmail.com with ESMTPSA id 105sm365832oti.13.2020.08.27.03.10.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 03:10:25 -0700 (PDT)
+Received: by mail-oo1-f44.google.com with SMTP id m4so1097510oos.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:10:25 -0700 (PDT)
+X-Received: by 2002:a4a:d62c:: with SMTP id n12mr13629175oon.38.1598523025055;
+ Thu, 27 Aug 2020 03:10:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLvXDFL6vFooPYLJ1QnZ7L756fNesXo-LW_scs9rV-zPA@mail.gmail.com>
+References: <20200821103608.2310097-1-acourbot@chromium.org>
+ <20200821103608.2310097-10-acourbot@chromium.org> <02eaeace-22dd-02ea-7162-90200fe1cffe@gmail.com>
+In-Reply-To: <02eaeace-22dd-02ea-7162-90200fe1cffe@gmail.com>
+From:   Alexandre Courbot <acourbot@chromium.org>
+Date:   Thu, 27 Aug 2020 19:10:13 +0900
+X-Gmail-Original-Message-ID: <CAPBb6MWZRKpg-rs7X_j3tqqsYHy=NkEMN1NdZwPS9zo-0whTJw@mail.gmail.com>
+Message-ID: <CAPBb6MWZRKpg-rs7X_j3tqqsYHy=NkEMN1NdZwPS9zo-0whTJw@mail.gmail.com>
+Subject: Re: [PATCH v4 09/17] arm64: dts: mt8183: add encoder node
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 04:48:38PM -0600, Rob Herring wrote:
-> On Wed, Aug 26, 2020 at 3:42 PM Cristian Ciocaltea
-> <cristian.ciocaltea@gmail.com> wrote:
+On Thu, Aug 27, 2020 at 7:03 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
+>
+>
+>
+> On 21/08/2020 12:36, Alexandre Courbot wrote:
+> > Now that the MT8183 encoder driver is ready, add its DT node. Also pull
+> > the iommu and scp ones, which the encoder depends upon.
+>
+> Please don't do that. Instead of pulling in other DT nodes, it would be handy to
+> get a reference of the series this is based on.
+>
+> Let me try to hunt them down now :)
+
+Sorry, I'm not sure to understand - do you mean each node should come
+with its own patch? Or that all the code should be merged before
+sending these nodes? The rest of this series should land into the
+media tree soon, if you prefer I can resend this patch separately once
+that happens.
+
+>
+> Regards,
+> Matthias
+>
 > >
-> > Hi Rob,
+> > Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+> > ---
+> >   arch/arm64/boot/dts/mediatek/mt8183-evb.dts   | 10 ++++++
+> >   .../arm64/boot/dts/mediatek/mt8183-kukui.dtsi | 12 +++++++
+> >   arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 36 +++++++++++++++++++
+> >   3 files changed, 58 insertions(+)
 > >
-> > Thanks for the review!
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> > index ae405bd8f06b..9e77b420eee8 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> > @@ -25,6 +25,16 @@ memory@40000000 {
+> >       chosen {
+> >               stdout-path = "serial0:921600n8";
+> >       };
+> > +     reserved-memory {
+> > +             #address-cells = <2>;
+> > +             #size-cells = <2>;
+> > +             ranges;
+> > +             scp_mem_reserved: scp_mem_region {
+> > +                     compatible = "shared-dma-pool";
+> > +                     reg = <0 0x50000000 0 0x2900000>;
+> > +                     no-map;
+> > +             };
+> > +     };
+> >   };
 > >
-> > On Tue, Aug 25, 2020 at 04:09:13PM -0600, Rob Herring wrote:
-> > > On Wed, Aug 19, 2020 at 07:37:56PM +0300, Cristian Ciocaltea wrote:
-> > > > Actions Semi Owl SoCs SIRQ interrupt controller is found in S500, S700
-> > > > and S900 SoCs and provides support for handling up to 3 external
-> > > > interrupt lines.
-> > > >
-> > > > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > > > ---
-> > > > Changes in v5:
-> > > >  - Updated controller description statements both in the commit message
-> > > >    and the binding doc
-> > > >
-> > > >  .../actions,owl-sirq.yaml                     | 68 +++++++++++++++++++
-> > > >  1 file changed, 68 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml b/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..cf9b7a514e4e
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml
-> > > > @@ -0,0 +1,68 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/interrupt-controller/actions,owl-sirq.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Actions Semi Owl SoCs SIRQ interrupt controller
-> > > > +
-> > > > +maintainers:
-> > > > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > +  - Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > > > +
-> > > > +description: |
-> > > > +  This interrupt controller is found in the Actions Semi Owl SoCs (S500, S700
-> > > > +  and S900) and provides support for handling up to 3 external interrupt lines.
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    oneOf:
-> > > > +      - items:
-> > > > +        - enum:
-> > > > +          - actions,s500-sirq
-> > > > +          - actions,s700-sirq
-> > > > +          - actions,s900-sirq
-> > > > +        - const: actions,owl-sirq
-> > > > +      - const: actions,owl-sirq
-> > >
-> > > This should be dropped. You should always have the SoC specific
-> > > compatible.
+> >   &auxadc {
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+> > index f0a070535b34..3c763be658da 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+> > @@ -90,6 +90,18 @@ pp3300_alw: regulator6 {
+> >               regulator-max-microvolt = <3300000>;
+> >       };
 > >
-> > Sure, I will get rid of the 'owl-sirq' compatible.
+> > +     reserved_memory: reserved-memory {
+> > +             #address-cells = <2>;
+> > +             #size-cells = <2>;
+> > +             ranges;
+> > +
+> > +             scp_mem_reserved: scp_mem_region {
+> > +                     compatible = "shared-dma-pool";
+> > +                     reg = <0 0x50000000 0 0x2900000>;
+> > +                     no-map;
+> > +             };
+> > +     };
+> > +
+> >       max98357a: codec0 {
+> >               compatible = "maxim,max98357a";
+> >               sdmode-gpios = <&pio 175 0>;
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > index 102105871db2..8f77eea6df27 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > @@ -8,6 +8,7 @@
+> >   #include <dt-bindings/clock/mt8183-clk.h>
+> >   #include <dt-bindings/interrupt-controller/arm-gic.h>
+> >   #include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/memory/mt8183-larb-port.h>
+> >   #include <dt-bindings/reset-controller/mt8183-resets.h>
+> >   #include <dt-bindings/phy/phy.h>
+> >   #include "mt8183-pinfunc.h"
+> > @@ -339,6 +340,25 @@ pwrap: pwrap@1000d000 {
+> >                       clock-names = "spi", "wrap";
+> >               };
 > >
-> > > > +
-> > > > +  reg:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  interrupt-controller: true
-> > > > +
-> > > > +  '#interrupt-cells':
-> > > > +    const: 2
-> > > > +    description:
-> > > > +      The first cell is the input IRQ number, between 0 and 2, while the second
-> > > > +      cell is the trigger type as defined in interrupt.txt in this directory.
-> > > > +
-> > > > +  'actions,ext-interrupts':
-> > > > +    description: |
-> > > > +      Contains the GIC SPI IRQ numbers mapped to the external interrupt
-> > > > +      lines. They shall be specified sequentially from output 0 to 2.
-> > > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > > +    minItems: 3
-> > > > +    maxItems: 3
-> > >
-> > > Can't you use 'interrupts' here?
+> > +             iommu: iommu@10205000 {
+> > +                     compatible = "mediatek,mt8183-m4u";
+> > +                     reg = <0 0x10205000 0 0x1000>;
+> > +                     interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_LOW>;
+> > +                     #iommu-cells = <1>;
+> > +             };
+> > +
+> > +             scp: scp@10500000 {
+> > +                     compatible = "mediatek,mt8183-scp";
+> > +                     reg = <0 0x10500000 0 0x80000>,
+> > +                           <0 0x105c0000 0 0x19080>;
+> > +                     reg-names = "sram", "cfg";
+> > +                     interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> > +                     clocks = <&infracfg CLK_INFRA_SCPSYS>;
+> > +                     clock-names = "main";
+> > +                     memory-region = <&scp_mem_reserved>;
+> > +                     status = "disabled";
+> > +             };
+> > +
+> >               systimer: timer@10017000 {
+> >                       compatible = "mediatek,mt8183-timer",
+> >                                    "mediatek,mt6765-timer";
+> > @@ -772,6 +792,22 @@ vencsys: syscon@17000000 {
+> >                       #clock-cells = <1>;
+> >               };
 > >
-> > This was actually my initial idea, but it might confuse the users since
-> > this is not following the parent controller IRQ specs, i.e. the trigger
-> > type is set internally by the SIRQ driver, it's not taken from DT.
-> 
-> Then what's the 2nd cell for?
-
-I should have added also a child device sample to make it more clear
-how this is supposed to work:
-
-&i2c0 {
-  atc260x: pmic@65 {
-    [...]
-	interrupt-parent = <&sirq>;
-	interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-  };
-};
-
-The PMIC above uses the SIRQ2 pin of the SIRQ controller to trigger
-interrupts, while the controller is responsible for proper translation
-before sending to GIC, i.e. converting falling edge to rising edge signal
-and active low to active high signal. 
-
-> > Please see the DTS sample bellow where both devices are on the same
-> > level and have GIC as interrupt parent. The 'interrupts' property
-> > in the sirq node looks incomplete now. That is why I decided to use
-> > a custom name for it, although I'm not sure it's the most relevant one,
-> > I am open to any other suggestion.
+> > +             vcodec_enc: vcodec@17020000 {
+> > +                     compatible = "mediatek,mt8183-vcodec-enc";
+> > +                     reg = <0 0x17020000 0 0x1000>;
+> > +                     interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_LOW>;
+> > +                     iommus = <&iommu M4U_PORT_VENC_REC>,
+> > +                              <&iommu M4U_PORT_VENC_BSDMA>,
+> > +                              <&iommu M4U_PORT_VENC_RD_COMV>,
+> > +                              <&iommu M4U_PORT_VENC_CUR_LUMA>,
+> > +                              <&iommu M4U_PORT_VENC_CUR_CHROMA>,
+> > +                              <&iommu M4U_PORT_VENC_REF_LUMA>,
+> > +                              <&iommu M4U_PORT_VENC_REF_CHROMA>;
+> > +                     mediatek,scp = <&scp>;
+> > +                     clocks = <&vencsys CLK_VENC_VENC>;
+> > +                     clock-names = "MT_CG_VENC";
+> > +             };
+> > +
+> >               ipu_conn: syscon@19000000 {
+> >                       compatible = "mediatek,mt8183-ipu_conn", "syscon";
+> >                       reg = <0 0x19000000 0 0x1000>;
 > >
-> > i2c0: i2c@b0170000 {
-> >   [...]
-> >   interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-> >   [...]
-> > };
-> >
-> > sirq: interrupt-controller@b01b0200 {
-> >   [...]
-> >   interrupt-controller;
-> >   #interrupt-cells = <2>;
-> >   interrupts = <13>, /* SIRQ0 */
-> >                <14>, /* SIRQ1 */
-> >                <15>; /* SIRQ2 */
-> 
-> This isn't valid if the GIC is the parent as you have to have 3 cells
-> for each interrupt.
-
-Right, that's the reason of replacing 'interrupts' with
-'actions,ext-interrupts'.
-
-> Ultimately the GIC trigger type has to be
-> something. Is it fixed or passed thru? If the latter, just use 0
-> (IRQ_TYPE_NONE) if the GIC trigger mode is not fixed. Having some sort
-> of translation of the trigger is pretty common.
-
-Yes, as explained above, the SIRQ controller performs indeed the
-translation of the incoming signal. So if I understand correctly, your
-suggestion would be to use the following inside the sirq node:
-
-interrupts = <GIC_SPI 13 IRQ_TYPE_NONE>, /* SIRQ0 */
-             [...]
-
-> Rob
-
-Thanks,
-Cristi
