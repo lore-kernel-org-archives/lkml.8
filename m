@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D94C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F51DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3768F20786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6522087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598554846;
-	bh=58yzE7nTwEaef/I5SNdV8roNQcWGPiVHAIvbkPbo/j0=;
+	s=default; t=1598554851;
+	bh=WbuIUV4K6WbEXrmF/VhS+y87lS2sy9UGDIEz3E4QwWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qCgGAf+3GkyW6fClKLwFoGEsAG5+h/fl9pMslAdo6NdqqZvon4KiB3aWv63dAf+f0
-	 EPC+sG7bSif0YRFoF3GW1Ke0OezIgHQZyCxX+EOkG28cgCr4rYcHNKV0aoyaqm8KGk
-	 3f5pn0igEXyi0WvFk7BicN1o+5B05ByMoK2mWt8k=
+	b=jlfaERiPkbxO9h1l67VzC8M4LDO5hgKOm6lauPe7FwqnkokJlHR6tFbf3kHAv7NyF
+	 IXKN0aRIdQ7FPiu6k9TnFvi8KPWSn7/xFuSFbG4NAHEQ6UnTOZ4zmaJOOi8g1y5Eyn
+	 7/reDNmFCVoAW8EUiKPzeo9D8HtgRCnxzqU1DNww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgH0S7R (ORCPT
+        id S1727933AbgH0S7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:59:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49368 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 14:59:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727997AbgH0S7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:59:12 -0400
+        id S1727894AbgH0S64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 14:58:56 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CBBD22BEA;
-        Thu, 27 Aug 2020 18:59:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98CE922BEA;
+        Thu, 27 Aug 2020 18:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598554752;
-        bh=58yzE7nTwEaef/I5SNdV8roNQcWGPiVHAIvbkPbo/j0=;
+        s=default; t=1598554735;
+        bh=WbuIUV4K6WbEXrmF/VhS+y87lS2sy9UGDIEz3E4QwWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i67ZNRM2AoaLxP8VlFRuuHzKyg+65pNt8UKjAlHGZoMCLxETTvb8IsY4L+96WgTPn
-         hrILQ8U+vp+nGiyJt/w30ntBFZ0s+ESPpy8eu5OUGhIMRNAzjKBAczh34CJoZne+qm
-         WXRfx0oJPPQdSEuFOoaQMa/9WsJdBdt+g7Xr2+bk=
+        b=Ut2/W2sV8VFb8FIGfuqy1l/mEmrCPxevdzXFOyakkwsfDl6ikmgKg8Q8t7jooXUHC
+         e+m6q+1iN/GYFpR5EclsvwG4uKKbLCPBatLMofskhmygv8T9FUiVt3iCzlufcqxFjk
+         k5FwSaFD/p8cRlmeEpsqtPkqo1tmslNYp+nLkxuQ=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -52,9 +52,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         clang-built-linux@googlegroups.com
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 09/27] Input: chipone_icn8318 - Simplify with dev_err_probe()
-Date:   Thu, 27 Aug 2020 20:58:11 +0200
-Message-Id: <20200827185829.30096-10-krzk@kernel.org>
+Subject: [PATCH v3 04/27] Input: pwm-vibra - Simplify with dev_err_probe()
+Date:   Thu, 27 Aug 2020 20:58:06 +0200
+Message-Id: <20200827185829.30096-5-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
 References: <20200827185829.30096-1-krzk@kernel.org>
@@ -68,30 +68,48 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- drivers/input/touchscreen/chipone_icn8318.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/input/touchscreen/chipone_icn8318.c b/drivers/input/touchscreen/chipone_icn8318.c
-index d91d2fd78649..5bee007184c4 100644
---- a/drivers/input/touchscreen/chipone_icn8318.c
-+++ b/drivers/input/touchscreen/chipone_icn8318.c
-@@ -194,12 +194,8 @@ static int icn8318_probe(struct i2c_client *client,
+---
+
+Changes since v1:
+1. Remove unneeded PTR_ERR_OR_ZERO, as pointed by Andy.
+---
+ drivers/input/misc/pwm-vibra.c | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/input/misc/pwm-vibra.c b/drivers/input/misc/pwm-vibra.c
+index 81e777a04b88..45c4f6a02177 100644
+--- a/drivers/input/misc/pwm-vibra.c
++++ b/drivers/input/misc/pwm-vibra.c
+@@ -134,22 +134,14 @@ static int pwm_vibrator_probe(struct platform_device *pdev)
  		return -ENOMEM;
  
- 	data->wake_gpio = devm_gpiod_get(dev, "wake", GPIOD_OUT_LOW);
--	if (IS_ERR(data->wake_gpio)) {
--		error = PTR_ERR(data->wake_gpio);
--		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Error getting wake gpio: %d\n", error);
--		return error;
+ 	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
+-	err = PTR_ERR_OR_ZERO(vibrator->vcc);
+-	if (err) {
+-		if (err != -EPROBE_DEFER)
+-			dev_err(&pdev->dev, "Failed to request regulator: %d",
+-				err);
+-		return err;
 -	}
-+	if (IS_ERR(data->wake_gpio))
-+		return dev_err_probe(dev, PTR_ERR(data->wake_gpio), "Error getting wake gpio\n");
++	if (IS_ERR(vibrator->vcc))
++		return dev_err_probe(&pdev->dev, PTR_ERR(vibrator->vcc),
++				     "Failed to request regulator\n");
  
- 	input = devm_input_allocate_device(dev);
- 	if (!input)
+ 	vibrator->pwm = devm_pwm_get(&pdev->dev, "enable");
+-	err = PTR_ERR_OR_ZERO(vibrator->pwm);
+-	if (err) {
+-		if (err != -EPROBE_DEFER)
+-			dev_err(&pdev->dev, "Failed to request main pwm: %d",
+-				err);
+-		return err;
+-	}
++	if (IS_ERR(vibrator->pwm))
++		return dev_err_probe(&pdev->dev, PTR_ERR(vibrator->pwm),
++				     "Failed to request main pwm\n");
+ 
+ 	INIT_WORK(&vibrator->play_work, pwm_vibrator_play_work);
+ 
 -- 
 2.17.1
 
