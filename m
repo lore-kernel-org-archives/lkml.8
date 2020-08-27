@@ -2,257 +2,265 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91966C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ECCD22BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B1222BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:29:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fKkwMSCT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgH0K3s (ORCPT
+        id S1728369AbgH0K3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:29:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:56368 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbgH0K3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:29:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 198D7101E;
-        Thu, 27 Aug 2020 03:29:47 -0700 (PDT)
-Received: from [192.168.1.190] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C33C03F66B;
-        Thu, 27 Aug 2020 03:29:43 -0700 (PDT)
-Subject: Re: [PATCH 20/35] arm64: mte: Add in-kernel MTE helpers
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1597425745.git.andreyknvl@google.com>
- <2cf260bdc20793419e32240d2a3e692b0adf1f80.1597425745.git.andreyknvl@google.com>
- <20200827093808.GB29264@gaia>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <588f3812-c9d0-8dbe-fce2-1ea89f558bd2@arm.com>
-Date:   Thu, 27 Aug 2020 11:31:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 27 Aug 2020 06:29:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgH0K3v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 06:29:51 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05270C061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:29:51 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 5so3943935otp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:29:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VqVqosFrIbjcMckf+U3+gM0HZKqC0WuU3mUX+w73JZU=;
+        b=fKkwMSCT3+pj22gsTIywq7R4LB1He2LTSACwbCTdIGXidzMgQfHh+U6FSnM8xecppd
+         QbXBqCxhAsd24Zw+4HglaCDRXu6RFTP2NAQgwkA/Ipe/S4qcfzbCDRpQJMhf3j420AC1
+         7T9kCyCWVet5iClQ592TiqqC6sAFi5/3YYlm8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VqVqosFrIbjcMckf+U3+gM0HZKqC0WuU3mUX+w73JZU=;
+        b=SobTro9Ao/o4tSg6UOl7eCQNd2foORs/ICIsswWfgvEpmkBZUqgZB//BiUQWoyrPnq
+         wRpp3Dl+qUSkBo3CR86HczdfLEx2PlONYuaBvofmq7VGHLsuIofvqOEtTWwihq01Z+Zm
+         h7BfAqjn48KSg2tGRFjIyy00AKakUTRi2ybbvHMhU6XhXedScgl48XOfM0WH0s9bo45k
+         wMiLX+EJGACmU1gjfcJyhfu0q6eB5+lAZfTLdtXC5nNHvzqfsRQWZbvzzMYJ5x8Fvor0
+         1ZjErsKzqkR5r+wf+3Wjo0YIz9cXpI3U+LUOJZ9HPZoKAh1h4UsGYSh3ysuT05I7GV+M
+         4FSw==
+X-Gm-Message-State: AOAM532LdG8VfK0KOE8BfPCZF/5D1L1NS5G8Zc6MSMblCLSrR8Id7b0k
+        vNsi4cr+JCklJkHPxwxQSqur40yU8ZcnNA==
+X-Google-Smtp-Source: ABdhPJwkcO9QWwwz/du8z8WkID4wlrd4jorJU6G8Al08TCuowAGvQYPn0eUYkCDfqPjuRQEbZCH5AQ==
+X-Received: by 2002:a05:6830:1259:: with SMTP id s25mr13755210otp.203.1598524189659;
+        Thu, 27 Aug 2020 03:29:49 -0700 (PDT)
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com. [209.85.210.53])
+        by smtp.gmail.com with ESMTPSA id w13sm388409oiw.50.2020.08.27.03.29.48
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 03:29:48 -0700 (PDT)
+Received: by mail-ot1-f53.google.com with SMTP id a65so3962719otc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:29:48 -0700 (PDT)
+X-Received: by 2002:a9d:5f0c:: with SMTP id f12mr12086496oti.141.1598524187719;
+ Thu, 27 Aug 2020 03:29:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200827093808.GB29264@gaia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200821103608.2310097-1-acourbot@chromium.org>
+ <20200821103608.2310097-10-acourbot@chromium.org> <02eaeace-22dd-02ea-7162-90200fe1cffe@gmail.com>
+ <CAPBb6MWZRKpg-rs7X_j3tqqsYHy=NkEMN1NdZwPS9zo-0whTJw@mail.gmail.com> <184d895c-239e-3f23-970e-6a9563235cd9@gmail.com>
+In-Reply-To: <184d895c-239e-3f23-970e-6a9563235cd9@gmail.com>
+From:   Alexandre Courbot <acourbot@chromium.org>
+Date:   Thu, 27 Aug 2020 19:29:35 +0900
+X-Gmail-Original-Message-ID: <CAPBb6MXrUNqWr=3KBPbJkXGmz=gL0aq_QuUQ5u_crR3yyDBvpw@mail.gmail.com>
+Message-ID: <CAPBb6MXrUNqWr=3KBPbJkXGmz=gL0aq_QuUQ5u_crR3yyDBvpw@mail.gmail.com>
+Subject: Re: [PATCH v4 09/17] arm64: dts: mt8183: add encoder node
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Catalin,
+Hi Matthias,
 
-On 8/27/20 10:38 AM, Catalin Marinas wrote:
-> On Fri, Aug 14, 2020 at 07:27:02PM +0200, Andrey Konovalov wrote:
->> diff --git a/arch/arm64/include/asm/mte.h b/arch/arm64/include/asm/mte.h
->> index 1c99fcadb58c..733be1cb5c95 100644
->> --- a/arch/arm64/include/asm/mte.h
->> +++ b/arch/arm64/include/asm/mte.h
->> @@ -5,14 +5,19 @@
->>  #ifndef __ASM_MTE_H
->>  #define __ASM_MTE_H
->>  
->> -#define MTE_GRANULE_SIZE	UL(16)
->> +#include <asm/mte_asm.h>
-> 
-> So the reason for this move is to include it in asm/cache.h. Fine by
-> me but...
-> 
->>  #define MTE_GRANULE_MASK	(~(MTE_GRANULE_SIZE - 1))
->>  #define MTE_TAG_SHIFT		56
->>  #define MTE_TAG_SIZE		4
->> +#define MTE_TAG_MASK		GENMASK((MTE_TAG_SHIFT + (MTE_TAG_SIZE - 1)), MTE_TAG_SHIFT)
->> +#define MTE_TAG_MAX		(MTE_TAG_MASK >> MTE_TAG_SHIFT)
-> 
-> ... I'd rather move all these definitions in a file with a more
-> meaningful name like mte-def.h. The _asm implies being meant for .S
-> files inclusion which isn't the case.
-> 
-
-mte-asm.h was originally called mte_helper.h hence it made sense to have these
-defines here. But I agree with your proposal it makes things more readable and
-it is in line with the rest of the arm64 code (e.g. page-def.h).
-
-We should as well update the commit message accordingly.
-
->> diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
->> index eb39504e390a..e2d708b4583d 100644
->> --- a/arch/arm64/kernel/mte.c
->> +++ b/arch/arm64/kernel/mte.c
->> @@ -72,6 +74,47 @@ int memcmp_pages(struct page *page1, struct page *page2)
->>  	return ret;
->>  }
->>  
->> +u8 mte_get_mem_tag(void *addr)
->> +{
->> +	if (system_supports_mte())
->> +		addr = mte_assign_valid_ptr_tag(addr);
-> 
-> The mte_assign_valid_ptr_tag() is slightly misleading. All it does is
-> read the allocation tag from memory.
-> 
-> I also think this should be inline asm, possibly using alternatives.
-> It's just an LDG instruction (and it saves us from having to invent a
-> better function name).
-> 
-
-Yes, I agree, I implemented this code in the early days and never got around to
-refactor it.
-
->> +
->> +	return 0xF0 | mte_get_ptr_tag(addr);
->> +}
->> +
->> +u8 mte_get_random_tag(void)
->> +{
->> +	u8 tag = 0xF;
->> +
->> +	if (system_supports_mte())
->> +		tag = mte_get_ptr_tag(mte_assign_random_ptr_tag(NULL));
-> 
-> Another alternative inline asm with an IRG instruction.
-> 
-
-As per above.
-
->> +
->> +	return 0xF0 | tag;
->> +}
->> +
->> +void * __must_check mte_set_mem_tag_range(void *addr, size_t size, u8 tag)
->> +{
->> +	void *ptr = addr;
->> +
->> +	if ((!system_supports_mte()) || (size == 0))
->> +		return addr;
->> +
->> +	tag = 0xF0 | (tag & 0xF);
->> +	ptr = (void *)__tag_set(ptr, tag);
->> +	size = ALIGN(size, MTE_GRANULE_SIZE);
-> 
-> I think aligning the size is dangerous. Can we instead turn it into a
-> WARN_ON if not already aligned? At a quick look, the callers of
-> kasan_{un,}poison_memory() already align the size.
-> 
-
-The size here is used only for tagging purposes and if we want to tag a
-subgranule amount of memory we end up tagging the granule anyway. Why do you
-think it can be dangerous?
-
-Anyway I agree on the fact that is seems redundant, a WARN_ON here should be
-sufficient.
-
->> +
->> +	mte_assign_mem_tag_range(ptr, size);
->> +
->> +	/*
->> +	 * mte_assign_mem_tag_range() can be invoked in a multi-threaded
->> +	 * context, ensure that tags are written in memory before the
->> +	 * reference is used.
->> +	 */
->> +	smp_wmb();
->> +
->> +	return ptr;
-> 
-> I'm not sure I understand the barrier here. It ensures the relative
-> ordering of memory (or tag) accesses on a CPU as observed by other CPUs.
-> While the first access here is setting the tag, I can't see what other
-> access on _this_ CPU it is ordered with.
-> 
-
-You are right it can be removed. I was just overthinking here.
-
->> +}
->> +
->>  static void update_sctlr_el1_tcf0(u64 tcf0)
->>  {
->>  	/* ISB required for the kernel uaccess routines */
->> diff --git a/arch/arm64/lib/mte.S b/arch/arm64/lib/mte.S
->> index 03ca6d8b8670..8c743540e32c 100644
->> --- a/arch/arm64/lib/mte.S
->> +++ b/arch/arm64/lib/mte.S
->> @@ -149,3 +149,44 @@ SYM_FUNC_START(mte_restore_page_tags)
->>  
->>  	ret
->>  SYM_FUNC_END(mte_restore_page_tags)
->> +
->> +/*
->> + * Assign pointer tag based on the allocation tag
->> + *   x0 - source pointer
->> + * Returns:
->> + *   x0 - pointer with the correct tag to access memory
->> + */
->> +SYM_FUNC_START(mte_assign_valid_ptr_tag)
->> +	ldg	x0, [x0]
->> +	ret
->> +SYM_FUNC_END(mte_assign_valid_ptr_tag)
->> +
->> +/*
->> + * Assign random pointer tag
->> + *   x0 - source pointer
->> + * Returns:
->> + *   x0 - pointer with a random tag
->> + */
->> +SYM_FUNC_START(mte_assign_random_ptr_tag)
->> +	irg	x0, x0
->> +	ret
->> +SYM_FUNC_END(mte_assign_random_ptr_tag)
-> 
-> As I said above, these two can be inline asm.
-> 
-
-Agreed.
-
->> +
->> +/*
->> + * Assign allocation tags for a region of memory based on the pointer tag
->> + *   x0 - source pointer
->> + *   x1 - size
->> + *
->> + * Note: size is expected to be MTE_GRANULE_SIZE aligned
->> + */
->> +SYM_FUNC_START(mte_assign_mem_tag_range)
->> +	/* if (src == NULL) return; */
->> +	cbz	x0, 2f
->> +	/* if (size == 0) return; */
-> 
-> You could skip the cbz here and just document that the size should be
-> non-zero and aligned. The caller already takes care of this check.
+On Thu, Aug 27, 2020 at 7:23 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
 >
+> Hi Alexandre,
+>
+> On 27/08/2020 12:10, Alexandre Courbot wrote:
+> > On Thu, Aug 27, 2020 at 7:03 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
+> >>
+> >>
+> >>
+> >> On 21/08/2020 12:36, Alexandre Courbot wrote:
+> >>> Now that the MT8183 encoder driver is ready, add its DT node. Also pull
+> >>> the iommu and scp ones, which the encoder depends upon.
+> >>
+> >> Please don't do that. Instead of pulling in other DT nodes, it would be handy to
+> >> get a reference of the series this is based on.
+> >>
+> >> Let me try to hunt them down now :)
+> >
+> > Sorry, I'm not sure to understand - do you mean each node should come
+> > with its own patch? Or that all the code should be merged before
+> > sending these nodes? The rest of this series should land into the
+> > media tree soon, if you prefer I can resend this patch separately once
+> > that happens.
+> >
+>
+> What I'm talking about is the case when you send a series that's based on
+> another one and the latter is not yet accepted in Torvalds tree. In that case it
+> helps to point to the series you expect to be included as well.
+>
+> In this case the SCP series was merged long time ago, but I missed the DTS
+> change. It would have been good if you would have added that information in your
+> series, instead of directly pulling in the SCP node.
 
-I would prefer to keep the check here, unless there is a valid reason, since
-allocate(0) is a viable option hence tag(x, 0) should be as well. The caller
-takes care of it in one place, today, but I do not know where the API will be
-used in future.
+Sorry about that, actually I was not even aware of this patch (or
+maybe I just forgot about it due to its date).
 
->> +	cbz	x1, 2f
->> +1:	stg	x0, [x0]
->> +	add	x0, x0, #MTE_GRANULE_SIZE
->> +	sub	x1, x1, #MTE_GRANULE_SIZE
->> +	cbnz	x1, 1b
->> +2:	ret
->> +SYM_FUNC_END(mte_assign_mem_tag_range)
-> 
+>
+> For the iommu node: I understand that there was never a patch adding the node
+> (at least I wasn't able to find one). So I'd prefer to have it send as a
+> separate patch of this series.
+>
+> Regarding this series now. If you want just resend the two DTS patches (iommu
+> and vcodec_enc) once the rest of this series got accpeted. If for any other
+> reason you have to send a v5, then feel free to include both in v5.
 
--- 
-Regards,
-Vincenzo
+Absolutely. I will wait until the patches land into the media tree and
+send you two DT-only patches.
+
+Thanks for the explanation!
+
+>
+> Hope I explained myself now :)
+>
+> Regards,
+> Matthias
+>
+> >>
+> >> Regards,
+> >> Matthias
+> >>
+> >>>
+> >>> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+> >>> ---
+> >>>    arch/arm64/boot/dts/mediatek/mt8183-evb.dts   | 10 ++++++
+> >>>    .../arm64/boot/dts/mediatek/mt8183-kukui.dtsi | 12 +++++++
+> >>>    arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 36 +++++++++++++++++++
+> >>>    3 files changed, 58 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> >>> index ae405bd8f06b..9e77b420eee8 100644
+> >>> --- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> >>> @@ -25,6 +25,16 @@ memory@40000000 {
+> >>>        chosen {
+> >>>                stdout-path = "serial0:921600n8";
+> >>>        };
+> >>> +     reserved-memory {
+> >>> +             #address-cells = <2>;
+> >>> +             #size-cells = <2>;
+> >>> +             ranges;
+> >>> +             scp_mem_reserved: scp_mem_region {
+> >>> +                     compatible = "shared-dma-pool";
+> >>> +                     reg = <0 0x50000000 0 0x2900000>;
+> >>> +                     no-map;
+> >>> +             };
+> >>> +     };
+> >>>    };
+> >>>
+> >>>    &auxadc {
+> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+> >>> index f0a070535b34..3c763be658da 100644
+> >>> --- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+> >>> @@ -90,6 +90,18 @@ pp3300_alw: regulator6 {
+> >>>                regulator-max-microvolt = <3300000>;
+> >>>        };
+> >>>
+> >>> +     reserved_memory: reserved-memory {
+> >>> +             #address-cells = <2>;
+> >>> +             #size-cells = <2>;
+> >>> +             ranges;
+> >>> +
+> >>> +             scp_mem_reserved: scp_mem_region {
+> >>> +                     compatible = "shared-dma-pool";
+> >>> +                     reg = <0 0x50000000 0 0x2900000>;
+> >>> +                     no-map;
+> >>> +             };
+> >>> +     };
+> >>> +
+> >>>        max98357a: codec0 {
+> >>>                compatible = "maxim,max98357a";
+> >>>                sdmode-gpios = <&pio 175 0>;
+> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> >>> index 102105871db2..8f77eea6df27 100644
+> >>> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> >>> @@ -8,6 +8,7 @@
+> >>>    #include <dt-bindings/clock/mt8183-clk.h>
+> >>>    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> >>>    #include <dt-bindings/interrupt-controller/irq.h>
+> >>> +#include <dt-bindings/memory/mt8183-larb-port.h>
+> >>>    #include <dt-bindings/reset-controller/mt8183-resets.h>
+> >>>    #include <dt-bindings/phy/phy.h>
+> >>>    #include "mt8183-pinfunc.h"
+> >>> @@ -339,6 +340,25 @@ pwrap: pwrap@1000d000 {
+> >>>                        clock-names = "spi", "wrap";
+> >>>                };
+> >>>
+> >>> +             iommu: iommu@10205000 {
+> >>> +                     compatible = "mediatek,mt8183-m4u";
+> >>> +                     reg = <0 0x10205000 0 0x1000>;
+> >>> +                     interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_LOW>;
+> >>> +                     #iommu-cells = <1>;
+> >>> +             };
+> >>> +
+> >>> +             scp: scp@10500000 {
+> >>> +                     compatible = "mediatek,mt8183-scp";
+> >>> +                     reg = <0 0x10500000 0 0x80000>,
+> >>> +                           <0 0x105c0000 0 0x19080>;
+> >>> +                     reg-names = "sram", "cfg";
+> >>> +                     interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> >>> +                     clocks = <&infracfg CLK_INFRA_SCPSYS>;
+> >>> +                     clock-names = "main";
+> >>> +                     memory-region = <&scp_mem_reserved>;
+> >>> +                     status = "disabled";
+> >>> +             };
+> >>> +
+> >>>                systimer: timer@10017000 {
+> >>>                        compatible = "mediatek,mt8183-timer",
+> >>>                                     "mediatek,mt6765-timer";
+> >>> @@ -772,6 +792,22 @@ vencsys: syscon@17000000 {
+> >>>                        #clock-cells = <1>;
+> >>>                };
+> >>>
+> >>> +             vcodec_enc: vcodec@17020000 {
+> >>> +                     compatible = "mediatek,mt8183-vcodec-enc";
+> >>> +                     reg = <0 0x17020000 0 0x1000>;
+> >>> +                     interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_LOW>;
+> >>> +                     iommus = <&iommu M4U_PORT_VENC_REC>,
+> >>> +                              <&iommu M4U_PORT_VENC_BSDMA>,
+> >>> +                              <&iommu M4U_PORT_VENC_RD_COMV>,
+> >>> +                              <&iommu M4U_PORT_VENC_CUR_LUMA>,
+> >>> +                              <&iommu M4U_PORT_VENC_CUR_CHROMA>,
+> >>> +                              <&iommu M4U_PORT_VENC_REF_LUMA>,
+> >>> +                              <&iommu M4U_PORT_VENC_REF_CHROMA>;
+> >>> +                     mediatek,scp = <&scp>;
+> >>> +                     clocks = <&vencsys CLK_VENC_VENC>;
+> >>> +                     clock-names = "MT_CG_VENC";
+> >>> +             };
+> >>> +
+> >>>                ipu_conn: syscon@19000000 {
+> >>>                        compatible = "mediatek,mt8183-ipu_conn", "syscon";
+> >>>                        reg = <0 0x19000000 0 0x1000>;
+> >>>
