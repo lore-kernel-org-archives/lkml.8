@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5251BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF22DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 328582075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 991052075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:18:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fkq7wTcI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M7A7WkzC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbgH0KSo (ORCPT
+        id S1728648AbgH0KSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:18:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46348 "EHLO
+        Thu, 27 Aug 2020 06:18:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728623AbgH0KOi (ORCPT
+        with ESMTP id S1728594AbgH0KOe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:14:38 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E943C06121B;
-        Thu, 27 Aug 2020 03:14:38 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id n3so2421209pjq.1;
-        Thu, 27 Aug 2020 03:14:38 -0700 (PDT)
+        Thu, 27 Aug 2020 06:14:34 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74138C06121B;
+        Thu, 27 Aug 2020 03:14:34 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ds1so2374176pjb.1;
+        Thu, 27 Aug 2020 03:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=Tgn7BmW3UPf15RTWedDiK9MChZ5JohXLdpQM+uE2unw=;
-        b=fkq7wTcI2hdpMWXDTKYB9kp8LfDRzvSbQowxElzqU60rMF4ksVtrDw64SlvcQc6aWm
-         KgMUlZIvoIeAaC9FuM5CiSFrMmKuoQ6sppieERWBB6I4J72Aniwc98hPItJAe8EZE7Om
-         2tEy1VQFHIGbRwtebNdnv0YSFnBDIBfSXlnT19XicdYzWDyqLr7/HFFAqfFpJ9BygjAu
-         naTG4fCN6hoPztvIo83+OfS88EvSJtKblKqR/PoZlcAKVb9Bggy0Tg3tjhOp2Jj657IN
-         uSOGvIz0fi+a5I0iRPLpxDna64zwvIz34693xRm24ObyzAjiPa762Qll+zzCOa4BnYzI
-         owEw==
+        bh=hrftI+TQY3BCyjvYX8clZw8H0tJAk+80/vXHms6y9CA=;
+        b=M7A7WkzCQcVg/GGhHmxYZcIy+RN/B/9qjTxm5m5+XBmLPSV/y0c0InzrUl3+VbcSRA
+         IB/IgJI5NkfjGLqXNKb4nG6tOE4rAsSeiiLSNl4pv+yvP0KPCJpgjsXsl8oPZBBJJSMH
+         OzIoaATB2lZ4hZBoUPr3BHzodWYqeu8f+eSrTYLm1DZBY48h/bcYKIQ+UybB0M/W96x8
+         AZY14KSFu2Q7vzS2Q0oVF0INPs3tgBa7Ppnt9WGUuj1NQIf5svIoUuSUGukotsoRuCSt
+         xd52pdSVx+Hq8JtaucS70nHtUaf8aNW0Rd1w2FJsQ3EMgCi5k1O4MXzSyHeHnmrmyBcP
+         CRew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=Tgn7BmW3UPf15RTWedDiK9MChZ5JohXLdpQM+uE2unw=;
-        b=RKERjVfBkVpL8wdnbpx3B/5he5vf43L8BKk4SN4onVd9vdPhjpftlIQHZ2h8MaW0fv
-         na/wxWdc4nu8LbQ50C1GJZGzPP1J6+gYlIkwFNbQSMnjBEuhTzirYfMPBY7PksBX8JuD
-         px28+ACImZnPJcLKwf57+tSwbI+JLQiBD5yKIJZAyF8WeJzuwBGQCk6aocOMnjpljBTz
-         E2Vc7ZcLBylSkRbzD8/g8apPQzST7Ls4MfRby8uotS85eVBgNENKlcBM2X54v4kOya8x
-         vC53Us+F6g1IbDSCkObW1wZE1bK0GEv85dKCoXuiomj1P10z++wvG+dxr0cOvfK6LmRS
-         I8pQ==
-X-Gm-Message-State: AOAM5300t+g3NR8DWl4w6pYaUobSfEbNu5bFwgBJLwU1AIY1we9AUqet
-        Au3YI4dhktCEudgDY1GEf3IQaEo4bjXj+w==
-X-Google-Smtp-Source: ABdhPJxmx7ggkgIHpl14X0JPM+SSOy88CiwxOTN2G/YFZCuiBPOs97aBZCfHrC4OV2yRd9YSYT1h3A==
-X-Received: by 2002:a17:90b:b18:: with SMTP id bf24mr9219665pjb.223.1598523278208;
-        Thu, 27 Aug 2020 03:14:38 -0700 (PDT)
+        bh=hrftI+TQY3BCyjvYX8clZw8H0tJAk+80/vXHms6y9CA=;
+        b=jthk83aTqGR6I7jFlslc1LhTLbEOjeMfaGC3FiTYTm6AOBLlXyF1ba3X7n4vg2tNpw
+         oAQG6QGVD92wj46xQ5/eOyR9zdVnTSGNgOY3HKG2nZkXkTmf59OAkrVwX2A/jS52UjwL
+         6qo2FSJ270n4yx/L7hWB+vNVTAP+6RkLbozhchH4A6QTjSaONw+odN0Bsw88Ex10aNOF
+         I+7EsN4UM2qsX3BkNEPengCXItjVLEHx8b0OmTnqQSiXXfakhAEaQOTe8C/7armBiJEp
+         s+nADZeDheoTV9BDDWh4LXqx2E2gI1MYoTt4owV6mp/TRXqBm2nSUfg6sMfauTLr6ST/
+         LeHA==
+X-Gm-Message-State: AOAM531uWeXnvHb3QMGX8zRqj06eaavcYJevmhFAcgL0DOYFPgdt+o3X
+        YhUOhW6D/GrT3lqyPmiVUa0=
+X-Google-Smtp-Source: ABdhPJw9U4CjyHuq/wnj1EIt7+3PVAz+0j1BNU4DP9GXim1rn1yivbp9bMGniGiZm5wEfM5TwRbv+g==
+X-Received: by 2002:a17:90a:2c06:: with SMTP id m6mr10328110pjd.129.1598523274050;
+        Thu, 27 Aug 2020 03:14:34 -0700 (PDT)
 Received: from VM-0-6-centos.localdomain ([119.28.90.140])
-        by smtp.gmail.com with ESMTPSA id t10sm2333434pfq.52.2020.08.27.03.14.37
+        by smtp.gmail.com with ESMTPSA id t10sm2333434pfq.52.2020.08.27.03.14.32
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Aug 2020 03:14:37 -0700 (PDT)
+        Thu, 27 Aug 2020 03:14:33 -0700 (PDT)
 From:   Chunguang Xu <brookxu.cn@gmail.com>
 X-Google-Original-From: Chunguang Xu <brookxu@tencent.com>
 To:     arnd@arndb.de
 Cc:     rppt@kernel.org, linux-arch@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 05/23] scsi: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-Date:   Thu, 27 Aug 2020 18:14:10 +0800
-Message-Id: <fa349cd3d02a3f3e6baff774146dd29ceee77077.1598518912.git.brookxu@tencent.com>
+Subject: [PATCH 02/23] ia64: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
+Date:   Thu, 27 Aug 2020 18:14:07 +0800
+Message-Id: <e9bb45969e2975c3e4632ce84168711667f5126f.1598518912.git.brookxu@tencent.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <cover.1598518912.git.brookxu@tencent.com>
 References: <cover.1598518912.git.brookxu@tencent.com>
@@ -84,31 +84,25 @@ facilitating problem analysis.
 
 Signed-off-by: Chunguang Xu <brookxu@tencent.com>
 ---
- drivers/scsi/megaraid/mega_common.h | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ arch/ia64/hp/common/sba_iommu.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/megaraid/mega_common.h b/drivers/scsi/megaraid/mega_common.h
-index 3a7596e..ba3007d 100644
---- a/drivers/scsi/megaraid/mega_common.h
-+++ b/drivers/scsi/megaraid/mega_common.h
-@@ -253,16 +253,10 @@
- 
- #ifdef DEBUG
- #if defined (_ASSERT_PANIC)
--#define ASSERT_ACTION	panic
-+#define ASSERT(expression)	ASSERT_FAIL(expression)
- #else
--#define ASSERT_ACTION	printk
-+#define ASSERT(expression)	ASSERT_WARN(expression)
+diff --git a/arch/ia64/hp/common/sba_iommu.c b/arch/ia64/hp/common/sba_iommu.c
+index 656a488..335bf4a 100644
+--- a/arch/ia64/hp/common/sba_iommu.c
++++ b/arch/ia64/hp/common/sba_iommu.c
+@@ -138,11 +138,7 @@
  #endif
--
--#define ASSERT(expression)						\
--	if (!(expression)) {						\
--	ASSERT_ACTION("assertion failed:(%s), file: %s, line: %d:%s\n",	\
--			#expression, __FILE__, __LINE__, __func__);	\
--	}
+ 
+ #ifdef ASSERT_PDIR_SANITY
+-#define ASSERT(expr) \
+-        if(!(expr)) { \
+-                printk( "\n" __FILE__ ":%d: Assertion " #expr " failed!\n",__LINE__); \
+-                panic(#expr); \
+-        }
++#define ASSERT(expr) ASSERT_FAIL(expr)
  #else
- #define ASSERT(expression)
+ #define ASSERT(expr)
  #endif
 -- 
 1.8.3.1
