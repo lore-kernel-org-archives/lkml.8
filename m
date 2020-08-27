@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DE4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52DD62054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C5432054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:59:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BvRGJ/ta"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KFwosy8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgH0O7X (ORCPT
+        id S1728127AbgH0O7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:59:23 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:53801 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728127AbgH0O6s (ORCPT
+        Thu, 27 Aug 2020 10:59:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21291 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728419AbgH0O7N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:58:48 -0400
+        Thu, 27 Aug 2020 10:59:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598540326;
+        s=mimecast20190719; t=1598540350;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=E6x4893U1XZUaKie9nG5yKGJyij3esKFZmrFVgshH0M=;
-        b=BvRGJ/taq4oGktbSmqqJbAemjnwdQDjfDOG7rS4WjMECZVXjfn+UWYc42ge1V8vNlvE+de
-        Xs5mha85Cv/q3tj86spOYYUoJLdqaTGjgxt0B3ZUScKAGOPWPT1Tee5QIR4knQYRC7wZNq
-        CS16cDxxWM8q6lcYVpNaUYRb3sWicBY=
+        bh=z4Vz/JxMJ98n2+tJ+MNwT1uOCyLxzwuXuw0qARqAyiM=;
+        b=KFwosy8JrSCDFWHHsYoH1TMrXOgpaiNP2vDm4NRuRE8RBenb3OYtVR9bGUZT04QyxPYcPA
+        YfGDGKX2aty2N9zTDxL2ceftVQWt2xh5EToE+vqTM+UaJkR7A4lxgDwJvMMBVYN740s999
+        sUnXCFoTEjpO2s4+kSjuU/xOt4c5CVI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-356-OzeCjMpkPR2bB2S_EItBpg-1; Thu, 27 Aug 2020 10:58:44 -0400
-X-MC-Unique: OzeCjMpkPR2bB2S_EItBpg-1
+ us-mta-65-bDDXn54yP324K-pMmJdIQw-1; Thu, 27 Aug 2020 10:59:06 -0400
+X-MC-Unique: bDDXn54yP324K-pMmJdIQw-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D8F218BE161;
-        Thu, 27 Aug 2020 14:58:43 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F3C5AE40E;
+        Thu, 27 Aug 2020 14:59:03 +0000 (UTC)
 Received: from steredhat.redhat.com (ovpn-113-96.ams2.redhat.com [10.36.113.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E260D5C1D0;
-        Thu, 27 Aug 2020 14:58:39 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D631B5C1C2;
+        Thu, 27 Aug 2020 14:58:52 +0000 (UTC)
 From:   Stefano Garzarella <sgarzare@redhat.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
@@ -56,9 +56,9 @@ Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
         Aleksa Sarai <asarai@suse.de>,
         Sargun Dhillon <sargun@sargun.me>,
         linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: [PATCH v6 1/3] io_uring: use an enumeration for io_uring_register(2) opcodes
-Date:   Thu, 27 Aug 2020 16:58:29 +0200
-Message-Id: <20200827145831.95189-2-sgarzare@redhat.com>
+Subject: [PATCH v6 3/3] io_uring: allow disabling rings during the creation
+Date:   Thu, 27 Aug 2020 16:58:31 +0200
+Message-Id: <20200827145831.95189-4-sgarzare@redhat.com>
 In-Reply-To: <20200827145831.95189-1-sgarzare@redhat.com>
 References: <20200827145831.95189-1-sgarzare@redhat.com>
 MIME-Version: 1.0
@@ -69,58 +69,191 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The enumeration allows us to keep track of the last
-io_uring_register(2) opcode available.
+This patch adds a new IORING_SETUP_R_DISABLED flag to start the
+rings disabled, allowing the user to register restrictions,
+buffers, files, before to start processing SQEs.
 
-Behaviour and opcodes names don't change.
+When IORING_SETUP_R_DISABLED is set, SQE are not processed and
+SQPOLL kthread is not started.
 
+The restrictions registration are allowed only when the rings
+are disable to prevent concurrency issue while processing SQEs.
+
+The rings can be enabled using IORING_REGISTER_ENABLE_RINGS
+opcode with io_uring_register(2).
+
+Suggested-by: Jens Axboe <axboe@kernel.dk>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
-v5:
- - explicitly assign enum values since this is UAPI [Kees]
----
- include/uapi/linux/io_uring.h | 27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+v4:
+ - fixed io_uring_enter() exit path when ring is disabled
 
+v3:
+ - enabled restrictions only when the rings start
+
+RFC v2:
+ - removed return value of io_sq_offload_start()
+---
+ fs/io_uring.c                 | 52 ++++++++++++++++++++++++++++++-----
+ include/uapi/linux/io_uring.h |  2 ++
+ 2 files changed, 47 insertions(+), 7 deletions(-)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 5f62997c147b..b036f3373fbe 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -226,6 +226,7 @@ struct io_restriction {
+ 	DECLARE_BITMAP(sqe_op, IORING_OP_LAST);
+ 	u8 sqe_flags_allowed;
+ 	u8 sqe_flags_required;
++	bool registered;
+ };
+ 
+ struct io_ring_ctx {
+@@ -7497,8 +7498,8 @@ static int io_init_wq_offload(struct io_ring_ctx *ctx,
+ 	return ret;
+ }
+ 
+-static int io_sq_offload_start(struct io_ring_ctx *ctx,
+-			       struct io_uring_params *p)
++static int io_sq_offload_create(struct io_ring_ctx *ctx,
++				struct io_uring_params *p)
+ {
+ 	int ret;
+ 
+@@ -7532,7 +7533,6 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
+ 			ctx->sqo_thread = NULL;
+ 			goto err;
+ 		}
+-		wake_up_process(ctx->sqo_thread);
+ 	} else if (p->flags & IORING_SETUP_SQ_AFF) {
+ 		/* Can't have SQ_AFF without SQPOLL */
+ 		ret = -EINVAL;
+@@ -7549,6 +7549,12 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
+ 	return ret;
+ }
+ 
++static void io_sq_offload_start(struct io_ring_ctx *ctx)
++{
++	if ((ctx->flags & IORING_SETUP_SQPOLL) && ctx->sqo_thread)
++		wake_up_process(ctx->sqo_thread);
++}
++
+ static inline void __io_unaccount_mem(struct user_struct *user,
+ 				      unsigned long nr_pages)
+ {
+@@ -8295,6 +8301,9 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
+ 	if (!percpu_ref_tryget(&ctx->refs))
+ 		goto out_fput;
+ 
++	if (ctx->flags & IORING_SETUP_R_DISABLED)
++		goto out_fput;
++
+ 	/*
+ 	 * For SQ polling, the thread will do all submissions and completions.
+ 	 * Just return the requested submit count, and wake the thread if
+@@ -8612,10 +8621,13 @@ static int io_uring_create(unsigned entries, struct io_uring_params *p,
+ 	if (ret)
+ 		goto err;
+ 
+-	ret = io_sq_offload_start(ctx, p);
++	ret = io_sq_offload_create(ctx, p);
+ 	if (ret)
+ 		goto err;
+ 
++	if (!(p->flags & IORING_SETUP_R_DISABLED))
++		io_sq_offload_start(ctx);
++
+ 	memset(&p->sq_off, 0, sizeof(p->sq_off));
+ 	p->sq_off.head = offsetof(struct io_rings, sq.head);
+ 	p->sq_off.tail = offsetof(struct io_rings, sq.tail);
+@@ -8678,7 +8690,8 @@ static long io_uring_setup(u32 entries, struct io_uring_params __user *params)
+ 
+ 	if (p.flags & ~(IORING_SETUP_IOPOLL | IORING_SETUP_SQPOLL |
+ 			IORING_SETUP_SQ_AFF | IORING_SETUP_CQSIZE |
+-			IORING_SETUP_CLAMP | IORING_SETUP_ATTACH_WQ))
++			IORING_SETUP_CLAMP | IORING_SETUP_ATTACH_WQ |
++			IORING_SETUP_R_DISABLED))
+ 		return -EINVAL;
+ 
+ 	return  io_uring_create(entries, &p, params);
+@@ -8761,8 +8774,12 @@ static int io_register_restrictions(struct io_ring_ctx *ctx, void __user *arg,
+ 	size_t size;
+ 	int i, ret;
+ 
++	/* Restrictions allowed only if rings started disabled */
++	if (!(ctx->flags & IORING_SETUP_R_DISABLED))
++		return -EINVAL;
++
+ 	/* We allow only a single restrictions registration */
+-	if (ctx->restricted)
++	if (ctx->restrictions.registered)
+ 		return -EBUSY;
+ 
+ 	if (!arg || nr_args > IORING_MAX_RESTRICTIONS)
+@@ -8814,12 +8831,27 @@ static int io_register_restrictions(struct io_ring_ctx *ctx, void __user *arg,
+ 	if (ret != 0)
+ 		memset(&ctx->restrictions, 0, sizeof(ctx->restrictions));
+ 	else
+-		ctx->restricted = 1;
++		ctx->restrictions.registered = true;
+ 
+ 	kfree(res);
+ 	return ret;
+ }
+ 
++static int io_register_enable_rings(struct io_ring_ctx *ctx)
++{
++	if (!(ctx->flags & IORING_SETUP_R_DISABLED))
++		return -EINVAL;
++
++	if (ctx->restrictions.registered)
++		ctx->restricted = 1;
++
++	ctx->flags &= ~IORING_SETUP_R_DISABLED;
++
++	io_sq_offload_start(ctx);
++
++	return 0;
++}
++
+ static bool io_register_op_must_quiesce(int op)
+ {
+ 	switch (op) {
+@@ -8941,6 +8973,12 @@ static int __io_uring_register(struct io_ring_ctx *ctx, unsigned opcode,
+ 			break;
+ 		ret = io_unregister_personality(ctx, nr_args);
+ 		break;
++	case IORING_REGISTER_ENABLE_RINGS:
++		ret = -EINVAL;
++		if (arg || nr_args)
++			break;
++		ret = io_register_enable_rings(ctx);
++		break;
+ 	case IORING_REGISTER_RESTRICTIONS:
+ 		ret = io_register_restrictions(ctx, arg, nr_args);
+ 		break;
 diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-index d65fde732518..5f12ae6a415c 100644
+index 6e7f2e5e917b..a0c85e0e9016 100644
 --- a/include/uapi/linux/io_uring.h
 +++ b/include/uapi/linux/io_uring.h
-@@ -255,17 +255,22 @@ struct io_uring_params {
- /*
-  * io_uring_register(2) opcodes and arguments
-  */
--#define IORING_REGISTER_BUFFERS		0
--#define IORING_UNREGISTER_BUFFERS	1
--#define IORING_REGISTER_FILES		2
--#define IORING_UNREGISTER_FILES		3
--#define IORING_REGISTER_EVENTFD		4
--#define IORING_UNREGISTER_EVENTFD	5
--#define IORING_REGISTER_FILES_UPDATE	6
--#define IORING_REGISTER_EVENTFD_ASYNC	7
--#define IORING_REGISTER_PROBE		8
--#define IORING_REGISTER_PERSONALITY	9
--#define IORING_UNREGISTER_PERSONALITY	10
-+enum {
-+	IORING_REGISTER_BUFFERS			= 0,
-+	IORING_UNREGISTER_BUFFERS		= 1,
-+	IORING_REGISTER_FILES			= 2,
-+	IORING_UNREGISTER_FILES			= 3,
-+	IORING_REGISTER_EVENTFD			= 4,
-+	IORING_UNREGISTER_EVENTFD		= 5,
-+	IORING_REGISTER_FILES_UPDATE		= 6,
-+	IORING_REGISTER_EVENTFD_ASYNC		= 7,
-+	IORING_REGISTER_PROBE			= 8,
-+	IORING_REGISTER_PERSONALITY		= 9,
-+	IORING_UNREGISTER_PERSONALITY		= 10,
-+
-+	/* this goes last */
-+	IORING_REGISTER_LAST
-+};
+@@ -95,6 +95,7 @@ enum {
+ #define IORING_SETUP_CQSIZE	(1U << 3)	/* app defines CQ size */
+ #define IORING_SETUP_CLAMP	(1U << 4)	/* clamp SQ/CQ ring sizes */
+ #define IORING_SETUP_ATTACH_WQ	(1U << 5)	/* attach to existing wq */
++#define IORING_SETUP_R_DISABLED	(1U << 6)	/* start with ring disabled */
  
- struct io_uring_files_update {
- 	__u32 offset;
+ enum {
+ 	IORING_OP_NOP,
+@@ -268,6 +269,7 @@ enum {
+ 	IORING_REGISTER_PERSONALITY		= 9,
+ 	IORING_UNREGISTER_PERSONALITY		= 10,
+ 	IORING_REGISTER_RESTRICTIONS		= 11,
++	IORING_REGISTER_ENABLE_RINGS		= 12,
+ 
+ 	/* this goes last */
+ 	IORING_REGISTER_LAST
 -- 
 2.26.2
 
