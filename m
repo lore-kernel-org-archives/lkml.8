@@ -2,135 +2,155 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9B5C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC18C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BEF22080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:03:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3MR6zMd"
+	by mail.kernel.org (Postfix) with ESMTP id 19BB62075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:12:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbgH0EDt (ORCPT
+        id S1726157AbgH0EMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 00:03:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgH0EDs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 00:03:48 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54AFBC0612A3;
-        Wed, 26 Aug 2020 21:03:27 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id m8so2465100pfh.3;
-        Wed, 26 Aug 2020 21:03:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6bQeuePNqH7dWbqUFgjlTSNlzBof5RgofuNEIyHakwM=;
-        b=X3MR6zMdfOgPqvRfgQkzGhLn/dxi02axDYvVL7GX/lmX+cA98U0F7qPCwN5R826MPt
-         P6f278VM9YOweJuu39pPhgqodUBu+ASdBdcZZwSSfYTgdzpBm5DLE9iwNIUmdt9bZ/dU
-         YgTTt9tbCeTgNibdS+a4BNHlRVfY0bKqaX6Rpsnx70swdhJFBmB8FNDJ4upzP7eFStyf
-         xTRKRq8CRQ35RLoLaC0Ct7s+xT4NSHWhCXZ9OAAXJeSZV6VnIddS8rQbEC2ylVXwzStu
-         LUXFNe8kgTUMCa337MPXi93vLwJBUj2x8ZZM/unRuBZoYo6Dmnp2RCOohjZeV6HUmy90
-         VaHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6bQeuePNqH7dWbqUFgjlTSNlzBof5RgofuNEIyHakwM=;
-        b=sW8nrtNQlFbJxeJ2BDWDdO4ry5+1oYO1+9RtIuYUElkuSQhb9ZGeW0LgS3sUSOb/A6
-         Z64oww97SZ5dlPTDfG8klgnQTR2Y0MYSkwgbNMtbpV+a2chQv2/c4UWn4FpxtwJvso0A
-         l/sblpd9oBMwHFSoGdZZqFC4sD473BlqPh6YEyIhSqw5jbXTL/xmPUEzFFBAKCSdHmPH
-         m38OpHCSmx4OLApUH5Gnbnhl4qepKJpBoGUdp+ojJRYcAyI3ORPj49MCJjkp/duPLGtF
-         SlHCRfHWoQhBIvFQlSzw4hQfBmsh3u9P67OvTu8PHBvkjrNWKAxj/Zmb1Z64hGdZE80W
-         PCTQ==
-X-Gm-Message-State: AOAM5330XpPh/wylHm26m9AatvXHN1KSFdtlXjfjOoMGmmS37+3D3YDB
-        gRmTOjJuWsLsuf6gt8O2bpI=
-X-Google-Smtp-Source: ABdhPJzh9mqw7jcuL/gdVISt/cqtAADn6a8e73oWM42h68OTeYpnn525+zrB4ZLZwskwsGEGF/z01w==
-X-Received: by 2002:a65:6882:: with SMTP id e2mr13324535pgt.290.1598501005803;
-        Wed, 26 Aug 2020 21:03:25 -0700 (PDT)
-Received: from localhost ([124.156.176.71])
-        by smtp.gmail.com with ESMTPSA id v78sm800705pfc.121.2020.08.26.21.03.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Aug 2020 21:03:25 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 12:03:27 +0800
-From:   Yue Hu <zbestahu@gmail.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, viresh.kumar@linaro.org
-Cc:     rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        huyue2@yulong.com, zbestahu@163.com
-Subject: Re: [PATCH] thermal: sysfs: fall back to vzalloc for cooling
- device's statistics
-Message-ID: <20200827120327.00003740.zbestahu@gmail.com>
-In-Reply-To: <c3fd7949-b33a-aca3-8dd5-1c2df35fb63d@linaro.org>
-References: <20200818063005.13828-1-zbestahu@gmail.com>
-        <40b69f97-46e5-d62e-0d2f-604dfd4dafa1@linaro.org>
-        <20200826101319.00003048.zbestahu@gmail.com>
-        <c3fd7949-b33a-aca3-8dd5-1c2df35fb63d@linaro.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 27 Aug 2020 00:12:18 -0400
+Received: from mga01.intel.com ([192.55.52.88]:34840 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbgH0EMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 00:12:18 -0400
+IronPort-SDR: iQaVEwsY4dn6HK/gP3thlb2m/BgQ0aO3D7E+YK2939VLnxDt/L/YcTi/pppE9SwGEavQXfIQa0
+ K2yo3U6xOrgA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="174470452"
+X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
+   d="scan'208";a="174470452"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 21:12:17 -0700
+IronPort-SDR: HZmNVwyuAIxVauNRXIn/7F+dvHBCr75jOHxA6PLHK6X5yXwZ5o0yf/AYaT7B6P5wL35V7gZvkp
+ rbPBsdsMmS8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
+   d="scan'208";a="313099176"
+Received: from otc-nc-03.jf.intel.com ([10.54.39.36])
+  by orsmga002.jf.intel.com with ESMTP; 26 Aug 2020 21:12:17 -0700
+From:   Ashok Raj <ashok.raj@intel.com>
+To:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ashok Raj <ashok.raj@intel.com>,
+        Sukumar Ghorai <sukumar.ghorai@intel.com>,
+        Srikanth Nandamuri <srikanth.nandamuri@intel.com>,
+        Evan Green <evgreen@chromium.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, x86@kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH v3] x86/hotplug: Silence APIC only after all irq's are migrated
+Date:   Wed, 26 Aug 2020 21:12:10 -0700
+Message-Id: <1598501530-45821-1-git-send-email-ashok.raj@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 11:19:02 +0200
-Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+There is a race when taking a CPU offline. Current code looks like this:
 
-> Hi Yue,
-> 
-> On 26/08/2020 04:13, Yue Hu wrote:
-> > On Mon, 24 Aug 2020 12:40:35 +0200
-> > Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
-> >   
-> >> On 18/08/2020 08:30, Yue Hu wrote:  
-> >>> From: Yue Hu <huyue2@yulong.com>
-> >>>
-> >>> We observed warning about kzalloc() when register thermal cooling device
-> >>> in backlight_device_register(). backlight display can be a cooling device
-> >>> since reducing screen brightness will can help reduce temperature.
-> >>>
-> >>> However, ->get_max_state of backlight will assign max brightness of 1024
-> >>> to states. The memory size can be getting 1MB+ due to states * states.    
-> >>
-> >> What are the benefits of a 1024 states cooling device ? Is the
-> >> difference noticeable with a such small step ?  
-> > 
-> > Okay, this issue is happened under MSM/Android platform. QCOM spmi wled driver
-> > will define the max brightness. We needs to fix the issue to get thermal statistics.  
-> 
-> Let me rephrase my questions:
-> 
-> Don't you think there is something wrong in creating a 1024 x 1024
-> matrix to show transitions ?
-> 
-> What is the benefit of such stats ?
-> 
-> What is the benefit of having a 1024 states cooling device ?
+native_cpu_disable()
+{
+	...
+	apic_soft_disable();
+	/*
+	 * Any existing set bits for pending interrupt to
+	 * this CPU are preserved and will be sent via IPI
+	 * to another CPU by fixup_irqs().
+	 */
+	cpu_disable_common();
+	{
+		....
+		/*
+		 * Race window happens here. Once local APIC has been
+		 * disabled any new interrupts from the device to
+		 * the old CPU are lost
+		 */
+		fixup_irqs(); // Too late to capture anything in IRR.
+		...
+	}
+}
 
-Hi Daniel,
+The fix is to disable the APIC *after* cpu_disable_common().
 
-Now, i'm just focus on removing the kernel warning based on current code logic.
-Commit 8ea229511e06 (thermal: Add cooling device's statistics in sysfs) added
-the thermal statistics by viresh and viresh gived the patch an acknowledgement
-in anther mail thread. 
+Testing was done with a USB NIC that provided a source of frequent
+interrupts. A script migrated interrupts to a specific CPU and
+then took that CPU offline.
 
-Hi viresh,
+Fixes: 60dcaad5736f ("x86/hotplug: Silence APIC and NMI when CPU is dead")
+Link: https://lore.kernel.org/lkml/875zdarr4h.fsf@nanos.tec.linutronix.de/
+Reported-by: Evan Green <evgreen@chromium.org>
+Tested-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Tested-by: Evan Green <evgreen@chromium.org>
+Reviewed-by: Evan Green <evgreen@chromium.org>
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+---
+v3:
+    Fix commit message and comments per Thomas.
+    https://lore.kernel.org/lkml/87mu2iw86q.fsf@nanos.tec.linutronix.de/
 
-Could you review the patch again about the question above?
+v2:
+- Typos and fixes suggested by Randy Dunlap
 
-Thank you.
+To: linux-kernel@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Sukumar Ghorai <sukumar.ghorai@intel.com>
+Cc: Srikanth Nandamuri <srikanth.nandamuri@intel.com>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: x86@kernel.org
+Cc: stable@vger.kernel.org
+---
+ arch/x86/kernel/smpboot.c | 26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
 
-> 
-> 
-> 
-> 
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 27aa04a95702..f5ef689dd62a 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -1594,14 +1594,28 @@ int native_cpu_disable(void)
+ 	if (ret)
+ 		return ret;
+ 
+-	/*
+-	 * Disable the local APIC. Otherwise IPI broadcasts will reach
+-	 * it. It still responds normally to INIT, NMI, SMI, and SIPI
+-	 * messages.
+-	 */
+-	apic_soft_disable();
+ 	cpu_disable_common();
+ 
++        /*
++         * Disable the local APIC. Otherwise IPI broadcasts will reach
++         * it. It still responds normally to INIT, NMI, SMI, and SIPI
++         * messages.
++         *
++         * Disabling the APIC must happen after cpu_disable_common()
++         * which invokes fixup_irqs().
++         *
++         * Disabling the APIC preserves already set bits in IRR, but
++         * an interrupt arriving after disabling the local APIC does not
++         * set the corresponding IRR bit.
++         *
++         * fixup_irqs() scans IRR for set bits so it can raise a not
++         * yet handled interrupt on the new destination CPU via an IPI
++         * but obviously it can't do so for IRR bits which are not set.
++         * IOW, interrupts arriving after disabling the local APIC will
++         * be lost.
++         */
++	apic_soft_disable();
++
+ 	return 0;
+ }
+ 
+-- 
+2.7.4
 
