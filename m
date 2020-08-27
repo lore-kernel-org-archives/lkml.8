@@ -2,180 +2,108 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A66C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E75C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9596C20825
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21687207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:14:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwlM3h0/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N0J5F50z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728577AbgH0KOc (ORCPT
+        id S1728675AbgH0KOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:14:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46324 "EHLO
+        Thu, 27 Aug 2020 06:14:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728511AbgH0KOb (ORCPT
+        with ESMTP id S1728369AbgH0KOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:14:31 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9A47C061264;
-        Thu, 27 Aug 2020 03:14:31 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id g6so2352948pjl.0;
-        Thu, 27 Aug 2020 03:14:31 -0700 (PDT)
+        Thu, 27 Aug 2020 06:14:37 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 519F0C061233;
+        Thu, 27 Aug 2020 03:14:37 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mw10so2350014pjb.2;
+        Thu, 27 Aug 2020 03:14:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=kJ2fpgSadIOzfLVJTzEgFA08Q4H4dHhYlJOzUg0KTfE=;
-        b=DwlM3h0/1TRgy1NN/FHAY3WH3gmxihuRVNnpA39YuyRdwdDBKQhAAElJw+DBI8gzsc
-         j0TCwX+em1hMhffXO735vff6d/iqlwOU5f5CAkRnNByQTBqZLAKtkhyNWyqUR1ZWL7hN
-         tpKMnn8hUCmvVB8FeayQWQsVOnNoWOvK30c1aOMJU2j9ZesqKY53us4I6f5YS8Ml2nPr
-         7+bxRdPIelKiYxqDfJ55U6xlOWaI/30SDhAaK1sGpefrg/IzEuEVW8yX7FfhUCaYsDv2
-         NWuavpw55nH6MKPk5K4rtBRxIWA3HYNwNwL7381X6f7w/+n7gOA1dssckeKNfJYXxzRU
-         Ayzw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=Rz4ryX0AMxAkIMgQI5I1yCNb3HoLILhZhjQ00rbjtJY=;
+        b=N0J5F50z/STIBf+k6ASzGjD6I3UkwlsYUJjLWuiCCjEzN1DAntFnkY87cnP6qDQ/JK
+         RAcUB/f3x+/Zl9mnnCh7Mcj7nKRR36RhK4NFZIwUvOZkPwOwb35dN/v/VrKAloqV77Hx
+         +pIBtdLjjSZnCNRUUmi5OpaO4fsFBywdzLPm0mTNxdJMcJYq4RzV47hc7twFR64KRgn+
+         g6NMFWwcqSaHAqpavP7YgUbEnSIUONji2M7uJh+O4FO4Pm8DBeJ/YsUCoyeQmoxiMkKF
+         pRsA53BuUhYLfow1mX80TJ6a42j5n7F7p1hP3/DLh2L5nu7Sd+0bSEqz+s9dw/Z5hrQn
+         ZcIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kJ2fpgSadIOzfLVJTzEgFA08Q4H4dHhYlJOzUg0KTfE=;
-        b=TC7OBrrYzcNMbCf+dEnEjeggIqR4xpsH/IGRTFk3L4IzfiWLJ0jjWSjchzh55WlVjj
-         7NlJHNQUHKIESeUTvcnFiALKuaKaqU1fLU/U8qcW66NURdxIwVvdoFXSd06xhlaJSHNh
-         WvUC0S8DobpYiBowoLqaDFajrYry5+4v7Tjw8bARTZcOgPIRr9C0xylcDx4YXBxF2Umr
-         VO2b3xEZGxjXM8ia6RhOEtebBkcs/h5Y6hxDkzIdlH4OLPkgFe7PvJYhPaZaZkZP707E
-         oso8TtFPkTtgxbqqPPRbe9lbWMoouJijm+ip2jKONPVQoJtPdIKgvyJdBfJPzbxJV9oe
-         Elcw==
-X-Gm-Message-State: AOAM5334eA5Aup27lDAffgh8ANvTucOaAVMq1Bx0u5D+snXi72yAGmDf
-        I8CNDPlEM94EC0uqMDJmrlOF15lY3KYDXA==
-X-Google-Smtp-Source: ABdhPJzBM9ZQNGhRRwHzq8Ti79sdq6UG69ya/El/b9FpPKWEybqQBzprLwYg82hyCgNwWtzfRwmdLg==
-X-Received: by 2002:a17:90a:fa47:: with SMTP id dt7mr10544171pjb.22.1598523271240;
-        Thu, 27 Aug 2020 03:14:31 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=Rz4ryX0AMxAkIMgQI5I1yCNb3HoLILhZhjQ00rbjtJY=;
+        b=e55D34Nih+yOhJxgpJ8kgsYCY2ybh5e6SNeEiN7AnnfMm4Xy+0075LCdUd1iwAD6A+
+         2hZPGMEhgtlnlERnjGV8vR1dX4i91Iz0OClpxqg0wMgidXG3nvpfgAoaMgTxxs1dc8nG
+         VZreJddJWai9Aigr6N+tN/eq7ru1oa+mXuPjlfuKorH9DWhNkQ/mUFcGBUF58oPyQIrW
+         W9bebU+HU28DjAGgmmCSc8DlYmpaf0izdz00wekE+Ubo8/9eiMByWREiOQUfb4Aiau02
+         Yr2IJKslOWiXRJ91TnXfl35YXd8W2r+apoc9ef5eB0lSEk+CJp6zWCysyHwlaIykBJGo
+         HAaA==
+X-Gm-Message-State: AOAM5325FYEdfF/ATxv3KYEAxzdQGxcQOrpXgZNwyeJZxXX7xcEzDtr8
+        vnpenUIfJoR3vfn6eB3gsQ0=
+X-Google-Smtp-Source: ABdhPJz+IG0Jrr1ijpeIHBxbdt+cj7XdgQ5SkdJp+WjLbqRWiCfi13cVTc7OhKskz9OljtBT1tmUDw==
+X-Received: by 2002:a17:90a:a787:: with SMTP id f7mr10038606pjq.103.1598523276803;
+        Thu, 27 Aug 2020 03:14:36 -0700 (PDT)
 Received: from VM-0-6-centos.localdomain ([119.28.90.140])
-        by smtp.gmail.com with ESMTPSA id t10sm2333434pfq.52.2020.08.27.03.14.29
+        by smtp.gmail.com with ESMTPSA id t10sm2333434pfq.52.2020.08.27.03.14.35
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Aug 2020 03:14:30 -0700 (PDT)
+        Thu, 27 Aug 2020 03:14:36 -0700 (PDT)
 From:   Chunguang Xu <brookxu.cn@gmail.com>
 X-Google-Original-From: Chunguang Xu <brookxu@tencent.com>
 To:     arnd@arndb.de
 Cc:     rppt@kernel.org, linux-arch@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 00/23] clean up the code related to ASSERT()
-Date:   Thu, 27 Aug 2020 18:14:05 +0800
-Message-Id: <cover.1598518912.git.brookxu@tencent.com>
+Subject: [PATCH 04/23] fore200e: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
+Date:   Thu, 27 Aug 2020 18:14:09 +0800
+Message-Id: <4fd1c0a89043ba696f8653cc721557ff6a5b86aa.1598518912.git.brookxu@tencent.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <cover.1598518912.git.brookxu@tencent.com>
+References: <cover.1598518912.git.brookxu@tencent.com>
+In-Reply-To: <cover.1598518912.git.brookxu@tencent.com>
+References: <cover.1598518912.git.brookxu@tencent.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel has not yet defined ASSERT(). Indeed, BUG() and WARN() are very
-clear and can cover most application scenarios. However, some applications
-require more debugging information and similar behavior to assert(), which
-cannot be directly provided by BUG() and WARN().
+Since ASSERT_FAIL() and ASSERT_WARN() have been provided, ASSERT()
+may be realized through them, thus reducing code redundancy and
+facilitating problem analysis.
 
-Therefore, many modules independently implement ASSERT(), and most of them
-are similar, but slightly different, such as:
+Signed-off-by: Chunguang Xu <brookxu@tencent.com>
+---
+ drivers/atm/fore200e.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
- #define ASSERT(expr) \
-         if(!(expr)) { \
-                 printk( "\n" __FILE__ ":%d: Assertion " #expr " failed!\n",__LINE__); \
-                 panic(#expr); \
-         }
-
- #define ASSERT(x)                                                       \
- do {                                                                    \
-         if (!(x)) {                                                     \
-                 printk(KERN_EMERG "assertion failed %s: %d: %s\n",      \
-                        __FILE__, __LINE__, #x);                         \
-                 BUG();                                                  \
-         }                                                               \
- } while (0)
-
-Some implementations are not optimal for instruction prediction, such as
-missing unlikely():
-
- #define assert(expr) \
-         if(!(expr)) { \
-         printk( "Assertion failed! %s,%s,%s,line=%d\n",\
-         #expr,__FILE__,__func__,__LINE__); \
-         BUG(); \
-         }
-
-Some implementations have too little log content information, such as:
-
- #define ASSERT(X)                                               \
- do {                                                            \
-        if (unlikely(!(X))) {                                   \
-                printk(KERN_ERR "\n");                          \
-                printk(KERN_ERR "XXX: Assertion failed\n");     \
-                BUG();                                          \
-        }                                                       \
- } while(0)
-
-As we have seen, This makes the code redundant and inconvenient to
-troubleshoot the system. Therefore, perhaps we need to define two
-wrappers for BUG() and WARN_ON(), such as ASSERT_FAIL() and
-ASSERT_WARN(), provide the implementation of ASSERT(), simplify the
-code and facilitate problem analysis.
-
-Maybe I missed some information, but I think there is a need to clean
-up the code, maybe in other ways, and more discussion is needed here.
-If this approach is reasonable, I will clean up these codes later and
-issue related patches.
-
-Chunguang Xu (23):
-  include/asm-generic/bug.h: add ASSERT_FAIL() and ASSERT_WARN() wrapper
-  ia64: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  KVM: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  fore200e: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  scsi: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  rxrpc: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  lib/mpi: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  jfs: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  cachefiles: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  btrfs: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  afs: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  rivafb: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  nvidia: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  fbdev/cirrusfb:: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  media/staging: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  sym53c8xx: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  8139too: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  net:hns: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  block/sx8: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  skb: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  ext4: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  rbd: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-  ALSA: asihpi: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-
- arch/ia64/hp/common/sba_iommu.c                    |  6 +---
- arch/x86/kvm/ioapic.h                              |  9 +-----
- drivers/atm/fore200e.c                             |  6 +---
- drivers/block/rbd.c                                |  9 +-----
- drivers/block/skd_main.c                           |  8 +-----
- drivers/block/sx8.c                                |  6 +---
- drivers/net/ethernet/hisilicon/hns/hnae.h          |  8 +-----
- drivers/net/ethernet/realtek/8139too.c             |  6 +---
- drivers/scsi/megaraid/mega_common.h                | 10 ++-----
- drivers/scsi/sym53c8xx_2/sym_hipd.h                |  9 +-----
- .../pci/hive_isp_css_include/assert_support.h      |  6 +---
- drivers/video/fbdev/cirrusfb.c                     |  6 +---
- drivers/video/fbdev/nvidia/nvidia.c                |  7 +----
- drivers/video/fbdev/riva/fbdev.c                   |  7 +----
- fs/afs/internal.h                                  |  9 +-----
- fs/btrfs/ctree.h                                   | 12 +-------
- fs/cachefiles/internal.h                           |  9 +-----
- fs/ext4/mballoc.c                                  | 10 +------
- fs/jfs/jfs_debug.h                                 | 13 +--------
- include/asm-generic/bug.h                          | 33 ++++++++++++++++++++++
- lib/mpi/mpi-internal.h                             |  7 +----
- net/rxrpc/ar-internal.h                            |  8 +-----
- sound/pci/asihpi/hpidebug.h                        |  8 +-----
- 23 files changed, 56 insertions(+), 156 deletions(-)
-
+diff --git a/drivers/atm/fore200e.c b/drivers/atm/fore200e.c
+index a81bc49..04f121b 100644
+--- a/drivers/atm/fore200e.c
++++ b/drivers/atm/fore200e.c
+@@ -83,11 +83,7 @@
+ #define FORE200E_NEXT_ENTRY(index, modulo)         (index = ((index) + 1) % (modulo))
+ 
+ #if 1
+-#define ASSERT(expr)     if (!(expr)) { \
+-			     printk(FORE200E "assertion failed! %s[%d]: %s\n", \
+-				    __func__, __LINE__, #expr); \
+-			     panic(FORE200E "%s", __func__); \
+-			 }
++#define ASSERT(expr)     ASSERT_FAIL(expr)
+ #else
+ #define ASSERT(expr)     do {} while (0)
+ #endif
 -- 
 1.8.3.1
 
