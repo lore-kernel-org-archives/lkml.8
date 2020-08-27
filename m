@@ -2,437 +2,135 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4C9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF5E2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B1522080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:24:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lPC8mGiK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZ1UT1Jv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgH0PXv (ORCPT
+        id S1727889AbgH0PYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:23:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38298 "EHLO
+        Thu, 27 Aug 2020 11:24:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727902AbgH0PXi (ORCPT
+        with ESMTP id S1726236AbgH0PYd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:23:38 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 290FCC061232
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 08:23:38 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id nv17so2802623pjb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 08:23:38 -0700 (PDT)
+        Thu, 27 Aug 2020 11:24:33 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC13C061264;
+        Thu, 27 Aug 2020 08:24:33 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id a21so8230205ejp.0;
+        Thu, 27 Aug 2020 08:24:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=Jmjo+zAW0IUrWVTJdT/lA2z8nbXn7PSK0371ix+/eGI=;
-        b=lPC8mGiKvhrovQj3erRKjKiFZgmnyIO3L95i/iaTi4O1l/zib1ys3GRH/TitqX/SOf
-         ioB2/JpzJrOB39RCFHB50kUMKA5VjVBNQhk2yMsTG/LxZqjWHst0/N7ltaJkc/rvfQko
-         DDqu8Xh7NkKdMAr7dhhpKBtiJv2oA4upa6TvU=
+        bh=RdoDtBKGcqZmEr6XwRvBVpJT6+jSdmIYiVMHvZ2UEtM=;
+        b=dZ1UT1JvUfj8uxpfO5tKZObD9vupZ6VKPHEPWHiIX6/azQ3Xx0wiMpuwNWJrbqQuRF
+         MtFchebdnoYgSKqDE0PxgEUQ2ono+2kbI99Ov7xzOQqnPKNzI68N8AQ9wVOUPW+Rn0e7
+         sYR5JWw22qj/yPUWFU7yH3afY4qi1ThAZFMX4QPAmju0zzCW9ZQnqMzGiptFdTfuuV3O
+         l7VwkbseTYupt71wVEWopi3mA00+fcQB0ENTmVwqdxeP4dQe5BPNA7jk9FprgWcTqtyR
+         ezQCSepa0hmpM8sRO9RiKBLtNV/WHEM+gxLrIEPK467vYT1vQ6PHqju5+BgSG7sd4VPd
+         /lSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Jmjo+zAW0IUrWVTJdT/lA2z8nbXn7PSK0371ix+/eGI=;
-        b=otmFNWkGQz1YTmX0of1lfgJ1R3pcpJLwdCSRoCRGok5b+JAYTfVLY0VwQIOsGeqCJE
-         hqvHO549mgQP7ju8BBsvr0EH94VtwDbsOw5c1h2HiBIsKWxENZj3lFAdhBlIC7j3PFt9
-         JWpdMAcJ9Nyha4/dZvvkKT7uzS6Sul11/s4TCC6Q/kEMp9RFG9E1B4OGcmV8MTUOnNuC
-         pw8HlJeURrEKqweg1v5+ytfVirP2MRDwoctSXcJOCqe51Lw5G7MLdxj+s3KJ6hZ2qjU9
-         Voynn3ncdfMxfdaN9Hgwhj+yAL5dPqoi+UVbhV+bS5HXo22lPENSohjDHTcqxH3+g6FA
-         7N9Q==
-X-Gm-Message-State: AOAM532NzsTXkX1jWACZbiCkLtvtDIu0H/Jb9y3uKzi5g7O1TXwnvhEl
-        CUNZY62fR77/LKWGcJgGW+Ko3w==
-X-Google-Smtp-Source: ABdhPJw/wvp0t5I18B0MQRodD7bZSVein50dUyJPDVW+o2pHRehERSSxTR0sL3WX6KmJ0KEGsibK+w==
-X-Received: by 2002:a17:90a:c505:: with SMTP id k5mr10640086pjt.188.1598541817407;
-        Thu, 27 Aug 2020 08:23:37 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id g19sm2661049pgj.86.2020.08.27.08.23.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 08:23:36 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 08:23:35 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     skakit@codeaurora.org
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy@qti.qualcomm.com,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH V3 2/3] arm64: dts: qcom: sc7180: Add sleep pin ctrl for
- BT uart
-Message-ID: <20200827152335.GF486007@google.com>
-References: <1597931467-24268-1-git-send-email-skakit@codeaurora.org>
- <1597931467-24268-3-git-send-email-skakit@codeaurora.org>
- <20200821172215.GB486007@google.com>
- <e1738473c26de45b5c9c7c4d5963f32c@codeaurora.org>
- <20200825163820.GD486007@google.com>
- <10485f6a111c578f2e15dbcc0ceec66d@codeaurora.org>
- <20200826164011.GE486007@google.com>
- <7dd865bff20320c147706919b62788e4@codeaurora.org>
+        bh=RdoDtBKGcqZmEr6XwRvBVpJT6+jSdmIYiVMHvZ2UEtM=;
+        b=DMbWc8H7mqAKg6u6Ny3/tm149wZ4UwKFUH0TP6MwqeJpFGXOdTvUplgqyGeo8m7I7L
+         i7fSW22BRhJTaA03nJ/22zFv8hl0NhFV2jINR06rhIvnPGSl7FLe/hAs5j4JFI930djZ
+         ogZrxOZqAeVsAqFFOnprFvKie+86pBEVZPEddWSjXfflQjYZfq4u5GOKzfRxF21kNBmJ
+         +MYFSGNCHDsItkYKdRT3/Qx0YOwjUxBMPllNAKGT3WozpyLT7F6vlblxunf6YVERMr0F
+         tGCnkVkUDtYNkfZedjrIE45IxXZty+JM43sKSV4GxF83fU25niIYWrXuaoDjMMFx94i3
+         lUog==
+X-Gm-Message-State: AOAM530YSB682hoy1JaY0K8vukfqCfbMENykRakxEbBcPY+8BLQ9vT/g
+        pVTaRkS3K6xmYQ4DbHSZFx3Zg3Ee7E4=
+X-Google-Smtp-Source: ABdhPJwE8DVg2X/JWXzdbYoyz5GYUFxkza0BR0PvLwoLKnPpFlRU1KQlEOc3ePw+NgAdF36O9erBYw==
+X-Received: by 2002:a17:906:1719:: with SMTP id c25mr22373847eje.487.1598541871646;
+        Thu, 27 Aug 2020 08:24:31 -0700 (PDT)
+Received: from BV030612LT ([188.24.159.61])
+        by smtp.gmail.com with ESMTPSA id g9sm1742781edk.97.2020.08.27.08.24.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 08:24:30 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 18:24:28 +0300
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH v5 1/3] dt-bindings: interrupt-controller: Add Actions
+ SIRQ controller binding
+Message-ID: <20200827152428.GA2467154@BV030612LT>
+References: <cover.1597852360.git.cristian.ciocaltea@gmail.com>
+ <6bd99d4a7e50904b57bb3ad050725fbb418874b7.1597852360.git.cristian.ciocaltea@gmail.com>
+ <20200825220913.GA1423455@bogus>
+ <20200826214220.GA2444747@BV030612LT>
+ <CAL_JsqLvXDFL6vFooPYLJ1QnZ7L756fNesXo-LW_scs9rV-zPA@mail.gmail.com>
+ <20200827100629.GA2451538@BV030612LT>
+ <64580e3b9acada6ff4ae9fdef02ac304@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7dd865bff20320c147706919b62788e4@codeaurora.org>
+In-Reply-To: <64580e3b9acada6ff4ae9fdef02ac304@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Satya,
+Hi Marc,
 
-On Thu, Aug 27, 2020 at 08:37:33PM +0530, skakit@codeaurora.org wrote:
-> Hi Matthias,
+On Thu, Aug 27, 2020 at 11:35:06AM +0100, Marc Zyngier wrote:
+> On 2020-08-27 11:06, Cristian Ciocaltea wrote:
+> > On Wed, Aug 26, 2020 at 04:48:38PM -0600, Rob Herring wrote:
+> > > On Wed, Aug 26, 2020 at 3:42 PM Cristian Ciocaltea
+> > > <cristian.ciocaltea@gmail.com> wrote:
 > 
-> On 2020-08-26 22:10, Matthias Kaehlcke wrote:
-> > Hi Satya,
-> > 
-> > On Wed, Aug 26, 2020 at 09:35:15PM +0530, skakit@codeaurora.org wrote:
-> > > Hi Matthias,
-> > > 
-> > > On 2020-08-25 22:08, Matthias Kaehlcke wrote:
-> > > > On Tue, Aug 25, 2020 at 06:42:28PM +0530, skakit@codeaurora.org wrote:
-> > > > > On 2020-08-21 22:52, Matthias Kaehlcke wrote:
-> > > > > > On Thu, Aug 20, 2020 at 07:21:06PM +0530, satya priya wrote:
-> > > > > > > Add sleep pin ctrl for BT uart, and also change the bias
-> > > > > > > configuration to match Bluetooth module.
-> > > > > > >
-> > > > > > > Signed-off-by: satya priya <skakit@codeaurora.org>
-> > > > > > > Reviewed-by: Akash Asthana <akashast@codeaurora.org>
-> > > > > > > ---
-> > > > > > > Changes in V2:
-> > > > > > >  - This patch adds sleep state for BT UART. Newly added in V2.
-> > > > > > >
-> > > > > > > Changes in V3:
-> > > > > > >  - Remove "output-high" for TX from both sleep and default states
-> > > > > > >    as it is not required. Configure pull-up for TX in sleep state.
-> > > > > > >
-> > > > > > >  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 54
-> > > > > > > +++++++++++++++++++++++++++------
-> > > > > > >  1 file changed, 45 insertions(+), 9 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > > > > > b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > > > > > index d8b5507..806f626 100644
-> > > > > > > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > > > > > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > > > > > @@ -473,20 +473,20 @@
-> > > > > > >
-> > > > > > >  &qup_uart3_default {
-> > > > > > >  	pinconf-cts {
-> > > > > > > -		/*
-> > > > > > > -		 * Configure a pull-down on 38 (CTS) to match the pull of
-> > > > > > > -		 * the Bluetooth module.
-> > > > > > > -		 */
-> > > > > > > +		/* Configure no pull on 38 (CTS) to match Bluetooth module */
-> > > > > > >  		pins = "gpio38";
-> > > > > > > -		bias-pull-down;
-> > > > > > > -		output-high;
-> > > > > > > +		bias-disable;
-> > > > > >
-> > > > > > I think it should be ok in functional terms, but I don't like the
-> > > > > > rationale
-> > > > > > and also doubt the change is really needed.
-> > > > > >
-> > > > > > If the pull is removed to match the Bluetooth module, then that sounds
-> > > > > > as
-> > > > > > if the signal was floating on the the BT side, which I think is not the
-> > > > > > case.
-> > > > > > Yes, according to the datasheet there is no pull when the BT controller
-> > > > > > is
-> > > > > > active, but then it drives the signal actively to either high or low.
-> > > > > > There
-> > > > > > seems to be no merit in 'matching' the Bluetooth side in this case, if
-> > > > > > the
-> > > > > > signal was really floating on the BT side we would definitely not want
-> > > > > > this.
-> > > > > >
-> > > > > > In a reply to v2 you said:
-> > > > > >
-> > > > > > > Recently on cherokee we worked with BT team and came to an agreement
-> > > > > > > to
-> > > > > > > keep no-pull from our side in order to not conflict with their pull in
-> > > > > > > any state.
-> > > > > >
-> > > > > > What are these conflicting pull states?
-> > > > > >
-> > > > > > The WCN3998 datasheet has a pull-down on RTS (WCN3998 side) in reset and
-> > > > > > boot mode, and no pull in active mode. In reset and boot mode the host
-> > > > > > config with a pull down would match, and no pull in active mode doesn't
-> > > > > > conflict with the pull-down on the host UART. My understanding is that
-> > > > > > the pinconf pulls are weak pulls, so as soon as the BT chip drives its
-> > > > > > RTS the pull on the host side shouldn't matter.
-> > > > > >
-> > > > >
-> > > > > yes, I agree with you, the pinconf pulls are weak. As this is driven
-> > > > > by BT
-> > > > > SoC (pull on HOST side shouldn't matter), we are not mentioning any
-> > > > > bias
-> > > > > configuration from our side and simply putting it as no-pull, just
-> > > > > to not
-> > > > > conflict in any case. It seems that the rationale mentioned is a bit
-> > > > > confusing i will change it to clearly specify why we are configuring
-> > > > > no-pull.
-> > > > >
-> > > > > > Is this change actually related with wakeup support? I have the
-> > > > > > impression
-> > > > > > that multiple things are conflated in this patch. If some of the changes
-> > > > > > are just fixing/improving other things they should be in a separate
-> > > > > > patch,
-> > > > > > which could be part of this series, otherwise it's really hard to
-> > > > > > distinguish between the pieces that are actually relevant for wakeup and
-> > > > > > the rest.
-> > > > > >
-> > > > > > Independently of whether the changes are done in a single or multiple
-> > > > > > patches, the commit log should include details on why the changes are
-> > > > > > necessary, especially when there are not explantatory comments in the
-> > > > > > DT/code itself (e.g. the removal of 'output-high', which seems correct
-> > > > > > to me, but no reason is given why it is done).
-> > > > > >
-> > > > >
-> > > > > This change is not related to wakeup support, I will make it a
-> > > > > separate
-> > > > > patch, will also mention the details in commit text.
-> > > > >
-> > > > > > >  	};
-> > > > > > >
-> > > > > > >  	pinconf-rts {
-> > > > > > > -		/* We'll drive 39 (RTS), so no pull */
-> > > > > > > +		/*
-> > > > > > > +		 * Configure pull-down on 39 (RTS). This is needed to avoid a
-> > > > > > > +		 * floating pin which could mislead Bluetooth controller
-> > > > > > > +		 * with UART RFR state (READY/NOT_READY).
-> > > > > > > +		 */
-> > > > > > >  		pins = "gpio39";
-> > > > > > >  		drive-strength = <2>;
-> > > > > > > -		bias-disable;
-> > > > > > > +		bias-pull-down;
-> > > > > > >  	};
-> > > > > >
-> > > > > > [copy of my comment on v2]
-> > > > > >
-> > > > > > I'm a bit at a loss here, about two things:
-> > > > > >
-> > > > > > RTS is an output pin controlled by the UART. IIUC if the UART port is
-> > > > > > active
-> > > > > > and hardware flow control is enabled the RTS signal is either driven to
-> > > > > > high
-> > > > > > or low, but not floating.
-> > > > >
-> > > > > Yes, RTS is either driven high or low. HW flow control is always
-> > > > > enabled and
-> > > > > only turned off when RX FIFO is full. Whereas SW flow control is
-> > > > > controlled
-> > > > > by upper layers(serial core), also it can be enabled/disabled from
-> > > > > host by
-> > > > > calling set_mctrl.
-> > > >
-> > > > As far as I understand the above isn't entirely correct. HW flow control
-> > > > is not
-> > > > disabled when the RX FIFO is full, rather as part of HW flow control the
-> > > > hardware deasserts RTS when the FIFO is full. Software flow control
-> > > > isn't really
-> > > > relevant here, since it doesn't use RTS/CTS but uses transmission of
-> > > > special
-> > > > codes (XON/XOFF) over TX/RX.
-> > > 
-> > > Here by Software flow control i meant, we can control the flow from
-> > > SW(explained below).
-> > 
-> > Better don't use a term that already has well defined meaning in a
-> > given context when you refer to something else.
-> > 
+> [...]
 > 
-> Okay.
-> 
-> > > >
-> > > > > > Now lets assume I'm wrong with the above and RTS can be floating. We
-> > > > > > only want
-> > > > > > the BT SoC to send data when the host UART is ready to receive them,
-> > > > > > right?
-> > > > > > RTS is an active low signal, hence by configuring it as a pull-down the
-> > > > > > BT
-> > > > > > SoC can send data regardless of whether the host UART actually asserts
-> > > > > > RTS,
-> > > > > > so the host UART may not be ready to receive it. I would argue that if
-> > > > > > there
-> > > > > > is really such a thing as a floating RTS signal then it should have a
-> > > > > > pull-up,
-> > > > > > to prevent the BT SoC from sending data at any time.
-> > > > > >
-> > > > > > I'm not an expert in UART communication and pinconf, so it could be that
-> > > > > > I
-> > > > > > got something wrong, but as of now it seems to me that no pull is the
-> > > > > > correct
-> > > > > > config for RTS.
-> > > > > >
-> > > > > > >
-> > > > > > >  	pinconf-tx {
-> > > > > > > @@ -494,7 +494,43 @@
-> > > > > > >  		pins = "gpio40";
-> > > > > > >  		drive-strength = <2>;
-> > > > > > >  		bias-disable;
-> > > > > > > -		output-high;
-> > > > > > > +	};
-> > > > > > > +
-> > > > > > > +	pinconf-rx {
-> > > > > > > +		/*
-> > > > > > > +		 * Configure a pull-up on 41 (RX). This is needed to avoid
-> > > > > > > +		 * garbage data when the TX pin of the Bluetooth module is
-> > > > > > > +		 * in tri-state (module powered off or not driving the
-> > > > > > > +		 * signal yet).
-> > > > > > > +		 */
-> > > > > > > +		pins = "gpio41";
-> > > > > > > +		bias-pull-up;
-> > > > > > > +	};
-> > > > > > > +};
-> > > > > > > +
-> > > > > > > +&qup_uart3_sleep {
-> > > > > > > +	pinconf-cts {
-> > > > > > > +		/* Configure no-pull on 38 (CTS) to match Bluetooth module */
-> > > > > > > +		pins = "gpio38";
-> > > > > > > +		bias-disable;
-> > > > > > > +	};
-> > > > > > > +
-> > > > > > > +	pinconf-rts {
-> > > > > > > +		/*
-> > > > > > > +		 * Configure pull-down on 39 (RTS). This is needed to avoid a
-> > > > > > > +		 * floating pin which could mislead Bluetooth controller
-> > > > > > > +		 * with UART RFR state (READY/NOT_READY).
-> > > > > > > +		 */
-> > > > > > > +		pins = "gpio39";
-> > > > > > > +		drive-strength = <2>;
-> > > >
-> > > > just noticed this: in the sleep config all pins are in GPIO config (see
-> > > > "arm64: dts: sc7180: Add wakeup support over UART RX" from this series)
-> > > > and by default they are inputs, hence the drive-strength here is
-> > > > pointless
-> > > > IIUC.
-> > > >
-> > > 
-> > > CTS and RX are inputs to the HOST whereas RTS and TX are outputs. We
-> > > have
-> > > added drive-strength for output pins only as they are driven by
-> > > UART(please
-> > > correct me if wrong).
+> > > Ultimately the GIC trigger type has to be
+> > > something. Is it fixed or passed thru? If the latter, just use 0
+> > > (IRQ_TYPE_NONE) if the GIC trigger mode is not fixed. Having some sort
+> > > of translation of the trigger is pretty common.
 > > 
-> > True, RTS and TX are outputs in UART mode, however in sleep mode the
-> > pins
-> > are (currently) configured as GPIOs and inputs (again, see "arm64: dts:
-> > sc7180: Add wakeup support over UART RX" of this series), hence the
-> > drive-strength attribute does nothing. If needed/preferred you can
-> > configure
-> > the pins as outputs and specify the desired state instead of using
-> > pulls,
-> > in that case specifying the drive strength can be useful.
+> > Yes, as explained above, the SIRQ controller performs indeed the
+> > translation of the incoming signal. So if I understand correctly, your
+> > suggestion would be to use the following inside the sirq node:
 > > 
+> > interrupts = <GIC_SPI 13 IRQ_TYPE_NONE>, /* SIRQ0 */
+> >              [...]
 > 
-> Ok, will remove the drive-strength from sleep state.
-> 
-> > > > > > > +		bias-pull-down;
-> > > > > > > +	};
-> > > > > >
-> > > > > > I don't know all the details, but I have the impression that this is the
-> > > > > > relevant pull change for wakeup. From the title of the series I derive
-> > > > > > that the UART RX pin is used for signalling wakeup. A pull-down on RTS
-> > > > > > indicates the BT controller that it can always send data to wake up the
-> > > > > > host.
-> > > > > >
-> > > > > > I think RTS in default mode should remain with no-pull (the UART is
-> > > > > > driving
-> > > > > > the signal), and then change it to pull-down in sleep mode.
-> > > > > >
-> > > > > >
-> > > > >
-> > > > > As I understand from your previous comment, pinconf pulls are weak and
-> > > > > cannot override the pull of controller.
-> > > >
-> > > > I'm not sure this is an absolute truth. I think there may be cases where
-> > > > the driver has to increase its drive strength..
-> > > >
-> > > > > Although pull down is configured,
-> > > > > data will be received only if host controller is ready to accept it.
-> > > > > So, we
-> > > > > want to put RTS in pull-down state(known state) instead of leaving
-> > > > > it in
-> > > > > ambiguous state i.e, no-pull(high/low).
-> > > >
-> > > > I disgress. I'm pretty sure that you want RTS to be low to make sure
-> > > > that
-> > > > the BT SoC can wake up the system by sending whatever data it has to
-> > > > send.
-> > > > It won't do that if RTS is high (e.g. because that's its floating state
-> > > > at that time). I just tried configuring a pull-up (also a known
-> > > > non-ambiguous state), and Bluetooth wakeup doesn't work with that,
-> > > > supposedly because the BT SoC/UART will wait for its CTS signal to be
-> > > > low.
-> > > >
-> > > 
-> > > yes, you are right, we are keeping RTS low to make sure that BT SoC
-> > > can
-> > > wakeup the system by sending bytes.
-> > > My intention here was to explain below case from your comment:
-> > > 
-> > > > > > RTS is an active low signal, hence by configuring it as a pull-down the
-> > > > > > BT
-> > > > > > SoC can send data regardless of whether the host UART actually asserts
-> > > > > > RTS,
-> > > > > > so the host UART may not be ready to receive it.
-> > > 
-> > > 1. By default our HW flow is enabled(since we are configuring
-> > > pull-down on
-> > > RTS),and BT SoC can send data anytime.
-> > > 2. But there is a SW mechanism where we can control the flow from
-> > > software.
-> > > In that case what ever is configured to UART_MANUAL_RFR(READY or
-> > > NOT_READY)
-> > > will override the dtsi pinconf pull and the RTS/RFR line is pulled
-> > > high when
-> > > HOST is not ready(while debugging the wake up issue we came across
-> > > this).
-> > 
-> > This is generally correct while the system is running, but (with the
-> > current
-> > pinconf) not when the system is suspended IIUC. When the system is in
-> > suspend
-> > the function of the UART pins is changed to GPIO, hence the UART ceases
-> > to
-> > control RTS.
-> > 
-> > Otherwise how do you explain that wakeup stops working when you
-> > configure
-> > a pull-up instead of a pull-down? According to your comment the UART
-> > should
-> > be driving the RTS depending on its readyness.
-> > 
-> 
-> True, I was explaining about UART mode(active case) only, in reply to your
-> previous comment:
-> 
-> > > > > > I'm not an expert in UART communication and pinconf, so it could be that
-> > > > > > I
-> > > > > > got something wrong, but as of now it seems to me that no pull is the
-> > > > > > correct
-> > > > > > config for RTS.
-> > > > > >
-> 
-> So, we can keep pull-down in Active case and in sleep state it is mandatory
-> to keep pull-down.
+> Please don't. If you are describing a GIC interrupt, use a
+> trigger that actually exists. Given that you have a 1:1
+> mapping between input and output, just encode the output
+> trigger that matches the input.
 
-Keeping the pull-down in active mode should do no harm, but why do it if
-it isn't needed? I think it is better to specify what is required and have
-comments explaining the rationale, since there are some nitty gritty details
-that may not be obvious at first as we have seen. In this sense I think it's
-better to have a comment like "We drive RTS, so no pull", rather than
-"Configure a pull-down on RTS to put the pin in a defined state / match sleep
-config" or similar.
+Understood, the only remark here is that internally, the driver will
+not use this information and instead will continue to rely on the input
+to properly set the trigger type for the output.
 
-If there's a good reason to have a pull I'm totally open to configure it, but
-so far I haven't seen a convincing argument for it.
+The question is if the driver should also emit a warning (or error?)
+when the trigger type supplied via DT doesn't match the expected value.
+
+If yes, we should also clarify what the user is supposed to provide in
+the controller node: the trigger type before the conversion (the input)
+or the one after the conversion (the output). 
+
+>         M.
+> -- 
+> Jazz is not dead. It just smells funny...
+
+Thanks,
+Cristi
