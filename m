@@ -2,168 +2,112 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A03C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4633C2087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B21D2177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:34:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PxYfTVtr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lkTRJ1mK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgH0Rea (ORCPT
+        id S1727015AbgH0Req (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:34:30 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:52733 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbgH0Rea (ORCPT
+        Thu, 27 Aug 2020 13:34:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbgH0Rep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:34:30 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200827173428euoutp02aaaafe18c68dcce7bbe853fb084330aa~vMHQjUThA2321323213euoutp02B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 17:34:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200827173428euoutp02aaaafe18c68dcce7bbe853fb084330aa~vMHQjUThA2321323213euoutp02B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598549668;
-        bh=wFMLyUMElLYUTG35lzNQlKN/voBWwST2pPYptKilXs4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PxYfTVtrZyGO4DwmsGdluocOPuXdlG5cEJQPcsIrhxgeFBTf1FXNJCOpUB2s1kH66
-         GzpZrBfQMiYDGYGeOmvRZuYLgAdPacHSy8MGIrLLO5iM0gsbFu3OpPjO5Mchnf4NJY
-         MnB58OJo1oRht5aut9FshSIJbAPa4LuZ+NCZ+xHk=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200827173427eucas1p1aabdd7d6624406b2d54e10b9b1cc4770~vMHQQlTUM2355023550eucas1p1T;
-        Thu, 27 Aug 2020 17:34:27 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 41.1C.06456.3AEE74F5; Thu, 27
-        Aug 2020 18:34:27 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200827173426eucas1p13f9f7d358dfcc440db160de3dc658ddf~vMHPbXoEN2355723557eucas1p1M;
-        Thu, 27 Aug 2020 17:34:26 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200827173426eusmtrp1fd6176141ac3bed27fc1e0a9130388dd~vMHPavXXn1826418264eusmtrp1P;
-        Thu, 27 Aug 2020 17:34:26 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-dd-5f47eea36d06
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 58.C6.06314.2AEE74F5; Thu, 27
-        Aug 2020 18:34:26 +0100 (BST)
-Received: from AMDC3061.digital.local (unknown [106.120.51.75]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200827173426eusmtip112b67de1ca4586f3308c4e8bca11ebd5~vMHO7gs0W0514105141eusmtip1O;
-        Thu, 27 Aug 2020 17:34:26 +0000 (GMT)
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-To:     broonie@kernel.org, lgirdwood@gmail.com
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        ckeepax@opensource.cirrus.com, patches@opensource.cirrus.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH 2/2] ASoC: wm8994: Ensure the device is resumed in
- wm89xx_mic_detect functions
-Date:   Thu, 27 Aug 2020 19:33:57 +0200
-Message-Id: <20200827173357.31891-2-s.nawrocki@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200827173357.31891-1-s.nawrocki@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphleLIzCtJLcpLzFFi42LZduzned3F79zjDT5f07W4cvEQk8XGGetZ
-        LaY+fMJmcaV1E6PF+fMb2C2+Xelgsri8aw6bxdojd9ktPr/fz2px+E07qwOXx4bPTWweO2fd
-        ZffYtKqTzWP6nP+MHn1bVjF6fN4kF8AWxWWTkpqTWZZapG+XwJXx8QpnwVS+iv2rGhgbGF9w
-        dzFycEgImEg8vVTSxcjFISSwglGi9ctTti5GTiDnC6PExLkJEInPjBIfrk5kB0mANMy+f40R
-        IrGcUeJ20z0muI5zU0xBbDYBQ4neo32MILaIgLbEnJsdbCANzAKdTBInJ18FmyQskCBx9vFV
-        sGYWAVWJazMugzXwClhLfP50lA1im7zE6g0HmEFO5RSwkWj+BXaRhEA/u8TufzeYIWpcJF7f
-        bWeBsIUlXh3fAnWpjMTpyT0sEA3NjBI9u2+zQzgTGCXuH1/ACFFlLXHn3C82kA3MApoS63fp
-        Q8LFUeJLryiEySdx460gSDEzkDlp23RmiDCvREebEMQMFYnfq6YzQdhSEt1P/kNd4yFx/vhZ
-        ZkhY9TNKND7pY5zAKD8LYdcCRsZVjOKppcW56anFhnmp5XrFibnFpXnpesn5uZsYgWnk9L/j
-        n3Ywfr2UdIhRgINRiYd3xz73eCHWxLLiytxDjBIczEoivE5nT8cJ8aYkVlalFuXHF5XmpBYf
-        YpTmYFES5zVe9DJWSCA9sSQ1OzW1ILUIJsvEwSnVwDgrhKM0Y+Hz7CcRgV4SDSmlAroB1RuE
-        +ZJddQ2ybvw8WC04Q3X/NIUJ090V3Q6myxusbFu1gcE9d3tLZ5Of6ccMz+9Mi4M/1k6+mXdf
-        8p2GnUlwGr/OCUk77yOh+usyYidMCH4enhcluP3NHLl3cy/duxwoYt2k43SxbP2M8O2pM/8r
-        v5ybrcRSnJFoqMVcVJwIAPQ5EdUfAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPLMWRmVeSWpSXmKPExsVy+t/xu7qL3rnHG5z5bWhx5eIhJouNM9az
-        Wkx9+ITN4krrJkaL8+c3sFt8u9LBZHF51xw2i7VH7rJbfH6/n9Xi8Jt2Vgcujw2fm9g8ds66
-        y+6xaVUnm8f0Of8ZPfq2rGL0+LxJLoAtSs+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLPyMRSz9DY
-        PNbKyFRJ384mJTUnsyy1SN8uQS/j4xXOgql8FftXNTA2ML7g7mLk5JAQMJGYff8aYxcjF4eQ
-        wFJGiclHljJ1MXIAJaQk5rcoQdQIS/y51sUGUfOJUeLA7DssIAk2AUOJ3qN9jCC2iICuxK2l
-        x5hBipgFJjJJbHp4nQkkISwQJ/H12CewBhYBVYlrMy6DNfAKWEt8/nSUDWKDvMTqDQeYQRZz
-        CthINP9KAAkLAZVceniedQIj3wJGhlWMIqmlxbnpucWGesWJucWleel6yfm5mxiBgb3t2M/N
-        OxgvbQw+xCjAwajEw7tjn3u8EGtiWXFl7iFGCQ5mJRFep7On44R4UxIrq1KL8uOLSnNSiw8x
-        mgLdNJFZSjQ5Hxh1eSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUa
-        GPN0/i7sZbrjYR/2aomZ546ipP64M4evBsTdZso4+GzB0sCq27LGxWK8eqw6Wv82BnJY379h
-        6L/DaPVX219T1szulU4SLO1jj38ZGOtgf+BoXE++tffEbgWduylrS0sT2N28V86PXxpZIm/M
-        NW3vZZZe4ZN/mzOXSkr/agwTUjQq7pMxDkpVYinOSDTUYi4qTgQAW1DUhoICAAA=
-X-CMS-MailID: 20200827173426eucas1p13f9f7d358dfcc440db160de3dc658ddf
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200827173426eucas1p13f9f7d358dfcc440db160de3dc658ddf
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200827173426eucas1p13f9f7d358dfcc440db160de3dc658ddf
-References: <20200827173357.31891-1-s.nawrocki@samsung.com>
-        <CGME20200827173426eucas1p13f9f7d358dfcc440db160de3dc658ddf@eucas1p1.samsung.com>
+        Thu, 27 Aug 2020 13:34:45 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 023AEC061264;
+        Thu, 27 Aug 2020 10:34:45 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id h20so2983637ybj.8;
+        Thu, 27 Aug 2020 10:34:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GxmsvrLcpOeXkCsHlYXOAwY7VKh0UFsLAGO+5hEpk1Q=;
+        b=lkTRJ1mKgk4cIPuJ5IMvWG7ijG3umHYB9nYkL+oAJE0t4OsJ46F+wrtWGJyoATCPDe
+         VgjH7PdTEqWZlvirOE9s9TVibxiJkkuQ6kXyEKqIMRpTeuPee5ss5QhmULBlaR1vuwey
+         XxS5NHbuxWiLkMAHuN/JURh/tsxhhFe/K8KNqu+Qzax9sHpZQmbIDX8O/jFU+Y0Od+1e
+         W+h5Z0Xk41k+qJEnvjnCG47zj4+oe+aLNkKv+y40anEwRnpVhdFU2OhpFC/f1n1D5KSs
+         VIeIMfApZ/AOVKQ3UA5neQ3owEIe4rKaJR8UoqRGR+0wBAaEOIUDt3IUif5ANx5IkZy9
+         YGOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GxmsvrLcpOeXkCsHlYXOAwY7VKh0UFsLAGO+5hEpk1Q=;
+        b=uUKFCl0BiS4ma1xTAEAj9eYp/xmmqQ0xiw1P7eNYM61ZEDZ0XZmdJYP6TzbafE1GVp
+         pvbHf98Qm5LWbQtS+Ken/SBDAYU/q+LJfrGd71OCXMb0cP+KqqeJFrEETTm9RjGlkgew
+         DxK3khucCbSZrNXp4dr9gSLo5Hti5nb0zFPHKlBCUxlh2yMe5OM6gpUSBNOwgiU/61bi
+         +Z3PRUhFJVD+Xs8qDTk+Qb8ppbqAXFFECT2K8rLZbWaGoA8/Vtk8Eqb8ucydwFJCKgHP
+         ASkWelP22O4l4G2tmvG2TA89xpLHIQanSxlh/IcrTdmRcnIPDixWgsxiRtz0zbYH0nuj
+         IW3g==
+X-Gm-Message-State: AOAM5308HyJkvGyMJV2nLveWfBQ89AAikRHtbl82K4C9hg8O7a+7T4U5
+        RN42zJP8kUezcf0/8mEB5EDztUXT3enIFgJA2Wk=
+X-Google-Smtp-Source: ABdhPJxYWuCSYXqkPcWE01ctXjzSlgjHoDui1b/Nonl6BZbG1ITby8r+A827hGsYXxn7sV4XEbLGCqrkeleiozi355w=
+X-Received: by 2002:a25:2f4d:: with SMTP id v74mr28532113ybv.401.1598549684365;
+ Thu, 27 Aug 2020 10:34:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594919915-5225-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 27 Aug 2020 18:34:18 +0100
+Message-ID: <CA+V-a8sn1_fKbHt6cy-27+j2HWFp7Fjt8XBRZPLpvN47C3E3hQ@mail.gmail.com>
+Subject: Re: [PATCH 01/20] dt-bindings: pci: rcar-pci: Add device tree support
+ for r8a774e1
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        alsa-devel <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the wm8958_mic_detect, wm8994_mic_detect functions get called from
-the machine driver, e.g. from the card's late_probe() callback, the CODEC
-device may be PM runtime suspended and any regmap writes have no effect.
-Add PM runtime calls to these functions to ensure the device registers
-are updated as expected.
-This suppresses an error during boot
-"wm8994-codec: ASoC: error at snd_soc_component_update_bits on wm8994-codec"
-caused by the regmap access error due to the cache_only flag being set.
+Hi Bjorn,
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- sound/soc/codecs/wm8994.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On Thu, Jul 16, 2020 at 6:18 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+>
+> Add PCIe support for the RZ/G2H (a.k.a. R8A774E1).
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+Gentle ping.
 
-diff --git a/sound/soc/codecs/wm8994.c b/sound/soc/codecs/wm8994.c
-index b3ba053..fc9ea19 100644
---- a/sound/soc/codecs/wm8994.c
-+++ b/sound/soc/codecs/wm8994.c
-@@ -3514,6 +3514,8 @@ int wm8994_mic_detect(struct snd_soc_component *component, struct snd_soc_jack *
- 		return -EINVAL;
- 	}
- 
-+	pm_runtime_get_sync(component->dev);
-+
- 	switch (micbias) {
- 	case 1:
- 		micdet = &wm8994->micdet[0];
-@@ -3561,6 +3563,8 @@ int wm8994_mic_detect(struct snd_soc_component *component, struct snd_soc_jack *
- 
- 	snd_soc_dapm_sync(dapm);
- 
-+	pm_runtime_put(component->dev);
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(wm8994_mic_detect);
-@@ -3932,6 +3936,8 @@ int wm8958_mic_detect(struct snd_soc_component *component, struct snd_soc_jack *
- 		return -EINVAL;
- 	}
- 
-+	pm_runtime_get_sync(component->dev);
-+
- 	if (jack) {
- 		snd_soc_dapm_force_enable_pin(dapm, "CLK_SYS");
- 		snd_soc_dapm_sync(dapm);
-@@ -4000,6 +4006,8 @@ int wm8958_mic_detect(struct snd_soc_component *component, struct snd_soc_jack *
- 		snd_soc_dapm_sync(dapm);
- 	}
- 
-+	pm_runtime_put(component->dev);
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(wm8958_mic_detect);
--- 
-2.7.4
-
+Cheers,
+Prabhakar
