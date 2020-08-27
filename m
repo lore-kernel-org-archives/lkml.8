@@ -7,131 +7,132 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E54C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78654C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42A4920714
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A1720714
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:41:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LbdSMOEN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8n5VPrp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgH0TkX (ORCPT
+        id S1726971AbgH0Tlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:40:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgH0TkW (ORCPT
+        Thu, 27 Aug 2020 15:41:35 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35385 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbgH0Tle (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:40:22 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA48BC061264;
-        Thu, 27 Aug 2020 12:40:22 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id y206so4283042pfb.10;
-        Thu, 27 Aug 2020 12:40:22 -0700 (PDT)
+        Thu, 27 Aug 2020 15:41:34 -0400
+Received: by mail-pg1-f196.google.com with SMTP id g29so3074047pgl.2;
+        Thu, 27 Aug 2020 12:40:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NNNdt/4IjrgeOPMBhjOnJXYG1tUOBVWjd9cyVGLK4Nk=;
-        b=LbdSMOENXvFM9Vf8hMQa1ALOjAVqgPlRFgCgAzQErHfM/ZWavrBZ0jLg3IfENhqGI6
-         fAxGkQyDyPfFBQoQ/aQS0jCiMsS9kjiseaKHJc1Omx+li9hsqFGQcngFD8nVyweKMW6M
-         7uUdyX3+djuVN3TlXt68eCbNxpa3ZvppO1E7B71QrFBu34zRZoSpt2AVZM9UJdxJFVBr
-         iu2D6pM4Ijhe3nQRHK8JY7J1K4wVPC5gnAgRlEryBtqCv1BIamlzQBFP2/KVjgtf5R11
-         jbfMJ5wCMmHLevsNsE0Rhm6D0BuPk1/9LPAtgv23S8ipSXAvBUoS+BYjAc+w8grWMFTY
-         vK2A==
+        bh=MZm/oywi3r1tbCCgZePyobFM2PGZReJQn7CQ3uKc+Ao=;
+        b=f8n5VPrpuTtwANe91fL3ceCKerjs9R1uZiyAXmwVy/cZqu3I8o92h7iWKeUrZbvTHI
+         xv3f2KNykWxz9M4p+YEx/8qCMXuZ9zkFFj9z+dffQXJOEZsPQBZzrKqn6Xfw2iQuP5Af
+         eIOEmUek3WrgS3fxMZwWJXrEDNbdzLAOraAWLfkDXyFr6h00Z7O9KvIpFIS9xEGr+3aX
+         9zXFJ0A9XeZY0Ce0KWz63fWV7wQ7VVhbTgUiEEsxac+lfKyxCqS913SAPiQ6itoN4Kdu
+         Hp/smrljQR+JJGKvlfG5Wqu+EBGIUVqGeslwuBUsIrpvL2dILvRlZuex9jG0lt4PEcd9
+         UTOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NNNdt/4IjrgeOPMBhjOnJXYG1tUOBVWjd9cyVGLK4Nk=;
-        b=GAUHazf/r6vLV6A/n6GIiHoqwFWbS1QRDtoNGRZOQQWNiiV636VM4sj1vjhTF8f+4b
-         EyYlRi4QYUCCdHTnPBCtgU29X2OZAhggiybMF/0B1IInA0nJDxPiaYbjj03P/WUuqqZd
-         nYa/sVYoDotJSkLooca6hWVJAuYLsg4MscsxC+kdN9B4DdkT7dyrqYR92zhGrjRK5CQe
-         RmD3kZ+F/kdVb8lHqYE+Tr+j0DY42RlpPzZNxdrKlToZcBgpgZqc1zeGiTm+MGDp1LjV
-         xcmtdEfvVY3ICFi3JugrDWPhseHN3q6Zczath5AwCQnMCL+3wPPBtzSv+1MSTPVKkEo7
-         6jyQ==
-X-Gm-Message-State: AOAM531u0rPbmtM+N2zBRL8WoJDPd9WUsYqIacRCVJ0NaZ3Yz9aAzDe9
-        WRnvUEjpYuESED0kJExJBeTeThJaxUo7Px7au/4=
-X-Google-Smtp-Source: ABdhPJzgixu1vjkCNUr2jBeexjL3Lla0KqgLVgu2GOiUo2aGg+shPIPNzlSqdusuUrrHVo6T8NYqCpbdRKbtzA3DXTE=
-X-Received: by 2002:a63:c543:: with SMTP id g3mr8366423pgd.203.1598557173833;
- Thu, 27 Aug 2020 12:39:33 -0700 (PDT)
+        bh=MZm/oywi3r1tbCCgZePyobFM2PGZReJQn7CQ3uKc+Ao=;
+        b=N+m23nxEuiXnMWvsECXxcBqXwrrt0Yez7OVPBlhddlFvrPBuTNr/ktkBKKer2NS0gd
+         FWWC/gJQig/5p9eVIE844mWTgiRq0+dg6bey9bPzDDN6SdCMh+WpwFpwtGYzCvIkVI/6
+         GfW8U9KLmAPEL3WdFAqLjEh8023K02++4VO3N4umWQcYQijC0c1LB0qejkjwBYGdVy2V
+         3uX9EDP0phaILBjT9zQdo2GfdmQ7a0rerxIEd5uZO13kE1mzzd0bo83wNZrrS1mOx37X
+         IvS4ab+G/9zHlSqBjw2pxDl8IUu9ML/1sU+T3vpp+3t0dqDtfN0KzwKx4DQU6kwTme7h
+         z0DQ==
+X-Gm-Message-State: AOAM533Lav3OTTU/FAzSpj4Cb58uLGD3MJcu4f2gU7/nSwzNJ/CKMK/Z
+        izAjwILIaR+H/CJNu0daSVplkl0ku1R9MWW7+B8=
+X-Google-Smtp-Source: ABdhPJzf24/mTVbylFzj0huXtaxnG7j22bCzla2pU3gLISj7msJajR9gj4ZkRMNtbU33SxLbtqsrpdn12ipaw+rhX4g=
+X-Received: by 2002:a63:ec18:: with SMTP id j24mr15210554pgh.74.1598557143681;
+ Thu, 27 Aug 2020 12:39:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200827185829.30096-1-krzk@kernel.org> <20200827185829.30096-5-krzk@kernel.org>
-In-Reply-To: <20200827185829.30096-5-krzk@kernel.org>
+References: <20200827192642.1725-1-krzk@kernel.org>
+In-Reply-To: <20200827192642.1725-1-krzk@kernel.org>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Aug 2020 22:39:17 +0300
-Message-ID: <CAHp75VfAn8oCqgXOWhsixZSs4FTkDACP3+3CgDdmQkPKQJg1aw@mail.gmail.com>
-Subject: Re: [PATCH v3 04/27] Input: pwm-vibra - Simplify with dev_err_probe()
+Date:   Thu, 27 Aug 2020 22:38:46 +0300
+Message-ID: <CAHp75VeOWTuB1SqsajLZE9WB+VzgMuL9gnA-ohf58_hfJ=gn5w@mail.gmail.com>
+Subject: Re: [PATCH v2 01/18] iio: accel: bma180: Simplify with dev_err_probe()
 To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Beniamin Bia <beniamin.bia@analog.com>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 9:58 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Thu, Aug 27, 2020 at 10:27 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
 > Common pattern of handling deferred probe can be simplified with
 > dev_err_probe().  Less code and also it prints the error value.
+>
 
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->
 > ---
+>  drivers/iio/accel/bma180.c | 20 ++++++++------------
+>  1 file changed, 8 insertions(+), 12 deletions(-)
 >
-> Changes since v1:
-> 1. Remove unneeded PTR_ERR_OR_ZERO, as pointed by Andy.
-> ---
->  drivers/input/misc/pwm-vibra.c | 20 ++++++--------------
->  1 file changed, 6 insertions(+), 14 deletions(-)
+> diff --git a/drivers/iio/accel/bma180.c b/drivers/iio/accel/bma180.c
+> index 5b7a467c7b27..448faed001fd 100644
+> --- a/drivers/iio/accel/bma180.c
+> +++ b/drivers/iio/accel/bma180.c
+> @@ -1000,19 +1000,15 @@ static int bma180_probe(struct i2c_client *client,
+>                 return ret;
 >
-> diff --git a/drivers/input/misc/pwm-vibra.c b/drivers/input/misc/pwm-vibra.c
-> index 81e777a04b88..45c4f6a02177 100644
-> --- a/drivers/input/misc/pwm-vibra.c
-> +++ b/drivers/input/misc/pwm-vibra.c
-> @@ -134,22 +134,14 @@ static int pwm_vibrator_probe(struct platform_device *pdev)
->                 return -ENOMEM;
->
->         vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
-> -       err = PTR_ERR_OR_ZERO(vibrator->vcc);
-> -       if (err) {
-> -               if (err != -EPROBE_DEFER)
-> -                       dev_err(&pdev->dev, "Failed to request regulator: %d",
-> -                               err);
-> -               return err;
+>         data->vdd_supply = devm_regulator_get(dev, "vdd");
+> -       if (IS_ERR(data->vdd_supply)) {
+> -               if (PTR_ERR(data->vdd_supply) != -EPROBE_DEFER)
+> -                       dev_err(dev, "Failed to get vdd regulator %d\n",
+> -                               (int)PTR_ERR(data->vdd_supply));
+> -               return PTR_ERR(data->vdd_supply);
 > -       }
-> +       if (IS_ERR(vibrator->vcc))
-> +               return dev_err_probe(&pdev->dev, PTR_ERR(vibrator->vcc),
-> +                                    "Failed to request regulator\n");
->
->         vibrator->pwm = devm_pwm_get(&pdev->dev, "enable");
-> -       err = PTR_ERR_OR_ZERO(vibrator->pwm);
-> -       if (err) {
-> -               if (err != -EPROBE_DEFER)
-> -                       dev_err(&pdev->dev, "Failed to request main pwm: %d",
-> -                               err);
-> -               return err;
+> +       if (IS_ERR(data->vdd_supply))
+> +               return dev_err_probe(dev, PTR_ERR(data->vdd_supply),
+> +                                    "Failed to get vdd regulator\n");
+> +
+>         data->vddio_supply = devm_regulator_get(dev, "vddio");
+> -       if (IS_ERR(data->vddio_supply)) {
+> -               if (PTR_ERR(data->vddio_supply) != -EPROBE_DEFER)
+> -                       dev_err(dev, "Failed to get vddio regulator %d\n",
+> -                               (int)PTR_ERR(data->vddio_supply));
+> -               return PTR_ERR(data->vddio_supply);
 > -       }
-> +       if (IS_ERR(vibrator->pwm))
-> +               return dev_err_probe(&pdev->dev, PTR_ERR(vibrator->pwm),
-> +                                    "Failed to request main pwm\n");
->
->         INIT_WORK(&vibrator->play_work, pwm_vibrator_play_work);
->
+> +       if (IS_ERR(data->vddio_supply))
+> +               return dev_err_probe(dev, PTR_ERR(data->vddio_supply),
+> +                                    "Failed to get vddio regulator\n");
+> +
+>         /* Typical voltage 2.4V these are min and max */
+>         ret = regulator_set_voltage(data->vdd_supply, 1620000, 3600000);
+>         if (ret)
 > --
 > 2.17.1
 >
