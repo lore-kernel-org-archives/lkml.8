@@ -2,173 +2,158 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99CCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE33C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB2CA207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B43120738
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:34:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dYuJGVBm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QyauHyC1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbgH0Jd7 (ORCPT
+        id S1728465AbgH0JeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:33:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39946 "EHLO
+        Thu, 27 Aug 2020 05:34:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728446AbgH0Jd4 (ORCPT
+        with ESMTP id S1727030AbgH0JeV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:33:56 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C3CC06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 02:33:54 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id a65so4513565wme.5
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 02:33:54 -0700 (PDT)
+        Thu, 27 Aug 2020 05:34:21 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F8EDC061264;
+        Thu, 27 Aug 2020 02:34:20 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id b17so6743235ejq.8;
+        Thu, 27 Aug 2020 02:34:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=s5e7PAlfYft9eFvmMXp+FriUBHbpOi2nhrqdvKXRL50=;
-        b=dYuJGVBmRmkmXcoI/V4nntaTYx0qVN96dznRjB5R99zgjt5H9u2l2suAYGkf2qk4ZR
-         RsUF2Uz5WhB1nfeZXqMidyIy+q4T6fVEwGcLaNB7Edoeha/7YEeM556KKBTSV7eMXuF6
-         Krva4Tp7eXmq2Cq1coYzDJCPsBvSCoExnMmb9DadVQY0ADbqBnoxz76CmueCHXwuB7t4
-         Cdmlpq2WBEN0fGM0Fm6nsxVeLbqMvPqR4JDzUDNUhB+b0NtYmhMq53ROTjzCpejkw+k1
-         aJnVc9hay1VHePkWxNQApXCtZt9Ofh0sgfBQdtvsahoiWizIFVfTK+5W285a/FFH27hv
-         MTPw==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=OPN019dv0ZwUErJy29rnKsWnH/b9Woj3nbMNGrhAC8c=;
+        b=QyauHyC15viX8/8BETQHlA5pax/IjzY2rWvLVuAuDl/aesI3URhsEWV8La+UcF2aVm
+         m6zW1XaCMrXpkMix02OjT9BelGbwB5kM1LV7nGw+onYgBfkOhl/NE6CTCBRofdXqL6+A
+         19IcOKKtBV1dOQ6wXaWpYAG/z8wtS28hnixs8V4HiKzuVENEFpmnYlSrLlzRJIAGK7Ka
+         fwlStZZUBm8wIffQaA9j/8d80xQB63VXetYk8UTIJX0Ava4YvK/QW1H7BYkCdkwYs/wu
+         /jc6vpwc3osLgK3/HEFkDTlRVMKL/cpNloPS8Wd4o3iszmzY7jEpij2iumzvqffjt49H
+         k3QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=s5e7PAlfYft9eFvmMXp+FriUBHbpOi2nhrqdvKXRL50=;
-        b=eoQslGOiwDecPg+w+52Aphv6k5xF6/PIVUBRV1w0GI4lv8ixP9gSkVlwe4hxxt00jO
-         OG1unDmgF+Lu6DfcrzoRff2kMsil7WhyeXDciU/JDvzKlUgNI8bIbG/fD+UlE7cgPIQB
-         laNNAZrUIN1Ok1eKY0Zc1j5ZMiSxuvslsvXXQz52BdFlveUeb7YhSLyzdS1BCVex05V/
-         oo/J/EBOfdEUHmX9tX01byRzaRbRgNoIVSRqw1/zX3ilK3vMVAuACFyophcF9Ke0o9vS
-         pGIIlptxNoGRYX87iFfr6kGhfey9nCQBYhA2RuuHvJK99J7xGeZjd0IhQ4W7JF9xXRj9
-         zG1A==
-X-Gm-Message-State: AOAM5310iF3pGDVEfzhRvd0ZgKPTBTH30kXxcKGb93C9lDyNo/HJQ/Wq
-        NCtihYHwbn4GSDZKxIuo3ZlSmg==
-X-Google-Smtp-Source: ABdhPJxh3MiG9wj6HGV/dnuv7EM7Uw1UBREO8gCQvp6ytS6Ki4av4AnJOt6sdwhcW3suy7Gn9E7xfA==
-X-Received: by 2002:a1c:f00a:: with SMTP id a10mr10797514wmb.84.1598520833319;
-        Thu, 27 Aug 2020 02:33:53 -0700 (PDT)
-Received: from dell ([91.110.221.141])
-        by smtp.gmail.com with ESMTPSA id z8sm3879309wmf.42.2020.08.27.02.33.52
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=OPN019dv0ZwUErJy29rnKsWnH/b9Woj3nbMNGrhAC8c=;
+        b=UjaO9AxHQ9VyohGDpHhMuZW9OBrQ4YPn2WKi0NV6JK3SyQNIBzAghrN66TnOcrjJIs
+         ED7qiL+mKTrJtyf9uHOlvjTYx1qBHbVvZ79lFf9EGjIIwjFDTYMi8hxWOs/Falh+kwXZ
+         D+no/yAOiGsDMHsExLvbKaae8DWPu8wVXi5/kWDFOZQQFDGMTH1Z5GgQDSOsc3DlraRk
+         XjeZgq8fwciSjRQAqc0HugyFagNKq87XT3EKTCN1WMj2fk2YVI2vshffYE8w1SprYDxx
+         UbIQr5+lvhixokbJNmcu6AZthLeN3N/6soAaZ8XIB5gRCbGoMVoijM2/HT5WswF9Zmgg
+         L1gw==
+X-Gm-Message-State: AOAM532RQima0ejLWuOc8eMbQrehe6DF+tcWYfLXmAPfTHdwjB5iqIGv
+        XxGYWylXY3lyGeLGDzOGRh0BmZTpi9//bfzI
+X-Google-Smtp-Source: ABdhPJzffUigmoS/TVvnVrsWqLpw6dP+dVGX9uIaZIdtyoo+ufdyWlLglYNyqstNFbsWvQVHH8RfgA==
+X-Received: by 2002:a17:906:780f:: with SMTP id u15mr6347818ejm.259.1598520858899;
+        Thu, 27 Aug 2020 02:34:18 -0700 (PDT)
+Received: from felia ([2001:16b8:2d0c:fc00:340b:71b8:4541:aa75])
+        by smtp.gmail.com with ESMTPSA id f5sm1132738edv.4.2020.08.27.02.34.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 02:33:52 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 10:33:51 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH v2 08/30] net: wireless: ath: carl9170: Convert 'ar9170_qmap'
- to inline function
-Message-ID: <20200827093351.GA1627017@dell>
-References: <20200814113933.1903438-1-lee.jones@linaro.org>
- <20200814113933.1903438-9-lee.jones@linaro.org>
+        Thu, 27 Aug 2020 02:34:18 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Thu, 27 Aug 2020 11:34:17 +0200 (CEST)
+X-X-Sender: lukas@felia
+To:     Mrinal Pandey <mrinalmni@gmail.com>
+cc:     skhan@linuxfoundation.org,
+        Linux-kernel-mentees@lists.linuxfoundation.org,
+        lukas.bulwahn@gmail.com, keescook@chromium.org, re.emese@gmail.com,
+        maennich@google.com, tglx@linutronix.de,
+        gregkh@linuxfoundation.org, akpm@linux-foundation.org,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        linux-spdx@vger.kernel.org
+Subject: Re: [PATCH] scripts: Add intended executable mode and SPDX license
+In-Reply-To: <20200827092405.b6hymjxufn2nvgml@mrinalpandey>
+Message-ID: <alpine.DEB.2.21.2008271128540.25858@felia>
+References: <20200827092405.b6hymjxufn2nvgml@mrinalpandey>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200814113933.1903438-9-lee.jones@linaro.org>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'ar9170_qmap' is used in some source files which include carl9170.h,
-but not all of them.  A 'defined but not used' warning is thrown when
-compiling the ones which do not use it.
 
-Fixes the following W=1 kernel build warning(s)
 
- from drivers/net/wireless/ath/carl9170/carl9170.h:57,
- In file included from drivers/net/wireless/ath/carl9170/carl9170.h:57,
- drivers/net/wireless/ath/carl9170/carl9170.h:71:17: warning: ‘ar9170_qmap’ defined but not used [-Wunused-const-variable=]
+On Thu, 27 Aug 2020, Mrinal Pandey wrote:
 
- NB: Snipped - lots of these repeat
+> commit b72231eb7084 ("scripts: add spdxcheck.py self test") added the file
+> spdxcheck-test.sh to the repository without the executable flag and license
+> information.
+> 
+> commit eb8305aecb95 ("scripts: Coccinelle script for namespace
+> dependencies.") added the file nsdeps, commit 313dd1b62921 ("gcc-plugins:
+> Add the randstruct plugin") added the file gcc-plugins/gen-random-seed.sh
+> and commit 9b4ade226f74 ("xen: build infrastructure for generating
+> hypercall depending symbols") added the file xen-hypercalls.sh without the
+> executable bit.
+> 
+> Set to usual modes for these files and provide the SPDX license for
+> spdxcheck-test.sh. No functional changes.
+> 
+> Signed-off-by: Mrinal Pandey <mrinalmni@gmail.com>
 
-Cc: Christian Lamparter <chunkeey@googlemail.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/net/wireless/ath/carl9170/carl9170.h | 5 ++++-
- drivers/net/wireless/ath/carl9170/main.c     | 2 +-
- drivers/net/wireless/ath/carl9170/tx.c       | 6 +++---
- 3 files changed, 8 insertions(+), 5 deletions(-)
+This is a contribution from a candidate of the Linux Kernel Onboarding 
+Mentorship. If successful, the candidate will work on improving 
+checkpatch.pl so that we get closer to a state where we can run it as a 
+bot reporting on patch submissions to mailing lists.
 
-diff --git a/drivers/net/wireless/ath/carl9170/carl9170.h b/drivers/net/wireless/ath/carl9170/carl9170.h
-index 237d0cda1bcb0..0d38100d6e4f5 100644
---- a/drivers/net/wireless/ath/carl9170/carl9170.h
-+++ b/drivers/net/wireless/ath/carl9170/carl9170.h
-@@ -68,7 +68,10 @@
- 
- #define PAYLOAD_MAX	(CARL9170_MAX_CMD_LEN / 4 - 1)
- 
--static const u8 ar9170_qmap[__AR9170_NUM_TXQ] = { 3, 2, 1, 0 };
-+static inline u8 ar9170_qmap(u8 idx)
-+{
-+	return 3 - idx; /* { 3, 2, 1, 0 } */
-+}
- 
- #define CARL9170_MAX_RX_BUFFER_SIZE		8192
- 
-diff --git a/drivers/net/wireless/ath/carl9170/main.c b/drivers/net/wireless/ath/carl9170/main.c
-index 816929fb5b143..dbef9d8fc893b 100644
---- a/drivers/net/wireless/ath/carl9170/main.c
-+++ b/drivers/net/wireless/ath/carl9170/main.c
-@@ -1374,7 +1374,7 @@ static int carl9170_op_conf_tx(struct ieee80211_hw *hw,
- 	int ret;
- 
- 	mutex_lock(&ar->mutex);
--	memcpy(&ar->edcf[ar9170_qmap[queue]], param, sizeof(*param));
-+	memcpy(&ar->edcf[ar9170_qmap(queue)], param, sizeof(*param));
- 	ret = carl9170_set_qos(ar);
- 	mutex_unlock(&ar->mutex);
- 	return ret;
-diff --git a/drivers/net/wireless/ath/carl9170/tx.c b/drivers/net/wireless/ath/carl9170/tx.c
-index 2407931440edb..2f9e275db8ef0 100644
---- a/drivers/net/wireless/ath/carl9170/tx.c
-+++ b/drivers/net/wireless/ath/carl9170/tx.c
-@@ -663,7 +663,7 @@ static void __carl9170_tx_process_status(struct ar9170 *ar,
- 	unsigned int r, t, q;
- 	bool success = true;
- 
--	q = ar9170_qmap[info & CARL9170_TX_STATUS_QUEUE];
-+	q = ar9170_qmap(info & CARL9170_TX_STATUS_QUEUE);
- 
- 	skb = carl9170_get_queued_skb(ar, cookie, &ar->tx_status[q]);
- 	if (!skb) {
-@@ -979,7 +979,7 @@ static int carl9170_tx_prepare(struct ar9170 *ar,
- 		((CARL9170_TX_SUPER_MISC_VIF_ID >>
- 		 CARL9170_TX_SUPER_MISC_VIF_ID_S) + 1));
- 
--	hw_queue = ar9170_qmap[carl9170_get_queue(ar, skb)];
-+	hw_queue = ar9170_qmap(carl9170_get_queue(ar, skb));
- 
- 	hdr = (void *)skb->data;
- 	info = IEEE80211_SKB_CB(skb);
-@@ -1279,7 +1279,7 @@ void carl9170_tx_drop(struct ar9170 *ar, struct sk_buff *skb)
- 
- 	super = (void *)skb->data;
- 	SET_VAL(CARL9170_TX_SUPER_MISC_QUEUE, q,
--		ar9170_qmap[carl9170_get_queue(ar, skb)]);
-+		ar9170_qmap(carl9170_get_queue(ar, skb)));
- 	__carl9170_tx_process_status(ar, super->s.cookie, q);
- }
- 
--- 
-2.25.1
+This was clean-up work we came across looking at SPDX license warnings,
+script shebangs, and executable modes of files.
+
+Acked-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+
+> ---
+> applies cleanly on next-20200827
+> 
+> Kees, Matthias, Thomas, please ack this patch.
+> 
+> Andrew, please pick this minor non-urgent cleanup patch once the
+> mainainers ack.
+> 
+>  scripts/gcc-plugins/gen-random-seed.sh | 0
+>  scripts/nsdeps                         | 0
+>  scripts/spdxcheck-test.sh              | 1 +
+>  scripts/xen-hypercalls.sh              | 0
+>  4 files changed, 1 insertion(+)
+>  mode change 100644 => 100755 scripts/gcc-plugins/gen-random-seed.sh
+>  mode change 100644 => 100755 scripts/nsdeps
+>  mode change 100644 => 100755 scripts/spdxcheck-test.sh
+>  mode change 100644 => 100755 scripts/xen-hypercalls.sh
+> 
+> diff --git a/scripts/gcc-plugins/gen-random-seed.sh b/scripts/gcc-plugins/gen-random-seed.sh
+> old mode 100644
+> new mode 100755
+> diff --git a/scripts/nsdeps b/scripts/nsdeps
+> old mode 100644
+> new mode 100755
+> diff --git a/scripts/spdxcheck-test.sh b/scripts/spdxcheck-test.sh
+> old mode 100644
+> new mode 100755
+> index cfea6a0d1cc0..e2902520a081
+> --- a/scripts/spdxcheck-test.sh
+> +++ b/scripts/spdxcheck-test.sh
+> @@ -1,4 +1,5 @@
+>  #!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+>  
+>  for PYTHON in python2 python3; do
+>  	# run check on a text and a binary file
+> diff --git a/scripts/xen-hypercalls.sh b/scripts/xen-hypercalls.sh
+> old mode 100644
+> new mode 100755
+> -- 
+> 2.25.1
+> 
+> 
