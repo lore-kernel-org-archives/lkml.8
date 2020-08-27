@@ -2,128 +2,173 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CED1C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC62CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C9152071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:02:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dTu6o2U3"
+	by mail.kernel.org (Postfix) with ESMTP id 849172071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:05:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgH0UC0 (ORCPT
+        id S1726323AbgH0UFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 16:02:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgH0UCZ (ORCPT
+        Thu, 27 Aug 2020 16:05:02 -0400
+Received: from lists.gateworks.com ([108.161.130.12]:59424 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbgH0UFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:02:25 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CDEC061264;
-        Thu, 27 Aug 2020 13:02:25 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 17so4331181pfw.9;
-        Thu, 27 Aug 2020 13:02:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jZGo/LXMWA743P+olH7TRkE+L3lrjbqKbRZ3LxAQjPo=;
-        b=dTu6o2U3wIn+j1v+r3MXNSN35FUN+T2Ga+C6IEZhOqyDDBfBE3A597INaQykc/zK5N
-         e29lSW8oIy3von1EDSHzrXAVeRMAvW1ed+lYOELqagYL5sR2inJeqwfBbqXV4FK6sCMk
-         Hfm42l4h/LTOWilsOGK7JOMAPAdmKuTI7ri15EU81fGomSsgujOEykmO3j5u3b8d00JT
-         y6G7L3ZjYiblAjxovxtPZnHCI16Md4+vLhzEs1tK7lNien1ry4pAHrXAiN3tLj6C5xlc
-         yK8rJWblvVYrsonzu63yJ/EgonbAcYBoDqsF2KrONQ8csAQTA+38zWBBwcTvD1DPUifV
-         GLSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jZGo/LXMWA743P+olH7TRkE+L3lrjbqKbRZ3LxAQjPo=;
-        b=mS4xUPJAIs6/fgjpcWp1vmIfjkQyihn4P+Y7q2SRTA6rmUh37dVoBgGjG+zLH98zXG
-         5oRefqZBb003vDawErEhRVmO7eWcUL6jnV/4PobB2zvQyOgZBYsaw/jlnTw9YWjjJggv
-         nqGt2+LuM9K1GN+FoMNhGI5fhPa6KgJo8sp2aNPFLX0RTRfuyU2e8i8hTCOBRDG57nYv
-         xmY8rJfSMzJEaEHAnPZ255/+COmlkeCixqby9TtAirZM+sPhSCq9XOXRJJyppk+w/rSK
-         qJ0Ji0cQCZ7q27NQRbcpP5M8S9suLBFgpmJbTzcpFy8sV1ksiAfGvkSOG1d6YveXHE/M
-         +K/Q==
-X-Gm-Message-State: AOAM531aelGRC0R/4qKJpP5AacIF90RkXKZ9EykLBpmVjG+8rLH7NjQt
-        nMcx1PgBo4vcPgHMMhLy5IPlLTg2GjaRLFYzHng=
-X-Google-Smtp-Source: ABdhPJyrJVOQaAjVOgzTH9Ia08ZxKIpsXNc3Mfx5rESAlYI8qMYgqJ1+s8Yh5E+7TlXUKU+iWqHjdU0n6g2EX6jm0oE=
-X-Received: by 2002:aa7:95b8:: with SMTP id a24mr17478277pfk.219.1598558545190;
- Thu, 27 Aug 2020 13:02:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200827192642.1725-1-krzk@kernel.org> <20200827192642.1725-18-krzk@kernel.org>
-In-Reply-To: <20200827192642.1725-18-krzk@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Aug 2020 23:02:08 +0300
-Message-ID: <CAHp75Vc4R_PkVSYFGNr0UO5yJ+dLGhVV-G7vznGnNu_aCVoTVQ@mail.gmail.com>
-Subject: Re: [PATCH v2 18/18] iio: magnetometer: iio-mux: Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 27 Aug 2020 16:05:01 -0400
+Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1kBODQ-00039V-KZ; Thu, 27 Aug 2020 20:09:44 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Robert Jones <rjones@gateworks.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v2] hwmon: gsc-hwmon: add fan sensor
+Date:   Thu, 27 Aug 2020 13:04:54 -0700
+Message-Id: <1598558694-743-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 10:29 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and also it prints the error value.
+Add a fan sensor to report RPM's from a fan tach input.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+--
+v2:
+ - avoid unnecessary line split and fix opening brace location
+---
+ drivers/hwmon/gsc-hwmon.c               | 32 +++++++++++++++++++++++++++++---
+ include/linux/platform_data/gsc_hwmon.h |  1 +
+ 2 files changed, 30 insertions(+), 3 deletions(-)
 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/iio/multiplexer/iio-mux.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/iio/multiplexer/iio-mux.c b/drivers/iio/multiplexer/iio-mux.c
-> index 6910218fdb00..d219d4a86657 100644
-> --- a/drivers/iio/multiplexer/iio-mux.c
-> +++ b/drivers/iio/multiplexer/iio-mux.c
-> @@ -354,11 +354,8 @@ static int mux_probe(struct platform_device *pdev)
->                 return -ENODEV;
->
->         parent = devm_iio_channel_get(dev, "parent");
-> -       if (IS_ERR(parent)) {
-> -               if (PTR_ERR(parent) != -EPROBE_DEFER)
-> -                       dev_err(dev, "failed to get parent channel\n");
-> -               return PTR_ERR(parent);
-> -       }
-> +       if (IS_ERR(parent))
-> +               return dev_err_probe(dev, PTR_ERR(parent), "failed to get parent channel\n");
->
->         sizeof_ext_info = iio_get_channel_ext_info_count(parent);
->         if (sizeof_ext_info) {
-> --
-> 2.17.1
->
-
-
+diff --git a/drivers/hwmon/gsc-hwmon.c b/drivers/hwmon/gsc-hwmon.c
+index c6d4567..1fe3741 100644
+--- a/drivers/hwmon/gsc-hwmon.c
++++ b/drivers/hwmon/gsc-hwmon.c
+@@ -17,6 +17,7 @@
+ 
+ #define GSC_HWMON_MAX_TEMP_CH	16
+ #define GSC_HWMON_MAX_IN_CH	16
++#define GSC_HWMON_MAX_FAN_CH	16
+ 
+ #define GSC_HWMON_RESOLUTION	12
+ #define GSC_HWMON_VREF		2500
+@@ -27,11 +28,14 @@ struct gsc_hwmon_data {
+ 	struct regmap *regmap;
+ 	const struct gsc_hwmon_channel *temp_ch[GSC_HWMON_MAX_TEMP_CH];
+ 	const struct gsc_hwmon_channel *in_ch[GSC_HWMON_MAX_IN_CH];
++	const struct gsc_hwmon_channel *fan_ch[GSC_HWMON_MAX_FAN_CH];
+ 	u32 temp_config[GSC_HWMON_MAX_TEMP_CH + 1];
+ 	u32 in_config[GSC_HWMON_MAX_IN_CH + 1];
++	u32 fan_config[GSC_HWMON_MAX_FAN_CH + 1];
+ 	struct hwmon_channel_info temp_info;
+ 	struct hwmon_channel_info in_info;
+-	const struct hwmon_channel_info *info[3];
++	struct hwmon_channel_info fan_info;
++	const struct hwmon_channel_info *info[4];
+ 	struct hwmon_chip_info chip;
+ };
+ 
+@@ -155,6 +159,9 @@ gsc_hwmon_read(struct device *dev, enum hwmon_sensor_types type, u32 attr,
+ 	case hwmon_temp:
+ 		ch = hwmon->temp_ch[channel];
+ 		break;
++	case hwmon_fan:
++		ch = hwmon->fan_ch[channel];
++		break;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+@@ -187,6 +194,9 @@ gsc_hwmon_read(struct device *dev, enum hwmon_sensor_types type, u32 attr,
+ 		/* adjust by uV offset */
+ 		tmp += ch->mvoffset;
+ 		break;
++	case mode_fan:
++		tmp *= 30; /* convert to revolutions per minute */
++		break;
+ 	case mode_voltage_24bit:
+ 	case mode_voltage_16bit:
+ 		/* no adjustment needed */
+@@ -211,6 +221,9 @@ gsc_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
+ 	case hwmon_temp:
+ 		*buf = hwmon->temp_ch[channel]->name;
+ 		break;
++	case hwmon_fan:
++		*buf = hwmon->fan_ch[channel]->name;
++		break;
+ 	default:
+ 		return -ENOTSUPP;
+ 	}
+@@ -304,7 +317,7 @@ static int gsc_hwmon_probe(struct platform_device *pdev)
+ 	struct gsc_hwmon_platform_data *pdata = dev_get_platdata(dev);
+ 	struct gsc_hwmon_data *hwmon;
+ 	const struct attribute_group **groups;
+-	int i, i_in, i_temp;
++	int i, i_in, i_temp, i_fan;
+ 
+ 	if (!pdata) {
+ 		pdata = gsc_hwmon_get_devtree_pdata(dev);
+@@ -324,7 +337,7 @@ static int gsc_hwmon_probe(struct platform_device *pdev)
+ 	if (IS_ERR(hwmon->regmap))
+ 		return PTR_ERR(hwmon->regmap);
+ 
+-	for (i = 0, i_in = 0, i_temp = 0; i < hwmon->pdata->nchannels; i++) {
++	for (i = 0, i_in = 0, i_temp = 0, i_fan = 0; i < hwmon->pdata->nchannels; i++) {
+ 		const struct gsc_hwmon_channel *ch = &pdata->channels[i];
+ 
+ 		switch (ch->mode) {
+@@ -338,6 +351,16 @@ static int gsc_hwmon_probe(struct platform_device *pdev)
+ 						     HWMON_T_LABEL;
+ 			i_temp++;
+ 			break;
++		case mode_fan:
++			if (i_fan == GSC_HWMON_MAX_FAN_CH) {
++				dev_err(gsc->dev, "too many fan channels\n");
++				return -EINVAL;
++			}
++			hwmon->fan_ch[i_fan] = ch;
++			hwmon->fan_config[i_fan] = HWMON_F_INPUT |
++						   HWMON_F_LABEL;
++			i_fan++;
++			break;
+ 		case mode_voltage_24bit:
+ 		case mode_voltage_16bit:
+ 		case mode_voltage_raw:
+@@ -361,10 +384,13 @@ static int gsc_hwmon_probe(struct platform_device *pdev)
+ 	hwmon->chip.info = hwmon->info;
+ 	hwmon->info[0] = &hwmon->temp_info;
+ 	hwmon->info[1] = &hwmon->in_info;
++	hwmon->info[2] = &hwmon->fan_info;
+ 	hwmon->temp_info.type = hwmon_temp;
+ 	hwmon->temp_info.config = hwmon->temp_config;
+ 	hwmon->in_info.type = hwmon_in;
+ 	hwmon->in_info.config = hwmon->in_config;
++	hwmon->fan_info.type = hwmon_fan;
++	hwmon->fan_info.config = hwmon->fan_config;
+ 
+ 	groups = pdata->fan_base ? gsc_hwmon_groups : NULL;
+ 	hwmon_dev = devm_hwmon_device_register_with_info(dev,
+diff --git a/include/linux/platform_data/gsc_hwmon.h b/include/linux/platform_data/gsc_hwmon.h
+index 37a8f554d..281f499 100644
+--- a/include/linux/platform_data/gsc_hwmon.h
++++ b/include/linux/platform_data/gsc_hwmon.h
+@@ -7,6 +7,7 @@ enum gsc_hwmon_mode {
+ 	mode_voltage_24bit,
+ 	mode_voltage_raw,
+ 	mode_voltage_16bit,
++	mode_fan,
+ 	mode_max,
+ };
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
+
