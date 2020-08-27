@@ -2,133 +2,195 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE91C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E0FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E10520786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:10:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f72xNZaz"
+	by mail.kernel.org (Postfix) with ESMTP id 36F8C20786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbgH0GKZ (ORCPT
+        id S1726988AbgH0GLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:10:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbgH0GKZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:10:25 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C28AC061258
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 23:10:25 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id v15so2587450pgh.6
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 23:10:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kvUmPPEUXRUMMdd71p7IlSZliwOvsu9WLjoTLyHc+GE=;
-        b=f72xNZaz8DpYkB5MJNVJu0AzbPGIOy4RnTLZtogP9xbbhQ3XFFiaM9QuhnVSXWHvgB
-         dSUo6tuIW9rTvXljZSKzbA33k2/y7pUWaE0Qh0AerIErSeTJZ4yrb91HzAtErFUN63r7
-         wHpBiVuQR6YLn/pjD3GY4RZ07Oz/2Fd6rZLcjY/8xEwdAkvHnVU8z7QwUn39KZ9pbMJe
-         Pt08mGBbUVsqXyPuRPDl+tqtkawYpIAq/RBPTIQKKEIYiTaTOlkMA9e0BGwuC8KfqGvC
-         /GlXwAkUoApLcqRhmp8phKv6Z6CH2OY3iVHdkuZoDbt6bBVeJjW4hiuUpqZ50K4xoA2w
-         PhfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kvUmPPEUXRUMMdd71p7IlSZliwOvsu9WLjoTLyHc+GE=;
-        b=peHCDbSwAcDhmDG8CWfHUdghBEGQ0y/FIAxmp34P4tkmq/L/8PE7OafxWQczqw/tFo
-         qp5rm2GyaOE9gA7PkI+dvsWgA6kI3YOPhS6s8du5mw8CZS4FK/zAg5QWpJtmRGi1Ss6a
-         DddonuXa4Lb8/Ic693OjSEkAjuKaFK3e7Vq4I3Z3n13Zm93r2YsHTF5vQzo2yyV+SRAt
-         S47dBkfzcTghJoZ9n3g/Qwr2dl4+gwAhOGsLvayc/xtdvZC3du/nFWUEpAq/yJlzqzSt
-         9kd7E/rDDmABy7GHUDI3/JX+uJi7VcqQn4iYxjuLCNRUqfbxVb9TzhzI0HhN9mw7En83
-         4Yjw==
-X-Gm-Message-State: AOAM530jCZ2AStIgX8ia4lTY+Ss7GesJXLfi7+qivdQbxhVwLGUVK4rd
-        JhhX1yxDKi2MV4xt3c6tuBrn+Q==
-X-Google-Smtp-Source: ABdhPJz9EcfAFlLK5x87WyF1Q/fc1QZ+/EIqezZ1IWw70vQsIRnTvx6EZEy81qENub+O/Yf5DKp5bQ==
-X-Received: by 2002:a17:902:7788:: with SMTP id o8mr87243pll.43.1598508624806;
-        Wed, 26 Aug 2020 23:10:24 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id 37sm989677pjo.8.2020.08.26.23.10.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Aug 2020 23:10:24 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 11:40:22 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     rjw@rjwysocki.net, dietmar.eggemann@arm.com,
-        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
-        valentin.schneider@arm.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] arch_topology: validate input frequencies to
- arch_set_freq_scale()
-Message-ID: <20200827061022.aocb2wunyxjl2lc6@vireshk-i7>
-References: <20200824210252.27486-1-ionela.voinescu@arm.com>
- <20200824210252.27486-2-ionela.voinescu@arm.com>
- <20200825055618.ybght3enlpuwo3va@vireshk-i7>
- <20200825113131.GB12506@arm.com>
+        Thu, 27 Aug 2020 02:11:33 -0400
+Received: from mga03.intel.com ([134.134.136.65]:40504 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbgH0GLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 02:11:32 -0400
+IronPort-SDR: kQuZQJrbRqv70Kd/8W5YT9++n2pjAFTuY9DjsqO/Zi10BZKD8fye6yRdm3rzlY/ooM1R9TF5Js
+ 4vw08eXt0eYg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="156432603"
+X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
+   d="scan'208";a="156432603"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 23:11:31 -0700
+IronPort-SDR: dF3te/9eMlBqrdSNu7nKwtGsgVljxjumlayN34tLdJUojd01NVusT20U0Y851NJkBfQ0UfRoTM
+ iBA+LI3VK/lg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
+   d="scan'208";a="500515776"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 26 Aug 2020 23:11:30 -0700
+Received: from [10.249.76.175] (vramuthx-MOBL1.gar.corp.intel.com [10.249.76.175])
+        by linux.intel.com (Postfix) with ESMTP id 5338B58069F;
+        Wed, 26 Aug 2020 23:11:28 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v2 2/2] extcon: ptn5150: Set the VBUS and POLARITY
+ property state
+To:     Chanwoo Choi <cw00.choi@samsung.com>, linux-kernel@vger.kernel.org
+Cc:     vijaikumar.kanagarajan@gmail.com, krzk@kernel.org,
+        myungjoo.ham@samsung.com, heikki.krogerus@linux.intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com
+References: <20200827035633.37348-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <CGME20200827035651epcas1p33a045925293860a361a3be0cf21a2e2a@epcas1p3.samsung.com>
+ <20200827035633.37348-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <b44d90d2-e91d-afd4-22c0-f64400ba9e11@samsung.com>
+ <1e9360ee-22f6-2135-26c7-a5b25fe7776d@linux.intel.com>
+ <55514836-b9cf-e937-b5d5-eb0535d98334@samsung.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <87f86b88-6698-343c-bdbd-75972db593a7@linux.intel.com>
+Date:   Thu, 27 Aug 2020 14:11:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825113131.GB12506@arm.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <55514836-b9cf-e937-b5d5-eb0535d98334@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-08-20, 12:31, Ionela Voinescu wrote:
-> On Tuesday 25 Aug 2020 at 11:26:18 (+0530), Viresh Kumar wrote:
-> > On 24-08-20, 22:02, Ionela Voinescu wrote:
-> > > The current frequency passed to arch_set_freq_scale() could end up
-> > > being 0, signaling an error in setting a new frequency. Also, if the
-> > > maximum frequency in 0, this will result in a division by 0 error.
-> > > 
-> > > Therefore, validate these input values before using them for the
-> > > setting of the frequency scale factor.
-> > > 
-> > > Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> > > Cc: Sudeep Holla <sudeep.holla@arm.com>
-> > > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > > ---
-> > >  drivers/base/arch_topology.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > > 
-> > > diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> > > index 75f72d684294..1aca82fcceb8 100644
-> > > --- a/drivers/base/arch_topology.c
-> > > +++ b/drivers/base/arch_topology.c
-> > > @@ -33,6 +33,9 @@ void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
-> > >  	unsigned long scale;
-> > >  	int i;
-> > >  
-> > > +	if (!cur_freq || !max_freq)
-> > 
-> > We should probably use unlikely() here.
-> > 
-> > Rafael: Shouldn't this have a WARN_ON_ONCE() as well ?
-> > 
+Hi,
+
+On 27/8/2020 1:35 pm, Chanwoo Choi wrote:
+> Hi,
 > 
-> I'll add the unlikely() as it's definitely useful.
+> On 8/27/20 2:17 PM, Ramuthevar, Vadivel MuruganX wrote:
+>> Hi,
+>>
+>> On 27/8/2020 12:51 pm, Chanwoo Choi wrote:
+>>> Hi,
+>>>
+>>> You better to change the 'state' word to 'capability'.
+>>> Actually, this patch doesn't change the value of property.
+>>> It set the capability value of property.
+>>>
+>>> "Set the VBUS and POLARITY property capability"
+>> Thank you for the review comments, sure will update.
+>>>
+>>> On 8/27/20 12:56 PM, Ramuthevar,Vadivel MuruganX wrote:
+>>>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>>>
+>>>> Set the VBUS and POLARITY property state.
+>>>
+>>> ditto. Need to change the work from 'state' and 'capability'.
+>> Noted.
+>>>
+>>>>
+>>>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>>> ---
+>>>>    drivers/extcon/extcon-ptn5150.c | 6 ++++++
+>>>>    1 file changed, 6 insertions(+)
+>>>>
+>>>> diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
+>>>> index 8b930050a3f1..b5217a61615c 100644
+>>>> --- a/drivers/extcon/extcon-ptn5150.c
+>>>> +++ b/drivers/extcon/extcon-ptn5150.c
+>>>> @@ -279,6 +279,12 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
+>>>>            return ret;
+>>>>        }
+>>>>    +    extcon_set_property_capability(info->edev, EXTCON_USB,
+>>>> +                       EXTCON_PROP_USB_VBUS);
+>>>> +    extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
+>>>> +                       EXTCON_PROP_USB_VBUS);
+>>>> +    extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
+>>>> +                       EXTCON_PROP_USB_TYPEC_POLARITY);
+>>>
+>>> Need to add blank line.
+>> Noted.
+>>>
+>>> I understood that you set the property capability
+>>> because of get_flipped() function of your patch[1].
+>>>
+>>> But, I think that you need to change the value of EXTCON_PROP_USB_TYPEC_POLARITY
+>>> when changing the state of EXTCON_USB_HOST. The polarity property value is always
+>>> zero regardless of EXTCON_USB_HOST state as following: The get_flipped()[1] returns
+>>> always the same *flipped value.
+>>>
+>>>      EXTCON_USB_HOST is 1, EXTCON_PROP_USB_TYPEC_POLARITY is 0
+>>>      EXTCON_USB_HOST is 0, EXTCON_PROP_USB_TYPEC_POLARITY is 0
+>> by default EXTCON_PROP_USB_TYPEC_POLARITY is 1
 > 
-> I'm somewhat on the fence about WARN_ON_ONCE() here. Wouldn't it work
-> better in cpufreq_driver_fast_switch()? It would cover scenarios where
-> the default arch_set_freq_scale() is used and flag potential hardware
-> issues with setting frequency that are currently just ignored both here
-> and in sugov_fast_switch().
+> If you don't touch the value of EXTCON_PROP_USB_TYPEC_POLARITY property,
+> EXTCON_PROP_USB_TYPEC_POLARITY has default value (0).
+Ok, thanks!
+will update the patch, send it.
 
-I think validation and the WARN (if required) must all happen at the
-same place. Considering that there can be many callers of a routine,
-like this one, it is better to put all that in the end function only.
-
-Maybe we can add the same in the dummy arch_set_freq_scale() if
-required.
-
--- 
-viresh
+Regards
+Vadivel
+> 
+>>>
+>>> If EXTCON_PROP_USB_TYPEC_POLARITY value is not related to any behavior,
+>>> you don't need to get the property value from extcon consumer driver
+>>> like drivers/phy/phy-lgm-usb.c.
+>>>
+>>> Actually, I don't understand why you don't handle the value
+>>> of EXTCON_PROP_USB_TYPEC_POLARITY.
+>>>
+>>> Or, are there any case of what drivers/phy/phy-lgm-usb.c
+>>> uses the different extcon device with EXTCON_PROP_USB_TYPEC_POLARITY property
+>>> in the future?
+>> Yes, you're right, user connect the different USB cable then we check polarity, accordingly driver proceeds, thanks!
+> 
+> OK.
+> 
+>>>
+>>> So, do you set the EXTCON_PROP_USB_TYPEC_POLARITY capability
+>>> for the extensibility in order to use other extcon device on later?
+>> yes, that might be the case as well.
+> 
+> OK.
+> 
+>>>
+>>>
+>>> [1] https://protect2.fireeye.com/v1/url?k=1fb29698-422c0d72-1fb31dd7-0cc47a6cba04-3009aa7184024984&q=1&e=566e4565-e7db-4a90-b036-fc28dbdb742f&u=https%3A%2F%2Fwww.spinics.net%2Flists%2Fdevicetree%2Fmsg371828.html
+>>> +static int get_flipped(struct tca_apb *ta, bool *flipped)
+>>> +{
+>>> +    union extcon_property_value property;
+>>> +    int ret;
+>>> +
+>>> +    ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
+>>> +                  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
+>>> +    if (ret) {
+>>> +        dev_err(ta->phy.dev, "no polarity property from extcon\n");
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    *flipped = property.intval;
+>>> +
+>>> +    return ret;
+>>> +}
+>> Thank you for the gone through my usb-phy patch as well
+>>
+>> Regards
+>> Vadivel
+>>>
+>>>
+>>>>        /* Initialize PTN5150 device and print vendor id and version id */
+>>>>        ret = ptn5150_init_dev_type(info);
+>>>>        if (ret)
+>>>>
+>>>
+>>>
+>>
+>>
+> 
+> 
