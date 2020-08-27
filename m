@@ -2,147 +2,118 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6E2C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 00:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19612C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 00:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11FA3207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 00:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E17652074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 00:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UFWD8x2L"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="KTB7nCKM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgH0Ael (ORCPT
+        id S1726834AbgH0AnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 20:34:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgH0Aek (ORCPT
+        Wed, 26 Aug 2020 20:43:12 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:61848 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbgH0AnL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 20:34:40 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D17ACC061574;
-        Wed, 26 Aug 2020 17:34:39 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BcNz009m4z9sSJ;
-        Thu, 27 Aug 2020 10:34:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1598488476;
-        bh=9J3Z/RzmtRQDyJKD7cxNHhVKPsEKKjMqAhiaCqWxv2I=;
-        h=Date:From:To:Cc:Subject:From;
-        b=UFWD8x2L2olBkNTpbRRIUM7dWECWZiMc99uPAX0WIoRISLai8zFPDCV+WMnFvdtjg
-         PBPnqHOGQuswyRV5R3QBTQ4ePO44EFHGcWbK+2bZj8ZrqvuqKSEvNtLZD5kHhfp7vs
-         T3DAagGDrblUZXvu//6DxFHLKolN+rn3EXzAkepV9Cyau7hV4t4ZumTOqiDteRgJZQ
-         IS64ek5kA4O5UDuct0UHeCQXd3xen99XGXPmnRSP9vJXxRM8cqU68QBONvPuIeopHe
-         5/BceKJjs+6D7SUCXdKQRpUZZBIGc+nargChAR+0jJg1qsE6shXKfXkrPBLmelwQZb
-         WY82hQatXfuJQ==
-Date:   Thu, 27 Aug 2020 10:34:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mingming Cao <mmc@linux.vnet.ibm.com>,
-        Dany Madden <drt@linux.ibm.com>,
-        Thomas Falcon <tlfalcon@linux.ibm.com>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20200827103433.43d384c8@canb.auug.org.au>
+        Wed, 26 Aug 2020 20:43:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1598488992; x=1630024992;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=gJAOuvCNVESTNELiVRxYhjymGe+a8wcK8KsX+jC97+8=;
+  b=KTB7nCKMKR9kI2/NH6sBM1hcZH4bf+L+syEpDok2jtIhRbpvjs5FB/dA
+   OUbJDkQ8QCZC3swXKtxjuWMYWpL3LG65gPF9DopdG9qagC0onxiuhWxHt
+   IiKlbxIPVYrpswF/N170WV7KNur83VPNcVli5te+S1/3V9zZf2uylY8RN
+   o=;
+X-IronPort-AV: E=Sophos;i="5.76,357,1592870400"; 
+   d="scan'208";a="70024280"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 27 Aug 2020 00:43:07 +0000
+Received: from EX13MTAUWC002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id C4069A18F5;
+        Thu, 27 Aug 2020 00:43:04 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC002.ant.amazon.com (10.43.162.240) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 27 Aug 2020 00:43:04 +0000
+Received: from u79c5a0a55de558.ant.amazon.com (10.43.160.192) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 27 Aug 2020 00:42:58 +0000
+From:   Alexander Graf <graf@amazon.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Tim Chen" <tim.c.chen@linux.intel.com>, <mingo@kernel.org>,
+        <tglx@linutronix.de>, <pjt@google.com>,
+        <torvalds@linux-foundation.org>, <subhra.mazumdar@oracle.com>,
+        <fweisbec@gmail.com>, <keescook@chromium.org>,
+        <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        "Pawan Gupta" <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>, <joel@joelfernandes.org>,
+        <vineethrp@gmail.com>, Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 0/3] Add HRTICK support to Core Scheduling
+Date:   Thu, 27 Aug 2020 02:42:47 +0200
+Message-ID: <20200827004250.4853-1-graf@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/eFsjpf3wj2EBY0NwhpmDa5W";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.192]
+X-ClientProxiedBy: EX13D28UWC002.ant.amazon.com (10.43.162.145) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/eFsjpf3wj2EBY0NwhpmDa5W
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+CFS supports a feature called "HRTICK" which allows scheduling
+decisions to be made independent of the HZ tick. That means that
+we can achieve much more fine grained time slices and thus be
+more fair in distributing time to different workloads.
 
-Hi all,
+Unfortunately, HRTICK currently does not work with the Core
+Scheduling patch set. This patch set adds support for it.
+Feel free to squash bits in where it makes sense.
 
-Today's linux-next merge of the net-next tree got a conflict in:
 
-  drivers/net/ethernet/ibm/ibmvnic.c
+Alex
 
-between commit:
+Alexander Graf (3):
+  sched: Allow hrticks to work with core scheduling
+  sched: Trigger new hrtick if timer expires too fast
+  sched: Use hrticks even with >sched_nr_latency tasks
 
-  9f1345737790 ("ibmvnic fix NULL tx_pools and rx_tools issue at do_reset")
+ kernel/sched/core.c  | 13 +++++++++++++
+ kernel/sched/fair.c  | 18 ++++++++++++++++--
+ kernel/sched/sched.h |  4 ++++
+ 3 files changed, 33 insertions(+), 2 deletions(-)
 
-from the net tree and commit:
+-- 
+2.26.2
 
-  507ebe6444a4 ("ibmvnic: Fix use-after-free of VNIC login response buffer")
 
-from the net-next tree.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
 
---=20
-Cheers,
-Stephen Rothwell
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
 
-diff --cc drivers/net/ethernet/ibm/ibmvnic.c
-index d3a774331afc,86a83e53dce5..000000000000
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@@ -475,17 -467,12 +467,15 @@@ static int init_stats_token(struct ibmv
-  static int reset_rx_pools(struct ibmvnic_adapter *adapter)
-  {
-  	struct ibmvnic_rx_pool *rx_pool;
-+ 	u64 buff_size;
-  	int rx_scrqs;
-  	int i, j, rc;
-- 	u64 *size_array;
- =20
- +	if (!adapter->rx_pool)
- +		return -1;
- +
-- 	size_array =3D (u64 *)((u8 *)(adapter->login_rsp_buf) +
-- 		be32_to_cpu(adapter->login_rsp_buf->off_rxadd_buff_size));
--=20
-- 	rx_scrqs =3D be32_to_cpu(adapter->login_rsp_buf->num_rxadd_subcrqs);
-+ 	buff_size =3D adapter->cur_rx_buf_sz;
-+ 	rx_scrqs =3D adapter->num_active_rx_pools;
-  	for (i =3D 0; i < rx_scrqs; i++) {
-  		rx_pool =3D &adapter->rx_pool[i];
- =20
-@@@ -652,10 -637,7 +640,10 @@@ static int reset_tx_pools(struct ibmvni
-  	int tx_scrqs;
-  	int i, rc;
- =20
- +	if (!adapter->tx_pool)
- +		return -1;
- +
-- 	tx_scrqs =3D be32_to_cpu(adapter->login_rsp_buf->num_txsubm_subcrqs);
-+ 	tx_scrqs =3D adapter->num_active_tx_pools;
-  	for (i =3D 0; i < tx_scrqs; i++) {
-  		rc =3D reset_one_tx_pool(adapter, &adapter->tso_pool[i]);
-  		if (rc)
 
---Sig_/eFsjpf3wj2EBY0NwhpmDa5W
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9G/5kACgkQAVBC80lX
-0GyqeAf9HUzAizW3e60JQkmaqI4HiLYdWb2Ko5Tig93cGN46SZ3PaO3W6zSoPsaY
-j2xUQMcn9YNl6P7Cw35va+NB5QorhswnpvlnT4CMx+dslgX3O1tHatypCITvzd7J
-VwaZPjIqbapdNMq+e99Wc8aVsV89FNm4N75/q4JDi/VITgfA/gbzCXO0ZK7ekhir
-y/vT4uHekS/zKCgKT3Mv5Uw99B52RbKrLaLswI6nWyG79D19uuR4r5LpmY/1Iel8
-XxfvPgtgNUVfDqCam4HKG6qsTng706AJ0gNQ/6xvvSFKJVBvDlvcwHCIrQqFX0rS
-4MID+hlXGoY11nhJ4s0wls4h9LAPjQ==
-=1LSu
------END PGP SIGNATURE-----
-
---Sig_/eFsjpf3wj2EBY0NwhpmDa5W--
