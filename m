@@ -2,201 +2,83 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE838C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 045A2C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD4122BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:33:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="R4kppq6g";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dPQi7FZ2"
+	by mail.kernel.org (Postfix) with ESMTP id C20B222D01
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:33:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598513604;
+	bh=X+y40DLVhGd5Us4fEJgD20QH8kLj69X1y7yxBz33ot4=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=YHmw38aCGdN4+WmceAqs4G+P/1VFw5yLD7dyV9d9dOslRhASNxC8Od+dWGl7lVw3U
+	 HutkI9wOwNsG5DMTy3l+a7RB//fix2bTLwwR9mLVr5chc/qCA5yOGHb5v4iTRNz7e7
+	 qvfVbXMiIDLEjsxyuK2GBALwWgeOmD7VEMz25pl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgH0HdC (ORCPT
+        id S1728033AbgH0HdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:33:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbgH0HdB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:33:01 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B693C061264;
-        Thu, 27 Aug 2020 00:33:01 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 07:32:58 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598513579;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=P36oEIEW26lLr8KitaGaEAxdQfOhpK7tlWZ1uAmlAPg=;
-        b=R4kppq6gCarrgv4Wj/1bsmaT8bWSKuRsJAzjqOiAwxDY2+iId+a45xo/aXd591FMBH6jLJ
-        BD8wd4YRD8+Im+QiyGLhYSkB4ONGfD14k7q77dyXJGnJUbYaz70YDjVKZ/9QESpywClu7f
-        V3q6OxS9mkQblibpAcKk6YIAQ/mHPpZ2Hz2KHu8QoevJ/8pANGLlCIoILd254bhaJi/sdV
-        pme0jlAjss/gU/9Q7w/ps12NmQ7urTVnbbsvdlXXce5EPntNUe7JEH0jZvHypljq4g5uO3
-        isLFuCYqSGjM8N3gR8BO9XeFBVly5cVIbP1xsd3KV/K0lG9bFgboGjRo83LWqw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598513579;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=P36oEIEW26lLr8KitaGaEAxdQfOhpK7tlWZ1uAmlAPg=;
-        b=dPQi7FZ2pLqoOmbUJIhXAeyNjpe3EX3TVQ6m9ARpyv3LdqdegWbDSA8MuP3Q8IlmsyFS6l
-        EB81OGIsvX3HzxCg==
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/irq: Unbreak interrupt affinity setting
-Cc:     Alex bykov <alex.bykov@scylladb.com>,
-        Avi Kivity <avi@scylladb.com>,
-        Alexander Graf <graf@amazon.com>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <87wo1ltaxz.fsf@nanos.tec.linutronix.de>
-References: <87wo1ltaxz.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Message-ID: <159851357826.20229.12114410199815745845.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        Thu, 27 Aug 2020 03:33:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726803AbgH0HdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:33:20 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6940120791;
+        Thu, 27 Aug 2020 07:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598513600;
+        bh=X+y40DLVhGd5Us4fEJgD20QH8kLj69X1y7yxBz33ot4=;
+        h=From:To:Subject:Date:From;
+        b=M79NegLV/hp09KS6jnHsLXJDpGzwTAbFBEnqL8wuOIyb88R6UiTv8pFuMfUP0+BWi
+         4oJaTZqB2gYDbiwU+NEltHJozveSvViGgD53BdKMQJPN6Yy9Moo5nqxoZRjo4bK4Vt
+         OLb9LB6o7n16st6Ag4WqrjPs/G8L0jeuluLliYdQ=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Scott Wood <scottwood@freescale.com>,
+        Bharat Bhushan <bharat.bhushan@freescale.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] memory: fsl-corenet-cf: Fix handling of platform_get_irq() error
+Date:   Thu, 27 Aug 2020 09:33:15 +0200
+Message-Id: <20200827073315.29351-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+platform_get_irq() returns -ERRNO on error.  In such case comparison
+to 0 would pass the check.
 
-Commit-ID:     e027fffff799cdd70400c5485b1a54f482255985
-Gitweb:        https://git.kernel.org/tip/e027fffff799cdd70400c5485b1a54f482255985
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 26 Aug 2020 22:21:44 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 27 Aug 2020 09:29:23 +02:00
-
-x86/irq: Unbreak interrupt affinity setting
-
-Several people reported that 5.8 broke the interrupt affinity setting
-mechanism.
-
-The consolidation of the entry code reused the regular exception entry code
-for device interrupts and changed the way how the vector number is conveyed
-from ptregs->orig_ax to a function argument.
-
-The low level entry uses the hardware error code slot to push the vector
-number onto the stack which is retrieved from there into a function
-argument and the slot on stack is set to -1.
-
-The reason for setting it to -1 is that the error code slot is at the
-position where pt_regs::orig_ax is. A positive value in pt_regs::orig_ax
-indicates that the entry came via a syscall. If it's not set to a negative
-value then a signal delivery on return to userspace would try to restart a
-syscall. But there are other places which rely on pt_regs::orig_ax being a
-valid indicator for syscall entry.
-
-But setting pt_regs::orig_ax to -1 has a nasty side effect vs. the
-interrupt affinity setting mechanism, which was overlooked when this change
-was made.
-
-Moving interrupts on x86 happens in several steps. A new vector on a
-different CPU is allocated and the relevant interrupt source is
-reprogrammed to that. But that's racy and there might be an interrupt
-already in flight to the old vector. So the old vector is preserved until
-the first interrupt arrives on the new vector and the new target CPU. Once
-that happens the old vector is cleaned up, but this cleanup still depends
-on the vector number being stored in pt_regs::orig_ax, which is now -1.
-
-That -1 makes the check for cleanup: pt_regs::orig_ax == new_vector
-always false. As a consequence the interrupt is moved once, but then it
-cannot be moved anymore because the cleanup of the old vector never
-happens.
-
-There would be several ways to convey the vector information to that place
-in the guts of the interrupt handling, but on deeper inspection it turned
-out that this check is pointless and a leftover from the old affinity model
-of X86 which supported multi-CPU affinities. Under this model it was
-possible that an interrupt had an old and a new vector on the same CPU, so
-the vector match was required.
-
-Under the new model the effective affinity of an interrupt is always a
-single CPU from the requested affinity mask. If the affinity mask changes
-then either the interrupt stays on the CPU and on the same vector when that
-CPU is still in the new affinity mask or it is moved to a different CPU, but
-it is never moved to a different vector on the same CPU.
-
-Ergo the cleanup check for the matching vector number is not required and
-can be removed which makes the dependency on pt_regs:orig_ax go away.
-
-The remaining check for new_cpu == smp_processsor_id() is completely
-sufficient. If it matches then the interrupt was successfully migrated and
-the cleanup can proceed.
-
-For paranoia sake add a warning into the vector assignment code to
-validate that the assumption of never moving to a different vector on
-the same CPU holds.
-
-Fixes: 633260fa143 ("x86/irq: Convey vector as argument and not in ptregs")
-Reported-by: Alex bykov <alex.bykov@scylladb.com>
-Reported-by: Avi Kivity <avi@scylladb.com>
-Reported-by: Alexander Graf <graf@amazon.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Alexander Graf <graf@amazon.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/87wo1ltaxz.fsf@nanos.tec.linutronix.de
-
+Fixes: 54afbec0d57f ("memory: Freescale CoreNet Coherency Fabric error reporting driver")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/x86/kernel/apic/vector.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ drivers/memory/fsl-corenet-cf.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
-index dae32d9..f8a56b5 100644
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -161,6 +161,7 @@ static void apic_update_vector(struct irq_data *irqd, unsigned int newvec,
- 		apicd->move_in_progress = true;
- 		apicd->prev_vector = apicd->vector;
- 		apicd->prev_cpu = apicd->cpu;
-+		WARN_ON_ONCE(apicd->cpu == newcpu);
- 	} else {
- 		irq_matrix_free(vector_matrix, apicd->cpu, apicd->vector,
- 				managed);
-@@ -910,7 +911,7 @@ void send_cleanup_vector(struct irq_cfg *cfg)
- 		__send_cleanup_vector(apicd);
- }
+diff --git a/drivers/memory/fsl-corenet-cf.c b/drivers/memory/fsl-corenet-cf.c
+index 0b0ed72016da..0309bd5a1800 100644
+--- a/drivers/memory/fsl-corenet-cf.c
++++ b/drivers/memory/fsl-corenet-cf.c
+@@ -211,10 +211,8 @@ static int ccf_probe(struct platform_device *pdev)
+ 	dev_set_drvdata(&pdev->dev, ccf);
  
--static void __irq_complete_move(struct irq_cfg *cfg, unsigned vector)
-+void irq_complete_move(struct irq_cfg *cfg)
- {
- 	struct apic_chip_data *apicd;
+ 	irq = platform_get_irq(pdev, 0);
+-	if (!irq) {
+-		dev_err(&pdev->dev, "%s: no irq\n", __func__);
+-		return -ENXIO;
+-	}
++	if (irq < 0)
++		return irq;
  
-@@ -918,15 +919,16 @@ static void __irq_complete_move(struct irq_cfg *cfg, unsigned vector)
- 	if (likely(!apicd->move_in_progress))
- 		return;
- 
--	if (vector == apicd->vector && apicd->cpu == smp_processor_id())
-+	/*
-+	 * If the interrupt arrived on the new target CPU, cleanup the
-+	 * vector on the old target CPU. A vector check is not required
-+	 * because an interrupt can never move from one vector to another
-+	 * on the same CPU.
-+	 */
-+	if (apicd->cpu == smp_processor_id())
- 		__send_cleanup_vector(apicd);
- }
- 
--void irq_complete_move(struct irq_cfg *cfg)
--{
--	__irq_complete_move(cfg, ~get_irq_regs()->orig_ax);
--}
--
- /*
-  * Called from fixup_irqs() with @desc->lock held and interrupts disabled.
-  */
+ 	ret = devm_request_irq(&pdev->dev, irq, ccf_irq, 0, pdev->name, ccf);
+ 	if (ret) {
+-- 
+2.17.1
+
