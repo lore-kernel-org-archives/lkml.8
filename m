@@ -2,240 +2,166 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A2BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1560C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2404022BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD8592073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:58:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="rAmQctHD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YbsZjk6v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgH0B6j (ORCPT
+        id S1727107AbgH0B6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 21:58:39 -0400
-Received: from mail-co1nam11on2059.outbound.protection.outlook.com ([40.107.220.59]:46657
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726790AbgH0B6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 21:58:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PvSdVUAzuwdgv9fhd9O27jiAMNe3KWaXQDoe7UaS2ah4yQUOnJWCndXXzKRHkaXtINzW6CM0xmzL8oZxXOt9R+pTwyH44x+s82im5Gz2GEfLbiK6AzfpL+4/JZ2GH+MqxYr0QfFTubrI+tqafakF8AU3+fbbxGWu1+PgeS2w+NQ79pH06+hcQY4A3P865mAw1RGN29PWsNPjt5PQjSHI7ajZWoHsw8cDzOGrbPelRJtojZzaxWDDKB3ZIBZSvzSQgK9iid3ttY0JF9rk5zjqe3Fd2m+Vi9q6nWTcLRfPfZ+q0D6180oPIPaRpCyGDfaG2I0bHuKLeSHCb2rikOjpjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DZ3+zwK7XaBuOc2uS8qUIvIm4z8BTwd9iOrQ5deSvg4=;
- b=M1zka2DkVOyCEpT+x0gyDVqwkrDQWp3DabIskXEMvAqLlM4TYJpwZ11G3fLtNUORXgGSAoIAw8fjhTauSz629YfrqK8qda62US1CNrxmiDFmknB/m+6CUt6u9Btz6vE7Pia0BDdV2nxR52VpH2H5NKHPYq7xnjypFsZ7P8/NtOn+khOmkt9Oc+Z5EzO9G2E/K4g8FxEDhQAwO9kpGnLHMuZ3DWTRy9fzPC9Ae6xBHzGzzBHZPhmmOtncRsqcvT7P9wZ5SiQkvRlgfKIf8J8kiS8YY1EG9chYUSPYejDobNb1kk+sbfWsI19I04jCBqlcuk1RjfsqL0xDZGgi82xjkQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=lists.infradead.org
- smtp.mailfrom=xilinx.com; dmarc=bestguesspass action=none
- header.from=xilinx.com; dkim=none (message not signed); arc=none
+        Wed, 26 Aug 2020 21:58:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbgH0B63 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 21:58:29 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DB78C061364
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 18:58:28 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id u24so3325346oic.7
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 18:58:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DZ3+zwK7XaBuOc2uS8qUIvIm4z8BTwd9iOrQ5deSvg4=;
- b=rAmQctHDg6eik0r0yosW9FdOIN/wExIm2YMz2ULlDDjXh9mlP/tD71D8e6pasAPDh4XACYfYXyQlozaueMQGc4k0YaYTQ+/Jma20H2HF7vqcUgJpPfJLQNEe6HedyTpoOjeBqbLBuRQAXWG3NEmvt8aFxlKgLuVReGkMaKuTbBs=
-Received: from DM5PR19CA0071.namprd19.prod.outlook.com (2603:10b6:3:116::33)
- by BYAPR02MB5208.namprd02.prod.outlook.com (2603:10b6:a03:64::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Thu, 27 Aug
- 2020 01:58:17 +0000
-Received: from CY1NAM02FT004.eop-nam02.prod.protection.outlook.com
- (2603:10b6:3:116:cafe::e4) by DM5PR19CA0071.outlook.office365.com
- (2603:10b6:3:116::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend
- Transport; Thu, 27 Aug 2020 01:58:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; lists.infradead.org; dkim=none (message not signed)
- header.d=none;lists.infradead.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT004.mail.protection.outlook.com (10.152.74.112) with Microsoft SMTP
- Server id 15.20.3326.19 via Frontend Transport; Thu, 27 Aug 2020 01:58:15
- +0000
-Received: from [149.199.38.66] (port=58693 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <ben.levinsky@xilinx.com>)
-        id 1kB7Ad-0002AL-Cc; Wed, 26 Aug 2020 18:57:43 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by smtp.xilinx.com with smtp (Exim 4.63)
-        (envelope-from <ben.levinsky@xilinx.com>)
-        id 1kB7B9-000183-0m; Wed, 26 Aug 2020 18:58:15 -0700
-Received: from xsj-pvapsmtp01 (mailman.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 07R1wApn015254;
-        Wed, 26 Aug 2020 18:58:11 -0700
-Received: from [172.19.2.206] (helo=xsjblevinsk50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <ben.levinsky@xilinx.com>)
-        id 1kB7B4-000155-PJ; Wed, 26 Aug 2020 18:58:10 -0700
-From:   Ben Levinsky <ben.levinsky@xilinx.com>
-To:     stefano.stabellini@xilinx.com, michals@xilinx.com,
-        michael.auchter@ni.com
-Cc:     devicetree@vger.kernel.org, mathieu.poirier@linaro.org,
-        emooring@xilinx.com, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jliang@xilinx.com,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v9 0/5] Provide basic driver to control Arm R5 co-processor found on Xilinx ZynqMP
-Date:   Wed, 26 Aug 2020 18:58:05 -0700
-Message-Id: <20200827015810.11157-1-ben.levinsky@xilinx.com>
-X-Mailer: git-send-email 2.17.1
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0gucHHi4ZHmdafDVfQXe+GXJ/XgXdpwzf5ZqQu5NL/k=;
+        b=YbsZjk6v9g9Xa9eZaY0SvPFg6XfNVVF3igAoxgS6YrqjRJOWWmDUcMGFqPqg1DH8QI
+         63RMGT/RdmKbLmQSo3npyAcapZJCrEb8BSwdBOcfDzZ6g/L5CPTqWIzCimTTUSsYY01a
+         rBxdfZc9wFI731j4Ef1onoyunl8aw7pCIFLetDWbh8QbeH/svPSFZMeiv/rl25xTR5Hn
+         zKSzYmnNhfZiDMhH8ygB8CAg3sW4/Z43OFBkHRaeGfCDVJY+9uyR/d64I/3jh0ncf5nL
+         I7tY2Lr7rHbtXx3kgi2KScHPcaQKcw3i5JB+Di6/zyOqkx1YZqpxBqbVQFWHj2+Y59qJ
+         paiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0gucHHi4ZHmdafDVfQXe+GXJ/XgXdpwzf5ZqQu5NL/k=;
+        b=fSQYvRVqAGMvzE/vWJRJ/0PApD8CErxgKz1DfSogOooTBAKnh5RHVasxliDRVVvFxi
+         NaDMMg1vduAhX1/hIfzANYTAowN/y2t2zq0/HS41DXGpT0Y0RpQyKpM1b+TznBbsJSne
+         K6/5ZSxV94x3Oeci2amkMiR3p4v/0HqY8fA52TsLlHft48hg79PLSAfsoyAqcYXV7tD8
+         L4cCuhSdZlcJj+/nFO8GwQ9XtcxXE1W8KuZCiZGzcV1hIaWxk9j4nxt4/m6l9MkAkDe7
+         KKA6WhWzIhL9P/eS0XXpEsy1J3IcUkJJlZL6l5AVmxcSaGaz6aNVmX9TXbN9K5YEEGpJ
+         qaRA==
+X-Gm-Message-State: AOAM532Iy3+hQ/vAmwJ42X3we68/gvsyKcPkPsASwvCC+V0ZEll7IMkF
+        QLG1eG6f3AR5HT0VWMUK2mz+0w==
+X-Google-Smtp-Source: ABdhPJwpb3rQUmO+jOUwJ2+AiZW58Lr8FDMKLclX7/euqgJHWZbF4b6YOfxhfo9xy8vwFra33QQoow==
+X-Received: by 2002:aca:5bc6:: with SMTP id p189mr5356770oib.130.1598493507642;
+        Wed, 26 Aug 2020 18:58:27 -0700 (PDT)
+Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
+        by smtp.gmail.com with ESMTPSA id l6sm185018otd.20.2020.08.26.18.58.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 18:58:26 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 20:58:24 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     andy.gross@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, ulf.hansson@linaro.org,
+        swboyd@chromium.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        John Stultz <john.stultz@linaro.org>,
+        Todd Kjos <tkjos@google.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH v2 2/2] soc: qcom: rpmh: Allow RPMH driver to be loaded
+ as a module
+Message-ID: <20200827015824.GH3715@yoga>
+References: <1598354482-15491-1-git-send-email-mkshah@codeaurora.org>
+ <1598354482-15491-3-git-send-email-mkshah@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: a5b9ef98-cb68-493e-88b4-08d84a2ca951
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5208:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB520858531F1320825445F219B5550@BYAPR02MB5208.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5Az1GCZHeRM0Cj/Q3DV3b+2kUFPFjP5fNTE5LPvosoDRyDyk2gnwhm5WE2xtJ2RYi3B+1N5WC/aIGD9SZ6vWhtVyd6gm3Lre5Sbpq6dO8liieMhIlp7C53AVKjROEB5I0vkqQCKnrtoUA7B+YNkNdBiuTxhQ+E0orxotZdpIsAS0QlJm/iFYYCF52VUfFpvfUemAz/ZbxMKvMqziNkrC0eJItqu/K2fRX16CwmTy9HUOjIzmC5fEvVJUnp7iVuRCDBZeRCoJf4lzwIUd4Oh31YsM46fXthRsyMigMEMhPUW2LS+atwjRisqeDQ1xWMmcpt03UsqACQLhS62gTCx3Bx+OvMRRtsZ8DW/oXyYp0E4kvhSphVxgZOXe3K/06/AwjpM7aGT7/gXQ5ijsRM3rhg==
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(39860400002)(346002)(376002)(396003)(136003)(46966005)(2616005)(81166007)(8936002)(8676002)(9786002)(6666004)(47076004)(26005)(82740400003)(426003)(82310400002)(336012)(44832011)(356005)(186003)(4326008)(2906002)(7696005)(1076003)(5660300002)(83380400001)(316002)(36756003)(70206006)(478600001)(70586007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2020 01:58:15.2544
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5b9ef98-cb68-493e-88b4-08d84a2ca951
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT004.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5208
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1598354482-15491-3-git-send-email-mkshah@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver was tested on Xilinx ZynqMP
+On Tue 25 Aug 06:21 CDT 2020, Maulik Shah wrote:
 
-For sake of ease of review, only support ZynqMP. Once accepted, then
-add support for Versal platform and R5 loading onto OCM.
+> From: John Stultz <john.stultz@linaro.org>
+> 
+> This patch allow the rpmh driver to be loaded as a permenent
+> module. Meaning it can be loaded from a module, but then cannot
+> be unloaded.
+> 
+> Ideally, it would include a remove hook and related logic, but
+> the rpmh driver is fairly core to the system, so once its loaded
+> with almost anything else to get the system to go, the dependencies
+> are not likely to ever also be removed.
+> 
+> So making it a permanent module at least improves things slightly
+> over requiring it to be a built in driver.
+> 
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Saravana Kannan <saravanak@google.com>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Rajendra Nayak <rnayak@codeaurora.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> [mkshah: Fix typos in commit message, send after removing _rcuidle trace]
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 
-v2:
-- remove domain struct as per review from Mathieu
-v3:
-- add xilinx-related platform mgmt fn's instead of wrapping around
-  function pointer in xilinx eemi ops struct
-- update zynqmp_r5 yaml parsing to not raise warnings for extra
-  information in children of R5 node. The warning "node has a unit
-  name, but no reg or ranges property" will still be raised though 
-  as this particular node is needed to describe the
-  '#address-cells' and '#size-cells' information.
-v4:
-- add default values for enums
-- fix formatting as per checkpatch.pl --strict. Note that 1 warning and
-  1 check are still raised as each is due to fixing the warning
-  results in that particular line going over 80 characters.
-- remove warning '/example-0/rpu@ff9a0000/r5@0: 
-  node has a unit name, but no reg or ranges property'
-  by adding reg to r5 node.
-v5:
-- update device tree sample and yaml parsing to not raise any warnings
-- description for memory-region in yaml parsing
-- compatible string in yaml parsing for TCM
-- parse_fw change from use of rproc_of_resm_mem_entry_init to
-  rproc_mem_entry_init and use of alloc/release
-- var's of type zynqmp_r5_pdata all have same local variable name
-- use dev_dbg instead of dev_info
-v6:
-- adding memory carveouts is handled much more similarly.
-  All mem carveouts are now described in reserved memory as needed.
-  That is, TCM nodes are not coupled to remoteproc anymore.
-  This is reflected in the remoteproc R5 driver and the device tree
-  binding.
-- remove mailbox from device tree binding as it is not necessary for elf
-  loading 
-v7:
-- remove unused headers
-- zynqmp_r5_remoteproc_probe:lockstep_mode from u32* to u32
-- device-tree binding "lockstep-mode"  to "xlnx,cluster-mode"
-- remove zynqmp_r5_mem_probe and loop to Probe R5 memory devices at
-  probe()
-- remove is_r5_mode_set from  zynqmp rpu remote processor private data
-- do not error out if no mailbox is provided since mailboxes are optional
-- remove zynqmp_r5_remoteproc_probe call of platform_set_drvdata as pdata
-  is handled in zynqmp_r5_remoteproc_remove
-v8:
-- remove old acks, reviewed-by's in commit message
-v9:
-- if zynqmp_r5_remoteproc.c pdata->tx_mc_skbs not initialized, then do not
-  call skb_queue_empty
-- update arguments and documentation for zynqmp_pm_set_rpu_mode
-- in fn zynqmp_pm_force_powerdown, change arg 'target' to 'node'
-- zynqmp_pm_request_wakeup update code style
-- edit 3/5 patch commit message
-- document zynqmp_pm_set_tcm_config and zynqmp_pm_get_rpu_mode
-  documentation to include expected return val
-- remove unused fn zynqmp_pm_get_node_status
-- update 5/5 patch commit message to document supported configurations
-  and how they are booted by the driver.
-- remove copyrights other than SPDX from zynqmp_r5_remoteproc.c
-- compilation warnings no longer raised
-- remove unused includes from zynqmp_r5_remoteproc.c
-- remove unused  var autoboot from zynqmp_r5_remoteproc.c
-- reorder zynqmp_r5_pdata fpr small mem savings due to alignment
-- zynqmp_pm_set_tcm_config and zynqmp_pm_set_rpu_mode uses second arg
-- zynqmp_r5_remoteproc.c use of zynqmp_pm_set_tcm_config now does not
-  have output arg
-- in tcm handling, unconditionally use &= 0x000fffff mask since all nodes
-  in this fn are for tcm
-- update comments for translating dma field in tcm handling to device
-  address
-- update calls to rproc_mem_entry_init in parse_mem_regions so that there
-  are only 2 cases for types of carveouts instead of 3
-- in parse_mem_regions, check if device tree node is null before using it
-- add example device tree nodes used in parse_mem_regions and tcm parsing
-- add comment for vring id node length
-- add check for string length so that vring id is at least min length
-- move tcm nodes from reserved mem to instead own device tree nodes
-   and only use them if enabled in device tree
-- add comment for explaining handling of rproc_elf_load_rsc_table
-- remove obsolete check for "if (vqid < 0)" in zynqmp_r5_rproc_kick
-- remove unused field mems in struct zynqmp_r5_pdata
-- remove call to zynqmp_r5_mem_probe and the fn itself as tcm handling
-  is done by zyqmp_r5_pm_request_tcm
-- remove obsolete setting of dma_ops and parent device dma_mask
-- remove obsolete use of of_dma_configure
-- add comment for call to r5_set_mode fn
-- make mbox usage optional and gracefully inform user via dev_dbg if not
-  present
-- change lockstep_mode from u32* to u32
-- update zynqmp_pm_set_rpu_mode and zynqmp_pm_set_rpu_mode documentation
-  and remove unused args
-v10:
-- add include types.h to xlnx-zynqmp.h for compilation
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Ben Levinsky (5):
-  firmware: xilinx: Add ZynqMP firmware ioctl enums for RPU
-    configuration.
-  firmware: xilinx: Add shutdown/wakeup APIs
-  firmware: xilinx: Add RPU configuration APIs
-  dt-bindings: remoteproc: Add documentation for ZynqMP R5 rproc
-    bindings
-  remoteproc: Add initial zynqmp R5 remoteproc driver
+Regards,
+Bjorn
 
- .../xilinx,zynqmp-r5-remoteproc.yaml          | 113 +++
- drivers/firmware/xilinx/zynqmp.c              |  86 ++
- drivers/remoteproc/Kconfig                    |  10 +
- drivers/remoteproc/Makefile                   |   1 +
- drivers/remoteproc/zynqmp_r5_remoteproc.c     | 898 ++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h          |  63 ++
- 6 files changed, 1171 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
- create mode 100644 drivers/remoteproc/zynqmp_r5_remoteproc.c
-
--- 
-2.17.1
-
+> ---
+>  drivers/soc/qcom/Kconfig    | 2 +-
+>  drivers/soc/qcom/rpmh-rsc.c | 5 +++++
+>  2 files changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> index 3dc3e3d..892bdc7 100644
+> --- a/drivers/soc/qcom/Kconfig
+> +++ b/drivers/soc/qcom/Kconfig
+> @@ -92,7 +92,7 @@ config QCOM_RMTFS_MEM
+>  	  Say y here if you intend to boot the modem remoteproc.
+>  
+>  config QCOM_RPMH
+> -	bool "Qualcomm RPM-Hardened (RPMH) Communication"
+> +	tristate "Qualcomm RPM-Hardened (RPMH) Communication"
+>  	depends on ARCH_QCOM || COMPILE_TEST
+>  	help
+>  	  Support for communication with the hardened-RPM blocks in
+> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
+> index fabe390d..5fce87c 100644
+> --- a/drivers/soc/qcom/rpmh-rsc.c
+> +++ b/drivers/soc/qcom/rpmh-rsc.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+>  #include <linux/list.h>
+> +#include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+> @@ -1025,6 +1026,7 @@ static const struct of_device_id rpmh_drv_match[] = {
+>  	{ .compatible = "qcom,rpmh-rsc", },
+>  	{ }
+>  };
+> +MODULE_DEVICE_TABLE(of, rpmh_drv_match);
+>  
+>  static struct platform_driver rpmh_driver = {
+>  	.probe = rpmh_rsc_probe,
+> @@ -1040,3 +1042,6 @@ static int __init rpmh_driver_init(void)
+>  	return platform_driver_register(&rpmh_driver);
+>  }
+>  arch_initcall(rpmh_driver_init);
+> +
+> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. RPMh Driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
