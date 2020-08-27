@@ -2,247 +2,192 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E57C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE757C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7389E2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:51:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598539867;
-	bh=fa2DrFabyT+DIgMoyFlHqZqjS5ow1whM7k7eYT1K05s=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=XEpe7MBu5GP3Fdhv2y2KYrMPYSMDnMSwCeMubmSvjjqv2vnWThRrCpt/sJ9jYStV9
-	 z53HBiiEemA503G8+EbrJuzffQ7kM+XauWTAVWkFxCVIsrL9oopKqFZ7svD1gAVPCq
-	 Hz0DquoUMgYunrJBBlqQo43BdUm7XqVvUOh6+uUI=
+	by mail.kernel.org (Postfix) with ESMTP id 9F97C22B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:51:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="kUQ3ihZr";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="GBcfbw+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgH0OvG (ORCPT
+        id S1728292AbgH0OvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:51:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34300 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727888AbgH0Njk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:39:40 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DF87207CD;
-        Thu, 27 Aug 2020 13:39:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598535579;
-        bh=fa2DrFabyT+DIgMoyFlHqZqjS5ow1whM7k7eYT1K05s=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VcaXRBZrFysXMNq+OW5DxhzIcbVXgzkyKUjruY7k0/vx4kmNTgH4WL+CyoE9tKMj2
-         dth5Ok8lYG3OSDqO24LMuammHM+h6KXD7Wpe9aH0uKbYdU88rSMhffXkpomz5MTu7b
-         GOejBpNGPLqso9z7aMdYlJ00BZevjwswmtFxwnXk=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Leon Romanovsky <leonro@nvidia.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: [RFC PATCH -rc] gcov: Protect from uninitialized number of functions provided by GCC
-Date:   Thu, 27 Aug 2020 16:39:32 +0300
-Message-Id: <20200827133932.3338519-1-leon@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Thu, 27 Aug 2020 10:51:07 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:5846 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728089AbgH0N3M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 09:29:12 -0400
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07RDSBPH004858;
+        Thu, 27 Aug 2020 06:29:05 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=sUfAFaQ91xEwa/9obC3b/GtBipGtqjQo+T11D+eD0l0=;
+ b=kUQ3ihZr3WCG0nd/r1RcCVS0+ij6AM3ADtUPT8QgkMFbDyu3KLv3noxganj+pLJYWoNb
+ kznTYTKBzvU1dUwBh+f1XXp9XcuPt0P9cgE0A05EEJrqylilGKscSk1/w35d0bgkEaUU
+ G1n8t/eAMjlKSxv42nqCIEShZVpA9yEQrTPxV4BQILMCkUyiq6XXfXgzX2q9FiYCgvbk
+ Ax8J9kt78Arl/3OBgtgc1fYDQ0T+GKzAYdDp5D/rRPIyaj6ND9HhEEXQ3i0wCx8ODWxl
+ v0b9NPh1dEWXFZudAFmLnBXCre0RgglRV3MZLG8So2sbLkfX3UFP0ZCSECQwYJ+KwQaW fw== 
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 332yww45dn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 06:29:04 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FP/PFe7Sb9C7Cw24Gu2n+3TdDGvO8BLcVlcLZavTwPphWM85EZ5lUEq+e/cntuQxx27rEBCa4Q/pqtxscP1yto0uwmRHAb9WVhBKgwwyQOcdeW+KiLgTTZP0KSCIhSkxI59LVy6sZ7H8+qn91Hsv9Kj7o4gxkqV8+a5LqQEaUVnEtYy7H8QiAUhuu1dkkdK2FVXUGP+4rERyVbJS8+nba1YaoKkL4j/68bdB5ZOe2RyEgO5kknlN/r84OeZxhUnpP6oECBTGiAxKBwVGeKJNZWHdQREfwxzk13o9F6n4zgfzu33LzJWhKKDf1ll1D+bdmr9O5ytcffVILNo0Xeh59w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sUfAFaQ91xEwa/9obC3b/GtBipGtqjQo+T11D+eD0l0=;
+ b=SfZWusht8jBrCGzJyaz8X13YPUzPyIbxwwKk0lMroAQ0F2ufIYQF+vYVIsIXE5E6djGYLN5+RGUoth2bIOlLFhifIWg5lgtmEFXyVb7QJLJfHvHZ4MESnqRi/TNYKhj6k1S//txJvhX/7F8ttHk0S72VjmwfmI+WoWBBN56LFql0I0ji0HK6sT744eQzfzW8/tzGP9UVXLEw+o2RVWiyQtKZQv2f/B/rffyra4Nf4p/xi/q4Cu+lQqrGyl6kZMmbd+C847AZKyEG7Tf8d9KBibSNzRoNy4Cvzump+e+0STSSS/LqeSOpSFv7GOOaUz/zRGofpkwqGWDjPwkvAIhjnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 199.43.4.23) smtp.rcpttodomain=kernel.org smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sUfAFaQ91xEwa/9obC3b/GtBipGtqjQo+T11D+eD0l0=;
+ b=GBcfbw+cq9uvn8vISUUbbifrI0FQn7VS9lVGo0i0A/w7wdB9QO6JFOJSMnz8TYMT5WqUqTsK5RXocu6eJjoPG9cQFKwdj1SkEchGUhIqdTE7kpPdWBdQjFtPPrybLW8Jdmc05sa4xtoavCVk1j1tKcfBawELN0CtjgBv/QGr8ig=
+Received: from BN8PR03CA0019.namprd03.prod.outlook.com (2603:10b6:408:94::32)
+ by BYAPR07MB4536.namprd07.prod.outlook.com (2603:10b6:a02:c3::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Thu, 27 Aug
+ 2020 13:29:02 +0000
+Received: from BN8NAM12FT059.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:408:94:cafe::d3) by BN8PR03CA0019.outlook.office365.com
+ (2603:10b6:408:94::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend
+ Transport; Thu, 27 Aug 2020 13:29:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 199.43.4.23)
+ smtp.mailfrom=cadence.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=pass action=none header.from=cadence.com;
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 199.43.4.23 as permitted sender) receiver=protection.outlook.com;
+ client-ip=199.43.4.23; helo=rmmaillnx1.cadence.com;
+Received: from rmmaillnx1.cadence.com (199.43.4.23) by
+ BN8NAM12FT059.mail.protection.outlook.com (10.13.183.55) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3326.19 via Frontend Transport; Thu, 27 Aug 2020 13:29:00 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 07RDSrRj001550
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Thu, 27 Aug 2020 09:28:59 -0400
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Thu, 27 Aug 2020 15:28:54 +0200
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 27 Aug 2020 15:28:54 +0200
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 07RDSrdA018750;
+        Thu, 27 Aug 2020 15:28:53 +0200
+Received: (from sjakhade@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 07RDSrYk018749;
+        Thu, 27 Aug 2020 15:28:53 +0200
+From:   Swapnil Jakhade <sjakhade@cadence.com>
+To:     <vkoul@kernel.org>, <kishon@ti.com>, <robh+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC:     <mparab@cadence.com>, <sjakhade@cadence.com>,
+        <yamonkar@cadence.com>, <tomi.valkeinen@ti.com>, <jsarha@ti.com>,
+        <nsekhar@ti.com>
+Subject: [PATCH v2 3/7] phy: cadence-torrent: Enable support for multiple subnodes
+Date:   Thu, 27 Aug 2020 15:28:48 +0200
+Message-ID: <1598534932-18693-4-git-send-email-sjakhade@cadence.com>
+X-Mailer: git-send-email 2.4.5
+In-Reply-To: <1598534932-18693-1-git-send-email-sjakhade@cadence.com>
+References: <1598534932-18693-1-git-send-email-sjakhade@cadence.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2daeb98b-3ffa-4fc6-6cb0-08d84a8d28d1
+X-MS-TrafficTypeDiagnostic: BYAPR07MB4536:
+X-Microsoft-Antispam-PRVS: <BYAPR07MB45366C8BC73A7522423D397FC5550@BYAPR07MB4536.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:131;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: VPoU+156xpC9X5XatjPNzb/GUWxxC8Qgt4889pJFoePAqulvI8ifawcXI3bcHcAyMXoADwrsEnWEr+OxDOMOK10wUUw7O3NzHpko4QiGHYdGRRFOaJgMBzIldpQTPr6eBP8RAh8IEzRDw7kHdE7rMe5MFEoX1W1uYcIcXFFChLrzfEdSq5BmG9YTJwE+6L8qx6naO2IboF2DcR/eNOm2bj1tFa3fCntygHdoY3MCnaOANrsjv99MeznPefPwsHtmpyLpO7TVvvprkNFAkpULz3EUly4E0bSEV5EjPweZTJMrE2k/tIq0hVg8O6ptuyIKGwAS6/miTKS6G4h/WTChVCEhmjyFjhV0AazyAZp2jqIZuzkZn/VVOM2ITi10BtzxvkcHVX9Cq8RA4TgA8Z4ZZ1ZWMeO/PtenF/6ol42Kdmg=
+X-Forefront-Antispam-Report: CIP:199.43.4.23;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:rmmaillnx1.cadence.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(376002)(136003)(346002)(396003)(39860400002)(36092001)(46966005)(42186006)(316002)(70206006)(336012)(70586007)(82740400003)(2906002)(36756003)(8676002)(86362001)(4326008)(83380400001)(8936002)(426003)(81166007)(110136005)(54906003)(82310400002)(5660300002)(6666004)(47076004)(186003)(26005)(2616005)(478600001)(356005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2020 13:29:00.8312
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2daeb98b-3ffa-4fc6-6cb0-08d84a8d28d1
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.23];Helo=[rmmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM12FT059.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB4536
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-27_07:2020-08-27,2020-08-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
+ bulkscore=0 mlxlogscore=843 spamscore=0 priorityscore=1501 impostorscore=0
+ malwarescore=0 lowpriorityscore=0 clxscore=1015 adultscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008270102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@nvidia.com>
+Enable support for multiple subnodes in torrent PHY to
+include multi-link combinations.
 
-The kernel compiled with GCC 10.2.1 and KASAN together with GCOV enabled
-produces the following splats while reloading modules.
-
-First splat [1] is generated due to the situation that gcov_info can be both
-user and kernel pointer, the memcpy() during kmemdup() causes to this.
-As a possible solution copy fields manually.
-
-Second splat [2] is seen because n_function provided by GCC through
-__gcov_init() is ridiculously high, in my case it was 2698213824.
-IMHO it means that this field is not initialized, but I'm not sure.
-
-[1]
- ==================================================================
- BUG: KASAN: global-out-of-bounds in kmemdup+0x43/0x70
- Read of size 120 at addr ffffffffa0d2c780 by task modprobe/296
-
- CPU: 0 PID: 296 Comm: modprobe Not tainted 5.9.0-rc1+ #1860
- Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04 /01/2014
- Call Trace:
-  ? dump_stack+0x128/0x1af
-  ? print_address_description.constprop.0+0x2c/0x3f0
-  ? _raw_spin_lock_irqsave+0x34/0xa0
-  ? __kasan_check_read+0x1d/0x30
-  ? kmemdup+0x43/0x70
-  ? kmemdup+0x43/0x70
-  ? gcov_info_dup+0x2d/0x730
-  ? __kasan_check_write+0x20/0x30
-  ? __mutex_unlock_slowpath+0x10d/0x740
-  ? gcov_event+0x88d/0xd30
-  ? gcov_module_notifier+0xe9/0x100
-  ? notifier_call_chain+0xeb/0x170
-  ? blocking_notifier_call_chain+0x75/0xc0
-  ? __x64_sys_delete_module+0x326/0x5a0
-  ? do_init_module+0x810/0x810
-  ? syscall_enter_from_user_mode+0x40/0x420
-  ? trace_hardirqs_on+0x45/0xb0
-  ? syscall_enter_from_user_mode+0x40/0x420
-  ? do_syscall_64+0x45/0x70
-  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
- The buggy address belongs to the variable:
-  __gcov_.uverbs_attr_get_obj+0x60/0xfffffffffff778e0 [mlx5_ib]
-
- Memory state around the buggy address:
-  ffffffffa0d2c680: 00 f9 f9 f9 f9 f9 f9 f9 00 00 00 00 00 f9 f9 f9
-  ffffffffa0d2c700: f9 f9 f9 f9 00 00 00 00 00 f9 f9 f9 f9 f9 f9 f9
- >ffffffffa0d2c780: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f9 f9
-                                                              ^
-  ffffffffa0d2c800: f9 f9 f9 f9 00 00 00 00 00 f9 f9 f9 f9 f9 f9 f9
-  ffffffffa0d2c880: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ==================================================================
- Disabling lock debugging due to kernel taint
- gcov: could not save data for '/home/leonro/src/kernel/drivers/infiniband/hw/mlx5/std_types.gcda' (out o
-f memory)
-
-[2]
-Colin has similar error [3].
-
- ------------[ cut here ]------------
- WARNING: CPU: 0 PID: 296 at mm/page_alloc.c:4859 __alloc_pages_nodemask+0x670/0x3190
- Modules linked in: mlx5_ib(-) mlx5_core mlxfw ptp ib_ipoib pps_core rdma_ucm rdma_cm iw_cm ib_cm ib_umad  ib_uverbs ib_core
- CPU: 0 PID: 296 Comm: modprobe Tainted: G    B             5.9.0-rc1+ #1860
- Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04 /01/2014
- RIP: 0010:__alloc_pages_nodemask+0x670/0x3190
- Code: e9 af fc ff ff 48 83 05 fd 28 90 05 01 81 e7 00 20 00 00 48 c7 44 24 28 00 00 00 00 0f 85 fb fd ff  ff 48 83 05 f0 28 90 05 01 <0f> 0b 48 83 05 ee 28 90 05 01 48 83 05 ee 28 90 05 01 e9 dc fd ff
- RSP: 0018:ffff88805f7ffa28 EFLAGS: 00010202
- RAX: 0000000000000000 RBX: 0000000000000000 RCX: 1ffff1100befff5e
- RDX: 0000000000000000 RSI: 0000000000000017 RDI: 0000000000000000
- RBP: 000000050695a900 R08: ffff888060fc7900 R09: ffff888060fc793b
- R10: ffffed100c1f8f27 R11: ffffed100c1f8f28 R12: 0000000000040dc0
- R13: 000000050695a900 R14: 0000000000000017 R15: 0000000000000001
- FS:  00007f521f695740(0000) GS:ffff88806ce00000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 00007f31b013f000 CR3: 000000006637e001 CR4: 0000000000370eb0
- DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
- DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- Call Trace:
-  ? __kmalloc_track_caller+0x17a/0x570
-  ? gcov_info_dup+0xfe/0x730
-  ? gcov_event+0x88d/0xd30
-  ? gcov_module_notifier+0xe9/0x100
-  ? blocking_notifier_call_chain+0x75/0xc0
-  ? __x64_sys_delete_module+0x326/0x5a0
-  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  ? mark_lock+0xba0/0xba0
-  ? mark_lock+0xba0/0xba0
-  ? notifier_call_chain+0xeb/0x170
-  ? blocking_notifier_call_chain+0x75/0xc0
-  ? __x64_sys_delete_module+0x326/0x5a0
-  ? do_syscall_64+0x45/0x70
-  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  ? warn_alloc+0x130/0x130
-  ? lock_acquire+0x1f2/0xa30
-  ? fs_reclaim_acquire+0x1f/0x70
-  ? fs_reclaim_release+0x1f/0x50
-  ? __kasan_check_read+0x1d/0x30
-  ? reacquire_held_locks+0x420/0x420
-  ? reacquire_held_locks+0x420/0x420
-  kmalloc_order+0x3f/0xc0
-  kmalloc_order_trace+0x24/0x220
-  __kmalloc+0x41b/0x5a0
-  ? gcov_info_dup+0xfe/0x730
-  ? memcpy+0x73/0xa0
-  gcov_info_dup+0x176/0x730
-  gcov_event+0x88d/0xd30
-  gcov_module_notifier+0xe9/0x100
-  notifier_call_chain+0xeb/0x170
-  blocking_notifier_call_chain+0x75/0xc0
-  __x64_sys_delete_module+0x326/0x5a0
-  ? do_init_module+0x810/0x810
-  ? syscall_enter_from_user_mode+0x40/0x420
-  ? trace_hardirqs_on+0x45/0xb0
-  ? syscall_enter_from_user_mode+0x40/0x420
-  do_syscall_64+0x45/0x70
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
- RIP: 0033:0x7f521f7c531b
- Code: 73 01 c3 48 8b 0d 7d 0b 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 b0 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 4d 0b 0c 00 f7 d8 64 89 01 48
- RSP: 002b:00007ffe1bd4af48 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
- RAX: ffffffffffffffda RBX: 0000561a3eae0910 RCX: 00007f521f7c531b
- RDX: 0000000000000000 RSI: 0000000000000800 RDI: 0000561a3eae0978
- RBP: 0000561a3eae0910 R08: 1999999999999999 R09: 0000000000000000
- R10: 00007f521f839ac0 R11: 0000000000000206 R12: 0000000000000000
- R13: 0000561a3eae0978 R14: 0000000000000000 R15: 0000561a3eae84d0
- irq event stamp: 326464
- hardirqs last  enabled at (326463): [<ffffffff832ecdde>] _raw_spin_unlock_irqrestore+0x8e/0xb0
- hardirqs last disabled at (326464): [<ffffffff832ec994>] _raw_spin_lock_irqsave+0x34/0xa0
- hardirqs last disabled at (326464): [<ffffffff832ec994>] _raw_spin_lock_irqsave+0x34/0xa0
- softirqs last  enabled at (320794): [<ffffffff83600931>] __do_softirq+0x931/0xbc4
- softirqs last disabled at (320789): [<ffffffff83400f2f>] asm_call_on_stack+0xf/0x20
- ---[ end trace 065ea9cc2ba144a6 ]---
-
-[3] https://bugzilla.kernel.org/show_bug.cgi?id=208885#c1
-Cc: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
 ---
-I have a strong feeling that this solution is not correct, but don't
-know how to do it right. The problem exists and reproducable in seconds.
----
- kernel/gcov/gcc_4_7.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ drivers/phy/cadence/phy-cadence-torrent.c | 15 ---------------
+ 1 file changed, 15 deletions(-)
 
-diff --git a/kernel/gcov/gcc_4_7.c b/kernel/gcov/gcc_4_7.c
-index 908fdf5098c3..357ef839cdd3 100644
---- a/kernel/gcov/gcc_4_7.c
-+++ b/kernel/gcov/gcc_4_7.c
-@@ -275,20 +275,23 @@ struct gcov_info *gcov_info_dup(struct gcov_info *info)
- 	size_t fi_size; /* function info size */
- 	size_t cv_size; /* counter values size */
-
--	dup = kmemdup(info, sizeof(*dup), GFP_KERNEL);
-+	dup = kzalloc(sizeof(*dup), GFP_KERNEL);
- 	if (!dup)
- 		return NULL;
-
--	dup->next = NULL;
--	dup->filename = NULL;
--	dup->functions = NULL;
-+	dup->version = info->version;
-+	dup->stamp = info->stamp;
-+	for (fi_idx = 0; i < GCOV_COUNTERS; i++)
-+		dup->merge[i] = info->merge[i];
-+	dup->n_functions = info->n_functions;
-
--	dup->filename = kstrdup(info->filename, GFP_KERNEL);
-+	dup->filename = kstrdup_const(info->filename, GFP_KERNEL);
- 	if (!dup->filename)
- 		goto err_free;
-
--	dup->functions = kcalloc(info->n_functions,
--				 sizeof(struct gcov_fn_info *), GFP_KERNEL);
-+	dup->functions =
-+		kcalloc(info->n_functions, sizeof(struct gcov_fn_info *),
-+			GFP_KERNEL | __GFP_NOWARN);
- 	if (!dup->functions)
- 		goto err_free;
-
-@@ -359,7 +362,7 @@ void gcov_info_free(struct gcov_info *info)
-
- free_info:
- 	kfree(info->functions);
--	kfree(info->filename);
-+	kfree_const(info->filename);
- 	kfree(info);
- }
-
---
-2.26.2
+diff --git a/drivers/phy/cadence/phy-cadence-torrent.c b/drivers/phy/cadence/phy-cadence-torrent.c
+index 566edf0e7937..ee633c8bf2d8 100644
+--- a/drivers/phy/cadence/phy-cadence-torrent.c
++++ b/drivers/phy/cadence/phy-cadence-torrent.c
+@@ -1747,9 +1747,6 @@ static int cdns_torrent_phy_probe(struct platform_device *pdev)
+ 	if (subnodes == 0) {
+ 		dev_err(dev, "No available link subnodes found\n");
+ 		return -EINVAL;
+-	} else if (subnodes != 1) {
+-		dev_err(dev, "Driver supports only one link subnode.\n");
+-		return -EINVAL;
+ 	}
+ 
+ 	for_each_available_child_of_node(dev->of_node, child) {
+@@ -1772,14 +1769,6 @@ static int cdns_torrent_phy_probe(struct platform_device *pdev)
+ 			goto put_child;
+ 		}
+ 
+-		if (cdns_phy->phys[node].mlane != 0) {
+-			dev_err(dev,
+-				"%s: Driver supports only lane-0 as master lane.\n",
+-				child->full_name);
+-			ret = -EINVAL;
+-			goto put_child;
+-		}
+-
+ 		if (of_property_read_u32(child, "cdns,phy-type",
+ 					 &cdns_phy->phys[node].phy_type)) {
+ 			dev_err(dev, "%s: No \"cdns,phy-type\"-property.\n",
+@@ -1852,10 +1841,6 @@ static int cdns_torrent_phy_probe(struct platform_device *pdev)
+ 			torrent_attr.mode = PHY_MODE_DP;
+ 
+ 			phy_set_attrs(gphy, &torrent_attr);
+-		} else {
+-			dev_err(dev, "Driver supports only PHY_TYPE_DP\n");
+-			ret = -ENOTSUPP;
+-			goto put_child;
+ 		}
+ 		cdns_phy->phys[node].phy = gphy;
+ 		phy_set_drvdata(gphy, &cdns_phy->phys[node]);
+-- 
+2.26.1
 
