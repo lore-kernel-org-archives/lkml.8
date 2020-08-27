@@ -2,159 +2,171 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B95C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EB0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1106207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A9A8207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgH0Jye (ORCPT
+        id S1728401AbgH0Jyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:54:34 -0400
-Received: from mga18.intel.com ([134.134.136.126]:16855 "EHLO mga18.intel.com"
+        Thu, 27 Aug 2020 05:54:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgH0Jyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:54:33 -0400
-IronPort-SDR: 6EwFLcfDa5CTaAAAoeSmLGZM+7jAd3C26xcXhdrNTckPT3UkVvFRCjpqc5SdFA3a00UkencRMv
- O8aQQsooodjg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="144131056"
-X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
-   d="scan'208";a="144131056"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 02:54:32 -0700
-IronPort-SDR: zzFZZKfiIYitmUmayPFZKycyu6m5slei8hD8mOAqFMwUJjwnmBW+VS3KvVoctozMoVYE2ERCii
- 5ywYwjjnQX8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
-   d="scan'208";a="295672250"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 27 Aug 2020 02:54:32 -0700
-Received: from [10.255.146.64] (mreddy3x-MOBL.gar.corp.intel.com [10.255.146.64])
-        by linux.intel.com (Postfix) with ESMTP id ABFFA5806C6;
-        Thu, 27 Aug 2020 02:54:29 -0700 (PDT)
-Subject: Re: [PATCH v5 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, chuanhua.lei@linux.intel.com,
-        malliamireddy009@gmail.com
-References: <cover.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <68c77fd2ffb477aa4a52a58f8a26bfb191d3c5d1.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <20200814203222.GA2674896@bogus>
- <7cdc0587-8b4f-4360-a303-1541c9ad57b2@linux.intel.com>
- <20200825112107.GN2639@vkoul-mobl>
-From:   "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
-Message-ID: <ffa5ba4d-f1b2-6a30-f2f1-f4578a77bce2@linux.intel.com>
-Date:   Thu, 27 Aug 2020 17:54:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1728303AbgH0Jye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:54:34 -0400
+Received: from gaia (unknown [46.69.195.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD3A0207CD;
+        Thu, 27 Aug 2020 09:54:31 +0000 (UTC)
+Date:   Thu, 27 Aug 2020 10:54:29 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        kasan-dev@googlegroups.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Branislav Rankov <Branislav.Rankov@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 21/35] arm64: mte: Add in-kernel tag fault handler
+Message-ID: <20200827095429.GC29264@gaia>
+References: <cover.1597425745.git.andreyknvl@google.com>
+ <f173aacd755e4644485c551198549ac52d1eb650.1597425745.git.andreyknvl@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200825112107.GN2639@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f173aacd755e4644485c551198549ac52d1eb650.1597425745.git.andreyknvl@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
-Thanks for the review comments.
+On Fri, Aug 14, 2020 at 07:27:03PM +0200, Andrey Konovalov wrote:
+> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> index 5e832b3387f1..c62c8ba85c0e 100644
+> --- a/arch/arm64/mm/fault.c
+> +++ b/arch/arm64/mm/fault.c
+> @@ -33,6 +33,7 @@
+>  #include <asm/debug-monitors.h>
+>  #include <asm/esr.h>
+>  #include <asm/kprobes.h>
+> +#include <asm/mte.h>
+>  #include <asm/processor.h>
+>  #include <asm/sysreg.h>
+>  #include <asm/system_misc.h>
+> @@ -222,6 +223,20 @@ int ptep_set_access_flags(struct vm_area_struct *vma,
+>  	return 1;
+>  }
+>  
+> +static bool is_el1_mte_sync_tag_check_fault(unsigned int esr)
+> +{
+> +	unsigned int ec = ESR_ELx_EC(esr);
+> +	unsigned int fsc = esr & ESR_ELx_FSC;
+> +
+> +	if (ec != ESR_ELx_EC_DABT_CUR)
+> +		return false;
+> +
+> +	if (fsc == ESR_ELx_FSC_MTE)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>  static bool is_el1_instruction_abort(unsigned int esr)
+>  {
+>  	return ESR_ELx_EC(esr) == ESR_ELx_EC_IABT_CUR;
+> @@ -294,6 +309,18 @@ static void die_kernel_fault(const char *msg, unsigned long addr,
+>  	do_exit(SIGKILL);
+>  }
+>  
+> +static void report_tag_fault(unsigned long addr, unsigned int esr,
+> +			     struct pt_regs *regs)
+> +{
+> +	bool is_write = ((esr & ESR_ELx_WNR) >> ESR_ELx_WNR_SHIFT) != 0;
+> +
+> +	pr_alert("Memory Tagging Extension Fault in %pS\n", (void *)regs->pc);
+> +	pr_alert("  %s at address %lx\n", is_write ? "Write" : "Read", addr);
+> +	pr_alert("  Pointer tag: [%02x], memory tag: [%02x]\n",
+> +			mte_get_ptr_tag(addr),
+> +			mte_get_mem_tag((void *)addr));
+> +}
+> +
+>  static void __do_kernel_fault(unsigned long addr, unsigned int esr,
+>  			      struct pt_regs *regs)
+>  {
+> @@ -317,12 +344,16 @@ static void __do_kernel_fault(unsigned long addr, unsigned int esr,
+>  			msg = "execute from non-executable memory";
+>  		else
+>  			msg = "read from unreadable memory";
+> +	} else if (is_el1_mte_sync_tag_check_fault(esr)) {
+> +		report_tag_fault(addr, esr, regs);
+> +		msg = "memory tagging extension fault";
 
-On 8/25/2020 7:21 PM, Vinod Koul wrote:
-> On 18-08-20, 15:00, Reddy, MallikarjunaX wrote:
->
->>>> +
->>>> +            intel,chans:
->>>> +              $ref: /schemas/types.yaml#/definitions/uint32-array
->>>> +              description:
->>>> +                 The channels included on this port. Format is channel start
->>>> +                 number and how many channels on this port.
->>> Why does this need to be in DT? This all seems like it can be in the dma
->>> cells for each client.
->> (*ABC)
->> Yes. We need this.
->> for dma0(lgm-cdma) old SOC supports 16 channels and the new SOC supports 22
->> channels. and the logical channel mapping for the peripherals also differ
->> b/w old and new SOCs.
->>
->> Because of this hardware limitation we are trying to configure the total
->> channels and port-channel mapping dynamically from device tree.
->>
->> based on port name we are trying to configure the default values for
->> different peripherals(ports).
->> Example: burst length is not same for all ports, so using port name to do
->> default configurations.
-> Sorry that does not make sense to me, why not specify the values to be
-> used here instead of defining your own name scheme!
-OK. Agreed. I will remove port name from DT and only use intel,chans
->
-> Only older soc it should create 16 channels and new 22 (hint this is hw
-> description so perfectly okay to specify in DT or in using driver_data
-> and compatible for each version
->
->>>> +
->>>> +          required:
->>>> +            - reg
->>>> +            - intel,name
->>>> +            - intel,chans
->>>> +
->>>> +
->>>> + ldma-channels:
->>>> +    type: object
->>>> +    description:
->>>> +       This sub-node must contain a sub-node for each DMA channel.
->>>> +    properties:
->>>> +      '#address-cells':
->>>> +        const: 1
->>>> +      '#size-cells':
->>>> +        const: 0
->>>> +
->>>> +    patternProperties:
->>>> +      "^ldma-channels@[0-15]+$":
->>>> +          type: object
->>>> +
->>>> +          properties:
->>>> +            reg:
->>>> +              items:
->>>> +                - enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
->>>> +              description:
->>>> +                 Which channel this node refers to.
->>>> +
->>>> +            intel,desc_num:
->>>> +              $ref: /schemas/types.yaml#/definitions/uint32
->>>> +              description:
->>>> +                 Per channel maximum descriptor number. The max value is 255.
->>>> +
->>>> +            intel,hdr-mode:
->>>> +              $ref: /schemas/types.yaml#/definitions/uint32-array
->>>> +              description:
->>>> +                 The first parameter is header mode size, the second
->>>> +                 parameter is checksum enable or disable. If enabled,
->>>> +                 header mode size is ignored. If disabled, header mode
->>>> +                 size must be provided.
->>>> +
->>>> +            intel,hw-desc:
->>>> +              $ref: /schemas/types.yaml#/definitions/uint32-array
->>>> +              description:
->>>> +                 Per channel dma hardware descriptor configuration.
->>>> +                 The first parameter is descriptor physical address and the
->>>> +                 second parameter hardware descriptor number.
->>> Again, this all seems like per client information for dma cells.
->>   Ok, if we move all these attributes to 'dmas' then 'dma-channels' child
->> node is not needed in dtsi.
->> #dma-cells number i am already using 7. If we move all these attributes to
->> 'dmas' then integer cells will increase.
->>
->> Is there any limitation in using a number of integer cells & as determined
->> by the #dma-cells property?
-> No I dont think there is but it needs to make sense :-)
-OK.
->
+IIUC, that's dead code. See my comment below on do_tag_check_fault().
+
+>  	} else if (addr < PAGE_SIZE) {
+>  		msg = "NULL pointer dereference";
+>  	} else {
+>  		msg = "paging request";
+>  	}
+>  
+> +
+
+Unnecessary empty line.
+
+>  	die_kernel_fault(msg, addr, esr, regs);
+>  }
+>  
+> @@ -658,10 +689,27 @@ static int do_sea(unsigned long addr, unsigned int esr, struct pt_regs *regs)
+>  	return 0;
+>  }
+>  
+> +static int do_tag_recovery(unsigned long addr, unsigned int esr,
+> +			   struct pt_regs *regs)
+> +{
+> +	report_tag_fault(addr, esr, regs);
+> +
+> +	/* Skip over the faulting instruction and continue: */
+> +	arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
+
+Ooooh, do we expect the kernel to still behave correctly after this? I
+thought the recovery means disabling tag checking altogether and
+restarting the instruction rather than skipping over it. We only skip if
+we emulated it.
+
+> +
+> +	return 0;
+> +}
+> +
+> +
+>  static int do_tag_check_fault(unsigned long addr, unsigned int esr,
+>  			      struct pt_regs *regs)
+>  {
+> -	do_bad_area(addr, esr, regs);
+> +	/* The tag check fault (TCF) is per TTBR */
+> +	if (is_ttbr0_addr(addr))
+> +		do_bad_area(addr, esr, regs);
+> +	else
+> +		do_tag_recovery(addr, esr, regs);
+
+So we never invoke __do_kernel_fault() for a synchronous tag check in
+the kernel. What's with all the is_el1_mte_sync_tag_check_fault() check
+above?
+
+-- 
+Catalin
