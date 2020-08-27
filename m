@@ -2,455 +2,143 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A8BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02557C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4891720825
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:35:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598513723;
-	bh=IP8OLbCvr7z4iHkOm7/fM2Kat3SeuBzjYRmMIZLAfKQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qB8M7Iz3bv18j7PtxdqGTatCsvrP9J8EaOabOSXYA4edRR2MhRDdTXbYju42bEl2D
-	 pL3fvP7rrH8UNaiowOlAbuBuOVuqCJ64Lt+Zqf3hQU7nuA6v/ovJmufkgUtkVdAvEp
-	 2cb3k7ZzkkO14GWaLQ/gL4NNuAHukXP2eGaYoU/Y=
+	by mail.kernel.org (Postfix) with ESMTP id AC26B20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:35:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MhOhwnPk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgH0HfW (ORCPT
+        id S1728281AbgH0Hfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:35:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52012 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728148AbgH0HfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:35:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FF45207DF;
-        Thu, 27 Aug 2020 07:35:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598513717;
-        bh=IP8OLbCvr7z4iHkOm7/fM2Kat3SeuBzjYRmMIZLAfKQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K8LBrsbUS8lPH/Ze92H4repmnbY32JpkJJ6sgvcOCWDLDIgJvjplnEvFyJk9U6t5E
-         9ShlyX6kmIUtuA8pFQqMAdVqttQ6trVf+2EIjGfqJ0ZLUpUmdbQJt9FqylJFvm4NtU
-         9oytuOH16cX1DJ9aSBrhReDLNWmBk3RdfRbMlkZM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, jslaby@suse.cz,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Linux 5.8.5
-Date:   Thu, 27 Aug 2020 09:35:23 +0200
-Message-Id: <159851372156137@kroah.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <1598513721250116@kroah.com>
-References: <1598513721250116@kroah.com>
+        Thu, 27 Aug 2020 03:35:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49612 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728115AbgH0Hft (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:35:49 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F3D7C06121B
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:35:49 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id h15so4314641wrt.12
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:35:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=y3aNmNMSAAKySSaB5bb9ahC7IKT1fIK3BKBDgaZqfos=;
+        b=MhOhwnPkn/mXHk29S0aVGPJU+5pGzM00XUyRGPLOZAnJUjsvfY0rCUKwzWzrzdKk8B
+         FTmXKFB6z7GR7R/M1UEGZAUnMVK3c7iUB2d6ME0A74idDUUTr8FnttE4PzyNoRn1dDaN
+         4Fe7Pq9ZXuzFK6T2K/MTj6iemQynffo8dufGq8IT78d+oGaKz/KejTRqiLTf/xnEEQBi
+         slzHFZ6xWq0nv16ud1WN92MQgBuot96gRpLkxkpjddXr3H7lVTHaK9DQ3Y58m2wrCNem
+         F/U3wCjoehqArOBRwez7CFZ4tkLH02bmDlPa9zjB6s6mR2KjUjVFBlpcKguHz9+0lymL
+         g7jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=y3aNmNMSAAKySSaB5bb9ahC7IKT1fIK3BKBDgaZqfos=;
+        b=dqpWYzKQMxdLJNhNxwJsYEpbbUZ7NZ2p2NyWe5YbmeVEDU4hcUZTjtQWVJUX8Mcdgr
+         HjI3t+UxvyoJ3IkYn1TpvUK/dz8fJtaIC0PtMlCaixBRorByYPlDWGMxLM/c7iphkhjk
+         XrbrIO8S4OvT/HbgzSdHsCYyQ4kiQQkdbp+26IN49qNUf0o3Am5JxVn1A/wYOEllAV2R
+         NvbUNoVvKoFQ+7pRL7jrARS1409uDwJZ9+Q4sxn6iUL449Ge8ano/dgSnY8jNL3LUgbz
+         hd9xtjLmwTWDdJMfmDJoI2LTt594DE62PRG1jhfStKLYKpS5m3raElqhhRRPOWA13xb3
+         XM0A==
+X-Gm-Message-State: AOAM530Y+E57QqTw17E+jDZOwh/rPscZjbWUfG7GI4oNXKTHlmAwn1V/
+        lbya4fFUbAm2o1hHsv0y6JDHVw==
+X-Google-Smtp-Source: ABdhPJyWD1fdGyzx1TwvJ8SngQQVXACF9Ez6lTR5lordc8i60z7i6OZvhFz80HM5+t9PexURWoznSw==
+X-Received: by 2002:adf:ee4a:: with SMTP id w10mr18352605wro.197.1598513747908;
+        Thu, 27 Aug 2020 00:35:47 -0700 (PDT)
+Received: from dell ([91.110.221.141])
+        by smtp.gmail.com with ESMTPSA id a8sm3868108wrh.86.2020.08.27.00.35.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 00:35:47 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 08:35:45 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, Maya Erez <merez@codeaurora.org>,
+        wil6210@qti.qualcomm.com
+Subject: [PATCH v2 28/32] wireless: ath: wil6210: txrx_edma: Demote comments
+ which are clearly not kernel-doc
+Message-ID: <20200827073545.GU3248864@dell>
+References: <20200821071644.109970-1-lee.jones@linaro.org>
+ <20200821071644.109970-29-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821071644.109970-29-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-diff --git a/Makefile b/Makefile
-index 9a7a416f2d84..f47073a3b474 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- VERSION = 5
- PATCHLEVEL = 8
--SUBLEVEL = 4
-+SUBLEVEL = 5
- EXTRAVERSION =
- NAME = Kleptomaniac Octopus
- 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 000f57198352..9f2c697ba0ac 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -3609,7 +3609,7 @@ static int check_missing_comp_in_tx_queue(struct ena_adapter *adapter,
- 	}
- 
- 	u64_stats_update_begin(&tx_ring->syncp);
--	tx_ring->tx_stats.missed_tx = missed_tx;
-+	tx_ring->tx_stats.missed_tx += missed_tx;
- 	u64_stats_update_end(&tx_ring->syncp);
- 
+Fixes the following W=1 kernel build warning(s):
+
+ drivers/net/wireless/ath/wil6210/txrx_edma.c:155: warning: Function parameter or member 'wil' not described in 'wil_ring_alloc_skb_edma'
+ drivers/net/wireless/ath/wil6210/txrx_edma.c:155: warning: Function parameter or member 'ring' not described in 'wil_ring_alloc_skb_edma'
+ drivers/net/wireless/ath/wil6210/txrx_edma.c:155: warning: Function parameter or member 'i' not described in 'wil_ring_alloc_skb_edma'
+ drivers/net/wireless/ath/wil6210/txrx_edma.c:1161: warning: Function parameter or member 'wil' not described in 'wil_tx_sring_handler'
+ drivers/net/wireless/ath/wil6210/txrx_edma.c:1161: warning: Function parameter or member 'sring' not described in 'wil_tx_sring_handler'
+ drivers/net/wireless/ath/wil6210/txrx_edma.c:1328: warning: Function parameter or member 'd' not described in 'wil_tx_desc_offload_setup_tso_edma'
+ drivers/net/wireless/ath/wil6210/txrx_edma.c:1328: warning: Function parameter or member 'tso_desc_type' not described in 'wil_tx_desc_offload_setup_tso_edma'
+ drivers/net/wireless/ath/wil6210/txrx_edma.c:1328: warning: Function parameter or member 'is_ipv4' not described in 'wil_tx_desc_offload_setup_tso_edma'
+ drivers/net/wireless/ath/wil6210/txrx_edma.c:1328: warning: Function parameter or member 'tcp_hdr_len' not described in 'wil_tx_desc_offload_setup_tso_edma'
+ drivers/net/wireless/ath/wil6210/txrx_edma.c:1328: warning: Function parameter or member 'skb_net_hdr_len' not described in 'wil_tx_desc_offload_setup_tso_edma'
+ drivers/net/wireless/ath/wil6210/txrx_edma.c:1328: warning: Function parameter or member 'mss' not described in 'wil_tx_desc_offload_setup_tso_edma'
+
+Cc: Maya Erez <merez@codeaurora.org>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-wireless@vger.kernel.org
+Cc: wil6210@qti.qualcomm.com
+Cc: netdev@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/net/wireless/ath/wil6210/txrx_edma.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/wil6210/txrx_edma.c b/drivers/net/wireless/ath/wil6210/txrx_edma.c
+index 7bfe867c7509e..8ca2ce51c83ef 100644
+--- a/drivers/net/wireless/ath/wil6210/txrx_edma.c
++++ b/drivers/net/wireless/ath/wil6210/txrx_edma.c
+@@ -147,9 +147,7 @@ static int wil_tx_init_edma(struct wil6210_priv *wil)
  	return rc;
-@@ -4537,6 +4537,9 @@ static void ena_keep_alive_wd(void *adapter_data,
- 	tx_drops = ((u64)desc->tx_drops_high << 32) | desc->tx_drops_low;
- 
- 	u64_stats_update_begin(&adapter->syncp);
-+	/* These stats are accumulated by the device, so the counters indicate
-+	 * all drops since last reset.
-+	 */
- 	adapter->dev_stats.rx_drops = rx_drops;
- 	adapter->dev_stats.tx_drops = tx_drops;
- 	u64_stats_update_end(&adapter->syncp);
-diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
-index f2f9086ebe98..b9c658e0548e 100644
---- a/fs/binfmt_flat.c
-+++ b/fs/binfmt_flat.c
-@@ -576,7 +576,7 @@ static int load_flat_file(struct linux_binprm *bprm,
- 			goto err;
- 		}
- 
--		len = data_len + extra;
-+		len = data_len + extra + MAX_SHARED_LIBS * sizeof(unsigned long);
- 		len = PAGE_ALIGN(len);
- 		realdatastart = vm_mmap(NULL, 0, len,
- 			PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE, 0);
-@@ -590,7 +590,9 @@ static int load_flat_file(struct linux_binprm *bprm,
- 			vm_munmap(textpos, text_len);
- 			goto err;
- 		}
--		datapos = ALIGN(realdatastart, FLAT_DATA_ALIGN);
-+		datapos = ALIGN(realdatastart +
-+				MAX_SHARED_LIBS * sizeof(unsigned long),
-+				FLAT_DATA_ALIGN);
- 
- 		pr_debug("Allocated data+bss+stack (%u bytes): %lx\n",
- 			 data_len + bss_len + stack_len, datapos);
-@@ -620,7 +622,7 @@ static int load_flat_file(struct linux_binprm *bprm,
- 		memp_size = len;
- 	} else {
- 
--		len = text_len + data_len + extra;
-+		len = text_len + data_len + extra + MAX_SHARED_LIBS * sizeof(u32);
- 		len = PAGE_ALIGN(len);
- 		textpos = vm_mmap(NULL, 0, len,
- 			PROT_READ | PROT_EXEC | PROT_WRITE, MAP_PRIVATE, 0);
-@@ -635,7 +637,9 @@ static int load_flat_file(struct linux_binprm *bprm,
- 		}
- 
- 		realdatastart = textpos + ntohl(hdr->data_start);
--		datapos = ALIGN(realdatastart, FLAT_DATA_ALIGN);
-+		datapos = ALIGN(realdatastart +
-+				MAX_SHARED_LIBS * sizeof(u32),
-+				FLAT_DATA_ALIGN);
- 
- 		reloc = (__be32 __user *)
- 			(datapos + (ntohl(hdr->reloc_start) - text_len));
-@@ -652,9 +656,8 @@ static int load_flat_file(struct linux_binprm *bprm,
- 					 (text_len + full_data
- 						  - sizeof(struct flat_hdr)),
- 					 0);
--			if (datapos != realdatastart)
--				memmove((void *)datapos, (void *)realdatastart,
--						full_data);
-+			memmove((void *) datapos, (void *) realdatastart,
-+					full_data);
- #else
- 			/*
- 			 * This is used on MMU systems mainly for testing.
-@@ -710,7 +713,8 @@ static int load_flat_file(struct linux_binprm *bprm,
- 		if (IS_ERR_VALUE(result)) {
- 			ret = result;
- 			pr_err("Unable to read code+data+bss, errno %d\n", ret);
--			vm_munmap(textpos, text_len + data_len + extra);
-+			vm_munmap(textpos, text_len + data_len + extra +
-+				MAX_SHARED_LIBS * sizeof(u32));
- 			goto err;
- 		}
- 	}
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index dd8ad87540ef..26978630378e 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4363,7 +4363,8 @@ static int io_sq_thread_acquire_mm(struct io_ring_ctx *ctx,
- 				   struct io_kiocb *req)
- {
- 	if (io_op_defs[req->opcode].needs_mm && !current->mm) {
--		if (unlikely(!mmget_not_zero(ctx->sqo_mm)))
-+		if (unlikely(!(ctx->flags & IORING_SETUP_SQPOLL) ||
-+			     !mmget_not_zero(ctx->sqo_mm)))
- 			return -EFAULT;
- 		kthread_use_mm(ctx->sqo_mm);
- 	}
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index b8afefe6f6b6..7afe52bd038b 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -5419,8 +5419,8 @@ struct sk_buff *skb_vlan_untag(struct sk_buff *skb)
- 	skb = skb_share_check(skb, GFP_ATOMIC);
- 	if (unlikely(!skb))
- 		goto err_free;
--
--	if (unlikely(!pskb_may_pull(skb, VLAN_HLEN)))
-+	/* We may access the two bytes after vlan_hdr in vlan_set_encap_proto(). */
-+	if (unlikely(!pskb_may_pull(skb, VLAN_HLEN + sizeof(unsigned short))))
- 		goto err_free;
- 
- 	vhdr = (struct vlan_hdr *)skb->data;
-diff --git a/net/ethtool/features.c b/net/ethtool/features.c
-index 4e632dc987d8..495635f152ba 100644
---- a/net/ethtool/features.c
-+++ b/net/ethtool/features.c
-@@ -224,7 +224,9 @@ int ethnl_set_features(struct sk_buff *skb, struct genl_info *info)
- 	DECLARE_BITMAP(wanted_diff_mask, NETDEV_FEATURE_COUNT);
- 	DECLARE_BITMAP(active_diff_mask, NETDEV_FEATURE_COUNT);
- 	DECLARE_BITMAP(old_active, NETDEV_FEATURE_COUNT);
-+	DECLARE_BITMAP(old_wanted, NETDEV_FEATURE_COUNT);
- 	DECLARE_BITMAP(new_active, NETDEV_FEATURE_COUNT);
-+	DECLARE_BITMAP(new_wanted, NETDEV_FEATURE_COUNT);
- 	DECLARE_BITMAP(req_wanted, NETDEV_FEATURE_COUNT);
- 	DECLARE_BITMAP(req_mask, NETDEV_FEATURE_COUNT);
- 	struct nlattr *tb[ETHTOOL_A_FEATURES_MAX + 1];
-@@ -250,6 +252,7 @@ int ethnl_set_features(struct sk_buff *skb, struct genl_info *info)
- 
- 	rtnl_lock();
- 	ethnl_features_to_bitmap(old_active, dev->features);
-+	ethnl_features_to_bitmap(old_wanted, dev->wanted_features);
- 	ret = ethnl_parse_bitset(req_wanted, req_mask, NETDEV_FEATURE_COUNT,
- 				 tb[ETHTOOL_A_FEATURES_WANTED],
- 				 netdev_features_strings, info->extack);
-@@ -261,17 +264,15 @@ int ethnl_set_features(struct sk_buff *skb, struct genl_info *info)
- 		goto out_rtnl;
- 	}
- 
--	/* set req_wanted bits not in req_mask from old_active */
-+	/* set req_wanted bits not in req_mask from old_wanted */
- 	bitmap_and(req_wanted, req_wanted, req_mask, NETDEV_FEATURE_COUNT);
--	bitmap_andnot(new_active, old_active, req_mask, NETDEV_FEATURE_COUNT);
--	bitmap_or(req_wanted, new_active, req_wanted, NETDEV_FEATURE_COUNT);
--	if (bitmap_equal(req_wanted, old_active, NETDEV_FEATURE_COUNT)) {
--		ret = 0;
--		goto out_rtnl;
-+	bitmap_andnot(new_wanted, old_wanted, req_mask, NETDEV_FEATURE_COUNT);
-+	bitmap_or(req_wanted, new_wanted, req_wanted, NETDEV_FEATURE_COUNT);
-+	if (!bitmap_equal(req_wanted, old_wanted, NETDEV_FEATURE_COUNT)) {
-+		dev->wanted_features &= ~dev->hw_features;
-+		dev->wanted_features |= ethnl_bitmap_to_features(req_wanted) & dev->hw_features;
-+		__netdev_update_features(dev);
- 	}
--
--	dev->wanted_features = ethnl_bitmap_to_features(req_wanted);
--	__netdev_update_features(dev);
- 	ethnl_features_to_bitmap(new_active, dev->features);
- 	mod = !bitmap_equal(old_active, new_active, NETDEV_FEATURE_COUNT);
- 
-diff --git a/net/ipv4/nexthop.c b/net/ipv4/nexthop.c
-index cc8049b100b2..134e92382275 100644
---- a/net/ipv4/nexthop.c
-+++ b/net/ipv4/nexthop.c
-@@ -446,7 +446,7 @@ static int nh_check_attr_group(struct net *net, struct nlattr *tb[],
- 	unsigned int i, j;
- 	u8 nhg_fdb = 0;
- 
--	if (len & (sizeof(struct nexthop_grp) - 1)) {
-+	if (!len || len & (sizeof(struct nexthop_grp) - 1)) {
- 		NL_SET_ERR_MSG(extack,
- 			       "Invalid length for nexthop group attribute");
- 		return -EINVAL;
-@@ -1187,6 +1187,9 @@ static struct nexthop *nexthop_create_group(struct net *net,
- 	struct nexthop *nh;
- 	int i;
- 
-+	if (WARN_ON(!num_nh))
-+		return ERR_PTR(-EINVAL);
-+
- 	nh = nexthop_alloc();
- 	if (!nh)
- 		return ERR_PTR(-ENOMEM);
-diff --git a/net/ipv6/ip6_tunnel.c b/net/ipv6/ip6_tunnel.c
-index a18c378ca5f4..d8f0102cec94 100644
---- a/net/ipv6/ip6_tunnel.c
-+++ b/net/ipv6/ip6_tunnel.c
-@@ -913,7 +913,15 @@ int ip6_tnl_rcv(struct ip6_tnl *t, struct sk_buff *skb,
- 		struct metadata_dst *tun_dst,
- 		bool log_ecn_err)
- {
--	return __ip6_tnl_rcv(t, skb, tpi, tun_dst, ip6ip6_dscp_ecn_decapsulate,
-+	int (*dscp_ecn_decapsulate)(const struct ip6_tnl *t,
-+				    const struct ipv6hdr *ipv6h,
-+				    struct sk_buff *skb);
-+
-+	dscp_ecn_decapsulate = ip6ip6_dscp_ecn_decapsulate;
-+	if (tpi->proto == htons(ETH_P_IP))
-+		dscp_ecn_decapsulate = ip4ip6_dscp_ecn_decapsulate;
-+
-+	return __ip6_tnl_rcv(t, skb, tpi, tun_dst, dscp_ecn_decapsulate,
- 			     log_ecn_err);
  }
- EXPORT_SYMBOL(ip6_tnl_rcv);
-diff --git a/net/netlink/policy.c b/net/netlink/policy.c
-index f6491853c797..2b3e26f7496f 100644
---- a/net/netlink/policy.c
-+++ b/net/netlink/policy.c
-@@ -51,6 +51,9 @@ static int add_policy(struct nl_policy_dump **statep,
- 	if (!state)
- 		return -ENOMEM;
  
-+	memset(&state->policies[state->n_alloc], 0,
-+	       flex_array_size(state, policies, n_alloc - state->n_alloc));
-+
- 	state->policies[state->n_alloc].policy = policy;
- 	state->policies[state->n_alloc].maxtype = maxtype;
- 	state->n_alloc = n_alloc;
-diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
-index 300a104b9a0f..85ab4559f057 100644
---- a/net/qrtr/qrtr.c
-+++ b/net/qrtr/qrtr.c
-@@ -692,23 +692,25 @@ static void qrtr_port_remove(struct qrtr_sock *ipc)
+-/**
+- * Allocate one skb for Rx descriptor RING
+- */
++/* Allocate one skb for Rx descriptor RING */
+ static int wil_ring_alloc_skb_edma(struct wil6210_priv *wil,
+ 				   struct wil_ring *ring, u32 i)
+ {
+@@ -1152,8 +1150,7 @@ wil_get_next_tx_status_msg(struct wil_status_ring *sring, u8 *dr_bit,
+ 	*msg = *_msg;
+ }
+ 
+-/**
+- * Clean up transmitted skb's from the Tx descriptor RING.
++/* Clean up transmitted skb's from the Tx descriptor RING.
+  * Return number of descriptors cleared.
   */
- static int qrtr_port_assign(struct qrtr_sock *ipc, int *port)
- {
-+	u32 min_port;
- 	int rc;
- 
- 	mutex_lock(&qrtr_port_lock);
- 	if (!*port) {
--		rc = idr_alloc(&qrtr_ports, ipc,
--			       QRTR_MIN_EPH_SOCKET, QRTR_MAX_EPH_SOCKET + 1,
--			       GFP_ATOMIC);
--		if (rc >= 0)
--			*port = rc;
-+		min_port = QRTR_MIN_EPH_SOCKET;
-+		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, QRTR_MAX_EPH_SOCKET, GFP_ATOMIC);
-+		if (!rc)
-+			*port = min_port;
- 	} else if (*port < QRTR_MIN_EPH_SOCKET && !capable(CAP_NET_ADMIN)) {
- 		rc = -EACCES;
- 	} else if (*port == QRTR_PORT_CTRL) {
--		rc = idr_alloc(&qrtr_ports, ipc, 0, 1, GFP_ATOMIC);
-+		min_port = 0;
-+		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, 0, GFP_ATOMIC);
- 	} else {
--		rc = idr_alloc(&qrtr_ports, ipc, *port, *port + 1, GFP_ATOMIC);
--		if (rc >= 0)
--			*port = rc;
-+		min_port = *port;
-+		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, *port, GFP_ATOMIC);
-+		if (!rc)
-+			*port = min_port;
- 	}
- 	mutex_unlock(&qrtr_port_lock);
- 
-diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
-index 6ed1652d1e26..41d8440deaf1 100644
---- a/net/sched/act_ct.c
-+++ b/net/sched/act_ct.c
-@@ -704,7 +704,7 @@ static int tcf_ct_handle_fragments(struct net *net, struct sk_buff *skb,
- 		err = ip_defrag(net, skb, user);
- 		local_bh_enable();
- 		if (err && err != -EINPROGRESS)
--			goto out_free;
-+			return err;
- 
- 		if (!err)
- 			*defrag = true;
-diff --git a/net/sctp/stream.c b/net/sctp/stream.c
-index bda2536dd740..6dc95dcc0ff4 100644
---- a/net/sctp/stream.c
-+++ b/net/sctp/stream.c
-@@ -88,12 +88,13 @@ static int sctp_stream_alloc_out(struct sctp_stream *stream, __u16 outcnt,
- 	int ret;
- 
- 	if (outcnt <= stream->outcnt)
--		return 0;
-+		goto out;
- 
- 	ret = genradix_prealloc(&stream->out, outcnt, gfp);
- 	if (ret)
- 		return ret;
- 
-+out:
- 	stream->outcnt = outcnt;
- 	return 0;
+ int wil_tx_sring_handler(struct wil6210_priv *wil,
+@@ -1314,8 +1311,7 @@ int wil_tx_sring_handler(struct wil6210_priv *wil,
+ 	return desc_cnt;
  }
-@@ -104,12 +105,13 @@ static int sctp_stream_alloc_in(struct sctp_stream *stream, __u16 incnt,
- 	int ret;
  
- 	if (incnt <= stream->incnt)
--		return 0;
-+		goto out;
- 
- 	ret = genradix_prealloc(&stream->in, incnt, gfp);
- 	if (ret)
- 		return ret;
- 
-+out:
- 	stream->incnt = incnt;
- 	return 0;
- }
-diff --git a/net/smc/smc_diag.c b/net/smc/smc_diag.c
-index e1f64f4ba236..da9ba6d1679b 100644
---- a/net/smc/smc_diag.c
-+++ b/net/smc/smc_diag.c
-@@ -170,13 +170,15 @@ static int __smc_diag_dump(struct sock *sk, struct sk_buff *skb,
- 	    (req->diag_ext & (1 << (SMC_DIAG_DMBINFO - 1))) &&
- 	    !list_empty(&smc->conn.lgr->list)) {
- 		struct smc_connection *conn = &smc->conn;
--		struct smcd_diag_dmbinfo dinfo = {
--			.linkid = *((u32 *)conn->lgr->id),
--			.peer_gid = conn->lgr->peer_gid,
--			.my_gid = conn->lgr->smcd->local_gid,
--			.token = conn->rmb_desc->token,
--			.peer_token = conn->peer_token
--		};
-+		struct smcd_diag_dmbinfo dinfo;
-+
-+		memset(&dinfo, 0, sizeof(dinfo));
-+
-+		dinfo.linkid = *((u32 *)conn->lgr->id);
-+		dinfo.peer_gid = conn->lgr->peer_gid;
-+		dinfo.my_gid = conn->lgr->smcd->local_gid;
-+		dinfo.token = conn->rmb_desc->token;
-+		dinfo.peer_token = conn->peer_token;
- 
- 		if (nla_put(skb, SMC_DIAG_DMBINFO, sizeof(dinfo), &dinfo) < 0)
- 			goto errout;
-diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
-index c8c47fc72653..d6426b6cc9c5 100644
---- a/net/tipc/crypto.c
-+++ b/net/tipc/crypto.c
-@@ -757,10 +757,12 @@ static void tipc_aead_encrypt_done(struct crypto_async_request *base, int err)
- 	switch (err) {
- 	case 0:
- 		this_cpu_inc(tx->stats->stat[STAT_ASYNC_OK]);
-+		rcu_read_lock();
- 		if (likely(test_bit(0, &b->up)))
- 			b->media->send_msg(net, skb, b, &tx_ctx->dst);
- 		else
- 			kfree_skb(skb);
-+		rcu_read_unlock();
- 		break;
- 	case -EINPROGRESS:
- 		return;
-diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
-index 217516357ef2..90e3c70a91ad 100644
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -275,8 +275,9 @@ static int __tipc_nl_compat_dumpit(struct tipc_nl_compat_cmd_dump *cmd,
- static int tipc_nl_compat_dumpit(struct tipc_nl_compat_cmd_dump *cmd,
- 				 struct tipc_nl_compat_msg *msg)
- {
--	int err;
-+	struct nlmsghdr *nlh;
- 	struct sk_buff *arg;
-+	int err;
- 
- 	if (msg->req_type && (!msg->req_size ||
- 			      !TLV_CHECK_TYPE(msg->req, msg->req_type)))
-@@ -305,6 +306,15 @@ static int tipc_nl_compat_dumpit(struct tipc_nl_compat_cmd_dump *cmd,
- 		return -ENOMEM;
- 	}
- 
-+	nlh = nlmsg_put(arg, 0, 0, tipc_genl_family.id, 0, NLM_F_MULTI);
-+	if (!nlh) {
-+		kfree_skb(arg);
-+		kfree_skb(msg->rep);
-+		msg->rep = NULL;
-+		return -EMSGSIZE;
-+	}
-+	nlmsg_end(arg, nlh);
-+
- 	err = __tipc_nl_compat_dumpit(cmd, msg, arg);
- 	if (err) {
- 		kfree_skb(msg->rep);
+-/**
+- * Sets the descriptor @d up for csum and/or TSO offloading. The corresponding
++/* Sets the descriptor @d up for csum and/or TSO offloading. The corresponding
+  * @skb is used to obtain the protocol and headers length.
+  * @tso_desc_type is a descriptor type for TSO: 0 - a header, 1 - first data,
+  * 2 - middle, 3 - last descriptor.
+-- 
+2.25.1
