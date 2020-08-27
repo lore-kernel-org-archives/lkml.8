@@ -2,147 +2,171 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C31DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08923C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18B2322B49
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6F2C20786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NLCjbjog"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D+Qfdi8o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgH0HEv (ORCPT
+        id S1727961AbgH0HF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:04:51 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34464 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgH0HEu (ORCPT
+        Thu, 27 Aug 2020 03:05:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgH0HFy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:04:50 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07R74WgK042393;
-        Thu, 27 Aug 2020 02:04:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598511872;
-        bh=260MNsf+sBTxKFsAR396C3Ut4B0Gn9sQVV96H1/dwCY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=NLCjbjog8okMnENPNR3UYZPVyOn5CS5JvV//y37cuZrWRaCVJKxi/ZCMebULpbl4i
-         rqTnakoUmAbTcKUvYMHPvHN9ImhsxO+H6L9x9kldAsbAwS/IFfHm4Dy90ZOH+l5dFt
-         uiOD57c9Q/wMO3k2qnd58psQYZ4NABqC8BuCRvSM=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07R74WQH004470;
-        Thu, 27 Aug 2020 02:04:32 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 27
- Aug 2020 02:04:31 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 27 Aug 2020 02:04:31 -0500
-Received: from [10.250.235.166] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07R74Riu008885;
-        Thu, 27 Aug 2020 02:04:28 -0500
-Subject: Re: [RESEND PATCH v3 5/8] mtd: spi-nor: cadence-quadspi: Handle probe
- deferral while requesting DMA channel
-To:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Jin, Le (RC-CN DF FA R&D)" <le.jin@siemens.com>
-CC:     Boris Brezillon <bbrezillon@kernel.org>,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <simon.k.r.goldschmidt@gmail.com>,
-        <dinguyen@kernel.org>, <marex@denx.de>
-References: <20200601070444.16923-1-vigneshr@ti.com>
- <20200601070444.16923-6-vigneshr@ti.com>
- <6c8d9bff-3a67-0e6c-d4d1-36b7ed5007b9@web.de>
- <8cebd31a-2366-4584-b1d1-faa30c18ed6a@ti.com>
- <dbba9f0c-4621-2d58-8fb8-4cbe788558f9@siemens.com>
- <eff1b49e-e392-8887-b3a0-3caedc5b81cc@siemens.com>
- <8995f5c5-bd6a-c0e5-1e4f-1744aedd2bcd@siemens.com>
- <5e215c3c-5603-a796-9dea-13b7c2840ed0@ti.com>
- <c090b23a-488f-6eb3-206b-a7678b70a4e2@siemens.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <ed61022e-4141-9ae3-d24b-e60e42ae58e3@ti.com>
-Date:   Thu, 27 Aug 2020 12:34:26 +0530
+        Thu, 27 Aug 2020 03:05:54 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 433B1C061264;
+        Thu, 27 Aug 2020 00:05:53 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id v12so5194018ljc.10;
+        Thu, 27 Aug 2020 00:05:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=brG5EoXG8FKt7Fq1ykdF4ABCLTAm7xSy7pDQ9zIqBmM=;
+        b=D+Qfdi8ojtdlFaIaWaofdcOW2dSpHJq/jTsM6dpwBevrFASrN1edAw8teUWVNerpgu
+         63ga9PzLJ1u8xo9GANebl8qwYj4EgB2Lt5+c2FZtDG0o0O+j7oIfdc233tEfNoJKuFe7
+         DUxpMDtEWgsp8LTUtik3F1caZRHo486JrXlztWvaxpavYrnD9ARqY6DH44IQECiMjSIF
+         cpTJQhP3AoFpI2jsFeq3dPzY4jmtYVXO8Sn8JUBkHLcyef3/N2jsvX1pnc2YLoznUsCF
+         HDRVd99ElVGCkW/Ai5VbnxNG4jsJBtsJfFUa7vCIIoL+cOkFeVgwwtrqBHrnRCjQFsrY
+         elFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=brG5EoXG8FKt7Fq1ykdF4ABCLTAm7xSy7pDQ9zIqBmM=;
+        b=lQKuy1WTIMBCmqUg63ksZAe4FLpxfq6BV0mJVT+My9DmuF+uVbXV5yu69nKtuACdAD
+         XAKIl6SPJpVPSaZ7KujG67/lic0wqkRUwjlduKbxAMmpAAO9FFoNfdMTqrwISR+Au2n6
+         48eWOoUENmDYqF/mmJpGjYYnVI2htnSeYg3g+ZOovPoycODeg8is55y/A9yFWJL3qQp0
+         XVr95gKWl/7XXZYeLaD5ZstW/4mRUaAq+bnzZmvRKKzY2RqqCDGLWlsi6SyQf6pz2Y56
+         wT4HN+Ujz4w2W+O9NTSYM6cRHKJmQPLwRO2FNcLr+cnoMFnM3S1fhYGvU5VMO0C/To0w
+         N0Zg==
+X-Gm-Message-State: AOAM5326EnNJ6pXRIYgcahR1QEbSrCQUTvyXH0EiPpXDurdYwH75rAkz
+        YP3biWrL7acvswuzUGUsF55EIFDkh5I=
+X-Google-Smtp-Source: ABdhPJydX9Y9oDAFN3zznJgsiPNaCKcyWdKxS8pHyPJWykfpSUQ7Hoqsd5NtTOYp9/AGdUkscMfEjA==
+X-Received: by 2002:a05:651c:106a:: with SMTP id y10mr9032794ljm.296.1598511951247;
+        Thu, 27 Aug 2020 00:05:51 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id i131sm294684lfd.27.2020.08.27.00.05.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 00:05:50 -0700 (PDT)
+Subject: Re: [PATCH 16/18] staging/media/tegra-vde: Clean up IOMMU workaround
+To:     Robin Murphy <robin.murphy@arm.com>, hch@lst.de, joro@8bytes.org,
+        linux@armlinux.org.uk
+Cc:     will@kernel.org, inki.dae@samsung.com, sw0312.kim@samsung.com,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, vdumpa@nvidia.com,
+        matthias.bgg@gmail.com, yong.wu@mediatek.com,
+        geert+renesas@glider.be, magnus.damm@gmail.com, t-kristo@ti.com,
+        s-anna@ti.com, laurent.pinchart@ideasonboard.com,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1597931875.git.robin.murphy@arm.com>
+ <3535c205b9bce52556abbf2f63384fb38e009df9.1597931876.git.robin.murphy@arm.com>
+ <07135a55-cbc9-83e5-60dc-731282192554@gmail.com>
+ <cb12808b-7316-19db-7413-b7f852a6f8ae@arm.com>
+ <62a72187-442b-2103-46c3-39d3cd999f54@gmail.com>
+ <affe2cfb-19e8-8e55-acd0-7170e274ab34@arm.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f1923a53-e799-e63c-fd22-4a6cca3b8212@gmail.com>
+Date:   Thu, 27 Aug 2020 10:05:14 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <c090b23a-488f-6eb3-206b-a7678b70a4e2@siemens.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <affe2cfb-19e8-8e55-acd0-7170e274ab34@arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/26/20 7:01 PM, Jan Kiszka wrote:
-> On 26.08.20 14:18, Vignesh Raghavendra wrote:
->> On 8/26/20 3:42 PM, Jan Kiszka wrote:
->>> On 24.08.20 19:20, Jan Kiszka wrote:
->>>> On 24.08.20 14:49, Jan Kiszka wrote:
->>>>> On 24.08.20 13:45, Vignesh Raghavendra wrote:
->>>>>>
-[...]
->> Also, there seems to be DMA mapping related issue, that was always present in 
->> older driver as well. Could you see if diff [2] fixes the issue?
+24.08.2020 17:01, Robin Murphy пишет:
+...
+>> Robin, thank you very much for the clarifications!
 >>
->> [2] Use DMA device for mapping:
+>> In accordance to yours comments, this patch can't be applied until Tegra
+>> SMMU will support IOMMU_DOMAIN_IDENTITY and implement def_domain_type()
+>> callback that returns IOMMU_DOMAIN_IDENTITY for the VDE device.
 >>
->> ---><8---
->>
->>
->> diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
->> index b9739ae919340..a546aa4598758 100644
->> --- a/drivers/spi/spi-cadence-quadspi.c
->> +++ b/drivers/spi/spi-cadence-quadspi.c
->> @@ -901,6 +901,7 @@ static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
->>  {
->>         struct cqspi_st *cqspi = f_pdata->cqspi;
->>         struct device *dev = &cqspi->pdev->dev;
->> +       struct device *ddev = cqspi->rx_chan->device->dev;
->>         enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
->>         dma_addr_t dma_src = (dma_addr_t)cqspi->mmap_phys_base + from;
->>         int ret = 0;
->> @@ -917,8 +918,8 @@ static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
->>                 return 0;
->>         }
->>  
->> -       dma_dst = dma_map_single(dev, buf, len, DMA_FROM_DEVICE);
->> -       if (dma_mapping_error(dev, dma_dst)) {
->> +       dma_dst = dma_map_single(ddev, buf, len, DMA_FROM_DEVICE);
->> +       if (dma_mapping_error(ddev, dma_dst)) {
->>                 dev_err(dev, "dma mapping failed\n");
->>                 return -ENOMEM;
->>         }
->> @@ -952,7 +953,7 @@ static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
->>         }
->>  
->>  err_unmap:
->> -       dma_unmap_single(dev, dma_dst, len, DMA_FROM_DEVICE);
->> +       dma_unmap_single(ddev, dma_dst, len, DMA_FROM_DEVICE);
->>  
->>         return ret;
->>  }
->>
+>> Otherwise you're breaking the VDE driver because
+>> dma_buf_map_attachment() [1] returns the IOMMU SGT of the implicit
+>> domain which is then mapped into the VDE's explicit domain [2], and this
+>> is a nonsense.
 > 
-> That seems to help! Wasn't able to reproduce the issue with this applied
-> so far.
+> It's true that iommu_dma_ops will do some work in the unattached default
+> domain, but non-coherent cache maintenance will still be performed
+> correctly on the underlying memory, which is really all that you care
+> about for this case. As for tegra_vde_iommu_map(), that seems to do the
+> right thing in only referencing the physical side of the scatterlist
+> (via iommu_map_sg()) and ignoring the DMA side, so things ought to work
+> out OK even if it is a little non-obvious.
+
+I'll need to double-check this, it's indeed not clear to me right now.
+
+I see that if Tegra DRM driver uses implicit IOMMU domain, then when VDE
+driver imports DMA-buf from Terga DRM and the imported buffer will be
+auto-mapped to the implicit VDE IOVA [1].
+
+[1]
+https://elixir.bootlin.com/linux/v5.9-rc2/source/drivers/gpu/drm/tegra/gem.c#L574
+
+>> Hence, either VDE driver should bypass iommu_dma_ops from the start or
+>> it needs a way to kick out the ops, like it does this using ARM's
+>> arm_iommu_detach_device().
+>>
+>>
+>> The same applies to the Tegra GPU devices, otherwise you're breaking
+>> them as well because Tegra DRM is sensible to implicit vs explicit
+>> domain.
 > 
+> Note that Tegra DRM will only be as broken as its current state on
+> arm64, and I was under the impression that that was OK now - at least I
+> don't recall seeing any complaints since 43c5bf11a610. Although that
+> commit and the one before it are resolving the scalability issue that
+> they describe, it was very much in my mind at the time that they also
+> have the happy side-effect described above - the default domain isn't
+> *completely* out of the way, but it's far enough that sensible cases
+> should be able to work as expected.
 
-OK, great... I will post this patch soon once I finish a bit more
-testing... Thanks!
+The Tegra DRM has a very special quirk for ARM32 that was added in this
+commit [2] and driver relies on checking of whether explicit or implicit
+IOMMU is used in order to activate the quirk.
 
+[2]
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=273da5a046965ccf0ec79eb63f2d5173467e20fa
 
-Regards
-Vignesh
+Once the implicit IOMMU is used for the DRM driver, the quirk no longer
+works (if I'm not missing something). This problem needs to be resolved
+before implicit IOMMU could be used by the Tegra DRM on ARM32.
+
+>> BTW, I tried to apply this series and T30 doesn't boot anymore. I don't
+>> have more info for now.
+> 
+> Yeah, I'm still trying to get to the bottom of whether it's actually
+> working as intended at all, even on my RK3288. So far my debugging
+> instrumentation has been confusingly inconclusive :/
+
+Surely it will take some time to resolve all the problems and it's great
+that you're pushing this work!
+
+I'll try to help with fixing the ARM32 Tegra side of the problems. I
+added this to my "TODO" list and should be able to take a closer look
+during of this/next weeks!
