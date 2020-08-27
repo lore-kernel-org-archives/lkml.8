@@ -2,229 +2,170 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6408DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9B0C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B1C922B47
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A91BD2177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:59:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ofPoQ+wh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgH0I70 (ORCPT
+        id S1728150AbgH0I7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:59:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34434 "EHLO
+        Thu, 27 Aug 2020 04:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbgH0I7W (ORCPT
+        with ESMTP id S1726851AbgH0I7l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:59:22 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06429C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 01:59:21 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 06236299E91
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
-        drinkcat@chromium.org, hsinyi@chromium.org,
-        laurent.pinchart@ideasonboard.com, sam@ravnborg.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH v3 1/1] drm/bridge: ps8640: Rework power state handling
-Date:   Thu, 27 Aug 2020 10:59:11 +0200
-Message-Id: <20200827085911.944899-2-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200827085911.944899-1-enric.balletbo@collabora.com>
-References: <20200827085911.944899-1-enric.balletbo@collabora.com>
+        Thu, 27 Aug 2020 04:59:41 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0CDAC061264;
+        Thu, 27 Aug 2020 01:59:40 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id kx11so2254402pjb.5;
+        Thu, 27 Aug 2020 01:59:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=knuyGrcnDNfBLfuI860cvzWQlaN7tR5tqLC2/Iy3p5w=;
+        b=ofPoQ+whIY+/DjQfkemlCBdXvPWQTU8raav3CrNeAYExt1VYUk8aJd7ejP4zzCnby6
+         WPGWGLCLXDHdgRtNIeX2XQyzu2ocY3HPjwKeWiIKZPAEsMpb3hRNbkTcKUPnUQTejHCV
+         8yXMt2AyxvGM68hd9YLpKpp784mQKMsZmOeovBLluEuFc3tgk3jmNvB4GYZZfvBdQ6NM
+         WTJ0PI2d+CGvc9ZHTbWsmnMJkEzRhSpOsSBpGbsaism1CIH10jOwTjGsHFjgaEwXHSeT
+         dSbyjFfSK+Hh1j5QqgjcOSKOVX0MXsdNul+VEHCSHejecYs9bKwQsouQvpGg0yDp047G
+         hSxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=knuyGrcnDNfBLfuI860cvzWQlaN7tR5tqLC2/Iy3p5w=;
+        b=ZMdKw6rGLdR/oogvgPdl0tf1Ki433QPEX0NOOz7fMIS/HjOt1ye66LeVFBLGuvaNND
+         MfW1jtm0pDocEzI9azC/inXMTzEAmSz79Y6mw8eKot/LOUVbsiQqDfy6wDXnoKrwku0N
+         +y4uePck2jHcr5iqSSlLiXzTDQgDs4BASkZEdsophU65EZsRN9362sPLZq5cO8m4khMM
+         TH3tXzcV7jL2lieDT5EDC9llcRqz7iO6cb6+BxI0Wf45tlxzx7W/MbRuBEWXCJxi7kP3
+         F0uLDFR0Gaaw6jSkOZWk3Tl5AbiWJdzPHD4cGHNgNMsIwzxYYNyLJZD7euVsKi84LLln
+         q8eA==
+X-Gm-Message-State: AOAM531cZKXujFOtLz3/jycXvhR3AHih5gs4MdmobpLfaPKBRm8t10/E
+        daNkGdPBhxtKQCCB4kekW2OgtmvMN6C+99xCEPY=
+X-Google-Smtp-Source: ABdhPJy7h7WBhdI26SwG260T0djY4/8Ef5iftULOB0OMZ64TrwMD0uf7c3K2CJDKKTZF6Bc2Ow1XW8d5cUdgagiDZh8=
+X-Received: by 2002:a17:90b:509:: with SMTP id r9mr10116299pjz.228.1598518780491;
+ Thu, 27 Aug 2020 01:59:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200825135838.2938771-1-ndesaulniers@google.com>
+ <CAK7LNAQXo5-5W6hvNMEVPBPf3tRWaf-pQdSR-0OHyi4RCGhjsQ@mail.gmail.com>
+ <d56bf7b93f7a28c4a90e4e16fd412e6934704346.camel@perches.com>
+ <CAKwvOd=YrVtPsB7HYPO0N=K7QJm9KstayqqeYQERSaGtGy2Bjg@mail.gmail.com>
+ <CAK7LNAQKwOo=Oas+7Du9+neSm=Ev6pxdPV7ges7eEEpW+jh8Ug@mail.gmail.com> <202008261627.7B2B02A@keescook>
+In-Reply-To: <202008261627.7B2B02A@keescook>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 27 Aug 2020 11:59:24 +0300
+Message-ID: <CAHp75VfniSw3AFTyyDk2OoAChGx7S6wF7sZKpJXNHmk97BoRXA@mail.gmail.com>
+Subject: Re: [PATCH v3] lib/string.c: implement stpcpy
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Joe Perches <joe@perches.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        stable <stable@vger.kernel.org>, Andy Lavr <andy.lavr@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The get_edid() callback can be triggered anytime by an ioctl, i.e
+On Thu, Aug 27, 2020 at 2:40 AM Kees Cook <keescook@chromium.org> wrote:
+> On Thu, Aug 27, 2020 at 07:59:45AM +0900, Masahiro Yamada wrote:
+> > On Thu, Aug 27, 2020 at 1:58 AM Nick Desaulniers
+> > <ndesaulniers@google.com> wrote:
+> > > On Wed, Aug 26, 2020 at 9:57 AM Joe Perches <joe@perches.com> wrote:
+> > > > On Thu, 2020-08-27 at 01:49 +0900, Masahiro Yamada wrote:
+> > > > > I do not have time to keep track of the discussion fully,
+> > > > > but could you give me a little more context why
+> > > > > the usage of stpcpy() is not recommended ?
+> > > > >
+> > > > > The implementation of strcpy() is almost the same.
+> > > > > It is unclear to me what makes stpcpy() unsafe..
+> > >
+> > > https://lore.kernel.org/lkml/202008150921.B70721A359@keescook/
+> > >
+> > > >
+> > > > It's the same thing that makes strcpy unsafe:
+> > > >
+> > > > Unchecked buffer lengths with no guarantee src is terminated.
+> > >
+> >
+> >
+> > OK, then stpcpy(), strcpy() and sprintf()
+> > have the same level of unsafety.
+>
+> Yes. And even snprintf() is dangerous because its return value is how
+> much it WOULD have written, which when (commonly) used as an offset for
+> further pointer writes, causes OOB writes too. :(
+> https://github.com/KSPP/linux/issues/105
+>
+> > strcpy() is used everywhere.
+>
+> Yes. It's very frustrating, but it's not an excuse to continue
+> using it nor introducing more bad APIs.
 
-  drm_mode_getconnector (ioctl)
-    -> drm_helper_probe_single_connector_modes
-       -> drm_bridge_connector_get_modes
-          -> ps8640_bridge_get_edid
+strcpy() is not a bad API for the cases when you know what you are
+doing. A problem that most of the developers do not know what they are
+doing.
+No need to split everything to bad and good by its name or semantics,
+each API has its own pros and cons and programmers must use their
+brains.
 
-Actually if the bridge pre_enable() function was not called before
-get_edid(), the driver will not be able to get the EDID properly and
-display will not work until a second get_edid() call is issued and if
-pre_enable() is called before. The side effect of this, for example, is
-that you see anything when `Frecon` starts, neither the splash screen,
-until the graphical session manager starts.
+>
+> $ git grep '\bstrcpy\b' | wc -l
+> 2212
+> $ git grep '\bstrncpy\b' | wc -l
+> 751
+> $ git grep '\bstrlcpy\b' | wc -l
+> 1712
+>
+> $ git grep '\bstrscpy\b' | wc -l
+> 1066
+>
+> https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy
+> https://github.com/KSPP/linux/issues/88
+>
+> https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
+> https://github.com/KSPP/linux/issues/89
+>
+> https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> https://github.com/KSPP/linux/issues/90
+>
+> We have no way right now to block the addition of deprecated API usage,
+> which makes ever catching up on this replacement very challenging. The
+> only way we caught up with VLA removal was because of -Wvla on sfr's
+> -next builds.
+>
+> I guess we could set up a robot to just watch -next commits and yell
+> about new instances, but patches come and go -- I worry it'd be noisy...
+>
+> > I am not convinced why only stpcpy() should be hidden.
+>
+> Because nothing uses it right now. It's only the compiler suddenly now
+> trying to use it directly...
+>
+> --
+> Kees Cook
 
-To fix this we need to make sure that all we need is enabled before
-reading the EDID. This means the following:
 
-1. If get_edid() is called before having the device powered we need to
-   power on the device. In such case, the driver will power off again the
-   device.
 
-2. If get_edid() is called after having the device powered, all should
-   just work. We added a powered flag in order to avoid recurrent calls
-   to ps8640_bridge_poweron() and unneeded delays.
-
-3. This seems to be specific for this device, but we need to make sure
-   the panel is powered on before do a power on cycle on this device.
-   Otherwise the device fails to retrieve the EDID.
-
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
-
-Changes in v3:
-- Make poweron/poweroff and pre_enable/post_disable reverse one to each other (Sam Ravnborg)
-
-Changes in v2:
-- Use drm_bridge_chain_pre_enable/post_disable() helpers (Sam Ravnborg)
-
- drivers/gpu/drm/bridge/parade-ps8640.c | 68 ++++++++++++++++++++++----
- 1 file changed, 58 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/bridge/parade-ps8640.c
-index 9f7b7a9c53c5..7bd0affa057a 100644
---- a/drivers/gpu/drm/bridge/parade-ps8640.c
-+++ b/drivers/gpu/drm/bridge/parade-ps8640.c
-@@ -65,6 +65,7 @@ struct ps8640 {
- 	struct regulator_bulk_data supplies[2];
- 	struct gpio_desc *gpio_reset;
- 	struct gpio_desc *gpio_powerdown;
-+	bool powered;
- };
- 
- static inline struct ps8640 *bridge_to_ps8640(struct drm_bridge *e)
-@@ -91,13 +92,15 @@ static int ps8640_bridge_vdo_control(struct ps8640 *ps_bridge,
- 	return 0;
- }
- 
--static void ps8640_pre_enable(struct drm_bridge *bridge)
-+static void ps8640_bridge_poweron(struct ps8640 *ps_bridge)
- {
--	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
- 	struct i2c_client *client = ps_bridge->page[PAGE2_TOP_CNTL];
- 	unsigned long timeout;
- 	int ret, status;
- 
-+	if (ps_bridge->powered)
-+		return;
-+
- 	ret = regulator_bulk_enable(ARRAY_SIZE(ps_bridge->supplies),
- 				    ps_bridge->supplies);
- 	if (ret < 0) {
-@@ -152,10 +155,6 @@ static void ps8640_pre_enable(struct drm_bridge *bridge)
- 		goto err_regulators_disable;
- 	}
- 
--	ret = ps8640_bridge_vdo_control(ps_bridge, ENABLE);
--	if (ret)
--		goto err_regulators_disable;
--
- 	/* Switch access edp panel's edid through i2c */
- 	ret = i2c_smbus_write_byte_data(client, PAGE2_I2C_BYPASS,
- 					I2C_BYPASS_EN);
-@@ -164,6 +163,8 @@ static void ps8640_pre_enable(struct drm_bridge *bridge)
- 		goto err_regulators_disable;
- 	}
- 
-+	ps_bridge->powered = true;
-+
- 	return;
- 
- err_regulators_disable:
-@@ -171,12 +172,12 @@ static void ps8640_pre_enable(struct drm_bridge *bridge)
- 			       ps_bridge->supplies);
- }
- 
--static void ps8640_post_disable(struct drm_bridge *bridge)
-+static void ps8640_bridge_poweroff(struct ps8640 *ps_bridge)
- {
--	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
- 	int ret;
- 
--	ps8640_bridge_vdo_control(ps_bridge, DISABLE);
-+	if (!ps_bridge->powered)
-+		return;
- 
- 	gpiod_set_value(ps_bridge->gpio_reset, 1);
- 	gpiod_set_value(ps_bridge->gpio_powerdown, 1);
-@@ -184,6 +185,28 @@ static void ps8640_post_disable(struct drm_bridge *bridge)
- 				     ps_bridge->supplies);
- 	if (ret < 0)
- 		DRM_ERROR("cannot disable regulators %d\n", ret);
-+
-+	ps_bridge->powered = false;
-+}
-+
-+static void ps8640_pre_enable(struct drm_bridge *bridge)
-+{
-+	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-+	int ret;
-+
-+	ps8640_bridge_poweron(ps_bridge);
-+
-+	ret = ps8640_bridge_vdo_control(ps_bridge, ENABLE);
-+	if (ret < 0)
-+		ps8640_bridge_poweroff(ps_bridge);
-+}
-+
-+static void ps8640_post_disable(struct drm_bridge *bridge)
-+{
-+	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-+
-+	ps8640_bridge_vdo_control(ps_bridge, DISABLE);
-+	ps8640_bridge_poweroff(ps_bridge);
- }
- 
- static int ps8640_bridge_attach(struct drm_bridge *bridge,
-@@ -249,9 +272,34 @@ static struct edid *ps8640_bridge_get_edid(struct drm_bridge *bridge,
- 					   struct drm_connector *connector)
- {
- 	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-+	bool poweroff = !ps_bridge->powered;
-+	struct edid *edid;
-+
-+	/*
-+	 * When we end calling get_edid() triggered by an ioctl, i.e
-+	 *
-+	 *   drm_mode_getconnector (ioctl)
-+	 *     -> drm_helper_probe_single_connector_modes
-+	 *        -> drm_bridge_connector_get_modes
-+	 *           -> ps8640_bridge_get_edid
-+	 *
-+	 * We need to make sure that what we need is enabled before reading
-+	 * EDID, for this chip, we need to do a full poweron, otherwise it will
-+	 * fail.
-+	 */
-+	drm_bridge_chain_pre_enable(bridge);
- 
--	return drm_get_edid(connector,
-+	edid = drm_get_edid(connector,
- 			    ps_bridge->page[PAGE0_DP_CNTL]->adapter);
-+
-+	/*
-+	 * If we call the get_edid() function without having enabled the chip
-+	 * before, return the chip to its original power state.
-+	 */
-+	if (poweroff)
-+		drm_bridge_chain_post_disable(bridge);
-+
-+	return edid;
- }
- 
- static const struct drm_bridge_funcs ps8640_bridge_funcs = {
 -- 
-2.28.0
-
+With Best Regards,
+Andy Shevchenko
