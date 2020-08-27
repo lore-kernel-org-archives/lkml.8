@@ -2,84 +2,122 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22742C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45387C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E12FD20786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:11:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598512279;
-	bh=jNqVqQ6eWSkE3IuUZP3Pk4lbjqOHgn30X2jL8RJuqNo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YoSFzIzLI9t0hH+bPJ8tlg5GkEB8nHJY6iwzddDmB0KqEu/h+fCVTfQR72eaZrObf
-	 2sVUcdZWPS0F4blTU1QOQs/H0i6ZUgsWPxnICKbUxdST4wbezjLP1hd1ppPKIcB/Iv
-	 u9GsZFukYoBK4iKmWtWGPfP2LEFnVzHo2eokwIOE=
+	by mail.kernel.org (Postfix) with ESMTP id 09D5E20786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:11:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="crDap6mO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgH0HLR (ORCPT
+        id S1728024AbgH0HLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:11:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726123AbgH0HLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:11:15 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFEF022B4E;
-        Thu, 27 Aug 2020 07:11:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598512275;
-        bh=jNqVqQ6eWSkE3IuUZP3Pk4lbjqOHgn30X2jL8RJuqNo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JY648liRfDDyMuhlc0e4Q1u6sioGsdtcmoNAu8o4tYceNIbTN3ldfD++RSs05JrBv
-         TTH31cJYqkZx+1vq8rPCkbDyVqY+8+oKS9OmCqhZNRg+cn7v+a9mb5hej3LLguR8/I
-         HtLH9bsOCX4vl95DTm26MeYWRoDt+Y540odVpEDE=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Eric Anholt <eric@anholt.net>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/2] drm/tve200: Fix handling of platform_get_irq() error
-Date:   Thu, 27 Aug 2020 09:11:07 +0200
-Message-Id: <20200827071107.27429-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200827071107.27429-1-krzk@kernel.org>
-References: <20200827071107.27429-1-krzk@kernel.org>
+        Thu, 27 Aug 2020 03:11:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbgH0HLY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:11:24 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D610C061264;
+        Thu, 27 Aug 2020 00:11:24 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id y2so5251200ljc.1;
+        Thu, 27 Aug 2020 00:11:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Nv57Gn1eKFngv8s/vSw/Btf+G9R1mZ77PltJIm2hCKI=;
+        b=crDap6mOKZrR9ZAtjqKwuhuwWvD9xNLGT8q+sm69RRILe0fG9BkjV+7z0DZ127asDo
+         I+jEutBlwKivDNRYRbrGNS/OqE+tcpehypYt15HUhqc2Kjr7Y1OukJc8fcpJnUpQ2WOh
+         Dha8PJ14CUJGcZNonjI7mLJZVzAp9qOi39Cdrq5+DZ1Fv2v4QyP7va94M9rrogworQaC
+         0SJXA3ZT22RqBUuEUM+8IZqjPOLxlVfBCVQ8Sb6qktu2lK0dfk15e8RrPKWBpWVW6eL9
+         P8gH2vpUjlpKXaGVoT08tvMnBDWyerZBD7A+LvO1/xiF7WA8g8bRemf27ZBqYN+JDM7R
+         HhcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Nv57Gn1eKFngv8s/vSw/Btf+G9R1mZ77PltJIm2hCKI=;
+        b=D+RYzdnDYZJvuB3lM36HHmstQkAUnyt60tN4quPIx5LcaTa0Z/g1+Nm6YasayobHqC
+         d9TFdMh4a5mUJv1pF1ehxosTzfK90e1g+/qbwp2wAsEPP2yuss9SCa8+LexkyhIxctXm
+         6xfGBLpWbWzajmcEsk9Wq9tKbYHRUhhIphUAIGFHLUFSljTVqGhwWn+Utcx7Z/AF0tyI
+         h0l15NKp7cO3Az5jBXwHgqrOAUeJKE9ikOn8KNsCpNlvWeKpugtJjFmxTEyCWENFwlQg
+         YrNfv2f+h5n3BpX+/tTZOeQMbe+gGzP838+9ZRywkjyWGyfdHTdKDfLDNWZKUTJWd/eV
+         KdqA==
+X-Gm-Message-State: AOAM5313AvtHONJTEXo/mmD8DkrXFNFkz4435YVEhwZqhW7YtDIM1J1C
+        4W87HhDUyblky5DUYS4iaXAV+PG2Uv5AQKzc9xHnmjE5IHeMQw==
+X-Google-Smtp-Source: ABdhPJzvJAEB9d5r9zidPaU9W1O7zcbNFi6NXmIb7tdkFFR+S/4m355fVHEQ2ZvkrN/Z08JyvffpgZG4T1Axqa0ooPg=
+X-Received: by 2002:a2e:9b08:: with SMTP id u8mr8377257lji.208.1598512282738;
+ Thu, 27 Aug 2020 00:11:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <1598503859-29620-1-git-send-email-u0084500@gmail.com> <20200827070010.GD813478@kuha.fi.intel.com>
+In-Reply-To: <20200827070010.GD813478@kuha.fi.intel.com>
+From:   =?UTF-8?B?5ZWf5Y6f6buD?= <u0084500@gmail.com>
+Date:   Thu, 27 Aug 2020 15:11:11 +0800
+Message-ID: <CADiBU3-GFkjA8p_tOkF-YcJf69K=Z48oDpme-rWWH3kEj=eaDA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] usb typec: mt6360: Add support for mt6360 Type-C driver
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
+        matthias.bgg@gmail.com, Guenter Roeck <linux@roeck-us.net>,
+        cy_huang <cy_huang@richtek.com>, gene_chen@richtek.com,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-platform_get_irq() returns -ERRNO on error.  In such case comparison
-to 0 would pass the check.
+Heikki Krogerus <heikki.krogerus@linux.intel.com> =E6=96=BC 2020=E5=B9=B48=
+=E6=9C=8827=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=883:00=E5=AF=AB=E9=
+=81=93=EF=BC=9A
+>
+> On Thu, Aug 27, 2020 at 12:50:58PM +0800, cy_huang wrote:
+> > From: ChiYuan Huang <cy_huang@richtek.com>
+> >
+> > Mediatek MT6360 is a multi-functional IC that includes USB Type-C.
+> > It works with Type-C Port Controller Manager to provide USB PD
+> > and USB Type-C functionalities.
+> >
+> > Add fix to Prevent the race condition from interrupt and tcpci port unr=
+egister
+> > during module remove.
+>
+> You merged two patches from v2 together, so that really makes this
+> v3. Where is the changelog?
 
-Fixes: 179c02fe90a4 ("drm/tve200: Add new driver for TVE200")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/gpu/drm/tve200/tve200_drv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+changelog
+Add fix to Prevent the race condition from interrupt and tcpci port unregis=
+ter
+during module remove.
 
-diff --git a/drivers/gpu/drm/tve200/tve200_drv.c b/drivers/gpu/drm/tve200/tve200_drv.c
-index c3aa39bd38ec..b5259cb1383f 100644
---- a/drivers/gpu/drm/tve200/tve200_drv.c
-+++ b/drivers/gpu/drm/tve200/tve200_drv.c
-@@ -200,8 +200,8 @@ static int tve200_probe(struct platform_device *pdev)
- 	}
- 
- 	irq = platform_get_irq(pdev, 0);
--	if (!irq) {
--		ret = -EINVAL;
-+	if (irq < 0) {
-+		ret = irq;
- 		goto clk_disable;
- 	}
- 
--- 
-2.17.1
+Do I need to resent the real V3 and mark the first patch for the
+commit log like as below text?
 
+Mediatek MT6360 is a multi-functional IC that includes USB Type-C.
+It works with Type-C Port Controller Manager to provide USB PD
+and USB Type-C functionalities.
+
+V1 -> V2
+1. Add fix to Prevent the race condition from interrupt and tcpci port
+unregister
+during module remove.
+
+V2 -> V3
+1. Merge V2 change into the first patch.
+
+
+If yes, I can use this way to resend patch v3 for the readability.
+>
+> thanks,
+>
+> --
+> heikki
