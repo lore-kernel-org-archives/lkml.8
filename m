@@ -2,205 +2,190 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB713C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CFEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 868C620738
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:10:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="ZeJkuoAc"
+	by mail.kernel.org (Postfix) with ESMTP id 61FB620738
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgH0PKZ (ORCPT
+        id S1728593AbgH0PKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:10:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbgH0Lt5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 07:49:57 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FF05C061237
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 04:49:44 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 83so7092190ybf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 04:49:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=W92EWp10cYvF5yPv3rgiIaePnIXh3IWgRNGaRIqgcR4=;
-        b=ZeJkuoAcd8dJY7+fCilJDkM8V8M3SmcWQgU+So846yMM9f6jM9riCbwbPfREaF0dY5
-         azjiHNKp8O7adw/N9CKVBPXtpdMW0qDR/FRcGjNgwiA7Xg4YAVSd/KrxNo/DMShAhT2R
-         gvt3WhIEAlZTrCYDYGy9B3J/DwPtkqHRIFxRzdItRltKvJZQ6pF8lrkxptpCzwuOFdYe
-         UxEuUIK+0+Pu7M6s2hyfeNVbO0IZ3zA1ZSkfIAezur4pqLLvO+lceOPtxc4LafsGYadB
-         YDTG6C+Tz8L/0lfYzwSactKMTE8n+Q1nBDRoze+VAVJKqPB+hOKuq88CjDzXHrCFqY/c
-         nb7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=W92EWp10cYvF5yPv3rgiIaePnIXh3IWgRNGaRIqgcR4=;
-        b=oYM9lXjqY2XkkDtP4hgerOQ7eP/v5cxVFqzFb1b0qMPzWTJQq9fO5njb7YeX9aQaf3
-         f2fOdPK+ojHPtWElKfkUZT0dJJNOBSX7X5xBtXFgU3aF83/XbCRaUyDeN9ixQ9EV243J
-         WjwUEKHx5mUXCvBot+LpH3hl2XQYePrfVytt636ZTVpsefJxP2snkHxhO0Vsd69gvdxq
-         9UhZPujlHnTfTgxeOdc81kl1czGTkdYpKWwCfnaP8Y1VwKcMxz2TTN6TO0IX2WUgxQbd
-         33zT7c2VtYU8PRR9pXW/2Ksj3fjxbm8x4Wk3jRrNJ9fBQZ8Okyc9fJEiMpuxnMZfrAoW
-         zoCA==
-X-Gm-Message-State: AOAM532GSrN1wQhOle/xQwkWfAk++tWgCN2Z0T1yaqjNQk1WLqjZqH5h
-        77n5EJEeWbjoR7xnloVv8UQWN6ORnA==
-X-Google-Smtp-Source: ABdhPJxBMYeNdBT4AqELwSCvlFMkpdIbIdV0PyZym4hTP8g2vL+hg+JfUQWtBxMn/GgdmqZygND6iAfo1A==
-X-Received: from jannh2.zrh.corp.google.com ([2a00:79e0:1b:201:1a60:24ff:fea6:bf44])
- (user=jannh job=sendgmr) by 2002:a25:14c3:: with SMTP id 186mr28815290ybu.114.1598528983701;
- Thu, 27 Aug 2020 04:49:43 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 13:49:26 +0200
-In-Reply-To: <20200827114932.3572699-1-jannh@google.com>
-Message-Id: <20200827114932.3572699-2-jannh@google.com>
-Mime-Version: 1.0
-References: <20200827114932.3572699-1-jannh@google.com>
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH v5 1/7] binfmt_elf_fdpic: Stop using dump_emit() on user
- pointers on !MMU
-From:   Jann Horn <jannh@google.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 27 Aug 2020 11:10:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:57320 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728925AbgH0LtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 07:49:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6114C31B;
+        Thu, 27 Aug 2020 03:54:39 -0700 (PDT)
+Received: from [192.168.1.190] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 220DF3F68F;
+        Thu, 27 Aug 2020 03:54:36 -0700 (PDT)
+Subject: Re: [PATCH 24/35] arm64: mte: Switch GCR_EL1 in kernel entry and exit
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Branislav Rankov <Branislav.Rankov@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1597425745.git.andreyknvl@google.com>
+ <ec314a9589ef8db18494d533b6eaf1fd678dc010.1597425745.git.andreyknvl@google.com>
+ <20200827103819.GE29264@gaia>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <8affcfbe-b8b4-0914-1651-368f669ddf85@arm.com>
+Date:   Thu, 27 Aug 2020 11:56:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200827103819.GE29264@gaia>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dump_emit() is for kernel pointers, and VMAs describe userspace memory.
-Let's be tidy here and avoid accessing userspace pointers under KERNEL_DS,
-even if it probably doesn't matter much on !MMU systems - especially given
-that it looks like we can just use the same get_dump_page() as on MMU if
-we move it out of the CONFIG_MMU block.
+On 8/27/20 11:38 AM, Catalin Marinas wrote:
+> On Fri, Aug 14, 2020 at 07:27:06PM +0200, Andrey Konovalov wrote:
+>> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+>> index cde127508e38..a17fefb0571b 100644
+>> --- a/arch/arm64/kernel/entry.S
+>> +++ b/arch/arm64/kernel/entry.S
+>> @@ -172,6 +172,29 @@ alternative_else_nop_endif
+>>  #endif
+>>  	.endm
+>>  
+>> +	/* Note: tmp should always be a callee-saved register */
+> 
+> Why callee-saved? Do you preserve it anywhere here?
+>
 
-One small change we have to make in get_dump_page() is to use
-__get_user_pages_locked() instead of __get_user_pages(), since the
-latter doesn't exist on nommu. On mmu builds, __get_user_pages_locked()
-will just call __get_user_pages() for us.
+Aargh, this is an old comment, I forgot to remove it after the last refactor.
+Thank you for pointing this out.
 
-Signed-off-by: Jann Horn <jannh@google.com>
----
- fs/binfmt_elf_fdpic.c |  8 ------
- mm/gup.c              | 57 +++++++++++++++++++++----------------------
- 2 files changed, 28 insertions(+), 37 deletions(-)
+>> +	.macro mte_restore_gcr, el, tsk, tmp, tmp2
+>> +#ifdef CONFIG_ARM64_MTE
+>> +alternative_if_not ARM64_MTE
+>> +	b	1f
+>> +alternative_else_nop_endif
+>> +	.if	\el == 0
+>> +	ldr	\tmp, [\tsk, #THREAD_GCR_EL1_USER]
+>> +	.else
+>> +	ldr_l	\tmp, gcr_kernel_excl
+>> +	.endif
+>> +	/*
+>> +	 * Calculate and set the exclude mask preserving
+>> +	 * the RRND (bit[16]) setting.
+>> +	 */
+>> +	mrs_s	\tmp2, SYS_GCR_EL1
+>> +	bfi	\tmp2, \tmp, #0, #16
+>> +	msr_s	SYS_GCR_EL1, \tmp2
+>> +	isb
+>> +1:
+>> +#endif
+>> +	.endm
+>> +
+>>  	.macro	kernel_entry, el, regsize = 64
+>>  	.if	\regsize == 32
+>>  	mov	w0, w0				// zero upper 32 bits of x0
+>> @@ -209,6 +232,8 @@ alternative_else_nop_endif
+>>  
+>>  	ptrauth_keys_install_kernel tsk, x20, x22, x23
+>>  
+>> +	mte_restore_gcr 1, tsk, x22, x23
+>> +
+>>  	scs_load tsk, x20
+>>  	.else
+>>  	add	x21, sp, #S_FRAME_SIZE
+>> @@ -386,6 +411,8 @@ alternative_else_nop_endif
+>>  	/* No kernel C function calls after this as user keys are set. */
+>>  	ptrauth_keys_install_user tsk, x0, x1, x2
+>>  
+>> +	mte_restore_gcr 0, tsk, x0, x1
+>> +
+>>  	apply_ssbd 0, x0, x1
+>>  	.endif
+>>  
+>> @@ -957,6 +984,7 @@ SYM_FUNC_START(cpu_switch_to)
+>>  	mov	sp, x9
+>>  	msr	sp_el0, x1
+>>  	ptrauth_keys_install_kernel x1, x8, x9, x10
+>> +	mte_restore_gcr 1, x1, x8, x9
+>>  	scs_save x0, x8
+>>  	scs_load x1, x8
+>>  	ret
+> 
+> Since we set GCR_EL1 on exception entry and return, why is this needed?
+> We don't have a per-kernel thread GCR_EL1, it's global to all threads,
+> so I think cpu_switch_to() should not be touched.
+> 
 
-diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-index 50f845702b92..a53f83830986 100644
---- a/fs/binfmt_elf_fdpic.c
-+++ b/fs/binfmt_elf_fdpic.c
-@@ -1529,14 +1529,11 @@ static bool elf_fdpic_dump_segments(struct coredump_params *cprm)
- 	struct vm_area_struct *vma;
- 
- 	for (vma = current->mm->mmap; vma; vma = vma->vm_next) {
--#ifdef CONFIG_MMU
- 		unsigned long addr;
--#endif
- 
- 		if (!maydump(vma, cprm->mm_flags))
- 			continue;
- 
--#ifdef CONFIG_MMU
- 		for (addr = vma->vm_start; addr < vma->vm_end;
- 							addr += PAGE_SIZE) {
- 			bool res;
-@@ -1552,11 +1549,6 @@ static bool elf_fdpic_dump_segments(struct coredump_params *cprm)
- 			if (!res)
- 				return false;
- 		}
--#else
--		if (!dump_emit(cprm, (void *) vma->vm_start,
--				vma->vm_end - vma->vm_start))
--			return false;
--#endif
- 	}
- 	return true;
- }
-diff --git a/mm/gup.c b/mm/gup.c
-index ae096ea7583f..92519e5a44b3 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1495,35 +1495,6 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
- 		mmap_read_unlock(mm);
- 	return ret;	/* 0 or negative error code */
- }
--
--/**
-- * get_dump_page() - pin user page in memory while writing it to core dump
-- * @addr: user address
-- *
-- * Returns struct page pointer of user page pinned for dump,
-- * to be freed afterwards by put_page().
-- *
-- * Returns NULL on any kind of failure - a hole must then be inserted into
-- * the corefile, to preserve alignment with its headers; and also returns
-- * NULL wherever the ZERO_PAGE, or an anonymous pte_none, has been found -
-- * allowing a hole to be left in the corefile to save diskspace.
-- *
-- * Called without mmap_lock, but after all other threads have been killed.
-- */
--#ifdef CONFIG_ELF_CORE
--struct page *get_dump_page(unsigned long addr)
--{
--	struct vm_area_struct *vma;
--	struct page *page;
--
--	if (__get_user_pages(current->mm, addr, 1,
--			     FOLL_FORCE | FOLL_DUMP | FOLL_GET, &page, &vma,
--			     NULL) < 1)
--		return NULL;
--	flush_cache_page(vma, addr, page_to_pfn(page));
--	return page;
--}
--#endif /* CONFIG_ELF_CORE */
- #else /* CONFIG_MMU */
- static long __get_user_pages_locked(struct mm_struct *mm, unsigned long start,
- 		unsigned long nr_pages, struct page **pages,
-@@ -1569,6 +1540,34 @@ static long __get_user_pages_locked(struct mm_struct *mm, unsigned long start,
- }
- #endif /* !CONFIG_MMU */
- 
-+/**
-+ * get_dump_page() - pin user page in memory while writing it to core dump
-+ * @addr: user address
-+ *
-+ * Returns struct page pointer of user page pinned for dump,
-+ * to be freed afterwards by put_page().
-+ *
-+ * Returns NULL on any kind of failure - a hole must then be inserted into
-+ * the corefile, to preserve alignment with its headers; and also returns
-+ * NULL wherever the ZERO_PAGE, or an anonymous pte_none, has been found -
-+ * allowing a hole to be left in the corefile to save diskspace.
-+ *
-+ * Called without mmap_lock, but after all other threads have been killed.
-+ */
-+#ifdef CONFIG_ELF_CORE
-+struct page *get_dump_page(unsigned long addr)
-+{
-+	struct vm_area_struct *vma;
-+	struct page *page;
-+
-+	if (__get_user_pages_locked(current->mm, addr, 1, &page, &vma, NULL,
-+				    FOLL_FORCE | FOLL_DUMP | FOLL_GET) < 1)
-+		return NULL;
-+	flush_cache_page(vma, addr, page_to_pfn(page));
-+	return page;
-+}
-+#endif /* CONFIG_ELF_CORE */
-+
- #if defined(CONFIG_FS_DAX) || defined (CONFIG_CMA)
- static bool check_dax_vmas(struct vm_area_struct **vmas, long nr_pages)
- {
+I agree, we can remove it. We only require the kernel entry and the kernel exit
+ones.
+
+>> diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
+>> index 7717ea9bc2a7..cfac7d02f032 100644
+>> --- a/arch/arm64/kernel/mte.c
+>> +++ b/arch/arm64/kernel/mte.c
+>> @@ -18,10 +18,14 @@
+>>  
+>>  #include <asm/barrier.h>
+>>  #include <asm/cpufeature.h>
+>> +#include <asm/kasan.h>
+>> +#include <asm/kprobes.h>
+>>  #include <asm/mte.h>
+>>  #include <asm/ptrace.h>
+>>  #include <asm/sysreg.h>
+>>  
+>> +u64 gcr_kernel_excl __read_mostly;
+> 
+> Could we make this __ro_after_init?
+>
+
+Yes, it makes sense, it should be updated only once through mte_init_tags().
+
+Something to consider though here is that this might not be the right approach
+if in future we want to add stack tagging. In such a case we need to know the
+kernel exclude mask before any C code is executed. Initializing the mask via
+mte_init_tags() it is too late.
+
+I was thinking to add a compilation define instead of having gcr_kernel_excl in
+place. This might not work if the kernel excl mask is meant to change during the
+execution.
+
+Thoughts?
+
+>> +
+>>  static void mte_sync_page_tags(struct page *page, pte_t *ptep, bool check_swap)
+>>  {
+>>  	pte_t old_pte = READ_ONCE(*ptep);
+>> @@ -115,6 +119,13 @@ void * __must_check mte_set_mem_tag_range(void *addr, size_t size, u8 tag)
+>>  	return ptr;
+>>  }
+>>  
+>> +void mte_init_tags(u64 max_tag)
+>> +{
+>> +	u64 incl = ((1ULL << ((max_tag & MTE_TAG_MAX) + 1)) - 1);
+> 
+> I'd rather use GENMASK here, it is more readable.
+> 
+
+Agree, we can change it.
+
 -- 
-2.28.0.297.g1956fa8f8d-goog
-
+Regards,
+Vincenzo
