@@ -2,178 +2,199 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17888C433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B394FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF53A2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:37:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ZF+GyWq6";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="YwN9/pLC"
+	by mail.kernel.org (Postfix) with ESMTP id 8E8BF2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgH0Whm (ORCPT
+        id S1727969AbgH0WjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 18:37:42 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:35396 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726234AbgH0Whm (ORCPT
+        Thu, 27 Aug 2020 18:39:03 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35616 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbgH0WjC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 18:37:42 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07RMSWuU017351;
-        Thu, 27 Aug 2020 15:37:34 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=Hc+68ixxWQoHe0PNRbmwq3kIm5z6qMpJFGu2qZLJxv0=;
- b=ZF+GyWq6VNSlBBWtXDleJ3vA141s6dOqigF/vuyEhkmAoyrAETUdAPAQ9Wyy4VZOTOIe
- Jq9jMr6ilCaRx3JisM+Pxomde46ztw3Rd37nJ0ws3woVhUs+AK5UX08oYNhN1c6iiL0Q
- K/um7myanmGaw/yla1mz0QLCqmyS7Rh5r/E= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 335up7r02g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 27 Aug 2020 15:37:33 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 27 Aug 2020 15:37:33 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cy/9P2MscME9Vz+FsLlmkIJjz1UBEpJvj1HYONm6JhGYGtbJVJ6nVigP1erhhs9/0XUx19IJipKV5yQ9mO8EiVMcJ14rbb5yCrhCLb7HmynwEwScENq/Ypscgs2Ha3LfEI2SIjqaylCM2h3+srd0Xort1YHiaJr1a2mysRtgJmn5SFjnpWApyONEe7JfQXu6A5I+fadb7TBHN5FCOZbaQcgXHZ1PJtamqj8+PvegtYPX5Lsodg7c+o8yKJ5FHcOcfqUs7IHrYVWY59lsmW/fiEevv25oHiVNUCJK+SwbvAhHz51kBIHdO13bHi2Y+52ntTT1gJ2+ZhJWDZWcoBXOsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hc+68ixxWQoHe0PNRbmwq3kIm5z6qMpJFGu2qZLJxv0=;
- b=dKcX7H+ervQvoUcs1dmUWi/Ut5Geq+Sb5Q7+mNy8K7EC65T8LDsH0inptSy3PKNOJjEy5AcToYQ8NyCQZGkAijLlROsdDJrMXKBXvbx6gMwlNbiEOLu+yLYqkePhakbILh5+5IOnQpX2o954TCGfHoTgzfBRZMQ2wMWaZjmbw+CkUr/G5V6K6BIcQcMq/x8T4ciM1Ty1btjZkO3jutGlmHnrcfiQq5Vb4XRf8x017moKE9M/NibFmZwqGk69UgpVDDCwDvwPzIdROsxYE/5VHTTPRVJd1F2Dk0oE87CfcYi+NMdkDTdwL8e8PCxxHWTDCYCHXIHUfvkXHAXOK1WBiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hc+68ixxWQoHe0PNRbmwq3kIm5z6qMpJFGu2qZLJxv0=;
- b=YwN9/pLCtWwrjr6ez55ySWNQOxYqDzKAyADUicGLIlWY0PYTkOdVk+X4YUkrUdRAF0G5uYfDmWjkndZry4ddMt0JjE8R2OOY4IWTWezvyfGNzURb72B8Fq3mC4gBqB7bj8/ibQbUfJY9p64x+/7FalNRmzOCtndKneMncTNEkbM=
-Authentication-Results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=fb.com;
-Received: from SN6PR1501MB4141.namprd15.prod.outlook.com
- (2603:10b6:805:e3::14) by SA0PR15MB3854.namprd15.prod.outlook.com
- (2603:10b6:806:80::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.21; Thu, 27 Aug
- 2020 22:37:31 +0000
-Received: from SN6PR1501MB4141.namprd15.prod.outlook.com
- ([fe80::e1a8:24c:73df:fe9a]) by SN6PR1501MB4141.namprd15.prod.outlook.com
- ([fe80::e1a8:24c:73df:fe9a%7]) with mapi id 15.20.3305.032; Thu, 27 Aug 2020
- 22:37:31 +0000
-Date:   Thu, 27 Aug 2020 15:37:28 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Shakeel Butt <shakeelb@google.com>
-CC:     Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC 3/4] mm: kmem: prepare remote memcg charging infra
- for interrupt contexts
-Message-ID: <20200827223728.GB2490802@carbon.dhcp.thefacebook.com>
-References: <20200827175215.319780-1-guro@fb.com>
- <20200827175215.319780-4-guro@fb.com>
- <CALvZod7p3Ju-OSoYPonfjWwVm9fgxbDUzPzvrenkEqPNPLD88w@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod7p3Ju-OSoYPonfjWwVm9fgxbDUzPzvrenkEqPNPLD88w@mail.gmail.com>
-X-ClientProxiedBy: BYAPR07CA0052.namprd07.prod.outlook.com
- (2603:10b6:a03:60::29) To SN6PR1501MB4141.namprd15.prod.outlook.com
- (2603:10b6:805:e3::14)
+        Thu, 27 Aug 2020 18:39:02 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y26so3803791lfe.2;
+        Thu, 27 Aug 2020 15:38:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=jWe/MZBuXsPQIPwGDtHXYOGQF+tZkW1rf6P5WyO7gU0=;
+        b=ou8tUqcv+e/mf5W5uXYZM0+tCez8tNGqhjutmr8/IayMsX+4nid4k5qvT83HNoH1oQ
+         N3kNFBAgKUeTU5HrpQL/YmoK0jDG+wbu6aSOKpy07mBPQA2z3lbg3W8/5J3P86oknqx8
+         3zpNg/BtUgJMHye7QJBvCqhh3LCJskEtXvRY7hynUDt0JsmYMdipZvo8ANCYAi3sU2Qm
+         E32+PjuPnZ6OIV1aDRlpjX1wZYm5TqC8Vu1DmYBMFIV2u3Ew3s+Qjj6M4PuH8obzbgaR
+         LzS4qHUOflJj132jsQdziL3xpIejG6PHv8SkYNkOWyVo19pWm0PT9VaXkw49ZyfUmDXb
+         cZwg==
+X-Gm-Message-State: AOAM531ncLkjkq3Z6127LEI+eNdO7N83hM5n0JSDkQ5Zh0BJzIo/MjSx
+        PVo/f3NXdGkTwUdSZ5/+y9w=
+X-Google-Smtp-Source: ABdhPJzNbZED6jAG/dXcSnQMVX21gJmCJMfrCRm6uK1ETK0qVpTDxrRAo0S5cqh9JjAkUoVOdtG0VA==
+X-Received: by 2002:a05:6512:1146:: with SMTP id m6mr1957763lfg.1.1598567938855;
+        Thu, 27 Aug 2020 15:38:58 -0700 (PDT)
+Received: from [192.168.1.8] ([213.87.147.111])
+        by smtp.gmail.com with ESMTPSA id d21sm355589lfi.41.2020.08.27.15.38.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 15:38:58 -0700 (PDT)
+To:     Joe Perches <joe@perches.com>, Julia Lawall <julia.lawall@inria.fr>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, cocci <cocci@systeme.lip6.fr>,
+        accessrunner-general@lists.sourceforge.net,
+        Alex Dewar <alex.dewar90@gmail.com>
+References: <20200824222322.22962-1-alex.dewar90@gmail.com>
+ <48f2dc90-7852-eaf1-55d7-2c85cf954688@rasmusvillemoes.dk>
+ <20200827071537.GA168593@kroah.com>
+ <20200827131819.7rcl2f5js3hkoqj2@lenovo-laptop>
+ <def24e9e-018c-9712-0d07-d4cbc84f07d9@rasmusvillemoes.dk>
+ <20200827144846.yauuttjaqtxaldxg@lenovo-laptop>
+ <5d1dfb9b031130d4d20763ec621233a19d6a88a2.camel@perches.com>
+ <alpine.DEB.2.22.394.2008272141220.2482@hadrien>
+ <5853c58e-7d26-2cf9-6cbf-698ecd93cbf9@linux.com>
+ <alpine.DEB.2.22.394.2008272334500.2482@hadrien>
+ <d6d5836196208d5280cedf5837952096c3518852.camel@perches.com>
+From:   Denis Efremov <efremov@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ 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
+Subject: Re: [Cocci] [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+Message-ID: <adfca3f2-561a-9d91-c064-cf01c2b573e7@linux.com>
+Date:   Fri, 28 Aug 2020 01:38:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by BYAPR07CA0052.namprd07.prod.outlook.com (2603:10b6:a03:60::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.20 via Frontend Transport; Thu, 27 Aug 2020 22:37:30 +0000
-X-Originating-IP: [2620:10d:c090:400::5:4840]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 585c9952-9d83-4fc5-9480-08d84ad9c929
-X-MS-TrafficTypeDiagnostic: SA0PR15MB3854:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA0PR15MB3854017563C70D6BC95CE39EBE550@SA0PR15MB3854.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TElxYctHTcG2OJHKLz3yoBheXIoQfa4tXDkDsXZKv6/qKSEi3Yr8zoz8JW/XM+ZOQlNe1yCHfj/NpScEtTkqBJbQrngvZIX1jntqkVtxU9HhcGX/5udRRBYwqj2Gi5tCIHlwjzY3JQIPaRKRJ8UrtmHeMu3hw5IMUg0rAB7PQ6w/cc1RmGM8QHnG63k92HdfCNr1HcVzGsE9f7Yzj5A/Wg7IHMQxF1GXjBlqQUn/fh3t9xMalqLJ4K3RiaelyjbMpHNrPmcTcfPMzpJiSuS+FhG/cTjbPXTIsfr65x+YstqluCC1UHmE7mjkv/R4iT8kfKpa9x4TMKA/ZqBylOFx/g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR1501MB4141.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(376002)(136003)(39860400002)(366004)(346002)(8936002)(6916009)(54906003)(316002)(4326008)(16576012)(186003)(52116002)(53546011)(2906002)(9686003)(6486002)(33656002)(956004)(478600001)(5660300002)(8676002)(83380400001)(86362001)(66946007)(1076003)(66476007)(66556008);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: /gintrtXO8lJTjzY8OwEhUivvEOmCDqGXnMsplqHXatrU2hUEEem+AdX2P9+sMoQV9MLhD/QjZAXzGwI1S58zQAsjpP1YQ82lJTUQS1198eCCVeKwzfAuEJ7Nz9IttKeeQJ6TVtoWQpc2L0Drx8HvgbXchQdSk5RxFJBJiuCYySH4tLTVQoI5dg4I9VyXU0mRmNmKPbctTdx71z6nYjGU0Bl/r3/57AxDYPG3SpTeugzbjq+7/Zy170Wsz4RcQafXYZ+OnT1+gbrDrRNoY7bejRkkziyd563CBQI3WAHtATTXq9GLoNYlK9nyH9SBejBiVdMzXjpK4i3pu7d3Q3XJWixjMfx/qBHg0jsSuFcu6dlYPu3oHHLGtLFtXBTwUhZ4afudI+W9ozMD1ANyPCyDxAEka7YkT5jPTN3oYO9nY3S8NHmhIZXsiAb5ksde+xN62cwFjhCMeHYLoft+N4DQgCdFEvVLalKwjrzPQA+F0HlVqqeJxT9hjPEYfd1jE3bMJ86Cm68Ugb36V+L5NiieADQUHsecD1zYhiJZIgLEXi6ct0lEEbRHIOCBGHjNHoQSFZjCyrRWZmfoq8NVVdYLInLORRksvTPAaEKI+OV4rXQcc7mMNg97Fe/O7nRxPiUiDR2DbETpWJvPxg4jQsnBSl8wV7F9ucTUvcjTflK8Vk=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 585c9952-9d83-4fc5-9480-08d84ad9c929
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR1501MB4141.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2020 22:37:31.7408
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: io9ZiXH+spRaZyyQTuCnp66NL8nBK6VVPY8DY6MQzRPgF+8ez5EP87ETz7j7ZLzJ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR15MB3854
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-27_14:2020-08-27,2020-08-27 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- bulkscore=0 phishscore=0 mlxscore=0 clxscore=1015 adultscore=0
- suspectscore=1 malwarescore=0 mlxlogscore=838 lowpriorityscore=0
- spamscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008270169
-X-FB-Internal: deliver
+In-Reply-To: <d6d5836196208d5280cedf5837952096c3518852.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 02:58:50PM -0700, Shakeel Butt wrote:
-> On Thu, Aug 27, 2020 at 10:52 AM Roman Gushchin <guro@fb.com> wrote:
-> >
-> > Remote memcg charging API uses current->active_memcg to store the
-> > currently active memory cgroup, which overwrites the memory cgroup
-> > of the current process. It works well for normal contexts, but doesn't
-> > work for interrupt contexts: indeed, if an interrupt occurs during
-> > the execution of a section with an active memcg set, all allocations
-> > inside the interrupt will be charged to the active memcg set (given
-> > that we'll enable accounting for allocations from an interrupt
-> > context). But because the interrupt might have no relation to the
-> > active memcg set outside, it's obviously wrong from the accounting
-> > prospective.
-> >
-> > To resolve this problem, let's add a global percpu int_active_memcg
-> > variable, which will be used to store an active memory cgroup which
-> > will be sued from interrupt contexts. set_active_memcg() will
 > 
-> *used
-> 
-> > transparently use current->active_memcg or int_active_memcg depending
-> > on the context.
-> >
-> > To make the read part simple and transparent for the caller, let's
-> > introduce two new functions:
-> >   - struct mem_cgroup *active_memcg(void),
-> >   - struct mem_cgroup *get_active_memcg(void).
-> >
-> > They are returning the active memcg if it's set, hiding all
-> > implementation details: where to get it depending on the current context.
-> >
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> 
-> I like this patch. Internally we have a similar patch which instead of
-> per-cpu int_active_memcg have current->active_memcg_irq. Our use-case
-> was radix tree node allocations where we use the root node's memcg to
-> charge all the nodes of the tree and the reason behind was that we
-> observed a lot of zombies which were stuck due to radix tree nodes
-> charges while the actual pages pointed by the those nodes/entries were
-> in used by active jobs (shared file system and the kernel is older
-> than the kmem reparenting).
-> 
-> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+> I tried:
+> @@
+> identifier f_show =~ "^.*_show$";
 
-Thank you for reviews, Shakeel!
 
-I'll fix the typo, add your acks and will resend it as v1.
+This will miss this kind of functions:
+./drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:1953:static DEVICE_ATTR(vbios_version, 0444, amdgpu_atombios_get_vbios_version,
+./drivers/gpu/drm/amd/amdgpu/df_v3_6.c:266:static DEVICE_ATTR(df_cntr_avail, S_IRUGO, df_v3_6_get_df_cntr_avail, NULL);
+./drivers/input/touchscreen/melfas_mip4.c:1348:static DEVICE_ATTR(fw_version, S_IRUGO, mip4_sysfs_read_fw_version, NULL);
+./drivers/input/touchscreen/melfas_mip4.c:1373:static DEVICE_ATTR(hw_version, S_IRUGO, mip4_sysfs_read_hw_version, NULL);
+./drivers/input/touchscreen/melfas_mip4.c:1392:static DEVICE_ATTR(product_id, S_IRUGO, mip4_sysfs_read_product_id, NULL);
+...
 
-Thanks!
+> identifier dev, attr, buf;
+> const char *chr;
+> @@
+> ssize_t f_show(struct device *dev, struct device_attribute *attr, char
+> *buf)
+> {
+> 	<...
+> (
+> -	sprintf
+> +	sysfs_sprintf
+> 	(...);
+> |
+> -	snprintf(buf, PAGE_SIZE,
+> +	sysfs_sprintf(buf,
+> 	...);
+> |
+> -	scnprintf(buf, PAGE_SIZE,
+> +	sysfs_sprintf(buf,
+> 	...);
+> |
+> 	strcpy(buf, chr);
+> 	sysfs_strcpy(buf, chr);
+> )
+> 	...>
+> }
+> 
+> which finds direct statements without an assign
+> but that doesn't find
+> 
+> arch/arm/common/dmabounce.c:static ssize_t dmabounce_show(struct device *dev, struct device_attribute *attr, char *buf)
+> arch/arm/common/dmabounce.c-{
+> arch/arm/common/dmabounce.c-    struct dmabounce_device_info *device_info = dev->archdata.dmabounce;
+> arch/arm/common/dmabounce.c-    return sprintf(buf, "%lu %lu %lu %lu %lu %lu\n",
+> arch/arm/common/dmabounce.c-            device_info->small.allocs,
+> arch/arm/common/dmabounce.c-            device_info->large.allocs,
+> arch/arm/common/dmabounce.c-            device_info->total_allocs - device_info->small.allocs -
+> arch/arm/common/dmabounce.c-                    device_info->large.allocs,
+> arch/arm/common/dmabounce.c-            device_info->total_allocs,
+> arch/arm/common/dmabounce.c-            device_info->map_op_count,
+> arch/arm/common/dmabounce.c-            device_info->bounce_count);
+> arch/arm/common/dmabounce.c-}
+>
+
+This will match it (the difference is in the ';'):
+@@
+identifier f_show =~ "^.*_show$";
+identifier dev, attr, buf;
+@@
+
+ssize_t f_show(struct device *dev, struct device_attribute *attr, char *buf)
+
+{
+
+	<...
+-	sprintf
++	sysfs_sprintf
+	(...)
+	...>
+}
+
+Regards,
+Denis
