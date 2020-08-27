@@ -2,135 +2,151 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F37AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28DBB22B4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:28:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dvTOnhDW"
+	by mail.kernel.org (Postfix) with ESMTP id DF81C207DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:32:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgH0Q17 (ORCPT
+        id S1726262AbgH0QcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:27:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:52897 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726845AbgH0Q1u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:27:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598545669;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gDA1nnu33h9EoCIllQ/S4lYLXEMFrnx+yFYTlg2I2Kk=;
-        b=dvTOnhDWZ34A87x/DV47XtQ0JNGBpEttvB10ZIbx/YtlIvzB/T7/ZNPOOnXIKGF3Bh4f7g
-        wffHeB6nsBWnv3GaaQ1c893oIVsy5XQT6W7zXnt0HXhp/SRFRbnRaSDGaXGmEgcudGplmT
-        EwomY9F46JmtITFe/I6C4UFyJnDdla0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-418-XVyJHn2IPc-cIosfpYpRQA-1; Thu, 27 Aug 2020 12:27:44 -0400
-X-MC-Unique: XVyJHn2IPc-cIosfpYpRQA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EDDB864080;
-        Thu, 27 Aug 2020 16:27:42 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.35.206.185])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 86D825C1DA;
-        Thu, 27 Aug 2020 16:27:39 +0000 (UTC)
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Maxim Levitsky <mlevitsk@redhat.com>
-Subject: [PATCH 3/3] KVM: nSVM: more strict SMM checks when returning to nested guest
-Date:   Thu, 27 Aug 2020 19:27:20 +0300
-Message-Id: <20200827162720.278690-4-mlevitsk@redhat.com>
-In-Reply-To: <20200827162720.278690-1-mlevitsk@redhat.com>
-References: <20200827162720.278690-1-mlevitsk@redhat.com>
+        Thu, 27 Aug 2020 12:32:07 -0400
+Received: from mga03.intel.com ([134.134.136.65]:21618 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726123AbgH0QcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 12:32:07 -0400
+IronPort-SDR: JD67NoLMMXQq5n6FU8Xp0ZzunYrWtR2eaPlRcXJ+Zal8bko34OkiliYFjHAb1LJSNqriTu/+t5
+ Qot9rkOUAm8A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="156525104"
+X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
+   d="scan'208";a="156525104"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 09:32:06 -0700
+IronPort-SDR: JaJtwHwfoRlhD9oee9kQXytAxOSTYBgdDbi4tlP7xPM/0YWghmC88IKX/0kZoae7ObIr2hAh/y
+ 2yIB1G20MmCw==
+X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
+   d="scan'208";a="444504866"
+Received: from agluck-desk2.sc.intel.com ([10.3.52.68])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 09:32:05 -0700
+From:   Tony Luck <tony.luck@intel.com>
+To:     Naoya Horiguchi <naoya.horiguchi@nec.com>
+Cc:     Tony Luck <tony.luck@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Youquan Song <youquan.song@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFD PATCH] x86/mce: Make sure to send SIGBUS even after losing the race to poison a page
+Date:   Thu, 27 Aug 2020 09:32:05 -0700
+Message-Id: <20200827163205.23096-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* check that guest is 64 bit guest, otherwise the SVM related fields
-  in the smm state area are not defined
+For discussion ... I'm 100% sure the patch below is the wrong way to
+fix this ... for one thing it doesn't provide the virtual address of
+the error to the user signal handler. For another it just looks like
+a hack.  I'm just not sure whether to delve deep into the
+memory_failure() path to make sure the signal is sent to the current
+process in the SRAR case. Or just to do a better job at an error return
+value and make the X86 specific code send the signal with the address.
 
-* If the SMM area indicates that SMM interrupted a running guest,
-  check that EFER.SVME which is also saved in this area is set, otherwise
-  the guest might have tampered with SMM save area, and so indicate
-  emulation failure which should triple fault the guest.
+I've also got a feeling that this issue has been discussed before, but
+can't remember how that turned out.
 
-* Check that that guest CPUID supports SVM (due to the same issue as above)
+First few paragraphs describe the problem (and I think are OK). Things
+go off the rails with the fix.
 
-Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+-Tony
+
+X86 hardware may provide two indications that a page has poison. First
+the memory controller that detects the failed ECC check may log a UCNA
+(uncorrected no action) signature in one machine check bank and signal
+the OS with a CMCI (corrected machine check interrupt ... historical name
+did not get updated for this case). Next the processor core may log a
+SRAR (software recoverable action required) signature in another bank
+and signal with #MC.
+
+The #MC used to win that race and the page was taken offline and SIGBUS
+sent to the task.
+
+Changes to how Linux processes machine checks now mean that:
+a) Linux will offline the page based on the UCNA siganture in the
+   CMCI handler.
+b) The machine check handler defers processing using task_work_add() which
+   can happen after the CMCI is processed.
+
+memory_failure() avoids races with multiple callers reporting the same
+page with an atomic test and set operation to mark the page as poisoned.
+
+The net result of all of the above is that when a task consumes poison
+the page is taken offline by the UCNA/CMCI path, and the SRAR/#MC path
+takes an early return without sending a SIGBUS.
+
+Fix by changing memory_failure() to return -EEXIST in the case where
+the page is already poisoned and make the machine check code path check
+for this error and force a SIGBUS.
+
+Note that -EBUSY might have been a more logical error code, but that is
+already used for many other error cases from memory_failure().
+
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- arch/x86/kvm/svm/svm.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+ arch/x86/kernel/cpu/mce/core.c | 7 +++++--
+ mm/memory-failure.c            | 2 +-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 03dd7bac80348..0cfb8c08e744e 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3900,21 +3900,28 @@ static int svm_pre_enter_smm(struct kvm_vcpu *vcpu, char *smstate)
- static int svm_pre_leave_smm(struct kvm_vcpu *vcpu, const char *smstate)
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index fb6b5f64f7e6..8515809e0472 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1182,18 +1182,21 @@ static void kill_me_maybe(struct callback_head *cb)
  {
- 	struct vcpu_svm *svm = to_svm(vcpu);
--	struct vmcb *nested_vmcb;
- 	struct kvm_host_map map;
--	u64 guest;
--	u64 vmcb;
- 	int ret = 0;
+ 	struct task_struct *p = container_of(cb, struct task_struct, mce_kill_me);
+ 	int flags = MF_ACTION_REQUIRED;
++	int ret;
  
--	guest = GET_SMSTATE(u64, smstate, 0x7ed8);
--	vmcb = GET_SMSTATE(u64, smstate, 0x7ee0);
-+	if (guest_cpuid_has(vcpu, X86_FEATURE_LM)) {
-+		u64 saved_efer = GET_SMSTATE(u64, smstate, 0x7ed0);
-+		u64 guest = GET_SMSTATE(u64, smstate, 0x7ed8);
-+		u64 vmcb = GET_SMSTATE(u64, smstate, 0x7ee0);
+ 	pr_err("Uncorrected hardware memory error in user-access at %llx", p->mce_addr);
  
--	if (guest) {
--		if (kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(vmcb), &map) == -EINVAL)
--			return 1;
--		nested_vmcb = map.hva;
--		ret = enter_svm_guest_mode(svm, vmcb, nested_vmcb);
--		kvm_vcpu_unmap(&svm->vcpu, &map, true);
-+		if (guest) {
-+			if (!guest_cpuid_has(vcpu, X86_FEATURE_SVM))
-+				return 1;
-+
-+			if (!(saved_efer && EFER_SVME))
-+				return 1;
-+
-+			if (kvm_vcpu_map(&svm->vcpu,
-+					 gpa_to_gfn(vmcb), &map) == -EINVAL)
-+				return 1;
-+
-+			ret = enter_svm_guest_mode(svm, vmcb, map.hva);
-+			kvm_vcpu_unmap(&svm->vcpu, &map, true);
-+		}
+ 	if (!p->mce_ripv)
+ 		flags |= MF_MUST_KILL;
+ 
+-	if (!memory_failure(p->mce_addr >> PAGE_SHIFT, flags)) {
++	ret = memory_failure(p->mce_addr >> PAGE_SHIFT, flags);
++	if (!ret) {
+ 		set_mce_nospec(p->mce_addr >> PAGE_SHIFT, p->mce_whole_page);
+ 		return;
  	}
  
- 	return ret;
+-	pr_err("Memory error not recovered");
++	if (ret != -EEXIST)
++		pr_err("Memory error not recovered");
+ 	kill_me_now(cb);
+ }
+ 
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index f1aa6433f404..e0486c4e0130 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -1298,7 +1298,7 @@ int memory_failure(unsigned long pfn, int flags)
+ 	if (TestSetPageHWPoison(p)) {
+ 		pr_err("Memory failure: %#lx: already hardware poisoned\n",
+ 			pfn);
+-		return 0;
++		return -EEXIST;
+ 	}
+ 
+ 	orig_head = hpage = compound_head(p);
 -- 
-2.26.2
+2.21.1
 
