@@ -2,143 +2,207 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DA9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBA8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38C2022CAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:14:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598534089;
-	bh=Bi9r01y/oAwP2vlIGYEvJd0db7VUaWRQRZh/kykfMJk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=WL0Wp0aYd8Z2AhpmPj031O/gh1SQKd+nCOKnIiuQz2anlTCUDrzrn6HE01o+4btD9
-	 cOa/dEkpT9qxsL+bO70+ZBH7M55FnCxN+NnEyJvo0VjsXCvwjF1flSqjll9Rw/OHrG
-	 ZogY2Xxp94FKn9TE9fU1Jwx0L+MUBYEIV8GBghRg=
+	by mail.kernel.org (Postfix) with ESMTP id 1FDE222B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:16:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T+PQdPUZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgH0NNm (ORCPT
+        id S1727078AbgH0NQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 09:13:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbgH0NKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:10:34 -0400
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi [91.155.214.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC9BD22CB2;
-        Thu, 27 Aug 2020 13:03:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598533434;
-        bh=Bi9r01y/oAwP2vlIGYEvJd0db7VUaWRQRZh/kykfMJk=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=EKheZYsk+i9D/SZWLSwwwgH5/wMI9ndeycv8LzX2TwhOCzJKdQ4c1PxaolOoO5qcj
-         bqiw9EnLZFDZHlGopD7a7/SyhwivnFqCm2EUXSHr/E1FZ3zXuuf1bvhXiJmwxGKgZO
-         xB9vsq9i2/TByOTvUuFhNH6l3GyNUtViwepcmJtc=
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Macpaul Lin <macpaul.lin@mediatek.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Cc:     Ainge Hsu <ainge.hsu@mediatek.com>,
-        Eddie Hung <eddie.hung@mediatek.com>,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v3] usb: mtu3: fix panic in mtu3_gadget_stop()
-In-Reply-To: <1598520178-17301-1-git-send-email-macpaul.lin@mediatek.com>
-References: <1596185878-24360-1-git-send-email-macpaul.lin@mediatek.com>
- <1598520178-17301-1-git-send-email-macpaul.lin@mediatek.com>
-Date:   Thu, 27 Aug 2020 16:03:46 +0300
-Message-ID: <87pn7ci6kt.fsf@kernel.org>
+        Thu, 27 Aug 2020 09:16:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8376 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727783AbgH0NLb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 09:11:31 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07RD2vHi055811;
+        Thu, 27 Aug 2020 09:11:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=sDhbinly1FIF+6k2Ac+2kNU9+2RhMtPqGLaeIbq+/FQ=;
+ b=T+PQdPUZ2wiQvbqllzL0YgFcGdbTXDBzDziANeycePgjXKIhj3ngvnWZHBqnm/q9187T
+ yxFQ/2J/sg/CwJa/ls97XoCl6f3OfrP+i9D8LdlIiICjzQ3k1paoDPuFwFkTEP5qWbsa
+ ph+FpDAE48YGgZkBVXxcLYXqaKt7TMHd7FUmvNDdMLz/0psgRf7V9jBQvUB+Ar5Fqvel
+ /omoH/gEAB8yhJVRZkE+nM2VxjZswvjtxVyOU1EgbmgJ89lFw6RQu2nKJ3d4bOnOPYPj
+ sCVYm6dxsXDkmtENAJKbsYhbYVScWx++YAOeTExyQEFtz6sKFcjc2bnyZ58kxTJ8ARlN Gg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 336d508rwr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 09:11:05 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07RD32O4056116;
+        Thu, 27 Aug 2020 09:11:04 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 336d508rvw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 09:11:04 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07RD8qal020355;
+        Thu, 27 Aug 2020 13:11:03 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04fra.de.ibm.com with ESMTP id 332ujjugpd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 13:11:02 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07RDAx8T22348132
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Aug 2020 13:11:00 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D2098A4054;
+        Thu, 27 Aug 2020 13:10:59 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E6BE6A405B;
+        Thu, 27 Aug 2020 13:10:54 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.79.210.202])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 27 Aug 2020 13:10:54 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     acme@kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, pc@us.ibm.com,
+        jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com,
+        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
+        john.garry@huawei.com, kjain@linux.ibm.com
+Subject: [PATCH v6 3/5] perf jevents: Add support for parsing perchip/percore events
+Date:   Thu, 27 Aug 2020 18:39:56 +0530
+Message-Id: <20200827130958.189146-4-kjain@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200827130958.189146-1-kjain@linux.ibm.com>
+References: <20200827130958.189146-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-27_07:2020-08-27,2020-08-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ phishscore=0 lowpriorityscore=0 priorityscore=1501 clxscore=1015
+ suspectscore=1 malwarescore=0 mlxscore=0 spamscore=0 impostorscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008270094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Initially, every time we want to add new terms like chip, core thread etc,
+we need to create corrsponding fields in pmu_events and event struct.
+This patch adds an enum called 'aggr_mode_class' which store all these
+aggregation like perchip/percore. It also adds new field 'aggr_mode'
+to capture these terms.
+Now, if user wants to add any new term, they just need to add it in
+the enum defined.
 
-Macpaul Lin <macpaul.lin@mediatek.com> writes:
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+---
+ tools/perf/pmu-events/jevents.c    | 16 ++++++++++++++++
+ tools/perf/pmu-events/pmu-events.h |  6 ++++++
+ 2 files changed, 22 insertions(+)
 
-> This patch fixes a possible issue when mtu3_gadget_stop()
-> already assigned NULL to mtu->gadget_driver during mtu_gadget_disconnect(=
-).
->
-> [<ffffff9008161974>] notifier_call_chain+0xa4/0x128
-> [<ffffff9008161fd4>] __atomic_notifier_call_chain+0x84/0x138
-> [<ffffff9008162ec0>] notify_die+0xb0/0x120
-> [<ffffff900809e340>] die+0x1f8/0x5d0
-> [<ffffff90080d03b4>] __do_kernel_fault+0x19c/0x280
-> [<ffffff90080d04dc>] do_bad_area+0x44/0x140
-> [<ffffff90080d0f9c>] do_translation_fault+0x4c/0x90
-> [<ffffff9008080a78>] do_mem_abort+0xb8/0x258
-> [<ffffff90080849d0>] el1_da+0x24/0x3c
-> [<ffffff9009bde01c>] mtu3_gadget_disconnect+0xac/0x128
-> [<ffffff9009bd576c>] mtu3_irq+0x34c/0xc18
-> [<ffffff90082ac03c>] __handle_irq_event_percpu+0x2ac/0xcd0
-> [<ffffff90082acae0>] handle_irq_event_percpu+0x80/0x138
-> [<ffffff90082acc44>] handle_irq_event+0xac/0x148
-> [<ffffff90082b71cc>] handle_fasteoi_irq+0x234/0x568
-> [<ffffff90082a8708>] generic_handle_irq+0x48/0x68
-> [<ffffff90082a96ac>] __handle_domain_irq+0x264/0x1740
-> [<ffffff90080819f4>] gic_handle_irq+0x14c/0x250
-> [<ffffff9008084cec>] el1_irq+0xec/0x194
-> [<ffffff90085b985c>] dma_pool_alloc+0x6e4/0xae0
-> [<ffffff9008d7f890>] cmdq_mbox_pool_alloc_impl+0xb0/0x238
-> [<ffffff9008d80904>] cmdq_pkt_alloc_buf+0x2dc/0x7c0
-> [<ffffff9008d80f60>] cmdq_pkt_add_cmd_buffer+0x178/0x270
-> [<ffffff9008d82320>] cmdq_pkt_perf_begin+0x108/0x148
-> [<ffffff9008d824d8>] cmdq_pkt_create+0x178/0x1f0
-> [<ffffff9008f96230>] mtk_crtc_config_default_path+0x328/0x7a0
-> [<ffffff90090246cc>] mtk_drm_idlemgr_kick+0xa6c/0x1460
-> [<ffffff9008f9bbb4>] mtk_drm_crtc_atomic_begin+0x1a4/0x1a68
-> [<ffffff9008e8df9c>] drm_atomic_helper_commit_planes+0x154/0x878
-> [<ffffff9008f2fb70>] mtk_atomic_complete.isra.16+0xe80/0x19c8
-> [<ffffff9008f30910>] mtk_atomic_commit+0x258/0x898
-> [<ffffff9008ef142c>] drm_atomic_commit+0xcc/0x108
-> [<ffffff9008ef7cf0>] drm_mode_atomic_ioctl+0x1c20/0x2580
-> [<ffffff9008ebc768>] drm_ioctl_kernel+0x118/0x1b0
-> [<ffffff9008ebcde8>] drm_ioctl+0x5c0/0x920
-> [<ffffff900863b030>] do_vfs_ioctl+0x188/0x1820
-> [<ffffff900863c754>] SyS_ioctl+0x8c/0xa0
->
-> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-> Cc: stable@vger.kernel.org
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index b205cd904a4f..f4ad2d403533 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -48,6 +48,7 @@
+ #include <linux/list.h>
+ #include "jsmn.h"
+ #include "json.h"
++#include "pmu-events.h"
+ 
+ int verbose;
+ char *prog;
+@@ -60,6 +61,7 @@ struct json_event {
+ 	char *pmu;
+ 	char *unit;
+ 	char *perpkg;
++	char *aggr_mode;
+ 	char *metric_expr;
+ 	char *metric_name;
+ 	char *metric_group;
+@@ -74,6 +76,14 @@ struct json_event {
+ 	(void)(&_min1 == &_min2);		\
+ 	_min1 < _min2 ? _min1 : _min2; })
+ #endif
++enum aggr_mode_class convert(const char *aggr_mode)
++{
++	if (!strcmp(aggr_mode, "PerCore"))
++		return PerCore;
++	else if (!strcmp(aggr_mode, "PerChip"))
++		return PerChip;
++	return -1;
++}
+ 
+ typedef int (*func)(void *data, struct json_event *je);
+ 
+@@ -368,6 +378,8 @@ static int print_events_table_entry(void *data, struct json_event *je)
+ 		fprintf(outfp, "\t.unit = \"%s\",\n", je->unit);
+ 	if (je->perpkg)
+ 		fprintf(outfp, "\t.perpkg = \"%s\",\n", je->perpkg);
++	if (je->aggr_mode)
++		fprintf(outfp, "\t.aggr_mode = \"%d\",\n", convert(je->aggr_mode));
+ 	if (je->metric_expr)
+ 		fprintf(outfp, "\t.metric_expr = \"%s\",\n", je->metric_expr);
+ 	if (je->metric_name)
+@@ -392,6 +404,7 @@ struct event_struct {
+ 	char *pmu;
+ 	char *unit;
+ 	char *perpkg;
++	char *aggr_mode;
+ 	char *metric_expr;
+ 	char *metric_name;
+ 	char *metric_group;
+@@ -421,6 +434,7 @@ struct event_struct {
+ 	op(pmu);						\
+ 	op(unit);						\
+ 	op(perpkg);						\
++	op(aggr_mode);						\
+ 	op(metric_expr);					\
+ 	op(metric_name);					\
+ 	op(metric_group);					\
+@@ -627,6 +641,8 @@ int json_events(const char *fn,
+ 				addfield(map, &je.unit, "", "", val);
+ 			} else if (json_streq(map, field, "PerPkg")) {
+ 				addfield(map, &je.perpkg, "", "", val);
++			} else if (json_streq(map, field, "AggregationMode")) {
++				addfield(map, &je.aggr_mode, "", "", val);
+ 			} else if (json_streq(map, field, "Deprecated")) {
+ 				addfield(map, &je.deprecated, "", "", val);
+ 			} else if (json_streq(map, field, "MetricName")) {
+diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+index c8f306b572f4..7da1a3743b77 100644
+--- a/tools/perf/pmu-events/pmu-events.h
++++ b/tools/perf/pmu-events/pmu-events.h
+@@ -2,6 +2,11 @@
+ #ifndef PMU_EVENTS_H
+ #define PMU_EVENTS_H
+ 
++enum aggr_mode_class {
++	PerChip = 1,
++	PerCore
++};
++
+ /*
+  * Describe each PMU event. Each CPU has a table of PMU events.
+  */
+@@ -14,6 +19,7 @@ struct pmu_event {
+ 	const char *pmu;
+ 	const char *unit;
+ 	const char *perpkg;
++	const char *aggr_mode;
+ 	const char *metric_expr;
+ 	const char *metric_name;
+ 	const char *metric_group;
+-- 
+2.26.2
 
-missing a Fixes: line here
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJFBAEBCAAvFiEElLzh7wn96CXwjh2IzL64meEamQYFAl9HrzIRHGJhbGJpQGtl
-cm5lbC5vcmcACgkQzL64meEamQZO7xAAm9sZr6+KnTpU/DKiIVja1ris7ncWwhNs
-bxcz1Idubfaxfe+v/+u66DxuOhBSuJhvUo3jXEZdvvKIP7iEpU6Ei2VuCN3d6Shu
-uImPZhqqio4JQVBAGDE5YOdLEQQt9tnJL0fH2MnE6IdaLSPuU9/FFtz6oa8iZrFa
-JJqbs6iiJsgQUUJIO59Rh1eNJNAX4oU+aIKYjjU6zefSUIEJ+tGnYfjP14bCIZaN
-lB90TrO96W26M65sZq1C16aF8+m6FWEqxB8vJDx9csJT1muiki1Gal4TB2X7+94v
-bbJcZsOZQlsYeT9YXOxkxJcavVuByyH28W7HdjLEe8YIs21vSwla7L1YFrt9dNP6
-7pzCsvnecuQtGRZACDFn5fPSQ12wLGlw0Tm1ViI6YLtZshfWWFeKYufk6cIHiksD
-PILbl4ulERm2+GhEtJX2k9h4EypKjEmzsjdzzi+/CqF22qWphqP9IIwXClQ3ZOU1
-RrM0M1eIR4UBW4pPUeOxAX1evZHmMU0kS1MyAYwzzGwwk3foMrtQd4h5jt/G06+/
-E6yIjFoMrtUGMxcFQr/fFQwMYG1BJByE5XsS1l8p2JS7CfH3b7CadfA6sGrDCRqF
-QVj0EgD7JKgrpwjgAm8pnTkskZAxxSWyFNMiJyWRhKfhCjfv0pmjYIaeJJAXtK3j
-nR/RQXhFEv4=
-=iB0O
------END PGP SIGNATURE-----
---=-=-=--
