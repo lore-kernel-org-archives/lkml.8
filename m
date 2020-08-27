@@ -2,150 +2,107 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1721FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32E542080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:33:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KBNvfVk4"
+	by mail.kernel.org (Postfix) with ESMTP id E702D2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:35:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598524517;
+	bh=j53l6xpN5pfCrGpF8KAKqigp2K/D3ZSlNkM8qZH4iBM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GW0H5Qk7AIb/ZKygCOW3ri5G1Yyo+zVAMGZVdmZ7xvT0A2a21aOWDWWXbeEI3nTQo
+	 2vYF8tlfVMzDgwfmbx3ubuuqVI9E6uCI2aekQIUZLYnFy1enmABm/RF+3HpDWvKax+
+	 zp5GKiU3ainqlbmXX2xZIn8g1Wnd/5GLu01Xw0jQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgH0KdG (ORCPT
+        id S1728405AbgH0KfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:33:06 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34138 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726938AbgH0KdF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:33:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598524383;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xVl6R1XwWuiNXr6HJxlhlEi6Bd9mQNsLml7GXEW9cbY=;
-        b=KBNvfVk4wLbCc/T/Ta6KRmLbtmKwx4c5cQKU+lHP2ah3eRmMe/+ly7owokNLHn6AsWnH6H
-        4UFjgt43kV2cz7sECxWNrZazCM+6NF0bQ59K7aW3JSHFVBA/S00qT4dkN2tNIVTdTWdv1Y
-        TJ/LQEVgniya4j01jEk3L1q/dP4UUiA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-275-bdNbO0IPPrq-tf0swTDF9Q-1; Thu, 27 Aug 2020 06:33:00 -0400
-X-MC-Unique: bdNbO0IPPrq-tf0swTDF9Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 27 Aug 2020 06:35:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728172AbgH0KfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 06:35:09 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84F94803F58;
-        Thu, 27 Aug 2020 10:32:46 +0000 (UTC)
-Received: from gondolin (ovpn-113-237.ams2.redhat.com [10.36.113.237])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E5D97196F3;
-        Thu, 27 Aug 2020 10:32:42 +0000 (UTC)
-Date:   Thu, 27 Aug 2020 12:32:40 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v10 01/16] s390/vfio-ap: add version vfio_ap module
-Message-ID: <20200827123240.42e0c787.cohuck@redhat.com>
-In-Reply-To: <ca016eca-1ee7-2d0f-c2ec-3ef147b6216a@linux.ibm.com>
-References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
-        <20200821195616.13554-2-akrowiak@linux.ibm.com>
-        <20200825120432.13a1b444.cohuck@redhat.com>
-        <ca016eca-1ee7-2d0f-c2ec-3ef147b6216a@linux.ibm.com>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D7AE2080C;
+        Thu, 27 Aug 2020 10:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598524508;
+        bh=j53l6xpN5pfCrGpF8KAKqigp2K/D3ZSlNkM8qZH4iBM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=1QJbiyzNg3t5cOLZnLALBry05iDYnUfmlvxdMa+gNBq+poiejYDO/HotOcgm2kQrr
+         OCvUO1JJ0veZ52Vd9ETYHdmWCcvQp7Sgv9Q+8D/+HNX9Y+2VVnBweShMgDbzgzeKLu
+         OMBNP7tvMokoJgPZOtwj/knq9U5MtWlwARObRb+4=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kBFFK-0076Gl-U5; Thu, 27 Aug 2020 11:35:07 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Date:   Thu, 27 Aug 2020 11:35:06 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH v5 1/3] dt-bindings: interrupt-controller: Add Actions
+ SIRQ controller binding
+In-Reply-To: <20200827100629.GA2451538@BV030612LT>
+References: <cover.1597852360.git.cristian.ciocaltea@gmail.com>
+ <6bd99d4a7e50904b57bb3ad050725fbb418874b7.1597852360.git.cristian.ciocaltea@gmail.com>
+ <20200825220913.GA1423455@bogus> <20200826214220.GA2444747@BV030612LT>
+ <CAL_JsqLvXDFL6vFooPYLJ1QnZ7L756fNesXo-LW_scs9rV-zPA@mail.gmail.com>
+ <20200827100629.GA2451538@BV030612LT>
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <64580e3b9acada6ff4ae9fdef02ac304@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: cristian.ciocaltea@gmail.com, robh@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, afaerber@suse.de, manivannan.sadhasivam@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 10:49:47 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On 2020-08-27 11:06, Cristian Ciocaltea wrote:
+> On Wed, Aug 26, 2020 at 04:48:38PM -0600, Rob Herring wrote:
+>> On Wed, Aug 26, 2020 at 3:42 PM Cristian Ciocaltea
+>> <cristian.ciocaltea@gmail.com> wrote:
 
-> On 8/25/20 6:04 AM, Cornelia Huck wrote:
-> > On Fri, 21 Aug 2020 15:56:01 -0400
-> > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-> >  
-> >> Let's set a version for the vfio_ap module so that automated regression
-> >> tests can determine whether dynamic configuration tests can be run or
-> >> not.
-> >>
-> >> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> >> ---
-> >>   drivers/s390/crypto/vfio_ap_drv.c | 2 ++
-> >>   1 file changed, 2 insertions(+)
-> >>
-> >> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
-> >> index be2520cc010b..f4ceb380dd61 100644
-> >> --- a/drivers/s390/crypto/vfio_ap_drv.c
-> >> +++ b/drivers/s390/crypto/vfio_ap_drv.c
-> >> @@ -17,10 +17,12 @@
-> >>   
-> >>   #define VFIO_AP_ROOT_NAME "vfio_ap"
-> >>   #define VFIO_AP_DEV_NAME "matrix"
-> >> +#define VFIO_AP_MODULE_VERSION "1.2.0"
-> >>   
-> >>   MODULE_AUTHOR("IBM Corporation");
-> >>   MODULE_DESCRIPTION("VFIO AP device driver, Copyright IBM Corp. 2018");
-> >>   MODULE_LICENSE("GPL v2");
-> >> +MODULE_VERSION(VFIO_AP_MODULE_VERSION);
-> >>   
-> >>   static struct ap_driver vfio_ap_drv;
-> >>     
-> > Setting a version manually has some drawbacks:
-> > - tools wanting to check for capabilities need to keep track which
-> >    versions support which features
-> > - you need to remember to actually bump the version when adding a new,
-> >    visible feature
-> > (- selective downstream backports may get into a pickle, but that's
-> > arguably not your problem)
-> >
-> > Is there no way for a tool to figure out whether this is supported?
-> > E.g., via existence of a sysfs file, or via a known error that will
-> > occur. If not, it's maybe better to expose known capabilities via a
-> > generic interface.  
+[...]
+
+>> Ultimately the GIC trigger type has to be
+>> something. Is it fixed or passed thru? If the latter, just use 0
+>> (IRQ_TYPE_NONE) if the GIC trigger mode is not fixed. Having some sort
+>> of translation of the trigger is pretty common.
 > 
-> This patch series introduces a new mediated device sysfs attribute,
-> guest_matrix, so the automated tests could check for the existence
-> of that interface. The problem I have with that is it will work for
-> this version of the vfio_ap device driver - which may be all that is
-> ever needed - but does not account for future enhancements
-> which may need to be detected by tooling or automated tests.
-> It seems to me that regardless of how a tool detects whether
-> a feature is supported or not, it will have to keep track of that
-> somehow.
+> Yes, as explained above, the SIRQ controller performs indeed the
+> translation of the incoming signal. So if I understand correctly, your
+> suggestion would be to use the following inside the sirq node:
+> 
+> interrupts = <GIC_SPI 13 IRQ_TYPE_NONE>, /* SIRQ0 */
+>              [...]
 
-Which enhancements? If you change the interface in an incompatible way,
-you have a different problem anyway. If someone trying to use the
-enhanced version of the interface gets an error on a kernel providing
-an older version of the interface, that's a reasonable way to discover
-support.
+Please don't. If you are describing a GIC interrupt, use a
+trigger that actually exists. Given that you have a 1:1
+mapping between input and output, just encode the output
+trigger that matches the input.
 
-I think "discover device driver capabilities by probing" is less
-burdensome and error prone than trying to match up capabilities with a
-version number. If you expose a version number, a tool would still have
-to probe that version number, and then consult with a list of features
-per version, which can easily go out of sync.
-
-> Can you provide more details about this generic interface of
-> which you speak?
-
-If that is really needed, I'd probably do a driver sysfs attribute that
-exposes a list of documented capabilities (as integer values, or as a
-bit.) But since tools can simply check for guest_matrix to find out
-about support for this feature here, it seems like overkill to me --
-unless you have a multitude of features waiting in queue that need to
-be made discoverable.
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
