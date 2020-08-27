@@ -2,100 +2,85 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 500DEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21B7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24DE92087D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51F32087D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:33:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgH0OdR (ORCPT
+        id S1728113AbgH0Od0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:33:17 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:45168 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727913AbgH0O3I (ORCPT
+        Thu, 27 Aug 2020 10:33:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727927AbgH0O3I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 10:29:08 -0400
-Received: from [78.134.86.56] (port=42726 helo=[192.168.77.62])
-        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1kBItY-0004dO-C9; Thu, 27 Aug 2020 16:28:52 +0200
-Subject: Re: [PATCH 1/3] fpga manager: xilinx-spi: remove stray comment
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     linux-fpga@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anatolij Gustschin <agust@denx.de>
-References: <20200817165911.32589-1-luca@lucaceresoli.net>
- <20200820041110.GA4022@epycbox.lan>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <3fe28140-0ea1-90a1-d5a0-1ca5fa83cb8e@lucaceresoli.net>
-Date:   Thu, 27 Aug 2020 16:28:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C144C061264;
+        Thu, 27 Aug 2020 07:28:54 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBItU-005aDQ-Dk; Thu, 27 Aug 2020 14:28:48 +0000
+Date:   Thu, 27 Aug 2020 15:28:48 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yuqi Jin <jinyuqi@huawei.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: [NAK] Re: [PATCH] fs: Optimized fget to improve performance
+Message-ID: <20200827142848.GZ1236603@ZenIV.linux.org.uk>
+References: <1598523584-25601-1-git-send-email-zhangshaokun@hisilicon.com>
 MIME-Version: 1.0
-In-Reply-To: <20200820041110.GA4022@epycbox.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1598523584-25601-1-git-send-email-zhangshaokun@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Moritz,
-
-On 20/08/20 06:11, Moritz Fischer wrote:
-> On Mon, Aug 17, 2020 at 06:59:09PM +0200, Luca Ceresoli wrote:
->> Remove comment committed by mistake.
->>
->> Fixes: dd2784c01d93 ("fpga manager: xilinx-spi: check INIT_B pin during write_init")
->> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->> ---
->>  drivers/fpga/xilinx-spi.c | 1 -
->>  1 file changed, 1 deletion(-)
->>
->> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
->> index 2967aa2a74e2..502fae0d1d85 100644
->> --- a/drivers/fpga/xilinx-spi.c
->> +++ b/drivers/fpga/xilinx-spi.c
->> @@ -57,7 +57,6 @@ static int wait_for_init_b(struct fpga_manager *mgr, int value,
->>  
->>  	if (conf->init_b) {
->>  		while (time_before(jiffies, timeout)) {
->> -			/* dump_state(conf, "wait for init_d .."); */
->>  			if (gpiod_get_value(conf->init_b) == value)
->>  				return 0;
->>  			usleep_range(100, 400);
->> -- 
->> 2.28.0
->>
+On Thu, Aug 27, 2020 at 06:19:44PM +0800, Shaokun Zhang wrote:
+> From: Yuqi Jin <jinyuqi@huawei.com>
 > 
-> Applied to for-next,
-> 
-> Thanks
-> 
+> It is well known that the performance of atomic_add is better than that of
+> atomic_cmpxchg.
+> The initial value of @f_count is 1. While @f_count is increased by 1 in
+> __fget_files, it will go through three phases: > 0, < 0, and = 0. When the
+> fixed value 0 is used as the condition for terminating the increase of 1,
+> only atomic_cmpxchg can be used. When we use < 0 as the condition for
+> stopping plus 1, we can use atomic_add to obtain better performance.
 
-Thanks, but still I don't see it. Missing push?
+Suppose another thread has just removed it from the descriptor table.
 
-As I'm sending a v2 patch series, I'll keep this patch for now, just in
-case.
+> +static inline bool get_file_unless_negative(atomic_long_t *v, long a)
+> +{
+> +	long c = atomic_long_read(v);
+> +
+> +	if (c <= 0)
+> +		return 0;
 
--- 
-Luca
+Still 1.  Now the other thread has gotten to dropping the last reference,
+decremented counter to zero and committed to freeing the struct file.
+
+> +
+> +	return atomic_long_add_return(a, v) - 1;
+
+... and you increment that sucker back to 1.  Sure, you return 0, so the
+caller does nothing to that struct file.  Which includes undoing the
+changes to its refecount.
+
+In the meanwhile, the third thread does fget on the same descriptor,
+and there we end up bumping the refcount to 2 and succeeding.  Which
+leaves the caller with reference to already doomed struct file...
+
+	IOW, NAK - this is completely broken.  The whole point of
+atomic_long_add_unless() is that the check and conditional increment
+are atomic.  Together.  That's what your optimization takes out.
