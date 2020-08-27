@@ -2,105 +2,131 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 482FFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C594C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2054420786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B1F020786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:14:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dubMJMWF"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="iKY1zfvQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgH0GNl (ORCPT
+        id S1727048AbgH0GOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:13:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgH0GNk (ORCPT
+        Thu, 27 Aug 2020 02:14:21 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47618 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725909AbgH0GOU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:13:40 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02A84C061258;
-        Wed, 26 Aug 2020 23:13:39 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id i10so5106617ljn.2;
-        Wed, 26 Aug 2020 23:13:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yCsGVzEa07QpG25wdJdogsPOJiE4mf7jTXesPysELoE=;
-        b=dubMJMWFseFCK/JlFJEZLfYxiKZ6SlXQuvC6LDPHmsM/qt1zRg1Ck0pfUj9eZNgeca
-         1Oed9X7K110/5xRKzFTKVqDx6SQ0KndBu5iHQZtMqB5lvLN+N446BxTQ9zvt2jrK8lpk
-         NlU/omUmIKDg58VUNe0U7w4JE3Yq6DwA3bEWQ9ClLc78RoV6y/lTK3skBSwp+GXYhmgD
-         b3zXayl5ujX6cmfCjOv1eKYx/qpEvG7d0RJblcqL2qCFEcC7Gd0JQGD9NHgKcdsJvUDd
-         vUGfgsn0nlYe+s8aqDhU6y42xgHTpLNXUDy79h7dYOuPs4D5gzLQ8BgHU2HVNPzcoM9m
-         GdVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yCsGVzEa07QpG25wdJdogsPOJiE4mf7jTXesPysELoE=;
-        b=Umj3bwsHFOzzut73j8C1rDCoPIkDzyv6/fuVOhTASXk6KnIrqs9SvdXrdFRFNYqVn5
-         er4VwqvoHByCe2PNTcpVxk8MkdA+Ro6Qo5tGqDhAV/CFtOiejtZQ4pAjmfhvUBr/raEr
-         WjCfFEoKQZ1U/KTtNi1BQVfQ8NrLHGb0rQenzBfg3jP82M8Lr3a9Fxj29MmXC72nPCE2
-         FbLlrPq2pOfagmaVLpw8OhYEUvDYk+AUDgiVW4zLdR6Zs1Pae7P+Wj7ow4I7tDnYF/71
-         HmeLe+13sq/sc5qXmvSmXstRtyjTHFWSM5xzJVWw7HRc2y68HUBkmS0S3pCzdbSQb6/X
-         KRHA==
-X-Gm-Message-State: AOAM531XIhgPsVI72CvSV2GZmxLpTzs/tFWpbSMcvsJFpIqgPRwyY4Tz
-        Vlsax18NeLZHqOg9/E3qPUb5+GOYg1I=
-X-Google-Smtp-Source: ABdhPJzpj2rXc21C8Y+4YKa0N4ooD3Kd3IswfRU0tkhitEzjF7/P6HGWsVaPjb6jod4eSKlGxK1Ecg==
-X-Received: by 2002:a2e:8e9a:: with SMTP id z26mr8408692ljk.271.1598508817298;
-        Wed, 26 Aug 2020 23:13:37 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id y64sm260128lfc.50.2020.08.26.23.13.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Aug 2020 23:13:36 -0700 (PDT)
-Subject: Re: [PATCH v2 1/4] brcmfmac: increase F2 watermark for BCM4329
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200827060441.15487-1-digetx@gmail.com>
- <20200827060441.15487-2-digetx@gmail.com>
-Message-ID: <ba942825-e165-68f1-00d1-81cc66ff518b@gmail.com>
-Date:   Thu, 27 Aug 2020 09:13:00 +0300
+        Thu, 27 Aug 2020 02:14:20 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07R6323f126362;
+        Thu, 27 Aug 2020 02:14:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : date : mime-version : in-reply-to : content-type :
+ content-transfer-encoding : message-id; s=pp1;
+ bh=pJanTcRrSobhV+CnpT6ahbjTwZg7JOS2dPDEmkoPgs8=;
+ b=iKY1zfvQvtdfg4G1ZW7aU56VzxN6tQ9h3s+Pph3h8NmGMRpRXydotp4CXHgA9hdCoE2c
+ cRtzBrOQYDcW/u/gHuzyeXy3ihE3ewGrvNdhnPgG29JpbxHRiqiov5ljcOmudVFyRKrK
+ aEB0cRls1o/qF/R/CDg9OyeOw6RbuHXFZX/FBr9XTldb25RGip3Q8R2WLg5eI77ZaDRw
+ ZYm0e2jhJShjia9hXOUzg6xcfPjs35TpqG8G9RxYUQFPLlwxIQuz9GC0z9b1nAVHIeu7
+ hjrZkTQXpdWs0P5Yeak3LTfuwN4sD0Be/q6v8Qs/Foii5fsopLluZScYrbNmWFBn+Z59 rw== 
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33669ahu7n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 02:14:13 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07R6EBDU011234;
+        Thu, 27 Aug 2020 06:14:11 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04fra.de.ibm.com with ESMTP id 332ujju97r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 06:14:11 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07R6E9eC31523126
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Aug 2020 06:14:09 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1FD8952050;
+        Thu, 27 Aug 2020 06:14:09 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.43.157])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 8D34D5204F;
+        Thu, 27 Aug 2020 06:14:07 +0000 (GMT)
+Subject: Re: [PATCH 1/1] block: Set same_page to false in __bio_try_merge_page
+ if ret is false
+To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, axboe@kernel.dk,
+        Christoph Hellwig <hch@infradead.org>,
+        Shivaprasad G Bhat <sbhat@linux.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>
+References: <e50582833c897c1a51a676d7726d1380a3e5a678.1598032711.git.riteshh@linux.ibm.com>
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+Date:   Thu, 27 Aug 2020 11:44:06 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200827060441.15487-2-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <e50582833c897c1a51a676d7726d1380a3e5a678.1598032711.git.riteshh@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Message-Id: <20200827061407.8D34D5204F@d06av21.portsmouth.uk.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-27_01:2020-08-26,2020-08-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ spamscore=0 phishscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0
+ mlxlogscore=850 malwarescore=0 adultscore=0 bulkscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008270044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-27.08.2020 09:04, Dmitry Osipenko пишет:
-> This patch fixes SDHCI CRC errors during of RX throughput testing on
-> BCM4329 chip if SDIO BUS is clocked above 25MHz. In particular the
-> checksum problem is observed on NVIDIA Tegra20 SoCs. The good watermark
-> value is borrowed from downstream BCMDHD driver and it's matching to the
-> value that is already used for the BCM4339 chip, hence let's re-use it
-> for BCM4329.
+Hello Jens,
+
+On 8/21/20 11:41 PM, Ritesh Harjani wrote:
+> If we hit the UINT_MAX limit of bio->bi_iter.bi_size and so we are anyway
+> not merging this page in this bio, then it make sense to make same_page
+> also as false before returning.
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
+> Without this patch, we hit below WARNING in iomap.
+> This mostly happens with very large memory system and / or after tweaking
+> vm dirty threshold params to delay writeback of dirty data.
+> 
+> WARNING: CPU: 18 PID: 5130 at fs/iomap/buffered-io.c:74 iomap_page_release+0x120/0x150
+>   CPU: 18 PID: 5130 Comm: fio Kdump: loaded Tainted: G        W         5.8.0-rc3 #6
+>   Call Trace:
+>    __remove_mapping+0x154/0x320 (unreliable)
+>    iomap_releasepage+0x80/0x180
+>    try_to_release_page+0x94/0xe0
+>    invalidate_inode_page+0xc8/0x110
+>    invalidate_mapping_pages+0x1dc/0x540
+>    generic_fadvise+0x3c8/0x450
+>    xfs_file_fadvise+0x2c/0xe0 [xfs]
+>    vfs_fadvise+0x3c/0x60
+>    ksys_fadvise64_64+0x68/0xe0
+>    sys_fadvise64+0x28/0x40
+>    system_call_exception+0xf8/0x1c0
+>    system_call_common+0xf0/0x278
+> 
+> Suggested-by: Christoph Hellwig <hch@infradead.org>
+> Reported-by: Shivaprasad G Bhat <sbhat@linux.ibm.com>
+> Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
 
-I accidentally missed to add the r-b from Arend that he gave to the v1:
+Sorry, I forgot to add the fixes tag. I think below commit
+have introduced this. Let me know if you want me to
+re-send this patch with below fixes tag.
 
-Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=cc90bc68422318eb8e75b15cd74bc8d538a7df29
+
+
+-ritesh
 
