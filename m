@@ -2,95 +2,169 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B0DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C530F2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEBBF2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:17:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598541472;
+	bh=L/e1Ny4hhfpRjK1FA5n+uilobQaA7dHkNtzT1eO2uMQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HMTtMTx9QUlqwSfubnYguVeOaMEA2YNuful59ywiEV7Rtc9LfI3ZVJZlbl/WKwPEv
+	 eEOhgsU1oA0Zbv94Kzu6BDfGTp/W3ePA5zoZQYimklwID+ugJaw+vHhCd94kTiH4AV
+	 OhpBLC1klAkOMZ9j/ejobwbdIMvxJwisSIQAJbl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgH0PRi (ORCPT
+        id S1728446AbgH0PRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:17:38 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10285 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728753AbgH0Lge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 11:17:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728587AbgH0Lge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 07:36:34 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EBEC1A285DC439BF461F;
-        Thu, 27 Aug 2020 19:19:15 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Thu, 27 Aug 2020
- 19:19:07 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <pshelar@ovn.org>,
-        <fw@strlen.de>, <martin.varghese@nokia.com>, <edumazet@google.com>,
-        <dcaratti@redhat.com>, <steffen.klassert@secunet.com>,
-        <pabeni@redhat.com>, <shmulik@metanetworks.com>,
-        <kyk.segfault@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] net: Call ip_hdrlen() when skbuff is not fragment
-Date:   Thu, 27 Aug 2020 07:17:59 -0400
-Message-ID: <20200827111759.40336-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BCAD20738;
+        Thu, 27 Aug 2020 11:36:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598528193;
+        bh=L/e1Ny4hhfpRjK1FA5n+uilobQaA7dHkNtzT1eO2uMQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Q+aDRXx8TfVAT7m5TmuN5n/02uCAIiqjyCuQJ2oMqSevPXmDX+Ga59ykbZL4v/xCt
+         b74lZ63Iv++rBEepc3lNjuTfvskzrFxbxsUKH45Pag8eoAYSuRJuGM/4KmC7OYek2k
+         xQ1+8VYWbn4oSFDZ/cSHQUyM3ovfp129Ww2BvVhw=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
+Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, x86@kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        linux-arch@vger.kernel.org
+Subject: [PATCH v2 07/15] ia64: kprobes: Use generic kretprobe trampoline handler
+Date:   Thu, 27 Aug 2020 20:36:28 +0900
+Message-Id: <159852818798.707944.9249352111340231044.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <159852811819.707944.12798182250041968537.stgit@devnote2>
+References: <159852811819.707944.12798182250041968537.stgit@devnote2>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When skbuff is fragment, we exit immediately and leave ip_hdrlen() as
-unused. And remove the unnecessary local variable fragment.
-
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- net/core/skbuff.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ arch/ia64/kernel/kprobes.c |   79 ++------------------------------------------
+ 1 file changed, 4 insertions(+), 75 deletions(-)
 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 4dc92290becd..0b24aed04060 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -4843,28 +4843,20 @@ static __sum16 *skb_checksum_setup_ip(struct sk_buff *skb,
- static int skb_checksum_setup_ipv4(struct sk_buff *skb, bool recalculate)
+diff --git a/arch/ia64/kernel/kprobes.c b/arch/ia64/kernel/kprobes.c
+index 7a7df944d798..0e725ca9c60d 100644
+--- a/arch/ia64/kernel/kprobes.c
++++ b/arch/ia64/kernel/kprobes.c
+@@ -396,83 +396,11 @@ static void kretprobe_trampoline(void)
  {
- 	unsigned int off;
--	bool fragment;
- 	__sum16 *csum;
- 	int err;
+ }
  
--	fragment = false;
+-/*
+- * At this point the target function has been tricked into
+- * returning into our trampoline.  Lookup the associated instance
+- * and then:
+- *    - call the handler function
+- *    - cleanup by marking the instance as unused
+- *    - long jump back to the original return address
+- */
+ int __kprobes trampoline_probe_handler(struct kprobe *p, struct pt_regs *regs)
+ {
+-	struct kretprobe_instance *ri = NULL;
+-	struct hlist_head *head, empty_rp;
+-	struct hlist_node *tmp;
+-	unsigned long flags, orig_ret_address = 0;
+-	unsigned long trampoline_address =
+-		((struct fnptr *)kretprobe_trampoline)->ip;
 -
- 	err = skb_maybe_pull_tail(skb,
- 				  sizeof(struct iphdr),
- 				  MAX_IP_HDR_LEN);
- 	if (err < 0)
- 		goto out;
+-	INIT_HLIST_HEAD(&empty_rp);
+-	kretprobe_hash_lock(current, &head, &flags);
+-
+-	/*
+-	 * It is possible to have multiple instances associated with a given
+-	 * task either because an multiple functions in the call path
+-	 * have a return probe installed on them, and/or more than one return
+-	 * return probe was registered for a target function.
+-	 *
+-	 * We can handle this because:
+-	 *     - instances are always inserted at the head of the list
+-	 *     - when multiple return probes are registered for the same
+-	 *       function, the first instance's ret_addr will point to the
+-	 *       real return address, and all the rest will point to
+-	 *       kretprobe_trampoline
+-	 */
+-	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
+-		if (ri->task != current)
+-			/* another task is sharing our hash bucket */
+-			continue;
+-
+-		orig_ret_address = (unsigned long)ri->ret_addr;
+-		if (orig_ret_address != trampoline_address)
+-			/*
+-			 * This is the real return address. Any other
+-			 * instances associated with this task are for
+-			 * other calls deeper on the call stack
+-			 */
+-			break;
+-	}
+-
+-	regs->cr_iip = orig_ret_address;
+-
+-	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
+-		if (ri->task != current)
+-			/* another task is sharing our hash bucket */
+-			continue;
+-
+-		if (ri->rp && ri->rp->handler)
+-			ri->rp->handler(ri, regs);
+-
+-		orig_ret_address = (unsigned long)ri->ret_addr;
+-		recycle_rp_inst(ri, &empty_rp);
+-
+-		if (orig_ret_address != trampoline_address)
+-			/*
+-			 * This is the real return address. Any other
+-			 * instances associated with this task are for
+-			 * other calls deeper on the call stack
+-			 */
+-			break;
+-	}
+-	kretprobe_assert(ri, orig_ret_address, trampoline_address);
+-
+-	kretprobe_hash_unlock(current, &flags);
+-
+-	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
+-		hlist_del(&ri->hlist);
+-		kfree(ri);
+-	}
++	regs->cr_iip = __kretprobe_trampoline_handler(regs,
++				(unsigned long)kretprobe_trampoline,
++				NULL);
+ 	/*
+ 	 * By returning a non-zero value, we are telling
+ 	 * kprobe_handler() that we don't want the post_handler
+@@ -485,6 +413,7 @@ void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
+ 				      struct pt_regs *regs)
+ {
+ 	ri->ret_addr = (kprobe_opcode_t *)regs->b0;
++	ri->fp = NULL;
  
--	if (ip_is_fragment(ip_hdr(skb)))
--		fragment = true;
--
--	off = ip_hdrlen(skb);
--
- 	err = -EPROTO;
--
--	if (fragment)
-+	if (ip_is_fragment(ip_hdr(skb)))
- 		goto out;
- 
-+	off = ip_hdrlen(skb);
- 	csum = skb_checksum_setup_ip(skb, ip_hdr(skb)->protocol, off);
- 	if (IS_ERR(csum))
- 		return PTR_ERR(csum);
--- 
-2.19.1
+ 	/* Replace the return addr with trampoline addr */
+ 	regs->b0 = ((struct fnptr *)kretprobe_trampoline)->ip;
 
