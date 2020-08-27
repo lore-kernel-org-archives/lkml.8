@@ -2,88 +2,104 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49323C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CCFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21F1E22B47
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB6920738
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:28:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lAgktEuI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgH0I1r (ORCPT
+        id S1728172AbgH0I2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:27:47 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49986 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726826AbgH0I1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:27:46 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A50017913B2FB90F1E44;
-        Thu, 27 Aug 2020 16:27:44 +0800 (CST)
-Received: from [127.0.0.1] (10.67.76.251) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 27 Aug 2020
- 16:27:35 +0800
-Subject: Re: [PATCH RESEND] fs: Move @f_count to different cacheline with
- @f_mode
-To:     Aleksa Sarai <cyphar@cyphar.com>
-CC:     Will Deacon <will@kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Yuqi Jin <jinyuqi@huawei.com>
-References: <1592987548-8653-1-git-send-email-zhangshaokun@hisilicon.com>
- <20200821160252.GC21517@willie-the-truck>
- <a75e514c-7e2d-54ed-45d4-327b2a514e67@hisilicon.com>
- <20200826082401.c6j5fwrbhl7vgmhj@yavin.dot.cyphar.com>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <803a5202-6240-b062-b1d9-2aed0e11ebad@hisilicon.com>
-Date:   Thu, 27 Aug 2020 16:27:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <20200826082401.c6j5fwrbhl7vgmhj@yavin.dot.cyphar.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.76.251]
-X-CFilter-Loop: Reflected
+        Thu, 27 Aug 2020 04:28:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbgH0I17 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 04:27:59 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E66DC061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 01:27:58 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d22so2933133pfn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 01:27:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Fa/FRN51AnrOkZk0OKVdqIlVG6v9Zi3yinifrNAr+80=;
+        b=lAgktEuIy34dp/IL4VO/nhPacZQjx7ZS/GCyeGhWta/d87/ZuyFrJyuXa5+XCeh8aY
+         giY1uJQmPaVIllgUBTD6aq/USKvSqcZGHnGxGcxvokWkSD4TuR8D1y49FwOxq+wWyi2q
+         T1wjNwRavC055dQg7/3fgRc+4sA7pltoprZBfNLqLcGHCSTg90myRn3shmZ3x39tVkMA
+         LJybGFW6Yh6VSUMXP/ZRUZ7zxNA789r3+Yz4/lrOl+caDEmQRa6XhkI8vzPjfVTqvePr
+         +m1ZYaHcAviJ8AvaOPaPbGNVYSgdggBMw0EbqPSk8FDdkMDQysmARMCWFiGfQWuHkoiL
+         DUYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Fa/FRN51AnrOkZk0OKVdqIlVG6v9Zi3yinifrNAr+80=;
+        b=onX8FcLYglDGbraa8HQbcIiNGBALRbX/3WUyeZspUSr1haXy7uoGjRKfy2OjIABwHG
+         xiIxdkAl6sjAYiRehEQzHGJ6ldFdkHryjBnlbvCWZ4uVj9HQ1uKr8I9dcj3WKuacp/xy
+         YSiCZiURMWsOJmbdFny/2n/CK7I/WT6oQBtUG/f//KZ5DyA8GtitCM24zCkYOobwputu
+         Jk6LE3cJk8GIQt4HM+Rtnk57A++/vDr5XCWDvwPOAzJM7/lYBA5QIOuyuE1+AHf/z8fE
+         BFcEM1+dB23fgoT2N09uVcd9PO4Uhd75xvNj9Z+r1Ai9b6CFMieWkqQVUxSTdY2Z37FD
+         xqWA==
+X-Gm-Message-State: AOAM531f8HfpDn8JZNrWEQU0QgUWaJnpGsGg7FBKDEhiPel+0mCZMPUB
+        5KE9BuQ3phyn+s1OkN0scjA=
+X-Google-Smtp-Source: ABdhPJw0wpighmqc7EmYHrVUF+WfEIiNTI/2BA3wK7bI2s3bMt5o33dbBjrJNfbucH+HlrS3SadA7A==
+X-Received: by 2002:a63:4e56:: with SMTP id o22mr13163940pgl.381.1598516878036;
+        Thu, 27 Aug 2020 01:27:58 -0700 (PDT)
+Received: from localhost.localdomain ([117.192.156.236])
+        by smtp.gmail.com with ESMTPSA id ft11sm1443967pjb.13.2020.08.27.01.27.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 01:27:57 -0700 (PDT)
+From:   Vinay Simha BN <simhavcs@gmail.com>
+Cc:     Vinay Simha BN <simhavcs@gmail.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/bridge/tc358775: Fix semicolon
+Date:   Thu, 27 Aug 2020 13:56:57 +0530
+Message-Id: <1598516817-8240-1-git-send-email-simhavcs@gmail.com>
+X-Mailer: git-send-email 2.1.2
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Aleksa,
+Remove unneded semicolon
 
-在 2020/8/26 16:24, Aleksa Sarai 写道:
-> On 2020-08-26, Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
->> 在 2020/8/22 0:02, Will Deacon 写道:
->>>   - This thing is tagged with __randomize_layout, so it doesn't help anybody
->>>     using that crazy plugin
->>
->> This patch isolated the @f_count with @f_mode absolutely and we don't care the
->> base address of the structure, or I may miss something what you said.
-> 
-> __randomize_layout randomises the order of fields in a structure on each
-> kernel rebuild (to make attacks against sensitive kernel structures
-> theoretically harder because the offset of a field is per-build). It is
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+---
+ drivers/gpu/drm/bridge/tc358775.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-My bad, I missed Will's comments for my poor understanding on it.
-
-> separate to ASLR or other base-related randomisation. However it depends
-> on having CONFIG_GCC_PLUGIN_RANDSTRUCT=y and I believe (at least for
-> distribution kernels) this isn't a widely-used configuration.
-
-Thanks for more explanations about it, in our test, this config is also
-disabled. If having CONFIG_GCC_PLUGIN_RANDSTRUCT=y, it seems this patch
-will lose its value.
-If it isn't widely-used for this config, hopefully we can do something on
-the scene.
-
-Thanks,
-Shaokun
-
-> 
+diff --git a/drivers/gpu/drm/bridge/tc358775.c b/drivers/gpu/drm/bridge/tc358775.c
+index d951cdc..2272adc 100644
+--- a/drivers/gpu/drm/bridge/tc358775.c
++++ b/drivers/gpu/drm/bridge/tc358775.c
+@@ -485,7 +485,7 @@ static void tc_bridge_enable(struct drm_bridge *bridge)
+ 		val |= TC358775_LVCFG_PCLKDIV(DIVIDE_BY_6);
+ 	} else {
+ 		val |= TC358775_LVCFG_PCLKDIV(DIVIDE_BY_3);
+-	};
++	}
+ 	d2l_write(tc->i2c, LVCFG, val);
+ }
+ 
+-- 
+2.1.2
 
