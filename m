@@ -2,228 +2,159 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9174EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B95C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 669B2207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:53:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j/Iiqx0C"
+	by mail.kernel.org (Postfix) with ESMTP id D1106207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgH0JxR (ORCPT
+        id S1728295AbgH0Jye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:53:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgH0JxQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:53:16 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BEB6C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 02:53:16 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id h15so4725246wrt.12
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 02:53:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3S2ltGK2B4ahfxRE0OqRsWU+E5mMz97vYPSClpVkEpw=;
-        b=j/Iiqx0CIhx0nsty8bj+dxZr7X5let9JMzxAJtte6vf0GUcfyJn+kxd/lKo8+1aVU3
-         LEoLd1clGvpkQaBGLO6T22hrbWW3S8KWsahbXmqEp1+sSwllynNwQsbtOpuZrOnwGvqM
-         XCJCrMkGqxNCg1Y8mYDi07x+C2FsgXBF6bYz4iIeEkgH+T+4h7v2X6kT+DzKQ9btHwm4
-         b1WQKZKh48+9ZASVFD0W+dA+aGB6ZsGDeLi+EZEbtUJddD07+SrIXiriWuVFqaKfZhks
-         oUl1IkoQfBshCWgRjZvV1DId5tUXKSI25nx9fubmMDQDS7yn7DPzcIWVgP3PXaLAg7vu
-         Y6Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3S2ltGK2B4ahfxRE0OqRsWU+E5mMz97vYPSClpVkEpw=;
-        b=Do1VbYcf2lhMc9x1siACmBXnwt2nHeJYeyRokTxL+Ycd4xOqfAhMPt1Xh0N/V2nHOM
-         97pgwRekYziYCjQqvxd8ZCFrTrz3bpkgRCc5FTB/jJio8xrlZ0/WanpgR+rw/VSCpGD9
-         QGig/M1+JboXziM9mjtPalEjG36AGw+R2H2ik+XqYnc9/MGtD0f/3bw2wl3zHYEFXt6n
-         ynrNULanxpj1TV3THr4rCdDdBPo02Z1PoHt3hqAel4DkEetY6ZQ+GeCyfaRSsINkLy2g
-         SePTx8JK1TVrlSjqdHsw/KduM/OZsjNa0PItqv4FkSFkg/lQCmQ4arIL3fWY21JvFSvO
-         UzRg==
-X-Gm-Message-State: AOAM532Ux+VFmzlAmJsCUf+qkdDMg+/YHzaZIjkuZ7WZlvSFB57oFt+A
-        5GAoi0zOlaD760nj8qu2LD4=
-X-Google-Smtp-Source: ABdhPJxCQib2nyRWJhQUT1arhmXoAnRcByD/McQ+QvDCu5PGTRgjO4PCrkOK/qYUpcMj1POZM32MmA==
-X-Received: by 2002:a05:6000:1248:: with SMTP id j8mr106089wrx.292.1598521994965;
-        Thu, 27 Aug 2020 02:53:14 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.119.187])
-        by smtp.gmail.com with ESMTPSA id s8sm3707553wmc.1.2020.08.27.02.53.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 02:53:14 -0700 (PDT)
-Subject: Re: [RESEND PATCH v4] iommu/mediatek: check 4GB mode by reading
- infracfg
-To:     Miles Chen <miles.chen@mediatek.com>,
-        Joerg Roedel <joro@8bytes.org>, Rob Herring <robh@kernel.org>
-Cc:     iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com, Mike Rapoport <rppt@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Yong Wu <yong.wu@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20200826085618.2889-1-miles.chen@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <0d1a4c6d-03ce-a5c4-d17b-26f5203e899a@gmail.com>
-Date:   Thu, 27 Aug 2020 11:53:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Thu, 27 Aug 2020 05:54:34 -0400
+Received: from mga18.intel.com ([134.134.136.126]:16855 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbgH0Jyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:54:33 -0400
+IronPort-SDR: 6EwFLcfDa5CTaAAAoeSmLGZM+7jAd3C26xcXhdrNTckPT3UkVvFRCjpqc5SdFA3a00UkencRMv
+ O8aQQsooodjg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="144131056"
+X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
+   d="scan'208";a="144131056"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 02:54:32 -0700
+IronPort-SDR: zzFZZKfiIYitmUmayPFZKycyu6m5slei8hD8mOAqFMwUJjwnmBW+VS3KvVoctozMoVYE2ERCii
+ 5ywYwjjnQX8w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
+   d="scan'208";a="295672250"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 27 Aug 2020 02:54:32 -0700
+Received: from [10.255.146.64] (mreddy3x-MOBL.gar.corp.intel.com [10.255.146.64])
+        by linux.intel.com (Postfix) with ESMTP id ABFFA5806C6;
+        Thu, 27 Aug 2020 02:54:29 -0700 (PDT)
+Subject: Re: [PATCH v5 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, chuanhua.lei@linux.intel.com,
+        malliamireddy009@gmail.com
+References: <cover.1597381889.git.mallikarjunax.reddy@linux.intel.com>
+ <68c77fd2ffb477aa4a52a58f8a26bfb191d3c5d1.1597381889.git.mallikarjunax.reddy@linux.intel.com>
+ <20200814203222.GA2674896@bogus>
+ <7cdc0587-8b4f-4360-a303-1541c9ad57b2@linux.intel.com>
+ <20200825112107.GN2639@vkoul-mobl>
+From:   "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
+Message-ID: <ffa5ba4d-f1b2-6a30-f2f1-f4578a77bce2@linux.intel.com>
+Date:   Thu, 27 Aug 2020 17:54:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200826085618.2889-1-miles.chen@mediatek.com>
+In-Reply-To: <20200825112107.GN2639@vkoul-mobl>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Vinod,
+Thanks for the review comments.
 
-
-On 26/08/2020 10:56, Miles Chen wrote:
-> In previous discussion [1] and [2], we found that it is risky to
-> use max_pfn or totalram_pages to tell if 4GB mode is enabled.
-> 
-> Check 4GB mode by reading infracfg register, remove the usage
-> of the un-exported symbol max_pfn.
-> 
-> This is a step towards building mtk_iommu as a kernel module.
-> 
-> [1] https://lore.kernel.org/lkml/20200603161132.2441-1-miles.chen@mediatek.com/
-> [2] https://lore.kernel.org/lkml/20200604080120.2628-1-miles.chen@mediatek.com/
-> [3] https://lore.kernel.org/lkml/20200715205120.GA778876@bogus/
-> 
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Yong Wu <yong.wu@mediatek.com>
-> Cc: Yingjoe Chen <yingjoe.chen@mediatek.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
-
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-> 
-> ---
-> 
-> Change since v3
-> - use lore.kernel.org links
-> - move "change since..." after "---"
-> 
-> Change since v2:
-> - determine compatible string by m4u_plat
-> - rebase to next-20200720
-> - add "---"
-> 
-> Change since v1:
-> - remove the phandle usage, search for infracfg instead [3]
-> - use infracfg instead of infracfg_regmap
-> - move infracfg definitaions to linux/soc/mediatek/infracfg.h
-> - update enable_4GB only when has_4gb_mode
-> ---
->   drivers/iommu/mtk_iommu.c             | 34 +++++++++++++++++++++++----
->   include/linux/soc/mediatek/infracfg.h |  3 +++
->   2 files changed, 32 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index 785b228d39a6..adc350150492 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -3,7 +3,6 @@
->    * Copyright (c) 2015-2016 MediaTek Inc.
->    * Author: Yong Wu <yong.wu@mediatek.com>
->    */
-> -#include <linux/memblock.h>
->   #include <linux/bug.h>
->   #include <linux/clk.h>
->   #include <linux/component.h>
-> @@ -15,13 +14,16 @@
->   #include <linux/iommu.h>
->   #include <linux/iopoll.h>
->   #include <linux/list.h>
-> +#include <linux/mfd/syscon.h>
->   #include <linux/of_address.h>
->   #include <linux/of_iommu.h>
->   #include <linux/of_irq.h>
->   #include <linux/of_platform.h>
->   #include <linux/platform_device.h>
-> +#include <linux/regmap.h>
->   #include <linux/slab.h>
->   #include <linux/spinlock.h>
-> +#include <linux/soc/mediatek/infracfg.h>
->   #include <asm/barrier.h>
->   #include <soc/mediatek/smi.h>
->   
-> @@ -640,8 +642,11 @@ static int mtk_iommu_probe(struct platform_device *pdev)
->   	struct resource         *res;
->   	resource_size_t		ioaddr;
->   	struct component_match  *match = NULL;
-> +	struct regmap		*infracfg;
->   	void                    *protect;
->   	int                     i, larb_nr, ret;
-> +	u32			val;
-> +	char                    *p;
->   
->   	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
->   	if (!data)
-> @@ -655,10 +660,29 @@ static int mtk_iommu_probe(struct platform_device *pdev)
->   		return -ENOMEM;
->   	data->protect_base = ALIGN(virt_to_phys(protect), MTK_PROTECT_PA_ALIGN);
->   
-> -	/* Whether the current dram is over 4GB */
-> -	data->enable_4GB = !!(max_pfn > (BIT_ULL(32) >> PAGE_SHIFT));
-> -	if (!MTK_IOMMU_HAS_FLAG(data->plat_data, HAS_4GB_MODE))
-> -		data->enable_4GB = false;
-> +	data->enable_4GB = false;
-> +	if (MTK_IOMMU_HAS_FLAG(data->plat_data, HAS_4GB_MODE)) {
-> +		switch (data->plat_data->m4u_plat) {
-> +		case M4U_MT2712:
-> +			p = "mediatek,mt2712-infracfg";
-> +			break;
-> +		case M4U_MT8173:
-> +			p = "mediatek,mt8173-infracfg";
-> +			break;
-> +		default:
-> +			p = NULL;
-> +		}
-> +
-> +		infracfg = syscon_regmap_lookup_by_compatible(p);
-> +
-> +		if (IS_ERR(infracfg))
-> +			return PTR_ERR(infracfg);
-> +
-> +		ret = regmap_read(infracfg, REG_INFRA_MISC, &val);
-> +		if (ret)
-> +			return ret;
-> +		data->enable_4GB = !!(val & F_DDR_4GB_SUPPORT_EN);
-> +	}
->   
->   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->   	data->base = devm_ioremap_resource(dev, res);
-> diff --git a/include/linux/soc/mediatek/infracfg.h b/include/linux/soc/mediatek/infracfg.h
-> index fd25f0148566..233463d789c6 100644
-> --- a/include/linux/soc/mediatek/infracfg.h
-> +++ b/include/linux/soc/mediatek/infracfg.h
-> @@ -32,6 +32,9 @@
->   #define MT7622_TOP_AXI_PROT_EN_WB		(BIT(2) | BIT(6) | \
->   						 BIT(7) | BIT(8))
->   
-> +#define REG_INFRA_MISC				0xf00
-> +#define F_DDR_4GB_SUPPORT_EN			BIT(13)
-> +
->   int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask,
->   		bool reg_update);
->   int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask,
-> 
+On 8/25/2020 7:21 PM, Vinod Koul wrote:
+> On 18-08-20, 15:00, Reddy, MallikarjunaX wrote:
+>
+>>>> +
+>>>> +            intel,chans:
+>>>> +              $ref: /schemas/types.yaml#/definitions/uint32-array
+>>>> +              description:
+>>>> +                 The channels included on this port. Format is channel start
+>>>> +                 number and how many channels on this port.
+>>> Why does this need to be in DT? This all seems like it can be in the dma
+>>> cells for each client.
+>> (*ABC)
+>> Yes. We need this.
+>> for dma0(lgm-cdma) old SOC supports 16 channels and the new SOC supports 22
+>> channels. and the logical channel mapping for the peripherals also differ
+>> b/w old and new SOCs.
+>>
+>> Because of this hardware limitation we are trying to configure the total
+>> channels and port-channel mapping dynamically from device tree.
+>>
+>> based on port name we are trying to configure the default values for
+>> different peripherals(ports).
+>> Example: burst length is not same for all ports, so using port name to do
+>> default configurations.
+> Sorry that does not make sense to me, why not specify the values to be
+> used here instead of defining your own name scheme!
+OK. Agreed. I will remove port name from DT and only use intel,chans
+>
+> Only older soc it should create 16 channels and new 22 (hint this is hw
+> description so perfectly okay to specify in DT or in using driver_data
+> and compatible for each version
+>
+>>>> +
+>>>> +          required:
+>>>> +            - reg
+>>>> +            - intel,name
+>>>> +            - intel,chans
+>>>> +
+>>>> +
+>>>> + ldma-channels:
+>>>> +    type: object
+>>>> +    description:
+>>>> +       This sub-node must contain a sub-node for each DMA channel.
+>>>> +    properties:
+>>>> +      '#address-cells':
+>>>> +        const: 1
+>>>> +      '#size-cells':
+>>>> +        const: 0
+>>>> +
+>>>> +    patternProperties:
+>>>> +      "^ldma-channels@[0-15]+$":
+>>>> +          type: object
+>>>> +
+>>>> +          properties:
+>>>> +            reg:
+>>>> +              items:
+>>>> +                - enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+>>>> +              description:
+>>>> +                 Which channel this node refers to.
+>>>> +
+>>>> +            intel,desc_num:
+>>>> +              $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +              description:
+>>>> +                 Per channel maximum descriptor number. The max value is 255.
+>>>> +
+>>>> +            intel,hdr-mode:
+>>>> +              $ref: /schemas/types.yaml#/definitions/uint32-array
+>>>> +              description:
+>>>> +                 The first parameter is header mode size, the second
+>>>> +                 parameter is checksum enable or disable. If enabled,
+>>>> +                 header mode size is ignored. If disabled, header mode
+>>>> +                 size must be provided.
+>>>> +
+>>>> +            intel,hw-desc:
+>>>> +              $ref: /schemas/types.yaml#/definitions/uint32-array
+>>>> +              description:
+>>>> +                 Per channel dma hardware descriptor configuration.
+>>>> +                 The first parameter is descriptor physical address and the
+>>>> +                 second parameter hardware descriptor number.
+>>> Again, this all seems like per client information for dma cells.
+>>   Ok, if we move all these attributes to 'dmas' then 'dma-channels' child
+>> node is not needed in dtsi.
+>> #dma-cells number i am already using 7. If we move all these attributes to
+>> 'dmas' then integer cells will increase.
+>>
+>> Is there any limitation in using a number of integer cells & as determined
+>> by the #dma-cells property?
+> No I dont think there is but it needs to make sense :-)
+OK.
+>
