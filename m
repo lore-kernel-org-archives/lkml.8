@@ -2,69 +2,135 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BD7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9B5C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0D02078A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BEF22080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:03:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3MR6zMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726028AbgH0EA0 (ORCPT
+        id S1726087AbgH0EDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 00:00:26 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:60686 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgH0EAZ (ORCPT
+        Thu, 27 Aug 2020 00:03:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbgH0EDs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 00:00:25 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id F125429817;
-        Thu, 27 Aug 2020 00:00:20 -0400 (EDT)
-Date:   Thu, 27 Aug 2020 13:59:59 +1000 (AEST)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-cc:     linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] m68k: Correct some typos in comments
-In-Reply-To: <CAMuHMdW7eWtkUURxvAwAz6cAHABLBk4qs4bLUXR3wuowQbn5Fw@mail.gmail.com>
-Message-ID: <alpine.LNX.2.23.453.2008271359390.53@nippy.intranet>
-References: <f54e99e9bd1e25ad70a6a1d7a7ec9ab2b4e50d68.1595460351.git.fthain@telegraphics.com.au> <CAMuHMdW7eWtkUURxvAwAz6cAHABLBk4qs4bLUXR3wuowQbn5Fw@mail.gmail.com>
+        Thu, 27 Aug 2020 00:03:48 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54AFBC0612A3;
+        Wed, 26 Aug 2020 21:03:27 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id m8so2465100pfh.3;
+        Wed, 26 Aug 2020 21:03:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6bQeuePNqH7dWbqUFgjlTSNlzBof5RgofuNEIyHakwM=;
+        b=X3MR6zMdfOgPqvRfgQkzGhLn/dxi02axDYvVL7GX/lmX+cA98U0F7qPCwN5R826MPt
+         P6f278VM9YOweJuu39pPhgqodUBu+ASdBdcZZwSSfYTgdzpBm5DLE9iwNIUmdt9bZ/dU
+         YgTTt9tbCeTgNibdS+a4BNHlRVfY0bKqaX6Rpsnx70swdhJFBmB8FNDJ4upzP7eFStyf
+         xTRKRq8CRQ35RLoLaC0Ct7s+xT4NSHWhCXZ9OAAXJeSZV6VnIddS8rQbEC2ylVXwzStu
+         LUXFNe8kgTUMCa337MPXi93vLwJBUj2x8ZZM/unRuBZoYo6Dmnp2RCOohjZeV6HUmy90
+         VaHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6bQeuePNqH7dWbqUFgjlTSNlzBof5RgofuNEIyHakwM=;
+        b=sW8nrtNQlFbJxeJ2BDWDdO4ry5+1oYO1+9RtIuYUElkuSQhb9ZGeW0LgS3sUSOb/A6
+         Z64oww97SZ5dlPTDfG8klgnQTR2Y0MYSkwgbNMtbpV+a2chQv2/c4UWn4FpxtwJvso0A
+         l/sblpd9oBMwHFSoGdZZqFC4sD473BlqPh6YEyIhSqw5jbXTL/xmPUEzFFBAKCSdHmPH
+         m38OpHCSmx4OLApUH5Gnbnhl4qepKJpBoGUdp+ojJRYcAyI3ORPj49MCJjkp/duPLGtF
+         SlHCRfHWoQhBIvFQlSzw4hQfBmsh3u9P67OvTu8PHBvkjrNWKAxj/Zmb1Z64hGdZE80W
+         PCTQ==
+X-Gm-Message-State: AOAM5330XpPh/wylHm26m9AatvXHN1KSFdtlXjfjOoMGmmS37+3D3YDB
+        gRmTOjJuWsLsuf6gt8O2bpI=
+X-Google-Smtp-Source: ABdhPJzh9mqw7jcuL/gdVISt/cqtAADn6a8e73oWM42h68OTeYpnn525+zrB4ZLZwskwsGEGF/z01w==
+X-Received: by 2002:a65:6882:: with SMTP id e2mr13324535pgt.290.1598501005803;
+        Wed, 26 Aug 2020 21:03:25 -0700 (PDT)
+Received: from localhost ([124.156.176.71])
+        by smtp.gmail.com with ESMTPSA id v78sm800705pfc.121.2020.08.26.21.03.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Aug 2020 21:03:25 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 12:03:27 +0800
+From:   Yue Hu <zbestahu@gmail.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, viresh.kumar@linaro.org
+Cc:     rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        huyue2@yulong.com, zbestahu@163.com
+Subject: Re: [PATCH] thermal: sysfs: fall back to vzalloc for cooling
+ device's statistics
+Message-ID: <20200827120327.00003740.zbestahu@gmail.com>
+In-Reply-To: <c3fd7949-b33a-aca3-8dd5-1c2df35fb63d@linaro.org>
+References: <20200818063005.13828-1-zbestahu@gmail.com>
+        <40b69f97-46e5-d62e-0d2f-604dfd4dafa1@linaro.org>
+        <20200826101319.00003048.zbestahu@gmail.com>
+        <c3fd7949-b33a-aca3-8dd5-1c2df35fb63d@linaro.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020, Geert Uytterhoeven wrote:
+On Wed, 26 Aug 2020 11:19:02 +0200
+Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
 
-> > @@ -2654,7 +2654,7 @@ func_start        mmu_get_page_table_entry,%d0/%a1
-> >         jne     2f
-> >
-> >         /* If the page table entry doesn't exist, we allocate a complete new
-> > -        * page and use it as one continues big page table which can cover
-> > +        * page and use it as one continuous big page table which can cover
+> Hi Yue,
 > 
-> Usually I use "contiguous", but the dictionary seems to permit both.
+> On 26/08/2020 04:13, Yue Hu wrote:
+> > On Mon, 24 Aug 2020 12:40:35 +0200
+> > Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+> >   
+> >> On 18/08/2020 08:30, Yue Hu wrote:  
+> >>> From: Yue Hu <huyue2@yulong.com>
+> >>>
+> >>> We observed warning about kzalloc() when register thermal cooling device
+> >>> in backlight_device_register(). backlight display can be a cooling device
+> >>> since reducing screen brightness will can help reduce temperature.
+> >>>
+> >>> However, ->get_max_state of backlight will assign max brightness of 1024
+> >>> to states. The memory size can be getting 1MB+ due to states * states.    
+> >>
+> >> What are the benefits of a 1024 states cooling device ? Is the
+> >> difference noticeable with a such small step ?  
+> > 
+> > Okay, this issue is happened under MSM/Android platform. QCOM spmi wled driver
+> > will define the max brightness. We needs to fix the issue to get thermal statistics.  
+> 
+> Let me rephrase my questions:
+> 
+> Don't you think there is something wrong in creating a 1024 x 1024
+> matrix to show transitions ?
+> 
+> What is the benefit of such stats ?
+> 
+> What is the benefit of having a 1024 states cooling device ?
+
+Hi Daniel,
+
+Now, i'm just focus on removing the kernel warning based on current code logic.
+Commit 8ea229511e06 (thermal: Add cooling device's statistics in sysfs) added
+the thermal statistics by viresh and viresh gived the patch an acknowledgement
+in anther mail thread. 
+
+Hi viresh,
+
+Could you review the patch again about the question above?
+
+Thank you.
+
+> 
+> 
+> 
 > 
 
-Two or more things may be said to be "contiguous". I think this sentence 
-refers to only one thing.
-
-> >          * 4MB of memory, nearly almost all mappings have that alignment.
-> >          */
-> >         get_new_page
-> 
-> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> i.e. will queue in the m68k for-v5.10 branch.
-> 
-
-Thanks.
-
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
