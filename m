@@ -2,110 +2,172 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B92AFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A64C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9479B22B40
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8D0207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:40:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YksGN/Kl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VFTQz853"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgH0Njk (ORCPT
+        id S1728009AbgH0Nku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 09:39:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49410 "EHLO
+        Thu, 27 Aug 2020 09:40:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbgH0NeX (ORCPT
+        with ESMTP id S1726853AbgH0Ney (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:34:23 -0400
+        Thu, 27 Aug 2020 09:34:54 -0400
 Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C488DC061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:34:22 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id k18so3509673pfp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:34:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70421C061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:34:54 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id k18so3510682pfp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:34:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7FCj4eo3j3GbtsvklB0HEapcPiKhwE+p6XCZdQG51e0=;
-        b=YksGN/Klz2U+5jSTHMCPwt8j9/PccIZtdyUnCZPwiqSlVHBB11ioUNakcTTduFyQ1y
-         3J3ryZ6OL/8b/1G4InuP8fts5scbP9Rz+uVvn07RU/CiWdWpz/hUraeORbm/9Pqsit8t
-         MqV63uHdwpuilQpBtjmGOE+Qz2Pq8NkRtGzzH2UplzOkGcjaXfWVewgS+sI7FRIFDjhE
-         fXqT6333zDssmhtV7ZdJds10qlWWv+UgN/kZHjtMjf2q1Y1NHOCBJWmTv5bJole94Dl3
-         flpUIjSVbZ69engbbNzyXrrtDASe0RHxwX0TR+3CVbeIcekxBno+13S3JuNZYPHAnqNf
-         9OGQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fOtOQwtAMnsiuZkel6P+QKLSzAWGFcwbvl4MhWbUo1c=;
+        b=VFTQz853WO4K2b97Gw8Vq+2NCsRZgwv1PoyWPiyF79O4L1GRoHXehFI0hrHO5E+3L7
+         nrLw54vjbmJAxJfu7iwZojsuLgK1EkXhuuF5hJg/zw7PF1ifJG/xBnl50S06cC19W/gq
+         i8v8c7i9DpklX0WWeUhuKJ027ioHReA6qzTwjXZQmmsBYH86hl6lvvvHIdQI5xUCw35n
+         djVrMOcEzNUHZDX9Q0JRJ+54DxyZ3qczuN01T1vEaxVf6TNlY1JzVpxVurEPofRICLTQ
+         sehOfUQssBoXDLpPl5PGDtsh+7wUv7SMNBwZa5CtaOi0/dpNOGbR+wxV8VZ0akl3pAEH
+         TFSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7FCj4eo3j3GbtsvklB0HEapcPiKhwE+p6XCZdQG51e0=;
-        b=mz5krUo0laj+BphsLXoNTbUmTkU6osq5Emcq2tO5KPAQbYTyEFpjvsAE11qOxV+4+H
-         X7SJs1t0OoyIw7pg9j0jgNzCVhWEsJ8ODZ6yn1pXiX6UAODCcluF+Lkug5hqqoYzmHPu
-         E8vklcAdEsixdpBT7Gn5+N1ZmiTmlf9t6Y55l5ln4/CtPrtnQjzPK4xsLQ+AWVOOUY2Z
-         BEmaP7ELW95IxWFsazgZYnVHPeWDVXf6JkXpQL6jsOfQpXFdTneODC2pQ4LU+c7q0boa
-         i5RdZ5QcKw3zpknF6yXPrxzMYhNit8V6LIrDwwf41f2s40bQ84TcHams3L1pt4FDq8bJ
-         w6NQ==
-X-Gm-Message-State: AOAM530rLrlB3v49w9S/zmxcWrFRUatpM07usTmaAsVaI1ANTjb7t9Ka
-        megXsnoYQMZ8EUM3i6peJiZJcUwU+c/2BQ==
-X-Google-Smtp-Source: ABdhPJy++A+Fs7bmmkIIIXiQU73QEHegDmjLB1wLcIEz7+TuVA5U8OYW5f3vRllozVKeE/uPCntAXg==
-X-Received: by 2002:a17:902:bb93:: with SMTP id m19mr15808911pls.77.1598535262252;
-        Thu, 27 Aug 2020 06:34:22 -0700 (PDT)
-Received: from localhost ([2405:201:4007:804a:5550:a563:c2bb:823e])
-        by smtp.gmail.com with ESMTPSA id 65sm2815345pfc.218.2020.08.27.06.34.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 06:34:21 -0700 (PDT)
-From:   Piyush Goyal <piyushgoyaliit@gmail.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH][next] regulator: mt6360: fix spelling mistake: "regulaotr" -> "regulator"
-Date:   Thu, 27 Aug 2020 19:04:19 +0530
-Message-Id: <20200827133419.36151-1-piyushgoyaliit@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fOtOQwtAMnsiuZkel6P+QKLSzAWGFcwbvl4MhWbUo1c=;
+        b=TQABgIuVJKddzEwmFzPJ11lKKWQK88KwZQkU+l6WcLdT1Cug6IG5oelAB1PQDfddj2
+         lAAF8/3qFYCMbZoIaKzBU0a/k3dwaDZ4l5tySjprX2sAPz/OzUiE/HS/6Mscxi1MI/BJ
+         IXXJiIokLsriyYra2C90Fb/09RmhZfz/lH8UyxNbbo0bM6Q5gI4WGyZNITe1eJ+zmfI6
+         F5rHOz0zCN3yWw4zmmiA4tSr+5RgoHbx6d/y4IQSGLg0/Ozq1dl4MEEjX3UOgull6qFS
+         e4bWN8JrT3xb/TDAWbsGWIHLtFND5LR18ae3xlRVqYWksYCsHqWlQaerYxqQfV9nZdTv
+         +ECw==
+X-Gm-Message-State: AOAM531ocjTnqSuRVgxTB4+pA+4J6ZkFPA0FeriojUcX26uV4Gx95IA8
+        oN8JhADommVb48Whp/GQBGRfOOVHAOeGGThAMSvZyQ==
+X-Google-Smtp-Source: ABdhPJwZDZ1YWgPOElrp9s/sDw0FY/M9AwCUa4WE07eW6R7ae8uB2U5pgCBMXEphtljLWo5s8MA4P1VEg3eAT76xSLQ=
+X-Received: by 2002:a17:902:b589:: with SMTP id a9mr15940749pls.98.1598535293587;
+ Thu, 27 Aug 2020 06:34:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1597425745.git.andreyknvl@google.com> <f173aacd755e4644485c551198549ac52d1eb650.1597425745.git.andreyknvl@google.com>
+ <20200827095429.GC29264@gaia> <CAAeHK+xHQDMsTehppknjNTEMFh18ufWB1XLUGdVFoc-QZ-mVrw@mail.gmail.com>
+ <20200827131045.GM29264@gaia>
+In-Reply-To: <20200827131045.GM29264@gaia>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 27 Aug 2020 15:34:42 +0200
+Message-ID: <CAAeHK+xraz7E41b4LW6VW9xOH51UoZ+odNEDrDGtaJ71n=bQ3A@mail.gmail.com>
+Subject: Re: [PATCH 21/35] arm64: mte: Add in-kernel tag fault handler
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Branislav Rankov <Branislav.Rankov@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some spelling mistakes in two dev_err messages. Fix these.
+On Thu, Aug 27, 2020 at 3:10 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+>
+> On Thu, Aug 27, 2020 at 02:31:23PM +0200, Andrey Konovalov wrote:
+> > On Thu, Aug 27, 2020 at 11:54 AM Catalin Marinas
+> > <catalin.marinas@arm.com> wrote:
+> > > On Fri, Aug 14, 2020 at 07:27:03PM +0200, Andrey Konovalov wrote:
+> > > > +static int do_tag_recovery(unsigned long addr, unsigned int esr,
+> > > > +                        struct pt_regs *regs)
+> > > > +{
+> > > > +     report_tag_fault(addr, esr, regs);
+> > > > +
+> > > > +     /* Skip over the faulting instruction and continue: */
+> > > > +     arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
+> > >
+> > > Ooooh, do we expect the kernel to still behave correctly after this? I
+> > > thought the recovery means disabling tag checking altogether and
+> > > restarting the instruction rather than skipping over it.
+> >
+> > The intention is to be able to catch multiple MTE faults without
+> > panicking or disabling MTE when executing KASAN tests (those do
+> > multiple bad accesses one after another).
+>
+> The problem is that for MTE synchronous tag check faults, the access has
+> not happened, so you basically introduce memory corruption by skipping
+> the access.
 
-Signed-off-by: Piyush Goyal <piyushgoyaliit@gmail.com>
----
- drivers/regulator/mt6360-regulator.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Yes, you're right.
 
-diff --git a/drivers/regulator/mt6360-regulator.c b/drivers/regulator/mt6360-regulator.c
-index 89ce379520ed..15308ee29c13 100644
---- a/drivers/regulator/mt6360-regulator.c
-+++ b/drivers/regulator/mt6360-regulator.c
-@@ -424,14 +424,14 @@ static int mt6360_regulator_probe(struct platform_device *pdev)
- 
- 		rdev = devm_regulator_register(&pdev->dev, &rdesc->desc, &config);
- 		if (IS_ERR(rdev)) {
--			dev_err(&pdev->dev, "Failed to register  %d regulaotr\n", i);
-+			dev_err(&pdev->dev, "Failed to register  %d regulator\n", i);
- 			return PTR_ERR(rdev);
- 		}
- 
- 		ret = mt6360_regulator_irq_register(pdev, rdev, rdesc->irq_tables,
- 						    rdesc->irq_table_size);
- 		if (ret) {
--			dev_err(&pdev->dev, "Failed to register  %d regulaotr irqs\n", i);
-+			dev_err(&pdev->dev, "Failed to register  %d regulator irqs\n", i);
- 			return ret;
- 		}
- 	}
--- 
-2.25.1
+> > We do arm64_skip_faulting_instruction() for software tag-based KASAN
+> > too, it's not ideal, but works for testing purposes.
+>
+> IIUC, KASAN only skips over the brk instruction which doesn't have any
+> other side-effects.
 
+Oh, yes, indeed. For some reason I confused myself thinking that we
+also skip the access for software KASAN.
+
+> Has the actual memory access taken place when it
+> hits the brk?
+
+IIRC, no, but it will be executed right after we skip the brk.
+
+> > Can we disable MTE, reexecute the instruction, and then reenable MTE,
+> > or something like that?
+>
+> If you want to preserve the MTE enabled, you could single-step the
+> instruction or execute it out of line, though it's a bit more convoluted
+> (we have a similar mechanism for kprobes/uprobes).
+>
+> Another option would be to attempt to set the matching tag in memory,
+> under the assumption that it is writable (if it's not, maybe it's fine
+> to panic). Not sure how this interacts with the slub allocator since,
+> presumably, the logical tag in the pointer is wrong rather than the
+> allocation one.
+>
+> Yet another option would be to change the tag in the register and
+> re-execute but this may confuse the compiler.
+
+Which one of these would be simpler to implement?
+
+Perhaps we could somehow only skip faulting instructions that happen
+in the KASAN test module?.. Decoding stack trace would be an option,
+but that's a bit weird.
+
+Overall, this feature is not essential, but will make testing simpler.
+
+> > When running in-kernel MTE in production, we'll either panic or
+> > disable MTE after the first fault. This was controlled by the
+> > panic_on_mte_fault option Vincenzo initially had.
+>
+> I prefer to disable MTE, print something and continue, but no panic.
+
+OK, we can do this.
+
+> > > We only skip if we emulated it.
+> >
+> > I'm not sure I understand this part, what do you mean by emulating?
+>
+> Executing it out of line or other form of instruction emulation (see
+> arch/arm64/kernel/probes/simulate-insn.c) so that the access actually
+> takes place. But you can single-step or experiment with some of the
+> other tricks above.
+>
+> --
+> Catalin
