@@ -2,317 +2,191 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E942C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D60C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4046D2078A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:15:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kqWOz9u1"
+	by mail.kernel.org (Postfix) with ESMTP id 206C22078A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:15:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgH0PPo (ORCPT
+        id S1727783AbgH0PO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:15:44 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:13684 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbgH0PPE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:15:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f47cde30000>; Thu, 27 Aug 2020 08:14:43 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 27 Aug 2020 08:14:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 27 Aug 2020 08:14:57 -0700
-Received: from [10.26.74.41] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
- 2020 15:14:53 +0000
-Subject: Re: [PATCH v6 7/7] sdhci: tegra: Add missing TMCLK for data timeout
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <thierry.reding@gmail.com>, <robh+dt@kernel.org>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <1598500201-5987-1-git-send-email-skomatineni@nvidia.com>
- <1598500201-5987-8-git-send-email-skomatineni@nvidia.com>
- <93d0188b-c833-33b4-211e-b9293c4f3a1c@nvidia.com>
- <3deac67c-bb1e-ef23-7dcc-8d4024203ab1@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <5ec4d869-f134-6e6d-6496-2410f271b196@nvidia.com>
-Date:   Thu, 27 Aug 2020 16:14:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 27 Aug 2020 11:14:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:57246 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728386AbgH0LjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 07:39:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6082212FC;
+        Thu, 27 Aug 2020 04:27:42 -0700 (PDT)
+Received: from localhost (unknown [10.1.199.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 015683F68F;
+        Thu, 27 Aug 2020 04:27:41 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 12:27:40 +0100
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Puhov <peter.puhov@linaro.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>
+Subject: Re: [RFC 0/3] cpufreq: cppc: Add support for frequency invariance
+Message-ID: <20200827112740.GA9923@arm.com>
+References: <cover.1594289009.git.viresh.kumar@linaro.org>
+ <20200709124349.GA15342@arm.com>
+ <20200710030032.3yq3lqqybhy5m744@vireshk-i7>
+ <CAKfTPtBpOdRSV0gb2CoC8J9GnuPiqZ+MbQLLc6NdSmjJhb0cgA@mail.gmail.com>
+ <20200825095629.GA15469@arm.com>
+ <20200827075149.ixunmyi3m6ygtehu@vireshk-i7>
 MIME-Version: 1.0
-In-Reply-To: <3deac67c-bb1e-ef23-7dcc-8d4024203ab1@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598541283; bh=xVoI1WZkGHOqNohPt0+gex2ZSLXV6wVFwXRA9Hx8SBA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=kqWOz9u1bINwK2K3lmHd1dbL57lLBYMMl2KAWX/leAhFGwUgBeggB/4LpX9LOp3GB
-         1ch2zDN1VNOgfcrod23at6YhLgpcU189s/eKCQnxAp0OL7LZ/iyRFqnxRAiiWElQpy
-         SXkYo0J+9p0qQB97snF103KCQgiKEKVTuzBX4t8WkkiYyipnBt3w4WmCYKwEeDkj/B
-         1WCa8UK2VDzym3noqz5Ztmf/X5NMGTdb5kBad/H+GYN7bQdwAsbFuFTMBhEK0xQ+kB
-         dXnpJRfWj4o3BmobrlLrhe39OTk8LhnG3ps7ATHEG6ouWd3JiemKJveHNtBsL1VR4b
-         VIed7kguBu50w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827075149.ixunmyi3m6ygtehu@vireshk-i7>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Viresh,
 
-On 27/08/2020 16:03, Sowjanya Komatineni wrote:
->=20
-> On 8/27/20 1:40 AM, Jon Hunter wrote:
->> On 27/08/2020 04:50, Sowjanya Komatineni wrote:
->>> commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
->>>
->>> Tegra210 and later has a separate sdmmc_legacy_tm (TMCLK) used by Tegra
->>> SDMMC hawdware for data timeout to achive better timeout than using
->>> SDCLK and using TMCLK is recommended.
->>>
->>> USE_TMCLK_FOR_DATA_TIMEOUT bit in Tegra SDMMC register
->>> SDHCI_TEGRA_VENDOR_SYS_SW_CTRL can be used to choose either TMCLK or
->>> SDCLK for data timeout.
->>>
->>> Default USE_TMCLK_FOR_DATA_TIMEOUT bit is set to 1 and TMCLK is used
->>> for data timeout by Tegra SDMMC hardware and having TMCLK not enabled
->>> is not recommended.
->>>
->>> So, this patch adds quirk NVQUIRK_HAS_TMCLK for SoC having separate
->>> timeout clock and keeps TMCLK enabled all the time.
->>>
->>> Fixes: b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
->>> Cc: stable <stable@vger.kernel.org> # 5.4
->>> Tested-by: Jon Hunter <jonathanh@nvidia.com>
->>> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
->>> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>> =C2=A0 drivers/mmc/host/sdhci-tegra.c | 90
->>> ++++++++++++++++++++++++++++++++++++++----
->>> =C2=A0 1 file changed, 82 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/drivers/mmc/host/sdhci-tegra.c
->>> b/drivers/mmc/host/sdhci-tegra.c
->>> index 31ed321..f69ca8d 100644
->>> --- a/drivers/mmc/host/sdhci-tegra.c
->>> +++ b/drivers/mmc/host/sdhci-tegra.c
->>> @@ -13,6 +13,7 @@
->>> =C2=A0 #include <linux/clk.h>
->>> =C2=A0 #include <linux/io.h>
->>> =C2=A0 #include <linux/of.h>
->>> +#include <linux/of_clk.h>
->>> =C2=A0 #include <linux/of_device.h>
->>> =C2=A0 #include <linux/pinctrl/consumer.h>
->>> =C2=A0 #include <linux/regulator/consumer.h>
->>> @@ -110,6 +111,12 @@
->>> =C2=A0 #define NVQUIRK_DIS_CARD_CLK_CONFIG_TAP=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(8)
->>> =C2=A0 #define NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 BIT(9)
->>> =C2=A0 +/*
->>> + * NVQUIRK_HAS_TMCLK is for SoC's having separate timeout clock for
->>> Tegra
->>> + * SDMMC hardware data timeout.
->>> + */
->>> +#define NVQUIRK_HAS_TMCLK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(10)
->>> +
->>> =C2=A0 /* SDMMC CQE Base Address for Tegra Host Ver 4.1 and Higher */
->>> =C2=A0 #define SDHCI_TEGRA_CQE_BASE_ADDR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0xF000
->>> =C2=A0 @@ -140,6 +147,7 @@ struct sdhci_tegra_autocal_offsets {
->>> =C2=A0 struct sdhci_tegra {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct sdhci_tegra_soc_data *soc_d=
-ata;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct gpio_desc *power_gpio;
->>> +=C2=A0=C2=A0=C2=A0 struct clk *tmclk;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool ddr_signaling;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool pad_calib_required;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool pad_control_available;
->>> @@ -1433,7 +1441,8 @@ static const struct sdhci_tegra_soc_data
->>> soc_data_tegra210 =3D {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_HAS_PADCALIB |
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_ENABLE_SDR50 |
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NVQ=
-UIRK_ENABLE_SDR104,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NVQ=
-UIRK_ENABLE_SDR104 |
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NVQ=
-UIRK_HAS_TMCLK,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .min_tap_delay =3D 106,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .max_tap_delay =3D 185,
->>> =C2=A0 };
->>> @@ -1471,6 +1480,7 @@ static const struct sdhci_tegra_soc_data
->>> soc_data_tegra186 =3D {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_ENABLE_SDR50 |
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_ENABLE_SDR104 |
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NVQ=
-UIRK_HAS_TMCLK |
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .min_tap_delay =3D 84,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .max_tap_delay =3D 136,
->>> @@ -1483,7 +1493,8 @@ static const struct sdhci_tegra_soc_data
->>> soc_data_tegra194 =3D {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_HAS_PADCALIB |
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_ENABLE_SDR50 |
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NVQ=
-UIRK_ENABLE_SDR104,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NVQ=
-UIRK_ENABLE_SDR104 |
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NVQ=
-UIRK_HAS_TMCLK,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .min_tap_delay =3D 96,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .max_tap_delay =3D 139,
->>> =C2=A0 };
->>> @@ -1611,15 +1622,76 @@ static int sdhci_tegra_probe(struct
->>> platform_device *pdev)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err_power_r=
-eq;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> =C2=A0 -=C2=A0=C2=A0=C2=A0 clk =3D devm_clk_get(mmc_dev(host->mmc), NUL=
-L);
->>> -=C2=A0=C2=A0=C2=A0 if (IS_ERR(clk)) {
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rc =3D PTR_ERR(clk);
->>> +=C2=A0=C2=A0=C2=A0 /*
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * Tegra210 and later has separate SDMMC_LEGAC=
-Y_TM clock used for
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * hardware data timeout clock and SW can choo=
-se TMCLK or SDCLK for
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * hardware data timeout through the bit USE_T=
-MCLK_FOR_DATA_TIMEOUT
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * of the register SDHCI_TEGRA_VENDOR_SYS_SW_C=
-TRL.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 *
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * USE_TMCLK_FOR_DATA_TIMEOUT bit default is s=
-et to 1 and SDMMC
->>> uses
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * 12Mhz TMCLK which is advertised in host cap=
-ability register.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * With TMCLK of 12Mhz provides maximum data t=
-imeout period that
->>> can
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * be achieved is 11s better than using SDCLK =
-for data timeout.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 *
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * So, TMCLK is set to 12Mhz and kept enabled =
-all the time on SoC's
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * supporting separate TMCLK.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 *
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * Old device tree has single sdhci clock. So =
-with addition of
->>> TMCLK,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * retrieving sdhci clock by "sdhci" clock nam=
-e based on number of
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * clocks in sdhci device node.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->>> +
->>> +=C2=A0=C2=A0=C2=A0 if (of_clk_get_parent_count(pdev->dev.of_node) =3D=
-=3D 1) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (soc_data->nvquirks & NV=
-QUIRK_HAS_TMCLK)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev=
-_warn(&pdev->dev,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 "missing tmclk in the device tree\n");
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk =3D devm_clk_get(&pdev-=
->dev, NULL);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(clk)) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rc =
-=3D PTR_ERR(clk);
->>> =C2=A0 -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (rc !=3D -EPROBE_=
-DEFER)
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev=
-_err(&pdev->dev, "failed to get clock: %d\n", rc);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if =
-(rc !=3D -EPROBE_DEFER)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 dev_err(&pdev->dev,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get sdhci clock: %=
-d\n", rc);
->>> =C2=A0 -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err_clk_get;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 got=
-o err_power_req;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> +=C2=A0=C2=A0=C2=A0 } else {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (soc_data->nvquirks & NV=
-QUIRK_HAS_TMCLK) {
->>
->> I think that I would do the inverse of this ...
->>
->> =C2=A0=C2=A0=C2=A0 } else {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!(soc_data->nvquirk=
-s & NVQUIRK_HAS_TMCLK)) {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(&pdev->dev, "Device has unexpected clocks!=
-\n");
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 rc =3D -EINVAL;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 goto_power_req;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk =3D devm_clk_get(&p=
-dev->dev, "tmclk");
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ...
->>
->> If the device does not have a single clock, then we expect it to support
->> the tmclk. If this is not the case, then this is a bug.
->>
->> Cheers
->> Jon
->=20
-> I don't see other drivers validating for unexpected device tree entries.
->=20
-> Also only for SoC with quirk HAS_TMCLK, we are retrieving TMCLK with
-> clock name and enabling it.
->=20
-> So for other SoC even if device tree has additional clock entry other
-> than sdhci driver don't use it and also dt-binding do not have any tmclk
-> entry for other SoC. So why would this be a bug?
+On Thursday 27 Aug 2020 at 13:21:49 (+0530), Viresh Kumar wrote:
+> On 25-08-20, 10:56, Ionela Voinescu wrote:
+> > I've been putting some more thought/code into this one and I believe
+> > something as follows might look nicer as well as cover a few corner cases
+> > (ignore implementation details for now, they can be changed):
+> 
+> I saw the other patchset you sent where AMU can be used as the backend
+> for CPPC driver, which means that if AMU IP is present on the platform
+> it will be used by the CPPC to get the perf counts, right ?
+> 
+> > - Have a per cpu value that marks the use of either AMUs, CPPC, or
+> >   cpufreq for freq invariance (can be done with per-cpu variable or with
+> >   cpumasks)
+> > 
+> > - arch_topology.c: initialization code as follows:
+> > 
+> > 	for_each_present_cpu(cpu) {
+> > 		if (freq_inv_amus_valid(cpu) &&
+> > 		    !freq_inv_set_max_ratio(cpufreq_get_hw_max_freq(cpu) * 1000,
+> > 					    arch_timer_get_rate(), cpu)) {
+> > 			per_cpu(inv_source, cpu) = INV_AMU_COUNTERS;
+> > 			continue;
+> > 		}
+> > 		if (freq_inv_cppc_counters_valid(cpu) &&
+> > 		    !freq_inv_set_max_ratio(cppc_max_perf, cppc_ref_perf, cpu)) {
+> > 			per_cpu(inv_source, cpu) = INV_CPPC_COUNTERS;
+> > 			continue;
+> > 		}
+> > 		if (!cpufreq_supports_freq_invariance() ||
+> > 		    freq_inv_set_max_ratio(cpufreq_get_hw_max_freq(cpu),
+> > 					   1, cpu)) {
+> > 			pr_info("FIE disabled: no valid source for CPU%d.", cpu);
+> > 			return 0;
+> > 		}
+> > 	}
+> 
+> Based on that (your other patchset), I think this can get further
+> simplified to whomsoever can register first for freq invariance.
+> 
 
-In the device tree binding doc, we say has two clocks for Tegra210,
-Tegra186 and Tegra194 and one clock for all other devices. So if we no
-there is more than 1 but the device does not have this quirk, then the
-device-tree does not reflect what is stated in the binding doc or the
-quirk is no populated as it should be. I feel that either case is a bug.
+I don't see it as anyone registering for freq invariance, rather the
+freq invariance framework chooses its source of information (AMU, CPPC,
+cpufreq).
 
-Now of course it could be possible for someone to add a 3rd clock for
-Tegra210 and we would not detect this but like you said we don't check
-all conditions. So yes we don't catch all cases, but the ones that matter.
+> i.e. if CPPC registers for it first then there is no need to check
+> AMUs further (as CPPC will be using AMUs anyway), else we will
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Not necessarily. Even if AMUs are present, they are only used for CPPC's
+delivered and reference performance counters if the ACPI _CPC entry
+specifies FFH as method:
 
-Jon
+  ResourceTemplate(){Register(FFixedHW, 0x40, 0, 1, 0x4)},
+  ResourceTemplate(){Register(FFixedHW, 0x40, 0, 0, 0x4)},
 
---=20
-nvpublic
+> fallback to AMU, else cpufreq.
+> 
+> Is that understanding correct ?
+
+While I understand your point (accessing AMUs through CPPC's read
+functions to implement invariance) I don't think it's worth tying the
+two together.
+
+I see the two functionalities as independent:
+ - frequency invariance with whichever source of information is valid
+   (AMUs, cpufreq, etc) is separate from
+ - CPPC's delivered and reference performance counters, which currently
+   are used in cpufreq's .get() function.
+
+Therefore, taking each of the scenarios one by one:
+ - All CPUs support AMUs: the freq invariance initialisation code will
+   find AMUs valid and it will use them to set the scale factor;
+   completely independently, if the FFH method is specified for CPPC's
+   delivered and reference performance counters, it will also use
+   AMUs, even if, let's say, invariance is disabled.
+
+ - None of the CPUs support AMUs, but the _CPC entry specifies some
+   platform specific counters for delivered and reference performance.
+   With the current mainline code neither cpufreq or counter based
+   invariance is supported, but the CPPC counters can be used in the
+   cppc_cpufreq driver for the .get() function.
+
+   But with the above new functionality we can detect that AMUs are not
+   supported and expose the CPPC counters to replace them in
+   implementing invariance.
+
+ - Mixed scenarios are also supported if we play our cards right and
+   implement the above per-cpu.
+
+
+I'm thinking that having some well defined invariance sources might work
+well: it will simplify the init function (go through all registered
+sources and choose (per-cpu) the one that's valid) and allow for
+otherwise generic invariance support. Something like:
+
+enum freq_inv_source {INV_CPUFREQ, INV_AMU_COUNTERS, INV_CPPC_COUNTERS};
+
+struct freq_inv_source {
+	enum freq_inv_source source;
+	bool (*valid)(int cpu);
+	u64 (*read_corecnt)(int cpu);
+	u64 (*read_constcnt)(int cpu);
+	u64 (*max_rate)(int cpu);
+	u64 (*ref_rate)(int cpu);
+}
+
+I am in the middle of unifying AMU counter and cpufreq invariance through
+something like this, so if you like the idea and you don't think I'm
+stepping too much on your toes with this, I can consider the usecase in
+my (what should be) generic support. So in the end this might end up
+being just a matter of adding a new invariance source (CPPC counters).
+
+My only worry is that while I know how a cpufreq source behaves and how
+AMU counters behave, I'm not entirely sure what to expect from CPPC
+counters: if they are always appropriate for updates on the tick (not
+blocking), if they both stop during idle, if there is save/restore
+functionality before/after idle, etc.
+
+What do you think?
+
+Regards,
+Ionela.
+
+> -- 
+> viresh
