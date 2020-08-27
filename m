@@ -2,137 +2,89 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7D9C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 232ACC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDD8D2177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:53:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rNirvoBE"
+	by mail.kernel.org (Postfix) with ESMTP id 01AA22177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:54:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgH0Ix6 (ORCPT
+        id S1728172AbgH0IyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 27 Aug 2020 04:54:06 -0400
+Received: from verein.lst.de ([213.95.11.211]:37293 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728001AbgH0Ix6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 04:53:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728046AbgH0Ix5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:53:57 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E3A5C061264;
-        Thu, 27 Aug 2020 01:53:56 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 5so3766650otp.12;
-        Thu, 27 Aug 2020 01:53:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wJqkqfKDzNHfiL/tMPJGSfWZ8ecLoIaK4a3CdN76f08=;
-        b=rNirvoBEcyW1jBwdIu+fwpbS49hBLs1+mFh7z2yzTaggVxkQ28bv9uNU8qZRAXpKPt
-         zN1oCIRrfarUUbUfKdtOiAIRRxXNZ0KvTIVr+j6KeUsj2V+gBe1OI7vp39yUFNeB71x1
-         18yO6MEZ0+FR/mO/Z3r1VQTllsPVysn1DQoK2knEe2IKBgdSxf50ssWjNKfSwQdJhvUx
-         RmYwz7YgihE9tdlXP3OulXvrF3pcPTKQxI7SKP9RzLy1SkKIr5rx07eugRW8LfPquP7k
-         GLD4MCvEVFBDZK5bertBsAyHV669YvZvNmQiZeRFAHztbZJCNCecI3skBmn59hVfeasr
-         GnnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wJqkqfKDzNHfiL/tMPJGSfWZ8ecLoIaK4a3CdN76f08=;
-        b=QzsE7fWVUSMxtQe9cXUwVsknWxzhFSESYU+mmCTC7yxuqPQPJ0DyOIBTViZLXNvo0p
-         ZQfOUlY7KkLkAxUrPhOaJau8m9tA9bLE5ewaeS2e3rSJTdywKzpn79qAaJu1utF2dkeh
-         ZE61u8XvdepEj7QKQQ2Tr0Tet5RGQZiCkpcLyHRtTJ329GsHdJuQCiC0BI63ixfnwGEm
-         ZEvdCfmQ8sV6f8I38ltjIxoJXSv/GiPX7+WhJGM9beRzOcBwXCKuCxAl+pNLfPgb+SDn
-         hiLcUWd3lWOCcG/h9ho/7jTLnm9eNHSfks574WDhx7uBaHeV5JZiXZkGu09r7wmQ8Xsr
-         /p6g==
-X-Gm-Message-State: AOAM531NacZwQi+2kyJZKjx4SCVdH7Utv9rb/2Ltz+7tsJe0zZEoQPCP
-        dwMJMo64/gXfzuMvdT1d7pzl/Np7WTFpWlyykC3ToMFZyFdywUpa
-X-Google-Smtp-Source: ABdhPJyNg9E+EYqZ3jMKYxrnDs3Fs/guWQT2WPErhXYuDxBwtvuuHvN5YzBTQvexOOWAYySUThg+sI7u84kGPM4z7eE=
-X-Received: by 2002:a9d:2ac5:: with SMTP id e63mr12914667otb.119.1598518435737;
- Thu, 27 Aug 2020 01:53:55 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id C68FE68B02; Thu, 27 Aug 2020 10:53:53 +0200 (CEST)
+Date:   Thu, 27 Aug 2020 10:53:53 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Subject: Re: [PATCH 01/19] char_dev: replace cdev_map with an xarray
+Message-ID: <20200827085353.GA12111@lst.de>
+References: <20200826062446.31860-1-hch@lst.de> <20200826062446.31860-2-hch@lst.de> <20200826081905.GB1796103@kroah.com>
 MIME-Version: 1.0
-References: <20200826132203.236748-1-alexandru.ardelean@analog.com> <20200827065625.GB17964@kozik-lap>
-In-Reply-To: <20200827065625.GB17964@kozik-lap>
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Thu, 27 Aug 2020 11:53:44 +0300
-Message-ID: <CA+U=Dsoo6YABe5ODLp+eFNPGFDjk5ZeQEceGkqjxXcVEhLWubw@mail.gmail.com>
-Subject: Re: [PATCH] iio: adc: exynos_adc: Replace indio_dev->mlock with own
- device lock
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>, kgene@kernel.org,
-        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826081905.GB1796103@kroah.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 9:57 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Wed, Aug 26, 2020 at 04:22:03PM +0300, Alexandru Ardelean wrote:
-> > From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> >
-> > As part of the general cleanup of indio_dev->mlock, this change replaces
-> > it with a local lock, to protect potential concurrent access to the
-> > completion callback during a conversion.
->
-> I don't know the bigger picture (and no links here for general cleanup)
-> but I assume it is part of wider work and that mlock is unwanted. In
-> such case:
->
-> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> If it is part of some bigger work, please put a link to lore.kernel.org
-> under separators ---, so everyone can get the context.
+On Wed, Aug 26, 2020 at 10:19:05AM +0200, Greg Kroah-Hartman wrote:
+> On Wed, Aug 26, 2020 at 08:24:28AM +0200, Christoph Hellwig wrote:
+> > None of the complicated overlapping regions bits of the kobj_map are
+> > required for the character device lookup, so just a trivial xarray
+> > instead.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> 
+> Really?  This is ok to use and just as fast?  If so, wonderful, it would
+> be great to clean up kobj_map users.
 
-Will keep that in mind.
-I am not sure if there is a lore.kernel.org link that's easy to find
-for a discussion on this topic, maybe I can describe it here and use
-the link [from this later].
+Xarrays provide pretty efficient as long as we have a unsigned long
+or smaller index (check, dev_t is small) and the indices are reasonable
+clustered (check, minors for the same major).  Memory usage will go down
+vs the probes, and lookup speed up.
 
-This was something that popped up during reviews we got from Jonathan
-[or others], saying "please don't use indio_dev->mlock, that is an IIO
-framework lock, and an IIO driver should not use it".
-Reasons include [and some may be repeated a bit]:
-- this could cause a deadlock if the IIO framework holds this lock and
-an IIO driver also tries to get a hold of this lock
-- similar to the previous point, this mlock is taken by
-iio_device_claim_direct_mode() and released by
-iio_device_release_direct_mode() ; which means that mlock aims to
-become more of an IIO framework lock, than a general usage lock;
-- this wasn't policed/reviewed intensely in the older driver [a few
-years ago], but has become a point in recent reviews;
-- if we want to develop/enhance the IIO framework, some elements like
-this need to be taken care of, as more drivers get added and more
-complexity gets added;
-- there is an element of fairness [obviously], where someone writing a
-new IIO driver, takes an older one as example, and gets hit on the
-review; the person feels they did a good job in mimicking the old
-driver; their feeling is correct; the IIO framework should provide
-good references and/or cleanup existing drivers;
-- same as the previous point, we don't want to keep telling people
-writing new IIO drivers [and starting out with IIO] to "not use mlock
-[because it was copied from an old driver]"; it's more/needless review
-work
+> > +	mutex_lock(&chrdevs_lock);
+> > +	for (i = 0; i < count; i++) {
+> > +		error = xa_insert(&cdev_map, dev + i, p, GFP_KERNEL);
+> > +		if (error)
+> > +			goto out_unwind;
+> > +	}
+> > +	mutex_unlock(&chrdevs_lock);
+> >  
+> >  	kobject_get(p->kobj.parent);
+> 
+> Can't you drop this kobject_get() too?
 
+I'll have to drop it or add back the put on the delete side.  And
+I think the latter is safer for now, because..
 
->
->
-> Best regards,
-> Krzysztof
->
-> >
-> > Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > ---
-> >  drivers/iio/adc/exynos_adc.c | 12 ++++++++----
-> >  1 file changed, 8 insertions(+), 4 deletions(-)
-> >
+> 
+> And also the "struct kobj" in struct cdev can be gone as well, as the
+> kobj_map was the only "real" user of this structure.  I know some
+> drivers liked to touch that field as well, but it never actually did
+> anything for them, so it was pointless, but it will take some 'make
+> allmodconfig' builds to flush them out.
+
+I looked at it, but it does get registered and shows up in sysfs.
+I don't really dare to touch this for now, as it can have huge
+implications.  Better done in a separate series (if we can actually do
+it at all).
