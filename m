@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DB8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F276C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6F4522BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C4B4207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:01:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbgH0M7s (ORCPT
+        id S1726990AbgH0NAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 08:59:48 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:41234 "EHLO huawei.com"
+        Thu, 27 Aug 2020 09:00:54 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10333 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726009AbgH0M7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 08:59:14 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 29AD3CB95655F8104BF9;
-        Thu, 27 Aug 2020 20:58:47 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Thu, 27 Aug 2020
- 20:58:37 +0800
+        id S1728981AbgH0M7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 08:59:23 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id F307EFE4E176E3835862;
+        Thu, 27 Aug 2020 20:59:17 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 27 Aug 2020
+ 20:59:11 +0800
 From:   Jason Yan <yanaijie@huawei.com>
-To:     <aacraid@microsemi.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <hare@suse.de>,
+To:     <intel-linux-scu@intel.com>, <artur.paszkiewicz@intel.com>,
+        <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
         <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] scsi: dpt_i2o: remove set but not used 'pHba'
-Date:   Thu, 27 Aug 2020 20:58:12 +0800
-Message-ID: <20200827125812.427753-1-yanaijie@huawei.com>
+Subject: [PATCH] scsi: isci: remove set but not used 'index'
+Date:   Thu, 27 Aug 2020 20:58:51 +0800
+Message-ID: <20200827125851.428071-1-yanaijie@huawei.com>
 X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -47,32 +47,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 This addresses the following gcc warning with "make W=1":
 
-drivers/scsi/dpt_i2o.c: In function ‘adpt_slave_configure’:
-drivers/scsi/dpt_i2o.c:411:12: warning: variable ‘pHba’ set but not used
-[-Wunused-but-set-variable]
-  411 |  adpt_hba* pHba;
-      |            ^~~~
+drivers/scsi/isci/host.c: In function ‘sci_controller_complete_io’:
+drivers/scsi/isci/host.c:2674:6: warning: variable ‘index’ set but not
+used [-Wunused-but-set-variable]
+ 2674 |  u16 index;
+      |      ^~~~~
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Jason Yan <yanaijie@huawei.com>
 ---
- drivers/scsi/dpt_i2o.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/scsi/isci/host.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/scsi/dpt_i2o.c b/drivers/scsi/dpt_i2o.c
-index f654ad8a3d69..4251212acbbe 100644
---- a/drivers/scsi/dpt_i2o.c
-+++ b/drivers/scsi/dpt_i2o.c
-@@ -408,9 +408,6 @@ static void adpt_inquiry(adpt_hba* pHba)
- static int adpt_slave_configure(struct scsi_device * device)
+diff --git a/drivers/scsi/isci/host.c b/drivers/scsi/isci/host.c
+index 7b5deae68d33..7ebfa3c8cdc7 100644
+--- a/drivers/scsi/isci/host.c
++++ b/drivers/scsi/isci/host.c
+@@ -2671,7 +2671,6 @@ enum sci_status sci_controller_complete_io(struct isci_host *ihost,
+ 					   struct isci_request *ireq)
  {
- 	struct Scsi_Host *host = device->host;
--	adpt_hba* pHba;
--
--	pHba = (adpt_hba *) host->hostdata[0];
+ 	enum sci_status status;
+-	u16 index;
  
- 	if (host->can_queue && device->tagged_supported) {
- 		scsi_change_queue_depth(device,
+ 	switch (ihost->sm.current_state_id) {
+ 	case SCIC_STOPPING:
+@@ -2682,7 +2681,6 @@ enum sci_status sci_controller_complete_io(struct isci_host *ihost,
+ 		if (status != SCI_SUCCESS)
+ 			return status;
+ 
+-		index = ISCI_TAG_TCI(ireq->io_tag);
+ 		clear_bit(IREQ_ACTIVE, &ireq->flags);
+ 		return SCI_SUCCESS;
+ 	default:
 -- 
 2.25.4
 
