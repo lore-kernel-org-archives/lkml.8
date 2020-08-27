@@ -2,299 +2,224 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2096C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB81C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A43A92087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF312207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:58:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vNAaq8P3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbgH0J6o (ORCPT
+        id S1728572AbgH0J6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:58:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37238 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728110AbgH0J6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:58:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 2359CADF7;
-        Thu, 27 Aug 2020 09:59:03 +0000 (UTC)
-From:   Daniel Wagner <dwagner@suse.de>
-To:     linux-scsi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Nilesh Javali <njavali@marvell.com>,
-        Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH 3/4] qla2xxx: Drop unused function argument from qla2x00_get_sp_from_handle()
-Date:   Thu, 27 Aug 2020 11:58:28 +0200
-Message-Id: <20200827095829.63871-4-dwagner@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200827095829.63871-1-dwagner@suse.de>
-References: <20200827095829.63871-1-dwagner@suse.de>
+        Thu, 27 Aug 2020 05:58:49 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:24127 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728573AbgH0J6q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:58:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598522325; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=WP6K/m86m5Agf2av5a4eUUl7nH3ft4KQzbUnpZTtPek=;
+ b=vNAaq8P3uf8uE6G+FHcg/0x2E8StesMQtquxlWW/XUQOhDIC/3HVF6hp6UjHyLQ2VBtX/Xal
+ 7wGRMCspxEtCuwRj+KaWuBI8YMGGeInqzWAwBQ18vd9oKVslrimnNs0KNfs0qPTnC3imRslP
+ XXs3C55U3DSe3/mamtAjkQjbGos=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5f4783d4c9ede11f5e6f11b6 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 09:58:44
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C1548C4339C; Thu, 27 Aug 2020 09:58:43 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C39D7C433CA;
+        Thu, 27 Aug 2020 09:58:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C39D7C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] mwifiex: switch from 'pci_' to 'dma_' API
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200819070152.111522-1-christophe.jaillet@wanadoo.fr>
+References: <20200819070152.111522-1-christophe.jaillet@wanadoo.fr>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     amitkarwar@gmail.com, ganapathi.bhat@nxp.com,
+        huxinming820@gmail.com, davem@davemloft.net, kuba@kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200827095843.C1548C4339C@smtp.codeaurora.org>
+Date:   Thu, 27 Aug 2020 09:58:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7c3df1320e5e ("[SCSI] qla2xxx: Code changes to support new
-dynamic logging infrastructure.") removed the use of the func
-argument.
+Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
 
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
----
- drivers/scsi/qla2xxx/qla_gbl.h |  3 +--
- drivers/scsi/qla2xxx/qla_isr.c | 36 ++++++++++++------------------------
- drivers/scsi/qla2xxx/qla_mr.c  |  9 +++------
- 3 files changed, 16 insertions(+), 32 deletions(-)
+> The wrappers in include/linux/pci-dma-compat.h should go away.
+> 
+> The patch has been generated with the coccinelle script below and has been
+> hand modified to replace GFP_ with a correct flag.
+> It has been compile tested.
+> 
+> When memory is allocated in 'mwifiex_pcie_alloc_buffers()' (see details in
+> the call chain below) GFP_KERNEL can be used because both
+> 'mwifiex_register()' and 'mwifiex_reinit_sw()' already use GFP_KERNEL.
+> (for 'mwifiex_reinit_sw()', it is hidden in a call to 'alloc_workqueue()')
+> 
+> The call chain is:
+>   mwifiex_register
+>     --> mwifiex_init_pcie        (.init_if function, see mwifiex_if_ops)
+>    [ or ]
+>   mwifiex_reinit_sw
+>     -->mwifiex_pcie_up_dev       (.up_dev function, see mwifiex_if_ops)
+> 
+>     [ then in both case ]
+>       -->mwifiex_pcie_alloc_buffers
+>         --> mwifiex_pcie_create_txbd_ring
+>         --> mwifiex_pcie_create_rxbd_ring
+>         --> mwifiex_pcie_create_evtbd_ring
+>         --> mwifiex_pcie_alloc_sleep_cookie_buf
+> 
+> @@
+> @@
+> -    PCI_DMA_BIDIRECTIONAL
+> +    DMA_BIDIRECTIONAL
+> 
+> @@
+> @@
+> -    PCI_DMA_TODEVICE
+> +    DMA_TO_DEVICE
+> 
+> @@
+> @@
+> -    PCI_DMA_FROMDEVICE
+> +    DMA_FROM_DEVICE
+> 
+> @@
+> @@
+> -    PCI_DMA_NONE
+> +    DMA_NONE
+> 
+> @@
+> expression e1, e2, e3;
+> @@
+> -    pci_alloc_consistent(e1, e2, e3)
+> +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+> 
+> @@
+> expression e1, e2, e3;
+> @@
+> -    pci_zalloc_consistent(e1, e2, e3)
+> +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
+> 
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_free_consistent(e1, e2, e3, e4)
+> +    dma_free_coherent(&e1->dev, e2, e3, e4)
+> 
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_map_single(e1, e2, e3, e4)
+> +    dma_map_single(&e1->dev, e2, e3, e4)
+> 
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_unmap_single(e1, e2, e3, e4)
+> +    dma_unmap_single(&e1->dev, e2, e3, e4)
+> 
+> @@
+> expression e1, e2, e3, e4, e5;
+> @@
+> -    pci_map_page(e1, e2, e3, e4, e5)
+> +    dma_map_page(&e1->dev, e2, e3, e4, e5)
+> 
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_unmap_page(e1, e2, e3, e4)
+> +    dma_unmap_page(&e1->dev, e2, e3, e4)
+> 
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_map_sg(e1, e2, e3, e4)
+> +    dma_map_sg(&e1->dev, e2, e3, e4)
+> 
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_unmap_sg(e1, e2, e3, e4)
+> +    dma_unmap_sg(&e1->dev, e2, e3, e4)
+> 
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
+> +    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
+> 
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_dma_sync_single_for_device(e1, e2, e3, e4)
+> +    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
+> 
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
+> +    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
+> 
+> @@
+> expression e1, e2, e3, e4;
+> @@
+> -    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
+> +    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
+> 
+> @@
+> expression e1, e2;
+> @@
+> -    pci_dma_mapping_error(e1, e2)
+> +    dma_mapping_error(&e1->dev, e2)
+> 
+> @@
+> expression e1, e2;
+> @@
+> -    pci_set_dma_mask(e1, e2)
+> +    dma_set_mask(&e1->dev, e2)
+> 
+> @@
+> expression e1, e2;
+> @@
+> -    pci_set_consistent_dma_mask(e1, e2)
+> +    dma_set_coherent_mask(&e1->dev, e2)
+> 
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-diff --git a/drivers/scsi/qla2xxx/qla_gbl.h b/drivers/scsi/qla2xxx/qla_gbl.h
-index 0ced18f3104e..bbe3dca6d0ab 100644
---- a/drivers/scsi/qla2xxx/qla_gbl.h
-+++ b/drivers/scsi/qla2xxx/qla_gbl.h
-@@ -561,8 +561,7 @@ extern void qla2x00_free_irqs(scsi_qla_host_t *);
- extern int qla2x00_get_data_rate(scsi_qla_host_t *);
- extern const char *qla2x00_get_link_speed_str(struct qla_hw_data *, uint16_t);
- extern srb_t *
--qla2x00_get_sp_from_handle(scsi_qla_host_t *, const char *, struct req_que *,
--	void *);
-+qla2x00_get_sp_from_handle(scsi_qla_host_t *, struct req_que *, void *);
- extern void
- qla2x00_process_completed_request(struct scsi_qla_host *, struct req_que *,
- 	uint32_t);
-diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
-index 5d278155e4e7..b787643f5031 100644
---- a/drivers/scsi/qla2xxx/qla_isr.c
-+++ b/drivers/scsi/qla2xxx/qla_isr.c
-@@ -1711,8 +1711,7 @@ qla2x00_process_completed_request(struct scsi_qla_host *vha,
- }
- 
- srb_t *
--qla2x00_get_sp_from_handle(scsi_qla_host_t *vha, const char *func,
--    struct req_que *req, void *iocb)
-+qla2x00_get_sp_from_handle(scsi_qla_host_t *vha, struct req_que *req, void *iocb)
- {
- 	struct qla_hw_data *ha = vha->hw;
- 	sts_entry_t *pkt = iocb;
-@@ -1750,7 +1749,6 @@ static void
- qla2x00_mbx_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
-     struct mbx_entry *mbx)
- {
--	const char func[] = "MBX-IOCB";
- 	const char *type;
- 	fc_port_t *fcport;
- 	srb_t *sp;
-@@ -1758,7 +1756,7 @@ qla2x00_mbx_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	uint16_t *data;
- 	uint16_t status;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, mbx);
-+	sp = qla2x00_get_sp_from_handle(vha, req, mbx);
- 	if (!sp)
- 		return;
- 
-@@ -1836,13 +1834,12 @@ static void
- qla24xx_mbx_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
-     struct mbx_24xx_entry *pkt)
- {
--	const char func[] = "MBX-IOCB2";
- 	srb_t *sp;
- 	struct srb_iocb *si;
- 	u16 sz, i;
- 	int res;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (!sp)
- 		return;
- 
-@@ -1861,11 +1858,10 @@ static void
- qla24xxx_nack_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
-     struct nack_to_isp *pkt)
- {
--	const char func[] = "nack";
- 	srb_t *sp;
- 	int res = 0;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (!sp)
- 		return;
- 
-@@ -1879,7 +1875,6 @@ static void
- qla2x00_ct_entry(scsi_qla_host_t *vha, struct req_que *req,
-     sts_entry_t *pkt, int iocb_type)
- {
--	const char func[] = "CT_IOCB";
- 	const char *type;
- 	srb_t *sp;
- 	struct bsg_job *bsg_job;
-@@ -1887,7 +1882,7 @@ qla2x00_ct_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	uint16_t comp_status;
- 	int res = 0;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (!sp)
- 		return;
- 
-@@ -1952,7 +1947,6 @@ qla24xx_els_ct_entry(scsi_qla_host_t *vha, struct req_que *req,
-     struct sts_entry_24xx *pkt, int iocb_type)
- {
- 	struct els_sts_entry_24xx *ese = (struct els_sts_entry_24xx *)pkt;
--	const char func[] = "ELS_CT_IOCB";
- 	const char *type;
- 	srb_t *sp;
- 	struct bsg_job *bsg_job;
-@@ -1962,7 +1956,7 @@ qla24xx_els_ct_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	int res;
- 	struct srb_iocb *els;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (!sp)
- 		return;
- 
-@@ -2077,7 +2071,6 @@ static void
- qla24xx_logio_entry(scsi_qla_host_t *vha, struct req_que *req,
-     struct logio_entry_24xx *logio)
- {
--	const char func[] = "LOGIO-IOCB";
- 	const char *type;
- 	fc_port_t *fcport;
- 	srb_t *sp;
-@@ -2085,7 +2078,7 @@ qla24xx_logio_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	uint16_t *data;
- 	uint32_t iop[2];
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, logio);
-+	sp = qla2x00_get_sp_from_handle(vha, req, logio);
- 	if (!sp)
- 		return;
- 
-@@ -2206,14 +2199,13 @@ qla24xx_logio_entry(scsi_qla_host_t *vha, struct req_que *req,
- static void
- qla24xx_tm_iocb_entry(scsi_qla_host_t *vha, struct req_que *req, void *tsk)
- {
--	const char func[] = "TMF-IOCB";
- 	const char *type;
- 	fc_port_t *fcport;
- 	srb_t *sp;
- 	struct srb_iocb *iocb;
- 	struct sts_entry_24xx *sts = (struct sts_entry_24xx *)tsk;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, tsk);
-+	sp = qla2x00_get_sp_from_handle(vha, req, tsk);
- 	if (!sp)
- 		return;
- 
-@@ -2385,11 +2377,10 @@ static void qla24xx_nvme_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
- static void qla_ctrlvp_completed(scsi_qla_host_t *vha, struct req_que *req,
-     struct vp_ctrl_entry_24xx *vce)
- {
--	const char func[] = "CTRLVP-IOCB";
- 	srb_t *sp;
- 	int rval = QLA_SUCCESS;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, vce);
-+	sp = qla2x00_get_sp_from_handle(vha, req, vce);
- 	if (!sp)
- 		return;
- 
-@@ -3287,7 +3278,6 @@ qla2x00_error_entry(scsi_qla_host_t *vha, struct rsp_que *rsp, sts_entry_t *pkt)
- {
- 	srb_t *sp;
- 	struct qla_hw_data *ha = vha->hw;
--	const char func[] = "ERROR-IOCB";
- 	uint16_t que = MSW(pkt->handle);
- 	struct req_que *req = NULL;
- 	int res = DID_ERROR << 16;
-@@ -3317,7 +3307,7 @@ qla2x00_error_entry(scsi_qla_host_t *vha, struct rsp_que *rsp, sts_entry_t *pkt)
- 	case ABORT_IOCB_TYPE:
- 	case MBX_IOCB_TYPE:
- 	default:
--		sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+		sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 		if (sp) {
- 			sp->done(sp, res);
- 			return 0;
-@@ -3376,11 +3366,10 @@ static void
- qla24xx_abort_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	struct abort_entry_24xx *pkt)
- {
--	const char func[] = "ABT_IOCB";
- 	srb_t *sp;
- 	struct srb_iocb *abt;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (!sp)
- 		return;
- 
-@@ -3393,10 +3382,9 @@ void qla24xx_nvme_ls4_iocb(struct scsi_qla_host *vha,
-     struct pt_ls4_request *pkt, struct req_que *req)
- {
- 	srb_t *sp;
--	const char func[] = "LS4_IOCB";
- 	uint16_t comp_status;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (!sp)
- 		return;
- 
-diff --git a/drivers/scsi/qla2xxx/qla_mr.c b/drivers/scsi/qla2xxx/qla_mr.c
-index a8fe4f725fa0..ba41c78d063c 100644
---- a/drivers/scsi/qla2xxx/qla_mr.c
-+++ b/drivers/scsi/qla2xxx/qla_mr.c
-@@ -2187,11 +2187,10 @@ static void
- qlafx00_abort_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 			 struct abort_iocb_entry_fx00 *pkt)
- {
--	const char func[] = "ABT_IOCB";
- 	srb_t *sp;
- 	struct srb_iocb *abt;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (!sp)
- 		return;
- 
-@@ -2204,7 +2203,6 @@ static void
- qlafx00_ioctl_iosb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 			 struct ioctl_iocb_entry_fx00 *pkt)
- {
--	const char func[] = "IOSB_IOCB";
- 	srb_t *sp;
- 	struct bsg_job *bsg_job;
- 	struct fc_bsg_reply *bsg_reply;
-@@ -2213,7 +2211,7 @@ qlafx00_ioctl_iosb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	struct qla_mt_iocb_rsp_fx00 fstatus;
- 	uint8_t	*fw_sts_ptr;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (!sp)
- 		return;
- 
-@@ -2687,14 +2685,13 @@ qlafx00_error_entry(scsi_qla_host_t *vha, struct rsp_que *rsp,
- {
- 	srb_t *sp;
- 	struct qla_hw_data *ha = vha->hw;
--	const char func[] = "ERROR-IOCB";
- 	uint16_t que = 0;
- 	struct req_que *req = NULL;
- 	int res = DID_ERROR << 16;
- 
- 	req = ha->req_q_map[que];
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (sp) {
- 		sp->done(sp, res);
- 		return;
+Patch applied to wireless-drivers-next.git, thanks.
+
+4cf975f640fe mwifiex: switch from 'pci_' to 'dma_' API
+
 -- 
-2.16.4
+https://patchwork.kernel.org/patch/11722857/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
