@@ -2,119 +2,147 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B99CBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C31DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6A022B49
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B2322B49
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:04:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NLCjbjog"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgH0HE0 (ORCPT
+        id S1727931AbgH0HEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:04:26 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10269 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726266AbgH0HE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:04:26 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B3F14F159AA9C340ACAD;
-        Thu, 27 Aug 2020 15:04:23 +0800 (CST)
-Received: from [127.0.0.1] (10.174.177.253) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 27 Aug 2020
- 15:04:18 +0800
-Subject: Re: [PATCH v3 5/7] libnvdimm: reduce an unnecessary if branch in
- nd_region_activate()
-To:     Oliver O'Halloran <oohall@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200820021641.3188-1-thunder.leizhen@huawei.com>
- <20200820021641.3188-6-thunder.leizhen@huawei.com>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <8027bff4-b100-2330-1bb6-5d0aa0215db3@huawei.com>
-Date:   Thu, 27 Aug 2020 15:04:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 27 Aug 2020 03:04:51 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34464 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgH0HEu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:04:50 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07R74WgK042393;
+        Thu, 27 Aug 2020 02:04:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598511872;
+        bh=260MNsf+sBTxKFsAR396C3Ut4B0Gn9sQVV96H1/dwCY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NLCjbjog8okMnENPNR3UYZPVyOn5CS5JvV//y37cuZrWRaCVJKxi/ZCMebULpbl4i
+         rqTnakoUmAbTcKUvYMHPvHN9ImhsxO+H6L9x9kldAsbAwS/IFfHm4Dy90ZOH+l5dFt
+         uiOD57c9Q/wMO3k2qnd58psQYZ4NABqC8BuCRvSM=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07R74WQH004470;
+        Thu, 27 Aug 2020 02:04:32 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 27
+ Aug 2020 02:04:31 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 27 Aug 2020 02:04:31 -0500
+Received: from [10.250.235.166] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07R74Riu008885;
+        Thu, 27 Aug 2020 02:04:28 -0500
+Subject: Re: [RESEND PATCH v3 5/8] mtd: spi-nor: cadence-quadspi: Handle probe
+ deferral while requesting DMA channel
+To:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Jin, Le (RC-CN DF FA R&D)" <le.jin@siemens.com>
+CC:     Boris Brezillon <bbrezillon@kernel.org>,
+        Ramuthevar Vadivel Murugan 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <simon.k.r.goldschmidt@gmail.com>,
+        <dinguyen@kernel.org>, <marex@denx.de>
+References: <20200601070444.16923-1-vigneshr@ti.com>
+ <20200601070444.16923-6-vigneshr@ti.com>
+ <6c8d9bff-3a67-0e6c-d4d1-36b7ed5007b9@web.de>
+ <8cebd31a-2366-4584-b1d1-faa30c18ed6a@ti.com>
+ <dbba9f0c-4621-2d58-8fb8-4cbe788558f9@siemens.com>
+ <eff1b49e-e392-8887-b3a0-3caedc5b81cc@siemens.com>
+ <8995f5c5-bd6a-c0e5-1e4f-1744aedd2bcd@siemens.com>
+ <5e215c3c-5603-a796-9dea-13b7c2840ed0@ti.com>
+ <c090b23a-488f-6eb3-206b-a7678b70a4e2@siemens.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <ed61022e-4141-9ae3-d24b-e60e42ae58e3@ti.com>
+Date:   Thu, 27 Aug 2020 12:34:26 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200820021641.3188-6-thunder.leizhen@huawei.com>
+In-Reply-To: <c090b23a-488f-6eb3-206b-a7678b70a4e2@siemens.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.177.253]
-X-CFilter-Loop: Reflected
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I will drop this patch, because I have a doubt:
-Suppose the nd_region->ndr_mappings is 4, and for each nd_region->mapping[],
-the value of num_flush is "0, 0, 4, 0", so the flush_data_size is "1 + 1 + 5 + 1", * sizeof(void *).
-But in ndrd_get_flush_wpq() or ndrd_set_flush_wpq(), the expression is
-"ndrd->flush_wpq[dimm * num + (hint & mask)]", I don't think the memory "ndrd" allocated is enough.
-Please refer call chain: nd_region_activate() --> nvdimm_map_flush() --> ndrd_set_flush_wpq()
-
-	for (i = 0; i < nd_region->ndr_mappings; i++) {
-                struct nd_mapping *nd_mapping = &nd_region->mapping[i];
-                struct nvdimm *nvdimm = nd_mapping->nvdimm;
-
-                /* at least one null hint slot per-dimm for the "no-hint" case */
-                flush_data_size += sizeof(void *);
-                num_flush = min_not_zero(num_flush, nvdimm->num_flush);
-                if (!nvdimm->num_flush)
-                        continue;
-                flush_data_size += nvdimm->num_flush * sizeof(void *);
-        }
-
-        ndrd = devm_kzalloc(dev, sizeof(*ndrd) + flush_data_size, GFP_KERNEL);
 
 
-
-
-On 2020/8/20 10:16, Zhen Lei wrote:
-> According to the original code logic:
-> if (!nvdimm->num_flush) {
-> 	flush_data_size += sizeof(void *);
-> 	//nvdimm->num_flush is zero now, add 1) have no side effects
-> } else {
-> 	flush_data_size += sizeof(void *);
-> 1)	flush_data_size += nvdimm->num_flush * sizeof(void *);
-> }
+On 8/26/20 7:01 PM, Jan Kiszka wrote:
+> On 26.08.20 14:18, Vignesh Raghavendra wrote:
+>> On 8/26/20 3:42 PM, Jan Kiszka wrote:
+>>> On 24.08.20 19:20, Jan Kiszka wrote:
+>>>> On 24.08.20 14:49, Jan Kiszka wrote:
+>>>>> On 24.08.20 13:45, Vignesh Raghavendra wrote:
+>>>>>>
+[...]
+>> Also, there seems to be DMA mapping related issue, that was always present in 
+>> older driver as well. Could you see if diff [2] fixes the issue?
+>>
+>> [2] Use DMA device for mapping:
+>>
+>> ---><8---
+>>
+>>
+>> diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
+>> index b9739ae919340..a546aa4598758 100644
+>> --- a/drivers/spi/spi-cadence-quadspi.c
+>> +++ b/drivers/spi/spi-cadence-quadspi.c
+>> @@ -901,6 +901,7 @@ static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
+>>  {
+>>         struct cqspi_st *cqspi = f_pdata->cqspi;
+>>         struct device *dev = &cqspi->pdev->dev;
+>> +       struct device *ddev = cqspi->rx_chan->device->dev;
+>>         enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
+>>         dma_addr_t dma_src = (dma_addr_t)cqspi->mmap_phys_base + from;
+>>         int ret = 0;
+>> @@ -917,8 +918,8 @@ static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
+>>                 return 0;
+>>         }
+>>  
+>> -       dma_dst = dma_map_single(dev, buf, len, DMA_FROM_DEVICE);
+>> -       if (dma_mapping_error(dev, dma_dst)) {
+>> +       dma_dst = dma_map_single(ddev, buf, len, DMA_FROM_DEVICE);
+>> +       if (dma_mapping_error(ddev, dma_dst)) {
+>>                 dev_err(dev, "dma mapping failed\n");
+>>                 return -ENOMEM;
+>>         }
+>> @@ -952,7 +953,7 @@ static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
+>>         }
+>>  
+>>  err_unmap:
+>> -       dma_unmap_single(dev, dma_dst, len, DMA_FROM_DEVICE);
+>> +       dma_unmap_single(ddev, dma_dst, len, DMA_FROM_DEVICE);
+>>  
+>>         return ret;
+>>  }
+>>
 > 
-> Obviously, the above code snippet can be reduced to one statement:
-> flush_data_size += (nvdimm->num_flush + 1) * sizeof(void *);
-> 
-> No functional change.
-> 
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-> ---
->  drivers/nvdimm/region_devs.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
-> index 7cf9c7d857909ce..49be115c9189eff 100644
-> --- a/drivers/nvdimm/region_devs.c
-> +++ b/drivers/nvdimm/region_devs.c
-> @@ -77,11 +77,8 @@ int nd_region_activate(struct nd_region *nd_region)
->  		}
->  
->  		/* at least one null hint slot per-dimm for the "no-hint" case */
-> -		flush_data_size += sizeof(void *);
-> +		flush_data_size += (nvdimm->num_flush + 1) * sizeof(void *);
->  		num_flush = min_not_zero(num_flush, nvdimm->num_flush);
-> -		if (!nvdimm->num_flush)
-> -			continue;
-> -		flush_data_size += nvdimm->num_flush * sizeof(void *);
->  	}
->  	nvdimm_bus_unlock(&nd_region->dev);
->  
+> That seems to help! Wasn't able to reproduce the issue with this applied
+> so far.
 > 
 
+OK, great... I will post this patch soon once I finish a bit more
+testing... Thanks!
+
+
+Regards
+Vignesh
