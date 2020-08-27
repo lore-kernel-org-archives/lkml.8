@@ -2,152 +2,101 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAE3C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC3CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C09D2177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BF3620639
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:20:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gBs5DsGV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gGiDwhEv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgH0GUC (ORCPT
+        id S1727111AbgH0GUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:20:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37670 "EHLO
+        Thu, 27 Aug 2020 02:20:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgH0GUB (ORCPT
+        with ESMTP id S1725909AbgH0GUt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:20:01 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0CD3C06125E;
-        Wed, 26 Aug 2020 23:20:01 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id g6so2066370pjl.0;
-        Wed, 26 Aug 2020 23:20:01 -0700 (PDT)
+        Thu, 27 Aug 2020 02:20:49 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7C0EC06125E;
+        Wed, 26 Aug 2020 23:20:48 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id i14so2291424lfl.12;
+        Wed, 26 Aug 2020 23:20:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2DyhFZJ3L50RHCjnfyOFFSA1C8Bx+09mqhOcCqewIw0=;
-        b=gBs5DsGVImY9h2NdkLBA8VAbLClDmYf5k2JzfxV4NQDIUkz5iE220JF3pbKR+IKQFK
-         XEK8sV8YVio9/4ea8Kfz265u4SGZdsJ+SMCKBEMy9lskCqqCV5DHsDaury2NC+f08Nd6
-         KCGYFjOFxHXZ+XzAcQyGjZsyDSfjMgL9yt23ODOP3CnLG54e5PXWusKtBta6yR/1vBGK
-         6Q6fwPpgntt4QCeUPMufE4aTAidoXLekUL8434j9w4xOoz22S5FFaj4cNeFhPPmB3c2E
-         LlUoBJjDV8K/g5JKVrhglMLbhDRwCQzkHBwo6Hx5tEUWyyD0Jitw7a+VGFJSo/I82FK/
-         cf9A==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=r5l/iVKTiUVvbZkbB/b51IFn+fyGDLG9SnEtHS4suU8=;
+        b=gGiDwhEv1QTfrUcR+8cI034luCHsccSlcEBu4qtLH2RwvgnJcG4Xeof1mqqStFpDrt
+         Lc5RGJvFLZlBeIaF2tGRfAQiUrFpdrhbM5ikcbQGCBGC58HXByLL0FPK0zjXgLrniLBg
+         5z28r0D1s1gNrUcdVnRezy9M6WJUiIEDjh7PrE0KV5CcFOdZDiVCb2kOIpSSf1h9Z0Zs
+         h1tR1EKXWFKic6cKMfCIIwnO/eW014LBv/LYHMJI/TVlvu/6g/RZnprFr1gZih8PJLLr
+         SJTs8wXIifRDi4IVCTdZUNXjsARJdL48H+QEf1mEJAZmKTgUBX8VzVnQEEH9k2S9iZoS
+         oPkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2DyhFZJ3L50RHCjnfyOFFSA1C8Bx+09mqhOcCqewIw0=;
-        b=fvxoBQKFXrH1ZFvUcimaPL2nxJlots+PqgahwtwXR6bJ7eYUtY5yzzinFV9uSuUu2C
-         PZbnf3+ix/XyuSniBafS4enrhthwIDSHGqDzTzsBiz85j3Ktko2zy2fUL99+Gi+nWdDm
-         zywU8jeZk6OtyjlrxFxRTj0ts4/qf3uBtEan+6Uwxreo3pxlI/5/9YiLNIyWm2rZOqdi
-         3fV2JYTmMdhnZXlmuSyTx/ZndJWbUQMb4OlH24Zjgo5ARdRBKUWMBP8GHi8w0Q6UcMXG
-         N15z4MqeQLx51tcK4qZ3glZAMu6F1ydKIcNcHE/Vi1rPUdSFzmePGuJBP7dB27SQ/dlC
-         yfiA==
-X-Gm-Message-State: AOAM530AwzRGcefqWiquH5fGYC8fBNdTQf6kc5t/C1h1poM1OV3X3mT8
-        YTRh9Hsd4dmrZ0NQ2t3NwnA=
-X-Google-Smtp-Source: ABdhPJwGY57wBq9Nl0yoEK8w45h6104ykZ45Oyp8862f/UAYES7K8QKJ582f8eTRHoNYGRoft3kYFw==
-X-Received: by 2002:a17:90b:fd8:: with SMTP id gd24mr4569589pjb.234.1598509200731;
-        Wed, 26 Aug 2020 23:20:00 -0700 (PDT)
-Received: from localhost ([124.156.176.71])
-        by smtp.gmail.com with ESMTPSA id h65sm1269103pfb.210.2020.08.26.23.19.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Aug 2020 23:20:00 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 14:20:03 +0800
-From:   Yue Hu <zbestahu@gmail.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     rafael.j.wysocki@intel.com,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        huyue2@yulong.com, zbestahu@163.com
-Subject: Re: [PATCH] thermal: sysfs: fall back to vzalloc for cooling
- device's statistics
-Message-ID: <20200827142003.000071c1.zbestahu@gmail.com>
-In-Reply-To: <20200827051401.yryitpgq2gi3nkbh@vireshk-i7>
-References: <20200818063005.13828-1-zbestahu@gmail.com>
-        <40b69f97-46e5-d62e-0d2f-604dfd4dafa1@linaro.org>
-        <20200826101319.00003048.zbestahu@gmail.com>
-        <c3fd7949-b33a-aca3-8dd5-1c2df35fb63d@linaro.org>
-        <20200827120327.00003740.zbestahu@gmail.com>
-        <20200827051401.yryitpgq2gi3nkbh@vireshk-i7>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=r5l/iVKTiUVvbZkbB/b51IFn+fyGDLG9SnEtHS4suU8=;
+        b=qkZFGpft5NE4LZILhwLxhCI2OguxSwLHmjH1ucTvka0OCbz0riKyTT8XuyLcW5YdoH
+         XPQ+/5Igl6fyTSSzDP4w87rV8QI6XKhZYHLdbk7S87flRu5XDG/NaEQtZfbLnwEgttJA
+         cAeNbPPfZhMNpP5JmwWlrc8h1SXNJrMdI9MgWhGcTtfOSXYFHkXt5ou9pOAEHe67vAP1
+         ZrY13Zs7qbGz0HTsYKzA9MULYkQrvrPEJjioEJIbvSPIm3LvUhIBi9kMTFOi8GUilXLT
+         YvXRyLsBasXES8WdX94CQqh4uwZgHMF4/2BOLs0cx0pO1RCWXrxSt3d/0w/cTk2PWC2e
+         0nVw==
+X-Gm-Message-State: AOAM5314EP8BT866nnzgT+qiDuzDpRK1XhhKcq3T+9QD3byuGNeg/mkY
+        CIGJ09zLAa486QzkjtWTzP+GTB/ZmYo=
+X-Google-Smtp-Source: ABdhPJy2QOqs34ZJMXeyTLFZt00WuO7FOhxkaAatGFpajU2bYLSOfwWUHJeYlGDqqIiuHil3tSkEPg==
+X-Received: by 2002:a05:6512:3e8:: with SMTP id n8mr9177272lfq.210.1598509247095;
+        Wed, 26 Aug 2020 23:20:47 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id m15sm244209ljh.62.2020.08.26.23.20.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Aug 2020 23:20:46 -0700 (PDT)
+Subject: Re: [PATCH v2 2/4] brcmfmac: drop unnecessary "fallthrough" comments
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200827060441.15487-1-digetx@gmail.com>
+ <20200827060441.15487-3-digetx@gmail.com>
+ <9ba55d08-879b-cf66-b5d9-cc8fd292a4aa@embeddedor.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d34ef95d-fd65-67ad-520a-7cba17eaadc0@gmail.com>
+Date:   Thu, 27 Aug 2020 09:20:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <9ba55d08-879b-cf66-b5d9-cc8fd292a4aa@embeddedor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 10:44:01 +0530
-Viresh Kumar <viresh.kumar@linaro.org> wrote:
-
-> On 27-08-20, 12:03, Yue Hu wrote:
-> > Hi Daniel,
-> > 
-> > Now, i'm just focus on removing the kernel warning based on current code logic.
-> > Commit 8ea229511e06 (thermal: Add cooling device's statistics in sysfs) added
-> > the thermal statistics by viresh and viresh gived the patch an acknowledgement
-> > in anther mail thread. 
-> > 
-> > Hi viresh,
-> > 
-> > Could you review the patch again about the question above?  
+27.08.2020 09:23, Gustavo A. R. Silva пишет:
+> Hi,
 > 
-> Yeah, I Acked it but the questions raised by Daniel are very valid and must be
-> answered.
-
-Yes, sure.
-
+> There is a patch that address this, already:
 > 
-> I understand that you only cared about fixing the warning, but maybe we need to
-> fix the driver and the warning will go away by itself. If you don't want to do
-> it, then someone who is responsible for the driver should do it.
-
-Yes, maybe the patch is not totally correct. maybe the driver has issue. Let's
-check the driver firstly.
-
+> https://lore.kernel.org/lkml/20200821063758.GA17783@embeddedor/
 > 
-> Was it the acpi_video.c driver that you got the warning from ? I have added
-> Rafael to the email in case that driver needs getting fixed.
-> 
+> Thanks
 
-Currenly, drivers/video/backlight does not call thermal_of_cooling_device_register()
-to register thermal cooling device. The issue happened in msm-4.19 kernel for
-QCOM/Android platform. Backlight in msm-4.19 kernel will register thermal cooling
-device as below:
-
-+static int bd_cdev_get_max_brightness(struct thermal_cooling_device *cdev,
-+                                 unsigned long *state)
-+{
-+ struct backlight_device *bd = (struct backlight_device *)cdev->devdata;
-+
-+ *state = bd->props.max_brightness;
-+
-+ return 0;
-+}
-
-
-+static struct thermal_cooling_device_ops bd_cdev_ops = {
-+ .get_max_state = bd_cdev_get_max_brightness,
-
-+static void backlight_cdev_register(struct device *parent,
-+                             struct backlight_device *bd)
-+{
-+ if (of_find_property(parent->of_node, "#cooling-cells", NULL)) {
-+         bd->cdev = thermal_of_cooling_device_register(parent->of_node,
-+                         (char *)dev_name(&bd->dev), bd, &bd_cdev_ops);
-
-And the bd->props.max_brightness is getting from video/backlight/qcom-wled.c. Maybe
-the driver should not assign 1024 to states/max_brightness. I'm not sure about it.
-So i consider to change memory allocation methord. That's the origin of the patch.
-
-Thank you.
-
+Okay, then my patch is unnecessary. Thank you!
