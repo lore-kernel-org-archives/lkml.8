@@ -2,117 +2,116 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A75CC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1893E22CF6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D1A22CE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:49:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PfLeP1nV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EakLQnPF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgH0QtT (ORCPT
+        id S1727906AbgH0QtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:49:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51830 "EHLO
+        Thu, 27 Aug 2020 12:49:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbgH0QtI (ORCPT
+        with ESMTP id S1727882AbgH0QtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:49:08 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C17EC06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:49:07 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p37so3779784pgl.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:49:07 -0700 (PDT)
+        Thu, 27 Aug 2020 12:49:16 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CCB2C061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:49:15 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id d11so8519296ejt.13
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:49:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WiGBqbvIsFO7z3w2LMazIC2FdnllWalUyM7tW1jEsT8=;
-        b=PfLeP1nV8B3U6EqkOgNzN84iR7UUy8/qiTcl/n3tYajHLnYHYm389y0pz4BY9Of1PY
-         JgbSGcf1d7WEcDLjR1sQPrpu42wCr6/27pbNXF5vziV/LDpvB3m0qY5a0GAkUWJWVU8A
-         EVZ6HlhvzrsITdJad7o0fkqp6zaLStbRbS/0o=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b5mt7pQURye9ecR53f+JvCJ0uiGgMxCegvnwnLRHzLo=;
+        b=EakLQnPFKi98TUfE+RqWCoPr3r9CgBHj/DV4tdU3T4twCuQndAB4O6iUrgVlxPMdG7
+         Gq+nZwxk2bEnY3RiAyb/670KKTFQ0Af+huh57E6sdJBMdVTpwYembXC1o5Qgva629mQD
+         4tlkzj2lXMfrkUNxIVfc7JZ+viH55An4qkeoveT7/DFtgwZTWY7gox8VZKgFqoYB7uT2
+         BHUAM0GHQGixfKeI3oxt5HuQNAKWsXIjL2gEI3mvJP8SEqt1FDhkT11PgEP5a4MoTUNv
+         PzEL2SMLy5LsZOIN27+GoJY6okVQmW1Yo8uudbRtDxQ3O7CYHSHd4bga6oys58LM0wuC
+         RTdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WiGBqbvIsFO7z3w2LMazIC2FdnllWalUyM7tW1jEsT8=;
-        b=TfeyvzfHb7e38ZlPDhrIQZYaX48vWqBgRywxSm6LBe0VPpgyol3asSQTelgTKT8kEL
-         XyJCduOxCXb9EJOYD8uQ6NgU4Ws7nRJ6MhWA2v8XOcoMkNK5yCXk91anQXdLE9ibtGYK
-         V4We++Jc8gLZbNYuxgpvUcK88tjJGuSi/aPoYUKJ32I0vElc4ZHGMvOlNcTrikGin11+
-         sKSJ+bWKYp3BBzWi6tXG22hULAn8fGBWaMiQOkTG/IdCeitX9bdUmUcrIuyG/TliPzL/
-         3dAIotII5roOmgn7SQKQSoznD6FIIAd8jr36Sd99yukW/YkZt3AuFINH6r3Z6ec56fJn
-         EASw==
-X-Gm-Message-State: AOAM533LC1vYtTZtU20QxY16RvTza1xpQNMYPvpjj1/3bQ2TbwAppqup
-        KZPOXRwltAZsiaM+TNgLFMmfNg==
-X-Google-Smtp-Source: ABdhPJzcuCsRrPfIfLlHbR023NYEZxh/FkaJVSEHWhDNKlQXZmCOAVL9LXU4hpqCbh4th+9qlI/bQA==
-X-Received: by 2002:a62:1803:: with SMTP id 3mr17714286pfy.198.1598546946678;
-        Thu, 27 Aug 2020 09:49:06 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m3sm2665362pjn.28.2020.08.27.09.49.05
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b5mt7pQURye9ecR53f+JvCJ0uiGgMxCegvnwnLRHzLo=;
+        b=swXSVkkCvWVT6l58KBbYm+h733mL17rIZ0vVNMz/pxXHcFfarrgh+JQHM5V3Ew90JL
+         5CdhGN/E/6mscN1n/kQPyoABcOsfsddEEVaZBkgSIt2T+DOtn3z4YCMZLs8g28oKxnp/
+         lBrVFomr8dY83enDthpKsXKRJ/ruVY4P68JLLRdYpB4+VVJMyvxSGd8TEb62BxpvJNQW
+         GuDAy4in74iuJVkrn6n2WTKSkvorpr0Sk4RGK4R7uRp9bhIcV6syWhfKQhZ9eoE9iNSI
+         q5ClUSk+cjGzfTKah3zeidfJ2CvuXqm+U5AAj33dYYUa6PcMZBqva0Ytgj7FDs7ir0sa
+         pusQ==
+X-Gm-Message-State: AOAM533ha1XaoPlEl6JXBppdDExq0+gzjb2MBbTdqEOPCfAajGCpKMrj
+        PuCqyd9u+5F7EdQ2PelhNnU=
+X-Google-Smtp-Source: ABdhPJw0ClNIO9jd/shZgALigC7aDMkBNZ2ND8Oqiy6UAgf7eU77ImYjD2vtFD8Xqrm4zCfIUaKk7g==
+X-Received: by 2002:a17:907:271a:: with SMTP id w26mr18415996ejk.402.1598546953816;
+        Thu, 27 Aug 2020 09:49:13 -0700 (PDT)
+Received: from localhost.localdomain (93-103-18-160.static.t-2.net. [93.103.18.160])
+        by smtp.gmail.com with ESMTPSA id lx15sm2285182ejb.66.2020.08.27.09.49.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 09:49:05 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 09:49:04 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     David Laight <David.Laight@aculab.com>,
-        'Alex Dewar' <alex.dewar90@gmail.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "accessrunner-general@lists.sourceforge.net" 
-        <accessrunner-general@lists.sourceforge.net>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: atm: don't use snprintf() for sysfs attrs
-Message-ID: <202008270936.6FF344336@keescook>
-References: <20200824222322.22962-1-alex.dewar90@gmail.com>
- <3e882693bb344424af37d4d35f3db605@AcuMS.aculab.com>
- <20200825082406.GB1335351@kroah.com>
+        Thu, 27 Aug 2020 09:49:13 -0700 (PDT)
+From:   Uros Bizjak <ubizjak@gmail.com>
+To:     x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     Uros Bizjak <ubizjak@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH] x86: Use XORL r32,r32 in __get_user_asm
+Date:   Thu, 27 Aug 2020 18:49:05 +0200
+Message-Id: <20200827164905.88235-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825082406.GB1335351@kroah.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 10:24:06AM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Aug 25, 2020 at 08:12:05AM +0000, David Laight wrote:
-> > From: Alex Dewar
-> > > Sent: 24 August 2020 23:23
-> > > kernel/cpu.c: don't use snprintf() for sysfs attrs
-> > > 
-> > > As per the documentation (Documentation/filesystems/sysfs.rst),
-> > > snprintf() should not be used for formatting values returned by sysfs.
-> > > 
-> > > In all of these cases, sprintf() suffices as we know that the formatted
-> > > strings will be less than PAGE_SIZE in length.
-> > 
-> > Hmmmm....
-> > I much prefer to see bounded string ops.
-> > sysfs really ought to be passing through the buffer length.
-> 
-> No.
+Use XORL r32,r32 for all operand sizes. x86_64 zero extends 32bit
+operations, so for 64bit operands, XORL r32,r32 is functionally
+equal to XORL r64,r64, but avoids a REX prefix byte when legacy
+registers are used.
 
-It really should, though. I _just_ got burned by this due to having
-a binattr sysfs reachable through splice[1]. Most sysfs things aren't
-binattr, but I've always considered this to be a weird fragility in the
-sysfs implementation.
+32bit operation also avoids 0x66 size prefix for 16bit operands
+and REX prefix when %sil, %dil and %bpl 8bit registers are used.
 
-> So this is designed this way on purpose, you shouldn't have to worry
-> about any of this, and that way, you don't have to "program
-> defensively", it all just works in a simple manner.
+As a bonus, 32bit XORL breaks register dependency chains, avoiding
+potential partial register stalls with 8 and 16bit operands.
 
-Later in this thread there's a suggestion to alter the API to avoid
-individual calls to sprintf(), which seems like a reasonable first step.
+The patch lowers the size of .fixup section by 20 bytes.
 
--Kees
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+ arch/x86/include/asm/uaccess.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=11990a5bd7e558e9203c1070fc52fb6f0488e75b
-
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index ecefaffd15d4..2bffba2a1b23 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -343,7 +343,7 @@ do {									\
+ 		     "2:\n"						\
+ 		     ".section .fixup,\"ax\"\n"				\
+ 		     "3:	mov %[efault],%[errout]\n"		\
+-		     "	xor"itype" %[output],%[output]\n"		\
++		     "	xorl %k[output],%k[output]\n"			\
+ 		     "	jmp 2b\n"					\
+ 		     ".previous\n"					\
+ 		     _ASM_EXTABLE_UA(1b, 3b)				\
 -- 
-Kees Cook
+2.26.2
+
