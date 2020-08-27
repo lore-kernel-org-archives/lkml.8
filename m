@@ -2,87 +2,74 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 054CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E749C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C81692074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:38:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dnw0CNEg"
+	by mail.kernel.org (Postfix) with ESMTP id 81D84207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgH0BiU (ORCPT
+        id S1727077AbgH0Big (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 21:38:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbgH0BiP (ORCPT
+        Wed, 26 Aug 2020 21:38:36 -0400
+Received: from cmccmta2.chinamobile.com ([221.176.66.80]:23126 "EHLO
+        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbgH0Bif (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 21:38:15 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D541AC0617BE
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 18:38:13 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id t74so2028428lff.6
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 18:38:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tcZaZT5thwhJ11Sw+P5MksLekBOktbPk7Gm1gWNLeIg=;
-        b=Dnw0CNEgWHRjRY6mVfKDmenVclOHmH5gb8vsyRKn1HlquwSK9oiMqP5+l+4bHIUmEN
-         ImBA+i6GyDM1F0AHWS7CRMjJ7MbjGg3iMTfGDiQs2TxZFuTaeWydDDDSQzsB1j+J+HS2
-         hF5BeBXmPWTkNM6rGsgz2JkcZoHkS34A8KeAOj/TRNVUC4cD4QDaQFLc1HCe10CG1PYe
-         Q0U9h5FTzR8smu+Ap/LU1p61Im/PL+P7y/rCDRvwMmMg06sLJPyajSl/UF/RMG3Dnw47
-         6BcaQUsr7h/UOccf+voQ08xND5Y4s1o9fVhqmMAio85FbwxE4hrSZAgkBPmBsn1k0C6I
-         e/Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tcZaZT5thwhJ11Sw+P5MksLekBOktbPk7Gm1gWNLeIg=;
-        b=UNoBplobcy++e0WGoQ36spNqgXpzE5jsca+75iUAGltjgZPuF5Pm7NLTdlbRFupuah
-         q+wUDbVrKDSxEh2XzwZU+57N9PRoQTJqA55rtn1QH7a14DW0bB6SC2ERokdgje4j7NjC
-         fzQFOcCe987w6UTCAfFZFHyPgyvfv4nQ27MSThIK13sZ70bgx9ajJQ2WRd3beE7ORI3P
-         dYf78fFS5MdVhrn23bx0fVhNTpQYc9qva7l7aggS04PutCPLrzvNnHJTMQKErBeHnU6q
-         k0MoGL+7/8GhOz2yaV6zERQA4yoBqU7O+/vRcE5YYFM2ZeCbZZCNpey2hTp29RwsUEgL
-         HgmA==
-X-Gm-Message-State: AOAM532ukHLzmXuxBTzJCayMNCecW9+h7GhrehnujFA8PZv9Cc0BWmFn
-        H471w7zATH+slhmun8O2c2Dg/sMyMCFMnTo88N1iMQ==
-X-Google-Smtp-Source: ABdhPJxRcjc/Gqp/xT0urxhuNv5VqgxhHlf/nPvUR2crUR0WvM1oYHdUzyehd4aChT2XgBrBktIsBGkJHiIB0EJwAh4=
-X-Received: by 2002:ac2:47ec:: with SMTP id b12mr3245912lfp.124.1598492292040;
- Wed, 26 Aug 2020 18:38:12 -0700 (PDT)
+        Wed, 26 Aug 2020 21:38:35 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.9]) by rmmx-syy-dmz-app07-12007 (RichMail) with SMTP id 2ee75f470e8b6d9-61641; Thu, 27 Aug 2020 09:38:20 +0800 (CST)
+X-RM-TRANSID: 2ee75f470e8b6d9-61641
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from [192.168.21.77] (unknown[10.42.68.12])
+        by rmsmtp-syy-appsvr05-12005 (RichMail) with SMTP id 2ee55f470e8be69-26624;
+        Thu, 27 Aug 2020 09:38:20 +0800 (CST)
+X-RM-TRANSID: 2ee55f470e8be69-26624
+Subject: Re: [PATCH] ASoC: fsl_spdif: Fix unnecessary check
+ infsl_spdif_probe()
+To:     Mark Brown <broonie@kernel.org>
+Cc:     timur@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20200826150918.16116-1-tangbin@cmss.chinamobile.com>
+ <20200826165308.GJ4965@sirena.org.uk>
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+Message-ID: <f2196e55-6458-4f55-96ac-bd18ecb461d1@cmss.chinamobile.com>
+Date:   Thu, 27 Aug 2020 09:37:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200821150134.2581465-1-guro@fb.com> <20200821150134.2581465-8-guro@fb.com>
-In-Reply-To: <20200821150134.2581465-8-guro@fb.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 26 Aug 2020 18:38:01 -0700
-Message-ID: <CALvZod62e=y1-HJJrC7dQQiarRR9o5t+4y_NtZT4B7aGhF46WQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 07/30] bpf: refine memcg-based memory
- accounting for devmap maps
-To:     Roman Gushchin <guro@fb.com>
-Cc:     bpf@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux MM <linux-mm@kvack.org>, Song Liu <songliubraving@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200826165308.GJ4965@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 8:18 AM Roman Gushchin <guro@fb.com> wrote:
->
-> Include map metadata and the node size (struct bpf_dtab_netdev) on
-> element update into the accounting.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Acked-by: Song Liu <songliubraving@fb.com>
+Hi Mark
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+在 2020/8/27 0:53, Mark Brown 写道:
+> On Wed, Aug 26, 2020 at 11:09:18PM +0800, Tang Bin wrote:
+>> The function fsl_spdif_probe() is only called with an openfirmware
+>> platform device. Therefore there is no need to check that the passed
+>> in device is NULL.
+> Why is this an issue - the check will make things more robust if someone
+> manages to load the driver on a non-DT system and otherwise costs us a
+> couple of instructions?
+Thanks for your reply.
+
+In this function,  function fsl_spdif_probe() can be triggered only if 
+the platform_device and platform_driver matches,
+
+so I think the judgement at the beginning is redundant.
+
+Thanks
+
+Tang Bin
+
+
+
