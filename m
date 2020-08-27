@@ -7,59 +7,62 @@ X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE85C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4C9020825
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD4420825
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:57:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y5MRA59w";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DQXb9cwE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TQB6dctE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wl1BNZCE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgH0H47 (ORCPT
+        id S1728710AbgH0H46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:56:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36664 "EHLO
+        Thu, 27 Aug 2020 03:56:58 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36582 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728394AbgH0Hy0 (ORCPT
+        with ESMTP id S1728406AbgH0Hy1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:54:26 -0400
-Date:   Thu, 27 Aug 2020 07:54:23 -0000
+        Thu, 27 Aug 2020 03:54:27 -0400
+Date:   Thu, 27 Aug 2020 07:54:24 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598514863;
+        s=2020; t=1598514865;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Az18AKM6BT8dn3vLckngVOwJYbF7d4EKE80ICkYF9xk=;
-        b=Y5MRA59w9Y5BXsMDUMM4gd0HGr0OdtEV+Yty6SGej+oVMEuGS+iQzsZjns1FtlqMLbzeJz
-        SFbieKXh0dTeFu4FZjjueiju0tkw4gr6wk3tuwTjxg56CgF5STDqu109BQcSV+ONxCYn2N
-        R0x4O7zCUCy/FWwK8F6JYp4Bye7nLz/iBYozWyNbqjTPV1C1zTVt4cHDKcE8Dn40Sfn0J8
-        +WoHf/l0HAbjUSmwXnrqGTG7zoyEbU4jYJ+yW2u7zMNTMz/WTH5MoJS4nHVeJnXoO87e7c
-        lBLt9nAay5wEezNk62M64eWmQ+o1FXtPn9EuG9QyuvXiL/ZDcmTeL3opkDXRPw==
+        bh=w6tcGtJrvRcbQhtixqj4vbfrcEniRUb9RXpR3YqCwCo=;
+        b=TQB6dctEgX0fc8AumrRync/Zakej1MV8+C5SdB3pfIiqbvm9FXGb0p9QXojiHnpHW8kgs7
+        s9D0mf98P3DDjWTwtaxrTYTl70PEZYBvhAShWuprkGJJXeXVynFhuUyKXE4zt0MFuxiLD/
+        79wuAEeezkyjkX+nBPttwGTYUMy7Vm6S5m/C8GKILD4WqTtfygzAonkBxHq0NETsexpZPi
+        bac/bKso9X8/aFQnGTYv7QUzqowWKeWLGKNjq8W+x40cRmElfI4KUdQAF+p0SWXCQJMdcI
+        hNn+SNdCSMocakz/Ch8shNQ7feSiBGfg65xzlZedTUL9VqHfZM5KrF89DcYYMg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598514863;
+        s=2020e; t=1598514865;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Az18AKM6BT8dn3vLckngVOwJYbF7d4EKE80ICkYF9xk=;
-        b=DQXb9cwE/EVZ+CnBWsWbyU9vp8zzYk8xe5uURy65EX4yNUvkLjUbr5kBG5hwN5Ap4uDp8r
-        FA+u/i9pHokPUWBw==
-From:   "tip-bot2 for Randy Dunlap" <tip-bot2@linutronix.de>
+        bh=w6tcGtJrvRcbQhtixqj4vbfrcEniRUb9RXpR3YqCwCo=;
+        b=Wl1BNZCEH17lXb7fiw6YMVZ+QKNrI6EiUgUned3CXaSaiecJCXQT442N0omRBF5gMGBrOH
+        dpPVpFKbfK+5YPBQ==
+From:   "tip-bot2 for Nicholas Piggin" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] seqlock: Fix multiple kernel-doc warnings
-Cc:     kernel test robot <lkp@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
+Subject: [tip: locking/core] lockdep: Only trace IRQ edges
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200817000200.20993-1-rdunlap@infradead.org>
-References: <20200817000200.20993-1-rdunlap@infradead.org>
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Marco Elver <elver@google.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200723105615.1268126-1-npiggin@gmail.com>
+References: <20200723105615.1268126-1-npiggin@gmail.com>
 MIME-Version: 1.0
-Message-ID: <159851486318.20229.14949275173019468028.tip-bot2@tip-bot2>
+Message-ID: <159851486478.20229.13478044751401692917.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -71,86 +74,139 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     a28e884b966e713da29caefbb347efea77367d22
-Gitweb:        https://git.kernel.org/tip/a28e884b966e713da29caefbb347efea77367d22
-Author:        Randy Dunlap <rdunlap@infradead.org>
-AuthorDate:    Sun, 16 Aug 2020 17:02:00 -07:00
+Commit-ID:     044d0d6de9f50192f9697583504a382347ee95ca
+Gitweb:        https://git.kernel.org/tip/044d0d6de9f50192f9697583504a382347ee95ca
+Author:        Nicholas Piggin <npiggin@gmail.com>
+AuthorDate:    Thu, 23 Jul 2020 20:56:14 +10:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 26 Aug 2020 12:42:02 +02:00
+CommitterDate: Wed, 26 Aug 2020 12:41:56 +02:00
 
-seqlock: Fix multiple kernel-doc warnings
+lockdep: Only trace IRQ edges
 
-Fix kernel-doc warnings in <linux/seqlock.h>.
+Problem:
 
-../include/linux/seqlock.h:152: warning: Incorrect use of kernel-doc format:  * seqcount_LOCKNAME_init() - runtime initializer for seqcount_LOCKNAME_t
-../include/linux/seqlock.h:164: warning: Incorrect use of kernel-doc format:  * SEQCOUNT_LOCKTYPE() - Instantiate seqcount_LOCKNAME_t and helpers
-../include/linux/seqlock.h:229: warning: Function parameter or member 'seq_name' not described in 'SEQCOUNT_LOCKTYPE_ZERO'
-../include/linux/seqlock.h:229: warning: Function parameter or member 'assoc_lock' not described in 'SEQCOUNT_LOCKTYPE_ZERO'
-../include/linux/seqlock.h:229: warning: Excess function parameter 'name' description in 'SEQCOUNT_LOCKTYPE_ZERO'
-../include/linux/seqlock.h:229: warning: Excess function parameter 'lock' description in 'SEQCOUNT_LOCKTYPE_ZERO'
-../include/linux/seqlock.h:695: warning: duplicate section name 'NOTE'
+  raw_local_irq_save(); // software state on
+  local_irq_save(); // software state off
+  ...
+  local_irq_restore(); // software state still off, because we don't enable IRQs
+  raw_local_irq_restore(); // software state still off, *whoopsie*
 
-Demote kernel-doc notation for the macros "seqcount_LOCKNAME_init()" and
-"SEQCOUNT_LOCKTYPE()"; scripts/kernel-doc does not handle them correctly.
+existing instances:
 
-Rename function parameters in SEQCNT_LOCKNAME_ZERO() documentation
-to match the macro's argument names. Change the macro name in the
-documentation to SEQCOUNT_LOCKTYPE_ZERO() to match the macro's name.
+ - lock_acquire()
+     raw_local_irq_save()
+     __lock_acquire()
+       arch_spin_lock(&graph_lock)
+         pv_wait() := kvm_wait() (same or worse for Xen/HyperV)
+           local_irq_save()
 
-For raw_write_seqcount_latch(), rename the second NOTE: to NOTE2:
-to prevent a kernel-doc warning. However, the generated output is not
-quite as nice as it could be for this.
+ - trace_clock_global()
+     raw_local_irq_save()
+     arch_spin_lock()
+       pv_wait() := kvm_wait()
+	 local_irq_save()
 
-Fix a typo: s/LOCKTYPR/LOCKTYPE/
+ - apic_retrigger_irq()
+     raw_local_irq_save()
+     apic->send_IPI() := default_send_IPI_single_phys()
+       local_irq_save()
 
-Fixes: 0efc94c5d15c ("seqcount: Compress SEQCNT_LOCKNAME_ZERO()")
-Fixes: e4e9ab3f9f91 ("seqlock: Fold seqcount_LOCKNAME_init() definition")
-Fixes: a8772dccb2ec ("seqlock: Fold seqcount_LOCKNAME_t definition")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Possible solutions:
+
+ A) make it work by enabling the tracing inside raw_*()
+ B) make it work by keeping tracing disabled inside raw_*()
+ C) call it broken and clean it up now
+
+Now, given that the only reason to use the raw_* variant is because you don't
+want tracing. Therefore A) seems like a weird option (although it can be done).
+C) is tempting, but OTOH it ends up converting a _lot_ of code to raw just
+because there is one raw user, this strips the validation/tracing off for all
+the other users.
+
+So we pick B) and declare any code that ends up doing:
+
+	raw_local_irq_save()
+	local_irq_save()
+	lockdep_assert_irqs_disabled();
+
+broken. AFAICT this problem has existed forever, the only reason it came
+up is because commit: 859d069ee1dd ("lockdep: Prepare for NMI IRQ
+state tracking") changed IRQ tracing vs lockdep recursion and the
+first instance is fairly common, the other cases hardly ever happen.
+
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+[rewrote changelog]
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200817000200.20993-1-rdunlap@infradead.org
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Tested-by: Marco Elver <elver@google.com>
+Link: https://lkml.kernel.org/r/20200723105615.1268126-1-npiggin@gmail.com
 ---
- include/linux/seqlock.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/powerpc/include/asm/hw_irq.h | 11 ++++-------
+ include/linux/irqflags.h          | 15 +++++++--------
+ 2 files changed, 11 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-index 962d976..300cbf3 100644
---- a/include/linux/seqlock.h
-+++ b/include/linux/seqlock.h
-@@ -138,7 +138,7 @@ static inline void seqcount_lockdep_reader_access(const seqcount_t *s)
- #endif
+diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm/hw_irq.h
+index 3a0db7b..35060be 100644
+--- a/arch/powerpc/include/asm/hw_irq.h
++++ b/arch/powerpc/include/asm/hw_irq.h
+@@ -200,17 +200,14 @@ static inline bool arch_irqs_disabled(void)
+ #define powerpc_local_irq_pmu_save(flags)			\
+ 	 do {							\
+ 		raw_local_irq_pmu_save(flags);			\
+-		trace_hardirqs_off();				\
++		if (!raw_irqs_disabled_flags(flags))		\
++			trace_hardirqs_off();			\
+ 	} while(0)
+ #define powerpc_local_irq_pmu_restore(flags)			\
+ 	do {							\
+-		if (raw_irqs_disabled_flags(flags)) {		\
+-			raw_local_irq_pmu_restore(flags);	\
+-			trace_hardirqs_off();			\
+-		} else {					\
++		if (!raw_irqs_disabled_flags(flags))		\
+ 			trace_hardirqs_on();			\
+-			raw_local_irq_pmu_restore(flags);	\
+-		}						\
++		raw_local_irq_pmu_restore(flags);		\
+ 	} while(0)
+ #else
+ #define powerpc_local_irq_pmu_save(flags)			\
+diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
+index 00d553d..3ed4e87 100644
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -191,25 +191,24 @@ do {						\
  
- /**
-- * typedef seqcount_LOCKNAME_t - sequence counter with LOCKTYPR associated
-+ * typedef seqcount_LOCKNAME_t - sequence counter with LOCKTYPE associated
-  * @seqcount:	The real sequence counter
-  * @lock:	Pointer to the associated spinlock
-  *
-@@ -148,7 +148,7 @@ static inline void seqcount_lockdep_reader_access(const seqcount_t *s)
-  * that the write side critical section is properly serialized.
-  */
+ #define local_irq_disable()				\
+ 	do {						\
++		bool was_disabled = raw_irqs_disabled();\
+ 		raw_local_irq_disable();		\
+-		trace_hardirqs_off();			\
++		if (!was_disabled)			\
++			trace_hardirqs_off();		\
+ 	} while (0)
  
--/**
-+/*
-  * seqcount_LOCKNAME_init() - runtime initializer for seqcount_LOCKNAME_t
-  * @s:		Pointer to the seqcount_LOCKNAME_t instance
-  * @lock:	Pointer to the associated LOCKTYPE
-@@ -217,7 +217,7 @@ SEQCOUNT_LOCKTYPE(rwlock_t,		rwlock,		false,	s->lock)
- SEQCOUNT_LOCKTYPE(struct mutex,		mutex,		true,	s->lock)
- SEQCOUNT_LOCKTYPE(struct ww_mutex,	ww_mutex,	true,	&s->lock->base)
+ #define local_irq_save(flags)				\
+ 	do {						\
+ 		raw_local_irq_save(flags);		\
+-		trace_hardirqs_off();			\
++		if (!raw_irqs_disabled_flags(flags))	\
++			trace_hardirqs_off();		\
+ 	} while (0)
  
--/**
-+/*
-  * SEQCNT_LOCKNAME_ZERO - static initializer for seqcount_LOCKNAME_t
-  * @name:	Name of the seqcount_LOCKNAME_t instance
-  * @lock:	Pointer to the associated LOCKTYPE
-@@ -688,7 +688,7 @@ static inline int raw_read_seqcount_t_latch(seqcount_t *s)
-  *	to miss an entire modification sequence, once it resumes it might
-  *	observe the new entry.
-  *
-- * NOTE:
-+ * NOTE2:
-  *
-  *	When data is a dynamic data structure; one should use regular RCU
-  *	patterns to manage the lifetimes of the objects within.
+ #define local_irq_restore(flags)			\
+ 	do {						\
+-		if (raw_irqs_disabled_flags(flags)) {	\
+-			raw_local_irq_restore(flags);	\
+-			trace_hardirqs_off();		\
+-		} else {				\
++		if (!raw_irqs_disabled_flags(flags))	\
+ 			trace_hardirqs_on();		\
+-			raw_local_irq_restore(flags);	\
+-		}					\
++		raw_local_irq_restore(flags);		\
+ 	} while (0)
+ 
+ #define safe_halt()				\
