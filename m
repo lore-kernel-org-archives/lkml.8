@@ -2,86 +2,120 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF06C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E612B22B47
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFDB32177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:17:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwfwxD6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgH0JRa (ORCPT
+        id S1728409AbgH0JRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:17:30 -0400
-Received: from mga18.intel.com ([134.134.136.126]:14585 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgH0JR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:17:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37284 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726938AbgH0JR2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 05:17:28 -0400
-IronPort-SDR: sjrbu/lqPu7v3BCkJxkze/Z4ycI6GbnaveubbOrYLU4EC5FqTZrMGhdPxYjl5smBrh7E0U9OC5
- aVY7a42lklZQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="144126653"
-X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
-   d="scan'208";a="144126653"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 02:17:27 -0700
-IronPort-SDR: HdQxFMr4zj2enzdTrdXmT80q/wsDt4eE7fyTrad+oevMENTV2ftTvQfynT7O87FaDZnxXq2+fx
- +0n5m6xLojHA==
-X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
-   d="scan'208";a="475133419"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 02:17:25 -0700
-Subject: Re: [mm] c566586818:
- BUG:kernel_hang_in_early-boot_stage,last_printk:Probing_EDD(edd=off_to_disable)...ok
-To:     Catalin Marinas <catalin.marinas@arm.com>, Qian Cai <cai@lca.pw>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-References: <34a960a0-ec0b-3c26-ec73-e415a8197757@intel.com>
- <9D9FBD8D-DF19-4DA9-B0B1-260BA72D3712@lca.pw> <20200826173010.GD24545@gaia>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <120c99ce-6439-2945-e990-588c42a9e582@intel.com>
-Date:   Thu, 27 Aug 2020 17:16:47 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9E0AC061264;
+        Thu, 27 Aug 2020 02:17:27 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id k15so3009964pfc.12;
+        Thu, 27 Aug 2020 02:17:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LhS9tD7SvsG3f30qBsS7AzNDrX3/gQHRk3YrLNvlZOA=;
+        b=DwfwxD6EugJWTcUqCG1123+gjK6WKsUjmHOC4I+QKwyKFWthlTCKriJ4sPL1Wxu48e
+         u2Av6K+jbl76B89VNKBA+ZQVrr1vjZ7jayzV/10saxuY9Dxvy7ZPe9SY2iiHt7QMX8Q0
+         4meUwX0OKdjssMluZq2ZnD4vG3MeoMpmx6E7hbBd0OxbUWuJkJ0/gOAnwGOajJ8JglWW
+         AChiACHQ0bKB9AHCasVdZvMsJXmXJyx9SJmSLgsWc9Ya49QyS7qDkzcPOMd8+p9Xa8CK
+         f8yJF/+JDOX7xA/4Nq5BAzUEz1ZrIUx6CQRvDZ2Gy/t0IZKxoG3lTX41Q6G1lQIl3rjl
+         LoHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LhS9tD7SvsG3f30qBsS7AzNDrX3/gQHRk3YrLNvlZOA=;
+        b=h0QELOfJz1HqC0pMQLY4VKf/+Cbnb7iifOi9ALFtNxWpFBT3vPQJJD2ewcCfDYf3dm
+         TeHfu1+5SiXW1RpJiu2w95rtoXM9YhW43093dx04BI1yGDkSs2jlpzPEFMte6d4UGL1Y
+         PP1OGUQPORiOmAV5V6VBy0S0iaBYbyAtwCjGSrd5uc+QFvFb90u0xXcFyTSBp6UXk867
+         Ub8hWDqymtWWL2wHI4PxOWETAyIH2NT/NG5GNz2/znn6rO0fdyKYKmClKz7u3eB9coNE
+         XrAGUJNjISgx13FLIQSiyQ5gBqE0dl9078SHwMGhh7osEzZISyPZwcKJMNoWLhP+vto4
+         uuPQ==
+X-Gm-Message-State: AOAM530iHbn6ZILpwbQVFIJisHcPquz9mTR2n1PcwEM7fCxEHPwlkaQu
+        q4GOtKXXCJWA2QaF7YDlIUd3Mt6lZUHvm57+1mQ=
+X-Google-Smtp-Source: ABdhPJx790xAH1rBOESsyw6YMCOPQAeo4g+Z4lZL05LND9tv5WIYhOnO1Y0bAo5lSHAAxsKY81MMaMLnZ4X3BK74/2I=
+X-Received: by 2002:a17:902:407:: with SMTP id 7mr15480051ple.167.1598519847448;
+ Thu, 27 Aug 2020 02:17:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200826173010.GD24545@gaia>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200826181706.11098-1-krzk@kernel.org> <20200826181706.11098-20-krzk@kernel.org>
+In-Reply-To: <20200826181706.11098-20-krzk@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 27 Aug 2020 12:17:10 +0300
+Message-ID: <CAHp75VdMqB2-TrNPvqp+gMbyY39ytJ9O8ZM5cY1r2kVdi4DbzA@mail.gmail.com>
+Subject: Re: [PATCH 20/24] Input: resistive-adc-touch - Simplify with dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-input <linux-input@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 26, 2020 at 9:21 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
 
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-On 8/27/20 1:30 AM, Catalin Marinas wrote:
-> On Tue, Aug 25, 2020 at 11:02:40PM -0400, Qian Cai wrote:
->> On Aug 25, 2020, at 8:44 PM, Rong Chen <rong.a.chen@intel.com> wrote:
->>> I rebuilt the kernel on commit c566586818 but the error changed to
->>> "RIP: 0010:clear_page_orig+0x12/0x40", and the error can be
->>> reproduced on parent commit:
->> Catalin, any thought? Sounds like those early kmemleak allocations
->> cause some sort of memory corruption?
-> I can't immediately see how but Rong implies that the error also happens
-> on the parent commit. Does it mean the bisection isn't entirely right?
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/input/touchscreen/resistive-adc-touch.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/input/touchscreen/resistive-adc-touch.c b/drivers/input/touchscreen/resistive-adc-touch.c
+> index cfc8bb4553f7..46b5a6caef84 100644
+> --- a/drivers/input/touchscreen/resistive-adc-touch.c
+> +++ b/drivers/input/touchscreen/resistive-adc-touch.c
+> @@ -108,12 +108,8 @@ static int grts_probe(struct platform_device *pdev)
+>
+>         /* get the channels from IIO device */
+>         st->iio_chans = devm_iio_channel_get_all(dev);
+> -       if (IS_ERR(st->iio_chans)) {
+> -               error = PTR_ERR(st->iio_chans);
+> -               if (error != -EPROBE_DEFER)
+> -                       dev_err(dev, "can't get iio channels.\n");
+> -               return error;
+> -       }
+> +       if (IS_ERR(st->iio_chans))
+> +               return dev_err_probe(dev, PTR_ERR(st->iio_chans), "can't get iio channels\n");
+>
+>         chan = &st->iio_chans[0];
+>         st->pressure = false;
+> --
+> 2.17.1
 >
 
-Hi Catalin,
 
-The original bisection is for "BUG:kernel_hang_in_early-boot_stage" 
-which locate to commit c566586818,
-and the boot will go on and meet the error "RIP: 
-0010:clear_page_orig+0x12/0x40" if we set
-CONFIG_DEBUG_KMEMLEAK_MEM_POOL_SIZE=400, but the error shouldn't cause 
-by commit c566586818
-because we can reproduce the error on parent commit.
-
-Best Regards,
-Rong Chen
+-- 
+With Best Regards,
+Andy Shevchenko
