@@ -2,110 +2,76 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F3DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B13C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B75C0207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:45:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CWltxGSq"
+	by mail.kernel.org (Postfix) with ESMTP id 6CA9122BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:45:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgH0KpH (ORCPT
+        id S1728498AbgH0Kpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:45:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbgH0Ko7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:44:59 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87C50C061264;
-        Thu, 27 Aug 2020 03:44:58 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x7so4911198wro.3;
-        Thu, 27 Aug 2020 03:44:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jHZbJ00C/f1K1DaZMLb0eY9W+8FWEJIJdHMmXmrVo2E=;
-        b=CWltxGSqJqTnBvTSqb044t2/wgwetRPVnoGQy++DNRNCyk2xQLZOMzxwDszpWyIMJO
-         2UnJmIQpyDzlX2SsQo6KZUeIr4gB5+gCrxEgFrwNWAAe/75o7PMcNI0u65YjG9YG6ODH
-         njANnMzoXh7jMcj7ZyfAyhMG12cWr+EXjyn70VNNUr3yXFGxxY6qg7GnmKH+B9u3xn/U
-         WKiUgbgzYFBxrLqgKSvDhdRXg0Y0dwRMLrkX20F3xIqpiWw+wAw3CpO2POWq2m/ACM1d
-         pTcLwlz5FB5JaFIHz4nrDrI4aWrOUp3ueVsWSo+3Om8ulic6d893MVSHuV5kUDd3kOxt
-         c7aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jHZbJ00C/f1K1DaZMLb0eY9W+8FWEJIJdHMmXmrVo2E=;
-        b=OSCJQAVR8f+kpb6cdQrdTzTV34zbkfNxUKT8ZF6krSa1Gq07gtuY9srT6Xy5Da/zGS
-         WphTRjBnmXZC3+sEvNbhEx8f0hU76D/sNTd2yrjn+AodQkX8Uiqc7DFSrdN8AZ6lqSHf
-         wq5bA6s2X8f0a64CsRbxAuhBS+ZKPQHuH4Goe4lvhTrFUn8Nqbz+ZYOWatfxmUOdhL8c
-         l802GB1FB+g2vGYDXTt3o457VpjDyJw8MREHc7cVsRIccH22M/ESsj5uhBKfZ8k/86jG
-         YH3LYoYYKbyEs4QQNU8/fRDB9YlXWwdSI8oPhzf+7xpBqi4K6zNQnzMFsE0t8yapRjRH
-         jtOQ==
-X-Gm-Message-State: AOAM530LQddgZitI/PcVQvU3Yimx91Q3iqAYkTDTuZdCHXj06rxutHdX
-        adLNa9yEcSnJb8Y5f+EMevNFeZA5WzKLeqpMz/Y=
-X-Google-Smtp-Source: ABdhPJx/nnMNZzdz51vNTwqRRAqSdXIEeo5csO5i7hm5GF700/WOBx/88e08iEWcI7Y3UO4eC2wffxgx1/oGC+i/voc=
-X-Received: by 2002:adf:f483:: with SMTP id l3mr6596174wro.148.1598525097155;
- Thu, 27 Aug 2020 03:44:57 -0700 (PDT)
+        Thu, 27 Aug 2020 06:45:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57676 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726266AbgH0KpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 06:45:24 -0400
+Received: from gaia (unknown [46.69.195.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AF46207F7;
+        Thu, 27 Aug 2020 10:45:20 +0000 (UTC)
+Date:   Thu, 27 Aug 2020 11:45:18 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        kasan-dev@googlegroups.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Branislav Rankov <Branislav.Rankov@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 31/35] kasan, arm64: implement HW_TAGS runtime
+Message-ID: <20200827104517.GH29264@gaia>
+References: <cover.1597425745.git.andreyknvl@google.com>
+ <4e86d422f930831666137e06a71dff4a7a16a5cd.1597425745.git.andreyknvl@google.com>
 MIME-Version: 1.0
-References: <20200817090637.26887-2-allen.cryptic@gmail.com> <20200827101540.6589BC433CB@smtp.codeaurora.org>
-In-Reply-To: <20200827101540.6589BC433CB@smtp.codeaurora.org>
-From:   Allen Pais <allen.cryptic@gmail.com>
-Date:   Thu, 27 Aug 2020 16:14:45 +0530
-Message-ID: <CAEogwTB=S6M6Xp4w5dd_W3b6Depmn6Gmu3RmAf96pRankoJQqg@mail.gmail.com>
-Subject: Re: [PATCH 01/16] wireless: ath5k: convert tasklets to use new
- tasklet_setup() API
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Jakub Kicinski <kuba@kernel.org>, jirislaby@kernel.org,
-        mickflemm@gmail.com, mcgrof@kernel.org, chunkeey@googlemail.com,
-        Larry.Finger@lwfinger.net, stas.yakovlev@gmail.com,
-        helmut.schaa@googlemail.com, pkshih@realtek.com,
-        yhchuang@realtek.com, dsd@gentoo.org, kune@deine-taler.de,
-        Kees Cook <keescook@chromium.org>, ath11k@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, b43-dev@lists.infradead.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, Allen Pais <allen.lkml@gmail.com>,
-        Romain Perier <romain.perier@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4e86d422f930831666137e06a71dff4a7a16a5cd.1597425745.git.andreyknvl@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
->
-> Allen Pais <allen.cryptic@gmail.com> wrote:
->
-> > In preparation for unconditionally passing the
-> > struct tasklet_struct pointer to all tasklet
-> > callbacks, switch to using the new tasklet_setup()
-> > and from_tasklet() to pass the tasklet pointer explicitly.
-> >
-> > Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> > Signed-off-by: Allen Pais <allen.lkml@gmail.com>
-> > Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
->
-> Patch applied to ath-next branch of ath.git, thanks.
->
-> c068a9ec3c94 ath5k: convert tasklets to use new tasklet_setup() API
->
-> --
-> https://patchwork.kernel.org/patch/11717393/
->
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+On Fri, Aug 14, 2020 at 07:27:13PM +0200, Andrey Konovalov wrote:
+> diff --git a/mm/kasan/mte.c b/mm/kasan/mte.c
+> new file mode 100644
+> index 000000000000..43b7d74161e5
+> --- /dev/null
+> +++ b/mm/kasan/mte.c
 
-Could you please drop these and wait for V2. A change was proposed
-for from_tasklet() api. The new API should be picked shortly. I will send out
-the updated version early next week.
+Since this is an arm64-specific kasan backend, I wonder whether it makes
+more sense to keep it under arch/arm64 (mte-kasan.c).
 
-Thanks,
-- Allen
+> diff --git a/mm/kasan/report_mte.c b/mm/kasan/report_mte.c
+> new file mode 100644
+> index 000000000000..dbbf3aaa8798
+> --- /dev/null
+> +++ b/mm/kasan/report_mte.c
+
+Same for this one.
+
+-- 
+Catalin
