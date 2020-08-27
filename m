@@ -2,115 +2,129 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CB8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E40C1207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD42E207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:26:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FUb9Pw7f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dy3ZnT0b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgH0NXx (ORCPT
+        id S1727066AbgH0N0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 09:23:53 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:41641 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727095AbgH0NRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:17:18 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598534237; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=qjM5TvevdF5BS4WxhbMS1yvGeMjUtBBsveQHXqbPgr0=;
- b=FUb9Pw7f6GwqFPr0hnP5ZGow/lKHLurrAl5tlTZpVbQkWgb3ncwnRhrrq1e6+CSFyYlAt1rT
- C6QP1UTr6GEFARu8tchT6yuS/0b3nGYvqWDo+7KnUV3way98pUOGx4TiA1LU3bhSvpslKeSs
- kCYJIP67EsExSJUlj5/3kT0IF+g=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5f47b23615988fabe06c04dc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 13:16:38
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5DCFFC433CA; Thu, 27 Aug 2020 13:16:38 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 11869C433CA;
-        Thu, 27 Aug 2020 13:16:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 11869C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Thu, 27 Aug 2020 09:26:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727954AbgH0NSZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 09:18:25 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C61BC061264;
+        Thu, 27 Aug 2020 06:18:23 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id t2so5160741wma.0;
+        Thu, 27 Aug 2020 06:18:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wGOm36EJ1gvLT2vEuLBm0bHlK+EP6bPxI7F5u3wXPR4=;
+        b=Dy3ZnT0b4XvZlnNaeII0JsUKxqSjbFz+Z7OhG/wjskDJ/PnJsbHSQbx0BWivbJdHCH
+         j6/XjkAmC6OhhG7LLrlrb0uVUZxo6XoMDZ9MQFzUje9t8Oa2bQwUZfJHnZiHcJvrUbsG
+         i77TYccRCB91FAJgI7GLKikJ65oci6GcYLN6oOq8oZj4zFHMUKIxxXM9F/Ois0A7RM/1
+         PzHNRvNPBCYxatHt0pBMaVGby2n7AK/w/7ODwumi2Jf7qznj9hSMwHP455BJTgjO5cAW
+         La7nqnS0MLQY5AVl+LJDGpQGpAh/vqClkQNJamCHCKipH5+QJKZ3HC9mL9ZrSgSLCh7X
+         OzLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wGOm36EJ1gvLT2vEuLBm0bHlK+EP6bPxI7F5u3wXPR4=;
+        b=LHdx9fXhqdJxngz/XfjcezIQknPHyULrNAf5ildmbIjfl3K25SPp48m9b5+w/2QadA
+         5CpnXum9kHpU/SxgMGI3vLECQobu75saZ9ZM+PN4NX28/2UEbMHwagHqkvWzpkfdchW9
+         qQ5B1om2pHG1VmUSjHbhh16GjPSh3e6P+7yR9qatpUCy9Tl6H2EoEp3o+jv9oeng4Oeu
+         cB5Bxfdxrm+aDJ5nRHRNYJyGi7aAiwGYjSdw+O5T6GIh2gt5wWvpsNjcH6Cnh45nw8J5
+         pqOWrlU2Y1YOcE3NjFBfhBBM9qzGpAio3V5VPiw/ldLWhclTdOUSnMfchYYmhd4oQxI/
+         /tEQ==
+X-Gm-Message-State: AOAM531lWyzIjJuT9+++TjjnMPLIJs3dfrQD58259dTJ/MmMh83q/ed8
+        ACl+GoDhxhit98qMqytGCUw=
+X-Google-Smtp-Source: ABdhPJzI5QjfPnh3uAIN0AT002leMR5QibZkzxxKT/UrRwGZ8om6hYO2KClj4bQXPg1weT+7NmHm2g==
+X-Received: by 2002:a1c:19c2:: with SMTP id 185mr11738054wmz.8.1598534301988;
+        Thu, 27 Aug 2020 06:18:21 -0700 (PDT)
+Received: from lenovo-laptop ([2a00:23c4:4b87:b300:cc3a:c411:9a4b:dba6])
+        by smtp.gmail.com with ESMTPSA id f3sm5022756wmb.35.2020.08.27.06.18.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 06:18:21 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+X-Google-Original-From: Alex Dewar <alex.dewar@gmx.co.uk>
+Date:   Thu, 27 Aug 2020 14:18:19 +0100
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alex Dewar <alex.dewar90@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        accessrunner-general@lists.sourceforge.net,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+Message-ID: <20200827131819.7rcl2f5js3hkoqj2@lenovo-laptop>
+References: <20200824222322.22962-1-alex.dewar90@gmail.com>
+ <48f2dc90-7852-eaf1-55d7-2c85cf954688@rasmusvillemoes.dk>
+ <20200827071537.GA168593@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [net] mwifiex: Increase AES key storage size to 256 bits
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200825153829.38043-1-luzmaximilian@gmail.com>
-References: <20200825153829.38043-1-luzmaximilian@gmail.com>
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     unlisted-recipients:; (no To-header on input)
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Kaloyan Nikolov <konik98@gmail.com>
-Illegal-Object: Syntax error in Cc: address found on vger.kernel.org:
-        Cc:     unlisted-recipients:; (no To-header on input)Amitkumar Karwar <amitkarwar@gmail.com>
-                                                                     ^-missing end of address
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200827131638.5DCFFC433CA@smtp.codeaurora.org>
-Date:   Thu, 27 Aug 2020 13:16:38 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827071537.GA168593@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maximilian Luz <luzmaximilian@gmail.com> wrote:
-
-> Following commit e18696786548 ("mwifiex: Prevent memory corruption
-> handling keys") the mwifiex driver fails to authenticate with certain
-> networks, specifically networks with 256 bit keys, and repeatedly asks
-> for the password. The kernel log repeats the following lines (id and
-> bssid redacted):
+On Thu, Aug 27, 2020 at 09:15:37AM +0200, Greg Kroah-Hartman wrote:
+> On Thu, Aug 27, 2020 at 08:42:06AM +0200, Rasmus Villemoes wrote:
+> > On 25/08/2020 00.23, Alex Dewar wrote:
+> > > kernel/cpu.c: don't use snprintf() for sysfs attrs
+> > > 
+> > > As per the documentation (Documentation/filesystems/sysfs.rst),
+> > > snprintf() should not be used for formatting values returned by sysfs.
+> > >
+> > 
+> > Sure. But then the security guys come along and send a patch saying
+> > "sprintf is evil, always pass a buffer bound". Perhaps with a side of
+> > "this code could get copy-pasted, better not promote the use of sprintf
+> > more than strictly necessary".
+> > 
+> > Can we have a sysfs_sprintf() (could just be a macro that does sprintf)
+> > to make it clear to the next reader that we know we're in a sysfs show
+> > method? It would make auditing uses of sprintf() much easier.
 > 
->     mwifiex_pcie 0000:01:00.0: info: trying to associate to '<id>' bssid <bssid>
->     mwifiex_pcie 0000:01:00.0: info: associated to bssid <bssid> successfully
->     mwifiex_pcie 0000:01:00.0: crypto keys added
->     mwifiex_pcie 0000:01:00.0: info: successfully disconnected from <bssid>: reason code 3
+> Code churn to keep code checkers quiet for pointless reasons?  What
+> could go wrong with that...
 > 
-> Tracking down this problem lead to the overflow check introduced by the
-> aforementioned commit into mwifiex_ret_802_11_key_material_v2(). This
-> check fails on networks with 256 bit keys due to the current storage
-> size for AES keys in struct mwifiex_aes_param being only 128 bit.
+> It should be pretty obvious to any reader that you are in a sysfs show
+> method, as almost all of them are trivially tiny and obvious.  Yes, it
+> doesn't help with those that make blanket statements like "sprintf is
+> evil", but I think that kind of just shows them that they shouldn't be
+> making foolish blanket statements like that :)
+
+Perhaps I should have mentioned this in the commit message, but the problem
+is that snprintf() doesn't return the number of bytes written to the
+destination buffer, but the number of bytes that *would have been written if
+they fitted*, which may be more than the bounds specified [1]. So "return
+snprintf(...)" for sysfs attributes is an antipattern. If you need bounded
+string ops, scnprintf() is the way to go. Using snprintf() can give a
+false sense of security, because it isn't necessarily safe.
+
+[1] https://github.com/KSPP/linux/issues/105
+
 > 
-> To fix this issue, increase the storage size for AES keys to 256 bit.
+> Anyway, we've had this for 20 years, if sysfs calls are the only left
+> remaining user of sprintf(), then I'll be glad to consider using a
+> "wrapper" function or macro.
 > 
-> Fixes: e18696786548 ("mwifiex: Prevent memory corruption handling keys")
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-> Reported-by: Kaloyan Nikolov <konik98@gmail.com>
-> Tested-by: Kaloyan Nikolov <konik98@gmail.com>
-> Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
-> Tested-by: Brian Norris <briannorris@chromium.org>
-
-Patch applied to wireless-drivers.git, thanks.
-
-4afc850e2e9e mwifiex: Increase AES key storage size to 256 bits
-
--- 
-https://patchwork.kernel.org/patch/11735929/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+> thanks,
+> 
+> greg k-h
