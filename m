@@ -2,186 +2,125 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40626C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE93C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13D1120825
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:59:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lm1ITC9J"
+	by mail.kernel.org (Postfix) with ESMTP id D490720786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbgH0H7Y (ORCPT
+        id S1728620AbgH0H7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:59:24 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:43349 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728051AbgH0H7T (ORCPT
+        Thu, 27 Aug 2020 03:59:36 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:40258 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728447AbgH0H6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:59:19 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200827075917epoutp0126dab66655722678bbc923295328c8a9~vERDwsof50467504675epoutp01Z
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 07:59:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200827075917epoutp0126dab66655722678bbc923295328c8a9~vERDwsof50467504675epoutp01Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598515157;
-        bh=XmQobl0I9SrP7Lo7crSQbDWM11M4lwMtuavjrwnEwx8=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=lm1ITC9JWIseXbxcrHAXPXgF0VoaKfTwrXMhkRXLkcsHfdj21UKPBvS0g4rwl258b
-         aj/eEVREAVqP+tAAF61Sj8pUbrAvyrW9/ZbbZD+YJ8p6VYMFZEuUbKgIaYjYByZOJL
-         WBgLmfyBwxs/9dneRkHdVC9xxv0PTC1UHeDFcLTE=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200827075916epcas1p3142fe9029a8547e408324f1df60f8161~vERDEt0pg3045030450epcas1p3y;
-        Thu, 27 Aug 2020 07:59:16 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4BcZr10WVTzMqYm9; Thu, 27 Aug
-        2020 07:59:13 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3E.F3.29173.AC7674F5; Thu, 27 Aug 2020 16:59:06 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200827075905epcas1p1d289cac765600d22fd1c328231b038c1~vEQ5GN3hm0863608636epcas1p1U;
-        Thu, 27 Aug 2020 07:59:05 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200827075905epsmtrp13e94d11ddb2679a6dac5c61eed77c774~vEQ5FU0Ft0369603696epsmtrp10;
-        Thu, 27 Aug 2020 07:59:05 +0000 (GMT)
-X-AuditID: b6c32a37-9cdff700000071f5-1b-5f4767caabaf
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        8D.A9.08382.9C7674F5; Thu, 27 Aug 2020 16:59:05 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200827075905epsmtip15162cdec85194f81cae322912822ac78~vEQ40zql82713327133epsmtip14;
-        Thu, 27 Aug 2020 07:59:05 +0000 (GMT)
-Subject: Re: [PATCH v3 1/1] extcon: ptn5150: Set the VBUS and POLARITY
- property capability
-To:     vadivel.muruganx.ramuthevar@linux.intel.com,
-        linux-kernel@vger.kernel.org
-Cc:     vijaikumar.kanagarajan@gmail.com, krzk@kernel.org,
-        myungjoo.ham@samsung.com, heikki.krogerus@linux.intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <b0e5e2e7-0ac6-4b0b-6d56-2766db28359d@samsung.com>
-Date:   Thu, 27 Aug 2020 17:11:32 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Thu, 27 Aug 2020 03:58:16 -0400
+Received: by mail-il1-f199.google.com with SMTP id z5so3600681ilp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:58:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=hQQsbVV5DfwwY5C17HqiQeKaMF+p/UJ2oy2T9wCo46c=;
+        b=L7CVCluUcXwHUCkybnX3Wa3Eohr9oj6zseJstsLWMBkcUp1E1oWuwawKDYRvkgeabW
+         NLzVGzA8OMceIc4HdHvY2j3rdJcFiVmYllEb6KvQhk/80EuTUphpAtwiriKu4HDTNqYU
+         KExG12PQ7xP0jFxGesErNvZoAk/1AyFhmT29FiIKESxD0YatDhZKxYFWf5xheSQN1NA6
+         rwHNzM9hSfopDRWzPYHSdwe1AlNG+m9nMSjnF3lH2iVqZ/ccZGlIJCv3gH8OS+ip0qBF
+         UQ/aMXfjNXci+UEMZG8z/zyb3UuPSgDOJncARdw5XzgEqx+kHsiueRKM3XBCbFMg+9ht
+         IyFQ==
+X-Gm-Message-State: AOAM531xoreOxabeyTJd3EBRmerSbnJ0HcX3qEsMUzdrZibZeWsP47CL
+        4SIS6UqQJvaAQZrgirnVUECf0E5/PTd8Xo6DvPUAPF4H3maz
+X-Google-Smtp-Source: ABdhPJzGeDwVWj3dpjeTIT+FiInDIT2gBGRlYXk3lc0O7o26ZMeM4q3Hcna5bvcRYc5FckZXtI2yWdI4t4Jm8W0U/5B141qWw9ye
 MIME-Version: 1.0
-In-Reply-To: <47fef2ec-012c-03c7-13ef-0882b4f7146b@linux.intel.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMJsWRmVeSWpSXmKPExsWy7bCmvu6pdPd4g7fPlSyuv42w6Fq9k8Xi
-        /PkN7BaXd81hs7jduILN4kvHejaLDcfus1m83D+d1aKp6TibA6fHzll32T0W73nJ5LFpVSeb
-        x7yTgR59W1YxenzeJBfAFpVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeY
-        m2qr5OIToOuWmQN0k5JCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwLJArzgxt7g0
-        L10vOT/XytDAwMgUqDAhO+P4yn72gjt8FccbXzA3MO7n6WLk5JAQMJHobmli6mLk4hAS2MEo
-        0bBqEzuE84lR4u6GBcwQzjdGidnPFzPDtKz8vI4RxBYS2MsosWddDETRe0aJzc3XgGZxcAgL
-        xEh8XCAHUiMi4C/x8PU1sHpmge2MEo9W14PYbAJaEvtf3GADsfkFFCWu/njMCNLKK2An8eZd
-        BUiYRUBVYuOiD+wgtqhAmMTJbS1gY3gFBCVOznzCAmJzCjhL/Dr8jh1ivLjErSfzmSBseYnm
-        rbPB7pcQ2MIhMXHnR1aI+10k+m/cYoGwhSVeHd/CDmFLSbzsb4OyqyVWnjzCBtHcwSixZf8F
-        qGZjif1LJ4P9yCygKbF+lz5EWFFi5++5UD/ySbz72sMKUiIhwCvR0SYEUaIscfnBXSYIW1Ji
-        cXsn2wRGpVlI3pmF5IVZSF6YhbBsASPLKkax1ILi3PTUYsMCY+S43sQITq1a5jsYp739oHeI
-        kYmD8RCjBAezkgiv4EXneCHelMTKqtSi/Pii0pzU4kOMpsAAnsgsJZqcD0zueSXxhqZGxsbG
-        FiaGZqaGhkrivA9vKcQLCaQnlqRmp6YWpBbB9DFxcEo1MO19ZLdRqfKc4BaXTI2nhmc2rTzy
-        uEqk6vZvpRWP7ja6vz43x2kPu8K/xAaZEhkXgTbh8M71z8Q8jicW95Ud/zJz+Y49/5ZpHOTq
-        SU3vCnfMVjrQo5izIvej7AWRoOf+b65VSuyT+zpXYONLmeWlL1IaJqz2a/X12B+16MeDzt+h
-        5asbr5+7FBh9RsR92v3ZqZulCvzny+RMzggW4Jli3/Nv17EIXY5H4cL8lXM3nGPv/R7r+c5M
-        +FXgou7ko2bCQUzv//ytm/3t5wvBBodbv87YPxDrXvVfj+EWm9bV5/yrtrvGnJt9hUv9zpK5
-        eqys+c3bsx2vx79L+/6cl627z4rZsnKmX31pZJ3i0WvfypVYijMSDbWYi4oTAf9u78M2BAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnkeLIzCtJLcpLzFFi42LZdlhJTvdkunu8wc31KhbX30ZYdK3eyWJx
-        /vwGdovLu+awWdxuXMFm8aVjPZvFhmP32Sxe7p/OatHUdJzNgdNj56y77B6L97xk8ti0qpPN
-        Y97JQI++LasYPT5vkgtgi+KySUnNySxLLdK3S+DKOL6yn73gDl/F8cYXzA2M+3m6GDk5JARM
-        JFZ+XsfYxcjFISSwm1Hi/c6LLBAJSYlpF48ydzFyANnCEocPF0PUvGWUuNJ1lx0kLiwQI/Fx
-        gRxIuYiAr8T6x9OZQWqYBbYzShw/f40FouEmk8SNjzPBhrIJaEnsf3GDDcTmF1CUuPrjMSPI
-        IF4BO4k37ypAwiwCqhIbF31gB7FFBcIkdi55zARi8woISpyc+QRsDKeAs8Svw+/AapgF1CX+
-        zLvEDGGLS9x6Mp8JwpaXaN46m3kCo/AsJO2zkLTMQtIyC0nLAkaWVYySqQXFuem5xYYFhnmp
-        5XrFibnFpXnpesn5uZsYwXGmpbmDcfuqD3qHGJk4GA8xSnAwK4nwCl50jhfiTUmsrEotyo8v
-        Ks1JLT7EKM3BoiTOe6NwYZyQQHpiSWp2ampBahFMlomDU6qB6ShX+orz+mmrjCzzl88/+VUv
-        1kj8Cs9psSXOCW01aacW7a32SFj6zO2rvO/M5HDj2ttzDE7PaNzJF7Yp4uVDpW1bf6RLbnC/
-        cY9lnkcuw41NeXeFWhe7aWuIRZ20Ff1y/Y1mz8Hi3LtViocPb78l3CjwbDUPp8LPy1Lch18k
-        WPiI5ZgpVtwSPfLE/wDzc8/Z28pjtbfvq7fOvsiXEfT96AvxvyyeFgZ1x3UmVFs80F9+UilF
-        hJdbNSHlbdZ0u9Xvu15/CH/nmb/oafiaTZFTdXb/yU6S2qXQ6H66b82m9OqYMK7tD7+Vyk+e
-        /Wnl9u37ouTZV/dz5l2+3lnwcu39iZ+mvH7y1dSLO74i/m6jpBJLcUaioRZzUXEiALFc/esi
-        AwAA
-X-CMS-MailID: 20200827075905epcas1p1d289cac765600d22fd1c328231b038c1
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200827065143epcas1p3da86f8d70e6d78c64a925f4d9c0f92eb
-References: <20200827065128.55094-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <CGME20200827065143epcas1p3da86f8d70e6d78c64a925f4d9c0f92eb@epcas1p3.samsung.com>
-        <20200827065128.55094-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-        <e0ac8482-d607-6095-0d9b-2918f0e7a0f2@samsung.com>
-        <47fef2ec-012c-03c7-13ef-0882b4f7146b@linux.intel.com>
+X-Received: by 2002:a92:6a0c:: with SMTP id f12mr15351925ilc.213.1598515095022;
+ Thu, 27 Aug 2020 00:58:15 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 00:58:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000068340d05add74c29@google.com>
+Subject: WARNING: ODEBUG bug in get_signal
+From:   syzbot <syzbot+e3cf8f93cf86936710db@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, linux-kernel@vger.kernel.org, oleg@redhat.com,
+        peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello,
 
-On 8/27/20 4:53 PM, Ramuthevar, Vadivel MuruganX wrote:
-> Hi,
-> 
-> On 27/8/2020 3:56 pm, Chanwoo Choi wrote:
->> On 8/27/20 3:51 PM, Ramuthevar,Vadivel MuruganX wrote:
->>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>>
->>> Set the capability value of property for VBUS and POLARITY.
->>>
->>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>> ---
->>>   drivers/extcon/extcon-ptn5150.c | 7 +++++++
->>>   1 file changed, 7 insertions(+)
->>>
->>> diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
->>> index 841c9fe211f1..20d49a54c36e 100644
->>> --- a/drivers/extcon/extcon-ptn5150.c
->>> +++ b/drivers/extcon/extcon-ptn5150.c
->>> @@ -275,6 +275,13 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
->>>           return ret;
->>>       }
->>>   +    extcon_set_property_capability(info->edev, EXTCON_USB,
->>> +                       EXTCON_PROP_USB_VBUS);
->>> +    extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
->>> +                       EXTCON_PROP_USB_VBUS);
->>> +    extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
->>> +                       EXTCON_PROP_USB_TYPEC_POLARITY);
->>
->> Above codes used the space for the indentation to keep the vertical line.
->> I think that we better to use tab for the indentation.
->>
->> If there are no objection, I'll fix and then apply it.
-> Thank you!, no objection , please fix it.
+syzbot found the following issue on:
 
-Applied it. Thanks.
+HEAD commit:    15bc20c6 Merge tag 'tty-5.9-rc3' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1566d8fe900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=978db74cb30aa994
+dashboard link: https://syzkaller.appspot.com/bug?extid=e3cf8f93cf86936710db
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13236eb6900000
 
-> 
-> Regards
-> Vadivel
->>
->>> +
->>>       /* Initialize PTN5150 device and print vendor id and version id */
->>>       ret = ptn5150_init_dev_type(info);
->>>       if (ret)
->>>
->>
->>
-> 
-> 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e3cf8f93cf86936710db@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+ODEBUG: free active (active state 1) object type: rcu_head hint: 0x0
+WARNING: CPU: 1 PID: 7108 at lib/debugobjects.c:485 debug_print_object+0x160/0x250 lib/debugobjects.c:485
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 7108 Comm: syz-executor.0 Not tainted 5.9.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:231
+ __warn.cold+0x20/0x4a kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+ exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:485
+Code: dd e0 26 94 88 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48 8b 14 dd e0 26 94 88 48 c7 c7 40 1c 94 88 e8 d2 36 a6 fd <0f> 0b 83 05 93 4f 13 07 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
+RSP: 0018:ffffc900068a7b80 EFLAGS: 00010086
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+RDX: ffff888090f64140 RSI: ffffffff815dafc7 RDI: fffff52000d14f62
+RBP: 0000000000000001 R08: 0000000000000001 R09: ffff8880ae720f8b
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffffff89bd6780
+R13: 0000000000000000 R14: dead000000000100 R15: dffffc0000000000
+ __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
+ debug_check_no_obj_freed+0x301/0x41c lib/debugobjects.c:998
+ kmem_cache_free.part.0+0x16d/0x1f0 mm/slab.c:3692
+ task_work_run+0xdd/0x190 kernel/task_work.c:141
+ get_signal+0xd89/0x1f00 kernel/signal.c:2561
+ arch_do_signal+0x82/0x2520 arch/x86/kernel/signal.c:811
+ exit_to_user_mode_loop kernel/entry/common.c:136 [inline]
+ exit_to_user_mode_prepare+0x15d/0x1c0 kernel/entry/common.c:167
+ syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:242
+ __do_fast_syscall_32+0x63/0x80 arch/x86/entry/common.c:127
+ do_fast_syscall_32+0x2f/0x70 arch/x86/entry/common.c:149
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+RIP: 0023:0xf7f05549
+Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000f76ff0cc EFLAGS: 00000296 ORIG_RAX: 00000000000000ff
+RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000000001
+RDX: 0000000000000006 RSI: 0000000020000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
