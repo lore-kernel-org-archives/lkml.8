@@ -2,167 +2,193 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8668BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A68FC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7E722B4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:54:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lg/AH9AE"
+	by mail.kernel.org (Postfix) with ESMTP id 0844822B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:54:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598540064;
+	bh=LzWZBpCw/l+Ix/GXPE6nae42Wme8sXfeIYoOLqaRLsQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=KeS27DvwZ0jm6e2RLepNOtKn4jCNKvGA9g+m+xBQDOZExVezJ849AaE+StWStJiHK
+	 Y8O3upwdqKijcNN/EbTfOTUhmASi1wLb0qIe4PxQkdMaxBVtwe6jUQ6ZiVRpGPpvsH
+	 y8PubhV8kNnqIz1uwaadiz/CwPWGxRlLGBsRkc/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgH0OyM (ORCPT
+        id S1727833AbgH0NMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:54:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46230 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbgH0NOu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:14:50 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D162C06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:14:46 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x9so5075365wmi.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:14:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/84K+kCuZ6/6lubgCBELCtdZ4/XE9uVpPslJepcM11E=;
-        b=Lg/AH9AEhSUK+isMDgj7wH/mY7ANdDWwoM2RAo0z4gxnb6aSWwsvpON4v9iaEoRa+O
-         Z9wd0bp41a0csDlRHs/2yTjdoMvi/P5Dn2U6SgGi26+dcGQFnYLlOap6sPQauFsROzbL
-         lm8QkvJQhXdMU7cncWqQIxL4/0vpcCPO8ofTvqfFKYUV/32NX6ZgfVeFZyyWv39XFtUu
-         m79mlcpJDhIddlRlUqbQSuYVzKbZnoc3HH9zeiHOk45L0PNzqPhBzMop82hNu+8+Mc78
-         +NPhyT1/o3c9RZY83CGypUjgbcUtOBxDHAdmSUu5WUOF/RgA88UwrPnwDNFwWbf4ysmK
-         UnMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/84K+kCuZ6/6lubgCBELCtdZ4/XE9uVpPslJepcM11E=;
-        b=HCRx5NjDB4cu0Bi9ugwBw4WqVf4lcC0OBX5uiPfH2frw+KQAY97h+cFYyI1Yo0tkK+
-         ejAV4nPrmowAiJPur3YGLrjIYpwn5fKzt8MYl7YF0py295nKgnkYslyPlTSkKh+mPAq3
-         F+JUBivg7q/1rgzNLq0P0u7DFJEZ+vH96dB68sheaVWvRXXcVaDI5sYevv+2t/Fh/gw5
-         cxnLsh/FU0Elwiypmcb0LzJMFNCmQs5MDNIC5JJPW7PYNpXGtJYV7hpvBGuUMN4lJ5zs
-         5Rv/vJuuMXVb1zw9JKSsHw66ghyATzl7wo1V0PJysBJSy1T2+mcL1lmagJABmehFRdKU
-         y9Ew==
-X-Gm-Message-State: AOAM530v8XImlW9zpvOkB1ido3/Vf+GrqQiorPbXIJYuBjdYVkSvdwNw
-        L/jbiElqYhD1IUUmY/wsv0Us8g==
-X-Google-Smtp-Source: ABdhPJzN9i8ZfDEBRslZvQ/bhX0aOKXV6A70ZxGYjAxbH8D/kgbxlur+s8QLGMJ46nypABJ6nrmuZA==
-X-Received: by 2002:a1c:1d17:: with SMTP id d23mr11063997wmd.187.1598534084691;
-        Thu, 27 Aug 2020 06:14:44 -0700 (PDT)
-Received: from elver.google.com ([100.105.32.75])
-        by smtp.gmail.com with ESMTPSA id a8sm5844814wrh.86.2020.08.27.06.14.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 06:14:43 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 15:14:38 +0200
-From:   Marco Elver <elver@google.com>
-To:     David Gow <davidgow@google.com>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Randy Dunlap <rd.dunlab@gmail.com>,
-        Theodore Ts'o <tytso@mit.edu>, Tim Bird <Tim.Bird@sony.com>,
-        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: kunit: Add naming guidelines
-Message-ID: <20200827131438.GA3597431@elver.google.com>
-References: <20200702071416.1780522-1-davidgow@google.com>
+        Thu, 27 Aug 2020 09:12:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727112AbgH0NKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 09:10:35 -0400
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi [91.155.214.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2095B207CD;
+        Thu, 27 Aug 2020 13:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598533367;
+        bh=LzWZBpCw/l+Ix/GXPE6nae42Wme8sXfeIYoOLqaRLsQ=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=y0Z196NIPvRRFED15YhQtorRsjOAL/5EHRTli8FDYNANC23zGBgTup+7OEOHNLZU6
+         yjR68sJL4gcNocA9V4maauV4CZLScAgY4aBIvQ56F73mQ0ZDQz2pwgAcE+d6Fjy4v6
+         tjj2go46yC/493h+pidRAT7l+Uzv/tpbV0gPSOx0=
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Roger Quadros <rogerq@ti.com>, Peter Chen <peter.chen@nxp.com>
+Cc:     Pawel Laszczak <pawell@cadence.com>,
+        Rahul Kumar <kurahul@cadence.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 3/3] usb: cdns3: Enable workaround for USB2.0 PHY Rx
+ compliance test PHY lockup
+In-Reply-To: <b083883d-b8c3-ee16-6b02-8987cade17ed@ti.com>
+References: <20200825120059.12436-1-rogerq@ti.com>
+ <20200825120059.12436-4-rogerq@ti.com>
+ <20200826031948.GA7646@b29397-desktop>
+ <DM6PR07MB5529A43AFDEB25993595DB59DD540@DM6PR07MB5529.namprd07.prod.outlook.com>
+ <20200826071504.GA19661@b29397-desktop>
+ <DM6PR07MB5529EB2FB7E3380321191B44DD540@DM6PR07MB5529.namprd07.prod.outlook.com>
+ <AM7PR04MB71576DF6C03387C7628DBE3A8B540@AM7PR04MB7157.eurprd04.prod.outlook.com>
+ <ab38721a-ef48-c6a7-aa33-3085ca7b8852@ti.com>
+ <20200827002339.GA17559@b29397-desktop>
+ <b083883d-b8c3-ee16-6b02-8987cade17ed@ti.com>
+Date:   Thu, 27 Aug 2020 16:02:39 +0300
+Message-ID: <87sgc8i6mo.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200702071416.1780522-1-davidgow@google.com>
-User-Agent: Mutt/1.14.4 (2020-06-18)
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 02, 2020 at 12:14AM -0700, David Gow wrote:
-> As discussed in [1], KUnit tests have hitherto not had a particularly
-> consistent naming scheme. This adds documentation outlining how tests
-> and test suites should be named, including how those names should be
-> used in Kconfig entries and filenames.
-> 
-> [1]:
-> https://lore.kernel.org/linux-kselftest/202006141005.BA19A9D3@keescook/t/#u
-> 
-> Signed-off-by: David Gow <davidgow@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> ---
-...
-> +An example Kconfig entry:
-> +
-> +.. code-block:: none
-> +
-> +        config FOO_KUNIT_TEST
-> +                tristate "KUnit test for foo" if !KUNIT_ALL_TESTS
-> +                depends on KUNIT
-> +                default KUNIT_ALL_TESTS
-> +                help
-> +                    This builds unit tests for foo.
-> +
-> +                    For more information on KUnit and unit tests in general, please refer
-> +                    to the KUnit documentation in Documentation/dev-tools/kunit
-> +
-> +                    If unsure, say N
-> +
-> +
-> +Test Filenames
-> +==============
-> +
-> +Where possible, test suites should be placed in a separate source file in the
-> +same directory as the code being tested.
-> +
-> +This file should be named ``<suite>_kunit.c``. It may make sense to strip
-> +excessive namespacing from the source filename (e.g., ``firmware_kunit.c`` instead of
-> +``<drivername>_firmware.c``), but please ensure the module name does contain the
-> +full suite name.
-
-First of all, thanks for the talk yesterday! I only looked at this
-because somebody pasted the LKML link. :-)
-
-The example about excessive namespacing seems confusing. Was it supposed
-to be 
-
-	[...] firmware_kunit.c`` instead of ``<drivername>_firmware_kunit.c [...]
-
-?
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
-While I guess this ship has sailed, and *_kunit.c is the naming
-convention now, I hope this is still just a recommendation and names of
-the form *-test.c are not banned!
+Hi,
 
-$> git grep 'KUNIT.*-test.o'
-	drivers/base/power/Makefile:obj-$(CONFIG_PM_QOS_KUNIT_TEST) += qos-test.o
-	drivers/base/test/Makefile:obj-$(CONFIG_KUNIT_DRIVER_PE_TEST) += property-entry-test.o
-	fs/ext4/Makefile:obj-$(CONFIG_EXT4_KUNIT_TESTS)		+= ext4-inode-test.o
-	kernel/Makefile:obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
-	lib/Makefile:obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
-	lib/kunit/Makefile:obj-$(CONFIG_KUNIT_TEST) +=		kunit-test.o
-	lib/kunit/Makefile:obj-$(CONFIG_KUNIT_TEST) +=		string-stream-test.o
-	lib/kunit/Makefile:obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=	kunit-example-test.o
+Roger Quadros <rogerq@ti.com> writes:
+>>>>>>>>> From: Pawel Laszczak <pawell@cadence.com>
+>>>>>>>>>
+>>>>>>>>> USB2.0 PHY hangs in Rx Compliance test when the incoming packet
+>>>>>>>>> amplitude is varied below and above the Squelch Level of Receiver
+>>>>>>>>> during the active packet multiple times.
+>>>>>>>>>
+>>>>>>>>> Version 1 of the controller allows PHY to be reset when RX fail
+>>>>>>>>> condition is detected to work around the above issue. This feature
+>>>>>>>>> is disabled by default and needs to be enabled using a bit from
+>>>>>>>>> the newly added PHYRST_CFG register. This patch enables the worka=
+round.
+>>>>>>>>>
+>>>>>>>>> As there is no way to distinguish between the controller version
+>>>>>>>>> before the device controller is started we need to rely on a DT
+>>>>>>>>> property to decide when to apply the workaround.
+>>>>>>>>
+>>>>>>>> Pawel, it could know the controller version at cdns3_gadget_start,
+>>>>>>>> but the controller starts when it tries to bind gadget driver, at
+>>>>>>>> that time, it has already known the controller version.
+>>>>>>>>
+>>>>>>>> For me, the device controller starts is using USB_CONF.DEVEN (Devi=
+ce
+>>>>>>>> Enable) through usb_gadget_connect, I am not sure if it is the same
+>>>>>>>> with yours.
+>>>>>>>>
+>>>>>>>
+>>>>>>> Yes in device mode driver knows controller version but this
+>>>>>>> workaround Must be enabled also in host mode. In host mode the
+>>>>>>> controller doesn't have access to device registers. The controller
+>>>>>>> version is placed in device register.
+>>>>>>>
+>>>>>>
+>>>>>> You may suggest your design team adding CHIP_VER register at global
+>>>>>> register region, it will easy the software engineer life.
+>>>>>>
+>>>>> >From what I read, this register is only enabling USB2 PHY reset
+>>>>>> software control, it needs for all chips with rev 0x0002450D, and the
+>>>>>> place you current change is only for 0x0002450D, right?
+>>>>>
+>>>>> Even I could say that this workaround should be enabled only for Spec=
+ific USB2
+>>>>> PHY  (only 0x0002450D)
+>>>>>
+>>>>> This bit should not have any impact for Cadence PHY but it can has Im=
+pact for third
+>>>>> party PHYs.
+>>>>>
+>>>>
+>>>> So, it is related to specific PHY, but enable this specific PHY reset =
+bit is at controller region, why don't
+>>>> put this enable bit at PHY region?
+>>>
+>>> I think this is related to Controller + PHY combination.
+>>> The fix for the issue is via a bit in the controller, so it needs to be=
+ managed by the
+>>> controller driver.
+>>>
+>>>>
+>>>> So, you use controller's device property to know this specific PHY, ca=
+n controller know this specific
+>>>> PHY dynamically?
+>>>
+>>> Still the PHY will have to tell the controller the enable that bit. How=
+ to do that?
+>>>
+>>> Adding a dt-property that vendors can used was the simplest option.
+>>>
+>>=20
+>> Ok, does all controllers with ver 0x0002450D need this fix? I just think
+>> if we introduce a flag stands for ver 0x0002450D in case this ver has
+>> other issues in future or just using phy reset enable property?
+>>=20
+>> Pawel & Roger, what's your opinion?
+>>=20
+> I think it is best to keep the flags specific to the issue rather than
+> a one flag for all issues with a specific version. This way you can
+> re-use the flag irrespective of IP version.
 
-$> git grep 'KUNIT.*_kunit.o'
-# Returns nothing
+I second that. Specially when some SoC-manufacturers may implement ECO
+fixes and not change IP revision.
 
+> But best case is that Cadence put a IP revision register in common area a=
+s you
+> have previously suggested so driver can automatically apply quirks to spe=
+cific
+> versions.
 
-Just an idea: Maybe the names are also an opportunity to distinguish
-real _unit_ style tests and then the rarer integration-style tests. I
-personally prefer using the more generic *-test.c, at least for the
-integration-style tests I've been working on (KUnit is still incredibly
-valuable for integration-style tests, because otherwise I'd have to roll
-my own poor-man's version of KUnit, so thank you!). Using *_kunit.c for
-such tests is unintuitive, because the word "unit" hints at "unit tests"
--- and having descriptive (and not misleading) filenames is still
-important. So I hope you won't mind if *-test.c are still used where
-appropriate.
+little too late for that :-)
 
-Thanks,
--- Marco
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJFBAEBCAAvFiEElLzh7wn96CXwjh2IzL64meEamQYFAl9Hru8RHGJhbGJpQGtl
+cm5lbC5vcmcACgkQzL64meEamQY8xg//WHz2GcqK1+sGxk+5lOGCP/rWdOLo+WMg
+UgBC36W9zMY0Cchh0rRluRfliavEkvtnIF12d8aQSg1tpqWQ+Mu2S8QwWUJCleaa
+wO77Ocyg3PfAOjHWEnWBJxrOoplNwnza/3uoKVfpPeJrHlqzwH9ibhe7MKdYlO13
+tTEHyGXL2G9tTiiF4KhEC0Q9W86i4lYscTfu9BZaRD0GESrnN+6BkLnBQHG7Eo2R
+fmj0ydezud89ezWtMhfSEXnsxRsylP/Nho5Rrd3mKyY4kL6A07JlGTzsZ5RDQmkp
+6V9MAyvw2IEIe41swFNf3VChP95c7eHmSVXlu0vuoJC+nluTqfHdCSq8LU6G1TQT
+BobJOm8/gSLfgNUua41wOf2HSDg0tNOzQ1FBPwJvphcLfDRJ0ExVjY12poRsaYV8
+ZISZzXrHddMVLOh5f36FeUkzEOVHl4Q13H9CjqOg+ehfqeXaY+iX7i3mVMkfpmsO
+eGCm5UUXxkcyvvlvCFYIcUTiWQ10y+M5Oql/HR5grD2MVEkUbWZyRU56WKRYkYgL
+VsOJ+lHx09MAo7aH2twsq/lf/A5zeo9f9qA/fyV0ppfCJBqeQOzuLGODD5r0zVWG
+F+tOI4MEAJyuQ4bKBPfENenFSck5oonFWZBtpMKYBD3JlG6u53MUFEIrMGTyUnl8
++ZbqFHkObCI=
+=7clK
+-----END PGP SIGNATURE-----
+--=-=-=--
