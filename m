@@ -2,112 +2,105 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D13DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B1DC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7912080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC162073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598553641;
-	bh=3rVr7CGpP71DL96a9V+Xr1Qn6CW2RhK3XaE9+rIDBts=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=F/hnRmjr2zmbiB7LljUIf6w7lb+/a8+u13etoP48gpvVVQEQVEdGb/s6J1/6Uc7iS
-	 Yt5p0jTkAIgObuhw4ub8b2BmsB/Z9DJPbkk1vNM6Y4SM/apnz9PbSn2dCQLID7tWzQ
-	 ygpeBro/quABJcRYy3qsxaaIdRjJ6X0dVY7A/pV0=
+	s=default; t=1598553645;
+	bh=dt4coWxXNYjS65WOHU4f6EglIm6iQ5oF+Hm9UigsEGE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uWtkbXKRg3yEQ3VnaYFmDL3B8YJ3YzQyXMGkmjZXFfFsWhjJlBi7OCdqt6YxV2iuU
+	 ldK+9916X5Zx9K+molF+409xjFRJDE6i3fu6yxyBpZ4Ly1nLHx4jFf/3/D86RwDmSm
+	 ED3z6TV+5UUJDY2YaXM1pZmWOeC0+39sICffW8aA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgH0Ski (ORCPT
+        id S1726878AbgH0Sko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:40:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbgH0Ski (ORCPT
+        Thu, 27 Aug 2020 14:40:44 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:44793 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbgH0Skj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:40:38 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 960B0C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:40:37 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id i10so7606292ljn.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j3Vd6g98KhVU6Iqw4vSL8bglGybIxelOWt5FP/Sv7j4=;
-        b=c5KMKyG6C7XEnhdxvESgyMYwmFezTimYCP0s3XadBQFgwZl9BYx8wM0CZwKfLEmj5Y
-         EPdPKzf2xFbs3wsYbHXCFag04NDG6SXaKu3bMGVW7Rb1oXNSQUY0oVth6/mNM31LZ5Ks
-         HKwLOkuzj60m09lJs5zfs8apSj9dwIjpQ+beE=
+        Thu, 27 Aug 2020 14:40:39 -0400
+Received: by mail-ej1-f67.google.com with SMTP id bo3so8996454ejb.11;
+        Thu, 27 Aug 2020 11:40:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j3Vd6g98KhVU6Iqw4vSL8bglGybIxelOWt5FP/Sv7j4=;
-        b=IwtOJQNp6OGhWDAoP+2numq27H3cf0Rjgy3iLtsdtukTslypOnyObUedhpPH3Wxs9y
-         k85lYkx4IhKUzt/ipBEAAvs7pyIBazAZ9Gv0TpXHMultTD9HsHYQlxbG26HhigsYoRYf
-         epnYiepYFBKbESJV6fF3Zhn2X6hXGWnM2BsoXUUdEu08eturv2ykHtpo8jv72WRAS7L/
-         5+VQBgG/tfgxZIzjL0c+/k6bLaE+I/0lS8xJIJ+vtBHkMvJBUZwJvAX0Dua0tpsWgiB9
-         gxMGqthjS47CcEDSSQ9ue3SOXHs701SkVjjvdu+hIdsYbh95z1VEcNC9UljfxJCY5WFy
-         03Ug==
-X-Gm-Message-State: AOAM532YgOlN4+OUMBDsIFnWoFufM8SI5iz+2EgagCAJgWt98DvcqKN/
-        EX+vC9BLaciGyRpyXIDgc+wprD8JS88LLg==
-X-Google-Smtp-Source: ABdhPJyHxLuCzId3wrJFIZVnJMoxz9tcRr3xsplxM7WRSFTIxHGgF/GgvXp3+LMMYOp7f8EpWdYr3g==
-X-Received: by 2002:a05:651c:1b4:: with SMTP id c20mr9878928ljn.432.1598553635692;
-        Thu, 27 Aug 2020 11:40:35 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id j1sm641044ljb.35.2020.08.27.11.40.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 11:40:34 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id m22so7575000ljj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:40:34 -0700 (PDT)
-X-Received: by 2002:a05:651c:503:: with SMTP id o3mr11144185ljp.312.1598553634230;
- Thu, 27 Aug 2020 11:40:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200827013636.149307-1-allen.lkml@gmail.com> <CAHk-=whiEUUrtnbgUH2xsD0+jNyoXudYJ4hGCA55MCjryaHGjw@mail.gmail.com>
- <1598553133.4237.8.camel@HansenPartnership.com>
-In-Reply-To: <1598553133.4237.8.camel@HansenPartnership.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 27 Aug 2020 11:40:18 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi8o+FvfQkUiH_2MUs3J19FzfMzumOViAJ2aboGg9qY7Q@mail.gmail.com>
-Message-ID: <CAHk-=wi8o+FvfQkUiH_2MUs3J19FzfMzumOViAJ2aboGg9qY7Q@mail.gmail.com>
-Subject: Re: [PATCH] linux/kernel.h: add container_from()
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Allen Pais <allen.lkml@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oDVzVcv1GncA1A9GcBvmV28MulHRr/qR43lfCwrJOTA=;
+        b=M6z8y26Nrts5BQkTq1yXho7eO88kxt2CmOnsnGfCnXW5zJ7dVDwUQxoa7h8Bq1VgH4
+         QW/vIgWiR5yWlElzh1IJsS+dnnHm4RKn6EnmGHeBSfIk5m4tAAG2k1sb8b+HcjERXdc0
+         CQN1Y7x/spgc5YW39lGWPYKxJ/fx3dp6NXBZcsmmMQlD3Kkm7CptSoqScYbYNDnx7bAP
+         sDBPjAq3zhNFnpYml29u1XGc8cm3GUnXV0sG8aaYePJmB/n+G+1Mx2eKCDpj3GM+JKGg
+         cIEUmfK0hBPE21Sit7lx7VkNHeMUQmJCx2BIzb6TwD/82xjnwle8YWo3PkmdtADRZEoK
+         hLvA==
+X-Gm-Message-State: AOAM531YZJdbcnOvKefqKv8iCxAYDqKcbq1Q4CTEc/Qvp88u2skOeyan
+        Ngan8bIW5N8iilqQ+KZ3ToqSx8i8WZvkwQfD
+X-Google-Smtp-Source: ABdhPJzQQrQizKXpDDhYdOaCPsxpZIWrNGdEeJeRidRKKnvdNVG6McNFLXQexn76rx0LV0wDSyWK6A==
+X-Received: by 2002:a17:906:1351:: with SMTP id x17mr21236951ejb.528.1598553636707;
+        Thu, 27 Aug 2020 11:40:36 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id m4sm2609458ejn.31.2020.08.27.11.40.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Aug 2020 11:40:36 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 20:40:33 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-input <linux-input@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jens Axboe <axboe@kernel.dk>
-Content-Type: text/plain; charset="UTF-8"
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH 04/24] Input: gpio-vibra - Simplify with dev_err_probe()
+Message-ID: <20200827184033.GA6196@kozik-lap>
+References: <20200826181706.11098-1-krzk@kernel.org>
+ <20200826181706.11098-4-krzk@kernel.org>
+ <CAHp75Vey_w7m4TZM9+=df-FMO6YW5DiSMQsupZsMb92Awg_x1Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vey_w7m4TZM9+=df-FMO6YW5DiSMQsupZsMb92Awg_x1Q@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 11:32 AM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
->
-> The tasklet rework people don't want to use container_of, which was our
-> first suggestion, because it produces lines which are "too long".
+On Thu, Aug 27, 2020 at 12:03:52PM +0300, Andy Shevchenko wrote:
+> On Wed, Aug 26, 2020 at 9:20 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > Common pattern of handling deferred probe can be simplified with
+> > dev_err_probe().  Less code and also it prints the error value.
+> 
+> >         vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
+> >         err = PTR_ERR_OR_ZERO(vibrator->vcc);
+> > -       if (err) {
+> > -               if (err != -EPROBE_DEFER)
+> > -                       dev_err(&pdev->dev, "Failed to request regulator: %d\n",
+> > -                               err);
+> > -               return err;
+> > -       }
+> > +       if (err)
+> > +               return dev_err_probe(&pdev->dev, err, "Failed to request regulator\n");
+> 
+> Can it be rather
+>   if (IS_ERR())
+>     return dev_err_probe(dev, PTR_ERR());
+> w/o err be involved?
 
-WTF?
+Good point.
 
-Next somebody will decide that our list handling macros don't match
-their mood, and make up their own.
-
-Guys, there's a real advantage to just following convention and not
-confusing people with new made-up stuff that does the same thing just
-using slightly different names and slightly different semantics.
-
-So let the tasklet rework people work on their own little thing if
-they can't play with the rest of the kernel.
-
-We'll just ignore them.
-
-              Linus
+Best regards,
+Krzysztof
