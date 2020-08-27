@@ -2,173 +2,76 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A245C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA7E20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D23320738
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:24:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WYZeTVhc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgH0IYC (ORCPT
+        id S1728369AbgH0IYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:24:02 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45902 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726395AbgH0IXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:23:55 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6EE67404E57DEB67FD5B;
-        Thu, 27 Aug 2020 16:23:53 +0800 (CST)
-Received: from huawei.com (10.174.187.31) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Thu, 27 Aug 2020
- 16:23:43 +0800
-From:   Yifei Jiang <jiangyifei@huawei.com>
-To:     <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-        <aou@eecs.berkeley.edu>, <anup.patel@wdc.com>,
-        <alistair.francis@wdc.com>, <atish.patra@wdc.com>,
-        <deepa.kernel@gmail.com>
-CC:     <kvm-riscv@lists.infradead.org>, <kvm@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <victor.zhangxiaofeng@huawei.com>, <wu.wubin@huawei.com>,
-        <zhang.zhanghailiang@huawei.com>, <dengkai1@huawei.com>,
-        <yinyipeng1@huawei.com>, Yifei Jiang <jiangyifei@huawei.com>
-Subject: [PATCH RFC 2/2] target/kvm: Add interfaces needed for log dirty
-Date:   Thu, 27 Aug 2020 16:22:51 +0800
-Message-ID: <20200827082251.1591-3-jiangyifei@huawei.com>
-X-Mailer: git-send-email 2.26.2.windows.1
-In-Reply-To: <20200827082251.1591-1-jiangyifei@huawei.com>
-References: <20200827082251.1591-1-jiangyifei@huawei.com>
+        Thu, 27 Aug 2020 04:24:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728363AbgH0IYM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 04:24:12 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5056AC06121B;
+        Thu, 27 Aug 2020 01:24:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=wRVRvBwHw4mKLQT5BkBZOHmTkNVsAilc82JLzdgdiFQ=; b=WYZeTVhcyUgsEJuYehPDTfQeC6
+        hdIJ+GHDZ7Lx85RR9NSO7b703Fd8D+0WUXycpsHfrAye2jxLdcvRrKf4CedVG70eq5TN9sbDoy/Ie
+        lxGlcYIMfI7tHsWaBRdMIxerlgj3jwMc5mqrifjYZtvcSM1rLfHZTyyaJ8sZB/zvuL3M8wv3zzHnu
+        pqOqjDW5ZKIDtXKGLF754ib/kRd6NPyidkl6fR3J5ex535yLT5GDOOQNuuHewALlii+CQ2xOymSPO
+        Z84Eko0WFWpIn4//Yz5HWmb0hPbB5vskC1vlUbvk4gO/E6x7QPwaeEL8uPlML7pGiD7XxWcN2QuMa
+        VOUcyflg==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBDCb-00030m-29; Thu, 27 Aug 2020 08:24:09 +0000
+Date:   Thu, 27 Aug 2020 09:24:08 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/9] iomap: Fix misplaced page flushing
+Message-ID: <20200827082408.GA11067@infradead.org>
+References: <20200824145511.10500-1-willy@infradead.org>
+ <20200824145511.10500-2-willy@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-Originating-IP: [10.174.187.31]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824145511.10500-2-willy@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add two interfaces of log dirty for kvm_main.c, and detele the interface
-kvm_vm_ioctl_get_dirty_log which is redundantly defined.
+On Mon, Aug 24, 2020 at 03:55:02PM +0100, Matthew Wilcox (Oracle) wrote:
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index bcfc288dba3f..cffd575e57b6 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -715,6 +715,7 @@ iomap_write_end_inline(struct inode *inode, struct page *page,
+>  {
+>  	void *addr;
+>  
+> +	flush_dcache_page(page);
+>  	WARN_ON_ONCE(!PageUptodate(page));
+>  	BUG_ON(pos + copied > PAGE_SIZE - offset_in_page(iomap->inline_data));
 
-CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT is added in defconfig.
+Please move the call down below the asserts.
 
-Signed-off-by: Yifei Jiang <jiangyifei@huawei.com>
-Signed-off-by: Yipeng Yin <yinyipeng1@huawei.com>
----
- arch/riscv/configs/defconfig |  1 +
- arch/riscv/kvm/Kconfig       |  1 +
- arch/riscv/kvm/mmu.c         | 43 ++++++++++++++++++++++++++++++++++++
- arch/riscv/kvm/vm.c          |  6 -----
- 4 files changed, 45 insertions(+), 6 deletions(-)
+Otherwise looks good:
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index d36e1000bbd3..857d799672c2 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -19,6 +19,7 @@ CONFIG_SOC_VIRT=y
- CONFIG_SMP=y
- CONFIG_VIRTUALIZATION=y
- CONFIG_KVM=y
-+CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT=y
- CONFIG_HOTPLUG_CPU=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
-diff --git a/arch/riscv/kvm/Kconfig b/arch/riscv/kvm/Kconfig
-index 2356dc52ebb3..91fcffc70e5d 100644
---- a/arch/riscv/kvm/Kconfig
-+++ b/arch/riscv/kvm/Kconfig
-@@ -26,6 +26,7 @@ config KVM
- 	select KVM_MMIO
- 	select HAVE_KVM_VCPU_ASYNC_IOCTL
- 	select SRCU
-+	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
- 	help
- 	  Support hosting virtualized guest machines.
- 
-diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
-index 88bce80ee983..df2a470c25e4 100644
---- a/arch/riscv/kvm/mmu.c
-+++ b/arch/riscv/kvm/mmu.c
-@@ -358,6 +358,43 @@ void stage2_wp_memory_region(struct kvm *kvm, int slot)
- 	kvm_flush_remote_tlbs(kvm);
- }
- 
-+/**
-+ * kvm_mmu_write_protect_pt_masked() - write protect dirty pages
-+ * @kvm:    The KVM pointer
-+ * @slot:   The memory slot associated with mask
-+ * @gfn_offset: The gfn offset in memory slot
-+ * @mask:   The mask of dirty pages at offset 'gfn_offset' in this memory
-+ *      slot to be write protected
-+ *
-+ * Walks bits set in mask write protects the associated pte's. Caller must
-+ * acquire kvm_mmu_lock.
-+ */
-+static void kvm_mmu_write_protect_pt_masked(struct kvm *kvm,
-+        struct kvm_memory_slot *slot,
-+        gfn_t gfn_offset, unsigned long mask)
-+{
-+    phys_addr_t base_gfn = slot->base_gfn + gfn_offset;
-+    phys_addr_t start = (base_gfn +  __ffs(mask)) << PAGE_SHIFT;
-+    phys_addr_t end = (base_gfn + __fls(mask) + 1) << PAGE_SHIFT;
-+
-+    stage2_wp_range(kvm, start, end);
-+}
-+
-+/*
-+ * kvm_arch_mmu_enable_log_dirty_pt_masked - enable dirty logging for selected
-+ * dirty pages.
-+ *
-+ * It calls kvm_mmu_write_protect_pt_masked to write protect selected pages to
-+ * enable dirty logging for them.
-+ */
-+void kvm_arch_mmu_enable_log_dirty_pt_masked(struct kvm *kvm,
-+        struct kvm_memory_slot *slot,
-+        gfn_t gfn_offset, unsigned long mask)
-+{
-+    kvm_mmu_write_protect_pt_masked(kvm, slot, gfn_offset, mask);
-+}
-+
-+
- int stage2_ioremap(struct kvm *kvm, gpa_t gpa, phys_addr_t hpa,
- 		   unsigned long size, bool writable)
- {
-@@ -433,6 +470,12 @@ void kvm_arch_sync_dirty_log(struct kvm *kvm, struct kvm_memory_slot *memslot)
- {
- }
- 
-+void kvm_arch_flush_remote_tlbs_memslot(struct kvm *kvm,
-+					struct kvm_memory_slot *memslot)
-+{
-+	kvm_flush_remote_tlbs(kvm);
-+}
-+
- void kvm_arch_free_memslot(struct kvm *kvm, struct kvm_memory_slot *free)
- {
- }
-diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
-index 4f2498198cb5..f7405676903b 100644
---- a/arch/riscv/kvm/vm.c
-+++ b/arch/riscv/kvm/vm.c
-@@ -12,12 +12,6 @@
- #include <linux/uaccess.h>
- #include <linux/kvm_host.h>
- 
--int kvm_vm_ioctl_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log)
--{
--	/* TODO: To be added later. */
--	return -ENOTSUPP;
--}
--
- int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- {
- 	int r;
--- 
-2.19.1
-
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
