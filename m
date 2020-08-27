@@ -2,85 +2,96 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B21C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5CBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90BDC2068E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3DC72078A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:43:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CMDsQQqW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728830AbgH0LmV (ORCPT
+        id S1728850AbgH0LnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 07:42:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:57106 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728660AbgH0Lb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 07:31:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3FAE1045;
-        Thu, 27 Aug 2020 04:31:03 -0700 (PDT)
-Received: from [192.168.1.190] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E08D53F68F;
-        Thu, 27 Aug 2020 04:31:01 -0700 (PDT)
-Subject: Re: [PATCH 25/35] kasan: introduce CONFIG_KASAN_HW_TAGS
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        kasan-dev@googlegroups.com
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1597425745.git.andreyknvl@google.com>
- <8a499341bbe4767a4ee1d3b8acb8bd83420ce3a5.1597425745.git.andreyknvl@google.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <b7884e93-008f-6b9f-32d8-6c03c7e14243@arm.com>
-Date:   Thu, 27 Aug 2020 12:33:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 27 Aug 2020 07:43:09 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:31486 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728723AbgH0LdT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 07:33:19 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598527998; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=7LDSBdIs9MxK1D0YmJUtozSeAA1LtdaBUbnzb467+QY=;
+ b=CMDsQQqW/9s52QTtON20woR8HkrriYiHV1XuQQWYEhRYPkwAXWGDk3JWvkObZRJ/iEp5cFjs
+ o5bstDy0ltHRRPLb2CgUjbfIVa7SJl99Ao8GhRKnR7PN3fGBuA5nDN6LKJ3zp/VKpXqcT+aq
+ yDOEn4h4PmJvnm1HeajJnUVTcHI=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f4799e515988fabe03b0f38 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 11:32:53
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9794EC433A0; Thu, 27 Aug 2020 11:32:53 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 52A9AC433C6;
+        Thu, 27 Aug 2020 11:32:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 52A9AC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <8a499341bbe4767a4ee1d3b8acb8bd83420ce3a5.1597425745.git.andreyknvl@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] ath11k: fix error check on return from call to
+ ath11k_core_firmware_request
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200819105712.51886-1-colin.king@canonical.com>
+References: <20200819105712.51886-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, ath11k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200827113253.9794EC433A0@smtp.codeaurora.org>
+Date:   Thu, 27 Aug 2020 11:32:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrey,
+Colin King <colin.king@canonical.com> wrote:
 
-On 8/14/20 6:27 PM, Andrey Konovalov wrote:
-> +config·KASAN_HW_TAGS
-> +» bool·"Hardware·tag-based·mode"
-> +» depends·on·HAVE_ARCH_KASAN_HW_TAGS
-> +» depends·on·SLUB
-> +» help
-> +» ··Enables·hardware·tag-based·KASAN·mode.
-> +
-> +» ··This·mode·requires·both·Memory·Tagging·Extension·and·Top·Byte·Ignore
-> +» ··support·by·the·CPU·and·therefore·is·only·supported·for·modern·arm64
-> +» ··CPUs·(MTE·added·in·ARMv8.5·ISA).
-> +
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The call to ath11k_core_firmware_request is returning a pointer that
+> can be set to an error code, however, this is not being checked.
+> Instead ret is being incorrecly checked for the error return. Fix the
+> error checking.
+> 
+> Addresses-Coverity: ("Logically dead code")
+> Fixes: 7b57b2ddec21 ("ath11k: create a common function to request all firmware files")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-I do not thing we should make KASAN_HW_TAGS MTE specific especially because it
-is in the common code (e.g. SPARC ADI might want to implement it in future).
+A similar patch has been already applied.
 
-Probably would be better to provide some indirection in the generic code an
-implement the MTE backend entirely in arch code.
+error: patch failed: drivers/net/wireless/ath/ath11k/qmi.c:1886
+error: drivers/net/wireless/ath/ath11k/qmi.c: patch does not apply
+stg import: Diff does not apply cleanly
 
-Thoughts?
+Patch set to Rejected.
 
 -- 
-Regards,
-Vincenzo
+https://patchwork.kernel.org/patch/11723519/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
