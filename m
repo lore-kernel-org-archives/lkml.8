@@ -2,463 +2,64 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B17C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B783C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE2C42087D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:44:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ASUfnAwN"
+	by mail.kernel.org (Postfix) with ESMTP id D67592177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgH0OoN (ORCPT
+        id S1727849AbgH0Ooo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:44:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53984 "EHLO
+        Thu, 27 Aug 2020 10:44:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728148AbgH0ODq (ORCPT
+        with ESMTP id S1728053AbgH0Ohg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:03:46 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3678FC0619C0;
-        Thu, 27 Aug 2020 07:02:27 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p37so3446423pgl.3;
-        Thu, 27 Aug 2020 07:02:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UdCpsZTzCCYntC6KrIJFb7IjzvVo+TE/5fdTdt2fe6Y=;
-        b=ASUfnAwNmkVD/TgWofl9nJ/MC+C7sHZvLWNc9AcpYUxkG5r8tc5senTf6Qbefv7+yv
-         HqTM22Wu88dCK49LWue1dzGLp9qGu+9ravln+a2g7kis+zPz79T/FdOBHn1FAeggWh+b
-         +f3iCi2gXTylX996rbw6N5R6sSmch4lMiNo8XftpSmwkDzzPgbUiddsjN5mbEUUMuqeC
-         x5xGH0ZVKSmNuFv22DyxzPVQkR9KACjqZ2Lo2o46zRklvLwT5ybLLRjBUB3m6PgX5L4x
-         bbBjPG390r6ORGs/NTFNdMyqFQTW39k7wAIlyJQ7gHEwudvxwKwXX2X94i3qIJIX4EIY
-         7g2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UdCpsZTzCCYntC6KrIJFb7IjzvVo+TE/5fdTdt2fe6Y=;
-        b=YqAOpxQsgwtVgb9J9SG1dayVlrnmiKoMBQpRcG8KJHTviMGBwKYLni46RAo0nnusp8
-         3dz5A0IasOfMkXMVa1ZEo+1BqqfvxPodywEI0aGhkYO3Y5IdlvjsEOl0UlhoDWtRC9nn
-         wBBMScQx7v0L2sCgAvQe/Y53bR2RycrgZD9Rxc0eFRs5cj+BEnNnxvw5gEoEaloEfRsv
-         pFPpiGhD2zdInHrVV72CR/JSA/oz8PFa0psQqI0Mpupq6gv5Ncul40bTdoD3G8pvU0LR
-         MeOYVx+u8c9kLTDTm2N5LVZoIfoy2yT2bdQhfYTh+Uz0sNlKEm4uoHUSKH6ilaZHqQol
-         tLFQ==
-X-Gm-Message-State: AOAM531+QxeC6CSZIcPnx3E65TXJYpVBIQ7HY93KVp8LUEj+T2/r1qyV
-        0HaS/OJjBNpwfa9FCUDYZgyAJ0JEe4E=
-X-Google-Smtp-Source: ABdhPJwcY4lU6YVkHzym4NZq7lQ2QKy2Z/43cb+y0RRTLlClFOss4vURbXDerjnoY79Zp0W0g26HfA==
-X-Received: by 2002:aa7:9d04:: with SMTP id k4mr16462305pfp.256.1598536945899;
-        Thu, 27 Aug 2020 07:02:25 -0700 (PDT)
-Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id fs12sm2371092pjb.21.2020.08.27.07.02.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 07:02:25 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v5 08/20] gpiolib: cdev: support GPIO_V2_GET_LINEINFO_IOCTL and GPIO_V2_GET_LINEINFO_WATCH_IOCTL
-Date:   Thu, 27 Aug 2020 22:00:08 +0800
-Message-Id: <20200827140020.159627-9-warthog618@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200827140020.159627-1-warthog618@gmail.com>
-References: <20200827140020.159627-1-warthog618@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 27 Aug 2020 10:37:36 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98D88C061264;
+        Thu, 27 Aug 2020 07:37:35 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id CADEC127504A2;
+        Thu, 27 Aug 2020 07:20:47 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 07:37:33 -0700 (PDT)
+Message-Id: <20200827.073733.1876161431562899494.davem@davemloft.net>
+To:     himadrispandya@gmail.com
+Cc:     kuba@kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH] net: usb: Fix uninit-was-stored issue in
+ asix_read_phy_addr()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200827065355.15177-1-himadrispandya@gmail.com>
+References: <20200827065355.15177-1-himadrispandya@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 27 Aug 2020 07:20:48 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for GPIO_V2_GET_LINEINFO_IOCTL and
-GPIO_V2_GET_LINEINFO_WATCH_IOCTL.
+From: Himadri Pandya <himadrispandya@gmail.com>
+Date: Thu, 27 Aug 2020 12:23:55 +0530
 
-The core of this change is the event kfifo switching to contain
-struct gpioline_info_changed_v2, instead of v1 as v2 is richer.
+> The buffer size is 2 Bytes and we expect to receive the same amount of
+> data. But sometimes we receive less data and run into uninit-was-stored
+> issue upon read. Hence modify the error check on the return value to match
+> with the buffer size as a prevention.
+> 
+> Reported-and-tested by: syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com
+> Signed-off-by: Himadri Pandya <himadrispandya@gmail.com>
 
-The two uAPI versions are mostly independent - other than where they both
-provide line info changes via reads on the chip fd.  As the info change
-structs differ between v1 and v2, the infowatch implementation tracks which
-version of the infowatch ioctl, either GPIO_GET_LINEINFO_WATCH_IOCTL or
-GPIO_V2_GET_LINEINFO_WATCH_IOCTL, initiates the initial watch and returns
-the corresponding info change struct to the read.  The version supported
-on that fd locks to that version on the first watch request, so subsequent
-watches from that process must use the same uAPI version.
-
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
-
-Changes for v5:
- - as per cover letter
-
-Changes for v4:
- - replace strncpy with memcpy in gpio_v2_line_info_to_v1
-
- drivers/gpio/gpiolib-cdev.c | 195 +++++++++++++++++++++++++++++++-----
- 1 file changed, 168 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index 1c0ed493cb83..281255e05323 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -162,7 +162,8 @@ static long linehandle_set_config(struct linehandle_state *lh,
- 		}
- 
- 		blocking_notifier_call_chain(&desc->gdev->notifier,
--					     GPIOLINE_CHANGED_CONFIG, desc);
-+					     GPIO_V2_LINE_CHANGED_CONFIG,
-+					     desc);
- 	}
- 	return 0;
- }
-@@ -334,7 +335,7 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
- 		}
- 
- 		blocking_notifier_call_chain(&desc->gdev->notifier,
--					     GPIOLINE_CHANGED_REQUESTED, desc);
-+					     GPIO_V2_LINE_CHANGED_REQUESTED, desc);
- 
- 		dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
- 			offset);
-@@ -724,7 +725,7 @@ static int linereq_create(struct gpio_device *gdev, void __user *ip)
- 		}
- 
- 		blocking_notifier_call_chain(&desc->gdev->notifier,
--					     GPIOLINE_CHANGED_REQUESTED, desc);
-+					     GPIO_V2_LINE_CHANGED_REQUESTED, desc);
- 
- 		dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
- 			offset);
-@@ -1071,7 +1072,7 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
- 		goto out_free_le;
- 
- 	blocking_notifier_call_chain(&desc->gdev->notifier,
--				     GPIOLINE_CHANGED_REQUESTED, desc);
-+				     GPIO_V2_LINE_CHANGED_REQUESTED, desc);
- 
- 	irq = gpiod_to_irq(desc);
- 	if (irq <= 0) {
-@@ -1138,17 +1139,59 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
- 	return ret;
- }
- 
-+static void gpio_v2_line_info_to_v1(struct gpio_v2_line_info *info_v2,
-+				    struct gpioline_info *info_v1)
-+{
-+	u64 flagsv2 = info_v2->flags;
-+
-+	memcpy(info_v1->name, info_v2->name, sizeof(info_v1->name));
-+	memcpy(info_v1->consumer, info_v2->consumer,
-+	       sizeof(info_v1->consumer));
-+	info_v1->line_offset = info_v2->offset;
-+	info_v1->flags = 0;
-+
-+	if (flagsv2 & GPIO_V2_LINE_FLAG_USED)
-+		info_v1->flags |= GPIOLINE_FLAG_KERNEL;
-+
-+	if (flagsv2 & GPIO_V2_LINE_FLAG_OUTPUT)
-+		info_v1->flags |= GPIOLINE_FLAG_IS_OUT;
-+
-+	if (flagsv2 & GPIO_V2_LINE_FLAG_ACTIVE_LOW)
-+		info_v1->flags |= GPIOLINE_FLAG_ACTIVE_LOW;
-+
-+	if (flagsv2 & GPIO_V2_LINE_FLAG_OPEN_DRAIN)
-+		info_v1->flags |= GPIOLINE_FLAG_OPEN_DRAIN;
-+	if (flagsv2 & GPIO_V2_LINE_FLAG_OPEN_SOURCE)
-+		info_v1->flags |= GPIOLINE_FLAG_OPEN_SOURCE;
-+
-+	if (flagsv2 & GPIO_V2_LINE_FLAG_BIAS_PULL_UP)
-+		info_v1->flags |= GPIOLINE_FLAG_BIAS_PULL_UP;
-+	if (flagsv2 & GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN)
-+		info_v1->flags |= GPIOLINE_FLAG_BIAS_PULL_DOWN;
-+	if (flagsv2 & GPIO_V2_LINE_FLAG_BIAS_DISABLED)
-+		info_v1->flags |= GPIOLINE_FLAG_BIAS_DISABLE;
-+}
-+
-+static void gpio_v2_line_info_changed_to_v1(
-+		struct gpio_v2_line_info_changed *lic_v2,
-+		struct gpioline_info_changed *lic_v1)
-+{
-+	gpio_v2_line_info_to_v1(&lic_v2->info, &lic_v1->info);
-+	lic_v1->timestamp = lic_v2->timestamp;
-+	lic_v1->event_type = lic_v2->event_type;
-+}
-+
- #endif /* CONFIG_GPIO_CDEV_V1 */
- 
- static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
--				  struct gpioline_info *info)
-+				  struct gpio_v2_line_info *info)
- {
- 	struct gpio_chip *gc = desc->gdev->chip;
- 	bool ok_for_pinctrl;
- 	unsigned long flags;
- 
- 	memset(info, 0, sizeof(*info));
--	info->line_offset = gpio_chip_hwgpio(desc);
-+	info->offset = gpio_chip_hwgpio(desc);
- 	/*
- 	 * This function takes a mutex so we must check this before taking
- 	 * the spinlock.
-@@ -1157,7 +1200,7 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
- 	 * lock common to both frameworks?
- 	 */
- 	ok_for_pinctrl =
--		pinctrl_gpio_can_use_line(gc->base + info->line_offset);
-+		pinctrl_gpio_can_use_line(gc->base + info->offset);
- 
- 	spin_lock_irqsave(&gpio_lock, flags);
- 
-@@ -1178,23 +1221,27 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
- 	    test_bit(FLAG_EXPORT, &desc->flags) ||
- 	    test_bit(FLAG_SYSFS, &desc->flags) ||
- 	    !ok_for_pinctrl)
--		info->flags |= GPIOLINE_FLAG_KERNEL;
-+		info->flags |= GPIO_V2_LINE_FLAG_USED;
-+
- 	if (test_bit(FLAG_IS_OUT, &desc->flags))
--		info->flags |= GPIOLINE_FLAG_IS_OUT;
-+		info->flags |= GPIO_V2_LINE_FLAG_OUTPUT;
-+	else
-+		info->flags |= GPIO_V2_LINE_FLAG_INPUT;
-+
- 	if (test_bit(FLAG_ACTIVE_LOW, &desc->flags))
--		info->flags |= GPIOLINE_FLAG_ACTIVE_LOW;
-+		info->flags |= GPIO_V2_LINE_FLAG_ACTIVE_LOW;
-+
- 	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags))
--		info->flags |= (GPIOLINE_FLAG_OPEN_DRAIN |
--				GPIOLINE_FLAG_IS_OUT);
-+		info->flags |= GPIO_V2_LINE_FLAG_OPEN_DRAIN;
- 	if (test_bit(FLAG_OPEN_SOURCE, &desc->flags))
--		info->flags |= (GPIOLINE_FLAG_OPEN_SOURCE |
--				GPIOLINE_FLAG_IS_OUT);
-+		info->flags |= GPIO_V2_LINE_FLAG_OPEN_SOURCE;
-+
- 	if (test_bit(FLAG_BIAS_DISABLE, &desc->flags))
--		info->flags |= GPIOLINE_FLAG_BIAS_DISABLE;
-+		info->flags |= GPIO_V2_LINE_FLAG_BIAS_DISABLED;
- 	if (test_bit(FLAG_PULL_DOWN, &desc->flags))
--		info->flags |= GPIOLINE_FLAG_BIAS_PULL_DOWN;
-+		info->flags |= GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN;
- 	if (test_bit(FLAG_PULL_UP, &desc->flags))
--		info->flags |= GPIOLINE_FLAG_BIAS_PULL_UP;
-+		info->flags |= GPIO_V2_LINE_FLAG_BIAS_PULL_UP;
- 
- 	spin_unlock_irqrestore(&gpio_lock, flags);
- }
-@@ -1202,11 +1249,65 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
- struct gpio_chardev_data {
- 	struct gpio_device *gdev;
- 	wait_queue_head_t wait;
--	DECLARE_KFIFO(events, struct gpioline_info_changed, 32);
-+	DECLARE_KFIFO(events, struct gpio_v2_line_info_changed, 32);
- 	struct notifier_block lineinfo_changed_nb;
- 	unsigned long *watched_lines;
-+#ifdef CONFIG_GPIO_CDEV_V1
-+	atomic_t watch_abi_version;
-+#endif
- };
- 
-+#ifdef CONFIG_GPIO_CDEV_V1
-+static int lineinfo_ensure_abi_version(struct gpio_chardev_data *cdata,
-+				       unsigned int version)
-+{
-+	int abiv = atomic_read(&cdata->watch_abi_version);
-+
-+	if (abiv == 0) {
-+		atomic_cmpxchg(&cdata->watch_abi_version, 0, version);
-+		abiv = atomic_read(&cdata->watch_abi_version);
-+	}
-+	if (abiv != version)
-+		return -EPERM;
-+	return 0;
-+}
-+#endif
-+
-+static int lineinfo_get(struct gpio_chardev_data *cdev, void __user *ip,
-+			bool watch)
-+{
-+	struct gpio_desc *desc;
-+	struct gpio_v2_line_info lineinfo;
-+
-+	if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
-+		return -EFAULT;
-+
-+	if (memchr_inv(lineinfo.padding, 0, sizeof(lineinfo.padding)))
-+		return -EINVAL;
-+
-+	desc = gpiochip_get_desc(cdev->gdev->chip, lineinfo.offset);
-+	if (IS_ERR(desc))
-+		return PTR_ERR(desc);
-+
-+	if (watch) {
-+#ifdef CONFIG_GPIO_CDEV_V1
-+		if (lineinfo_ensure_abi_version(cdev, 2))
-+			return -EPERM;
-+#endif
-+		if (test_and_set_bit(lineinfo.offset, cdev->watched_lines))
-+			return -EBUSY;
-+	}
-+	gpio_desc_to_lineinfo(desc, &lineinfo);
-+
-+	if (copy_to_user(ip, &lineinfo, sizeof(lineinfo))) {
-+		if (watch)
-+			clear_bit(lineinfo.offset, cdev->watched_lines);
-+		return -EFAULT;
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * gpio_ioctl() - ioctl handler for the GPIO chardev
-  */
-@@ -1216,7 +1317,6 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	struct gpio_device *gdev = cdev->gdev;
- 	struct gpio_chip *gc = gdev->chip;
- 	void __user *ip = (void __user *)arg;
--	struct gpio_desc *desc;
- 	__u32 offset;
- 
- 	/* We fail any subsequent ioctl():s when the chip is gone */
-@@ -1239,7 +1339,9 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 		return 0;
- #ifdef CONFIG_GPIO_CDEV_V1
- 	} else if (cmd == GPIO_GET_LINEINFO_IOCTL) {
-+		struct gpio_desc *desc;
- 		struct gpioline_info lineinfo;
-+		struct gpio_v2_line_info lineinfo_v2;
- 
- 		if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
- 			return -EFAULT;
-@@ -1249,7 +1351,8 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 		if (IS_ERR(desc))
- 			return PTR_ERR(desc);
- 
--		gpio_desc_to_lineinfo(desc, &lineinfo);
-+		gpio_desc_to_lineinfo(desc, &lineinfo_v2);
-+		gpio_v2_line_info_to_v1(&lineinfo_v2, &lineinfo);
- 
- 		if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
- 			return -EFAULT;
-@@ -1259,7 +1362,9 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	} else if (cmd == GPIO_GET_LINEEVENT_IOCTL) {
- 		return lineevent_create(gdev, ip);
- 	} else if (cmd == GPIO_GET_LINEINFO_WATCH_IOCTL) {
-+		struct gpio_desc *desc;
- 		struct gpioline_info lineinfo;
-+		struct gpio_v2_line_info lineinfo_v2;
- 
- 		if (copy_from_user(&lineinfo, ip, sizeof(lineinfo)))
- 			return -EFAULT;
-@@ -1269,10 +1374,14 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 		if (IS_ERR(desc))
- 			return PTR_ERR(desc);
- 
-+		if (lineinfo_ensure_abi_version(cdev, 1))
-+			return -EPERM;
-+
- 		if (test_and_set_bit(lineinfo.line_offset, cdev->watched_lines))
- 			return -EBUSY;
- 
--		gpio_desc_to_lineinfo(desc, &lineinfo);
-+		gpio_desc_to_lineinfo(desc, &lineinfo_v2);
-+		gpio_v2_line_info_to_v1(&lineinfo_v2, &lineinfo);
- 
- 		if (copy_to_user(ip, &lineinfo, sizeof(lineinfo))) {
- 			clear_bit(lineinfo.line_offset, cdev->watched_lines);
-@@ -1281,6 +1390,10 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 
- 		return 0;
- #endif /* CONFIG_GPIO_CDEV_V1 */
-+	} else if (cmd == GPIO_V2_GET_LINEINFO_IOCTL ||
-+		   cmd == GPIO_V2_GET_LINEINFO_WATCH_IOCTL) {
-+		return lineinfo_get(cdev, ip,
-+				    cmd == GPIO_V2_GET_LINEINFO_WATCH_IOCTL);
- 	} else if (cmd == GPIO_V2_GET_LINE_IOCTL) {
- 		return linereq_create(gdev, ip);
- 	} else if (cmd == GPIO_GET_LINEINFO_UNWATCH_IOCTL) {
-@@ -1316,7 +1429,7 @@ static int lineinfo_changed_notify(struct notifier_block *nb,
- 				   unsigned long action, void *data)
- {
- 	struct gpio_chardev_data *cdev = to_gpio_chardev_data(nb);
--	struct gpioline_info_changed chg;
-+	struct gpio_v2_line_info_changed chg;
- 	struct gpio_desc *desc = data;
- 	int ret;
- 
-@@ -1356,12 +1469,16 @@ static ssize_t lineinfo_watch_read(struct file *file, char __user *buf,
- 				   size_t count, loff_t *off)
- {
- 	struct gpio_chardev_data *cdev = file->private_data;
--	struct gpioline_info_changed event;
-+	struct gpio_v2_line_info_changed event;
- 	ssize_t bytes_read = 0;
- 	int ret;
-+	size_t event_size;
- 
--	if (count < sizeof(event))
-+#ifndef CONFIG_GPIO_CDEV_V1
-+	event_size = sizeof(struct gpio_v2_line_info_changed);
-+	if (count < event_size)
- 		return -EINVAL;
-+#endif
- 
- 	do {
- 		spin_lock(&cdev->wait.lock);
-@@ -1383,7 +1500,17 @@ static ssize_t lineinfo_watch_read(struct file *file, char __user *buf,
- 				return ret;
- 			}
- 		}
--
-+#ifdef CONFIG_GPIO_CDEV_V1
-+		/* must be after kfifo check so watch_abi_version is set */
-+		if (atomic_read(&cdev->watch_abi_version) == 2)
-+			event_size = sizeof(struct gpio_v2_line_info_changed);
-+		else
-+			event_size = sizeof(struct gpioline_info_changed);
-+		if (count < event_size) {
-+			spin_unlock(&cdev->wait.lock);
-+			return -EINVAL;
-+		}
-+#endif
- 		ret = kfifo_out(&cdev->events, &event, 1);
- 		spin_unlock(&cdev->wait.lock);
- 		if (ret != 1) {
-@@ -1392,9 +1519,23 @@ static ssize_t lineinfo_watch_read(struct file *file, char __user *buf,
- 			/* We should never get here. See lineevent_read(). */
- 		}
- 
--		if (copy_to_user(buf + bytes_read, &event, sizeof(event)))
-+#ifdef CONFIG_GPIO_CDEV_V1
-+		if (event_size == sizeof(struct gpio_v2_line_info_changed)) {
-+			if (copy_to_user(buf + bytes_read, &event, event_size))
-+				return -EFAULT;
-+		} else {
-+			struct gpioline_info_changed event_v1;
-+
-+			gpio_v2_line_info_changed_to_v1(&event, &event_v1);
-+			if (copy_to_user(buf + bytes_read, &event_v1,
-+					 event_size))
-+				return -EFAULT;
-+		}
-+#else
-+		if (copy_to_user(buf + bytes_read, &event, event_size))
- 			return -EFAULT;
--		bytes_read += sizeof(event);
-+#endif
-+		bytes_read += event_size;
- 	} while (count >= bytes_read + sizeof(event));
- 
- 	return bytes_read;
--- 
-2.28.0
-
+Applied, thanks.
