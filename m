@@ -2,114 +2,127 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C48C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 264AFC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 405DF20786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06F8420786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:50:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oBL1hdk0"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Xmd3ZB8Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgH0Dtr (ORCPT
+        id S1726977AbgH0Dua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 23:49:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726790AbgH0Dtq (ORCPT
+        Wed, 26 Aug 2020 23:50:30 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18228 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726790AbgH0Du3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 23:49:46 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B744BC0612A3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 20:49:45 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id h4so4453936ioe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 20:49:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fU7xS5CivaMNWa2AK46tOD8m+SFLPnhzRQv95SuRSUQ=;
-        b=oBL1hdk0OtEtn93kqjZhKyLrBS5APXLWcyp2quP4Ige2GwfoNDrzfgjB2TiX/aHLL4
-         qJGvpiidLIhR7mxZBUIBN30hWNZWyKxkdE/KpokKupgjNPS3GC3rvZ69JPQeuUl4jxTU
-         HOHPC9T3xgFLJ5Z4ehiB15TE4PU3FDH7Cyv+7+0INCYypEhWtHND6Rkstz2zegrVGy+O
-         WaeD5J+ynYbAEHFIs0VuLbgdCGBH0+6JHKBfNn4XLRgbEFXu6koYrAjASyI3IrgktVQj
-         y4M7jqU4cay4GUoPBuxlGAbXdmcbfLvBu+Re8drgnrtKuIuFHTuYBFu8oSONZWxYCjYJ
-         w/qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fU7xS5CivaMNWa2AK46tOD8m+SFLPnhzRQv95SuRSUQ=;
-        b=dR/M3uZDaGGZg1u914eEzB2sOhqwbPPduApNMicjwnB60eCibve249Rfl/4nMF2Ry/
-         CXGZSpSok/aT0KzIZ8dT986Tj5HG71etwPz5Skeghs+g5HuEt02LfSlSa27eX94Dh7rY
-         EQMWqgb8WIHK+tsL0DQIx7N2k72Ot/rB5CUgy6dOXvL7cZFGtM4E466LJzbiaCcDQ39R
-         aDR18rtjFT8nzO+svlemWGtpgJURsi7ogm+2M3usTxlMTBMO7TnsXceTCkOzIj66Dqkx
-         AC0MPx7pJ3au0SvQ+k13vulQFdRNbPSvK/6rE6fJnRf8uEc1F2qKTJKIkECsWUWZqvPq
-         I1nQ==
-X-Gm-Message-State: AOAM531R2zcD4NEISJrgkV4tQsgJ8BcWhIYGBzhiMXgUNYleWJkzgszk
-        O/t+S/uvx57/dDOVCYVMdiDngihO1UfOPVU/e14=
-X-Google-Smtp-Source: ABdhPJwPigRBo1K8q7pRYZ45A6GGNvQzIel93w70vcWbHHFDvDF/kzbXQ/pzVUqnyeEGIBvctlMzf4WNrl4KFQ37OWg=
-X-Received: by 2002:a5d:980f:: with SMTP id a15mr15579146iol.12.1598500185034;
- Wed, 26 Aug 2020 20:49:45 -0700 (PDT)
+        Wed, 26 Aug 2020 23:50:29 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f472d770000>; Wed, 26 Aug 2020 20:50:15 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 26 Aug 2020 20:50:29 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 26 Aug 2020 20:50:29 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
+ 2020 03:50:27 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 27 Aug 2020 03:50:27 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.174.186]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f472d830001>; Wed, 26 Aug 2020 20:50:27 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <robh+dt@kernel.org>
+CC:     <skomatineni@nvidia.com>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: [PATCH v6 0/7] Fix timeout clock used by hardware data timeout
+Date:   Wed, 26 Aug 2020 20:49:54 -0700
+Message-ID: <1598500201-5987-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <311159bc826dcca2848344fc277c0069cff0a164.1597207603.git.zhaoqianli@xiaomi.com>
- <20200820062533.GK18179@shao2-debian>
-In-Reply-To: <20200820062533.GK18179@shao2-debian>
-From:   qianli zhao <zhaoqianligood@gmail.com>
-Date:   Thu, 27 Aug 2020 11:49:34 +0800
-Message-ID: <CAPx_LQGBY-QzXnYMB4zZ=Q5yyRGFF9W68NgB8gqqXchRjUD2WQ@mail.gmail.com>
-Subject: Re: [kthread] 2e7d8748eb: last_state.is_incomplete_run
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, axboe@kernel.dk,
-        akpm@linux-foundation.org, Felix.Kuehling@amd.com,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>, ben.dooks@codethink.co.uk,
-        bfields@redhat.com, cl@rock-chips.com,
-        linux-kernel@vger.kernel.org, Qianli Zhao <zhaoqianli@xiaomi.com>,
-        0day robot <lkp@intel.com>, lkp@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598500215; bh=3oWMyh7UrR3SghOEg2r/+ZZhpDX0XPq207eBnYJe02o=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=Xmd3ZB8ZRizeh/kHUTAQ//tTDT/rdNp/3WFcYZ/quo2H/1tSggordYshZnOS/i3t5
+         0detwCt41VDqwgX1DfwH6N+2hj3yHPuFh+SkNRXWH9NLlXvkw6T+oLSoeRfdJoOt5m
+         ImxVfxMGX/RZvxGwF5+EDtdFBpawm/Ym/nsWTJULVMVSMu3JLAmfNX3NvVXpwwgoPp
+         6hjthctGs5s1m5FQFttAEWf2XUFnXE2USk78DvWkGRtwHyDeiJvbLQKbOFCERqpKsj
+         KmGpJrtJRwejYYrmh6KvY48+cseiLxdV20MHsWpZM4VaN4OguJGEK/EmDyZcTXySX0
+         8i0BMC8KYTb8g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I did not see any exceptions related to my changes,the corresponding
-macro CONFIG_DEBUG_OBJECTS_KTHREAD is not enabled,so i think the issue
-has nothing to do with my changes
+Tegra210/Tegra186/Tegra194 has incorrectly enabled
+SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK from the beginning of their support.
 
-Thanks
+Tegra210 and later SDMMC hardware default uses sdmmc_legacy_tm (TMCLK)
+all the time for hardware data timeout instead of SDCLK and this TMCLK
+need to be kept enabled by Tegra sdmmc driver.
 
-On Thu, 20 Aug 2020 at 14:26, kernel test robot <rong.a.chen@intel.com> wrote:
->
-> Greeting,
->
-> FYI, we noticed the following commit (built with gcc-9):
->
-> commit: 2e7d8748eba7e32150cbd4f57129ea77d1255892 ("[RFC V2] kthread: add object debug support")
-> url: https://github.com/0day-ci/linux/commits/Qianli-Zhao/kthread-add-object-debug-support/20200812-131719
-> base: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git fb893de323e2d39f7a1f6df425703a2edbdf56ea
->
-> in testcase: boot
->
-> on test machine: 8 threads Intel(R) Core(TM) i7-3770K CPU @ 3.50GHz with 16G memory
->
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
->
->
->
-> kernel boot failed by kexec:
->
-> user  :notice:  [32m[  +0.371313]  [0m [33mLKP [0m: kexec loading...
-> user  :notice:  [32m[  +0.007118]  [0mkexec --noefi -l /opt/rootfs/tmp/pkg/linux/x86_64-rhel-8.3/gcc-9/2e7d8748eba7e32150cbd4f57129ea77d1255892/vmlinuz-5.8.0-12610-g2e7d8748eba7e --initrd=/opt/rootfs/tmp/initrd-concatenated
->
->
->
->
-> Thanks,
-> Rong Chen
->
+This series includes patches to fix this for Tegra210/Tegra186/Tegra194.
+
+These patches need to be manually backported for 4.9, 4.14 and 4.19.
+
+Will send patches to backport separately once these patches are ack'd.
+
+Delta between patch versions:
+[v6]:	v5 is sent out mistakenly with incorrect patches.
+	v6 includes proper patches addressing v4 feedback
+	- updated dt-binding doc to be more clear
+	- updated Tegra sdhci driver to retrieve sdhci and tmclk clocks
+	  based on no. of clocks in sdhci device node as old device trees
+	  do not use sdhci clock name and this allows proper clock retrival
+	  irrespective of sdhci and tmclk clocks order in device tree.	  
+	- Added separate quirk for identifying SoC's supporting separate
+	  timeout clock to be more clear.
+
+[v5]:	Include below changes based on v4 feedback
+	- updated dt-binding doc to be more clear
+	- updated Tegra sdhci driver to retrieve sdhci and tmclk clocks
+	  based on no. of clocks in sdhci device node as old device trees
+	  do not use sdhci clock name and this allows proper clock retrival
+	  irrespective of sdhci and tmclk clocks order in device tree.	  
+	- Added separate quirk for identifying SoC's supporting separate
+	  timeout clock to be more clear.
+
+[v4]:	Include additional dt-binding patch
+
+[v3]:	Same as v2 with fixes tag
+
+[v2]:	Includes minor fix
+	- Patch-0006: parentheses around operand of '!'
+
+Sowjanya Komatineni (7):
+  sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra210
+  sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra186
+  dt-bindings: mmc: tegra: Add tmclk for Tegra210 and later
+  arm64: tegra: Add missing timeout clock to Tegra210 SDMMC
+  arm64: tegra: Add missing timeout clock to Tegra186 SDMMC nodes
+  arm64: tegra: Add missing timeout clock to Tegra194 SDMMC nodes
+  sdhci: tegra: Add missing TMCLK for data timeout
+
+ .../bindings/mmc/nvidia,tegra20-sdhci.txt          | 32 +++++++-
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi           | 20 +++--
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi           | 15 ++--
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 20 +++--
+ drivers/mmc/host/sdhci-tegra.c                     | 92 +++++++++++++++++++---
+ 5 files changed, 144 insertions(+), 35 deletions(-)
+
+-- 
+2.7.4
+
