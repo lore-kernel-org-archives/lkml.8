@@ -2,132 +2,70 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FD9C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CFD9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 665A32177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:19:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CxWG48zp"
+	by mail.kernel.org (Postfix) with ESMTP id 172892080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgH0JTE (ORCPT
+        id S1728469AbgH0JTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:19:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727897AbgH0JTC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:19:02 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4093C061264;
-        Thu, 27 Aug 2020 02:19:02 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id y206so3014880pfb.10;
-        Thu, 27 Aug 2020 02:19:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VgFZ3oc2fxtal1v8qY7ILD3Hbp8X8hErMNMpovFOacY=;
-        b=CxWG48zpulIoeeq4DDcQ2DoH/7wm4cQm+Pj/r8BEZ6iyyW6Ib0Kc5jYbCyKqmWsynR
-         D92g1UgE5FRMcGm9T1RA696WTtsk9alwjRfwS3P9R41UmTmNkVzLT6S+3iYVtmh6W7zf
-         bH0UbQTeOH/bfOp+75Og0cffB8MayR3NU30CIWEgYBqDjYESVMPEzBOInc/A+GVS1H5M
-         +HdLV5FObiPvtHL6X3W+dKYaJacFoPdDAQez42wmzladeuJqfB1vTCvRUMiAfbYAyeaH
-         t0/ouM+Q3G6x0RyAHZPwRUbruCLmcfLFFCAi6SduqDpl/KiFG2u6W8QPFNQV4jcR0zNF
-         9dcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VgFZ3oc2fxtal1v8qY7ILD3Hbp8X8hErMNMpovFOacY=;
-        b=YReUTxTFhEFhhneajqkno3kKB3n4e0Ba0+TBB7IEtkVkIUwHm+LkzQXIPK9wnyxNdG
-         azx93/dqwz3TKia4d5BW73ncYgjzYZInqp2wOiE+NkKRMewNvNjMEbWL0W+WuC264/Zw
-         IFZtDwDdDslyI/FdZjWttUj1GhaXJKToaQlEQQDNcdbIiKV483e5JvRbI21Wubk5I+1y
-         sPAcvuDOHaZ3kdUp7kvbe5GQctZvuKss9bRMhJPkUj5mRpoALPiw8QNJ5tK6JqAf/SAE
-         Pn1xnYmS/QCn5FHK44LP15JMPWIHntdS4yvefaOXYRX1GCMY9MZRaXVjNMAtjANajpIq
-         JrJw==
-X-Gm-Message-State: AOAM532CCakWHC7I3d0gZnvfv1rHkudxrYcNgT1cbtq8M02Z1spFRXCU
-        O2XdR5gE3kB+aPSa6W1cglipKPCt/fuyCxnml38=
-X-Google-Smtp-Source: ABdhPJy2sx0lGOZtzgnh0B94nDuzu7sanQKqJ7UK1Q4rptGZJnV9/hL7Za1e1VRKnFZKTXqmiZmX63dTU7SojC/8zTg=
-X-Received: by 2002:a62:9215:: with SMTP id o21mr4726022pfd.268.1598519942162;
- Thu, 27 Aug 2020 02:19:02 -0700 (PDT)
+        Thu, 27 Aug 2020 05:19:15 -0400
+Received: from mail.monom.org ([188.138.9.77]:49848 "EHLO mail.monom.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727793AbgH0JTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:19:13 -0400
+Received: from mail.monom.org (localhost [127.0.0.1])
+        by filter.mynetwork.local (Postfix) with ESMTP id 144C250035A;
+        Thu, 27 Aug 2020 11:19:11 +0200 (CEST)
+Received: from localhost (unknown [94.31.100.251])
+        by mail.monom.org (Postfix) with ESMTPSA id A7627500103;
+        Thu, 27 Aug 2020 11:19:10 +0200 (CEST)
+Date:   Thu, 27 Aug 2020 11:19:10 +0200
+From:   Daniel Wagner <wagi@monom.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [ANNOUNCE] v5.9-rc2-rt1
+Message-ID: <20200827091910.ibuyr53qprb7qmju@beryllium.lan>
+References: <20200824154605.v66t2rsxobt3r5jg@linutronix.de>
+ <20200826080802.5lnnf5wh3kcwfykz@beryllium.lan>
+ <20200826081211.bvk5kfuzh4vlbh5k@linutronix.de>
+ <20200826090518.m6vblobggnfdjau5@beryllium.lan>
+ <20200826104326.xfexkwovwbi2q4el@beryllium.lan>
 MIME-Version: 1.0
-References: <20200826181706.11098-1-krzk@kernel.org> <20200826181706.11098-23-krzk@kernel.org>
-In-Reply-To: <20200826181706.11098-23-krzk@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Aug 2020 12:18:46 +0300
-Message-ID: <CAHp75VdKxibhohQEEbtF4Er=OYLVqFc-7-GoAZ+O2mL3Vi4s3w@mail.gmail.com>
-Subject: Re: [PATCH 23/24] Input: surface3_spi - Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bastien Nocera <hadess@hadess.net>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-input <linux-input@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826104326.xfexkwovwbi2q4el@beryllium.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 9:22 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and also it prints the error value.
+On Wed, Aug 26, 2020 at 12:43:26PM +0200, Daniel Wagner wrote:
+> All looks good, no crash and all tests do pass on x86_64. Firing up the
+> ARM boards now.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+All test pass on the BeagleBone Black.
 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/input/touchscreen/surface3_spi.c | 13 +++----------
->  1 file changed, 3 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/input/touchscreen/surface3_spi.c b/drivers/input/touchscreen/surface3_spi.c
-> index ce4828b1415a..25bb77ddf2ef 100644
-> --- a/drivers/input/touchscreen/surface3_spi.c
-> +++ b/drivers/input/touchscreen/surface3_spi.c
-> @@ -223,7 +223,6 @@ static void surface3_spi_power(struct surface3_ts_data *data, bool on)
->   */
->  static int surface3_spi_get_gpio_config(struct surface3_ts_data *data)
->  {
-> -       int error;
->         struct device *dev;
->         struct gpio_desc *gpiod;
->         int i;
-> @@ -233,15 +232,9 @@ static int surface3_spi_get_gpio_config(struct surface3_ts_data *data)
->         /* Get the reset lines GPIO pin number */
->         for (i = 0; i < 2; i++) {
->                 gpiod = devm_gpiod_get_index(dev, NULL, i, GPIOD_OUT_LOW);
-> -               if (IS_ERR(gpiod)) {
-> -                       error = PTR_ERR(gpiod);
-> -                       if (error != -EPROBE_DEFER)
-> -                               dev_err(dev,
-> -                                       "Failed to get power GPIO %d: %d\n",
-> -                                       i,
-> -                                       error);
-> -                       return error;
-> -               }
-> +               if (IS_ERR(gpiod))
-> +                       return dev_err_probe(dev, PTR_ERR(gpiod),
-> +                                            "Failed to get power GPIO %d\n", i);
->
->                 data->gpiod_rst[i] = gpiod;
->         }
-> --
-> 2.17.1
->
+Something is a bit weird with my RPi3 in 64bit mode. uboot loads
+the the dtb file via ftp and then does a booti. For all non PREEMPT_RT
+kernels (PREEMPT, NONE, SMP=n, ...) everything works fine. For the
+PREEMPT_RT kernel uboot complains with
 
+  U-Boot> booti 0x00080000 - 0x02600000
+  bootloader-commands: Wait for prompt Starting kernel (timeout 00:03:43)
+  booti 0x00080000 - 0x02600000
+  ERROR: Did not find a cmdline Flattened Device Tree
+  Starting kernel ...
 
--- 
-With Best Regards,
-Andy Shevchenko
+It's the same dtb in all cases. Not totally sure what is upsetting uboot
+here, maybe the load addresses don't work anymore?
+
+In short, I can't really say if v5.9-rt for ARMv8 works for me.
