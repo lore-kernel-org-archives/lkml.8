@@ -2,99 +2,113 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E71A1C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B592C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3A4A22BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B23022B4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:18:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="go1nmKtW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgH0SSU (ORCPT
+        id S1727769AbgH0SSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:18:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:32922 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726243AbgH0SSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:18:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35068101E;
-        Thu, 27 Aug 2020 11:18:17 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C62533F68F;
-        Thu, 27 Aug 2020 11:18:13 -0700 (PDT)
-Subject: Re: [PATCH 13/18] iommu/tegra: Add IOMMU_DOMAIN_DMA support
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     geert+renesas@glider.be, dri-devel@lists.freedesktop.org,
-        linux-tegra@vger.kernel.org, laurent.pinchart@ideasonboard.com,
-        digetx@gmail.com, will@kernel.org, hch@lst.de,
-        linux-samsung-soc@vger.kernel.org, magnus.damm@gmail.com,
-        linux@armlinux.org.uk, jonathanh@nvidia.com, agross@kernel.org,
-        kyungmin.park@samsung.com, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, inki.dae@samsung.com,
-        linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com,
-        linux-arm-kernel@lists.infradead.org, sw0312.kim@samsung.com,
-        linux-kernel@vger.kernel.org, t-kristo@ti.com,
-        iommu@lists.linux-foundation.org
-References: <cover.1597931875.git.robin.murphy@arm.com>
- <cd11bc7851dbe46db6d14821a942678047331913.1597931876.git.robin.murphy@arm.com>
- <20200827154502.GA1660457@ulmo>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <f6697e60-286c-f7c7-39d1-fe0784cc3e6d@arm.com>
-Date:   Thu, 27 Aug 2020 19:18:12 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 27 Aug 2020 14:18:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37588 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726243AbgH0SSr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 14:18:47 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9330BC061264;
+        Thu, 27 Aug 2020 11:18:47 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ls14so3015609pjb.3;
+        Thu, 27 Aug 2020 11:18:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MzplqZpUWJg+UmQwey/x6RphVUW+awblL5IuecDIzI0=;
+        b=go1nmKtWWgGZ3kW2g9FiK3bZiCSoxdxSKqHKlJ+S+OD3MdLhVL0wGrM3Qa5gWyh1Ey
+         VsTZYbOSuqZg8uCCNj6+VghI0dKjk8Zs1uvqxy5xGwaLFxxoQdtIjTb4Ba52Ku4WUc7O
+         sXazylyJuNC3ToATqO3lppxB3aRw54iWAH5iJY0VwJ7+GBJlrJ9/JjZtJiSwC0TSroqq
+         vvrIpgMrn6DwNSfK29GFCsZI+RLZjXKk6Kk2DrZ8wm3/H10nctFbvffAxv1ayVIypYoo
+         d9OSDTAOW6YbnqQN+ceVLEbUK6OTlDvN/hQVSNzpSo9fwO9OySS6fOOLE9KOS7i35aMC
+         y5Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MzplqZpUWJg+UmQwey/x6RphVUW+awblL5IuecDIzI0=;
+        b=OBQmcrDAgurTsnfD68fvVgd2GtZsr4b08hHI+eemThO9CqFimQaruZTPdvjFSgiB6p
+         zWmPj/MabFly8V/sYuYoLkyaaV41htWVILklCkmvZA2FZDZsLkXouUJ09kCmHj6/imJK
+         gERHVa3IE83LpPm7aBdzVYbMaD8iaFVza4JPZGO1K1nvGDKeNS8w9Dta8CsNH0x+/XT+
+         wzzKxmM4xxW4SYIb1zudkWpcYkz/A4uVBvAompkspAQFMRlVMldub+XeNaDoOtx0miPk
+         Ra/4cYuNhrWwvKc6HSrEBaLtX7/t95lS8s6R2Eb8FjOxO540xTxqphNcD8VQPVxQwVsO
+         aGsg==
+X-Gm-Message-State: AOAM530CVpQ1W4EgAw9QSYUL+ObWPD35Btp5nHzG73M2l261V/uwHoTJ
+        v4O9aesiiFCpA/1DRsM8WdI=
+X-Google-Smtp-Source: ABdhPJyNWwuvPIA9EDQkvsagVGkqnrgia8Y47+2tHmT2iIFXNFMuVBFIAJnLnw6rcvsASOFE0hcTlA==
+X-Received: by 2002:a17:90b:30c6:: with SMTP id hi6mr111707pjb.172.1598552326889;
+        Thu, 27 Aug 2020 11:18:46 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id q18sm3580179pfn.106.2020.08.27.11.18.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 11:18:46 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM SPI DRIVER),
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        Yendapally Reddy Dhananjaya Reddy 
+        <yendapally.reddy@broadcom.com>,
+        linux-spi@vger.kernel.org (open list:SPI SUBSYSTEM),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 0/5] qspi binding and DTS fixes
+Date:   Thu, 27 Aug 2020 11:18:37 -0700
+Message-Id: <20200827181842.1000451-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200827154502.GA1660457@ulmo>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-27 16:45, Thierry Reding wrote:
-> On Thu, Aug 20, 2020 at 04:08:32PM +0100, Robin Murphy wrote:
->> Now that arch/arm is wired up for default domains and iommu-dma,
->> implement the corresponding driver-side support for DMA domains.
->>
->> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->> ---
->>   drivers/iommu/tegra-smmu.c | 37 +++++++++++++++++++++----------------
->>   1 file changed, 21 insertions(+), 16 deletions(-)
-> 
-> We can't do that yet because it will currently still break for use-cases
-> such as display where we don't properly set up identity mappings during
-> boot. The result is that the dma-iommu code will enable translations
-> before the driver gets a chance to set up any mappings and if the
-> display controller was left on by the bootloader, scanning out a splash
-> screen, this causes faults between the point where dma-iommu is being
-> set up for the display controller and where the display controller
-> starts mapping its own buffers (rather than the ones mapped by the
-> bootloader).
+Hi all,
 
-Rest assured that I understand the situation all too well ;) As with 
-tegra-gart, the unspoken point here is that since tegra-smmu implements 
-of_xlate(), then arm_setup_iommu_dma_ops() must already be causing the 
-exact same problem, no? This patch only seeks to move any existing 
-behaviour over to the common backend, regardless of whether it was ever 
-really appropriate in the first place.
+This patch series fixes incorrectly defined compatible strings for the
+Broadcom QSPI controller which resulted in the strings not being
+ordered from most to least compatible.
 
-> That said, I do have a series that I've been carrying around for longer
-> than I've wanted that does exactly this for Tegra SMMU and I'd prefer if
-> you could drop this particular change from your series so that I can
-> keep working on resolving the identity mapping issues first.
+We will need to apply some changes to the spi-bcm-qspi.c driver in
+the future to assume no revision register exist, and these patches
+are a preliminary step towards that goal.
 
-That would mean you'd see a functional change from the final patch, 
-wherein nothing would ever be able to get translation unless drivers do 
-their own explicit IOMMU API management. If you definitely want that 
-change then OK, but it would still be nice to do it "properly" with 
-IOMMU_DOMAIN_IDENTITY support, rather than just forcibly failing default 
-domain allocation. I'm having a go at reworking the tegra-gart patch in 
-that direction, so I can certainly try it for tegra-smmu as well.
+Florian Fainelli (5):
+  dt-bindings: spi: Fix spi-bcm-qspi compatible ordering
+  ARM: dts: bcm: HR2: Fixed QSPI compatible string
+  ARM: dts: NSP: Fixed QSPI compatible string
+  ARM: dts: BCM5301X: Fixed QSPI compatible string
+  arm64: dts: ns2: Fixed QSPI compatible string
 
-Robin.
+ .../bindings/spi/brcm,spi-bcm-qspi.txt           | 16 ++++++++--------
+ arch/arm/boot/dts/bcm-hr2.dtsi                   |  2 +-
+ arch/arm/boot/dts/bcm-nsp.dtsi                   |  2 +-
+ arch/arm/boot/dts/bcm5301x.dtsi                  |  2 +-
+ arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi |  2 +-
+ 5 files changed, 12 insertions(+), 12 deletions(-)
+
+-- 
+2.25.1
+
