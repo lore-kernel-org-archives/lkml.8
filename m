@@ -2,121 +2,185 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CD3C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BD4C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B47822BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADFFF2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:34:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgH0Td7 (ORCPT
+        id S1727103AbgH0TeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:33:59 -0400
-Received: from mga01.intel.com ([192.55.52.88]:43719 "EHLO mga01.intel.com"
+        Thu, 27 Aug 2020 15:34:10 -0400
+Received: from mga07.intel.com ([134.134.136.100]:53824 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbgH0Td7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:33:59 -0400
-IronPort-SDR: +r6fOacdljr8O+XW1cTad84jUIE7pZNHKkJaT1uSMWl6eHa21H0b0ytE/AM0IBxKmAXdvx7cBV
- bfUPu2xS99zg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="174603365"
+        id S1726871AbgH0TeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 15:34:09 -0400
+IronPort-SDR: zr9MTr3me4n6zvHndZ5ATHjzbvw0GSl1tGG92+Ylv7AeUu5MS2njA5WzsyASokukK2qJHxs+su
+ 5fip4yP2QySg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="220804766"
 X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
-   d="scan'208";a="174603365"
+   d="scan'208";a="220804766"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 12:33:58 -0700
-IronPort-SDR: OPISa7thH3ifFl2p+owBLIitIqmZbW/hl+EP5wSwNVukJNFhzMv4wB+31X5KIa136wfknEKV7P
- 7teTxH4ipSsQ==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 12:34:08 -0700
+IronPort-SDR: S1ZAxSndS4BY4kg0KGIYFpnTrQb6Fw+3l0EbcO45eLOhaoQHWiVKGxZ+BLIeUzDmnzHY6ocp6I
+ rsnVuLbVEx4A==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
-   d="scan'208";a="500229981"
-Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.213.179.54]) ([10.213.179.54])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 12:33:57 -0700
-Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
- shadow stack
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Dave Martin <Dave.Martin@arm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <a770d45d-b147-a8c5-b7f8-30d668cbed84@intel.com>
- <4BDFD364-798C-4537-A88E-F94F101F524B@amacapital.net>
-From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
-Message-ID: <a6de6b9d-d724-271d-72b2-8dd3418ccaed@intel.com>
-Date:   Thu, 27 Aug 2020 12:33:56 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+   d="scan'208";a="475355635"
+Received: from lkp-server01.sh.intel.com (HELO 4f455964fc6c) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 27 Aug 2020 12:34:07 -0700
+Received: from kbuild by 4f455964fc6c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kBNew-0002F4-HV; Thu, 27 Aug 2020 19:34:06 +0000
+Date:   Fri, 28 Aug 2020 03:33:19 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ e027fffff799cdd70400c5485b1a54f482255985
+Message-ID: <5f480a7f./1kTtw+7dkFga1zc%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <4BDFD364-798C-4537-A88E-F94F101F524B@amacapital.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/2020 11:56 AM, Andy Lutomirski wrote:
-> 
-> 
->> On Aug 27, 2020, at 11:13 AM, Yu, Yu-cheng <yu-cheng.yu@intel.com> wrote:
->>
->> ﻿On 8/27/2020 6:36 AM, Florian Weimer wrote:
->>> * H. J. Lu:
->>>>> On Thu, Aug 27, 2020 at 6:19 AM Florian Weimer <fweimer@redhat.com> wrote:
->>>>>>
->>>>>> * Dave Martin:
->>>>>>
->>>>>>> You're right that this has implications: for i386, libc probably pulls
->>>>>>> more arguments off the stack than are really there in some situations.
->>>>>>> This isn't a new problem though.  There are already generic prctls with
->>>>>>> fewer than 4 args that are used on x86.
->>>>>>
->>>>>> As originally posted, glibc prctl would have to know that it has to pull
->>>>>> an u64 argument off the argument list for ARCH_X86_CET_DISABLE.  But
->>>>>> then the u64 argument is a problem for arch_prctl as well.
->>>>>>
->>>>
->>>> Argument of ARCH_X86_CET_DISABLE is int and passed in register.
->>> The commit message and the C source say otherwise, I think (not sure
->>> about the C source, not a kernel hacker).
->>
->> H.J. Lu suggested that we fix x86 arch_prctl() to take four arguments, and then keep MMAP_SHSTK as an arch_prctl().  Because now the map flags and size are all in registers, this also solves problems being pointed out earlier.  Without a wrapper, the shadow stack mmap call (from user space) will be:
->>
->> syscall(_NR_arch_prctl, ARCH_X86_CET_MMAP_SHSTK, size, MAP_32BIT).
-> 
-> I admit I don’t see a show stopping technical reason we can’t add arguments to an existing syscall, but I’m pretty sure it’s unprecedented, and it doesn’t seem like a good idea.
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/urgent
+branch HEAD: e027fffff799cdd70400c5485b1a54f482255985  x86/irq: Unbreak interrupt affinity setting
 
-There are nine existing arch_prctl calls now.  If the concern is the 
-extra new arguments getting misused, we can mask them out for the 
-existing calls.  Otherwise, I have not seen anything that can break.
+elapsed time: 721m
 
-Yu-cheng
+configs tested: 114
+configs skipped: 69
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+sh                ecovec24-romimage_defconfig
+arm                      pxa255-idp_defconfig
+mips                           ip32_defconfig
+sh                           se7721_defconfig
+powerpc                         ps3_defconfig
+arm                             rpc_defconfig
+powerpc                  mpc885_ads_defconfig
+powerpc                     pq2fads_defconfig
+mips                           xway_defconfig
+m68k                          sun3x_defconfig
+sh                            shmin_defconfig
+mips                          malta_defconfig
+arm                           spitz_defconfig
+mips                       rbtx49xx_defconfig
+powerpc                mpc7448_hpc2_defconfig
+powerpc                     mpc5200_defconfig
+mips                           ip22_defconfig
+arm                         hackkit_defconfig
+arm                          moxart_defconfig
+parisc                           alldefconfig
+arm                        mvebu_v7_defconfig
+arm                    vt8500_v6_v7_defconfig
+sh                             sh03_defconfig
+arm                         mv78xx0_defconfig
+sh                               alldefconfig
+m68k                          amiga_defconfig
+sh                        edosk7705_defconfig
+arm                         axm55xx_defconfig
+sh                          urquell_defconfig
+arm                         assabet_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                               defconfig
+sh                          sdk7780_defconfig
+c6x                         dsk6455_defconfig
+arc                              alldefconfig
+arm                  colibri_pxa270_defconfig
+mips                       lemote2f_defconfig
+m68k                         apollo_defconfig
+sh                        edosk7760_defconfig
+sh                           sh2007_defconfig
+sparc                            allyesconfig
+sh                         microdev_defconfig
+sh                           se7712_defconfig
+arm                        magician_defconfig
+nios2                            alldefconfig
+arc                                 defconfig
+c6x                        evmc6678_defconfig
+sh                             shx3_defconfig
+powerpc                    amigaone_defconfig
+powerpc                     skiroot_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a003-20200827
+x86_64               randconfig-a002-20200827
+x86_64               randconfig-a001-20200827
+x86_64               randconfig-a005-20200827
+x86_64               randconfig-a006-20200827
+x86_64               randconfig-a004-20200827
+i386                 randconfig-a002-20200827
+i386                 randconfig-a004-20200827
+i386                 randconfig-a003-20200827
+i386                 randconfig-a005-20200827
+i386                 randconfig-a006-20200827
+i386                 randconfig-a001-20200827
+i386                 randconfig-a013-20200827
+i386                 randconfig-a012-20200827
+i386                 randconfig-a011-20200827
+i386                 randconfig-a016-20200827
+i386                 randconfig-a015-20200827
+i386                 randconfig-a014-20200827
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
