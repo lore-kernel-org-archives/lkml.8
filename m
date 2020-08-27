@@ -2,135 +2,158 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E64C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B1522080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA112080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:27:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dZ1UT1Jv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rwaezHLB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgH0PYf (ORCPT
+        id S1726953AbgH0P1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:24:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38448 "EHLO
+        Thu, 27 Aug 2020 11:27:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgH0PYd (ORCPT
+        with ESMTP id S1726084AbgH0P1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:24:33 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC13C061264;
-        Thu, 27 Aug 2020 08:24:33 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id a21so8230205ejp.0;
-        Thu, 27 Aug 2020 08:24:33 -0700 (PDT)
+        Thu, 27 Aug 2020 11:27:01 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07B8DC061264;
+        Thu, 27 Aug 2020 08:27:00 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id k18so4785170qtm.10;
+        Thu, 27 Aug 2020 08:27:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RdoDtBKGcqZmEr6XwRvBVpJT6+jSdmIYiVMHvZ2UEtM=;
-        b=dZ1UT1JvUfj8uxpfO5tKZObD9vupZ6VKPHEPWHiIX6/azQ3Xx0wiMpuwNWJrbqQuRF
-         MtFchebdnoYgSKqDE0PxgEUQ2ono+2kbI99Ov7xzOQqnPKNzI68N8AQ9wVOUPW+Rn0e7
-         sYR5JWw22qj/yPUWFU7yH3afY4qi1ThAZFMX4QPAmju0zzCW9ZQnqMzGiptFdTfuuV3O
-         l7VwkbseTYupt71wVEWopi3mA00+fcQB0ENTmVwqdxeP4dQe5BPNA7jk9FprgWcTqtyR
-         ezQCSepa0hmpM8sRO9RiKBLtNV/WHEM+gxLrIEPK467vYT1vQ6PHqju5+BgSG7sd4VPd
-         /lSQ==
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=7UREsbmmfUl6uKDuaxhy7wo7SSoNjIwrrnq3Cb8sDVE=;
+        b=rwaezHLBXo3AhAay1MBvcv8LFx6RGX0pQZUAqP91NiIsN5xJ99bIZpRhFZQnC8mXgZ
+         x1mVX1lr8PvGkgQvM7aSdscLvx7BXQwAucX6azU+yG1DXfZdVCag/9aYwO27qzXnAIex
+         Bwi1yfimf0VV4GYNzsuR7IfoQttvs0hckYkyJAVu2i7tgbTNAWYNbc4SyJAzzLvfiKko
+         ALxulrR5llewc3WOi0rv3owL6qeLVtj3+9O37nMZqNLBupHAXmQZr2+ucCHZbm0UXYNc
+         JfXcdA4RMo9CdOv9/bI7NRBp4IcipfzSmTR7Jmu1bVh380K3IF9Wob24gmuwHHEXtoN+
+         CCUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RdoDtBKGcqZmEr6XwRvBVpJT6+jSdmIYiVMHvZ2UEtM=;
-        b=DMbWc8H7mqAKg6u6Ny3/tm149wZ4UwKFUH0TP6MwqeJpFGXOdTvUplgqyGeo8m7I7L
-         i7fSW22BRhJTaA03nJ/22zFv8hl0NhFV2jINR06rhIvnPGSl7FLe/hAs5j4JFI930djZ
-         ogZrxOZqAeVsAqFFOnprFvKie+86pBEVZPEddWSjXfflQjYZfq4u5GOKzfRxF21kNBmJ
-         +MYFSGNCHDsItkYKdRT3/Qx0YOwjUxBMPllNAKGT3WozpyLT7F6vlblxunf6YVERMr0F
-         tGCnkVkUDtYNkfZedjrIE45IxXZty+JM43sKSV4GxF83fU25niIYWrXuaoDjMMFx94i3
-         lUog==
-X-Gm-Message-State: AOAM530YSB682hoy1JaY0K8vukfqCfbMENykRakxEbBcPY+8BLQ9vT/g
-        pVTaRkS3K6xmYQ4DbHSZFx3Zg3Ee7E4=
-X-Google-Smtp-Source: ABdhPJwE8DVg2X/JWXzdbYoyz5GYUFxkza0BR0PvLwoLKnPpFlRU1KQlEOc3ePw+NgAdF36O9erBYw==
-X-Received: by 2002:a17:906:1719:: with SMTP id c25mr22373847eje.487.1598541871646;
-        Thu, 27 Aug 2020 08:24:31 -0700 (PDT)
-Received: from BV030612LT ([188.24.159.61])
-        by smtp.gmail.com with ESMTPSA id g9sm1742781edk.97.2020.08.27.08.24.30
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=7UREsbmmfUl6uKDuaxhy7wo7SSoNjIwrrnq3Cb8sDVE=;
+        b=Onr6O89a79tan63JjhWPFmMm2dNnXbUCIIMBn6nMzM/bBewck427eIDKS8QCm9QQ1a
+         5K2g56YhXovTVi/c+GnfFVkwsEyLFW5i3PK+CyJ8a/hE6diOrG+qGZTrQFfUGZGmNROi
+         5UPjGbR6ENrSbQDBHOdHqQVk9Ja5T41kb+gk5NhG8pRH2PONtKPZHQZfbd/mzsNgTZyj
+         65e2MTsXHd8noF1izlYhEO7/Kn2qTxqcpjpJmHBTZhFxHQrUlC3lpxixrsT8aW6j6Y6F
+         5PuNDpGlVXqpvca9TOHA688nO/srAnI55e3oAr6FtC6uIDQcOstq9z61yTJ0u6PpzMPE
+         pWmA==
+X-Gm-Message-State: AOAM531aaMJ2Wl/RyV8MsZeHkIPZmYLcpHi59DqyMfpnIVsnVxADxVRq
+        AQrxxPMEhEDbkEX9QHwVL55PsKWlp2I=
+X-Google-Smtp-Source: ABdhPJznEyF0mZAogiSFgjmdI6X+tyx1xA88jTcbKW6mRF+XTymMpK8jWQDvlZ+RBBtCcslMP15KFA==
+X-Received: by 2002:ac8:4248:: with SMTP id r8mr18734289qtm.218.1598542019916;
+        Thu, 27 Aug 2020 08:26:59 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id d17sm1950504qkj.96.2020.08.27.08.26.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 08:24:30 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 18:24:28 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH v5 1/3] dt-bindings: interrupt-controller: Add Actions
- SIRQ controller binding
-Message-ID: <20200827152428.GA2467154@BV030612LT>
-References: <cover.1597852360.git.cristian.ciocaltea@gmail.com>
- <6bd99d4a7e50904b57bb3ad050725fbb418874b7.1597852360.git.cristian.ciocaltea@gmail.com>
- <20200825220913.GA1423455@bogus>
- <20200826214220.GA2444747@BV030612LT>
- <CAL_JsqLvXDFL6vFooPYLJ1QnZ7L756fNesXo-LW_scs9rV-zPA@mail.gmail.com>
- <20200827100629.GA2451538@BV030612LT>
- <64580e3b9acada6ff4ae9fdef02ac304@kernel.org>
+        Thu, 27 Aug 2020 08:26:59 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 27 Aug 2020 11:26:57 -0400
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v6 13/76] x86/boot/compressed/64: Add IDT Infrastructure
+Message-ID: <20200827152657.GA669574@rani.riverdale.lan>
+References: <20200824085511.7553-1-joro@8bytes.org>
+ <20200824085511.7553-14-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <64580e3b9acada6ff4ae9fdef02ac304@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200824085511.7553-14-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On Thu, Aug 27, 2020 at 11:35:06AM +0100, Marc Zyngier wrote:
-> On 2020-08-27 11:06, Cristian Ciocaltea wrote:
-> > On Wed, Aug 26, 2020 at 04:48:38PM -0600, Rob Herring wrote:
-> > > On Wed, Aug 26, 2020 at 3:42 PM Cristian Ciocaltea
-> > > <cristian.ciocaltea@gmail.com> wrote:
+On Mon, Aug 24, 2020 at 10:54:08AM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 > 
-> [...]
+> Add code needed to setup an IDT in the early pre-decompression
+> boot-code. The IDT is loaded first in startup_64, which is after
+> EfiExitBootServices() has been called, and later reloaded when the
+> kernel image has been relocated to the end of the decompression area.
 > 
-> > > Ultimately the GIC trigger type has to be
-> > > something. Is it fixed or passed thru? If the latter, just use 0
-> > > (IRQ_TYPE_NONE) if the GIC trigger mode is not fixed. Having some sort
-> > > of translation of the trigger is pretty common.
-> > 
-> > Yes, as explained above, the SIRQ controller performs indeed the
-> > translation of the incoming signal. So if I understand correctly, your
-> > suggestion would be to use the following inside the sirq node:
-> > 
-> > interrupts = <GIC_SPI 13 IRQ_TYPE_NONE>, /* SIRQ0 */
-> >              [...]
+> This allows to setup different IDT handlers before and after the
+> relocation.
 > 
-> Please don't. If you are describing a GIC interrupt, use a
-> trigger that actually exists. Given that you have a 1:1
-> mapping between input and output, just encode the output
-> trigger that matches the input.
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> Link: https://lore.kernel.org/r/20200724160336.5435-13-joro@8bytes.org
+> diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+> index 9e46729cf162..260c7940f960 100644
+> --- a/arch/x86/boot/compressed/head_64.S
+> +++ b/arch/x86/boot/compressed/head_64.S
+> @@ -33,6 +33,7 @@
+>  #include <asm/processor-flags.h>
+>  #include <asm/asm-offsets.h>
+>  #include <asm/bootparam.h>
+> +#include <asm/desc_defs.h>
+>  #include "pgtable.h"
+>  
+>  /*
+> @@ -415,6 +416,10 @@ SYM_CODE_START(startup_64)
+>  
+>  .Lon_kernel_cs:
+>  
+> +	pushq	%rsi
+> +	call	load_stage1_idt
+> +	popq	%rsi
+> +
 
-Understood, the only remark here is that internally, the driver will
-not use this information and instead will continue to rely on the input
-to properly set the trigger type for the output.
+Do we need the functions later in the series or could this just use lidt
+directly?
 
-The question is if the driver should also emit a warning (or error?)
-when the trigger type supplied via DT doesn't match the expected value.
+Is there any risk of exceptions getting triggered during the move of the
+compressed kernel, before the stage2 reload?
 
-If yes, we should also clarify what the user is supposed to provide in
-the controller node: the trigger type before the conversion (the input)
-or the one after the conversion (the output). 
+>  
+> +SYM_DATA_START(boot_idt_desc)
+> +	.word	boot_idt_end - boot_idt
 
->         M.
-> -- 
-> Jazz is not dead. It just smells funny...
+I think this should be boot_idt_end - boot_idt - 1, right?
+  The limit value is expressed in bytes and is added to the base address
+  to get the address of the last valid byte. A limit value of 0 results
+  in exactly 1 valid byte. Because IDT entries are always eight bytes
+  long, the limit should always be one less than an integral multiple of
+  eight (that is, 8N – 1).
 
-Thanks,
-Cristi
+> +	.quad	0
+> +SYM_DATA_END(boot_idt_desc)
+> +	.balign 8
+> +SYM_DATA_START(boot_idt)
+> +	.rept	BOOT_IDT_ENTRIES
+> +	.quad	0
+> +	.quad	0
+> +	.endr
+> +SYM_DATA_END_LABEL(boot_idt, SYM_L_GLOBAL, boot_idt_end)
+> +
