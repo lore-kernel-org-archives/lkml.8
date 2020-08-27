@@ -2,120 +2,104 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 626EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C9BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3511B2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F6AB2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:01:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYZTMqQJ"
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="gVi1CCdv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgH0QBT (ORCPT
+        id S1727122AbgH0QBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:01:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44312 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbgH0QBR (ORCPT
+        Thu, 27 Aug 2020 12:01:43 -0400
+Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:46924 "EHLO
+        relaydlg-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726234AbgH0QBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:01:17 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2D53C061264;
-        Thu, 27 Aug 2020 09:01:17 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id b14so6335526qkn.4;
-        Thu, 27 Aug 2020 09:01:17 -0700 (PDT)
+        Thu, 27 Aug 2020 12:01:42 -0400
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id A62A682246;
+        Thu, 27 Aug 2020 19:01:39 +0300 (MSK)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8moOsqRnYIhz4ZttMW9zwcBUEs7klx/rrFKF2mMjY8s=;
-        b=OYZTMqQJaSZueJVUNgDzpIsruyaBu+TLAQQdPAiItmnBT0Q8V/rihSpvpJcEUthbc6
-         geBvAlOovV3Ci6jklaFysg/H+C1ATiiH390HryGB1FmK5IsI24tgmgWVdrvtIDp5oHa0
-         0cIgc//70fiGXQuSM9otGWtsqS6fz9ddgNnBdeiTirTQ88KlzI7WT9xedMHnfLGGwRKR
-         UpXpnXkqjhNvJIbfTJgefsYcbCModlIQaGKvZE/VT56UQJiPEHYQPHqdxSvDxVRlKuyY
-         yqKywcMW9HlFYFN/P1EL0KZLOdiLEFvpy09wpXWlqUeMc0747ziToJPe79hIWxO3BYqF
-         caTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=8moOsqRnYIhz4ZttMW9zwcBUEs7klx/rrFKF2mMjY8s=;
-        b=icR02EI1yyEH1Fy0Wlt3nyS0JHiDUDoa7GM4kP0KkDC/VW0avo+dG+i0bDbRCyLlGm
-         YjwBaiQ6ZX8/v9uHRy9KQWttdHBGJfw+K4oHIx/LFTGu2hSINcDKixy4sEDuVfRsXIKi
-         leYPmmPp5DPjhBtruwfc21vAnKJSrMPXtCUTow+lVKuz/JKUou9wLWGJlUMczDsdVCwg
-         LUe4YA5lY6xM6kXdG89x9wpwtc5/MQPPu/X78EFUuyIrEZq7vge/N8E/LLIchJd1uF23
-         M0wyeztEnco0CcLBJINj1KplbD96rxlsPnXHdoU4CXX6X0No1xNGtY99b48EZZPigHDW
-         rmQA==
-X-Gm-Message-State: AOAM531uoAINV3wvoKZmb9kdujJs6bledqLteJvf2deSIaBLs6wOKPi8
-        BeDtN3Hyzt9Vedo2S3YR0r4=
-X-Google-Smtp-Source: ABdhPJzdZ+ZP5PyVj/QsANQkew3oPOWo8PnejboP8Zc8k+cK1AZVqg4lvdxOYROjb+F7t8I2zaySgw==
-X-Received: by 2002:a37:9ad4:: with SMTP id c203mr4792839qke.420.1598544076808;
-        Thu, 27 Aug 2020 09:01:16 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id 19sm2087813qkj.123.2020.08.27.09.01.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 09:01:16 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Thu, 27 Aug 2020 12:01:13 -0400
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org,
-        Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v6 02/76] KVM: SVM: Add GHCB definitions
-Message-ID: <20200827160113.GA721088@rani.riverdale.lan>
-References: <20200824085511.7553-1-joro@8bytes.org>
- <20200824085511.7553-3-joro@8bytes.org>
- <20200824104451.GA4732@zn.tnic>
- <20200825092224.GF3319@8bytes.org>
- <20200825110446.GC12107@zn.tnic>
+        d=paragon-software.com; s=mail; t=1598544099;
+        bh=KV0VCdFLsvj5Argmz3nlfjvKM4uICmDC66jp2333TV4=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=gVi1CCdvtmjals08pT60HSl7+TAJs/T2N8a3RMmCptPEjx0GWFRDa+OqaN61BoFNz
+         mZSduFLmfs7+lA2WMWX8/9CoZlvi3ygE/vytNwkcYoaUyWRmKY2bbLOSy7Y34Gj8/Z
+         yZIQRu9MZxFp6ZnFEcNXhIjgWmlDKD0FMOvUih2w=
+Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Thu, 27 Aug 2020 19:01:39 +0300
+Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
+ by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
+ id 15.01.1847.003; Thu, 27 Aug 2020 19:01:39 +0300
+From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+CC:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>
+Subject: RE: [PATCH v2 08/10] fs/ntfs3: Add Kconfig, Makefile and doc
+Thread-Topic: [PATCH v2 08/10] fs/ntfs3: Add Kconfig, Makefile and doc
+Thread-Index: AdZ302F8VVG9og4hTA6+RhoU6EU4hv//5nIA//Z4EJA=
+Date:   Thu, 27 Aug 2020 16:01:39 +0000
+Message-ID: <8fc9d4a25f25472384d9de2b6d5e8111@paragon-software.com>
+References: <74de75d537ac486e9fcfe7931181a9b9@paragon-software.com>
+ <63ae69b5-ee05-053d-feb6-6c9b5ed04499@infradead.org>
+In-Reply-To: <63ae69b5-ee05-053d-feb6-6c9b5ed04499@infradead.org>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.8.36]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200825110446.GC12107@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 01:04:46PM +0200, Borislav Petkov wrote:
-> On Tue, Aug 25, 2020 at 11:22:24AM +0200, Joerg Roedel wrote:
-> > I don't think so, if I look at the history of these checks their whole
-> > purpose seems to be to alert the developer/maintainer when their size
-> > changes and that they might not fit on the stack anymore. But that is
-> > taken care of in patch 1.
-> 
-> Why? What's wrong with:
-> 
-> 	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != VMCB_SAVE_AREA_SIZE);
-> 	BUILD_BUG_ON(sizeof(struct vmcb_control_area) != VMCB_CONTROL_AREA_SIZE);
-> 	BUILD_BUG_ON(sizeof(struct ghcb) != PAGE_SIZE);
-> 
-> ?
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
-
-Wouldn't we rather just remove the checks?
+RnJvbTogUmFuZHkgRHVubGFwIDxyZHVubGFwQGluZnJhZGVhZC5vcmc+DQpTZW50OiBGcmlkYXks
+IEF1Z3VzdCAyMSwgMjAyMCA4OjIzIFBNDQo+IA0KPiBPbiA4LzIxLzIwIDk6MjUgQU0sIEtvbnN0
+YW50aW4gS29tYXJvdiB3cm90ZToNCj4gPiBUaGlzIGFkZHMgZnMvbnRmczMgS2NvbmZpZywgTWFr
+ZWZpbGUgYW5kIERvY3VtZW50YXRpb24gZmlsZQ0KW10NCj4gPiArDQo+ID4gKy0gVGhpcyBkcml2
+ZXIgaW1wbGVtZW50cyBOVEZTIHJlYWQvd3JpdGUgc3VwcG9ydCBmb3Igbm9ybWFsLCBzcGFyc2Vk
+IGFuZA0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIHNwYXJzZQ0KPiANCj4gPiArICBjb21wcmVzc2VkIGZpbGVzLg0K
+PiA+ICsgIE5PVEU6IE9wZXJhdGlvbnMgd2l0aCBjb21wcmVzc2VkIGZpbGVzIHJlcXVpcmUgaW5j
+cmVhc2VkIG1lbW9yeSBjb25zdW1wdGlvbjsNCj4gPiArLSBTdXBwb3J0cyBuYXRpdmUgam91cm5h
+bCByZXBsYXlpbmc7DQo+ID4gKy0gU3VwcG9ydHMgZXh0ZW5kZWQgYXR0cmlidXRlczsNCj4gPiAr
+LSBTdXBwb3J0cyBORlMgZXhwb3J0IG9mIG1vdW50ZWQgTlRGUyB2b2x1bWVzLg0KPiA+ICsNCj4g
+PiArTW91bnQgT3B0aW9ucw0KPiA+ICs9PT09PT09PT09PT09DQo+ID4gKw0KPiA+ICtUaGUgbGlz
+dCBiZWxvdyBkZXNjcmliZXMgbW91bnQgb3B0aW9ucyBzdXBwb3J0ZWQgYnkgTlRGUzMgZHJpdmVy
+IGluIGFkZHRpb24gdG8NCj4gDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYWRkaXRpb24NCj4gDQo+ID4gK2dl
+bmVyaWMgb25lcy4NCg0KVGhhbmtzISBXaWxsIGJlIGZpeGVkIGluIHYzLg0KDQo+ID4gKz09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT0NCltdDQo+ID4gKw0KPiA+ICtub2hpZGRlbgkJRmlsZXMgd2l0aCB0
+aGUgV2luZG93cy1zcGVjaWZpYyBISURERU4gKEZJTEVfQVRUUklCVVRFX0hJRERFTikNCj4gPiAr
+CQkJYXR0cmlidXRlIHdpbGwgbm90IGJlIHNob3duIHVuZGVyIExpbnV4Lg0KPiANCj4gV2l0aG91
+dCB0aGlzIG1vdW50IG9wdGlvbiwgd2lsbCBISURERU4gZmlsZXMgYmUgc2hvd24gYnkgZGVmYXVs
+dD8NCg0KWWVzLCBjb3JyZWN0LCB3aXRob3V0ICJub2hpZGRlbiIgbW91bnQgb3B0aW9uIGZpbGVz
+IHdpdGggRklMRV9BVFRSSUJVVEVfSElEREVOIHNldCB3aWxsIGJlIHNob3duIGFzIHJlZ3VsYXIg
+ZmlsZXMuDQoNCj4gPiArDQo+ID4gK3N5c19pbW11dGFibGUJCUZpbGVzIHdpdGggdGhlIFdpbmRv
+d3Mtc3BlY2lmaWMgU1lTVEVNDQpbXQ0KPiA+ICsNCj4gPiArLSBGdWxsIGpvdXJuYWxpbmcgc3Vw
+cG9ydCAoY3VycmVudGx5IGpvdXJuYWwgcmVwbGF5aW5nIGlzIHN1cHBvcnRlZCkgb3ZlciBKQkQu
+DQo+IA0KPiAgICAgICAgICAgam91cm5hbGxpbmcNCj4gc2VlbXMgdG8gYmUgcHJlZmVycmVkLg0K
+PiANCg0KSGF2ZSB0byBkaXNhZ3JlZSBvbiB0aGlzLiBBY2NvcmRpbmcgdG8gImpvdXJuYWxpbmci
+IHRlcm0gdXNhZ2UgaW4gZGlmZmVyZW50IHNvdXJjZXMsIHRoZSBzaW5nbGUtTCBzZWVtcyB0byBi
+ZSB0aGUgc3RhbmRhcmQuDQoNCj4gPiArDQo+ID4gKw0KPiA+ICtSZWZlcmVuY2VzDQo+ID4gKz09
+PT09PT09PT0NCj4gPiAraHR0cHM6Ly93d3cucGFyYWdvbi1zb2Z0d2FyZS5jb20vaG9tZS9udGZz
+LWxpbnV4LXByb2Zlc3Npb25hbC8NCj4gPiArCS0gQ29tbWVyY2lhbCB2ZXJzaW9uIG9mIHRoZSBO
+VEZTIGRyaXZlciBmb3IgTGludXguDQo+ID4gKw0KPiA+ICthbG1hei5hbGV4YW5kcm92aWNoQHBh
+cmFnb24tc29mdHdhcmUuY29tDQo+ID4gKwktIERpcmVjdCBlLW1haWwgYWRkcmVzcyBmb3IgZmVl
+ZGJhY2sgYW5kIHJlcXVlc3RzIG9uIHRoZSBOVEZTMyBpbXBsZW1lbnRhdGlvbi4NCj4gPiArDQo+
+ID4gKw0KPiANCj4gdGhhbmtzLg0KPiAtLQ0KPiB+UmFuZHkNCg==
