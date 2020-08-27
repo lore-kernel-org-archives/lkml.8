@@ -2,273 +2,95 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F3AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6EDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6032177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068262177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:34:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lA9GohKb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgH0MdB (ORCPT
+        id S1729045AbgH0MeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 08:33:01 -0400
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:4393 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728964AbgH0MHq (ORCPT
+        Thu, 27 Aug 2020 08:34:01 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14976 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728995AbgH0MIv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 08:07:46 -0400
-IronPort-SDR: lZrENF98HkO7lgSHgxOU5bs67FNWYT7XnUvz3YZceUd4qL2JR/nzW4uNCwFGXhkJucsie98nas
- MIsnFROOBQkpZhkE2zF7OGixRrhAbLJYSY/QivAy7nDjFfGp5GJzxvOobhNccESst9i4/oV+wf
- +AKaDupO8kyjPqZBm6aTt3DKu0o/pbbqiYjuz4A52LufKMX/5KgYxtcbcc/fgO8vgvlernCTzu
- 4R1fpodiBl9GUJDYGp7uMBvgd0+f/DLNWXYhgked/oht7xWR6HW1L/ZzTOzo6UthfG9ZK9SHav
- 0dw=
-X-IronPort-AV: E=Sophos;i="5.76,359,1592899200"; 
-   d="scan'208";a="52331554"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa2.mentor.iphmx.com with ESMTP; 27 Aug 2020 04:06:45 -0800
-IronPort-SDR: 8VB2H+hJ/+U8lqR67sLBmUJ/+z+Qwbylgkedv2al+v2XOSu4h0w3bSdbrI+bmPeAij+7jQD9wS
- t5TMIn4sN+UQeIV3QTfw/Em+JiccVrtY03SP4XN0FyIe492zKnsl7okA7FoiD25gwQOiBekLQ0
- Xrgbfu9hu4OXhQRVWZlPAhwOFTvX+HFd0s4SzU8fHFF076Dy5pkpU/diaQENp2de/p/PfvFkPe
- wxhgLwyZvAzEGDHmM070yIQo1HZ5H9SlFkXNwTHsmUSjwVs4IBBScgqmZ8z695HKTlf3+zdFkb
- 72o=
-Subject: Re: PROBLEM: Long Workqueue delays V2
-From:   Jim Baxter <jim_baxter@mentor.com>
-To:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-block@vger.kernel.org>
-References: <625615f2-3a6b-3136-35f9-2f2fb3c110cf@mentor.com>
- <066753ec-eddc-d7f6-5cc8-fe282baba6ec@mentor.com>
-CC:     <linux-usb@vger.kernel.org>,
-        "Frkuska, Joshua" <Joshua_Frkuska@mentor.com>,
-        "Resch Carsten (CM/ESO6)" <Carsten.Resch@de.bosch.com>,
-        "Rosca, Eugeniu (ADITG/ESB)" <erosca@de.adit-jv.com>,
-        "Craske, Mark" <Mark_Craske@mentor.com>,
-        "Brown, Michael" <michael_brown@mentor.com>
-Message-ID: <bf3d7f89-e652-a26b-bb27-c6dbef08e28c@mentor.com>
-Date:   Thu, 27 Aug 2020 13:06:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 27 Aug 2020 08:08:51 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f47a2130000>; Thu, 27 Aug 2020 05:07:47 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 27 Aug 2020 05:08:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 27 Aug 2020 05:08:30 -0700
+Received: from mtl-vdi-166.wap.labs.mlnx (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
+ 2020 12:08:15 +0000
+Date:   Thu, 27 Aug 2020 15:08:11 +0300
+From:   Eli Cohen <elic@nvidia.com>
+To:     Jing Xiangfeng <jingxiangfeng@huawei.com>
+CC:     <mst@redhat.com>, <jasowang@redhat.com>, <eli@mellanox.com>,
+        <dan.carpenter@oracle.com>, <parav@mellanox.com>,
+        <natechancellor@gmail.com>, <colin.king@canonical.com>,
+        <virtualization@lists.linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] vdpa/mlx5: Remove duplicate include
+Message-ID: <20200827120811.GA101680@mtl-vdi-166.wap.labs.mlnx>
+References: <20200827120547.83997-1-jingxiangfeng@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <066753ec-eddc-d7f6-5cc8-fe282baba6ec@mentor.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-08.mgc.mentorg.com (139.181.222.8) To
- SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200827120547.83997-1-jingxiangfeng@huawei.com>
+User-Agent: Mutt/1.9.5 (bf161cf53efb) (2018-04-13)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598530067; bh=inb6WrN6PDof0nfJ5667HKoyHeUwp4PxtBynk5WzLuc=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=lA9GohKbA93UxQrNvrs29Zh99t6x1Eq3kxrjNcvbRPAEPG4lIBoyywiBwKZGdl9eC
+         HVEyTfn4LdQC8tDEH0+uLwnGTv/0ZmOK5w8/mc5RG+xpATbDvzi5r298LjEuXlCQCe
+         Ip+1aRIgxXVxpO0jK6v5g+UhE9WUxe/lAdp8Bw5mNwexvpKWgXJVvbqePxwGpn8ucU
+         Yqlb465QVCdCX4AlkFJ2k5iZZghSec1QmSdeG3XMVV91LV3tLTg0xGZAy5oiGtaD2Q
+         at5esiCNRV3DLC0ypAvUx2TfNIFGDoAt9KRps/zd0mtxGcr3wagwraONeGwCIT35VK
+         Q4nUerEnHqN2g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Has anyone any ideas of how to investigate this delay further?
-
-Comparing the perf output for unplugging the USB stick and using umount
-which does not cause these delays in other workqueues the main difference
-is that the problem case is executing the code in invalidate_mapping_pages()
-and a large part of that arch_local_irq_restore() which is part of
-releasing a lock, I would usually expect that requesting a lock would be
-where delays may occur.
-
-	--94.90%--invalidate_partition
-	   __invalidate_device
-	   |          
-	   |--64.55%--invalidate_bdev
-	   |  |          
-	   |   --64.13%--invalidate_mapping_pages
-	   |     |          
-	   |     |--24.09%--invalidate_inode_page
-	   |     |   |          
-	   |     |   --23.44%--remove_mapping
-	   |     |     |          
-	   |     |      --23.20%--__remove_mapping
-	   |     |        |          
-	   |     |         --21.90%--arch_local_irq_restore
-	   |     |          
-	   |     |--22.44%--arch_local_irq_enable
-
-Best regards,
-Jim
-
--------- Original Message --------
-Subject: Re: PROBLEM: Long Workqueue delays V2
-From: Jim Baxter <jim_baxter@mentor.com>
-To: 
-Date: Wed Aug 19 2020 14:12:24 GMT+0100 (British Summer Time)
-
-> Added linux-block List which may also be relevant to this issue.
+On Thu, Aug 27, 2020 at 08:05:47PM +0800, Jing Xiangfeng wrote:
+> Remove linux/mlx5/device.h which is included more than once
 > 
-> -------- Original Message --------
-> Subject: PROBLEM: Long Workqueue delays V2
-> From: Jim Baxter <jim_baxter@mentor.com>
-> To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
-> CC: "Resch Carsten (CM/ESO6)" <Carsten.Resch@de.bosch.com>, "Rosca, Eugeniu (ADITG/ESB)" <erosca@de.adit-jv.com>
-> Date: Tue, 18 Aug 2020 12:58:13 +0100
+> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+
+Acked-by: Eli Cohen <elic@nvidia.com>
+
+> ---
+>  drivers/vdpa/mlx5/net/mlx5_vnet.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
->> I am asking this question again to include the fs-devel list.
->>
->>
->> We have issues with the workqueue of the kernel overloading the CPU 0 
->> when we we disconnect a USB stick.
->>
->> This results in other items on the shared workqueue being delayed by
->> around 6.5 seconds with a default kernel configuration and 2.3 seconds
->> on a config tailored for our RCar embedded platform.
->>
->>
->>
->> We first noticed this issue on custom hardware and we have recreated it
->> on an RCar Starter Kit using a test module [1] to replicate the
->> behaviour, the test module outputs any delays of greater then 9ms.
->>
->> To run the test we have a 4GB random file on a USB stick and perform
->> the following test.
->> The stick is mounted as R/O and we are copying data from the stick:
->>
->> - Mount the stick.
->> mount -o ro,remount /dev/sda1
->>
->> - Load the Module:
->> # taskset -c 0 modprobe latency-mon
->>
->> - Copy large amount of data from the stick:
->> # dd if=/run/media/sda1/sample.txt of=/dev/zero
->> [ 1437.517603] DELAY: 10
->> 8388607+1 records in
->> 8388607+1 records out
->>
->>
->> - Disconnect the USB stick:
->> [ 1551.796792] usb 2-1: USB disconnect, device number 2
->> [ 1558.625517] DELAY: 6782
->>
->>
->> The Delay output 6782 is in milliseconds.
->>
->>
->>
->> Using umount stops the issue occurring but is unfortunately not guaranteed
->> in our particular system.
->>
->>
->> From my analysis the hub_event workqueue kworker/0:1+usb thread uses around
->> 98% of the CPU.
->>
->> I have traced the workqueue:workqueue_queue_work function while unplugging the USB
->> and there is no particular workqueue function being executed a lot more then the 
->> others for the kworker/0:1+usb thread.
->>
->>
->> Using perf I identified the hub_events workqueue was spending a lot of time in
->> invalidate_partition(), I have included a cut down the captured data from perf in
->> [2] which shows the additional functions where the kworker spends most of its time.
->>
->>
->> I am aware there will be delays on the shared workqueue, are the delays
->> we are seeing considered normal?
->>
->>
->> Is there any way to mitigate or identify where the delay is?
->> I am unsure if this is a memory or filesystem subsystem issue.
->>
->>
->> Thank you for you help.
->>
->> Thanks,
->> Jim Baxter
->>
->> [1] Test Module:
->> // SPDX-License-Identifier: GPL-2.0
->> /*
->>  * Simple WQ latency monitoring
->>  *
->>  * Copyright (C) 2020 Advanced Driver Information Technology.
->>  */
->>
->> #include <linux/init.h>
->> #include <linux/ktime.h>
->> #include <linux/module.h>
->>
->> #define PERIOD_MS 100
->>
->> static struct delayed_work wq;
->> static u64 us_save;
->>
->> static void wq_cb(struct work_struct *work)
->> {
->> 	u64 us = ktime_to_us(ktime_get());
->> 	u64 us_diff = us - us_save;
->> 	u64 us_print = 0;
->>
->> 	if (!us_save)
->> 		goto skip_print;
->>
->>
->> 	us_print = us_diff / 1000 - PERIOD_MS;
->> 	if (us_print > 9)
->> 		pr_crit("DELAY: %lld\n", us_print);
->>
->> skip_print:
->> 	us_save = us;
->> 	schedule_delayed_work(&wq, msecs_to_jiffies(PERIOD_MS));
->> }
->>
->> static int latency_mon_init(void)
->> {
->> 	us_save = 0;
->> 	INIT_DELAYED_WORK(&wq, wq_cb);
->> 	schedule_delayed_work(&wq, msecs_to_jiffies(PERIOD_MS));
->>
->> 	return 0;
->> }
->>
->> static void latency_mon_exit(void)
->> {
->> 	cancel_delayed_work_sync(&wq);
->> 	pr_info("%s\n", __func__);
->> }
->>
->> module_init(latency_mon_init);
->> module_exit(latency_mon_exit);
->> MODULE_AUTHOR("Eugeniu Rosca <erosca@de.adit-jv.com>");
->> MODULE_LICENSE("GPL");
->>
->>
->> [2] perf trace:
->>     95.22%     0.00%  kworker/0:2-eve  [kernel.kallsyms]
->>     |
->>     ---ret_from_fork
->>        kthread
->>        worker_thread
->>        |          
->>         --95.15%--process_one_work
->> 		  |          
->> 		   --94.99%--hub_event
->> 			 |          
->> 			  --94.99%--usb_disconnect
->> 			  <snip>
->> 				|  
->> 				--94.90%--invalidate_partition
->> 				   __invalidate_device
->> 				   |          
->> 				   |--64.55%--invalidate_bdev
->> 				   |  |          
->> 				   |   --64.13%--invalidate_mapping_pages
->> 				   |     |          
->> 				   |     |--24.09%--invalidate_inode_page
->> 				   |     |   |          
->> 				   |     |   --23.44%--remove_mapping
->> 				   |     |     |          
->> 				   |     |      --23.20%--__remove_mapping
->> 				   |     |        |          
->> 				   |     |         --21.90%--arch_local_irq_restore
->> 				   |     |          
->> 				   |     |--22.44%--arch_local_irq_enable
->> 				   |          
->> 					--30.35%--shrink_dcache_sb 
->> 					<snip>
->> 					  |      
->> 					  --30.17%--truncate_inode_pages_range
->>
+> diff --git a/drivers/vdpa/mlx5/net/mlx5_vnet.c b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+> index 70676a6d1691..b4bdbe062b7c 100644
+> --- a/drivers/vdpa/mlx5/net/mlx5_vnet.c
+> +++ b/drivers/vdpa/mlx5/net/mlx5_vnet.c
+> @@ -8,7 +8,6 @@
+>  #include <linux/mlx5/device.h>
+>  #include <linux/mlx5/vport.h>
+>  #include <linux/mlx5/fs.h>
+> -#include <linux/mlx5/device.h>
+>  #include "mlx5_vnet.h"
+>  #include "mlx5_vdpa_ifc.h"
+>  #include "mlx5_vdpa.h"
+> -- 
+> 2.26.0.106.g9fadedd
+> 
