@@ -2,104 +2,85 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DD1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AF9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D140C20786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9C252087D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:02:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="e3sJovM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgH0N7Y (ORCPT
+        id S1726873AbgH0OCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 09:59:24 -0400
-Received: from outbound-smtp46.blacknight.com ([46.22.136.58]:53063 "EHLO
-        outbound-smtp46.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726803AbgH0Nnz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:43:55 -0400
-X-Greylist: delayed 505 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Aug 2020 09:43:54 EDT
-Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp46.blacknight.com (Postfix) with ESMTPS id 0F2FFFAF62
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 14:35:25 +0100 (IST)
-Received: (qmail 15080 invoked from network); 27 Aug 2020 13:35:24 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.16.65])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 27 Aug 2020 13:35:24 -0000
-Date:   Thu, 27 Aug 2020 14:35:23 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Joonsoo Kim <js1304@gmail.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        kernel-team@lge.com, Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH for v5.9] mm/page_alloc: handle a missing case for
- memalloc_nocma_{save/restore} APIs
-Message-ID: <20200827133523.GC3090@techsingularity.net>
-References: <1598331582-19923-1-git-send-email-iamjoonsoo.kim@lge.com>
- <e83100ae-d687-3b4e-8256-aee242191ada@suse.cz>
- <CAAmzW4MRizKRbdt_ZBqs_+OQGsP4f2F6iYDk88u78kYqOZA9NQ@mail.gmail.com>
+        Thu, 27 Aug 2020 10:02:23 -0400
+Received: from mout.gmx.net ([212.227.17.20]:50229 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726851AbgH0NmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 09:42:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1598535710;
+        bh=4quNDffXBr7xu+P8AYTF5B4Q4KC4iGb6IlNPmZ7OG44=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=e3sJovM3KqoNxeIq1/5pBzS+ip7jqoLwC9l9PlkeAZzaIDk5KZbPCIKsQ6rV2luSn
+         uqWuwqbAyWcccWgkiwhmNF/tHGIGM11V+0ZhWnufh46+NPelcGb/ogBS63ui35TTXf
+         0wzIiMwmUnHQetmDUnt70YSjg8+3NI0g6ji4yKcg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [217.61.146.7] ([217.61.146.7]) by web-mail.gmx.net
+ (3c-app-gmx-bap26.server.lan [172.19.172.96]) (via HTTP); Thu, 27 Aug 2020
+ 15:41:50 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <CAAmzW4MRizKRbdt_ZBqs_+OQGsP4f2F6iYDk88u78kYqOZA9NQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <trinity-ddd51146-41eb-49ae-9456-4588450d31aa-1598535710011@3c-app-gmx-bap26>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Frank Wunderlich <linux@fw-web.de>,
+        chunkuang Hu <chunkuang.hu@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Aw: Re:  [PATCH v5 3/7] drm/mediatek: disable tmds on mt2701
+Content-Type: text/plain; charset=UTF-8
+Date:   Thu, 27 Aug 2020 15:41:50 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <81276d4c-8883-8bfd-d7d0-9b9ac025ed97@gmail.com>
+References: <20200819081752.4805-1-linux@fw-web.de>
+ <20200819081752.4805-4-linux@fw-web.de>
+ <trinity-14a1b182-38ab-4f84-bb72-94d448b05fd5-1597994235320@3c-app-gmx-bs37>
+ <81276d4c-8883-8bfd-d7d0-9b9ac025ed97@gmail.com>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:Qlp+wHkbak6pBZ5/7qykL04OknqT6U+WwH+B4u5tOtj3VmxF1XWSKrFYv2a1JnOA+i2Lc
+ Hg2GwIs2jHrdNRuqRMAtCHBi/k4/RlQ99TTbKd3kElatLj3MdORZA1tUpyXWgo3l49SbXwC4yj/M
+ LsWL+SJ4s2B+GEGWo+MoSBMhBUk04FIzI+8sYIdftad7aGEgMaAF9ze5jPqQLlRJbnQ6v66K2SKI
+ ifet6FKzp2K62Ov2c3YltC4L6NbYXmQEMDhBvjZC7ybq//eKEAcT1eE6cw+WoWDwtZpst8hVn6oW
+ UI=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:h5tkjHGfYDU=:lPmXLFE1B8AX3Zy3CbIsRD
+ s3VayhK0/M/yARQry0GUjQ5SQ/cVYMkllZIE0P5rQMgq99bx4K4Frj56LvcjoWVW9Dq0lnl9V
+ 8tEP/JgYwaTRELytQ6wzIsL1iT9R8N0SrgvWKHxoeshp4XfROVxrFBMBywPqL6GN/dTQKSahO
+ olxlvZ0BKTn4rEqfQyJbwlEcSbapgGw+c2dPYFy+H2jLCzYdK9yJHVUcANPLJpkUFH4sIjeIz
+ WEESP+gE41YkuahFPE6LKdC1SOMvqgUYZvzUZVQnN4oSLbearFiLbMolaegP5D1mde4xlLIaz
+ PRE8U3SxgvkzmPaoocV2OZh9LHWXUIihI/d54ZD+n80KekMosV2o1V4T/oSGwm50xfFUQXDaI
+ 64++WExLDIV8BPHmWAmwc0KwXdQa+GwMJ8Lb4lIPk3uh6ybmq/RyAXXTIXh1HI825htbnZ9BE
+ 0QvCEmZN993Rkwu4IxmDbrNW2ux6TN6zBTSohvveBWurA5jol5hISl6oj9RZnSZUNbzqYS29M
+ PPcTZ7jZA7F4cy/rX+b+5jr6woxNeuyXPyz0vMj3JBSS+KZUho+pWx9DNs7mZvtPgspguIL+e
+ GBhrExP6PHJPYN0w936PQ3XA7YTUEE2y4TOF9QCfu80Zc1aWHiAKUo6cn0nhwFKuiIcsA+sFn
+ aWDahsL08vUtEYS6ALCRT6XHEN3lT1UtI2rMrV3+NTEvCQs2xcTKXAN7AoYkz4e3K4BI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 02:12:44PM +0900, Joonsoo Kim wrote:
-> > > And, it requires to break current code
-> > > layering that order-0 page is always handled by the pcplist. I'd prefer
-> > > to avoid it so this patch uses different way to skip CMA page allocation
-> > > from the pcplist.
-> >
-> > Well it would be much simpler and won't affect most of allocations. Better than
-> > flushing pcplists IMHO.
-> 
-> Hmm...Still, I'd prefer my approach.
+Hi Matthias,
 
-I prefer the pcp bypass approach. It's simpler and it does not incur a
-pcp drain/refill penalty. 
+any opinions about the dts-changes?
 
-> There are two reasons. First,
-> layering problem
-> mentioned above. In rmqueue(), there is a code for MIGRATE_HIGHATOMIC.
-> As the name shows, it's for high order atomic allocation. But, after
-> skipping pcplist
-> allocation as you suggested, we could get there with order 0 request.
+maybe series except the tmds-Patch get merged...so i add it only to my own repo till we find a better way?
+currently mainline does not support hdmi at all for the board. the tmds-patch is only a fix for specific resolutions which have a "flickering" without this Patch.
 
-I guess your concern is that under some circumstances that a request that
-passes a watermark check could fail due to a highatomic reserve and to
-an extent this is true. However, in that case the system is already low
-on memory depending on the allocation context, the pcp lists may get
-flushed anyway.
-
-> We can also
-> change this code, but, I'd hope to maintain current layering. Second,
-> a performance
-> reason. After the flag for nocma is up, a burst of nocma allocation
-> could come. After
-> flushing the pcplist one times, we can use the free page on the
-> pcplist as usual until
-> the context is changed.
-
-It's not guaranteed because CMA pages could be freed between the nocma save
-and restore triggering further drains due to a reschedule.  Similarly,
-a CMA allocation in parallel could refill with CMA pages on the per-cpu
-list. While both cases are unlikely, it's more unpredictable than a
-straight-forward pcp bypass.
-
-I don't really see it as a layering violation of the API because all
-order-0 pages go through the PCP lists. The fact that order-0 is serviced
-from the pcp list is an internal implementation detail, the API doesn't
-care.
-
--- 
-Mel Gorman
-SUSE Labs
+regards Frank
