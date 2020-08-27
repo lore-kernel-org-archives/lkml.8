@@ -2,159 +2,125 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 028EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6D2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D62272080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D659E2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:37:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZz2oj0+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JJ3s1wAl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgH0SfE (ORCPT
+        id S1726706AbgH0Shl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:35:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbgH0SfE (ORCPT
+        Thu, 27 Aug 2020 14:37:41 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44129 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726009AbgH0Shk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:35:04 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02522C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:35:04 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id o196so6341425qke.8
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:35:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=mqA0EYRZVIwLWOqPk5pwlyc1YvuGeQHgSqHXghkkHnM=;
-        b=mZz2oj0+wSsZMB0AWjnl+4qg8AhwmYO4kdO1S60jA8VA3SBzIiwO3DH3P5DsCLfbaa
-         aQs1elgpTpBsZseoNPTY/AZaVTY7vIgMvIhNZ+1QtULPTEn0KylF7zheYoJ+puMkl8Mt
-         ufCfQRHenD51rHnaB23BlMLXUYyH1DlRDWAjroZ2m5zP/wD4LcZ5wpO/auvaaHxCi5Ch
-         yQWFXlgwLYFQ8P+w2G5PI067IALkO+LAD8kpVSi+FtmjLFzXgHPOBD7KYZYQwh0WcZRQ
-         pEmv2Uzcgf9zARFWxLOCDa1uLo9FQlQI11Gg/N4RVXc3RV0sQNt4XeSM2K19tWa0i7gf
-         heAA==
+        Thu, 27 Aug 2020 14:37:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598553459;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=GIOyNKn4lpZbuj6L4tBDqNoHcELuwP+YTy/cWEhcVsA=;
+        b=JJ3s1wAl1I+k/O0Gffi1YCxvuYZ1JNLE0dwJunl4IuWmBKojK10I/hQ2bPyey5dbDxKr0M
+        2HZ/PSUZlydAfk90Q/f/KvOd/WxKfIZCAeNBsYRjRisdgweaP9E8Ft27ofzwtJ4WGjKXhA
+        IaLgaBftXBA1yhevrFcEIp7dshCFfk4=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-480-tUhRq4mZOnqYit4x_IcbwA-1; Thu, 27 Aug 2020 14:37:37 -0400
+X-MC-Unique: tUhRq4mZOnqYit4x_IcbwA-1
+Received: by mail-qt1-f199.google.com with SMTP id r24so5514550qtu.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:37:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=mqA0EYRZVIwLWOqPk5pwlyc1YvuGeQHgSqHXghkkHnM=;
-        b=jTfufvCp6Vc2FtT5RDK+sWCBL7cbI90X0PL65vPzwJnFfQkQzwtX/oeuYvSrVnPIga
-         3rYvBpubLc8bXy2hBTReosRwtOZfqtN2ZUATCNMm+Q6JEHIKTr9Kriewp+ClkZSHwhN8
-         cespPlZIBKViN/Ojx0bLR25LkmVrl6nY4M9ZR98YadKLKCIHrr5lIsQ2XGjPlPvlszkz
-         LB9okOeUkZyL4+vD17tUvrJtlT0CKHfTOQ8YF/L4glUA8Z9Q4FJFv64FbdLHTOYx5YUh
-         JJ4WurVxJ7aMBRLE76sC+hEwP0zTzAYEqlKQ9MuFW9bEocMWm2WscTmYHGwOKka0hbA1
-         EguA==
-X-Gm-Message-State: AOAM532zt2HHWDdvn4nLV5QF6tUDYnmBblmO4kPkmaD3TOFdoFv/TaJV
-        7FVRO+kKtRcK5Shye2+lME4=
-X-Google-Smtp-Source: ABdhPJy5fetU3wuT21/nV4z+TpEhx5H+HcuTSDouRqF/O4+AAPbFy3jvsqMy+FFVvSUXwetLcnug7A==
-X-Received: by 2002:a37:7407:: with SMTP id p7mr20410109qkc.350.1598553303218;
-        Thu, 27 Aug 2020 11:35:03 -0700 (PDT)
-Received: from LeoBras ([2804:14d:8084:8e41:9b0d:571e:a65:b5d8])
-        by smtp.gmail.com with ESMTPSA id k38sm2464453qtc.88.2020.08.27.11.34.59
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GIOyNKn4lpZbuj6L4tBDqNoHcELuwP+YTy/cWEhcVsA=;
+        b=BSt7OS+V67xMWh6Tk9Jpv3IHyP5H6exqz7zuX4ENAVd9I4wMz3tubtpqzQxdRsk1tP
+         wLH+jNx57uO0Z8akRMqpmXAp01weqRrRSn1UHtOxDCG3XaqmDr53hu562nA4E2tsYK2Y
+         Ip0FGJfqO1UfODizUA2rtK6grOjudawwVri6R9oRZXnS5i9SdEtar5t3vr71+mrrR/Uj
+         rOSgl5lOjgUGBNebdIHiOzWi1AufwHjzmNKSR+z+l7ZTZJKRKo5QqJmXdqiMmb6CUuSk
+         Em1c45A1LKBW+bSB7ltMw8wWcbKMM9vE6L0RFdSPQw9u/Ujbm6LIWzsAm4wxYynjirx1
+         qEug==
+X-Gm-Message-State: AOAM530/oHkPwEl7Ava+xhz5fIW7Jh8i6T6D3FNLstU8tsExsgiIl/iN
+        RjrPEJMaeoHqioaU3+xIizfxu0GGNTxGHs3RvXx7E0CDEk1CxXskUm2Law9kMZHOuEp0FuL8tIb
+        V6zgR/bKNv3M63X/FVp0xMJKw
+X-Received: by 2002:ac8:45c7:: with SMTP id e7mr20255189qto.187.1598553456823;
+        Thu, 27 Aug 2020 11:37:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzXdvN0a05gbC1rP9FvdO3i+S9AkoKl/LGZWrmmNmYELI9HeqKh23RzqUkEBrEfpUvhGucamw==
+X-Received: by 2002:ac8:45c7:: with SMTP id e7mr20255172qto.187.1598553456580;
+        Thu, 27 Aug 2020 11:37:36 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id x28sm2362305qki.55.2020.08.27.11.37.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 11:35:02 -0700 (PDT)
-Message-ID: <5f26d433abcde7cd3b4da705742e17ca6c0f0f0b.camel@gmail.com>
-Subject: Re: [PATCH v1 04/10] powerpc/kernel/iommu: Add new
- iommu_table_in_use() helper
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Joel Stanley <joel@jms.id.au>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>,
-        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
-        David Dai <zdai@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Thu, 27 Aug 2020 15:34:55 -0300
-In-Reply-To: <e7d0e85c-c4c4-ad1d-899a-72d4fbd92852@ozlabs.ru>
-References: <20200817234033.442511-1-leobras.c@gmail.com>
-         <20200817234033.442511-5-leobras.c@gmail.com>
-         <e7d0e85c-c4c4-ad1d-899a-72d4fbd92852@ozlabs.ru>
-Organization: IBM
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 27 Aug 2020 11:37:35 -0700 (PDT)
+From:   trix@redhat.com
+To:     bskeggs@redhat.com, airlied@linux.ie, daniel@ffwll.ch
+Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
+Subject: [PATCH] drm/nouveau: remove redundant check
+Date:   Thu, 27 Aug 2020 11:37:23 -0700
+Message-Id: <20200827183723.7767-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-08-22 at 20:34 +1000, Alexey Kardashevskiy wrote:
-> > +
-> > +	/*ignore reserved bit0*/
-> 
-> s/ignore reserved bit0/ ignore reserved bit0 /  (add spaces)
+From: Tom Rix <trix@redhat.com>
 
-Fixed
+clang static analysis flags this problem
 
-> > +	if (tbl->it_offset == 0)
-> > +		p1_start = 1;
-> > +
-> > +	/* Check if reserved memory is valid*/
-> 
-> A missing space here.
+hw.c:271:12: warning: The left operand of '>=' is a
+  garbage value
+    if (pv.M1 >= pll_lim.vco1.min_m ...
+        ~~~~~ ^
 
-Fixed
+This is mostly not a problem because an early check in
+nouveau_hw_fix_bad_vpll()
 
-> 
-> > +	if (tbl->it_reserved_start >= tbl->it_offset &&
-> > +	    tbl->it_reserved_start <= (tbl->it_offset + tbl->it_size) &&
-> > +	    tbl->it_reserved_end   >= tbl->it_offset &&
-> > +	    tbl->it_reserved_end   <= (tbl->it_offset + tbl->it_size)) {
-> 
-> Uff. What if tbl->it_reserved_end is bigger than tbl->it_offset +
-> tbl->it_size?
-> 
-> The reserved area is to preserve MMIO32 so it is for it_offset==0 only
-> and the boundaries are checked in the only callsite, and it is unlikely
-> to change soon or ever.
-> 
-> Rather that bothering with fixing that, may be just add (did not test):
-> 
-> if (WARN_ON((
-> (tbl->it_reserved_start || tbl->it_reserved_end) && (it_offset != 0))
-> (tbl->it_reserved_start > it_offset && tbl->it_reserved_end < it_offset
-> + it_size) && (it_offset == 0)) )
->  return true;
-> 
-> Or simply always look for it_offset..it_reserved_start and
-> it_reserved_end..it_offset+it_size and if there is no reserved area,
-> initialize it_reserved_start=it_reserved_end=it_offset so the first
-> it_offset..it_reserved_start becomes a no-op.
+    	if (nvbios_pll_parse(bios, pll, &pll_lim))
+		return;
+	nouveau_hw_get_pllvals(dev, pll, &pv);
 
-The problem here is that the values of it_reserved_{start,end} are not
-necessarily valid. I mean, on iommu_table_reserve_pages() the values
-are stored however they are given (bit reserving is done only if they
-are valid). 
+shadows a similar check in nouveau_hw_get_pllvals()
 
-Having a it_reserved_{start,end} value outside the valid ranges would
-cause find_next_bit() to run over memory outside the bitmap.
-Even if the those values are < tbl->it_offset, the resulting
-subtraction on unsigned would cause it to become a big value and run
-over memory outside the bitmap.
+	ret = nvbios_pll_parse(bios, plltype, &pll_lim);
+	if (ret || !(reg1 = pll_lim.reg))
+		return -ENOENT;
 
-But I think you are right. That is not the place to check if the
-reserved values are valid. It should just trust them here.
-I intent to change iommu_table_reserve_pages() to only store the
-parameters in it_reserved_{start,end} if they are in the range, and or
-it_offset in both of them if they are not.
+Since the first check is redundant, remove it and
+check the status of nouveau_hw_get_pllvals().
 
-What do you think?
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/gpu/drm/nouveau/dispnv04/hw.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Thanks for the feedback!
-Leonardo Bras
-
-
+diff --git a/drivers/gpu/drm/nouveau/dispnv04/hw.c b/drivers/gpu/drm/nouveau/dispnv04/hw.c
+index b674d68ef28a..b96c5628c33b 100644
+--- a/drivers/gpu/drm/nouveau/dispnv04/hw.c
++++ b/drivers/gpu/drm/nouveau/dispnv04/hw.c
+@@ -259,14 +259,12 @@ nouveau_hw_fix_bad_vpll(struct drm_device *dev, int head)
+ 	struct nouveau_drm *drm = nouveau_drm(dev);
+ 	struct nvif_device *device = &drm->client.device;
+ 	struct nvkm_clk *clk = nvxx_clk(device);
+-	struct nvkm_bios *bios = nvxx_bios(device);
+ 	struct nvbios_pll pll_lim;
+ 	struct nvkm_pll_vals pv;
+ 	enum nvbios_pll_type pll = head ? PLL_VPLL1 : PLL_VPLL0;
+ 
+-	if (nvbios_pll_parse(bios, pll, &pll_lim))
++	if (nouveau_hw_get_pllvals(dev, pll, &pv))
+ 		return;
+-	nouveau_hw_get_pllvals(dev, pll, &pv);
+ 
+ 	if (pv.M1 >= pll_lim.vco1.min_m && pv.M1 <= pll_lim.vco1.max_m &&
+ 	    pv.N1 >= pll_lim.vco1.min_n && pv.N1 <= pll_lim.vco1.max_n &&
+-- 
+2.18.1
 
