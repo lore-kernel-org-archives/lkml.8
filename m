@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEDBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9905C22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3597B2177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:52:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nWq2Q3kO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GO2WK+lI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbgH0MvU (ORCPT
+        id S1728917AbgH0MwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 08:51:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42406 "EHLO
+        Thu, 27 Aug 2020 08:52:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729131AbgH0MuI (ORCPT
+        with ESMTP id S1729226AbgH0MuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 08:50:08 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43433C06121B;
-        Thu, 27 Aug 2020 05:50:08 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id 67so3268813pgd.12;
-        Thu, 27 Aug 2020 05:50:08 -0700 (PDT)
+        Thu, 27 Aug 2020 08:50:05 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 636F6C061264;
+        Thu, 27 Aug 2020 05:50:05 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id 31so3271091pgy.13;
+        Thu, 27 Aug 2020 05:50:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tJoGp29OgjxfQZ/rs065wQ2H4gpJMwEOpG42+00lmMo=;
-        b=nWq2Q3kOSBA4eUQNC/PkeUzMlnm0FTH+mQa/wOrydL6eCiXoEYZuL07MuE2sZdJrng
-         fnvKM5+WRf4ooDY4cTXdpmrdG0l7N2Mjjz5j+FaJGKR/coiJWI/t7Xft73lY5YMfZayo
-         0yJBEiahSwxqcWywPnOmm2y8uXi41rC4pEKnfRCCz9IVgMx8H4ZtdXZTw7hRpbwIIPLt
-         PmPYCouvI5gGj9kYH37C5Hl9UAvGqaF2mavsAUp0oGNnl6YULnviFSyjt5nwJjdBpVsH
-         epBJqoPVZt5hoQJqWWjo72YdETQbogDi2YiQfDI0WyvWh9fgvUs4Lu9uU1XWnhQ+ksKz
-         d12A==
+        bh=iVn32/+h+GNmNnGq6KtcJdQuuDhMDx+GSH2Nqxq5Ye4=;
+        b=GO2WK+lIUPKBfiaD+KHM4ryCclu5hEL1L4zER0rNcelUi4Jp2Y78WlacQCVbSt0OQo
+         qnnLXN6uJskJw+aTo6NorhxcI/FZxNzqLZ3itv+riaMfjLIgUQ4Ee4dC4LCGjYXg4x04
+         /N3wZ5XEj4mshoYoIH98rtgZQtCtYbNK0PCDc+7kHCDf2j30ZT+z2ihy+p/xWFGavcxJ
+         Nqe4Ic+nuMv72BKEiYCCbQEaX/OmuD0Z2p41S5TCRjvf2IxbtkVGJMDdVaQBolCoNF/f
+         hIqGmxWjPgIecgm87gg6zAkYe4t0u3NWguk81tbDwHYM+QwNw5S9i7FNxyP07ZrZdTtR
+         wB3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tJoGp29OgjxfQZ/rs065wQ2H4gpJMwEOpG42+00lmMo=;
-        b=jCP3M/412ermcgLnkIrE+gvgdkCHfSLlvzIhOxJi68oDqgBInbX6m5J8Dw+9Pjb+d7
-         A42NX8NhFytPgVUKdbzJYxg7G8bFd/ep/eiFzbgBOkz4Vt/s9THxCMh1Vkdc/U5gY7+f
-         rykWPd3Q2GZGdFFeSPFiQv/A8Jq4GaAxyjRhLVCBT1jheMnV1BPIKxpuK0g5edJ9cJNn
-         sRhPVL3+Kpbe3L1Su4kbD/p/CjEiIOprPX8i59jCiEfDNXmCX+IKobA3TNZA6aJq5m/I
-         hunPWT3U9/sdyhWZ5JsX1fxeRUo2B98jYEaZM8daN0oE1UcxC8EHOUZ/FlB7HtZzsFAn
-         6baQ==
-X-Gm-Message-State: AOAM530B4OW8a7ns61St5b4OhvnOGBMptwVmSP0sv9bF48AZDqGNbssd
-        PgrrRcsXcn7YWb8Hgxo4abM=
-X-Google-Smtp-Source: ABdhPJyGoxnkKj9G59MOf7GJPe+vX7/wpqFRcAeweD6nHHvKFLtUajPKb+m4tJs3YB5Uvjk5p+I1Cg==
-X-Received: by 2002:a63:1341:: with SMTP id 1mr7078186pgt.144.1598532607763;
-        Thu, 27 Aug 2020 05:50:07 -0700 (PDT)
+        bh=iVn32/+h+GNmNnGq6KtcJdQuuDhMDx+GSH2Nqxq5Ye4=;
+        b=B1FxUvlpXOZ9VxEnQtepQQGGwyeQlwExVrMvFs6476tQC/tCa4k9zXUu/hvzb58k/d
+         htvLok2nfFZGRIXi246eB1YD8zxjUK5JRHcNn2FUjKlnrV+NTogLr4c0RFHweDxCuroM
+         csWCjjiAfoaZsLMZMjPK86AA7mnBlaG9TOb82ZBbRQ3AuJgqF4b/k4hs4hmFjIPSCCOq
+         eOyTaxioZXs/0uzVONlUzSvxNMvH2hP4iEebqdsIU9fd4nIfAHUj/Ed7k+/YtG7//kzz
+         K88WuKwEd5mTtsk2rFPcXmQh945uz9sOB8QAtUVqAloZmzwavN9ZV4Kszislu9Vwv2s1
+         DlTQ==
+X-Gm-Message-State: AOAM530+z+tpAtZ2onUW78W0kZXm0XO6f9ihhTmSaVHHYV6JBZY7uRks
+        fYWYzGis36lJDOWZ8Mldt9o=
+X-Google-Smtp-Source: ABdhPJydRDtEc4n4v7dMkwEuLC2MUJVmJOEMp8QnJrq1Bg7Q38V6yCyaC5XstPdXR1gLlo+tJwBcoQ==
+X-Received: by 2002:a62:4e09:: with SMTP id c9mr13204642pfb.223.1598532604887;
+        Thu, 27 Aug 2020 05:50:04 -0700 (PDT)
 Received: from localhost.localdomain ([240d:1a:8f0:6c00:89cb:88d1:b6b2:3345])
-        by smtp.gmail.com with ESMTPSA id v18sm2947044pfu.15.2020.08.27.05.50.05
+        by smtp.gmail.com with ESMTPSA id v18sm2947044pfu.15.2020.08.27.05.50.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 05:50:06 -0700 (PDT)
+        Thu, 27 Aug 2020 05:50:04 -0700 (PDT)
 From:   Alexandre Courbot <gnurou@gmail.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Hans Verkuil <hverkuil-cisco@xs4all.nl>,
@@ -67,9 +67,9 @@ To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
 Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alexandre Courbot <gnurou@gmail.com>
-Subject: [PATCH v2 2/2] media: v4l2-mem2mem: simplify poll logic
-Date:   Thu, 27 Aug 2020 21:49:46 +0900
-Message-Id: <20200827124946.328700-3-gnurou@gmail.com>
+Subject: [PATCH v2 1/2] media: v4l2-mem2mem: always consider OUTPUT queue during poll
+Date:   Thu, 27 Aug 2020 21:49:45 +0900
+Message-Id: <20200827124946.328700-2-gnurou@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200827124946.328700-1-gnurou@gmail.com>
 References: <20200827124946.328700-1-gnurou@gmail.com>
@@ -80,63 +80,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Factorize redundant checks into a single code block, remove unneeded
-checks (a buffer in done_list is necessarily in the DONE or ERROR
-state), and we end up with a much simpler version of this function.
+If poll() is called on a m2m device with the EPOLLOUT event after the
+last buffer of the CAPTURE queue is dequeued, any buffer available on
+OUTPUT queue will never be signaled because v4l2_m2m_poll_for_data()
+starts by checking whether dst_q->last_buffer_dequeued is set and
+returns EPOLLIN in this case, without looking at the state of the OUTPUT
+queue.
+
+Fix this by not early returning so we keep checking the state of the
+OUTPUT queue afterwards.
 
 Signed-off-by: Alexandre Courbot <gnurou@gmail.com>
 ---
- drivers/media/v4l2-core/v4l2-mem2mem.c | 26 +++++---------------------
- 1 file changed, 5 insertions(+), 21 deletions(-)
+ drivers/media/v4l2-core/v4l2-mem2mem.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
-index fe90c3c0e4128..af8138c5d7ced 100644
+index 95a8f2dc5341d..fe90c3c0e4128 100644
 --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
 +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
-@@ -841,7 +841,6 @@ static __poll_t v4l2_m2m_poll_for_data(struct file *file,
- 				       struct poll_table_struct *wait)
- {
- 	struct vb2_queue *src_q, *dst_q;
--	struct vb2_buffer *src_vb = NULL, *dst_vb = NULL;
- 	__poll_t rc = 0;
- 	unsigned long flags;
- 
-@@ -862,32 +861,17 @@ static __poll_t v4l2_m2m_poll_for_data(struct file *file,
- 	     list_empty(&dst_q->queued_list)))
- 		return EPOLLERR;
- 
--	spin_lock_irqsave(&dst_q->done_lock, flags);
--	if (list_empty(&dst_q->done_list)) {
--		/*
--		 * If the last buffer was dequeued from the capture queue,
--		 * return immediately. DQBUF will return -EPIPE.
--		 */
--		if (dst_q->last_buffer_dequeued)
--			rc |= EPOLLIN | EPOLLRDNORM;
--	}
--	spin_unlock_irqrestore(&dst_q->done_lock, flags);
--
- 	spin_lock_irqsave(&src_q->done_lock, flags);
- 	if (!list_empty(&src_q->done_list))
--		src_vb = list_first_entry(&src_q->done_list, struct vb2_buffer,
--						done_entry);
--	if (src_vb && (src_vb->state == VB2_BUF_STATE_DONE
--			|| src_vb->state == VB2_BUF_STATE_ERROR))
- 		rc |= EPOLLOUT | EPOLLWRNORM;
- 	spin_unlock_irqrestore(&src_q->done_lock, flags);
- 
- 	spin_lock_irqsave(&dst_q->done_lock, flags);
--	if (!list_empty(&dst_q->done_list))
--		dst_vb = list_first_entry(&dst_q->done_list, struct vb2_buffer,
--						done_entry);
--	if (dst_vb && (dst_vb->state == VB2_BUF_STATE_DONE
--			|| dst_vb->state == VB2_BUF_STATE_ERROR))
-+	/*
-+	 * If the last buffer was dequeued from the capture queue, signal
-+	 * userspace. DQBUF(CAPTURE) will return -EPIPE.
-+	 */
-+	if (!list_empty(&dst_q->done_list) || dst_q->last_buffer_dequeued)
- 		rc |= EPOLLIN | EPOLLRDNORM;
+@@ -868,10 +868,8 @@ static __poll_t v4l2_m2m_poll_for_data(struct file *file,
+ 		 * If the last buffer was dequeued from the capture queue,
+ 		 * return immediately. DQBUF will return -EPIPE.
+ 		 */
+-		if (dst_q->last_buffer_dequeued) {
+-			spin_unlock_irqrestore(&dst_q->done_lock, flags);
+-			return EPOLLIN | EPOLLRDNORM;
+-		}
++		if (dst_q->last_buffer_dequeued)
++			rc |= EPOLLIN | EPOLLRDNORM;
+ 	}
  	spin_unlock_irqrestore(&dst_q->done_lock, flags);
  
 -- 
