@@ -2,195 +2,119 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE81C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EBEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1235D2177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D13222177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:58:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gnl17B6Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgH0I4b (ORCPT
+        id S1727970AbgH0I6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:56:31 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2695 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726395AbgH0I4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:56:31 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 4F95897B38DD409779FE;
-        Thu, 27 Aug 2020 09:56:27 +0100 (IST)
-Received: from [127.0.0.1] (10.210.169.222) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 27 Aug
- 2020 09:56:25 +0100
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v8 00/18] blk-mq/scsi: Provide hostwide shared tags for
- SCSI HBAs
-To:     <axboe@kernel.dk>
-CC:     <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-        <don.brace@microsemi.com>, <kashyap.desai@broadcom.com>,
-        <ming.lei@redhat.com>, <bvanassche@acm.org>,
-        <dgilbert@interlog.com>, <paolo.valente@linaro.org>,
-        <hare@suse.de>, <hch@lst.de>, <sumit.saxena@broadcom.com>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, <esc.storagedev@microsemi.com>,
-        <megaraidlinux.pdl@broadcom.com>, <chenxiang66@hisilicon.com>,
-        <luojiaxing@huawei.com>
-References: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
-Message-ID: <8369f4e3-6b59-609e-f5ef-3a51fa4d7b5f@huawei.com>
-Date:   Thu, 27 Aug 2020 09:53:58 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Thu, 27 Aug 2020 04:58:15 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:52835 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726882AbgH0I6N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 04:58:13 -0400
+X-UUID: 002c42f5b3e746409b131c11eb235ba8-20200827
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=z4HtARY63qecmM+UTuwL38oHkQEk8xUNbn1/BUzTchw=;
+        b=gnl17B6QIji7Vk8I0qsLqDwLBR+kzjndRD6X2fZvthnuA0e3y6d3sYZmQLv0O6HvAcFkZzjaLlbZP56WErBUbdZ4IjfNtGGyXKtYTFTUOgGlmWblo/uPsv+80K3u2DC2AGSQJRN+yjXMQ8ayDgYqRCe9SsoHJVRrQQjRaGXAU+A=;
+X-UUID: 002c42f5b3e746409b131c11eb235ba8-20200827
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <hector.yuan@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 765371042; Thu, 27 Aug 2020 16:58:08 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 27 Aug 2020 16:58:04 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 27 Aug 2020 16:58:05 +0800
+Message-ID: <1598518685.4204.8.camel@mtkswgap22>
+Subject: Re: [PATCH v2 1/2] cpufreq: mediatek-hw: Add support for Mediatek
+ cpufreq HW driver
+From:   Hector Yuan <hector.yuan@mediatek.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+CC:     <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Olof Johansson" <olof@lixom.net>, <linux-kernel@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>
+Date:   Thu, 27 Aug 2020 16:58:05 +0800
+In-Reply-To: <20200827042653.5ttsxnjjhpslmrcv@vireshk-i7>
+References: <1597302475-15484-1-git-send-email-hector.yuan@mediatek.com>
+         <1597302475-15484-2-git-send-email-hector.yuan@mediatek.com>
+         <20200824100619.o6uwnlsaxdgc3l7r@vireshk-i7>
+         <1598446624.24220.10.camel@mtkswgap22>
+         <20200827042653.5ttsxnjjhpslmrcv@vireshk-i7>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.169.222]
-X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-TM-SNTS-SMTP: BD4260F00D8F1BF7AF40A81B24370BFC97A30A7B409831315CBF6869CF9669432000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
-
-I was wondering if you could kindly consider the block changes in this 
-series, since I have now dropped the RFC flag?
-
-I guess patch 5/18 (using pointers to bitmaps) would be of first 
-concern. We did discuss this previously, and I think what we're doing 
-now could be considered satisfactory.
-
-Thanks,
-john
-
-> 
-> Here is v8 of the patchset.
-> 
-> In this version of the series, we keep the shared sbitmap for driver tags,
-> and introduce changes to fix up the tag budgeting across request queues.
-> We also have a change to count requests per-hctx for when an elevator is
-> enabled, as an optimisation. I also dropped the debugfs changes - more on
-> that below.
-> 
-> Some performance figures:
-> 
-> Using 12x SAS SSDs on hisi_sas v3 hw. mq-deadline results are included,
-> but it is not always an appropriate scheduler to use.
-> 
-> Tag depth 		4000 (default)			260**
-> 
-> Baseline (v5.9-rc1):
-> none sched:		2094K IOPS			513K
-> mq-deadline sched:	2145K IOPS			1336K
-> 
-> Final, host_tagset=0 in LLDD *, ***:
-> none sched:		2120K IOPS			550K
-> mq-deadline sched:	2121K IOPS			1309K
-> 
-> Final ***:
-> none sched:		2132K IOPS			1185			
-> mq-deadline sched:	2145K IOPS			2097	
-> 
-> * this is relevant as this is the performance in supporting but not
->    enabling the feature
-> ** depth=260 is relevant as some point where we are regularly waiting for
->     tags to be available. Figures were are a bit unstable here.
-> *** Included "[PATCH V4] scsi: core: only re-run queue in
->      scsi_end_request() if device queue is busy"
-> 
-> A copy of the patches can be found here:
-> https://github.com/hisilicon/kernel-dev/tree/private-topic-blk-mq-shared-tags-v8
-> 
-> The hpsa patch depends on:
-> https://lore.kernel.org/linux-scsi/20200430131904.5847-1-hare@suse.de/
-> 
-> And the smartpqi patch is not to be accepted.
-> 
-> Comments (and testing) welcome, thanks!
-> 
-> Differences to v7:
-> - Add null_blk and scsi_debug support
-> - Drop debugfs tags patch - it's too difficult to be the same between
-> hostwide and non-hostwide, as discussed:
-> https://lore.kernel.org/linux-scsi/1591810159-240929-1-git-send-email-john.garry@huawei.com/T/#mb3eb462d8be40273718505989abd12f8228c15fd
-> And from commit 6bf0eb550452 ("sbitmap: Consider cleared bits in
-> sbitmap_bitmap_show()"), I guess not many used this anyway...
-> - Add elevator per-hctx request count for optimisation
-> - Break up "blk-mq: rename blk_mq_update_tag_set_depth()" into 2x patches
-> - Pass flags for avoid per-hq queue tags init/free for hostwide tags
-> - Add Don's reviewed-tag and tested-by tags to appropiate patches
-> 	- (@Don, please let me know if issue with how I did this)
-> - Add "scsi: core: Show nr_hw_queues in sysfs"
-> - Rework megaraid SAS patch to have module param (Kashyap)
-> - rebase
-> 
-> V7 is here for more info:
-> https://lore.kernel.org/linux-scsi/1591810159-240929-1-git-send-email-john.garry@huawei.com/T/#t
-> 
-> Hannes Reinecke (5):
->    blk-mq: Rename blk_mq_update_tag_set_depth()
->    blk-mq: Free tags in blk_mq_init_tags() upon error
->    scsi: Add host and host template flag 'host_tagset'
->    hpsa: enable host_tagset and switch to MQ
->    smartpqi: enable host tagset
-> 
-> John Garry (10):
->    blk-mq: Pass flags for tag init/free
->    blk-mq: Use pointers for blk_mq_tags bitmap tags
->    blk-mq: Facilitate a shared sbitmap per tagset
->    blk-mq: Relocate hctx_may_queue()
->    blk-mq: Record nr_active_requests per queue for when using shared
->      sbitmap
->    blk-mq: Record active_queues_shared_sbitmap per tag_set for when using
->      shared sbitmap
->    null_blk: Support shared tag bitmap
->    scsi: core: Show nr_hw_queues in sysfs
->    scsi: hisi_sas: Switch v3 hw to MQ
->    scsi: scsi_debug: Support host tagset
-> 
-> Kashyap Desai (2):
->    blk-mq, elevator: Count requests per hctx to improve performance
->    scsi: megaraid_sas: Added support for shared host tagset for
->      cpuhotplug
-> 
-> Ming Lei (1):
->    blk-mq: Rename BLK_MQ_F_TAG_SHARED as BLK_MQ_F_TAG_QUEUE_SHARED
-> 
->   block/bfq-iosched.c                         |   9 +-
->   block/blk-core.c                            |   2 +
->   block/blk-mq-debugfs.c                      |  10 +-
->   block/blk-mq-sched.c                        |  13 +-
->   block/blk-mq-tag.c                          | 149 ++++++++++++++------
->   block/blk-mq-tag.h                          |  56 +++-----
->   block/blk-mq.c                              |  81 +++++++----
->   block/blk-mq.h                              |  76 +++++++++-
->   block/kyber-iosched.c                       |   4 +-
->   block/mq-deadline.c                         |   6 +
->   drivers/block/null_blk_main.c               |   6 +
->   drivers/block/rnbd/rnbd-clt.c               |   2 +-
->   drivers/scsi/hisi_sas/hisi_sas.h            |   3 +-
->   drivers/scsi/hisi_sas/hisi_sas_main.c       |  36 ++---
->   drivers/scsi/hisi_sas/hisi_sas_v3_hw.c      |  87 +++++-------
->   drivers/scsi/hosts.c                        |   1 +
->   drivers/scsi/hpsa.c                         |  44 +-----
->   drivers/scsi/hpsa.h                         |   1 -
->   drivers/scsi/megaraid/megaraid_sas_base.c   |  39 +++++
->   drivers/scsi/megaraid/megaraid_sas_fusion.c |  29 ++--
->   drivers/scsi/scsi_debug.c                   |  28 ++--
->   drivers/scsi/scsi_lib.c                     |   2 +
->   drivers/scsi/scsi_sysfs.c                   |  11 ++
->   drivers/scsi/smartpqi/smartpqi_init.c       |  45 ++++--
->   include/linux/blk-mq.h                      |  13 +-
->   include/linux/blkdev.h                      |   3 +
->   include/scsi/scsi_host.h                    |   9 +-
->   27 files changed, 484 insertions(+), 281 deletions(-)
-> 
+T24gVGh1LCAyMDIwLTA4LTI3IGF0IDA5OjU2ICswNTMwLCBWaXJlc2ggS3VtYXIgd3JvdGU6DQo+
+IE9uIDI2LTA4LTIwLCAyMDo1NywgSGVjdG9yIFl1YW4gd3JvdGU6DQo+ID4gT24gTW9uLCAyMDIw
+LTA4LTI0IGF0IDE1OjM2ICswNTMwLCBWaXJlc2ggS3VtYXIgd3JvdGU6DQo+ID4gPiBPbiAxMy0w
+OC0yMCwgMTU6MDcsIEhlY3RvciBZdWFuIHdyb3RlOg0KPiA+ID4gPiAgQ09ORklHX0FSTV9BTExX
+SU5ORVJfU1VONTBJX0NQVUZSRVFfTlZNRU09bQ0KPiA+ID4gPiAgQ09ORklHX0FSTV9BUk1BREFf
+MzdYWF9DUFVGUkVRPXkNCj4gPiA+ID4gK0NPTkZJR19BUk1fTUVESUFURUtfQ1BVRlJFUV9IVz1t
+DQo+ID4gPiANCj4gPiA+IFdoYXQgYWJvdXQgYSAnZGVmYXVsdCBtJyBpbiBLY29uZmlnIGl0c2Vs
+ZiA/DQo+ID4gPiBPSywgd2lsbCB1cGRhdGUgaW4gVjMuDQo+IA0KPiBIZWN0b3IsIHlvdSBuZWVk
+IHRvIHJlbW92ZSAob3Igbm90IGFkZCkgdGhlIHJpZ2h0IGJyYWNrZXQgKD4pIGJlZm9yZSB0aGUN
+Cj4gYmVnaW5uaW5nIG9mIHlvdXIgbGluZXMuIFRoaXMgbWFrZXMgaXQgaW5jcmVkaWJseSBkaWZm
+aWN1bHQgdG8gcmVhZC4NCg0KT0ssIEkgZ2V0IGl0LiBTb3JyeSBmb3IgdGhlIGluY29udmVuaWVu
+Y2UuDQo+ID4gPiA+ICsJZm9yIChpID0gMDsgaSA8IExVVF9NQVhfRU5UUklFUzsgaSsrKSB7DQo+
+ID4gPiA+ICsJCWRhdGEgPSByZWFkbF9yZWxheGVkKGJhc2UgKyAoaSAqIExVVF9ST1dfU0laRSkp
+Ow0KPiA+ID4gPiArCQlmcmVxID0gRklFTERfR0VUKExVVF9GUkVRLCBkYXRhKSAqIDEwMDA7DQo+
+ID4gPiA+ICsJCXZvbHQgPSBGSUVMRF9HRVQoTFVUX1ZPTFQsIGRhdGEpOw0KPiA+ID4gPiArCQlp
+ZiAoZnJlcSAhPSBwcmV2X2ZyZXEpIHsNCj4gPiA+ID4gKwkJCXRhYmxlW2ldLmZyZXF1ZW5jeSA9
+IGZyZXE7DQo+ID4gPiA+ICsJCQlkZXZfcG1fb3BwX2FkZChjcHVfZGV2LCBmcmVxICogMTAwMCwg
+dm9sdCk7DQo+ID4gPiANCj4gPiA+IFdoeSBhcmUgeW91IGFkZGluZyBPUFBzIGhlcmUgYW5kIHJh
+dGhlciB3aHkgdXNpbmcgT1BQIHNwZWNpZmljIHN0dWZmDQo+ID4gPiBhdCBhbGwgaW4gdGhlIGRy
+aXZlciA/DQo+ID4gPiB5ZXMsIHRoZSBvcHAgaW5mb3JtYXRpb24gaXMgcmVhZCBmcm9tIENQVSBI
+VyBlbmdpbmUuVGhlbiBhZGQgaXQgdG8gdGhlIENQVSBkZXYgT1BQIG9uZSBieSBvbmUuICANCj4g
+DQo+IEkgYXNrZWQgYSBkaWZmZXJlbnQgcXVlc3Rpb24sIHdoeSBhcmUgeW91IGFkZGluZyBPUFBz
+ID8gWW91IGRvbid0IG5lZWQgdGhlIE9QUHMNCj4gYXQgYWxsIGluIG15IG9waW5pb24uIFlvdSBj
+YW4ganVzdCBjcmVhdGUgdGhlIGZyZXF1ZW5jeSB0YWJsZSBhbmQgdGhhdCdzIGl0Lg0KDQpJIGp1
+c3QgYWRkIE9QUCBpbmZvIHRvIE9QUCBmcmFtZXdvcmsgc28gdGhhdCBvdGhlcnMgbW9kdWxlcyBj
+YW4gZ2V0IGl0DQpmcm9tIE9QUCBmcmFtZXdvcmsuDQpCdXQgbGlrZSB5b3Ugc2FpZCwgSSBkb24n
+dCBuZWVkIGl0IGluIHRoaXMgZHJpdmVyLiBJIHdpbGwgcmVtb3ZlIHRoaXMNCmNvZGUgc2VnbWVu
+dCBpbiBWNC4NCkkgYWxyZWFkeSBzZW5kIFYzIHllc3RlcmRheSBidXQgbm90IGluY2x1ZGluZyB0
+aGlzIG1vZGlmaWNhdGlvbi4NCg0KPiA+ID4gPiArCWZvcl9lYWNoX3Bvc3NpYmxlX2NwdShjcHUp
+IHsNCj4gPiA+ID4gKwkJY3B1X25wID0gb2ZfY3B1X2RldmljZV9ub2RlX2dldChjcHUpOw0KPiA+
+ID4gPiArCQlpZiAoIWNwdV9ucCkNCj4gPiA+ID4gKwkJCWNvbnRpbnVlOw0KPiA+ID4gPiArDQo+
+ID4gPiA+ICsJCXJldCA9IG9mX3BhcnNlX3BoYW5kbGVfd2l0aF9hcmdzKGNwdV9ucCwgIm10ayxm
+cmVxLWRvbWFpbiIsDQo+ID4gPiANCj4gPiA+IFdoZXJlIGFyZSBiaW5kaW5ncyBvZiB0aGlzIG5v
+ZGUgYW5kIGhvdyBkb2VzIHRoaXMgbG9vayA/DQo+ID4gPiBDYW4gcmVmZXIgdG8gdGhlIHNhbWUg
+cGF0Y2ggc2VyaWVzLCBJIHNwbGl0IGl0IHRvIGFub3RoZXIgcGF0Y2guRWFjaCBjcHUgd2lsbCBi
+ZSBncm91cCBpbnRvIG9uZSBmcmVxdWVuY3kgZG9tYWluIGZvciB0aGUgQ1BVIERWRlMuIA0KPiAN
+Cj4gVGhhdCBiaW5kaW5nIG9ubHkgZGVmaW5lcyAibWVkaWF0ZWssY3B1ZnJlcS1odyIgYW5kIG5v
+dCAibXRrLGZyZXEtZG9tYWluIi4NCg0KUGxlYXNlIHJlZmVyIHRvIHRoZSBkdCBiaW5kaW5nIGlu
+IFYzLCB0aGFuayB5b3UuICAobGttbCBub3Qgc2hvdyB1cCB5ZXQsDQpzbyBJIHBvc3QgdGhlIGJl
+bG93IGxpbmsgaW5zdGVhZCkNCmh0dHBzOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2FybS1rZXJu
+ZWwvbXNnODMyNTkyLmh0bWwNCj4gDQoNCg==
 
