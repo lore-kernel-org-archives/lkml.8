@@ -2,109 +2,171 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15500C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D48FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFAAE207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB166207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:52:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EqsgqqAc"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="eeMlfq0O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgH0Rue (ORCPT
+        id S1726967AbgH0RwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:50:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgH0Rud (ORCPT
+        Thu, 27 Aug 2020 13:52:21 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:16716 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726262AbgH0RwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:50:33 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A72D3C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:50:32 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id o68so242526pfg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:50:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=b/SqgsWTsXb0lAU8siKr5ztfJwzAssbL+oJi/YbwiHA=;
-        b=EqsgqqAct0LzsIgirTyObWdj5tHI8+KgB9NSPeSYMO10Ye/pXUa8Eiui0nReAip/gw
-         8gTsgoiPhgewoZFInWgvSHQrixdPD3vIaeQptrt6UzPV61WxLq9AjRK5rhN3uJKoocWK
-         8Zflarg0F905B8wAM0GXvkpo47/VJdSMsYxJw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=b/SqgsWTsXb0lAU8siKr5ztfJwzAssbL+oJi/YbwiHA=;
-        b=QKgnk6h38cV8Z7Q79Yu/9ZL/JmMsCHUhp3yd8NeBjPbnjS12Fm3VmRpw6yKuoXAl+/
-         NFLlPRhK9K8109UwNmK7lK3vz4UIPK4vFe9hWaP01jvlgFCzq9jD4nh5jatCERIXqlcr
-         AFW0dmFMi2e9m9LCynBu2pmHMniLc0WRC9veX90T9wHmgPP5mBgRQ9DW2pwu7KBuGI+b
-         7Fe/SVka9kwYd+ewEcIDjE3wzP0TxUO7I46y/iwmAReJCsouIsYU9hp6gO81WvlISxgN
-         7VTPg2aMjoH+ucPjQx9MZsMLEmc6TE6J3Q0vU26mwB/jiytOwc0fD79ZkznBXMaPms3g
-         U8Ew==
-X-Gm-Message-State: AOAM533VYGfkA5M+Aj/4JNfATtEU7Mah13tnHbQgXomywVQ4T+gwChHw
-        NYrUP1SqwWPCwjOr6mLiN0qx0w==
-X-Google-Smtp-Source: ABdhPJwfJOfwKwO/2EvFZ4qXgPksM9GHGJeDgFs1QiCo+e8nten38UbbDx7ppa3qyPKqi4hM2YfLKQ==
-X-Received: by 2002:aa7:850b:: with SMTP id v11mr17467146pfn.240.1598550632247;
-        Thu, 27 Aug 2020 10:50:32 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g17sm2676168pjl.30.2020.08.27.10.50.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 10:50:31 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 10:50:30 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Allen Pais <allen.lkml@gmail.com>, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org,
-        "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH] linux/kernel.h: add container_from()
-Message-ID: <202008271050.009BE3795@keescook>
-References: <20200827013636.149307-1-allen.lkml@gmail.com>
- <202008261929.A50D0DB3E8@keescook>
- <20200827121941.GC420527@kroah.com>
+        Thu, 27 Aug 2020 13:52:20 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07RHpUHO017899
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:52:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=lBLp+M/M4q7MNxLrusnBwT4NnNHP3uVf51kHz/U8dPs=;
+ b=eeMlfq0OG0057zNcGHGiR8Zj4dLqfdomvxEm5FiYzvkdMWMDF0dEimWZZDNU0KqhPeRC
+ fEIZwsu3ngL0JDA/Iwf/jICb216OuzDZCDt/bXtjW1bjcOTClC1RuTpgOcdopMGXN3W6
+ 5jR5M/LZ6l+LKbPBfvXiEhHm8kXXtqPU4AY= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 335up8pqc5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:52:19 -0700
+Received: from intmgw002.41.prn1.facebook.com (2620:10d:c085:208::11) by
+ mail.thefacebook.com (2620:10d:c085:11d::7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 27 Aug 2020 10:52:19 -0700
+Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
+        id 2DB6D3922483; Thu, 27 Aug 2020 10:52:16 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
+To:     <linux-mm@kvack.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        =Shakeel Butt <shakeelb@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn0c01
+Subject: [PATCH RFC 1/4] mm: kmem: move memcg_kmem_bypass() calls to get_mem/obj_cgroup_from_current()
+Date:   Thu, 27 Aug 2020 10:52:12 -0700
+Message-ID: <20200827175215.319780-2-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200827175215.319780-1-guro@fb.com>
+References: <20200827175215.319780-1-guro@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827121941.GC420527@kroah.com>
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-27_10:2020-08-27,2020-08-27 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ lowpriorityscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0 adultscore=0
+ impostorscore=0 priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0
+ suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008270134
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 02:19:41PM +0200, Greg Kroah-Hartman wrote:
-> On Wed, Aug 26, 2020 at 07:31:40PM -0700, Kees Cook wrote:
-> > On Thu, Aug 27, 2020 at 07:06:36AM +0530, Allen Pais wrote:
-> > > Introduce container_from() as a generic helper instead of
-> > > sub-systems defining a private from_* API
-> > > (Eg: from_tasklets recently introduced in
-> > > 12cc923f1ccc: Tasklet: Introduce new initialization API)
-> > > 
-> > > The helper is similar to container_of() in argument order
-> > > with the difference of naming the containing structure instead
-> > > of having to specify its type.
-> > > 
-> > > Suggested-by: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
-> > > Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > Suggested-by: Jens Axboe <axboe@kernel.dk>
-> > > Signed-off-by: Allen Pais <allen.lkml@gmail.com>
-> > 
-> > Acked-by: Kees Cook <keescook@chromium.org>
-> > 
-> > Who can carry this so it can get used by multiple trees? Should I keep a
-> > git branch folks should merge when taking Allen's conversion patches?
-> 
-> I can put it in my driver core tree, and give everyone a stable, signed,
-> tag to pull it from so that it can get propagated everywhere, if that
-> makes it easy for others to use it now.
+Currently memcg_kmem_bypass() is called before obtaining the current
+memory/obj cgroup using get_mem/obj_cgroup_from_current(). Moving
+memcg_kmem_bypass() into get_mem/obj_cgroup_from_current() reduces
+the number of call sites and allows further code simplifications.
 
-Thank you; that would be lovely. :)
+Signed-off-by: Roman Gushchin <guro@fb.com>
+---
+ mm/memcontrol.c | 13 ++++++++-----
+ mm/percpu.c     |  3 +--
+ mm/slab.h       |  3 ---
+ 3 files changed, 9 insertions(+), 10 deletions(-)
 
--- 
-Kees Cook
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index dc892a3c4b17..9c08d8d14bc0 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1074,6 +1074,9 @@ EXPORT_SYMBOL(get_mem_cgroup_from_page);
+  */
+ static __always_inline struct mem_cgroup *get_mem_cgroup_from_current(vo=
+id)
+ {
++	if (memcg_kmem_bypass())
++		return NULL;
++
+ 	if (unlikely(current->active_memcg)) {
+ 		struct mem_cgroup *memcg;
+=20
+@@ -2913,6 +2916,9 @@ __always_inline struct obj_cgroup *get_obj_cgroup_f=
+rom_current(void)
+ 	struct obj_cgroup *objcg =3D NULL;
+ 	struct mem_cgroup *memcg;
+=20
++	if (memcg_kmem_bypass())
++		return NULL;
++
+ 	if (unlikely(!current->mm && !current->active_memcg))
+ 		return NULL;
+=20
+@@ -3039,19 +3045,16 @@ int __memcg_kmem_charge_page(struct page *page, g=
+fp_t gfp, int order)
+ 	struct mem_cgroup *memcg;
+ 	int ret =3D 0;
+=20
+-	if (memcg_kmem_bypass())
+-		return 0;
+-
+ 	memcg =3D get_mem_cgroup_from_current();
+-	if (!mem_cgroup_is_root(memcg)) {
++	if (memcg && !mem_cgroup_is_root(memcg)) {
+ 		ret =3D __memcg_kmem_charge(memcg, gfp, 1 << order);
+ 		if (!ret) {
+ 			page->mem_cgroup =3D memcg;
+ 			__SetPageKmemcg(page);
+ 			return 0;
+ 		}
++		css_put(&memcg->css);
+ 	}
+-	css_put(&memcg->css);
+ 	return ret;
+ }
+=20
+diff --git a/mm/percpu.c b/mm/percpu.c
+index f4709629e6de..9b07bd5bc45f 100644
+--- a/mm/percpu.c
++++ b/mm/percpu.c
+@@ -1584,8 +1584,7 @@ static enum pcpu_chunk_type pcpu_memcg_pre_alloc_ho=
+ok(size_t size, gfp_t gfp,
+ {
+ 	struct obj_cgroup *objcg;
+=20
+-	if (!memcg_kmem_enabled() || !(gfp & __GFP_ACCOUNT) ||
+-	    memcg_kmem_bypass())
++	if (!memcg_kmem_enabled() || !(gfp & __GFP_ACCOUNT))
+ 		return PCPU_CHUNK_ROOT;
+=20
+ 	objcg =3D get_obj_cgroup_from_current();
+diff --git a/mm/slab.h b/mm/slab.h
+index 95e5cc1bb2a3..4a24e1702923 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -280,9 +280,6 @@ static inline struct obj_cgroup *memcg_slab_pre_alloc=
+_hook(struct kmem_cache *s,
+ {
+ 	struct obj_cgroup *objcg;
+=20
+-	if (memcg_kmem_bypass())
+-		return NULL;
+-
+ 	objcg =3D get_obj_cgroup_from_current();
+ 	if (!objcg)
+ 		return NULL;
+--=20
+2.26.2
+
