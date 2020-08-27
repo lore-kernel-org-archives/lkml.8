@@ -2,102 +2,259 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B303C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD024C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50939207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA6522B4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:08:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WlEJMPn2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajwrQItS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgH0THy (ORCPT
+        id S1727949AbgH0TIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:07:54 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15737 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbgH0THx (ORCPT
+        Thu, 27 Aug 2020 15:08:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbgH0TIL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:07:53 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f48040e0001>; Thu, 27 Aug 2020 12:05:50 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 27 Aug 2020 12:07:52 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 27 Aug 2020 12:07:52 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
- 2020 19:07:52 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 27 Aug 2020 19:07:52 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f4804870001>; Thu, 27 Aug 2020 12:07:51 -0700
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH] mm/migrate: remove obsolete comment about device public
-Date:   Thu, 27 Aug 2020 12:07:35 -0700
-Message-ID: <20200827190735.12752-2-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200827190735.12752-1-rcampbell@nvidia.com>
-References: <20200827190735.12752-1-rcampbell@nvidia.com>
+        Thu, 27 Aug 2020 15:08:11 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D44AC061264;
+        Thu, 27 Aug 2020 12:08:10 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id z3so7026508qkz.7;
+        Thu, 27 Aug 2020 12:08:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jIU7OM2BcXNMnaD5vUeqWWGQL1ghDrdUrZFcP2UE+vE=;
+        b=ajwrQItSJSicaIy2VcdbUObEh6K8UYKqPTrzmbxNy/upUTCF4vUbY2u+jDjyF/y/rc
+         4zjqoQCgtBofLHjdr2qTdWvl9yL4F5A/H+9JpLiexkvSg6rikEbRADST1uHe4ZWo5qaD
+         t4Mdu8jW4yR2Bl52NN0Awv2JfFdBll/TuaTOtbk9lyxee4OArTJZjN5TtsNLlm2j+Bf1
+         mpd+i7j63pztYO6F//fJhh8DYbH6H0TUDXOS8e/t+j0z8jDBcPai9No+7POOa1BXT4Lt
+         ketM8+iGaFmeZOZKXHa8drCDnxDKBVKvqR5/entBAbF+RS132/jksiZw1cCdnnhje4tX
+         zXTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jIU7OM2BcXNMnaD5vUeqWWGQL1ghDrdUrZFcP2UE+vE=;
+        b=jFH8LNzSo5DXXOQlu+A3cU9lytCQQRilTsy0ogp1WxOMPcD05DnEaLIQWt2Z34tC/K
+         79h0dCKjKRE3bTVQx+YuetweASzO6HsRt5OsHAIjcMimnQK7FUxeT1MsOvNiNbsbwMnS
+         UbpEQBy+Nv3UrkejLWVCOk5+yOHqHw8cAFyDc63CWV70F6yO/Ju+bICjL0zwyCcYzqHE
+         j6vo66mXCXpIbZuYUdBIOkpgi81fPQV0hcsMS+oTRmfvDrUoiEctKun3XfN9e5R1gBUo
+         LNDrYeVr4cW1MZS1pJRzfhZK4DOvMLBnJMFEnEWRIIM/X7ELz6VBUgce9S6OC05eXHwg
+         baHg==
+X-Gm-Message-State: AOAM530SBPNZufCZguIRglWHxUCtzncqBB+nDvKucGyV9wEKgtw1Co9W
+        Z9DBJh5IvYhKF8drGugY3EooFCRee54=
+X-Google-Smtp-Source: ABdhPJwHs2sSdB2X3yeD6W286PihtFGchMft9n3QjgiOnCbqH6IoN0hX09BcQ1CS3HkuTTD30Vq7fA==
+X-Received: by 2002:a37:b204:: with SMTP id b4mr20200766qkf.50.1598555289679;
+        Thu, 27 Aug 2020 12:08:09 -0700 (PDT)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id k3sm2464720qkb.95.2020.08.27.12.08.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Aug 2020 12:08:09 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 3F92E27C0054;
+        Thu, 27 Aug 2020 15:08:08 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 27 Aug 2020 15:08:08 -0400
+X-ME-Sender: <xms:lgRIX6WCnBLl-JEHYhSC3J5RofasYQ_wRugTrjo9HcYenlb1M40gcQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvhedgtdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
+    htvghrnhepgfehgeejueeffeelheelgeeivdeihfdtledtieduleeufffhlefhjeffgfdv
+    heffnecuffhomhgrihhnpehmohhougihtggrmhgvlhdrtghomhenucfkphephedvrdduhe
+    ehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeile
+    dvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgt
+    ohhmsehfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:lgRIX2n6FVj-KFvoV8oFTG5PxfHCN1OxWMv5uVaLj1XYNgEWVOn_Hg>
+    <xmx:lgRIX-ZMgh5mhAM0oWw9imdp2lcA6x3GgDpADukx5GdFyKkO-iYW_w>
+    <xmx:lgRIXxXOfKsucBA3CsHsHimF-RKm5oyuGvntE6DBYMG1rAA8gIkegA>
+    <xmx:mARIX-cYTOk8EU2VYqnH1HLKcJ7edUBaaev0CpNqJpE4rmycLqHZ-tqqysU>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 842BF30600B2;
+        Thu, 27 Aug 2020 15:08:06 -0400 (EDT)
+Date:   Fri, 28 Aug 2020 03:08:04 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
+        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
+        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
+        cameron@moodycamel.com, oleg@redhat.com, will@kernel.org,
+        paulmck@kernel.org
+Subject: Re: [RFC][PATCH 6/7] freelist: Lock less freelist
+Message-ID: <20200827190804.GA128237@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200827161237.889877377@infradead.org>
+ <20200827161754.535381269@infradead.org>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598555150; bh=BfJm+RGbGFk68/SdYnbTc0lCDPuZwtCIZZNn8TT1MVQ=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=WlEJMPn2H4T2sLGFlK0P8GAlqPSxGWLhY8Tb3wL+kNObc7FQT3itTF21dSAwgDufG
-         Sdh6u2ULItn05ZXXAJ0Jph6vlAKMSEn/7LgyckmtFAoPb5UzY4MpQUD9x7Ghw2aE2H
-         HjyT5IYCEzp18iKdjMz3eCTxprFOo9AGIrhOay5MPt81jzzzpHuUX3fBIKrf5Qh0iR
-         Fj4ljlrQY23gH+5LYSFurwVua6AneXgVNNzdVKERjFjgHYfBEKQIjqcKaSfcXbyRhR
-         WyWh245sYbKxnXH9Y2NXGPQzuOdsP54/neD248fZFEYz4uxpMsTAJs0e+O7C42PjBZ
-         Uxdeze5ddEcnQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827161754.535381269@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Device public memory never had an in tree consumer and was removed in
-commit 25b2995a35b6 ("mm: remove MEMORY_DEVICE_PUBLIC support").
-Delete the obsolete comment.
+On Thu, Aug 27, 2020 at 06:12:43PM +0200, Peter Zijlstra wrote:
+> 
+> 
+> Cc: cameron@moodycamel.com
+> Cc: oleg@redhat.com
+> Cc: will@kernel.org
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  include/linux/freelist.h |  129 +++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 129 insertions(+)
+> 
+> --- /dev/null
+> +++ b/include/linux/freelist.h
+> @@ -0,0 +1,129 @@
+> +// SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +#ifndef FREELIST_H
+> +#define FREELIST_H
+> +
+> +#include <linux/atomic.h>
+> +
+> +/*
+> + * Copyright: cameron@moodycamel.com
+> + *
+> + * A simple CAS-based lock-free free list. Not the fastest thing in the world
+> + * under heavy contention, but simple and correct (assuming nodes are never
+> + * freed until after the free list is destroyed), and fairly speedy under low
+> + * contention.
+> + *
+> + * Adapted from: https://moodycamel.com/blog/2014/solving-the-aba-problem-for-lock-free-free-lists
+> + */
+> +
+> +struct freelist_node {
+> +	atomic_t		refs;
+> +	struct freelist_node	*next;
+> +};
+> +
+> +struct freelist_head {
+> +	struct freelist_node	*head;
+> +};
+> +
+> +#define REFS_ON_FREELIST 0x80000000
+> +#define REFS_MASK	 0x7FFFFFFF
+> +
+> +static inline void __freelist_add(struct freelist_node *node, struct freelist_head *list)
+> +{
+> +	/*
+> +	 * Since the refcount is zero, and nobody can increase it once it's
+> +	 * zero (except us, and we run only one copy of this method per node at
+> +	 * a time, i.e. the single thread case), then we know we can safely
+> +	 * change the next pointer of the node; however, once the refcount is
+> +	 * back above zero, then other threads could increase it (happens under
+> +	 * heavy contention, when the refcount goes to zero in between a load
+> +	 * and a refcount increment of a node in try_get, then back up to
+> +	 * something non-zero, then the refcount increment is done by the other
+> +	 * thread) -- so if the CAS to add the node to the actual list fails,
+> +	 * decrese the refcount and leave the add operation to the next thread
+> +	 * who puts the refcount back to zero (which could be us, hence the
+> +	 * loop).
+> +	 */
+> +	struct freelist_node *head = READ_ONCE(list->head);
+> +
+> +	for (;;) {
+> +		WRITE_ONCE(node->next, head);
+> +		atomic_set_release(&node->refs, 1);
+> +
+> +		if (!try_cmpxchg_release(&list->head, &head, node)) {
+> +			/*
+> +			 * Hmm, the add failed, but we can only try again when
+> +			 * the refcount goes back to zero.
+> +			 */
+> +			if (atomic_fetch_add_release(REFS_ON_FREELIST - 1, &node->refs) == 1)
+> +				continue;
+> +		}
+> +		return;
+> +	}
+> +}
+> +
+> +static inline void freelist_add(struct freelist_node *node, struct freelist_head *list)
+> +{
+> +	/*
+> +	 * We know that the should-be-on-freelist bit is 0 at this point, so
+> +	 * it's safe to set it using a fetch_add.
+> +	 */
+> +	if (!atomic_fetch_add_release(REFS_ON_FREELIST, &node->refs)) {
+> +		/*
+> +		 * Oh look! We were the last ones referencing this node, and we
+> +		 * know we want to add it to the free list, so let's do it!
+> +		 */
+> +		__freelist_add(node, list);
+> +	}
+> +}
+> +
+> +static inline struct freelist_node *freelist_try_get(struct freelist_head *list)
+> +{
+> +	struct freelist_node *prev, *next, *head = smp_load_acquire(&list->head);
+> +	unsigned int refs;
+> +
+> +	while (head) {
+> +		prev = head;
+> +		refs = atomic_read(&head->refs);
+> +		if ((refs & REFS_MASK) == 0 ||
+> +		    !atomic_try_cmpxchg_acquire(&head->refs, &refs, refs+1)) {
+> +			head = smp_load_acquire(&list->head);
+> +			continue;
+> +		}
+> +
+> +		/*
+> +		 * Good, reference count has been incremented (it wasn't at
+> +		 * zero), which means we can read the next and not worry about
+> +		 * it changing between now and the time we do the CAS.
+> +		 */
+> +		next = READ_ONCE(head->next);
+> +		if (try_cmpxchg_acquire(&list->head, &head, next)) {
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
----
+So if try_cmpxchg_acquire() fails, we don't have ACQUIRE semantics on
+read of the new list->head, right? Then probably a
+smp_mb__after_atomic() is needed in that case?
 
-This applies to linux-mm and is for Andrew Morton's tree.
+Regards,
+Boqun
 
- mm/migrate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/migrate.c b/mm/migrate.c
-index eb859f7a9811..34fdd25a26db 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -381,7 +381,7 @@ static int expected_page_refs(struct address_space *map=
-ping, struct page *page)
- 	int expected_count =3D 1;
-=20
- 	/*
--	 * Device public or private pages have an extra refcount as they are
-+	 * Device private pages have an extra refcount as they are
- 	 * ZONE_DEVICE pages.
- 	 */
- 	expected_count +=3D is_device_private_page(page);
---=20
-2.20.1
-
+> +			/*
+> +			 * Yay, got the node. This means it was on the list,
+> +			 * which means should-be-on-freelist must be false no
+> +			 * matter the refcount (because nobody else knows it's
+> +			 * been taken off yet, it can't have been put back on).
+> +			 */
+> +			WARN_ON_ONCE(atomic_read(&head->refs) & REFS_ON_FREELIST);
+> +
+> +			/*
+> +			 * Decrease refcount twice, once for our ref, and once
+> +			 * for the list's ref.
+> +			 */
+> +			atomic_fetch_add(-2, &head->refs);
+> +
+> +			return head;
+> +		}
+> +
+> +		/*
+> +		 * OK, the head must have changed on us, but we still need to decrement
+> +		 * the refcount we increased.
+> +		 */
+> +		refs = atomic_fetch_add(-1, &prev->refs);
+> +		if (refs == REFS_ON_FREELIST + 1)
+> +			__freelist_add(prev, list);
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +#endif /* FREELIST_H */
+> 
+> 
