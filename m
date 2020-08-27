@@ -2,125 +2,209 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC0AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C94C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4478820737
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:06:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A0KhOfe6"
+	by mail.kernel.org (Postfix) with ESMTP id 1D12220848
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:06:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598558792;
+	bh=4/XNRU5rKAtpaXdhI/CFjAMslEaB+vEKDey8nNOsVTQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Y03VNREgrUEASC9g96qVValO0R1TGglLPOtDHJBDglcEF4e4enIfqjOhf69XdQUa4
+	 PvV4NvBOA8c/8wb2Vmhpd7V9E4SVQoQHGqAF3qd3fkveW7MzCu6+gy52lm2XDNxjp1
+	 qaiXN66S+aF8f29QTacHeNjzmOjnIN5Pha7GeUVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgH0UGA (ORCPT
+        id S1726912AbgH0UGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 16:06:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgH0UF7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:05:59 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04715C061264;
-        Thu, 27 Aug 2020 13:05:59 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id t9so4338172pfq.8;
-        Thu, 27 Aug 2020 13:05:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ub0Bu40C+ajnp8gPyXN/uxHJUWCLLoo1qQzKb0q6mUo=;
-        b=A0KhOfe6ikHXNKVmF6lIQ21Vr37zlOWg3aJOtOhEDEo6Afmow90W6VhvEQ246rByz1
-         y/3WXUJLwyDBM9x/eKFpZq+w4O17qd48DFV5KTy1jNjHYH92aqqc84/DoziTrnuVcbZo
-         m1dTyWzLvcGox/SwHFhNjGYEnpWtl7TumXpk7lH+lfccVn6ya3kwniERvCTG2Squ/UKK
-         9y+x7UvskPqvGgH+DD1SCDXezncIvGqpsrXC++y2CJ1onyCbGMBs0Gl+dUYAyYVYLZhK
-         qaAcbXL0GzbtEEvx9E0qeE0rRxiPdDF8l2gctpM5MDe1F6glwLSagFVinkisblldgAF0
-         RFmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ub0Bu40C+ajnp8gPyXN/uxHJUWCLLoo1qQzKb0q6mUo=;
-        b=FtqCPHw0acVIrydtJv7EmdCW2wuvngF3MrdoGef+DowlksMXp/Wel4AWBeInrJrikz
-         1rcWpyfmxiNH0JlPE2eQ72LGlewqI8HdPj/IuAzR4WrTYirzvfGlIpxy6+GwhNLWP2Ui
-         z8zJp8sjVbcTDvN7JdftkjxwY378YsEFbf/qrCA2JSjLvc3kwAPCcqjgh136NLQqYzgG
-         iT1BdTirS128E8kylWPN9smP0JN2aCMUwGsQ+F1IJVxpDpsKIDFkk/9UBwbVXJoLuYTn
-         GuNCI45eQRv7mj6qf3sWUS33DbYFwKEzQKc88pVXhJAdssiY5fCXyM2eTKITBzZq05rd
-         9SFg==
-X-Gm-Message-State: AOAM531sCIT1sMZZzUF7yAYDtCbJ1X5qDRgJENF2aki7fgc9NSC27MDF
-        hUYkUAFcKn86hSwnzrE6zyvCka/ZVmQfS9/HHv0=
-X-Google-Smtp-Source: ABdhPJwpZ2my+v3HNXdDre9rqJ54hiQyrUbuh9IJNNSssBnk+K4yPU2m2kaStY5UFduoxsH0N867X40yZKjlIcjhcoY=
-X-Received: by 2002:a63:c543:: with SMTP id g3mr8431840pgd.203.1598558758497;
- Thu, 27 Aug 2020 13:05:58 -0700 (PDT)
+        Thu, 27 Aug 2020 16:06:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726120AbgH0UGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 16:06:30 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F19A220737;
+        Thu, 27 Aug 2020 20:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598558789;
+        bh=4/XNRU5rKAtpaXdhI/CFjAMslEaB+vEKDey8nNOsVTQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Okue3pjoa1k0VitmvfJa/ru6HzEhtAppffFkKj+MGoBZhxioOa7Ybk7t1e8cXONKE
+         lD/uIXlH0VL6oXQhRJoQwqdpAM/e0XqnXVrTuOs1la3i1ZnNWiUCJ1CJyn5G7n5lPB
+         NiAJ6S01t4j1E4vxyjDCL98261R7nmq+AhouY/p8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kBOAF-007F0X-2e; Thu, 27 Aug 2020 21:06:27 +0100
 MIME-Version: 1.0
-References: <20200825135838.2938771-1-ndesaulniers@google.com>
- <CAK7LNAQXo5-5W6hvNMEVPBPf3tRWaf-pQdSR-0OHyi4RCGhjsQ@mail.gmail.com>
- <d56bf7b93f7a28c4a90e4e16fd412e6934704346.camel@perches.com>
- <CAKwvOd=YrVtPsB7HYPO0N=K7QJm9KstayqqeYQERSaGtGy2Bjg@mail.gmail.com>
- <CAK7LNAQKwOo=Oas+7Du9+neSm=Ev6pxdPV7ges7eEEpW+jh8Ug@mail.gmail.com>
- <202008261627.7B2B02A@keescook> <CAHp75VfniSw3AFTyyDk2OoAChGx7S6wF7sZKpJXNHmk97BoRXA@mail.gmail.com>
- <202008271126.2C397BF6D@keescook>
-In-Reply-To: <202008271126.2C397BF6D@keescook>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Aug 2020 23:05:42 +0300
-Message-ID: <CAHp75VeA6asim81CwxPD7LKc--DEvOWH9fwgQ9Bbb1Xf55OYKw@mail.gmail.com>
-Subject: Re: [PATCH v3] lib/string.c: implement stpcpy
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joe Perches <joe@perches.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        stable <stable@vger.kernel.org>, Andy Lavr <andy.lavr@gmail.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Thu, 27 Aug 2020 21:06:26 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
+        David Lechner <david@lechnology.com>,
+        Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Roger Quadros <rogerq@ti.com>, kernel-team@android.com
+Subject: Re: [RESEND PATCH v2] mfd: syscon: Use a unique name with
+ regmap_config
+In-Reply-To: <74bc1f9f-cc48-cec9-85f4-3376b66b40fc@ti.com>
+References: <20200727211008.24225-1-s-anna@ti.com>
+ <0c1feaf91b9d285c1bded488437705da@misterjones.org>
+ <74bc1f9f-cc48-cec9-85f4-3376b66b40fc@ti.com>
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <78b465b080772b6ba867e39a623c2310@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: s-anna@ti.com, lee.jones@linaro.org, arnd@arndb.de, grzegorz.jaszczyk@linaro.org, david@lechnology.com, tony@atomide.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rogerq@ti.com, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 9:30 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, Aug 27, 2020 at 11:59:24AM +0300, Andy Shevchenko wrote:
-> > strcpy() is not a bad API for the cases when you know what you are
-> > doing. A problem that most of the developers do not know what they are
-> > doing.
-> > No need to split everything to bad and good by its name or semantics,
-> > each API has its own pros and cons and programmers must use their
-> > brains.
->
-> I equate "unsafe" or "fragile" with "bad". There's no reason to use our
-> brains for remembering what's safe or not when we can just remove unsafe
-> things from the available APIs, and/or lean on the compiler to help
-> (e.g. CONFIG_FORTIFY_SOURCE).
->
-> Most of the uses of strcpy() in the kernel are just copying between two
-> known-at-compile-time NUL-terminated character arrays. We had wanted to
-> introduce stracpy() for this, but Linus objected to yet more string
-> functions. So for now, I'm aimed at removing strlcpy() completely first,
-> then look at strcpy() -> strscpy() for cases where target size is NOT
-> compile-time known, and then to convert the kernel's strcpy() into
-> _requiring_ that source/dest lengths are known at compile time.
->
-> And then tackle strncpy(), which is a mess.
+Hi Suman,
 
-In general it's better to have a robust API, but what may go wrong
-with the interface where we have no length of  the buffer passed, but
-we all know that it's PAGE_SIZE?
-So, what's wrong with doing something like
-strcpy(buf, "Yes, we know we won't overflow here\n");
-?
+On 2020-08-27 19:28, Suman Anna wrote:
+> Hi Marc,
+> 
+> On 8/27/20 9:46 AM, Marc Zyngier wrote:
+>> Hi all,
+>> 
+>> On 2020-07-27 22:10, Suman Anna wrote:
+>>> The DT node full name is currently being used in regmap_config
+>>> which in turn is used to create the regmap debugfs directories.
+>>> This name however is not guaranteed to be unique and the regmap
+>>> debugfs registration can fail in the cases where the syscon nodes
+>>> have the same unit-address but are present in different DT node
+>>> hierarchies. Replace this logic using the syscon reg resource
+>>> address instead (inspired from logic used while creating platform
+>>> devices) to ensure a unique name is given for each syscon.
+>>> 
+>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>> ---
+>>> Hi Arnd,
+>>> Lee is looking for your review on this patch. Can you please
+>>> review and provide your comments.
+>>> 
+>>> This is a resend of the patch that was posted previously, rebased
+>>> now onto latest kernel.
+>>> 
+>>> v2: https://patchwork.kernel.org/patch/11353355/
+>>>  - Fix build warning reported by kbuild test bot
+>>> v1: https://patchwork.kernel.org/patch/11346363/
+>>> 
+>>>  drivers/mfd/syscon.c | 4 +++-
+>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>> 
+>>> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+>>> index 3a97816d0cba..75859e492984 100644
+>>> --- a/drivers/mfd/syscon.c
+>>> +++ b/drivers/mfd/syscon.c
+>>> @@ -101,12 +101,14 @@ static struct syscon *of_syscon_register(struct
+>>> device_node *np, bool check_clk)
+>>>          }
+>>>      }
+>>> 
+>>> -    syscon_config.name = of_node_full_name(np);
+>>> +    syscon_config.name = kasprintf(GFP_KERNEL, "%pOFn@%llx", np,
+>>> +                       (u64)res.start);
+>>>      syscon_config.reg_stride = reg_io_width;
+>>>      syscon_config.val_bits = reg_io_width * 8;
+>>>      syscon_config.max_register = resource_size(&res) - reg_io_width;
+>>> 
+>>>      regmap = regmap_init_mmio(NULL, base, &syscon_config);
+>>> +    kfree(syscon_config.name);
+>>>      if (IS_ERR(regmap)) {
+>>>          pr_err("regmap init failed\n");
+>>>          ret = PTR_ERR(regmap);
+>> 
+>> This patch triggers some illegal memory accesses when debugfs is
+>> enabled, as regmap does rely on config->name to be persistent
+>> when the debugfs registration is deferred via 
+>> regmap_debugfs_early_list
+>> (__regmap_init() -> regmap_attach_dev() -> regmap_debugfs_init()...),
+>> leading to a KASAN splat on demand.
+>> 
+> 
+> Thanks, I missed the subtlety around the debugfs registration.
+> 
+>> I came up with the following patch that solves the issue for me.
+>> 
+>> Thanks,
+>> 
+>>         M.
+>> 
+>> From fd3f5f2bf72df53be18d13914fe349a34f81f16b Mon Sep 17 00:00:00 2001
+>> From: Marc Zyngier <maz@kernel.org>
+>> Date: Thu, 27 Aug 2020 14:45:34 +0100
+>> Subject: [PATCH] mfd: syscon: Don't free allocated name for 
+>> regmap_config
+>> 
+>> The name allocated for the regmap_config structure is freed
+>> pretty early, right after the registration of the MMIO region.
+>> 
+>> Unfortunately, that doesn't follow the life cycle that debugfs
+>> expects, as it can access the name field long after the free
+>> has occured.
+>> 
+>> Move the free on the error path, and keep it forever otherwise.
+> 
+> Hmm, this is exactly what I was trying to avoid. The regmap_init does 
+> duplicate
+> the name into map->name if config->name is given, and the regmap 
+> debugfs makes
+> another copy of its own into debugfs_name when actually registered. If 
+> the rules
+> for regmap_init is that the config->name should be persistent, then I 
+> guess we
+> have no choice but to go with the below fix.
+> 
+> Does something like below help?
+> 
+> diff --git a/drivers/base/regmap/regmap.c 
+> b/drivers/base/regmap/regmap.c
+> index e93700af7e6e..96d8a0161c89 100644
+> --- a/drivers/base/regmap/regmap.c
+> +++ b/drivers/base/regmap/regmap.c
+> @@ -1137,7 +1137,7 @@ struct regmap *__regmap_init(struct device *dev,
+>                 if (ret != 0)
+>                         goto err_regcache;
+>         } else {
+> -               regmap_debugfs_init(map, config->name);
+> +               regmap_debugfs_init(map, map->name);
+> 
+> But there are couple of other places in regmap code that uses 
+> config->name, but
+> those won't be exercised with the syscon code.
 
+Is config->name always the same as map->name? If so, why don't you just
+pass map once and for all? Is the lifetime of map->name the same as
+that of config->name?
 
+My worry with this approach is that we start changing stuff in a rush,
+and this would IMHO deserve a thorough investigation of whether this
+change is actually safe.
+
+I'd rather take the safe approach of either keeping the memory around
+until we clearly understand what the implications are (and probably
+this should involve the regmap maintainer), or to revert this patch
+until we figure out the actual life cycle of the various names.
+
+Thanks,
+
+         M.
 -- 
-With Best Regards,
-Andy Shevchenko
+Jazz is not dead. It just smells funny...
