@@ -2,291 +2,126 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF0AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2566620738
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F12E20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:03:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ubV2Bnqr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbgH0JDJ convert rfc822-to-8bit (ORCPT
+        id S1728220AbgH0JDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:03:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35030 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgH0JDI (ORCPT
+        Thu, 27 Aug 2020 05:03:55 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:5862 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726266AbgH0JDy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:03:08 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0430FC061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 02:03:08 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1kBDoC-0002xt-8J; Thu, 27 Aug 2020 11:03:00 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1kBDoA-0006g5-NR; Thu, 27 Aug 2020 11:02:58 +0200
-Message-ID: <8d3045b22bf9524eba9dddf1ff470858d4b748be.camel@pengutronix.de>
-Subject: Re: [PATCH 2/2] usb: dwc3: Add driver for Xilinx platforms
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Manish Narani <manish.narani@xilinx.com>,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        michal.simek@xilinx.com, balbi@kernel.org
-Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        git@xilinx.com
-Date:   Thu, 27 Aug 2020 11:02:58 +0200
-In-Reply-To: <1598467441-124203-3-git-send-email-manish.narani@xilinx.com>
-References: <1598467441-124203-1-git-send-email-manish.narani@xilinx.com>
-         <1598467441-124203-3-git-send-email-manish.narani@xilinx.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 27 Aug 2020 05:03:54 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07R91vfa000570;
+        Thu, 27 Aug 2020 11:03:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=lx+QYBokaHHL/CwY5ofgZfT1OTJOb3G3GrKi86P18Gg=;
+ b=ubV2Bnqr1skfZO4yPCcWRoIojbuL/jlVBuomhD2W2lLk5pDPpQ0LlyLtoQMZN/lBReaw
+ Rdeqq8taJzY6cskIYqssKEVzEVu1cOeqjfIcxstmWnGl66DPSYT2MEhtA9cfsqWWhibQ
+ m+rTm+oymrqq5T4fPJYXK/Wa3aeMXg10sBL7XXnlIf/2T4mIgvkmK5P5RyQcLrVc1L7r
+ 8MfVkOQxb5vohvuLuLJHZIXpfsHOlI7yM5TifWHNP2IuR/snueCbXdBvdN4jVKlvVut8
+ tjOpIMszwyr/130JT8H0geA0cNpMqfhZFfvNcAiVb/pRDCexoYl//s1BiTJKOgwxZnhY FQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 333b3hn6a8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 11:03:28 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 827DE10002A;
+        Thu, 27 Aug 2020 11:03:25 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6AF5B221159;
+        Thu, 27 Aug 2020 11:03:25 +0200 (CEST)
+Received: from [10.48.1.149] (10.75.127.45) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
+ 2020 11:03:24 +0200
+Subject: Re: [PATCH v2] iio: stm32-dac: Replace indio_dev->mlock with own
+ device lock
+To:     Alexandru Ardelean <ardeleanalex@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+CC:     linux-iio <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>, <alexandre.torgue@st.com>,
+        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+References: <20200826063850.47625-1-alexandru.ardelean@analog.com>
+ <20200826120042.200364-1-alexandru.ardelean@analog.com>
+ <CA+U=DsrMDSTQKEc2_3+W8u4bLraAowVB3nB4huKY--v8gnds2Q@mail.gmail.com>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <c3a9411e-186d-a3ac-5ad0-bd70ad78f147@st.com>
+Date:   Thu, 27 Aug 2020 11:03:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <CA+U=DsrMDSTQKEc2_3+W8u4bLraAowVB3nB4huKY--v8gnds2Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-27_02:2020-08-27,2020-08-27 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manish,
-
-On Thu, 2020-08-27 at 00:14 +0530, Manish Narani wrote:
-> Add a new driver for supporting Xilinx platforms. This driver handles
-> the USB 3.0 PHY initialization and PIPE control & reset operations for
-> ZynqMP platforms. This also handles the USB 2.0 PHY initialization and
-> reset operations for Versal platforms.
+On 8/27/20 10:55 AM, Alexandru Ardelean wrote:
+> On Wed, Aug 26, 2020 at 3:03 PM Alexandru Ardelean
+> <alexandru.ardelean@analog.com> wrote:
+>> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+>>
+>> As part of the general cleanup of indio_dev->mlock, this change replaces
+>> it with a local lock. The lock protects against potential races when
+>> reading the CR reg and then updating, so that the state of pm_runtime
+>> is consistent between the two operations.
+>>
+>> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+>> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+>> ---
+> Forgot the changelog here.
+> Apologies.
 > 
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
-[...]
-> +static int dwc3_xlnx_rst_assert(struct reset_control *rstc)
-> +{
-> +	unsigned long loop_time = msecs_to_jiffies(RST_TIMEOUT);
-> +	unsigned long timeout;
-> +
-> +	reset_control_assert(rstc);
-> +
-> +	/* wait until reset is asserted or timeout */
-> +	timeout = jiffies + loop_time;
-> +
-> +	while (!time_after_eq(jiffies, timeout)) {
-> +		if (reset_control_status(rstc) > 0)
-> +			return 0;
-> +
-> +		cpu_relax();
-> +	}
-> +
-> +	return -ETIMEDOUT;
-> +}
+> Changelog v1 -> v2:
+> * removed whitespace change for 'common' field
+> * updated comment about the lock usage
 
-I think this should be done in the reset controller driver instead.
+Hi Alexandru,
 
-When reset_control_assert() is called with an exclusive reset control,
-the reset line should be already asserted when the function returns.
+Sorry if I missed it... is there an update on the comment :-) ?
 
-> +
-> +static int dwc3_xlnx_rst_deassert(struct reset_control *rstc)
-> +{
-> +	unsigned long loop_time = msecs_to_jiffies(RST_TIMEOUT);
-> +	unsigned long timeout;
-> +
-> +	reset_control_deassert(rstc);
-> +
-> +	/* wait until reset is de-asserted or timeout */
-> +	timeout = jiffies + loop_time;
-> +	while (!time_after_eq(jiffies, timeout)) {
-> +		if (!reset_control_status(rstc))
-> +			return 0;
-> +
-> +		cpu_relax();
-> +	}
-> +
-> +	return -ETIMEDOUT;
-> +}
-
-Same as above, this belongs in the reset controller driver.
-
-> +static int dwc3_xlnx_init_versal(struct dwc3_xlnx *priv_data)
-> +{
-> +	struct device *dev = priv_data->dev;
-> +	int ret;
-> +
-> +	dwc3_xlnx_mask_phy_rst(priv_data, false);
-> +
-> +	/* Assert and De-assert reset */
-> +	ret = zynqmp_pm_reset_assert(VERSAL_USB_RESET_ID,
-> +				     PM_RESET_ACTION_ASSERT);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to assert Reset\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = zynqmp_pm_reset_assert(VERSAL_USB_RESET_ID,
-> +				     PM_RESET_ACTION_RELEASE);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to De-assert Reset\n");
-> +		return ret;
-> +	}
-> +
-> +	dwc3_xlnx_mask_phy_rst(priv_data, true);
-> +
-> +	return 0;
-> +}
-> +
-> +static int dwc3_xlnx_init_zynqmp(struct dwc3_xlnx *priv_data)
-> +{
-> +	struct device *dev = priv_data->dev;
-> +	int ret;
-> +	u32 reg;
-> +
-> +	priv_data->crst = devm_reset_control_get(dev, "usb_crst");
-
-Please use devm_reset_control_get_exclusive() instead.
-
-> +	if (IS_ERR(priv_data->crst)) {
-> +		dev_err(dev, "failed to get %s reset signal\n", "usb_crst");
-
-Consider using dev_err_probe() to hide -EPROBE_DEFER error values.
-
-> +		ret = PTR_ERR(priv_data->crst);
-> +		goto err;
-> +	}
-> +
-> +	priv_data->hibrst = devm_reset_control_get(dev, "usb_hibrst");
-> +	if (IS_ERR(priv_data->hibrst)) {
-> +		dev_err(dev, "failed to get %s reset signal\n", "usb_hibrst");
-> +		ret = PTR_ERR(priv_data->hibrst);
-> +		goto err;
-> +	}
-> +
-> +	priv_data->apbrst = devm_reset_control_get(dev, "usb_apbrst");
-> +	if (IS_ERR(priv_data->apbrst)) {
-> +		dev_err(dev, "failed to get %s reset signal\n", "usb_apbrst");
-> +		ret = PTR_ERR(priv_data->apbrst);
-> +		goto err;
-> +	}
-
-Same as above for the other two reset controls.
-
-> +	priv_data->usb3_phy = devm_phy_get(dev, "usb3-phy");
-> +
-> +	ret = dwc3_xlnx_rst_assert(priv_data->crst);
-> +	if (ret < 0) {
-> +		dev_err(dev, "%s: %d: Failed to assert reset\n",
-> +			__func__, __LINE__);
-> +		goto err;
-> +	}
-> +
-> +	ret = dwc3_xlnx_rst_assert(priv_data->hibrst);
-> +	if (ret < 0) {
-> +		dev_err(dev, "%s: %d: Failed to assert reset\n",
-> +			__func__, __LINE__);
-> +		goto err;
-> +	}
-> +
-> +	ret = dwc3_xlnx_rst_assert(priv_data->apbrst);
-> +	if (ret < 0) {
-> +		dev_err(dev, "%s: %d: Failed to assert reset\n",
-> +			__func__, __LINE__);
-> +		goto err;
-> +	}
-> +
-> +	ret = phy_init(priv_data->usb3_phy);
-> +	if (ret < 0) {
-> +		phy_exit(priv_data->usb3_phy);
-> +		goto err;
-> +	}
-> +
-> +	ret = dwc3_xlnx_rst_deassert(priv_data->apbrst);
-> +	if (ret < 0) {
-> +		dev_err(dev, "%s: %d: Failed to release reset\n",
-> +			__func__, __LINE__);
-> +		goto err;
-> +	}
-> +
-> +	/* Set PIPE power present signal */
-> +	writel(PIPE_POWER_ON, priv_data->regs + PIPE_POWER_OFFSET);
-> +
-> +	/* Clear PIPE CLK signal */
-> +	writel(PIPE_CLK_OFF, priv_data->regs + PIPE_CLK_OFFSET);
-> +
-> +	ret = dwc3_xlnx_rst_deassert(priv_data->crst);
-> +	if (ret < 0) {
-> +		dev_err(dev, "%s: %d: Failed to release reset\n",
-> +			__func__, __LINE__);
-> +		goto err;
-> +	}
-> +
-> +	ret = dwc3_xlnx_rst_deassert(priv_data->hibrst);
-> +	if (ret < 0) {
-> +		dev_err(dev, "%s: %d: Failed to release reset\n",
-> +			__func__, __LINE__);
-> +		goto err;
-> +	}
-> +
-> +	ret = phy_power_on(priv_data->usb3_phy);
-> +	if (ret < 0) {
-> +		phy_exit(priv_data->usb3_phy);
-> +		goto err;
-> +	}
-> +
-> +	/*
-> +	 * This routes the usb dma traffic to go through CCI path instead
-> +	 * of reaching DDR directly. This traffic routing is needed to
-> +	 * make SMMU and CCI work with USB dma.
-> +	 */
-> +	if (of_dma_is_coherent(dev->of_node) || dev->iommu_group) {
-> +		reg = readl(priv_data->regs + XLNX_USB_COHERENCY);
-> +		reg |= XLNX_USB_COHERENCY_ENABLE;
-> +		writel(reg, priv_data->regs + XLNX_USB_COHERENCY);
-> +	}
-> +
-> +err:
-> +	return ret;
-> +}
-> +
-> +static int dwc3_xlnx_probe(struct platform_device *pdev)
-> +{
-> +	struct dwc3_xlnx	*priv_data;
-> +	struct device		*dev = &pdev->dev;
-> +	struct device_node	*np = dev->of_node;
-> +	struct resource		*res;
-> +	void __iomem		*regs;
-> +	int			ret;
-> +
-> +	priv_data = devm_kzalloc(dev, sizeof(*priv_data), GFP_KERNEL);
-> +	if (!priv_data)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res) {
-> +		dev_err(dev, "missing memory resource\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(regs))
-> +		return PTR_ERR(regs);
-> +
-> +	/* Store the usb control regs into priv_data for further usage */
-> +	priv_data->regs = regs;
-> +
-> +	priv_data->dev = dev;
-> +
-> +	platform_set_drvdata(pdev, priv_data);
-> +
-> +	ret = clk_bulk_get_all(priv_data->dev, &priv_data->clks);
-
-Why not use devm_clk_bulk_get_all()?
-
-regards
-Philipp
+Best Regards,
+Fabrice
+> 
+>>  drivers/iio/dac/stm32-dac.c | 12 ++++++++----
+>>  1 file changed, 8 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
+>> index 092c796fa3d9..7a8aed476850 100644
+>> --- a/drivers/iio/dac/stm32-dac.c
+>> +++ b/drivers/iio/dac/stm32-dac.c
+>> @@ -26,9 +26,11 @@
+>>  /**
+>>   * struct stm32_dac - private data of DAC driver
+>>   * @common:            reference to DAC common data
+>> + * @lock:              lock to protect the data buffer during regmap ops
+>>   */
+>>  struct stm32_dac {
+>>         struct stm32_dac_common *common;
+>> +       struct mutex            lock;
+>>  };
