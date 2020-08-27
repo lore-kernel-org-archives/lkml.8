@@ -2,110 +2,122 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C40C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E43CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0D022BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D22322CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:03:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sHpuHPRk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgH0IAu (ORCPT
+        id S1728094AbgH0IDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:00:50 -0400
-Received: from mga04.intel.com ([192.55.52.120]:18800 "EHLO mga04.intel.com"
+        Thu, 27 Aug 2020 04:03:12 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:48262 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgH0IAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:00:48 -0400
-IronPort-SDR: 9RrsowQtcQBMiE1qlKFvKBSMYtx+dbV8dFdJNc7/US+x8MNZ4HVVWYjvYE49TkrS5LXDR4Cy9S
- SPnlVDGTcdCw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="153860693"
-X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
-   d="scan'208";a="153860693"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 01:00:47 -0700
-IronPort-SDR: vBlE8G0sFynYcM8sdc9gJbZvGMTIHnQtFOnPL2GGarlfPnhq6xrMi2y+aJQgtOxbF8vHCFc45P
- pPbFuQLdbMKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
-   d="scan'208";a="373647850"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 27 Aug 2020 01:00:47 -0700
-Received: from [10.249.76.175] (vramuthx-MOBL1.gar.corp.intel.com [10.249.76.175])
-        by linux.intel.com (Postfix) with ESMTP id 27FAD5806C6;
-        Thu, 27 Aug 2020 01:00:42 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v3 1/1] extcon: ptn5150: Set the VBUS and POLARITY
- property capability
-To:     Chanwoo Choi <cw00.choi@samsung.com>, linux-kernel@vger.kernel.org
-Cc:     vijaikumar.kanagarajan@gmail.com, krzk@kernel.org,
-        myungjoo.ham@samsung.com, heikki.krogerus@linux.intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com
-References: <20200827065128.55094-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CGME20200827065143epcas1p3da86f8d70e6d78c64a925f4d9c0f92eb@epcas1p3.samsung.com>
- <20200827065128.55094-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <e0ac8482-d607-6095-0d9b-2918f0e7a0f2@samsung.com>
- <47fef2ec-012c-03c7-13ef-0882b4f7146b@linux.intel.com>
- <b0e5e2e7-0ac6-4b0b-6d56-2766db28359d@samsung.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <6a151d0d-4d78-5310-265d-93eca2143e3e@linux.intel.com>
-Date:   Thu, 27 Aug 2020 16:00:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1727786AbgH0IDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 04:03:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598515382; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=deplzEvxYDzNg5sadmLOiZaUYk7lhFmqIsbII+EbBmw=; b=sHpuHPRkAnHKlWa32cv3WScxW8xLfzFcfr5yjtglkapQgn94cdXZK0lc5NWNQfEh0xFdmiVJ
+ 0nC2+Za7ztTATyyBIky52WwA3ywnTwJLpA62vz+qkwTIij8ZwkTscUD1SbRIda5GguO/ud8V
+ kgFBWq2TSm1Bo7yORgh+58UEPRc=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f47689ae2d4d29fc8d95bb8 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 08:02:34
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 661A6C43387; Thu, 27 Aug 2020 08:02:34 +0000 (UTC)
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 02436C433C6;
+        Thu, 27 Aug 2020 08:02:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 02436C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "\<netdev\@vger.kernel.org\>" <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Kaloyan Nikolov <konik98@gmail.com>
+Subject: Re: [PATCH net] mwifiex: Increase AES key storage size to 256 bits
+References: <20200825153829.38043-1-luzmaximilian@gmail.com>
+        <CA+ASDXPoxdMb4b5d0Ayv=JFACHcq7EXub14pJtJfcCV2di95Rg@mail.gmail.com>
+Date:   Thu, 27 Aug 2020 11:02:28 +0300
+In-Reply-To: <CA+ASDXPoxdMb4b5d0Ayv=JFACHcq7EXub14pJtJfcCV2di95Rg@mail.gmail.com>
+        (Brian Norris's message of "Tue, 25 Aug 2020 12:30:28 -0700")
+Message-ID: <87mu2gldnv.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <b0e5e2e7-0ac6-4b0b-6d56-2766db28359d@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Brian Norris <briannorris@chromium.org> writes:
 
-On 27/8/2020 4:11 pm, Chanwoo Choi wrote:
-> On 8/27/20 4:53 PM, Ramuthevar, Vadivel MuruganX wrote:
->> Hi,
+> Hi,
+>
+> On Tue, Aug 25, 2020 at 8:38 AM Maximilian Luz <luzmaximilian@gmail.com> wrote:
 >>
->> On 27/8/2020 3:56 pm, Chanwoo Choi wrote:
->>> On 8/27/20 3:51 PM, Ramuthevar,Vadivel MuruganX wrote:
->>>> From: Ramuthevar Vadivel Murugan<vadivel.muruganx.ramuthevar@linux.intel.com>
->>>>
->>>> Set the capability value of property for VBUS and POLARITY.
->>>>
->>>> Signed-off-by: Ramuthevar Vadivel Murugan<vadivel.muruganx.ramuthevar@linux.intel.com>
->>>> ---
->>>>    drivers/extcon/extcon-ptn5150.c | 7 +++++++
->>>>    1 file changed, 7 insertions(+)
->>>>
->>>> diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
->>>> index 841c9fe211f1..20d49a54c36e 100644
->>>> --- a/drivers/extcon/extcon-ptn5150.c
->>>> +++ b/drivers/extcon/extcon-ptn5150.c
->>>> @@ -275,6 +275,13 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
->>>>            return ret;
->>>>        }
->>>>    +    extcon_set_property_capability(info->edev, EXTCON_USB,
->>>> +                       EXTCON_PROP_USB_VBUS);
->>>> +    extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
->>>> +                       EXTCON_PROP_USB_VBUS);
->>>> +    extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
->>>> +                       EXTCON_PROP_USB_TYPEC_POLARITY);
->>> Above codes used the space for the indentation to keep the vertical line.
->>> I think that we better to use tab for the indentation.
->>>
->>> If there are no objection, I'll fix and then apply it.
->> Thank you!, no objection , please fix it.
-> Applied it. Thanks.
-Thank you so much for applying.
+>> Following commit e18696786548 ("mwifiex: Prevent memory corruption
+>> handling keys") the mwifiex driver fails to authenticate with certain
+>> networks, specifically networks with 256 bit keys, and repeatedly asks
+>> for the password. The kernel log repeats the following lines (id and
+>> bssid redacted):
+>>
+>>     mwifiex_pcie 0000:01:00.0: info: trying to associate to '<id>' bssid <bssid>
+>>     mwifiex_pcie 0000:01:00.0: info: associated to bssid <bssid> successfully
+>>     mwifiex_pcie 0000:01:00.0: crypto keys added
+>>     mwifiex_pcie 0000:01:00.0: info: successfully disconnected from <bssid>: reason code 3
+>>
+>> Tracking down this problem lead to the overflow check introduced by the
+>> aforementioned commit into mwifiex_ret_802_11_key_material_v2(). This
+>> check fails on networks with 256 bit keys due to the current storage
+>> size for AES keys in struct mwifiex_aes_param being only 128 bit.
+>>
+>> To fix this issue, increase the storage size for AES keys to 256 bit.
+>>
+>> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+>> Reported-by: Kaloyan Nikolov <konik98@gmail.com>
+>> Tested-by: Kaloyan Nikolov <konik98@gmail.com>
+>
+> Thanks for this! I just happened to notice this breakage here, as we
+> just merged the relevant -stable updates. I think it would be wise to
+> get the Fixes tag Dan noted, when Kalle lands this.
 
-Regards
-Vadivel
-> 
+Ok, I'll queue this for v5.9 and add the Fixes tag.
+
+If anyone is bored it would be great to get patchwork automatically
+pickup the Fixes tags :) It already does that Acked-by, Reported-by and
+Tested-by tags:
+
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+Reported-by: Kaloyan Nikolov <konik98@gmail.com>
+Tested-by: Kaloyan Nikolov <konik98@gmail.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Brian Norris <briannorris@chromium.org>
+Tested-by: Brian Norris <briannorris@chromium.org>
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
