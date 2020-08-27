@@ -2,203 +2,128 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3D2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EB9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5C9122CAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2175207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:35:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="llWyNpxJ"
+	dkim=pass (1024-bit key) header.d=labbott.name header.i=@labbott.name header.b="RNiGEKW3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbgH0NeP (ORCPT
+        id S1726246AbgH0Nf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 09:34:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49064 "EHLO
+        Thu, 27 Aug 2020 09:35:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727793AbgH0NcK (ORCPT
+        with ESMTP id S1728265AbgH0Nb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:32:10 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C789C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:32:10 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id b79so4530459wmb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:32:10 -0700 (PDT)
+        Thu, 27 Aug 2020 09:31:29 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB68C061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:31:29 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id s16so4481265qtn.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:31:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=RzjTTXuW8DoQzMoQkpQltYkMS2hvfG2Wfy3KypxE85c=;
-        b=llWyNpxJ3XYx4msjmJiZYlY6gVQe7XWBxESPQWE5O4+p1/7ffuz3Hh+8PKvIOKijtA
-         xPjWCpULHdChCIFlNhwXM0bYx4QhMtmMkWALfpAteoa++wRIjBx4elYwR365z7mcimmn
-         QzEJsSO9u2Zwd6DQ/83vF0GIYszdYx0fCcmDa/v87iBYf/cggfoNA+iD8VHiv7Qg9CG5
-         d4gi9feMHBUGAhGUMqRb78xOKL/6fZtMkY3OBwTH/+LwxSByvYejWSaXvx/8Omr9lLH9
-         6C1ipG5Z68JQKmc7vA0fDA8Y07pG9V1XyucEBTsVIWzEqikWY8pKDYIHa4vzfy+4fysd
-         mZCw==
+        d=labbott.name; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lDczrlJd3qpi62PuNHOBqp+bVIuJaZ3CIq+6qbkhanw=;
+        b=RNiGEKW35DYb/JfM8HflEt7mDoN5TTPevUjWrFEMiWnB7Nb4c3aWKy7OU/kyHLadcm
+         xBs4dPO9yvjR28pNvlkIVvz1z48FwzX+Q7XHHN6Hc6GYQb3xJXyaCtC7yoF6eGgJlzB5
+         q3NWsx/2aKVfGGvJjPYX2AMGRKQLIZVqtIxk0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=RzjTTXuW8DoQzMoQkpQltYkMS2hvfG2Wfy3KypxE85c=;
-        b=GUPvcJ0mJI47QUhseai74QF9pxRuYC/2mQGSXZPnD5olVax5L9m+Z6seUEK66qetzV
-         ETPizLRNJ0hxLBtaJvmHpFO43NHj4sgrNF5eVAhpzfR10fmz7fYOnf5O4g1dHP4ykBiy
-         G+DdrEI4c/01RB6W1F5mo+2O6DJZlNx3K8DQCe74izK4D7gFuh487CDnq3ZxVkIt7XGi
-         Kbt36gJ6ayRTbotAUBq9d/51fstc8ucWVGQai+IEpYSy6S3YVGCDUwb9mE2D8FMdlsAl
-         +9m5JZHMmrHOjBYGurCvK6MiYnEmo79OrmhN/8HkGjzktseUWtry7Eh3nm7VQp1BxPj1
-         3UJQ==
-X-Gm-Message-State: AOAM5304XfzH6Nw44Mpyn3NIOWcZtgimRic4RnkbPUVTBkxmo0gAdLxe
-        uaiYxUqv3jTOfp3zERByRpHaiQ==
-X-Google-Smtp-Source: ABdhPJw34SA8WJgrEgzMp2TR1ApIy6v1Wx2UvzK6DpDa87F1baFk/BT77mLLH0QK1paRl37b2MDcRQ==
-X-Received: by 2002:a1c:b4c1:: with SMTP id d184mr12466841wmf.26.1598535129044;
-        Thu, 27 Aug 2020 06:32:09 -0700 (PDT)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id 31sm6239269wrp.87.2020.08.27.06.32.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 06:32:08 -0700 (PDT)
-References: <20200731120603.2243261-1-jbrunet@baylibre.com> <CGME20200827124306eucas1p2c355345ca848e396f1fb06a7ef7a111e@eucas1p2.samsung.com> <e950898e-0a07-4f75-2640-ec8039d81464@samsung.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@intel.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     alsa-devel@alsa-project.org, Kevin Hilman <khilman@baylibre.com>,
-        linux-kernel@vger.kernel.org, zhangn1985@outlook.com,
-        linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH] ASoC: meson: cards: deal dpcm flag change
-In-reply-to: <e950898e-0a07-4f75-2640-ec8039d81464@samsung.com>
-Date:   Thu, 27 Aug 2020 15:32:07 +0200
-Message-ID: <1jmu2g6wq0.fsf@starbuckisacylon.baylibre.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lDczrlJd3qpi62PuNHOBqp+bVIuJaZ3CIq+6qbkhanw=;
+        b=JHV6IWwl3yjn2GFN7KSpNfYMYBmv22nwoNkFTP06zl5UvM2s+ozlyLyTC+Vu3QdZyL
+         HVnIifByRMhF0ZvZ7T8BvEi1NBsvHSdTNjLbf5Sh5Vlp/auoH39QA3IQi7Yxy0+k4Hvn
+         a0y9WXX54zL+b4wNBIxOJrsx/hRRiw9a5LG37rmpp3Q6ZIUGLdizfubFzXFuLRtj+hPv
+         segl+wOW9DsAuDtYlZGUe8Q8/juaBrXh2abqtBLfJHG2GBzda1i1p5oZSWgbPT98G9zn
+         hcDgnkfBfkTZItdoruhFdM4vDYO5MVM3qEVRYim+HvOpJ3NOdKQMbqlM+6YN2sBzIulz
+         OesA==
+X-Gm-Message-State: AOAM5317mIeqJYIN6fRZDIMRxKsb72O5+bQRffJyHHtfNwTjwa8RXnoI
+        hLQkMv/YtIUOrDSOQ8xP/XcQbg==
+X-Google-Smtp-Source: ABdhPJz94NCDJe1Y3TCUAT1fErYJ7r4fw5orM7dXc6gbtDSEIf2lbXNnjENlynBt6QlAePZlj2K0AQ==
+X-Received: by 2002:ac8:4f44:: with SMTP id i4mr6328121qtw.189.1598535088575;
+        Thu, 27 Aug 2020 06:31:28 -0700 (PDT)
+Received: from [192.168.1.168] (pool-74-109-246-95.pitbpa.fios.verizon.net. [74.109.246.95])
+        by smtp.gmail.com with ESMTPSA id i7sm1774133qkb.131.2020.08.27.06.31.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 06:31:28 -0700 (PDT)
+Subject: Re: [PATCH] staging: ion: remove from the tree
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        sumit.semwal@linaro.org, john.stultz@linaro.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        =?UTF-8?Q?Arve_Hj=c3=b8nnev=c3=a5g?= <arve@android.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Christian Brauner <christian@brauner.io>,
+        Christoph Hellwig <hch@infradead.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Todd Kjos <tkjos@android.com>, devel@driverdev.osuosl.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+References: <20200827123627.538189-1-gregkh@linuxfoundation.org>
+From:   Laura Abbott <laura@labbott.name>
+Message-ID: <3d8de519-65b3-123b-8ace-e820982884e0@labbott.name>
+Date:   Thu, 27 Aug 2020 09:31:27 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200827123627.538189-1-gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 8/27/20 8:36 AM, Greg Kroah-Hartman wrote:
+> The ION android code has long been marked to be removed, now that we
+> dma-buf support merged into the real part of the kernel.
+> 
+> It was thought that we could wait to remove the ion kernel at a later
+> time, but as the out-of-tree Android fork of the ion code has diverged
+> quite a bit, and any Android device using the ion interface uses that
+> forked version and not this in-tree version, the in-tree copy of the
+> code is abandonded and not used by anyone.
+> 
+> Combine this abandoned codebase with the need to make changes to it in
+> order to keep the kernel building properly, which then causes merge
+> issues when merging those changes into the out-of-tree Android code, and
+> you end up with two different groups of people (the in-kernel-tree
+> developers, and the Android kernel developers) who are both annoyed at
+> the current situation.  Because of this problem, just drop the in-kernel
+> copy of the ion code now, as it's not used, and is only causing problems
+> for everyone involved.
+> 
+> Cc: "Arve Hjønnevåg" <arve@android.com>
+> Cc: "Christian König" <christian.koenig@amd.com>
+> Cc: Christian Brauner <christian@brauner.io>
+> Cc: Christoph Hellwig <hch@infradead.org>
+> Cc: Hridya Valsaraju <hridya@google.com>
+> Cc: Joel Fernandes <joel@joelfernandes.org>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Cc: Laura Abbott <laura@labbott.name>
+> Cc: Martijn Coenen <maco@android.com>
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: Todd Kjos <tkjos@android.com>
+> Cc: devel@driverdev.osuosl.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linaro-mm-sig@lists.linaro.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-On Thu 27 Aug 2020 at 14:43, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-
-> Hi Jerome,
->
-> On 31.07.2020 14:06, Jerome Brunet wrote:
->> Commit b73287f0b074 ("ASoC: soc-pcm: dpcm: fix playback/capture checks")
->> changed the meaning of dpcm_playback/dpcm_capture and now requires the
->> CPU DAI BE to aligned with those flags.
->>
->> This broke all Amlogic cards with uni-directional backends (All gx and
->> most axg cards).
->>
->> While I'm still confused as to how this change is an improvement, those
->> cards can't remain broken forever. Hopefully, next time an API change is
->> done like that, all the users will be updated as part of the change, and
->> not left to fend for themselves.
->>
->> Fixes: b73287f0b074 ("ASoC: soc-pcm: dpcm: fix playback/capture checks")
->> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
->
-> This patch landed finally in v5.9-rc1. I've noticed it causes a 
-> following warning on Hardkernel's Odroid N2 board 
-> (arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dtb):
-
-Looks like the after match of the flag change again ...
-
->
-> meson-drm ff900000.vpu: [drm] fb0: mesondrmfb frame buffer device
-> ------------[ cut here ]------------
-> WARNING: CPU: 3 PID: 66 at sound/soc/soc-core.c:817
-
-Marek, is it possible that you have CONFIG_LOCKDEP enabled in your
-configuration ?
-
-snd_soc_find_dai() is called by snd_soc_dai_link_set_capabilities().
-Indeed, the client_mutex will not be help by any of the user of 
-snd_soc_dai_link_set_capabilities() when called.
-
-So I believe simple card and qcom will be impacted as well.
-
-> snd_soc_find_dai+0xe4/0xf0
-> Modules linked in: dw_hdmi_i2s_audio dw_hdmi_cec meson_gxl realtek 
-> dwmac_generic crct10dif_ce snd_soc_meson_axg_sound_card 
-> snd_soc_meson_card_utils rc_odroid pwm_meson meson_ir 
-> snd_soc_meson_g12a_toacodec snd_soc_meson_axg_tdmout rtc_meson_vrtc 
-> snd_soc_meson_g12a_tohdmitx snd_soc_meson_codec_glue mdio_mux_meson_g12a 
-> snd_soc_meson_axg_tdmin dwmac_meson8b stmmac_platform 
-> reset_meson_audio_arb snd_soc_meson_axg_frddr axg_audio 
-> snd_soc_meson_axg_toddr sclk_div clk_phase meson_rng stmmac rng_core 
-> meson_dw_hdmi snd_soc_meson_axg_fifo meson_drm meson_canvas mdio_xpcs 
-> dw_hdmi snd_soc_meson_t9015 display_connector nvmem_meson_efuse 
-> snd_soc_meson_axg_tdm_interface snd_soc_meson_axg_tdm_formatter 
-> snd_soc_simple_amplifier
-> CPU: 3 PID: 66 Comm: kworker/3:1 Not tainted 5.9.0-rc1 #1527
-> Hardware name: Hardkernel ODROID-N2 (DT)
-> Workqueue: events deferred_probe_work_func
-> pstate: 60000005 (nZCv daif -PAN -UAO BTYPE=--)
-> pc : snd_soc_find_dai+0xe4/0xf0
-> lr : snd_soc_find_dai+0xe0/0xf0
-> ...
-> Call trace:
->   snd_soc_find_dai+0xe4/0xf0
->   snd_soc_dai_link_set_capabilities+0x68/0x160
->   axg_card_add_link+0x188/0x5c4 [snd_soc_meson_axg_sound_card]
->   meson_card_probe+0x1e0/0x960 [snd_soc_meson_card_utils]
->   platform_drv_probe+0x50/0xa8
->   really_probe+0x110/0x400
->   driver_probe_device+0x54/0xb8
->   __device_attach_driver+0x90/0xc0
->   bus_for_each_drv+0x70/0xc8
->   __device_attach+0xec/0x150
->   device_initial_probe+0x10/0x18
->   bus_probe_device+0x94/0xa0
->   deferred_probe_work_func+0x70/0xa8
->   process_one_work+0x2a8/0x718
->   worker_thread+0x48/0x460
->   kthread+0x134/0x160
->   ret_from_fork+0x10/0x1c
-> irq event stamp: 269690
-> hardirqs last  enabled at (269689): [<ffff800010f6048c>] 
-> _raw_spin_unlock_irqrestore+0x7c/0x98
-> hardirqs last disabled at (269690): [<ffff800010025a68>] 
-> do_debug_exception+0x140/0x26c
-> softirqs last  enabled at (269318): [<ffff800010001654>] 
-> efi_header_end+0x654/0x6d4
-> softirqs last disabled at (269313): [<ffff80001008929c>] 
-> irq_exit+0x16c/0x178
-> ---[ end trace 56a3ea4fa00c37c8 ]---
-> ...
-> axg-sound-card sound: ASoC: no DMI vendor name!
->
-> The warning is repeated 10 times.
-
-That's the probe defferal mechanism causing the repeat
-
->
-> The bisect between v5.8-rc1 and v5.9-rc1 points to the commit 
-> c8f7dbdbaa15 ("Merge remote-tracking branch 'asoc/for-5.8' into 
-> asoc-linus"), which introduced a branch with this patch.
->
-> The commit with this patch is applied on the earlier kernel release 
-> (da3f23fde9d7 "ASoC: meson: cards: deal dpcm flag change" on top of 
-> v5.7-rc1) worked fine, so it looks that there is an interference with 
-> something merged later.
->
-> If I revert this patch on top of v5.9-rc1 or current linux-next, the 
-> warning is gone.
-
-... but any aml platform with uni-directional backend (not the N2, lucky
-you) would be broken.
-
-> Let me know how I can help debugging this issue.
-
-If you have CONFIG_LOCKDEP enabled, try disabling see how it goes and
-report. It is not a fix but at least you'll be unblocked.
-
->
-> Best regards
-
+We discussed this at the Android MC on Monday and the plan was to
+remove it after the next LTS release.
