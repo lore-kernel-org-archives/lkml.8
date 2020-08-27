@@ -2,218 +2,76 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0596C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA2C72078A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:22:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rAbKI83y"
+	by mail.kernel.org (Postfix) with ESMTP id 2BC122177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgH0GWG (ORCPT
+        id S1727048AbgH0GXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:22:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgH0GWF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:22:05 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B962C06125E;
-        Wed, 26 Aug 2020 23:21:56 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id cs12so2172137qvb.2;
-        Wed, 26 Aug 2020 23:21:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Epu5LMMnzcXJyXxIxmqqE2Un3GzqSZHgAZfFnavRrqA=;
-        b=rAbKI83yqP0ZA7NP/tDKWnJU+DHWyMqTRzR6f+Pzu+GmVHTi9rEo9fDX4sKdObZAdp
-         hxukX8Toy7Z3h4L5ON4yJB8RSmDR/sHb68+mNNVzYNL202z3PoRp3j9eSDD4ZxEh1q+E
-         /wTPTA0dK4qyBeVi5IKFZKsDT+gHu1BWjZtFwpeCvYOQyqYHJsTZL1Zy9kxPGpBVLOqU
-         JymJS4GrI0TFzbsOP2TpyG6FARte8dxHqhdyM9HxFsIRb+rIsbHkEhcNFRqU2dXFAQff
-         JDkIfIAwDJ5zHCS89NPYKn6dsJ82KT+CSuIj7ITE1X3Dz3kOjg7ZJfq1feJu9eRWwohd
-         TFRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Epu5LMMnzcXJyXxIxmqqE2Un3GzqSZHgAZfFnavRrqA=;
-        b=Q7UzsyPXcXDz6pmPSXb1MdXOsQoW1KXUfjJsbUEsm55YWN6iidUi095MUkWJOUgxf2
-         YJbu57+QkLAk2GGF4GDW0T0xbxelF7cUrlOkqFAEx/nbWkyFjUQ0GLMnHD5DXHuMN5Yd
-         PuCmCb+7ZzZCYW8/u8fhpLUl+2CcB/5fvMzTWSE3Hg5LYkCTrW3UNOjx27XsbJ1mRO9z
-         9s/E7snya4oMK6mCX8BzRyTYzVHadjVer2PFJG5horsJ/NgLLp3HNiEZZU/+D2V7s1WD
-         fs+rWK7L3Is9Gd6hqxTDbc8VBKp7WWMkL2H0lUkN031cAYj1N6RZaDNPUqE+AQYLFj5z
-         YC8g==
-X-Gm-Message-State: AOAM531FdzaZHzezzoYGj6sHUkQRGrQRidLS5Dhs/WOSW1EAe1lPvsJN
-        57cbkvLnt/reSs/N+PCOXHFJFpTMJqY=
-X-Google-Smtp-Source: ABdhPJy/5QPXrFEUP8b1kDdDCDWnDRvuEWTQqNEn3iYxVg8XOa5ZUpX00yykfPR+piIyTFRs5QJF4g==
-X-Received: by 2002:ad4:50a6:: with SMTP id d6mr16945786qvq.173.1598509315365;
-        Wed, 26 Aug 2020 23:21:55 -0700 (PDT)
-Received: from localhost.localdomain ([50.236.19.102])
-        by smtp.gmail.com with ESMTPSA id f7sm1186117qkj.32.2020.08.26.23.21.49
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Aug 2020 23:21:54 -0700 (PDT)
-From:   xiangxia.m.yue@gmail.com
-To:     greg@kroah.com, sashal@kernel.org, davem@davemloft.net
-Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, jknoos@google.com,
-        Tonghao Zhang <xiangxia.m.yue@gmail.com>
-Subject: [PATCH net backport to 5.5 - 5.8.3 v2] net: openvswitch: introduce common code for flushing flows
-Date:   Thu, 27 Aug 2020 14:19:52 +0800
-Message-Id: <20200827061952.5789-1-xiangxia.m.yue@gmail.com>
-X-Mailer: git-send-email 2.15.0
+        Thu, 27 Aug 2020 02:23:32 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35910 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725909AbgH0GXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 02:23:32 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2F17778F08D2597D33A1;
+        Thu, 27 Aug 2020 14:23:29 +0800 (CST)
+Received: from thunder-town.china.huawei.com (10.174.177.253) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 27 Aug 2020 14:23:22 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-watchdog <linux-watchdog@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH 1/1] watchdog: remove unneeded inclusion of <uapi/linux/sched/types.h>
+Date:   Thu, 27 Aug 2020 14:21:54 +0800
+Message-ID: <20200827062154.1847-1-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.177.253]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tonghao Zhang <xiangxia.m.yue@gmail.com>
+There has been no reference to "struct sched_param" since
+commit 94beddacb53c ("sched,watchdog: Convert to sched_set_fifo()"), so
+there's no need to include <uapi/linux/sched/types.h> any more, delete
+it.
 
-[ Upstream commit 1f3a090b9033f69de380c03db3ea1a1015c850cf ]
-
-Backport this commit to 5.5 - 5.8.3.
-
-To avoid some issues, for example RCU usage warning and double free,
-we should flush the flows under ovs_lock. This patch refactors
-table_instance_destroy and introduces table_instance_flow_flush
-which can be invoked by __dp_destroy or ovs_flow_tbl_flush.
-
-Fixes: 50b0e61b32ee ("net: openvswitch: fix possible memleak on destroy flow-table")
-Reported-by: Johan Knöös <jknoos@google.com>
-Reported-at: https://mail.openvswitch.org/pipermail/ovs-discuss/2020-August/050489.html
-Signed-off-by: Tonghao Zhang <xiangxia.m.yue@gmail.com>
-Reviewed-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- net/openvswitch/datapath.c   | 10 +++++++++-
- net/openvswitch/flow_table.c | 35 +++++++++++++++--------------------
- net/openvswitch/flow_table.h |  3 +++
- 3 files changed, 27 insertions(+), 21 deletions(-)
+ drivers/watchdog/watchdog_dev.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/net/openvswitch/datapath.c b/net/openvswitch/datapath.c
-index e3a37d22539c..15615cae4c89 100644
---- a/net/openvswitch/datapath.c
-+++ b/net/openvswitch/datapath.c
-@@ -1737,6 +1737,7 @@ static int ovs_dp_cmd_new(struct sk_buff *skb, struct genl_info *info)
- /* Called with ovs_mutex. */
- static void __dp_destroy(struct datapath *dp)
- {
-+	struct flow_table *table = &dp->table;
- 	int i;
+diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+index 6798addabd5a067..0f18fa2433310b0 100644
+--- a/drivers/watchdog/watchdog_dev.c
++++ b/drivers/watchdog/watchdog_dev.c
+@@ -43,8 +43,6 @@
+ #include <linux/watchdog.h>	/* For watchdog specific items */
+ #include <linux/uaccess.h>	/* For copy_to_user/put_user/... */
  
- 	for (i = 0; i < DP_VPORT_HASH_BUCKETS; i++) {
-@@ -1755,7 +1756,14 @@ static void __dp_destroy(struct datapath *dp)
- 	 */
- 	ovs_dp_detach_port(ovs_vport_ovsl(dp, OVSP_LOCAL));
- 
--	/* RCU destroy the flow table */
-+	/* Flush sw_flow in the tables. RCU cb only releases resource
-+	 * such as dp, ports and tables. That may avoid some issues
-+	 * such as RCU usage warning.
-+	 */
-+	table_instance_flow_flush(table, ovsl_dereference(table->ti),
-+				  ovsl_dereference(table->ufid_ti));
-+
-+	/* RCU destroy the ports, meters and flow tables. */
- 	call_rcu(&dp->rcu, destroy_dp_rcu);
- }
- 
-diff --git a/net/openvswitch/flow_table.c b/net/openvswitch/flow_table.c
-index 5904e93e5765..1c4fbac53fbd 100644
---- a/net/openvswitch/flow_table.c
-+++ b/net/openvswitch/flow_table.c
-@@ -345,19 +345,15 @@ static void table_instance_flow_free(struct flow_table *table,
- 	flow_mask_remove(table, flow->mask);
- }
- 
--static void table_instance_destroy(struct flow_table *table,
--				   struct table_instance *ti,
--				   struct table_instance *ufid_ti,
--				   bool deferred)
-+/* Must be called with OVS mutex held. */
-+void table_instance_flow_flush(struct flow_table *table,
-+			       struct table_instance *ti,
-+			       struct table_instance *ufid_ti)
- {
- 	int i;
- 
--	if (!ti)
--		return;
+-#include <uapi/linux/sched/types.h>	/* For struct sched_param */
 -
--	BUG_ON(!ufid_ti);
- 	if (ti->keep_flows)
--		goto skip_flows;
-+		return;
+ #include "watchdog_core.h"
+ #include "watchdog_pretimeout.h"
  
- 	for (i = 0; i < ti->n_buckets; i++) {
- 		struct sw_flow *flow;
-@@ -369,18 +365,16 @@ static void table_instance_destroy(struct flow_table *table,
- 
- 			table_instance_flow_free(table, ti, ufid_ti,
- 						 flow, false);
--			ovs_flow_free(flow, deferred);
-+			ovs_flow_free(flow, true);
- 		}
- 	}
-+}
- 
--skip_flows:
--	if (deferred) {
--		call_rcu(&ti->rcu, flow_tbl_destroy_rcu_cb);
--		call_rcu(&ufid_ti->rcu, flow_tbl_destroy_rcu_cb);
--	} else {
--		__table_instance_destroy(ti);
--		__table_instance_destroy(ufid_ti);
--	}
-+static void table_instance_destroy(struct table_instance *ti,
-+				   struct table_instance *ufid_ti)
-+{
-+	call_rcu(&ti->rcu, flow_tbl_destroy_rcu_cb);
-+	call_rcu(&ufid_ti->rcu, flow_tbl_destroy_rcu_cb);
- }
- 
- /* No need for locking this function is called from RCU callback or
-@@ -393,7 +387,7 @@ void ovs_flow_tbl_destroy(struct flow_table *table)
- 
- 	free_percpu(table->mask_cache);
- 	kfree_rcu(rcu_dereference_raw(table->mask_array), rcu);
--	table_instance_destroy(table, ti, ufid_ti, false);
-+	table_instance_destroy(ti, ufid_ti);
- }
- 
- struct sw_flow *ovs_flow_tbl_dump_next(struct table_instance *ti,
-@@ -509,7 +503,8 @@ int ovs_flow_tbl_flush(struct flow_table *flow_table)
- 	flow_table->count = 0;
- 	flow_table->ufid_count = 0;
- 
--	table_instance_destroy(flow_table, old_ti, old_ufid_ti, true);
-+	table_instance_flow_flush(flow_table, old_ti, old_ufid_ti);
-+	table_instance_destroy(old_ti, old_ufid_ti);
- 	return 0;
- 
- err_free_ti:
-diff --git a/net/openvswitch/flow_table.h b/net/openvswitch/flow_table.h
-index 8a5cea6ae111..8ea8fc957377 100644
---- a/net/openvswitch/flow_table.h
-+++ b/net/openvswitch/flow_table.h
-@@ -86,4 +86,7 @@ bool ovs_flow_cmp(const struct sw_flow *, const struct sw_flow_match *);
- 
- void ovs_flow_mask_key(struct sw_flow_key *dst, const struct sw_flow_key *src,
- 		       bool full, const struct sw_flow_mask *mask);
-+void table_instance_flow_flush(struct flow_table *table,
-+			       struct table_instance *ti,
-+			       struct table_instance *ufid_ti);
- #endif /* flow_table.h */
 -- 
-2.23.0
+1.8.3
+
 
