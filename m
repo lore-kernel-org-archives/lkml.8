@@ -2,364 +2,144 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C22C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F6FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CFC422B4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 499EB22B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:00:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hrB9s2hw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ghTzCFJC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgH0O7d (ORCPT
+        id S1727884AbgH0O76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:59:33 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25614 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728327AbgH0O7A (ORCPT
+        Thu, 27 Aug 2020 10:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgH0O7m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:59:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598540337;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oCf0HL5axoQi6gogOTw+oBtKHNy8s+gbx0FTrn1OOvQ=;
-        b=hrB9s2hw4cWCRqDLKDLFeNgtZUtVWNwgEr+2i3PjaKWHQ92HBJdtL8BkqBSQqEK/IniDV6
-        ojTG41ZvUi3dyhCqlUzXLXIomyPbOLZoE9ag4fpBxkr4MN50zaZ8/Lo0h2Jko14llv7j+J
-        g6mPVazcu7CvphpNgBnmWYqUm7mYPIg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-135-Vey3m61ZMo-XaqY6mHgmDw-1; Thu, 27 Aug 2020 10:58:54 -0400
-X-MC-Unique: Vey3m61ZMo-XaqY6mHgmDw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 288B310A5D82;
-        Thu, 27 Aug 2020 14:58:52 +0000 (UTC)
-Received: from steredhat.redhat.com (ovpn-113-96.ams2.redhat.com [10.36.113.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0AF5A59;
-        Thu, 27 Aug 2020 14:58:43 +0000 (UTC)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Moyer <jmoyer@redhat.com>,
-        Aleksa Sarai <asarai@suse.de>,
-        Sargun Dhillon <sargun@sargun.me>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: [PATCH v6 2/3] io_uring: add IOURING_REGISTER_RESTRICTIONS opcode
-Date:   Thu, 27 Aug 2020 16:58:30 +0200
-Message-Id: <20200827145831.95189-3-sgarzare@redhat.com>
-In-Reply-To: <20200827145831.95189-1-sgarzare@redhat.com>
-References: <20200827145831.95189-1-sgarzare@redhat.com>
+        Thu, 27 Aug 2020 10:59:42 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2306DC061232
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 07:59:42 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id y206so3702729pfb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 07:59:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WuL1dIUKsXBKS74w29uHtR6KbU+GU+6B3P99Ro425TA=;
+        b=ghTzCFJCnPmQ+DImiDILpCS6WX5yhT8MFpZj9RUpmJjv3EXxiJN5WUqT8L4MXcuwxD
+         pDNzURkebg9gNy52q5ZsI/Dui3sJhS0Z/2W9PKez79BQdhhRwnf5Mb6p8J4gRu4Gxh8v
+         SveFSFYljkwpakvd+DNDZCZJZwc8Vmf6chJRE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WuL1dIUKsXBKS74w29uHtR6KbU+GU+6B3P99Ro425TA=;
+        b=GJFowid9+fTCMqZtWfdeCrcAej47JBoNLAiL3pZCDJ860MdrLQ3yo2VUxMM2uT1j1d
+         b9H7BXK0r7iux3sgeDoBS6dUVp9fImOjuKE+g/GkOAnn5sKv9OQH0exzDB432kU5jQVf
+         8tM6sHTg/dV6U3yKy5D+p50UH7WOvpgQmN6F6yTt/SeAEf2i0SWcWshakYQmtr2vD1f2
+         D77Hx0GAbGfr+ifbP7x7qXpDl7nd4Bn6TmBl6Y/lBbojYaK3ool8RgkrzXtFmW/Fyz4s
+         oqPJhogB4XrzZpIgMBsnqiDGvJMKhGhHtJ6fushbDyhqep8Hx0A9yzIFhwx8k5WwSaPM
+         8C4A==
+X-Gm-Message-State: AOAM532zFXC41FnkZDlowVPuYKnmuyNw39Ll9r+m/XVn2k3kIDQkLALh
+        eNeu9OcI7kw4Ed5XDdH7s7eqvw==
+X-Google-Smtp-Source: ABdhPJzzU+IA2AKHCax5T4tD+YBJLoQ/6ieQfs/9z2zBy3H5T5H0eGgx+8rRdt3zBu85loFG04lVjg==
+X-Received: by 2002:aa7:9427:: with SMTP id y7mr17053693pfo.12.1598540381631;
+        Thu, 27 Aug 2020 07:59:41 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id u123sm3113198pfb.209.2020.08.27.07.59.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 07:59:41 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     vbadigan@codeaurora.org, Douglas Anderson <dianders@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Chris Ball <chris@printf.net>,
+        Georgi Djakov <gdjakov@mm-sol.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Subject: [PATCH] mmc: sdhci-msm: Add retries when all tuning phases are found valid
+Date:   Thu, 27 Aug 2020 07:58:41 -0700
+Message-Id: <20200827075809.1.If179abf5ecb67c963494db79c3bc4247d987419b@changeid>
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new io_uring_register(2) IOURING_REGISTER_RESTRICTIONS opcode
-permanently installs a feature allowlist on an io_ring_ctx.
-The io_ring_ctx can then be passed to untrusted code with the
-knowledge that only operations present in the allowlist can be
-executed.
+As the comments in this patch say, if we tune and find all phases are
+valid it's _almost_ as bad as no phases being found valid.  Probably
+all phases are not really reliable but we didn't detect where the
+unreliable place is.  That means we'll essentially be guessing and
+hoping we get a good phase.
 
-The allowlist approach ensures that new features added to io_uring
-do not accidentally become available when an existing application
-is launched on a newer kernel version.
+This is not just a problem in theory.  It was causing real problems on
+a real board.  On that board, most often phase 10 is found as the only
+invalid phase, though sometimes 10 and 11 are invalid and sometimes
+just 11.  Some percentage of the time, however, all phases are found
+to be valid.  When this happens, the current logic will decide to use
+phase 11.  Since phase 11 is sometimes found to be invalid, this is a
+bad choice.  Sure enough, when phase 11 is picked we often get mmc
+errors later in boot.
 
-Currently is it possible to restrict sqe opcodes, sqe flags, and
-register opcodes.
+I have seen cases where all phases were found to be valid 3 times in a
+row, so increase the retry count to 10 just to be extra sure.
 
-IOURING_REGISTER_RESTRICTIONS can only be made once. Afterwards
-it is not possible to change restrictions anymore.
-This prevents untrusted code from removing restrictions.
-
-Suggested-by: Stefan Hajnoczi <stefanha@redhat.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Fixes: 415b5a75da43 ("mmc: sdhci-msm: Add platform_execute_tuning implementation")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
-v6:
- - moved restriction checks in a function [Jens]
- - changed ret value handling in io_register_restrictions() [Jens]
 
-v5:
- - explicitly assigned enum values [Kees]
- - replaced kmalloc/copy_from_user with memdup_user [kernel test robot]
+ drivers/mmc/host/sdhci-msm.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-v3:
- - added IORING_RESTRICTION_SQE_FLAGS_ALLOWED and
-   IORING_RESTRICTION_SQE_FLAGS_REQUIRED
- - removed IORING_RESTRICTION_FIXED_FILES_ONLY
-
-RFC v2:
- - added 'restricted' flag in the ctx [Jens]
- - added IORING_MAX_RESTRICTIONS define
- - returned EBUSY instead of EINVAL when restrictions are already
-   registered
- - reset restrictions if an error happened during the registration
----
- fs/io_uring.c                 | 124 +++++++++++++++++++++++++++++++++-
- include/uapi/linux/io_uring.h |  31 +++++++++
- 2 files changed, 154 insertions(+), 1 deletion(-)
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 6df08287c59e..5f62997c147b 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -98,6 +98,8 @@
- #define IORING_MAX_FILES_TABLE	(1U << IORING_FILE_TABLE_SHIFT)
- #define IORING_FILE_TABLE_MASK	(IORING_MAX_FILES_TABLE - 1)
- #define IORING_MAX_FIXED_FILES	(64 * IORING_MAX_FILES_TABLE)
-+#define IORING_MAX_RESTRICTIONS	(IORING_RESTRICTION_LAST + \
-+				 IORING_REGISTER_LAST + IORING_OP_LAST)
- 
- struct io_uring {
- 	u32 head ____cacheline_aligned_in_smp;
-@@ -219,6 +221,13 @@ struct io_buffer {
- 	__u16 bid;
- };
- 
-+struct io_restriction {
-+	DECLARE_BITMAP(register_op, IORING_REGISTER_LAST);
-+	DECLARE_BITMAP(sqe_op, IORING_OP_LAST);
-+	u8 sqe_flags_allowed;
-+	u8 sqe_flags_required;
-+};
-+
- struct io_ring_ctx {
- 	struct {
- 		struct percpu_ref	refs;
-@@ -231,6 +240,7 @@ struct io_ring_ctx {
- 		unsigned int		cq_overflow_flushed: 1;
- 		unsigned int		drain_next: 1;
- 		unsigned int		eventfd_async: 1;
-+		unsigned int		restricted: 1;
- 
- 		/*
- 		 * Ring buffer of indices into array of io_uring_sqe, which is
-@@ -338,6 +348,7 @@ struct io_ring_ctx {
- 	struct llist_head		file_put_llist;
- 
- 	struct work_struct		exit_work;
-+	struct io_restriction		restrictions;
- };
- 
- /*
-@@ -6381,6 +6392,32 @@ static inline void io_consume_sqe(struct io_ring_ctx *ctx)
- 	ctx->cached_sq_head++;
- }
- 
-+/*
-+ * Check SQE restrictions (opcode and flags).
-+ *
-+ * Returns 'true' if SQE is allowed, 'false' otherwise.
-+ */
-+static inline bool io_check_restriction(struct io_ring_ctx *ctx,
-+					struct io_kiocb *req,
-+					unsigned int sqe_flags)
-+{
-+	if (!ctx->restricted)
-+		return true;
-+
-+	if (!test_bit(req->opcode, ctx->restrictions.sqe_op))
-+		return false;
-+
-+	if ((sqe_flags & ctx->restrictions.sqe_flags_required) !=
-+	    ctx->restrictions.sqe_flags_required)
-+		return false;
-+
-+	if (sqe_flags & ~(ctx->restrictions.sqe_flags_allowed |
-+			  ctx->restrictions.sqe_flags_required))
-+		return false;
-+
-+	return true;
-+}
-+
- #define SQE_VALID_FLAGS	(IOSQE_FIXED_FILE|IOSQE_IO_DRAIN|IOSQE_IO_LINK|	\
- 				IOSQE_IO_HARDLINK | IOSQE_ASYNC | \
- 				IOSQE_BUFFER_SELECT)
-@@ -6414,6 +6451,9 @@ static int io_init_req(struct io_ring_ctx *ctx, struct io_kiocb *req,
- 	if (unlikely(sqe_flags & ~SQE_VALID_FLAGS))
- 		return -EINVAL;
- 
-+	if (unlikely(!io_check_restriction(ctx, req, sqe_flags)))
-+		return -EACCES;
-+
- 	if ((sqe_flags & IOSQE_BUFFER_SELECT) &&
- 	    !io_op_defs[req->opcode].buffer_select)
- 		return -EOPNOTSUPP;
-@@ -8714,6 +8754,72 @@ static int io_unregister_personality(struct io_ring_ctx *ctx, unsigned id)
- 	return -EINVAL;
- }
- 
-+static int io_register_restrictions(struct io_ring_ctx *ctx, void __user *arg,
-+				    unsigned int nr_args)
-+{
-+	struct io_uring_restriction *res;
-+	size_t size;
-+	int i, ret;
-+
-+	/* We allow only a single restrictions registration */
-+	if (ctx->restricted)
-+		return -EBUSY;
-+
-+	if (!arg || nr_args > IORING_MAX_RESTRICTIONS)
-+		return -EINVAL;
-+
-+	size = array_size(nr_args, sizeof(*res));
-+	if (size == SIZE_MAX)
-+		return -EOVERFLOW;
-+
-+	res = memdup_user(arg, size);
-+	if (IS_ERR(res))
-+		return PTR_ERR(res);
-+
-+	ret = 0;
-+
-+	for (i = 0; i < nr_args; i++) {
-+		switch (res[i].opcode) {
-+		case IORING_RESTRICTION_REGISTER_OP:
-+			if (res[i].register_op >= IORING_REGISTER_LAST) {
-+				ret = -EINVAL;
-+				goto out;
-+			}
-+
-+			__set_bit(res[i].register_op,
-+				  ctx->restrictions.register_op);
-+			break;
-+		case IORING_RESTRICTION_SQE_OP:
-+			if (res[i].sqe_op >= IORING_OP_LAST) {
-+				ret = -EINVAL;
-+				goto out;
-+			}
-+
-+			__set_bit(res[i].sqe_op, ctx->restrictions.sqe_op);
-+			break;
-+		case IORING_RESTRICTION_SQE_FLAGS_ALLOWED:
-+			ctx->restrictions.sqe_flags_allowed = res[i].sqe_flags;
-+			break;
-+		case IORING_RESTRICTION_SQE_FLAGS_REQUIRED:
-+			ctx->restrictions.sqe_flags_required = res[i].sqe_flags;
-+			break;
-+		default:
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+	}
-+
-+out:
-+	/* Reset all restrictions if an error happened */
-+	if (ret != 0)
-+		memset(&ctx->restrictions, 0, sizeof(ctx->restrictions));
-+	else
-+		ctx->restricted = 1;
-+
-+	kfree(res);
-+	return ret;
-+}
-+
- static bool io_register_op_must_quiesce(int op)
+diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+index b7e47107a31a..1b78106681e0 100644
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -1165,7 +1165,7 @@ static void sdhci_msm_set_cdr(struct sdhci_host *host, bool enable)
+ static int sdhci_msm_execute_tuning(struct mmc_host *mmc, u32 opcode)
  {
- 	switch (op) {
-@@ -8760,6 +8866,18 @@ static int __io_uring_register(struct io_ring_ctx *ctx, unsigned opcode,
- 		if (ret) {
- 			percpu_ref_resurrect(&ctx->refs);
- 			ret = -EINTR;
-+			goto out_quiesce;
+ 	struct sdhci_host *host = mmc_priv(mmc);
+-	int tuning_seq_cnt = 3;
++	int tuning_seq_cnt = 10;
+ 	u8 phase, tuned_phases[16], tuned_phase_cnt = 0;
+ 	int rc;
+ 	struct mmc_ios ios = host->mmc->ios;
+@@ -1221,6 +1221,22 @@ static int sdhci_msm_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 	} while (++phase < ARRAY_SIZE(tuned_phases));
+ 
+ 	if (tuned_phase_cnt) {
++		if (tuned_phase_cnt == ARRAY_SIZE(tuned_phases)) {
++			/*
++			 * All phases valid is _almost_ as bad as no phases
++			 * valid.  Probably all phases are not really reliable
++			 * but we didn't detect where the unreliable place is.
++			 * That means we'll essentially be guessing and hoping
++			 * we get a good phase.  Better to try a few times.
++			 */
++			dev_dbg(mmc_dev(mmc), "%s: All phases valid; try again\n",
++				mmc_hostname(mmc));
++			if (--tuning_seq_cnt) {
++				tuned_phase_cnt = 0;
++				goto retry;
++			}
 +		}
-+	}
 +
-+	if (ctx->restricted) {
-+		if (opcode >= IORING_REGISTER_LAST) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+
-+		if (!test_bit(opcode, ctx->restrictions.register_op)) {
-+			ret = -EACCES;
- 			goto out;
- 		}
- 	}
-@@ -8823,15 +8941,19 @@ static int __io_uring_register(struct io_ring_ctx *ctx, unsigned opcode,
- 			break;
- 		ret = io_unregister_personality(ctx, nr_args);
- 		break;
-+	case IORING_REGISTER_RESTRICTIONS:
-+		ret = io_register_restrictions(ctx, arg, nr_args);
-+		break;
- 	default:
- 		ret = -EINVAL;
- 		break;
- 	}
- 
-+out:
- 	if (io_register_op_must_quiesce(opcode)) {
- 		/* bring the ctx back to life */
- 		percpu_ref_reinit(&ctx->refs);
--out:
-+out_quiesce:
- 		reinit_completion(&ctx->ref_comp);
- 	}
- 	return ret;
-diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-index 5f12ae6a415c..6e7f2e5e917b 100644
---- a/include/uapi/linux/io_uring.h
-+++ b/include/uapi/linux/io_uring.h
-@@ -267,6 +267,7 @@ enum {
- 	IORING_REGISTER_PROBE			= 8,
- 	IORING_REGISTER_PERSONALITY		= 9,
- 	IORING_UNREGISTER_PERSONALITY		= 10,
-+	IORING_REGISTER_RESTRICTIONS		= 11,
- 
- 	/* this goes last */
- 	IORING_REGISTER_LAST
-@@ -295,4 +296,34 @@ struct io_uring_probe {
- 	struct io_uring_probe_op ops[0];
- };
- 
-+struct io_uring_restriction {
-+	__u16 opcode;
-+	union {
-+		__u8 register_op; /* IORING_RESTRICTION_REGISTER_OP */
-+		__u8 sqe_op;      /* IORING_RESTRICTION_SQE_OP */
-+		__u8 sqe_flags;   /* IORING_RESTRICTION_SQE_FLAGS_* */
-+	};
-+	__u8 resv;
-+	__u32 resv2[3];
-+};
-+
-+/*
-+ * io_uring_restriction->opcode values
-+ */
-+enum {
-+	/* Allow an io_uring_register(2) opcode */
-+	IORING_RESTRICTION_REGISTER_OP		= 0,
-+
-+	/* Allow an sqe opcode */
-+	IORING_RESTRICTION_SQE_OP		= 1,
-+
-+	/* Allow sqe flags */
-+	IORING_RESTRICTION_SQE_FLAGS_ALLOWED	= 2,
-+
-+	/* Require sqe flags (these flags must be set on each submission) */
-+	IORING_RESTRICTION_SQE_FLAGS_REQUIRED	= 3,
-+
-+	IORING_RESTRICTION_LAST
-+};
-+
- #endif
+ 		rc = msm_find_most_appropriate_phase(host, tuned_phases,
+ 						     tuned_phase_cnt);
+ 		if (rc < 0)
 -- 
-2.26.2
+2.28.0.297.g1956fa8f8d-goog
 
