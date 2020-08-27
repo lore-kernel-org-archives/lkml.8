@@ -2,133 +2,213 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85360C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7BBC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64E092080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:30:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mdsSv4Ok"
+	by mail.kernel.org (Postfix) with ESMTP id 83A0420872
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:31:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598571109;
+	bh=BjPccaFPfwZJ/MfjC8dMfdnImTr+XTKV9scKCJijFtI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UMLJgsl+UcmcQbcAOrMWPF5Unc//KTJzcA35aQJLdakgwKPJtjj1cl5VVzKxGjpJt
+	 wnefji1DJaciL5FjvCz2qYRumiCCLyoNlqQppspn0rZdU98tSDSqV7xXQr/iSLX/T+
+	 2a/T4WYMqJbgZnn7tR2dm1RAgHeiNUveUzKJsvYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbgH0XaC (ORCPT
+        id S1728014AbgH0Xbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 19:30:02 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:47858 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgH0XaA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 19:30:00 -0400
-Received: from [192.168.1.17] (50-47-107-221.evrt.wa.frontiernet.net [50.47.107.221])
-        by linux.microsoft.com (Postfix) with ESMTPSA id E933820B7178;
-        Thu, 27 Aug 2020 16:29:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E933820B7178
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1598571000;
-        bh=wuKHk2etmpOkKZ+mX7e+4wCZgquz5pl8IyY73pe5ZGE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=mdsSv4OkGJMTMEOR4egTE96ddEeTMglYTT1hGi4Mg8TENH/qtgadEXQL0r3OVgcQD
-         52TN+lI4fLsEvE8/gDF2BhNlrwpElC61jUMDzf2H9Y4Cxf2BW5W/Y49hGX5a0mV9Ws
-         CKRpea0tNFI2a/iRndFW6ApzdMv4xJh4gtCcnAm0=
-Subject: Re: [PATCH 1/4] drivers: hv: dxgkrnl: core code
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, iourit@microsoft.com,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-References: <20200814123856.3880009-1-sashal@kernel.org>
- <20200814123856.3880009-2-sashal@kernel.org>
- <20200814125528.GA56456@kroah.com>
-From:   Iouri Tarassov <iourit@linux.microsoft.com>
-Message-ID: <58011269-e910-b3e4-2a3c-552b08c90574@linux.microsoft.com>
-Date:   Thu, 27 Aug 2020 16:29:59 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 27 Aug 2020 19:31:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38488 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726147AbgH0Xbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 19:31:47 -0400
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89967208C9
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 23:31:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598571106;
+        bh=BjPccaFPfwZJ/MfjC8dMfdnImTr+XTKV9scKCJijFtI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YOG/7ZrlaZzzJgTtYvJi+bJ8f7TpYeE6YlVE2ZVzHig0mrFIstP1vejUeEOctYoVI
+         K7ms6V5EOE9EftV0AeMleQE0JXeGx4lOD9feJSEixNhhy0hdNNqX8UOrzJQLbJDYtr
+         Zeu5bRnXS0cKiDIKCgVqkjcz1mz2k2UQNQIMOCz8=
+Received: by mail-ej1-f54.google.com with SMTP id m22so9908405eje.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 16:31:46 -0700 (PDT)
+X-Gm-Message-State: AOAM5310LlizvIWirXdwugq9Al1nI56BrZNR3FHYploFHPYTGgPb6j5x
+        1UNuvWWOLyrY/0BVKT/pbZK2knmHTfv4HSiRoA==
+X-Google-Smtp-Source: ABdhPJz7iGlzoSU0rP3TYayWIZDMjV8NBQSzqq+G0LfQWQ1CD7evxQy7VbZ+S3BaM8YPgtqNIvuZPCDMLtC9cTBqLPs=
+X-Received: by 2002:a17:906:15cc:: with SMTP id l12mr24291379ejd.7.1598571105087;
+ Thu, 27 Aug 2020 16:31:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200814125528.GA56456@kroah.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200819081752.4805-1-linux@fw-web.de> <20200819081752.4805-2-linux@fw-web.de>
+In-Reply-To: <20200819081752.4805-2-linux@fw-web.de>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Fri, 28 Aug 2020 07:31:33 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9+yamENvGDHTDHd8Jvy_2hbko2YaBEcdetsZHD5+FVrA@mail.gmail.com>
+Message-ID: <CAAOTY_9+yamENvGDHTDHd8Jvy_2hbko2YaBEcdetsZHD5+FVrA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/7] dt-bindings: mediatek: add mt7623 display-nodes
+To:     Frank Wunderlich <linux@fw-web.de>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/14/2020 5:55 AM, Greg KH wrote:
-> On Fri, Aug 14, 2020 at 08:38:53AM -0400, Sasha Levin wrote:
-> > Add support for a Hyper-V based vGPU implementation that exposes the
-> > DirectX API to Linux userspace.
-> > 
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
->
-> Better, but what is this mess:
->
-> > +#define ISERROR(ret)					(ret < 0)
+Hi, Frank:
 
-The VM bus messages return the NTSTATUS error code from the host. 
-NTSTATUS is integer and the positive values indicate success.
-The success error code needs to be returned by IOCTLs to the DxCore 
-applications. The ISERROR() macro is used in places where the NTSTATUS 
-success code could be returned from a function. "if (ret)" cannot be 
-used. I will add a comment to the macro in the next patch.
+Frank Wunderlich <linux@fw-web.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=8819=E6=
+=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:18=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> From: Frank Wunderlich <frank-w@public-files.de>
+>
+> mt7623 uses mt2701/mt8173 for drm, but have own compatibles
+>
 
->
-> ?
->
-> > +#define EINTERNALERROR					EINVAL
-This macro will be removed in the next patch
-> And that?
->
-> > +
-> > +#define DXGKRNL_ASSERT(exp)
-> > +#define UNUSED(x) (void)(x)
-The UNUSED macro will be removed.
-The DXGKRNL_ASSERT() macro will be changed to generate a memory dump and 
-BUG_ON when DXGDEBUG is enabled. It is used to catch internal errors in 
-the debug code. There will be no bugcheck in the released driver.
->
-> Ick, no, please.
->
-> > +#undef pr_fmt
->
-> In a .h file?
->
-> > +#define pr_fmt(fmt)	"dxgk:err: " fmt
-> > +#define pr_fmt1(fmt)	"dxgk: " fmt
-> > +#define pr_fmt2(fmt)	"dxgk:    " fmt
-This will be fixed in the next patch set.
-> Why?
->
-> > +
-> > +#define DXGKDEBUG 1
-> > +/* #define USEPRINTK 1 */
-> > +
-> > +#ifndef DXGKDEBUG
-> > +#define TRACE_DEBUG(...)
-> > +#define TRACE_DEFINE(...)
-> > +#define TRACE_FUNC_ENTER(...)
-> > +#define TRACE_FUNC_EXIT(...)
->
-> No, please do not to custom "trace" printk messages, that is what ftrace
-> is for, no individual driver should ever need to do that.
->
-> Just use the normal dev_*() calls for error messages and the like, do
-> not try to come up with a custom tracing framework for one tiny
-> individual driver.  If every driver in kernel did that, we would have a
-> nightmare...
-I understand the concern. This will be fixed later when we learn and 
-pick the final tracing technology for the driver. The current 
-implementation allows the hardware vendors to quickly identify issues 
-without learning about ftrace. They just need to enable the WSL debug 
-console and mount debugfs.
-> thanks,
->
-> greg k-h
->
-Thank you for your time and good comments.
-Iouri
+For this patch, applied to mediatek-drm-next [1], thanks.
 
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
+log/?h=3Dmediatek-drm-next
+
+Regards,
+Chun-Kuang.
+
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,disp.txt    | 2 +-
+>  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt     | 2 +-
+>  .../devicetree/bindings/display/mediatek/mediatek,dsi.txt     | 4 ++--
+>  .../devicetree/bindings/display/mediatek/mediatek,hdmi.txt    | 4 ++++
+>  4 files changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
+disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp=
+.txt
+> index b91e709db7a4..121220745d46 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.tx=
+t
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.tx=
+t
+> @@ -43,7 +43,7 @@ Required properties (all function blocks):
+>         "mediatek,<chip>-dpi"                   - DPI controller, see med=
+iatek,dpi.txt
+>         "mediatek,<chip>-disp-mutex"            - display mutex
+>         "mediatek,<chip>-disp-od"               - overdrive
+> -  the supported chips are mt2701, mt2712 and mt8173.
+> +  the supported chips are mt2701, mt7623, mt2712 and mt8173.
+>  - reg: Physical base address and length of the function block register s=
+pace
+>  - interrupts: The interrupt signal from the function block (required, ex=
+cept for
+>    merge and split function blocks).
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
+dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.t=
+xt
+> index 77def4456706..dc1ebd13cc88 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+> @@ -7,7 +7,7 @@ output bus.
+>
+>  Required properties:
+>  - compatible: "mediatek,<chip>-dpi"
+> -  the supported chips are mt2701 , mt8173 and mt8183.
+> +  the supported chips are mt2701, mt7623, mt8173 and mt8183.
+>  - reg: Physical base address and length of the controller's registers
+>  - interrupts: The interrupt signal from the function block.
+>  - clocks: device clocks
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
+dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.t=
+xt
+> index 8e4729de8c85..f06f24d405a5 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+> @@ -7,7 +7,7 @@ channel output.
+>
+>  Required properties:
+>  - compatible: "mediatek,<chip>-dsi"
+> -  the supported chips are mt2701, mt8173 and mt8183.
+> +- the supported chips are mt2701, mt7623, mt8173 and mt8183.
+>  - reg: Physical base address and length of the controller's registers
+>  - interrupts: The interrupt signal from the function block.
+>  - clocks: device clocks
+> @@ -26,7 +26,7 @@ The MIPI TX configuration module controls the MIPI D-PH=
+Y.
+>
+>  Required properties:
+>  - compatible: "mediatek,<chip>-mipi-tx"
+> -  the supported chips are mt2701, mt8173 and mt8183.
+> +- the supported chips are mt2701, 7623, mt8173 and mt8183.
+>  - reg: Physical base address and length of the controller's registers
+>  - clocks: PLL reference clock
+>  - clock-output-names: name of the output clock line to the DSI encoder
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
+hdmi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi=
+.txt
+> index 7b124242b0c5..6b1c586403e4 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.tx=
+t
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.tx=
+t
+> @@ -6,6 +6,7 @@ its parallel input.
+>
+>  Required properties:
+>  - compatible: Should be "mediatek,<chip>-hdmi".
+> +- the supported chips are mt2701, mt7623 and mt8173
+>  - reg: Physical base address and length of the controller's registers
+>  - interrupts: The interrupt signal from the function block.
+>  - clocks: device clocks
+> @@ -32,6 +33,7 @@ The HDMI CEC controller handles hotplug detection and C=
+EC communication.
+>
+>  Required properties:
+>  - compatible: Should be "mediatek,<chip>-cec"
+> +- the supported chips are mt7623 and mt8173
+>  - reg: Physical base address and length of the controller's registers
+>  - interrupts: The interrupt signal from the function block.
+>  - clocks: device clock
+> @@ -44,6 +46,7 @@ The Mediatek's I2C controller is used to interface with=
+ I2C devices.
+>
+>  Required properties:
+>  - compatible: Should be "mediatek,<chip>-hdmi-ddc"
+> +- the supported chips are mt7623 and mt8173
+>  - reg: Physical base address and length of the controller's registers
+>  - clocks: device clock
+>  - clock-names: Should be "ddc-i2c".
+> @@ -56,6 +59,7 @@ output and drives the HDMI pads.
+>
+>  Required properties:
+>  - compatible: "mediatek,<chip>-hdmi-phy"
+> +- the supported chips are mt2701, mt7623 and mt8173
+>  - reg: Physical base address and length of the module's registers
+>  - clocks: PLL reference clock
+>  - clock-names: must contain "pll_ref"
+> --
+> 2.25.1
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
