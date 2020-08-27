@@ -2,114 +2,163 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD31C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F75C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47F3C2087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:17:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dB9WcXqW"
+	by mail.kernel.org (Postfix) with ESMTP id 9D7F82087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:17:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598548656;
+	bh=PltBLwlOgKxxGKPfhP0kyIlXe7QOuvH340zu37AK8pU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dc5iRAfw121uae6F6pski6EKrCwyZxuXWQ62prAQKZ1lr1fbfHF/EADNpsiWT8qvD
+	 FJ7Ft/c9AQ0SRucu6Aa6uy8qBoeWbSJJTvH0LkZ3+NPmOG8iUELvopJq8oZI7BSmqQ
+	 UGz8IDrXNxMaofrnQMQX94hJyL5AZpOMMU3PSBCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgH0RRW (ORCPT
+        id S1727776AbgH0RRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:17:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgH0RRV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:17:21 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B39DFC061264;
-        Thu, 27 Aug 2020 10:17:20 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id c8so5595195edn.8;
-        Thu, 27 Aug 2020 10:17:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=rMb9LJxrcGiTyNyXwwyZ6syio89Yz2hnJzYevmI52VE=;
-        b=dB9WcXqWXys8obmbtsB0NyXuam4s3n3sqAJ2FO6MZJziZgF/U2ynJXCnc9PrqpC5lz
-         btmeqnTmPPM68itNNSwrCzFE0WnEs1uvNCT8xwHVWmboUN09RG6elHINBAOcw3iqNTa1
-         n2IyTmgJeFz/2cRfLv1X9kY/jnySuyrnFe4ani1nQ2Cob+Ksaky6eWsAb7mfnN6kbTLv
-         76Tj9XOg2XfiNGpT0y61jIITf20G9IwvOcUKhDQ+mVtQbgcxrx8Ivb4zli+1UqJ1tlxN
-         fVuQo1vgNqeA2yCN5zQo0tOx1qmSFcQZRKDAewJTcchnXH4rI3r37SbDhXgs/cSGGYr0
-         BGDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:references:date
-         :in-reply-to:message-id:user-agent:mime-version;
-        bh=rMb9LJxrcGiTyNyXwwyZ6syio89Yz2hnJzYevmI52VE=;
-        b=pmGylB5IH3qV90drfTtjSzlU17+tec8ZYy3Mx1hWqdZpqZ+T0LAYRvSB1yl0J66+z9
-         WVZqVi8oBxYBAZs+fRfF0b2jy0zROvny73jaYDVUBcew6hTUp+47CwXSwCXyQIBojiiL
-         /yurd7B2n116huy90g3JPVIaAE4pmdXSQbgv0cZK8mgxWVj2wZLynRoSaQk4bzDQX2VO
-         BGH/ItO7nO8fbxwcgu4IlF9FEr00OsGwTs9vLo5C2tTHH0/t16kfEzOrm8RfQ6G5qTfH
-         ne2HptaaQNlzFCXexnTN4n7d5ep7YGejwhDmLjmmiF1HaQjUC5CVGNTPMljJX9YI6svs
-         9WwQ==
-X-Gm-Message-State: AOAM533uO6w/CzbUn+RLL5YgJIQlhG2jliip0+s5biibn/uBxP+aJ3Uu
-        2QAmeKiH1CRjTZQHxgIKzk0=
-X-Google-Smtp-Source: ABdhPJwcBvHTnG9Xg7kXrNUUX+KbvFG59tNLBgd8D/deEo5TMVFE72bHs1NgF1Ey6p8ITpDfcQmxLQ==
-X-Received: by 2002:aa7:c596:: with SMTP id g22mr21145561edq.109.1598548639333;
-        Thu, 27 Aug 2020 10:17:19 -0700 (PDT)
-Received: from dell.be.48ers.dk (d51A5BC31.access.telenet.be. [81.165.188.49])
-        by smtp.gmail.com with ESMTPSA id v13sm2336389ejq.59.2020.08.27.10.17.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 10:17:18 -0700 (PDT)
-Received: from peko by dell.be.48ers.dk with local (Exim 4.92)
-        (envelope-from <peter@korsgaard.com>)
-        id 1kBLWX-0007qi-IQ; Thu, 27 Aug 2020 19:17:17 +0200
-From:   Peter Korsgaard <peter@korsgaard.com>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 4/4] arm: dts: owl-s500: Add RoseapplePi
-References: <cover.1592123160.git.cristian.ciocaltea@gmail.com>
-        <2d12521d196e2c08a30aacd0ab20d93593f94707.1592123160.git.cristian.ciocaltea@gmail.com>
-        <87v9h4y4dj.fsf@dell.be.48ers.dk>
-        <20200827141520.GD2451538@BV030612LT>
-Date:   Thu, 27 Aug 2020 19:17:17 +0200
-In-Reply-To: <20200827141520.GD2451538@BV030612LT> (Cristian Ciocaltea's
-        message of "Thu, 27 Aug 2020 17:15:20 +0300")
-Message-ID: <87r1rsxb36.fsf@dell.be.48ers.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 27 Aug 2020 13:17:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbgH0RRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 13:17:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29A452087C;
+        Thu, 27 Aug 2020 17:17:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598548652;
+        bh=PltBLwlOgKxxGKPfhP0kyIlXe7QOuvH340zu37AK8pU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qQxS8ZMZsnBv7N611D2Tho2iEQbWLST2pzCypEmgeZ4yEWmdmyTFXZpme3ML7zC/u
+         +RNWjiZbFgVSthur1Fyuze+ggvQMEI/K0cncNdNotb0NFxNM3Tk+uU1mjftss79ar6
+         7C3vglXoXWoOtYTmN94LSLymGwYwxgH7qzotbOlo=
+Date:   Thu, 27 Aug 2020 19:17:45 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Amit Pundir <amit.pundir@linaro.org>
+Cc:     "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        linaro-mm-sig@lists.linaro.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Laura Abbott <laura@labbott.name>,
+        Shuah Khan <shuah@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Christian Brauner <christian@brauner.io>
+Subject: Re: [PATCH] staging: ion: remove from the tree
+Message-ID: <20200827171745.GA701089@kroah.com>
+References: <20200827123627.538189-1-gregkh@linuxfoundation.org>
+ <3d8de519-65b3-123b-8ace-e820982884e0@labbott.name>
+ <20200827160506.GC684514@kroah.com>
+ <CAMi1Hd1Ch1RWvOTnON3tsrucaKThTuGQnwNFo94GqUjufVmnOg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMi1Hd1Ch1RWvOTnON3tsrucaKThTuGQnwNFo94GqUjufVmnOg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>>> "Cristian" == Cristian Ciocaltea <cristian.ciocaltea@gmail.com> writes:
+On Thu, Aug 27, 2020 at 10:31:41PM +0530, Amit Pundir wrote:
+> On Thu, 27 Aug 2020 at 21:34, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Thu, Aug 27, 2020 at 09:31:27AM -0400, Laura Abbott wrote:
+> > > On 8/27/20 8:36 AM, Greg Kroah-Hartman wrote:
+> > > > The ION android code has long been marked to be removed, now that we
+> > > > dma-buf support merged into the real part of the kernel.
+> > > >
+> > > > It was thought that we could wait to remove the ion kernel at a later
+> > > > time, but as the out-of-tree Android fork of the ion code has diverged
+> > > > quite a bit, and any Android device using the ion interface uses that
+> > > > forked version and not this in-tree version, the in-tree copy of the
+> > > > code is abandonded and not used by anyone.
+> > > >
+> > > > Combine this abandoned codebase with the need to make changes to it in
+> > > > order to keep the kernel building properly, which then causes merge
+> > > > issues when merging those changes into the out-of-tree Android code, and
+> > > > you end up with two different groups of people (the in-kernel-tree
+> > > > developers, and the Android kernel developers) who are both annoyed at
+> > > > the current situation.  Because of this problem, just drop the in-kernel
+> > > > copy of the ion code now, as it's not used, and is only causing problems
+> > > > for everyone involved.
+> > > >
+> > > > Cc: "Arve Hjønnevåg" <arve@android.com>
+> > > > Cc: "Christian König" <christian.koenig@amd.com>
+> > > > Cc: Christian Brauner <christian@brauner.io>
+> > > > Cc: Christoph Hellwig <hch@infradead.org>
+> > > > Cc: Hridya Valsaraju <hridya@google.com>
+> > > > Cc: Joel Fernandes <joel@joelfernandes.org>
+> > > > Cc: John Stultz <john.stultz@linaro.org>
+> > > > Cc: Laura Abbott <laura@labbott.name>
+> > > > Cc: Martijn Coenen <maco@android.com>
+> > > > Cc: Shuah Khan <shuah@kernel.org>
+> > > > Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> > > > Cc: Suren Baghdasaryan <surenb@google.com>
+> > > > Cc: Todd Kjos <tkjos@android.com>
+> > > > Cc: devel@driverdev.osuosl.org
+> > > > Cc: dri-devel@lists.freedesktop.org
+> > > > Cc: linaro-mm-sig@lists.linaro.org
+> > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > >
+> > > We discussed this at the Android MC on Monday and the plan was to
+> > > remove it after the next LTS release.
+> >
+> > I know it was discussed, my point is that it is actually causing
+> > problems now (with developers who want to change the internal kernel api
+> > hitting issues, and newbies trying to clean up code in ways that isn't
+> > exactly optimal wasting maintainer cycles), and that anyone who uses
+> > this code, is not actually using this version of the code.  Everyone who
+> > relies on ion right now, is using the version that is in the Android
+> > common kernel tree, which has diverged from this in-kernel way quite a
+> > bit now for the reason that we didn't want to take any of those new
+> > features in the in-kernel version.
+> >
+> > So this is a problem that we have caused by just wanting to wait, no one
+> > is using this code, combined with it causing problems for the upstream
+> > developers.
+> >
+> > There is nothing "magic" about the last kernel of the year that requires
+> > this code to sit here until then.  At that point in time, all users
+> > will, again, be using the forked Android kernel version, and if we
+> > delete this now here, that fork can remain just fine, with the added
+> > benifit of it reducing developer workloads here in-kernel.
+> >
+> > So why wait?
+> 
+> Hi,
+> 
+> I don't know what is the right thing to do here. I just want to
+> highlight that AOSP's audio (codec2) HAL depends on the ION system
+> heap and it will break AOSP for people who boot mainline on their
+> devices, even for just testing purpose like we do in Linaro. Right now
+> we need only 1 (Android specific out-of-tree) patch to boot AOSP with
+> mainline and Sumit is already trying to upstream that vma naming
+> patch. Removal of in-kernel ION, will just add more to that delta.
 
- > Hi Peter,
- > Thanks for the review!
+As AOSP will continue to rely on ION after December of this year, all
+you are doing is postponing the inevitable a few more months.
 
- > On Thu, Aug 27, 2020 at 08:44:40AM +0200, Peter Korsgaard wrote:
- >> >>>>> "Cristian" == Cristian Ciocaltea <cristian.ciocaltea@gmail.com> writes:
- >> 
- >> > Add a Device Tree for the RoseapplePi SBC.
- >> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
- >> 
- >> Reviewed-by: Peter Korsgaard <peter@korsgaard.com>
- >> 
- >> On a related note: There is now an owl-mmc driver for the s900. From a
- >> quick look at the datasheet it looks compatible with the controller on
- >> the s500. Did you have a look at hooking that up?
+Push back on the Android team to fix up the code to not use ION, they
+know this needs to happen.
 
- > Yes, please see:
- > https://lore.kernel.org/lkml/cover.1593124368.git.cristian.ciocaltea@gmail.com/
+thanks,
 
- > The clock related patches have been already applied to v5.9 and
- > hopefully the pinctrl driver will follow in v5.10.
-
-Cool, I must have missed that series Great, thanks!
-
--- 
-Bye, Peter Korsgaard
+greg k-h
