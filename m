@@ -2,124 +2,142 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBB8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C17C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F192922BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF8420825
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:55:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Vt9pXnuM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FlWsXzof"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="S6P0P4gL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgH0HzC (ORCPT
+        id S1728531AbgH0HzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:55:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36928 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728455AbgH0Hyd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:54:33 -0400
-Date:   Thu, 27 Aug 2020 07:54:31 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598514872;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eS0B/Fc8ttTFAoYL2xaPmYpFUqXrIKnco5J+1jeN79U=;
-        b=Vt9pXnuMCkejGTYz5kqZ6z/NmYGhEFkyyGhG2+4ACAdAKvUZ/mj9M6wJ5X69YJmMZzfCe6
-        o35tYqZuMjZXOAnTxNSyhsTlRd34gtoK48IMptO7bwZmO1sb5lAoAih7nynGRREdwAEspS
-        oYAig0Kw9g6z6/mHrdILSSr1KmRyJCuHAyLqQ0k2Gozgo8txTrJhhazaE1ud7vlBvGpJXe
-        0n49nvb+kOXo9FUdZOkKNS3Nonif5q0uDoxVvHHsjLlZKve2NYIWWXJwHxDoBOAZCVpa35
-        BZsefmRewOrn+mUVZNlsxiIzhUPvd2m9Zrp+e0JwiYsxTAUvUlQJEzW/PSP7Ig==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598514872;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eS0B/Fc8ttTFAoYL2xaPmYpFUqXrIKnco5J+1jeN79U=;
-        b=FlWsXzofzP5gkKUmCRI7fbIS0y0JVRiq9wUGpLoj5vz5nqO6rs7TusFdRtlFfgaAdyRXt3
-        Hjn36YDBFFsHvtAQ==
-From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched: Cache task_struct::flags in sched_submit_work()
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200819200025.lqvmyefqnbok5i4f@linutronix.de>
-References: <20200819200025.lqvmyefqnbok5i4f@linutronix.de>
+        Thu, 27 Aug 2020 03:55:20 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:53653 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728483AbgH0Hyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:54:54 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598514893; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
+ To: From: Sender; bh=R3GfTB2n3TnLY699vSjPfiKPod4E8AJXYwtplDEpXT0=; b=S6P0P4gL63YHE8PZQ/FJfRfxf35sScsvEPMlXTmVnBpurw/vdKUCAvElV3GfJGNfQ8sot39S
+ 7V0NQVfWZDDUhxibhiSbsu5pBOYowi0FCg1az8eLZ3QWh/5keUERMpK1fY6NhvdlMKjazJ/3
+ pc5ZRnzvVfQERRTxV8Z/wmUotIs=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
+ 5f4766b44b23cecfe27dd07a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 07:54:28
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A4E04C433A0; Thu, 27 Aug 2020 07:54:27 +0000 (UTC)
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8D16FC433C6;
+        Thu, 27 Aug 2020 07:54:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8D16FC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Christian Lamparter <chunkeey@gmail.com>, davem@davemloft.net,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 08/30] net: wireless: ath: carl9170: Mark 'ar9170_qmap' as __maybe_unused
+References: <20200814113933.1903438-1-lee.jones@linaro.org>
+        <20200814113933.1903438-9-lee.jones@linaro.org>
+        <7ef231f2-e6d3-904f-dc3a-7ef82beda6ef@gmail.com>
+        <9776eb47-6b83-a891-f057-dd34d14ea16e@rasmusvillemoes.dk>
+        <87eeo5mnr0.fsf@codeaurora.org> <20200818095024.GZ4354@dell>
+Date:   Thu, 27 Aug 2020 10:54:21 +0300
+In-Reply-To: <20200818095024.GZ4354@dell> (Lee Jones's message of "Tue, 18 Aug
+        2020 10:50:24 +0100")
+Message-ID: <87r1rsle1e.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Message-ID: <159851487131.20229.10063015332671420555.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+Lee Jones <lee.jones@linaro.org> writes:
 
-Commit-ID:     c1cecf884ad748f63f9139d5a18ee265ee2f70fb
-Gitweb:        https://git.kernel.org/tip/c1cecf884ad748f63f9139d5a18ee265ee2f70fb
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Wed, 19 Aug 2020 22:00:25 +02:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 26 Aug 2020 12:41:58 +02:00
+> On Mon, 17 Aug 2020, Kalle Valo wrote:
+>
+>> Rasmus Villemoes <linux@rasmusvillemoes.dk> writes:
+>>=20
+>> > On 14/08/2020 17.14, Christian Lamparter wrote:
+>> >> On 2020-08-14 13:39, Lee Jones wrote:
+>> >>> 'ar9170_qmap' is used in some source files which include carl9170.h,
+>> >>> but not all of them.=C2=A0 Mark it as __maybe_unused to show that th=
+is is
+>> >>> not only okay, it's expected.
+>> >>>
+>> >>> Fixes the following W=3D1 kernel build warning(s)
+>> >>=20
+>> >> Is this W=3D1 really a "must" requirement? I find it strange having
+>> >> __maybe_unused in header files as this "suggests" that the
+>> >> definition is redundant.
+>> >
+>> > In this case it seems one could replace the table lookup with a
+>> >
+>> > static inline u8 ar9170_qmap(u8 idx) { return 3 - idx; }
+>> >
+>> > gcc doesn't warn about unused static inline functions (or one would ha=
+ve
+>> > a million warnings to deal with). Just my $0.02.
+>>=20
+>> Yeah, this is much better.
+>>=20
+>> And I think that static variables should not even be in the header
+>> files. Doesn't it mean that there's a local copy of the variable
+>> everytime the .h file is included? Sure, in this case the overhead is
+>> small (4 bytes per include) but still it's wrong.
+>
+> It happens a lot.
+>
+> As I stated before, the 2 viable options are to a) move it into the
+> source files; ensuring code duplication, unnecessary maintenance
+> burden and probably disparity over time, or b) create (or locate if
+> there is one already) a special header file which is only to be
+> included by the users.
+>
+> The later option gets really complicated if there are a variety of
+> tables which are included by any given number of source file
+> permutations.
+>
+> The accepted answer in all of the other subsystems I've worked with so
+> far, is to use __maybe_unused.  It's simple, non-intrusive and doesn't
+> rely on any functional changes.
+>
+>> Having a static inline
+>> function would solve that problem as well the compiler warning.
+>
+> This time yes, but it's a hack that will only work with simple,
+> linear data.=20=20
 
-sched: Cache task_struct::flags in sched_submit_work()
+To me __maybe_unused is a hack and a static inline function is a much
+better solution.
 
-sched_submit_work() is considered to be a hot path. The preempt_disable()
-instruction is a compiler barrier and forces the compiler to load
-task_struct::flags for the second comparison.
-By using a local variable, the compiler can load the value once and keep it in
-a register for the second comparison.
+> Try doing that with some of the other, more complicated
+> tables, like mwifiex_sdio_sd8*.
 
-Verified on x86-64 with gcc-10.
+Then the table should be moved to a .c file and the .h file should have
+"extern const int foo[]"
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200819200025.lqvmyefqnbok5i4f@linutronix.de
----
- kernel/sched/core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 8471a0f..c36dc1a 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4551,9 +4551,12 @@ void __noreturn do_task_dead(void)
- 
- static inline void sched_submit_work(struct task_struct *tsk)
- {
-+	unsigned int task_flags;
-+
- 	if (!tsk->state)
- 		return;
- 
-+	task_flags = tsk->flags;
- 	/*
- 	 * If a worker went to sleep, notify and ask workqueue whether
- 	 * it wants to wake up a task to maintain concurrency.
-@@ -4562,9 +4565,9 @@ static inline void sched_submit_work(struct task_struct *tsk)
- 	 * in the possible wakeup of a kworker and because wq_worker_sleeping()
- 	 * requires it.
- 	 */
--	if (tsk->flags & (PF_WQ_WORKER | PF_IO_WORKER)) {
-+	if (task_flags & (PF_WQ_WORKER | PF_IO_WORKER)) {
- 		preempt_disable();
--		if (tsk->flags & PF_WQ_WORKER)
-+		if (task_flags & PF_WQ_WORKER)
- 			wq_worker_sleeping(tsk);
- 		else
- 			io_wq_worker_sleeping(tsk);
+--=20
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
