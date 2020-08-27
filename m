@@ -2,106 +2,109 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B93C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC6B20786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA17020786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:04:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g/Qft8ne"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BXsu5XUn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgH0TEb (ORCPT
+        id S1727897AbgH0TEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:04:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49403 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726894AbgH0TE3 (ORCPT
+        Thu, 27 Aug 2020 15:04:39 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8648 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727845AbgH0TEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:04:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598555068;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dpPTnyY1jEEF6hodFsVeyGCg6LIEq1osNtlESX3XqhY=;
-        b=g/Qft8neV0uKsCdaMRaqfrQirXbLqXr53QmqyfR0TXWXcd8pwHYrVENSTg8fAuFM24VaM1
-        kyxwqneKcvaX7M6SiwSsG1AtX+6sqO/gZ/J7hHdh8MXWm8J9LS234jmYFnyrMMYj3qfXZP
-        XMLtL4xmn2vYiZEEWOzMcf+/ofyT5gw=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-369-oZ592Wq2PDC-_supR5WPqg-1; Thu, 27 Aug 2020 15:04:26 -0400
-X-MC-Unique: oZ592Wq2PDC-_supR5WPqg-1
-Received: by mail-qv1-f71.google.com with SMTP id e12so3435295qvy.13
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 12:04:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=dpPTnyY1jEEF6hodFsVeyGCg6LIEq1osNtlESX3XqhY=;
-        b=o3b+qqgl7PZ+OFm5zOYBvbSOYi3UWNt3iCZRP1ccPKZ6cfK9SAIANuPjfP2j/Ki5+E
-         FYqcqRclwdk+QW0mahMQovl8B/ujJjOM7Objc+S0iwhw785+929fgLLoV6l4h8CuJ/bw
-         BgGus8MkfiF0dO7+0eTZEMHB8ZiUglcHf4+EaU65oq+w6UG5yvoOUf2XFnS1M61Uo5HR
-         mcWNWA41lW3kndS3gzcjKKk5dUFNXtZBWt6siWuSXymGR0LojsVLa6Xnmhl6cTjEauJy
-         NEUCurAfnUry6Zqe/4DTbDwpZ5tkvDL1qFRjCASg9RlIoFw83R0fsbeQ+84QX+byA2y2
-         5Mlg==
-X-Gm-Message-State: AOAM530+OWtqQgKsF4nWe4z0C4p+qPWbtSQ/77+q1VnlQuOc92lgznLW
-        +Wm1Ud0JWD8evQHkZ0YbDf28/cGOeIO6+CWea7/UqwZkT63ipDjqp/I+e+JWmJW9KlDLneXBYV5
-        Zi5juB1WWt9M7PiOibEa9qaOS
-X-Received: by 2002:ae9:e40c:: with SMTP id q12mr17555684qkc.68.1598555065940;
-        Thu, 27 Aug 2020 12:04:25 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxwu1wIJxuc9erShjjxOxlzaZkchq1wagQLHXczQWn9FAGBbene5P6362g6/5YgQY916BkKSw==
-X-Received: by 2002:ae9:e40c:: with SMTP id q12mr17555673qkc.68.1598555065747;
-        Thu, 27 Aug 2020 12:04:25 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id w20sm2464189qki.108.2020.08.27.12.04.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 12:04:25 -0700 (PDT)
-Subject: Re: [PATCH v2 4/5] fpga manager: xilinx-spi: add error checking after
- gpiod_get_value()
-To:     Luca Ceresoli <luca@lucaceresoli.net>, linux-fpga@vger.kernel.org
-Cc:     Moritz Fischer <mdf@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anatolij Gustschin <agust@denx.de>
-References: <20200827143249.10973-1-luca@lucaceresoli.net>
- <20200827143249.10973-4-luca@lucaceresoli.net>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <e0ce7edb-53dd-2961-278d-e9bc8a1726ac@redhat.com>
-Date:   Thu, 27 Aug 2020 12:04:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 27 Aug 2020 15:04:38 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4803b80000>; Thu, 27 Aug 2020 12:04:24 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 27 Aug 2020 12:04:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 27 Aug 2020 12:04:38 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
+ 2020 19:04:38 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 27 Aug 2020 19:04:38 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f4803c50002>; Thu, 27 Aug 2020 12:04:37 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH] mm/test: use the new SKIP() macro
+Date:   Thu, 27 Aug 2020 12:04:00 -0700
+Message-ID: <20200827190400.12608-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200827143249.10973-4-luca@lucaceresoli.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598555064; bh=tyYJnOGUbn8M6OcI0QlHbRb0snJ2xTK+ApnxWnOBsic=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=BXsu5XUnDKKwSIWiV7a1TSfU1RJg9JD8O3EDL454TgZagF6P372wGk3sSs9DulWlL
+         O4/IUdhdWc4NJKjPLSOuMuxSEL7cDL512EPlJ9xPcXj+GVEd6EuPikPmcTETd+FC8l
+         tFih1RKjUJ1INpzhIypW+kgrxEGCDJCs3tIdhTzJwjGgM1sGwqnR9nh9AQelkpASo8
+         87oit53X5sRDp2cTnMEnNIrpq+km4wN3Bdx8cTKGOisu4IIzhZDhuSN4tCb+hKZFXu
+         OoiPh6N5+HY2qv0G4MiTQW2r97Zj7jGUoy7CBbYGgdsfA17wE3iB767RVNqtNBNANf
+         A24pWUqGLnUmA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Some tests might not be able to be run if resources like huge pages are
+not available. Mark these tests as skipped instead of simply passing.
 
-On 8/27/20 7:32 AM, Luca Ceresoli wrote:
-> Current code calls gpiod_get_value() without error checking. Should the
-> GPIO controller fail, execution would continue without any error message.
->
-> Fix by checking for negative error values.
->
-> Reported-by: Tom Rix <trix@redhat.com>
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->
-> ---
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+---
 
-Thanks, this looks fine.
+This applies to linux-mm and is for Andrew Morton's tree.
 
-Reviewed-by: Tom Rix <trix@redhat.com>
+ tools/testing/selftests/vm/hmm-tests.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/tools/testing/selftests/vm/hmm-tests.c b/tools/testing/selftes=
+ts/vm/hmm-tests.c
+index 93fc5cadce61..0a28a6a29581 100644
+--- a/tools/testing/selftests/vm/hmm-tests.c
++++ b/tools/testing/selftests/vm/hmm-tests.c
+@@ -680,7 +680,7 @@ TEST_F(hmm, anon_write_hugetlbfs)
+=20
+ 	n =3D gethugepagesizes(pagesizes, 4);
+ 	if (n <=3D 0)
+-		return;
++		SKIP(return, "Huge page size could not be determined");
+ 	for (idx =3D 0; --n > 0; ) {
+ 		if (pagesizes[n] < pagesizes[idx])
+ 			idx =3D n;
+@@ -694,7 +694,7 @@ TEST_F(hmm, anon_write_hugetlbfs)
+ 	buffer->ptr =3D get_hugepage_region(size, GHR_STRICT);
+ 	if (buffer->ptr =3D=3D NULL) {
+ 		free(buffer);
+-		return;
++		SKIP(return, "Huge page could not be allocated");
+ 	}
+=20
+ 	buffer->fd =3D -1;
+--=20
+2.20.1
 
