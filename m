@@ -2,94 +2,107 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFC2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD5F5207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E69B7207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgH0GgT (ORCPT
+        id S1727821AbgH0Ghy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:36:19 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:53102 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726395AbgH0GfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:35:22 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 73AE2A05E37D5DB2E6B2;
-        Thu, 27 Aug 2020 14:35:19 +0800 (CST)
-Received: from [127.0.0.1] (10.174.177.253) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 27 Aug 2020
- 14:35:15 +0800
-Subject: Re: [PATCH v3 0/7] bugfix and optimize for drivers/nvdimm
-To:     Oliver O'Halloran <oohall@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200820021641.3188-1-thunder.leizhen@huawei.com>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <90d93e2e-1124-22ee-81fb-83ffebc3129c@huawei.com>
-Date:   Thu, 27 Aug 2020 14:35:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 27 Aug 2020 02:37:54 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:56106 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726395AbgH0Ghy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 02:37:54 -0400
+Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id A365D823E11;
+        Thu, 27 Aug 2020 16:37:49 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1kBBXg-00054k-Du; Thu, 27 Aug 2020 16:37:48 +1000
+Date:   Thu, 27 Aug 2020 16:37:48 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Hao Li <lihao2018.fnst@cn.fujitsu.com>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, y-goto@fujitsu.com
+Subject: Re: [PATCH] fs: Kill DCACHE_DONTCACHE dentry even if
+ DCACHE_REFERENCED is set
+Message-ID: <20200827063748.GA12096@dread.disaster.area>
+References: <20200821015953.22956-1-lihao2018.fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <20200820021641.3188-1-thunder.leizhen@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.177.253]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821015953.22956-1-lihao2018.fnst@cn.fujitsu.com>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=KcmsTjQD c=1 sm=1 tr=0 cx=a_idp_d
+        a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
+        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=omOdbC7AAAAA:8 a=7-415B0cAAAA:8
+        a=by_5GhPrgXZcAFhFJM8A:9 a=CjuIK1q_8ugA:10 a=baC4JDFNLZpnPwus_NF9:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all:
-  Any comment? I want to merge patches 1 and 2 into one, then send
-other patches separately.
+On Fri, Aug 21, 2020 at 09:59:53AM +0800, Hao Li wrote:
+> Currently, DCACHE_REFERENCED prevents the dentry with DCACHE_DONTCACHE
+> set from being killed, so the corresponding inode can't be evicted. If
+> the DAX policy of an inode is changed, we can't make policy changing
+> take effects unless dropping caches manually.
+> 
+> This patch fixes this problem and flushes the inode to disk to prepare
+> for evicting it.
+> 
+> Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
+> ---
+>  fs/dcache.c | 3 ++-
+>  fs/inode.c  | 2 +-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/dcache.c b/fs/dcache.c
+> index ea0485861d93..486c7409dc82 100644
+> --- a/fs/dcache.c
+> +++ b/fs/dcache.c
+> @@ -796,7 +796,8 @@ static inline bool fast_dput(struct dentry *dentry)
+>  	 */
+>  	smp_rmb();
+>  	d_flags = READ_ONCE(dentry->d_flags);
+> -	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED;
+> +	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED
+> +			| DCACHE_DONTCACHE;
 
-On 2020/8/20 10:16, Zhen Lei wrote:
-> v2 --> v3:
-> 1. Fix spelling error of patch 1 subject: memmory --> memory
-> 2. Add "Reviewed-by: Oliver O'Halloran <oohall@gmail.com>" into patch 1
-> 3. Rewrite patch descriptions of Patch 1, 3, 4
-> 4. Add 3 new trivial patches 5-7, I just found that yesterday.
-> 5. Unify all "subsystem" names to "libnvdimm:"
-> 
-> v1 --> v2:
-> 1. Add Fixes for Patch 1-2
-> 2. Slightly change the subject and description of Patch 1
-> 3. Add a new trivial Patch 4, I just found that yesterday.
-> 
-> v1:
-> I found a memleak when I learned the drivers/nvdimm code today. And I also
-> added a sanity check for priv->bus_desc.provider_name, because strdup()
-> maybe failed. Patch 3 is a trivial source code optimization.
-> 
-> 
-> Zhen Lei (7):
->   libnvdimm: fix memory leaks in of_pmem.c
->   libnvdimm: add sanity check for provider_name in
->     of_pmem_region_probe()
->   libnvdimm: simplify walk_to_nvdimm_bus()
->   libnvdimm: reduce an unnecessary if branch in nd_region_create()
->   libnvdimm: reduce an unnecessary if branch in nd_region_activate()
->   libnvdimm: make sure EXPORT_SYMBOL_GPL(nvdimm_flush) close to its
->     function
->   libnvdimm: slightly simplify available_slots_show()
-> 
->  drivers/nvdimm/bus.c         |  7 +++----
->  drivers/nvdimm/dimm_devs.c   |  5 ++---
->  drivers/nvdimm/of_pmem.c     |  7 +++++++
->  drivers/nvdimm/region_devs.c | 13 ++++---------
->  4 files changed, 16 insertions(+), 16 deletions(-)
-> 
+Seems reasonable, but you need to update the comment above as to
+how this flag fits into this code....
 
+>  	/* Nothing to do? Dropping the reference was all we needed? */
+>  	if (d_flags == (DCACHE_REFERENCED | DCACHE_LRU_LIST) && !d_unhashed(dentry))
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 72c4c347afb7..5218a8aebd7f 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -1632,7 +1632,7 @@ static void iput_final(struct inode *inode)
+>  	}
+>  
+>  	state = inode->i_state;
+> -	if (!drop) {
+> +	if (!drop || (drop && (inode->i_state & I_DONTCACHE))) {
+>  		WRITE_ONCE(inode->i_state, state | I_WILL_FREE);
+>  		spin_unlock(&inode->i_lock);
+
+What's this supposed to do? We'll only get here with drop set if the
+filesystem is mounting or unmounting. In either case, why does
+having I_DONTCACHE set require the inode to be written back here
+before it is evicted from the cache?
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
