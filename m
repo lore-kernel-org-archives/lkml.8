@@ -2,89 +2,98 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF21FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C3CC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 955C62076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E7B2076C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:12:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YpT/6OF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgH0DMF (ORCPT
+        id S1726903AbgH0DMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 23:12:05 -0400
-Received: from smtprelay0227.hostedemail.com ([216.40.44.227]:36230 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726798AbgH0DMF (ORCPT
+        Wed, 26 Aug 2020 23:12:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbgH0DMa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 23:12:05 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id C59B21802DA53;
-        Thu, 27 Aug 2020 03:12:03 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: meal91_421740e27069
-X-Filterd-Recvd-Size: 2732
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 27 Aug 2020 03:12:02 +0000 (UTC)
-Message-ID: <5e10c1645dd8f735215cf54a74db0f8dd3f6cbd5.camel@perches.com>
-Subject: [PATCH] deprecated.rst: Remove now removed uninitialized_var
-From:   Joe Perches <joe@perches.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>
-Date:   Wed, 26 Aug 2020 20:12:01 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Wed, 26 Aug 2020 23:12:30 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5700FC0612A3;
+        Wed, 26 Aug 2020 20:12:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=xeNavqw5VrEUhK1uC5SznmQUTraq5Hr4BCCsMByRsaI=; b=YpT/6OF/Gpyyb1tY7UT8DwNc0I
+        tFI/88DFWeXSQmA721mD00+5P8ucXGbX9dP60A+99p1JQPchNJh1Xq9kPw7LRbJwt3hiWzmTKz/KH
+        dws/BCGIKixIhx17rIDQv0MWEbrxnbUXmyNZcDpw2eD/+78PYE2z0gp9K0mVRT5KUevIistUUAP0I
+        6caaYXd9pcpPBoDi4/MQ+1mmaa8XYNMQw/MaXcYFKKOiW2K7xwTVECPjpqqxwOOngzrL5GEUT3GFr
+        dGeIDdBreF/qwOahd84rmbAi6wqIaXQxvBGAzJbuKgiMdIfu8ahGG/eumx1Bvw3jDTBpxH0XSLrwe
+        /mK/z8fQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kB8Km-0001jN-Il; Thu, 27 Aug 2020 03:12:16 +0000
+Date:   Thu, 27 Aug 2020 04:12:16 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     hejinyang <hejinyang@loongson.cn>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH] MIPS: Loongson: Fix complie errors without CONFIG_SMP
+Message-ID: <20200827031216.GB14765@casper.infradead.org>
+References: <1598446407-8845-1-git-send-email-hejinyang@loongson.cn>
+ <20200826130122.GR17456@casper.infradead.org>
+ <5394f030-104c-f191-e581-4f1ed23a85a6@loongson.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5394f030-104c-f191-e581-4f1ed23a85a6@loongson.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's now gone from the kernel so remove it from the deprecated API text.
+On Thu, Aug 27, 2020 at 10:31:33AM +0800, hejinyang wrote:
+> 
+> 
+> On 08/26/2020 09:01 PM, Matthew Wilcox wrote:
+> > On Wed, Aug 26, 2020 at 08:53:27PM +0800, Jinyang He wrote:
+> > > +++ b/arch/mips/include/asm/mach-loongson64/topology.h
+> > > @@ -4,7 +4,11 @@
+> > >   #ifdef CONFIG_NUMA
+> > > +#ifdef CONFIG_SMP
+> > >   #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
+> > > +#else
+> > > +#define cpu_to_node(cpu)	0
+> > > +#endif
+> > Are you saying you've enabled NUMA without enabling SMP?  Does that make
+> > sense?
+> 
+> NUMA option normally work with more than two nodes, though Loongson64 use it
+> default after patch 6fbde6b492dfc761ad60a68fb2cb32b1eb05b786. Loongson64(3A)'s
+> each node consists of 4 cpus while it only has 4 cpus. In other words, it has
+> only one node while open NUMA. I'm confused it if NUMA deponds on SMP.
+> 
+> I'll try fix it with unabling NUMA and SMP later.
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- Documentation/process/deprecated.rst | 18 ------------------
- 1 file changed, 18 deletions(-)
+mips:
+config NUMA
+        bool "NUMA Support"
+        depends on SYS_SUPPORTS_NUMA
 
-diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
-index 918e32d76fc4..70720f00b9aa 100644
---- a/Documentation/process/deprecated.rst
-+++ b/Documentation/process/deprecated.rst
-@@ -51,24 +51,6 @@ to make sure their systems do not continue running in the face of
- "unreachable" conditions. (For example, see commits like `this one
- <https://git.kernel.org/linus/d4689846881d160a4d12a514e991a740bcb5d65a>`_.)
- 
--uninitialized_var()
---------------------
--For any compiler warnings about uninitialized variables, just add
--an initializer. Using the uninitialized_var() macro (or similar
--warning-silencing tricks) is dangerous as it papers over `real bugs
--<https://lore.kernel.org/lkml/20200603174714.192027-1-glider@google.com/>`_
--(or can in the future), and suppresses unrelated compiler warnings
--(e.g. "unused variable"). If the compiler thinks it is uninitialized,
--either simply initialize the variable or make compiler changes. Keep in
--mind that in most cases, if an initialization is obviously redundant,
--the compiler's dead-store elimination pass will make sure there are no
--needless variable writes.
--
--As Linus has said, this macro
--`must <https://lore.kernel.org/lkml/CA+55aFw+Vbj0i=1TGqCR5vQkCzWJ0QxK6CernOU6eedsudAixw@mail.gmail.com/>`_
--`be <https://lore.kernel.org/lkml/CA+55aFwgbgqhbp1fkxvRKEpzyR5J8n1vKT1VZdz9knmPuXhOeg@mail.gmail.com/>`_
--`removed <https://lore.kernel.org/lkml/CA+55aFz2500WfbKXAx8s67wrm9=yVJu65TpLgN_ybYNv0VEOKA@mail.gmail.com/>`_.
--
- open-coded arithmetic in allocator arguments
- --------------------------------------------
- Dynamic size calculations (especially multiplication) should not be
+x86:
+config NUMA
+        bool "NUMA Memory Allocation and Scheduler Support"
+        depends on SMP
 
-
+If you had a good reason for enabling NUMA without enabling SMP (CPU-less
+memory nodes?), that'd be an interesting discussion to have.  Since your
+hardware seems to have SMP by default, I'd suggest just adding the missing
+'depends'.
