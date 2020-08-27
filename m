@@ -7,167 +7,224 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F64FC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EB5C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37E0F22BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 407BD207DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:50:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="SZObRZlr"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mR9jECCz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728141AbgH0TuR (ORCPT
+        id S1728153AbgH0TuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:50:17 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:54882 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727986AbgH0TtW (ORCPT
+        Thu, 27 Aug 2020 15:50:20 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:51487 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726289AbgH0TuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:49:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=c143+GTEX7zyD/AulBS9Iu+zOY5FLCUer2NvCoDsSeI=; b=SZObRZlrY2eN4y+pUAiPO1SXTU
-        Dx3AaFVhqM903maM+RjjDXpaIqCMPF3u5XQlnL/09MGb/3WX9T/+e1QSuCBrVPoqBs+fa/4XYuEyW
-        XMYP9Fm+1qF0z/XghXrUWNBIgo7OoOMqMfqP5dl63s56/KolW/bpFAunH8z/kUpreKD4EHWe0RqLh
-        YTyWPvT2decsz5mxb+OhypgpiLv3CSQ1aCf6IvndkisC5tykzNwwAkYxOmybsLseeXi6DsB4LYSig
-        EQK4oPVWLztSi6JWwHXJVDUKge+ZcN6H4+WbdUxhECCME7mRmu8Ix/9ZeGxMtfq7R5J9ov9EdC8te
-        ou0ktxeQ==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1kBNtg-0000Cf-J2; Thu, 27 Aug 2020 13:49:21 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1kBNta-0001c8-92; Thu, 27 Aug 2020 13:49:14 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, Omar Sandoval <osandov@osandov.com>
-Cc:     Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 27 Aug 2020 13:49:07 -0600
-Message-Id: <20200827194912.6135-7-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200827194912.6135-1-logang@deltatee.com>
-References: <20200827194912.6135-1-logang@deltatee.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, osandov@osandov.com, sagi@grimberg.me, Chaitanya.Kulkarni@wdc.com, sbates@raithlin.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH blktests 06/11] nvme/033: Simple test to create and connect to a passthru target
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+        Thu, 27 Aug 2020 15:50:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598557810; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=jQ/gIuY2mY0oFoFD/iITvJMPLZuXd04x2UZpRd55VRM=; b=mR9jECCzG855ALuixZlfh0YFx4B8njzGmJRt+YTclFJLBTEHzF2Ho3WQek+sl0vj3+G2wrdm
+ pK3E1ubSuo/e6tEm+/KeosPp7rFCFg3KhQTZcHDFY2QKPukWiFQXY2rKiK0CUzny0ZeE4YJm
+ X9AEk8A0PQmhPB7VlLdTuYUItow=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f480e45630b177c472cd16f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 19:49:25
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 126EBC433CA; Thu, 27 Aug 2020 19:49:25 +0000 (UTC)
+Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rishabhb)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B8C24C43387;
+        Thu, 27 Aug 2020 19:49:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B8C24C43387
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
+From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
+To:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     bjorn.andersson@linaro.org, mathieu.poirier@linaro.org,
+        tsoni@codeaurora.org, psodagud@codeaurora.org,
+        sidgup@codeaurora.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: [PATCH v2 2/3] remoteproc: Add coredump configuration to sysfs
+Date:   Thu, 27 Aug 2020 12:48:50 -0700
+Message-Id: <1598557731-1566-3-git-send-email-rishabhb@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1598557731-1566-1-git-send-email-rishabhb@codeaurora.org>
+References: <1598557731-1566-1-git-send-email-rishabhb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This tests creates and connects to a passthru controller backed
-by a test NVMe namespace. It then verifies that some common fields
-in id-ctrl and id-ns are the same in the target and the orginial
-device.
+Expose coredump configuration in sysfs under a feature
+flag. This is useful for systems where access to
+debugfs might be limited.
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
 ---
- tests/nvme/033     | 69 ++++++++++++++++++++++++++++++++++++++++++++++
- tests/nvme/033.out |  6 ++++
- 2 files changed, 75 insertions(+)
- create mode 100755 tests/nvme/033
- create mode 100644 tests/nvme/033.out
+ Documentation/ABI/testing/sysfs-class-remoteproc | 24 +++++++++
+ drivers/remoteproc/remoteproc_debugfs.c          |  4 ++
+ drivers/remoteproc/remoteproc_sysfs.c            | 68 ++++++++++++++++++++++++
+ 3 files changed, 96 insertions(+)
 
-diff --git a/tests/nvme/033 b/tests/nvme/033
-new file mode 100755
-index 000000000000..e45c5e9758ba
---- /dev/null
-+++ b/tests/nvme/033
-@@ -0,0 +1,69 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-3.0+
-+# Copyright (C) 2019 Logan Gunthorpe
-+# Copyright (C) 2019 Eideticom Communications Inc.
+diff --git a/Documentation/ABI/testing/sysfs-class-remoteproc b/Documentation/ABI/testing/sysfs-class-remoteproc
+index 36094fb..f6c44fa 100644
+--- a/Documentation/ABI/testing/sysfs-class-remoteproc
++++ b/Documentation/ABI/testing/sysfs-class-remoteproc
+@@ -58,3 +58,27 @@ Description:	Remote processor name
+ 		Reports the name of the remote processor. This can be used by
+ 		userspace in exactly identifying a remote processor and ease
+ 		up the usage in modifying the 'firmware' or 'state' files.
 +
-+. tests/nvme/rc
++What:		/sys/class/remoteproc/.../coredump
++Date:		July 2020
++Contact:	Bjorn Andersson <bjorn.andersson@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>
++Description:	Remote processor coredump configuration
 +
-+DESCRIPTION="create and connect to an NVMeOF target with a passthru controller"
-+QUICK=1
++		Reports the coredump configuration of the remote processor,
++		which will be one of:
 +
-+requires() {
-+	_have_program nvme &&
-+	_have_modules nvme-loop nvmet &&
-+	_have_configfs &&
-+	_have_kernel_option NVME_TARGET_PASSTHRU
++		"default"
++		"inline"
++		"disabled"
++
++		"default" means when the remote processor's coredump is
++		collected it will be copied to a separate buffer and that
++		buffer is exposed to userspace.
++
++		"inline" means when the remote processor's coredump is
++		collected userspace will directly read from the remote
++		processor's device memory. Extra buffer will not be used to
++		copy the dump. Also recovery process will not proceed until
++		all data is read by usersapce.
++
++		"disabled" means no dump will be collected.
+diff --git a/drivers/remoteproc/remoteproc_debugfs.c b/drivers/remoteproc/remoteproc_debugfs.c
+index 2e3b3e2..48dfd0a 100644
+--- a/drivers/remoteproc/remoteproc_debugfs.c
++++ b/drivers/remoteproc/remoteproc_debugfs.c
+@@ -27,6 +27,7 @@
+ /* remoteproc debugfs parent dir */
+ static struct dentry *rproc_dbg;
+ 
++#if (!IS_ENABLED(CONFIG_RPROC_SYSFS_CONFIGURATION_SUPPORT))
+ /*
+  * A coredump-configuration-to-string lookup table, for exposing a
+  * human readable configuration via debugfs. Always keep in sync with
+@@ -114,6 +115,7 @@ static const struct file_operations rproc_coredump_fops = {
+ 	.open = simple_open,
+ 	.llseek = generic_file_llseek,
+ };
++#endif
+ 
+ /*
+  * Some remote processors may support dumping trace logs into a shared
+@@ -425,8 +427,10 @@ void rproc_create_debug_dir(struct rproc *rproc)
+ 			    rproc, &rproc_rsc_table_fops);
+ 	debugfs_create_file("carveout_memories", 0400, rproc->dbg_dir,
+ 			    rproc, &rproc_carveouts_fops);
++#if (!IS_ENABLED(CONFIG_RPROC_SYSFS_CONFIGURATION_SUPPORT))
+ 	debugfs_create_file("coredump", 0600, rproc->dbg_dir,
+ 			    rproc, &rproc_coredump_fops);
++#endif
+ }
+ 
+ void __init rproc_init_debugfs(void)
+diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
+index eea514c..89b301a 100644
+--- a/drivers/remoteproc/remoteproc_sysfs.c
++++ b/drivers/remoteproc/remoteproc_sysfs.c
+@@ -10,6 +10,71 @@
+ 
+ #define to_rproc(d) container_of(d, struct rproc, dev)
+ 
++#if IS_ENABLED(CONFIG_RPROC_SYSFS_CONFIGURATION_SUPPORT)
++/*
++ * A coredump-configuration-to-string lookup table, for exposing a
++ * human readable configuration via sysfs. Always keep in sync with
++ * enum rproc_coredump_mechanism
++ */
++static const char * const rproc_coredump_str[] = {
++	[RPROC_COREDUMP_DEFAULT]	= "default",
++	[RPROC_COREDUMP_INLINE]		= "inline",
++	[RPROC_COREDUMP_DISABLED]	= "disabled",
++};
++
++/* Expose the current coredump configuration via debugfs */
++static ssize_t coredump_show(struct device *dev,
++			     struct device_attribute *attr, char *buf)
++{
++	struct rproc *rproc = to_rproc(dev);
++
++	return sprintf(buf, "%s\n", rproc_coredump_str[rproc->dump_conf]);
 +}
 +
-+nvme_info() {
-+	local ns=$1
++/*
++ * By writing to the 'coredump' sysfs entry, we control the behavior of the
++ * coredump mechanism dynamically. The default value of this entry is "default".
++ *
++ * The 'coredump' sysfs entry supports these commands:
++ *
++ * default:	This is the default coredump mechanism. When the remoteproc
++ *		crashes the entire coredump will be copied to a separate buffer
++ *		and exposed to userspace.
++ *
++ * inline:	The coredump will not be copied to a separate buffer and the
++ *		recovery process will have to wait until data is read by
++ *		userspace. But this avoid usage of extra memory.
++ *
++ * disabled:	This will disable coredump. Recovery will proceed without
++ *		collecting any dump.
++ */
++static ssize_t coredump_store(struct device *dev,
++			      struct device_attribute *attr,
++			      const char *buf, size_t count)
++{
++	struct rproc *rproc = to_rproc(dev);
 +
-+	nvme id-ctrl "$ns" | grep -E '^(vid|sn|mn|fr) '
-+	nvme id-ns "$ns" | grep -E '^(nsze|ncap) '
++	if (rproc->state == RPROC_CRASHED) {
++		dev_err(&rproc->dev, "can't change coredump configuration\n");
++		return -EBUSY;
++	}
++
++	if (sysfs_streq(buf, "disable")) {
++		rproc->dump_conf = RPROC_COREDUMP_DISABLED;
++	} else if (sysfs_streq(buf, "inline")) {
++		rproc->dump_conf = RPROC_COREDUMP_INLINE;
++	} else if (sysfs_streq(buf, "default")) {
++		rproc->dump_conf = RPROC_COREDUMP_DEFAULT;
++	} else {
++		dev_err(&rproc->dev, "Invalid coredump configuration\n");
++		return -EINVAL;
++	}
++
++	return count;
 +}
++static DEVICE_ATTR_RW(coredump);
++#endif
 +
-+compare_dev_info() {
-+	local passthru_dev=$1
-+	local testdev_info
-+	local passthru_info
-+
-+	testdev_info=$(nvme_info "$TEST_DEV")
-+	passthru_info=$(nvme_info "$passthru_dev")
-+
-+	cat >> "${FULL}" <<- EOF
-+
-+	Test Device ${TEST_DEV} Info:
-+	$testdev_info
-+
-+	Passthru Device ${passthru_dev} Info:
-+	$passthru_info
-+
-+	EOF
-+
-+	diff -u <(echo "$testdev_info") <(echo "$passthru_info")
-+	if [[ "$testdev_info" != "$passthru_info" ]]; then
-+		echo "ERROR: Device information does not match! (See ${FULL})"
-+	fi
-+}
-+
-+test_device() {
-+	local subsys="blktests-subsystem-1"
-+	local nsdev
-+	local port
-+
-+	echo "Running ${TEST_NAME}"
-+
-+	_setup_nvmet
-+	port=$(_nvmet_passthru_target_setup "$subsys")
-+
-+	nvme discover -t loop | _filter_discovery
-+
-+	nsdev=$(_nvmet_passthru_target_connect "$subsys")
-+
-+	compare_dev_info "${nsdev}"
-+
-+	_nvmet_passthru_target_disconnect "$subsys"
-+	_nvmet_passthru_target_cleanup "$port" "$subsys"
-+
-+	echo "Test complete"
-+}
-diff --git a/tests/nvme/033.out b/tests/nvme/033.out
-new file mode 100644
-index 000000000000..88787848654f
---- /dev/null
-+++ b/tests/nvme/033.out
-@@ -0,0 +1,6 @@
-+Running nvme/033
-+Discovery Log Number of Records 1, Generation counter X
-+=====Discovery Log Entry 0======
-+trtype:  loop
-+subnqn:  blktests-subsystem-1
-+Test complete
+ /* Expose the loaded / running firmware name via sysfs */
+ static ssize_t firmware_show(struct device *dev, struct device_attribute *attr,
+ 			  char *buf)
+@@ -138,6 +203,9 @@ static ssize_t name_show(struct device *dev, struct device_attribute *attr,
+ static DEVICE_ATTR_RO(name);
+ 
+ static struct attribute *rproc_attrs[] = {
++#if IS_ENABLED(CONFIG_RPROC_SYSFS_CONFIGURATION_SUPPORT)
++	&dev_attr_coredump.attr,
++#endif
+ 	&dev_attr_firmware.attr,
+ 	&dev_attr_state.attr,
+ 	&dev_attr_name.attr,
 -- 
-2.20.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
