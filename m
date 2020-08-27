@@ -2,209 +2,114 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE94C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0ED8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1610C22B4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B023C207DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:52:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h0P8ksLv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ExhD/2mN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgH0QwJ (ORCPT
+        id S1727084AbgH0Qwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:52:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52308 "EHLO
+        Thu, 27 Aug 2020 12:52:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbgH0QwE (ORCPT
+        with ESMTP id S1726009AbgH0Qwm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:52:04 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33492C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:52:04 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id cs12so2923144qvb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:52:04 -0700 (PDT)
+        Thu, 27 Aug 2020 12:52:42 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7D9BC061264;
+        Thu, 27 Aug 2020 09:52:41 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id u6so3339511ybf.1;
+        Thu, 27 Aug 2020 09:52:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=pMOP7GvtalnvE1bAalLKdMDTFVojjFa/CIZrykJhyA0=;
-        b=h0P8ksLv0SkYmJK3zzvDr/R7THSzA72QP3N2IwSzwKpJ3iiNMHxFi/mQ5kzKYteTfz
-         fQyLTnyLdIHB3Gaa1yTROhP6k90swdorDE4WYoa6fySeP32+qdkuNRsu06JLnpLRR7u0
-         g8PhQElen69O4YP4hvfTiIkqWRYB8+3JLN8aTIHWcjAo0NmCwJAk1BWOPkVGyACdgvGQ
-         BMRiELtJhmECatPKpRBEQVtmOLOrAjywEKaK03Yvwujqgd4uT+UDH0xI9AaijUSfprMv
-         //0ZILqH1SsviV/dU8hcaAB6fycLMW70fjo1LRHld16XoyvT99lWozl+qEiS6PSYaeOs
-         EKlg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v+eVxBfBAprEoX5lLsx5hIWnMBJGynUOeo5uh014b8M=;
+        b=ExhD/2mNuu7QZdIY5cch/qOJMBWfnT4mnJMCA4ivXYVpIesCxQrVTOct6XrITaUdqW
+         zI0D1zbSlVZENk+1rZwlfnZHnygNc+D8lg+Ea4hNY2GbpmmnCSmlD/28uI1V1SdBlXau
+         Omd8VC0AVp+dRJ96EWawlmPCep3Yah+/Wt8J1OQlw8JS1cSalpCf6RSRx4NvjJ4UyFYJ
+         9CFaro1gpjQLQZ7ozt2kz/rnFrRUHkczgBtK/LvMC5EDcm9f0vyg4qvlVTyv5vLEr+K8
+         PDQkA8WXJP5C3Fqx63+KDiV2NZOrrzkYU13nBUs+9OkxCfov/ysC4COJW9vo8SYii+Jx
+         RMKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=pMOP7GvtalnvE1bAalLKdMDTFVojjFa/CIZrykJhyA0=;
-        b=a92KI65nc5qAevB+1oY16sliY7BsodmK3jME7A/jGIdcGKqJ9O3E6egGesTYzTU5WE
-         WwihCYsOPCHIWJQr4/gjYwuQ0vJGija25I1gn13eY8fj60XZmUICRKIo6gl+XRTc8Yyo
-         ZNrewZ4CNeR55WYKcUIqQ8Mkv9IUloRwLdYuBabtkHZHgEM62DuG38RLcpSF77As/Jly
-         U7e0QCI1y5ClxLgL2d6IFQFJLgB7mWJeiR52Nlu/8KrxdsU6q/3dNd+q4eSIgg2bVlFZ
-         f9imhmVB0dvI9ahX5u9ZYIG9Hzm9gHrf0R3u6EFjqC+53agjkASG72oqip0PkLtMlDJH
-         uMYg==
-X-Gm-Message-State: AOAM532D15X2Hn75Fg8aOaVzvXJM/S9G0VIJxl0/sQ5fgzIFwvkNZWb0
-        J/GZoE0edEBHIZlY/CmTxR4=
-X-Google-Smtp-Source: ABdhPJznHTMFGAjs5NYYi+b0cJT1FwNBBwSRZP0u9ZT/YI0/vD4D9CZvvaieHmHltQaSxwLwZTuURA==
-X-Received: by 2002:ad4:5764:: with SMTP id r4mr2903921qvx.73.1598547123085;
-        Thu, 27 Aug 2020 09:52:03 -0700 (PDT)
-Received: from LeoBras ([2804:14d:8084:8e41:9b0d:571e:a65:b5d8])
-        by smtp.gmail.com with ESMTPSA id e13sm2139022qkg.124.2020.08.27.09.51.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 09:52:02 -0700 (PDT)
-Message-ID: <c67c66e466ad27d15aa2b970c48d2336d95b2971.camel@gmail.com>
-Subject: Re: [PATCH v1 02/10] powerpc/kernel/iommu: Align size for
- IOMMU_PAGE_SIZE on iommu_*_coherent()
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Joel Stanley <joel@jms.id.au>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>,
-        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
-        David Dai <zdai@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Thu, 27 Aug 2020 13:51:54 -0300
-In-Reply-To: <7b9640e0-568f-1470-40f4-a3ccec8abcf2@ozlabs.ru>
-References: <20200817234033.442511-1-leobras.c@gmail.com>
-         <20200817234033.442511-3-leobras.c@gmail.com>
-         <7b9640e0-568f-1470-40f4-a3ccec8abcf2@ozlabs.ru>
-Organization: IBM
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v+eVxBfBAprEoX5lLsx5hIWnMBJGynUOeo5uh014b8M=;
+        b=eeNYfbITkoNabZAgVXrpF6HkTfrdS+38eL9Zyp5WkjoX4ED2tESIi8Gc4WY6YJ5gRw
+         bNURWxuoOYCCzvVs94WFYL687/kJzo885X1HbYwmby8COA06wRp7WfTkX/pOwVqK9GlM
+         lE0OjXFTHsVpTGcZWnXt24pZLxx4XNdTSqFvVbrpfqCI0gQxT+YKGcJUkzotMVn9GyB2
+         tdRXViAjd4oJC6GZXfQxp1mf2OFpD7NcTP7aKlKG38LSMq04QDxJJP9WJKUqVsLTiD0D
+         X5gOfuLZ4vVq0oxB0PZcpXglBbpjE9tbE+KsoW2GDWXa0nOf/TK3+PM2XxTv3Y+g+Dar
+         pAWg==
+X-Gm-Message-State: AOAM533Wdo3KsQJleUqJrgxQ4S2JOq/TxP/4qpgeThqkx4EH28gpKdyE
+        1aKz8VctPvPVTj9gM9S9WfvpfzNPORwOmUHulyw=
+X-Google-Smtp-Source: ABdhPJzWnbAjrzxUkZhdpNb2pCrtHNzhLuZPuwpgMSMn67x3fMFvwz8SPKnNKf4Cg4KNXX+P3L0zcQWqDZA/oMNp76c=
+X-Received: by 2002:a25:8149:: with SMTP id j9mr31166464ybm.214.1598547161204;
+ Thu, 27 Aug 2020 09:52:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594811350-14066-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594811350-14066-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 27 Aug 2020 17:52:15 +0100
+Message-ID: <CA+V-a8vwhtTWjaoXkfMBjKx90WkcoejD5ryPkXnQNEbtgnJGXQ@mail.gmail.com>
+Subject: Re: [PATCH 02/20] dt-bindings: thermal: rcar-gen3-thermal: Add
+ r8a774e1 support
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-can@vger.kernel.org,
+        netdev <netdev@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-08-22 at 20:07 +1000, Alexey Kardashevskiy wrote:
-> 
-> On 18/08/2020 09:40, Leonardo Bras wrote:
-> > Both iommu_alloc_coherent() and iommu_free_coherent() assume that once
-> > size is aligned to PAGE_SIZE it will be aligned to IOMMU_PAGE_SIZE.
-> 
-> The only case when it is not aligned is when IOMMU_PAGE_SIZE > PAGE_SIZE
-> which is unlikely but not impossible, we could configure the kernel for
-> 4K system pages and 64K IOMMU pages I suppose. Do we really want to do
-> this here, or simply put WARN_ON(tbl->it_page_shift > PAGE_SHIFT)?
+Hi Zhang,Daniel,Amit,
 
-I think it would be better to keep the code as much generic as possible
-regarding page sizes. 
+On Wed, Jul 15, 2020 at 12:09 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+>
+> Document RZ/G2H (R8A774E1) SoC bindings.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+Gentle ping.
 
-> Because if we want the former (==support), then we'll have to align the
-> size up to the bigger page size when allocating/zeroing system pages,
-> etc. 
-
-This part I don't understand. Why do we need to align everything to the
-bigger pagesize? 
-
-I mean, is not that enough that the range [ret, ret + size[ is both
-allocated by mm and mapped on a iommu range?
-
-Suppose a iommu_alloc_coherent() of 16kB on PAGESIZE = 4k and
-IOMMU_PAGE_SIZE() == 64k.
-Why 4 * cpu_pages mapped by a 64k IOMMU page is not enough? 
-All the space the user asked for is allocated and mapped for DMA.
-
-
-> Bigger pages are not the case here as I understand it.
-
-I did not get this part, what do you mean?
-
-> > Update those functions to guarantee alignment with requested size
-> > using IOMMU_PAGE_ALIGN() before doing iommu_alloc() / iommu_free().
-> > 
-> > Also, on iommu_range_alloc(), replace ALIGN(n, 1 << tbl->it_page_shift)
-> > with IOMMU_PAGE_ALIGN(n, tbl), which seems easier to read.
-> > 
-> > Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
-> > ---
-> >  arch/powerpc/kernel/iommu.c | 17 +++++++++--------
-> >  1 file changed, 9 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
-> > index 9704f3f76e63..d7086087830f 100644
-> > --- a/arch/powerpc/kernel/iommu.c
-> > +++ b/arch/powerpc/kernel/iommu.c
-> > @@ -237,10 +237,9 @@ static unsigned long iommu_range_alloc(struct device *dev,
-> >  	}
-> >  
-> >  	if (dev)
-> > -		boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
-> > -				      1 << tbl->it_page_shift);
-> > +		boundary_size = IOMMU_PAGE_ALIGN(dma_get_seg_boundary(dev) + 1, tbl);
-> 
-> Run checkpatch.pl, should complain about a long line.
-
-It's 86 columns long, which is less than the new limit of 100 columns
-Linus announced a few weeks ago. checkpatch.pl was updated too:
-https://www.phoronix.com/scan.php?page=news_item&px=Linux-Kernel-Deprecates-80-Col
-
-
-> 
-> 
-> >  	else
-> > -		boundary_size = ALIGN(1UL << 32, 1 << tbl->it_page_shift);
-> > +		boundary_size = IOMMU_PAGE_ALIGN(1UL << 32, tbl);
-> >  	/* 4GB boundary for iseries_hv_alloc and iseries_hv_map */
-> >  
-> >  	n = iommu_area_alloc(tbl->it_map, limit, start, npages, tbl->it_offset,
-> > @@ -858,6 +857,7 @@ void *iommu_alloc_coherent(struct device *dev, struct iommu_table *tbl,
-> >  	unsigned int order;
-> >  	unsigned int nio_pages, io_order;
-> >  	struct page *page;
-> > +	size_t size_io = size;
-> >  
-> >  	size = PAGE_ALIGN(size);
-> >  	order = get_order(size);
-> > @@ -884,8 +884,9 @@ void *iommu_alloc_coherent(struct device *dev, struct iommu_table *tbl,
-> >  	memset(ret, 0, size);
-> >  
-> >  	/* Set up tces to cover the allocated range */
-> > -	nio_pages = size >> tbl->it_page_shift;
-> > -	io_order = get_iommu_order(size, tbl);
-> > +	size_io = IOMMU_PAGE_ALIGN(size_io, tbl);
-> > +	nio_pages = size_io >> tbl->it_page_shift;
-> > +	io_order = get_iommu_order(size_io, tbl);
-> >  	mapping = iommu_alloc(dev, tbl, ret, nio_pages, DMA_BIDIRECTIONAL,
-> >  			      mask >> tbl->it_page_shift, io_order, 0);
-> >  	if (mapping == DMA_MAPPING_ERROR) {
-> > @@ -900,11 +901,11 @@ void iommu_free_coherent(struct iommu_table *tbl, size_t size,
-> >  			 void *vaddr, dma_addr_t dma_handle)
-> >  {
-> >  	if (tbl) {
-> > -		unsigned int nio_pages;
-> > +		size_t size_io = IOMMU_PAGE_ALIGN(size, tbl);
-> > +		unsigned int nio_pages = size_io >> tbl->it_page_shift;
-> >  
-> > -		size = PAGE_ALIGN(size);
-> > -		nio_pages = size >> tbl->it_page_shift;
-> >  		iommu_free(tbl, dma_handle, nio_pages);
-> > +
-> 
-> Unrelated new line.
-
-Will be removed. Thanks!
-
-> 
-> 
-> >  		size = PAGE_ALIGN(size);
-> >  		free_pages((unsigned long)vaddr, get_order(size));
-> >  	}
-> > 
-
+Cheers,
+Prabhakar
