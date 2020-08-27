@@ -2,106 +2,127 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455FFC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D4F92080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9CBB2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:20:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcovqugj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgH0JUO (ORCPT
+        id S1728358AbgH0JUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:20:14 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:55035 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbgH0JUN (ORCPT
+        Thu, 27 Aug 2020 05:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgH0JUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:20:13 -0400
-Received: from mail-qk1-f173.google.com ([209.85.222.173]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Md6hP-1kjjc83ZT9-00aFVM; Thu, 27 Aug 2020 11:20:12 +0200
-Received: by mail-qk1-f173.google.com with SMTP id x69so5273932qkb.1;
-        Thu, 27 Aug 2020 02:20:11 -0700 (PDT)
-X-Gm-Message-State: AOAM5305xN3piQi/USsmKyOIrmb8R/nEk0delK98M3H8rb9bjXGtDcrr
-        X05n17qt0ahmVbKzTRvO1lWP8sFVSwlvM8xKKak=
-X-Google-Smtp-Source: ABdhPJwys/Ld1ISwBQtGOVjsKOAmmhWUAnLw1tNxLCheE9BdtOHaa/dmwj3anmunhGIn0yb7Bm9gQ59+ubRMyha0700=
-X-Received: by 2002:a37:8405:: with SMTP id g5mr17532540qkd.286.1598520010584;
- Thu, 27 Aug 2020 02:20:10 -0700 (PDT)
+        Thu, 27 Aug 2020 05:20:18 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C22D9C061264;
+        Thu, 27 Aug 2020 02:20:16 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 17so3025297pfw.9;
+        Thu, 27 Aug 2020 02:20:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NHovxXj8kNl+bO/iYwws9eniGeyDYn/VL5TU+ffgVe8=;
+        b=gcovqugjmSAGtw1SadGUSYghzOegMGsxuFFYTfl1i1TQhmAUH6wYXgJf7oDOSnUiYo
+         2yK4hr+IonNH5Z4kS3bkZcB88gD+xw0D6GNM6JUhyWRNmy6MI1i9wwYK4XaTB4Akm4r2
+         J6MwACe7X9ZN1B3YkRf/ZoOc+gQ8RcuO5ykz5nxUqZEdYDq4LorwFP8/tJCrOBQI5hj2
+         R5Xspmoa60AUW0Wiv4zZXY758AhK/RnvcF4AYPOgUHrjr82+/2ol7b/YWwMvLwKp5UNo
+         CNkKggy9+VmOWdL7LdYqeEjDNe8GO21LhokpW8WeEIsQAst4GEgETw4DS+N39sBYcsI5
+         dPZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NHovxXj8kNl+bO/iYwws9eniGeyDYn/VL5TU+ffgVe8=;
+        b=PbBtLHgOx4DtoVBrAhx5UMoPzHIsiXSjwbFg72i4OVYggKN5QfbdhLjJjmHByvkA3w
+         gjEVN5UWUXG1g5PKePxKihy+qX4MmQR/2BoyVaZxmOn2ZFFvJLqFI0ou0Yk6cCdyqHwb
+         GRtYMzfB837yy94/8Zz1K+5Bp8QfGo9oM5+oWy5cJnyd6pm1mIxLEZplYqlziYNpoIsW
+         z9CHvMLE5P/zBQ6GRzGl5c515mmfRQzzDACqndmKQAzD40xBy8rydsJ9NSL54WdMhKh3
+         GkWjBwhxF82loJCGw1arbU+DnpsaHC26pGcqYmIJBveXpdngnV3Hk6ctzCMGDvJXByFI
+         wDJQ==
+X-Gm-Message-State: AOAM530UNccRgCioGGCjRa0vYyy9f2L7hhDtjXWqOk9AXdpzNF6RqBwX
+        rZamouAe5+ymw8HqnvyBXdpQ2dQq9jVz64MC52M=
+X-Google-Smtp-Source: ABdhPJwe0B4oPJaBrE/zcyPdEd/iXNQmz7ydwrDHQeDooT4rtlP2BEsxoIKXfXOd3ZfQIEmpnRfN8FY78P1J1rOzibo=
+X-Received: by 2002:a63:ec18:: with SMTP id j24mr13402591pgh.74.1598520016226;
+ Thu, 27 Aug 2020 02:20:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <202008271145.xE8qIAjp%lkp@intel.com> <20200827080558.GA3024@gondor.apana.org.au>
- <CAMj1kXHJrLtnJWYBKBYRtNHVS6rv51+crMsjLEnSqkud0BBaWw@mail.gmail.com>
- <CAK8P3a3tjv78arTj75eKk5zYUhrGkPYRDLiqv3WJJC=U+Jia0Q@mail.gmail.com> <CAMj1kXHhmAdHjK5avXOySw43khzft1g8p48jX7aTeTC0FvS7tQ@mail.gmail.com>
-In-Reply-To: <CAMj1kXHhmAdHjK5avXOySw43khzft1g8p48jX7aTeTC0FvS7tQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 27 Aug 2020 11:19:54 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1nOL+BbvGAM3-aiH-mfzmFYgfFL2dWJKd8=Rw-WosP=w@mail.gmail.com>
-Message-ID: <CAK8P3a1nOL+BbvGAM3-aiH-mfzmFYgfFL2dWJKd8=Rw-WosP=w@mail.gmail.com>
-Subject: Re: lib/crypto/chacha.c:65:1: warning: the frame size of 1604 bytes
- is larger than 1024 bytes
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        kernel test robot <lkp@intel.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        kbuild-all@lists.01.org,
+References: <20200826181706.11098-1-krzk@kernel.org> <20200826181706.11098-24-krzk@kernel.org>
+In-Reply-To: <20200826181706.11098-24-krzk@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 27 Aug 2020 12:20:00 +0300
+Message-ID: <CAHp75VdygxySau_Ma5YqARgR92BNM+AK3yn2rThYxFEmzdYSLg@mail.gmail.com>
+Subject: Re: [PATCH 24/24] Input: sx8643 - Simplify with dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-input <linux-input@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+        Platform Driver <platform-driver-x86@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:coeQkCFQCHOzFYWd/LNBuIApxXKvpdTrY6bcraw/yAhdB4ZJvk9
- ccrXE00WmHGEqhLA/3ZOMLUtP+u7O+lCmWuTbzuXj+zCnC5FUSB7isTXTh3jeBJmvq6fVMD
- CcuTVqdzO+O+dwA09cK7OAS97J9hTa4VHcTBao2L3SilBu607JrbaoMQCZAO/pLwc4gX2Jw
- hSWkhM6KFnTcAMBHOwXIg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/BpwjMeUJ20=:1Y2w50mFJIsOb/1FZFWZ/E
- ZokFJLxXESgV5uV+xYNXJKOgNLndVl/WpsngjusN5qS3UnLj3akBRiupolgzXGNVZw83kvv1k
- /S9RbKi4owBgIpXUetCF/vHXHtRgClCwSVblLjMreGJVRmfx/aVHSxKziT6LaHQJwVvNQVk72
- b0wBzYNwmYnt9SvoipmyHQ13Q8dmvZR1RLRUK9iUjmHKB199GKUuEcXRrQI6dC/1rpd5UPMIU
- gHaba0v4NUfZ8aCCEd05uvPDKW4WuGdiM7XFqNnz2k6ppQqyDGgg79zc0axEY7MjDTuHQ1J9o
- kfG2r8BPxP4OOd7sXF4cO2rXgAVjz6e3PV30aW0rvBIu/yCiYQYGVJbVEsfJ0C6NXgOHSoENj
- SrfdGBeohT5VrDpUxYMU98ONqFlT3uM+2q3V3kVhQ9vIRUhg35WKqCtRIUAxVxH7L8NAnMihR
- 2iaO1022vX8AI/TXITgmzMfchWgZxpvUbNTnd1GKupWnyFGJkFQ+yBKcZ0pCb7rbnC6zAFeG9
- nrxKqmDviASV5NYe7sB81ZmKvi9G0KgxyfGSUikhyIEnHOQMONfNYj6+NaIyXDQkZ74QTeM6I
- ur9cdPY6QWWgE99KmXooIzM/5D+TYKu4uHoipo4DHWb+WyCMX5iV9dbWJVIBVIWgtyUWc2nQU
- ncp9bPqBs7bGNrHRJ0tJJ+YRvDmpC3loORpLUqukG1IIXLwylOhJsUlaV2JmNzuufb0rEc5gu
- YFN7euOs8eGjZyi7/cRpRsM8MsEJZoypLs9cHnLWPzDKWEsyjJuEYJAqLpretWe9NP6FSRtYx
- DlgqkPYjewbXEVTIU9i+m6iFGnpC1fUne/GlwDx1JzUw9rV2DBnfn8KlA5qwhE/v06gml+vPZ
- xVUpWIr4IlmV52G8lEcNzgZhJig6JKFMBhH1ohkN7TcEcnBN/qCDWMk144gCGwnLgxRRetHUu
- OqwqnMbaAdpPOD3mt98BJLSIZLpJqQPO9W9GRzh65tuW4wE4Q8sNT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 10:42 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+On Wed, Aug 26, 2020 at 9:21 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
-> In that case, I suppose we should simply disable instrumentation for
-> chacha_permute()? It is a straight-forward arithmetic transformation
-> on a u32[16] array, where ubsan has limited value afaict.
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
 
-I guess that always works as a last resort, but shouldn't we first try
-to figure out why ubsan even makes a difference and whether the
-object code without ubsan looks like a reasonable representation
-of the source form?
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Since it really is a fairly simple transformation, I would have
-expected the compiler to not emit any ubsan checks. If gcc
-only gets confused about the fixed offsets possibly overflowing
-the fixed-length array, maybe it helps to give it a little extra
-information like (untested):
+Just in case if you want to save more LOCs, you may in some drivers
+introduce temporary variable for device pointer, like
 
---- a/lib/crypto/chacha.c
-+++ b/lib/crypto/chacha.c
-@@ -13,7 +13,7 @@
- #include <asm/unaligned.h>
- #include <crypto/chacha.h>
+struct device *dev = &client->dev;
 
--static void chacha_permute(u32 *x, int nrounds)
-+static void chacha_permute(u32 x[16], int nrounds)
- {
-        int i;
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/input/touchscreen/sx8654.c | 10 +++-------
+>  1 file changed, 3 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/input/touchscreen/sx8654.c b/drivers/input/touchscreen/sx8654.c
+> index de85e57b2486..d2ed9be64c3a 100644
+> --- a/drivers/input/touchscreen/sx8654.c
+> +++ b/drivers/input/touchscreen/sx8654.c
+> @@ -323,13 +323,9 @@ static int sx8654_probe(struct i2c_client *client,
+>
+>         sx8654->gpio_reset = devm_gpiod_get_optional(&client->dev, "reset",
+>                                                      GPIOD_OUT_HIGH);
+> -       if (IS_ERR(sx8654->gpio_reset)) {
+> -               error = PTR_ERR(sx8654->gpio_reset);
+> -               if (error != -EPROBE_DEFER)
+> -                       dev_err(&client->dev, "unable to get reset-gpio: %d\n",
+> -                               error);
+> -               return error;
+> -       }
+> +       if (IS_ERR(sx8654->gpio_reset))
+> +               return dev_err_probe(&client->dev, PTR_ERR(sx8654->gpio_reset),
+> +                                    "unable to get reset-gpio\n");
+>         dev_dbg(&client->dev, "got GPIO reset pin\n");
+>
+>         sx8654->data = device_get_match_data(&client->dev);
+> --
+> 2.17.1
+>
 
-      Arnd
+
+-- 
+With Best Regards,
+Andy Shevchenko
