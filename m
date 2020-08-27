@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB26C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBD7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF4B20825
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8EFC2073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:00:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EC6JFCJ0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fCqpJw64"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kUg9e0Sy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MN54I43C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgH0IAL (ORCPT
+        id S1728684AbgH0IAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:00:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52478 "EHLO
+        Thu, 27 Aug 2020 04:00:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbgH0HyS (ORCPT
+        with ESMTP id S1728363AbgH0HyT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:54:18 -0400
+        Thu, 27 Aug 2020 03:54:19 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73502C061264;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B19C06121A;
         Thu, 27 Aug 2020 00:54:18 -0700 (PDT)
 Date:   Thu, 27 Aug 2020 07:54:16 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
@@ -35,12 +35,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lZRXyvtL1vuDckpPkE05Vn5NLrig7fdoj/FPnWJN3t4=;
-        b=EC6JFCJ0YfnarMq1jkfN3YJ21LhEZxwZk2uAxUEVaqy9S83zJmsvZLjNk8nDjrJTB1lioJ
-        JT/G0gF6R7fgk6ljeMOCCsg/GOEXrwn7DzQ0lYtW0AvIl6QJeAcd7gJ8w1SbBpC3sr2u1Y
-        gObs866qTAUcVth8bmDtdQrwb3VySwqubnC7+WHeFinGRWu6te3IQnAoqrhKMC+gRiCQeJ
-        ISKDjXfPwO02zUzl3Ekx6egjCvM1u63zJKMms68kmKzM8kafukFrqPGEEwvwZaP6e6iU02
-        vcYDRM+2zJv8xgUgyhTKfmRabcRYY4vukiAmkY5A6cqLW+J3BoSfWY24wDt6dw==
+        bh=AkfGLaoqIHqktw//Exf8qq5VjMD1cnxZzW2R3O5WBtw=;
+        b=kUg9e0SyDL7+EaO2Fho0u/ATWoOf/v4x3l86RnzWm+3QN2TWOJr5LDfiGZJQ+5BqwcSlwd
+        POz9lp8OSNAgIluA0cJu6p+sc7+FtSiTZEGkQsJBkJWPuAYSgFacfSVjz1YBwAvjNUjSlM
+        Nn9WvDF8FAnVzz6Whe8JUh3A4k3A5cDzNywDOuIAOheZMaMld85Tv5YC4FRC449Qzpbavt
+        qX1pu/pKpAXloebGS2woX2BNwdcWxe0NyfiQ7sjFQvOVY0xGyEz/oUYIPX5Yzb5FZpA9yI
+        QS4qkUGXumCKt/jeWqf3p+MHylNJgwOruwXLskl0eFSvRGWmqwTFGrPZ4Z5U/g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020e; t=1598514857;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -48,21 +48,21 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lZRXyvtL1vuDckpPkE05Vn5NLrig7fdoj/FPnWJN3t4=;
-        b=fCqpJw645sUZWT+scFcsIY6c4kx41iEjnV1qkuxWu1DLRjv6cfJGT6U7Fe6xrsJbBLIqm4
-        A+VGqIfI8EwBk8Aw==
+        bh=AkfGLaoqIHqktw//Exf8qq5VjMD1cnxZzW2R3O5WBtw=;
+        b=MN54I43CBO4d4eDySfyMDTEycmN/pACLPHNBn5hznmx3JzdgTJIbosVubh0zGS6ruNGqMV
+        Ujo6P9Xso3pdEbCA==
 From:   "tip-bot2 for Boqun Feng" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] lockdep/selftest: Unleash irq_read_recursion2 and
- add more
+Subject: [tip: locking/core] lockdep: Take read/write status in consideration
+ when generate chainkey
 Cc:     Boqun Feng <boqun.feng@gmail.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200807074238.1632519-16-boqun.feng@gmail.com>
-References: <20200807074238.1632519-16-boqun.feng@gmail.com>
+In-Reply-To: <20200807074238.1632519-15-boqun.feng@gmail.com>
+References: <20200807074238.1632519-15-boqun.feng@gmail.com>
 MIME-Version: 1.0
-Message-ID: <159851485628.20229.4921296450007884546.tip-bot2@tip-bot2>
+Message-ID: <159851485675.20229.7430053417111193715.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -74,133 +74,203 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     31e0d747708272356bee9b6a1b90c1e6525b0f6d
-Gitweb:        https://git.kernel.org/tip/31e0d747708272356bee9b6a1b90c1e6525b0f6d
+Commit-ID:     f611e8cf98ec908b9c2c0da6064a660fc6022487
+Gitweb:        https://git.kernel.org/tip/f611e8cf98ec908b9c2c0da6064a660fc6022487
 Author:        Boqun Feng <boqun.feng@gmail.com>
-AuthorDate:    Fri, 07 Aug 2020 15:42:34 +08:00
+AuthorDate:    Fri, 07 Aug 2020 15:42:33 +08:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Wed, 26 Aug 2020 12:42:06 +02:00
 
-lockdep/selftest: Unleash irq_read_recursion2 and add more
+lockdep: Take read/write status in consideration when generate chainkey
 
-Now since we can handle recursive read related irq inversion deadlocks
-correctly, uncomment the irq_read_recursion2 and add more testcases.
+Currently, the chainkey of a lock chain is a hash sum of the class_idx
+of all the held locks, the read/write status are not taken in to
+consideration while generating the chainkey. This could result into a
+problem, if we have:
+
+	P1()
+	{
+		read_lock(B);
+		lock(A);
+	}
+
+	P2()
+	{
+		lock(A);
+		read_lock(B);
+	}
+
+	P3()
+	{
+		lock(A);
+		write_lock(B);
+	}
+
+, and P1(), P2(), P3() run one by one. And when running P2(), lockdep
+detects such a lock chain A -> B is not a deadlock, then it's added in
+the chain cache, and then when running P3(), even if it's a deadlock, we
+could miss it because of the hit of chain cache. This could be confirmed
+by self testcase "chain cached mixed R-L/L-W ".
+
+To resolve this, we use concept "hlock_id" to generate the chainkey, the
+hlock_id is a tuple (hlock->class_idx, hlock->read), which fits in a u16
+type. With this, the chainkeys are different is the lock sequences have
+the same locks but different read/write status.
+
+Besides, since we use "hlock_id" to generate chainkeys, the chain_hlocks
+array now store the "hlock_id"s rather than lock_class indexes.
 
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200807074238.1632519-16-boqun.feng@gmail.com
+Link: https://lkml.kernel.org/r/20200807074238.1632519-15-boqun.feng@gmail.com
 ---
- lib/locking-selftest.c | 59 ++++++++++++++++++++++++++++++++---------
- 1 file changed, 47 insertions(+), 12 deletions(-)
+ kernel/locking/lockdep.c | 53 +++++++++++++++++++++++++--------------
+ 1 file changed, 35 insertions(+), 18 deletions(-)
 
-diff --git a/lib/locking-selftest.c b/lib/locking-selftest.c
-index 002d1ec..f65a658 100644
---- a/lib/locking-selftest.c
-+++ b/lib/locking-selftest.c
-@@ -1053,20 +1053,28 @@ GENERATE_PERMUTATIONS_3_EVENTS(irq_inversion_soft_wlock)
- #define E3()				\
- 					\
- 	IRQ_ENTER();			\
--	RL(A);				\
-+	LOCK(A);			\
- 	L(B);				\
- 	U(B);				\
--	RU(A);				\
-+	UNLOCK(A);			\
- 	IRQ_EXIT();
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index b87766e..cccf4bc 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -372,6 +372,21 @@ static struct hlist_head classhash_table[CLASSHASH_SIZE];
+ static struct hlist_head chainhash_table[CHAINHASH_SIZE];
  
  /*
-- * Generate 12 testcases:
-+ * Generate 24 testcases:
-  */
- #include "locking-selftest-hardirq.h"
--GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion_hard)
-+#include "locking-selftest-rlock.h"
-+GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion_hard_rlock)
++ * the id of held_lock
++ */
++static inline u16 hlock_id(struct held_lock *hlock)
++{
++	BUILD_BUG_ON(MAX_LOCKDEP_KEYS_BITS + 2 > 16);
 +
-+#include "locking-selftest-wlock.h"
-+GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion_hard_wlock)
- 
- #include "locking-selftest-softirq.h"
--GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion_soft)
-+#include "locking-selftest-rlock.h"
-+GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion_soft_rlock)
++	return (hlock->class_idx | (hlock->read << MAX_LOCKDEP_KEYS_BITS));
++}
 +
-+#include "locking-selftest-wlock.h"
-+GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion_soft_wlock)
++static inline unsigned int chain_hlock_class_idx(u16 hlock_id)
++{
++	return hlock_id & (MAX_LOCKDEP_KEYS - 1);
++}
++
++/*
+  * The hash key of the lock dependency chains is a hash itself too:
+  * it's a hash of all locks taken up to that lock, including that lock.
+  * It's a 64-bit hash, because it's important for the keys to be
+@@ -3202,7 +3217,10 @@ static inline void free_chain_hlocks(int base, int size)
  
- #undef E1
- #undef E2
-@@ -1080,8 +1088,8 @@ GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion_soft)
- 					\
- 	IRQ_DISABLE();			\
- 	L(B);				\
--	WL(A);				\
--	WU(A);				\
-+	LOCK(A);			\
-+	UNLOCK(A);			\
- 	U(B);				\
- 	IRQ_ENABLE();
- 
-@@ -1098,13 +1106,21 @@ GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion_soft)
- 	IRQ_EXIT();
+ struct lock_class *lock_chain_get_class(struct lock_chain *chain, int i)
+ {
+-	return lock_classes + chain_hlocks[chain->base + i];
++	u16 chain_hlock = chain_hlocks[chain->base + i];
++	unsigned int class_idx = chain_hlock_class_idx(chain_hlock);
++
++	return lock_classes + class_idx - 1;
+ }
  
  /*
-- * Generate 12 testcases:
-+ * Generate 24 testcases:
+@@ -3228,12 +3246,12 @@ static inline int get_first_held_lock(struct task_struct *curr,
+ /*
+  * Returns the next chain_key iteration
   */
- #include "locking-selftest-hardirq.h"
--// GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion2_hard)
-+#include "locking-selftest-rlock.h"
-+GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion2_hard_rlock)
-+
-+#include "locking-selftest-wlock.h"
-+GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion2_hard_wlock)
+-static u64 print_chain_key_iteration(int class_idx, u64 chain_key)
++static u64 print_chain_key_iteration(u16 hlock_id, u64 chain_key)
+ {
+-	u64 new_chain_key = iterate_chain_key(chain_key, class_idx);
++	u64 new_chain_key = iterate_chain_key(chain_key, hlock_id);
  
- #include "locking-selftest-softirq.h"
--// GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion2_soft)
-+#include "locking-selftest-rlock.h"
-+GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion2_soft_rlock)
-+
-+#include "locking-selftest-wlock.h"
-+GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion2_soft_wlock)
+-	printk(" class_idx:%d -> chain_key:%016Lx",
+-		class_idx,
++	printk(" hlock_id:%d -> chain_key:%016Lx",
++		(unsigned int)hlock_id,
+ 		(unsigned long long)new_chain_key);
+ 	return new_chain_key;
+ }
+@@ -3250,12 +3268,12 @@ print_chain_keys_held_locks(struct task_struct *curr, struct held_lock *hlock_ne
+ 		hlock_next->irq_context);
+ 	for (; i < depth; i++) {
+ 		hlock = curr->held_locks + i;
+-		chain_key = print_chain_key_iteration(hlock->class_idx, chain_key);
++		chain_key = print_chain_key_iteration(hlock_id(hlock), chain_key);
  
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
- # define I_SPINLOCK(x)	lockdep_reset_lock(&lock_##x.dep_map)
-@@ -1257,6 +1273,25 @@ static inline void print_testname(const char *testname)
- 	dotest(name##_rlock_##nr, SUCCESS, LOCKTYPE_RWLOCK);	\
- 	pr_cont("\n");
+ 		print_lock(hlock);
+ 	}
  
-+#define DO_TESTCASE_2RW(desc, name, nr)				\
-+	print_testname(desc"/"#nr);				\
-+	pr_cont("      |");					\
-+	dotest(name##_wlock_##nr, FAILURE, LOCKTYPE_RWLOCK);	\
-+	dotest(name##_rlock_##nr, SUCCESS, LOCKTYPE_RWLOCK);	\
-+	pr_cont("\n");
-+
-+#define DO_TESTCASE_2x2RW(desc, name, nr)			\
-+	DO_TESTCASE_2RW("hard-"desc, name##_hard, nr)		\
-+	DO_TESTCASE_2RW("soft-"desc, name##_soft, nr)		\
-+
-+#define DO_TESTCASE_6x2x2RW(desc, name)				\
-+	DO_TESTCASE_2x2RW(desc, name, 123);			\
-+	DO_TESTCASE_2x2RW(desc, name, 132);			\
-+	DO_TESTCASE_2x2RW(desc, name, 213);			\
-+	DO_TESTCASE_2x2RW(desc, name, 231);			\
-+	DO_TESTCASE_2x2RW(desc, name, 312);			\
-+	DO_TESTCASE_2x2RW(desc, name, 321);
-+
- #define DO_TESTCASE_6(desc, name)				\
- 	print_testname(desc);					\
- 	dotest(name##_spin, FAILURE, LOCKTYPE_SPIN);		\
-@@ -2121,8 +2156,8 @@ void locking_selftest(void)
- 	DO_TESTCASE_6x6("safe-A + unsafe-B #2", irqsafe4);
- 	DO_TESTCASE_6x6RW("irq lock-inversion", irq_inversion);
+-	print_chain_key_iteration(hlock_next->class_idx, chain_key);
++	print_chain_key_iteration(hlock_id(hlock_next), chain_key);
+ 	print_lock(hlock_next);
+ }
  
--	DO_TESTCASE_6x2("irq read-recursion", irq_read_recursion);
--//	DO_TESTCASE_6x2B("irq read-recursion #2", irq_read_recursion2);
-+	DO_TESTCASE_6x2x2RW("irq read-recursion", irq_read_recursion);
-+	DO_TESTCASE_6x2x2RW("irq read-recursion #2", irq_read_recursion2);
+@@ -3263,14 +3281,14 @@ static void print_chain_keys_chain(struct lock_chain *chain)
+ {
+ 	int i;
+ 	u64 chain_key = INITIAL_CHAIN_KEY;
+-	int class_id;
++	u16 hlock_id;
  
- 	ww_tests();
+ 	printk("depth: %u\n", chain->depth);
+ 	for (i = 0; i < chain->depth; i++) {
+-		class_id = chain_hlocks[chain->base + i];
+-		chain_key = print_chain_key_iteration(class_id, chain_key);
++		hlock_id = chain_hlocks[chain->base + i];
++		chain_key = print_chain_key_iteration(hlock_id, chain_key);
  
+-		print_lock_name(lock_classes + class_id);
++		print_lock_name(lock_classes + chain_hlock_class_idx(hlock_id) - 1);
+ 		printk("\n");
+ 	}
+ }
+@@ -3319,7 +3337,7 @@ static int check_no_collision(struct task_struct *curr,
+ 	}
+ 
+ 	for (j = 0; j < chain->depth - 1; j++, i++) {
+-		id = curr->held_locks[i].class_idx;
++		id = hlock_id(&curr->held_locks[i]);
+ 
+ 		if (DEBUG_LOCKS_WARN_ON(chain_hlocks[chain->base + j] != id)) {
+ 			print_collision(curr, hlock, chain);
+@@ -3368,7 +3386,6 @@ static inline int add_chain_cache(struct task_struct *curr,
+ 				  struct held_lock *hlock,
+ 				  u64 chain_key)
+ {
+-	struct lock_class *class = hlock_class(hlock);
+ 	struct hlist_head *hash_head = chainhashentry(chain_key);
+ 	struct lock_chain *chain;
+ 	int i, j;
+@@ -3411,11 +3428,11 @@ static inline int add_chain_cache(struct task_struct *curr,
+ 
+ 	chain->base = j;
+ 	for (j = 0; j < chain->depth - 1; j++, i++) {
+-		int lock_id = curr->held_locks[i].class_idx;
++		int lock_id = hlock_id(curr->held_locks + i);
+ 
+ 		chain_hlocks[chain->base + j] = lock_id;
+ 	}
+-	chain_hlocks[chain->base + j] = class - lock_classes;
++	chain_hlocks[chain->base + j] = hlock_id(hlock);
+ 	hlist_add_head_rcu(&chain->entry, hash_head);
+ 	debug_atomic_inc(chain_lookup_misses);
+ 	inc_chains(chain->irq_context);
+@@ -3602,7 +3619,7 @@ static void check_chain_key(struct task_struct *curr)
+ 		if (prev_hlock && (prev_hlock->irq_context !=
+ 							hlock->irq_context))
+ 			chain_key = INITIAL_CHAIN_KEY;
+-		chain_key = iterate_chain_key(chain_key, hlock->class_idx);
++		chain_key = iterate_chain_key(chain_key, hlock_id(hlock));
+ 		prev_hlock = hlock;
+ 	}
+ 	if (chain_key != curr->curr_chain_key) {
+@@ -4749,7 +4766,7 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+ 		chain_key = INITIAL_CHAIN_KEY;
+ 		chain_head = 1;
+ 	}
+-	chain_key = iterate_chain_key(chain_key, class_idx);
++	chain_key = iterate_chain_key(chain_key, hlock_id(hlock));
+ 
+ 	if (nest_lock && !__lock_is_held(nest_lock, -1)) {
+ 		print_lock_nested_lock_not_held(curr, hlock, ip);
+@@ -5648,7 +5665,7 @@ static void remove_class_from_lock_chain(struct pending_free *pf,
+ 	int i;
+ 
+ 	for (i = chain->base; i < chain->base + chain->depth; i++) {
+-		if (chain_hlocks[i] != class - lock_classes)
++		if (chain_hlock_class_idx(chain_hlocks[i]) != class - lock_classes)
+ 			continue;
+ 		/*
+ 		 * Each lock class occurs at most once in a lock chain so once
