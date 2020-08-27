@@ -2,436 +2,177 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A108C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CEBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9AC42080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B8502080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:21:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XTWkbPbm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGJQu3Tb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgH0PVm (ORCPT
+        id S1728431AbgH0PVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:21:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58344 "EHLO
+        Thu, 27 Aug 2020 11:21:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728692AbgH0LcR (ORCPT
+        with ESMTP id S1728701AbgH0LcR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 07:32:17 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92B2AC06121B;
-        Thu, 27 Aug 2020 04:21:53 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BcgG332Xkz9sSJ;
-        Thu, 27 Aug 2020 21:18:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1598527117;
-        bh=JGkQUzrfaJwWetpSft/MlH9JHRba2xs5k/tJXw18Q/4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XTWkbPbmepzdwPtg50R1u5xl6gt31LrjC6cTBW40HkxSpFe/bVatOl1m+rmnhyaD6
-         9t0RZcTHHWzOwWG0cfVpUkPWMVHhTnJ5MoETLDY097U2qJa2hOuaDBxRInDGLV9DDg
-         rssMw1LNfOVlx8HTKanqJkaH2mShc7Jweu7uxTFhFjlxbgM27sjGKXDa8YQRN6Nnl9
-         dHt9sanVogx/tU63LoUm9kj2v/0LbHkTTg+55VIQBjIC9uqZA6oDg+fgYT1BMNaSPX
-         tlZKuB/6Kx1HXt6Nt77cUg+2fGtTC7vujMy6IzXGXc8i87sMVIRVSBLk8o9hcv6sbA
-         jFyjYCN5EUcIg==
-Date:   Thu, 27 Aug 2020 21:18:32 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>, sbhanu@codeaurora.org,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>, nm@ti.com
-Subject: Re: WARNING: at drivers/opp/core.c:678
- dev_pm_opp_set_rate+0x4cc/0x5d4 - on arm x15
-Message-ID: <20200827211832.3ebeda8a@canb.auug.org.au>
-In-Reply-To: <20200827094651.3grvs6ungv3dh7y3@vireshk-i7>
-References: <CA+G9fYvK5UkERLuBSRH5t2=j5==dbtw45GTMta9MafyJDqFsFA@mail.gmail.com>
-        <20200827094651.3grvs6ungv3dh7y3@vireshk-i7>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/lc2=fBhV=r79f32N/0cZpyA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 992FCC0611E2;
+        Thu, 27 Aug 2020 04:19:25 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id g1so3111645pgm.9;
+        Thu, 27 Aug 2020 04:19:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=A0zpPcYJ1vUHmpV3rQXkBSiNDDj5ItcpLqLQV/ENULo=;
+        b=AGJQu3TbjrCnuhhqkqS7j1YaiFtASNUFy2jKDkkrMPsbG74tH+k2AvHvE3Wq3SFUFK
+         il9cHaz+IFKfK0oQnZqC7GVn9uztwPz7XrF09MilOdo1c4uyLjnkPy7qHUZ328ce7Qim
+         4+rSz1G2nwDriX1NppIqikjH7CHPGsbDohBmB1EO+6vyFcyKtRI5zxP26bovtvOdIqPX
+         vIbFygjdpZzEU/AUet9U27Ekk3eAOZKLaGdUCGl5qGiHktb/Tv1pflAza1wFPATgaMxC
+         +HSEfAU4sPHHQqf4uqxRE8zCDQYE7VMtWATO6g7O3Mi2I6D18seH689L3mOrHGyERk9l
+         t47w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=A0zpPcYJ1vUHmpV3rQXkBSiNDDj5ItcpLqLQV/ENULo=;
+        b=bodw/jAX5fOFl1qBgICUUckdB0Kp4OBNaXNMipWNvfOSYvK8jAmVLdKQ+0sz8UlSku
+         noX4R+giCJXIVVRwoCjnmnXumA03WWB1TR+MkcmfoKqsCp12OCrOOgN0T2ko/oBdcfbA
+         0OPv4AKSmt1W+msmEnM1LpQQkdgnnxvryoUGKTpFi4vzfbYullzfu3maPXSfWreZTs/z
+         QFOXFN9a36NJxllRIXzkBvy5O5gmsVtgFloEp34R71XccGr0aBojRW7dJST2G+6SDm4k
+         BPBDIPDH56+M1fa/rX7HsKAv4u6DI1sZ0nLqCuoguR6o1bhcGTRiVOJbxt37nixLwI9Q
+         QuMA==
+X-Gm-Message-State: AOAM531OXBxcte8ph1zr1Vewy/fKTVmnKdGiK1tQX2DKBjy/FtFiU/r/
+        EffgSOqfJTyl8BI7yKtbAPa2rOG3gjmcHFid
+X-Google-Smtp-Source: ABdhPJx9BG4IH8NlwPLL49IRWs8UoqHlTHOcA3OYqMJkPAu5ZaZsoK54zswbbH4CKT3oBYuVYRl8QQ==
+X-Received: by 2002:a63:2d83:: with SMTP id t125mr13734429pgt.441.1598527165079;
+        Thu, 27 Aug 2020 04:19:25 -0700 (PDT)
+Received: from localhost.localdomain ([2402:7500:46b:c678:1129:dc1b:b8d8:6430])
+        by smtp.gmail.com with ESMTPSA id h64sm2411609pfe.201.2020.08.27.04.19.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Aug 2020 04:19:24 -0700 (PDT)
+From:   cy_huang <u0084500@gmail.com>
+To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        matthias.bgg@gmail.com, linux@roeck-us.net,
+        heikki.krogerus@linux.intel.com
+Cc:     cy_huang@richtek.com, gene_chen@richtek.com,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 3/3] usb typec: mt6360: Add MT6360 Type-C DT binding documentation
+Date:   Thu, 27 Aug 2020 19:18:57 +0800
+Message-Id: <1598527137-6915-3-git-send-email-u0084500@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1598527137-6915-1-git-send-email-u0084500@gmail.com>
+References: <1598527137-6915-1-git-send-email-u0084500@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/lc2=fBhV=r79f32N/0cZpyA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: ChiYuan Huang <cy_huang@richtek.com>
 
-Hi Viresh,
+Add a devicetree binding documentation for the MT6360 Type-C driver.
 
-On Thu, 27 Aug 2020 15:16:51 +0530 Viresh Kumar <viresh.kumar@linaro.org> w=
-rote:
->
-> On 27-08-20, 15:04, Naresh Kamboju wrote:
-> > While boot testing arm x15 devices the Kernel warning noticed with linu=
-x next
-> > tag 20200825.
-> >=20
-> > BAD:  next-20200825
-> > GOOD:  next-20200824
-> >=20
-> > metadata:
-> >   git branch: master
-> >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-=
-next.git
-> >   git commit: 3a00d3dfd4b68b208ecd5405e676d06c8ad6bb63
-> >   git describe: next-20200825
-> >   make_kernelversion: 5.9.0-rc2
-> >   kernel-config:
-> > https://builds.tuxbuild.com/LDTu4GFMmvkJspza5LJIjQ/kernel.config
-> >=20
-> > We are working on git bisect and boot testing on x15 and get back to yo=
-u. =20
->=20
-> Was this working earlier ? But considering that multiple things
-> related to OPP broke recently, it may be a OPP core bug as well. Not
-> sure though.
->=20
-> Can you give me delta between both the next branches for drivers/opp/
-> path ? I didn't get these tags after fetching linux-next.
+usb typec: mt6360: Rename DT binding doument from mt6360 to mt636x
 
-Yeah, you need to explicitly fetch the tags as only the latest tag is
-part of the branches in the tree.
+Change binding document file name from mt6360 to mt636xfor the
+future compatible.
+Also change internal description from mt6360 to mt636x.
 
-$ git diff next-20200824..next-20200825 drivers/opp
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 6978b9218c6e..8b3c3986f589 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -779,29 +779,39 @@ static int _set_opp_custom(const struct opp_table *op=
-p_table,
- 	return opp_table->set_opp(data);
- }
-=20
-+static int _set_required_opp(struct device *dev, struct device *pd_dev,
-+			     struct dev_pm_opp *opp, int i)
-+{
-+	unsigned int pstate =3D likely(opp) ? opp->required_opps[i]->pstate : 0;
-+	int ret;
+Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+---
+ .../bindings/usb/mediatek,mt636x-tcpc.yaml         | 73 ++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/mediatek,mt636x-tcpc.yaml
+
+diff --git a/Documentation/devicetree/bindings/usb/mediatek,mt636x-tcpc.yaml b/Documentation/devicetree/bindings/usb/mediatek,mt636x-tcpc.yaml
+new file mode 100644
+index 00000000..e6d2b3d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/mediatek,mt636x-tcpc.yaml
+@@ -0,0 +1,73 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/usb/mediatek,mt636x-tcpc.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+	if (!pd_dev)
-+		return 0;
++title: Mediatek MT636x Type-C Port Switch and Power Delivery controller DT bindings
 +
-+	ret =3D dev_pm_genpd_set_performance_state(pd_dev, pstate);
-+	if (ret) {
-+		dev_err(dev, "Failed to set performance rate of %s: %d (%d)\n",
-+			dev_name(pd_dev), pstate, ret);
-+	}
++maintainers:
++  - ChiYuan Huang <cy_huang@richtek.com>
 +
-+	return ret;
-+}
++description: |
++  Mediatek MT636x is a multi-functional device. It integrates charger, ADC, flash, RGB indicators,
++  regulators (BUCKs/LDOs), and TypeC Port Switch with Power Delivery controller.
++  This document only describes MT636x Type-C Port Switch and Power Delivery controller.
 +
- /* This is only called for PM domain for now */
- static int _set_required_opps(struct device *dev,
- 			      struct opp_table *opp_table,
--			      struct dev_pm_opp *opp)
-+			      struct dev_pm_opp *opp, bool up)
- {
- 	struct opp_table **required_opp_tables =3D opp_table->required_opp_tables;
- 	struct device **genpd_virt_devs =3D opp_table->genpd_virt_devs;
--	unsigned int pstate;
- 	int i, ret =3D 0;
-=20
- 	if (!required_opp_tables)
- 		return 0;
-=20
- 	/* Single genpd case */
--	if (!genpd_virt_devs) {
--		pstate =3D likely(opp) ? opp->required_opps[0]->pstate : 0;
--		ret =3D dev_pm_genpd_set_performance_state(dev, pstate);
--		if (ret) {
--			dev_err(dev, "Failed to set performance state of %s: %d (%d)\n",
--				dev_name(dev), pstate, ret);
--		}
--		return ret;
--	}
-+	if (!genpd_virt_devs)
-+		return _set_required_opp(dev, dev, opp, 0);
-=20
- 	/* Multiple genpd case */
-=20
-@@ -811,19 +821,21 @@ static int _set_required_opps(struct device *dev,
- 	 */
- 	mutex_lock(&opp_table->genpd_virt_dev_lock);
-=20
--	for (i =3D 0; i < opp_table->required_opp_count; i++) {
--		pstate =3D likely(opp) ? opp->required_opps[i]->pstate : 0;
--
--		if (!genpd_virt_devs[i])
--			continue;
--
--		ret =3D dev_pm_genpd_set_performance_state(genpd_virt_devs[i], pstate);
--		if (ret) {
--			dev_err(dev, "Failed to set performance rate of %s: %d (%d)\n",
--				dev_name(genpd_virt_devs[i]), pstate, ret);
--			break;
-+	/* Scaling up? Set required OPPs in normal order, else reverse */
-+	if (up) {
-+		for (i =3D 0; i < opp_table->required_opp_count; i++) {
-+			ret =3D _set_required_opp(dev, genpd_virt_devs[i], opp, i);
-+			if (ret)
-+				break;
-+		}
-+	} else {
-+		for (i =3D opp_table->required_opp_count - 1; i >=3D 0; i--) {
-+			ret =3D _set_required_opp(dev, genpd_virt_devs[i], opp, i);
-+			if (ret)
-+				break;
- 		}
- 	}
++properties:
++  compatible:
++    enum:
++      - mediatek,mt6360-tcpc
 +
- 	mutex_unlock(&opp_table->genpd_virt_dev_lock);
-=20
- 	return ret;
-@@ -882,7 +894,7 @@ static int _opp_set_rate_zero(struct device *dev, struc=
-t opp_table *opp_table)
- 	if (opp_table->regulators)
- 		regulator_disable(opp_table->regulators[0]);
-=20
--	ret =3D _set_required_opps(dev, opp_table, NULL);
-+	ret =3D _set_required_opps(dev, opp_table, NULL, false);
-=20
- 	opp_table->enabled =3D false;
- 	return ret;
-@@ -973,7 +985,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned lo=
-ng target_freq)
-=20
- 	/* Scaling up? Configure required OPPs before frequency */
- 	if (freq >=3D old_freq) {
--		ret =3D _set_required_opps(dev, opp_table, opp);
-+		ret =3D _set_required_opps(dev, opp_table, opp, true);
- 		if (ret)
- 			goto put_opp;
- 	}
-@@ -993,7 +1005,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned l=
-ong target_freq)
-=20
- 	/* Scaling down? Configure required OPPs after frequency */
- 	if (!ret && freq < old_freq) {
--		ret =3D _set_required_opps(dev, opp_table, opp);
-+		ret =3D _set_required_opps(dev, opp_table, opp, false);
- 		if (ret)
- 			dev_err(dev, "Failed to set required opps: %d\n", ret);
- 	}
-@@ -1068,7 +1080,7 @@ static struct opp_table *_allocate_opp_table(struct d=
-evice *dev, int index)
- 	 */
- 	opp_table =3D kzalloc(sizeof(*opp_table), GFP_KERNEL);
- 	if (!opp_table)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
-=20
- 	mutex_init(&opp_table->lock);
- 	mutex_init(&opp_table->genpd_virt_dev_lock);
-@@ -1079,8 +1091,8 @@ static struct opp_table *_allocate_opp_table(struct d=
-evice *dev, int index)
-=20
- 	opp_dev =3D _add_opp_dev(dev, opp_table);
- 	if (!opp_dev) {
--		kfree(opp_table);
--		return NULL;
-+		ret =3D -ENOMEM;
-+		goto err;
- 	}
-=20
- 	_of_init_opp_table(opp_table, dev, index);
-@@ -1089,16 +1101,21 @@ static struct opp_table *_allocate_opp_table(struct=
- device *dev, int index)
- 	opp_table->clk =3D clk_get(dev, NULL);
- 	if (IS_ERR(opp_table->clk)) {
- 		ret =3D PTR_ERR(opp_table->clk);
--		if (ret !=3D -EPROBE_DEFER)
--			dev_dbg(dev, "%s: Couldn't find clock: %d\n", __func__,
--				ret);
-+		if (ret =3D=3D -EPROBE_DEFER)
-+			goto err;
++  interrupts-extended:
++    maxItems: 1
 +
-+		dev_dbg(dev, "%s: Couldn't find clock: %d\n", __func__, ret);
- 	}
-=20
- 	/* Find interconnect path(s) for the device */
- 	ret =3D dev_pm_opp_of_find_icc_paths(dev, opp_table);
--	if (ret)
-+	if (ret) {
-+		if (ret =3D=3D -EPROBE_DEFER)
-+			goto err;
++  interrupt-names:
++    items:
++      - const: PD_IRQB
 +
- 		dev_warn(dev, "%s: Error finding interconnect paths: %d\n",
- 			 __func__, ret);
-+	}
-=20
- 	BLOCKING_INIT_NOTIFIER_HEAD(&opp_table->head);
- 	INIT_LIST_HEAD(&opp_table->opp_list);
-@@ -1107,6 +1124,10 @@ static struct opp_table *_allocate_opp_table(struct =
-device *dev, int index)
- 	/* Secure the device table modification */
- 	list_add(&opp_table->node, &opp_tables);
- 	return opp_table;
++patternProperties:
++  "connector":
++    type: object
++    $ref: ../connector/usb-connector.yaml#
++    description:
++      Properties for usb c connector.
 +
-+err:
-+	kfree(opp_table);
-+	return ERR_PTR(ret);
- }
-=20
- void _get_opp_table_kref(struct opp_table *opp_table)
-@@ -1129,7 +1150,7 @@ static struct opp_table *_opp_get_opp_table(struct de=
-vice *dev, int index)
- 	if (opp_table) {
- 		if (!_add_opp_dev_unlocked(dev, opp_table)) {
- 			dev_pm_opp_put_opp_table(opp_table);
--			opp_table =3D NULL;
-+			opp_table =3D ERR_PTR(-ENOMEM);
- 		}
- 		goto unlock;
- 	}
-@@ -1573,8 +1594,8 @@ struct opp_table *dev_pm_opp_set_supported_hw(struct =
-device *dev,
- 	struct opp_table *opp_table;
-=20
- 	opp_table =3D dev_pm_opp_get_opp_table(dev);
--	if (!opp_table)
--		return ERR_PTR(-ENOMEM);
-+	if (IS_ERR(opp_table))
-+		return opp_table;
-=20
- 	/* Make sure there are no concurrent readers while updating opp_table */
- 	WARN_ON(!list_empty(&opp_table->opp_list));
-@@ -1632,8 +1653,8 @@ struct opp_table *dev_pm_opp_set_prop_name(struct dev=
-ice *dev, const char *name)
- 	struct opp_table *opp_table;
-=20
- 	opp_table =3D dev_pm_opp_get_opp_table(dev);
--	if (!opp_table)
--		return ERR_PTR(-ENOMEM);
-+	if (IS_ERR(opp_table))
-+		return opp_table;
-=20
- 	/* Make sure there are no concurrent readers while updating opp_table */
- 	WARN_ON(!list_empty(&opp_table->opp_list));
-@@ -1725,8 +1746,8 @@ struct opp_table *dev_pm_opp_set_regulators(struct de=
-vice *dev,
- 	int ret, i;
-=20
- 	opp_table =3D dev_pm_opp_get_opp_table(dev);
--	if (!opp_table)
--		return ERR_PTR(-ENOMEM);
-+	if (IS_ERR(opp_table))
-+		return opp_table;
-=20
- 	/* This should be called before OPPs are initialized */
- 	if (WARN_ON(!list_empty(&opp_table->opp_list))) {
-@@ -1833,8 +1854,8 @@ struct opp_table *dev_pm_opp_set_clkname(struct devic=
-e *dev, const char *name)
- 	int ret;
-=20
- 	opp_table =3D dev_pm_opp_get_opp_table(dev);
--	if (!opp_table)
--		return ERR_PTR(-ENOMEM);
-+	if (IS_ERR(opp_table))
-+		return opp_table;
-=20
- 	/* This should be called before OPPs are initialized */
- 	if (WARN_ON(!list_empty(&opp_table->opp_list))) {
-@@ -1901,8 +1922,8 @@ struct opp_table *dev_pm_opp_register_set_opp_helper(=
-struct device *dev,
- 		return ERR_PTR(-EINVAL);
-=20
- 	opp_table =3D dev_pm_opp_get_opp_table(dev);
--	if (!opp_table)
--		return ERR_PTR(-ENOMEM);
-+	if (!IS_ERR(opp_table))
-+		return opp_table;
-=20
- 	/* This should be called before OPPs are initialized */
- 	if (WARN_ON(!list_empty(&opp_table->opp_list))) {
-@@ -1982,8 +2003,8 @@ struct opp_table *dev_pm_opp_attach_genpd(struct devi=
-ce *dev,
- 	const char **name =3D names;
-=20
- 	opp_table =3D dev_pm_opp_get_opp_table(dev);
--	if (!opp_table)
--		return ERR_PTR(-ENOMEM);
-+	if (IS_ERR(opp_table))
-+		return opp_table;
-=20
- 	/*
- 	 * If the genpd's OPP table isn't already initialized, parsing of the
-@@ -2153,8 +2174,8 @@ int dev_pm_opp_add(struct device *dev, unsigned long =
-freq, unsigned long u_volt)
- 	int ret;
-=20
- 	opp_table =3D dev_pm_opp_get_opp_table(dev);
--	if (!opp_table)
--		return -ENOMEM;
-+	if (IS_ERR(opp_table))
-+		return PTR_ERR(opp_table);
-=20
- 	/* Fix regulator count for dynamic OPPs */
- 	opp_table->regulator_count =3D 1;
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index 7d9d4455a59e..e39ddcc779af 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -947,8 +947,8 @@ int dev_pm_opp_of_add_table(struct device *dev)
- 	int ret;
-=20
- 	opp_table =3D dev_pm_opp_get_opp_table_indexed(dev, 0);
--	if (!opp_table)
--		return -ENOMEM;
-+	if (IS_ERR(opp_table))
-+		return PTR_ERR(opp_table);
-=20
- 	/*
- 	 * OPPs have two version of bindings now. Also try the old (v1)
-@@ -1002,8 +1002,8 @@ int dev_pm_opp_of_add_table_indexed(struct device *de=
-v, int index)
- 	}
-=20
- 	opp_table =3D dev_pm_opp_get_opp_table_indexed(dev, index);
--	if (!opp_table)
--		return -ENOMEM;
-+	if (IS_ERR(opp_table))
-+		return PTR_ERR(opp_table);
-=20
- 	ret =3D _of_add_opp_table_v2(dev, opp_table);
- 	if (ret)
++additionalProperties: false
++
++required:
++  - compatible
++  - interrupts-extended
++  - interrupt-names
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/usb/pd.h>
++    i2c0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        mt6360@34 {
++            compatible = "mediatek,mt6360";
++            reg = <0x34>;
++
++            tcpc {
++                compatible = "mediatek,mt6360-tcpc";
++                interrupts-extended = <&gpio26 3 IRQ_TYPE_LEVEL_LOW>;
++                interrupt-names = "PD_IRQB";
++
++                connector {
++                        compatible = "usb-c-connector";
++                        label = "USB-C";
++                        data-role = "dual";
++                        power-role = "dual";
++                        try-power-role = "sink";
++                        source-pdos = <PDO_FIXED(5000, 1000, PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP)>;
++                        sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP)>;
++                        op-sink-microwatt = <10000000>;
++                };
++            };
++        };
++    };
++...
+-- 
+2.7.4
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/lc2=fBhV=r79f32N/0cZpyA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9HlokACgkQAVBC80lX
-0GwZAwf+O1kXzQQ9o40/uccDJvSP0ptBP4b0O2LOcDcXGJTuYCRWxYCiejzoGEAw
-tzwyZi6YLL+IG9noHb+68fvCrVLZW7t33DtyhqF4MSxL/LUe6Hxn4eRMQEyt6f7a
-+awiM5nr5YrzSqpIoX8YDPDB9k3oAQaiVXMvKi1Wi+BLqFUgBUMi34RGMAeNumjC
-CICNoahPhML3wR8kdlePniInWJyLzRB/T+JHp9ovvrVlMsIEYgXilI3esf5aLRiF
-KIAYnl6CbVf6BllH6I0nkAHG0YBzfhZ2Rir2V3yuAJ6RspqbDWi24JcovQ+cZfJA
-hEC/x5vvVqZiqGoxa7eKNhLZG1t5Wg==
-=cg31
------END PGP SIGNATURE-----
-
---Sig_/lc2=fBhV=r79f32N/0cZpyA--
