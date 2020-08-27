@@ -2,249 +2,80 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FABC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51660C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42718207DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:48:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598557691;
-	bh=S7+ytNvy4Ms5HI/eVO4FDsU8aXgDwpeOVIrlQEqYQZI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G5B9Wm6q+Bw9pHi5qLgKnXgsC7MVz7/uJjDkeQdU/Ne93hDFhv/3Jzx3Ygu3eLm+2
-	 IdBo4BdGDUYrw709ab8lucLpPkbIEvYDHGMd5ZKncMz9gAKV6ZjBKqCq+dWa/6aYQP
-	 QqqEFKsVi5VJ4fTQBx/43WeOHndB9ckFnlFlbiPY=
+	by mail.kernel.org (Postfix) with ESMTP id 21F2E207DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgH0TsK (ORCPT
+        id S1727921AbgH0Ts2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:48:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbgH0TsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:48:09 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FD1A207DF;
-        Thu, 27 Aug 2020 19:48:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598557688;
-        bh=S7+ytNvy4Ms5HI/eVO4FDsU8aXgDwpeOVIrlQEqYQZI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hxfcnR1bLSaTFTPs0qXEnwKXtAxe0Som9YeDELU9IFUddMrykmithPUghN7+mCpgm
-         EWy8/WYWGiYxCB0bNS1UIP2Pp/xi3DMhXawyn+74GswLeSyCPBKEDZm9+7whwUpbJ2
-         N9mfe01B6lf5jKtp7DPgah+V787G3cIyxoDhED5A=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3.1] Input: bu21013_ts - Use local 'client->dev' variable in probe()
-Date:   Thu, 27 Aug 2020 21:47:45 +0200
-Message-Id: <20200827194745.10721-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200827185829.30096-27-krzk@kernel.org>
-References: <20200827185829.30096-27-krzk@kernel.org>
+        Thu, 27 Aug 2020 15:48:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51592 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbgH0TsZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 15:48:25 -0400
+Received: from forward105j.mail.yandex.net (forward105j.mail.yandex.net [IPv6:2a02:6b8:0:801:2::108])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99AFAC06121B
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 12:48:22 -0700 (PDT)
+Received: from mxback17j.mail.yandex.net (mxback17j.mail.yandex.net [IPv6:2a02:6b8:0:1619::93])
+        by forward105j.mail.yandex.net (Yandex) with ESMTP id 5611BB20D8C;
+        Thu, 27 Aug 2020 22:48:17 +0300 (MSK)
+Received: from iva7-f62245f79210.qloud-c.yandex.net (iva7-f62245f79210.qloud-c.yandex.net [2a02:6b8:c0c:2e83:0:640:f622:45f7])
+        by mxback17j.mail.yandex.net (mxback/Yandex) with ESMTP id cCPYONAQh0-mGbekdjK;
+        Thu, 27 Aug 2020 22:48:17 +0300
+Received: by iva7-f62245f79210.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id JKX2XogRXs-mEnG4U43;
+        Thu, 27 Aug 2020 22:48:15 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Lach <iam@lach.pw>
+Cc:     iam@lach.pw, Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Julian Anastasov <ja@ssi.bg>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Remove ipvs v6 dependency on iptables
+Date:   Fri, 28 Aug 2020 00:48:02 +0500
+Message-Id: <20200827194802.1164-1-iam@lach.pw>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'dev' is shorter and simpler than '&client->dev' and in few cases it
-allows to skip line wrapping. Probe function uses '&client->dev' a lot,
-so this improves readability slightly.
+This dependency was added in 63dca2c0b0e7a92cb39d1b1ecefa32ffda201975, because this commit had dependency on
+ipv6_find_hdr, which was located in iptables-specific code
 
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
+But it is no longer required, because f8f626754ebeca613cf1af2e6f890cfde0e74d5b moved them to a more common location
 ---
+ net/netfilter/ipvs/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-Changes since v3:
-1. Correct suggested-by tag,
-2. Add Reviewed-by tag.
-
-Changes since v2:
-1. New patch
----
- drivers/input/touchscreen/bu21013_ts.c | 61 ++++++++++++--------------
- 1 file changed, 28 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/input/touchscreen/bu21013_ts.c b/drivers/input/touchscreen/bu21013_ts.c
-index 86bd38243d6c..f09204091ba5 100644
---- a/drivers/input/touchscreen/bu21013_ts.c
-+++ b/drivers/input/touchscreen/bu21013_ts.c
-@@ -411,31 +411,32 @@ static int bu21013_probe(struct i2c_client *client,
- 	struct input_dev *in_dev;
- 	struct input_absinfo *info;
- 	u32 max_x = 0, max_y = 0;
-+	struct device *dev = &client->dev;
- 	int error;
- 
- 	if (!i2c_check_functionality(client->adapter,
- 				     I2C_FUNC_SMBUS_BYTE_DATA)) {
--		dev_err(&client->dev, "i2c smbus byte data not supported\n");
-+		dev_err(dev, "i2c smbus byte data not supported\n");
- 		return -EIO;
- 	}
- 
- 	if (!client->irq) {
--		dev_err(&client->dev, "No IRQ set up\n");
-+		dev_err(dev, "No IRQ set up\n");
- 		return -EINVAL;
- 	}
- 
--	ts = devm_kzalloc(&client->dev, sizeof(*ts), GFP_KERNEL);
-+	ts = devm_kzalloc(dev, sizeof(*ts), GFP_KERNEL);
- 	if (!ts)
- 		return -ENOMEM;
- 
- 	ts->client = client;
- 
--	ts->x_flip = device_property_read_bool(&client->dev, "rohm,flip-x");
--	ts->y_flip = device_property_read_bool(&client->dev, "rohm,flip-y");
-+	ts->x_flip = device_property_read_bool(dev, "rohm,flip-x");
-+	ts->y_flip = device_property_read_bool(dev, "rohm,flip-y");
- 
--	in_dev = devm_input_allocate_device(&client->dev);
-+	in_dev = devm_input_allocate_device(dev);
- 	if (!in_dev) {
--		dev_err(&client->dev, "device memory alloc failed\n");
-+		dev_err(dev, "device memory alloc failed\n");
- 		return -ENOMEM;
- 	}
- 	ts->in_dev = in_dev;
-@@ -445,8 +446,8 @@ static int bu21013_probe(struct i2c_client *client,
- 	in_dev->name = DRIVER_TP;
- 	in_dev->id.bustype = BUS_I2C;
- 
--	device_property_read_u32(&client->dev, "rohm,touch-max-x", &max_x);
--	device_property_read_u32(&client->dev, "rohm,touch-max-y", &max_y);
-+	device_property_read_u32(dev, "rohm,touch-max-x", &max_x);
-+	device_property_read_u32(dev, "rohm,touch-max-y", &max_y);
- 
- 	input_set_abs_params(in_dev, ABS_MT_POSITION_X, 0, max_x, 0, 0);
- 	input_set_abs_params(in_dev, ABS_MT_POSITION_Y, 0, max_y, 0, 0);
-@@ -455,14 +456,14 @@ static int bu21013_probe(struct i2c_client *client,
- 
- 	/* Adjust for the legacy "flip" properties, if present */
- 	if (!ts->props.invert_x &&
--	    device_property_read_bool(&client->dev, "rohm,flip-x")) {
-+	    device_property_read_bool(dev, "rohm,flip-x")) {
- 		info = &in_dev->absinfo[ABS_MT_POSITION_X];
- 		info->maximum -= info->minimum;
- 		info->minimum = 0;
- 	}
- 
- 	if (!ts->props.invert_y &&
--	    device_property_read_bool(&client->dev, "rohm,flip-y")) {
-+	    device_property_read_bool(dev, "rohm,flip-y")) {
- 		info = &in_dev->absinfo[ABS_MT_POSITION_Y];
- 		info->maximum -= info->minimum;
- 		info->minimum = 0;
-@@ -472,50 +473,46 @@ static int bu21013_probe(struct i2c_client *client,
- 				    INPUT_MT_DIRECT | INPUT_MT_TRACK |
- 					INPUT_MT_DROP_UNUSED);
- 	if (error) {
--		dev_err(&client->dev, "failed to initialize MT slots");
-+		dev_err(dev, "failed to initialize MT slots");
- 		return error;
- 	}
- 
--	ts->regulator = devm_regulator_get(&client->dev, "avdd");
-+	ts->regulator = devm_regulator_get(dev, "avdd");
- 	if (IS_ERR(ts->regulator)) {
--		dev_err(&client->dev, "regulator_get failed\n");
-+		dev_err(dev, "regulator_get failed\n");
- 		return PTR_ERR(ts->regulator);
- 	}
- 
- 	error = regulator_enable(ts->regulator);
- 	if (error) {
--		dev_err(&client->dev, "regulator enable failed\n");
-+		dev_err(dev, "regulator enable failed\n");
- 		return error;
- 	}
- 
--	error = devm_add_action_or_reset(&client->dev, bu21013_power_off, ts);
-+	error = devm_add_action_or_reset(dev, bu21013_power_off, ts);
- 	if (error) {
--		dev_err(&client->dev, "failed to install power off handler\n");
-+		dev_err(dev, "failed to install power off handler\n");
- 		return error;
- 	}
- 
- 	/* Named "CS" on the chip, DT binding is "reset" */
--	ts->cs_gpiod = devm_gpiod_get(&client->dev, "reset", GPIOD_OUT_HIGH);
-+	ts->cs_gpiod = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
- 	if (IS_ERR(ts->cs_gpiod))
--		return dev_err_probe(&client->dev, PTR_ERR(ts->cs_gpiod),
--				     "failed to get CS GPIO\n");
-+		return dev_err_probe(dev, PTR_ERR(ts->cs_gpiod), "failed to get CS GPIO\n");
- 
- 	gpiod_set_consumer_name(ts->cs_gpiod, "BU21013 CS");
- 
--	error = devm_add_action_or_reset(&client->dev,
--					 bu21013_disable_chip, ts);
-+	error = devm_add_action_or_reset(dev, bu21013_disable_chip, ts);
- 	if (error) {
--		dev_err(&client->dev,
--			"failed to install chip disable handler\n");
-+		dev_err(dev, "failed to install chip disable handler\n");
- 		return error;
- 	}
- 
- 	/* Named "INT" on the chip, DT binding is "touch" */
--	ts->int_gpiod = devm_gpiod_get_optional(&client->dev,
--						"touch", GPIOD_IN);
-+	ts->int_gpiod = devm_gpiod_get_optional(dev, "touch", GPIOD_IN);
- 	error = PTR_ERR_OR_ZERO(ts->int_gpiod);
- 	if (error)
--		return dev_err_probe(&client->dev, error, "failed to get INT GPIO\n");
-+		return dev_err_probe(dev, error, "failed to get INT GPIO\n");
- 
- 	if (ts->int_gpiod)
- 		gpiod_set_consumer_name(ts->int_gpiod, "BU21013 INT");
-@@ -523,22 +520,20 @@ static int bu21013_probe(struct i2c_client *client,
- 	/* configure the touch panel controller */
- 	error = bu21013_init_chip(ts);
- 	if (error) {
--		dev_err(&client->dev, "error in bu21013 config\n");
-+		dev_err(dev, "error in bu21013 config\n");
- 		return error;
- 	}
- 
--	error = devm_request_threaded_irq(&client->dev, client->irq,
--					  NULL, bu21013_gpio_irq,
-+	error = devm_request_threaded_irq(dev, client->irq, NULL, bu21013_gpio_irq,
- 					  IRQF_ONESHOT, DRIVER_TP, ts);
- 	if (error) {
--		dev_err(&client->dev, "request irq %d failed\n",
--			client->irq);
-+		dev_err(dev, "request irq %d failed\n", client->irq);
- 		return error;
- 	}
- 
- 	error = input_register_device(in_dev);
- 	if (error) {
--		dev_err(&client->dev, "failed to register input device\n");
-+		dev_err(dev, "failed to register input device\n");
- 		return error;
- 	}
- 
+diff --git a/net/netfilter/ipvs/Kconfig b/net/netfilter/ipvs/Kconfig
+index 2c1593089..eb0e329f9 100644
+--- a/net/netfilter/ipvs/Kconfig
++++ b/net/netfilter/ipvs/Kconfig
+@@ -29,7 +29,6 @@ if IP_VS
+ config	IP_VS_IPV6
+ 	bool "IPv6 support for IPVS"
+ 	depends on IPV6 = y || IP_VS = IPV6
+-	select IP6_NF_IPTABLES
+ 	select NF_DEFRAG_IPV6
+ 	help
+ 	  Add IPv6 support to IPVS.
 -- 
-2.17.1
+2.28.0
 
