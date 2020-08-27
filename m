@@ -2,107 +2,182 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75FBC433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9042C433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91A052084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:54:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mixtli.metztli.it header.i=@mixtli.metztli.it header.b="UIGPMEkY"
+	by mail.kernel.org (Postfix) with ESMTP id 98F0F208C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgH0VyM (ORCPT
+        id S1727888AbgH0VyS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 17:54:12 -0400
-Received: from mail7.static.mailgun.info ([104.130.122.7]:45252 "EHLO
-        mail7.static.mailgun.info" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgH0VyL (ORCPT
+        Thu, 27 Aug 2020 17:54:18 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:38916 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727831AbgH0VyS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 17:54:11 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mixtli.metztli.it; q=dns/txt;
- s=mx; t=1598565251; h=From: Date: Message-Id: To: Subject: Sender;
- bh=o+9aW35LyZ+a6CX/oxEFA/hVTeU4qS0Hd7WDhPR4GUM=; b=UIGPMEkYeXF6GjSu29GA7J9euCEhilY6CnDR9HIBhMw+Kissy+TRCiLrfLTRImAxIkz9zpQP
- Vfu478hiXzX5SRB/Mx5NFptESGFjXShdU0HSer8/k5zaZoAdZehwbyfdEQQtvmcJfkjnwG/S
- 72wh16HotXPUKDDgCpYqJwN2yuY=
-X-Mailgun-Sending-Ip: 104.130.122.7
-X-Mailgun-Sid: WyIxYzIzYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgIjE3YjU0Il0=
-Received: from huitzilopochtli.metztli-it.com
- (99-130-254-3.lightspeed.sntcca.sbcglobal.net [99.130.254.3]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5f482b702fd6d21f0a2ffa79 (version=TLS1.3, cipher=TLS_AES_128_GCM_SHA256);
- Thu, 27 Aug 2020 21:53:52 GMT
-Received: by huitzilopochtli.metztli-it.com (Postfix, from userid 1000)
-        id 620A468F3402; Thu, 27 Aug 2020 14:53:51 -0700 (PDT)
-Subject: Re: [ANNOUNCE] Reiser5: Selective File Migration - User Interface
-To:     <edward.shishkin@gmail.com>, <reiserfs-devel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-X-Mailer: mail (GNU Mailutils 3.9)
-Message-Id: <20200827215351.620A468F3402@huitzilopochtli.metztli-it.com>
-Date:   Thu, 27 Aug 2020 14:53:51 -0700 (PDT)
-From:   Metztli Information Technology <jose.r.r@metztli.com>
+        Thu, 27 Aug 2020 17:54:18 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-58-iJVQv5u7OyCBBBM2t5KBVA-1; Thu, 27 Aug 2020 22:54:12 +0100
+X-MC-Unique: iJVQv5u7OyCBBBM2t5KBVA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 27 Aug 2020 22:54:12 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 27 Aug 2020 22:54:12 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Joe Perches' <joe@perches.com>,
+        Alex Dewar <alex.dewar90@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        cocci <cocci@systeme.lip6.fr>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "accessrunner-general@lists.sourceforge.net" 
+        <accessrunner-general@lists.sourceforge.net>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+Thread-Topic: [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+Thread-Index: AQHWfJNPoPleWxCDKky1KLXQzyLa5alMfq2A
+Date:   Thu, 27 Aug 2020 21:54:12 +0000
+Message-ID: <c256eba42a564c01a8e470320475d46f@AcuMS.aculab.com>
+References: <20200824222322.22962-1-alex.dewar90@gmail.com>
+         <48f2dc90-7852-eaf1-55d7-2c85cf954688@rasmusvillemoes.dk>
+         <20200827071537.GA168593@kroah.com>
+         <20200827131819.7rcl2f5js3hkoqj2@lenovo-laptop>
+         <def24e9e-018c-9712-0d07-d4cbc84f07d9@rasmusvillemoes.dk>
+         <20200827144846.yauuttjaqtxaldxg@lenovo-laptop>
+ <5d1dfb9b031130d4d20763ec621233a19d6a88a2.camel@perches.com>
+In-Reply-To: <5d1dfb9b031130d4d20763ec621233a19d6a88a2.camel@perches.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 2:13 PM Edward Shishkin <edward.shishkin@gmail.com> wrote:
->
-> [...]
->
+From: Joe Perches
+> Sent: 27 August 2020 17:59
+> To: Alex Dewar <alex.dewar90@gmail.com>; Rasmus Villemoes <linux@rasmusvillemoes.dk>; cocci
+> <cocci@systeme.lip6.fr>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Kees Cook <keescook@chromium.org>; Gustavo A. R.
+> Silva <gustavoars@kernel.org>; accessrunner-general@lists.sourceforge.net; linux-usb@vger.kernel.org;
+> linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+> 
+> On Thu, 2020-08-27 at 15:48 +0100, Alex Dewar wrote:
+> > On Thu, Aug 27, 2020 at 03:41:06PM +0200, Rasmus Villemoes wrote:
+> > > On 27/08/2020 15.18, Alex Dewar wrote:
+> > > > On Thu, Aug 27, 2020 at 09:15:37AM +0200, Greg Kroah-Hartman wrote:
+> > > > > On Thu, Aug 27, 2020 at 08:42:06AM +0200, Rasmus Villemoes wrote:
+> > > > > > On 25/08/2020 00.23, Alex Dewar wrote:
+> > > > > > > kernel/cpu.c: don't use snprintf() for sysfs attrs
+> > > > > > >
+> > > > > > > As per the documentation (Documentation/filesystems/sysfs.rst),
+> > > > > > > snprintf() should not be used for formatting values returned by sysfs.
+> > > > > > >
+> > > > > >
+> > > > > > Can we have a sysfs_sprintf() (could just be a macro that does sprintf)
+> > > > > > to make it clear to the next reader that we know we're in a sysfs show
+> > > > > > method? It would make auditing uses of sprintf() much easier.
+> > > > >
+> > > > > Code churn to keep code checkers quiet for pointless reasons?  What
+> > > > > could go wrong with that...
+> > >
+> > > I did not (mean to) suggest replacing existing sprintf() calls in sysfs
+> > > show methods. But when changes _are_ being made, such as when replacing
+> > > snprintf() calls for whatever reasons, can we please not make it harder
+> > > for people doing manual audits (those are "code checkers" as well, I
+> > > suppose, but they do tend to only make noise when finding something).
+> > >
+> > > > > It should be pretty obvious to any reader that you are in a sysfs show
+> > > > > method, as almost all of them are trivially tiny and obvious.
+> > >
+> > > git grep doesn't immediately show that, not even with a suitable -C
+> > > argument, as you can't really know the potential callers unless you open
+> > > the file and see that the function is only assigned as a .show method.
+> > > And even that can be a pain because it's all hidden behind five levels
+> > > of magic macros that build identifiers with ##.
+> > >
+> > > > Perhaps I should have mentioned this in the commit message, but the problem
+> > > > is that snprintf() doesn't return the number of bytes written to the
+> > > > destination buffer,
+> > >
+> > > I'm perfectly well aware of that, TYVM (you may want to 'git log
+> > > --author Villemoes lib/vsprintf.c').
+> > >
+> > >  but the number of bytes that *would have been written if
+> > > > they fitted*, which may be more than the bounds specified [1]. So "return
+> > > > snprintf(...)" for sysfs attributes is an antipattern. If you need bounded
+> > > > string ops, scnprintf() is the way to go. Using snprintf() can give a
+> > > > false sense of security, because it isn't necessarily safe.
+> > >
+> > > Huh? This all seems utterly irrelevant WRT a change that replaces
+> > > PAGE_SIZE by INT_MAX (because that's what sprintf() is going to pretend
+> > > you passed). You get the same return value.
+> > >
+> > > But I'm not at all concerned about whether one passes the proper buffer
+> > > size or not in sysfs show methods; with my embedded hat on, I'm all for
+> > > saving a few bytes of .text here and there. The problem, as far as I'm
+> > > concerned, is merely that adding sprintf() callers makes it harder to
+> > > find the problematic sprintf() instances.
+> > >
 > >
-> > FYI Although not officially, the Debian metaframework Buster AMD64 distribution might be the first to support native installation of Reiser4 SFRN 5.1.3, kernel and reiser4progs 2.0.3, file system utilities.
+> > Apologies, I think I might have expressed myself poorly, being a kernel noob
+> > ;-). I know that this is a stylistic change rather than a functional
+> > one -- I meant that I was hoping that it would be helpful to get rid of bad
+> > uses of snprintf().
 > >
-> > I have already made a couple of successful Metztli Reiser4 SFRN 5 native installations onto ~100 GB slices, which root file system is formatted in 'Reiser5' and 1 GB /boot in JFS.
-> > https://metztli.it/reiser5 (Screenshot 600x338 size)
+> > I really like your idea of helper methods though :-). If in show()
+> > methods we could have something like:
+> > 	return sysfs_itoa(buf, i);
+> > in place of:
+> > 	return sprintf(buf, "%d\n", i);
 > >
-> > The upgraded netboot installation media metztli-reiser4-sfrn5.iso is available at:
-> > https://sourceforge.net/projects/debian-reiser4/
-> > as well as
-> > https://metztli.it/buster-reiser5/metztli-reiser4-sfrn5.iso
-> > https://metztli.it/buster-reiser5/metztli-reiser4-sfrn5.iso.SHA256SUM
+> > ... then we wouldn't be introducing any new calls to sprintf() as you
+> > say, but we'd still be removing a call to snprintf() (which also may be
+> > problematic). Plus we'd have type checking on the argument.
 > >
-> > Likely the brick/volume feature(s) will be useful in Cloud fabric infrastructures, like Google's, where reiser4 excels.
+> > For returning strings, we could have a bounded and unbounded variant of
+> > the function. As it seems like only single values should be returned via
+> > sysfs, if we did things this way then it would only be these
+> > string-returning functions which could cause buffer overflow problems
+> > and kernel devs could focus their attention accordingly...
 > >
-> > The current SFRN 5.1.3 -patched Zstd -compressed kernel in the installation media is Debian's 5.7.10.
->
->
-> wow, reiser5 from the box? I might want to try..
-Well, it is more of a 'reference implementation' as there are persons who reached out to me because their builds succeeded, they were able to format in reiser4 SFRN x.y.z, but they were not able to mount their partition(s).
-Turns out, they were inadvertently mixing SFRN 4.0.2 with 5.1.3, either in the reiser4 kernel patch -- released with the same in both instances -- or in the reiser4progs.
+> > What do people think? I'm happy to have a crack, provided this is
+> > actually a sensible thing to do! I'm looking for a newbie-level project
+> > to get started with.
 
->
-> >
-> > The installer defaults to create the root system reiser5 -formatted partition as:
-> > mkfs.reiser4 -yo "create=reg42"
->
->
-> "reg42" is default profile in reiser4progs-2.0.3 (check by
-> "mkfs.reiser4 -p") - there is no need to specify it via option.
-Acknowledged. Thanks.
+The problem with that idea is that is the code needs to
+merge the output of two values or split an integer as nnn.nn
+then it needs to do something different from the 'normal' code.
 
->
-> Have you had a chance to play with logical volumes (add/remove
-> bricks, etc)?
-That is coming up. I still have to create/customize an image of Metztli Reiser4 SFRN5 for a Google Compute Engine (GCE) minimal ~200GB instance for evaluation.
-Fact is 'not all clouds are created equal' -- even if KVM -based. For instance, reiser4 SFRN 4.0.2 on a trial Linode small ~80GB SSD slice(s) with 2 virtual cpus frequently hung under short sustained disk/network I/O usage.
-I have not experienced that with reiser4 SFRN 4.0.2 on GCE -- where sometimes I allocate eight to sixteen virtual cpus with 16, 32, or even 64, GBs of RAM, on a region hosting AMD Epyc, for fast kernel building ops.
+If the buffer is always PAGE_SIZE the why not embed it in
+a structure.
+The generated code will be the same, but it will be absolutely
+explicit that the size is PAGE_SIZE if the code filling in the
+buffer decides it needs to check.
 
-But testing a relatively small bootable image first will usually provide insight if adding one, two... eight, TB slices will make sense later on.
->
-> Thanks!
-> Edward.
+	David
 
-Best Professional Regards.
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
--- 
-Jose R R
-http://metztli.it
----------------------------------------------------------------------------------------------
-Download Metztli Reiser4: Debian Buster w/ Linux 5.7.10 AMD64
----------------------------------------------------------------------------------------------
-feats ZSTD compression https://sf.net/projects/metztli-reiser4/
--------------------------------------------------------------------------------------------
-Official current Reiser4 resources: https://reiser4.wiki.kernel.org/
