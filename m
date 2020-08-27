@@ -2,93 +2,122 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF57C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E397C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41DF022CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D84A22B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:42:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598524932;
+	bh=/ljKbVAPrePzEKLZQ+JKLYkGll/DYvgpO1ZR1rzsmIg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aBTdEIzPbmXWZf6MqMw2bzZ7XaVNbD2I8rV0ae07CpprCrr0rIDznkjdazCpqEvJN
+	 +55JwYdqD18VNH/AEk29LO7eYcHK6QzOCvBY7ISnUr5hCv/uP7pf82TrStFXxyXuKe
+	 s/06aKVlg2X57Nv+OpHntDieSwukbbX5cASb5SHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgH0Kly (ORCPT
+        id S1728524AbgH0KmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:41:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55268 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 06:42:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726093AbgH0Klx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:41:53 -0400
-Received: from gaia (unknown [46.69.195.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728222AbgH0KmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 06:42:06 -0400
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F7DE22B40;
-        Thu, 27 Aug 2020 10:41:50 +0000 (UTC)
-Date:   Thu, 27 Aug 2020 11:41:47 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        kasan-dev@googlegroups.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 28/35] kasan: define KASAN_GRANULE_SIZE for HW_TAGS
-Message-ID: <20200827104147.GG29264@gaia>
-References: <cover.1597425745.git.andreyknvl@google.com>
- <07455abaab13824579c1b8e50cc038cf8a0f3369.1597425745.git.andreyknvl@google.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B18622CAF;
+        Thu, 27 Aug 2020 10:42:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598524925;
+        bh=/ljKbVAPrePzEKLZQ+JKLYkGll/DYvgpO1ZR1rzsmIg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Pc0aVeHXA3IgL6z4uE6duJ7msAs1AW62fy0AbKNBLNUyByNWIThBHFFfJTWk4ja+z
+         ThDRU+lUVGiX/5bIfJwNhqH7k/cL0KU3Mh63KE3IObdVgosIhGJXq/iIG2FYd/FVel
+         CoZbw+3ALswo3uQT2r4COySsAT7I8AyWIvqHr1Ys=
+Received: by mail-oo1-f42.google.com with SMTP id g1so1112493oop.11;
+        Thu, 27 Aug 2020 03:42:05 -0700 (PDT)
+X-Gm-Message-State: AOAM531Sgp79Q1beyXTFkDmdqFkLdfG6cqBgndtvEzTex9JwZNgtvn12
+        UxDN4ZleBlI2JD4BfujAHtqwbIA+rwtbuJwXfZs=
+X-Google-Smtp-Source: ABdhPJxGmEMhtRMvZgrZT6FuVBi6VqqwBOFMjYTZD9Z4EjlIaOKCVnzjYNkJJ+9IyUHCjHcdYxdIT34tEh7gdK8xdqo=
+X-Received: by 2002:a4a:d816:: with SMTP id f22mr7865816oov.45.1598524924576;
+ Thu, 27 Aug 2020 03:42:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <07455abaab13824579c1b8e50cc038cf8a0f3369.1597425745.git.andreyknvl@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <202008271145.xE8qIAjp%lkp@intel.com> <20200827080558.GA3024@gondor.apana.org.au>
+ <CAMj1kXHJrLtnJWYBKBYRtNHVS6rv51+crMsjLEnSqkud0BBaWw@mail.gmail.com>
+ <CAK8P3a3tjv78arTj75eKk5zYUhrGkPYRDLiqv3WJJC=U+Jia0Q@mail.gmail.com>
+ <CAMj1kXHhmAdHjK5avXOySw43khzft1g8p48jX7aTeTC0FvS7tQ@mail.gmail.com> <CAK8P3a1nOL+BbvGAM3-aiH-mfzmFYgfFL2dWJKd8=Rw-WosP=w@mail.gmail.com>
+In-Reply-To: <CAK8P3a1nOL+BbvGAM3-aiH-mfzmFYgfFL2dWJKd8=Rw-WosP=w@mail.gmail.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 27 Aug 2020 12:41:53 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGpX+g_t4aAz5yGs-c+PG+NLnu1j9_QLJ6teWTjJ1FkMQ@mail.gmail.com>
+Message-ID: <CAMj1kXGpX+g_t4aAz5yGs-c+PG+NLnu1j9_QLJ6teWTjJ1FkMQ@mail.gmail.com>
+Subject: Re: lib/crypto/chacha.c:65:1: warning: the frame size of 1604 bytes
+ is larger than 1024 bytes
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        kernel test robot <lkp@intel.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        kbuild-all@lists.01.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 07:27:10PM +0200, Andrey Konovalov wrote:
-> Hardware tag-based KASAN has granules of MTE_GRANULE_SIZE. Define
-> KASAN_GRANULE_SIZE to MTE_GRANULE_SIZE for CONFIG_KASAN_HW_TAGS.
-> 
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
->  mm/kasan/kasan.h | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-> index 1d3c7c6ce771..4d8e229f8e01 100644
-> --- a/mm/kasan/kasan.h
-> +++ b/mm/kasan/kasan.h
-> @@ -5,7 +5,13 @@
->  #include <linux/kasan.h>
->  #include <linux/stackdepot.h>
->  
-> +#if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
->  #define KASAN_GRANULE_SIZE	(1UL << KASAN_SHADOW_SCALE_SHIFT)
-> +#else
-> +#include <asm/mte.h>
+On Thu, 27 Aug 2020 at 11:20, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Thu, Aug 27, 2020 at 10:42 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > In that case, I suppose we should simply disable instrumentation for
+> > chacha_permute()? It is a straight-forward arithmetic transformation
+> > on a u32[16] array, where ubsan has limited value afaict.
+>
+> I guess that always works as a last resort, but shouldn't we first try
+> to figure out why ubsan even makes a difference and whether the
+> object code without ubsan looks like a reasonable representation
+> of the source form?
+>
+> Since it really is a fairly simple transformation, I would have
+> expected the compiler to not emit any ubsan checks. If gcc
+> only gets confused about the fixed offsets possibly overflowing
+> the fixed-length array, maybe it helps to give it a little extra
+> information like (untested):
+>
+> --- a/lib/crypto/chacha.c
+> +++ b/lib/crypto/chacha.c
+> @@ -13,7 +13,7 @@
+>  #include <asm/unaligned.h>
+>  #include <crypto/chacha.h>
+>
+> -static void chacha_permute(u32 *x, int nrounds)
+> +static void chacha_permute(u32 x[16], int nrounds)
+>  {
+>         int i;
+>
 
-You could only include the new asm/mte-def.h file (currently mte_asm.h).
+That does not help, unfortunately.
 
-> +#define KASAN_GRANULE_SIZE	(MTE_GRANULE_SIZE)
-> +#endif
-> +
->  #define KASAN_GRANULE_MASK	(KASAN_GRANULE_SIZE - 1)
->  
->  #define KASAN_TAG_KERNEL	0xFF /* native kernel pointers tag */
-> -- 
-> 2.28.0.220.ged08abb693-goog
-> 
+What does seem to work is
 
--- 
-Catalin
+struct chacha_state { u32 x[16]; };
+
+struct chacha_state chacha_permute(struct chacha_state st, int nrounds)
+{
+  struct chacha_state ret = st;
+  u32 *x = ret.x;
+
+  ...
+
+  return st;
+}
+
+(and updating the caller accordingly, obviously)
