@@ -2,126 +2,119 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BA4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838A6C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F12E20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D392080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:04:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ubV2Bnqr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X0CERTCN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgH0JDz (ORCPT
+        id S1728245AbgH0JEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:03:55 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:5862 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726266AbgH0JDy (ORCPT
+        Thu, 27 Aug 2020 05:04:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35188 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgH0JEJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:03:54 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07R91vfa000570;
-        Thu, 27 Aug 2020 11:03:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=lx+QYBokaHHL/CwY5ofgZfT1OTJOb3G3GrKi86P18Gg=;
- b=ubV2Bnqr1skfZO4yPCcWRoIojbuL/jlVBuomhD2W2lLk5pDPpQ0LlyLtoQMZN/lBReaw
- Rdeqq8taJzY6cskIYqssKEVzEVu1cOeqjfIcxstmWnGl66DPSYT2MEhtA9cfsqWWhibQ
- m+rTm+oymrqq5T4fPJYXK/Wa3aeMXg10sBL7XXnlIf/2T4mIgvkmK5P5RyQcLrVc1L7r
- 8MfVkOQxb5vohvuLuLJHZIXpfsHOlI7yM5TifWHNP2IuR/snueCbXdBvdN4jVKlvVut8
- tjOpIMszwyr/130JT8H0geA0cNpMqfhZFfvNcAiVb/pRDCexoYl//s1BiTJKOgwxZnhY FQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 333b3hn6a8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 11:03:28 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 827DE10002A;
-        Thu, 27 Aug 2020 11:03:25 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6AF5B221159;
-        Thu, 27 Aug 2020 11:03:25 +0200 (CEST)
-Received: from [10.48.1.149] (10.75.127.45) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
- 2020 11:03:24 +0200
-Subject: Re: [PATCH v2] iio: stm32-dac: Replace indio_dev->mlock with own
- device lock
-To:     Alexandru Ardelean <ardeleanalex@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-CC:     linux-iio <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Jonathan Cameron <jic23@kernel.org>, <alexandre.torgue@st.com>,
-        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-References: <20200826063850.47625-1-alexandru.ardelean@analog.com>
- <20200826120042.200364-1-alexandru.ardelean@analog.com>
- <CA+U=DsrMDSTQKEc2_3+W8u4bLraAowVB3nB4huKY--v8gnds2Q@mail.gmail.com>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <c3a9411e-186d-a3ac-5ad0-bd70ad78f147@st.com>
-Date:   Thu, 27 Aug 2020 11:03:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 27 Aug 2020 05:04:09 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D934C061264;
+        Thu, 27 Aug 2020 02:04:09 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id kx11so2260483pjb.5;
+        Thu, 27 Aug 2020 02:04:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kQIjPvNcruWdrhRT1Dcg3GsN3olXB1w8GX5PGyVfAGc=;
+        b=X0CERTCNwahFGetwbkDcwpbax7bi81njvVK3YhQeTYQ1Ox53DBa53nrSRR+ByOe2NM
+         SMfng7Z/7T9BiCJxPniaMBgWWOb4dQ4S4IRpAlqiG1KFHrLDD+pR0lZaPPTYxtyGSWeg
+         6Y1Xe9/UwWF4h+HNraqFnKzlj+oUpgdgvjXGyuyMUk7+TwqaeCwcHj9ESNWxHctbn2xA
+         LQ20v5Z8m06CxmD1UTZ6fywFBA/HMn+6Drre2hNAbVAINqjZzM79jkBoeUuac7mbXW3M
+         GYoxD1LMQ/2Ib2zeTl45sjnHVOvbW5SlxWIxXRJpbpCqfJhN2Dj9CYJVlxFf5lm37T7l
+         g7GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kQIjPvNcruWdrhRT1Dcg3GsN3olXB1w8GX5PGyVfAGc=;
+        b=CEaAni0QkIZM5quqXQ4GFYXSaWhKLMF21biv/ZwRmUcoTTPgG87iT2u18qSRUI1/kj
+         Enh0xjIJfRAcqCiwH+YBrEJ6pMMfFqnqKOHbnCq4uOJ7FrCJTleb/zhUk30kGQdvMJSF
+         sAtU8mUza7pN3cClJJU+HmnWmgLI0ZTzBtJE5zTkaB2GSDaB92yy60iNvKx/VCgYdpUm
+         Ww+mLEgvkTqbmA8UGa7HA0A9Ix3pzgrMfedzXLi5IzLtH4x3dUVRNTQF9TyKkMwhhRdo
+         CTsCfqBcB6vx6aKbu6nxxyioOEClpCQ250BMcEHMWk4rdqZsKbQ3inREkOFWcvQ1K8jn
+         47wQ==
+X-Gm-Message-State: AOAM530SMJU2Ckh6uOYvId8XzPswicr6QjHRumUnBD/ISVh1Is0ikF+K
+        oCspt4UFt/i60cVVNcGLBIavxIM9KjBoI0xLDO4=
+X-Google-Smtp-Source: ABdhPJxtLGlvQf+9FVDIBVpN/W71XHXcPr5afe3Yg/33ozosb9y2WQz05PzzZ19bvqEjU98ctWB3AaL+/KljE7z035c=
+X-Received: by 2002:a17:90b:509:: with SMTP id r9mr10132669pjz.228.1598519048706;
+ Thu, 27 Aug 2020 02:04:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CA+U=DsrMDSTQKEc2_3+W8u4bLraAowVB3nB4huKY--v8gnds2Q@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-27_02:2020-08-27,2020-08-27 signatures=0
+References: <20200826181706.11098-1-krzk@kernel.org> <20200826181706.11098-4-krzk@kernel.org>
+In-Reply-To: <20200826181706.11098-4-krzk@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 27 Aug 2020 12:03:52 +0300
+Message-ID: <CAHp75Vey_w7m4TZM9+=df-FMO6YW5DiSMQsupZsMb92Awg_x1Q@mail.gmail.com>
+Subject: Re: [PATCH 04/24] Input: gpio-vibra - Simplify with dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-input <linux-input@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/20 10:55 AM, Alexandru Ardelean wrote:
-> On Wed, Aug 26, 2020 at 3:03 PM Alexandru Ardelean
-> <alexandru.ardelean@analog.com> wrote:
->> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
->>
->> As part of the general cleanup of indio_dev->mlock, this change replaces
->> it with a local lock. The lock protects against potential races when
->> reading the CR reg and then updating, so that the state of pm_runtime
->> is consistent between the two operations.
->>
->> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
->> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
->> ---
-> Forgot the changelog here.
-> Apologies.
-> 
-> Changelog v1 -> v2:
-> * removed whitespace change for 'common' field
-> * updated comment about the lock usage
+On Wed, Aug 26, 2020 at 9:20 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
 
-Hi Alexandru,
+>         vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
+>         err = PTR_ERR_OR_ZERO(vibrator->vcc);
+> -       if (err) {
+> -               if (err != -EPROBE_DEFER)
+> -                       dev_err(&pdev->dev, "Failed to request regulator: %d\n",
+> -                               err);
+> -               return err;
+> -       }
+> +       if (err)
+> +               return dev_err_probe(&pdev->dev, err, "Failed to request regulator\n");
 
-Sorry if I missed it... is there an update on the comment :-) ?
+Can it be rather
+  if (IS_ERR())
+    return dev_err_probe(dev, PTR_ERR());
+w/o err be involved?
 
-Best Regards,
-Fabrice
-> 
->>  drivers/iio/dac/stm32-dac.c | 12 ++++++++----
->>  1 file changed, 8 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
->> index 092c796fa3d9..7a8aed476850 100644
->> --- a/drivers/iio/dac/stm32-dac.c
->> +++ b/drivers/iio/dac/stm32-dac.c
->> @@ -26,9 +26,11 @@
->>  /**
->>   * struct stm32_dac - private data of DAC driver
->>   * @common:            reference to DAC common data
->> + * @lock:              lock to protect the data buffer during regmap ops
->>   */
->>  struct stm32_dac {
->>         struct stm32_dac_common *common;
->> +       struct mutex            lock;
->>  };
+>         vibrator->gpio = devm_gpiod_get(&pdev->dev, "enable", GPIOD_OUT_LOW);
+>         err = PTR_ERR_OR_ZERO(vibrator->gpio);
+> -       if (err) {
+> -               if (err != -EPROBE_DEFER)
+> -                       dev_err(&pdev->dev, "Failed to request main gpio: %d\n",
+> -                               err);
+> -               return err;
+> -       }
+> +       if (err)
+> +               return dev_err_probe(&pdev->dev, err, "Failed to request main gpio\n");
+
+Ditto.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
