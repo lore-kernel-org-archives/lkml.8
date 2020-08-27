@@ -2,117 +2,133 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 015F8C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 953B9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0E8D22B4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 538DE207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598555121;
-	bh=6wi7BZ7sjbl1BjeinCwOI2PqM7WQLe/7Md+KmWzCljw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=WJwzh5cL5LgkVJlq5qcWmK7k00YbHkJ4xlquNtUQh0fm2rffRa2KnZl5PML8+YqJO
-	 1RfSQf9+m/8qjhfedx+OaIVsP4jlpvTmQoZvOPpmE0PSr/GhcY7HZFX8ZJ1VSETw3z
-	 rTxaHYlKrtARhbBr4aR+AjYwGoENBu9EERMOEHUw=
+	s=default; t=1598555219;
+	bh=vTHK2xAuoLPvz0B5okzq225ClGRruZ/zZapxLoQ371o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SFZO/tT4l6cG3yfM3EdRM/w2qUUqZdiJMLdXVBNg6B9bMnCr+q9T0GX2vIY06t0QW
+	 kOqv5BXrV9CHsKya+/kaaAEy3tLCAClOL13+igKeyp5x0x/OtrTt1eEQLogS5c16WO
+	 dEpdzrCEHjzm1lq2+2T8AfWCWMlnvORV/97IFE0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgH0TFT (ORCPT
+        id S1727821AbgH0TG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:05:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbgH0TFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:05:19 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6524E20786;
-        Thu, 27 Aug 2020 19:05:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598555118;
-        bh=6wi7BZ7sjbl1BjeinCwOI2PqM7WQLe/7Md+KmWzCljw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=l1e8/Pmn8ngF+p3T9et0To6f49k4Ql3c2Z74uxj3xtH00LxLMAu5rqZK5lwfRW+63
-         a2oxGdG2gcwUcCa7OKsDv0Sr9kCeSbyeEIuhTR+zmHFvr3YFh8HlUlxsJB+STprPT0
-         uMjl4QF+58ofygnmmXDpFUoANW4vhWh+RNq8ZbG8=
-Date:   Thu, 27 Aug 2020 14:05:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        stable <stable@vger.kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Adam Borowski <kilobyte@angband.pl>
-Subject: Re: [PATCH v2] x86/pci: fix intel_mid_pci.c build error when ACPI is
- not enabled
-Message-ID: <20200827190517.GA2097725@bjorn-Precision-5520>
+        Thu, 27 Aug 2020 15:06:58 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:44241 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbgH0TG5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 15:06:57 -0400
+Received: by mail-ej1-f67.google.com with SMTP id bo3so9096917ejb.11;
+        Thu, 27 Aug 2020 12:06:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kX9eyuUyhq2QFDZPTT8K+fKfXv//9k/lun1Oefq69vQ=;
+        b=kr2oH/9CxNs7iz8r8DpKFNCTMyQ28aGdp3TLDbLX5ElLn2zM/9q9ONlrMid5RvBVJi
+         hjrxUbIVBwwNHG+Z0AcPDDAqcIZJ2Nk8ZOMjfQyFFHZeTq1yKxXeJtYFCn66Vss7wQEE
+         CrJH2gdkN5y/i0sILTpZmY+D95+3Nn2ComTA8q+JmtKsJv+JQsGHzA9s347OUm+aLcUi
+         b1VsdC5HhtupuibhJwnYGizsrJFxu+PcwyZ0PZXhAC0It5CxjJcWKd1XRzr3hfuMZRSf
+         Ik5IpaDMmu9IV11nn3JLpMzthBQVZ4HIAS54WSDTR0UZbBvLNd9JkOH7lWt1DnX62KgP
+         tbcg==
+X-Gm-Message-State: AOAM533p9tc3H6iMApibp4zFbz+Sg86BQHmy9naKiUYoBIzLaFKTgNJV
+        8lBnIFG9/lP1fk7p82yiWNxNu/vPWcjdUmdF
+X-Google-Smtp-Source: ABdhPJwErb1TPe6yej5LwLYtNxfx1kujrjSq4jsHJ5VaVSvbdjyWgjoSXSM2n9G+Y0DfBXVTqlVBtw==
+X-Received: by 2002:a17:906:37c1:: with SMTP id o1mr22299708ejc.279.1598555215565;
+        Thu, 27 Aug 2020 12:06:55 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id w20sm2629985ejc.77.2020.08.27.12.06.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Aug 2020 12:06:54 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 21:06:52 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Etienne Carriere <etienne.carriere@st.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] iio: adc: stm32: Simplify with dev_err_probe()
+Message-ID: <20200827190652.GD6196@kozik-lap>
+References: <20200826161818.20969-1-krzk@kernel.org>
+ <CAHp75Vf3s0+RrHnBoO4y4+t4Egth4uyYwtO5iPt9DbLJcunL6g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ea903917-e51b-4cc9-2680-bc1e36efa026@infradead.org>
+In-Reply-To: <CAHp75Vf3s0+RrHnBoO4y4+t4Egth4uyYwtO5iPt9DbLJcunL6g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 05:10:27PM -0700, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
+On Thu, Aug 27, 2020 at 11:27:12AM +0300, Andy Shevchenko wrote:
+> On Wed, Aug 26, 2020 at 7:19 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > Common pattern of handling deferred probe can be simplified with
+> > dev_err_probe().  Less code and also it prints the error value.
 > 
-> Fix build error when CONFIG_ACPI is not set/enabled by adding
-> the header file <asm/acpi.h> which contains a stub for the function
-> in the build error.
 > 
-> ../arch/x86/pci/intel_mid_pci.c: In function ‘intel_mid_pci_init’:
-> ../arch/x86/pci/intel_mid_pci.c:303:2: error: implicit declaration of function ‘acpi_noirq_set’; did you mean ‘acpi_irq_get’? [-Werror=implicit-function-declaration]
->   acpi_noirq_set();
 > 
-> Fixes: a912a7584ec3 ("x86/platform/intel-mid: Move PCI initialization to arch_init()")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: stable@vger.kernel.org	# v4.16+
-> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Len Brown <lenb@kernel.org>
-> To: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Jesse Barnes <jsbarnes@google.com>
-> Cc: Arjan van de Ven <arjan@linux.intel.com>
-> Cc: linux-pci@vger.kernel.org
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Jesse Barnes <jsbarnes@google.com>
-> Acked-by: Thomas Gleixner <tglx@linutronix.de>
+> 
+> 
+> 
+> >         priv->aclk = devm_clk_get(&pdev->dev, "adc");
+> >         if (IS_ERR(priv->aclk)) {
+> >                 ret = PTR_ERR(priv->aclk);
+> > -               if (ret != -ENOENT) {
+> > -                       if (ret != -EPROBE_DEFER)
+> > -                               dev_err(&pdev->dev, "Can't get 'adc' clock\n");
+> > -                       return ret;
+> > -               }
+> > +               if (ret != -ENOENT)
+> > +                       return dev_err_probe(&pdev->dev, ret, "Can't get 'adc' clock\n");
+> > +
+> >                 priv->aclk = NULL;
+> >         }
+> >
+> >         priv->bclk = devm_clk_get(&pdev->dev, "bus");
+> >         if (IS_ERR(priv->bclk)) {
+> >                 ret = PTR_ERR(priv->bclk);
+> > -               if (ret != -ENOENT) {
+> > -                       if (ret != -EPROBE_DEFER)
+> > -                               dev_err(&pdev->dev, "Can't get 'bus' clock\n");
+> > -                       return ret;
+> > -               }
+> > +               if (ret != -ENOENT)
+> > +                       return dev_err_probe(&pdev->dev, ret, "Can't get 'bus' clock\n");
+> > +
+> >                 priv->bclk = NULL;
+> >         }
+> 
+> Again, devm_clk_get_optional() and even, if it exists,
+> devm_clk_bulk_get_optional().
 
-Applied to pci/misc for v5.10, thanks!
+Sure.
 
-We could put it in v5.9, but a912a7584ec3 was merged for v4.16, so
-apparently this has been broken for a long time.
+> 
+> Please, revisit all patches on this topic.
 
-> ---
-> Found in linux-next, but applies to/exists in mainline also.
-> 
-> v2:
-> - add Reviewed-by: and Acked-by: tags
-> - drop alternatives
-> 
->  arch/x86/pci/intel_mid_pci.c |    1 +
->  1 file changed, 1 insertion(+)
-> 
-> --- linux-next-20200813.orig/arch/x86/pci/intel_mid_pci.c
-> +++ linux-next-20200813/arch/x86/pci/intel_mid_pci.c
-> @@ -33,6 +33,7 @@
->  #include <asm/hw_irq.h>
->  #include <asm/io_apic.h>
->  #include <asm/intel-mid.h>
-> +#include <asm/acpi.h>
->  
->  #define PCIE_CAP_OFFSET	0x100
->  
-> 
+I'll check them.
+
+
+Best regards,
+Krzysztof
+
