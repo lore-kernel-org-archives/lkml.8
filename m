@@ -2,152 +2,240 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E10C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C105C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8BFB22B4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508792054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:48:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nio365.onmicrosoft.com header.i=@nio365.onmicrosoft.com header.b="EenSbI5i"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QqekevUc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgH0OsZ (ORCPT
+        id S1727905AbgH0OsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:48:25 -0400
-Received: from mx0a-00010702.pphosted.com ([148.163.156.75]:49520 "EHLO
-        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728043AbgH0OsB (ORCPT
+        Thu, 27 Aug 2020 10:48:18 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:41015 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727933AbgH0Oqd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:48:01 -0400
-X-Greylist: delayed 3506 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Aug 2020 10:47:52 EDT
-Received: from pps.filterd (m0098781.ppops.net [127.0.0.1])
-        by mx0a-00010702.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07RDitBC012196;
-        Thu, 27 Aug 2020 08:47:45 -0500
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2051.outbound.protection.outlook.com [104.47.36.51])
-        by mx0a-00010702.pphosted.com with ESMTP id 332yd26r2g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 08:47:45 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ez6aI/WDLGWO4m0FyoH2ZPLStT9/1pZy7hasLUbIgc820KCUzVs/0cSvEBnhKuBc6aae4Fa9CeRJyNabk471UQCrZ+IVmPlNDrbWYD5oKch3VlY9qGb2UA5UlOY3H0A/MIHedkklioe5UsivkFIa+AwNcxq0evV67rEecTnUOtBgKNwEt+IXJbgH+MQCgDqGp04KYLMv+neF9hhNBv3t17p+iJCLO61nUPPOuGTpFEMTfaJGydJfM9MJ9WNAxiNP73iwicDZt88/s2/yBvKKk7kVjPhClVQjBJByo5UT6oiSQpDIIw0XSVOls4FUyQ4sQpn/MFIC+hwL/LYE+eIFEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KnzD30OSqbBlP3TKzzQR2rHtCNCizQB4pKMSVRPdM3Y=;
- b=C7DnxnC6wWzWuRLABowfk+hJ95IEPXg0F+n/kOuLQLQgj+K6MQhQ+VViH7LHyjtdSg52kJ49SOluQ+9DLf7BIHZb7Fw/ZXD/yVJtGQ3ADrVxsZOOWbN2mqDxTV7waXqAGzNwxKtugDZraFLPmpNxe0+IPfWjoZMRdmbe3qOo4LTClwCo91xf9WE1revegTfe5734ImaUpSHNNJ9JiX//EbMZtMwa5Fi1HIOk1sqcilGrrK5ud8QReW0qHmDwawXBMemwtS9u+AMVesG2hqxVdls0o2zvHa4eqG3yLywzYFYmGN7RrqnMbfRPnI8tdkq/JPVZbbIm9QqNiHge6NGLOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ni.com; dmarc=pass action=none header.from=ni.com; dkim=pass
- header.d=ni.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=nio365.onmicrosoft.com; s=selector2-nio365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KnzD30OSqbBlP3TKzzQR2rHtCNCizQB4pKMSVRPdM3Y=;
- b=EenSbI5igwG0DV2YbMoNxjrI6AXkRc2qhsprUisZELEjlWAjSF9AexR2VUfwPPO4fyB+/+olRlZvbz3Wv3SiEppZCMYlxs9aoEhE06IPYoEJ0atezP+hgjmdepEQ6YzwNaPrFzazALTn5PMgghRpye5+yiBAq65QGzjHDt4RGsQ=
-Authentication-Results: xilinx.com; dkim=none (message not signed)
- header.d=none;xilinx.com; dmarc=none action=none header.from=ni.com;
-Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
- (2603:10b6:803:4b::29) by SN6PR04MB4829.namprd04.prod.outlook.com
- (2603:10b6:805:b0::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Thu, 27 Aug
- 2020 13:47:43 +0000
-Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
- ([fe80::30f8:af2b:efff:2750]) by SN4PR0401MB3646.namprd04.prod.outlook.com
- ([fe80::30f8:af2b:efff:2750%3]) with mapi id 15.20.3305.026; Thu, 27 Aug 2020
- 13:47:43 +0000
-Date:   Thu, 27 Aug 2020 08:47:42 -0500
-From:   Michael Auchter <michael.auchter@ni.com>
-To:     Ben Levinsky <ben.levinsky@xilinx.com>
-Cc:     stefano.stabellini@xilinx.com, michals@xilinx.com,
-        devicetree@vger.kernel.org, mathieu.poirier@linaro.org,
-        emooring@xilinx.com, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jliang@xilinx.com,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
-Message-ID: <20200827134742.GB404249@xaphan>
-References: <20200827015810.11157-1-ben.levinsky@xilinx.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827015810.11157-1-ben.levinsky@xilinx.com>
-X-ClientProxiedBy: SA0PR11CA0016.namprd11.prod.outlook.com
- (2603:10b6:806:d3::21) To SN4PR0401MB3646.namprd04.prod.outlook.com
- (2603:10b6:803:4b::29)
+        Thu, 27 Aug 2020 10:46:33 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200827144616euoutp01d74f159bdc72917b0f7486bfbbce35ca~vJ0aAf_JX0708907089euoutp01j
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 14:46:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200827144616euoutp01d74f159bdc72917b0f7486bfbbce35ca~vJ0aAf_JX0708907089euoutp01j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598539576;
+        bh=bfYHG/OvY7faFyGz2klWMd1yoNRtbGbgih2IyrZiibc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=QqekevUcHsSO2ZsiZpBHKNHUGio5hI0U+c7/nWp16dyhjCl3CKxf3F8tKN1J0/Xnq
+         rgoOvMAAC/+ufUnD1w+Zpc5OgfrFZq7p09P7yqK82m+Xt9MavpaetJHBNjGQZxDJ0C
+         TIGLkRYp4g6sBUNpXiBH82hA+UQ7GNj7Do9rsrxk=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200827144616eucas1p1401d8fe408315d454a3b3af23c4e2a16~vJ0Z0C0sz2332423324eucas1p11;
+        Thu, 27 Aug 2020 14:46:16 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id DC.59.05997.837C74F5; Thu, 27
+        Aug 2020 15:46:16 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200827144615eucas1p26e2e13f503ad810fb7eabb145a2ff75c~vJ0ZUGWdK1538615386eucas1p2c;
+        Thu, 27 Aug 2020 14:46:15 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200827144615eusmtrp22fbe258574a204ed1a90634f927698fd~vJ0ZTYB0P2232022320eusmtrp2P;
+        Thu, 27 Aug 2020 14:46:15 +0000 (GMT)
+X-AuditID: cbfec7f4-677ff7000000176d-3d-5f47c7384aca
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 8D.E8.06314.737C74F5; Thu, 27
+        Aug 2020 15:46:15 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200827144615eusmtip2c3a8bec75faa8f4d014885d05a89d39f~vJ0YnyOLU0209002090eusmtip2Z;
+        Thu, 27 Aug 2020 14:46:14 +0000 (GMT)
+Subject: Re: [PATCH] ASoC: meson: cards: deal dpcm flag change
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@intel.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     alsa-devel@alsa-project.org, Kevin Hilman <khilman@baylibre.com>,
+        linux-kernel@vger.kernel.org, zhangn1985@outlook.com,
+        linux-amlogic@lists.infradead.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <1b540f64-bf03-af59-756a-c4981fc43259@samsung.com>
+Date:   Thu, 27 Aug 2020 16:46:15 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.11.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by SA0PR11CA0016.namprd11.prod.outlook.com (2603:10b6:806:d3::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Thu, 27 Aug 2020 13:47:42 +0000
-X-Originating-IP: [2605:a601:ab6f:2000:2739:a39e:9b12:ab20]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: cd5453c7-6bb2-460d-4803-08d84a8fc59a
-X-MS-TrafficTypeDiagnostic: SN6PR04MB4829:
-X-Microsoft-Antispam-PRVS: <SN6PR04MB48294F21CE7DF9312522F53B87550@SN6PR04MB4829.namprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: oQ9m2qXaJu5z/mODUVbNUvWAmLxtHoGgut3rEi2EZHNiN3UN1X+Ib1icNvIEoV+wBZxewXtn05a07v7+65IXXmw++HES8M896cAkkzFuc7kFnxUF3IA4ccl9cfGcp/6J8PdMihlyS8nNhjhW9pNMTulD1yI792+u06i2/fimjEjf0L9Xxz+KvuiMGAJNZ4oTFiFIDrz9gdOXHpzHRFKHmK4two4c45/nklb6bYM+hiLnTB2AP2cya/Fn/+XCnD6i9AkS5hg3ucHCrVSFDSIYf1WGo608haWDV4fKCDmpW6H20DiglX3SWcjxnVf66IrQeAbSGVHKmISfQrp5jaWzuw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3646.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(346002)(396003)(366004)(376002)(136003)(39860400002)(5660300002)(86362001)(7416002)(478600001)(33656002)(44832011)(2906002)(6486002)(9686003)(316002)(186003)(8676002)(52116002)(1076003)(6916009)(66556008)(4326008)(66946007)(66476007)(83380400001)(16576012)(956004)(8936002)(33716001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: D6q8zs2YATuyC2VFWcOHTd5gszxC2DPvLPTkymqe6O2TlI84u/JKFfZYjMytjYx3EQsM2kAAn2ejHw5WDmUmn8vuzHRyMJyqZrvHrBR4K1ABKcOpu/h9dTLdgWz6VToWXvoatZ9KDOyPteNmxFdasoqB7iSiYkjLMXfpbsmdSzNXNvc7iJkPrM5Zv2E6pdbFwD5tGSsuOFNksH0Ww0ctHOMONLWUFYt3hWgQKCKQDz1FMtJTrUTX6vbbbwfcawjNirD4Un4I9j4UpsCiRP8UUsfPUHJ3+9zbcQ++Aq00mtzrN9T/Y67wRohyRUE5OuUC7KeOwcbOT1dTfi0bSeuy2H4EsyeNeOmuJpBACZD+zNlHGl/h6EVnPgJaAOEDSPGmnUZIa61DRrTSkymYOXroFgD6LPLyp3jFAGHd0EyVUIXiiLPOI4A5OMY8o9nNkmMDHSup0CY9qLJM0B1x5n9q+UnzBFmFfBvjELOjmfVotiLDfgM8FzKK4bQ/0rv5yzaL+WyrNpYonUFDqAR13+yvcT2vaLN/vbmpZsqcOX8bDE6Mv9gpPpnNrp7ajCOVQpgEMZU3Z+IzSo9gFIw843M8x8LrwP2w29NoXMNsp1KzEaQiPvy4hEk15Y5XmBUGNPZRQQWsPpeGH8W96eQn/k3Yf2P+8t7aXZXXi3kdS9b8hSeEZkPEIQbSoXj1jOvfw7lY0YxMqpDN5eq6rY05FLGLQQ==
-X-OriginatorOrg: ni.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd5453c7-6bb2-460d-4803-08d84a8fc59a
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3646.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2020 13:47:43.1654
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: adb81k0fCiBBH+IGYajJWWI2eDQeUc0i1Dnnsa5ESW3HtUVBg6DLotRIa40qCBR+pZTVtAQ9ihNFqQGNwLGG9A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4829
-Subject: Re: [PATCH v9 0/5] Provide basic driver to control Arm R5 co-processor
- found on Xilinx ZynqMP
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-27_07:2020-08-27,2020-08-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_policy_notspam policy=outbound_policy score=30 mlxscore=0
- lowpriorityscore=0 spamscore=0 suspectscore=1 adultscore=0
- priorityscore=1501 phishscore=0 clxscore=1015 malwarescore=0
- impostorscore=0 mlxlogscore=634 bulkscore=0 classifier=spam adjust=30
- reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008270104
+In-Reply-To: <1jmu2g6wq0.fsf@starbuckisacylon.baylibre.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrAKsWRmVeSWpSXmKPExsWy7djPc7oWx93jDV6e4rW4cvEQk8XUh0/Y
+        LN48OsJs8bN9C5PFq8O7GC2+Xelgslgwm9vi8q45bBbf7vezWLQdO8ZqcWOuiUXj6ZVMDjwe
+        Gz43sXm8v9HK7tG2wN5j56y77B6L97xk8ti0qpPN4861PWwem5fUe2x+/YLZ49uZiSwenzfJ
+        BXBHcdmkpOZklqUW6dslcGV87rzNXHBUo+LgFZkGxnalLkZODgkBE4kPq7pZuxi5OIQEVjBK
+        nG86yQLhfGGU6H3UyQ7hfGaU2PhxMjtMy7XDjVAtyxklLp9qZYZw3jNKHD9xjAWkSljATuL3
+        zx1gCRGBA0wSOya8YQNxmAUWMkocfrGYFaSKTcBQouttFxuIzQvUse/oeWYQm0VAVeLwlfmM
+        ILaoQJzE1uNXmSBqBCVOznwCtoFTwFqib2YDWC+zgLzE9rdzmCFscYlbT+YzgSyTEGjkkJja
+        /5YZ4nAXiclPr0A9ISzx6vgWKFtG4v9OmIZmRomH59ayQzg9QN81zWCEqLKWuHPuF9A6DqAV
+        mhLrd+lDhB0l9hzazgwSlhDgk7jxVhDiCD6JSdumQ4V5JTrahCCq1SRmHV8Ht/bghUvMExiV
+        ZiF5bRaSd2YheWcWwt4FjCyrGMVTS4tz01OLjfJSy/WKE3OLS/PS9ZLzczcxAtPd6X/Hv+xg
+        3PUn6RCjAAejEg/vjn3u8UKsiWXFlbmHGCU4mJVEeJ3Ono4T4k1JrKxKLcqPLyrNSS0+xCjN
+        waIkzmu86GWskEB6YklqdmpqQWoRTJaJg1OqgXHKST8+DYuT5dMstBk2xLHvClvd2fszXaHC
+        PjxsfbKh/qHJ7iGM/m31zrULv3xJiPy8ZB2/9z9/n4T/+xMErt9OmDpb2Wj1qYILWlXNemG5
+        h9oENujf3BnoL/KtKrr50Z/yqcVfO3pUuwpb2M6tV38tbn/PUy5fUylpTlKj0rqbjzfX9NTp
+        KLEUZyQaajEXFScCANL3dXFzAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrIIsWRmVeSWpSXmKPExsVy+t/xe7rmx93jDXqeqFtcuXiIyWLqwyds
+        Fm8eHWG2+Nm+hcni1eFdjBbfrnQwWSyYzW1xedccNotv9/tZLNqOHWO1uDHXxKLx9EomBx6P
+        DZ+b2Dze32hl92hbYO+xc9Zddo/Fe14yeWxa1cnmcefaHjaPzUvqPTa/fsHs8e3MRBaPz5vk
+        Arij9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DI+
+        d95mLjiqUXHwikwDY7tSFyMnh4SAicS1w42sXYxcHEICSxkluh7PZodIyEicnNbACmELS/y5
+        1sUGYgsJvGWU+Ho6B8QWFrCT+P1zBzNIs4jAISaJdTcWsoA4zAILGSV+zf/FCDH2K6PEtH89
+        jCAtbAKGEl1vIUbxArXvO3qeGcRmEVCVOHxlPliNqECcxOPe/8wQNYISJ2c+YQGxOQWsJfpm
+        NoD1MguYSczb/JAZwpaX2P52DpQtLnHryXymCYxCs5C0z0LSMgtJyywkLQsYWVYxiqSWFuem
+        5xYb6hUn5haX5qXrJefnbmIERve2Yz8372C8tDH4EKMAB6MSD++Ofe7xQqyJZcWVuYcYJTiY
+        lUR4nc6ejhPiTUmsrEotyo8vKs1JLT7EaAr03ERmKdHkfGDiySuJNzQ1NLewNDQ3Njc2s1AS
+        5+0QOBgjJJCeWJKanZpakFoE08fEwSnVwNhqffs3/+kfx3+Ub9DglK0RPrzztIimT/Wlzeur
+        vIrvcCt77p0yq1CuxHlVrtyjK9W3fmtt32QZYH5gWp2fcuM/40lGx7bdS7ze1Zty/1rUcacP
+        FrcLXQ1+H5jozcp7dNeWL1si799n+jyTkfved72wae0vKp+//2Xl7c7bemXPq5/bF94ROhSs
+        xFKckWioxVxUnAgAkM0SnAQDAAA=
+X-CMS-MailID: 20200827144615eucas1p26e2e13f503ad810fb7eabb145a2ff75c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200827124306eucas1p2c355345ca848e396f1fb06a7ef7a111e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200827124306eucas1p2c355345ca848e396f1fb06a7ef7a111e
+References: <20200731120603.2243261-1-jbrunet@baylibre.com>
+        <CGME20200827124306eucas1p2c355345ca848e396f1fb06a7ef7a111e@eucas1p2.samsung.com>
+        <e950898e-0a07-4f75-2640-ec8039d81464@samsung.com>
+        <1jmu2g6wq0.fsf@starbuckisacylon.baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Ben,
+Hi
 
-On Wed, Aug 26, 2020 at 06:58:05PM -0700, Ben Levinsky wrote:
-> v10:
-> - add include types.h to xlnx-zynqmp.h for compilation
+On 27.08.2020 15:32, Jerome Brunet wrote:
+> On Thu 27 Aug 2020 at 14:43, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+>> On 31.07.2020 14:06, Jerome Brunet wrote:
+>>> Commit b73287f0b074 ("ASoC: soc-pcm: dpcm: fix playback/capture checks")
+>>> changed the meaning of dpcm_playback/dpcm_capture and now requires the
+>>> CPU DAI BE to aligned with those flags.
+>>>
+>>> This broke all Amlogic cards with uni-directional backends (All gx and
+>>> most axg cards).
+>>>
+>>> While I'm still confused as to how this change is an improvement, those
+>>> cards can't remain broken forever. Hopefully, next time an API change is
+>>> done like that, all the users will be updated as part of the change, and
+>>> not left to fend for themselves.
+>>>
+>>> Fixes: b73287f0b074 ("ASoC: soc-pcm: dpcm: fix playback/capture checks")
+>>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> This patch landed finally in v5.9-rc1. I've noticed it causes a
+>> following warning on Hardkernel's Odroid N2 board
+>> (arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dtb):
+> Looks like the after match of the flag change again ...
+>
+>> meson-drm ff900000.vpu: [drm] fb0: mesondrmfb frame buffer device
+>> ------------[ cut here ]------------
+>> WARNING: CPU: 3 PID: 66 at sound/soc/soc-core.c:817
+> Marek, is it possible that you have CONFIG_LOCKDEP enabled in your
+> configuration ?
+Right, I have CONFIG_PROVE_LOCKING and CONFIG_LOCKDEP enabled.
+> snd_soc_find_dai() is called by snd_soc_dai_link_set_capabilities().
+> Indeed, the client_mutex will not be help by any of the user of
+> snd_soc_dai_link_set_capabilities() when called.
+>
+> So I believe simple card and qcom will be impacted as well.
+>
+>> snd_soc_find_dai+0xe4/0xf0
+>> Modules linked in: dw_hdmi_i2s_audio dw_hdmi_cec meson_gxl realtek
+>> dwmac_generic crct10dif_ce snd_soc_meson_axg_sound_card
+>> snd_soc_meson_card_utils rc_odroid pwm_meson meson_ir
+>> snd_soc_meson_g12a_toacodec snd_soc_meson_axg_tdmout rtc_meson_vrtc
+>> snd_soc_meson_g12a_tohdmitx snd_soc_meson_codec_glue mdio_mux_meson_g12a
+>> snd_soc_meson_axg_tdmin dwmac_meson8b stmmac_platform
+>> reset_meson_audio_arb snd_soc_meson_axg_frddr axg_audio
+>> snd_soc_meson_axg_toddr sclk_div clk_phase meson_rng stmmac rng_core
+>> meson_dw_hdmi snd_soc_meson_axg_fifo meson_drm meson_canvas mdio_xpcs
+>> dw_hdmi snd_soc_meson_t9015 display_connector nvmem_meson_efuse
+>> snd_soc_meson_axg_tdm_interface snd_soc_meson_axg_tdm_formatter
+>> snd_soc_simple_amplifier
+>> CPU: 3 PID: 66 Comm: kworker/3:1 Not tainted 5.9.0-rc1 #1527
+>> Hardware name: Hardkernel ODROID-N2 (DT)
+>> Workqueue: events deferred_probe_work_func
+>> pstate: 60000005 (nZCv daif -PAN -UAO BTYPE=--)
+>> pc : snd_soc_find_dai+0xe4/0xf0
+>> lr : snd_soc_find_dai+0xe0/0xf0
+>> ...
+>> Call trace:
+>>    snd_soc_find_dai+0xe4/0xf0
+>>    snd_soc_dai_link_set_capabilities+0x68/0x160
+>>    axg_card_add_link+0x188/0x5c4 [snd_soc_meson_axg_sound_card]
+>>    meson_card_probe+0x1e0/0x960 [snd_soc_meson_card_utils]
+>>    platform_drv_probe+0x50/0xa8
+>>    really_probe+0x110/0x400
+>>    driver_probe_device+0x54/0xb8
+>>    __device_attach_driver+0x90/0xc0
+>>    bus_for_each_drv+0x70/0xc8
+>>    __device_attach+0xec/0x150
+>>    device_initial_probe+0x10/0x18
+>>    bus_probe_device+0x94/0xa0
+>>    deferred_probe_work_func+0x70/0xa8
+>>    process_one_work+0x2a8/0x718
+>>    worker_thread+0x48/0x460
+>>    kthread+0x134/0x160
+>>    ret_from_fork+0x10/0x1c
+>> irq event stamp: 269690
+>> hardirqs last  enabled at (269689): [<ffff800010f6048c>]
+>> _raw_spin_unlock_irqrestore+0x7c/0x98
+>> hardirqs last disabled at (269690): [<ffff800010025a68>]
+>> do_debug_exception+0x140/0x26c
+>> softirqs last  enabled at (269318): [<ffff800010001654>]
+>> efi_header_end+0x654/0x6d4
+>> softirqs last disabled at (269313): [<ffff80001008929c>]
+>> irq_exit+0x16c/0x178
+>> ---[ end trace 56a3ea4fa00c37c8 ]---
+>> ...
+>> axg-sound-card sound: ASoC: no DMI vendor name!
+>>
+>> The warning is repeated 10 times.
+> That's the probe defferal mechanism causing the repeat
+>
+>> The bisect between v5.8-rc1 and v5.9-rc1 points to the commit
+>> c8f7dbdbaa15 ("Merge remote-tracking branch 'asoc/for-5.8' into
+>> asoc-linus"), which introduced a branch with this patch.
+>>
+>> The commit with this patch is applied on the earlier kernel release
+>> (da3f23fde9d7 "ASoC: meson: cards: deal dpcm flag change" on top of
+>> v5.7-rc1) worked fine, so it looks that there is an interference with
+>> something merged later.
+>>
+>> If I revert this patch on top of v5.9-rc1 or current linux-next, the
+>> warning is gone.
+> ... but any aml platform with uni-directional backend (not the N2, lucky
+> you) would be broken.
+>
+>> Let me know how I can help debugging this issue.
+> If you have CONFIG_LOCKDEP enabled, try disabling see how it goes and
+> report. It is not a fix but at least you'll be unblocked.
 
-I appreciate the quick turnaround on v10, but it looks like much of my
-feedback on v9 went unacknowledged. 
+Right, disabling LOCKDEP hides it. The issue is not a problem for me. 
+I've just added OdroidN2 to my test machines and wanted to report what I 
+found and help fixing it.
 
-Most concerning is the fact that loading firmware on to R5 1 is _still_
-broken in v10 due to the incorrect TCM banks being used.
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-Thanks,
- Michael
-
-> 
-> Ben Levinsky (5):
->   firmware: xilinx: Add ZynqMP firmware ioctl enums for RPU
->     configuration.
->   firmware: xilinx: Add shutdown/wakeup APIs
->   firmware: xilinx: Add RPU configuration APIs
->   dt-bindings: remoteproc: Add documentation for ZynqMP R5 rproc
->     bindings
->   remoteproc: Add initial zynqmp R5 remoteproc driver
-> 
->  .../xilinx,zynqmp-r5-remoteproc.yaml          | 113 +++
->  drivers/firmware/xilinx/zynqmp.c              |  86 ++
->  drivers/remoteproc/Kconfig                    |  10 +
->  drivers/remoteproc/Makefile                   |   1 +
->  drivers/remoteproc/zynqmp_r5_remoteproc.c     | 898 ++++++++++++++++++
->  include/linux/firmware/xlnx-zynqmp.h          |  63 ++
->  6 files changed, 1171 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
->  create mode 100644 drivers/remoteproc/zynqmp_r5_remoteproc.c
-> 
-> -- 
-> 2.17.1
-> 
