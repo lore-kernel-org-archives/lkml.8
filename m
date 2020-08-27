@@ -2,111 +2,183 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE72C433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C39C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB5DD207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 009A5207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:27:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K/syNsgg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="MArYJ3D2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgH0W0O (ORCPT
+        id S1727894AbgH0W1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 18:26:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbgH0W0O (ORCPT
+        Thu, 27 Aug 2020 18:27:36 -0400
+Received: from gateway20.websitewelcome.com ([192.185.65.13]:17399 "EHLO
+        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726234AbgH0W1g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 18:26:14 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1567CC06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 15:26:14 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id i13so3388013pjv.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 15:26:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oiRYPTV9Xp4hDmIJl3FIgZQBNMfOgdOX8kJLpd9LdbA=;
-        b=K/syNsggEMRL31WNQmgeGoNMQ/ehQnSpbyNXTjVkpgc+66YGK2IfWbpNNhuuLcOjgU
-         S+FSsY+M1DHqAVEzjeOJ18Gp+tWus2d9m98Y/uDDwORzyIO48JoP1+9BOG2S2x3cl0Bb
-         ilXVhL9PIdDhs3FFbbAu3iwYjyIdlqBMEhhSA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oiRYPTV9Xp4hDmIJl3FIgZQBNMfOgdOX8kJLpd9LdbA=;
-        b=ixrLruMePZVzpHeck1JZRhx8OUeXFxRDAnPigS/9QG/RnyoGfetwrZthfUIbLeGv69
-         GKaHVc8+JppaMfVU1oAOfp4E1dWHXQqtfAlMz0/Jun+G0ny5bdakd5Zg6SsbgLZIAVnl
-         cSEgs5W08k1AXaPtIPJR3CjTD3+4ojxULKZP4qjt/OG/d0FQD0ewMEnTCWF7BjK/GxPP
-         dP2Mtom3xswExEK9sifneLm8qOd1GQ95CQngaeGQhVu0Qy6ZJ1BxTGH5kLm+0zxuQeMD
-         BWK0f3ZHKQfTUKKbiAnniPLhhO6jJwfKUivu2pafAgEqQ/jgCO8aZG9jniKEyGBX8NeX
-         Mu4g==
-X-Gm-Message-State: AOAM533ixq6hWw/+0csNgNTz7yRdHNjb1Nr/etqby6KA3J5zlkeUHGhL
-        OD+GGeO38cciToaTACzbsG8ZKw==
-X-Google-Smtp-Source: ABdhPJxONp4RrvitcYcVF82oYuZdrsKx6Ay/xu8opcvalfLsdDHC05RMM7SmB4tIPVDlVRRlXcMRHg==
-X-Received: by 2002:a17:90a:6b07:: with SMTP id v7mr910704pjj.138.1598567173631;
-        Thu, 27 Aug 2020 15:26:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y1sm3960582pfp.95.2020.08.27.15.26.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 15:26:12 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 15:26:11 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joe Perches <joe@perches.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        stable <stable@vger.kernel.org>, Andy Lavr <andy.lavr@gmail.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] lib/string.c: implement stpcpy
-Message-ID: <202008271523.88796F201F@keescook>
-References: <20200825135838.2938771-1-ndesaulniers@google.com>
- <CAK7LNAQXo5-5W6hvNMEVPBPf3tRWaf-pQdSR-0OHyi4RCGhjsQ@mail.gmail.com>
- <d56bf7b93f7a28c4a90e4e16fd412e6934704346.camel@perches.com>
- <CAKwvOd=YrVtPsB7HYPO0N=K7QJm9KstayqqeYQERSaGtGy2Bjg@mail.gmail.com>
- <CAK7LNAQKwOo=Oas+7Du9+neSm=Ev6pxdPV7ges7eEEpW+jh8Ug@mail.gmail.com>
- <202008261627.7B2B02A@keescook>
- <CAHp75VfniSw3AFTyyDk2OoAChGx7S6wF7sZKpJXNHmk97BoRXA@mail.gmail.com>
- <202008271126.2C397BF6D@keescook>
- <CAHp75VeA6asim81CwxPD7LKc--DEvOWH9fwgQ9Bbb1Xf55OYKw@mail.gmail.com>
+        Thu, 27 Aug 2020 18:27:36 -0400
+X-Greylist: delayed 1464 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Aug 2020 18:27:35 EDT
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway20.websitewelcome.com (Postfix) with ESMTP id 0BE29400C5F70
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 15:39:25 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BPzCkfvEcOIGpBPzCkEjWa; Thu, 27 Aug 2020 17:03:10 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=FvnhuzSdN+I0gWQnpuvrEB9W+fGpRmA5GbAp6gB4udY=; b=MArYJ3D2+4E6+pJ/Dtakgk6Kfg
+        kWLKHcUH6+X9nwJJ6liJaTDCcJ+hcWXbxJw5qA0iZXqbd4pfBv7n83I52Rzxcnjc9lUAyWHzcTXfc
+        0Oq3u6lZ3vDXEIKmxbhDvdtJWi6BwknB0FgpUoW+UT5c35mhd6jEebULlORRLcbzVZ01ePcm94N94
+        M0RbXEyY7mDjedn8/UTGz6t96PKz4mk/RVWopJ5zta3qrpLSs8nz51ZvOCciIAp4EYTDjJR23KNMB
+        39q6mQ4rLaUSboLurgoXXCK4XdNMiS2z+Hig6aE0vFLUraX7IEctP/DehqbaaLU2+XTVhvpwckRKN
+        GIRWVwiw==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:54518 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1kBPzC-00128n-BY; Thu, 27 Aug 2020 17:03:10 -0500
+To:     Denis Efremov <efremov@linux.com>, Jan Kara <jack@suse.com>
+Cc:     linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
+References: <20200827151923.40067-1-efremov@linux.com>
+ <20200827212530.48013-1-efremov@linux.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ AP7RWS474w==
+Subject: Re: [PATCH v2] udf: Use kvzalloc() in udf_sb_alloc_bitmap()
+Message-ID: <0caaeb1e-6f71-b97f-f86c-22819c30e31f@embeddedor.com>
+Date:   Thu, 27 Aug 2020 17:09:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeA6asim81CwxPD7LKc--DEvOWH9fwgQ9Bbb1Xf55OYKw@mail.gmail.com>
+In-Reply-To: <20200827212530.48013-1-efremov@linux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1kBPzC-00128n-BY
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:54518
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 3
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 11:05:42PM +0300, Andy Shevchenko wrote:
-> In general it's better to have a robust API, but what may go wrong
-> with the interface where we have no length of  the buffer passed, but
-> we all know that it's PAGE_SIZE?
-> So, what's wrong with doing something like
-> strcpy(buf, "Yes, we know we won't overflow here\n");
 
-(There's a whole thread[1] about this right now, actually.)
 
-The problem isn't the uses where it's safe (obviously), it's about the
-uses where it is NOT safe. (Or _looks_ safe but isn't.) In order to
-eliminate bug classes, we need remove the APIs that are foot-guns. Even
-if one developer never gets it wrong, others might.
+On 8/27/20 16:25, Denis Efremov wrote:
+> Use kvzalloc() in udf_sb_alloc_bitmap() instead of open-coding it.
+> Size computation wrapped in struct_size() macro to prevent potential
+> integer overflows.
+> 
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> ---
 
-[1] https://lore.kernel.org/lkml/c256eba42a564c01a8e470320475d46f@AcuMS.aculab.com/T/#mac95487d7ae427de03251b49b75dd4de40c2462d
+Please, comment here what changed in v2, vn... e.g.:
 
--- 
-Kees Cook
+Changes in v2:
+ - Use struct_size() helper.
+
+
+>  fs/udf/super.c | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/udf/super.c b/fs/udf/super.c
+> index 1c42f544096d..bdf51bea54f3 100644
+> --- a/fs/udf/super.c
+> +++ b/fs/udf/super.c
+> @@ -1010,14 +1010,9 @@ static struct udf_bitmap *udf_sb_alloc_bitmap(struct super_block *sb, u32 index)
+>  	int size;
+>  
+>  	nr_groups = udf_compute_nr_groups(sb, index);
+> -	size = sizeof(struct udf_bitmap) +
+> -		(sizeof(struct buffer_head *) * nr_groups);
+> -
+> -	if (size <= PAGE_SIZE)
+> -		bitmap = kzalloc(size, GFP_KERNEL);
+> -	else
+> -		bitmap = vzalloc(size); /* TODO: get rid of vzalloc */
+> +	size = struct_size(bitmap, s_block_bitmap, nr_groups);
+>  
+> +	bitmap = kvzalloc(size, GFP_KERNEL);
+
+Why not this:
+
+bitmap = kvzalloc(struct_size(bitmap, s_block_bitmap, nr_groups),
+		  GFP_KERNEL);
+
+and you can also get rid of _size_ entirely.
+
+Thanks
+--
+Gustavo
+
+>  	if (!bitmap)
+>  		return NULL;
+>  
+> 
