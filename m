@@ -2,132 +2,109 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E82C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D31AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1CD52087D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:35:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598538937;
-	bh=jyEOpDGF58EqMyy4CAA6ODNRwClS6tF5zgcHWbsZr48=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=b9GW7r9MHx64u0pgPicHMwELXBBs4GNG/QE+aaGm9nikz4u407vTLn1NIBceSVNZp
-	 A3xobMP4oP6sQDV/JNygkZQCWdhEs0Pq78W1q3qTwO2tUjLEVyfHdv/aEK0YHWg8xK
-	 e5njJg6CRjkUPo/fdAk2ZHXQyEFwnKNOWiPDINdQ=
+	by mail.kernel.org (Postfix) with ESMTP id 954EC2087D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:36:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWBEgGPw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726093AbgH0Of3 (ORCPT
+        id S1727883AbgH0Ofq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:35:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728039AbgH0O0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:26:48 -0400
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi [91.155.214.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0192C2177B;
-        Thu, 27 Aug 2020 14:26:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598538407;
-        bh=jyEOpDGF58EqMyy4CAA6ODNRwClS6tF5zgcHWbsZr48=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=KtE6g3myS01Vitmo+hD9Pu7YyaqLPHM39fwPCFEeR7pbRqbYl9marPKGXx4lRbxUM
-         uHtNDJog4/9AwqmebNRgl1DsLiEyB5K8LHPop+cLk+Lvg2FuYk71ucVyztN2sjC/o8
-         K76Zb9dWOimWG7W/S44b1S5KwzZw5ZzcUXLThxfk=
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
-        =?utf-8?B?5ZGo?= =?utf-8?B?5q2j?= <sernia.zhou@foxmail.com>,
-        =?utf-8?B?5ryG6bmP5oyv?= <aric.pzqi@ingenic.com>, od@zcrc.me,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] USB: PHY: JZ4770: Fix uninitialized value written
- to HW register
-In-Reply-To: <HG6QFQ.KLMIR92DB2D02@crapouillou.net>
-References: <20200827124308.71963-1-paul@crapouillou.net>
- <20200827124308.71963-2-paul@crapouillou.net> <87v9h4i6t5.fsf@kernel.org>
- <PN4QFQ.KWNBY2ZWQ7XC2@crapouillou.net> <87bliwi5kx.fsf@kernel.org>
- <HG6QFQ.KLMIR92DB2D02@crapouillou.net>
-Date:   Thu, 27 Aug 2020 17:26:40 +0300
-Message-ID: <878se0i2qn.fsf@kernel.org>
+        Thu, 27 Aug 2020 10:35:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727906AbgH0OQj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 10:16:39 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9142CC06121B;
+        Thu, 27 Aug 2020 07:15:28 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id u1so5068416edi.4;
+        Thu, 27 Aug 2020 07:15:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NXkLLdStZAp/ZkgGou+K3F4imj0vfXH+Hp3m3xXWcro=;
+        b=MWBEgGPw8K6mkTY5BsXwDG/tkAjCutG31ed3J4GGXW64ymyLGydPe5Y+l849kuTZL6
+         yv84qalw1kG2lf823+h65AY4/B9+NSJY481zea/luna/GIkP0oPfmhFJn/8keppiM8HL
+         /SU0jHblLyZ6Fdb2IXT2VWwSI1VqCq4c/opm/cTdpwosuw4J1RGDXrwcpv1HHQci5LJJ
+         L1kcIGvLFSYC8PXfNMj+9hz0zT2sAos9PBYkcQU0K/b0JWfRf/H1E6qpHc0kZMYFCkgQ
+         SQC6ndi9zdcpr+n2uqrG+rN5p/AlMePr1/S/lLgE+JHjac1tRZlNrHZdP+7SstWj8Y0h
+         i14w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NXkLLdStZAp/ZkgGou+K3F4imj0vfXH+Hp3m3xXWcro=;
+        b=VOFIH7BUGkMYOi9stquBflk04DoViY9QegEYo/4amKCMW2uG+8rt3VCwrSvACvtQUO
+         KHmWU0prCHzqKWc/CO5kk904rDMJRM+AyXsjjbsrvTkFO858xywSEHzHsf4YcTInu3dJ
+         uLafhg7zYoA6B3jWDrVyeNxj92TdbqnGkVb/KQBhYmnrv1P8u4TV4eajjCw5VE2aQfJM
+         SS+vZ8JxFBktKgnr5CPUq+xUSzdOLCCifB+3zutvN37EWGSlo19YerY9ThSelJeLWYae
+         ttecVha57YVQCIVvk/p2oXZrqvmdA4JMt+E0mFXLRW0surZ7Xe9dv0bGJzOiPqzLrAD2
+         jvHA==
+X-Gm-Message-State: AOAM5306j13rnhjQ+FAicpcSjLFhHersIo7EguJkfAB/xQ8msoVWk2Ne
+        GoVnTVTX+h/CzQ6lX9IgnM8=
+X-Google-Smtp-Source: ABdhPJwr1Ohh7U+k+NbwwlGg9XlS6X9acHkKu4ucrrjGVFuW8d6WFhqWj8pq3Nfa8c8Ce6BBYEZeNQ==
+X-Received: by 2002:a50:9d8a:: with SMTP id w10mr19602085ede.16.1598537723356;
+        Thu, 27 Aug 2020 07:15:23 -0700 (PDT)
+Received: from BV030612LT ([188.24.159.61])
+        by smtp.gmail.com with ESMTPSA id d17sm1575988edr.78.2020.08.27.07.15.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 07:15:22 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 17:15:20 +0300
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Peter Korsgaard <peter@korsgaard.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 4/4] arm: dts: owl-s500: Add RoseapplePi
+Message-ID: <20200827141520.GD2451538@BV030612LT>
+References: <cover.1592123160.git.cristian.ciocaltea@gmail.com>
+ <2d12521d196e2c08a30aacd0ab20d93593f94707.1592123160.git.cristian.ciocaltea@gmail.com>
+ <87v9h4y4dj.fsf@dell.be.48ers.dk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v9h4y4dj.fsf@dell.be.48ers.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Peter,
 
-Hi,
+Thanks for the review!
 
-Paul Cercueil <paul@crapouillou.net> writes:
->>>>>   @@ -246,9 +241,8 @@ static void x1830_usb_phy_init(struct usb_phy
->>>>>  *phy)
->>>>>    		USBPCR1_DMPD | USBPCR1_DPPD;
->>>>>    	writel(reg, priv->base + REG_USBPCR1_OFFSET);
->>>>>=20
->>>>>   -	reg =3D USBPCR_IDPULLUP_OTG | USBPCR_VBUSVLDEXT
->>>>>  |	USBPCR_TXPREEMPHTUNE |
->>>>>   +	return USBPCR_IDPULLUP_OTG | USBPCR_VBUSVLDEXT |
->>>>>  USBPCR_TXPREEMPHTUNE |
->>>>>    		USBPCR_COMMONONN | USBPCR_POR;
->>>>>   -	writel(reg, priv->base + REG_USBPCR_OFFSET);
->>>>=20
->>>>  not a bug fix
->>>=20
->>>  Well, if you don't like my bug fix, next time wait for my=20
->>> Reviewed-by.
->>=20
->> why so angry? Take a break every once in a while. Besides, someone=20
->> else
->> already sent the oneliner before you ;-)
->
-> I'm just pissed that this patch has not been tested. I don't like=20
-> sloppy work.
+On Thu, Aug 27, 2020 at 08:44:40AM +0200, Peter Korsgaard wrote:
+> >>>>> "Cristian" == Cristian Ciocaltea <cristian.ciocaltea@gmail.com> writes:
+> 
+>  > Add a Device Tree for the RoseapplePi SBC.
+>  > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> 
+> Reviewed-by: Peter Korsgaard <peter@korsgaard.com>
+> 
+> On a related note: There is now an owl-mmc driver for the s900. From a
+> quick look at the datasheet it looks compatible with the controller on
+> the s500. Did you have a look at hooking that up?
 
-yeah, s**t happens
+Yes, please see:
+https://lore.kernel.org/lkml/cover.1593124368.git.cristian.ciocaltea@gmail.com/
 
->> In any case, why should I wait for your Reviewed-by? Get maintainer
->> doesn't list you as the maintainer for it. Do you want to update
->> MAINTAINERS by any chance?
->
-> Yes, I thought I was (I'm maintainer of all Ingenic drivers), that also=20
-> explains why I wasn't Cc'd for the oneliner patch you mentioned...
->
-> IIRC Zhou has a patch to move the driver to drivers/phy/, I'll add=20
-> myself as maintainer once it's moved there.
+The clock related patches have been already applied to v5.9 and
+hopefully the pinctrl driver will follow in v5.10.
 
-makes sense
+> -- 
+> Bye, Peter Korsgaard
 
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJFBAEBCAAvFiEElLzh7wn96CXwjh2IzL64meEamQYFAl9HwqARHGJhbGJpQGtl
-cm5lbC5vcmcACgkQzL64meEamQb56A/+OPhVliSrlBVVZ0goHmIdr+wMbvIICLEw
-CtSbe/vqazexOfe9E/8b5W25JOz28Lv+3whz+gr81W66eL/8YpuBzVBkJxtUjJD8
-iWq+5CXHTyNjBNSNx4aHuNCTnmLNcWHhxLf7oDBO5fpikyhMBNOIgUa5ciDEmjro
-3eH/IekqlN35vmt51B6XoVLJVbAl5pnyKhdDDSZTqQMyJkMPaeinNnvxC48r9bQ/
-fPnZkb2AjE5QLzeidFpRdOVBKP4SqtHjjVz3fObrcsxu65RHFqjmMDKdFNekNkdV
-2UmJwuHWZxZL9z6EDotxXo5Kp9wUWxmm5aymhDmvtsvonb4iiNBuluhimVYXU5Hi
-CxCH9mcGQWC9pi7BE1oIv8ECA1FAdQykmYbAkqqiTxoUN8pLw4Uox4ge5YFkGNPX
-gxAOPNCFeWpG89WjUhIDBheGPgw/w7JEibrrUrm3kTnAZxmWyW0sj+gmW/SjZthR
-jkf/qJg2Hh3P6lWOY4mTrKO3CObZv6WG0J41lVKkF+az+GwbEO4KGUYJJi8HK6hQ
-rwp9pmaf7cZSrG1PBVsMh6Y+OIxqbwLCAz9IYY0jjKWCw0AeK7tMBYnUXdN8l1+e
-bKDwZlp9v9SGdKkELAwNBW9tKlaaqNd5qsiKN7TchhM+XeuEXclWjSSE/FZCgD/Z
-DxnwwE1DolM=
-=VXAU
------END PGP SIGNATURE-----
---=-=-=--
+Regards,
+Cristi
