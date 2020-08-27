@@ -2,124 +2,178 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD1C02087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABCAC20737
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:02:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="GU3t6tHO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QJdS2QFB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgH0RBU (ORCPT
+        id S1726825AbgH0RCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:01:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53718 "EHLO
+        Thu, 27 Aug 2020 13:02:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727034AbgH0RBN (ORCPT
+        with ESMTP id S1726147AbgH0RCT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:01:13 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 020E6C061232
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:01:11 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id q21so4352011edv.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:01:11 -0700 (PDT)
+        Thu, 27 Aug 2020 13:02:19 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4353CC061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:02:19 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id w13so6060232wrk.5
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:02:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fQwOilPKk1piCWiUYQqWKm3Q131dR9gCFRx5y6SMd7w=;
-        b=GU3t6tHOHu2MtrVfx2sMpm5WdOuJxuu031alP5ivhrqq5P/pHwXExArOYO1KsWT1zq
-         cknfojUCR6Td7kJzSIn9s0J9UNU9ulNJAEND9jG1v+PM4tggjg8yvlV75OPhB6poYwdK
-         Tw++wzZ8I+mv/1wE3GebYJI9JPQCN4kZRRybwkHw+YvFkbI6PlDBeLJ/EMFKsRf5xcwE
-         ZHjSHjEqZqJHgROwJw0gbYCNAQvpc1qZQ5gpgnXfw7rXC7vTsoQK9lQyrNcoNt4c8L9b
-         Tdm/sGZlAGt0i45FRWvywm9vWtnyllycLoBpUyjmUXSbnlwbFYnJmFPomt9dRQ+sPkFR
-         e2mg==
+         :cc:content-transfer-encoding;
+        bh=iaDJiDThZeeDEzVlzU4moTVS3qRE8PjuLAm4ANV0fPA=;
+        b=QJdS2QFBX5yromQSOgok4Hu/Nj+uS0RxjYDbQ8Ks5RYDnERghNSeoKkMDULiCKRwKg
+         AWfhg93e3wtc5bzAU7Oo/RdIFgF70toIKidKT6KxIYu2BYpPw/s/L+ciMfc2Deq5zoR+
+         W+sPNlrl/U8NbcydIyjiYuZVlRQnpQooKHV39pSp1gEHTbkm3zWcF8tr95xOUAmRXP06
+         uVJnybjpBL8V3c0f7/zNK20dyhF7zpYQf7H5VhEduk1wZ77gcjLHSSZgUWAhhLdddDn6
+         Gpi/cic/sDPjxY/5rqFmak/ZIFYW54WjvCeF5+VXTh/NXAzF8msIjTE3hfGwr2hz9sRd
+         C/tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fQwOilPKk1piCWiUYQqWKm3Q131dR9gCFRx5y6SMd7w=;
-        b=JK64fK/c+SbMjY1/cbs8OmDgeJFTa9+tOI0IYoOiQqdrQWZoVmaP61BIqb5Dlp72D+
-         ef7vtPDiJy0s/RYGjtAx6Y7XrLHEzAaA07NWiLMu+Q+lhDWw6XyOP+VlLag5gb79gKrf
-         EignT5+/t8HOsril/uJuFHssX5f7SdFSrh/iklTFuykuUF+Eft1gh5UsaFf9YyRqJO9r
-         m82rGrwZEyUcDdzYxGjNlocXPu9+RDWlq3Bceq3You7sSJI++sXVUn2b/VOT8RiMXsGW
-         aBKeG/FpXiktoOw2u9Pa8hs66+ng+nfUAlD0NUR2LyCO1obJystpLGz+6ax5U1EWz0UG
-         PiMA==
-X-Gm-Message-State: AOAM533VOUeyjmLv1Y8ZLBDywm5wZefUzIjah2gkQk9QkWINzkgIZdRi
-        UXD5Sr7QB7hckjkrOq0mi1aZkGbnTmpQNw3lBdoH
-X-Google-Smtp-Source: ABdhPJxyYHZx4GJwDRAPIGE4a5yirISt0x+61wFkAezzM5ZYDXxdb9wD5WIZ/vnluTCqbhjdmfD3a/mC2JYpqD0za84=
-X-Received: by 2002:aa7:ca46:: with SMTP id j6mr18609335edt.128.1598547670264;
- Thu, 27 Aug 2020 10:01:10 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=iaDJiDThZeeDEzVlzU4moTVS3qRE8PjuLAm4ANV0fPA=;
+        b=g87M6t92HrHONRtIqmGWPWHqTEI7KajuadZbadwh2VyXTduYuaga2zYrnP/A3r0jhq
+         4Cr84ZGQE67B0564zsu7FY3VYW/fi8p26XGLiKlZ7F9e10Y9BOGmv9gt39uZdPLTIDVp
+         blEgCcik8OHcJcrwkjKFgZnnbeFKeVMNl6Dh8vJWXsqOenjJwMKhqrYvyoN1gcuUdQ14
+         fz4FqOLpwzgix5JEvTBA3mvgazJVugLDOXNs1t7iuUsvrc9MIz0KEE5B1+/pyH02DJ8z
+         lEHzy5/gtTz3FVT99OgO5EJSeTZ9ZOdN9gN6QJMiYtHINqFGWA3UFsTJvPHvOSIjnA2E
+         AAaQ==
+X-Gm-Message-State: AOAM533Phlv/owEQMnj10+8u99KrXRGfer96Ui+jb1haEhCuI7D/uuCQ
+        Wr35W+bRXUzo3VkCw8giqfGXwrQRxGGqOCkCigIS2g==
+X-Google-Smtp-Source: ABdhPJx2h4Suq8Q/8FtsNU6SR+9RMB/Kow8o2Jcg/4T455UHRuZ7Oyo36M9mR7aTSczGcHXxhR4Y5Y4E8PwPBYYbluQ=
+X-Received: by 2002:adf:9ec1:: with SMTP id b1mr20983425wrf.171.1598547737864;
+ Thu, 27 Aug 2020 10:02:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200827163712.106303-1-alex.dewar90@gmail.com>
-In-Reply-To: <20200827163712.106303-1-alex.dewar90@gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 27 Aug 2020 13:00:58 -0400
-Message-ID: <CAHC9VhRgi54TXae1Wi+SSzkuy9BL7HH=pZCHL1p215M9ZXKEOA@mail.gmail.com>
-Subject: Re: [PATCH RFC] netlabel: remove unused param from audit_log_format()
-To:     Alex Dewar <alex.dewar90@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200827123627.538189-1-gregkh@linuxfoundation.org>
+ <3d8de519-65b3-123b-8ace-e820982884e0@labbott.name> <20200827160506.GC684514@kroah.com>
+In-Reply-To: <20200827160506.GC684514@kroah.com>
+From:   Amit Pundir <amit.pundir@linaro.org>
+Date:   Thu, 27 Aug 2020 22:31:41 +0530
+Message-ID: <CAMi1Hd1Ch1RWvOTnON3tsrucaKThTuGQnwNFo94GqUjufVmnOg@mail.gmail.com>
+Subject: Re: [PATCH] staging: ion: remove from the tree
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Laura Abbott <laura@labbott.name>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        John Stultz <john.stultz@linaro.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linaro-mm-sig@lists.linaro.org, Shuah Khan <shuah@kernel.org>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Christian Brauner <christian@brauner.io>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 12:39 PM Alex Dewar <alex.dewar90@gmail.com> wrote:
+On Thu, 27 Aug 2020 at 21:34, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Commit d3b990b7f327 ("netlabel: fix problems with mapping removal")
-> added a check to return an error if ret_val != 0, before ret_val is
-> later used in a log message. Now it will unconditionally print "...
-> res=0". So don't print res anymore.
+> On Thu, Aug 27, 2020 at 09:31:27AM -0400, Laura Abbott wrote:
+> > On 8/27/20 8:36 AM, Greg Kroah-Hartman wrote:
+> > > The ION android code has long been marked to be removed, now that we
+> > > dma-buf support merged into the real part of the kernel.
+> > >
+> > > It was thought that we could wait to remove the ion kernel at a later
+> > > time, but as the out-of-tree Android fork of the ion code has diverge=
+d
+> > > quite a bit, and any Android device using the ion interface uses that
+> > > forked version and not this in-tree version, the in-tree copy of the
+> > > code is abandonded and not used by anyone.
+> > >
+> > > Combine this abandoned codebase with the need to make changes to it i=
+n
+> > > order to keep the kernel building properly, which then causes merge
+> > > issues when merging those changes into the out-of-tree Android code, =
+and
+> > > you end up with two different groups of people (the in-kernel-tree
+> > > developers, and the Android kernel developers) who are both annoyed a=
+t
+> > > the current situation.  Because of this problem, just drop the in-ker=
+nel
+> > > copy of the ion code now, as it's not used, and is only causing probl=
+ems
+> > > for everyone involved.
+> > >
+> > > Cc: "Arve Hj=C3=B8nnev=C3=A5g" <arve@android.com>
+> > > Cc: "Christian K=C3=B6nig" <christian.koenig@amd.com>
+> > > Cc: Christian Brauner <christian@brauner.io>
+> > > Cc: Christoph Hellwig <hch@infradead.org>
+> > > Cc: Hridya Valsaraju <hridya@google.com>
+> > > Cc: Joel Fernandes <joel@joelfernandes.org>
+> > > Cc: John Stultz <john.stultz@linaro.org>
+> > > Cc: Laura Abbott <laura@labbott.name>
+> > > Cc: Martijn Coenen <maco@android.com>
+> > > Cc: Shuah Khan <shuah@kernel.org>
+> > > Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> > > Cc: Suren Baghdasaryan <surenb@google.com>
+> > > Cc: Todd Kjos <tkjos@android.com>
+> > > Cc: devel@driverdev.osuosl.org
+> > > Cc: dri-devel@lists.freedesktop.org
+> > > Cc: linaro-mm-sig@lists.linaro.org
+> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >
+> > We discussed this at the Android MC on Monday and the plan was to
+> > remove it after the next LTS release.
 >
-> Addresses-Coverity: ("Dead code")
-> Fixes: d3b990b7f327 ("netlabel: fix problems with mapping removal")
-> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
-> ---
+> I know it was discussed, my point is that it is actually causing
+> problems now (with developers who want to change the internal kernel api
+> hitting issues, and newbies trying to clean up code in ways that isn't
+> exactly optimal wasting maintainer cycles), and that anyone who uses
+> this code, is not actually using this version of the code.  Everyone who
+> relies on ion right now, is using the version that is in the Android
+> common kernel tree, which has diverged from this in-kernel way quite a
+> bit now for the reason that we didn't want to take any of those new
+> features in the in-kernel version.
 >
-> I wasn't sure whether it was intended that something other than ret_val
-> be printed in the log, so that's why I'm sending this as an RFC.
-
-It's intentional for a couple of reasons:
-
-* The people who care about audit logs like to see success/fail (e.g.
-"res=X") for audit events/records, so printing this out gives them the
-warm fuzzies.
-
-* For a lot of awful reasons that I won't bore you with, we really
-don't want to add/remove fields in the middle of an audit record so we
-pretty much need to keep the "res=0" there even if it seems a bit
-redundant.
-
-So NACK from me, but thanks for paying attention just the same :)
-
->  net/netlabel/netlabel_domainhash.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+> So this is a problem that we have caused by just wanting to wait, no one
+> is using this code, combined with it causing problems for the upstream
+> developers.
 >
-> diff --git a/net/netlabel/netlabel_domainhash.c b/net/netlabel/netlabel_domainhash.c
-> index f73a8382c275..526762b2f3a9 100644
-> --- a/net/netlabel/netlabel_domainhash.c
-> +++ b/net/netlabel/netlabel_domainhash.c
-> @@ -612,9 +612,8 @@ int netlbl_domhsh_remove_entry(struct netlbl_dom_map *entry,
->         audit_buf = netlbl_audit_start_common(AUDIT_MAC_MAP_DEL, audit_info);
->         if (audit_buf != NULL) {
->                 audit_log_format(audit_buf,
-> -                                " nlbl_domain=%s res=%u",
-> -                                entry->domain ? entry->domain : "(default)",
-> -                                ret_val == 0 ? 1 : 0);
-> +                                " nlbl_domain=%s",
-> +                                entry->domain ? entry->domain : "(default)");
->                 audit_log_end(audit_buf);
->         }
+> There is nothing "magic" about the last kernel of the year that requires
+> this code to sit here until then.  At that point in time, all users
+> will, again, be using the forked Android kernel version, and if we
+> delete this now here, that fork can remain just fine, with the added
+> benifit of it reducing developer workloads here in-kernel.
 >
+> So why wait?
 
--- 
-paul moore
-www.paul-moore.com
+Hi,
+
+I don't know what is the right thing to do here. I just want to
+highlight that AOSP's audio (codec2) HAL depends on the ION system
+heap and it will break AOSP for people who boot mainline on their
+devices, even for just testing purpose like we do in Linaro. Right now
+we need only 1 (Android specific out-of-tree) patch to boot AOSP with
+mainline and Sumit is already trying to upstream that vma naming
+patch. Removal of in-kernel ION, will just add more to that delta.
+
+Regards,
+Amit Pundir
+
+>
+> thanks,
+>
+> greg k-h
