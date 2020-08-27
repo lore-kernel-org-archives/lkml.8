@@ -2,105 +2,87 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEFEC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D18C3C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8030020678
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:04:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598540699;
-	bh=+jRn5/x2Cn9B+Uaw6OdWSzuUG6h+1XhekMjRvXwB/A8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0Hj6fWYHe03Mczx3BH3GMsC567DvyQpxAfNZZBW3TH5Pj29d+XqJARr14rOLVhPmM
-	 whv80847MqtAWft2x3tb+QFMqybpfq1WU6rJGjOEREA8+RWnqAT6k9XMMrYBNQTBgx
-	 N9LIldMdCsJgozFamHnbsGk4uort91PgTyWa0JuI=
+	by mail.kernel.org (Postfix) with ESMTP id BBF532177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbgH0PE6 (ORCPT
+        id S1728343AbgH0PE7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:04:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728016AbgH0PBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:01:06 -0400
-Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 795FF20678;
-        Thu, 27 Aug 2020 15:01:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598540465;
-        bh=+jRn5/x2Cn9B+Uaw6OdWSzuUG6h+1XhekMjRvXwB/A8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uhJ18CJrnJ/EmIyJpAKkfxLSGytmtwE8i/Dy00KjqNwutiVCjU8cWA5ZgGb67DqFL
-         MRxkUOzM/nNTaQwSDU813rHNnEa3IzGGihph/X0nLvOc+Ik+iVuH58Vh7eH8R/I+YP
-         pCiZqrMF6RKnCK4KnNjSBytesfTocPeEEQpnzO+4=
-Date:   Thu, 27 Aug 2020 08:01:03 -0700
-From:   Keith Busch <kbusch@kernel.org>
-To:     Tong Zhang <ztong0001@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        axboe@fb.com, Christoph Hellwig <hch@lst.de>, sagi@grimberg.me
-Subject: Re: [PATCH] nvme-pci: cancel nvme device request before disabling
-Message-ID: <20200827150103.GA2613662@dhcp-10-100-145-180.wdl.wdc.com>
-References: <20200814071431.201400-1-ztong0001@gmail.com>
- <20200814150433.GA3498391@dhcp-10-100-145-180.wdl.wdc.com>
- <CAA5qM4CctYiBe766-OnxAPHJWByyOo1rE7FzW-75ZcOib6niCA@mail.gmail.com>
- <20200814154233.GA3772144@dhcp-10-100-145-180.wdl.wdc.com>
- <CAA5qM4CtnNgZDpT-8Wiwvs18-h4fmxv3jPmW4AqWXgT-BqNLYw@mail.gmail.com>
+        Thu, 27 Aug 2020 11:04:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726854AbgH0PD3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 11:03:29 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B5FC061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 08:03:16 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1kBJQe-0000so-Kx; Thu, 27 Aug 2020 17:03:04 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1kBJQd-0002Rp-My; Thu, 27 Aug 2020 17:03:03 +0200
+Message-ID: <b17e8cb934f223a4f6055cdc2065ba75367ccffd.camel@pengutronix.de>
+Subject: Re: [PATCH] Revert "usb: dwc3: meson-g12a: fix shared reset control
+ use"
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Amjad Ouled-Ameur <aouledameur@baylibre.com>,
+        Felipe Balbi <balbi@kernel.org>
+Cc:     Dan Robertson <dan@dlrobertson.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Thu, 27 Aug 2020 17:03:03 +0200
+In-Reply-To: <20200827144810.26657-1-aouledameur@baylibre.com>
+References: <20200827144810.26657-1-aouledameur@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA5qM4CtnNgZDpT-8Wiwvs18-h4fmxv3jPmW4AqWXgT-BqNLYw@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 12:11:56PM -0400, Tong Zhang wrote:
-> On Fri, Aug 14, 2020 at 11:42 AM Keith Busch <kbusch@kernel.org> wrote:
-> > > > On Fri, Aug 14, 2020 at 03:14:31AM -0400, Tong Zhang wrote:
-> > > > > diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-> > > > > index ba725ae47305..c4f1ce0ee1e3 100644
-> > > > > --- a/drivers/nvme/host/pci.c
-> > > > > +++ b/drivers/nvme/host/pci.c
-> > > > > @@ -1249,8 +1249,8 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
-> > > > >               dev_warn_ratelimited(dev->ctrl.device,
-> > > > >                        "I/O %d QID %d timeout, disable controller\n",
-> > > > >                        req->tag, nvmeq->qid);
-> > > > > -             nvme_dev_disable(dev, true);
-> > > > >               nvme_req(req)->flags |= NVME_REQ_CANCELLED;
-> > > > > +             nvme_dev_disable(dev, true);
-> > > > >               return BLK_EH_DONE;
+On Thu, 2020-08-27 at 16:48 +0200, Amjad Ouled-Ameur wrote:
+> This reverts commit 7a410953d1fb4dbe91ffcfdee9cbbf889d19b0d7.
 > 
-> > anymore. The driver is not reporting   non-response back for all
-> > cancelled requests, and that is probably not what we should be doing.
+> This commit breaks USB on meson-gxl-s905x-libretech-cc. Reverting
+> the change solves the issue.
 > 
-> OK, thanks for the explanation. I think the bottom line here is to let the
-> probe function know and stop proceeding when there's an error.
-> I also don't see an obvious reason to set NVME_REQ_CANCELLED
-> after nvme_dev_disable(dev, true).
+> In fact, according to the reset framework code, consumers must not use
+> reset_control_(de)assert() on shared reset lines when reset_control_reset
+> has been used, and vice-versa.
+> 
+> Moreover, with this commit, usb is not guaranted to be reset since the
+> reset is likely to be initially deasserted.
+> 
+> Reverting the commit will bring back the suspend warning mentioned in the
+> commit description. Nevertheless, a warning is much less critical than
+> breaking dwc3-meson-g12a USB completely. We will address the warning
+> issue in another way as a 2nd step.
+> 
+> Signed-off-by: Amjad Ouled-Ameur <aouledameur@baylibre.com>
+> Reported-by: Jerome Brunet <jbrunet@baylibre.com>
 
-The flag was set after disabling when it didn't happen to matter: the
-block layer had a complicated timeout scheme that didn't actually
-complete the request until the timeout handler returned, so the flag set
-where it is was 'ok'. That's clearly not the case anymore, so yes, I
-think we do need your patch.
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-There is one case you are missing, though:
-
----
-@@ -1267,10 +1267,10 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
- 		dev_warn(dev->ctrl.device,
- 			 "I/O %d QID %d timeout, reset controller\n",
- 			 req->tag, nvmeq->qid);
-+		nvme_req(req)->flags |= NVME_REQ_CANCELLED;
- 		nvme_dev_disable(dev, false);
- 		nvme_reset_ctrl(&dev->ctrl);
- 
--		nvme_req(req)->flags |= NVME_REQ_CANCELLED;
- 		return BLK_EH_DONE;
- 	}
---
+regards
+Philipp
