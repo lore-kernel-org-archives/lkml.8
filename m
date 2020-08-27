@@ -2,85 +2,144 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5622CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B23C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C377207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD01D207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:12:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kLi7Icac"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbgH0KMG (ORCPT
+        id S1728544AbgH0KMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:12:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54450 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgH0KMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:12:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D8C55AC2F;
-        Thu, 27 Aug 2020 10:12:36 +0000 (UTC)
-Message-ID: <04f76144372753cceab48f59f7f2aaea017f021f.camel@suse.com>
-Subject: Re: [PATCH 1/4] qla2xxx: Reset done and free callback pointer on
- release
-From:   Martin Wilck <mwilck@suse.com>
-To:     Daniel Wagner <dwagner@suse.de>, linux-scsi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Nilesh Javali <njavali@marvell.com>
-Date:   Thu, 27 Aug 2020 12:12:04 +0200
-In-Reply-To: <20200827095829.63871-2-dwagner@suse.de>
-References: <20200827095829.63871-1-dwagner@suse.de>
-         <20200827095829.63871-2-dwagner@suse.de>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.36.5 
+        Thu, 27 Aug 2020 06:12:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgH0KMe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 06:12:34 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53FA0C061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:12:34 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 17so3121630pfw.9
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:12:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NJv+kX0fx+tQS4yK9UoZ8qyQVF+m9p2XpweB7RFLEmo=;
+        b=kLi7Icack7lOIO0wq/nfvgRAgBD76TneJHfLt62pddUwAvuIwFGXPrt1RPO8ERlHSo
+         jKOKr6Lrr2qByhU+y6ZmL9L813/DyrKinJcgIS7+KnjcL77/HCvBxrD4ZhmPbVAsHVIn
+         O5YKdLMrouJ3H29P/pzRpIb4owUvrYRpqQgJlBH3dcSERgXGWf/UyxE4RDoCA2o7w0ad
+         Tlu+f6TfGreAJScwgA+LinJxOc2eB9u1t427zGHYB1yHLCdJhS/hDO6U1c7GY4KEl3Xj
+         q6I7v/VS9qIH9hk9ODo0rX5fGAxRmbql8etWjJt15uj+qUnmMQ0DDhSxx2ciI6xaVGcp
+         lSgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NJv+kX0fx+tQS4yK9UoZ8qyQVF+m9p2XpweB7RFLEmo=;
+        b=EmQ7TOt50Y2ccZqO4ckA9gT+BMWqTdFnJHUVg9bSnYMoy7HYf55WY8dyMJxa+9WFJC
+         WKqbSDMP7S2kLMU/lHFr2LbeiPLY4pcQgt3Ccn0qFOPrp+DoY+Vn+ghXI5ZpKToHDy6r
+         THsUYTJ+8uastD+vKNpigxwI7k+bAS+hhtEo5e5pBmS/2y7W/2NQ78mHrAaVR1TuBUwE
+         AZ4LIbbj56UMu5J28ZhdyS/BrZj/JDnvcH+P0XsiIp2JA5cTNraozW61cj5tOsqaelEd
+         /UyG8YzXGBMHjubDD8+pLlVIysquzkuHA6EQOJg26sCJ6MDjK5g5xKiQqmu2tjOwp9Bd
+         WhQw==
+X-Gm-Message-State: AOAM533va76+t7tXIdksUmXsyGZmFuUYfEawYZkGWwDhYDggaZ7xXVgX
+        rYDvYl14g9Lr+52HckQyVfIQFg==
+X-Google-Smtp-Source: ABdhPJxcA/y5X1Cy7gMI+Ti+jy6KE1Bhf1haAh9otEUPNYOnJ/WNKO1u9FcJcYInXzwj9ZyU8C4HHg==
+X-Received: by 2002:a05:6a00:2285:: with SMTP id f5mr15977535pfe.173.1598523153812;
+        Thu, 27 Aug 2020 03:12:33 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id fv21sm1717054pjb.16.2020.08.27.03.12.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Aug 2020 03:12:32 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 15:42:31 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        madhuparnabhowmik10@gmail.com
+Subject: Re: Kernel panic : Unable to handle kernel paging request at virtual
+ address - dead address between user and kernel address ranges
+Message-ID: <20200827101231.smqrhqu5da6jlz6i@vireshk-i7>
+References: <CA+G9fYvUwH2FA9GOeA_7GYpLA31uOmEpg32VKnJ8-d5QSK4PdQ@mail.gmail.com>
+ <20200827090813.fjugeqbb47fachy7@vireshk-i7>
+ <CAK8P3a2zxybiMDzHXkTsT=VpHJOLkwd1=YTtCNU04vuMjZLkxA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2zxybiMDzHXkTsT=VpHJOLkwd1=YTtCNU04vuMjZLkxA@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-08-27 at 11:58 +0200, Daniel Wagner wrote:
-> Reset ->done and ->free when releasing the srb. There is a hidden
-> use-after-free bug in the driver which corrupts the srb memory pool
-> which originates from the cleanup callbacks. By explicitly resetting
-> the callbacks to NULL, we workaround the memory corruption.
+On 27-08-20, 11:48, Arnd Bergmann wrote:
+> > > [    3.680477]  dev_pm_opp_put_clkname+0x30/0x58
+> > > [    3.683431]  sdhci_msm_probe+0x284/0x9a0
 > 
-> An extensive search didn't bring any lights on the real problem. The
-> initial idea was to set both pointers to NULL and try to catch
-> invalid
-> accesses. But instead the memory corruption was gone and the driver
-> didn't crash.
+> dev_pm_opp_put_clkname() is part of the error handling in the
+> probe function, so I would deduct there are two problems:
 > 
-> Signed-off-by: Daniel Wagner <dwagner@suse.de>
-> ---
->  drivers/scsi/qla2xxx/qla_inline.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/scsi/qla2xxx/qla_inline.h
-> b/drivers/scsi/qla2xxx/qla_inline.h
-> index 861dc522723c..6d41d758fc17 100644
-> --- a/drivers/scsi/qla2xxx/qla_inline.h
-> +++ b/drivers/scsi/qla2xxx/qla_inline.h
-> @@ -211,6 +211,8 @@ static inline void
->  qla2xxx_rel_qpair_sp(struct qla_qpair *qpair, srb_t *sp)
->  {
->  	sp->qpair = NULL;
-> +	sp->done = NULL;
-> +	sp->free = NULL;
->  	mempool_free(sp, qpair->srb_mempool);
->  	QLA_QPAIR_MARK_NOT_BUSY(qpair);
->  }
+> - something failed during the probe and the driver is trying
+>   to unwind
+> - the error handling it self is buggy and tries to undo something
+>   again that has already been undone.
 
-Both sp->done() and sp->free() are called all over the place without
-making sure the pointers are non-null. If these functions can be called
-for freed sp's, wouldn't that mean we'd crash?
+Right.
 
-How about setting them to a dummy function that prints a big fat
-warning?
+> This points to Viresh's
+> d05a7238fe1c mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()
 
-Martin
+I completely forgot that Ulf already pushed this patch and I was
+wondering on which of the OPP core changes I wrote have done this :(
 
+> Most likely this is not the entire problem but it uncovered a preexisting
+> bug.
 
+I think this is.
+
+Naresh: Can you please test with this diff ?
+
+diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+index b7e47107a31a..401839a97b57 100644
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -2286,7 +2286,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+        ret = dev_pm_opp_of_add_table(&pdev->dev);
+        if (ret != -ENODEV) {
+                dev_err(&pdev->dev, "Invalid OPP table in Device tree\n");
+-               goto opp_cleanup;
++               goto opp_put_clkname;
+        }
+ 
+        /* Vote for maximum clock rate for maximum performance */
+@@ -2451,6 +2451,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+                                   msm_host->bulk_clks);
+ opp_cleanup:
+        dev_pm_opp_of_remove_table(&pdev->dev);
++opp_put_clkname:
+        dev_pm_opp_put_clkname(msm_host->opp_table);
+ bus_clk_disable:
+        if (!IS_ERR(msm_host->bus_clk))
+
+-- 
+viresh
