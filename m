@@ -2,142 +2,134 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE50C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC094C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B68212087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:56:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="1qJZF1j7"
+	by mail.kernel.org (Postfix) with ESMTP id 8DCF622BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:58:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598554724;
+	bh=LFqs81pjV2AB3heJBIp/bGnwvU4OW/BsN3exXdyoSeM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=mcmXBlI6HzkTQ6RTDQtuq9SxYUghdTApwu476oroWQlYnEFrI6gaTovjMez9HymVu
+	 yUCgD64UIGFcZSsSYZ72xnUi09U6Y2AlqoSRFWegv5KTrYqe00cLYiMmyFxAhTSayl
+	 OAqPH860f2Kqa+RsfZiFUh2o13zxK7fXH/h3iqy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgH0S4w (ORCPT
+        id S1726968AbgH0S6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:56:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgH0S4u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:56:50 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6836FC061232
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:56:50 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id 2so3111943pjx.5
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:56:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=qvX+0t4taP46QXZOUzH9jS+RyGYBYFHPCCevAMrrHDg=;
-        b=1qJZF1j7aP9/gm8JJKCOiOmY8yDhder5SBu4XDeJXypfw+jqz30KJKC2TixCvPVViK
-         xlyPbT0mk9IkEZAohEpohg9pTxIu+yU+8I99UYuFfB2+W6d1yn9K/s/ZEdAeYNwEFrh7
-         uIEw6O9Sv5M7d82YW0k2n7hJ42sUVJ+0AyoHw/pBvsJg0JfJkhZLOV0kygxS5bRK7lwp
-         hnZ4sJgY33aokxqI9jOqk7Ssge/vXqhthQtrILVuuzdVHv1aHxPjsnxK2HiRQfrXnTEO
-         n/GkIFN8FvZ2rmUMRWcnfMJIwbR8JUj0xzI1/BNVZ2o8q0vatriR3W41ZXJSnyJeurqg
-         8wYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=qvX+0t4taP46QXZOUzH9jS+RyGYBYFHPCCevAMrrHDg=;
-        b=NNIBsReIaZaeBvEMzgvgnv+s4XQcjMMgDJlM8q7wZD9uhxpbaUBm57MEIoFZcAzzvU
-         iEEb0T/bDbufgB04n43u28igoZZeeO+lkySF/kpoLgMhvtfuKeslXt/fEP3aw/sAHWqb
-         esv+au8YIpHAjIti2lToJ76FsT8KnvpVCCfXyyZIWAqejQiU4Fnf0gonD4W5nDITiPRO
-         kqDIn2pGr4ZjlVC3zIfYev1f4tdQ1W5bS3p75OXK8GG3eUhHJHg2Xl9tuYdiAzbA5+0S
-         5p/VjKToV3+SJx2HGewLA5BDWioN4CN2lPEYKI5KevBToDOpMarsqpmJLVBfVEC7mFlC
-         HM6g==
-X-Gm-Message-State: AOAM531YC5CnooWTkVkkD0FdwsQBTmgDQvqT7X1K67jn5bqXTo3nl9ij
-        tkwY6v09qV/GbOaTzg01AuKi9w==
-X-Google-Smtp-Source: ABdhPJw0Il7nyzGXecauI/EFZTlrviyvlwdNvPHCgqm8m/VXXhnhoQ1jf2Ta5Mdp8f616+x7S9BSZw==
-X-Received: by 2002:a17:90a:ec03:: with SMTP id l3mr200548pjy.193.1598554609609;
-        Thu, 27 Aug 2020 11:56:49 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:f108:b6a3:155e:4f99? ([2601:646:c200:1ef2:f108:b6a3:155e:4f99])
-        by smtp.gmail.com with ESMTPSA id y203sm3847139pfb.58.2020.08.27.11.56.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 11:56:48 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for shadow stack
-Date:   Thu, 27 Aug 2020 11:56:44 -0700
-Message-Id: <4BDFD364-798C-4537-A88E-F94F101F524B@amacapital.net>
-References: <a770d45d-b147-a8c5-b7f8-30d668cbed84@intel.com>
-Cc:     Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Dave Martin <Dave.Martin@arm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-In-Reply-To: <a770d45d-b147-a8c5-b7f8-30d668cbed84@intel.com>
-To:     "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
-X-Mailer: iPhone Mail (17G80)
+        Thu, 27 Aug 2020 14:58:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48494 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726250AbgH0S6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 14:58:43 -0400
+Received: from localhost.localdomain (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AD122087E;
+        Thu, 27 Aug 2020 18:58:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598554722;
+        bh=LFqs81pjV2AB3heJBIp/bGnwvU4OW/BsN3exXdyoSeM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HW69DhahnMu9OGAvNDhOxukWgSSVgLl/Myb1Jn+vEEYvdZD0VqFSJOhCKtOkiYkkm
+         tekKhLyHLEkQ433QJNohEYs3MafMf1pgdGhWoZBwvxVqFAi9CnLp0SCgkR94M1uNEY
+         iiFpoaQ4URBW7Gc3THkloyK9RSGmORNSvrzFRJOA=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3 01/27] Input: Simplify with dev_err_probe()
+Date:   Thu, 27 Aug 2020 20:58:02 +0200
+Message-Id: <20200827185829.30096-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+
+Changes since v2:
+1. Add review tags,
+2. Fixes after review (see individual patches).
+3. Two new patches - 26 and 27.
 
 
-> On Aug 27, 2020, at 11:13 AM, Yu, Yu-cheng <yu-cheng.yu@intel.com> wrote:
->=20
-> =EF=BB=BFOn 8/27/2020 6:36 AM, Florian Weimer wrote:
->> * H. J. Lu:
->>>> On Thu, Aug 27, 2020 at 6:19 AM Florian Weimer <fweimer@redhat.com> wro=
-te:
->>>>>=20
->>>>> * Dave Martin:
->>>>>=20
->>>>>> You're right that this has implications: for i386, libc probably pull=
-s
->>>>>> more arguments off the stack than are really there in some situations=
-.
->>>>>> This isn't a new problem though.  There are already generic prctls wi=
-th
->>>>>> fewer than 4 args that are used on x86.
->>>>>=20
->>>>> As originally posted, glibc prctl would have to know that it has to pu=
-ll
->>>>> an u64 argument off the argument list for ARCH_X86_CET_DISABLE.  But
->>>>> then the u64 argument is a problem for arch_prctl as well.
->>>>>=20
->>>=20
->>> Argument of ARCH_X86_CET_DISABLE is int and passed in register.
->> The commit message and the C source say otherwise, I think (not sure
->> about the C source, not a kernel hacker).
->=20
-> H.J. Lu suggested that we fix x86 arch_prctl() to take four arguments, and=
- then keep MMAP_SHSTK as an arch_prctl().  Because now the map flags and siz=
-e are all in registers, this also solves problems being pointed out earlier.=
-  Without a wrapper, the shadow stack mmap call (from user space) will be:
->=20
-> syscall(_NR_arch_prctl, ARCH_X86_CET_MMAP_SHSTK, size, MAP_32BIT).
+Best regards,
+Krzysztof
 
-I admit I don=E2=80=99t see a show stopping technical reason we can=E2=80=99=
-t add arguments to an existing syscall, but I=E2=80=99m pretty sure it=E2=80=
-=99s unprecedented, and it doesn=E2=80=99t seem like a good idea.
+
+
+Krzysztof Kozlowski (27):
+  Input: gpio_keys_polled - Simplify with dev_err_probe()
+  Input: gpio-vibra - Simplify with dev_err_probe()
+  Input: pwm-beeper - Simplify with dev_err_probe()
+  Input: pwm-vibra - Simplify with dev_err_probe()
+  Input: rotary_encoder - Simplify with dev_err_probe()
+  Input: elan_i2c - Simplify with dev_err_probe()
+  Input: bu21013_ts - Simplify with dev_err_probe()
+  Input: bu21029_ts - Simplify with dev_err_probe()
+  Input: chipone_icn8318 - Simplify with dev_err_probe()
+  Input: cy8ctma140 - Simplify with dev_err_probe()
+  Input: edf-ft5x06 - Simplify with dev_err_probe()
+  Input: ektf2127 - Simplify with dev_err_probe()
+  Input: elants_i2c - Simplify with dev_err_probe()
+  Input: goodix - Simplify with dev_err_probe()
+  Input: melfas_mip4 - Simplify with dev_err_probe()
+  Input: pixcir_i2c_ts - Simplify with dev_err_probe()
+  Input: raydium_i2c_ts - Simplify with dev_err_probe()
+  Input: resistive-adc-touch - Simplify with dev_err_probe()
+  Input: silead - Simplify with dev_err_probe()
+  Input: sis_i2c - Simplify with dev_err_probe()
+  Input: surface3_spi - Simplify with dev_err_probe()
+  Input: sx8643 - Simplify with dev_err_probe()
+  Input: bcm-keypad - Simplify with dev_err_probe()
+  gpio: Add devm_fwnode_gpiod_get_optional() helpers
+  Input: gpio_keys - Simplify with dev_err_probe()
+  Input: bu21013_ts - Use local 'client->dev' variable in probe()
+  Input: bu21029_ts - Use local 'client->dev' variable in probe()
+
+ drivers/gpio/gpiolib-devres.c                 | 71 ++++++++++++++++++
+ drivers/input/keyboard/bcm-keypad.c           | 14 ++--
+ drivers/input/keyboard/gpio_keys.c            | 25 +++----
+ drivers/input/keyboard/gpio_keys_polled.c     |  8 +--
+ drivers/input/misc/gpio-vibra.c               | 20 ++----
+ drivers/input/misc/pwm-beeper.c               | 19 ++---
+ drivers/input/misc/pwm-vibra.c                | 20 ++----
+ drivers/input/misc/rotary_encoder.c           |  8 +--
+ drivers/input/mouse/elan_i2c_core.c           |  9 +--
+ drivers/input/touchscreen/bu21013_ts.c        | 72 ++++++++-----------
+ drivers/input/touchscreen/bu21029_ts.c        | 53 ++++++--------
+ drivers/input/touchscreen/chipone_icn8318.c   |  8 +--
+ drivers/input/touchscreen/cy8ctma140.c        |  8 +--
+ drivers/input/touchscreen/edt-ft5x06.c        | 10 +--
+ drivers/input/touchscreen/ektf2127.c          |  8 +--
+ drivers/input/touchscreen/elants_i2c.c        | 22 ++----
+ drivers/input/touchscreen/goodix.c            | 40 +++--------
+ drivers/input/touchscreen/melfas_mip4.c       |  9 +--
+ drivers/input/touchscreen/pixcir_i2c_ts.c     | 38 ++++------
+ drivers/input/touchscreen/raydium_i2c_ts.c    | 30 +++-----
+ .../input/touchscreen/resistive-adc-touch.c   |  8 +--
+ drivers/input/touchscreen/silead.c            |  8 +--
+ drivers/input/touchscreen/sis_i2c.c           | 20 ++----
+ drivers/input/touchscreen/surface3_spi.c      | 13 +---
+ drivers/input/touchscreen/sx8654.c            | 10 +--
+ include/linux/gpio/consumer.h                 | 30 ++++++++
+ 26 files changed, 253 insertions(+), 328 deletions(-)
+
+-- 
+2.17.1
+
