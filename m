@@ -2,143 +2,149 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22454C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1964DC433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F401220848
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E612620872
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:48:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JpRLddmh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsiMaFmh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgH0Wrt (ORCPT
+        id S1728033AbgH0WsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 18:47:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51274 "EHLO
+        Thu, 27 Aug 2020 18:48:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbgH0Wrs (ORCPT
+        with ESMTP id S1726706AbgH0WsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 18:47:48 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC59C061264;
-        Thu, 27 Aug 2020 15:47:48 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id w186so4393310pgb.8;
-        Thu, 27 Aug 2020 15:47:48 -0700 (PDT)
+        Thu, 27 Aug 2020 18:48:14 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E7A4C061264;
+        Thu, 27 Aug 2020 15:48:13 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id p25so7764061qkp.2;
+        Thu, 27 Aug 2020 15:48:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=+8SfVn5+0BRnFAIpm4JbMbWGF0XqmhERlJ52Y3/HL/M=;
-        b=JpRLddmhXWk9C3Tx3zCrreCh8q5vK4ek2jGWoqI/2O+hcZ6Yap4MYg2b0F1NpACi1y
-         0qgsomljAQPs8mxsdPeR0OFIl3LlYwd6TIPqu5G+K3/RnnKGjmczC+EmvTD/WDyQo+Pi
-         Nu5iWRVFhheufpsGZGXo0RNUmLrzRpqiycot31epR6SDlGYtF0LG9EviMDcJrBEFcC0U
-         LdvYeJw1ZSWYjgiGydi3CzRbxcu4IwBM0Jq2WDQ1Ctje3C/8MxVGLzEu23aCjJQ3+Y3C
-         Xo1hYH/5RKPsAyQBHpLrSQhwnfQdflXjCaPAM3coZ4rp4k8Xy2rg4X8j2PeOhlpl2J7e
-         lySA==
+        bh=Y2apmauJqQxWRpgQvwb+Zmg3D+lXVvnQVjZBHrBv0Go=;
+        b=RsiMaFmhnOCD5XVKA2gNSkEsXK540EqNGscrDEBjxtDvkRikQp/qmY1NJ+ybo84OOp
+         Eyvfz5G4N10SSYayeFA3jEXXizLZsivTuL8P3vHjoqdhZYH1AAh8+r+yQHvpbvtwBDih
+         TunbvS1/nhe7a5QXX7X+7H4UFu0uUwcD8l8R5B+/IRg/H9tPcKGZpW7lZotP6A1vowpC
+         cW8o5ARcOqPUoFjGR5IevTyD14DTtEW1k59XzNa2kd7bKjjK4NHTpiHH7kVpjQ4UbvQQ
+         RhP+gz9w9wFjZO2cfdU4nYyNQJoBUHuA5zUxu2JtD5tWMLNNKWL8WRkcggs3/PlWfRjN
+         OMNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+8SfVn5+0BRnFAIpm4JbMbWGF0XqmhERlJ52Y3/HL/M=;
-        b=QzylWjOZhdnrt6t2Z3mULVnM2DgWNceBUoIvC6pyMDmR/oshqXOy/03ZuPYiC6nlya
-         cdyKIDSrnsE+uTzLA3DIwcTSojZUbloUG9kcpsr2es6fkVVy7RlF6r0PbdlKIhfZMdvq
-         lc0cMpiim8yXKWZHlML0On92XxylNcenPoyC+s+XCnlSjPjYuj6N9QXd6MLrS/mscjdB
-         EMDZXr6/JsCbF/dm/j5uKLMKw2P7c8LuyVRau5ImHi5h3gCHbmQlWC/+Vi/mRYz5FQ8g
-         wTzBd5ZcBttG3UNjO+XesxBhXjsHYgtFJT1imoO1XBXg/QvpXfmUOaE90+jaS+CaELPk
-         kKLA==
-X-Gm-Message-State: AOAM53361xwK87HgMogWwtkYSfn3LBmGOZ/QGb4b2tbbpkKFbVrCZj5y
-        HsiqK3y/LzpaTlrfSNIDtBY=
-X-Google-Smtp-Source: ABdhPJw9y/M/11sN6pq8CixeRatTb/bCQnARPElCDgQqujKCMx2coLOLbKXC+H2LM9OGzXRXUTCUxA==
-X-Received: by 2002:a17:902:44f:: with SMTP id 73mr17747623ple.178.1598568467922;
-        Thu, 27 Aug 2020 15:47:47 -0700 (PDT)
-Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id a69sm3977438pfa.116.2020.08.27.15.47.44
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=Y2apmauJqQxWRpgQvwb+Zmg3D+lXVvnQVjZBHrBv0Go=;
+        b=kpSI5DCFkFMKCOMImfdwNz9jhP4tt5NmfG4qB/OPvreQvw4/Kiri5kBgf/xVKMGQuN
+         9XFN04DfrNaJx10mcDrfor58HXr/wo4AqnW9Z0tk3v/wlRwGfXyM49PiEtmc4G0aUMAC
+         8GyW/phR4hBUF5yNbicqVLHFUgFnhJAwA8Sm2ZulGUYMIHLIbLKWb/Va00gytr0vEUns
+         i32ipez3lIN6s/rUhfgLrCFRHhyuuK+eo3cwMYjYmV7NVy7Ad7isUXrmzquqUud+igVN
+         vOSI6YS++BDQ1HxlZJkh4G1inGZrdJiWzudOFfe4t48pX1zvP+htHtvtHGzZYNQkf+fE
+         qYAg==
+X-Gm-Message-State: AOAM533hwM9uiEP2Y+o9KidN2rLsCeCgDisfZJvyUy1xcfalXC8cSCgF
+        x+nH9Sg4PTC95wZAqxg+A2g=
+X-Google-Smtp-Source: ABdhPJzwDTK91WvNvq8E6g5kUeSK5dWZl7/Bap/DMiLhxt0h5fc0gSs3IYAL5uhBmfvgsemamjTKQg==
+X-Received: by 2002:a05:620a:148a:: with SMTP id w10mr14211312qkj.281.1598568492613;
+        Thu, 27 Aug 2020 15:48:12 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id a20sm2909161qtw.45.2020.08.27.15.48.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 15:47:47 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 06:47:42 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v5 00/20] gpio: cdev: add uAPI v2
-Message-ID: <20200827224742.GA3714@sol>
-References: <20200827140020.159627-1-warthog618@gmail.com>
- <CACRpkdZZMbfpKy4gcfAzNq53LkYLcL9wm3Qtzyj_K8vkUW9RfQ@mail.gmail.com>
- <CAMpxmJXRY2wqqN3SzfJN+QTWAHYSYz4vEjLKWU82Y=PAmcm=5w@mail.gmail.com>
+        Thu, 27 Aug 2020 15:48:12 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 27 Aug 2020 18:48:10 -0400
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v6 27/76] x86/sev-es: Add CPUID handling to #VC handler
+Message-ID: <20200827224810.GA986963@rani.riverdale.lan>
+References: <20200824085511.7553-1-joro@8bytes.org>
+ <20200824085511.7553-28-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAMpxmJXRY2wqqN3SzfJN+QTWAHYSYz4vEjLKWU82Y=PAmcm=5w@mail.gmail.com>
+In-Reply-To: <20200824085511.7553-28-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 06:02:03PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Aug 27, 2020 at 5:53 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> >
-> > On Thu, Aug 27, 2020 at 4:00 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > > This patchset defines and implements a new version of the
-> > > GPIO CDEV uAPI to address existing 32/64-bit alignment issues, add
-> > > support for debounce, event sequence numbers, and allow for requested
-> > > lines with different configurations.
-> > > It provides some future proofing by adding optional configuration fields
-> > > and padding reserved for future use.
-> > >
-> > > The series can be partitioned into three blocks; the first two patches
-> > > are minor fixes that impact later patches, the next eleven contain the
-> > > v2 uAPI definition and implementation, and the final seven port the GPIO
-> > > tools to the v2 uAPI and extend them to use new uAPI features.
-> > >
-> > > The more complicated patches include their own commentary where
-> > > appropriate.
-> >
-> > I'm ready to queue this now. Certainly any remaining snags can be
-> > fixed in-tree.
-> >
-> > It kind of keeps in tradition with proper software projects "plan to
-> > throw one away" which is what we have traditionally done several
-> > times: the first Bluetooh framework was tossed, JFFS was tossed
-> > for JFFS2, Video4Linux was tossed for V4L2. So let's do this.
-> >
-> > Anyone against? I will put it on an immutable branch and then merge
-> > that in for devel.
-> >
+On Mon, Aug 24, 2020 at 10:54:22AM +0200, Joerg Roedel wrote:
+> From: Tom Lendacky <thomas.lendacky@amd.com>
 > 
-> Hi Linus,
+> Handle #VC exceptions caused by CPUID instructions. These happen in
+> early boot code when the KASLR code checks for RDTSC.
 > 
-> please hold it maybe for one more week - I'd love to have some more
-> people take a look at the user facing header at least. Andy is usually
-> very thorough in his reviews so I'm Ccing him here.
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> [ jroedel@suse.de: Adapt to #VC handling framework ]
+> Co-developed-by: Joerg Roedel <jroedel@suse.de>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> Link: https://lore.kernel.org/r/20200724160336.5435-27-joro@8bytes.org
+> ---
+> +
+> +static enum es_result vc_handle_cpuid(struct ghcb *ghcb,
+> +				      struct es_em_ctxt *ctxt)
+> +{
+> +	struct pt_regs *regs = ctxt->regs;
+> +	u32 cr4 = native_read_cr4();
+> +	enum es_result ret;
+> +
+> +	ghcb_set_rax(ghcb, regs->ax);
+> +	ghcb_set_rcx(ghcb, regs->cx);
+> +
+> +	if (cr4 & X86_CR4_OSXSAVE)
+
+Will this ever happen? trampoline_32bit_src will clear CR4 except for
+PAE and possibly LA57, no?
+
+> +		/* Safe to read xcr0 */
+> +		ghcb_set_xcr0(ghcb, xgetbv(XCR_XFEATURE_ENABLED_MASK));
+> +	else
+> +		/* xgetbv will cause #GP - use reset value for xcr0 */
+> +		ghcb_set_xcr0(ghcb, 1);
+> +
+> +	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_CPUID, 0, 0);
+> +	if (ret != ES_OK)
+> +		return ret;
+> +
+> +	if (!(ghcb_rax_is_valid(ghcb) &&
+> +	      ghcb_rbx_is_valid(ghcb) &&
+> +	      ghcb_rcx_is_valid(ghcb) &&
+> +	      ghcb_rdx_is_valid(ghcb)))
+> +		return ES_VMM_ERROR;
+> +
+> +	regs->ax = ghcb->save.rax;
+> +	regs->bx = ghcb->save.rbx;
+> +	regs->cx = ghcb->save.rcx;
+> +	regs->dx = ghcb->save.rdx;
+> +
+> +	return ES_OK;
+> +}
+> -- 
+> 2.28.0
 > 
-> I'll too skim through the series one more time.
-> 
-
-I'd be happier with more eyeballs over it before it goes in as well.
-
-I'm also wondering if it is worthwhile dropping the restriction on
-changing edge detection configuration, that is present in
-gpio_v2_line_config_change_validate() in patch 10, so long as userspace
-is made aware that changing it may result in lost interrupts as we
-may need to release and re-request the interrupt to effect the change.
-
-Similarly changing debounce while edge detection is enabled, that is
-disallowed in patch 12.
-
-My policy when writing the implementation was to disallow any operation
-that may have unanticiapted side-effects, and forcing userspace to
-release and re-request the line(s), but that may be overly restrictive?
-The particular use case I am considering is one I had been asked about -
-changing a requested line from input with edge detection to output, and
-vice versa. Losing interrupts isn't really an issue for this use case -
-it is expected.  Yet the current implementation requires a re-request.
-
-Cheers,
-Kent.
