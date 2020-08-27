@@ -2,207 +2,214 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB71C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96EA1C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F251B2087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A67C2087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:29:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="peXan55M"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TfE7kX5V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbgH0S2U (ORCPT
+        id S1727013AbgH0S3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:28:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgH0S2Q (ORCPT
+        Thu, 27 Aug 2020 14:29:21 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:34146 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbgH0S3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:28:16 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DF1EC061232
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:28:16 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id z203so1136802ooa.4
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:28:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VxlbWvka+07kHZPf01+EUiW1alBItC8Pr3Tn8LbFklQ=;
-        b=peXan55M41airQcwalxfGsmf4nrB+F5Ll5GMwX64kU3Vo+5HB9b0f6CVxw1o5JIs3q
-         qZ1b9XUIpYjcqMCSHU5FYiwzFopbgLt5b5goPNP3CJiLS26g40+KVQQHRs19X8ec+wXI
-         Xvr5EvMmOs1yZkUPeL/kQlKWiXmXba5jtBQAySYJNjc4Rm/i1YZoaPMdb2vMwvr+/FTw
-         x0tessMx4QzIUMHJHQ+JdDglMcj79qIbKsnVSgvYulpOR68h2/iijrZIV/E9/izUpTwq
-         CUOXq35T8mtWgQFiElp3fpAP2sfUGIMa427iA9whE8zHrop8cZewgZmKWf2O3h3R4MSx
-         vtsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VxlbWvka+07kHZPf01+EUiW1alBItC8Pr3Tn8LbFklQ=;
-        b=tWH4LeoNIXbID8AYd82Wpleo0qqrCfcDhXWQ7WnwOwLX3OUTP2kib8jPXADHBN5kic
-         HJynb16Ch6ups5rp3Hj5q2YnCaLGx6hYp8aq5AlKn8ysmv4yEowchpcdHbkXUT3AzoVB
-         p01VTgOHsjOxWFyXlMCFYXxDcmf9ogoSdrUYw0G6zL42LY5sR8uWOu7kAnH9GPRFHk6u
-         FdKhERGMwCIMyLKPeayAj7mQgADkw5QVMZrmf1jovatXT7SI0EKkA18+qhuOJj8KVM0M
-         BZs0l4u2Fo3/Tye3NU46ewl5wYGAetckbSO/D489jj9A1hqFW7OUJgD0rcU7lAH1FUCh
-         zAMg==
-X-Gm-Message-State: AOAM530ksv7M5uCC/2k0GuH2H5TwpzTa+UIEHuvBQQQOWJ6/a57MhUwj
-        AJmdYBQ1VdgEejfjuacAQV6Bg/XLw81AsMPlYrH/xg==
-X-Google-Smtp-Source: ABdhPJyZof+lv2Rdb068ddJIG0Fuq/ptEYfL7PHggKV923EZOQ/WvcqDXzxtwSckF1WY8r2ySti4FCh5wtjONGhRl3g=
-X-Received: by 2002:a05:6820:24c:: with SMTP id b12mr15207106ooe.36.1598552894223;
- Thu, 27 Aug 2020 11:28:14 -0700 (PDT)
+        Thu, 27 Aug 2020 14:29:18 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07RISNAL042936;
+        Thu, 27 Aug 2020 13:28:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598552903;
+        bh=CYfrfqchJ0r8G0FVf8s1w6i5+0bkf7U47DWkf0YLlpY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=TfE7kX5VaR8jwPQ/8Jm61wV4C7Pcb3YhF/K7lnah7bJN99DtUtGBsWQD/7uCqlOBF
+         cNYayzjo1OxmWSGlfHTHKGJIlV0rRk5W0RnSeKj0KF8KXC/AVrvjuEVFCyqbOxC1Xn
+         P0bxORDWBCxi2ab3CtHJqpYH7ceODu1Sq3JdhAgY=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07RISNEu082634;
+        Thu, 27 Aug 2020 13:28:23 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 27
+ Aug 2020 13:28:23 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 27 Aug 2020 13:28:23 -0500
+Received: from [10.250.69.147] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07RISL33019552;
+        Thu, 27 Aug 2020 13:28:22 -0500
+Subject: Re: [RESEND PATCH v2] mfd: syscon: Use a unique name with
+ regmap_config
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
+        David Lechner <david@lechnology.com>,
+        Tony Lindgren <tony@atomide.com>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Roger Quadros <rogerq@ti.com>, <kernel-team@android.com>
+References: <20200727211008.24225-1-s-anna@ti.com>
+ <0c1feaf91b9d285c1bded488437705da@misterjones.org>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <74bc1f9f-cc48-cec9-85f4-3376b66b40fc@ti.com>
+Date:   Thu, 27 Aug 2020 13:28:21 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200702071416.1780522-1-davidgow@google.com> <20200827131438.GA3597431@elver.google.com>
- <CABVgOSmoiFh5i8Ue14MtCLwq-LbGgQ1hf4MyRYLFWFQrkushjQ@mail.gmail.com>
-In-Reply-To: <CABVgOSmoiFh5i8Ue14MtCLwq-LbGgQ1hf4MyRYLFWFQrkushjQ@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 27 Aug 2020 20:28:03 +0200
-Message-ID: <CANpmjNP0mGdEEFj5u-Crsvj0iaWvnt3OS+ioJNeZNjg=s0kpLQ@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: kunit: Add naming guidelines
-To:     David Gow <davidgow@google.com>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Randy Dunlap <rd.dunlab@gmail.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, Tim Bird <Tim.Bird@sony.com>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0c1feaf91b9d285c1bded488437705da@misterjones.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 at 18:17, David Gow <davidgow@google.com> wrote:
-[...]
-> > First of all, thanks for the talk yesterday! I only looked at this
-> > because somebody pasted the LKML link. :-)
->
-> No worries! Clearly this document needed linking -- even I was
-> starting to suspect the reason no-one was complaining about this was
-> that no-one had read it. :-)
-[...]
-> >
-> > While I guess this ship has sailed, and *_kunit.c is the naming
-> > convention now, I hope this is still just a recommendation and names of
-> > the form *-test.c are not banned!
->
-> The ship hasn't technically sailed until this patch is actually
-> accepted. Thus far, we hadn't had any real complaints about the
-> _kunit.c idea, though that may have been due to this email not
-> reaching enough people. If you haven't read the discussion in
-> https://lore.kernel.org/linux-kselftest/202006141005.BA19A9D3@keescook/t/#u
-> it's worthwhile: the _kunit.c name is discussed, and Kees lays out
-> some more detailed rationale for it as well.
+Hi Marc,
 
-Thanks, I can see the rationale. AFAIK the main concern was "it does
-not distinguish it from other tests".
+On 8/27/20 9:46 AM, Marc Zyngier wrote:
+> Hi all,
+> 
+> On 2020-07-27 22:10, Suman Anna wrote:
+>> The DT node full name is currently being used in regmap_config
+>> which in turn is used to create the regmap debugfs directories.
+>> This name however is not guaranteed to be unique and the regmap
+>> debugfs registration can fail in the cases where the syscon nodes
+>> have the same unit-address but are present in different DT node
+>> hierarchies. Replace this logic using the syscon reg resource
+>> address instead (inspired from logic used while creating platform
+>> devices) to ensure a unique name is given for each syscon.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>> Hi Arnd,
+>> Lee is looking for your review on this patch. Can you please
+>> review and provide your comments.
+>>
+>> This is a resend of the patch that was posted previously, rebased
+>> now onto latest kernel.
+>>
+>> v2: https://patchwork.kernel.org/patch/11353355/
+>>  - Fix build warning reported by kbuild test bot
+>> v1: https://patchwork.kernel.org/patch/11346363/
+>>
+>>  drivers/mfd/syscon.c | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+>> index 3a97816d0cba..75859e492984 100644
+>> --- a/drivers/mfd/syscon.c
+>> +++ b/drivers/mfd/syscon.c
+>> @@ -101,12 +101,14 @@ static struct syscon *of_syscon_register(struct
+>> device_node *np, bool check_clk)
+>>          }
+>>      }
+>>
+>> -    syscon_config.name = of_node_full_name(np);
+>> +    syscon_config.name = kasprintf(GFP_KERNEL, "%pOFn@%llx", np,
+>> +                       (u64)res.start);
+>>      syscon_config.reg_stride = reg_io_width;
+>>      syscon_config.val_bits = reg_io_width * 8;
+>>      syscon_config.max_register = resource_size(&res) - reg_io_width;
+>>
+>>      regmap = regmap_init_mmio(NULL, base, &syscon_config);
+>> +    kfree(syscon_config.name);
+>>      if (IS_ERR(regmap)) {
+>>          pr_err("regmap init failed\n");
+>>          ret = PTR_ERR(regmap);
+> 
+> This patch triggers some illegal memory accesses when debugfs is
+> enabled, as regmap does rely on config->name to be persistent
+> when the debugfs registration is deferred via regmap_debugfs_early_list
+> (__regmap_init() -> regmap_attach_dev() -> regmap_debugfs_init()...),
+> leading to a KASAN splat on demand.
+> 
 
-> > $> git grep 'KUNIT.*-test.o'
-> >         drivers/base/power/Makefile:obj-$(CONFIG_PM_QOS_KUNIT_TEST) += qos-test.o
-> >         drivers/base/test/Makefile:obj-$(CONFIG_KUNIT_DRIVER_PE_TEST) += property-entry-test.o
-> >         fs/ext4/Makefile:obj-$(CONFIG_EXT4_KUNIT_TESTS)         += ext4-inode-test.o
-> >         kernel/Makefile:obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
-> >         lib/Makefile:obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
-> >         lib/kunit/Makefile:obj-$(CONFIG_KUNIT_TEST) +=          kunit-test.o
-> >         lib/kunit/Makefile:obj-$(CONFIG_KUNIT_TEST) +=          string-stream-test.o
-> >         lib/kunit/Makefile:obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=  kunit-example-test.o
-> >
-> > $> git grep 'KUNIT.*_kunit.o'
-> > # Returns nothing
-> >
->
-> This was definitely something we noted. Part of the goal of having
-> _kunit.c as a filename suffix (and, perhaps more importantly, the
-> _kunit module name suffix) was to have a way of both distinguishing
-> KUnit tests from non-KUnit ones (of which there are quite a few
-> already with -test names), and to have a way of quickly determining
-> what modules contain KUnit tests. That really only works if everyone
-> is using it, so the plan was to push this as much as possible. This'd
-> probably include renaming most of the existing test files to match,
-> which is a bit of a pain (particularly when converting non-KUnit tests
-> to KUnit and similar), but is a one-time thing.
+Thanks, I missed the subtlety around the debugfs registration.
 
-Feel free to ignore the below, but here might be one concern:
+> I came up with the following patch that solves the issue for me.
+> 
+> Thanks,
+> 
+>         M.
+> 
+> From fd3f5f2bf72df53be18d13914fe349a34f81f16b Mon Sep 17 00:00:00 2001
+> From: Marc Zyngier <maz@kernel.org>
+> Date: Thu, 27 Aug 2020 14:45:34 +0100
+> Subject: [PATCH] mfd: syscon: Don't free allocated name for regmap_config
+> 
+> The name allocated for the regmap_config structure is freed
+> pretty early, right after the registration of the MMIO region.
+> 
+> Unfortunately, that doesn't follow the life cycle that debugfs
+> expects, as it can access the name field long after the free
+> has occured.
+> 
+> Move the free on the error path, and keep it forever otherwise.
 
-I think the problem of distinguishing KUnit tests from non-KUnit tests
-is a technical problem (in fact, the Kconfig entries have all the info
-we need), but a solution that sacrifices readability might cause
-unnecessary friction.
+Hmm, this is exactly what I was trying to avoid. The regmap_init does duplicate
+the name into map->name if config->name is given, and the regmap debugfs makes
+another copy of its own into debugfs_name when actually registered. If the rules
+for regmap_init is that the config->name should be persistent, then I guess we
+have no choice but to go with the below fix.
 
-The main issue I foresee is that the _kunit.c name is opaque as to
-what the file does, but merely indicates one of its dependencies. Most
-of us clearly know that KUnit is a test framework, but it's a level of
-indirection nevertheless. (But _kunit_test.c is also bad, because it's
-unnecessarily long.) For a dozen tests, that's probably still fine.
-But now imagine 100s of tests, people will quickly wonder "what's this
-_kunit thing?". And if KUnit tests are eventually the dominant tests,
-does it still matter?
+Does something like below help?
 
-I worry that because of the difficulty of enforcing the name, choosing
-something unintuitive will also achieve the opposite result:
-proliferation of even more diverse names. A generic convention like
-"*-test.c" will be close enough to what's intuitive for most people,
-and we might actually have a chance of getting everyone to stick to
-it.
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index e93700af7e6e..96d8a0161c89 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -1137,7 +1137,7 @@ struct regmap *__regmap_init(struct device *dev,
+                if (ret != 0)
+                        goto err_regcache;
+        } else {
+-               regmap_debugfs_init(map, config->name);
++               regmap_debugfs_init(map, map->name);
 
-The problem of identifying all KUnit tests can be solved with a script.
+But there are couple of other places in regmap code that uses config->name, but
+those won't be exercised with the syscon code.
 
-> > Just an idea: Maybe the names are also an opportunity to distinguish
-> > real _unit_ style tests and then the rarer integration-style tests. I
-> > personally prefer using the more generic *-test.c, at least for the
-> > integration-style tests I've been working on (KUnit is still incredibly
-> > valuable for integration-style tests, because otherwise I'd have to roll
-> > my own poor-man's version of KUnit, so thank you!). Using *_kunit.c for
-> > such tests is unintuitive, because the word "unit" hints at "unit tests"
-> > -- and having descriptive (and not misleading) filenames is still
-> > important. So I hope you won't mind if *-test.c are still used where
-> > appropriate.
->
-> As Brendan alluded to in the talk, the popularity of KUnit for these
-> integration-style tests came as something of a surprise (more due to
-> our lack of imagination than anything else, I suspect). It's great
-> that it's working, though: I don't think anyone wants the world filled
-> with more single-use test "frameworks" than is necessary!
->
-> I guess the interesting thing to note is that we've to date not really
-> made a distinction between KUnit the framework and the suite of all
-> KUnit tests. Maybe having a separate file/module naming scheme could
-> be a way of making that distinction, though it'd really only appear
-> when loading tests as modules -- there'd be no indication in e.g.,
-> suite names or test results. The more obvious solution to me (at
-> least, based on the current proposal) would be to have "integration"
-> or similar be part of the suite name (and hence the filename, so
-> _integration_kunit.c or similar), though even I admit that that's much
-> uglier.
+regards
+Suman
 
-Yeah, that's not great either.  Again, in the end it's probably
-entirely up to you, but it'd be good if the filenames are descriptive
-and readable (vs. a puzzle).
+> 
+> Fixes: e15d7f2b81d2 ("mfd: syscon: Use a unique name with regmap_config")
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/mfd/syscon.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> index 75859e492984..7a660411c562 100644
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -108,7 +108,6 @@ static struct syscon *of_syscon_register(struct device_node
+> *np, bool check_clk)
+>      syscon_config.max_register = resource_size(&res) - reg_io_width;
+> 
+>      regmap = regmap_init_mmio(NULL, base, &syscon_config);
+> -    kfree(syscon_config.name);
+>      if (IS_ERR(regmap)) {
+>          pr_err("regmap init failed\n");
+>          ret = PTR_ERR(regmap);
+> @@ -145,6 +144,7 @@ static struct syscon *of_syscon_register(struct device_node
+> *np, bool check_clk)
+>      regmap_exit(regmap);
+>  err_regmap:
+>      iounmap(base);
+> +    kfree(syscon_config.name);
+>  err_map:
+>      kfree(syscon);
+>      return ERR_PTR(ret);
 
-> Maybe the idea of having the subsystem/suite distinction be
-> represented in the code could pave the way to having different suites
-> support different suffixes like that.
-
-> Do you know of any cases where something has/would have both
-> unit-style tests and integration-style tests built with KUnit where
-> the distinction needs to be clear?
-
-None I know of, so probably not a big deal.
-
-> Brendan, Kees: do you have any thoughts?
->
-
-> Cheers,
-> -- David
-
-Thanks,
--- Marco
