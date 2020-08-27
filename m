@@ -2,94 +2,101 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FA8C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A41C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C6422177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECFDB2087D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:58:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="I9iYMGYc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgH0P6H convert rfc822-to-8bit (ORCPT
+        id S1727903AbgH0P6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:58:07 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:22881 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726266AbgH0P6G (ORCPT
+        Thu, 27 Aug 2020 11:58:48 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:51925 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727048AbgH0P6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:58:06 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-127-1uCyu8HkODWHTq8BSgI4eA-1; Thu, 27 Aug 2020 16:58:02 +0100
-X-MC-Unique: 1uCyu8HkODWHTq8BSgI4eA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 27 Aug 2020 16:58:02 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 27 Aug 2020 16:58:02 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Christoph Hellwig' <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 01/10] fs: don't allow kernel reads and writes without
- iter ops
-Thread-Topic: [PATCH 01/10] fs: don't allow kernel reads and writes without
- iter ops
-Thread-Index: AQHWfINAnoKBzQpz30W83mcBiLuV+KlMG9NA
-Date:   Thu, 27 Aug 2020 15:58:02 +0000
-Message-ID: <e5cb22d53c7c4ebea92443b8b6d86e88@AcuMS.aculab.com>
-References: <20200827150030.282762-1-hch@lst.de>
- <20200827150030.282762-2-hch@lst.de>
-In-Reply-To: <20200827150030.282762-2-hch@lst.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 27 Aug 2020 11:58:47 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598543926; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
+ Subject: Sender; bh=PXU1GxiflHtQGjyx5Lj/J5bd/WptB1Xkp5e6b+wuZz8=; b=I9iYMGYctvcOtT7A1uATwzFmaf1pEoMHbUwyQLacjTpJ/e4FIYayNccEHHHibYT7XL9tEJPt
+ UeU4wMrITGlCiIq3EFZ0tmwvtDVvtC4Yeq1w7BpXyxQBKvm0/Kv5leDGT6QLIIhu9Ikh0jUi
+ 0wtflhq65iiR3bdlTelHgsJCNnA=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5f47d836883d7674772131a4 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 15:58:46
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5AA31C433CA; Thu, 27 Aug 2020 15:58:45 +0000 (UTC)
+Received: from [192.168.0.101] (unknown [182.74.172.118])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kathirav)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C8255C433C6;
+        Thu, 27 Aug 2020 15:58:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C8255C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
+Subject: Re: [PATCH V2 0/2] Enable DVFS support for IPQ6018
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, sivaprak@codeaurora.org,
+        devicetree@vger.kernel.org
+References: <1597648720-13649-1-git-send-email-kathirav@codeaurora.org>
+From:   Kathiravan T <kathirav@codeaurora.org>
+Message-ID: <8de1b3ac-518c-ae82-4e2e-d4b24de7fcf1@codeaurora.org>
+Date:   Thu, 27 Aug 2020 21:28:33 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1597648720-13649-1-git-send-email-kathirav@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig
-> Sent: 27 August 2020 16:00
-> 
-> Don't allow calling ->read or ->write with set_fs as a preparation for
-> killing off set_fs.  All the instances that we use kernel_read/write on
-> are using the iter ops already.
-> 
-> If a file has both the regular ->read/->write methods and the iter
-> variants those could have different semantics for messed up enough
-> drivers.  Also fails the kernel access to them in that case.
+Bjorn,
 
-Is there a real justification for that?
-For system calls supplying both methods makes sense to avoid
-the extra code paths for a simple read/write.
 
-Any one stupid enough to make them behave differently gets
-what they deserve.
+Can you help to share your comments on this series?
 
-	David
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Thanks,
+
+Kathiravan T.
+
+
+On 8/17/2020 12:48 PM, Kathiravan T wrote:
+> Add A53 PLL, APCS clock, RPM Glink, RPM message RAM, cpu-opp-table,
+> SMPA2 regulator to enable the cpu frequency on IPQ6018.
+>
+> [v2]
+> 	- Rebased on v5.9-rc1
+> 	- Picked up the Rob's Acked-by tag for mailbox YAML
+> 	- Regulator binding in V1 was picked by Mark and available in v5.9-rc1
+>
+> Kathiravan T (2):
+>    dt-bindings: mailbox: add compatible for the IPQ6018 SoC
+>    arm64: dts: ipq6018: enable DVFS support
+>
+>   .../bindings/mailbox/qcom,apcs-kpss-global.yaml    |  1 +
+>   arch/arm64/boot/dts/qcom/ipq6018.dtsi              | 96 +++++++++++++++++++++-
+>   2 files changed, 94 insertions(+), 3 deletions(-)
+>
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
