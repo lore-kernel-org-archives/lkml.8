@@ -2,125 +2,207 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB61DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB71C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8742087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598552840;
-	bh=MxFjZJl44WMADt2iCSk3kahBaMEHIGUpHooEjyGWgq0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oF24jnajgr6ZHPWjeJ1shxsO+Es0g4ql52hrimhHh7OVnrenrng82Zn5lC09bNhyi
-	 x1OwGiV28NLQDT8B3Rdd2Cxcm1d/wpsrbhMifdxSY5WUX0GFvzafMNSiLZwMzcVx0Y
-	 5A5tCD6PSNZoR4dnTM78h1bmpS5WOr7d1opUe51k=
+	by mail.kernel.org (Postfix) with ESMTP id F251B2087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:28:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="peXan55M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgH0S1T (ORCPT
+        id S1727824AbgH0S2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:27:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbgH0S1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:27:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 215112087C;
-        Thu, 27 Aug 2020 18:27:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598552837;
-        bh=MxFjZJl44WMADt2iCSk3kahBaMEHIGUpHooEjyGWgq0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZKOMproJ+l39sqPi+pOm9qQu1lnaxUtB0ssNz/oDYhNHHE3w+PbSL1ZxXLMJvfKTU
-         lSv8dj/mXGRAZAIFxbYhVKmnyObGyFm01S5k6NBlGlkgV6nILJb7s1lLCBwuGWrrN6
-         P4HXqMLqGyhIPm/hLWuxSGh34/BSCNfKWSIGuYuQ=
-Date:   Thu, 27 Aug 2020 20:27:30 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Qiushi Wu <wu000273@umn.edu>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: Some questions about the patching process
-Message-ID: <20200827182730.GA712693@kroah.com>
-References: <CAMV6ehGKBfXN89XeDzMHKQ_6qLg41R2Tb7=sE+NC7KrbPsigDw@mail.gmail.com>
+        Thu, 27 Aug 2020 14:28:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgH0S2Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 14:28:16 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DF1EC061232
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:28:16 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id z203so1136802ooa.4
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:28:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VxlbWvka+07kHZPf01+EUiW1alBItC8Pr3Tn8LbFklQ=;
+        b=peXan55M41airQcwalxfGsmf4nrB+F5Ll5GMwX64kU3Vo+5HB9b0f6CVxw1o5JIs3q
+         qZ1b9XUIpYjcqMCSHU5FYiwzFopbgLt5b5goPNP3CJiLS26g40+KVQQHRs19X8ec+wXI
+         Xvr5EvMmOs1yZkUPeL/kQlKWiXmXba5jtBQAySYJNjc4Rm/i1YZoaPMdb2vMwvr+/FTw
+         x0tessMx4QzIUMHJHQ+JdDglMcj79qIbKsnVSgvYulpOR68h2/iijrZIV/E9/izUpTwq
+         CUOXq35T8mtWgQFiElp3fpAP2sfUGIMa427iA9whE8zHrop8cZewgZmKWf2O3h3R4MSx
+         vtsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VxlbWvka+07kHZPf01+EUiW1alBItC8Pr3Tn8LbFklQ=;
+        b=tWH4LeoNIXbID8AYd82Wpleo0qqrCfcDhXWQ7WnwOwLX3OUTP2kib8jPXADHBN5kic
+         HJynb16Ch6ups5rp3Hj5q2YnCaLGx6hYp8aq5AlKn8ysmv4yEowchpcdHbkXUT3AzoVB
+         p01VTgOHsjOxWFyXlMCFYXxDcmf9ogoSdrUYw0G6zL42LY5sR8uWOu7kAnH9GPRFHk6u
+         FdKhERGMwCIMyLKPeayAj7mQgADkw5QVMZrmf1jovatXT7SI0EKkA18+qhuOJj8KVM0M
+         BZs0l4u2Fo3/Tye3NU46ewl5wYGAetckbSO/D489jj9A1hqFW7OUJgD0rcU7lAH1FUCh
+         zAMg==
+X-Gm-Message-State: AOAM530ksv7M5uCC/2k0GuH2H5TwpzTa+UIEHuvBQQQOWJ6/a57MhUwj
+        AJmdYBQ1VdgEejfjuacAQV6Bg/XLw81AsMPlYrH/xg==
+X-Google-Smtp-Source: ABdhPJyZof+lv2Rdb068ddJIG0Fuq/ptEYfL7PHggKV923EZOQ/WvcqDXzxtwSckF1WY8r2ySti4FCh5wtjONGhRl3g=
+X-Received: by 2002:a05:6820:24c:: with SMTP id b12mr15207106ooe.36.1598552894223;
+ Thu, 27 Aug 2020 11:28:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMV6ehGKBfXN89XeDzMHKQ_6qLg41R2Tb7=sE+NC7KrbPsigDw@mail.gmail.com>
+References: <20200702071416.1780522-1-davidgow@google.com> <20200827131438.GA3597431@elver.google.com>
+ <CABVgOSmoiFh5i8Ue14MtCLwq-LbGgQ1hf4MyRYLFWFQrkushjQ@mail.gmail.com>
+In-Reply-To: <CABVgOSmoiFh5i8Ue14MtCLwq-LbGgQ1hf4MyRYLFWFQrkushjQ@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 27 Aug 2020 20:28:03 +0200
+Message-ID: <CANpmjNP0mGdEEFj5u-Crsvj0iaWvnt3OS+ioJNeZNjg=s0kpLQ@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: kunit: Add naming guidelines
+To:     David Gow <davidgow@google.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Randy Dunlap <rd.dunlab@gmail.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, Tim Bird <Tim.Bird@sony.com>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 12:34:57PM -0500, Qiushi Wu wrote:
-> Dear Linux maintainers:
-> 
-> I'm Qiushi Wu, a Ph.D. student from the secure and reliable systems
-> research group at the University of Minnesota. Our group strives to improve
-> the security and reliability of the Linux kernel and has contributed quite
-> a number of patches. We appreciate the openness of the Linux community, but
-> would also like to discuss some questions about the patching process. It
-> would be great if you could let us know your thoughts.
-> 
-> We recently found that minor patches such as one fixing a memory leak may
-> introduce more critical security bugs like double free. Sometimes the
-> maintainers can capture the introduced security bugs, sometimes not. This
-> is understandable because the introduced bugs can be subtle and hard to
-> catch due to the complexity. We are more concerned when “bad” submitters
-> intentionally and stealthily introduce such security bugs via seemingly
-> good patches, as they indeed have a chance to get the actually bad patches
-> accepted. This is not impossible because people have incentives---to plant
-> a vulnerability in a targeted driver, to get bounty rewards, etc.
-> 
-> Based on our patching experience, we observe several things related to the
-> risks.
-> 
-> 1. Linux allows anyone to submit a patch because it is an open community.
-> 
-> 2. Maintainers tend to not accept preventive patches, i.e., a patch for a
-> bug that is not really there yet, but it can be likely formed in the
-> future.
+On Thu, 27 Aug 2020 at 18:17, David Gow <davidgow@google.com> wrote:
+[...]
+> > First of all, thanks for the talk yesterday! I only looked at this
+> > because somebody pasted the LKML link. :-)
+>
+> No worries! Clearly this document needed linking -- even I was
+> starting to suspect the reason no-one was complaining about this was
+> that no-one had read it. :-)
+[...]
+> >
+> > While I guess this ship has sailed, and *_kunit.c is the naming
+> > convention now, I hope this is still just a recommendation and names of
+> > the form *-test.c are not banned!
+>
+> The ship hasn't technically sailed until this patch is actually
+> accepted. Thus far, we hadn't had any real complaints about the
+> _kunit.c idea, though that may have been due to this email not
+> reaching enough people. If you haven't read the discussion in
+> https://lore.kernel.org/linux-kselftest/202006141005.BA19A9D3@keescook/t/#u
+> it's worthwhile: the _kunit.c name is discussed, and Kees lays out
+> some more detailed rationale for it as well.
 
-How can you create a patch to prevent a bug that is not present?
+Thanks, I can see the rationale. AFAIK the main concern was "it does
+not distinguish it from other tests".
 
-But no, this is not true, look at all of the kernel hardening features
-added to the kernel over the past 5+ years.  Those are specifically to
-help handle the problem when there are bugs in the kernel, so that "bad
-things" do not happen when they occur.
+> > $> git grep 'KUNIT.*-test.o'
+> >         drivers/base/power/Makefile:obj-$(CONFIG_PM_QOS_KUNIT_TEST) += qos-test.o
+> >         drivers/base/test/Makefile:obj-$(CONFIG_KUNIT_DRIVER_PE_TEST) += property-entry-test.o
+> >         fs/ext4/Makefile:obj-$(CONFIG_EXT4_KUNIT_TESTS)         += ext4-inode-test.o
+> >         kernel/Makefile:obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
+> >         lib/Makefile:obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
+> >         lib/kunit/Makefile:obj-$(CONFIG_KUNIT_TEST) +=          kunit-test.o
+> >         lib/kunit/Makefile:obj-$(CONFIG_KUNIT_TEST) +=          string-stream-test.o
+> >         lib/kunit/Makefile:obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=  kunit-example-test.o
+> >
+> > $> git grep 'KUNIT.*_kunit.o'
+> > # Returns nothing
+> >
+>
+> This was definitely something we noted. Part of the goal of having
+> _kunit.c as a filename suffix (and, perhaps more importantly, the
+> _kunit module name suffix) was to have a way of both distinguishing
+> KUnit tests from non-KUnit ones (of which there are quite a few
+> already with -test names), and to have a way of quickly determining
+> what modules contain KUnit tests. That really only works if everyone
+> is using it, so the plan was to push this as much as possible. This'd
+> probably include renaming most of the existing test files to match,
+> which is a bit of a pain (particularly when converting non-KUnit tests
+> to KUnit and similar), but is a one-time thing.
 
-> 3. The patch review is mainly manual, so sometimes the introduced security
-> bugs could be missed.
+Feel free to ignore the below, but here might be one concern:
 
-We are human, no development process can prevent this.
+I think the problem of distinguishing KUnit tests from non-KUnit tests
+is a technical problem (in fact, the Kconfig entries have all the info
+we need), but a solution that sacrifices readability might cause
+unnecessary friction.
 
-> We would like to know how the Linux maintainers think about these risks.
+The main issue I foresee is that the _kunit.c name is opaque as to
+what the file does, but merely indicates one of its dependencies. Most
+of us clearly know that KUnit is a test framework, but it's a level of
+indirection nevertheless. (But _kunit_test.c is also bad, because it's
+unnecessarily long.) For a dozen tests, that's probably still fine.
+But now imagine 100s of tests, people will quickly wonder "what's this
+_kunit thing?". And if KUnit tests are eventually the dominant tests,
+does it still matter?
 
-I think 2. is wrong, so it's not a risk.
+I worry that because of the difficulty of enforcing the name, choosing
+something unintuitive will also achieve the opposite result:
+proliferation of even more diverse names. A generic convention like
+"*-test.c" will be close enough to what's intuitive for most people,
+and we might actually have a chance of getting everyone to stick to
+it.
 
-And how is 1. a "risk"?
+The problem of identifying all KUnit tests can be solved with a script.
 
-And of course, 3., humans, well, what can you do about them?  :)
+> > Just an idea: Maybe the names are also an opportunity to distinguish
+> > real _unit_ style tests and then the rarer integration-style tests. I
+> > personally prefer using the more generic *-test.c, at least for the
+> > integration-style tests I've been working on (KUnit is still incredibly
+> > valuable for integration-style tests, because otherwise I'd have to roll
+> > my own poor-man's version of KUnit, so thank you!). Using *_kunit.c for
+> > such tests is unintuitive, because the word "unit" hints at "unit tests"
+> > -- and having descriptive (and not misleading) filenames is still
+> > important. So I hope you won't mind if *-test.c are still used where
+> > appropriate.
+>
+> As Brendan alluded to in the talk, the popularity of KUnit for these
+> integration-style tests came as something of a surprise (more due to
+> our lack of imagination than anything else, I suspect). It's great
+> that it's working, though: I don't think anyone wants the world filled
+> with more single-use test "frameworks" than is necessary!
+>
+> I guess the interesting thing to note is that we've to date not really
+> made a distinction between KUnit the framework and the suite of all
+> KUnit tests. Maybe having a separate file/module naming scheme could
+> be a way of making that distinction, though it'd really only appear
+> when loading tests as modules -- there'd be no indication in e.g.,
+> suite names or test results. The more obvious solution to me (at
+> least, based on the current proposal) would be to have "integration"
+> or similar be part of the suite name (and hence the filename, so
+> _integration_kunit.c or similar), though even I admit that that's much
+> uglier.
 
-> We
-> would like to know if maintainers have some methods and tools (such as
-> Smatch, Syzbot?) to mitigate these potential issues. We are happy to
-> discuss these issues and hope our observations could raise some awareness
-> of them.
+Yeah, that's not great either.  Again, in the end it's probably
+entirely up to you, but it'd be good if the filenames are descriptive
+and readable (vs. a puzzle).
 
-How do you "raise awareness" among a developer community that is 4000
-people each year (1000 are new each year), consisting of 450+ different
-companies?
+> Maybe the idea of having the subsystem/suite distinction be
+> represented in the code could pave the way to having different suites
+> support different suffixes like that.
 
-And yes, we have lots of tools, and run them all the time on all of our
-public trees constantly.  And they fix things before they get merged and
-sent out to the rest of the world.
+> Do you know of any cases where something has/would have both
+> unit-style tests and integration-style tests built with KUnit where
+> the distinction needs to be clear?
 
-So what specific things are you wanting to discuss here?
+None I know of, so probably not a big deal.
 
-thanks,
+> Brendan, Kees: do you have any thoughts?
+>
 
-greg k-h
+> Cheers,
+> -- David
+
+Thanks,
+-- Marco
