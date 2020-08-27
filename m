@@ -2,81 +2,115 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E50CC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E041C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDF332087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55B952087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:20:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="GhtCzp23"
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="PA/KZnR+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgH0QTx (ORCPT
+        id S1727802AbgH0QUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:19:53 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:43576 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbgH0QTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:19:52 -0400
-Received: from zn.tnic (p200300ec2f104500059e4b9a4804679d.dip0.t-ipconnect.de [IPv6:2003:ec:2f10:4500:59e:4b9a:4804:679d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0D9791EC0423;
-        Thu, 27 Aug 2020 18:19:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1598545191;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=8QkVnkRzvDRQrZeUzmaDHT7ZWuqLDu370tFsz3uoBFk=;
-        b=GhtCzp23m/8JrKlNe2AI+L5CSVBCovcFE+rSdbNl4qQvwW8E7FnRgZ0Erw+L1DLPjYArHB
-        DwOaq0bqDxeRxZkmOs+1DhnUBCRyhzk1Bk9iwxBUHcD/oirjDG0Jh3JV/sSDxBkWIORIpT
-        KVeILwGC2j5EK9F3KkFa0ROUSPuQ+Ss=
-Date:   Thu, 27 Aug 2020 18:19:52 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mchehab@kernel.org, tony.luck@intel.com, james.morse@arm.com,
-        rrichter@marvell.com, linuxarm@huawei.com,
-        Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH v2 1/1] EDAC/ghes: Fix for NULL pointer dereference in
- ghes_edac_register()
-Message-ID: <20200827161952.GD30897@zn.tnic>
-References: <20200827140450.1620-1-shiju.jose@huawei.com>
+        Thu, 27 Aug 2020 12:20:19 -0400
+Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:47886 "EHLO
+        relaydlg-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726217AbgH0QUS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 12:20:18 -0400
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id 64150820D7;
+        Thu, 27 Aug 2020 19:20:15 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paragon-software.com; s=mail; t=1598545215;
+        bh=NKcHa36mTiyxo7usyWNgEjGp32om2cafUFtZv4TBocM=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=PA/KZnR+HRLHjnelp11zCWvTgHh6NZV4Fw5OMmSaiCOlk3x4bgLySkWRXNTxX0V7N
+         IfghciA2DCPMe43MB7Lp+Ebep5mUcdOA2eBt3n0vhBlzk3vo4czEK+3s/fC5VqR6/w
+         22u61x+unzDbL01DjTJC4djcNiYi4x40Z4Z7Jxe4=
+Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Thu, 27 Aug 2020 19:20:14 +0300
+Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
+ by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
+ id 15.01.1847.003; Thu, 27 Aug 2020 19:20:14 +0300
+From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To:     =?iso-8859-1?Q?Pali_Roh=E1r?= <pali@kernel.org>
+CC:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: RE: [PATCH v2 02/10] fs/ntfs3: Add initialization of super block
+Thread-Topic: [PATCH v2 02/10] fs/ntfs3: Add initialization of super block
+Thread-Index: AdZ30tAfM9dNSlAKR92rLVrbgJq3AABR4GEAANzhXxA=
+Date:   Thu, 27 Aug 2020 16:20:14 +0000
+Message-ID: <208746d50bbf4ffc8de599a4e10befd8@paragon-software.com>
+References: <caddbe41eaef4622aab8bac24934eed1@paragon-software.com>
+ <20200823095500.ug5vibiv3hy3luqs@pali>
+In-Reply-To: <20200823095500.ug5vibiv3hy3luqs@pali>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.8.36]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200827140450.1620-1-shiju.jose@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 03:04:50PM +0100, Shiju Jose wrote:
-> After the 'commit b9cae27728d1 ("EDAC/ghes: Scan the system once on driver init")'
-> applied, following error has occurred in the ghes_edac_register() when
-> CONFIG_DEBUG_TEST_DRIVER_REMOVE is enabled. The null ghes_hw.dimms pointer
-> in the mci_for_each_dimm() of ghes_edac_register() caused the error.
-> 
-> The error occurs when all the previously initialized ghes instances are
-> removed and then probe a new ghes instance. In this case, the ghes_refcount
-> would be 0, ghes_hw.dimms and mci already freed. The ghes_hw.dimms would
-> be null because ghes_scan_system() would not call enumerate_dimms() again.
-> 
-> Suggested-by: Borislav Petkov <bp@suse.de>
-> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-> ---
->  drivers/edac/ghes_edac.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+From: Pali Roh=E1r <pali@kernel.org>
+Sent: Sunday, August 23, 2020 12:55 PM
+>=20
+> On Friday 21 August 2020 16:25:03 Konstantin Komarov wrote:
+> > +		case Opt_nls:
+> > +			match_strlcpy(nls_name, &args[0], sizeof(nls_name));
+> > +			break;
+> > +
+> > +		/* unknown option */
+> > +		default:
+> > +			if (!silent)
+> > +				ntfs_error(
+> > +					sb,
+> > +					"Unrecognized mount option \"%s\" or missing value",
+> > +					p);
+> > +			//return -EINVAL;
+> > +		}
+> > +	}
+> > +
+> > +out:
+> > +	if (nls_name[0]) {
+> > +		sbi->nls =3D load_nls(nls_name);
+> > +		if (!sbi->nls) {
+> > +			/* critical ?*/
+> > +			ntfs_error(sb, "failed to load \"%s\"\n", nls_name);
+> > +			//return -EINVAL;
+>=20
+> Well, I think it is a fatal error if user supplied NLS encoding cannot
+> be loaded. If user via mount parameter specify that wants encoding XYZ
+> and kernel loads different (e.g. default one) then userspace would be
+> confused as it would expect encoding XYZ.
+>=20
 
-Thanks, queued in edac-urgent.
+Agreed. Will be fixed in V3.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> > +		}
+> > +	}
+> > +
+> > +	if (!sbi->nls) {
+> > +		sbi->nls =3D load_nls_default();
+> > +		if (!sbi->nls) {
+> > +			/* critical */
+> > +			ntfs_error(sb, "failed to load default nls");
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> > +
+> > +	return 0;
+> > +}
