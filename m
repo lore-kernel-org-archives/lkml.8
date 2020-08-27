@@ -2,64 +2,61 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA630C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C88F020786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C7EB22B47
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgH0GqB (ORCPT
+        id S1727031AbgH0GsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:46:01 -0400
-Received: from mga18.intel.com ([134.134.136.126]:3564 "EHLO mga18.intel.com"
+        Thu, 27 Aug 2020 02:48:00 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:30811 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726882AbgH0Gp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:45:59 -0400
-IronPort-SDR: UxdRk3eXKp44EuIdGe6/N7CSC0Okx5OasHBuyi5J3iZyw8C/bFJzakxE7MXATLwYg9/rmqx8Zq
- ReY3H39f7qPA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="144109102"
-X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
-   d="scan'208";a="144109102"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 23:45:58 -0700
-IronPort-SDR: bhh5IeRvAmjU2S8givn05HqpKnUHorYxlVY0p7rP2Tn8QhhVJFBnGpvTYH7lMm/wUXMEH+gUcm
- Mmwrulc9/cmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
-   d="scan'208";a="337069793"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
-  by FMSMGA003.fm.intel.com with ESMTP; 26 Aug 2020 23:45:51 -0700
-Subject: Re: Broadcom WiFi SDIO performance regression after commit "mmc:
- sdhci: Remove finish_tasklet"
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        brcm80211-dev-list@cypress.com,
-        brcm80211-dev-list.pdl@broadcom.com,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <5cf1af89-6026-09ad-7f20-82e19ad49fa1@gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <9332715c-6ee5-fce3-8b93-305823d5a551@intel.com>
-Date:   Thu, 27 Aug 2020 09:45:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726123AbgH0Gr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 02:47:59 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BcYFl3bpzz9vD3v;
+        Thu, 27 Aug 2020 08:47:55 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id oApkwu2Z5dlT; Thu, 27 Aug 2020 08:47:55 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BcYFl1t8Lz9vD3t;
+        Thu, 27 Aug 2020 08:47:55 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0DD3D8B85C;
+        Thu, 27 Aug 2020 08:47:56 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id kPtxLO6nQspm; Thu, 27 Aug 2020 08:47:55 +0200 (CEST)
+Received: from localhost.localdomain (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A1A1C8B85A;
+        Thu, 27 Aug 2020 08:47:55 +0200 (CEST)
+Subject: Re: [PATCH v1 4/9] powerpc/vdso: Remove unnecessary ifdefs in
+ vdso_pagelist initialization
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <df48ed76cf8a756a7f97ed42a1a39d0a404014bc.1598363608.git.christophe.leroy@csgroup.eu>
+ <834f362626e18bc36226f46ed4113c461a3ad032.1598363608.git.christophe.leroy@csgroup.eu>
+ <87ft89h2st.fsf@mpe.ellerman.id.au>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <04a968f6-88c0-0603-43aa-202196a68df2@csgroup.eu>
+Date:   Thu, 27 Aug 2020 06:47:42 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-In-Reply-To: <5cf1af89-6026-09ad-7f20-82e19ad49fa1@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <87ft89h2st.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,39 +64,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/08/20 9:07 am, Dmitry Osipenko wrote:
-> Hello!
-> 
-> I was debugging WiFi performance problems on Acer A500 tablet device
-> that has BCM4329 WiFi chip which is connected to NVIDIA Terga20 SoC via
-> SDIO and found that the following commit causes a solid 5-10 Mbit/s of
-> WiFi throughput regression after 5.2 kernel:
 
-What is that in percentage terms?
 
+On 08/26/2020 02:58 PM, Michael Ellerman wrote:
+> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+>> diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
+>> index daef14a284a3..bbb69832fd46 100644
+>> --- a/arch/powerpc/kernel/vdso.c
+>> +++ b/arch/powerpc/kernel/vdso.c
+>> @@ -718,16 +710,14 @@ static int __init vdso_init(void)
+> ...
+>>   
+>> -
+>> -#ifdef CONFIG_VDSO32
+>>   	vdso32_kbase = &vdso32_start;
+>>   
+>>   	/*
+>> @@ -735,8 +725,6 @@ static int __init vdso_init(void)
+>>   	 */
+>>   	vdso32_pages = (&vdso32_end - &vdso32_start) >> PAGE_SHIFT;
+>>   	DBG("vdso32_kbase: %p, 0x%x pages\n", vdso32_kbase, vdso32_pages);
+>> -#endif
 > 
-> commit c07a48c2651965e84d35cf193dfc0e5f7892d612
-> Author: Adrian Hunter <adrian.hunter@intel.com>
-> Date:   Fri Apr 5 15:40:20 2019 +0300
+> This didn't build for ppc64le:
 > 
->     mmc: sdhci: Remove finish_tasklet
+>    /opt/cross/gcc-8.20_binutils-2.32/powerpc64-unknown-linux-gnu/bin/powerpc64-unknown-linux-gnu-ld: arch/powerpc/kernel/vdso.o:(.toc+0x0): undefined reference to `vdso32_end'
+>    /opt/cross/gcc-8.20_binutils-2.32/powerpc64-unknown-linux-gnu/bin/powerpc64-unknown-linux-gnu-ld: arch/powerpc/kernel/vdso.o:(.toc+0x8): undefined reference to `vdso32_start'
+>    make[1]: *** [/scratch/michael/build/maint/Makefile:1166: vmlinux] Error 1
+>    make: *** [Makefile:185: __sub-make] Error 2
 > 
->     Remove finish_tasklet. Requests that require DMA-unmapping or
-> sdhci_reset
->     are completed either in the IRQ thread or a workqueue if the
-> completion is
->     not initiated by the IRQ.
-> 
-> Reverting the offending commit on top of recent linux-next resolves the
-> problem.
-> 
-> Ulf / Adrian, do you have any ideas what could be done in regards to
-> restoring the SDIO performance? Should we just revert the offending commit?
+> So I just put that ifdef back.
 > 
 
-Unfortunately I think we are past the point of returning to the tasklet.
+The problem is because is_32bit() can still return true even when 
+CONFIG_VDSO32 is not set.
 
-sdhci can complete requests in the irq handler but only if ->pre_req() and
-->post_req() are used, which is not supported by SDIO at present.  pre_req
-and post_req were introduced to reduce latency for the block driver, so it
-seems reasonable perhaps to look at using them in SDIO as well.
+The change below fixes the problem:
+
+diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
+index bbb69832fd46..38abff60cbe2 100644
+--- a/arch/powerpc/kernel/vdso.c
++++ b/arch/powerpc/kernel/vdso.c
+@@ -132,11 +132,7 @@ int arch_setup_additional_pages(struct linux_binprm 
+*bprm, int uses_interp)
+  	if (!vdso_ready)
+  		return 0;
+
+-	if (is_32bit_task()) {
+-		vdso_pagelist = vdso32_pagelist;
+-		vdso_pages = vdso32_pages;
+-		vdso_base = VDSO32_MBASE;
+-	} else {
++	if (!is_32bit_task()) {
+  		vdso_pagelist = vdso64_pagelist;
+  		vdso_pages = vdso64_pages;
+  		/*
+@@ -145,6 +141,12 @@ int arch_setup_additional_pages(struct linux_binprm 
+*bprm, int uses_interp)
+  		 * and most likely share a SLB entry.
+  		 */
+  		vdso_base = 0;
++	} else if (IS_ENABLED(CONFIG_VDSO32)) {
++		vdso_pagelist = vdso32_pagelist;
++		vdso_pages = vdso32_pages;
++		vdso_base = VDSO32_MBASE;
++	} else {
++		vdso_pages = 0;
+  	}
+
+  	current->mm->context.vdso_base = 0;
+
+With this change all vdso32 static objects (functions and vars) go away 
+as expected.
+
+We get a simple conflict with the following patch.
+
+Do you prefer an updated series or a follow up patch, or you take the 
+above change yourself ?
+
+Christophe
