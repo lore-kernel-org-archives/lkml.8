@@ -2,186 +2,152 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E10C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9316F2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598539702;
-	bh=11kjkxrZ1KlShNO5tYEuJppL7eE0J4PVf6jQfEffwII=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=W0A/VYLuI+hxDPkzl+LqgW8BxxCDGjUfGZYXuc0tpAGmd2Vgxgz8d0OhYT7WoM81u
-	 MZSMqVmWTKI2Yf6zacrYiK6Pxlhk1qy3SARmP8DYwnbgjOLTxebEaL61MwBHlFFiVW
-	 HdWjpGD/nGIEhmrlTAeMVcGsnM30KMcYkpYHGy08=
+	by mail.kernel.org (Postfix) with ESMTP id B8BFB22B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:48:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nio365.onmicrosoft.com header.i=@nio365.onmicrosoft.com header.b="EenSbI5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgH0OsU (ORCPT
+        id S1728150AbgH0OsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:48:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45686 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728098AbgH0Oqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:46:53 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7623922B4B;
-        Thu, 27 Aug 2020 14:46:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598539612;
-        bh=11kjkxrZ1KlShNO5tYEuJppL7eE0J4PVf6jQfEffwII=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1w65j1kq6Nv6863YjmMUcNZtkuTPLRMzhsPYMSB++HKTCTGAaVVh8d+h5rMWPzAaC
-         ZNnzplqBTYuSTr50a/GnsVGQhhFREL7ttXaDscBTcnfh/S7w5fz65siSCEChvZ5LQu
-         Zo6sy8IVh2Q30SeJRFyFusukvtSqjYv8sfyyMsBs=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kBJAw-0079iW-Id; Thu, 27 Aug 2020 15:46:50 +0100
+        Thu, 27 Aug 2020 10:48:25 -0400
+Received: from mx0a-00010702.pphosted.com ([148.163.156.75]:49520 "EHLO
+        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728043AbgH0OsB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 10:48:01 -0400
+X-Greylist: delayed 3506 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Aug 2020 10:47:52 EDT
+Received: from pps.filterd (m0098781.ppops.net [127.0.0.1])
+        by mx0a-00010702.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07RDitBC012196;
+        Thu, 27 Aug 2020 08:47:45 -0500
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2051.outbound.protection.outlook.com [104.47.36.51])
+        by mx0a-00010702.pphosted.com with ESMTP id 332yd26r2g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 08:47:45 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ez6aI/WDLGWO4m0FyoH2ZPLStT9/1pZy7hasLUbIgc820KCUzVs/0cSvEBnhKuBc6aae4Fa9CeRJyNabk471UQCrZ+IVmPlNDrbWYD5oKch3VlY9qGb2UA5UlOY3H0A/MIHedkklioe5UsivkFIa+AwNcxq0evV67rEecTnUOtBgKNwEt+IXJbgH+MQCgDqGp04KYLMv+neF9hhNBv3t17p+iJCLO61nUPPOuGTpFEMTfaJGydJfM9MJ9WNAxiNP73iwicDZt88/s2/yBvKKk7kVjPhClVQjBJByo5UT6oiSQpDIIw0XSVOls4FUyQ4sQpn/MFIC+hwL/LYE+eIFEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KnzD30OSqbBlP3TKzzQR2rHtCNCizQB4pKMSVRPdM3Y=;
+ b=C7DnxnC6wWzWuRLABowfk+hJ95IEPXg0F+n/kOuLQLQgj+K6MQhQ+VViH7LHyjtdSg52kJ49SOluQ+9DLf7BIHZb7Fw/ZXD/yVJtGQ3ADrVxsZOOWbN2mqDxTV7waXqAGzNwxKtugDZraFLPmpNxe0+IPfWjoZMRdmbe3qOo4LTClwCo91xf9WE1revegTfe5734ImaUpSHNNJ9JiX//EbMZtMwa5Fi1HIOk1sqcilGrrK5ud8QReW0qHmDwawXBMemwtS9u+AMVesG2hqxVdls0o2zvHa4eqG3yLywzYFYmGN7RrqnMbfRPnI8tdkq/JPVZbbIm9QqNiHge6NGLOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=ni.com; dmarc=pass action=none header.from=ni.com; dkim=pass
+ header.d=ni.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=nio365.onmicrosoft.com; s=selector2-nio365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KnzD30OSqbBlP3TKzzQR2rHtCNCizQB4pKMSVRPdM3Y=;
+ b=EenSbI5igwG0DV2YbMoNxjrI6AXkRc2qhsprUisZELEjlWAjSF9AexR2VUfwPPO4fyB+/+olRlZvbz3Wv3SiEppZCMYlxs9aoEhE06IPYoEJ0atezP+hgjmdepEQ6YzwNaPrFzazALTn5PMgghRpye5+yiBAq65QGzjHDt4RGsQ=
+Authentication-Results: xilinx.com; dkim=none (message not signed)
+ header.d=none;xilinx.com; dmarc=none action=none header.from=ni.com;
+Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
+ (2603:10b6:803:4b::29) by SN6PR04MB4829.namprd04.prod.outlook.com
+ (2603:10b6:805:b0::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Thu, 27 Aug
+ 2020 13:47:43 +0000
+Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
+ ([fe80::30f8:af2b:efff:2750]) by SN4PR0401MB3646.namprd04.prod.outlook.com
+ ([fe80::30f8:af2b:efff:2750%3]) with mapi id 15.20.3305.026; Thu, 27 Aug 2020
+ 13:47:43 +0000
+Date:   Thu, 27 Aug 2020 08:47:42 -0500
+From:   Michael Auchter <michael.auchter@ni.com>
+To:     Ben Levinsky <ben.levinsky@xilinx.com>
+Cc:     stefano.stabellini@xilinx.com, michals@xilinx.com,
+        devicetree@vger.kernel.org, mathieu.poirier@linaro.org,
+        emooring@xilinx.com, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jliang@xilinx.com,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Message-ID: <20200827134742.GB404249@xaphan>
+References: <20200827015810.11157-1-ben.levinsky@xilinx.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827015810.11157-1-ben.levinsky@xilinx.com>
+X-ClientProxiedBy: SA0PR11CA0016.namprd11.prod.outlook.com
+ (2603:10b6:806:d3::21) To SN4PR0401MB3646.namprd04.prod.outlook.com
+ (2603:10b6:803:4b::29)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 27 Aug 2020 15:46:50 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
-        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
-        David Lechner <david@lechnology.com>,
-        Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Roger Quadros <rogerq@ti.com>, kernel-team@android.com
-Subject: Re: [RESEND PATCH v2] mfd: syscon: Use a unique name with
- regmap_config
-In-Reply-To: <20200727211008.24225-1-s-anna@ti.com>
-References: <20200727211008.24225-1-s-anna@ti.com>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <0c1feaf91b9d285c1bded488437705da@misterjones.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: s-anna@ti.com, lee.jones@linaro.org, arnd@arndb.de, grzegorz.jaszczyk@linaro.org, david@lechnology.com, tony@atomide.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rogerq@ti.com, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by SA0PR11CA0016.namprd11.prod.outlook.com (2603:10b6:806:d3::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Thu, 27 Aug 2020 13:47:42 +0000
+X-Originating-IP: [2605:a601:ab6f:2000:2739:a39e:9b12:ab20]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: cd5453c7-6bb2-460d-4803-08d84a8fc59a
+X-MS-TrafficTypeDiagnostic: SN6PR04MB4829:
+X-Microsoft-Antispam-PRVS: <SN6PR04MB48294F21CE7DF9312522F53B87550@SN6PR04MB4829.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: oQ9m2qXaJu5z/mODUVbNUvWAmLxtHoGgut3rEi2EZHNiN3UN1X+Ib1icNvIEoV+wBZxewXtn05a07v7+65IXXmw++HES8M896cAkkzFuc7kFnxUF3IA4ccl9cfGcp/6J8PdMihlyS8nNhjhW9pNMTulD1yI792+u06i2/fimjEjf0L9Xxz+KvuiMGAJNZ4oTFiFIDrz9gdOXHpzHRFKHmK4two4c45/nklb6bYM+hiLnTB2AP2cya/Fn/+XCnD6i9AkS5hg3ucHCrVSFDSIYf1WGo608haWDV4fKCDmpW6H20DiglX3SWcjxnVf66IrQeAbSGVHKmISfQrp5jaWzuw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3646.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(346002)(396003)(366004)(376002)(136003)(39860400002)(5660300002)(86362001)(7416002)(478600001)(33656002)(44832011)(2906002)(6486002)(9686003)(316002)(186003)(8676002)(52116002)(1076003)(6916009)(66556008)(4326008)(66946007)(66476007)(83380400001)(16576012)(956004)(8936002)(33716001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: D6q8zs2YATuyC2VFWcOHTd5gszxC2DPvLPTkymqe6O2TlI84u/JKFfZYjMytjYx3EQsM2kAAn2ejHw5WDmUmn8vuzHRyMJyqZrvHrBR4K1ABKcOpu/h9dTLdgWz6VToWXvoatZ9KDOyPteNmxFdasoqB7iSiYkjLMXfpbsmdSzNXNvc7iJkPrM5Zv2E6pdbFwD5tGSsuOFNksH0Ww0ctHOMONLWUFYt3hWgQKCKQDz1FMtJTrUTX6vbbbwfcawjNirD4Un4I9j4UpsCiRP8UUsfPUHJ3+9zbcQ++Aq00mtzrN9T/Y67wRohyRUE5OuUC7KeOwcbOT1dTfi0bSeuy2H4EsyeNeOmuJpBACZD+zNlHGl/h6EVnPgJaAOEDSPGmnUZIa61DRrTSkymYOXroFgD6LPLyp3jFAGHd0EyVUIXiiLPOI4A5OMY8o9nNkmMDHSup0CY9qLJM0B1x5n9q+UnzBFmFfBvjELOjmfVotiLDfgM8FzKK4bQ/0rv5yzaL+WyrNpYonUFDqAR13+yvcT2vaLN/vbmpZsqcOX8bDE6Mv9gpPpnNrp7ajCOVQpgEMZU3Z+IzSo9gFIw843M8x8LrwP2w29NoXMNsp1KzEaQiPvy4hEk15Y5XmBUGNPZRQQWsPpeGH8W96eQn/k3Yf2P+8t7aXZXXi3kdS9b8hSeEZkPEIQbSoXj1jOvfw7lY0YxMqpDN5eq6rY05FLGLQQ==
+X-OriginatorOrg: ni.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd5453c7-6bb2-460d-4803-08d84a8fc59a
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3646.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2020 13:47:43.1654
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: adb81k0fCiBBH+IGYajJWWI2eDQeUc0i1Dnnsa5ESW3HtUVBg6DLotRIa40qCBR+pZTVtAQ9ihNFqQGNwLGG9A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4829
+Subject: Re: [PATCH v9 0/5] Provide basic driver to control Arm R5 co-processor
+ found on Xilinx ZynqMP
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-27_07:2020-08-27,2020-08-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_policy_notspam policy=outbound_policy score=30 mlxscore=0
+ lowpriorityscore=0 spamscore=0 suspectscore=1 adultscore=0
+ priorityscore=1501 phishscore=0 clxscore=1015 malwarescore=0
+ impostorscore=0 mlxlogscore=634 bulkscore=0 classifier=spam adjust=30
+ reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008270104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Hey Ben,
 
-On 2020-07-27 22:10, Suman Anna wrote:
-> The DT node full name is currently being used in regmap_config
-> which in turn is used to create the regmap debugfs directories.
-> This name however is not guaranteed to be unique and the regmap
-> debugfs registration can fail in the cases where the syscon nodes
-> have the same unit-address but are present in different DT node
-> hierarchies. Replace this logic using the syscon reg resource
-> address instead (inspired from logic used while creating platform
-> devices) to ensure a unique name is given for each syscon.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
-> Hi Arnd,
-> Lee is looking for your review on this patch. Can you please
-> review and provide your comments.
-> 
-> This is a resend of the patch that was posted previously, rebased
-> now onto latest kernel.
-> 
-> v2: https://patchwork.kernel.org/patch/11353355/
->  - Fix build warning reported by kbuild test bot
-> v1: https://patchwork.kernel.org/patch/11346363/
-> 
->  drivers/mfd/syscon.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-> index 3a97816d0cba..75859e492984 100644
-> --- a/drivers/mfd/syscon.c
-> +++ b/drivers/mfd/syscon.c
-> @@ -101,12 +101,14 @@ static struct syscon *of_syscon_register(struct
-> device_node *np, bool check_clk)
->  		}
->  	}
-> 
-> -	syscon_config.name = of_node_full_name(np);
-> +	syscon_config.name = kasprintf(GFP_KERNEL, "%pOFn@%llx", np,
-> +				       (u64)res.start);
->  	syscon_config.reg_stride = reg_io_width;
->  	syscon_config.val_bits = reg_io_width * 8;
->  	syscon_config.max_register = resource_size(&res) - reg_io_width;
-> 
->  	regmap = regmap_init_mmio(NULL, base, &syscon_config);
-> +	kfree(syscon_config.name);
->  	if (IS_ERR(regmap)) {
->  		pr_err("regmap init failed\n");
->  		ret = PTR_ERR(regmap);
+On Wed, Aug 26, 2020 at 06:58:05PM -0700, Ben Levinsky wrote:
+> v10:
+> - add include types.h to xlnx-zynqmp.h for compilation
 
-This patch triggers some illegal memory accesses when debugfs is
-enabled, as regmap does rely on config->name to be persistent
-when the debugfs registration is deferred via regmap_debugfs_early_list
-(__regmap_init() -> regmap_attach_dev() -> regmap_debugfs_init()...),
-leading to a KASAN splat on demand.
+I appreciate the quick turnaround on v10, but it looks like much of my
+feedback on v9 went unacknowledged. 
 
-I came up with the following patch that solves the issue for me.
+Most concerning is the fact that loading firmware on to R5 1 is _still_
+broken in v10 due to the incorrect TCM banks being used.
 
 Thanks,
+ Michael
 
-         M.
-
- From fd3f5f2bf72df53be18d13914fe349a34f81f16b Mon Sep 17 00:00:00 2001
- From: Marc Zyngier <maz@kernel.org>
-Date: Thu, 27 Aug 2020 14:45:34 +0100
-Subject: [PATCH] mfd: syscon: Don't free allocated name for 
-regmap_config
-
-The name allocated for the regmap_config structure is freed
-pretty early, right after the registration of the MMIO region.
-
-Unfortunately, that doesn't follow the life cycle that debugfs
-expects, as it can access the name field long after the free
-has occured.
-
-Move the free on the error path, and keep it forever otherwise.
-
-Fixes: e15d7f2b81d2 ("mfd: syscon: Use a unique name with 
-regmap_config")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
-  drivers/mfd/syscon.c | 2 +-
-  1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index 75859e492984..7a660411c562 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -108,7 +108,6 @@ static struct syscon *of_syscon_register(struct 
-device_node *np, bool check_clk)
-  	syscon_config.max_register = resource_size(&res) - reg_io_width;
-
-  	regmap = regmap_init_mmio(NULL, base, &syscon_config);
--	kfree(syscon_config.name);
-  	if (IS_ERR(regmap)) {
-  		pr_err("regmap init failed\n");
-  		ret = PTR_ERR(regmap);
-@@ -145,6 +144,7 @@ static struct syscon *of_syscon_register(struct 
-device_node *np, bool check_clk)
-  	regmap_exit(regmap);
-  err_regmap:
-  	iounmap(base);
-+	kfree(syscon_config.name);
-  err_map:
-  	kfree(syscon);
-  	return ERR_PTR(ret);
--- 
-2.27.0
-
-
--- 
-Jazz is not dead. It just smells funny...
+> 
+> Ben Levinsky (5):
+>   firmware: xilinx: Add ZynqMP firmware ioctl enums for RPU
+>     configuration.
+>   firmware: xilinx: Add shutdown/wakeup APIs
+>   firmware: xilinx: Add RPU configuration APIs
+>   dt-bindings: remoteproc: Add documentation for ZynqMP R5 rproc
+>     bindings
+>   remoteproc: Add initial zynqmp R5 remoteproc driver
+> 
+>  .../xilinx,zynqmp-r5-remoteproc.yaml          | 113 +++
+>  drivers/firmware/xilinx/zynqmp.c              |  86 ++
+>  drivers/remoteproc/Kconfig                    |  10 +
+>  drivers/remoteproc/Makefile                   |   1 +
+>  drivers/remoteproc/zynqmp_r5_remoteproc.c     | 898 ++++++++++++++++++
+>  include/linux/firmware/xlnx-zynqmp.h          |  63 ++
+>  6 files changed, 1171 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
+>  create mode 100644 drivers/remoteproc/zynqmp_r5_remoteproc.c
+> 
+> -- 
+> 2.17.1
+> 
