@@ -7,26 +7,23 @@ X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F7BC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 038D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4439B20825
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A4620786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:57:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v7ITrjWl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qOVfVV3t"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P7r3DsHt";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0KWJI9gA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbgH0H5f (ORCPT
+        id S1728480AbgH0H5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:57:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728397AbgH0HyZ (ORCPT
+        Thu, 27 Aug 2020 03:57:43 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36656 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728310AbgH0HyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 03:54:25 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FBD3C061264;
-        Thu, 27 Aug 2020 00:54:24 -0700 (PDT)
 Date:   Thu, 27 Aug 2020 07:54:22 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020; t=1598514863;
@@ -35,12 +32,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VmsOkT6QWTQSrj1TTxvkK8Jl1Wo9FX5s0w6TlZUgGqI=;
-        b=v7ITrjWlY46HMBqx1HIizd7qSyNQE7HWYbILz45/FNkrtchvHL0WINwp3uuXpNG1MipvM9
-        dIUZP/4vv2N0lCywnC5wkDI7SToe3+Vgfc+DSI915MpAhCpOJhEAuwVYORe2qVHBWFRyoZ
-        tXYxusxUnyJgSise7UkpWRYBVq0m0aoZW1KCg/a8KOKIVPcXaVsbtetoIcupXEjAVPu5nZ
-        78S9xpmOJEs0hKxuV+SmocYximj58jOQ4Qqzn0s6GsfVIMOa6tpauOwaWo4G754Lfz41c9
-        teMTAuX8Oss6y4/Uxi//wPubKxsMmhacVUa9wlv5lAHvFlzXVDC1RR21/FP6qQ==
+        bh=ShlSWZaOU2j0A+6omF/deBC41KyJor1u+W/oZ/wsjm0=;
+        b=P7r3DsHtqDNZMutTYe7SvZvSmQX73zY02uauc2fs2aCseg3N/2cKvh0aZ17IO/nD/prW1L
+        3Bi9b9WUGh7Z88ZQLn5e6uLZnvW+5SS+jwVucAkzjnD/B2g9YXwv87j1VKxGc/qqazxIjR
+        Fnyp0Molxiv/Yr+oQhi9YvzGWMG0c3M02XY+rMxGt5OEAABGD0SAqc45JdngNU5WouAhGP
+        dDAMqWjJGFIQf/HCzUqOdKqGwmL8yMmIFF6UK1akslgzaJNRi3JA/dWj84ao99FHUPDQZB
+        SexiBmi7bjxZAUzjJgVehLWduO0S7UHNCiygRNt7dLkrdEh8A3cn1NEWfh6w5w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020e; t=1598514863;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -48,20 +45,22 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VmsOkT6QWTQSrj1TTxvkK8Jl1Wo9FX5s0w6TlZUgGqI=;
-        b=qOVfVV3tnK4dhuj19gnsPXJbdsSp7bPrvVEOAHtwFNxtut0vVFVtuFdEDwQO2QQhFNFkCQ
-        QR3llC7uu3Dj1WCw==
-From:   "tip-bot2 for Boqun Feng" <tip-bot2@linutronix.de>
+        bh=ShlSWZaOU2j0A+6omF/deBC41KyJor1u+W/oZ/wsjm0=;
+        b=0KWJI9gAfnJ6yyALneCFBrpaTPnsGZdRxhZ5vhQBS4WWWJBcvPvgCr9Rw9bOuj5WXiwtv8
+        IB4OPvRx7PLjE8Ag==
+From:   "tip-bot2 for Marta Rybczynska" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] locking: More accurate annotations for read_lock()
-Cc:     Boqun Feng <boqun.feng@gmail.com>,
+Subject: [tip: locking/core] Documentation/locking/locktypes: Fix local_locks
+ documentation
+Cc:     Marta Rybczynska <rybczynska@gmail.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200807074238.1632519-2-boqun.feng@gmail.com>
-References: <20200807074238.1632519-2-boqun.feng@gmail.com>
+        Will Deacon <will@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAApg2=SKxQ3Sqwj6TZnV-0x0cKLXFKDaPvXT4N15MPDMKq724g@mail.gmail.com>
+References: <CAApg2=SKxQ3Sqwj6TZnV-0x0cKLXFKDaPvXT4N15MPDMKq724g@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <159851486232.20229.2972315816824977686.tip-bot2@tip-bot2>
+Message-ID: <159851486278.20229.8569920948831137698.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -73,132 +72,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     e918188611f073063415f40fae568fa4d86d9044
-Gitweb:        https://git.kernel.org/tip/e918188611f073063415f40fae568fa4d86d9044
-Author:        Boqun Feng <boqun.feng@gmail.com>
-AuthorDate:    Fri, 07 Aug 2020 15:42:20 +08:00
+Commit-ID:     92b4e9f11a636d1723cc0866bf8b9111b1e24339
+Gitweb:        https://git.kernel.org/tip/92b4e9f11a636d1723cc0866bf8b9111b1e24339
+Author:        Marta Rybczynska <rybczynska@gmail.com>
+AuthorDate:    Sun, 26 Jul 2020 20:54:40 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Wed, 26 Aug 2020 12:42:02 +02:00
 
-locking: More accurate annotations for read_lock()
+Documentation/locking/locktypes: Fix local_locks documentation
 
-On the archs using QUEUED_RWLOCKS, read_lock() is not always a recursive
-read lock, actually it's only recursive if in_interrupt() is true. So
-change the annotation accordingly to catch more deadlocks.
+Fix issues with local_locks documentation:
 
-Note we used to treat read_lock() as pure recursive read locks in
-lib/locking-seftest.c, and this is useful, especially for the lockdep
-development selftest, so we keep this via a variable to force switching
-lock annotation for read_lock().
+ - fix function names, local_lock.h has local_unlock_irqrestore(), not
+   local_lock_irqrestore()
 
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+ - fix mapping table, local_unlock_irqrestore() maps to
+   local_irq_restore(), not _save()
+
+Signed-off-by: Marta Rybczynska <rybczynska@gmail.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200807074238.1632519-2-boqun.feng@gmail.com
+Acked-by: Will Deacon <will@kernel.org>
+Link: https://lkml.kernel.org/r/CAApg2=SKxQ3Sqwj6TZnV-0x0cKLXFKDaPvXT4N15MPDMKq724g@mail.gmail.com
 ---
- include/linux/lockdep.h  | 23 ++++++++++++++++++++++-
- kernel/locking/lockdep.c | 14 ++++++++++++++
- lib/locking-selftest.c   | 11 +++++++++++
- 3 files changed, 47 insertions(+), 1 deletion(-)
+ Documentation/locking/locktypes.rst | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 6a584b3..7cae5ea 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -469,6 +469,20 @@ static inline void print_irqtrace_events(struct task_struct *curr)
- }
- #endif
+diff --git a/Documentation/locking/locktypes.rst b/Documentation/locking/locktypes.rst
+index 4cefed8..ddada4a 100644
+--- a/Documentation/locking/locktypes.rst
++++ b/Documentation/locking/locktypes.rst
+@@ -164,14 +164,14 @@ by disabling preemption or interrupts.
+ On non-PREEMPT_RT kernels local_lock operations map to the preemption and
+ interrupt disabling and enabling primitives:
  
-+/* Variable used to make lockdep treat read_lock() as recursive in selftests */
-+#ifdef CONFIG_DEBUG_LOCKING_API_SELFTESTS
-+extern unsigned int force_read_lock_recursive;
-+#else /* CONFIG_DEBUG_LOCKING_API_SELFTESTS */
-+#define force_read_lock_recursive 0
-+#endif /* CONFIG_DEBUG_LOCKING_API_SELFTESTS */
-+
-+#ifdef CONFIG_LOCKDEP
-+extern bool read_lock_is_recursive(void);
-+#else /* CONFIG_LOCKDEP */
-+/* If !LOCKDEP, the value is meaningless */
-+#define read_lock_is_recursive() 0
-+#endif
-+
- /*
-  * For trivial one-depth nesting of a lock-class, the following
-  * global define can be used. (Subsystems with multiple levels
-@@ -490,7 +504,14 @@ static inline void print_irqtrace_events(struct task_struct *curr)
- #define spin_release(l, i)			lock_release(l, i)
+- =========================== ======================
+- local_lock(&llock)          preempt_disable()
+- local_unlock(&llock)        preempt_enable()
+- local_lock_irq(&llock)      local_irq_disable()
+- local_unlock_irq(&llock)    local_irq_enable()
+- local_lock_save(&llock)     local_irq_save()
+- local_lock_restore(&llock)  local_irq_save()
+- =========================== ======================
++ ===============================  ======================
++ local_lock(&llock)               preempt_disable()
++ local_unlock(&llock)             preempt_enable()
++ local_lock_irq(&llock)           local_irq_disable()
++ local_unlock_irq(&llock)         local_irq_enable()
++ local_lock_irqsave(&llock)       local_irq_save()
++ local_unlock_irqrestore(&llock)  local_irq_restore()
++ ===============================  ======================
  
- #define rwlock_acquire(l, s, t, i)		lock_acquire_exclusive(l, s, t, NULL, i)
--#define rwlock_acquire_read(l, s, t, i)		lock_acquire_shared_recursive(l, s, t, NULL, i)
-+#define rwlock_acquire_read(l, s, t, i)					\
-+do {									\
-+	if (read_lock_is_recursive())					\
-+		lock_acquire_shared_recursive(l, s, t, NULL, i);	\
-+	else								\
-+		lock_acquire_shared(l, s, t, NULL, i);			\
-+} while (0)
-+
- #define rwlock_release(l, i)			lock_release(l, i)
+ The named scope of local_lock has two advantages over the regular
+ primitives:
+@@ -353,14 +353,14 @@ protection scope. So the following substitution is wrong::
+   {
+     local_irq_save(flags);    -> local_lock_irqsave(&local_lock_1, flags);
+     func3();
+-    local_irq_restore(flags); -> local_lock_irqrestore(&local_lock_1, flags);
++    local_irq_restore(flags); -> local_unlock_irqrestore(&local_lock_1, flags);
+   }
  
- #define seqcount_acquire(l, s, t, i)		lock_acquire_exclusive(l, s, t, NULL, i)
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 54b74fa..77cd9e6 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -4968,6 +4968,20 @@ static bool lockdep_nmi(void)
- }
+   func2()
+   {
+     local_irq_save(flags);    -> local_lock_irqsave(&local_lock_2, flags);
+     func3();
+-    local_irq_restore(flags); -> local_lock_irqrestore(&local_lock_2, flags);
++    local_irq_restore(flags); -> local_unlock_irqrestore(&local_lock_2, flags);
+   }
  
- /*
-+ * read_lock() is recursive if:
-+ * 1. We force lockdep think this way in selftests or
-+ * 2. The implementation is not queued read/write lock or
-+ * 3. The locker is at an in_interrupt() context.
-+ */
-+bool read_lock_is_recursive(void)
-+{
-+	return force_read_lock_recursive ||
-+	       !IS_ENABLED(CONFIG_QUEUED_RWLOCKS) ||
-+	       in_interrupt();
-+}
-+EXPORT_SYMBOL_GPL(read_lock_is_recursive);
-+
-+/*
-  * We are not always called with irqs disabled - do that here,
-  * and also avoid lockdep recursion:
-  */
-diff --git a/lib/locking-selftest.c b/lib/locking-selftest.c
-index 14f44f5..caadc4d 100644
---- a/lib/locking-selftest.c
-+++ b/lib/locking-selftest.c
-@@ -28,6 +28,7 @@
-  * Change this to 1 if you want to see the failure printouts:
-  */
- static unsigned int debug_locks_verbose;
-+unsigned int force_read_lock_recursive;
+   func3()
+@@ -379,14 +379,14 @@ PREEMPT_RT-specific semantics of spinlock_t. The correct substitution is::
+   {
+     local_irq_save(flags);    -> local_lock_irqsave(&local_lock, flags);
+     func3();
+-    local_irq_restore(flags); -> local_lock_irqrestore(&local_lock, flags);
++    local_irq_restore(flags); -> local_unlock_irqrestore(&local_lock, flags);
+   }
  
- static DEFINE_WD_CLASS(ww_lockdep);
+   func2()
+   {
+     local_irq_save(flags);    -> local_lock_irqsave(&local_lock, flags);
+     func3();
+-    local_irq_restore(flags); -> local_lock_irqrestore(&local_lock, flags);
++    local_irq_restore(flags); -> local_unlock_irqrestore(&local_lock, flags);
+   }
  
-@@ -1979,6 +1980,11 @@ void locking_selftest(void)
- 	}
- 
- 	/*
-+	 * treats read_lock() as recursive read locks for testing purpose
-+	 */
-+	force_read_lock_recursive = 1;
-+
-+	/*
- 	 * Run the testsuite:
- 	 */
- 	printk("------------------------\n");
-@@ -2073,6 +2079,11 @@ void locking_selftest(void)
- 
- 	ww_tests();
- 
-+	force_read_lock_recursive = 0;
-+	/*
-+	 * queued_read_lock() specific test cases can be put here
-+	 */
-+
- 	if (unexpected_testcase_failures) {
- 		printk("-----------------------------------------------------------------\n");
- 		debug_locks = 0;
+   func3()
