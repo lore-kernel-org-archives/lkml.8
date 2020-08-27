@@ -2,161 +2,117 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6A4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B1CC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E39152080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 865492080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:21:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598541691;
+	bh=5EXplaVXNI+IHFzq1tVAP2yAGUXR9mfdt5BaX3Eq9FI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JOhpn82Lz9hJTyY4LPNqyjc8PEXpnnuM9fEs/Axa8Tfx+L72Drl2jJkGR5TPK+/ru
+	 j0q5Xl+uKSyIeJKVCkGDkMK8HjGXLL+av6VCg2sPC/Aqx2r5qQRbuKK0Cq7gEK+f1B
+	 RFg6Oddp/1LHJqy+dA7wtlwcpmJ0RMJwrq1fIA2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgH0PVQ (ORCPT
+        id S1728356AbgH0PVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:21:16 -0400
-Received: from mga05.intel.com ([192.55.52.43]:16015 "EHLO mga05.intel.com"
+        Thu, 27 Aug 2020 11:21:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728234AbgH0PUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:20:55 -0400
-IronPort-SDR: 55Yqlb798kOgvMHQZhnXcBcTdeo+Xo1dt6DAcqiTTA9gJTKHgeL2bFtI+NYg5rfBB8jtOfPZiU
- TBxlyZhVzsTw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="241320086"
-X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
-   d="scan'208";a="241320086"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 08:20:53 -0700
-IronPort-SDR: 2ftvRexz4LzBoob2AWoL+hj30qCYj3C4kUREAoXxllKNIiFmgRvAhAGhznSW/hfX99yOfY3vov
- 1w/1LiuwvBTg==
-X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
-   d="scan'208";a="337196893"
-Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 08:20:52 -0700
-Date:   Thu, 27 Aug 2020 08:20:51 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Nathaniel McCallum <npmccallum@redhat.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        X86 ML <x86@kernel.org>, linux-sgx@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asapek@google.com, Borislav Petkov <bp@alien8.de>,
-        "Xing, Cedric" <cedric.xing@intel.com>, chenalexchen@google.com,
-        Conrad Parker <conradparker@google.com>, cyhanish@google.com,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Keith Moyer <kmoy@google.com>,
-        Christian Ludloff <ludloff@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Neil Horman <nhorman@redhat.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
-Subject: Re: [PATCH v36 22/24] selftests/x86: Add a selftest for SGX
-Message-ID: <20200827152051.GB22351@sjchrist-ice>
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-23-jarkko.sakkinen@linux.intel.com>
- <CAOASepO-DuQW88hxtAJv5Ki4GNYnkGNz5qK_dTEK_y8roMdPkg@mail.gmail.com>
+        id S1728681AbgH0LdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 07:33:00 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AACF322B40;
+        Thu, 27 Aug 2020 11:32:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598527973;
+        bh=5EXplaVXNI+IHFzq1tVAP2yAGUXR9mfdt5BaX3Eq9FI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VnqH2UurJYyKagUdSIUZIvaKa853kKWzU5p1R3C1/o7PeWY8DoJNwn6QOtYWMSaQM
+         erpjZu5+pVs3JEgFBnQPJP8j1BXy33UA7ep3ic6p9Mg1ZzE04CcFHZzZjX1jNMM5Jh
+         gQPeRG8AxN0/5DHRwXhMZOWi9nwmQalyZlPq2Ano=
+Date:   Thu, 27 Aug 2020 12:32:16 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        kuldip dwivedi <kuldip.dwivedi@puresoftware.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        tanveer <tanveer.alam@puresoftware.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
+Message-ID: <20200827113216.GA4674@sirena.org.uk>
+References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
+ <20200822183342.6sdhp6yq6i7yvdia@skbuf>
+ <CAHp75VeNXy1jWNWMuZc0bfXruKc3=0H4ezwpE8jbj6GLYk5QBA@mail.gmail.com>
+ <20200826204108.reuy7ieqabutwuwo@skbuf>
+ <20200826204547.GU4965@sirena.org.uk>
+ <20200826210657.z526xjhhkq6vkxgr@skbuf>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOASepO-DuQW88hxtAJv5Ki4GNYnkGNz5qK_dTEK_y8roMdPkg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200826210657.z526xjhhkq6vkxgr@skbuf>
+X-Cookie: Causes moderate eye irritation.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 12:47:04AM -0400, Nathaniel McCallum wrote:
-> > +int main(int argc, char *argv[], char *envp[])
-> > +{
-> > +       struct sgx_enclave_exception exception;
-> > +       struct vdso_symtab symtab;
-> > +       Elf64_Sym *eenter_sym;
-> > +       uint64_t result = 0;
-> > +       struct encl encl;
-> > +       unsigned int i;
-> > +       void *addr;
-> > +
-> > +       if (!encl_load("test_encl.elf", &encl))
-> > +               goto err;
-> > +
-> > +       if (!encl_measure(&encl))
-> > +               goto err;
-> > +
-> > +       if (!encl_build(&encl))
-> > +               goto err;
-> > +
-> > +       /*
-> > +        * An enclave consumer only must do this.
-> > +        */
-> > +       for (i = 0; i < encl.nr_segments; i++) {
-> > +               struct encl_segment *seg = &encl.segment_tbl[i];
-> > +
-> > +               addr = mmap((void *)encl.encl_base + seg->offset, seg->size,
-> > +                           seg->prot, MAP_SHARED | MAP_FIXED, encl.fd, 0);
-> 
-> My patch version is a bit behind (v32), but I suspect this still
-> applies. I discovered the following by accident.
-> 
-> In the Enarx code base, this invocation succeeds:
-> mmap(0x200000000000, 0x1000, PROT_READ | PROT_WRITE, MAP_SHARED |
-> MAP_FIXED, sgxfd, 0)
-> 
-> However, this one fails with -EINVAL:
-> mmap(0x200000000000, 0x1000, PROT_READ | PROT_WRITE,
-> MAP_SHARED_VALIDATE | MAP_FIXED, sgxfd, 0)
-> 
-> From man mmap:
-> 
->        MAP_SHARED_VALIDATE (since Linux 4.15)
->               This flag provides the same behavior as MAP_SHARED
-> except that MAP_SHARED mappings ignore unknown
->               flags in flags.  By contrast, when creating a mapping
-> using MAP_SHARED_VALIDATE, the kernel veri‐
->               fies  all  passed  flags  are  known  and fails the
-> mapping with the error EOPNOTSUPP for unknown
->               flags.  This mapping type is also required to be able to
-> use some mapping flags (e.g., MAP_SYNC).
-> 
-> I can try again on a newer patch set tomorrow if need be. But the
-> documentation of mmap() doesn't match the behavior I'm seeing. A brief
-> look through the patch set didn't turn up anything obvious that could
-> be causing this.
 
-This is a bug in sgx_get_unmapped_area().  EPC must be mapped SHARED, and
-so MAP_PRIVATE is disallowed.  The current check is:
+--gBBFr7Ir9EOA20Yy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  if (flags & MAP_PRIVATE)
-          return -EINVAL;
+On Thu, Aug 27, 2020 at 12:06:57AM +0300, Vladimir Oltean wrote:
+> On Wed, Aug 26, 2020 at 09:45:47PM +0100, Mark Brown wrote:
+> > On Wed, Aug 26, 2020 at 11:41:08PM +0300, Vladimir Oltean wrote:
 
-and the base "flags" are:
+> > > Something doesn't look right about PRP0001, what's the catch?
 
-  #define MAP_SHARED      0x01            /* Share changes */
-  #define MAP_PRIVATE     0x02            /* Changes are private */
-  #define MAP_SHARED_VALIDATE 0x03        /* share + validate extension flags */
+> > Microsoft decided not to implement support for it in Windows, it's
+> > essentially there for embedded style x86 platforms running Linux so they
+> > don't need to reimplement so many wheels and can just reuse existing DT
+> > bindings but it causes problems if you want to run Windows (and possibly
+> > some of the enterprise Linux distros, I can't remember if any of them
+> > had concerns about it) on the platform.
 
-which causes the SGX check to interpret MAP_SHARED_VALIDATE as MAP_PRIVATE.
-The types are just that, types, not flag modifiers.  So the SGX code needs
-to be:
+> So if a silicon vendor doesn't care about Windows, what incentive does
+> it have to even register an official ACPI/PNP ID for its devices?
 
-  if ((flags & MAP_TYPE) == MAP_PRIVATE)
-          return -EINVAL;
+Not that there's any registration process or anything, there's some
+namespacing but that's it, but the main thing would just be keeping the
+ACPI bindings and DT bindings separate.  ACPI has some strong opinions
+on how systems are built and described so while you can use the PRP0001
+stuff to parse DT bindings on an ACPI system it doesn't alway fit well,
+and there are some things where you just plain shouldn't use PRP0001
+since the ACPI and DT models for that sort of device diverge so strongly.
 
-or
+--gBBFr7Ir9EOA20Yy
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  unsigned long map_type = (flags & MAP_TYPE);
+-----BEGIN PGP SIGNATURE-----
 
-  if (map_type != MAP_SHARED && map_type != MAP_SHARED_VALIDATE)
-          return -EINVAL;
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9Hmb8ACgkQJNaLcl1U
+h9B/KAf/TZJSBmxaYq4h8SUowHGREwHtVaLdaCnflawd6gDO2QF8RPV57eClAnLS
+G7UDFlscVt90VKQ+6DDiYMyEROOQEyOPSXF9do7/uAlnYpwiiW34cbCHCJ7aZZh9
+LTBOxhKioz1sxuFrwUIPSWS2HFdFayu8xSl6op0MWjABI+R6pwILHPsx+ks5jkSN
+jCDn5IZTxFqgP9pB/xtUl2/njhQ8wwVTYg3Outr5+gl2gMgPC+mAhwsrYv53mzUu
+XtPDZ9AvJc/hXRoN1+2LsE+w8dhmWkofhLavT55sS5ncKlqf2DzOXmRV0UUqR+Io
+Bxgrb3GnGd503w/KsxUmXzusS3x+tg==
+=b08t
+-----END PGP SIGNATURE-----
 
-
-Side topic, there is at least one existing bug of this nature, in mm/nommu.c.
-I'll send a patch for that and look for any other instances of the bad
-pattern.
+--gBBFr7Ir9EOA20Yy--
