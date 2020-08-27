@@ -2,68 +2,111 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1ACC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC2E520825
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18FC420738
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:17:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SFiCcwuK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgH0KQe (ORCPT
+        id S1726157AbgH0KRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:16:34 -0400
-Received: from mail.monom.org ([188.138.9.77]:50060 "EHLO mail.monom.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728508AbgH0KQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:16:25 -0400
-Received: from mail.monom.org (localhost [127.0.0.1])
-        by filter.mynetwork.local (Postfix) with ESMTP id E73E150035A;
-        Thu, 27 Aug 2020 12:16:22 +0200 (CEST)
-Received: from localhost (unknown [94.31.100.251])
-        by mail.monom.org (Postfix) with ESMTPSA id A25AE500103;
-        Thu, 27 Aug 2020 12:16:22 +0200 (CEST)
-Date:   Thu, 27 Aug 2020 12:16:22 +0200
-From:   Daniel Wagner <wagi@monom.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [ANNOUNCE] v5.9-rc2-rt1
-Message-ID: <20200827101622.xx4jzecouxrlwbii@beryllium.lan>
-References: <20200824154605.v66t2rsxobt3r5jg@linutronix.de>
- <20200826080802.5lnnf5wh3kcwfykz@beryllium.lan>
- <20200826081211.bvk5kfuzh4vlbh5k@linutronix.de>
- <20200826090518.m6vblobggnfdjau5@beryllium.lan>
- <20200826104326.xfexkwovwbi2q4el@beryllium.lan>
- <20200827091910.ibuyr53qprb7qmju@beryllium.lan>
- <20200827092743.kjl6hkaephx3a64a@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827092743.kjl6hkaephx3a64a@linutronix.de>
+        Thu, 27 Aug 2020 06:17:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728474AbgH0KOs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 06:14:48 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 099B1C06121B;
+        Thu, 27 Aug 2020 03:14:47 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p37so3029268pgl.3;
+        Thu, 27 Aug 2020 03:14:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=7JxoSvMc+RW02sQ/p5xnykFpDMa/i2s+16/ntahA338=;
+        b=SFiCcwuKvcDTOAt03SdOLHB0exIP1SVwyCci88D9C+oiMdIBrzmV9EpIFGz1Ueuwrj
+         0L6ZeBxdCibLr01PbCfTYwKabUW3djlg7TIRtMybsQ+WYOYv5rzh6KLe5Hfn1MO0IqRT
+         tXcBC2B/lESWf8wQ2HX2d4j1vHTH/sIqvLsuDlYKBH+6zI3+8UKtqSI5SDU+vCNRQJL1
+         59Em2PNR6EKKnMcMTNpoT+tv19KElefTTl5bK1+J0aqXsTpwKsy+XxAZVVtKE2DCqOOz
+         YhtyA0jmgiY+IN6CkeeuVU3vpJMdQxpXaabe2JLJLjBe+O6yVr0ZQiKMTGcH+LT+4tWv
+         6X4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=7JxoSvMc+RW02sQ/p5xnykFpDMa/i2s+16/ntahA338=;
+        b=rc+AP/OCmu5VQJ1hg/oBrOE7ZyRDJM9e0SBWNKDnDudG/f4z6rYae2/p84gbR76BOw
+         voNzTVr6Lt5Z85SbRWm7H4tR2j3T/hfypVHKU7mJhhCwU6MxYq/YuDOUFeffiHDPSQa1
+         9kdcsjJqAwAftzxtFa7vGd728RU65mKZ5P+9Jp3CpOi2pNgBnotdttAzjHnl3Z0406lE
+         hTolaSj6gk1kk7ebM9U45el9c5eui4ZbObqMrZ1oL8OzMdFJUC0mTZdj0Fjotj1Tmfqd
+         P0XDJ8TygBYgwGzLbCvrjeHdpJvqniouw2MRBJEOlbH6Ii/cs3Y4kWUNguA5Uzq0Ij01
+         eXZw==
+X-Gm-Message-State: AOAM532iTZZVIp/klD/Vx100paGVVEcCJ8fTniGU0GwjeVP3+lpEGwAM
+        I6CiqbDjrojuckxzmwWngo8=
+X-Google-Smtp-Source: ABdhPJzsx/8/MYuMPl1CYDlgMi+5oM5/GqCorfJWRGHh2xYdASmM1T/ESCC4ugRowlTfLWEmguvLWA==
+X-Received: by 2002:aa7:9f9b:: with SMTP id z27mr3431514pfr.236.1598523286632;
+        Thu, 27 Aug 2020 03:14:46 -0700 (PDT)
+Received: from VM-0-6-centos.localdomain ([119.28.90.140])
+        by smtp.gmail.com with ESMTPSA id t10sm2333434pfq.52.2020.08.27.03.14.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Aug 2020 03:14:46 -0700 (PDT)
+From:   Chunguang Xu <brookxu.cn@gmail.com>
+X-Google-Original-From: Chunguang Xu <brookxu@tencent.com>
+To:     arnd@arndb.de
+Cc:     rppt@kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 11/23] afs: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
+Date:   Thu, 27 Aug 2020 18:14:16 +0800
+Message-Id: <8e6ebee6b664259579296b66a9668e4b301c7030.1598518912.git.brookxu@tencent.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <cover.1598518912.git.brookxu@tencent.com>
+References: <cover.1598518912.git.brookxu@tencent.com>
+In-Reply-To: <cover.1598518912.git.brookxu@tencent.com>
+References: <cover.1598518912.git.brookxu@tencent.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 11:27:43AM +0200, Sebastian Andrzej Siewior wrote:
-> So v5.9-rc2-rt1 with PREEMPT_RT=y enabled leads to the problem and
-> v5.9-rc2-rt1 with PREEMPT_PREEMPT=y boots fine?
+Since ASSERT_FAIL() and ASSERT_WARN() have been provided, ASSERT()
+may be realized through them, thus reducing code redundancy and
+facilitating problem analysis.
 
-Yes. But it must be something with uboot related since it's not the
-kernel printing the error message. It's likely just an infrastructure
-problem on my side. Properly related to the kernel size:
+Signed-off-by: Chunguang Xu <brookxu@tencent.com>
+---
+ fs/afs/internal.h | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
--rw-r--r-- 1 wagi users 31910400 Aug 26 12:54 rpi3-image-ll-v5.9-rc2-rt1-rebase-1-gdf6b97f22351
--rw-r--r-- 1 wagi users 31910400 Aug 26 12:49 rpi3-image-nohz-v5.9-rc2-rt1-rebase-1-gdf6b97f22351
--rw-r--r-- 1 wagi users 32891392 Aug 26 12:47 rpi3-image-none-v5.9-rc2-rt1-rebase-1-gdf6b97f22351
--rw-r--r-- 1 wagi users 38224384 Aug 26 12:45 rpi3-image-rt-v5.9-rc2-rt1-rebase-1-gdf6b97f22351
--rw-r--r-- 1 wagi users 31910400 Aug 26 12:54 rpi3-image-up-v5.9-rc2-rt1-rebase-1-gdf6b97f22351
--rw-r--r-- 1 wagi users 32891392 Aug 26 12:52 rpi3-image-vp-v5.9-rc2-rt1-rebase-1-gdf6b97f22351
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index 792ac71..72594e5 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -1580,14 +1580,7 @@ static inline int afs_bad(struct afs_vnode *vnode, enum afs_file_error where)
+  */
+ #if 1 // defined(__KDEBUGALL)
+ 
+-#define ASSERT(X)						\
+-do {								\
+-	if (unlikely(!(X))) {					\
+-		printk(KERN_ERR "\n");				\
+-		printk(KERN_ERR "AFS: Assertion failed\n");	\
+-		BUG();						\
+-	}							\
+-} while(0)
++#define ASSERT(X) ASSERT_FAIL(x)
+ 
+ #define ASSERTCMP(X, OP, Y)						\
+ do {									\
+-- 
+1.8.3.1
 
-The -rt kernel is roughly 6MB larger. Just need to check the memory
-ranges u-boot is using.
