@@ -2,67 +2,102 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA32C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 775D02080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BE292080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:12:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="laGqsRGl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgH0QMq (ORCPT
+        id S1727024AbgH0QMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:12:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgH0QMq (ORCPT
+        Thu, 27 Aug 2020 12:12:52 -0400
+Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:47510 "EHLO
+        relaydlg-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726123AbgH0QMu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:12:46 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2449C061264;
-        Thu, 27 Aug 2020 09:12:45 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E1335127EA615;
-        Thu, 27 Aug 2020 08:55:58 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 09:12:44 -0700 (PDT)
-Message-Id: <20200827.091244.2116589061763488368.davem@davemloft.net>
-To:     linmiaohe@huawei.com
-Cc:     kuba@kernel.org, pshelar@ovn.org, fw@strlen.de,
-        martin.varghese@nokia.com, edumazet@google.com,
-        dcaratti@redhat.com, steffen.klassert@secunet.com,
-        pabeni@redhat.com, shmulik@metanetworks.com,
-        kyk.segfault@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: exit immediately when encounter ipv6 fragment in
- skb_checksum_setup_ipv6()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200827112159.43242-1-linmiaohe@huawei.com>
-References: <20200827112159.43242-1-linmiaohe@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 27 Aug 2020 08:55:59 -0700 (PDT)
+        Thu, 27 Aug 2020 12:12:50 -0400
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id 29D6B821F8;
+        Thu, 27 Aug 2020 19:12:46 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paragon-software.com; s=mail; t=1598544766;
+        bh=b0m2YScacBRU4oQW0bpcg+OTA+e/Nm/yF/uS+thlVMI=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=laGqsRGlmisNFsw4WpemS9WZFNsY6NuUVUMv2tuJ8GAGj9B26Mu+2IxQBlIuqZCYu
+         w6Pz83IGUlZeTkTsZxRleBxgi1BSx8XDS1fpvsWYjNZ2GR0cdqDed8F8VCBh8ga3cJ
+         rggDc0cQEz897TpsZZP8EmyvW3alaR+8IwJKTa4I=
+Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Thu, 27 Aug 2020 19:12:45 +0300
+Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
+ by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
+ id 15.01.1847.003; Thu, 27 Aug 2020 19:12:45 +0300
+From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To:     Joe Perches <joe@perches.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+CC:     =?iso-8859-1?Q?Pali_Roh=E1r?= <pali@kernel.org>
+Subject: RE: [PATCH v2 00/10] fs: NTFS read-write driver GPL implementation by
+ Paragon Software.
+Thread-Topic: [PATCH v2 00/10] fs: NTFS read-write driver GPL implementation
+ by Paragon Software.
+Thread-Index: AdZ30n3KUTPgxpZ7Q/+ZtR0YneODPwABJfsAAS00XHA=
+Date:   Thu, 27 Aug 2020 16:12:45 +0000
+Message-ID: <8dc38559e18f43238e5b4cba533963cd@paragon-software.com>
+References: <904d985365a34f0787a4511435417ab3@paragon-software.com>
+ <ed518871bf6182bb7d9a2b95074985cf8af1d5c4.camel@perches.com>
+In-Reply-To: <ed518871bf6182bb7d9a2b95074985cf8af1d5c4.camel@perches.com>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.8.36]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
-Date: Thu, 27 Aug 2020 07:21:59 -0400
+From: Joe Perches <joe@perches.com>
+Sent: Friday, August 21, 2020 10:21 PM
+>=20
+> On Fri, 2020-08-21 at 16:24 +0000, Konstantin Komarov wrote:
+> > This patch adds NTFS Read-Write driver to fs/ntfs3.
+>=20
+> Thanks.
+> Proper ntfs read/write support will be great addition.
+>=20
+> Trivia:
+>=20
+> If this patchset is submitted again with a new version,
+> please use something like "git format-patch --cover-letter"
+> and "git send-email" so all parts of the patches and replies
+> have the a single message thread to follow.
+>=20
+> That will add an "in-reply-to" header of the 0/m patch
+> message-id to all n/m parts.
+>=20
 
-> skb_checksum_setup_ipv6() always return -EPROTO if ipv6 packet is fragment.
-> So we should not continue to parse other header type in this case. Also
-> remove unnecessary local variable 'fragment'.
-> 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Hi Joe! Thanks a lot. Will use git send-email for V3. format-patch and --co=
+ver-letter have been already used for v2.
 
-Again, this optimization is arguable at best.  The code functions fine and
-correctly as-is.
+> One style oddity I noticed is the use of goto labels in
+> favor of if block indentation.  It's not terrible style,
+> just unusual for kernel code.
+>=20
 
-I'm not applying this, sorry.
+AFAIK goto's are being quite widely used in kernel code as well. However V3=
+ will introduce several goto's replacements with if blocks.
+
+Thanks!
