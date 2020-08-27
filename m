@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7BBC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 060D2C433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A0420872
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D797820848
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598571109;
-	bh=BjPccaFPfwZJ/MfjC8dMfdnImTr+XTKV9scKCJijFtI=;
+	s=default; t=1598571180;
+	bh=CxkE/q++Eo2vJZXF0frHIrwwj8Su9GHTDl44/EylMxI=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UMLJgsl+UcmcQbcAOrMWPF5Unc//KTJzcA35aQJLdakgwKPJtjj1cl5VVzKxGjpJt
-	 wnefji1DJaciL5FjvCz2qYRumiCCLyoNlqQppspn0rZdU98tSDSqV7xXQr/iSLX/T+
-	 2a/T4WYMqJbgZnn7tR2dm1RAgHeiNUveUzKJsvYw=
+	b=K2Mq/dE0b2SLY/KG+qgXZtq6CEBD+EFQW1qvU6nNuRoL2/8LxZGd4ScOUtOrveXqZ
+	 NG9BnY1Srz6nybrp0rf4Ah3z2exq3UwrkTaCNX/kbEmEw1k4kvXVzro2ad78ZuNhJf
+	 ns3wXyp9fjYuMw4MN/P0p2hA/O8CO2vLDGuE8qPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbgH0Xbs (ORCPT
+        id S1728039AbgH0Xc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 19:31:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38488 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 19:32:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbgH0Xbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 19:31:47 -0400
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+        id S1726147AbgH0Xc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 19:32:59 -0400
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89967208C9
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 23:31:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B49320872
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 23:32:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598571106;
-        bh=BjPccaFPfwZJ/MfjC8dMfdnImTr+XTKV9scKCJijFtI=;
+        s=default; t=1598571178;
+        bh=CxkE/q++Eo2vJZXF0frHIrwwj8Su9GHTDl44/EylMxI=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YOG/7ZrlaZzzJgTtYvJi+bJ8f7TpYeE6YlVE2ZVzHig0mrFIstP1vejUeEOctYoVI
-         K7ms6V5EOE9EftV0AeMleQE0JXeGx4lOD9feJSEixNhhy0hdNNqX8UOrzJQLbJDYtr
-         Zeu5bRnXS0cKiDIKCgVqkjcz1mz2k2UQNQIMOCz8=
-Received: by mail-ej1-f54.google.com with SMTP id m22so9908405eje.10
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 16:31:46 -0700 (PDT)
-X-Gm-Message-State: AOAM5310LlizvIWirXdwugq9Al1nI56BrZNR3FHYploFHPYTGgPb6j5x
-        1UNuvWWOLyrY/0BVKT/pbZK2knmHTfv4HSiRoA==
-X-Google-Smtp-Source: ABdhPJz7iGlzoSU0rP3TYayWIZDMjV8NBQSzqq+G0LfQWQ1CD7evxQy7VbZ+S3BaM8YPgtqNIvuZPCDMLtC9cTBqLPs=
-X-Received: by 2002:a17:906:15cc:: with SMTP id l12mr24291379ejd.7.1598571105087;
- Thu, 27 Aug 2020 16:31:45 -0700 (PDT)
+        b=0INqP1XWALFFZC20VHK8xYB2tSGPjASUk4GIkFKOcvuFubYdz5GfetLVTTTBWPFBU
+         PdqSaWjRJGPExZnMjjlZ3Q8OwLC8eMfWLP0qCGJOz8LSo4eWkthsMxP8ZGCF3ZoFsJ
+         dZ9gjHsPJ6BSUjnhwXkmUIajxFUVWdeop8pHEDPw=
+Received: by mail-ed1-f47.google.com with SMTP id l63so6416476edl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 16:32:58 -0700 (PDT)
+X-Gm-Message-State: AOAM531Sgj5pKNbSxCqmbvYWC0zSaysIJSHN+jbBMLT4mWa4gL38/oMj
+        W2JOHMuL2AQLerMgkWlkLOjMh8qpryoO0wsusg==
+X-Google-Smtp-Source: ABdhPJwTJAXoXtZdq1zZz3alAlq9lDJ0l2Ct9XsjXhjUW3fXtj711OBC1IZNyN5F5962joWUZrBnuIu2GzAzLaEVIWs=
+X-Received: by 2002:a05:6402:17d8:: with SMTP id s24mr21170877edy.61.1598571176689;
+ Thu, 27 Aug 2020 16:32:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200819081752.4805-1-linux@fw-web.de> <20200819081752.4805-2-linux@fw-web.de>
-In-Reply-To: <20200819081752.4805-2-linux@fw-web.de>
+References: <20200819081752.4805-1-linux@fw-web.de> <20200819081752.4805-3-linux@fw-web.de>
+In-Reply-To: <20200819081752.4805-3-linux@fw-web.de>
 From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Fri, 28 Aug 2020 07:31:33 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9+yamENvGDHTDHd8Jvy_2hbko2YaBEcdetsZHD5+FVrA@mail.gmail.com>
-Message-ID: <CAAOTY_9+yamENvGDHTDHd8Jvy_2hbko2YaBEcdetsZHD5+FVrA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/7] dt-bindings: mediatek: add mt7623 display-nodes
+Date:   Fri, 28 Aug 2020 07:32:44 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__SVKF=9CDeyHyKoAZ1fhRK+R0y0S5wMYz+ovqRN8Xtjw@mail.gmail.com>
+Message-ID: <CAAOTY__SVKF=9CDeyHyKoAZ1fhRK+R0y0S5wMYz+ovqRN8Xtjw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/7] drm/mediatek: add ddp routing for mt7623
 To:     Frank Wunderlich <linux@fw-web.de>
 Cc:     "moderated list:ARM/Mediatek SoC support" 
         <linux-mediatek@lists.infradead.org>,
@@ -65,7 +65,6 @@ Cc:     "moderated list:ARM/Mediatek SoC support"
         DRI Development <dri-devel@lists.freedesktop.org>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh@kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -81,7 +80,9 @@ Frank Wunderlich <linux@fw-web.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=8819=E6=
 >
 > From: Frank Wunderlich <frank-w@public-files.de>
 >
-> mt7623 uses mt2701/mt8173 for drm, but have own compatibles
+> on BPi-R2/mt7623 main-path have to be routed to DPI0 (hdmi) instead of DS=
+I0
+> using compatible "mt7623-mmsys" already defined in dts
 >
 
 For this patch, applied to mediatek-drm-next [1], thanks.
@@ -93,117 +94,63 @@ Regards,
 Chun-Kuang.
 
 > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> Acked-by: Rob Herring <robh@kernel.org>
 > Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 > ---
->  .../devicetree/bindings/display/mediatek/mediatek,disp.txt    | 2 +-
->  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt     | 2 +-
->  .../devicetree/bindings/display/mediatek/mediatek,dsi.txt     | 4 ++--
->  .../devicetree/bindings/display/mediatek/mediatek,hdmi.txt    | 4 ++++
->  4 files changed, 8 insertions(+), 4 deletions(-)
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp=
-.txt
-> index b91e709db7a4..121220745d46 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.tx=
-t
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.tx=
-t
-> @@ -43,7 +43,7 @@ Required properties (all function blocks):
->         "mediatek,<chip>-dpi"                   - DPI controller, see med=
-iatek,dpi.txt
->         "mediatek,<chip>-disp-mutex"            - display mutex
->         "mediatek,<chip>-disp-od"               - overdrive
-> -  the supported chips are mt2701, mt2712 and mt8173.
-> +  the supported chips are mt2701, mt7623, mt2712 and mt8173.
->  - reg: Physical base address and length of the function block register s=
-pace
->  - interrupts: The interrupt signal from the function block (required, ex=
-cept for
->    merge and split function blocks).
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.t=
-xt
-> index 77def4456706..dc1ebd13cc88 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> @@ -7,7 +7,7 @@ output bus.
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/med=
+iatek/mtk_drm_drv.c
+> index 040a8f393fe2..2350e3200b59 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> @@ -74,6 +74,19 @@ static const enum mtk_ddp_comp_id mt2701_mtk_ddp_ext[]=
+ =3D {
+>         DDP_COMPONENT_DPI0,
+>  };
 >
->  Required properties:
->  - compatible: "mediatek,<chip>-dpi"
-> -  the supported chips are mt2701 , mt8173 and mt8183.
-> +  the supported chips are mt2701, mt7623, mt8173 and mt8183.
->  - reg: Physical base address and length of the controller's registers
->  - interrupts: The interrupt signal from the function block.
->  - clocks: device clocks
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.t=
-xt
-> index 8e4729de8c85..f06f24d405a5 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> @@ -7,7 +7,7 @@ channel output.
+> +static const enum mtk_ddp_comp_id mt7623_mtk_ddp_main[] =3D {
+> +       DDP_COMPONENT_OVL0,
+> +       DDP_COMPONENT_RDMA0,
+> +       DDP_COMPONENT_COLOR0,
+> +       DDP_COMPONENT_BLS,
+> +       DDP_COMPONENT_DPI0,
+> +};
+> +
+> +static const enum mtk_ddp_comp_id mt7623_mtk_ddp_ext[] =3D {
+> +       DDP_COMPONENT_RDMA1,
+> +       DDP_COMPONENT_DSI0,
+> +};
+> +
+>  static const enum mtk_ddp_comp_id mt2712_mtk_ddp_main[] =3D {
+>         DDP_COMPONENT_OVL0,
+>         DDP_COMPONENT_COLOR0,
+> @@ -127,6 +140,14 @@ static const struct mtk_mmsys_driver_data mt2701_mms=
+ys_driver_data =3D {
+>         .shadow_register =3D true,
+>  };
 >
->  Required properties:
->  - compatible: "mediatek,<chip>-dsi"
-> -  the supported chips are mt2701, mt8173 and mt8183.
-> +- the supported chips are mt2701, mt7623, mt8173 and mt8183.
->  - reg: Physical base address and length of the controller's registers
->  - interrupts: The interrupt signal from the function block.
->  - clocks: device clocks
-> @@ -26,7 +26,7 @@ The MIPI TX configuration module controls the MIPI D-PH=
-Y.
->
->  Required properties:
->  - compatible: "mediatek,<chip>-mipi-tx"
-> -  the supported chips are mt2701, mt8173 and mt8183.
-> +- the supported chips are mt2701, 7623, mt8173 and mt8183.
->  - reg: Physical base address and length of the controller's registers
->  - clocks: PLL reference clock
->  - clock-output-names: name of the output clock line to the DSI encoder
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-hdmi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi=
-.txt
-> index 7b124242b0c5..6b1c586403e4 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.tx=
-t
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.tx=
-t
-> @@ -6,6 +6,7 @@ its parallel input.
->
->  Required properties:
->  - compatible: Should be "mediatek,<chip>-hdmi".
-> +- the supported chips are mt2701, mt7623 and mt8173
->  - reg: Physical base address and length of the controller's registers
->  - interrupts: The interrupt signal from the function block.
->  - clocks: device clocks
-> @@ -32,6 +33,7 @@ The HDMI CEC controller handles hotplug detection and C=
-EC communication.
->
->  Required properties:
->  - compatible: Should be "mediatek,<chip>-cec"
-> +- the supported chips are mt7623 and mt8173
->  - reg: Physical base address and length of the controller's registers
->  - interrupts: The interrupt signal from the function block.
->  - clocks: device clock
-> @@ -44,6 +46,7 @@ The Mediatek's I2C controller is used to interface with=
- I2C devices.
->
->  Required properties:
->  - compatible: Should be "mediatek,<chip>-hdmi-ddc"
-> +- the supported chips are mt7623 and mt8173
->  - reg: Physical base address and length of the controller's registers
->  - clocks: device clock
->  - clock-names: Should be "ddc-i2c".
-> @@ -56,6 +59,7 @@ output and drives the HDMI pads.
->
->  Required properties:
->  - compatible: "mediatek,<chip>-hdmi-phy"
-> +- the supported chips are mt2701, mt7623 and mt8173
->  - reg: Physical base address and length of the module's registers
->  - clocks: PLL reference clock
->  - clock-names: must contain "pll_ref"
+> +static const struct mtk_mmsys_driver_data mt7623_mmsys_driver_data =3D {
+> +       .main_path =3D mt7623_mtk_ddp_main,
+> +       .main_len =3D ARRAY_SIZE(mt7623_mtk_ddp_main),
+> +       .ext_path =3D mt7623_mtk_ddp_ext,
+> +       .ext_len =3D ARRAY_SIZE(mt7623_mtk_ddp_ext),
+> +       .shadow_register =3D true,
+> +};
+> +
+>  static const struct mtk_mmsys_driver_data mt2712_mmsys_driver_data =3D {
+>         .main_path =3D mt2712_mtk_ddp_main,
+>         .main_len =3D ARRAY_SIZE(mt2712_mtk_ddp_main),
+> @@ -422,6 +443,8 @@ static const struct of_device_id mtk_ddp_comp_dt_ids[=
+] =3D {
+>  static const struct of_device_id mtk_drm_of_ids[] =3D {
+>         { .compatible =3D "mediatek,mt2701-mmsys",
+>           .data =3D &mt2701_mmsys_driver_data},
+> +       { .compatible =3D "mediatek,mt7623-mmsys",
+> +         .data =3D &mt7623_mmsys_driver_data},
+>         { .compatible =3D "mediatek,mt2712-mmsys",
+>           .data =3D &mt2712_mmsys_driver_data},
+>         { .compatible =3D "mediatek,mt8173-mmsys",
 > --
 > 2.25.1
 >
