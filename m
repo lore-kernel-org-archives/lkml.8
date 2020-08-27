@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B052C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8170EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE98722BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3E322BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598554781;
-	bh=+sCZf4QqZftn2qRoSs7JjNAyL5o05Qs6eKp7oldk8O8=;
+	s=default; t=1598554785;
+	bh=mhzjeNt2Pr/YS+s9dAme3pQs5JrjYzFjpcgQ00RtFAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sC7JlCORoWuQ6wbIxnS7d0Inl5Naitz6u8VZa36MSjPLyjzIhMa9LKDGgBhi0PGdI
-	 NRTo1Jy9f+gCUixXSd1ppPl0NyAR7MusSZf2t39naZDYM/lQCJpA6qvf4L2/8BXLON
-	 Vz/trptmsuDoFANF1NwSgskyYBC70CfdXAFZPugY=
+	b=E2RRuR38hM60gSJIeKCK8iMD3M3chMs/Kr2wpD38gtijkNRsQMz4007KuGR0kxgpf
+	 NVMjQG0/iXwL3cuxBIuEur0GrgVK7ShEebjzfg8tPc3MY7Clmv+PzDwk1I2HurUM39
+	 fEIhI3e9fdD+RzUUS8lhe/nxNFiP5GhJK6xt10aY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgH0S7k (ORCPT
+        id S1728210AbgH0S7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:59:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49950 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 14:59:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728140AbgH0S7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:59:36 -0400
+        id S1728184AbgH0S7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 14:59:42 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA3AD22CAF;
-        Thu, 27 Aug 2020 18:59:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65D8022BEB;
+        Thu, 27 Aug 2020 18:59:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598554775;
-        bh=+sCZf4QqZftn2qRoSs7JjNAyL5o05Qs6eKp7oldk8O8=;
+        s=default; t=1598554782;
+        bh=mhzjeNt2Pr/YS+s9dAme3pQs5JrjYzFjpcgQ00RtFAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qp/WwPiHeQAN4vaC3bm30YMRpTpoY8Vfm+505NKC12/OLIrHyJ5oEQuaeZy4la7+J
-         YMqom7EapQ9bZ2cS4ar8Xe6O3+XCOZiwmWoSQhJSkYh8zdGWS45rDnNWMF88ZEJmDD
-         uFNVkZqsOJAFNQc5iEW+eE3dgzBpm7W1j8lMWTWU=
+        b=D+xiDIZjnFhBHvG5TvPrMQV8EVlJ2n1bixQfrQX5amEM3jgHlmSe0FlQOZ/pX9HCM
+         sd+w23D+hDANe/3ZIqpcm6csk0Z50O9jj5wDAWc2UNOMss9MzIJh6d41wfvhqVvpym
+         ZqixYj8oXufIb8SIPneJQM+WH176VXiWEVBs670o=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -52,9 +52,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         clang-built-linux@googlegroups.com
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 16/27] Input: pixcir_i2c_ts - Simplify with dev_err_probe()
-Date:   Thu, 27 Aug 2020 20:58:18 +0200
-Message-Id: <20200827185829.30096-17-krzk@kernel.org>
+Subject: [PATCH v3 18/27] Input: resistive-adc-touch - Simplify with dev_err_probe()
+Date:   Thu, 27 Aug 2020 20:58:20 +0200
+Message-Id: <20200827185829.30096-19-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
 References: <20200827185829.30096-1-krzk@kernel.org>
@@ -70,67 +70,28 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/input/touchscreen/pixcir_i2c_ts.c | 38 +++++++----------------
- 1 file changed, 12 insertions(+), 26 deletions(-)
+ drivers/input/touchscreen/resistive-adc-touch.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
-index 9aa098577350..fb37567e2d7e 100644
---- a/drivers/input/touchscreen/pixcir_i2c_ts.c
-+++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
-@@ -515,41 +515,27 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 	input_set_drvdata(input, tsdata);
+diff --git a/drivers/input/touchscreen/resistive-adc-touch.c b/drivers/input/touchscreen/resistive-adc-touch.c
+index cfc8bb4553f7..46b5a6caef84 100644
+--- a/drivers/input/touchscreen/resistive-adc-touch.c
++++ b/drivers/input/touchscreen/resistive-adc-touch.c
+@@ -108,12 +108,8 @@ static int grts_probe(struct platform_device *pdev)
  
- 	tsdata->gpio_attb = devm_gpiod_get(dev, "attb", GPIOD_IN);
--	if (IS_ERR(tsdata->gpio_attb)) {
--		error = PTR_ERR(tsdata->gpio_attb);
+ 	/* get the channels from IIO device */
+ 	st->iio_chans = devm_iio_channel_get_all(dev);
+-	if (IS_ERR(st->iio_chans)) {
+-		error = PTR_ERR(st->iio_chans);
 -		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Failed to request ATTB gpio: %d\n",
--				error);
+-			dev_err(dev, "can't get iio channels.\n");
 -		return error;
 -	}
-+	if (IS_ERR(tsdata->gpio_attb))
-+		return dev_err_probe(dev, PTR_ERR(tsdata->gpio_attb),
-+				     "Failed to request ATTB gpio\n");
++	if (IS_ERR(st->iio_chans))
++		return dev_err_probe(dev, PTR_ERR(st->iio_chans), "can't get iio channels\n");
  
- 	tsdata->gpio_reset = devm_gpiod_get_optional(dev, "reset",
- 						     GPIOD_OUT_LOW);
--	if (IS_ERR(tsdata->gpio_reset)) {
--		error = PTR_ERR(tsdata->gpio_reset);
--		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Failed to request RESET gpio: %d\n",
--				error);
--		return error;
--	}
-+	if (IS_ERR(tsdata->gpio_reset))
-+		return dev_err_probe(dev, PTR_ERR(tsdata->gpio_reset),
-+				     "Failed to request RESET gpio\n");
- 
- 	tsdata->gpio_wake = devm_gpiod_get_optional(dev, "wake",
- 						    GPIOD_OUT_HIGH);
--	if (IS_ERR(tsdata->gpio_wake)) {
--		error = PTR_ERR(tsdata->gpio_wake);
--		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Failed to get wake gpio: %d\n", error);
--		return error;
--	}
-+	if (IS_ERR(tsdata->gpio_wake))
-+		return dev_err_probe(dev, PTR_ERR(tsdata->gpio_wake),
-+				     "Failed to get wake gpio\n");
- 
- 	tsdata->gpio_enable = devm_gpiod_get_optional(dev, "enable",
- 						      GPIOD_OUT_HIGH);
--	if (IS_ERR(tsdata->gpio_enable)) {
--		error = PTR_ERR(tsdata->gpio_enable);
--		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Failed to get enable gpio: %d\n", error);
--		return error;
--	}
-+	if (IS_ERR(tsdata->gpio_enable))
-+		return dev_err_probe(dev, PTR_ERR(tsdata->gpio_enable),
-+				     "Failed to get enable gpio\n");
- 
- 	if (tsdata->gpio_enable)
- 		msleep(100);
+ 	chan = &st->iio_chans[0];
+ 	st->pressure = false;
 -- 
 2.17.1
 
