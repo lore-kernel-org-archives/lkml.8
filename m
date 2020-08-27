@@ -2,107 +2,197 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E615BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF3DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFC092087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:41:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/LX6jW3"
+	by mail.kernel.org (Postfix) with ESMTP id 11FE722CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:44:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598546680;
+	bh=Q5aYYSu8IY0KtYyVdillqXz7kNeaqxHQnPYNT03oQfk=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=PwLsdeo5Vjg/AahuaKuoVDluspbhNUTqSk4ex/0n4cyw3xPjGaBiiglXbU884FZSC
+	 iA2gY3acWZK/wQjt9CGNTLlw5QbK8sJSZSGW6RhvIqdaFT0bjtUR3QJIsPwUX+uNnc
+	 KveWzZfRminvN6yrcJfffAvEBT2cvhCB6kJvFAis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgH0Qlg (ORCPT
+        id S1727061AbgH0Qoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50626 "EHLO
+        Thu, 27 Aug 2020 12:44:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbgH0Qle (ORCPT
+        with ESMTP id S1726157AbgH0Qoh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:41:34 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E761EC061264;
-        Thu, 27 Aug 2020 09:41:33 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id v15so3752598pgh.6;
-        Thu, 27 Aug 2020 09:41:33 -0700 (PDT)
+        Thu, 27 Aug 2020 12:44:37 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 690C4C061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:44:37 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id i10so6533713iow.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:44:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bliB1023sdj3aVwTJNlYRjd1ewQEAeyLSLCuQayJAjY=;
-        b=O/LX6jW3Q1owUemH+ORqZxREhcmC4Tf9sc59qQUxz1eV6D1PEexrtS7HKA9gDAAwN/
-         6ZjPIAANWXCGdm/GhZKZ5Y34UVp2agMfpeHcQrSegriMLj3RxUxQTpqQjtAcascxW5z/
-         UaDYdM8dNMbL7RycsDJVxvNGtnPq5QG2GTKLeCVc+JphNoz2c6Ev7slanxLt2Brz5LeZ
-         y3uedDiM9SWIEBPjhtKaJuJ8t0tU6ZV618y3qNN6N2x+pfAPw4Tqb4tRktEjhaQqtinP
-         WhXgJt1e6rWMKe5S2dNIMomtIWAVFYWqXSrkubOm5Nt+S3OMvZ1z1S0ghGRIWxQkwCyF
-         8yCA==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yD0oCQhhV/YgON9Q9qRgw4PKAGTMOkPcQdtUeu+eeGo=;
+        b=H05tKdjRA7CpsxEhAgD2n+R4Zle8k6MFcogR4vh+WxqFQFBrWtVUdJz3+SUM49oHD9
+         zfD94Dxq/goNnWe5STC8ZOGq3O1pQQzCsLTtD8+q8FTmclfPnQU473ymDA4x/Nd0v02C
+         lEFjhLE0CSByi+9XTNWb9TYCy0ZrRoSh1D7gE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bliB1023sdj3aVwTJNlYRjd1ewQEAeyLSLCuQayJAjY=;
-        b=sxPBFhsQYZCmRN4sg5/4M5++dy9recofmFOf7dGKjC/73Za9sL6tWcrfnqhXoq8Ohl
-         BbPFyHsijJ73N5E4VQ/U+dDfD0kTwu1c0JxdV8N2nFC98CaIk0/zG5TGprxrYIoNSGBi
-         t2BdaG36GMcrJewztj7MfFJYv9DKQKfUn8UoW64oyWuyxw7d8J6IvvCEbndmkAgbT7PF
-         VphiUCfNplJtigPGwt2DVqTrg8oUaIfyWiDjo/ByLhcX7WRPFJ4xeVizUHeBGTyq6GoM
-         yB/nqQnS98vbPc7Z7YvQ2VXPq0dr80l8xHw8ukxfES2j466C/l0GIzXAZNZ63k1494Ta
-         FbLg==
-X-Gm-Message-State: AOAM531He9JmoLalw/Gi+qRPOjxABvOng9LpVC5VBQh/kJ+a4EMRnZP4
-        +B/44fYmWjxZVcz79PJaEXKNqjNxCaE=
-X-Google-Smtp-Source: ABdhPJzxsq/DfBtHgBlz3wlVDsTjBSAiejy26z59L26K47Ecf5fOnNwebJGKqFdOnEwaXfRIPFwAvw==
-X-Received: by 2002:a63:1521:: with SMTP id v33mr11635537pgl.374.1598546493237;
-        Thu, 27 Aug 2020 09:41:33 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a200sm3356631pfd.182.2020.08.27.09.41.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Aug 2020 09:41:32 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 09:41:31 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     cy_huang <u0084500@gmail.com>
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        matthias.bgg@gmail.com, heikki.krogerus@linux.intel.com,
-        cy_huang@richtek.com, gene_chen@richtek.com,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] usb typec: mt6360: Rename driver/Kconfig/Makefile
- from mt6360 to mt636x
-Message-ID: <20200827164131.GA86149@roeck-us.net>
-References: <1598527137-6915-1-git-send-email-u0084500@gmail.com>
- <1598527137-6915-2-git-send-email-u0084500@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yD0oCQhhV/YgON9Q9qRgw4PKAGTMOkPcQdtUeu+eeGo=;
+        b=nxKzdHdnRaYExBYQOsjpCgtpy7heJ7ygBA5ezxDoQhEEPW6CyRzENBWKd11OW4reiF
+         iwg7zPBu/5aqlI95MvcFfSJR72hUHqFMRuxgf+NzAHj34SRDQkCbXqwBAMLID1BLl3/a
+         g7uPhyfTJyDsy6pkCvFEM1OwAnaHoiH/7WxCkPiXCT0Akk37r9uladsm+3bGZs8flQEZ
+         ZVI3dKSODes2yzp6ZK2Lu96+t2zJLHqC2ql5WoG8vR5jie+Ii4MUrm/puC8lI/3+OZIR
+         FaQ/j+x2MVVFDZTx4F0rQGTR35eqXWqzhErZxRgIcW+tAmAQ9GHoiDrAmObjyIM7nt6p
+         NFwA==
+X-Gm-Message-State: AOAM530Jc1aKdDfyS25sJJN2/W0UC37NvHRpbK1Gj4gVifbuthl0Cg/u
+        RcWDs8orrl2BgptAC7XgU+GFpw==
+X-Google-Smtp-Source: ABdhPJy0QNZLAye/+ntACjbnw1CEGNqxV2Hk5ydPtsRxq1oIDicWP2J9Mdu1tNXeMBU5axSrEjfP7A==
+X-Received: by 2002:a02:843:: with SMTP id 64mr14945203jac.59.1598546676673;
+        Thu, 27 Aug 2020 09:44:36 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id v11sm632346ili.66.2020.08.27.09.44.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 09:44:36 -0700 (PDT)
+Subject: Re: [PATCH] staging: ion: remove from the tree
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        laura@labbott.name, sumit.semwal@linaro.org, john.stultz@linaro.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        =?UTF-8?Q?Arve_Hj=c3=b8nnev=c3=a5g?= <arve@android.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Christian Brauner <christian@brauner.io>,
+        Christoph Hellwig <hch@infradead.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Todd Kjos <tkjos@android.com>, devel@driverdev.osuosl.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200827123627.538189-1-gregkh@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <6be71d12-1335-e53a-72ed-bd4392f20394@linuxfoundation.org>
+Date:   Thu, 27 Aug 2020 10:44:34 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1598527137-6915-2-git-send-email-u0084500@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200827123627.538189-1-gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 07:18:56PM +0800, cy_huang wrote:
-> From: ChiYuan Huang <cy_huang@richtek.com>
+On 8/27/20 6:36 AM, Greg Kroah-Hartman wrote:
+> The ION android code has long been marked to be removed, now that we
+> dma-buf support merged into the real part of the kernel.
 > 
-> 1. Rename file form tcpci_mt6360.c to tcpci_mt636x.c
-> 2. Rename internal function from mt6360 to mt636x, except the register
-> definition.
-> 3. Change Kconfig/Makefile from MT6360 to MT636X.
+> It was thought that we could wait to remove the ion kernel at a later
+> time, but as the out-of-tree Android fork of the ion code has diverged
+> quite a bit, and any Android device using the ion interface uses that
+> forked version and not this in-tree version, the in-tree copy of the
+> code is abandonded and not used by anyone.
 > 
-> Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+> Combine this abandoned codebase with the need to make changes to it in
+> order to keep the kernel building properly, which then causes merge
+> issues when merging those changes into the out-of-tree Android code, and
+> you end up with two different groups of people (the in-kernel-tree
+> developers, and the Android kernel developers) who are both annoyed at
+> the current situation.  Because of this problem, just drop the in-kernel
+> copy of the ion code now, as it's not used, and is only causing problems
+> for everyone involved.
+> 
+> Cc: "Arve Hjønnevåg" <arve@android.com>
+> Cc: "Christian König" <christian.koenig@amd.com>
+> Cc: Christian Brauner <christian@brauner.io>
+> Cc: Christoph Hellwig <hch@infradead.org>
+> Cc: Hridya Valsaraju <hridya@google.com>
+> Cc: Joel Fernandes <joel@joelfernandes.org>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Cc: Laura Abbott <laura@labbott.name>
+> Cc: Martijn Coenen <maco@android.com>
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Cc: Suren Baghdasaryan <surenb@google.com>
+> Cc: Todd Kjos <tkjos@android.com>
+> Cc: devel@driverdev.osuosl.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linaro-mm-sig@lists.linaro.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > ---
->  drivers/usb/typec/tcpm/Kconfig        |   6 +-
->  drivers/usb/typec/tcpm/Makefile       |   2 +-
->  drivers/usb/typec/tcpm/tcpci_mt6360.c | 212 ----------------------------------
->  drivers/usb/typec/tcpm/tcpci_mt636x.c | 212 ++++++++++++++++++++++++++++++++++
->  4 files changed, 216 insertions(+), 216 deletions(-)
->  delete mode 100644 drivers/usb/typec/tcpm/tcpci_mt6360.c
->  create mode 100644 drivers/usb/typec/tcpm/tcpci_mt636x.c
+>   MAINTAINERS                                   |  10 -
+>   drivers/staging/android/Kconfig               |   2 -
+>   drivers/staging/android/Makefile              |   2 -
+>   drivers/staging/android/TODO                  |   5 -
+>   drivers/staging/android/ion/Kconfig           |  27 -
+>   drivers/staging/android/ion/Makefile          |   4 -
+>   drivers/staging/android/ion/ion.c             | 649 ------------------
+>   drivers/staging/android/ion/ion.h             | 302 --------
+>   drivers/staging/android/ion/ion_cma_heap.c    | 138 ----
+>   drivers/staging/android/ion/ion_heap.c        | 286 --------
+>   drivers/staging/android/ion/ion_page_pool.c   | 155 -----
+>   drivers/staging/android/ion/ion_system_heap.c | 377 ----------
+>   drivers/staging/android/uapi/ion.h            | 127 ----
+>   tools/testing/selftests/Makefile              |   3 +-
+>   tools/testing/selftests/android/Makefile      |  39 --
+>   tools/testing/selftests/android/config        |   5 -
+>   .../testing/selftests/android/ion/.gitignore  |   4 -
+>   tools/testing/selftests/android/ion/Makefile  |  20 -
+>   tools/testing/selftests/android/ion/README    | 101 ---
+>   tools/testing/selftests/android/ion/ion.h     | 134 ----
+>   .../testing/selftests/android/ion/ion_test.sh |  58 --
+>   .../selftests/android/ion/ionapp_export.c     | 127 ----
+>   .../selftests/android/ion/ionapp_import.c     |  79 ---
+>   .../selftests/android/ion/ionmap_test.c       | 136 ----
+>   .../testing/selftests/android/ion/ionutils.c  | 253 -------
+>   .../testing/selftests/android/ion/ionutils.h  |  55 --
+>   .../testing/selftests/android/ion/ipcsocket.c | 227 ------
+>   .../testing/selftests/android/ion/ipcsocket.h |  35 -
+>   tools/testing/selftests/android/run.sh        |   3 -
+>   29 files changed, 1 insertion(+), 3362 deletions(-)
+>   delete mode 100644 drivers/staging/android/ion/Kconfig
+>   delete mode 100644 drivers/staging/android/ion/Makefile
+>   delete mode 100644 drivers/staging/android/ion/ion.c
+>   delete mode 100644 drivers/staging/android/ion/ion.h
+>   delete mode 100644 drivers/staging/android/ion/ion_cma_heap.c
+>   delete mode 100644 drivers/staging/android/ion/ion_heap.c
+>   delete mode 100644 drivers/staging/android/ion/ion_page_pool.c
+>   delete mode 100644 drivers/staging/android/ion/ion_system_heap.c
+>   delete mode 100644 drivers/staging/android/uapi/ion.h
+>   delete mode 100644 tools/testing/selftests/android/Makefile
+>   delete mode 100644 tools/testing/selftests/android/config
+>   delete mode 100644 tools/testing/selftests/android/ion/.gitignore
+>   delete mode 100644 tools/testing/selftests/android/ion/Makefile
+>   delete mode 100644 tools/testing/selftests/android/ion/README
+>   delete mode 100644 tools/testing/selftests/android/ion/ion.h
+>   delete mode 100755 tools/testing/selftests/android/ion/ion_test.sh
+>   delete mode 100644 tools/testing/selftests/android/ion/ionapp_export.c
+>   delete mode 100644 tools/testing/selftests/android/ion/ionapp_import.c
+>   delete mode 100644 tools/testing/selftests/android/ion/ionmap_test.c
+>   delete mode 100644 tools/testing/selftests/android/ion/ionutils.c
+>   delete mode 100644 tools/testing/selftests/android/ion/ionutils.h
+>   delete mode 100644 tools/testing/selftests/android/ion/ipcsocket.c
+>   delete mode 100644 tools/testing/selftests/android/ion/ipcsocket.h
+>   delete mode 100755 tools/testing/selftests/android/run.sh
+> 
+>
 
-Maybe Heikki is ok with this change, but I am not, for the reasons
-mentioned before. So I won't approve this patch. Note that, either
-case, it should be merged with the first patch.
+For selftest changes in this patch:
 
-Guenter
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+
+thanks,
+-- Shuah
+
+
