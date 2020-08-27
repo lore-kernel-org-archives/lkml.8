@@ -2,72 +2,129 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F90C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29B9D22B47
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF6E20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:27:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ow/iU5Cf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oqBSHp+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgH0I0k (ORCPT
+        id S1728122AbgH0I1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:26:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57550 "EHLO
+        Thu, 27 Aug 2020 04:27:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbgH0I0j (ORCPT
+        with ESMTP id S1726826AbgH0I13 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:26:39 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C58C061264;
-        Thu, 27 Aug 2020 01:26:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=S6YVOoqzwTlckg/PNbF867wxnwUJFXoSme6f6Yt+mow=; b=Ow/iU5CfLqY1ciE8rv01JdZ/mE
-        AjAOqYOAmWLUqBopr/QulUYZJh3jS39U4nTR8Vt6Xa81V1HBII8Kvd02XA9HLuFgPpfn/keVhYytK
-        kVq7hIGC+vYqgfNeqAi3DYZETLqtCfaZoJhxTiM7Yk6r7VeBTwKQKc+mw+B2eEzuz+B94XDjLzJdL
-        vX3pvwTmI/n2moHRdQzBjVdkIGJiHZlwXDspqjwFRMyYPJYvjEOrSLRW5Agi5Lgtyf093OQ6Ir6Zg
-        5RE4nce6CHzX6Ykc7dcVE3zZ+axlfae2zVgIxna1mRtnNHV4GK1+6ZVRWi+R7grvNDwqEvdU614IO
-        00zfb0Eg==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBDEy-0003Bb-Sc; Thu, 27 Aug 2020 08:26:36 +0000
-Date:   Thu, 27 Aug 2020 09:26:36 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] iomap: Support arbitrarily many blocks per page
-Message-ID: <20200827082636.GB11067@infradead.org>
-References: <20200824145511.10500-1-willy@infradead.org>
- <20200824145511.10500-6-willy@infradead.org>
+        Thu, 27 Aug 2020 04:27:29 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A1B7C061264;
+        Thu, 27 Aug 2020 01:27:29 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id z18so2250016pjr.2;
+        Thu, 27 Aug 2020 01:27:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HZu39BmrS22KD4B9ZU5A9XCIkFWAsFL80Y7SUDG2qtE=;
+        b=oqBSHp+HrXhPE9QUUx68UGa9/YcMBY4IZZmU8tQEHoL0eR6q+q9L3KJxyU+5smq+mh
+         Qpb47EuOJNxtnzUze/6j+DruJ9FAig6k1cmSSVZe4HSNqO71XXMp0HWKvL//Jn/SrsVg
+         XDbTdaVO9ZDB9BadUVb0EXv/8MSvaT+iNh4DUhmXqSPdRZA+FvIWaEBj0KvH7/jwmzlc
+         kbK+AW0LRTkel5HNUFj1MK2DXbFfjbShHU7ash7Sspa9HWszpy9Gmt3BpJ8DPsAlNMxF
+         /XJN/Pw5pnUN3rRoxjBCOhTrLosJSp8mDe6aGlHjEfTDwyJ7xlixtSkiGR3gw2hRCCMF
+         7Bag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HZu39BmrS22KD4B9ZU5A9XCIkFWAsFL80Y7SUDG2qtE=;
+        b=PPAJ4nAx9Z25LG6kCDAHrAc33AsyVyBLPw/emyofQ1ZH10OpFwJDOqlB8XkPS7PVnG
+         5egFm+7vxXPxmDGG6H1y7hfhLeogk5bUisnpTOwuceTi0izFbUBslDNSAbuSFaBwbJrn
+         QKEqD7sKPjUhAn/V4LnmRS6lS/MfBMGMs9yiQuZw0ojH9KqW/zFYYyYBj6ZNFa2eizF3
+         rTd5OVobeRijL7MA9ciyhGhUJe59HeFzFOgzyikliHPcmZRhK6ryu9sqNFxbNgQtwrog
+         lEEGz/bs77cj6X2AggPNI/JqxMLSvbVQZcbkqWXiJ9NvK4IPAb2S1WlfC8WG7c/7FaJs
+         hzhA==
+X-Gm-Message-State: AOAM530ylKPK2EXqCiJf7svK8FtR6RmD6up/tjjm5LZxNvYHjb/cFkJx
+        fUxUKvSwAcwFUNyzdXAVUZXnLrehQCGIoG6D4gU=
+X-Google-Smtp-Source: ABdhPJy7FFxyHMt/VY+0213GOuICfPnBcgRzlKo9w1yk5kPoOdyCc69OPZ9PWgEDp1GqqASWBQKX2axNN3k90TDpCTE=
+X-Received: by 2002:a17:90a:2c06:: with SMTP id m6mr9988021pjd.129.1598516848820;
+ Thu, 27 Aug 2020 01:27:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824145511.10500-6-willy@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200826161818.20969-1-krzk@kernel.org>
+In-Reply-To: <20200826161818.20969-1-krzk@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 27 Aug 2020 11:27:12 +0300
+Message-ID: <CAHp75Vf3s0+RrHnBoO4y4+t4Egth4uyYwtO5iPt9DbLJcunL6g@mail.gmail.com>
+Subject: Re: [PATCH v2] iio: adc: stm32: Simplify with dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Etienne Carriere <etienne.carriere@st.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  static inline struct iomap_page *to_iomap_page(struct page *page)
->  {
-> +	VM_BUG_ON_PGFLAGS(PageTail(page), page);
->  	if (page_has_private(page))
->  		return (struct iomap_page *)page_private(page);
->  	return NULL;
+On Wed, Aug 26, 2020 at 7:19 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
 
-Nit: can you add an empty line after the VM_BUG_ON_PGFLAGS assert to
-keep the function readable?  Maybe also add a comment on the assert,
-as it isn't totally obvious.
 
-Otherwise looks good:
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+
+
+
+>         priv->aclk = devm_clk_get(&pdev->dev, "adc");
+>         if (IS_ERR(priv->aclk)) {
+>                 ret = PTR_ERR(priv->aclk);
+> -               if (ret != -ENOENT) {
+> -                       if (ret != -EPROBE_DEFER)
+> -                               dev_err(&pdev->dev, "Can't get 'adc' clock\n");
+> -                       return ret;
+> -               }
+> +               if (ret != -ENOENT)
+> +                       return dev_err_probe(&pdev->dev, ret, "Can't get 'adc' clock\n");
+> +
+>                 priv->aclk = NULL;
+>         }
+>
+>         priv->bclk = devm_clk_get(&pdev->dev, "bus");
+>         if (IS_ERR(priv->bclk)) {
+>                 ret = PTR_ERR(priv->bclk);
+> -               if (ret != -ENOENT) {
+> -                       if (ret != -EPROBE_DEFER)
+> -                               dev_err(&pdev->dev, "Can't get 'bus' clock\n");
+> -                       return ret;
+> -               }
+> +               if (ret != -ENOENT)
+> +                       return dev_err_probe(&pdev->dev, ret, "Can't get 'bus' clock\n");
+> +
+>                 priv->bclk = NULL;
+>         }
+
+Again, devm_clk_get_optional() and even, if it exists,
+devm_clk_bulk_get_optional().
+
+Please, revisit all patches on this topic.
+
+-- 
+With Best Regards,
+Andy Shevchenko
