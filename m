@@ -2,97 +2,87 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A9BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25220C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15F2922B47
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:44:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eig7GaE7"
+	by mail.kernel.org (Postfix) with ESMTP id 0C6FE22BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbgH0Gos (ORCPT
+        id S1727902AbgH0Go4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:44:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgH0Gor (ORCPT
+        Thu, 27 Aug 2020 02:44:56 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46838 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgH0Goy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:44:47 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88357C061264;
-        Wed, 26 Aug 2020 23:44:46 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id si26so6120200ejb.12;
-        Wed, 26 Aug 2020 23:44:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=5lZlEjBzHRbMaEVBrPh3+beD+zVE1nLzNB1myX762eI=;
-        b=Eig7GaE7XdtAk48TplK6uI32yfBA7+SXesz+kHeB7XZmBb+3DwCE5/M3VmSy8sYXWe
-         v1NEBt1cRDS4guAOYoKqZGD++lWBO1I8RKYLJ4MRV+HLW65pSYYRkIai7n6xWxTWVVVL
-         bnS6fZEu9DbCWXSYGc63CZxyzYKBwttSwLEjIDrMa+NZ8Mp/Qd7CJArFfeL1AJah468N
-         i9sxzoJqo3TJSiMAvvswZZyNoGk3tscjSQaACzfGn59u72K1bv0q5h1s/Uu16i5zUI6q
-         oXx1ihd5px0RTi3KVHJdAz5ATt7pkSIySTONx/Zi5cvVjA14XZl9g/Zz4p51Zms+zn1b
-         aQaA==
+        Thu, 27 Aug 2020 02:44:54 -0400
+Received: by mail-lj1-f195.google.com with SMTP id h19so5137136ljg.13;
+        Wed, 26 Aug 2020 23:44:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:references:date
-         :in-reply-to:message-id:user-agent:mime-version;
-        bh=5lZlEjBzHRbMaEVBrPh3+beD+zVE1nLzNB1myX762eI=;
-        b=TNX3vKLLeqFJj56Xs2CdIl6V2Q+ZY52FIrHLnsRxlg5KCns1YqbR7cJKjy7r1u/Fm7
-         RHDPKE9Q+m/wWcNIsuQ+bInRNkSQUe2FURGNvZI/x1K4o4UnCUJA7I1YMPmVytPCrMVl
-         cX7cRjyEoxB9twxF55xgkeFM5QnfUjxPako287BVtfJzWXZES3JyFminbXYkhI4ISWUa
-         6XoSWFLGnVFfpeEu9rfFsYP7KVDKgRScd24rsuFnm6mbKjKyjSI0icjy5k4UYKq/LD6u
-         whMx8smqJCg1HSgIJrYNk7BCSfkA6BKYe3VEQ6VqbYYhbPK/Chnb1NZ5oTYKbj1kwgxg
-         iikQ==
-X-Gm-Message-State: AOAM5332dEgVAsbNsIjH4PCQXQrBmNtdDwzGXnDgN40WqMyk/ogO1pPi
-        nH9tf6j80pcjfq4MQnQDj8I=
-X-Google-Smtp-Source: ABdhPJw5t5UbTv14Uj4GGZCXucqEXH1T/j2DVoME59kzRmfLL/U93OuLxcFPSpBov8Bart9NRig9cQ==
-X-Received: by 2002:a17:906:d8ca:: with SMTP id re10mr18729543ejb.382.1598510685222;
-        Wed, 26 Aug 2020 23:44:45 -0700 (PDT)
-Received: from dell.be.48ers.dk (d51A5BC31.access.telenet.be. [81.165.188.49])
-        by smtp.gmail.com with ESMTPSA id t21sm1048506ejr.62.2020.08.26.23.44.40
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=f/nPRgHC0iGFykXQ1veAuL/EAakIUq9/Zg/UORe3DVo=;
+        b=KplhNYR/Q7PpC8q3Dd+2RjcTfCDWnusVGHzwlYkOjxB3pJv2RAKyrOjIhaXq5PIARC
+         6+Ock68WsYxgNgaD/crEy+mwc/72EU+f8Opnhei7Th0qlxehZhHzH+aql+NpWZqmsWrw
+         M3yBLqm70qBRd7YsLEl9aXMMTziNj6EB6m5Fwy+1sEED88In8tKBtgaRHhWjZLLACRHI
+         l5w1kLuQb0eoarwGhSbMV0cyzLkEZbVWQjRfPdt3BYYt3X/6C/rCr1IcMMoFEzQEI+Zu
+         4svy+qVzg+s/tAsAe0ZwLZA/c8cjTkZHcjBaipWF6qp5Td86OJrcjtvKYmWHJ1ik0RUg
+         4aQw==
+X-Gm-Message-State: AOAM533bkU0r1FpnmhiCiWN2Py8MJX+0Tznq9PJ0uIdQYcPAXaMzEgn7
+        Iy7oqNqnyP/GhivLMe6o34MQdxpUFxE=
+X-Google-Smtp-Source: ABdhPJz+PdSPsiaJMGDnJnGpAH3k5yyMkhsoQ8EYD5eusfK2iGv6+RkA691Am5KjrG43htjux6RP7Q==
+X-Received: by 2002:a2e:558:: with SMTP id 85mr1670859ljf.293.1598510692176;
+        Wed, 26 Aug 2020 23:44:52 -0700 (PDT)
+Received: from localhost.localdomain ([213.87.147.111])
+        by smtp.googlemail.com with ESMTPSA id j17sm282159lfr.32.2020.08.26.23.44.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 23:44:41 -0700 (PDT)
-Received: from peko by dell.be.48ers.dk with local (Exim 4.92)
-        (envelope-from <peter@korsgaard.com>)
-        id 1kBBeK-0002mM-CC; Thu, 27 Aug 2020 08:44:40 +0200
-From:   Peter Korsgaard <peter@korsgaard.com>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 4/4] arm: dts: owl-s500: Add RoseapplePi
-References: <cover.1592123160.git.cristian.ciocaltea@gmail.com>
-        <2d12521d196e2c08a30aacd0ab20d93593f94707.1592123160.git.cristian.ciocaltea@gmail.com>
-Date:   Thu, 27 Aug 2020 08:44:40 +0200
-In-Reply-To: <2d12521d196e2c08a30aacd0ab20d93593f94707.1592123160.git.cristian.ciocaltea@gmail.com>
-        (Cristian Ciocaltea's message of "Mon, 15 Jun 2020 03:19:11 +0300")
-Message-ID: <87v9h4y4dj.fsf@dell.be.48ers.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 26 Aug 2020 23:44:51 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     linux-crypto@vger.kernel.org
+Cc:     Denis Efremov <efremov@linux.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/4] crypto: inside-secure - use kfree_sensitive()
+Date:   Thu, 27 Aug 2020 09:43:59 +0300
+Message-Id: <20200827064402.7130-2-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200827064402.7130-1-efremov@linux.com>
+References: <20200827064402.7130-1-efremov@linux.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>>> "Cristian" == Cristian Ciocaltea <cristian.ciocaltea@gmail.com> writes:
+Use kfree_sensitive() instead of open-coding it.
 
- > Add a Device Tree for the RoseapplePi SBC.
- > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ drivers/crypto/inside-secure/safexcel_hash.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Reviewed-by: Peter Korsgaard <peter@korsgaard.com>
-
-On a related note: There is now an owl-mmc driver for the s900. From a
-quick look at the datasheet it looks compatible with the controller on
-the s500. Did you have a look at hooking that up?
-
+diff --git a/drivers/crypto/inside-secure/safexcel_hash.c b/drivers/crypto/inside-secure/safexcel_hash.c
+index 16a467969d8e..5ffdc1cd5847 100644
+--- a/drivers/crypto/inside-secure/safexcel_hash.c
++++ b/drivers/crypto/inside-secure/safexcel_hash.c
+@@ -1082,8 +1082,7 @@ static int safexcel_hmac_init_pad(struct ahash_request *areq,
+ 		}
+ 
+ 		/* Avoid leaking */
+-		memzero_explicit(keydup, keylen);
+-		kfree(keydup);
++		kfree_sensitive(keydup);
+ 
+ 		if (ret)
+ 			return ret;
 -- 
-Bye, Peter Korsgaard
+2.26.2
+
