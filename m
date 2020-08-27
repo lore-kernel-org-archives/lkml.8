@@ -1,125 +1,117 @@
-Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6580AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 23:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DE6C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 00:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F519207CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 23:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 961EF20791
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 00:11:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="I5RpbHbZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgHZX5v (ORCPT
+        id S1726804AbgH0ALx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 19:57:51 -0400
-Received: from smtprelay0132.hostedemail.com ([216.40.44.132]:48980 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726238AbgHZX5u (ORCPT
+        Wed, 26 Aug 2020 20:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgH0ALw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 19:57:50 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 132A318000BE0;
-        Wed, 26 Aug 2020 23:57:45 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: ocean54_1a016df27068
-X-Filterd-Recvd-Size: 3604
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 26 Aug 2020 23:57:42 +0000 (UTC)
-Message-ID: <77428f28620d4e5ecad1556396f2b0f8f0daef41.camel@perches.com>
-Subject: Re: [PATCH v3] lib/string.c: implement stpcpy
-From:   Joe Perches <joe@perches.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        stable <stable@vger.kernel.org>, Andy Lavr <andy.lavr@gmail.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 26 Aug 2020 16:57:41 -0700
-In-Reply-To: <202008261627.7B2B02A@keescook>
-References: <20200825135838.2938771-1-ndesaulniers@google.com>
-         <CAK7LNAQXo5-5W6hvNMEVPBPf3tRWaf-pQdSR-0OHyi4RCGhjsQ@mail.gmail.com>
-         <d56bf7b93f7a28c4a90e4e16fd412e6934704346.camel@perches.com>
-         <CAKwvOd=YrVtPsB7HYPO0N=K7QJm9KstayqqeYQERSaGtGy2Bjg@mail.gmail.com>
-         <CAK7LNAQKwOo=Oas+7Du9+neSm=Ev6pxdPV7ges7eEEpW+jh8Ug@mail.gmail.com>
-         <202008261627.7B2B02A@keescook>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Wed, 26 Aug 2020 20:11:52 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44CA0C061756
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 17:11:52 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id g26so4392546qka.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 17:11:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dCluAD0PN3QnKR1L6av9Yix65gTIcPBWE23e5ipBNOg=;
+        b=I5RpbHbZ5XZ0XXivHFDSvP9p51uLPnb2qMfaIj6qSSTCE44kBPxf49wchi5i5rnAtA
+         flQwe1O1YWroNoYZ/A/7x02aUgY0R1fVX5XS/WhQU2ulTznktJCKGXfA0uAdhi3xaFdj
+         ET2jbPehovlan8l5E5xP2wbiclhcTNH50AA4vWGKGvPyX+TkhXSmiXAO/kQ2kSaGnJvx
+         IGO9hOw+LJc/LYyjj96ErRhif1HMub9xLf/0cI5pqI9nDiYjohXBAQPUPV6JdQR3es15
+         4y9+oY2ftEBBKByZ3YjZ7PUEEYFeJUwbhi2xowJG0t1Y3J8rVj7uxvyeIapT8WLmDCkz
+         Wbfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dCluAD0PN3QnKR1L6av9Yix65gTIcPBWE23e5ipBNOg=;
+        b=ARa7Hbeu4ahFpUYqEnCweekGE7fVKD2JUTypPqzr4D1SdQ3MjGvfdlJMYKx045qfC2
+         VJ4SbGQkFwF2iwqRRE3mVcXlUhrw4Q1ra5Chdo05vrhcuTRdvl549JviXZZd5yWiNijE
+         IxfJuj37d87foPkiZfIGczMxKcuIF2KO1tyt1MK6d+FWebtf87dkYsQNN3uk33pm9M4p
+         bG1Wi26Z6NQgcbILG0Noco1cmVO+6VAb/bIIwrId5tZusTSvMIwrCqvRHk/KlzyVqImY
+         RqVjWgQEpHG/L0oWCkYOXbuLfnfdwEkmXcWnOex1zQCCht3x64KgnBnhaP0eTvJZpmss
+         04Uw==
+X-Gm-Message-State: AOAM530cU5peZD0f983gvEQjWABHrVGhzrvLRqfpnsneIT1nosI5mNZ1
+        XhRh4hDssR+AUafhyPfkZwuFbA==
+X-Google-Smtp-Source: ABdhPJwUgyahGD12NG/wuD8f/tDKHjQNftvGasarmXg0H7l1YwOsJ3yIFu35ruJvTzEHD3OfrLI91A==
+X-Received: by 2002:ae9:e102:: with SMTP id g2mr15816477qkm.134.1598487111253;
+        Wed, 26 Aug 2020 17:11:51 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id y22sm558789qkj.114.2020.08.26.17.11.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 17:11:50 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kB5W9-00GRHE-Lq; Wed, 26 Aug 2020 21:11:49 -0300
+Date:   Wed, 26 Aug 2020 21:11:49 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>, dennis.dalessandro@intel.com,
+        dledford@redhat.com, gustavo@embeddedor.com,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        mike.marciniszyn@intel.com, roland@purestorage.com
+Subject: Re: [PATCH v2 1/2] IB/qib: remove superfluous fallthrough statements
+Message-ID: <20200827001149.GK24045@ziepe.ca>
+References: <64d7e1c9-9c6a-93f3-ce0a-c24b1c236071@gmail.com>
+ <20200825171242.448447-1-alex.dewar90@gmail.com>
+ <20200825193327.GA5504@embeddedor>
+ <20200826191859.GB2671@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826191859.GB2671@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-26 at 16:38 -0700, Kees Cook wrote:
-> On Thu, Aug 27, 2020 at 07:59:45AM +0900, Masahiro Yamada wrote:
-[]
-> > OK, then stpcpy(), strcpy() and sprintf()
-> > have the same level of unsafety.
+On Wed, Aug 26, 2020 at 02:18:59PM -0500, Gustavo A. R. Silva wrote:
+> Hi,
 > 
-> Yes. And even snprintf() is dangerous because its return value is how
-> much it WOULD have written, which when (commonly) used as an offset for
-> further pointer writes, causes OOB writes too. :(
-> https://github.com/KSPP/linux/issues/105
+> On Tue, Aug 25, 2020 at 02:33:27PM -0500, Gustavo A. R. Silva wrote:
+> > On Tue, Aug 25, 2020 at 06:12:42PM +0100, Alex Dewar wrote:
+> > > Commit 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
+> > > erroneously marked a couple of switch cases as /* FALLTHROUGH */, which
+> > > were later converted to fallthrough statements by commit df561f6688fe
+> > > ("treewide: Use fallthrough pseudo-keyword"). This triggered a Coverity
+> > > warning about unreachable code.
+> > >
+> > 
+> > It's worth mentioning that this warning is triggered only by compilers
+> > that don't support __attribute__((__fallthrough__)), which has been
+> > supported since GCC 7.1.
+> > 
+> > > Remove the fallthrough statements.
+> > > 
+> > > Addresses-Coverity: ("Unreachable code")
+> > > Fixes: 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
+> > > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+> > 
+> > Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > 
 > 
-> > strcpy() is used everywhere.
-> 
-> Yes. It's very frustrating, but it's not an excuse to continue
-> using it nor introducing more bad APIs.
-> 
-> $ git grep '\bstrcpy\b' | wc -l
-> 2212
-> $ git grep '\bstrncpy\b' | wc -l
-> 751
-> $ git grep '\bstrlcpy\b' | wc -l
-> 1712
-> 
-> $ git grep '\bstrscpy\b' | wc -l
-> 1066
-> 
-> https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy
-> https://github.com/KSPP/linux/issues/88
-> 
-> https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
-> https://github.com/KSPP/linux/issues/89
-> 
-> https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> https://github.com/KSPP/linux/issues/90
-> 
-> We have no way right now to block the addition of deprecated API usage,
-> which makes ever catching up on this replacement very challenging.
+> I can take this in my tree for 5.9-rc3.
 
-These could be added to checkpatch's deprecated_api test.
----
- scripts/checkpatch.pl | 3 +++
- 1 file changed, 3 insertions(+)
+That would make conflicts for the 2nd patch, lets just send them all
+through the rdma tree please. Is there a reason this is -rc material?
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 149518d2a6a7..f9ccb2a63a95 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -605,6 +605,9 @@ foreach my $entry (@mode_permission_funcs) {
- $mode_perms_search = "(?:${mode_perms_search})";
- 
- our %deprecated_apis = (
-+	"strcpy"				=> "strscpy",
-+	"strncpy"				=> "strscpy",
-+	"strlcpy"				=> "strscpy",
- 	"synchronize_rcu_bh"			=> "synchronize_rcu",
- 	"synchronize_rcu_bh_expedited"		=> "synchronize_rcu_expedited",
- 	"call_rcu_bh"				=> "call_rcu",
-
-
+Jason
