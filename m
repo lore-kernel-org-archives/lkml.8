@@ -2,57 +2,159 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C89C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F97C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8249E2177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69B272177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:55:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NU6KxZo/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728244AbgH0IzZ (ORCPT
+        id S1728256AbgH0Izv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:55:25 -0400
-Received: from verein.lst.de ([213.95.11.211]:37310 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727814AbgH0IzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:55:24 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0E8A568B02; Thu, 27 Aug 2020 10:55:21 +0200 (CEST)
-Date:   Thu, 27 Aug 2020 10:55:20 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Hannes Reinecke <hare@suse.de>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Denis Efremov <efremov@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
-Subject: Re: [PATCH 01/19] char_dev: replace cdev_map with an xarray
-Message-ID: <20200827085520.GB12111@lst.de>
-References: <20200826062446.31860-1-hch@lst.de> <20200826062446.31860-2-hch@lst.de> <b2126993-b861-1899-bb42-cb7f461094d4@suse.de>
+        Thu, 27 Aug 2020 04:55:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727030AbgH0Izu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 04:55:50 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55298C061264;
+        Thu, 27 Aug 2020 01:55:49 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id 5so3770008otp.12;
+        Thu, 27 Aug 2020 01:55:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yYRU5RWjdCABcW+SWFbp3Yrowl6dALpg4gGN9PPMym4=;
+        b=NU6KxZo/Iocb1DwO8n2E2MmxQxjBz2QmvF6tuBRu/iXnmUOHthNxzm8LmtICLTuW1q
+         W7cR9OOP5WiyZFhHBnj9HnPZgnLKBqljoZKc1H7WR2AgHS2gt2i+EI4VamX98hMKz+v4
+         MlSIRxfx4Wtwpw5DUksXVn2aKQSE7rjY3AuVpocTsN4WSthyGK3E98tFYBGTaiZIyvHk
+         e0s/kC6il6ZhcB3FvfbkGUI2NIEU5LgRiqENR8ShqRGjmnJH3uGl8J5cUA61r/zRms/M
+         HXBdTKOY3u+LnMkAnxlOYE28knMiU0xVrl0nt+mtNIF5/rjKCWvpxofnnE4VLDMHeVVT
+         6hTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yYRU5RWjdCABcW+SWFbp3Yrowl6dALpg4gGN9PPMym4=;
+        b=lspfdG3GVDDEusxG51MKZLvI42v2KUzkoWGoxtDyse15nwCS3/cQ+IReitRbfNUJtF
+         bc88qaSGxrW9+lMQQtoRXi/qGjHhBLmMz98j/X8pZSem5L/dPMAmyL25N22Uq3VY/AO4
+         q0Q10PXXJ/lPsRmTHiimb8MZltCk6nwxpolbgmctPTPjcYnLvQP9MQcmGQJ+saher/US
+         twdt3Sp38zueCbV7iCPXINAJ279wnLCAR4TXVE0vr62hD7AQg9WUssBXG/PEnUUQaEoh
+         /zBmkoyXhSiuM5UKcO/TOTp+wLgKnEqZDnFIa3yvlGAnTe4pOYaCgt0hswse7FGSAWrF
+         I4oA==
+X-Gm-Message-State: AOAM532nkMJI4bUpIwyoX0n8q7ZsB4OfKwMqiCEIl3ZQrPxiFLWAHwQG
+        Q/obR90Sp9Zq6go3sKoRQpn3G8dgzoRj/qWcyQM=
+X-Google-Smtp-Source: ABdhPJyYmnPw+UXq5Pnbrb1d8+Ls6OeV0jJ9/BCH19PZH76AENpdIFCNPcG4tB6nf4A3wQ8tAgaLGVlATIaLG7vJeOg=
+X-Received: by 2002:a9d:4c04:: with SMTP id l4mr12187928otf.207.1598518548666;
+ Thu, 27 Aug 2020 01:55:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b2126993-b861-1899-bb42-cb7f461094d4@suse.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20200826063850.47625-1-alexandru.ardelean@analog.com> <20200826120042.200364-1-alexandru.ardelean@analog.com>
+In-Reply-To: <20200826120042.200364-1-alexandru.ardelean@analog.com>
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+Date:   Thu, 27 Aug 2020 11:55:37 +0300
+Message-ID: <CA+U=DsrMDSTQKEc2_3+W8u4bLraAowVB3nB4huKY--v8gnds2Q@mail.gmail.com>
+Subject: Re: [PATCH v2] iio: stm32-dac: Replace indio_dev->mlock with own
+ device lock
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Jonathan Cameron <jic23@kernel.org>, alexandre.torgue@st.com,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 09:25:07AM +0200, Hannes Reinecke wrote:
-> Do you really need the mutex?
-> Wouldn't xa_store_range() be better and avoid the mutex?
+On Wed, Aug 26, 2020 at 3:03 PM Alexandru Ardelean
+<alexandru.ardelean@analog.com> wrote:
+>
+> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+>
+> As part of the general cleanup of indio_dev->mlock, this change replaces
+> it with a local lock. The lock protects against potential races when
+> reading the CR reg and then updating, so that the state of pm_runtime
+> is consistent between the two operations.
+>
+> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
 
-We need the mutex as we need to grab the kobject reference under it.
+Forgot the changelog here.
+Apologies.
 
-xa_store_range is only available with a separate config option, and
-has really strange calling conventions.  So I'd rather not pull it in
-here, especially as most cdev_add callers are for a single minor only
-anyway.
+Changelog v1 -> v2:
+* removed whitespace change for 'common' field
+* updated comment about the lock usage
+
+>  drivers/iio/dac/stm32-dac.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
+> index 092c796fa3d9..7a8aed476850 100644
+> --- a/drivers/iio/dac/stm32-dac.c
+> +++ b/drivers/iio/dac/stm32-dac.c
+> @@ -26,9 +26,11 @@
+>  /**
+>   * struct stm32_dac - private data of DAC driver
+>   * @common:            reference to DAC common data
+> + * @lock:              lock to protect the data buffer during regmap ops
+>   */
+>  struct stm32_dac {
+>         struct stm32_dac_common *common;
+> +       struct mutex            lock;
+>  };
+>
+>  static int stm32_dac_is_enabled(struct iio_dev *indio_dev, int channel)
+> @@ -58,10 +60,10 @@ static int stm32_dac_set_enable_state(struct iio_dev *indio_dev, int ch,
+>         int ret;
+>
+>         /* already enabled / disabled ? */
+> -       mutex_lock(&indio_dev->mlock);
+> +       mutex_lock(&dac->lock);
+>         ret = stm32_dac_is_enabled(indio_dev, ch);
+>         if (ret < 0 || enable == !!ret) {
+> -               mutex_unlock(&indio_dev->mlock);
+> +               mutex_unlock(&dac->lock);
+>                 return ret < 0 ? ret : 0;
+>         }
+>
+> @@ -69,13 +71,13 @@ static int stm32_dac_set_enable_state(struct iio_dev *indio_dev, int ch,
+>                 ret = pm_runtime_get_sync(dev);
+>                 if (ret < 0) {
+>                         pm_runtime_put_noidle(dev);
+> -                       mutex_unlock(&indio_dev->mlock);
+> +                       mutex_unlock(&dac->lock);
+>                         return ret;
+>                 }
+>         }
+>
+>         ret = regmap_update_bits(dac->common->regmap, STM32_DAC_CR, msk, en);
+> -       mutex_unlock(&indio_dev->mlock);
+> +       mutex_unlock(&dac->lock);
+>         if (ret < 0) {
+>                 dev_err(&indio_dev->dev, "%s failed\n", en ?
+>                         "Enable" : "Disable");
+> @@ -327,6 +329,8 @@ static int stm32_dac_probe(struct platform_device *pdev)
+>         indio_dev->info = &stm32_dac_iio_info;
+>         indio_dev->modes = INDIO_DIRECT_MODE;
+>
+> +       mutex_init(&dac->lock);
+> +
+>         ret = stm32_dac_chan_of_init(indio_dev);
+>         if (ret < 0)
+>                 return ret;
+> --
+> 2.25.1
+>
