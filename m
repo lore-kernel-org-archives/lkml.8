@@ -8,66 +8,66 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90487C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCEBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B0BC2075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BC8420825
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:18:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ta3iUX/d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MtGH5F6J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbgH0KSj (ORCPT
+        id S1728973AbgH0KSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:18:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46356 "EHLO
+        Thu, 27 Aug 2020 06:18:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbgH0KOl (ORCPT
+        with ESMTP id S1728600AbgH0KOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:14:41 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B85B5C061264;
-        Thu, 27 Aug 2020 03:14:40 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id m71so3136765pfd.1;
-        Thu, 27 Aug 2020 03:14:40 -0700 (PDT)
+        Thu, 27 Aug 2020 06:14:36 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7FD9C061264;
+        Thu, 27 Aug 2020 03:14:35 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id g6so2353032pjl.0;
+        Thu, 27 Aug 2020 03:14:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=0S/3MaYnQwLIQMpiagM/QFgRQQwPKockiXBo5QwKFoI=;
-        b=ta3iUX/dw32LH0N6YHqGZZCS2CRdezoqLOrHQ2EXetuOBco/I5knIshHJQDG6tYUb9
-         G8AHTJg4JR7dDAnXJ6veYetBlajIpFvHe1ZdZK6XBqN3iiXUZQXKe0KoNI8oiHMno2dK
-         C8fRCrpmC5t42boBm+6+fONLn7IamA4WX5HHp01FVheBgH21Cuy8YfZsQSZUcPmCk3II
-         f/276jGX7TYzzECmZLCJNI7P/IyYIE6+i4CXE2I0ay41M9bvYq3y/r6BcncF2XRMMJCz
-         iYv7xr5V10Q0DaZZ6SnpmQOm6z46zrMyJgsXk0HVJDM+aWNz5pphZeH2432UmXmqDBSr
-         rNYg==
+        bh=jvIU1C8xMP6WcFtiASQieWl9PBc0cM/X9m49AuYn3v4=;
+        b=MtGH5F6JVuriOopERqxIJ5MWmzdSYALg+MZ6zMjBHNh2fDEj517cH8RDOLSEqcruQA
+         qY5QhahgFbYY9ODI3OPGtHNJ35210kgCf8s3u7DlH8H+H7ESZWLLHDlshgShmeWK8oaL
+         KQ3tzOzV9Q9DCcBSH8cXt3VidkWUNn/tIkamDbELoWF2RgDIH56Ztzccofz36M4ZCS01
+         pBXJXSSAPLze+nvY2cEMVp9uBbwsM8/Ueo0HyRMjbsYwBjM8wYgJS51oBuEvKNjvwb10
+         aIRAegKJHO/a0bILMRSfC9Z3YapS1s3gxTxnZJLV41AZ2WJCKoskdjGxo6+sx3ufCpip
+         6RJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=0S/3MaYnQwLIQMpiagM/QFgRQQwPKockiXBo5QwKFoI=;
-        b=j0Ud6D1hUAVEEaUrMx3HGsqzh+XGJMvvCRFYJR7IKQl4AkZkvNkAjpBG1Ed75HKwH8
-         eB9yEAUQ5CEOpEIHyRg5uVJXMcun8UKND4scGwkaEne9yFP2NgpfUAQ7PiwJH7N8z4oA
-         KGQTYoF5XhN7isU6HuFA6sffRS8+IK+4EGro994HdrjCFqtKSbIa80Hsf4Xgtu2J9L8A
-         idq6neHJrA97fzQctKsbgyJSTDciy28bX4NGewUbO1PM9rWRbR1vBzpZeHUnj6+NnM3o
-         TotQu8DTY4F6gCS1CWAQyAmhnISXMMdQ8BXpuDqutmJ/k/6MLTerXBsptLZipIdbLlL2
-         KH5Q==
-X-Gm-Message-State: AOAM533IGqOK9ev9m5zoIXLEmWYraZErF2Pe+QN6cpcBmqcGWl6xJ8kH
-        22UaWmihwfG3GaIEo4C9l4l2PMfLdUZtBQ==
-X-Google-Smtp-Source: ABdhPJy8AE0jxoRUgey07BcE4gIQYCZsnsaKfuyVPlicu94oXm1WyorwtRWeNsMEP+RGAbaEeDklsQ==
-X-Received: by 2002:a17:902:b686:: with SMTP id c6mr15807695pls.133.1598523279570;
-        Thu, 27 Aug 2020 03:14:39 -0700 (PDT)
+        bh=jvIU1C8xMP6WcFtiASQieWl9PBc0cM/X9m49AuYn3v4=;
+        b=lm1w+MaifO5xzzEtAPlsap2Xvh7vUJHJ5se3ofeHobmNenXoxUrvCrx6LuSMSRn+cW
+         M3sxXLtJ2fRektmdlRaGv/DBDLaAtqVnILWxkGd8d0DMLeWmUjI4o+gadZW/AdJL7o44
+         AM3j5+coKLJOA7dLoxitGAaZPKuo4FQi5dxz70KLLVbbMASxcjkzinsNZ1GZJ3sDMa3u
+         kgSQvaQizVXQ89keKwYyuheb5bkfOa1HLQRXXyzHQ5fscHKlQ9dzyHafXTLckAw6QDzs
+         a7dvz/ONHqagQzaWrw/2j8zmBHGRR4GTlEcG7oekJabHnmzzbp6N7nqlZFvW0+yQeark
+         eJkw==
+X-Gm-Message-State: AOAM531nUt+M87qlEsQ7Ri15SBhYk8aE6sawnpqKsu4Ysc28WWX/UU8g
+        MnxzaQhMV4bs5rV96QCZIe0=
+X-Google-Smtp-Source: ABdhPJyPSxYAT0eFZtjmdSmvlioTDc7oXqB5hls3x6WIv6TItYg3y+Yt3qlA/YngeKl/1ULKQ54/Rg==
+X-Received: by 2002:a17:90a:c688:: with SMTP id n8mr9827755pjt.7.1598523275403;
+        Thu, 27 Aug 2020 03:14:35 -0700 (PDT)
 Received: from VM-0-6-centos.localdomain ([119.28.90.140])
-        by smtp.gmail.com with ESMTPSA id t10sm2333434pfq.52.2020.08.27.03.14.38
+        by smtp.gmail.com with ESMTPSA id t10sm2333434pfq.52.2020.08.27.03.14.34
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Aug 2020 03:14:39 -0700 (PDT)
+        Thu, 27 Aug 2020 03:14:35 -0700 (PDT)
 From:   Chunguang Xu <brookxu.cn@gmail.com>
 X-Google-Original-From: Chunguang Xu <brookxu@tencent.com>
 To:     arnd@arndb.de
 Cc:     rppt@kernel.org, linux-arch@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 06/23] rxrpc: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-Date:   Thu, 27 Aug 2020 18:14:11 +0800
-Message-Id: <5e7c145a8b5a57c78b9228806738ccb0cfc2ac98.1598518912.git.brookxu@tencent.com>
+Subject: [PATCH 03/23] KVM: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
+Date:   Thu, 27 Aug 2020 18:14:08 +0800
+Message-Id: <fac741b7bb9b93c30b5134eb9741bce344b9ef15.1598518912.git.brookxu@tencent.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <cover.1598518912.git.brookxu@tencent.com>
 References: <cover.1598518912.git.brookxu@tencent.com>
@@ -84,28 +84,29 @@ facilitating problem analysis.
 
 Signed-off-by: Chunguang Xu <brookxu@tencent.com>
 ---
- net/rxrpc/ar-internal.h | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ arch/x86/kvm/ioapic.h | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index 6d29a36..b428dc7 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -1181,13 +1181,7 @@ static inline bool after_eq(u32 seq1, u32 seq2)
-  */
- #if 1 // defined(__KDEBUGALL)
+diff --git a/arch/x86/kvm/ioapic.h b/arch/x86/kvm/ioapic.h
+index 6604017..aa0c61a 100644
+--- a/arch/x86/kvm/ioapic.h
++++ b/arch/x86/kvm/ioapic.h
+@@ -94,14 +94,7 @@ struct kvm_ioapic {
+ };
  
--#define ASSERT(X)						\
--do {								\
--	if (unlikely(!(X))) {					\
--		pr_err("Assertion failed\n");			\
--		BUG();						\
--	}							\
+ #ifdef DEBUG
+-#define ASSERT(x)  							\
+-do {									\
+-	if (!(x)) {							\
+-		printk(KERN_EMERG "assertion failed %s: %d: %s\n",	\
+-		       __FILE__, __LINE__, #x);				\
+-		BUG();							\
+-	}								\
 -} while (0)
-+#define ASSERT(X)	ASSERT_FAIL(x)
- 
- #define ASSERTCMP(X, OP, Y)						\
- do {									\
++#define ASSERT(x) ASSERT_FAIL(x)
+ #else
+ #define ASSERT(x) do { } while (0)
+ #endif
 -- 
 1.8.3.1
 
