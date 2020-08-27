@@ -2,123 +2,96 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BA4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF31CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33A0B2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98CCF22B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:55:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sggoiReV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbgH0OzS (ORCPT
+        id S1726802AbgH0NKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:55:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727075AbgH0NLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:11:19 -0400
-Received: from gaia (unknown [46.69.195.127])
+        Thu, 27 Aug 2020 09:10:13 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:57927 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727056AbgH0NH7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 09:07:59 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598533679; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=TAoaWSZUFF1KNYXDVNXCndtaTBFmtxnhRgkY/2qV+MM=;
+ b=sggoiReVcsgjnpipO3U14csC/fcAXwQOPiJcy12k8rfvLDmzy4MPBPsPCWxC5Go//fDKJkCh
+ lcqPgfgE0fCZKnf8zgasnm8vNBE707HUjThBoLnkmnVfjK4Kehvi2rVKAH6e2Z04bx+hNTXi
+ 2pm8euDqAIRndUEmSBbTvcRD2ns=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5f47b01e797ad9909b1ad181 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 13:07:42
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BDA54C433CA; Thu, 27 Aug 2020 13:07:41 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10065206F0;
-        Thu, 27 Aug 2020 13:10:47 +0000 (UTC)
-Date:   Thu, 27 Aug 2020 14:10:45 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 21/35] arm64: mte: Add in-kernel tag fault handler
-Message-ID: <20200827131045.GM29264@gaia>
-References: <cover.1597425745.git.andreyknvl@google.com>
- <f173aacd755e4644485c551198549ac52d1eb650.1597425745.git.andreyknvl@google.com>
- <20200827095429.GC29264@gaia>
- <CAAeHK+xHQDMsTehppknjNTEMFh18ufWB1XLUGdVFoc-QZ-mVrw@mail.gmail.com>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 98F87C433C6;
+        Thu, 27 Aug 2020 13:07:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 98F87C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAeHK+xHQDMsTehppknjNTEMFh18ufWB1XLUGdVFoc-QZ-mVrw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] brcmfmac: Use fallthrough pseudo-keyword
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200821063758.GA17783@embeddedor>
+References: <20200821063758.GA17783@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200827130741.BDA54C433CA@smtp.codeaurora.org>
+Date:   Thu, 27 Aug 2020 13:07:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 02:31:23PM +0200, Andrey Konovalov wrote:
-> On Thu, Aug 27, 2020 at 11:54 AM Catalin Marinas
-> <catalin.marinas@arm.com> wrote:
-> > On Fri, Aug 14, 2020 at 07:27:03PM +0200, Andrey Konovalov wrote:
-> > > +static int do_tag_recovery(unsigned long addr, unsigned int esr,
-> > > +                        struct pt_regs *regs)
-> > > +{
-> > > +     report_tag_fault(addr, esr, regs);
-> > > +
-> > > +     /* Skip over the faulting instruction and continue: */
-> > > +     arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
-> >
-> > Ooooh, do we expect the kernel to still behave correctly after this? I
-> > thought the recovery means disabling tag checking altogether and
-> > restarting the instruction rather than skipping over it.
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+
+> Replace the existing /* fall through */ comments and its variants with
+> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> fall-through markings when it is the case.
 > 
-> The intention is to be able to catch multiple MTE faults without
-> panicking or disabling MTE when executing KASAN tests (those do
-> multiple bad accesses one after another).
-
-The problem is that for MTE synchronous tag check faults, the access has
-not happened, so you basically introduce memory corruption by skipping
-the access.
-
-> We do arm64_skip_faulting_instruction() for software tag-based KASAN
-> too, it's not ideal, but works for testing purposes.
-
-IIUC, KASAN only skips over the brk instruction which doesn't have any
-other side-effects. Has the actual memory access taken place when it
-hits the brk?
-
-> Can we disable MTE, reexecute the instruction, and then reenable MTE,
-> or something like that?
-
-If you want to preserve the MTE enabled, you could single-step the
-instruction or execute it out of line, though it's a bit more convoluted
-(we have a similar mechanism for kprobes/uprobes).
-
-Another option would be to attempt to set the matching tag in memory,
-under the assumption that it is writable (if it's not, maybe it's fine
-to panic). Not sure how this interacts with the slub allocator since,
-presumably, the logical tag in the pointer is wrong rather than the
-allocation one.
-
-Yet another option would be to change the tag in the register and
-re-execute but this may confuse the compiler.
-
-> When running in-kernel MTE in production, we'll either panic or
-> disable MTE after the first fault. This was controlled by the
-> panic_on_mte_fault option Vincenzo initially had.
-
-I prefer to disable MTE, print something and continue, but no panic.
-
-> > We only skip if we emulated it.
+> [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 > 
-> I'm not sure I understand this part, what do you mean by emulating?
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Executing it out of line or other form of instruction emulation (see
-arch/arm64/kernel/probes/simulate-insn.c) so that the access actually
-takes place. But you can single-step or experiment with some of the
-other tricks above.
+Patch applied to wireless-drivers-next.git, thanks.
+
+0bde10dc553d brcmfmac: Use fallthrough pseudo-keyword
 
 -- 
-Catalin
+https://patchwork.kernel.org/patch/11728219/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
