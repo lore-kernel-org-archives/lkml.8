@@ -2,145 +2,66 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC20C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B80122CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:49:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SyCN2jiY"
+	by mail.kernel.org (Postfix) with ESMTP id 1523522CAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:49:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729200AbgH0MtX (ORCPT
+        id S1729206AbgH0Mtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 08:49:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52201 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729081AbgH0MpT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 08:45:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598532298;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vr70ALb4ZjXi9RcX6VvF0ywgFtWFCx5BiJCk7jKQduQ=;
-        b=SyCN2jiY0B1vdI+qj67hIl5j3rii7pyAww9u2dXqQmmwmbMtd+skZYQj94iRfvIIqzOB7M
-        NYgc5QYU7afzUbR1Hsq5Ye7R4SLRAXCOMXlklJ53jLwdn6xQWvwctOVJv8PLWSX9MFoB3C
-        TgHd6bYJj13H7/7rhZenGiWYuBK7D0w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-106-rgIfL0zhNvOAoxeX1uhPyQ-1; Thu, 27 Aug 2020 08:44:54 -0400
-X-MC-Unique: rgIfL0zhNvOAoxeX1uhPyQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 02A7C420E7;
-        Thu, 27 Aug 2020 12:44:53 +0000 (UTC)
-Received: from krava (unknown [10.40.195.119])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 94EEB19936;
-        Thu, 27 Aug 2020 12:44:48 +0000 (UTC)
-Date:   Thu, 27 Aug 2020 14:44:47 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH] tools build feature: cleanup feature files on make clean
-Message-ID: <20200827124447.GA77089@krava>
-References: <159851841661.1072907.13770213104521805592.stgit@firesoul>
+        Thu, 27 Aug 2020 08:49:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60942 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728847AbgH0Mpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 08:45:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 27660B65C;
+        Thu, 27 Aug 2020 12:46:22 +0000 (UTC)
+Message-ID: <1f16a16669dd78127236db1916e41387ebdd32d1.camel@suse.com>
+Subject: Re: [PATCH 4/4] qla2xxx: Handle incorrect entry_type entries
+From:   Martin Wilck <mwilck@suse.com>
+To:     Daniel Wagner <dwagner@suse.de>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nilesh Javali <njavali@marvell.com>
+Date:   Thu, 27 Aug 2020 14:45:49 +0200
+In-Reply-To: <20200827114626.daispydkcsdp3rj2@beryllium.lan>
+References: <20200827095829.63871-1-dwagner@suse.de>
+         <20200827095829.63871-5-dwagner@suse.de>
+         <21cd86f782616fcac25f1a6270a9bd834ec777b7.camel@suse.com>
+         <20200827114626.daispydkcsdp3rj2@beryllium.lan>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.36.5 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159851841661.1072907.13770213104521805592.stgit@firesoul>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 10:53:36AM +0200, Jesper Dangaard Brouer wrote:
-> The system for "Auto-detecting system features" located under
-> tools/build/ are (currently) used by perf, libbpf and bpftool. It can
-> contain stalled feature detection files, which are not cleaned up by
-> libbpf and bpftool on make clean (side-note: perf tool is correct).
+On Thu, 2020-08-27 at 13:46 +0200, Daniel Wagner wrote:
+> On Thu, Aug 27, 2020 at 12:17:13PM +0200, Martin Wilck wrote:
+> > Should we perhaps log an error message when we detect a mismatch
+> > between sp->type and entry_type?
 > 
-> Fix this by making the users invoke the make clean target.
+> Sure can do, but does it really help? Not much we can do in the
+> driver. I hope the firmware gets fixed eventually. I am not against
+> it,
+> just not sure if the log entry really is helping except saying 'you
+> are
+> using a firmware with a known issue'.
 > 
-> Some details about the changes. The libbpf Makefile already had a
-> clean-config target (which seems to be copy-pasted from perf), but this
-> target was not "connected" (a make dependency) to clean target. Choose
-> not to rename target as someone might be using it. Did change the output
-> from "CLEAN config" to "CLEAN feature-detect", to make it more clear
-> what happens.
-> 
-> This is related to the complaint and troubleshooting in link:
-> Link: https://lore.kernel.org/lkml/20200818122007.2d1cfe2d@carbon/
 
-sry, I forgot about this one.. the change looks good to me
+... which might provide insightful, to users as well as perhaps
+developers (by observing under which conditions this problem occurs).
+I'd hope so, at least. But you know this issue much better than me.
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+Regards,
+Martin
 
-thanks,
-jirka
-
-> 
-> Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-> ---
->  tools/build/Makefile |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-> index 8462690a039b..02c99bc95c69 100644
-> --- a/tools/bpf/bpftool/Makefile
-> +++ b/tools/bpf/bpftool/Makefile
-> @@ -176,7 +176,11 @@ $(OUTPUT)bpftool: $(OBJS) $(LIBBPF)
->  $(OUTPUT)%.o: %.c
->  	$(QUIET_CC)$(CC) $(CFLAGS) -c -MMD -o $@ $<
->  
-> -clean: $(LIBBPF)-clean
-> +feature-detect-clean:
-> +	$(call QUIET_CLEAN, feature-detect)
-> +	$(Q)$(MAKE) -C $(srctree)/tools/build/feature/ clean >/dev/null
-> +
-> +clean: $(LIBBPF)-clean feature-detect-clean
->  	$(call QUIET_CLEAN, bpftool)
->  	$(Q)$(RM) -- $(OUTPUT)bpftool $(OUTPUT)*.o $(OUTPUT)*.d
->  	$(Q)$(RM) -- $(BPFTOOL_BOOTSTRAP) $(OUTPUT)*.skel.h $(OUTPUT)vmlinux.h
-> diff --git a/tools/build/Makefile b/tools/build/Makefile
-> index 727050c40f09..722f1700d96a 100644
-> --- a/tools/build/Makefile
-> +++ b/tools/build/Makefile
-> @@ -38,6 +38,8 @@ clean:
->  	$(call QUIET_CLEAN, fixdep)
->  	$(Q)find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
->  	$(Q)rm -f $(OUTPUT)fixdep
-> +	$(call QUIET_CLEAN, feature-detect)
-> +	$(Q)$(MAKE) -C feature/ clean >/dev/null
->  
->  $(OUTPUT)fixdep-in.o: FORCE
->  	$(Q)$(MAKE) $(build)=fixdep
-> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-> index bf8ed134cb8a..bbb89551468a 100644
-> --- a/tools/lib/bpf/Makefile
-> +++ b/tools/lib/bpf/Makefile
-> @@ -269,10 +269,10 @@ install: install_lib install_pkgconfig install_headers
->  ### Cleaning rules
->  
->  config-clean:
-> -	$(call QUIET_CLEAN, config)
-> +	$(call QUIET_CLEAN, feature-detect)
->  	$(Q)$(MAKE) -C $(srctree)/tools/build/feature/ clean >/dev/null
->  
-> -clean:
-> +clean: config-clean
->  	$(call QUIET_CLEAN, libbpf) $(RM) -rf $(CMD_TARGETS)		     \
->  		*~ .*.d .*.cmd LIBBPF-CFLAGS $(BPF_HELPER_DEFS)		     \
->  		$(SHARED_OBJDIR) $(STATIC_OBJDIR)			     \
-> 
-> 
 
