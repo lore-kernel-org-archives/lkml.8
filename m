@@ -2,127 +2,127 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D2DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9CBB2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:20:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gcovqugj"
+	by mail.kernel.org (Postfix) with ESMTP id 18EA42078A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:20:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbgH0JUU (ORCPT
+        id S1728373AbgH0JUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:20:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgH0JUS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:20:18 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C22D9C061264;
-        Thu, 27 Aug 2020 02:20:16 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 17so3025297pfw.9;
-        Thu, 27 Aug 2020 02:20:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NHovxXj8kNl+bO/iYwws9eniGeyDYn/VL5TU+ffgVe8=;
-        b=gcovqugjmSAGtw1SadGUSYghzOegMGsxuFFYTfl1i1TQhmAUH6wYXgJf7oDOSnUiYo
-         2yK4hr+IonNH5Z4kS3bkZcB88gD+xw0D6GNM6JUhyWRNmy6MI1i9wwYK4XaTB4Akm4r2
-         J6MwACe7X9ZN1B3YkRf/ZoOc+gQ8RcuO5ykz5nxUqZEdYDq4LorwFP8/tJCrOBQI5hj2
-         R5Xspmoa60AUW0Wiv4zZXY758AhK/RnvcF4AYPOgUHrjr82+/2ol7b/YWwMvLwKp5UNo
-         CNkKggy9+VmOWdL7LdYqeEjDNe8GO21LhokpW8WeEIsQAst4GEgETw4DS+N39sBYcsI5
-         dPZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NHovxXj8kNl+bO/iYwws9eniGeyDYn/VL5TU+ffgVe8=;
-        b=PbBtLHgOx4DtoVBrAhx5UMoPzHIsiXSjwbFg72i4OVYggKN5QfbdhLjJjmHByvkA3w
-         gjEVN5UWUXG1g5PKePxKihy+qX4MmQR/2BoyVaZxmOn2ZFFvJLqFI0ou0Yk6cCdyqHwb
-         GRtYMzfB837yy94/8Zz1K+5Bp8QfGo9oM5+oWy5cJnyd6pm1mIxLEZplYqlziYNpoIsW
-         z9CHvMLE5P/zBQ6GRzGl5c515mmfRQzzDACqndmKQAzD40xBy8rydsJ9NSL54WdMhKh3
-         GkWjBwhxF82loJCGw1arbU+DnpsaHC26pGcqYmIJBveXpdngnV3Hk6ctzCMGDvJXByFI
-         wDJQ==
-X-Gm-Message-State: AOAM530UNccRgCioGGCjRa0vYyy9f2L7hhDtjXWqOk9AXdpzNF6RqBwX
-        rZamouAe5+ymw8HqnvyBXdpQ2dQq9jVz64MC52M=
-X-Google-Smtp-Source: ABdhPJwe0B4oPJaBrE/zcyPdEd/iXNQmz7ydwrDHQeDooT4rtlP2BEsxoIKXfXOd3ZfQIEmpnRfN8FY78P1J1rOzibo=
-X-Received: by 2002:a63:ec18:: with SMTP id j24mr13402591pgh.74.1598520016226;
- Thu, 27 Aug 2020 02:20:16 -0700 (PDT)
+        Thu, 27 Aug 2020 05:20:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35054 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726266AbgH0JUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:20:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C446CB70C;
+        Thu, 27 Aug 2020 09:21:06 +0000 (UTC)
+Subject: Re: [PATCH] drm/hisilicon: Removed the dependency on the mmu
+To:     Tian Tao <tiantao6@hisilicon.com>, airlied@linux.ie,
+        daniel@ffwll.ch, kraxel@redhat.com, alexander.deucher@amd.com,
+        tglx@linutronix.de, dri-devel@lists.freedesktop.org,
+        xinliang.liu@linaro.org, linux-kernel@vger.kernel.org
+Cc:     linuxarm@huawei.com
+References: <1598428528-49046-1-git-send-email-tiantao6@hisilicon.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Message-ID: <6f0110db-e99c-f3aa-7384-0c94b103df46@suse.de>
+Date:   Thu, 27 Aug 2020 11:20:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200826181706.11098-1-krzk@kernel.org> <20200826181706.11098-24-krzk@kernel.org>
-In-Reply-To: <20200826181706.11098-24-krzk@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Aug 2020 12:20:00 +0300
-Message-ID: <CAHp75VdygxySau_Ma5YqARgR92BNM+AK3yn2rThYxFEmzdYSLg@mail.gmail.com>
-Subject: Re: [PATCH 24/24] Input: sx8643 - Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bastien Nocera <hadess@hadess.net>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-input <linux-input@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1598428528-49046-1-git-send-email-tiantao6@hisilicon.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="KULVXC8S39wiYcq8slr4cOQpojIehEohB"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 9:21 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and also it prints the error value.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--KULVXC8S39wiYcq8slr4cOQpojIehEohB
+Content-Type: multipart/mixed; boundary="qbNIdt43Js2p80Ombq6tt2QVpDl3hq9xC";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Tian Tao <tiantao6@hisilicon.com>, airlied@linux.ie, daniel@ffwll.ch,
+ kraxel@redhat.com, alexander.deucher@amd.com, tglx@linutronix.de,
+ dri-devel@lists.freedesktop.org, xinliang.liu@linaro.org,
+ linux-kernel@vger.kernel.org
+Cc: linuxarm@huawei.com
+Message-ID: <6f0110db-e99c-f3aa-7384-0c94b103df46@suse.de>
+Subject: Re: [PATCH] drm/hisilicon: Removed the dependency on the mmu
+References: <1598428528-49046-1-git-send-email-tiantao6@hisilicon.com>
+In-Reply-To: <1598428528-49046-1-git-send-email-tiantao6@hisilicon.com>
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+--qbNIdt43Js2p80Ombq6tt2QVpDl3hq9xC
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Just in case if you want to save more LOCs, you may in some drivers
-introduce temporary variable for device pointer, like
+Hi
 
-struct device *dev = &client->dev;
+Am 26.08.20 um 09:55 schrieb Tian Tao:
+> hibmc can only be used in ARM64 architectures, and mmu defaults to y
+> in arch/arm64/Kconfig, so there is no need to add a dependency on mmu
+> in hibmc's kconfig.
+>=20
+> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+
 > ---
->  drivers/input/touchscreen/sx8654.c | 10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/input/touchscreen/sx8654.c b/drivers/input/touchscreen/sx8654.c
-> index de85e57b2486..d2ed9be64c3a 100644
-> --- a/drivers/input/touchscreen/sx8654.c
-> +++ b/drivers/input/touchscreen/sx8654.c
-> @@ -323,13 +323,9 @@ static int sx8654_probe(struct i2c_client *client,
->
->         sx8654->gpio_reset = devm_gpiod_get_optional(&client->dev, "reset",
->                                                      GPIOD_OUT_HIGH);
-> -       if (IS_ERR(sx8654->gpio_reset)) {
-> -               error = PTR_ERR(sx8654->gpio_reset);
-> -               if (error != -EPROBE_DEFER)
-> -                       dev_err(&client->dev, "unable to get reset-gpio: %d\n",
-> -                               error);
-> -               return error;
-> -       }
-> +       if (IS_ERR(sx8654->gpio_reset))
-> +               return dev_err_probe(&client->dev, PTR_ERR(sx8654->gpio_reset),
-> +                                    "unable to get reset-gpio\n");
->         dev_dbg(&client->dev, "got GPIO reset pin\n");
->
->         sx8654->data = device_get_match_data(&client->dev);
-> --
-> 2.17.1
->
+>  drivers/gpu/drm/hisilicon/hibmc/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/Kconfig b/drivers/gpu/drm/=
+hisilicon/hibmc/Kconfig
+> index dfc5aef..43943e9 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/Kconfig
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config DRM_HISI_HIBMC
+>  	tristate "DRM Support for Hisilicon Hibmc"
+> -	depends on DRM && PCI && MMU && ARM64
+> +	depends on DRM && PCI && ARM64
+>  	select DRM_KMS_HELPER
+>  	select DRM_VRAM_HELPER
+>  	select DRM_TTM
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+--qbNIdt43Js2p80Ombq6tt2QVpDl3hq9xC--
+
+--KULVXC8S39wiYcq8slr4cOQpojIehEohB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQFIBAEBCAAyFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl9HeuEUHHR6aW1tZXJt
+YW5uQHN1c2UuZGUACgkQaA3BHVMLeiNVLQgAhJP85eJllBaaDomuKaFMd771xpMM
+oAASYd3aocuf0yMRW+VUsOKP93l0FrRCdgMX5PkcuUpUMfpRvX0z583IMjcKXP90
+Kcf9wSiTr6UfFfMBWsCXpxwg6KbDJsDBO3D1cRWwhN0zU9ZI7Q/5yfiYT9/iZVY+
+zxJJHzfxT+Mob59phfY1MVQJppLbQdtJAKyK4EU0o1FBC7EL6/TK4vvH8k1Hj7ts
+rVPjaZRxUqmZnsgJRyrIEEqzHctiU71JMwjsWlKjfbcwnOONIdPKOhYakDQhyeyt
+Fo0jACY0wr5e3qfIEuRWFCT98aeP1co/S4dhrIBPvwpGFDXh3Bw0HfeWog==
+=rU1j
+-----END PGP SIGNATURE-----
+
+--KULVXC8S39wiYcq8slr4cOQpojIehEohB--
