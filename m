@@ -2,83 +2,147 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2F7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5C2C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC7FA2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E472080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:16:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="olO2E455"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MZqck0sj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgH0JQA (ORCPT
+        id S1728374AbgH0JQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:16:00 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:51362 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726157AbgH0JQA (ORCPT
+        Thu, 27 Aug 2020 05:16:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgH0JQj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:16:00 -0400
-X-UUID: 520acdf6c46f4604939d6a7a13e5b330-20200827
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=V1FwTzdYmRJ/zoRfCUGYgxD7wn+pwTusye8m5DDKIDU=;
-        b=olO2E455TEdjE8bfsj8k6SFXAGjtRFTGPnZfyBTjm+M3xaFcl5Cz84UEzN7bngu7dcTsCCJVmWDux0xnYoOpkFhTS2QIsdYf1Lhs7mEVBW6entY08IyHxwvDdtXEyTu6/cJOzcT7s8S21gUMEbIno6pBsSrC3xHHUl9RWtpYufk=;
-X-UUID: 520acdf6c46f4604939d6a7a13e5b330-20200827
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <landen.chao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 258634638; Thu, 27 Aug 2020 17:15:51 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 27 Aug 2020 17:15:48 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 27 Aug 2020 17:15:49 +0800
-From:   Landen Chao <landen.chao@mediatek.com>
-To:     Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Russell King <linux@armlinux.org.uk>
-CC:     <opensource@vdorst.com>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <frank-w@public-files.de>,
-        <dqfext@gmail.com>, Landen Chao <landen.chao@mediatek.com>
-Subject: [PATCH] net: dsa: mt7530: fix advertising unsupported
-Date:   Thu, 27 Aug 2020 17:15:47 +0800
-Message-ID: <20200827091547.21870-1-landen.chao@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Thu, 27 Aug 2020 05:16:39 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADC8DC061264;
+        Thu, 27 Aug 2020 02:16:38 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id w186so2913801pgb.8;
+        Thu, 27 Aug 2020 02:16:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JwFCkkz5VX1KhqOgC/A46pRkPoJXqCrnvRq7RlXV44Y=;
+        b=MZqck0sjY5yqBsyyGG7EL6lGiDj5SzDST8SkhvPk6A1/uGj63z5+m3kax8UWb6wtcZ
+         /+wIvoK8uNNiBrHTehpEZk9B2aYVYUl6tHqSB0usNtbD87t8wGL8ucl23F63dFKwZALB
+         ST78rU4PyEbOQZjWZSyDn3gib2fkrZUo9D4kJ5d8zN3jkAPe3y+hc/2mkaFM3W6ZFJ/M
+         JqOqLahlrmpW9XkphCj3Ki04lEIchqBV8pt0WCxge9KSey6dHNej3fHlo6UWE9eXiZZ8
+         PbEUpZmiIfcOA9y7rxhZXADI68yRpC67VkeiYSyx7nSzyY3xBskNWNAl4N4NyhJHxVxj
+         s9tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JwFCkkz5VX1KhqOgC/A46pRkPoJXqCrnvRq7RlXV44Y=;
+        b=pXPptWXf4GMM591e3XhX2QJjq9tIB8LGlR5wSBQ/8zw/uOesLeYHKgZ7F4gujcnUhO
+         pSJ56ugcS8rYY96eUTZ2ZBUulqgYFGpDKG5DFZBlkO4zHSZzIV461FSfFIe/2jfK7x1s
+         7rELn7/eGhDnwiz2BpnCZkBZv9EmlEPPQtfZCaCSK4UulgfbSPrYihc7FHNilRIbog6K
+         R46PhdW3lH9hJxAFKsB5sHRz2mWKbpEG5GOmNRqLgVUajLw727+hxPv5BFYGacQrZSGM
+         BQ0I6OHSUgj1ODhP+mb+/ZhmPAy4eSnO5H/X0SWretGrDFh+b1AkH2LopOC+9B/gpCZ3
+         akZA==
+X-Gm-Message-State: AOAM533qtLosVA/ckE8OuFXvtjY7zGu7X1MnKOU1WNZWaqrYSi8n+D8a
+        JFr656OTkqe+E2gSjhQJhx2/SqVWSDIo6heozlk=
+X-Google-Smtp-Source: ABdhPJzmUAdRt6wwEF23BJ0BUUKEohQ229uHbHaYH/ixziT5WHv8yFE7nk7RmU1uwWmU5O6dqSJ+sP0+jStaqcQKeZE=
+X-Received: by 2002:a17:902:8208:: with SMTP id x8mr4121547pln.65.1598519798257;
+ Thu, 27 Aug 2020 02:16:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200826181706.11098-1-krzk@kernel.org> <20200826181706.11098-19-krzk@kernel.org>
+In-Reply-To: <20200826181706.11098-19-krzk@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 27 Aug 2020 12:16:22 +0300
+Message-ID: <CAHp75VezmFsK0eiEk-4ZzcSfnHP4y6N4Qfds4paBJhkHYL85Bw@mail.gmail.com>
+Subject: Re: [PATCH 19/24] Input: raydium_i2c_ts - Simplify with dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-input <linux-input@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MTAwMGJhc2VUX0hhbGYNCg0KUmVtb3ZlIDEwMDBiYXNlVF9IYWxmIHRvIGFkdmVydGlzZSBjb3Jy
-ZWN0IGhhcmR3YXJlIGNhcGFiaWxpdHkgaW4NCnBoeWxpbmtfdmFsaWRhdGUoKSBjYWxsYmFjayBm
-dW5jdGlvbi4NCg0KRml4ZXM6IDM4Zjc5MGE4MDU2MCAoIm5ldDogZHNhOiBtdDc1MzA6IEFkZCBz
-dXBwb3J0IGZvciBwb3J0IDUiKQ0KU2lnbmVkLW9mZi1ieTogTGFuZGVuIENoYW8gPGxhbmRlbi5j
-aGFvQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvbmV0L2RzYS9tdDc1MzAuYyB8IDIgKy0N
-CiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCg0KZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAuYyBiL2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAu
-Yw0KaW5kZXggOGRjYjhhNDlhYjY3Li4yMzg0MTdkYjI2ZjkgMTAwNjQ0DQotLS0gYS9kcml2ZXJz
-L25ldC9kc2EvbXQ3NTMwLmMNCisrKyBiL2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAuYw0KQEAgLTE1
-MDEsNyArMTUwMSw3IEBAIHN0YXRpYyB2b2lkIG10NzUzMF9waHlsaW5rX3ZhbGlkYXRlKHN0cnVj
-dCBkc2Ffc3dpdGNoICpkcywgaW50IHBvcnQsDQogCQlwaHlsaW5rX3NldChtYXNrLCAxMDBiYXNl
-VF9GdWxsKTsNCiANCiAJCWlmIChzdGF0ZS0+aW50ZXJmYWNlICE9IFBIWV9JTlRFUkZBQ0VfTU9E
-RV9NSUkpIHsNCi0JCQlwaHlsaW5rX3NldChtYXNrLCAxMDAwYmFzZVRfSGFsZik7DQorCQkJLyog
-VGhpcyBzd2l0Y2ggb25seSBzdXBwb3J0cyAxRyBmdWxsLWR1cGxleC4gKi8NCiAJCQlwaHlsaW5r
-X3NldChtYXNrLCAxMDAwYmFzZVRfRnVsbCk7DQogCQkJaWYgKHBvcnQgPT0gNSkNCiAJCQkJcGh5
-bGlua19zZXQobWFzaywgMTAwMGJhc2VYX0Z1bGwpOw0KLS0gDQoyLjE3LjENCg==
+On Wed, Aug 26, 2020 at 9:20 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
 
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/input/touchscreen/raydium_i2c_ts.c | 30 +++++++---------------
+>  1 file changed, 9 insertions(+), 21 deletions(-)
+>
+> diff --git a/drivers/input/touchscreen/raydium_i2c_ts.c b/drivers/input/touchscreen/raydium_i2c_ts.c
+> index fe245439adee..4017775f6466 100644
+> --- a/drivers/input/touchscreen/raydium_i2c_ts.c
+> +++ b/drivers/input/touchscreen/raydium_i2c_ts.c
+> @@ -1015,32 +1015,20 @@ static int raydium_i2c_probe(struct i2c_client *client,
+>         i2c_set_clientdata(client, ts);
+>
+>         ts->avdd = devm_regulator_get(&client->dev, "avdd");
+> -       if (IS_ERR(ts->avdd)) {
+> -               error = PTR_ERR(ts->avdd);
+> -               if (error != -EPROBE_DEFER)
+> -                       dev_err(&client->dev,
+> -                               "Failed to get 'avdd' regulator: %d\n", error);
+> -               return error;
+> -       }
+> +       if (IS_ERR(ts->avdd))
+> +               return dev_err_probe(&client->dev, PTR_ERR(ts->avdd),
+> +                                    "Failed to get 'avdd' regulator\n");
+>
+>         ts->vccio = devm_regulator_get(&client->dev, "vccio");
+> -       if (IS_ERR(ts->vccio)) {
+> -               error = PTR_ERR(ts->vccio);
+> -               if (error != -EPROBE_DEFER)
+> -                       dev_err(&client->dev,
+> -                               "Failed to get 'vccio' regulator: %d\n", error);
+> -               return error;
+> -       }
+> +       if (IS_ERR(ts->vccio))
+> +               return dev_err_probe(&client->dev, PTR_ERR(ts->vccio),
+> +                                    "Failed to get 'vccio' regulator\n");
+>
+>         ts->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+>                                                  GPIOD_OUT_LOW);
+> -       if (IS_ERR(ts->reset_gpio)) {
+> -               error = PTR_ERR(ts->reset_gpio);
+> -               if (error != -EPROBE_DEFER)
+> -                       dev_err(&client->dev,
+> -                               "failed to get reset gpio: %d\n", error);
+> -               return error;
+> -       }
+> +       if (IS_ERR(ts->reset_gpio))
+> +               return dev_err_probe(&client->dev, PTR_ERR(ts->reset_gpio),
+> +                                    "Failed to get reset gpio\n");
+>
+>         error = raydium_i2c_power_on(ts);
+>         if (error)
+> --
+> 2.17.1
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
