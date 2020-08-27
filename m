@@ -2,169 +2,86 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907A9C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D89C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60FE22087D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598541402;
-	bh=PP0bI7sUDln6gk+DlxUV7f5eKbxC3kbdiD3361ooqy0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UfMgIkaPsVr8UFxcoRctLj4XkjNGShW44ewpnW4J2qcczuggf0VqMq7t34/09tYFe
-	 WOo2LfAv/Lg/geQ0M6JwRXJseykORV/nO/lRLBPOfI6u2mqViNdwkCZBVUWYFBykg9
-	 9CoruUTci4syoWv69R8LbikiUlDv7KeXEl4QPqo4=
+	by mail.kernel.org (Postfix) with ESMTP id A4B122080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:17:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgH0PQF (ORCPT
+        id S1728030AbgH0PQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:16:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50404 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728129AbgH0LhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 07:37:13 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FF0322CB3;
-        Thu, 27 Aug 2020 11:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598528232;
-        bh=PP0bI7sUDln6gk+DlxUV7f5eKbxC3kbdiD3361ooqy0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tHlD1hc9p+6M5UQV6MKA3W8Lkaa62bL+qOtZ/qzKr+8p8FBL4YxCRClk8CLx8ryZJ
-         nBnMWFni06h0Zfle4CGAOaqgoJtfHDaann41JC17cMb+lmkcgErfcFrvx299OVHJDo
-         Q32a37c+SAu5Bn5e6M80Um+TRAMh/9ki4ORxyXmw=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, x86@kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        linux-arch@vger.kernel.org
-Subject: [PATCH v2 11/15] s390: kprobes: Use generic kretprobe trampoline handler
-Date:   Thu, 27 Aug 2020 20:37:08 +0900
-Message-Id: <159852822822.707944.2885054218880962378.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <159852811819.707944.12798182250041968537.stgit@devnote2>
-References: <159852811819.707944.12798182250041968537.stgit@devnote2>
-User-Agent: StGit/0.19
+        Thu, 27 Aug 2020 11:16:59 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35622 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbgH0PPw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 11:15:52 -0400
+Received: by mail-lj1-f193.google.com with SMTP id i10so6884194ljn.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 08:15:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Vee510hlaKXEjilUzfAAyKIFzgEM6FJYt8Ol80rJ/4g=;
+        b=t/o2WDYxUN0aHwsD9rZ1xk22+koLQmPHqh4SGTMOCytHpSE038ixLdGHHmns8OPjVo
+         R4YnYe7ULRp1tM06XJzPEUn5eogarylJBT1Ejn/I9NHYiH0kk2rP6p78+OZuKW93B5Ts
+         wYt2Rn7H04+eL9aIN2ekS43119uawFtXBqoXYYzyNTiML+DT4MO0JSrElHNxO1Aii+6P
+         B4HAqFE5Gw3qPvdzZt5cMAS07JGi3ZaHwL5raENV+9UuJ2BHNrr0BtxvBTiaQvhd5NRi
+         FtBn8d2XEgm/izwnh3/ITXIlVNr93YQoNC2PV8OSSAsB8LhXuLys9FMnvMxuHATv3Ih5
+         mwag==
+X-Gm-Message-State: AOAM533xw4hYSFCavGsylWZzNkhV7crqqX3xQ5UUILG/S13JXYFTFYhw
+        BlsDJHFqDCIMf0iNzjeV1iE=
+X-Google-Smtp-Source: ABdhPJwXlSIz+YWou16eoxNonKiNs689uN3pfPogY0WqVFeBhVt5XbmYDxq34O0s8zLwVcqzGrEzCA==
+X-Received: by 2002:a2e:918f:: with SMTP id f15mr9729215ljg.86.1598541350578;
+        Thu, 27 Aug 2020 08:15:50 -0700 (PDT)
+Received: from localhost.localdomain ([213.87.147.111])
+        by smtp.googlemail.com with ESMTPSA id y9sm532209lji.106.2020.08.27.08.15.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 08:15:50 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Denis Efremov <efremov@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>
+Subject: [PATCH] ARM/dma-mapping: use kvzalloc() in __iommu_alloc_buffer()
+Date:   Thu, 27 Aug 2020 18:15:41 +0300
+Message-Id: <20200827151541.39662-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- arch/s390/kernel/kprobes.c |   81 ++------------------------------------------
- 1 file changed, 4 insertions(+), 77 deletions(-)
+Use kvzalloc() in __iommu_alloc_buffer() instead of open-coding it.
 
-diff --git a/arch/s390/kernel/kprobes.c b/arch/s390/kernel/kprobes.c
-index d2a71d872638..6009f08836f4 100644
---- a/arch/s390/kernel/kprobes.c
-+++ b/arch/s390/kernel/kprobes.c
-@@ -228,6 +228,7 @@ NOKPROBE_SYMBOL(pop_kprobe);
- void arch_prepare_kretprobe(struct kretprobe_instance *ri, struct pt_regs *regs)
- {
- 	ri->ret_addr = (kprobe_opcode_t *) regs->gprs[14];
-+	ri->fp = NULL;
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ arch/arm/mm/dma-mapping.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
+index 8a8949174b1c..9def10affa70 100644
+--- a/arch/arm/mm/dma-mapping.c
++++ b/arch/arm/mm/dma-mapping.c
+@@ -1203,10 +1203,7 @@ static struct page **__iommu_alloc_buffer(struct device *dev, size_t size,
+ 	int i = 0;
+ 	int order_idx = 0;
  
- 	/* Replace the return addr with trampoline addr */
- 	regs->gprs[14] = (unsigned long) &kretprobe_trampoline;
-@@ -331,83 +332,9 @@ static void __used kretprobe_trampoline_holder(void)
-  */
- static int trampoline_probe_handler(struct kprobe *p, struct pt_regs *regs)
- {
--	struct kretprobe_instance *ri;
--	struct hlist_head *head, empty_rp;
--	struct hlist_node *tmp;
--	unsigned long flags, orig_ret_address;
--	unsigned long trampoline_address;
--	kprobe_opcode_t *correct_ret_addr;
--
--	INIT_HLIST_HEAD(&empty_rp);
--	kretprobe_hash_lock(current, &head, &flags);
--
--	/*
--	 * It is possible to have multiple instances associated with a given
--	 * task either because an multiple functions in the call path
--	 * have a return probe installed on them, and/or more than one return
--	 * return probe was registered for a target function.
--	 *
--	 * We can handle this because:
--	 *     - instances are always inserted at the head of the list
--	 *     - when multiple return probes are registered for the same
--	 *	 function, the first instance's ret_addr will point to the
--	 *	 real return address, and all the rest will point to
--	 *	 kretprobe_trampoline
--	 */
--	ri = NULL;
--	orig_ret_address = 0;
--	correct_ret_addr = NULL;
--	trampoline_address = (unsigned long) &kretprobe_trampoline;
--	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
--		if (ri->task != current)
--			/* another task is sharing our hash bucket */
--			continue;
--
--		orig_ret_address = (unsigned long) ri->ret_addr;
--
--		if (orig_ret_address != trampoline_address)
--			/*
--			 * This is the real return address. Any other
--			 * instances associated with this task are for
--			 * other calls deeper on the call stack
--			 */
--			break;
--	}
--
--	kretprobe_assert(ri, orig_ret_address, trampoline_address);
--
--	correct_ret_addr = ri->ret_addr;
--	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
--		if (ri->task != current)
--			/* another task is sharing our hash bucket */
--			continue;
--
--		orig_ret_address = (unsigned long) ri->ret_addr;
--
--		if (ri->rp && ri->rp->handler) {
--			ri->ret_addr = correct_ret_addr;
--			ri->rp->handler(ri, regs);
--		}
--
--		recycle_rp_inst(ri, &empty_rp);
--
--		if (orig_ret_address != trampoline_address)
--			/*
--			 * This is the real return address. Any other
--			 * instances associated with this task are for
--			 * other calls deeper on the call stack
--			 */
--			break;
--	}
--
--	regs->psw.addr = orig_ret_address;
--
--	kretprobe_hash_unlock(current, &flags);
--
--	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
--		hlist_del(&ri->hlist);
--		kfree(ri);
--	}
-+	regs->psw.addr = __kretprobe_trampoline_handler(regs,
-+			(unsigned long) &kretprobe_trampoline,
-+			NULL);
- 	/*
- 	 * By returning a non-zero value, we are telling
- 	 * kprobe_handler() that we don't want the post_handler
+-	if (array_size <= PAGE_SIZE)
+-		pages = kzalloc(array_size, GFP_KERNEL);
+-	else
+-		pages = vzalloc(array_size);
++	pages = kvzalloc(array_size, GFP_KERNEL);
+ 	if (!pages)
+ 		return NULL;
+ 
+-- 
+2.26.2
 
