@@ -2,115 +2,124 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D96C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19093C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43BFB20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:17:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ANPJzFdN"
+	by mail.kernel.org (Postfix) with ESMTP id F0CDE20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:17:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgH0KRQ (ORCPT
+        id S1728951AbgH0KRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 27 Aug 2020 06:17:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58806 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728932AbgH0KRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 06:17:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728369AbgH0KOq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:14:46 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1450C061264;
-        Thu, 27 Aug 2020 03:14:45 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id g29so2003121pgl.2;
-        Thu, 27 Aug 2020 03:14:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=HZGm0oXcyUeZY6L8W+dSwUofViF+kTxFMzUB/D8ZFAM=;
-        b=ANPJzFdN8kjfNXtQxOMLBA22mHOKLWBBCBVZg7qIV+f6tHORlUxSlOXNIdI/ab0jXE
-         EC57zjRwF8+aPIaz+y4ZhMJ+oxbezSBvEyn9T/IwuhSdzcJIWC3FQGBt294Up+XvlWr0
-         veffF2qvQKp1rFI29ulOXGOcRMuT0tX4ShR4mEdztLPrAe2Pl2pSKZ9f2vqcXdltClE/
-         TsNA8XgEmZpaEfs+8s+0mWOSMXZwqFq++aYwFzGr+p3TTQ00/sDcY0SUCrLOFwtmVia/
-         tNNrwkYY/2rWHHmiVkJcgjuJjYS7QbAy1INVzDRUbZbHfBpNVz/Dr3w40tVArsvNnOqK
-         IPUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=HZGm0oXcyUeZY6L8W+dSwUofViF+kTxFMzUB/D8ZFAM=;
-        b=lH3Udd4q8EsGW5pi/8OAmaOPLqE6Ai1Ujj2rHwHzY+F164XsqJpX+XyPwIyrlXWumR
-         SBV+SHPe7Tse6o9ygqJgSaXT7JBeGKeXkFOgfr/mRFVajSccPzrjuDgWYcSkuY/32/54
-         fTnIwPkP6d6t0nrITDxpXp5M2109Y0LhOIA1naBfH0T2EPUsSy9qiR+y+Vlg6Csq4nxW
-         /3wHLXk+QfEZcz+jSgmTvCjvFYq7d5u0bUF/mJnBw5NbZKoZjz4yD83yoejQ5AFy14H1
-         2iDYEIDW+Juj6DYUFIUdkptY2nbSt3noPBwfmQuJq2OaR5CbBAgkg+XFX90H1rcvAVY1
-         NAbQ==
-X-Gm-Message-State: AOAM533JOJaWa9jlX9LD2XpWTDfk/Wn+RZx6IqIBv0B4hx6f0je8twnG
-        Tek1YTok9uQVOoWecxrE7gi9Q/KAR33Raw==
-X-Google-Smtp-Source: ABdhPJzTG3bN4gpahNny/4xg9AnJ4k/CAerjJ60Meuyw9Gqe8D4p8VQB3S/ZcsE8VOZfEy0wiKuinQ==
-X-Received: by 2002:a62:7687:: with SMTP id r129mr15999101pfc.308.1598523285129;
-        Thu, 27 Aug 2020 03:14:45 -0700 (PDT)
-Received: from VM-0-6-centos.localdomain ([119.28.90.140])
-        by smtp.gmail.com with ESMTPSA id t10sm2333434pfq.52.2020.08.27.03.14.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Aug 2020 03:14:44 -0700 (PDT)
-From:   Chunguang Xu <brookxu.cn@gmail.com>
-X-Google-Original-From: Chunguang Xu <brookxu@tencent.com>
-To:     arnd@arndb.de
-Cc:     rppt@kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 10/23] btrfs: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-Date:   Thu, 27 Aug 2020 18:14:15 +0800
-Message-Id: <03e19096206bd199e6e42289da5c8da537faaeea.1598518912.git.brookxu@tencent.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1598518912.git.brookxu@tencent.com>
-References: <cover.1598518912.git.brookxu@tencent.com>
-In-Reply-To: <cover.1598518912.git.brookxu@tencent.com>
-References: <cover.1598518912.git.brookxu@tencent.com>
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 3495FAFC1;
+        Thu, 27 Aug 2020 10:17:46 +0000 (UTC)
+Message-ID: <21cd86f782616fcac25f1a6270a9bd834ec777b7.camel@suse.com>
+Subject: Re: [PATCH 4/4] qla2xxx: Handle incorrect entry_type entries
+From:   Martin Wilck <mwilck@suse.com>
+To:     Daniel Wagner <dwagner@suse.de>, linux-scsi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Nilesh Javali <njavali@marvell.com>
+Date:   Thu, 27 Aug 2020 12:17:13 +0200
+In-Reply-To: <20200827095829.63871-5-dwagner@suse.de>
+References: <20200827095829.63871-1-dwagner@suse.de>
+         <20200827095829.63871-5-dwagner@suse.de>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.36.5 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since ASSERT_FAIL() and ASSERT_WARN() have been provided, ASSERT()
-may be realized through them, thus reducing code redundancy and
-facilitating problem analysis.
+On Thu, 2020-08-27 at 11:58 +0200, Daniel Wagner wrote:
+> It was observed on an ISP8324 16Gb HBA with fw=8.08.203 (d0d5) that
+> pkt->entry_type was MBX_IOCB_TYPE/0x39 with an sp->type SRB_SCSI_CMD
+> which is invalid and should not be possible.
+> 
+> A careful code review of the crash dump didn't reveal any short
+> comings. Reading the entry_type from the crash dump shows the
+> expected
+> value of STATUS_TYPE/0x03 but the call trace shows that
+> qla24xx_mbx_iocb_entry() is used.
+> 
+> One possible explanation is when pkt->entry_type is read it doesn't
+> contain the correct information. That means the driver observes an
+> data
+> race by the firmware.
+> 
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+> ---
+>  drivers/scsi/qla2xxx/qla_isr.c | 28 ++++++++++++++++++++++++++--
+>  1 file changed, 26 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/scsi/qla2xxx/qla_isr.c
+> b/drivers/scsi/qla2xxx/qla_isr.c
+> index b787643f5031..0c324e88b189 100644
+> --- a/drivers/scsi/qla2xxx/qla_isr.c
+> +++ b/drivers/scsi/qla2xxx/qla_isr.c
+> @@ -3392,6 +3392,31 @@ void qla24xx_nvme_ls4_iocb(struct
+> scsi_qla_host *vha,
+>  	sp->done(sp, comp_status);
+>  }
+>  
+> +static void qla24xx_process_mbx_iocb_response(struct scsi_qla_host
+> *vha,
+> +	struct rsp_que *rsp, struct sts_entry_24xx *pkt)
+> +{
+> +	srb_t *sp;
+> +
+> +	sp = qla2x00_get_sp_from_handle(vha, rsp->req, pkt);
+> +	if (!sp)
+> +		return;
+> +
+> +	if (sp->type == SRB_SCSI_CMD ||
+> +	    sp->type == SRB_NVME_CMD ||
+> +	    sp->type == SRB_TM_CMD) {
+> +		/* Some firmware version don't update the entry_type
+> +		 * correctly.  It was observed entry_type contained
+> +		 * MBCX_IOCB_TYPE instead of the expected STATUS_TYPE
+> +		 * for sp->type SRB_SCSI_CMD, SRB_NVME_CMD or
+> +		 * SRB_TM_CMD.
+> +		 */
+> +		qla2x00_status_entry(vha, rsp, pkt);
+> +		return;
+> +	}
+> +
+> +	qla24xx_mbx_iocb_entry(vha, rsp->req, (struct mbx_24xx_entry
+> *)pkt);
+> +}
+> +
+>  /**
+>   * qla24xx_process_response_queue() - Process response queue
+> entries.
+>   * @vha: SCSI driver HA context
+> @@ -3499,8 +3524,7 @@ void qla24xx_process_response_queue(struct
+> scsi_qla_host *vha,
+>  			    (struct abort_entry_24xx *)pkt);
+>  			break;
+>  		case MBX_IOCB_TYPE:
+> -			qla24xx_mbx_iocb_entry(vha, rsp->req,
+> -			    (struct mbx_24xx_entry *)pkt);
+> +			qla24xx_process_mbx_iocb_response(vha, rsp,
+> pkt);
+>  			break;
+>  		case VP_CTRL_IOCB_TYPE:
+>  			qla_ctrlvp_completed(vha, rsp->req,
 
-Signed-off-by: Chunguang Xu <brookxu@tencent.com>
----
- fs/btrfs/ctree.h | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+Should we perhaps log an error message when we detect a mismatch
+between sp->type and entry_type?
 
-diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-index 9c7e466..9254dc6 100644
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -3226,18 +3226,8 @@ void btrfs_no_printk(const struct btrfs_fs_info *fs_info, const char *fmt, ...)
- } while (0)
- 
- #ifdef CONFIG_BTRFS_ASSERT
--__cold __noreturn
--static inline void assertfail(const char *expr, const char *file, int line)
--{
--	pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
--	BUG();
--}
--
--#define ASSERT(expr)						\
--	(likely(expr) ? (void)0 : assertfail(#expr, __FILE__, __LINE__))
--
-+#define ASSERT(expr)	ASSERT_FAIL(expr)
- #else
--static inline void assertfail(const char *expr, const char* file, int line) { }
- #define ASSERT(expr)	(void)(expr)
- #endif
- 
--- 
-1.8.3.1
+Regards,
+Martin
+
 
