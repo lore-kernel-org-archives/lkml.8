@@ -2,227 +2,92 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD75C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99900C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 327842080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:06:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598562364;
-	bh=4T7itvBuNhrU5EtXRDH9oxp9S/8bwdzGICRlG/iodjE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=srKhKez38dTVZqnmYIbtKcePpwlrCvgoncJA4Pmu3CTxYZnQxotlmauz9xQCoA6+Q
-	 llKj8AM12rTW0VvPCwJ0erYtFmNApPS0DF7xKpcXKxCfAGiJ3zq8M2Icl8V4/1QG43
-	 vukO4tdVbFjxRFymJ6NNVQJCMJU05Wu5/X522ALQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6E19B2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbgH0VGD (ORCPT
+        id S1726944AbgH0VGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 17:06:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45760 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 17:06:10 -0400
+Received: from mg.ssi.bg ([178.16.128.9]:35388 "EHLO mg.ssi.bg"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbgH0VGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 17:06:02 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06ED62080C;
-        Thu, 27 Aug 2020 21:06:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598562361;
-        bh=4T7itvBuNhrU5EtXRDH9oxp9S/8bwdzGICRlG/iodjE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=O/w5mGTAkotI7deKLW/qN1PQqrblmSC7FpBLifdSqjF9/S9pWzFW+CThafhK0O341
-         ZAaXABcOPJwmsqzs9VDXaU1U7ZDKOYSODKTGHfPar8OxQkdduKl8C0/D7jjlqTcd8p
-         g47llVo8WXonwRQNUljxvvyl1LkFkhMjHo9F2WYM=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kBP5r-007FWG-Fw; Thu, 27 Aug 2020 22:05:59 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH v3] HID: core: Sanitize event code and type when mapping input
-Date:   Thu, 27 Aug 2020 22:05:55 +0100
-Message-Id: <20200827210555.1050190-1-maz@kernel.org>
-X-Mailer: git-send-email 2.27.0
+        id S1726706AbgH0VGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 17:06:08 -0400
+Received: from mg.ssi.bg (localhost [127.0.0.1])
+        by mg.ssi.bg (Proxmox) with ESMTP id 340B52E3CE;
+        Thu, 27 Aug 2020 23:59:32 +0300 (EEST)
+Received: from ink.ssi.bg (ink.ssi.bg [178.16.128.7])
+        by mg.ssi.bg (Proxmox) with ESMTP id A28952E3CC;
+        Thu, 27 Aug 2020 23:59:31 +0300 (EEST)
+Received: from ja.ssi.bg (unknown [178.16.129.10])
+        by ink.ssi.bg (Postfix) with ESMTPS id A90133C09C4;
+        Thu, 27 Aug 2020 23:59:27 +0300 (EEST)
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id 07RKxO9Y013130;
+        Thu, 27 Aug 2020 23:59:26 +0300
+Date:   Thu, 27 Aug 2020 23:59:24 +0300 (EEST)
+From:   Julian Anastasov <ja@ssi.bg>
+To:     Lach <iam@lach.pw>
+cc:     Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Remove ipvs v6 dependency on iptables
+In-Reply-To: <20200827194802.1164-1-iam@lach.pw>
+Message-ID: <alpine.LFD.2.23.451.2008272357240.4567@ja.home.ssi.bg>
+References: <20200827194802.1164-1-iam@lach.pw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: dmitry.torokhov@gmail.com, jikos@kernel.org, benjamin.tissoires@redhat.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calling into hid_map_usage(), the passed event code is
-blindly stored as is, even if it doesn't fit in the associated bitmap.
 
-This event code can come from a variety of sources, including devices
-masquerading as input devices, only a bit more "programmable".
+	Hello,
 
-Instead of taking the event code at face value, check that it actually
-fits the corresponding bitmap, and if it doesn't:
-- spit out a warning so that we know which device is acting up
-- NULLify the bitmap pointer so that we catch unexpected uses
+On Fri, 28 Aug 2020, Lach wrote:
 
-Code paths that can make use of untrusted inputs can now check
-that the mapping was indeed correct and bail out if not.
+> This dependency was added in 63dca2c0b0e7a92cb39d1b1ecefa32ffda201975, because this commit had dependency on
+> ipv6_find_hdr, which was located in iptables-specific code
+> 
+> But it is no longer required, because f8f626754ebeca613cf1af2e6f890cfde0e74d5b moved them to a more common location
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
-* From v2:
-  - Don't prematurely narrow the event code so that hid_map_usage()
-    catches illegal values beyond the 16bit limit.
+	May be then we should also not include ip6_tables.h from
+include/net/ip_vs.h ?
 
-* From v1:
-  - Dropped the input.c changes, and turned hid_map_usage() into
-    the validation primitive.
-  - Handle mapping failures in hidinput_configure_usage() and
-    mt_touch_input_mapping() (on top of hid_map_usage_clear() which
-    was already handled)
+> ---
+>  net/netfilter/ipvs/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/net/netfilter/ipvs/Kconfig b/net/netfilter/ipvs/Kconfig
+> index 2c1593089..eb0e329f9 100644
+> --- a/net/netfilter/ipvs/Kconfig
+> +++ b/net/netfilter/ipvs/Kconfig
+> @@ -29,7 +29,6 @@ if IP_VS
+>  config	IP_VS_IPV6
+>  	bool "IPv6 support for IPVS"
+>  	depends on IPV6 = y || IP_VS = IPV6
+> -	select IP6_NF_IPTABLES
+>  	select NF_DEFRAG_IPV6
+>  	help
+>  	  Add IPv6 support to IPVS.
+> -- 
+> 2.28.0
 
- drivers/hid/hid-input.c      |  4 ++++
- drivers/hid/hid-multitouch.c |  2 ++
- drivers/mfd/syscon.c         |  2 +-
- include/linux/hid.h          | 42 +++++++++++++++++++++++++-----------
- 4 files changed, 36 insertions(+), 14 deletions(-)
+Regards
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index b8eabf206e74..88e19996427e 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -1132,6 +1132,10 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 	}
- 
- mapped:
-+	/* Mapping failed, bail out */
-+	if (!bit)
-+		return;
-+
- 	if (device->driver->input_mapped &&
- 	    device->driver->input_mapped(device, hidinput, field, usage,
- 					 &bit, &max) < 0) {
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index 3f94b4954225..e3152155c4b8 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -856,6 +856,8 @@ static int mt_touch_input_mapping(struct hid_device *hdev, struct hid_input *hi,
- 			code = BTN_0  + ((usage->hid - 1) & HID_USAGE);
- 
- 		hid_map_usage(hi, usage, bit, max, EV_KEY, code);
-+		if (!*bit)
-+			return -1;
- 		input_set_capability(hi->input, EV_KEY, code);
- 		return 1;
- 
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index 7a660411c562..75859e492984 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -108,6 +108,7 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_clk)
- 	syscon_config.max_register = resource_size(&res) - reg_io_width;
- 
- 	regmap = regmap_init_mmio(NULL, base, &syscon_config);
-+	kfree(syscon_config.name);
- 	if (IS_ERR(regmap)) {
- 		pr_err("regmap init failed\n");
- 		ret = PTR_ERR(regmap);
-@@ -144,7 +145,6 @@ static struct syscon *of_syscon_register(struct device_node *np, bool check_clk)
- 	regmap_exit(regmap);
- err_regmap:
- 	iounmap(base);
--	kfree(syscon_config.name);
- err_map:
- 	kfree(syscon);
- 	return ERR_PTR(ret);
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index 875f71132b14..c7044a14200e 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -959,34 +959,49 @@ static inline void hid_device_io_stop(struct hid_device *hid) {
-  * @max: maximal valid usage->code to consider later (out parameter)
-  * @type: input event type (EV_KEY, EV_REL, ...)
-  * @c: code which corresponds to this usage and type
-+ *
-+ * The value pointed to by @bit will be set to NULL if either @type is
-+ * an unhandled event type, or if @c is out of range for @type. This
-+ * can be used as an error condition.
-  */
- static inline void hid_map_usage(struct hid_input *hidinput,
- 		struct hid_usage *usage, unsigned long **bit, int *max,
--		__u8 type, __u16 c)
-+		__u8 type, unsigned int c)
- {
- 	struct input_dev *input = hidinput->input;
--
--	usage->type = type;
--	usage->code = c;
-+	unsigned long *bmap = NULL;
-+	unsigned int limit = 0;
- 
- 	switch (type) {
- 	case EV_ABS:
--		*bit = input->absbit;
--		*max = ABS_MAX;
-+		bmap = input->absbit;
-+		limit = ABS_MAX;
- 		break;
- 	case EV_REL:
--		*bit = input->relbit;
--		*max = REL_MAX;
-+		bmap = input->relbit;
-+		limit = REL_MAX;
- 		break;
- 	case EV_KEY:
--		*bit = input->keybit;
--		*max = KEY_MAX;
-+		bmap = input->keybit;
-+		limit = KEY_MAX;
- 		break;
- 	case EV_LED:
--		*bit = input->ledbit;
--		*max = LED_MAX;
-+		bmap = input->ledbit;
-+		limit = LED_MAX;
- 		break;
- 	}
-+
-+	if (unlikely(c > limit || !bmap)) {
-+		pr_warn_ratelimited("%s: Invalid code %d type %d\n",
-+				    input->name, c, type);
-+		*bit = NULL;
-+		return;
-+	}
-+
-+	usage->type = type;
-+	usage->code = c;
-+	*max = limit;
-+	*bit = bmap;
- }
- 
- /**
-@@ -1000,7 +1015,8 @@ static inline void hid_map_usage_clear(struct hid_input *hidinput,
- 		__u8 type, __u16 c)
- {
- 	hid_map_usage(hidinput, usage, bit, max, type, c);
--	clear_bit(c, *bit);
-+	if (*bit)
-+		clear_bit(usage->code, *bit);
- }
- 
- /**
--- 
-2.27.0
+--
+Julian Anastasov <ja@ssi.bg>
 
