@@ -2,135 +2,176 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F92C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27D7720738
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8746522B47
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:31:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWRAKdEt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgH0I3R (ORCPT
+        id S1728063AbgH0IbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:29:17 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:34433 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727814AbgH0I3P (ORCPT
+        Thu, 27 Aug 2020 04:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58220 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgH0Ia5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:29:15 -0400
-Received: by mail-il1-f200.google.com with SMTP id p10so3672152ile.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 01:29:15 -0700 (PDT)
+        Thu, 27 Aug 2020 04:30:57 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78DE1C061264;
+        Thu, 27 Aug 2020 01:30:57 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id kx11so2221377pjb.5;
+        Thu, 27 Aug 2020 01:30:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tm5UyWFyhKPtuv3cWQrYQMoHEt8xl5m5RQNN6i1Hdws=;
+        b=RWRAKdEtzJXdCfFt/TgZnRjFh/MtUqq6ka6vfUrC6BLyjEeXCztTrFXj2iRm3qdBO8
+         PbsZmq7O4Qg163Ln0PLdRPFGr/iamWqrdU0+A0DVJYDd1yfhq+DKEeFdkx2+VqOudkqI
+         d9bnPOdot2M6hlM8+O3VWGN5SuqStxM/ahvymM2PAyUHKvoh7oaSTf/IzgBw4DvL2uhU
+         F7RgBbCVn2rUxJt1zJu5e2c8ksZfOempfObxue6ftX4iC+/JAdYW/7NG1Z3YIJ3ytN84
+         BVbKhtcu4nYaWmgf3HSaBFicUT2u/+ARKF5RNc9jILNN7dhG/4lOH4yHzMjNF0slUi0i
+         oxQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=mLESpSDEkhDZ4y1aWX8nXwML2t9ZXkQSTNGQdfCDhts=;
-        b=b05bj8iHKqerMgfVcyMQjyrkmCqNcVK8NKA04AynqwV0js1RK4HZGV8khRVpF9ypgJ
-         TYVTwFSz0WBMTKxMAJivSX2npXZ+yYUGM7F6bjRbs937/ZkfoY9CDV+Z3q9/B5PafEfv
-         7sJPpkMlvc7dq3CQ7SJnmx/Sfu7n0HXxbWiFKgBld+p+Avy1U9xVANwa3Jg03HUj/ssC
-         afn5FtZd/2BzwZbKllzb4jRwPZeZ02i8d9IRu84A0I56PKci/jQHT3Dg43/nljpXhQfO
-         YiD02RFAGAgTTo30xMz/ZL6D47bYjwfFc9Z8rd6sXF7G+GLmT2Yr3qR3Gb1925I3Gian
-         ZaVA==
-X-Gm-Message-State: AOAM530td8NV7OpMEtAelpHGXMTQCCWSf77aeVHhDDaDx9jvEWsm9Gt2
-        p8xKh/5/QOEemakDRPY0pCskf94b7FsTHAIjybAMbsNPiuk9
-X-Google-Smtp-Source: ABdhPJxTRJSBiACMe8R/WuiqKE2iSLdfLYHjBJ6shw2LkaSyu4H99buqPQ2VTayLtwWmzBkiVgabHcHuR847+zlcASm55ZXmbSiZ
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tm5UyWFyhKPtuv3cWQrYQMoHEt8xl5m5RQNN6i1Hdws=;
+        b=jfU37++vI+nYEAVOlnNoFBI6ucPwhQedTPPFswtsOUx+VaJyeZHeWyf/aTvqNuGAv9
+         ITHzE+ILQ+Cun5ZFEQBnzndGlshdje9mqktwMhh8l5+fMdAbfAB05FumzaOTXMcMk1XL
+         Cm2WpEqTxAJBZKVBRGlOc2uBRr/KcTPXE6LPMiur6Q8MPdNNhwCEYT2h5eFLGPVVcvbM
+         Rp20ERapBFrgQQMiBBN0tIWi8NWpgk0aSYxw8bcgZy+24y7dd4hTB9JgCTEZULIMX+pC
+         /Ir5mp7kLvEDVLV9XUfKsZD7nRy6EnkTG6BuKodP0MR96Ddk2/tgfWvw6gKfh29FA77Y
+         L0mg==
+X-Gm-Message-State: AOAM530Z8bmSa6IEBDyBBpbkyIZ0JwnVBXKyzn3IQnsSGUZuxpLHmbc3
+        kB9iKWRaipIlb0sBhZGFHNVVTsN7q5uMcA==
+X-Google-Smtp-Source: ABdhPJyqinOe9Iy+KegRclSEt8DWA2/+13Ip+X015ifKPrrLe8XLUgJMHWHeJtvxNtUKgGL1RMhMKQ==
+X-Received: by 2002:a17:90a:f48e:: with SMTP id bx14mr9233135pjb.233.1598517056869;
+        Thu, 27 Aug 2020 01:30:56 -0700 (PDT)
+Received: from localhost.localdomain ([122.224.153.227])
+        by smtp.gmail.com with ESMTPSA id l13sm1529068pgq.33.2020.08.27.01.30.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Aug 2020 01:30:56 -0700 (PDT)
+From:   Yanhu Cao <gmayyyha@gmail.com>
+To:     jlayton@kernel.org
+Cc:     idryomov@gmail.com, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yanhu Cao <gmayyyha@gmail.com>
+Subject: [PATCH] ceph: support getting ceph.dir.rsnaps vxattr
+Date:   Thu, 27 Aug 2020 16:30:47 +0800
+Message-Id: <20200827083047.9478-1-gmayyyha@gmail.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 MIME-Version: 1.0
-X-Received: by 2002:a92:c9cb:: with SMTP id k11mr16274699ilq.194.1598516954725;
- Thu, 27 Aug 2020 01:29:14 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 01:29:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004101f705add7bb3e@google.com>
-Subject: KASAN: vmalloc-out-of-bounds Write in i801_isr (2)
-From:   syzbot <syzbot+33f6c360821c399d69eb@syzkaller.appspotmail.com>
-To:     jdelvare@suse.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+It's easy to know how many snapshots have been created.
 
-syzbot found the following issue on:
-
-HEAD commit:    fffe3ae0 Merge tag 'for-linus-hmm' of git://git.kernel.org..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1653d951900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=50463ec6729f9706
-dashboard link: https://syzkaller.appspot.com/bug?extid=33f6c360821c399d69eb
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+33f6c360821c399d69eb@syzkaller.appspotmail.com
-
-BUG: KASAN: vmalloc-out-of-bounds in i801_isr_byte_done drivers/i2c/busses/i2c-i801.c:589 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in i801_isr drivers/i2c/busses/i2c-i801.c:660 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in i801_isr+0xb2d/0xbf0 drivers/i2c/busses/i2c-i801.c:641
-Write of size 1 at addr ffffc90002fafda4 by task aoe_tx0/2856
-
-CPU: 3 PID: 2856 Comm: aoe_tx0 Not tainted 5.8.0-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0x5/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- i801_isr_byte_done drivers/i2c/busses/i2c-i801.c:589 [inline]
- i801_isr drivers/i2c/busses/i2c-i801.c:660 [inline]
- i801_isr+0xb2d/0xbf0 drivers/i2c/busses/i2c-i801.c:641
- __handle_irq_event_percpu+0x223/0xa30 kernel/irq/handle.c:156
- handle_irq_event_percpu kernel/irq/handle.c:196 [inline]
- handle_irq_event+0x102/0x285 kernel/irq/handle.c:213
- handle_fasteoi_irq+0x22f/0x9f0 kernel/irq/chip.c:714
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- handle_irq arch/x86/kernel/irq.c:230 [inline]
- __common_interrupt arch/x86/kernel/irq.c:249 [inline]
- common_interrupt+0x115/0x1f0 arch/x86/kernel/irq.c:239
- asm_common_interrupt+0x1e/0x40 arch/x86/include/asm/idtentry.h:572
-RIP: 0010:__rhashtable_lookup+0x58c/0x780 include/linux/rhashtable.h:594
-Code: ff e8 28 8a f0 f9 48 c7 c2 e0 ee 17 89 be 71 01 00 00 48 c7 c7 40 ef 17 89 c6 05 46 13 27 03 01 e8 9e 0f d7 f9 e9 7d fd ff ff <e8> ff 89 f0 f9 48 8b 3c 24 e8 c6 12 14 fc 31 ff 89 c3 89 c6 e8 6b
-RSP: 0018:ffffc90003ab79b0 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff87838eae
-RDX: 0000000000000000 RSI: ffff88802bfbcf00 RDI: 0000000000000001
-RBP: 1ffff92000756f6c R08: 0000000000000000 R09: ffffffff8c5b3a27
-R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
-R13: ffff8880220ecbc0 R14: ffff888075030c80 R15: ffff888027fac000
- rhltable_lookup include/linux/rhashtable.h:688 [inline]
- sta_info_hash_lookup net/mac80211/sta_info.c:162 [inline]
- sta_info_get+0x13d/0x380 net/mac80211/sta_info.c:174
- ieee80211_select_queue+0x3fe/0x580 net/mac80211/wme.c:210
- netdev_core_pick_tx+0x169/0x2e0 net/core/dev.c:4019
- __dev_queue_xmit+0x7a3/0x2d60 net/core/dev.c:4095
- tx+0x68/0xb0 drivers/block/aoe/aoenet.c:63
- kthread+0x1e2/0x3a0 drivers/block/aoe/aoecmd.c:1239
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-
-Memory state around the buggy address:
- ffffc90002fafc80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
- ffffc90002fafd00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
->ffffc90002fafd80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-                               ^
- ffffc90002fafe00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
- ffffc90002fafe80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-==================================================================
-
-
+Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ fs/ceph/inode.c      | 1 +
+ fs/ceph/mds_client.c | 4 +++-
+ fs/ceph/mds_client.h | 1 +
+ fs/ceph/super.h      | 2 +-
+ fs/ceph/xattr.c      | 7 +++++++
+ 5 files changed, 13 insertions(+), 2 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+index 357c937699d5..650cad4b3ecb 100644
+--- a/fs/ceph/inode.c
++++ b/fs/ceph/inode.c
+@@ -891,6 +891,7 @@ int ceph_fill_inode(struct inode *inode, struct page *locked_page,
+ 			ci->i_rfiles = le64_to_cpu(info->rfiles);
+ 			ci->i_rsubdirs = le64_to_cpu(info->rsubdirs);
+ 			ci->i_dir_pin = iinfo->dir_pin;
++			ci->i_rsnaps = iinfo->rsnaps;
+ 			ceph_decode_timespec64(&ci->i_rctime, &info->rctime);
+ 		}
+ 	}
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index 4a26862d7667..35fdbefa676e 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -172,8 +172,10 @@ static int parse_reply_info_in(void **p, void *end,
+ 			ceph_decode_need(p, end, sizeof(info->snap_btime), bad);
+ 			ceph_decode_copy(p, &info->snap_btime,
+ 					 sizeof(info->snap_btime));
++			ceph_decode_64_safe(p, end, info->rsnaps, bad);
+ 		} else {
+ 			memset(&info->snap_btime, 0, sizeof(info->snap_btime));
++			info->rsnaps = 0;
+ 		}
+ 
+ 		*p = end;
+@@ -214,7 +216,7 @@ static int parse_reply_info_in(void **p, void *end,
+ 		}
+ 
+ 		info->dir_pin = -ENODATA;
+-		/* info->snap_btime remains zero */
++		/* info->snap_btime and info->rsnaps remain zero */
+ 	}
+ 	return 0;
+ bad:
+diff --git a/fs/ceph/mds_client.h b/fs/ceph/mds_client.h
+index bc9e95937d7c..76f2ed1a7cbf 100644
+--- a/fs/ceph/mds_client.h
++++ b/fs/ceph/mds_client.h
+@@ -88,6 +88,7 @@ struct ceph_mds_reply_info_in {
+ 	s32 dir_pin;
+ 	struct ceph_timespec btime;
+ 	struct ceph_timespec snap_btime;
++	u64 rsnaps;
+ 	u64 change_attr;
+ };
+ 
+diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+index 4c3c964b1c54..eb108b69da71 100644
+--- a/fs/ceph/super.h
++++ b/fs/ceph/super.h
+@@ -332,7 +332,7 @@ struct ceph_inode_info {
+ 
+ 	/* for dirs */
+ 	struct timespec64 i_rctime;
+-	u64 i_rbytes, i_rfiles, i_rsubdirs;
++	u64 i_rbytes, i_rfiles, i_rsubdirs, i_rsnaps;
+ 	u64 i_files, i_subdirs;
+ 
+ 	/* quotas */
+diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
+index 3a733ac33d9b..c7d8ecc3d04b 100644
+--- a/fs/ceph/xattr.c
++++ b/fs/ceph/xattr.c
+@@ -231,6 +231,12 @@ static ssize_t ceph_vxattrcb_dir_rsubdirs(struct ceph_inode_info *ci, char *val,
+ 	return ceph_fmt_xattr(val, size, "%lld", ci->i_rsubdirs);
+ }
+ 
++static ssize_t ceph_vxattrcb_dir_rsnaps(struct ceph_inode_info *ci, char *val,
++					  size_t size)
++{
++	return ceph_fmt_xattr(val, size, "%lld", ci->i_rsnaps);
++}
++
+ static ssize_t ceph_vxattrcb_dir_rbytes(struct ceph_inode_info *ci, char *val,
+ 					size_t size)
+ {
+@@ -352,6 +358,7 @@ static struct ceph_vxattr ceph_dir_vxattrs[] = {
+ 	XATTR_RSTAT_FIELD(dir, rentries),
+ 	XATTR_RSTAT_FIELD(dir, rfiles),
+ 	XATTR_RSTAT_FIELD(dir, rsubdirs),
++	XATTR_RSTAT_FIELD(dir, rsnaps),
+ 	XATTR_RSTAT_FIELD(dir, rbytes),
+ 	XATTR_RSTAT_FIELD(dir, rctime),
+ 	{
+-- 
+2.24.3 (Apple Git-128)
+
