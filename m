@@ -2,114 +2,95 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BC2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 086BAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73F1D22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:46:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pmLLySbi"
+	by mail.kernel.org (Postfix) with ESMTP id D7976207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:48:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbgH0Kqy (ORCPT
+        id S1728122AbgH0Ksi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:46:54 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:58912 "EHLO m43-7.mailgun.net"
+        Thu, 27 Aug 2020 06:48:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727986AbgH0Kqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:46:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598525212; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=Qf3xBPF40hi1nSraA0pGIa1xT4mCmEErajbyvZnQnHY=; b=pmLLySbiCCO3zYGVF+imh2iAnucamT77HKRmfA3Y6GLyEl3ghC/ZVidSQfpNBUzKLEnPrDxt
- RlOqRv8lCXc3Z4rCZFBIBkDooevUu3CcX3m9v8IG/XUx/RtTFZJJ25zkfznaFcvvQ3fsBQwP
- 3KWOnRMJbNbRpVOV/hDvui9OSko=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f478f166ad591ec08e96c2c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 10:46:46
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 686C7C433C6; Thu, 27 Aug 2020 10:46:46 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727986AbgH0KsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 06:48:22 -0400
+Received: from gaia (unknown [46.69.195.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1957EC433CA;
-        Thu, 27 Aug 2020 10:46:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1957EC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Zong-Zhe Yang <kevin_yang@realtek.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        linux-wireless@vger.kernel.org
-Subject: Re: drivers/net/wireless/realtek/rtw88/pci.c:1477:5: warning: no previous prototype for 'rtw_pci_probe'
-References: <202007251817.x5EF2Aoc%lkp@intel.com>
-Date:   Thu, 27 Aug 2020 13:46:42 +0300
-In-Reply-To: <202007251817.x5EF2Aoc%lkp@intel.com> (kernel test robot's
-        message of "Sat, 25 Jul 2020 18:41:21 +0800")
-Message-ID: <87eensbc31.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id 445F3207F7;
+        Thu, 27 Aug 2020 10:48:19 +0000 (UTC)
+Date:   Thu, 27 Aug 2020 11:48:16 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        kasan-dev@googlegroups.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Branislav Rankov <Branislav.Rankov@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 32/35] kasan, arm64: print report from tag fault handler
+Message-ID: <20200827104816.GI29264@gaia>
+References: <cover.1597425745.git.andreyknvl@google.com>
+ <4691d6019ef00c11007787f5190841b47ba576c4.1597425745.git.andreyknvl@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4691d6019ef00c11007787f5190841b47ba576c4.1597425745.git.andreyknvl@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ linux-wireless
+On Fri, Aug 14, 2020 at 07:27:14PM +0200, Andrey Konovalov wrote:
+> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> index c62c8ba85c0e..cf00b3942564 100644
+> --- a/arch/arm64/mm/fault.c
+> +++ b/arch/arm64/mm/fault.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/hardirq.h>
+>  #include <linux/init.h>
+> +#include <linux/kasan.h>
+>  #include <linux/kprobes.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/page-flags.h>
+> @@ -314,11 +315,19 @@ static void report_tag_fault(unsigned long addr, unsigned int esr,
+>  {
+>  	bool is_write = ((esr & ESR_ELx_WNR) >> ESR_ELx_WNR_SHIFT) != 0;
+>  
+> +#ifdef CONFIG_KASAN_HW_TAGS
+> +	/*
+> +	 * SAS bits aren't set for all faults reported in EL1, so we can't
+> +	 * find out access size.
+> +	 */
+> +	kasan_report(addr, 0, is_write, regs->pc);
+> +#else
+>  	pr_alert("Memory Tagging Extension Fault in %pS\n", (void *)regs->pc);
+>  	pr_alert("  %s at address %lx\n", is_write ? "Write" : "Read", addr);
+>  	pr_alert("  Pointer tag: [%02x], memory tag: [%02x]\n",
+>  			mte_get_ptr_tag(addr),
+>  			mte_get_mem_tag((void *)addr));
+> +#endif
+>  }
 
-kernel test robot <lkp@intel.com> writes:
-
-> Hi Zong-Zhe,
->
-> FYI, the error/warning still remains.
->
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   23ee3e4e5bd27bdbc0f1785eef7209ce872794c7
-> commit: 72f256c2b948622cc45ff8bc0456dd6039d8fe36 rtw88: extract:
-> export symbols about pci interface
-> date:   10 weeks ago
-> config: arc-randconfig-r026-20200725 (attached as .config)
-> compiler: arc-elf-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->         wget
-> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross
-> -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout 72f256c2b948622cc45ff8bc0456dd6039d8fe36
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=arc 
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> All warnings (new ones prefixed by >>):
->
->>> drivers/net/wireless/realtek/rtw88/pci.c:1477:5: warning: no
->>> previous prototype for 'rtw_pci_probe' [-Wmissing-prototypes]
->     1477 | int rtw_pci_probe(struct pci_dev *pdev,
->          |     ^~~~~~~~~~~~~
->>> drivers/net/wireless/realtek/rtw88/pci.c:1557:6: warning: no
->>> previous prototype for 'rtw_pci_remove' [-Wmissing-prototypes]
->     1557 | void rtw_pci_remove(struct pci_dev *pdev)
->          |      ^~~~~~~~~~~~~~
->>> drivers/net/wireless/realtek/rtw88/pci.c:1579:6: warning: no
->>> previous prototype for 'rtw_pci_shutdown' [-Wmissing-prototypes]
->     1579 | void rtw_pci_shutdown(struct pci_dev *pdev)
->          |      ^~~~~~~~~~~~~~~~
-
-Tony, these are older warnings but please also check these.
+More dead code. So what's the point of keeping the pr_alert() introduced
+earlier? CONFIG_KASAN_HW_TAGS is always on for in-kernel MTE. If MTE is
+disabled, this function isn't called anyway.
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Catalin
