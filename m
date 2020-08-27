@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C0BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 017FD2177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F07452177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:23:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbgH0JWk (ORCPT
+        id S1728497AbgH0JXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:22:40 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:42160 "EHLO inva021.nxp.com"
+        Thu, 27 Aug 2020 05:23:18 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:42866 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728220AbgH0JWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:22:38 -0400
+        id S1728509AbgH0JXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:23:12 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2A6E7200AF0;
-        Thu, 27 Aug 2020 11:22:36 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BA2D0200B27;
+        Thu, 27 Aug 2020 11:23:10 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 032DF20004A;
-        Thu, 27 Aug 2020 11:22:33 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9386B20004A;
+        Thu, 27 Aug 2020 11:23:07 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C27D5402A7;
-        Thu, 27 Aug 2020 11:22:28 +0200 (CEST)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5EE33402D2;
+        Thu, 27 Aug 2020 11:23:03 +0200 (CEST)
 From:   Qiang Zhao <qiang.zhao@nxp.com>
 To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
         robh+dt@kernel.org
 Cc:     linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Zhao Qiang <qiang.zhao@nxp.com>
-Subject: [PATCH 2/3] rtc: pcf2127: add "no-watchdog" property
-Date:   Thu, 27 Aug 2020 17:14:40 +0800
-Message-Id: <20200827091441.12972-2-qiang.zhao@nxp.com>
+Subject: [PATCH 3/3] arm64: dts: lx2160a: Add "no-watchdog" property to pcf2127
+Date:   Thu, 27 Aug 2020 17:14:41 +0800
+Message-Id: <20200827091441.12972-3-qiang.zhao@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200827091441.12972-1-qiang.zhao@nxp.com>
 References: <20200827091441.12972-1-qiang.zhao@nxp.com>
@@ -48,39 +48,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Zhao Qiang <qiang.zhao@nxp.com>
 
-Commit 0e735eaae165 ("rtc: pcf2127: add watchdog feature support")
-adds watchdog feature for pcf2127, then it will be registered as
-a watchdog device even though it is not used as watchdog.
-Pcf2127 always be registered as watchdog0(default watchdog device),
-even though it is not used as watchdog, meanwhile there is another
-real watchdog device registered as watchdog1.
-So add "no-watchdog" property, if the node has this property,
-driver will not register it as a watchdog device
+pcf2127 on lx2160a are not used as watchdog.
 
 Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
 ---
- drivers/rtc/rtc-pcf2127.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/rtc/rtc-pcf2127.c b/drivers/rtc/rtc-pcf2127.c
-index 02b069c..38d30e2 100644
---- a/drivers/rtc/rtc-pcf2127.c
-+++ b/drivers/rtc/rtc-pcf2127.c
-@@ -476,9 +476,11 @@ static int pcf2127_probe(struct device *dev, struct regmap *regmap,
- 	}
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+index 2ec43c6..4d14c91 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+@@ -149,6 +149,7 @@
+ 		reg = <0x51>;
+ 		// IRQ10_B
+ 		interrupts = <0 150 0x4>;
++		no-watchdog;
+ 	};
+ };
  
- #ifdef CONFIG_WATCHDOG
--	ret = devm_watchdog_register_device(dev, &pcf2127->wdd);
--	if (ret)
--		return ret;
-+	if (!of_property_read_bool(dev->of_node, "no-watchdog")) {
-+		ret = devm_watchdog_register_device(dev, &pcf2127->wdd);
-+		if (ret)
-+			return ret;
-+	}
- #endif /* CONFIG_WATCHDOG */
- 
- 	/*
 -- 
 2.7.4
 
