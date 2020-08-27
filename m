@@ -2,137 +2,109 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A503FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 114672075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 816FB207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:01:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IYEfpoxW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lOH6fqEu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgH0KAv (ORCPT
+        id S1728719AbgH0KBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:00:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44174 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727902AbgH0KAu (ORCPT
+        Thu, 27 Aug 2020 06:01:00 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:24127 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727802AbgH0KA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:00:50 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B993EC061264;
-        Thu, 27 Aug 2020 03:00:49 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id t7so3939028otp.0;
-        Thu, 27 Aug 2020 03:00:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AAVaUW7VwZegQfkJwMOJ8uza77AqEjXeq+6lLbyPRPM=;
-        b=IYEfpoxWOrgM4B+rtfvP9lwMfghFgE8vdnrARgx0tBgVT3lXSqsCFo9fAz+niPiyxo
-         rdB2smv37lBdCuf0lCYAMeq992BABs8tJZNXHRI0O/FpJ24EtEBMiehnidWe9jVIUjfq
-         CdZFvaZq5IcH3ls+zQIrJXH9K7T2mw+V/R8AcEUCcC3Obv0U1iMOapj1fPdBgDCiSIWW
-         7xcHnVejZBN/zu8v+QfvIUfVBvD6eyl2pTz0fi1+Zn8NmW2nmgQC8/MynnilIUHtF5fb
-         mmF/v8b/Dv9DjWu2QbGe7U34Ka3wQM9NlktTZePIyXzeAX2E6B4jZs6b6/stfr9afTfP
-         mFZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AAVaUW7VwZegQfkJwMOJ8uza77AqEjXeq+6lLbyPRPM=;
-        b=dnm7NXzr0OfasXQ5ikZcqjGFchQtiunZ2TUe8RJQowPX9hwVq9eppUBDGPmiLTHDQC
-         p8nSQ4ee8copSFUOqyU1CpEnPEOUgyGbQarc/Jof9WUkJxX3EmOpieetIJnxdK3iUwJG
-         PYAZMtaGCXoDDcGEtbJeHdrWHA7S0rnjxP6BcKNKwzn7rSy9fZ/vb72xKi4PSxr6Uzrw
-         CrS5PQA1IRM3v3xYk72Lt82E9h5fJOULsD8WyjHPUD+6Sc44truGP/mxJ3o6FlCffEwC
-         tosKBIQVB4P8S7O/XCpE+bnliUrGcLvA4Rec6B694CYOzHodvCnqfRVVLhYP/qMMp8qM
-         NvSA==
-X-Gm-Message-State: AOAM532/PY6eAMB5nzYM0aSOv4zq5iDlxoy3D8T7QTFOcB1/rWCd10NB
-        DLAtVrobFMenvx29wQxhQ2CUaPIw7aXevo7wnUo=
-X-Google-Smtp-Source: ABdhPJzisz0W2lNrmBlCnPW5yf/NHJi2xOH4+cZ5xxIWgb4iDZYft3NFtXLC2sZ9FFQKQuPthOEekZMRwP+l5XBWL5E=
-X-Received: by 2002:a9d:480d:: with SMTP id c13mr13251835otf.224.1598522447729;
- Thu, 27 Aug 2020 03:00:47 -0700 (PDT)
+        Thu, 27 Aug 2020 06:00:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598522456; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=g0YFy2eE4lE9AZIT/otbyOAVrUNfiz3bBfsoL1KFWMg=;
+ b=lOH6fqEugmTTkRtzLjirNxsh2cnQ4+7dk+bA1aWzzWRO0fDyxIrFTIiWBp8BEYQfYjaVdHXE
+ U6lyxKE8KDIaHrCBV08XQIwnwqCJgSn5OfD6oVDRpGkFLnmVRIwcC2k8gX5eY36hWQhSta6/
+ iSbSx4YSNzNm71MkYNnVWWc3kn0=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5f4784281d69e438cb14ff33 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 10:00:08
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3FF13C433B1; Thu, 27 Aug 2020 10:00:06 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 328F9C433CA;
+        Thu, 27 Aug 2020 10:00:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 328F9C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200826063850.47625-1-alexandru.ardelean@analog.com>
- <20200826120042.200364-1-alexandru.ardelean@analog.com> <CA+U=DsrMDSTQKEc2_3+W8u4bLraAowVB3nB4huKY--v8gnds2Q@mail.gmail.com>
- <c3a9411e-186d-a3ac-5ad0-bd70ad78f147@st.com>
-In-Reply-To: <c3a9411e-186d-a3ac-5ad0-bd70ad78f147@st.com>
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Thu, 27 Aug 2020 13:00:36 +0300
-Message-ID: <CA+U=DspjGUhXCY7c8P6zOYZsx17ybcU4Kdr52yujmdYOaa1JSQ@mail.gmail.com>
-Subject: Re: [PATCH v2] iio: stm32-dac: Replace indio_dev->mlock with own
- device lock
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Jonathan Cameron <jic23@kernel.org>, alexandre.torgue@st.com,
-        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2] mwifiex: don't call del_timer_sync() on uninitialized
+ timer
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200821082720.7716-1-penguin-kernel@I-love.SAKURA.ne.jp>
+References: <20200821082720.7716-1-penguin-kernel@I-love.SAKURA.ne.jp>
+To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc:     Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Brian Norris <briannorris@chromium.org>, amitkarwar@gmail.com,
+        andreyknvl@google.com, davem@davemloft.net, dvyukov@google.com,
+        huxinming820@gmail.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, nishants@marvell.com,
+        syzkaller-bugs@googlegroups.com,
+        syzbot <syzbot+373e6719b49912399d21@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200827100007.3FF13C433B1@smtp.codeaurora.org>
+Date:   Thu, 27 Aug 2020 10:00:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 12:03 PM Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
->
-> On 8/27/20 10:55 AM, Alexandru Ardelean wrote:
-> > On Wed, Aug 26, 2020 at 3:03 PM Alexandru Ardelean
-> > <alexandru.ardelean@analog.com> wrote:
-> >> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> >>
-> >> As part of the general cleanup of indio_dev->mlock, this change replaces
-> >> it with a local lock. The lock protects against potential races when
-> >> reading the CR reg and then updating, so that the state of pm_runtime
-> >> is consistent between the two operations.
-> >>
-> >> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> >> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> >> ---
-> > Forgot the changelog here.
-> > Apologies.
-> >
-> > Changelog v1 -> v2:
-> > * removed whitespace change for 'common' field
-> > * updated comment about the lock usage
->
-> Hi Alexandru,
->
-> Sorry if I missed it... is there an update on the comment :-) ?
+Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp> wrote:
 
-For a moment there, I thought I didn't.
-GMail's threading is confusing.
+> syzbot is reporting that del_timer_sync() is called from
+> mwifiex_usb_cleanup_tx_aggr() from mwifiex_unregister_dev() without
+> checking timer_setup() from mwifiex_usb_tx_init() was called [1].
+> 
+> Ganapathi Bhat proposed a possibly cleaner fix, but it seems that
+> that fix was forgotten [2].
+> 
+> "grep -FrB1 'del_timer' drivers/ | grep -FA1 '.function)'" says that
+> currently there are 28 locations which call del_timer[_sync]() only if
+> that timer's function field was initialized (because timer_setup() sets
+> that timer's function field). Therefore, let's use same approach here.
+> 
+> [1] https://syzkaller.appspot.com/bug?id=26525f643f454dd7be0078423e3cdb0d57744959
+> [2] https://lkml.kernel.org/r/CA+ASDXMHt2gq9Hy+iP_BYkWXsSreWdp3_bAfMkNcuqJ3K+-jbQ@mail.gmail.com
+> 
+> Reported-by: syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>
+> Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+> Cc: Brian Norris <briannorris@chromium.org>
+> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> Reviewed-by: Brian Norris <briannorris@chromium.org>
+> Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
 
-----------------------------------------------------------------------------
-As part of the general cleanup of indio_dev->mlock, this change replaces
-it with a local lock. The lock protects against potential races when
-reading the CR reg and then updating, so that the state of pm_runtime
-is consistent between the two operations.
-----------------------------------------------------------------------------
+Patch applied to wireless-drivers-next.git, thanks.
 
->
-> Best Regards,
-> Fabrice
-> >
-> >>  drivers/iio/dac/stm32-dac.c | 12 ++++++++----
-> >>  1 file changed, 8 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
-> >> index 092c796fa3d9..7a8aed476850 100644
-> >> --- a/drivers/iio/dac/stm32-dac.c
-> >> +++ b/drivers/iio/dac/stm32-dac.c
-> >> @@ -26,9 +26,11 @@
-> >>  /**
-> >>   * struct stm32_dac - private data of DAC driver
-> >>   * @common:            reference to DAC common data
-> >> + * @lock:              lock to protect the data buffer during regmap ops
-> >>   */
-> >>  struct stm32_dac {
-> >>         struct stm32_dac_common *common;
-> >> +       struct mutex            lock;
-> >>  };
+621a3a8b1c0e mwifiex: don't call del_timer_sync() on uninitialized timer
+
+-- 
+https://patchwork.kernel.org/patch/11728607/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
