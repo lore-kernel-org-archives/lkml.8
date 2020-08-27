@@ -2,129 +2,106 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA5CC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB97C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA4322B4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:28:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598509701;
-	bh=uTlyu4Ggbom6cpomUXJKQ1GKWCdyLuFd3Pick+7iBao=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ubwME20DKYgfgPVRRJf34B3KBaAWZzndugLWBqw7ZQ+jIf1+l5XGaivR/n6VwqyH9
-	 66mzrZkxH3GGersmbZs05MopVHVvJo1yo9RJuxsFdZNebJdQZyFBObqzjIl/DD49LT
-	 wnGIr6UU6/rQv2fxo1xyhPhNECyz1a4dWT2P8wow=
+	by mail.kernel.org (Postfix) with ESMTP id 349E922B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:29:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgH0G2T (ORCPT
+        id S1727834AbgH0G3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:28:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgH0G2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:28:16 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DDEF22B49;
-        Thu, 27 Aug 2020 06:28:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598509695;
-        bh=uTlyu4Ggbom6cpomUXJKQ1GKWCdyLuFd3Pick+7iBao=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nO8NuCnVpOQBELP+v/O22dxuv09RFbjRFq/uuriGLAgYqTIEZrsSmItlVXgtxwd7v
-         t1/0qQ87dP254Xh9i2+lbDYE5U0jXlgQi1fC7bWJznJbyPfh1rVCxOf+GAITgh+pxM
-         kjhL+WjNZJro0xiZqk1xVGhmCcNfZ5xUO6W4RLRs=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, clang-built-linux@googlegroups.com
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v3 2/2] Input: gpio_keys - Simplify with dev_err_probe()
-Date:   Thu, 27 Aug 2020 08:28:04 +0200
-Message-Id: <20200827062804.16730-2-krzk@kernel.org>
+        Thu, 27 Aug 2020 02:29:02 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:10086 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726266AbgH0G3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 02:29:02 -0400
+Received: from localhost.localdomain (unknown [210.32.144.184])
+        by mail-app4 (Coremail) with SMTP id cS_KCgCXD3ubUkdfExdgAQ--.30382S4;
+        Thu, 27 Aug 2020 14:28:46 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ext4: Fix memleak in add_new_gdb
+Date:   Thu, 27 Aug 2020 14:28:43 +0800
+Message-Id: <20200827062843.10188-1-dinghao.liu@zju.edu.cn>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200827062804.16730-1-krzk@kernel.org>
-References: <20200827062804.16730-1-krzk@kernel.org>
+X-CM-TRANSID: cS_KCgCXD3ubUkdfExdgAQ--.30382S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7CF43KF4xCw17tw45Wr4Durg_yoW8GFy5pr
+        yjkF1kCrykCFyqgFZay3WUX3W8C3WxKryUWrZ7GryfZrZxX3Z3KFyUt34fCF45ArWrua12
+        qF4Ut34Yyr1qg3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvI1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8AwCF04k20xvY0x0EwIxG
+        rwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r12
+        6r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+        kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
+        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+        9x0JU-J5rUUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0EBlZdtPrBDAATsW
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe() and devm_fwnode_gpiod_get_optional().   Less code and
-the error value gets printed.
+When ext4_journal_get_write_access() fails, we should release
+n_group_desc, iloc.bh, dind and gdb_bh to prevent memleak.
+It's the same when ext4_handle_dirty_super() fails, but we
+don't need to release dind here because it has been released
+before.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
+ fs/ext4/resize.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-Changes since v2:
-1. Preserve comment,
-2. Include <device.h> to fix warning on clang (reported by kbuild),
-3. Fix use of uninitialized "error" variable.
-
-Changes since v1:
-1. Use devm_fwnode_gpiod_get_optional
----
- drivers/input/keyboard/gpio_keys.c | 25 ++++++++-----------------
- 1 file changed, 8 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index f2d4e4daa818..160d94b1c2c0 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -18,6 +18,7 @@
- #include <linux/sysctl.h>
- #include <linux/proc_fs.h>
- #include <linux/delay.h>
-+#include <linux/device.h>
- #include <linux/platform_device.h>
- #include <linux/input.h>
- #include <linux/gpio_keys.h>
-@@ -494,23 +495,13 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
- 	spin_lock_init(&bdata->lock);
+diff --git a/fs/ext4/resize.c b/fs/ext4/resize.c
+index a50b51270ea9..efc0a022ca8e 100644
+--- a/fs/ext4/resize.c
++++ b/fs/ext4/resize.c
+@@ -843,8 +843,10 @@ static int add_new_gdb(handle_t *handle, struct inode *inode,
  
- 	if (child) {
--		bdata->gpiod = devm_fwnode_gpiod_get(dev, child,
--						     NULL, GPIOD_IN, desc);
--		if (IS_ERR(bdata->gpiod)) {
--			error = PTR_ERR(bdata->gpiod);
--			if (error == -ENOENT) {
--				/*
--				 * GPIO is optional, we may be dealing with
--				 * purely interrupt-driven setup.
--				 */
--				bdata->gpiod = NULL;
--			} else {
--				if (error != -EPROBE_DEFER)
--					dev_err(dev, "failed to get gpio: %d\n",
--						error);
--				return error;
--			}
--		}
-+		/*
-+		 * GPIO is optional, we may be dealing with purely
-+		 * interrupt-driven setup.
-+		 */
-+		bdata->gpiod = devm_fwnode_gpiod_get_optional(dev, child, NULL, GPIOD_IN, desc);
-+		if (IS_ERR(bdata->gpiod))
-+			return dev_err_probe(dev, PTR_ERR(bdata->gpiod), "failed to get gpio\n");
- 	} else if (gpio_is_valid(button->gpio)) {
- 		/*
- 		 * Legacy GPIO number, so request the GPIO here and
+ 	BUFFER_TRACE(dind, "get_write_access");
+ 	err = ext4_journal_get_write_access(handle, dind);
+-	if (unlikely(err))
++	if (unlikely(err)) {
+ 		ext4_std_error(sb, err);
++		goto errout;
++	}
+ 
+ 	/* ext4_reserve_inode_write() gets a reference on the iloc */
+ 	err = ext4_reserve_inode_write(handle, inode, &iloc);
+@@ -899,13 +901,17 @@ static int add_new_gdb(handle_t *handle, struct inode *inode,
+ 
+ 	le16_add_cpu(&es->s_reserved_gdt_blocks, -1);
+ 	err = ext4_handle_dirty_super(handle, sb);
+-	if (err)
++	if (err) {
+ 		ext4_std_error(sb, err);
++		goto errsuper;
++	}
++
+ 	return err;
+ errout:
++	brelse(dind);
++errsuper:
+ 	kvfree(n_group_desc);
+ 	brelse(iloc.bh);
+-	brelse(dind);
+ 	brelse(gdb_bh);
+ 
+ 	ext4_debug("leaving with error %d\n", err);
 -- 
 2.17.1
 
