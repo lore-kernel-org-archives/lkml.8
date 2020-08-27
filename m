@@ -2,116 +2,85 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75061C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25A9C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50AB92075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C35F12075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:27:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rYi9Y+8O"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oYMYeWcS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgH0J1V (ORCPT
+        id S1728484AbgH0J1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:27:21 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49576 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727030AbgH0J1U (ORCPT
+        Thu, 27 Aug 2020 05:27:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727030AbgH0J1h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:27:20 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07R9R3Es027540;
-        Thu, 27 Aug 2020 04:27:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598520423;
-        bh=IiVjgGh9n9U/mfxR2yJpQg4PuQcUL6DOGNbNr5tYBPQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rYi9Y+8Oe41k4u2hYSMIzGCdo03SZuJ5RJ4qwoQcJ5u4oBFSDu2FzW3xNzBSfzEOk
-         HjYDiK3nsoEXtcUv9T/WgRpNxnVi2paggq6q9E7WT8Hwlgt6uBsHMFeYVh6aQoxHj8
-         476K3eKqX276tUwwu6yvCt5o6KtqhORAlX+IscpA=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07R9R2UV020528
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 27 Aug 2020 04:27:03 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 27
- Aug 2020 04:27:02 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 27 Aug 2020 04:27:02 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07R9R0O8043489;
-        Thu, 27 Aug 2020 04:27:01 -0500
-Subject: Re: [PATCH v2] memory: omap-gpmc: Fix build error without CONFIG_OF
-To:     YueHaibing <yuehaibing@huawei.com>, <tony@atomide.com>,
-        <krzk@kernel.org>, <ladis@linux-mips.org>, <bbrezillon@kernel.org>,
-        <peter.ujfalusi@ti.com>
-CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200818125338.58148-1-yuehaibing@huawei.com>
- <20200826125919.22172-1-yuehaibing@huawei.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <c4d64ed6-2bd6-9b6e-63e1-59eb50157b87@ti.com>
-Date:   Thu, 27 Aug 2020 12:27:00 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 27 Aug 2020 05:27:37 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ABEAC061264;
+        Thu, 27 Aug 2020 02:27:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Cbkbj9n8n3AMTxZpJL8iKP1ExJYrvJSewIYwEkXDWlc=; b=oYMYeWcS5GPq0zqTS9H03jKfiM
+        ZS8DT+uU2qnSvCgVslIG2rxMlkmBNIabvCnRj/S+CNFX3j5TacjM53XNqoP5Vii8r4lvSSH6nakdE
+        EGhwk1zfbNJcfAswUfjtPnca9kR7WceFtdvJZCZBY2zaX0a2+nNQy0niMsS8Sz9dEK+cCt2O6lcct
+        R0kTZpy0dKZp9EmOplkDhfomirTSKEsxQS5T8ncWqeuY6GI4Q/wwJO80PegSsXB5O1wBI4vwlI7IL
+        xWKtznPrRceAblMEbDrxnI/stnU7a6pJwP49WJjfFh9snBYBWvupfs0AlM3lzjHVp+jcDuUmNoJsp
+        KGputAPQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBEBw-0005mz-5D; Thu, 27 Aug 2020 09:27:32 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5C4CE301A66;
+        Thu, 27 Aug 2020 11:27:30 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1FE122C30F37F; Thu, 27 Aug 2020 11:27:30 +0200 (CEST)
+Date:   Thu, 27 Aug 2020 11:27:30 +0200
+From:   peterz@infradead.org
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tip-commits@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        x86 <x86@kernel.org>
+Subject: Re: [tip: sched/core] sched/topology: Move sd_flag_debug out of
+ linux/sched/topology.h
+Message-ID: <20200827092730.GI1362448@hirez.programming.kicks-ass.net>
+References: <20200825133216.9163-1-valentin.schneider@arm.com>
+ <159851487090.20229.14835640470330793284.tip-bot2@tip-bot2>
+ <CAHp75VfJumPP=wKuU=OjFB11RUhPp0_5_+ogupQLFeEWKfbybA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200826125919.22172-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VfJumPP=wKuU=OjFB11RUhPp0_5_+ogupQLFeEWKfbybA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Aug 27, 2020 at 11:50:07AM +0300, Andy Shevchenko wrote:
+> On Thu, Aug 27, 2020 at 10:57 AM tip-bot2 for Valentin Schneider
+> <tip-bot2@linutronix.de> wrote:
+> >
+> > The following commit has been merged into the sched/core branch of tip:
+> 
+> > Fixes: b6e862f38672 ("sched/topology: Define and assign sched_domain flag metadata")
+> > Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Link: https://lkml.kernel.org/r/20200825133216.9163-1-valentin.schneider@arm.com
+> 
+> Hmm... I'm wondering if this bot is aware of tags given afterwards in
+> the thread?
 
-On 26/08/2020 15:59, YueHaibing wrote:
-> If CONFIG_OF is n, gcc fails:
-> 
-> drivers/memory/omap-gpmc.o: In function `gpmc_omap_onenand_set_timings':
-> omap-gpmc.c:(.text+0x2a88): undefined reference to `gpmc_read_settings_dt'
-> 
-> Add gpmc_read_settings_dt() helper function to fix this.
-> 
-> Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
-> v2: add gpmc_read_settings_dt() stub
-> ---
->   drivers/memory/omap-gpmc.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
-> index cd9e80748591..02c0c694ecaf 100644
-> --- a/drivers/memory/omap-gpmc.c
-> +++ b/drivers/memory/omap-gpmc.c
-> @@ -2310,6 +2310,9 @@ static void gpmc_probe_dt_children(struct platform_device *pdev)
->   	}
->   }
->   #else
-> +void gpmc_read_settings_dt(struct device_node *np, struct gpmc_settings *p)
-> +{
-
-I will suggest to set gpmc_settings data structure to zero here so that
-the caller doesn't proceed with random/invalid settings.
-
-> +}
->   static int gpmc_probe_dt(struct platform_device *pdev)
->   {
->   	return 0;
-> 
-
-cheers,
--roger
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Sorry, your tag came in after I'd already queued the lot.
