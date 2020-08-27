@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDEAC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 783A82087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1889522BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598554767;
-	bh=D3W11RS5LQuK0NiOtRpaiYpfrAhdnBPWAZ5FOYkiWdI=;
+	s=default; t=1598554774;
+	bh=1aI34oflIhzPRAI0UU1xJacHYtSBrAKdYvjEbULjxgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vET8G7L8d1WZyT2lAYqXjoqRpe/YHTNw6XZDQvw5N+C7qhqGva4/2muzspMG6jdR9
-	 qE30PVUYdyBUcrlQvlwnU0AbNfOVBxndfk5ywUagz1TcqY891P+BM1lCJ396GQ2OWI
-	 d3Y7a3hY9RUg4fAmPpjZJfSRypaJqsDi21Of3dhg=
+	b=raRHmdXDr8QeTa9T7jzmjhfJFGPAMf/5CBlZpMwreIheeQcg9quEfljNIYNbjQLmy
+	 Rs9Y6QdiBNOxfkZo8VKnHwMUGm41dh9T9w3QoP3EcnRHv2FF66zuAiKlqjqreDLsmI
+	 6x07xIQwh0awKJIfgieVWrr/4aNXn8wQX2jWDseY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgH0S70 (ORCPT
+        id S1728130AbgH0S7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:59:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49600 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 14:59:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728074AbgH0S7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:59:22 -0400
+        id S1728109AbgH0S73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 14:59:29 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7487D2087E;
-        Thu, 27 Aug 2020 18:59:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C9F022BEB;
+        Thu, 27 Aug 2020 18:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598554762;
-        bh=D3W11RS5LQuK0NiOtRpaiYpfrAhdnBPWAZ5FOYkiWdI=;
+        s=default; t=1598554768;
+        bh=1aI34oflIhzPRAI0UU1xJacHYtSBrAKdYvjEbULjxgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kxo8B7z/KfXCzKq6i9xdm5ZGZ30wxjrUHTxPxbWshx3XUfUIB4KPbrRyBxVzX7GGS
-         AC6Be2aH8B/1ewVSYLxARvkdKZS8lDRb+CBweofoYewIqDTK9PYyhNZsPoH5xZWJzg
-         6aysKruXbFti6mJolKvpAN6Kl5u3Zr/Z9K/S7AcQ=
+        b=aZ5SeS7/or+YYxyw8LKT7pd5+Sbn8tF2kNZ+KYwBareZGJe7MR7z1YEDE3TzDF6UE
+         DOFBGa3fjUEh1VFYz3ZluCyw1VCk5NgXL8Dm2vq01VXIqfu7Vwj6W38GMwFMWtzpgU
+         j+YY9wLeJt8vtrPUjv2IOOmWm2Xq+a9rEEOL3Lso=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -52,9 +52,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         clang-built-linux@googlegroups.com
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 12/27] Input: ektf2127 - Simplify with dev_err_probe()
-Date:   Thu, 27 Aug 2020 20:58:14 +0200
-Message-Id: <20200827185829.30096-13-krzk@kernel.org>
+Subject: [PATCH v3 14/27] Input: goodix - Simplify with dev_err_probe()
+Date:   Thu, 27 Aug 2020 20:58:16 +0200
+Message-Id: <20200827185829.30096-15-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
 References: <20200827185829.30096-1-krzk@kernel.org>
@@ -70,28 +70,80 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/input/touchscreen/ektf2127.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/input/touchscreen/goodix.c | 40 ++++++++----------------------
+ 1 file changed, 11 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/input/touchscreen/ektf2127.c b/drivers/input/touchscreen/ektf2127.c
-index eadd389cf81f..cd41483cfae5 100644
---- a/drivers/input/touchscreen/ektf2127.c
-+++ b/drivers/input/touchscreen/ektf2127.c
-@@ -237,12 +237,8 @@ static int ektf2127_probe(struct i2c_client *client,
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index 02c75ea385e0..48c4c3d297fe 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -864,7 +864,6 @@ static int goodix_add_acpi_gpio_mappings(struct goodix_ts_data *ts)
+  */
+ static int goodix_get_gpio_config(struct goodix_ts_data *ts)
+ {
+-	int error;
+ 	struct device *dev;
+ 	struct gpio_desc *gpiod;
+ 	bool added_acpi_mappings = false;
+@@ -874,33 +873,20 @@ static int goodix_get_gpio_config(struct goodix_ts_data *ts)
+ 	dev = &ts->client->dev;
  
- 	/* This requests the gpio *and* turns on the touchscreen controller */
- 	ts->power_gpios = devm_gpiod_get(dev, "power", GPIOD_OUT_HIGH);
--	if (IS_ERR(ts->power_gpios)) {
--		error = PTR_ERR(ts->power_gpios);
+ 	ts->avdd28 = devm_regulator_get(dev, "AVDD28");
+-	if (IS_ERR(ts->avdd28)) {
+-		error = PTR_ERR(ts->avdd28);
 -		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Error getting power gpio: %d\n", error);
+-			dev_err(dev,
+-				"Failed to get AVDD28 regulator: %d\n", error);
 -		return error;
 -	}
-+	if (IS_ERR(ts->power_gpios))
-+		return dev_err_probe(dev, PTR_ERR(ts->power_gpios), "Error getting power gpio\n");
++	if (IS_ERR(ts->avdd28))
++		return dev_err_probe(dev, PTR_ERR(ts->avdd28), "Failed to get AVDD28 regulator\n");
  
- 	input = devm_input_allocate_device(dev);
- 	if (!input)
+ 	ts->vddio = devm_regulator_get(dev, "VDDIO");
+-	if (IS_ERR(ts->vddio)) {
+-		error = PTR_ERR(ts->vddio);
+-		if (error != -EPROBE_DEFER)
+-			dev_err(dev,
+-				"Failed to get VDDIO regulator: %d\n", error);
+-		return error;
+-	}
++	if (IS_ERR(ts->vddio))
++		return dev_err_probe(dev, PTR_ERR(ts->vddio), "Failed to get VDDIO regulator\n");
+ 
+ retry_get_irq_gpio:
+ 	/* Get the interrupt GPIO pin number */
+ 	gpiod = devm_gpiod_get_optional(dev, GOODIX_GPIO_INT_NAME, GPIOD_IN);
+-	if (IS_ERR(gpiod)) {
+-		error = PTR_ERR(gpiod);
+-		if (error != -EPROBE_DEFER)
+-			dev_dbg(dev, "Failed to get %s GPIO: %d\n",
+-				GOODIX_GPIO_INT_NAME, error);
+-		return error;
+-	}
++	if (IS_ERR(gpiod))
++		return dev_err_probe(dev, PTR_ERR(gpiod), "Failed to get %s GPIO\n",
++				     GOODIX_GPIO_INT_NAME);
++
+ 	if (!gpiod && has_acpi_companion(dev) && !added_acpi_mappings) {
+ 		added_acpi_mappings = true;
+ 		if (goodix_add_acpi_gpio_mappings(ts) == 0)
+@@ -911,13 +897,9 @@ static int goodix_get_gpio_config(struct goodix_ts_data *ts)
+ 
+ 	/* Get the reset line GPIO pin number */
+ 	gpiod = devm_gpiod_get_optional(dev, GOODIX_GPIO_RST_NAME, GPIOD_IN);
+-	if (IS_ERR(gpiod)) {
+-		error = PTR_ERR(gpiod);
+-		if (error != -EPROBE_DEFER)
+-			dev_dbg(dev, "Failed to get %s GPIO: %d\n",
+-				GOODIX_GPIO_RST_NAME, error);
+-		return error;
+-	}
++	if (IS_ERR(gpiod))
++		return dev_err_probe(dev, PTR_ERR(gpiod), "Failed to get %s GPIO\n",
++				     GOODIX_GPIO_RST_NAME);
+ 
+ 	ts->gpiod_rst = gpiod;
+ 
 -- 
 2.17.1
 
