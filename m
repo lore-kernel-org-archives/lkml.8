@@ -2,104 +2,114 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A4BC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59485C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF17F207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:29:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598556575;
-	bh=muQ+YCp+Vwe8eKdaduBpNI5ws078auP+0FO7/EUefYM=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p+FraOKlrsP/+MkumtYalJ7YwRKAklojQOB1hOsddMqZkMgvabZXidES6vzVad66D
-	 wx/6Jv3Q/sIkTyFPtZ3nSdNG3g5pvAqn9wTRWjS+Bb42SIG/tGj6o9nLxaK//kp06w
-	 ub/qmUPb4tTXBUFHh6EzWXPLWD7EfRR1YWZv+AZY=
+	by mail.kernel.org (Postfix) with ESMTP id 09DA122BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:30:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FrpUZP/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgH0T3d (ORCPT
+        id S1726936AbgH0Ta0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:29:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbgH0T3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:29:33 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9D5122BEA;
-        Thu, 27 Aug 2020 19:29:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598556572;
-        bh=muQ+YCp+Vwe8eKdaduBpNI5ws078auP+0FO7/EUefYM=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=a+3rvvU1Eu9UZntSAuNuiPQ8m9m6YcjmxtK5A0z5CZy9WfsYSBgB35x0Z0GK65p8Z
-         vN3pos0/p5be4YAE5dhcmPgMKkzqJFbMoMXtZtGHJJd7EyZBxEcamfW6FOU8dyTr37
-         POs9e9xoOLlfXFjvkBaae6A50Uo9wI4lBFaj+D58=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Beniamin Bia <beniamin.bia@analog.com>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH v2 18/18] iio: magnetometer: iio-mux: Simplify with dev_err_probe()
-Date:   Thu, 27 Aug 2020 21:26:42 +0200
-Message-Id: <20200827192642.1725-18-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200827192642.1725-1-krzk@kernel.org>
-References: <20200827192642.1725-1-krzk@kernel.org>
+        Thu, 27 Aug 2020 15:30:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726299AbgH0TaX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 15:30:23 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AFECC061234
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 12:30:23 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id b2so5946638edw.5
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 12:30:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V0nv7wQoHFBDfCKea743Tg8u0187UBuuLmeycLCt9IE=;
+        b=FrpUZP/youjPCtKM9LqQKI6rWq/hmeX+PYpwaZCE58MOs9aULbEOUD4Iz6rJOV9v86
+         kzMmDQCn52Ev45YGSetnAY0Zm7bYPpoVb1ZDDxrGQ7IVOnwAt/v/76ct3LJCAOm0LjYs
+         t+lHPbwV5vlIeg3D3P29PjAeS807e1JZrOYtTkXUIScqDeAk1oZKWXnMuL9lQYTsQRg7
+         Qs17+Og1AY2RfXqoDXhpDyjUr+UD5+p4KKOtLn3B9ZubRDpXluQW5i2GTfFHaCUFIV6T
+         Plx3KsGr4Ctbdrr2snVE0YWdOkp0m/vKoxw1hDKbo4gpWES/+w0F4NRMcoYvSSomc6ny
+         X83w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V0nv7wQoHFBDfCKea743Tg8u0187UBuuLmeycLCt9IE=;
+        b=aFI6VMcLWRAaz1XEjChv2VbNExHvKKyJ/uTsOY5KGxhgT7yymASVWzUPC4fbq5+Xb/
+         4Nnn2+uvVqdLOjqo8M5nT5SP4Js0BG5ZcM3+qpayK69u9a2NfDYSmcxJRvzhYZZdntHg
+         pAi7DHq5GG44FkaBDOCQMuG0iOrL1/qVPYlebAfKX6N5zj0CWpUuxWAZhbg1M5cOZdH+
+         pvBvRTZdCL4D7AG/QF6qbYvmT1fAs+c5huzz207dnw9jQaLkx4EgBRY1DO3P1BWlTxk4
+         E5O2f2tswX18TMJB5n45I8xI5ci41WKLXbF3UEH4/EDNIQkl06F9giIdfTRCS3FcFRg3
+         ZlPg==
+X-Gm-Message-State: AOAM531qM2ZejX67Zmjh4665e6jEJyA2+/yLNNBqQZxUL1b8qQkXvNuv
+        d+yzL4iu0vSKe/O/8Hx5q1y13YWxpOMIg/ltD8z0qQ==
+X-Google-Smtp-Source: ABdhPJxrUFTaTtdB3uET/8l/a6XdYU2SNVMC86F8LwhWn6NZzuQLhDwt1HrAbXd+AGqTmGHN1IUW2aCKfRrjVA8PDWU=
+X-Received: by 2002:a50:d809:: with SMTP id o9mr20639212edj.12.1598556621415;
+ Thu, 27 Aug 2020 12:30:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594676120-5862-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CA+V-a8tZAp_oTpG2MsdC47TtGP7=oM6CubCnjBoR6UhV4=opNg@mail.gmail.com>
+In-Reply-To: <CA+V-a8tZAp_oTpG2MsdC47TtGP7=oM6CubCnjBoR6UhV4=opNg@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 27 Aug 2020 21:30:10 +0200
+Message-ID: <CAMpxmJWv=hTgbMLSVFm=C_5qSpo=BvOByW=B+BEEzTPswXfZzQ@mail.gmail.com>
+Subject: Re: [PATCH 6/9] dt-bindings: gpio: renesas,rcar-gpio: Add r8a774e1 support
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and also it prints the error value.
+On Thu, Aug 27, 2020 at 6:40 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+>
+> Hi Linus and Bartosz,
+>
+> On Mon, Jul 13, 2020 at 10:35 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> >
+> > Document Renesas RZ/G2H (R8A774E1) GPIO blocks compatibility within the
+> > relevant dt-bindings.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> Gentle ping.
+>
+> Cheers,
+> Prabhakar
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/iio/multiplexer/iio-mux.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+This doesn't apply on top of v5.9-rc1.
 
-diff --git a/drivers/iio/multiplexer/iio-mux.c b/drivers/iio/multiplexer/iio-mux.c
-index 6910218fdb00..d219d4a86657 100644
---- a/drivers/iio/multiplexer/iio-mux.c
-+++ b/drivers/iio/multiplexer/iio-mux.c
-@@ -354,11 +354,8 @@ static int mux_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 
- 	parent = devm_iio_channel_get(dev, "parent");
--	if (IS_ERR(parent)) {
--		if (PTR_ERR(parent) != -EPROBE_DEFER)
--			dev_err(dev, "failed to get parent channel\n");
--		return PTR_ERR(parent);
--	}
-+	if (IS_ERR(parent))
-+		return dev_err_probe(dev, PTR_ERR(parent), "failed to get parent channel\n");
- 
- 	sizeof_ext_info = iio_get_channel_ext_info_count(parent);
- 	if (sizeof_ext_info) {
--- 
-2.17.1
-
+Bart
