@@ -2,143 +2,168 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE119C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71994C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A00B820738
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38EE42177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:11:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eBtTDkom"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="eJry3dtL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728623AbgH0PKq (ORCPT
+        id S1728496AbgH0PLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:10:46 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:43555 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728409AbgH0LsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 07:48:05 -0400
-Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.100]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f479d720000>; Thu, 27 Aug 2020 19:48:02 +0800
-Received: from HKMAIL103.nvidia.com ([10.18.16.12])
-  by hkpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 27 Aug 2020 04:48:02 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate102.nvidia.com on Thu, 27 Aug 2020 04:48:02 -0700
-Received: from HKMAIL104.nvidia.com (10.18.16.13) by HKMAIL103.nvidia.com
- (10.18.16.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
- 2020 11:48:02 +0000
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.105)
- by HKMAIL104.nvidia.com (10.18.16.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Thu, 27 Aug 2020 11:48:02 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nVO5PP+5HOmCXiQ9AMz48FYgDeJAnhkedxjLlYRwfGWpXW5XW9z4MfG2fCiMFTw1930tRkLSyzNoovXLNKlUFcFDVVjOSenV39iWVWLyq+ffAMYpESMtDVYpyJwC6d+ng59yperm8aK+954ItBMvD4POuLZrT1CuW8L3dgeygHp9urFSAAA4pHdYKjayOtKxGhSdJsHylCGcvELScI57Ab73DaNfQcBa1iCokDyYLvPgjZ0eF7dn6wlDLL/5RVgePOhksZ35W38+l79oCs4fP8m0SzAKlAzM3XSjjPAw0mgqsU2/yMrvBrPoM62VB3HjnZeeP6UiVA93Uv2O84rWGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zo6Ke2qK0TIlHdBdxUuscYCC3G+zz+J/TRn+dQ31f2c=;
- b=GWJnkg9zy0zdLYpnYiycWRqk7w9NDyAY6c1Fo6avdjJmKwIi86NDdbe59o3X9BBkZlgXdzvqdpUM1BsKVZY9tz1vW3iLIKUA9SG2o8TqIXcl+uoTVlpq/Haf3JagZ/WlXxakOu5tReYKPxXrLA7er48tCrqPH9HHQ7VOI4iGhxISxW1rwIMszRybqONsWsR6IZkuKeRKRAK9IGA+oN6BUPyE+dR8mwHhQQ13sBvRq0thvws2MKTUBOMuIQGTsU587IptkAoa2Q2fIMUCctLpkpUu1+zswFC8ZUInViKUToFOAw5Io5QbSn1eVVwne3p1iAnrkZTxTpN199ARLfHs8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: zju.edu.cn; dkim=none (message not signed)
- header.d=none;zju.edu.cn; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR12MB1882.namprd12.prod.outlook.com (2603:10b6:3:112::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Thu, 27 Aug
- 2020 11:48:00 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3305.032; Thu, 27 Aug 2020
- 11:47:59 +0000
-Date:   Thu, 27 Aug 2020 08:47:58 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-CC:     <kjlu@umn.edu>, Zhu Yanjun <yanjunz@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] RDMA/rxe: Fix memleak in rxe_mem_init_user
-Message-ID: <20200827114758.GA3997325@nvidia.com>
-References: <20200819075632.22285-1-dinghao.liu@zju.edu.cn>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200819075632.22285-1-dinghao.liu@zju.edu.cn>
-X-ClientProxiedBy: MN2PR10CA0036.namprd10.prod.outlook.com
- (2603:10b6:208:120::49) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Thu, 27 Aug 2020 11:11:01 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:10938 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728874AbgH0LpU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 07:45:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598528669;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=woZpEfnFaBE4cm7/zjsWew74v/fudZ9kURmp1bF8wmQ=;
+        b=eJry3dtLZnw52U2jiLBK5/IvrSSxCyi17Lzp5sXI5X76AAcW+oVzeOaRo0MGqRFT1l
+        7JxIJMfVSoqipbMTd1sIKLNiMejQXQeAbjKKXHFjW+tBRu0GLWLzQbrDiU/iBCeSVtdN
+        rdsAUCaJie7Pz5//Phs8o1dS+fDpnhXLCHDgAvH8PkKG1JyeA/rknodsRvElM/X8VFv3
+        VewlDeQ8LOIWdnWf/B3dAmZdAt4+OoBo5Zcpyb7DW/tQcgGDhceF9WYe4EXsta/zxRv4
+        zBGg2TpNGv3/8b5xuQ+rwbafG/AgQnMWuwefQLeEpD4kN8+6g3ovsOq4G/uV+HxztZbi
+        h6nw==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7Ic/Fboo="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
+        with ESMTPSA id g0b6c1w7RBiRtNJ
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Thu, 27 Aug 2020 13:44:27 +0200 (CEST)
+Date:   Thu, 27 Aug 2020 13:44:22 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Niklas Cassel <nks@flawful.org>
+Subject: Re: [PATCH v2] opp: Power on (virtual) power domains managed by the
+ OPP core
+Message-ID: <20200827114422.GA1784@gerhold.net>
+References: <20200826093328.88268-1-stephan@gerhold.net>
+ <20200827100104.yuf2nzb6qras7zcw@vireshk-i7>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by MN2PR10CA0036.namprd10.prod.outlook.com (2603:10b6:208:120::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.20 via Frontend Transport; Thu, 27 Aug 2020 11:47:59 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kBGNq-00Gltn-5C; Thu, 27 Aug 2020 08:47:58 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 35ea42b3-10cd-4664-a5f1-08d84a7f0beb
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1882:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB18822DF9E2F66359753BD2F2C2550@DM5PR12MB1882.namprd12.prod.outlook.com>
-X-MS-Exchange-Transport-Forked: True
-X-MS-Oob-TLC-OOBClassifiers: OLM:3276;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ru9UI+tm5kcE93ZzeKKVBOqflUc9pUSj0l9NykJW/KxXz8V6V1llknD5WZCWXPT7pJhXK4PTFUbUS3S3cKMU/UL6nvUQPmugcV7qCs3ayHFTFyK8Is6dJhkPSpvY6n7NUAtJ3Y8bOon4yHt+/UBXUmzx7pUOqRrK3rqFsw9VSD/Hu2NfdJi5mrOJs5VjbemzE1Wwf75LVHtcSvLUxNXLsoWnOmjq4MkyOpuoGfTaDfcYnpUAeyjumryj7o8s0tzldJfk8zPPxmS4V+wcFJp3kn/C4OrB+MhC6gcVzVxreqJSwLtAByaesEb9WoX3jKS2mvZrslUotg23hu5iKmJGEg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(396003)(376002)(39860400002)(346002)(66556008)(66476007)(9786002)(66946007)(36756003)(9746002)(6916009)(478600001)(426003)(8676002)(4326008)(2616005)(1076003)(8936002)(316002)(26005)(5660300002)(186003)(4744005)(86362001)(33656002)(2906002)(54906003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: O4Ks6C90Gn1SlbZxtZ3N8p1KgdCdP8I3h8yPwvJSjy7Ayyz+BJUMAlowduWFnuW59EZzsZyA8/NoGBoVzksyTMYbtZ8KLEx4WfhTDYakQw9wiRUd4gkobRYVGTlZET7HCN24ksOZU4w9iiDGBFrb5Xg9gryrUspM/cFUdk8aXuSIfWCTXIpbWYgUC2ilIr4lRkaYTV+MzSazgEOK/KjQ5eqKl2Fg9z1v87QOKqpQdK5XKCbA5W8B8vt0X1KHJphX2MqC3oXRWBQIRtsuvjXAlv2Z12Vae967in38cIqS5Lhcd03QL7+ftHiizfv8UCNmSZqvpYUxt5rjVV3HyeR0juZhgfEHaxbwr3vH51q2qvtmQRPl+ces+e4cHRIJwEpHnVcn7We6Hp55OOvvIpGVqkYVE+EmdSzEBUaZCSeh9I6y/ckk5RODOcC401GPjQPXrNwOxftOqjnYuYIw1X4DcSEACYK1R8swmGnH2qMCAWddmIlmMwf+5jnjZXlTjtynrEb1uqsbKYTT+6d+IC2fbiwlqT3c9z5NoCpX3XQIKtxcQ/PcX5S9qFPo6Gfs1ArRmxhqswhDx/qZrFVpL3NaqCyYpW+CxgNhln9UaMY6RX6i1++3TCDI4Cf35LsSOWeVyHYAh4tJ4JPeJtSrErBFCA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35ea42b3-10cd-4664-a5f1-08d84a7f0beb
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2020 11:47:59.7937
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3izvq9Zq6xTzjCXT7mXZJOzIjvOFHkKEZCn8bkiISLM26MiPlIedCdYrj0t0uq3J
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1882
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598528882; bh=Zo6Ke2qK0TIlHdBdxUuscYCC3G+zz+J/TRn+dQ31f2c=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
-         X-MS-Exchange-Transport-Forked:X-MS-Oob-TLC-OOBClassifiers:
-         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
-         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-         X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=eBtTDkomGIL2e423YHt9VLpIsQSIA99ITUD8xaEWIWVpo+p+OZiYuxCs7b4vH2XEh
-         QGR4z+WQI/jfKxUMEbjKJ47mSlOKyrfLVOam+m5wbl3z7AE35Qs1ONCY1edCWnchj9
-         ZAlLCYrsc850oHS4lgG7tMu+jalmiw6+3TznBNVT5lH9xhwClV01nV3Vyz3tSzSnOo
-         mKIAPZ0Fr1OJr/njLyy5lZ7W08Ido7Q6XjaazvAb2ZyLqTzPoWTHUvZPZCWO21i9Gs
-         cox46/kKwPRxG+I2TfBR9SA9yg0BLlk1volCFl2uTCiqkB4CC5DklfrTaEz0smBVn5
-         hKPBFTa/53vHw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827100104.yuf2nzb6qras7zcw@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 03:56:32PM +0800, Dinghao Liu wrote:
-> When page_address() fails, umem should be freed just
-> like when rxe_mem_alloc() fails.
+On Thu, Aug 27, 2020 at 03:31:04PM +0530, Viresh Kumar wrote:
+> On 26-08-20, 11:33, Stephan Gerhold wrote:
+> > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> > index 8b3c3986f589..7e53a7b94c59 100644
+> > --- a/drivers/opp/core.c
+> > +++ b/drivers/opp/core.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/device.h>
+> >  #include <linux/export.h>
+> >  #include <linux/pm_domain.h>
+> > +#include <linux/pm_runtime.h>
+> >  #include <linux/regulator/consumer.h>
+> >  
+> >  #include "opp.h"
+> > @@ -1964,10 +1965,13 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
+> >  		if (!opp_table->genpd_virt_devs[index])
+> >  			continue;
+> >  
+> > +		if (opp_table->genpd_virt_links && opp_table->genpd_virt_links[index])
+> > +			device_link_del(opp_table->genpd_virt_links[index]);
+> >  		dev_pm_domain_detach(opp_table->genpd_virt_devs[index], false);
+> >  		opp_table->genpd_virt_devs[index] = NULL;
+> >  	}
+> >  
+> > +	kfree(opp_table->genpd_virt_links);
+> >  	kfree(opp_table->genpd_virt_devs);
+> >  	opp_table->genpd_virt_devs = NULL;
+> >  }
+> > @@ -1999,8 +2003,10 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
+> >  {
+> >  	struct opp_table *opp_table;
+> >  	struct device *virt_dev;
+> > -	int index = 0, ret = -EINVAL;
+> > +	struct device_link *dev_link;
+> > +	int index = 0, ret = -EINVAL, num_devs;
+> >  	const char **name = names;
+> > +	u32 flags;
+> >  
+> >  	opp_table = dev_pm_opp_get_opp_table(dev);
+> >  	if (IS_ERR(opp_table))
+> > @@ -2049,6 +2055,32 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
 > 
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  drivers/infiniband/sw/rxe/rxe_mr.c | 1 +
->  1 file changed, 1 insertion(+)
+> I was about to apply this patch when I noticed that this routine does
+> return the array of virtual devices back to the caller, like the qcom
+> cpufreq driver in this case. IIRC we did it this way as a generic
+> solution for this in the OPP core wasn't preferable.
+> 
 
-Applied to for-rc, I added a fixes line
+Hmm. Actually I was using this parameter for initial testing, and forced
+on the power domains from the qcom-cpufreq-nvmem driver. For my v1 patch
+I wanted to enable the power domains in dev_pm_opp_set_rate(), so there
+using the virt_devs parameter was not possible.
 
-Jason
+On the other hand, creating the device links would be possible from the
+platform driver by using the parameter.
+
+> And so I think again if this patch should be picked instead of letting
+> the platform handle this ?
+> 
+
+It seems like originally the motivation for the parameter was that
+cpufreq consumers do *not* need to power on the power domains:
+
+Commit 17a8f868ae3e ("opp: Return genpd virtual devices from dev_pm_opp_attach_genpd()"):
+ "The cpufreq drivers don't need to do runtime PM operations on
+  the virtual devices returned by dev_pm_domain_attach_by_name() and so
+  the virtual devices weren't shared with the callers of
+  dev_pm_opp_attach_genpd() earlier.
+
+  But the IO device drivers would want to do that. This patch updates
+  the prototype of dev_pm_opp_attach_genpd() to accept another argument
+  to return the pointer to the array of genpd virtual devices."
+
+But the reason why I made this patch is that actually something *should*
+enable the power domains even for the cpufreq case.
+If every user of dev_pm_opp_attach_genpd() ends up creating these device
+links we might as well manage those directly from the OPP core.
+
+I cannot think of any use case where you would not want to manage those
+power domains using device links. And if there is such a use case,
+chances are good that this use case is so special that using the OPP API
+to set the performance states would not work either. In either case,
+this seems like something that should be discussed once there is such a
+use case.
+
+At the moment, there are only two users of dev_pm_opp_attach_genpd():
+
+  - cpufreq (qcom-cpufreq-nvmem)
+  - I/O (venus, recently added in linux-next [1])
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=9a538b83612c8b5848bf840c2ddcd86dda1c8c76
+
+In fact, venus adds the device link exactly the same way as in my patch.
+So we could move that to the OPP core, simplify the venus code and
+remove the virt_devs parameter. That would be my suggestion.
+
+I can submit a v3 with that if you agree (or we take this patch as-is
+and remove the parameter separately - I just checked and creating a
+device link twice does not seem to cause any problems...)
+
+Thanks!
+Stephan
