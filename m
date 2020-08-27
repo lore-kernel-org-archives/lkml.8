@@ -2,245 +2,102 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A82CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E98C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29D8F22BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:38:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598546335;
-	bh=BQJgGx0WZxmBAOL4TvjzTRBHVFKglf3uZbHr3G4N01w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PBvAgXfg+UJu+HjvKgahq1/NHsjKYQAy7XiUQnaXqhFSI4PH3QQ2suZ7qAB/tViQj
-	 lqLAr8q1qWdesQAN+dtcuD3rLqSP+WFQVxmg521jxZXfb4hE4g6C2ma65Mgt5Ho8JQ
-	 0nfsbnIn6Zn5uzskRbcEjSoqZnkxsbayNQxuYNSs=
+	by mail.kernel.org (Postfix) with ESMTP id D0FE922BEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgH0Qiy (ORCPT
+        id S1727817AbgH0QjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:38:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45032 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 12:39:00 -0400
+Received: from mga06.intel.com ([134.134.136.31]:50528 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbgH0Qis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:38:48 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A0852087C;
-        Thu, 27 Aug 2020 16:38:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598546327;
-        bh=BQJgGx0WZxmBAOL4TvjzTRBHVFKglf3uZbHr3G4N01w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DDcxQtntCepPeLd1p93wCGqt5Coj4RTtb8YxjN6gMGfAC1Oi+QN850wJSdmepflfZ
-         xEGfpSHhRg8o12BTqFhUlNvUjmRvjEKtB1IuUgZNa9Y94DekwK6/tW+ejNSyS2We12
-         Zsr0wpu8jjOR8jLeVNq/JzAnGZBQCg4RiFaDhqG8=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, x86@kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        linux-arch@vger.kernel.org, guoren@kernel.org
-Subject: [PATCH v3 01/16] kprobes: Add generic kretprobe trampoline handler
-Date:   Fri, 28 Aug 2020 01:38:44 +0900
-Message-Id: <159854632381.736475.17150452390088286224.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <159854631442.736475.5062989489155389472.stgit@devnote2>
-References: <159854631442.736475.5062989489155389472.stgit@devnote2>
-User-Agent: StGit/0.19
+        id S1727078AbgH0Qi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 12:38:56 -0400
+IronPort-SDR: CxKpXJ8HWMe2EQ8GRMeBZeFfARBwmIMQXgGYzPXQWLe8Jsb7U7gtHvYoP984Sm5InJm+JfxTri
+ B/MDC+yANALw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="218073813"
+X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
+   d="scan'208";a="218073813"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 09:38:56 -0700
+IronPort-SDR: vts0Vlpjg+ajGomCStZRxxeP3u7ckxpaGtCW836r9BjS0dxN3YSHQJb6EVXC1Jv5a6OncUNQuA
+ C40x1lJ5VhcQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
+   d="scan'208";a="299917319"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga006.jf.intel.com with SMTP; 27 Aug 2020 09:38:52 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Thu, 27 Aug 2020 19:38:51 +0300
+Date:   Thu, 27 Aug 2020 19:38:51 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Intel-gfx] [PATCH] drm/i915/vlv_dsi_pll: fix spelling mistake
+ "Cant" -> "Can't"
+Message-ID: <20200827163851.GU6112@intel.com>
+References: <20200810095952.60968-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200810095952.60968-1-colin.king@canonical.com>
+X-Patchwork-Hint: comment
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a generic kretprobe trampoline handler for unifying
-the all cloned /arch/* kretprobe trampoline handlers.
+On Mon, Aug 10, 2020 at 10:59:52AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake in a drm_err message. Fix it.
 
-The generic kretprobe trampoline handler is based on the
-x86 implementation, because it is the latest implementation.
-It has frame pointer checking, kprobe_busy_begin/end and
-return address fixup for user handlers.
+Thanks. Applied to dinq.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- include/linux/kprobes.h |   32 +++++++++++++--
- kernel/kprobes.c        |  101 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 129 insertions(+), 4 deletions(-)
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/gpu/drm/i915/display/vlv_dsi_pll.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/display/vlv_dsi_pll.c b/drivers/gpu/drm/i915/display/vlv_dsi_pll.c
+> index d0a514301575..4070b00c3690 100644
+> --- a/drivers/gpu/drm/i915/display/vlv_dsi_pll.c
+> +++ b/drivers/gpu/drm/i915/display/vlv_dsi_pll.c
+> @@ -483,7 +483,7 @@ int bxt_dsi_pll_compute(struct intel_encoder *encoder,
+>  
+>  	if (dsi_ratio < dsi_ratio_min || dsi_ratio > dsi_ratio_max) {
+>  		drm_err(&dev_priv->drm,
+> -			"Cant get a suitable ratio from DSI PLL ratios\n");
+> +			"Can't get a suitable ratio from DSI PLL ratios\n");
+>  		return -ECHRNG;
+>  	} else
+>  		drm_dbg_kms(&dev_priv->drm, "DSI PLL calculation is Done!!\n");
+> -- 
+> 2.27.0
+> 
+> _______________________________________________
+> Intel-gfx mailing list
+> Intel-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/intel-gfx
 
-diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-index 9be1bff4f586..46a7afcf5ec0 100644
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -187,10 +187,38 @@ static inline int kprobes_built_in(void)
- 	return 1;
- }
- 
-+extern struct kprobe kprobe_busy;
-+void kprobe_busy_begin(void);
-+void kprobe_busy_end(void);
-+
- #ifdef CONFIG_KRETPROBES
- extern void arch_prepare_kretprobe(struct kretprobe_instance *ri,
- 				   struct pt_regs *regs);
- extern int arch_trampoline_kprobe(struct kprobe *p);
-+
-+/* If the trampoline handler called from a kprobe, use this version */
-+unsigned long __kretprobe_trampoline_handler(struct pt_regs *regs,
-+				unsigned long trampoline_address,
-+				void *frame_pointer);
-+
-+static nokprobe_inline
-+unsigned long kretprobe_trampoline_handler(struct pt_regs *regs,
-+				unsigned long trampoline_address,
-+				void *frame_pointer)
-+{
-+	unsigned long ret;
-+	/*
-+	 * Set a dummy kprobe for avoiding kretprobe recursion.
-+	 * Since kretprobe never runs in kprobe handler, any kprobe must not
-+	 * be running at this point.
-+	 */
-+	kprobe_busy_begin();
-+	ret = __kretprobe_trampoline_handler(regs, trampoline_address, frame_pointer);
-+	kprobe_busy_end();
-+
-+	return ret;
-+}
-+
- #else /* CONFIG_KRETPROBES */
- static inline void arch_prepare_kretprobe(struct kretprobe *rp,
- 					struct pt_regs *regs)
-@@ -354,10 +382,6 @@ static inline struct kprobe_ctlblk *get_kprobe_ctlblk(void)
- 	return this_cpu_ptr(&kprobe_ctlblk);
- }
- 
--extern struct kprobe kprobe_busy;
--void kprobe_busy_begin(void);
--void kprobe_busy_end(void);
--
- kprobe_opcode_t *kprobe_lookup_name(const char *name, unsigned int offset);
- int register_kprobe(struct kprobe *p);
- void unregister_kprobe(struct kprobe *p);
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 287b263c9cb9..cbd2ad1af7b7 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1927,6 +1927,107 @@ unsigned long __weak arch_deref_entry_point(void *entry)
- }
- 
- #ifdef CONFIG_KRETPROBES
-+
-+unsigned long __kretprobe_trampoline_handler(struct pt_regs *regs,
-+					unsigned long trampoline_address,
-+					void *frame_pointer)
-+{
-+	struct kretprobe_instance *ri = NULL;
-+	struct hlist_head *head, empty_rp;
-+	struct hlist_node *tmp;
-+	unsigned long flags, orig_ret_address = 0;
-+	kprobe_opcode_t *correct_ret_addr = NULL;
-+	bool skipped = false;
-+
-+	INIT_HLIST_HEAD(&empty_rp);
-+	kretprobe_hash_lock(current, &head, &flags);
-+
-+	/*
-+	 * It is possible to have multiple instances associated with a given
-+	 * task either because multiple functions in the call path have
-+	 * return probes installed on them, and/or more than one
-+	 * return probe was registered for a target function.
-+	 *
-+	 * We can handle this because:
-+	 *     - instances are always pushed into the head of the list
-+	 *     - when multiple return probes are registered for the same
-+	 *	 function, the (chronologically) first instance's ret_addr
-+	 *	 will be the real return address, and all the rest will
-+	 *	 point to kretprobe_trampoline.
-+	 */
-+	hlist_for_each_entry(ri, head, hlist) {
-+		if (ri->task != current)
-+			/* another task is sharing our hash bucket */
-+			continue;
-+		/*
-+		 * Return probes must be pushed on this hash list correct
-+		 * order (same as return order) so that it can be popped
-+		 * correctly. However, if we find it is pushed it incorrect
-+		 * order, this means we find a function which should not be
-+		 * probed, because the wrong order entry is pushed on the
-+		 * path of processing other kretprobe itself.
-+		 */
-+		if (ri->fp != frame_pointer) {
-+			if (!skipped)
-+				pr_warn("kretprobe is stacked incorrectly. Trying to fixup.\n");
-+			skipped = true;
-+			continue;
-+		}
-+
-+		orig_ret_address = (unsigned long)ri->ret_addr;
-+		if (skipped)
-+			pr_warn("%ps must be blacklisted because of incorrect kretprobe order\n",
-+				ri->rp->kp.addr);
-+
-+		if (orig_ret_address != trampoline_address)
-+			/*
-+			 * This is the real return address. Any other
-+			 * instances associated with this task are for
-+			 * other calls deeper on the call stack
-+			 */
-+			break;
-+	}
-+
-+	kretprobe_assert(ri, orig_ret_address, trampoline_address);
-+
-+	correct_ret_addr = ri->ret_addr;
-+	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
-+		if (ri->task != current)
-+			/* another task is sharing our hash bucket */
-+			continue;
-+		if (ri->fp != frame_pointer)
-+			continue;
-+
-+		orig_ret_address = (unsigned long)ri->ret_addr;
-+		if (ri->rp && ri->rp->handler) {
-+			__this_cpu_write(current_kprobe, &ri->rp->kp);
-+			ri->ret_addr = correct_ret_addr;
-+			ri->rp->handler(ri, regs);
-+			__this_cpu_write(current_kprobe, &kprobe_busy);
-+		}
-+
-+		recycle_rp_inst(ri, &empty_rp);
-+
-+		if (orig_ret_address != trampoline_address)
-+			/*
-+			 * This is the real return address. Any other
-+			 * instances associated with this task are for
-+			 * other calls deeper on the call stack
-+			 */
-+			break;
-+	}
-+
-+	kretprobe_hash_unlock(current, &flags);
-+
-+	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
-+		hlist_del(&ri->hlist);
-+		kfree(ri);
-+	}
-+
-+	return orig_ret_address;
-+}
-+NOKPROBE_SYMBOL(__kretprobe_trampoline_handler)
-+
- /*
-  * This kprobe pre_handler is registered with every kretprobe. When probe
-  * hits it will set up the return probe.
-
+-- 
+Ville Syrjälä
+Intel
