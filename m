@@ -2,108 +2,123 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AAEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 467CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2A42087D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:50:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SbfRWaTY"
+	by mail.kernel.org (Postfix) with ESMTP id 2DE8F2087D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:51:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbgH0Puj (ORCPT
+        id S1727108AbgH0Pvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:50:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbgH0Puh (ORCPT
+        Thu, 27 Aug 2020 11:51:43 -0400
+Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:40693 "EHLO
+        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726232AbgH0Pvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:50:37 -0400
-Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00537C061264;
-        Thu, 27 Aug 2020 08:50:36 -0700 (PDT)
-Received: by mail-ua1-x92a.google.com with SMTP id g20so1804578uap.8;
-        Thu, 27 Aug 2020 08:50:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rqgQFayVgaKlkaBGtNrK6F+MRvnVjmjaxJyHhjZ7vS8=;
-        b=SbfRWaTYDdGMHKXhX7od1Wavmkpg1jfntwNI335+Cg5KMF1c5QjtACDPJP2t7sg3/N
-         ZswDOZEqbBrGYKycI0accmJTGZ0cTWczccdaueti0evPm0PCQBkd5q7cYxCPwvs5M+GX
-         +5z7Zc12lbuevG/7MSH6/eQXSUNAhssaiVBCmvq2qER2qzSvzUOoGfN58LW24SHSD8W+
-         TO3Vy+w47diP733htgFi0RP88xab4Th6b6SnGQ0JATeUk5NNVYYw+PHZJ9zj0LESoAhO
-         9OcubkOL/2dN6HpCZSnmvOlIWoSnARhAbQ2z2jiUEfoz5VgEr6dbiaEDnWUcyjYFYL7C
-         nrAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rqgQFayVgaKlkaBGtNrK6F+MRvnVjmjaxJyHhjZ7vS8=;
-        b=HgBqQmSuyjdBXSZGdOUitLyzOwEMuGWU4ctwVlJmJ/Nf4dDRh6Sg4m1iXJG2SlXjqR
-         eGwdFVIHevIY7Aw4HT55btO/f+0KN7ox8vO3+KS2h0AEkZyzYnjhFINEZyfGMZIG674n
-         Pc6xO7+XfcWWKbr5oFffkoBsuWcipnrRS/TvcLF9YAL6FM7fUxsqVBMA0VF1OT5CBjQ+
-         hckdCvYebs1xDwnRCMeM23FEkwgzyrlxDQlpe/BsDM4U43/cUonbGPEtZWFBJmM9Ck7R
-         DJ0sj4H4SnCm4BrZrnqwXxX6BuGVOptlU6qXWat9o3gainGY8qgYBSai590si58aBNWa
-         yinw==
-X-Gm-Message-State: AOAM533C/YzANiLrnzD+svojXLL3PrHczT7sYbyC4Oq8I0qXNeal/Xfj
-        mcuNz2YRN2T19wcw+HL0fO97zQdt0ecWlT6qnrC6xCSuGGI=
-X-Google-Smtp-Source: ABdhPJxy/uWzerN1lgAoWXWpUsfEkSeXxsPdLqIuN4nEMR8qJ6R/Qt5/Z3rmzAh1YwKglRqTOW0vbD9xVoYIGlv4pQ8=
-X-Received: by 2002:ab0:3443:: with SMTP id a3mr11593386uaq.6.1598543435957;
- Thu, 27 Aug 2020 08:50:35 -0700 (PDT)
+        Thu, 27 Aug 2020 11:51:43 -0400
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.93)
+          with esmtps (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1kBKBf-002seO-TE; Thu, 27 Aug 2020 17:51:39 +0200
+Received: from suse-laptop.physik.fu-berlin.de ([160.45.32.140])
+          by inpost2.zedat.fu-berlin.de (Exim 4.93)
+          with esmtpsa (TLS1.2)
+          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1kBKBf-0038hI-Mi; Thu, 27 Aug 2020 17:51:39 +0200
+Subject: Re: [PATCH] fs/affs: Fix basic permission bits to actually work
+To:     Max Staudt <max@enpas.org>, David Sterba <dsterba@suse.com>
+Cc:     linux-fsdevel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20200827154900.28233-1-max@enpas.org>
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
+ 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
+ scOkTAZQGVpD/8AaLH4v1w==
+Message-ID: <4f499ab3-e76c-0f3a-e92f-a66c6af6938e@physik.fu-berlin.de>
+Date:   Thu, 27 Aug 2020 17:51:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200824154605.v66t2rsxobt3r5jg@linutronix.de>
- <20200826080802.5lnnf5wh3kcwfykz@beryllium.lan> <20200826081211.bvk5kfuzh4vlbh5k@linutronix.de>
- <20200826090518.m6vblobggnfdjau5@beryllium.lan> <20200826104326.xfexkwovwbi2q4el@beryllium.lan>
- <20200827091910.ibuyr53qprb7qmju@beryllium.lan> <20200827092743.kjl6hkaephx3a64a@linutronix.de>
- <20200827101622.xx4jzecouxrlwbii@beryllium.lan> <20200827102840.msv556nrah4h4vmq@linutronix.de>
- <20200827112705.uleixtdmx3pacr5u@beryllium.lan> <20200827124611.tsivo4xopvoenfmy@beryllium.lan>
-In-Reply-To: <20200827124611.tsivo4xopvoenfmy@beryllium.lan>
-From:   Daniel Vacek <neelx.g@gmail.com>
-Date:   Thu, 27 Aug 2020 17:50:24 +0200
-Message-ID: <CAA7rmPG1j0vD4rtv2piLF1UV9qD4mfcXVAHfA3vqGniPUAerrw@mail.gmail.com>
-Subject: Re: [ANNOUNCE] v5.9-rc2-rt1
-To:     Daniel Wagner <wagi@monom.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200827154900.28233-1-max@enpas.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 160.45.32.140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 2:49 PM Daniel Wagner <wagi@monom.org> wrote:
->
-> > Would be interesting to see the size numbers for v5.6-rt? Hmm, I'll
-> > just start the compiler. It's all scripted anyway :)
->
-> v5.6-rt:
->
-> -rw-r--r-- 1 wagi users 28688896 Aug 27 13:38 rpi3-image-ll-v5.6.19-rt12
-> -rw-r--r-- 1 wagi users 28688896 Aug 27 13:34 rpi3-image-nohz-v5.6.19-rt12
-> -rw-r--r-- 1 wagi users 29669888 Aug 27 13:32 rpi3-image-none-v5.6.19-rt12
-> -rw-r--r-- 1 wagi users 33438208 Aug 27 13:30 rpi3-image-rt-v5.6.19-rt12
-> -rw-r--r-- 1 wagi users 28688896 Aug 27 13:38 rpi3-image-up-v5.6.19-rt12
-> -rw-r--r-- 1 wagi users 29669888 Aug 27 13:36 rpi3-image-vp-v5.6.19-rt12
->
-> v5.4-rt:
->
-> -rw-r--r-- 1 wagi users 27525632 Aug 27 14:40 rpi3-image-ll-v5.4.59-rt36
-> -rw-r--r-- 1 wagi users 27525632 Aug 27 14:36 rpi3-image-nohz-v5.4.59-rt36
-> -rw-r--r-- 1 wagi users 28506624 Aug 27 14:34 rpi3-image-none-v5.4.59-rt36
-> -rw-r--r-- 1 wagi users 32360960 Aug 27 14:32 rpi3-image-rt-v5.4.59-rt36
-> -rw-r--r-- 1 wagi users 27525632 Aug 27 14:40 rpi3-image-up-v5.4.59-rt36
-> -rw-r--r-- 1 wagi users 28506624 Aug 27 14:38 rpi3-image-vp-v5.4.59-rt36
->
-> So in previous releases the size offset was roughly around 4MB.
+Hi Max!
 
-Maybe the threshold is 33554432, eg. 32 megs...
+On 8/27/20 5:49 PM, Max Staudt wrote:
+> The basic permission bits (protection bits in AmigaOS) have been broken
+> in Linux' affs - it would only set bits, but never delete them.
+> Also, contrary to the documentation, the Archived bit was not handled.
+> 
+> Let's fix this for good, and set the bits such that Linux and classic
+> AmigaOS can coexist in the most peaceful manner.
+> 
+> Also, update the documentation to represent the current state of things.
 
---nX
+I haven't tested this yet (obviously) but thanks a lot for fixing this :-).
+
+Adrian
+
+-- 
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer - glaubitz@debian.org
+`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
