@@ -2,240 +2,92 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F510C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B36C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0A392075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12DC82075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:16:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oUZSJ3G0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbgH0KQA (ORCPT
+        id S1728911AbgH0KQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:16:00 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:42609 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727897AbgH0KPl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:15:41 -0400
-Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MXY6b-1k7EjF27d1-00YwRu for <linux-kernel@vger.kernel.org>; Thu, 27 Aug
- 2020 12:15:38 +0200
-Received: by mail-qk1-f178.google.com with SMTP id u3so5321133qkd.9
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:15:38 -0700 (PDT)
-X-Gm-Message-State: AOAM5313IQgaB9CrcH4STsbn76UssYC5BUhgnbfqugXfRxcVUBnmLSup
-        zm0Y4uiJPvoM4vZdF56tCd47hO43KXwK1kbY99c=
-X-Google-Smtp-Source: ABdhPJzdaSYhoLaNpQK/mfzoY+l0Nc76rW6do3te9j00/vi91iqdAFRcbliHdY9cMdBv3s+wlm8XaSkhKHmrxyeOuls=
-X-Received: by 2002:a37:b942:: with SMTP id j63mr18167411qkf.138.1598523337360;
- Thu, 27 Aug 2020 03:15:37 -0700 (PDT)
+        Thu, 27 Aug 2020 06:16:25 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:28178 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728015AbgH0KQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 06:16:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598523363; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=xiRJtvh5xtUWE5eu9E5uIp48fwmVaUEWj0td3jLbHMw=;
+ b=oUZSJ3G0dhFZEJXj54Y3E8H+fdI58b6GCPGXaD5AEPwK/tG1X44I9WufY6GweA0Q9BO7k3Yq
+ yXaSoswKD/r8I9dIqVudmAdt/5RpHzsGFUCpvu+YpEFBVGazpfeakl5ItxOrjNg3vyPtX4KV
+ u1oSM7T3JCJl9gGoLd3E15lE0qw=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f4787e3d6f74c6f9c6eb3c2 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 10:16:03
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5FAC9C433AD; Thu, 27 Aug 2020 10:16:03 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 89C5FC43395;
+        Thu, 27 Aug 2020 10:16:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 89C5FC43395
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200820145117.8348-1-daniel.gutson@eclypsium.com>
-In-Reply-To: <20200820145117.8348-1-daniel.gutson@eclypsium.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 27 Aug 2020 12:15:21 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3Z_mw4k+FZbGiz8Qg-YOHo7f=bWgpZ2gGZYqZuKo-8Hw@mail.gmail.com>
-Message-ID: <CAK8P3a3Z_mw4k+FZbGiz8Qg-YOHo7f=bWgpZ2gGZYqZuKo-8Hw@mail.gmail.com>
-Subject: Re: [PATCH] Platform lockdown information in sysfs (v2)
-To:     Daniel Gutson <daniel.gutson@eclypsium.com>
-Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Richard Hughes <hughsient@gmail.com>,
-        Alex Bazhaniuk <alex@eclypsium.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:ODR9pjc7whQH0JW1v7iW0KyUXm7FDdIpDPSvsgCyDbIjsOaKhwQ
- kkvVNmfM7gp18lJKyKg10YQrIZvgB+/c3RZfzXlPuI8J2RWTqRGJanKYajgl+IApSXyQjiw
- kvviFBK94KTT3RFrfJfSuK7gqgMy3Dlt3d5POC66pUFaFPpmKBzgxKSo/Xr9SyxOyTA8N0T
- gTHqrjCIPCZoz5xZiZHOg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:C0mUOtjFBpk=:c0M059xJJNfBjPL+pnFdEP
- twXe31XRQhZRVCnkkj8RaFHjZU+fNrOdVXbNX57m6/7nV9c9JH09eyLMVAEQeOghx47XOua/H
- sWJ5EKrQg0/x0bMkBoe3CcK1C6LL1ndc6uU9AtAgHEcbbGXqj4zUYiiaHlkcFVMI7I9LwQphl
- 7pXZzhVL/xtb8qWTaPmAJwcyYyOLiDBKyswJQg4VIpQ1tXhP7f5n5WBoYdztV+mq4emXbTqlR
- 7t2ojHnp06VXuIARloS6us812ZJcGmFAdvC0zgsQAi7n5ihhEL1/c0+N2Iqn1iwBH1ds10SDI
- azYVtYz8beIlm5PzHBHGqy+Wob0iwj3xjnDkyO/snFSTTc5RtpKgqhktX9vfpkz3AhNeUtoYw
- 4ID5BEDBbK3rs+IQ/uIOyVo9T41QtdXTa1gtd7dRpMCfmyVUpaX0cSd0JJgWlQfeUU+EBtEvP
- MjbephVJjmXb4MfsZV9Hj1rE/uqSqqaBweAvQHwLW+50gDe4wb1oI/WEaDMpfOVenuo72Q6Ip
- 7EIgdDXiw1K9D7EzCrxdU+73mIYTI7rjpJbiV+5xmwpuo7LlFFC1ZItNxo1eIkW+25L7GJ7Kc
- ilYEuls4pFP7hUTSney3G2Fzap0pWvLQIqT9ljNGor2dHNSI1IG0rnqQ8N+tsfjgezL2plWMM
- Fcskacol84dB+tG62TZ66Qk/X4TDBHREiL7jHt9w+hH2B+l3vbkD/AcQckwkABt/4MZBYu5s2
- DjAC0s1Osjrh1OLJDwEbqDgQ9AQNaK1+5ji0yLAw5nmBwnfZmq94Szo/VJK1ZBe8DFxgajN8e
- 8qtnrTQxjL1nNmlioIAKTNXIhU3kDNBcuBfzh+aa0dnSqIp5WxgclYZ6TCK1NNPfdgP7O41
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 14/30] wireless: ath: ath6kl: wmi: Remove unused variable
+ 'rate'
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200826093401.1458456-15-lee.jones@linaro.org>
+References: <20200826093401.1458456-15-lee.jones@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200827101603.5FAC9C433AD@smtp.codeaurora.org>
+Date:   Thu, 27 Aug 2020 10:16:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 4:51 PM Daniel Gutson
-<daniel.gutson@eclypsium.com> wrote:
->
-> This patch exports information about the platform lockdown
-> firmware configuration in the sysfs filesystem.
-> In this initial patch, I include some configuration attributes
-> for the system SPI chip.
->
-> This initial version exports the BIOS Write Enable (bioswe),
-> BIOS Lock Enable (ble), and the SMM BIOS Write Protect (SMM_BWP)
-> fields of the BIOS Control register. The idea is to keep adding more
-> flags, not only from the BC but also from other registers in following
-> versions.
->
-> The goal is that the attributes are avilable to fwupd when SecureBoot
-> is turned on.
->
-> The patch provides a new misc driver, as proposed in the previous patch,
-> that provides a registration function for HW Driver devices to register
-> class_attributes.
-> In this case, the intel SPI flash chip (intel-spi) registers three
-> class_attributes corresponding to the fields mentioned above.
->
-> This version of the patch replaces class attributes by device
-> attributes.
->
-> Signed-off-by: Daniel Gutson <daniel.gutson@eclypsium.com>
+Lee Jones <lee.jones@linaro.org> wrote:
 
-This looks much better than before, thanks for addressing the feedback.
-> diff --git a/Documentation/ABI/stable/sysfs-class-platform-lockdown b/Documentation/ABI/stable/sysfs-class-platform-lockdown
-> new file mode 100644
-> index 000000000000..3fe75d775a42
-> --- /dev/null
-> +++ b/Documentation/ABI/stable/sysfs-class-platform-lockdown
-> @@ -0,0 +1,23 @@
-> +What:          /sys/class/platform-lockdown/bioswe
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  drivers/net/wireless/ath/ath6kl/wmi.c: In function ‘ath6kl_wmi_bitrate_reply_rx’:
+>  drivers/net/wireless/ath/ath6kl/wmi.c:1204:6: warning: variable ‘rate’ set but not used [-Wunused-but-set-variable]
+> 
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-platform-lockdown is a much better name than the previous suggestions.
-I'm still hoping for an even better suggestion. Like everything the term
-"lockdown" is also overloaded a bit, with the other common meaning
-referring to the effort to give root users less privilege than the
-kernel itself,
-see https://lwn.net/Articles/750730/
+Patch applied to ath-next branch of ath.git, thanks.
 
-Shouldn't there be a device name between the class name
-("platform-lockdown") and the attribute name?
+e58518499ded ath6kl: wmi: Remove unused variable 'rate'
 
-> +PLATFORM LOCKDOWN ATTRIBUTES MODULE
-> +M:     Daniel Gutson <daniel.gutson@eclypsium.com>
-> +S:     Supported
-> +F:     Documentation/ABI/sysfs-class-platform-lockdown
-> +F:     drivers/misc/platform-lockdown-attrs.c
-> +F:     include/linux/platform_data/platform-lockdown-attrs.h
+-- 
+https://patchwork.kernel.org/patch/11737737/
 
-include/linux/platform_data/ is not the right place for the header,
-this is defined to be the place for defining properties of devices
-that are created from old-style board files.
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
-Just put the header into include/linux/ directly.
-the host.
->
-> +config PLATFORM_LOCKDOWN_ATTRS
-> +       tristate "Platform lockdown information in the sysfs"
-> +       depends on SYSFS
-> +       help
-> +         This kernel module is a helper driver to provide information about
-> +         platform lockdown settings and configuration.
-> +         This module is used by other device drivers -such as the intel-spi-
-> +         to publish the information in /sys/class/platform-lockdown.
-
-Maybe mention fwupd in the description in some form.
-
-> +
-> +static struct class platform_lockdown_class = {
-> +       .name = "platform-lockdown",
-> +       .owner = THIS_MODULE,
-> +};
-> +
-> +struct device *register_platform_lockdown_data_device(struct device *parent,
-> +                                                     const char *name)
-> +{
-> +       return device_create(&platform_lockdown_class, parent, MKDEV(0, 0),
-> +                            NULL, name);
-> +}
-> +EXPORT_SYMBOL_GPL(register_platform_lockdown_data_device);
-> +
-> +void unregister_platform_lockdown_data_device(struct device *dev)
-> +{
-> +       device_unregister(dev);
-> +}
-> +EXPORT_SYMBOL_GPL(unregister_platform_lockdown_data_device);
-> +
-> +int register_platform_lockdown_attribute(struct device *dev,
-> +                                        struct device_attribute *dev_attr)
-> +{
-> +       return device_create_file(dev, dev_attr);
-> +}
-> +EXPORT_SYMBOL_GPL(register_platform_lockdown_attribute);
-> +
-> +void register_platform_lockdown_attributes(struct device *dev,
-> +                                          struct device_attribute dev_attrs[])
-> +{
-> +       u32 idx = 0;
-> +
-> +       while (dev_attrs[idx].attr.name != NULL) {
-> +               register_platform_lockdown_attribute(dev, &dev_attrs[idx]);
-> +               idx++;
-> +       }
-
-There is a bit of a race with creating the device first and then
-the attributes. Generally it seems better to me to use
-device_create_with_groups() instead so the device shows up
-with all attributes in place already.
-
-> +void register_platform_lockdown_custom_attributes(struct device *dev,
-> +                                                 void *custom_attrs,
-> +                                                 size_t dev_attr_offset,
-> +                                                 size_t custom_attr_size)
-
-This interface seems to be overly complex, I would hope it can be avoided.
-
-> +static ssize_t cnl_spi_attr_show(struct device *dev,
-> +       struct device_attribute *attr, char *buf)
-> +{
-> +       u32 bcr;
-> +       struct cnl_spi_attr *cnl_spi_attr = container_of(attr,
-> +               struct cnl_spi_attr, dev_attr);
-> +
-> +       if (class_child_device != dev)
-> +               return -EIO;
-> +
-> +       if (dev->parent == NULL)
-> +               return -EIO;
-> +
-> +       if (pci_read_config_dword(container_of(dev->parent, struct pci_dev, dev),
-> +                               BCR, &bcr) != PCIBIOS_SUCCESSFUL)
-> +               return -EIO;
-> +
-> +       return sprintf(buf, "%d\n", (int)!!(bcr & cnl_spi_attr->mask));
-> +}
-
-If I understand it right, that complexity comes from attempting to
-have a single show callback for three different flags. To me that
-actually feels more complicated than having an attribute group
-with three similar but simpler show callbacks.
-
->  static void intel_spi_pci_remove(struct pci_dev *pdev)
->  {
-> +       if (class_child_device != NULL) {
-
-Please avoid the global variable here and just add a member in the
-per-device data.
-
-> +               unregister_platform_lockdown_custom_attributes(
-> +                       class_child_device,
-> +                       cnl_spi_attrs,
-> +                       offsetof(struct cnl_spi_attr, dev_attr),
-> +                       sizeof(struct cnl_spi_attr));
-> +
-> +               unregister_platform_lockdown_data_device(class_child_device);
-
-It should be possible to just destroy the attributes as part of
-unregister_platform_lockdown_data_device.
-
-       Arnd
