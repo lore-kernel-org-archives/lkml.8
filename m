@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C31C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F78C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6CE72087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A80F20737
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:12:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yze0Go7w"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RGWWT6ZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgH0RMf (ORCPT
+        id S1727964AbgH0RMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:12:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50356 "EHLO
+        Thu, 27 Aug 2020 13:12:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53535 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726834AbgH0RM2 (ORCPT
+        with ESMTP id S1727036AbgH0RMl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:12:28 -0400
+        Thu, 27 Aug 2020 13:12:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598548347;
+        s=mimecast20190719; t=1598548359;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=W/YGWSLvG6lY5R83KUArknDiX8BRYjrRNnmUZit1EZI=;
-        b=Yze0Go7wKX8CtxVniOw0Gk2lINKBj2yyxLTTrJesrun6cAmVBloc0cX/azWpLY61vqZPLP
-        Wx3SXOXIdw5gZEn/KHxEcZ3TccMNmqigqX5VRi2x2M29lp6gZyYOtdnV9PhnOjw+u+Os92
-        BLwUeWrW4WJ8Iv38kXqMnLjcxzGoaEY=
+        bh=0eSuGan0/UkqgTX87tH1fFC/jOPqKwkNi+GUUV3aL8Q=;
+        b=RGWWT6ZS0h452Bcs/rlWVcYgFKcC5tn6aXWk/gQR2zS87AC15BmxAxGUGCbfFwnQdS6w7r
+        p0lux4NPvD4KEdep+M31FLIYwzuJ2RGHnE2dZAq6aGY6h+XI2EfYhilXaYioolpZPUmq2O
+        WeFEyc5EzWz8QP2/ijByTBVnn2wt6yQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-370-DbTiD6I8MFqHmhuIjFc4kQ-1; Thu, 27 Aug 2020 13:12:26 -0400
-X-MC-Unique: DbTiD6I8MFqHmhuIjFc4kQ-1
+ us-mta-60-p6cjgNmOOxyq1kUYVED_GQ-1; Thu, 27 Aug 2020 13:12:37 -0400
+X-MC-Unique: p6cjgNmOOxyq1kUYVED_GQ-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A55E6802B47;
-        Thu, 27 Aug 2020 17:12:24 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 56EA710ABDBF;
+        Thu, 27 Aug 2020 17:12:35 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.35.206.185])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 402F45D9E8;
-        Thu, 27 Aug 2020 17:12:21 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 149485D9E8;
+        Thu, 27 Aug 2020 17:12:24 +0000 (UTC)
 From:   Maxim Levitsky <mlevitsk@redhat.com>
 To:     kvm@vger.kernel.org
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -59,9 +59,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Ingo Molnar <mingo@redhat.com>, Joerg Roedel <joro@8bytes.org>,
         Wanpeng Li <wanpengli@tencent.com>,
         Maxim Levitsky <mlevitsk@redhat.com>
-Subject: [PATCH v3 5/8] KVM: SVM: refactor exit labels in svm_create_vcpu
-Date:   Thu, 27 Aug 2020 20:11:42 +0300
-Message-Id: <20200827171145.374620-6-mlevitsk@redhat.com>
+Subject: [PATCH v3 6/8] KVM: x86: allow kvm_x86_ops.set_efer to return a value
+Date:   Thu, 27 Aug 2020 20:11:43 +0300
+Message-Id: <20200827171145.374620-7-mlevitsk@redhat.com>
 In-Reply-To: <20200827171145.374620-1-mlevitsk@redhat.com>
 References: <20200827171145.374620-1-mlevitsk@redhat.com>
 MIME-Version: 1.0
@@ -72,61 +72,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel coding style suggests not to use labels like error1,error2
+This will be used later to return an error when setting this msr fails.
 
-Suggested-by: Jim Mattson <jmattson@google.com>
+Note that we ignore this return value for qemu initiated writes to
+avoid breaking backward compatibility.
+
 Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
 ---
- arch/x86/kvm/svm/svm.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 2 +-
+ arch/x86/kvm/svm/svm.c          | 3 ++-
+ arch/x86/kvm/svm/svm.h          | 2 +-
+ arch/x86/kvm/vmx/vmx.c          | 9 ++++++---
+ arch/x86/kvm/x86.c              | 3 ++-
+ 5 files changed, 12 insertions(+), 7 deletions(-)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 5303dbc5c9bce..b273c199b9a55 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1069,7 +1069,7 @@ struct kvm_x86_ops {
+ 	void (*get_cs_db_l_bits)(struct kvm_vcpu *vcpu, int *db, int *l);
+ 	void (*set_cr0)(struct kvm_vcpu *vcpu, unsigned long cr0);
+ 	int (*set_cr4)(struct kvm_vcpu *vcpu, unsigned long cr4);
+-	void (*set_efer)(struct kvm_vcpu *vcpu, u64 efer);
++	int (*set_efer)(struct kvm_vcpu *vcpu, u64 efer);
+ 	void (*get_idt)(struct kvm_vcpu *vcpu, struct desc_ptr *dt);
+ 	void (*set_idt)(struct kvm_vcpu *vcpu, struct desc_ptr *dt);
+ 	void (*get_gdt)(struct kvm_vcpu *vcpu, struct desc_ptr *dt);
 diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 290b2d0cd78e3..b617579095277 100644
+index b617579095277..4c92432e33e27 100644
 --- a/arch/x86/kvm/svm/svm.c
 +++ b/arch/x86/kvm/svm/svm.c
-@@ -1196,11 +1196,11 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+@@ -263,7 +263,7 @@ static int get_max_npt_level(void)
+ #endif
+ }
  
- 	hsave_page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
- 	if (!hsave_page)
--		goto free_page1;
-+		goto error_free_vmcb_page;
+-void svm_set_efer(struct kvm_vcpu *vcpu, u64 efer)
++int svm_set_efer(struct kvm_vcpu *vcpu, u64 efer)
+ {
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+ 	vcpu->arch.efer = efer;
+@@ -283,6 +283,7 @@ void svm_set_efer(struct kvm_vcpu *vcpu, u64 efer)
  
- 	err = avic_init_vcpu(svm);
- 	if (err)
--		goto free_page2;
-+		goto error_free_hsave_page;
+ 	svm->vmcb->save.efer = efer | EFER_SVME;
+ 	vmcb_mark_dirty(svm->vmcb, VMCB_CR);
++	return 0;
+ }
  
- 	/* We initialize this flag to true to make sure that the is_running
- 	 * bit would be set the first time the vcpu is loaded.
-@@ -1212,11 +1212,11 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+ static int is_external_interrupt(u32 info)
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index ab913468f9cbe..468c58a915347 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -349,7 +349,7 @@ static inline bool gif_set(struct vcpu_svm *svm)
+ #define MSR_INVALID				0xffffffffU
  
- 	svm->msrpm = svm_vcpu_init_msrpm();
- 	if (!svm->msrpm)
--		goto free_page2;
-+		goto error_free_hsave_page;
+ u32 svm_msrpm_offset(u32 msr);
+-void svm_set_efer(struct kvm_vcpu *vcpu, u64 efer);
++int svm_set_efer(struct kvm_vcpu *vcpu, u64 efer);
+ void svm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0);
+ int svm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4);
+ void svm_flush_tlb(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 46ba2e03a8926..c2b60d242c2bd 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2862,13 +2862,15 @@ static void enter_rmode(struct kvm_vcpu *vcpu)
+ 	kvm_mmu_reset_context(vcpu);
+ }
  
- 	svm->nested.msrpm = svm_vcpu_init_msrpm();
- 	if (!svm->nested.msrpm)
--		goto free_page3;
-+		goto error_free_msrpm;
+-void vmx_set_efer(struct kvm_vcpu *vcpu, u64 efer)
++int vmx_set_efer(struct kvm_vcpu *vcpu, u64 efer)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	struct shared_msr_entry *msr = find_msr_entry(vmx, MSR_EFER);
  
- 	svm->vmcb = page_address(vmcb_page);
- 	svm->vmcb_pa = __sme_set(page_to_pfn(vmcb_page) << PAGE_SHIFT);
-@@ -1228,11 +1228,11 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+-	if (!msr)
+-		return;
++	if (!msr) {
++		/* Host doen't support EFER, nothing to do */
++		return 0;
++	}
  
- 	return 0;
+ 	vcpu->arch.efer = efer;
+ 	if (efer & EFER_LMA) {
+@@ -2880,6 +2882,7 @@ void vmx_set_efer(struct kvm_vcpu *vcpu, u64 efer)
+ 		msr->data = efer & ~EFER_LME;
+ 	}
+ 	setup_msrs(vmx);
++	return 0;
+ }
  
--free_page3:
-+error_free_msrpm:
- 	svm_vcpu_free_msrpm(svm->msrpm);
--free_page2:
-+error_free_hsave_page:
- 	__free_page(hsave_page);
--free_page1:
-+error_free_vmcb_page:
- 	__free_page(vmcb_page);
- out:
- 	return err;
+ #ifdef CONFIG_X86_64
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 539ea1cd6020c..3fed4e4367b24 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1471,7 +1471,8 @@ static int set_efer(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 	efer &= ~EFER_LMA;
+ 	efer |= vcpu->arch.efer & EFER_LMA;
+ 
+-	kvm_x86_ops.set_efer(vcpu, efer);
++	if (kvm_x86_ops.set_efer(vcpu, efer) && !msr_info->host_initiated)
++		return 1;
+ 
+ 	/* Update reserved bits */
+ 	if ((efer ^ old_efer) & EFER_NX)
 -- 
 2.26.2
 
