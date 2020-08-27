@@ -2,229 +2,135 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C03C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB19EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7129020791
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:34:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eBmPFLnE"
+	by mail.kernel.org (Postfix) with ESMTP id C40F520791
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:35:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598513714;
+	bh=P4YNVNYUh0FeNnaF4nixNGpIDzORDRqaUU67e3RwtBA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cExZ3vjwUAXUlMeGeyKCQagW2dShUOWiKPSMxjV3l+tCYtvOPAiUKLaJO3eK/hIdv
+	 BHiGq9XLwbnQtNe4cUFZA2Oveg+VHqrDB1PRNiyw1REFTkifuWK81WuWQhyzue8tmg
+	 IbHOQBtbQPs9Po9vpQyTuVRa4isWkk8vcIgAFQH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgH0Hez (ORCPT
+        id S1728254AbgH0HfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:34:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728077AbgH0Heq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:34:46 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9779C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:34:45 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id c15so4312201wrs.11
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:34:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nMutSp2j8lDpsARJd2bf3g5RNBU3idpv78njSHIfOe8=;
-        b=eBmPFLnENcqBUmxoVeQzsC8krhJde4fyDRfTOapBPl3kr/0SvF8s+Uuh6i31uAGSc2
-         vWS2B5lBX0s59zd+AZGm8Lb2YtVGpXVfpvID0LnN9JrfBLX5fLGtk4OBSqaQlhXoq2va
-         tHiP+M9SfFwiCh+ZEWG5634cTaGa4qfqJ+/QrqSMdQrQ0WicHDkCKWSeAZtlpshQm59q
-         91TnkDu4pC+2H595isJymY2OSLFDLG6yItrmIq/f0JMd7HllxaFU9PkphgqcpvRCIlas
-         bhXtgFCYSRZ7wWDf/iVprkZWEmEV3Mom2RuVDWd4SPuSu8dPHnXmE8m16FkG01f3EOMj
-         OnkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nMutSp2j8lDpsARJd2bf3g5RNBU3idpv78njSHIfOe8=;
-        b=mSS5VaMz5D+HGK592YvqgvJgIgpvsLZbgtzl2HtUP+Ym5xKXmKPZfCSdZL/Nz1Eff4
-         38c0hboWvRxRBMjXOy/in++yYir5uivubUjAsogweaVSwXAgFywWf3y9QpWWaluWLdWm
-         bS6mZ5LXHXRzaQOh+VCQqyU3ngCaJCK5nfKRhzpUZLRmmlKSx9i4Oj9Mw1VYhBvvXvoI
-         u17oTSkE/ppFD8WAZLZDH61R5eQU4AGgLUBhQtnCxVco1neI0yGmkglorlFjpqc9SsL5
-         KVzu+P179Or+UrYJDRNkcdoOtmQgEAgLY+QPn4N9GoQeKryP95Ye08/mTd8XU8ADpEWR
-         OldA==
-X-Gm-Message-State: AOAM530nvzRE7HIp3OQtuRAfdnQvU5xR35a/UcCVf17NM0G/pJM+PAYj
-        DwAUUC1o+abovx2O72O2cfRD4pBDzsTpVA==
-X-Google-Smtp-Source: ABdhPJwn8Lcoxc9EnpXbTBuzBujvMmlrHarXWaQxsG2Se2uk7zjIfOd6U61a761RLZzKeJ34Gwh4xA==
-X-Received: by 2002:adf:a287:: with SMTP id s7mr20425857wra.103.1598513684404;
-        Thu, 27 Aug 2020 00:34:44 -0700 (PDT)
-Received: from dell ([91.110.221.141])
-        by smtp.gmail.com with ESMTPSA id c9sm3383642wmf.3.2020.08.27.00.34.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 00:34:43 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 08:34:42 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, Maya Erez <merez@codeaurora.org>,
-        wil6210@qti.qualcomm.com
-Subject: [PATCH v2 27/32] wireless: ath: wil6210: txrx: Demote obvious abuse
- of kernel-doc
-Message-ID: <20200827073442.GT3248864@dell>
-References: <20200821071644.109970-1-lee.jones@linaro.org>
- <20200821071644.109970-28-lee.jones@linaro.org>
+        Thu, 27 Aug 2020 03:35:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728029AbgH0HfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:35:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B0DA20791;
+        Thu, 27 Aug 2020 07:35:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598513709;
+        bh=P4YNVNYUh0FeNnaF4nixNGpIDzORDRqaUU67e3RwtBA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=xOd56YE0SGwnJzkriFiZ6yv0ZpqpiRrldfSSw9YLEukG/C6iJSgpCnnuVWlzBmDNl
+         cDuD6DGrM5PBK8UCY5JYLjIBTZzhKZq0h8edbu1y+hnkLRj3pBS2bnXM+uDJq1ECXO
+         zebuUrx2ArtrmhJvBfcDMj6uUMbwTtvPZlAbXOMk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, jslaby@suse.cz,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Linux 5.8.5
+Date:   Thu, 27 Aug 2020 09:35:22 +0200
+Message-Id: <1598513721250116@kroah.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821071644.109970-28-lee.jones@linaro.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-None of these headers provide any parameter documentation.
+I'm announcing the release of the 5.8.5 kernel.
 
-Fixes the following W=1 kernel build warning(s):
+All users of the 5.8 kernel series must upgrade.
 
- drivers/net/wireless/ath/wil6210/txrx.c:259: warning: Function parameter or member 'wil' not described in 'wil_vring_alloc_skb'
- drivers/net/wireless/ath/wil6210/txrx.c:259: warning: Function parameter or member 'vring' not described in 'wil_vring_alloc_skb'
- drivers/net/wireless/ath/wil6210/txrx.c:259: warning: Function parameter or member 'i' not described in 'wil_vring_alloc_skb'
- drivers/net/wireless/ath/wil6210/txrx.c:259: warning: Function parameter or member 'headroom' not described in 'wil_vring_alloc_skb'
- drivers/net/wireless/ath/wil6210/txrx.c:309: warning: Function parameter or member 'wil' not described in 'wil_rx_add_radiotap_header'
- drivers/net/wireless/ath/wil6210/txrx.c:309: warning: Function parameter or member 'skb' not described in 'wil_rx_add_radiotap_header'
- drivers/net/wireless/ath/wil6210/txrx.c:444: warning: Function parameter or member 'wil' not described in 'wil_vring_reap_rx'
- drivers/net/wireless/ath/wil6210/txrx.c:444: warning: Function parameter or member 'vring' not described in 'wil_vring_reap_rx'
- drivers/net/wireless/ath/wil6210/txrx.c:610: warning: Function parameter or member 'wil' not described in 'wil_rx_refill'
- drivers/net/wireless/ath/wil6210/txrx.c:610: warning: Function parameter or member 'count' not described in 'wil_rx_refill'
- drivers/net/wireless/ath/wil6210/txrx.c:1011: warning: Function parameter or member 'wil' not described in 'wil_rx_handle'
- drivers/net/wireless/ath/wil6210/txrx.c:1011: warning: Function parameter or member 'quota' not described in 'wil_rx_handle'
- drivers/net/wireless/ath/wil6210/txrx.c:1643: warning: Function parameter or member 'd' not described in 'wil_tx_desc_offload_setup_tso'
- drivers/net/wireless/ath/wil6210/txrx.c:1643: warning: Function parameter or member 'skb' not described in 'wil_tx_desc_offload_setup_tso'
- drivers/net/wireless/ath/wil6210/txrx.c:1643: warning: Function parameter or member 'tso_desc_type' not described in 'wil_tx_desc_offload_setup_tso'
- drivers/net/wireless/ath/wil6210/txrx.c:1643: warning: Function parameter or member 'is_ipv4' not described in 'wil_tx_desc_offload_setup_tso'
- drivers/net/wireless/ath/wil6210/txrx.c:1643: warning: Function parameter or member 'tcp_hdr_len' not described in 'wil_tx_desc_offload_setup_tso'
- drivers/net/wireless/ath/wil6210/txrx.c:1643: warning: Function parameter or member 'skb_net_hdr_len' not described in 'wil_tx_desc_offload_setup_tso'
- drivers/net/wireless/ath/wil6210/txrx.c:1674: warning: Function parameter or member 'd' not described in 'wil_tx_desc_offload_setup'
- drivers/net/wireless/ath/wil6210/txrx.c:1674: warning: Function parameter or member 'skb' not described in 'wil_tx_desc_offload_setup'
- drivers/net/wireless/ath/wil6210/txrx.c:2240: warning: Function parameter or member 'wil' not described in '__wil_update_net_queues'
- drivers/net/wireless/ath/wil6210/txrx.c:2240: warning: Function parameter or member 'vif' not described in '__wil_update_net_queues'
- drivers/net/wireless/ath/wil6210/txrx.c:2240: warning: Function parameter or member 'ring' not described in '__wil_update_net_queues'
- drivers/net/wireless/ath/wil6210/txrx.c:2240: warning: Function parameter or member 'check_stop' not described in '__wil_update_net_queues'
- drivers/net/wireless/ath/wil6210/txrx.c:2430: warning: Function parameter or member 'vif' not described in 'wil_tx_complete'
- drivers/net/wireless/ath/wil6210/txrx.c:2430: warning: Function parameter or member 'ringid' not described in 'wil_tx_complete'
+The updated 5.8.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.8.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
-Cc: Maya Erez <merez@codeaurora.org>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: linux-wireless@vger.kernel.org
-Cc: wil6210@qti.qualcomm.com
-Cc: netdev@vger.kernel.org
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/net/wireless/ath/wil6210/txrx.c | 30 +++++++++----------------
- 1 file changed, 10 insertions(+), 20 deletions(-)
+thanks,
 
-diff --git a/drivers/net/wireless/ath/wil6210/txrx.c b/drivers/net/wireless/ath/wil6210/txrx.c
-index 080e5aa60bea4..cc830c795b33c 100644
---- a/drivers/net/wireless/ath/wil6210/txrx.c
-+++ b/drivers/net/wireless/ath/wil6210/txrx.c
-@@ -249,8 +249,7 @@ static void wil_vring_free(struct wil6210_priv *wil, struct wil_ring *vring)
- 	vring->ctx = NULL;
- }
- 
--/**
-- * Allocate one skb for Rx VRING
-+/* Allocate one skb for Rx VRING
-  *
-  * Safe to call from IRQ
-  */
-@@ -295,8 +294,7 @@ static int wil_vring_alloc_skb(struct wil6210_priv *wil, struct wil_ring *vring,
- 	return 0;
- }
- 
--/**
-- * Adds radiotap header
-+/* Adds radiotap header
-  *
-  * Any error indicated as "Bad FCS"
-  *
-@@ -432,8 +430,7 @@ static int wil_rx_get_cid_by_skb(struct wil6210_priv *wil, struct sk_buff *skb)
- 	return cid;
- }
- 
--/**
-- * reap 1 frame from @swhead
-+/* reap 1 frame from @swhead
-  *
-  * Rx descriptor copied to skb->cb
-  *
-@@ -597,8 +594,7 @@ static struct sk_buff *wil_vring_reap_rx(struct wil6210_priv *wil,
- 	return skb;
- }
- 
--/**
-- * allocate and fill up to @count buffers in rx ring
-+/* allocate and fill up to @count buffers in rx ring
-  * buffers posted at @swtail
-  * Note: we have a single RX queue for servicing all VIFs, but we
-  * allocate skbs with headroom according to main interface only. This
-@@ -1002,8 +998,7 @@ void wil_netif_rx_any(struct sk_buff *skb, struct net_device *ndev)
- 	wil_netif_rx(skb, ndev, cid, stats, true);
- }
- 
--/**
-- * Proceed all completed skb's from Rx VRING
-+/* Proceed all completed skb's from Rx VRING
-  *
-  * Safe to call from NAPI poll, i.e. softirq with interrupts enabled
-  */
-@@ -1629,8 +1624,7 @@ void wil_tx_desc_set_nr_frags(struct vring_tx_desc *d, int nr_frags)
- 	d->mac.d[2] |= (nr_frags << MAC_CFG_DESC_TX_2_NUM_OF_DESCRIPTORS_POS);
- }
- 
--/**
-- * Sets the descriptor @d up for csum and/or TSO offloading. The corresponding
-+/* Sets the descriptor @d up for csum and/or TSO offloading. The corresponding
-  * @skb is used to obtain the protocol and headers length.
-  * @tso_desc_type is a descriptor type for TSO: 0 - a header, 1 - first data,
-  * 2 - middle, 3 - last descriptor.
-@@ -1660,8 +1654,7 @@ static void wil_tx_desc_offload_setup_tso(struct vring_tx_desc *d,
- 	d->dma.d0 |= BIT(DMA_CFG_DESC_TX_0_PSEUDO_HEADER_CALC_EN_POS);
- }
- 
--/**
-- * Sets the descriptor @d up for csum. The corresponding
-+/* Sets the descriptor @d up for csum. The corresponding
-  * @skb is used to obtain the protocol and headers length.
-  * Returns the protocol: 0 - not TCP, 1 - TCPv4, 2 - TCPv6.
-  * Note, if d==NULL, the function only returns the protocol result.
-@@ -2216,8 +2209,7 @@ static int wil_tx_ring(struct wil6210_priv *wil, struct wil6210_vif *vif,
- 	return rc;
- }
- 
--/**
-- * Check status of tx vrings and stop/wake net queues if needed
-+/* Check status of tx vrings and stop/wake net queues if needed
-  * It will start/stop net queues of a specific VIF net_device.
-  *
-  * This function does one of two checks:
-@@ -2419,8 +2411,7 @@ void wil_tx_latency_calc(struct wil6210_priv *wil, struct sk_buff *skb,
- 		sta->stats.tx_latency_max_us = skb_time_us;
- }
- 
--/**
-- * Clean up transmitted skb's from the Tx VRING
-+/* Clean up transmitted skb's from the Tx VRING
-  *
-  * Return number of descriptors cleared
-  *
-@@ -2460,8 +2451,7 @@ int wil_tx_complete(struct wil6210_vif *vif, int ringid)
- 	while (!wil_ring_is_empty(vring)) {
- 		int new_swtail;
- 		struct wil_ctx *ctx = &vring->ctx[vring->swtail];
--		/**
--		 * For the fragmented skb, HW will set DU bit only for the
-+		/* For the fragmented skb, HW will set DU bit only for the
- 		 * last fragment. look for it.
- 		 * In TSO the first DU will include hdr desc
- 		 */
--- 
-2.25.1
+greg k-h
+
+------------
+
+ Makefile                                     |    2 +-
+ drivers/net/ethernet/amazon/ena/ena_netdev.c |    5 ++++-
+ fs/binfmt_flat.c                             |   20 ++++++++++++--------
+ fs/io_uring.c                                |    3 ++-
+ net/core/skbuff.c                            |    4 ++--
+ net/ethtool/features.c                       |   19 ++++++++++---------
+ net/ipv4/nexthop.c                           |    5 ++++-
+ net/ipv6/ip6_tunnel.c                        |   10 +++++++++-
+ net/netlink/policy.c                         |    3 +++
+ net/qrtr/qrtr.c                              |   20 +++++++++++---------
+ net/sched/act_ct.c                           |    2 +-
+ net/sctp/stream.c                            |    6 ++++--
+ net/smc/smc_diag.c                           |   16 +++++++++-------
+ net/tipc/crypto.c                            |    2 ++
+ net/tipc/netlink_compat.c                    |   12 +++++++++++-
+ 15 files changed, 85 insertions(+), 44 deletions(-)
+
+Alaa Hleihel (1):
+      net/sched: act_ct: Fix skb double-free in tcf_ct_handle_fragments() error flow
+
+Cong Wang (1):
+      tipc: fix uninit skb->data in tipc_nl_compat_dumpit()
+
+David Laight (1):
+      net: sctp: Fix negotiation of the number of data streams.
+
+Greg Kroah-Hartman (1):
+      Linux 5.8.5
+
+Johannes Berg (1):
+      netlink: fix state reallocation in policy export
+
+Mark Tomlinson (1):
+      gre6: Fix reception with IP6_TNL_F_RCV_DSCP_COPY
+
+Max Filippov (1):
+      binfmt_flat: revert "binfmt_flat: don't offset the data start"
+
+Maxim Mikityanskiy (3):
+      ethtool: Fix preserving of wanted feature bits in netlink interface
+      ethtool: Account for hw_features in netlink interface
+      ethtool: Don't omit the netlink reply if no features were changed
+
+Miaohe Lin (1):
+      net: Fix potential wrong skb->protocol in skb_vlan_untag()
+
+Necip Fazil Yildiran (1):
+      net: qrtr: fix usage of idr in port assignment to socket
+
+Nikolay Aleksandrov (1):
+      net: nexthop: don't allow empty NHA_GROUP
+
+Pavel Begunkov (1):
+      io_uring: fix missing ->mm on exit
+
+Peilin Ye (1):
+      net/smc: Prevent kernel-infoleak in __smc_diag_dump()
+
+Shay Agroskin (1):
+      net: ena: Make missed_tx stat incremental
+
+Xin Long (1):
+      tipc: call rcu_read_lock() in tipc_aead_encrypt_done()
+
