@@ -2,105 +2,94 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B911C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6992522CAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:46:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KMqhlbcw"
+	by mail.kernel.org (Postfix) with ESMTP id C798022CAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:47:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598532430;
+	bh=4/JCZZZKd3GAf8uGJdQVfmYilwVSlF/9voYKJmjwsUc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PAxpg1U1U5JvVvBo92pWPZIPb/yQ24rZh3LLdacVWCyqDYSmsd4CiGivnWcyoZB3t
+	 F/AkqrXA44NdXodzDaLLRiq3hOKNdgYeBFqWPOuUtmpkFhWRRsfsbdScXNt5Rk+ag6
+	 5ZjczJ3DjUjL/0cWlTuEi+lhMnQn/kC/q/am3WL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgH0Mqv (ORCPT
+        id S1729143AbgH0MrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 08:46:51 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:46894 "EHLO m43-7.mailgun.net"
+        Thu, 27 Aug 2020 08:47:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729046AbgH0M2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 08:28:00 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598531279; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=cO//0luWVCYAyHjVHMw1ITNwOBiEMsNJEDqCuv4b1+A=;
- b=KMqhlbcwRJAxKeKRH+X1KdWcHjHB+LUOVUkwt7ipyHI4u9NxMwB4ftgpbpyDZWs21s9x6ZWX
- aqIrAUgJrohCfxR6LNmjZr9PBPTlNmnFH6x9MMrunm+CQ+BnY/cf5MjkKmyl+emSnVUhZmAp
- ovN406/Cvuo+KDsTWgZLcDDeKYU=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5f47a422c598aced545ad7c8 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 12:16:34
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 47F55C43387; Thu, 27 Aug 2020 12:16:34 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        id S1728778AbgH0Ma1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 08:30:27 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 05A78C433CA;
-        Thu, 27 Aug 2020 12:16:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 05A78C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 05/30] atmel: Demote non-kerneldoc
- header to standard comment block
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200814113933.1903438-6-lee.jones@linaro.org>
-References: <20200814113933.1903438-6-lee.jones@linaro.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 5365F22CB2;
+        Thu, 27 Aug 2020 12:20:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598530850;
+        bh=4/JCZZZKd3GAf8uGJdQVfmYilwVSlF/9voYKJmjwsUc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2NbpzukTEt73j72RQ+t6LucIKcDF2zHs3wQClU8BR5wA1osb/Tc581/HNuxt+P4HF
+         LksM0gHFR7jPzu+tu3LGQjshUqN0MdYqCka2EppA7FMsiuJHtDEIf0wbuWURuWM2le
+         p7gCHA523n3rzTx2U7n/uVFgH9E1jAyaffEk29q0=
+Date:   Thu, 27 Aug 2020 13:20:14 +0100
+From:   Mark Brown <broonie@kernel.org>
 To:     Lee Jones <lee.jones@linaro.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Simon Kelley <simon@thekelleys.org.uk>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200827121634.47F55C43387@smtp.codeaurora.org>
-Date:   Thu, 27 Aug 2020 12:16:34 +0000 (UTC)
+Cc:     linux-kernel@vger.kernel.org, Xu Yilun <yilun.xu@intel.com>,
+        hao.wu@intel.com, lgoncalv@redhat.com,
+        matthew.gerlach@linux.intel.com, trix@redhat.com,
+        russell.h.weight@intel.com
+Subject: Re: [PATCH v4 0/2] add regmap-spi-avmm & Intel Max10 BMC chip support
+Message-ID: <20200827122013.GB4674@sirena.org.uk>
+References: <1597822497-25107-1-git-send-email-yilun.xu@intel.com>
+ <159846941049.39902.15220563960562003689.b4-ty@kernel.org>
+ <20200827065647.GQ3248864@dell>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="WhfpMioaduB5tiZL"
+Content-Disposition: inline
+In-Reply-To: <20200827065647.GQ3248864@dell>
+X-Cookie: Causes moderate eye irritation.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> wrote:
 
-> Fixes the following W=1 kernel build warning(s):
-> 
->  drivers/net/wireless/atmel/atmel.c:4232: warning: Cannot understand     This file is part of net.russotto.AtmelMACFW, hereto referred to
-> 
-> Cc: Simon Kelley <simon@thekelleys.org.uk>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+--WhfpMioaduB5tiZL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-14 patches applied to wireless-drivers-next.git, thanks.
+On Thu, Aug 27, 2020 at 07:56:47AM +0100, Lee Jones wrote:
+> On Wed, 26 Aug 2020, Mark Brown wrote:
 
-68fd3030ad67 atmel: Demote non-kerneldoc header to standard comment block
-64847777d05a b43: main: Add braces around empty statements
-0b6a4247dea7 airo: Place brackets around empty statement
-ba4d65132922 airo: Fix a myriad of coding style issues
-0171c6185c8f iwlegacy: common: Remove set but not used variable 'len'
-9bafe8b82306 iwlegacy: common: Demote kerneldoc headers to standard comment blocks
-b2e732081f19 ipw2200: Remove set but unused variables 'rc' and 'w'
-6214ef8a532f b43legacy: main: Provide braces around empty 'if' body
-10c3ba7dbe6e brcmfmac: fweh: Remove set but unused variable 'err'
-4e124e1fee6d brcmfmac: fweh: Fix docrot related function documentation issues
-7eae8c732977 brcmsmac: mac80211_if: Demote a few non-conformant kerneldoc headers
-5f442fe435e1 ipw2200: Demote lots of nonconformant kerneldoc comments
-c171304b42f9 b43: phy_common: Demote non-conformant kerneldoc header
-5ae6c8a696cd b43: phy_n: Add empty braces around empty statements
+> > [2/2] mfd: intel-m10-bmc: add Max10 BMC chip support for Intel FPGA PAC
+> >       commit: 53be8bbc2f4058d4a6bfff3dadf34164bcaafa87
 
--- 
-https://patchwork.kernel.org/patch/11714411/
+> Que?  This is yet to be reviewed.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Sorry, meant to only fetch the first patch.  Dropped now.
 
+--WhfpMioaduB5tiZL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9HpP0ACgkQJNaLcl1U
+h9Ab+wf/cLWjo0P4b+tIGlW0ybqnP9R85uWysei9vdgfeX/ZOcbpEhay0/1rTNwR
+qmkptpzH3IXdT1A1UmBo10WW12oDJMx979W2XfFhpooJh9GlkTq497ioZFLd6rFI
+1Ftl8Y8igT+OsKMS/BQdyvMtjgggCoKZgSPt6akPKB1zlAhDyskEk/80f4Xy9A3M
+ZsDJAnqVUrN8xesIyj6T9FrHgDKaW2RbXXmOOX4hQqn+XYImi43qmpqoeLqfTjNM
+0D5jGHM6RHFiJX3cMma4O5xub5ciAWiVy858hznKwRsDPfGMKB1nSscaPcfjidR5
+s37EB8K+XcvZ22H5YnpRP24WQxgAcg==
+=dGJr
+-----END PGP SIGNATURE-----
+
+--WhfpMioaduB5tiZL--
