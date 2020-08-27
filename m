@@ -2,142 +2,112 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0007C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7328C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7AB420737
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E8D320737
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:04:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jz0jrysR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KysYfwv+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgH0RD5 (ORCPT
+        id S1726940AbgH0REs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:03:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgH0RDz (ORCPT
+        Thu, 27 Aug 2020 13:04:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48280 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726246AbgH0REr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:03:55 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF3FBC06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:03:54 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id o13so3810864pgf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:03:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VdlKRWAYiWH7aKzpIghVWZrmLNU8AEzG/Co4MAt2Y8A=;
-        b=jz0jrysRrFtf/raS4GKGdoe89ArXeoPqY37vy/lf9q7hC1dPzYrXzA7FQg1GxNoSx9
-         45sI9wAD+tgmlr+4TRjRy7KymBhpuGnQhdOezR7Iji0nDV4LHV6FZa9XYTwyqI7K5ywo
-         wZW4a8krMN8wUAFvWxBTRuvn0QzrMmbFzyALo6zd9iPiVjYXO08aHo24023L8s2S2miN
-         fSBNMgoX7M1YmR4ki4uaKST0hES5XubV5AUI379ZwuQSy+yn34/KVq80YDGHALdqwTC4
-         D5bltMawbgbptzmTJG/fA7IDtDYZ5aBE5bZGX+w8WcIZl7cfNsgcjR3BVcPdMri/bQlR
-         CI0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=VdlKRWAYiWH7aKzpIghVWZrmLNU8AEzG/Co4MAt2Y8A=;
-        b=e3hPh4xML7idtRr6JL9Vo31olEfwoNKL77aW0vYZKJ1Vg5lZ6yCJEQgO72qrsiGsVE
-         ZaRALecCr7pvYj0TAaO9Ij+ms3w9qLLyYampJPOjSeqROGTLK1gSxLsuf8+BLHx2lOGS
-         Zdyg0KAPAGxF+00CCTzWaWRiv6q3eSau7tF9x8TG1v5Xinmd3yowzC1oEwmAA6poZyLd
-         +CgkGH4p6EHaVy+N9cOb6VPD+xxk2pzLbEvubaL3QHg64LjNM5orZtrCMZQUZRfWcE6F
-         sWR8Uqc4RK5t+K6edPNx5ENWpsM/z0jTqNKk6NHjnAtuPl30ZhMyaH5DKqApgH8De1ZO
-         4GVA==
-X-Gm-Message-State: AOAM5337k3B72uCbJ587bR4H0RgEGjQPXeD1e28ycvOBbQL0OGw10XvU
-        oAdum7s5E7Q24olJQHgbxJp6Ng==
-X-Google-Smtp-Source: ABdhPJzh87b1e1c3qz49gLw9m5Qn9DxARjR19PlbS5t4MeaJtCJCaCf1OukqFVW6zxLubVLXUWN6HA==
-X-Received: by 2002:a63:a53:: with SMTP id z19mr14876176pgk.67.1598547834087;
-        Thu, 27 Aug 2020 10:03:54 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id v10sm3402662pff.192.2020.08.27.10.03.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 10:03:53 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 10:03:53 -0700 (PDT)
-X-Google-Original-Date: Thu, 27 Aug 2020 10:03:52 PDT (-0700)
-Subject:     Re: linux-next: Tree for Aug 27
-In-Reply-To: <fa8a133517704eff9b0f2369c1b7b5bbc8517916.camel@wdc.com>
-CC:     anders.roxell@linaro.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        anup@brainfault.org, linux-next@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-To:     Atish Patra <Atish.Patra@wdc.com>
-Message-ID: <mhng-16126c08-fe1d-43bf-bd48-9f1cdcdb5a57@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Thu, 27 Aug 2020 13:04:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598547885;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6skhDZK1eBFqInLIv6DlYJCfL20AefptLm3lM0sktaQ=;
+        b=KysYfwv++BEGcBPflnLlC/v8oNnYgrJ6UYCVvRORnSFF5J3Ge2PBT37wZEScUzp5jjn76j
+        Sy5t4SGWqd38h2Xrd5TgOaCBPsvt8sTI1qUQBO73ToKSu66BAvPgbQy8fPap9vTdOkKKeL
+        q4Y6NLkLaUCK90E+lhKRtijBnBKA8+A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-43-vuJ0MpH5PuSgTyT0hBShIQ-1; Thu, 27 Aug 2020 13:04:41 -0400
+X-MC-Unique: vuJ0MpH5PuSgTyT0hBShIQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DF13107464C;
+        Thu, 27 Aug 2020 17:04:40 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.35.206.185])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2891919936;
+        Thu, 27 Aug 2020 17:04:34 +0000 (UTC)
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@alien8.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>
+Subject: [PATCH 0/8] KVM: nSVM: ondemand nested state allocation + smm fixes
+Date:   Thu, 27 Aug 2020 20:04:26 +0300
+Message-Id: <20200827170434.284680-1-mlevitsk@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 10:02:57 PDT (-0700), Atish Patra wrote:
-> On Thu, 2020-08-27 at 10:37 +0200, Anders Roxell wrote:
->> On Thu, 27 Aug 2020 at 07:11, Stephen Rothwell <sfr@canb.auug.org.au>
->> wrote:
->> > Hi all,
->> > 
->> > News:  There will be no linux-next releases next Monday or Tuesday.
->> > 
->> > Changes since 20200826:
->> > 
->> > The net-next tree gained a conflict against the net tree.
->> > 
->> > Non-merge commits (relative to Linus' tree): 2901
->> >  3429 files changed, 100496 insertions(+), 37081 deletions(-)
->> > 
->> 
->> I built riscv on todays tag and I see this error:
->> ../arch/riscv/kernel/setup.c: In function ‘setup_arch’:
->> ../arch/riscv/kernel/setup.c:74:2: error: implicit declaration of
->> function ‘early_ioremap_setup’; did you mean ‘early_memtest’?
->> [-Werror=implicit-function-declaration]
->>   early_ioremap_setup();
->>   ^~~~~~~~~~~~~~~~~~~
->>   early_memtest
->> cc1: some warnings being treated as errors
->> 
->> I think its due to commit 3d109b0e0949 ("RISC-V: Add early ioremap
->> support")
->> 
-> 
-> Yes. For some reason, I never get this with the UEFI support series
-> applied on top 5.9-rc2 in my tree. But I get this error with linux-next 
-> tree.
-> 
->> It builds with this fix:
->> 
->> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
->> index 5ab185130cae..41ef96d0d97a 100644
->> --- a/arch/riscv/kernel/setup.c
->> +++ b/arch/riscv/kernel/setup.c
->> @@ -19,6 +19,7 @@
->>  #include <linux/smp.h>
->> 
->>  #include <asm/cpu_ops.h>
->> +#include <asm/early_ioremap.h>
->>  #include <asm/setup.h>
->>  #include <asm/sections.h>
->>  #include <asm/sbi.h>
->> 
->> 
-> 
-> This fix solves the problem. Thanks.
-> @palmer: Do you want me to update the patch and send v7 ?
+This patch series does some refactoring and implements on demand nested sta=
+te area=0D
+This way at least guests that don't use nesting won't waste memory=0D
+on nested state.=0D
+=0D
+This patch series is based on patch series '[PATCH 0/3] Few nSVM bugfixes'=
+=0D
+(patch #7 here should have beeing moved there as well to be honest)=0D
+=0D
+The series was tested with various nested guests, and it seems to work=0D
+as long as I disable the TSC deadline timer (this is unrelated to this=0D
+patch series)=0D
+=0D
+I addressed the review feedback from V2, and added few refactoring=0D
+patches to this series as suggested.=0D
+=0D
+Best regards,=0D
+        Maxim Levitsky=0D
+=0D
+Maxim Levitsky (8):=0D
+  KVM: SVM: rename a variable in the svm_create_vcpu=0D
+  KVM: nSVM: rename nested vmcb to vmcb12=0D
+  KVM: SVM: refactor msr permission bitmap allocation=0D
+  KVM: SVM: use __GFP_ZERO instead of clear_page=0D
+  KVM: SVM: refactor exit labels in svm_create_vcpu=0D
+  KVM: x86: allow kvm_x86_ops.set_efer to return a value=0D
+  KVM: emulator: more strict rsm checks.=0D
+  KVM: nSVM: implement ondemand allocation of the nested state=0D
+=0D
+ arch/x86/include/asm/kvm_host.h |   2 +-=0D
+ arch/x86/kvm/emulate.c          |  22 ++-=0D
+ arch/x86/kvm/svm/nested.c       | 267 ++++++++++++++++++--------------=0D
+ arch/x86/kvm/svm/svm.c          | 106 +++++++------=0D
+ arch/x86/kvm/svm/svm.h          |  10 +-=0D
+ arch/x86/kvm/vmx/vmx.c          |   9 +-=0D
+ arch/x86/kvm/x86.c              |   3 +-=0D
+ 7 files changed, 243 insertions(+), 176 deletions(-)=0D
+=0D
+-- =0D
+2.26.2=0D
+=0D
 
-That'd be great, thanks!
-
-> 
-> 
->> Cheers,
->> Anders
-> 
-> -- 
-> Regards,
-> Atish
