@@ -2,151 +2,174 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF81C207DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:32:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3D9207DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:34:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726262AbgH0QcH (ORCPT
+        id S1726828AbgH0QeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:32:07 -0400
-Received: from mga03.intel.com ([134.134.136.65]:21618 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726123AbgH0QcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:32:07 -0400
-IronPort-SDR: JD67NoLMMXQq5n6FU8Xp0ZzunYrWtR2eaPlRcXJ+Zal8bko34OkiliYFjHAb1LJSNqriTu/+t5
- Qot9rkOUAm8A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="156525104"
-X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
-   d="scan'208";a="156525104"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 09:32:06 -0700
-IronPort-SDR: JaJtwHwfoRlhD9oee9kQXytAxOSTYBgdDbi4tlP7xPM/0YWghmC88IKX/0kZoae7ObIr2hAh/y
- 2yIB1G20MmCw==
-X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
-   d="scan'208";a="444504866"
-Received: from agluck-desk2.sc.intel.com ([10.3.52.68])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 09:32:05 -0700
-From:   Tony Luck <tony.luck@intel.com>
-To:     Naoya Horiguchi <naoya.horiguchi@nec.com>
-Cc:     Tony Luck <tony.luck@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Youquan Song <youquan.song@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFD PATCH] x86/mce: Make sure to send SIGBUS even after losing the race to poison a page
-Date:   Thu, 27 Aug 2020 09:32:05 -0700
-Message-Id: <20200827163205.23096-1-tony.luck@intel.com>
-X-Mailer: git-send-email 2.21.1
+        Thu, 27 Aug 2020 12:34:17 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:36203 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbgH0QeR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 12:34:17 -0400
+Received: by mail-il1-f199.google.com with SMTP id f20so4083246ilg.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:34:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=CeejWM1wsnx+eYnik6gMIrJziDJ/HbH2NxxTTf+OlEo=;
+        b=h4MIUo12EPfVawXSnT8+2mwDLBpBoSuT4WcLI/bEk4FE4qAee2pnTeQEh2HCC90vM2
+         oTxsnXgubBQBIAsBzzXHV6dloSkW0Nnz04vwXey2Ux7ooBMhog9rVf2XY7DDn6IoJs9K
+         2zpMmDVwW++mXplhJbEs8TqEZsy+4ODPajcH1HAO+HDm4Ezy/5UlopmxZbzOQiVGmvok
+         gi5v0n4hN1O5dVToYRocCm72VtKMHhn0ctq5m3Af26a1iohq7QMr15tHdYQkF1EqG781
+         9OI4hurJ8CXMdgje3Hay2/loGya543s7QuyG57+xFxS2bJVM4ahDKZIRpPiBBkIU/2jI
+         +ZPA==
+X-Gm-Message-State: AOAM530l1Rvxm67LgQLsYi0JRg5KikNWRGl8T2KObEns+2Wpm7LpFqw5
+        H6MzvfrnlxVLBfJjUDgwsvqS43SRFV+bdTVQGp330riv55iT
+X-Google-Smtp-Source: ABdhPJwHkrto7t0X1WgI6fFrkVMbX4Uvg4rR0wAtL+dlrFnlUcoF9NqNwCZped76HCsV5Uryb/Pn3h1YMIx/Dt1YLvEIpkdKkk/J
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:da07:: with SMTP id z7mr11323378ilm.196.1598546055601;
+ Thu, 27 Aug 2020 09:34:15 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 09:34:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cd24b305adde81ff@google.com>
+Subject: KASAN: use-after-free Read in snd_pcm_oss_release
+From:   syzbot <syzbot+12a3fcd1493ec6585007@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, alsa-devel@alsa-project.org,
+        arnd@arndb.de, gustavoars@kernel.org, linux-kernel@vger.kernel.org,
+        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com,
+        vbabka@suse.cz, walken@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For discussion ... I'm 100% sure the patch below is the wrong way to
-fix this ... for one thing it doesn't provide the virtual address of
-the error to the user signal handler. For another it just looks like
-a hack.  I'm just not sure whether to delve deep into the
-memory_failure() path to make sure the signal is sent to the current
-process in the SRAR case. Or just to do a better job at an error return
-value and make the X86 specific code send the signal with the address.
+Hello,
 
-I've also got a feeling that this issue has been discussed before, but
-can't remember how that turned out.
+syzbot found the following issue on:
 
-First few paragraphs describe the problem (and I think are OK). Things
-go off the rails with the fix.
+HEAD commit:    f37be724 Add linux-next specific files for 20200826
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=137c7cb9900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1e5a1cf036089d95
+dashboard link: https://syzkaller.appspot.com/bug?extid=12a3fcd1493ec6585007
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
--Tony
+Unfortunately, I don't have any reproducer for this issue yet.
 
-X86 hardware may provide two indications that a page has poison. First
-the memory controller that detects the failed ECC check may log a UCNA
-(uncorrected no action) signature in one machine check bank and signal
-the OS with a CMCI (corrected machine check interrupt ... historical name
-did not get updated for this case). Next the processor core may log a
-SRAR (software recoverable action required) signature in another bank
-and signal with #MC.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+12a3fcd1493ec6585007@syzkaller.appspotmail.com
 
-The #MC used to win that race and the page was taken offline and SIGBUS
-sent to the task.
+==================================================================
+BUG: KASAN: use-after-free in snd_pcm_oss_release_file sound/core/oss/pcm_oss.c:2367 [inline]
+BUG: KASAN: use-after-free in snd_pcm_oss_release_file sound/core/oss/pcm_oss.c:2361 [inline]
+BUG: KASAN: use-after-free in snd_pcm_oss_release+0x28d/0x300 sound/core/oss/pcm_oss.c:2548
+Read of size 8 at addr ffff888026b66480 by task syz-executor.1/27751
 
-Changes to how Linux processes machine checks now mean that:
-a) Linux will offline the page based on the UCNA siganture in the
-   CMCI handler.
-b) The machine check handler defers processing using task_work_add() which
-   can happen after the CMCI is processed.
+CPU: 1 PID: 27751 Comm: syz-executor.1 Not tainted 5.9.0-rc2-next-20200826-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ snd_pcm_oss_release_file sound/core/oss/pcm_oss.c:2367 [inline]
+ snd_pcm_oss_release_file sound/core/oss/pcm_oss.c:2361 [inline]
+ snd_pcm_oss_release+0x28d/0x300 sound/core/oss/pcm_oss.c:2548
+ __fput+0x285/0x920 fs/file_table.c:281
+ task_work_run+0xdd/0x190 kernel/task_work.c:141
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
+ exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:167
+ syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:242
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x416f01
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffdd39a5e70 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000416f01
+RDX: 0000000000000001 RSI: 0000000001190428 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 00007ffdd39a5f60 R11: 0000000000000293 R12: 0000000001190428
+R13: 0000000000268c54 R14: ffffffffffffffff R15: 000000000118cfec
 
-memory_failure() avoids races with multiple callers reporting the same
-page with an atomic test and set operation to mark the page as poisoned.
+Allocated by task 27754:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
+ kmem_cache_alloc_trace+0x16e/0x2c0 mm/slab.c:3550
+ kmalloc include/linux/slab.h:554 [inline]
+ kzalloc include/linux/slab.h:666 [inline]
+ snd_pcm_oss_open_file sound/core/oss/pcm_oss.c:2389 [inline]
+ snd_pcm_oss_open.part.0+0x55e/0x1290 sound/core/oss/pcm_oss.c:2491
+ snd_pcm_oss_open+0x3c/0x50 sound/core/oss/pcm_oss.c:2455
+ soundcore_open+0x445/0x600 sound/sound_core.c:593
+ chrdev_open+0x266/0x770 fs/char_dev.c:414
+ do_dentry_open+0x4b9/0x11b0 fs/open.c:817
+ do_open fs/namei.c:3251 [inline]
+ path_openat+0x1b9a/0x2730 fs/namei.c:3368
+ do_filp_open+0x17e/0x3c0 fs/namei.c:3395
+ do_sys_openat2+0x16d/0x420 fs/open.c:1168
+ do_sys_open fs/open.c:1184 [inline]
+ __do_sys_openat fs/open.c:1200 [inline]
+ __se_sys_openat fs/open.c:1195 [inline]
+ __x64_sys_openat+0x13f/0x1f0 fs/open.c:1195
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-The net result of all of the above is that when a task consumes poison
-the page is taken offline by the UCNA/CMCI path, and the SRAR/#MC path
-takes an early return without sending a SIGBUS.
+Freed by task 27754:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+ kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
+ kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
+ __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
+ __cache_free mm/slab.c:3418 [inline]
+ kfree+0x103/0x2c0 mm/slab.c:3756
+ snd_pcm_oss_release_file sound/core/oss/pcm_oss.c:2371 [inline]
+ snd_pcm_oss_release_file sound/core/oss/pcm_oss.c:2361 [inline]
+ snd_pcm_oss_release+0x17e/0x300 sound/core/oss/pcm_oss.c:2548
+ __fput+0x285/0x920 fs/file_table.c:281
+ task_work_run+0xdd/0x190 kernel/task_work.c:141
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
+ exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:167
+ syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:242
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Fix by changing memory_failure() to return -EEXIST in the case where
-the page is already poisoned and make the machine check code path check
-for this error and force a SIGBUS.
+The buggy address belongs to the object at ffff888026b66480
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 0 bytes inside of
+ 32-byte region [ffff888026b66480, ffff888026b664a0)
+The buggy address belongs to the page:
+page:0000000076bbbb49 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff888026b66fc1 pfn:0x26b66
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea0002385208 ffffea0000782448 ffff8880aa040100
+raw: ffff888026b66fc1 ffff888026b66000 000000010000002e 0000000000000000
+page dumped because: kasan: bad access detected
 
-Note that -EBUSY might have been a more logical error code, but that is
-already used for many other error cases from memory_failure().
+Memory state around the buggy address:
+ ffff888026b66380: fa fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+ ffff888026b66400: 00 fc fc fc fc fc fc fc 00 00 00 00 fc fc fc fc
+>ffff888026b66480: fa fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+                   ^
+ ffff888026b66500: 00 fc fc fc fc fc fc fc 00 fc fc fc fc fc fc fc
+ ffff888026b66580: fa fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+==================================================================
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+
 ---
- arch/x86/kernel/cpu/mce/core.c | 7 +++++--
- mm/memory-failure.c            | 2 +-
- 2 files changed, 6 insertions(+), 3 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index fb6b5f64f7e6..8515809e0472 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1182,18 +1182,21 @@ static void kill_me_maybe(struct callback_head *cb)
- {
- 	struct task_struct *p = container_of(cb, struct task_struct, mce_kill_me);
- 	int flags = MF_ACTION_REQUIRED;
-+	int ret;
- 
- 	pr_err("Uncorrected hardware memory error in user-access at %llx", p->mce_addr);
- 
- 	if (!p->mce_ripv)
- 		flags |= MF_MUST_KILL;
- 
--	if (!memory_failure(p->mce_addr >> PAGE_SHIFT, flags)) {
-+	ret = memory_failure(p->mce_addr >> PAGE_SHIFT, flags);
-+	if (!ret) {
- 		set_mce_nospec(p->mce_addr >> PAGE_SHIFT, p->mce_whole_page);
- 		return;
- 	}
- 
--	pr_err("Memory error not recovered");
-+	if (ret != -EEXIST)
-+		pr_err("Memory error not recovered");
- 	kill_me_now(cb);
- }
- 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index f1aa6433f404..e0486c4e0130 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1298,7 +1298,7 @@ int memory_failure(unsigned long pfn, int flags)
- 	if (TestSetPageHWPoison(p)) {
- 		pr_err("Memory failure: %#lx: already hardware poisoned\n",
- 			pfn);
--		return 0;
-+		return -EEXIST;
- 	}
- 
- 	orig_head = hpage = compound_head(p);
--- 
-2.21.1
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
