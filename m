@@ -2,110 +2,97 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB872C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B84C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A75EA20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1270420738
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:15:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CwWiFHIp"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Bz38YPsb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgH0KPt (ORCPT
+        id S1728856AbgH0KPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:15:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728708AbgH0KO5 (ORCPT
+        Thu, 27 Aug 2020 06:15:50 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:55130 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728605AbgH0KPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:14:57 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5769EC061264;
-        Thu, 27 Aug 2020 03:14:57 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id l191so3022335pgd.5;
-        Thu, 27 Aug 2020 03:14:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=U2pLMlURzmGqBGphG5X7qdWIHdS8OqboLK4Ve/cfEZs=;
-        b=CwWiFHIpEmQejEoTrptvUkAjWSFPkxz4WSp+YrZEVnR9YkUD8pGhPrcWxbEmgcWz4M
-         CZFQWd8YlV1FUNxIrRuRsuJFne6v9A2Hswry3BydndqaWXIeJ5Awo22TIJTcCrQg5qik
-         ItMBnrx02yFDPbQSDkw5txOAlY/jHhDoHQ3LXIhmknxLTkWqFmPa9nlOXYAGe3S4y2+y
-         ZfIhV5RBm6DttKysKVD2PBkp8MsZVC15EyjYNejyrcyW0oyDxU4MfPm1GQMNd5LUCAFQ
-         35jFw4EOUWESR60ljYYSPt4w/ZzStJkSvXzIq7ajM0mV4HK4qbpNg9WtU3b/KnV88WE0
-         TIRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=U2pLMlURzmGqBGphG5X7qdWIHdS8OqboLK4Ve/cfEZs=;
-        b=RDMHemx42ugUqkUtrIXB3kGWu89sRBwI1cZ6xhDRxCb7xzwp4/9+RG3Rgoa/bgwcE2
-         kz+KgbjaKgkWmrz/dyWKMKStJ0YO00+2L1A1Q2eFsZ7sNYgDvAVQIxlQr6kW44WMRyWc
-         d1UBmtGoS0xDH2gx4rNwffDHKP0btHtOupwhXMw5K51f8+AEfNvoFPOVx57paJzR4shs
-         KE15wQeYlbeabQWlm/GorxH4kv/LWTdb8Uzcjbg8VYJZIRhKXhud5lfXdjkym+hpOOox
-         VnEcC6BFpQPYKjsUyEwsZPt/O8EoP2HntZYZQjoFd9LI1LAo0KuL7nLPLRdkfpqiwMpU
-         yUZA==
-X-Gm-Message-State: AOAM5322pEJRhWkEx6GTviU4oOc7EBVGPbUH4vO/yDBNDc6kI24bN8BW
-        ZgmStqct7s1IVtRNGiWb3L0=
-X-Google-Smtp-Source: ABdhPJwTQVvfC4ioaLQrHeEdUzLQy3bvsL+d5B7zfHyMQHobnBISJB+KCXk7NqbqrBwobOm7ApKfXg==
-X-Received: by 2002:a62:7bca:: with SMTP id w193mr714350pfc.152.1598523296763;
-        Thu, 27 Aug 2020 03:14:56 -0700 (PDT)
-Received: from VM-0-6-centos.localdomain ([119.28.90.140])
-        by smtp.gmail.com with ESMTPSA id t10sm2333434pfq.52.2020.08.27.03.14.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Aug 2020 03:14:56 -0700 (PDT)
-From:   Chunguang Xu <brookxu.cn@gmail.com>
-X-Google-Original-From: Chunguang Xu <brookxu@tencent.com>
-To:     arnd@arndb.de
-Cc:     rppt@kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 18/23] net:hns: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
-Date:   Thu, 27 Aug 2020 18:14:23 +0800
-Message-Id: <613c5b2b5e24602ea4d84831966a543bd4240e00.1598518912.git.brookxu@tencent.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1598518912.git.brookxu@tencent.com>
-References: <cover.1598518912.git.brookxu@tencent.com>
-In-Reply-To: <cover.1598518912.git.brookxu@tencent.com>
-References: <cover.1598518912.git.brookxu@tencent.com>
+        Thu, 27 Aug 2020 06:15:46 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598523345; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=cpiJrWGR7IiAnRChj/Pc8HCUiUmIcAJx/vDvmwb4mO8=;
+ b=Bz38YPsbwmGbdBGnxVahQt5V87vahGMbX0o8S19xGGiwDbbBYtY3S/tscOZqyVHb/GWnrd/y
+ 3vXY87AKGxT1uHA2L9RxB6S4oNNliigJmVSt4SFmouyc4PzPC+kknJwdRCLksLa2FQtskYkY
+ xSPjxPfMKCYzj70o4FVNxp67Gw8=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5f4787cd2fd6d21f0aa24504 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 10:15:41
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3E694C433A1; Thu, 27 Aug 2020 10:15:41 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 570ABC43395;
+        Thu, 27 Aug 2020 10:15:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 570ABC43395
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 01/16] wireless: ath5k: convert tasklets to use new
+ tasklet_setup() API
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200817090637.26887-2-allen.cryptic@gmail.com>
+References: <20200817090637.26887-2-allen.cryptic@gmail.com>
+To:     Allen Pais <allen.cryptic@gmail.com>
+Cc:     kuba@kernel.org, jirislaby@kernel.org, mickflemm@gmail.com,
+        mcgrof@kernel.org, chunkeey@googlemail.com,
+        Larry.Finger@lwfinger.net, stas.yakovlev@gmail.com,
+        helmut.schaa@googlemail.com, pkshih@realtek.com,
+        yhchuang@realtek.com, dsd@gentoo.org, kune@deine-taler.de,
+        keescook@chromium.org, ath11k@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, b43-dev@lists.infradead.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, Allen Pais <allen.lkml@gmail.com>,
+        Romain Perier <romain.perier@gmail.com>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200827101541.3E694C433A1@smtp.codeaurora.org>
+Date:   Thu, 27 Aug 2020 10:15:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since ASSERT_FAIL() and ASSERT_WARN() have been provided, ASSERT()
-may be realized through them, thus reducing code redundancy and
-facilitating problem analysis.
+Allen Pais <allen.cryptic@gmail.com> wrote:
 
-Signed-off-by: Chunguang Xu <brookxu@tencent.com>
----
- drivers/net/ethernet/hisilicon/hns/hnae.h | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+> In preparation for unconditionally passing the
+> struct tasklet_struct pointer to all tasklet
+> callbacks, switch to using the new tasklet_setup()
+> and from_tasklet() to pass the tasklet pointer explicitly.
+> 
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.h b/drivers/net/ethernet/hisilicon/hns/hnae.h
-index 6ab9458..55710f4 100644
---- a/drivers/net/ethernet/hisilicon/hns/hnae.h
-+++ b/drivers/net/ethernet/hisilicon/hns/hnae.h
-@@ -41,13 +41,7 @@
- #ifdef DEBUG
- 
- #ifndef assert
--#define assert(expr) \
--do { \
--	if (!(expr)) { \
--		pr_err("Assertion failed! %s, %s, %s, line %d\n", \
--			   #expr, __FILE__, __func__, __LINE__); \
--	} \
--} while (0)
-+#define assert(expr) ASSERT_WARN(expr)
- #endif
- 
- #else
+Patch applied to ath-next branch of ath.git, thanks.
+
+c068a9ec3c94 ath5k: convert tasklets to use new tasklet_setup() API
+
 -- 
-1.8.3.1
+https://patchwork.kernel.org/patch/11717393/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
