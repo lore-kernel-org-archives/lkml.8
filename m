@@ -2,165 +2,88 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADECC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E20CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 531932054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:55:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598540133;
-	bh=y90su4zGAKQF6PiuAyW0kkYzgnN+AT/BAiFKfzHsF+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZBJA8N99vvRBZTRj79vjrYJblZs3tW+6yBjOCj0CcKZmKiYqmo9j1tbBV9H+MBiQ7
-	 H9ZhEIwXX39njPTgjeZCbHkOjStQgmIo3/AkShsAQrgp1AYWb+GvonMY1pW0CyH3xT
-	 2dJTxTH2rAZoAhXwgFmVD/TZi03SOnpllkGU1FS0=
+	by mail.kernel.org (Postfix) with ESMTP id ACF9122B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:55:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="G/i7ysB5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgH0Ozc (ORCPT
+        id S1726867AbgH0Ozn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:55:32 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45372 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbgH0NKP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:10:15 -0400
-Received: by mail-ed1-f66.google.com with SMTP id i17so3322421edx.12;
-        Thu, 27 Aug 2020 06:10:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MO4XT5vfILQQQs7m8NAXIZICzPk5ma+oMaf+AWE/M2Q=;
-        b=SyeXlwn2OZEYHP1CAZ+WTjWFGFQULm6vkjC04zsP5MQPrFWohfCfQRAw03DPbhPLio
-         fPUUhAhdMoi4bt8QnG1tzZcPLOx515x8aQJJyTVmgpitpQ5kIgHKR2ynP+/0rxkx20lg
-         Pz+PDx+GdcnbdhOwyRhodvOtKaFXHBuiXufszhjRlJLWULBfveYmdRDeOcignZ0sZrJm
-         M5/uzmXZzKX+ojEeaJWe9nGx/E9wFyv55BhXLya6N1baTBZMIe4UzYUqWVGxGvOr8lpj
-         GglIQ1D0ibmZErnID9JWOrRXYlCHT6X+0hb+Jjue5N6s4r+NuCle7iI+kvF+5orjT0wV
-         PM2g==
-X-Gm-Message-State: AOAM531sNxQYjRHOu8s5KF7zNnqYk4uSNZON1vJXoPFjp/1aQu1pnV8j
-        xjnjg2G9fqPEZNuE+LqBfd0=
-X-Google-Smtp-Source: ABdhPJy3DhoRQwhFz7pG2UXliaNjzznIPsFx/Ttim2NepQAK9i66MyfFwvIK0wowQlP1k42Y0lL1pw==
-X-Received: by 2002:a50:ef15:: with SMTP id m21mr20164933eds.300.1598533807483;
-        Thu, 27 Aug 2020 06:10:07 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id a26sm1867497eju.83.2020.08.27.06.10.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Aug 2020 06:10:06 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 15:10:04 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Brooke Basile <brookebasile@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH 2/2] docs: admin-guide: Not every security bug should be
- kept hidden
-Message-ID: <20200827131004.GA2736@kozik-lap>
-References: <20200827105319.9734-1-krzk@kernel.org>
- <20200827105319.9734-2-krzk@kernel.org>
- <20200827121123.GC417381@kroah.com>
+        Thu, 27 Aug 2020 10:55:43 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:24766 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726967AbgH0NJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 09:09:33 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598533745; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=inzUS5eWiB+AyM6U5dLaww9My5fpNG3NyKg/eTaUdPo=;
+ b=G/i7ysB5d/fVXNYDpZ8FDvyabxs04L7vhEJfx+sy3izCryhteSGIY+CyWdkp+uiv54AsCUVj
+ Fiy1122pnKZ/xnUqPAv6vADuDvmP3L3HgztB4zJQucn6r2bKGwYK3DBJYNmMToMaPG65foxx
+ zgfznZGGL+K8+RtRnFmUfJqOjbs=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f47b070c598aced5477d361 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 13:09:04
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7ECD5C433CB; Thu, 27 Aug 2020 13:09:04 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 37C6FC433CA;
+        Thu, 27 Aug 2020 13:09:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 37C6FC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200827121123.GC417381@kroah.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] b43legacy: Use fallthrough pseudo-keyword
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200821064412.GA20612@embeddedor>
+References: <20200821064412.GA20612@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, b43-dev@lists.infradead.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200827130904.7ECD5C433CB@smtp.codeaurora.org>
+Date:   Thu, 27 Aug 2020 13:09:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 02:11:23PM +0200, Greg Kroah-Hartman wrote:
-> On Thu, Aug 27, 2020 at 12:53:19PM +0200, Krzysztof Kozlowski wrote:
-> > Document describes the process of handling security bugs but does not
-> > mention any criteria what is a "security bug".  Unlike
-> > submitting-patches.rst which explicitly says - publicly exploitable bug.
-> > 
-> > Many NULL pointer exceptions, off-by-one errors or overflows tend
-> > to look like security bug, so there might be a temptation to discuss
-> > them behind security list which is not an open list.
-> > 
-> > Such discussion limits the amount of testing and independent reviewing.
-> > Sacrificing open discussion is understandable in the case of real
-> > security issues but not for regular bugs.  These should be discussed
-> > publicly.
-> > 
-> > At the end, "security problems are just bugs".
-> > 
-> > Cc: Greg KH <gregkh@linuxfoundation.org>
-> > Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > 
-> > ---
-> > 
-> > Follow up to:
-> > https://lore.kernel.org/linux-usb/1425ab4f-ef7e-97d9-238f-0328ab51eb35@samsung.com/
-> > ---
-> >  Documentation/admin-guide/security-bugs.rst | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/Documentation/admin-guide/security-bugs.rst b/Documentation/admin-guide/security-bugs.rst
-> > index c32eb786201c..7ebddbd4bbcd 100644
-> > --- a/Documentation/admin-guide/security-bugs.rst
-> > +++ b/Documentation/admin-guide/security-bugs.rst
-> > @@ -78,6 +78,12 @@ include linux-distros from the start. In this case, remember to prefix
-> >  the email Subject line with "[vs]" as described in the linux-distros wiki:
-> >  <http://oss-security.openwall.org/wiki/mailing-lists/distros#how-to-use-the-lists>
-> >  
-> > +Fixes for non-exploitable bugs which do not pose a real security risk, should
-> > +be disclosed in a regular way of submitting patches to Linux kernel (see
-> > +:ref:`Documentation/process/submitting-patches.rst <submitting-patches>`).
-> > +Just because patch fixes some off-by-one or NULL pointer exception, does not
-> > +classify it as a security bug which should be discussed in closed channels.
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+
+> Replace the existing /* fall through */ comments and its variants with
+> the new pseudo-keyword macro fallthrough[1].
 > 
-> I said this on another thread, but almost always, when we get reports
-> like this on security@k.o, we do push them back to public lists.
-
-Then let's hope that next time someone will read this documentation
-before submitting such report to @security.
-
+> [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 > 
-> For the most part, this paragraph is not going to help much (mostly for
-> the reason that no one seems to read it, but that's a different
-> topic...)
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-All of our documentation is our wish that someone will read it and
-follow it. Just because people might not follow it, is not necessarily a
-reason to skip documentation.
+Patch applied to wireless-drivers-next.git, thanks.
 
-> We get crazy reports all the time, and that's fine, because
-> sometimes, there is a real issue in some of them.  And for that, we do
-> want to be careful.  We also have many docuemented "off-by-one" bugs
-> that were real security issues (there's a blog post somewhere about how
-> a developer turned such a bug into a root hole, can't find it right
-> now...)
+ce3b6845fc4d b43legacy: Use fallthrough pseudo-keyword
 
-I understand. That's why I also mentioned the criteria of exploitable
-and posing a security risk. First case (even stricter - publicly
-exploitable) is already mentioned in submitting-patches so I am not
-changing the current status.
+-- 
+https://patchwork.kernel.org/patch/11728231/
 
-I merely want to document it based on recent discussion.
-
-> So while I understand the temptation here, based on the current
-> security@k.o traffic, I doubt this will really change much :(
-> 
-> Also, you should have cc:ed that group when you are changing things that
-> will affect them.
-
-Indeed, I will update the maintainers as well.
-
-Best regards,
-Krzysztof
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
