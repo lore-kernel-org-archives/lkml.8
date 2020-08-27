@@ -2,176 +2,93 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 448FFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F301DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BBD22080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF1D12080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:20:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iJGHl6OP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728155AbgH0PUa (ORCPT
+        id S1728185AbgH0PUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:20:30 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:58451 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728480AbgH0PUP (ORCPT
+        Thu, 27 Aug 2020 11:20:50 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44549 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728649AbgH0LdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:20:15 -0400
-Received: from fsav404.sakura.ne.jp (fsav404.sakura.ne.jp [133.242.250.103])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 07RFK9UG015546;
-        Fri, 28 Aug 2020 00:20:10 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav404.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp);
- Fri, 28 Aug 2020 00:20:09 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav404.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 07RFK9M2015540
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Fri, 28 Aug 2020 00:20:09 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: [PATCH v2] lockdep: Allow tuning tracing capacity constants.
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+62ebe501c1ce9a91f68c@syzkaller.appspotmail.com>,
-        syzbot <syzbot+91fd909b6e62ebe06131@syzkaller.appspotmail.com>,
-        syzbot <syzbot+cd0ec5211ac07c18c049@syzkaller.appspotmail.com>
-References: <1595640639-9310-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <384ce711-25c5-553b-8d22-965847132fbd@i-love.sakura.ne.jp>
-Date:   Fri, 28 Aug 2020 00:20:07 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 27 Aug 2020 07:33:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598527981;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tK2E5OHaYdIMnHynVyzOX85+jSQpnlWbWxI1ka3rMpQ=;
+        b=iJGHl6OPlX/bSFOwWs6Tl5Z5Fd+juMSODETyFwMqsD6H0OtAMMBztX6PTiI/tM+0FSGL6H
+        cWodOzu+cBJhPRhANWsb0Nu/pBdtpgR/+P7oby2wJvrWPv5ylQFyGW3dv66DvRLQ+V7mM+
+        4ossNlXy9iHK2P5ycyQ5Ixu0T4eTOvE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-88-GHCIpvapPlWFtEXqEva68w-1; Thu, 27 Aug 2020 07:24:30 -0400
+X-MC-Unique: GHCIpvapPlWFtEXqEva68w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 455E080EFBE;
+        Thu, 27 Aug 2020 11:24:29 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.194.8])
+        by smtp.corp.redhat.com (Postfix) with SMTP id CC68F5D9E8;
+        Thu, 27 Aug 2020 11:24:27 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 27 Aug 2020 13:24:28 +0200 (CEST)
+Date:   Thu, 27 Aug 2020 13:24:26 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     syzbot <syzbot+e3cf8f93cf86936710db@syzkaller.appspotmail.com>
+Cc:     axboe@kernel.dk, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Subject: Re: WARNING: ODEBUG bug in get_signal
+Message-ID: <20200827112426.GE28468@redhat.com>
+References: <00000000000068340d05add74c29@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1595640639-9310-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000068340d05add74c29@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since syzkaller continues various test cases until the kernel crashes,
-syzkaller tends to examine more locking dependencies than normal systems.
-As a result, syzbot is reporting that the fuzz testing was terminated
-due to hitting upper limits lockdep can track [1] [2] [3].
+On 08/27, syzbot wrote:
+>
+>  __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
+>  debug_check_no_obj_freed+0x301/0x41c lib/debugobjects.c:998
+>  kmem_cache_free.part.0+0x16d/0x1f0 mm/slab.c:3692
+>  task_work_run+0xdd/0x190 kernel/task_work.c:141
 
-Let's allow individually tuning upper limits via kernel config options
-(based on an assumption that there is no inter-dependency among these
-constants).
+I don't understand this trace, work->func(work) can call kmem_cache_free()
+but task_work_run() doesn't do this.
 
-[1] https://syzkaller.appspot.com/bug?id=3d97ba93fb3566000c1c59691ea427370d33ea1b
-[2] https://syzkaller.appspot.com/bug?id=381cb436fe60dc03d7fd2a092b46d7f09542a72a
-[3] https://syzkaller.appspot.com/bug?id=a588183ac34c1437fc0785e8f220e88282e5a29f
+In theory the patch below makes sense anyway, but I have no idea if it can
+explain the problem.
 
-Reported-by: syzbot <syzbot+cd0ec5211ac07c18c049@syzkaller.appspotmail.com>
-Reported-by: syzbot <syzbot+91fd909b6e62ebe06131@syzkaller.appspotmail.com>
-Reported-by: syzbot <syzbot+62ebe501c1ce9a91f68c@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
- kernel/locking/lockdep.c           |  2 +-
- kernel/locking/lockdep_internals.h |  8 +++---
- lib/Kconfig.debug                  | 40 ++++++++++++++++++++++++++++++
- 3 files changed, 45 insertions(+), 5 deletions(-)
+Oleg.
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 2fad21d345b0..5a058fcec435 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1349,7 +1349,7 @@ static int add_lock_to_list(struct lock_class *this,
- /*
-  * For good efficiency of modular, we use power of 2
-  */
--#define MAX_CIRCULAR_QUEUE_SIZE		4096UL
-+#define MAX_CIRCULAR_QUEUE_SIZE		(1UL << CONFIG_LOCKDEP_CIRCULAR_QUEUE_BITS)
- #define CQ_MASK				(MAX_CIRCULAR_QUEUE_SIZE-1)
+--- x/kernel/task_work.c
++++ x/kernel/task_work.c
+@@ -137,7 +137,7 @@ void task_work_run(void)
+ 		raw_spin_unlock_irq(&task->pi_lock);
  
- /*
-diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
-index baca699b94e9..8435a11bf456 100644
---- a/kernel/locking/lockdep_internals.h
-+++ b/kernel/locking/lockdep_internals.h
-@@ -94,16 +94,16 @@ static const unsigned long LOCKF_USED_IN_IRQ_READ =
- #define MAX_STACK_TRACE_ENTRIES	262144UL
- #define STACK_TRACE_HASH_SIZE	8192
- #else
--#define MAX_LOCKDEP_ENTRIES	32768UL
-+#define MAX_LOCKDEP_ENTRIES	(1UL << CONFIG_LOCKDEP_BITS)
- 
--#define MAX_LOCKDEP_CHAINS_BITS	16
-+#define MAX_LOCKDEP_CHAINS_BITS	CONFIG_LOCKDEP_CHAINS_BITS
- 
- /*
-  * Stack-trace: tightly packed array of stack backtrace
-  * addresses. Protected by the hash_lock.
-  */
--#define MAX_STACK_TRACE_ENTRIES	524288UL
--#define STACK_TRACE_HASH_SIZE	16384
-+#define MAX_STACK_TRACE_ENTRIES	(1UL << CONFIG_LOCKDEP_STACK_TRACE_BITS)
-+#define STACK_TRACE_HASH_SIZE	(1 << CONFIG_LOCKDEP_STACK_TRACE_HASH_BITS)
- #endif
- 
- /*
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index e068c3c7189a..d7612e132986 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1311,6 +1311,46 @@ config LOCKDEP
- config LOCKDEP_SMALL
- 	bool
- 
-+config LOCKDEP_BITS
-+	int "Bitsize for MAX_LOCKDEP_ENTRIES"
-+	depends on LOCKDEP && !LOCKDEP_SMALL
-+	range 10 30
-+	default 15
-+	help
-+	  Try increasing this value if you hit "BUG: MAX_LOCKDEP_ENTRIES too low!" message.
-+
-+config LOCKDEP_CHAINS_BITS
-+	int "Bitsize for MAX_LOCKDEP_CHAINS"
-+	depends on LOCKDEP && !LOCKDEP_SMALL
-+	range 10 30
-+	default 16
-+	help
-+	  Try increasing this value if you hit "BUG: MAX_LOCKDEP_CHAINS too low!" message.
-+
-+config LOCKDEP_STACK_TRACE_BITS
-+	int "Bitsize for MAX_STACK_TRACE_ENTRIES"
-+	depends on LOCKDEP && !LOCKDEP_SMALL
-+	range 10 30
-+	default 19
-+	help
-+	  Try increasing this value if you hit "BUG: MAX_STACK_TRACE_ENTRIES too low!" message.
-+
-+config LOCKDEP_STACK_TRACE_HASH_BITS
-+	int "Bitsize for STACK_TRACE_HASH_SIZE"
-+	depends on LOCKDEP && !LOCKDEP_SMALL
-+	range 10 30
-+	default 14
-+	help
-+	  Try increasing this value if you need large MAX_STACK_TRACE_ENTRIES.
-+
-+config LOCKDEP_CIRCULAR_QUEUE_BITS
-+	int "Bitsize for elements in circular_queue struct"
-+	depends on LOCKDEP
-+	range 10 30
-+	default 12
-+	help
-+	  Try increasing this value if you hit "lockdep bfs error:-1" warning due to __cq_enqueue() failure.
-+
- config DEBUG_LOCKDEP
- 	bool "Lock dependency engine debugging"
- 	depends on DEBUG_KERNEL && LOCKDEP
--- 
-2.18.4
-
+ 		do {
+-			next = work->next;
++			next = READ_ONCE(work->next);
+ 			work->func(work);
+ 			work = next;
+ 			cond_resched();
 
