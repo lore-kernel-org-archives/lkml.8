@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4653DC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38793C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB0A22D2B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A6F020786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:56:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Mq44+TdW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sg9PfaIL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="m9pZXOsR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IA5mV85B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728365AbgH0H4N (ORCPT
+        id S1728633AbgH0H4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:56:13 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36802 "EHLO
+        Thu, 27 Aug 2020 03:56:25 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36744 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728425AbgH0Hyb (ORCPT
+        with ESMTP id S1728417AbgH0Hya (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:54:31 -0400
-Date:   Thu, 27 Aug 2020 07:54:28 -0000
+        Thu, 27 Aug 2020 03:54:30 -0400
+Date:   Thu, 27 Aug 2020 07:54:26 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598514868;
+        s=2020; t=1598514867;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=998Mxj6ZR4cuWBvKgZEKUei+GKcasgYRPJGfg/A/+is=;
-        b=Mq44+TdW4fmGkTr3Z5oXcr9skYGWUdIkVy3HcPZiTwDimJaoHkHXmmG4v/FWAqvC7bWvVs
-        p+iMvISLBU24ih7QInfK4NBO5tHQAuqPBHwZ8Qq4LESGG+oyEqJAnkKeaBuoc5td4Vur6D
-        PJ9rVa9p7TaFWrA7addISUgy/66hLkYa+ph9XlO/fUdnT57h5TQPjzxbMwsIPkCGtE+V30
-        sCuHQ+n6OnHuFuOOiXooQJRpo4v2A95vBgnyDWSjOLVbJd2A1kAiEEBiazsZuRo7fC02eC
-        XYSpmbSmVxTqjVOOfLpIzXaLSft8Sri52DMyI0XSVmoRT/5U2wspIAGoCh1Jxw==
+        bh=GJ0AmpRzhk0Hi2kdoNAyyiBxBdZrB41FDdHi2Y21Jtw=;
+        b=m9pZXOsRrp5ZO+HdQINIPcR9gtleQDzDtr/nnMJEI/6Eim5XudbubfqNMWJ+szd0Zhrzj6
+        FPVBQ9VJ84Drx+GbcLOydKWKTA7HVDyG8o9MF/jRDvz/r8wH/JBYI25gE06T3qWr4zC0YP
+        GSp6F7rh3VeoVEqq10NsGgrpmXiKiQv6/E5Sl00209FKiEmJai+DONwufIYkSDg3heJGNO
+        IytAzRuWaKkF4vyiepcvT0Olc4oG+MqiDcGeERg1JBqP3c/pOwfKKbxLG+IC0HrpZm+eKX
+        tndX8NjDWvMlfcRIStq/j4gnlyMPodnBpUgX46hBQE+i6SPrhsVMN+lKrsZoaw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598514868;
+        s=2020e; t=1598514867;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=998Mxj6ZR4cuWBvKgZEKUei+GKcasgYRPJGfg/A/+is=;
-        b=sg9PfaILdjV+oxXEPJblH7gIAIFzgxF4G5e1zhrQVPEJGCJfAvt4KNq2nNPJX2VCQeObsp
-        7S3xCBqJBCJX/xDg==
+        bh=GJ0AmpRzhk0Hi2kdoNAyyiBxBdZrB41FDdHi2Y21Jtw=;
+        b=IA5mV85Ba1wVhxKkzBgiCPXgo41xly4v7AHnXZR725I9gwUy/Wh77d8sh2oi9roSkXM/a3
+        5YA3elxN6IBJRiAA==
 From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] sched,idle,rcu: Push rcu_idle deeper into the idle path
+Subject: [tip: locking/core] locking/lockdep: Cleanup
 Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Marco Elver <elver@google.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200821085348.310943801@infradead.org>
-References: <20200821085348.310943801@infradead.org>
+In-Reply-To: <20200821085348.546087214@infradead.org>
+References: <20200821085348.546087214@infradead.org>
 MIME-Version: 1.0
-Message-ID: <159851486807.20229.7903134121913378872.tip-bot2@tip-bot2>
+Message-ID: <159851486636.20229.9494858646362997006.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -73,170 +73,114 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     1098582a0f6c4e8fd28da0a6305f9233d02c9c1d
-Gitweb:        https://git.kernel.org/tip/1098582a0f6c4e8fd28da0a6305f9233d02c9c1d
+Commit-ID:     00b0ed2d4997af6d0a93edef820386951fd66d94
+Gitweb:        https://git.kernel.org/tip/00b0ed2d4997af6d0a93edef820386951fd66d94
 Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Fri, 07 Aug 2020 20:50:19 +02:00
+AuthorDate:    Wed, 12 Aug 2020 19:28:06 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 26 Aug 2020 12:41:53 +02:00
+CommitterDate: Wed, 26 Aug 2020 12:41:54 +02:00
 
-sched,idle,rcu: Push rcu_idle deeper into the idle path
-
-Lots of things take locks, due to a wee bug, rcu_lockdep didn't notice
-that the locking tracepoints were using RCU.
-
-Push rcu_idle_{enter,exit}() as deep as possible into the idle paths,
-this also resolves a lot of _rcuidle()/RCU_NONIDLE() usage.
-
-Specifically, sched_clock_idle_wakeup_event() will use ktime which
-will use seqlocks which will tickle lockdep, and
-stop_critical_timings() uses lock.
+locking/lockdep: Cleanup
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Tested-by: Marco Elver <elver@google.com>
-Link: https://lkml.kernel.org/r/20200821085348.310943801@infradead.org
+Link: https://lkml.kernel.org/r/20200821085348.546087214@infradead.org
 ---
- drivers/cpuidle/cpuidle.c | 12 ++++++++----
- kernel/sched/idle.c       | 22 ++++++++--------------
- 2 files changed, 16 insertions(+), 18 deletions(-)
+ include/linux/irqflags.h | 54 +++++++++++++++++++++------------------
+ 1 file changed, 30 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-index 2fe4f3c..9bcda41 100644
---- a/drivers/cpuidle/cpuidle.c
-+++ b/drivers/cpuidle/cpuidle.c
-@@ -145,13 +145,14 @@ static void enter_s2idle_proper(struct cpuidle_driver *drv,
- 	 * executing it contains RCU usage regarded as invalid in the idle
- 	 * context, so tell RCU about that.
- 	 */
--	RCU_NONIDLE(tick_freeze());
-+	tick_freeze();
- 	/*
- 	 * The state used here cannot be a "coupled" one, because the "coupled"
- 	 * cpuidle mechanism enables interrupts and doing that with timekeeping
- 	 * suspended is generally unsafe.
- 	 */
- 	stop_critical_timings();
-+	rcu_idle_enter();
- 	drv->states[index].enter_s2idle(dev, drv, index);
- 	if (WARN_ON_ONCE(!irqs_disabled()))
- 		local_irq_disable();
-@@ -160,7 +161,8 @@ static void enter_s2idle_proper(struct cpuidle_driver *drv,
- 	 * first CPU executing it calls functions containing RCU read-side
- 	 * critical sections, so tell RCU about that.
- 	 */
--	RCU_NONIDLE(tick_unfreeze());
-+	rcu_idle_exit();
-+	tick_unfreeze();
- 	start_critical_timings();
+diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
+index d7e50a2..00d553d 100644
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -49,10 +49,11 @@ struct irqtrace_events {
+ DECLARE_PER_CPU(int, hardirqs_enabled);
+ DECLARE_PER_CPU(int, hardirq_context);
  
- 	time_end = ns_to_ktime(local_clock());
-@@ -229,16 +231,18 @@ int cpuidle_enter_state(struct cpuidle_device *dev, struct cpuidle_driver *drv,
- 	/* Take note of the planned idle state. */
- 	sched_idle_set_state(target_state);
- 
--	trace_cpu_idle_rcuidle(index, dev->cpu);
-+	trace_cpu_idle(index, dev->cpu);
- 	time_start = ns_to_ktime(local_clock());
- 
- 	stop_critical_timings();
-+	rcu_idle_enter();
- 	entered_state = target_state->enter(dev, drv, index);
-+	rcu_idle_exit();
- 	start_critical_timings();
- 
- 	sched_clock_idle_wakeup_event();
- 	time_end = ns_to_ktime(local_clock());
--	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, dev->cpu);
-+	trace_cpu_idle(PWR_EVENT_EXIT, dev->cpu);
- 
- 	/* The cpu is no longer idle or about to enter idle. */
- 	sched_idle_set_state(NULL);
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index 6bf3498..ea3a098 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -54,17 +54,18 @@ __setup("hlt", cpu_idle_nopoll_setup);
- 
- static noinline int __cpuidle cpu_idle_poll(void)
- {
-+	trace_cpu_idle(0, smp_processor_id());
-+	stop_critical_timings();
- 	rcu_idle_enter();
--	trace_cpu_idle_rcuidle(0, smp_processor_id());
- 	local_irq_enable();
--	stop_critical_timings();
- 
- 	while (!tif_need_resched() &&
--		(cpu_idle_force_poll || tick_check_broadcast_expired()))
-+	       (cpu_idle_force_poll || tick_check_broadcast_expired()))
- 		cpu_relax();
--	start_critical_timings();
--	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, smp_processor_id());
+-  extern void trace_hardirqs_on_prepare(void);
+-  extern void trace_hardirqs_off_finish(void);
+-  extern void trace_hardirqs_on(void);
+-  extern void trace_hardirqs_off(void);
++extern void trace_hardirqs_on_prepare(void);
++extern void trace_hardirqs_off_finish(void);
++extern void trace_hardirqs_on(void);
++extern void trace_hardirqs_off(void);
 +
- 	rcu_idle_exit();
-+	start_critical_timings();
-+	trace_cpu_idle(PWR_EVENT_EXIT, smp_processor_id());
+ # define lockdep_hardirq_context()	(raw_cpu_read(hardirq_context))
+ # define lockdep_softirq_context(p)	((p)->softirq_context)
+ # define lockdep_hardirqs_enabled()	(this_cpu_read(hardirqs_enabled))
+@@ -120,17 +121,17 @@ do {						\
+ #else
+ # define trace_hardirqs_on_prepare()		do { } while (0)
+ # define trace_hardirqs_off_finish()		do { } while (0)
+-# define trace_hardirqs_on()		do { } while (0)
+-# define trace_hardirqs_off()		do { } while (0)
+-# define lockdep_hardirq_context()	0
+-# define lockdep_softirq_context(p)	0
+-# define lockdep_hardirqs_enabled()	0
+-# define lockdep_softirqs_enabled(p)	0
+-# define lockdep_hardirq_enter()	do { } while (0)
+-# define lockdep_hardirq_threaded()	do { } while (0)
+-# define lockdep_hardirq_exit()		do { } while (0)
+-# define lockdep_softirq_enter()	do { } while (0)
+-# define lockdep_softirq_exit()		do { } while (0)
++# define trace_hardirqs_on()			do { } while (0)
++# define trace_hardirqs_off()			do { } while (0)
++# define lockdep_hardirq_context()		0
++# define lockdep_softirq_context(p)		0
++# define lockdep_hardirqs_enabled()		0
++# define lockdep_softirqs_enabled(p)		0
++# define lockdep_hardirq_enter()		do { } while (0)
++# define lockdep_hardirq_threaded()		do { } while (0)
++# define lockdep_hardirq_exit()			do { } while (0)
++# define lockdep_softirq_enter()		do { } while (0)
++# define lockdep_softirq_exit()			do { } while (0)
+ # define lockdep_hrtimer_enter(__hrtimer)	false
+ # define lockdep_hrtimer_exit(__context)	do { } while (0)
+ # define lockdep_posixtimer_enter()		do { } while (0)
+@@ -181,17 +182,25 @@ do {						\
+  * if !TRACE_IRQFLAGS.
+  */
+ #ifdef CONFIG_TRACE_IRQFLAGS
+-#define local_irq_enable() \
+-	do { trace_hardirqs_on(); raw_local_irq_enable(); } while (0)
+-#define local_irq_disable() \
+-	do { raw_local_irq_disable(); trace_hardirqs_off(); } while (0)
++
++#define local_irq_enable()				\
++	do {						\
++		trace_hardirqs_on();			\
++		raw_local_irq_enable();			\
++	} while (0)
++
++#define local_irq_disable()				\
++	do {						\
++		raw_local_irq_disable();		\
++		trace_hardirqs_off();			\
++	} while (0)
++
+ #define local_irq_save(flags)				\
+ 	do {						\
+ 		raw_local_irq_save(flags);		\
+ 		trace_hardirqs_off();			\
+ 	} while (0)
  
- 	return 1;
- }
-@@ -91,7 +92,9 @@ void __cpuidle default_idle_call(void)
- 		local_irq_enable();
- 	} else {
- 		stop_critical_timings();
-+		rcu_idle_enter();
- 		arch_cpu_idle();
-+		rcu_idle_exit();
- 		start_critical_timings();
- 	}
- }
-@@ -158,7 +161,6 @@ static void cpuidle_idle_call(void)
- 
- 	if (cpuidle_not_available(drv, dev)) {
- 		tick_nohz_idle_stop_tick();
--		rcu_idle_enter();
- 
- 		default_idle_call();
- 		goto exit_idle;
-@@ -178,21 +180,17 @@ static void cpuidle_idle_call(void)
- 		u64 max_latency_ns;
- 
- 		if (idle_should_enter_s2idle()) {
--			rcu_idle_enter();
- 
- 			entered_state = call_cpuidle_s2idle(drv, dev);
- 			if (entered_state > 0)
- 				goto exit_idle;
- 
--			rcu_idle_exit();
 -
- 			max_latency_ns = U64_MAX;
- 		} else {
- 			max_latency_ns = dev->forced_idle_latency_limit_ns;
- 		}
+ #define local_irq_restore(flags)			\
+ 	do {						\
+ 		if (raw_irqs_disabled_flags(flags)) {	\
+@@ -214,10 +223,7 @@ do {						\
  
- 		tick_nohz_idle_stop_tick();
--		rcu_idle_enter();
+ #define local_irq_enable()	do { raw_local_irq_enable(); } while (0)
+ #define local_irq_disable()	do { raw_local_irq_disable(); } while (0)
+-#define local_irq_save(flags)					\
+-	do {							\
+-		raw_local_irq_save(flags);			\
+-	} while (0)
++#define local_irq_save(flags)	do { raw_local_irq_save(flags); } while (0)
+ #define local_irq_restore(flags) do { raw_local_irq_restore(flags); } while (0)
+ #define safe_halt()		do { raw_safe_halt(); } while (0)
  
- 		next_state = cpuidle_find_deepest_state(drv, dev, max_latency_ns);
- 		call_cpuidle(drv, dev, next_state);
-@@ -209,8 +207,6 @@ static void cpuidle_idle_call(void)
- 		else
- 			tick_nohz_idle_retain_tick();
- 
--		rcu_idle_enter();
--
- 		entered_state = call_cpuidle(drv, dev, next_state);
- 		/*
- 		 * Give the governor an opportunity to reflect on the outcome
-@@ -226,8 +222,6 @@ exit_idle:
- 	 */
- 	if (WARN_ON_ONCE(irqs_disabled()))
- 		local_irq_enable();
--
--	rcu_idle_exit();
- }
- 
- /*
