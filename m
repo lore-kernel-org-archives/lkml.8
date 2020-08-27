@@ -2,98 +2,137 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9002CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9ACC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D259206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D490206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:53:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I4CqqHi8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ROARXQDZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgH0IwV (ORCPT
+        id S1727999AbgH0Ixs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:52:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbgH0IwT (ORCPT
+        Thu, 27 Aug 2020 04:53:48 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44711 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726851AbgH0Ixp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:52:19 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F31DC06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 01:52:18 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id m22so5518403ljj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 01:52:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yYacB22eYqjS0h2EHD7vpnW368MZpgmYVMb0jVEC+0k=;
-        b=I4CqqHi8i6aZUgWVs79dQH94/DTsPWfoTtqiUAGLfoUuyChmrVFlCJt2xtstW36Y4j
-         srvtiSanJALvFkGgcExhOsRLJbdHal2iROBeZUh3KvND7j42b6+Few3BMJlywvKTA7dk
-         ybPUE3SK0t+TFNUTx8lqxIfifMsnc/xuZHJ1ZNs5saEACMpfE+DV06RyD4dc+tMEIecr
-         I2BAxZtGiqRHJEg+8eBXUoM9SUQUsRKQoo5M6Pmfww7FbPgNKKtKPjTn0PNhRle64LMB
-         waN3UegYTBknmsNPNhbhnfmpgGvCbM23phLffVIVJpeM8L3Z2wTYNWoWZ4Xe4xSgWSpT
-         bZQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yYacB22eYqjS0h2EHD7vpnW368MZpgmYVMb0jVEC+0k=;
-        b=WPFJwXBNg+JWvwd8AW7q1jbV7Vq0W5+8EHPhqRGcuN1yn2xGWV/cc+Wb049/rBG+ZC
-         UmX42LUbsUJMZesaOD6ZD6DC7sBg/JOUFUleuGQUakh60hJORSnGuIBkoTlDpGZvoeMM
-         n6ajWUy6VGu4ODAj3BOr9FPebnE+y3hyQRII5qdym/sjBb+y3rzsVilalyGgNiXf9YGO
-         FCfWo7f3rpuOTuyZIu2ZgXaIjvzWgOkK0bl5vZ9mDp9harxwbzjGyz7hDpEKe0SQkoPh
-         yYbeFeuS09KcFf3DlkqE4lVR7FO4+0YwxKEJ05x8hFpuj4LSmMSdMWzsEiOdzqW86xqi
-         cXfQ==
-X-Gm-Message-State: AOAM533vyZBOscsYDahIaVv68YX0T/C3LaTZC2HKaFI3z0M+Psec7Yj7
-        F8qxBzo7HzqEDjyVfaTUkGA/BNYuwpZ66Tju7JtCjw==
-X-Google-Smtp-Source: ABdhPJzMK/QQzozGDxzhZ1ptVcFeOA7pCMf7o4BoinmpKAwFETGR2jOwjTUEQE5hG43D4uonIeuqoQ+98b/Uh0VfqsM=
-X-Received: by 2002:a2e:8144:: with SMTP id t4mr9913723ljg.100.1598518336643;
- Thu, 27 Aug 2020 01:52:16 -0700 (PDT)
+        Thu, 27 Aug 2020 04:53:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598518423;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=RrMwwJkiIN6IE4DKC1Do1r49qx7TdOB11Zk1v1eRJzw=;
+        b=ROARXQDZLVEYPhCBxvnfBjuzwFO6A0J3B4DJjbOvE6hzdSH0Ao9rqcEV09llnNO/VNLOjd
+        gedk2pXdFWOxoM/44nb8hfDUd/HGlGeCT6bjYaqZOSWMxTDeJZmZmEan1L0PFCGlRB9slY
+        7OlYa5joLdm4Nyi73hvwbDVbL2zpSf0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-541-k-L04AzZPEukU3yiqK1pgg-1; Thu, 27 Aug 2020 04:53:41 -0400
+X-MC-Unique: k-L04AzZPEukU3yiqK1pgg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BF0AF185FD6C;
+        Thu, 27 Aug 2020 08:53:40 +0000 (UTC)
+Received: from firesoul.localdomain (unknown [10.40.208.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C4C347B9F2;
+        Thu, 27 Aug 2020 08:53:37 +0000 (UTC)
+Received: from [192.168.42.3] (localhost [IPv6:::1])
+        by firesoul.localdomain (Postfix) with ESMTP id B205C30736C8B;
+        Thu, 27 Aug 2020 10:53:36 +0200 (CEST)
+Subject: [PATCH] tools build feature: cleanup feature files on make clean
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org
+Date:   Thu, 27 Aug 2020 10:53:36 +0200
+Message-ID: <159851841661.1072907.13770213104521805592.stgit@firesoul>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-References: <20200817001702.1646-1-zhiyong.tao@mediatek.com>
-In-Reply-To: <20200817001702.1646-1-zhiyong.tao@mediatek.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 27 Aug 2020 10:52:05 +0200
-Message-ID: <CACRpkdYedyDcnL5DUD33Z2iT1jEJ_W1gvB_a8VaFnNAH1mKgzQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] Mediatek pinctrl patch on mt8192
-To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>, srv_heupstream@mediatek.com,
-        hui.liu@mediatek.com, huang eddie <eddie.huang@mediatek.com>,
-        Chuanjia Liu <chuanjia.liu@mediatek.com>,
-        Biao Huang <biao.huang@mediatek.com>,
-        Hongzhou Yang <hongzhou.yang@mediatek.com>,
-        Erin Lo <erin.lo@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>, sj.huang@mediatek.com,
-        seiya.wang@mediatek.com, jg_poxu@mediatek.com,
-        sin_jieyang@mediatek.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 2:18 AM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
+The system for "Auto-detecting system features" located under
+tools/build/ are (currently) used by perf, libbpf and bpftool. It can
+contain stalled feature detection files, which are not cleaned up by
+libbpf and bpftool on make clean (side-note: perf tool is correct).
 
-> This series includes 3 patches:
-> 1.add pinctrl file on mt8192.
-> 2.add pinctrl binding document on mt8192.
-> 3.add pinctrl driver on MT8192.
+Fix this by making the users invoke the make clean target.
 
-Patches applied for v5.10!
-Thanks!
-Linus Walleij
+Some details about the changes. The libbpf Makefile already had a
+clean-config target (which seems to be copy-pasted from perf), but this
+target was not "connected" (a make dependency) to clean target. Choose
+not to rename target as someone might be using it. Did change the output
+from "CLEAN config" to "CLEAN feature-detect", to make it more clear
+what happens.
+
+This is related to the complaint and troubleshooting in link:
+Link: https://lore.kernel.org/lkml/20200818122007.2d1cfe2d@carbon/
+
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+---
+ tools/build/Makefile |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+index 8462690a039b..02c99bc95c69 100644
+--- a/tools/bpf/bpftool/Makefile
++++ b/tools/bpf/bpftool/Makefile
+@@ -176,7 +176,11 @@ $(OUTPUT)bpftool: $(OBJS) $(LIBBPF)
+ $(OUTPUT)%.o: %.c
+ 	$(QUIET_CC)$(CC) $(CFLAGS) -c -MMD -o $@ $<
+ 
+-clean: $(LIBBPF)-clean
++feature-detect-clean:
++	$(call QUIET_CLEAN, feature-detect)
++	$(Q)$(MAKE) -C $(srctree)/tools/build/feature/ clean >/dev/null
++
++clean: $(LIBBPF)-clean feature-detect-clean
+ 	$(call QUIET_CLEAN, bpftool)
+ 	$(Q)$(RM) -- $(OUTPUT)bpftool $(OUTPUT)*.o $(OUTPUT)*.d
+ 	$(Q)$(RM) -- $(BPFTOOL_BOOTSTRAP) $(OUTPUT)*.skel.h $(OUTPUT)vmlinux.h
+diff --git a/tools/build/Makefile b/tools/build/Makefile
+index 727050c40f09..722f1700d96a 100644
+--- a/tools/build/Makefile
++++ b/tools/build/Makefile
+@@ -38,6 +38,8 @@ clean:
+ 	$(call QUIET_CLEAN, fixdep)
+ 	$(Q)find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+ 	$(Q)rm -f $(OUTPUT)fixdep
++	$(call QUIET_CLEAN, feature-detect)
++	$(Q)$(MAKE) -C feature/ clean >/dev/null
+ 
+ $(OUTPUT)fixdep-in.o: FORCE
+ 	$(Q)$(MAKE) $(build)=fixdep
+diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+index bf8ed134cb8a..bbb89551468a 100644
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -269,10 +269,10 @@ install: install_lib install_pkgconfig install_headers
+ ### Cleaning rules
+ 
+ config-clean:
+-	$(call QUIET_CLEAN, config)
++	$(call QUIET_CLEAN, feature-detect)
+ 	$(Q)$(MAKE) -C $(srctree)/tools/build/feature/ clean >/dev/null
+ 
+-clean:
++clean: config-clean
+ 	$(call QUIET_CLEAN, libbpf) $(RM) -rf $(CMD_TARGETS)		     \
+ 		*~ .*.d .*.cmd LIBBPF-CFLAGS $(BPF_HELPER_DEFS)		     \
+ 		$(SHARED_OBJDIR) $(STATIC_OBJDIR)			     \
+
+
