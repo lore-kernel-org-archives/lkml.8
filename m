@@ -5,257 +5,217 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A68C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78FFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E38B820786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9219020786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:38:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jCa/eH20"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="D81tfc3E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbgH0EfY (ORCPT
+        id S1726266AbgH0Eiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 00:35:24 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:12238 "EHLO
+        Thu, 27 Aug 2020 00:38:51 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:14160 "EHLO
         mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbgH0EfX (ORCPT
+        with ESMTP id S1725988AbgH0Eir (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 00:35:23 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200827043520epoutp03247d026b9c187cc43b11ce25f8c38507~vBe-eGqya1621716217epoutp03i
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 04:35:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200827043520epoutp03247d026b9c187cc43b11ce25f8c38507~vBe-eGqya1621716217epoutp03i
+        Thu, 27 Aug 2020 00:38:47 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200827043841epoutp03992b09f5cd4cbf40eb41a3a9698c86e3~vBh7CO_E41917519175epoutp03a
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 04:38:41 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200827043841epoutp03992b09f5cd4cbf40eb41a3a9698c86e3~vBh7CO_E41917519175epoutp03a
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598502920;
-        bh=wynkeJ2gZV5eNhHFGgSioBpWQoDnsmVxk8KLfHGKQ6A=;
+        s=mail20170921; t=1598503121;
+        bh=qCWPrfdruCkeKVBXUGB0XNsN790tUmHM0okcm60Ch/w=;
         h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=jCa/eH20KD1XAhu0AFe30qCbuhhLrA7pyq4i5P20d5XF4bvqscpfxRU8W8HniRSOK
-         0NXMY/eFsKAFOZZoTDzqUSqcLOiPuCjKmVs6APQmDqFwIOj738fAjRYkuwckagJnaf
-         Uwel7EG5PROnxW04HJBZN5AIdMJoZEI0CFZ6liUg=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        b=D81tfc3EDjtQuNhR/7no8BgRy5cdN/aNNNNZ/JhKcy0YVhjR/33VujtDJ2LGR+N2X
+         MRgUhZ/k3blit71bH76VzEtt1Aba11uF9A1kHYJorrKw1Qn9SFOQiSddDIUJjQoVnj
+         gGfeQu2nf6ky09QTmDLiJ+Po8fByMYC6O4/KOdbQ=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
         epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200827043519epcas1p392729327227b17aa7956bcab5699c7bf~vBe_ptMYh3020030200epcas1p3C;
-        Thu, 27 Aug 2020 04:35:19 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4BcVJj0MhtzMqYkn; Thu, 27 Aug
-        2020 04:35:17 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F8.41.19033.408374F5; Thu, 27 Aug 2020 13:35:16 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200827043516epcas1p4d8e42aa0019711fc3e52079c7548cde0~vBe7ubg4N1941719417epcas1p4p;
-        Thu, 27 Aug 2020 04:35:16 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200827043516epsmtrp2b45aace3bcbd5974e55f1fe0d55475a0~vBe7teMmA2463524635epsmtrp2E;
-        Thu, 27 Aug 2020 04:35:16 +0000 (GMT)
-X-AuditID: b6c32a36-159ff70000004a59-7a-5f4738047e9a
+        20200827043841epcas1p3dea8a2b4e0dbb7115914cea32df59b19~vBh6gwJc02433824338epcas1p3v;
+        Thu, 27 Aug 2020 04:38:41 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.158]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4BcVNY0j7RzMqYkk; Thu, 27 Aug
+        2020 04:38:37 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A6.9B.18978.CC8374F5; Thu, 27 Aug 2020 13:38:37 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200827043836epcas1p2552f5cc00c76240e21a062b236e2f748~vBh1rca9y2014220142epcas1p2r;
+        Thu, 27 Aug 2020 04:38:36 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200827043836epsmtrp163ed5e986728fcacbb6c7ddfc24656d1~vBh1qZmFC2984029840epsmtrp1v;
+        Thu, 27 Aug 2020 04:38:36 +0000 (GMT)
+X-AuditID: b6c32a35-5edff70000004a22-ff-5f4738ccc080
 Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1C.90.08382.408374F5; Thu, 27 Aug 2020 13:35:16 +0900 (KST)
-Received: from [10.113.111.64] (unknown [10.113.111.64]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F4.FE.08303.BC8374F5; Thu, 27 Aug 2020 13:38:36 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
         epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200827043516epsmtip1b4add86ac8dacc6ccdf3ed8efd33ca8b~vBe7R5eSV1882518825epsmtip1y;
-        Thu, 27 Aug 2020 04:35:16 +0000 (GMT)
-Subject: Re: [PATCH 3/3] drm/vc4: hdmi: Add pixel bvb clock control
-To:     Stefan Wahren <stefan.wahren@i2se.com>, nsaenzjulienne@suse.de,
-        eric@anholt.net, maxime@cerno.tech
-Cc:     devicetree@vger.kernel.org, tim.gover@raspberrypi.com,
-        kdasu.kdev@gmail.com, sboyd@kernel.org, mturquette@baylibre.com,
-        dave.stevenson@raspberrypi.com, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, phil@raspberrypi.com,
-        robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>
-From:   Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Message-ID: <80749dcd-d4b2-68a1-f3ca-c19a120f6f7b@samsung.com>
-Date:   Thu, 27 Aug 2020 13:35:02 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
+        20200827043835epsmtip168f1b1965183fb28caa40cab0018d19a~vBh1ciZMu2047920479epsmtip1r;
+        Thu, 27 Aug 2020 04:38:35 +0000 (GMT)
+Subject: Re: [PATCH v2 2/2] extcon: ptn5150: Set the VBUS and POLARITY
+ property state
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     vijaikumar.kanagarajan@gmail.com, krzk@kernel.org,
+        myungjoo.ham@samsung.com, heikki.krogerus@linux.intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <b44d90d2-e91d-afd4-22c0-f64400ba9e11@samsung.com>
+Date:   Thu, 27 Aug 2020 13:51:03 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-In-Reply-To: <61c199bf-852f-82d3-089a-a0a435343acf@i2se.com>
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200827035633.37348-3-vadivel.muruganx.ramuthevar@linux.intel.com>
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TfUxTZxTG8/be3rZuNZeC8Mq2rt4oBjegpRQvExACwk2QhM2ZBd3sGrhp
-        CaUtbVmcLK4YIcAQLaQ6ixSSiVWMw1FEIaJY+RDZYAZkjMH4EhdlUCbhIzDZWi7L+O93Tp7z
-        nvOcN4eLCJYwf26GxkjrNQo1gW1BGx8GioNQMlEuvlqzj7xxph0lZyq/Q8mqth422b/gwsjW
-        vD5AuuzFGNnUfwMl6ycH2ORfJb+zyb7mSxhp/u0mh/x2eQ2QTx4fIButdoz8fmgaI/Nb2jjk
-        2sAP7oKrgxg5YRkFMd7UKVcHRrkG8zmUdfQnjBru6cWoJusIh7o1JKPqa4swavSbThbluPw1
-        ld++glKlDbWAcnTnUvP1whT+kcxIFa1Ip/UiWpOmTc/QKKOIpEPyOLksXCwJkkSQewmRRpFF
-        RxHxB1OCEjLUbpuE6AuFOsedSlEYDERIdKRem2OkRSqtwRhF0Lp0tS5CF2xQZBlyNMrgNG3W
-        BxKxOFTmFn6eqaprWMV0j4THHQPn2CYwBosBjwvxMFhXuMTysAC/A+Bke1Qx2OLmVwCWXLjP
-        ZoJFALsmVrBiwF2vaLiSwORbAJxrWsOYYAbA6lc2xPOUNx4HLcsP2B72wVWwZ6WF4xEheAcC
-        z1curIswPAgulPyy3puPR8M8xxjwdEDxXfDuWLQnvQ1PhU1TLziMxAt2XXyGepiHR0Ln82Hg
-        YQR/F96euYQw7AeHnlWxPL0gXsGDeX+fZjE+46HdOcdh2Bu+7GzYYH84P9uCMWyA/Rdfokyx
-        CcCz5ooNkRTerylneYZD8EBY1xzCpHfAptXKjSG2wtmFEjazIT4sLBAwkgD43NTKZvht+PiM
-        fWMcCrrKH3LOgR3WTdasm+xYN9mx/t+4GqC1wJfWGbKUtEGiC9382fVg/QL2hN8BZTNzwU7A
-        4gIngFyE8OF7PYmTC/jpii9P0HqtXJ+jpg1OIHPv2oz4b0vTuk9IY5RLZKFSqZQMk4TLJBLC
-        jz8+JJILcKXCSGfStI7W/1fH4vL8TawK+/7EfuOV3k5ht7C4IOnjZE6EbeXEvXtvpM++09Pz
-        olt5Mrb06FGbvjH6o9qET3yTQ5eH/9n+ein3vb3blWVR6sTLq09tbyKBOlZa/SPL+dhby6Oq
-        kbFjd3mWgJKq8p27F9/iwp+P5+ZIOR8eNHfNdlv2u3adCpHFnv0qYl+FSdxtl+42V0c7HUXj
-        12xT8WpBQNLtP+zZrwtbPpv1sXk3kjPHCnae9i2ajjWlgilHzI+HS1Mb5WapczBDX7MkDFts
-        Ez3omGju+LQ315Kt+dOafeFIXvLWpflr45AQ+rUmaL2e3kzsK+id9NZ3GZNifr3+fsx0mW04
-        oJaXOUIdPnlgQk6gBpVCsgfRGxT/AoGOmrmKBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYRiA+XYuO65Wx2n0ZaYwM6lQs+sXhBiSngprkRAaZcsOaulcO9kd
-        MsMuc+WlrLm8VVoxs2xbc8uu81JmGtZyZpp2l9ZaZtIVqbkC/z287/Pw/ngpTPQU96FSZNtY
-        hUyaKiYFuLFe7BeMo+iEWYMtEFUfbcSRo+Qcjsoa2ghkHXKS6M7+JwA5LyhJZLZW40j3uoNA
-        A6oXBHpyvZhE+c9r+Ej9fRig9gdLkFFzgUSXu+wkyr7ZwEfDHVf/Bhc7SfSqsBdEeDFZziaS
-        cXZm8xlNbyvJdLc9IhmzpofPXOuax+i0R0imN+cej9FX7GOyG3/izDGDFjD6lj3MoM5PIowX
-        LNrEpqZsZxWh4RsEyVcMv0j5fb+d+o48IhP0QSWgKEjPhYbzUUogoER0HYDDz/IwJfD4O/eF
-        2lwD4Xa8YH0953bsAJoKXgGX40VHwsLvdwkXe9PJsDi/FHNJGN2EwVbdR8JdfAOwOt82YpF0
-        MBxS2XguFtLhcL++D7gu4HQgvNEX7sIJdBw0mxa6DU/YXPQGd7EHvQha3nWP3MXo+bBU/xJz
-        sz+sdRT/44mw600ZLw+INKNyzahEMyrRjErKAa4Fk1g5l5aUxoXJw2TsjhBOmsZlyJJCEtPT
-        dGDk8zOmm0Ct9nOIBfAoYAGQwsTeQs/2yASRcJN0125WkZ6gyEhlOQuYTOHiicLOrWfWi+gk
-        6TZ2C8vKWcX/LY/y8MnkhZQTjr1FsiCHrmTmmiUWrw9DlTXKg6qB/Bz1YsNWQWzJin6dpyRB
-        0OBTY9suy7H9FshVqytPSF7fjnmfQZR6P4+8GWyuivx1llk7cEAtuSJxsIFTaxd3D26Mzsqy
-        zy41H0tcWTicq4qxz25dEdTTHBNqivgUQLatGuubU+4hO1xQ98OqwKIKQ22TTXH2j7HpPYkn
-        C05J/NWX1p2W32r8Oj1oM95//P2cKv7qqG9Pp8WXma2XKwLjw+/ndjvr7i0/M+/l+Kka44IG
-        b8MN3/ihKSI6tMq/v6moZZnxd9mCayL7uJ0zk6KxCCU3Zv3X2C/NDze0x1kzU/IeH8paanyr
-        DgoQ41yyNGwGpuCkfwBtV1uTaAMAAA==
-X-CMS-MailID: 20200827043516epcas1p4d8e42aa0019711fc3e52079c7548cde0
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEJsWRmVeSWpSXmKPExsWy7bCmru5ZC/d4g8+rmCyuv42w6Fq9k8Xi
+        /PkN7BaXd81hs7jduILN4kvHejaLDcfus1m83D+d1aKp6TibA6fHzll32T0W73nJ5LFpVSeb
+        x7yTgR59W1YxenzeJBfAFpVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeY
+        m2qr5OIToOuWmQN0k5JCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwLJArzgxt7g0
+        L10vOT/XytDAwMgUqDAhO+P4XNuCR+IV8988ZW1gPC3cxcjBISFgIvHkoU8XIxeHkMAORolP
+        q5+wQDifGCUOz++Bcj4zSvx78JWti5ETrOPEgivMEIldjBI/tn0ESwgJvGeUmPq0EMQWFgiX
+        mLBiCxvIChGBfIkzTwRBwswC2xklHq2uB7HZBLQk9r+4AdbKL6AocfXHY0YQm1fATuLMnK1g
+        NouAqsTvRV1gNaICYRInt7VA1QhKnJwJciknB6dAoMSCb/1MEPPFJW49mQ9ly0tsfzsH7E4J
+        gZUcEssOvmGEeMBFYsXiPlYIW1ji1fEt7BC2lMTL/jYou1pi5ckjbBDNHYwSW/ZfgGowlti/
+        dDITyGPMApoS63fpQ4QVJXb+nssIsZhP4t3XHlZI8PJKdLQJQZQoS1x+cJcJwpaUWNzeyTaB
+        UWkWkndmIXlhFpIXZiEsW8DIsopRLLWgODc9tdiwwBA5qjcxghOrlukOxolvP+gdYmTiYDzE
+        KMHBrCTCK3jROV6INyWxsiq1KD++qDQntfgQoykwgCcyS4km5wNTe15JvKGpkbGxsYWJoZmp
+        oaGSOO/DWwrxQgLpiSWp2ampBalFMH1MHJxSDUwVESrcXcZ1nLadxyO9t8Stv3Hjzu1lzz50
+        p4T9emLgmtnwjJ/lrrc9m3CYtq+WiMZCroPu5rfD38ht2eR00mnuq1Aeg8UxrS91n/7adLlx
+        RYvkneAMCfYYJUG/51Vd5+ZI3lXptZveYH1c13rPQaXI+C//lRYFaf8Xc2H60CVUoaraYNlW
+        uT/1z/fvbP1GLIv9ajdJ/f2ry3rV7dHa1yeP7L5xjE30jtZeq28VN3i3R6p+qnGu/rLstVJ4
+        NN+nlR9n8q1OzZyvz34qXTNphcd/AxN9NpHP0cXvfvh49j/OVchMs19rvkyGr7R3P//8ubuc
+        51/YZCAerNg9Xzb7xS+V83lx4oyyPXcTliz3V2Ipzkg01GIuKk4EAFbwhNM1BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAIsWRmVeSWpSXmKPExsWy7bCSnO4ZC/d4gwndzBbX30ZYdK3eyWJx
+        /vwGdovLu+awWdxuXMFm8aVjPZvFhmP32Sxe7p/OatHUdJzNgdNj56y77B6L97xk8ti0qpPN
+        Y97JQI++LasYPT5vkgtgi+KySUnNySxLLdK3S+DKOD7XtuCReMX8N09ZGxhPC3cxcnJICJhI
+        nFhwhbmLkYtDSGAHo8SXia/ZIBKSEtMuHgVKcADZwhKHDxdD1LxllHh3cBMjSI2wQLjEhBVb
+        wOpFBPIl3s3czQpSxCywnVHi+PlrLBAdr4GmLn3NDlLFJqAlsf/FDbAOfgFFias/HoNN4hWw
+        kzgzZyuYzSKgKvF7URdYjahAmMTOJY+ZIGoEJU7OfMICYnMKBEos+NYPFmcWUJf4M+8SM4Qt
+        LnHryXyouLzE9rdzmCcwCs9C0j4LScssJC2zkLQsYGRZxSiZWlCcm55bbFhglJdarlecmFtc
+        mpeul5yfu4kRHGlaWjsY96z6oHeIkYmD8RCjBAezkgiv4EXneCHelMTKqtSi/Pii0pzU4kOM
+        0hwsSuK8X2ctjBMSSE8sSc1OTS1ILYLJMnFwSjUwrf5gu/uW5/qC6uirTSanpquI7ZpZrjXD
+        dLvidE+271s/+ih8a7zgLuV3zLd6b1pGlYiqoP0WuSO+6teb/yxZLn3474Fj3IevKuntVxT9
+        8zBYXfbSpcKXfEvmPK3k9z/7LuXZbQVPiVpGnpU8pk3Zc/J1TOM3H6x2+yQUE1i09+IP9UsP
+        TL1WOuffuCsQcOJuefkdQckXggHd4j1tQlOFdvyJuLZRyDV0apiF6+4Eb14B4V272RXFuBlv
+        PWL2Srr+U2mHzdzAJJH3fnVL7Kds4Nkyy0S38NM78UMK/oebEhOY1/Pm6/57bJ7SuTdimczJ
+        g3Zuc54c5dX/7vvu1cpnTz8vf3BKIuz/ok+Bn1XWKLEUZyQaajEXFScCAEfgUsEjAwAA
+X-CMS-MailID: 20200827043836epcas1p2552f5cc00c76240e21a062b236e2f748
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: SVC_REQ_APPROVE
 CMS-TYPE: 101P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200821071122epcas1p3d00dda4665f94192ac5e9ee829d0557d
-References: <20200821071045.24501-1-hoegeun.kwon@samsung.com>
-        <CGME20200821071122epcas1p3d00dda4665f94192ac5e9ee829d0557d@epcas1p3.samsung.com>
-        <20200821071045.24501-4-hoegeun.kwon@samsung.com>
-        <61c199bf-852f-82d3-089a-a0a435343acf@i2se.com>
+X-CMS-RootMailID: 20200827035651epcas1p33a045925293860a361a3be0cf21a2e2a
+References: <20200827035633.37348-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <CGME20200827035651epcas1p33a045925293860a361a3be0cf21a2e2a@epcas1p3.samsung.com>
+        <20200827035633.37348-3-vadivel.muruganx.ramuthevar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stefan,
+Hi,
 
-Thank you for your review.
+You better to change the 'state' word to 'capability'.
+Actually, this patch doesn't change the value of property.
+It set the capability value of property.
+
+"Set the VBUS and POLARITY property capability"
+
+On 8/27/20 12:56 PM, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> 
+> Set the VBUS and POLARITY property state.
+
+ditto. Need to change the work from 'state' and 'capability'.
+
+> 
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> ---
+>  drivers/extcon/extcon-ptn5150.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
+> index 8b930050a3f1..b5217a61615c 100644
+> --- a/drivers/extcon/extcon-ptn5150.c
+> +++ b/drivers/extcon/extcon-ptn5150.c
+> @@ -279,6 +279,12 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
+>  		return ret;
+>  	}
+>  
+> +	extcon_set_property_capability(info->edev, EXTCON_USB,
+> +				       EXTCON_PROP_USB_VBUS);
+> +	extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
+> +				       EXTCON_PROP_USB_VBUS);
+> +	extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
+> +				       EXTCON_PROP_USB_TYPEC_POLARITY);
+
+Need to add blank line.
+
+I understood that you set the property capability
+because of get_flipped() function of your patch[1].
+
+But, I think that you need to change the value of EXTCON_PROP_USB_TYPEC_POLARITY
+when changing the state of EXTCON_USB_HOST. The polarity property value is always
+zero regardless of EXTCON_USB_HOST state as following: The get_flipped()[1] returns
+always the same *flipped value.
+
+	EXTCON_USB_HOST is 1, EXTCON_PROP_USB_TYPEC_POLARITY is 0
+	EXTCON_USB_HOST is 0, EXTCON_PROP_USB_TYPEC_POLARITY is 0
+
+If EXTCON_PROP_USB_TYPEC_POLARITY value is not related to any behavior,
+you don't need to get the property value from extcon consumer driver
+like drivers/phy/phy-lgm-usb.c.
+
+Actually, I don't understand why you don't handle the value
+of EXTCON_PROP_USB_TYPEC_POLARITY. 
+
+Or, are there any case of what drivers/phy/phy-lgm-usb.c
+uses the different extcon device with EXTCON_PROP_USB_TYPEC_POLARITY property
+in the future?
+
+So, do you set the EXTCON_PROP_USB_TYPEC_POLARITY capability 
+for the extensibility in order to use other extcon device on later?
 
 
-On 8/26/20 7:04 PM, Stefan Wahren wrote:
-> Hi Hoeguen,
->
-> Am 21.08.20 um 09:10 schrieb Hoegeun Kwon:
->> There is a problem that the output does not work at a resolution
->> exceeding FHD. To solve this, we need to adjust the bvb clock at a
->> resolution exceeding FHD.
-> this patch introduces a mandatory clock, please update
-> brcm,bcm2835-hdmi.yaml first.
->
-> Is this clock physically available on BCM283x or only on BCM2711?
-
-As far as I know, BCM2711 raspberry pi 4 supports 4k,
-
-don't supported on pi 3 and pi 3+.
-
-Since 4k is not supported in versions prior to Raspberry Pi 4,
-
-I don't think we need to modify the bvb clock.
+[1] https://www.spinics.net/lists/devicetree/msg371828.html
++static int get_flipped(struct tca_apb *ta, bool *flipped)
++{
++	union extcon_property_value property;
++	int ret;
++
++	ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
++				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
++	if (ret) {
++		dev_err(ta->phy.dev, "no polarity property from extcon\n");
++		return ret;
++	}
++
++	*flipped = property.intval;
++
++	return ret;
++}
 
 
-So I think it is better to update 'brcm,bcm2711-hdmi.yaml'
-
-instead of 'brcm,bcm2835-hdmi.yaml'.
-
-Please comment, what do you think?
-
->
-> I'm a little bit afraid, this change could break with older firmware
-> versions on BCM283x.
-
-Tested it several times with libdrm modetest.
-
-I expect there will be no problem.
+>  	/* Initialize PTN5150 device and print vendor id and version id */
+>  	ret = ptn5150_init_dev_type(info);
+>  	if (ret)
+> 
 
 
-Best regards,
-
-Hoegeun
-
->
-> Best regards
-> Stefan
->
->> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
->> ---
->>   drivers/gpu/drm/vc4/vc4_hdmi.c | 25 +++++++++++++++++++++++++
->>   drivers/gpu/drm/vc4/vc4_hdmi.h |  1 +
->>   2 files changed, 26 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
->> index 95ec5eedea39..eb3192d1fd86 100644
->> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
->> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
->> @@ -80,6 +80,7 @@
->>   # define VC4_HD_M_ENABLE			BIT(0)
->>   
->>   #define CEC_CLOCK_FREQ 40000
->> +#define VC4_HSM_MID_CLOCK 149985000
->>   
->>   static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
->>   {
->> @@ -380,6 +381,7 @@ static void vc4_hdmi_encoder_post_crtc_powerdown(struct drm_encoder *encoder)
->>   	HDMI_WRITE(HDMI_VID_CTL,
->>   		   HDMI_READ(HDMI_VID_CTL) & ~VC4_HD_VID_CTL_ENABLE);
->>   
->> +	clk_disable_unprepare(vc4_hdmi->pixel_bvb_clock);
->>   	clk_disable_unprepare(vc4_hdmi->hsm_clock);
->>   	clk_disable_unprepare(vc4_hdmi->pixel_clock);
->>   
->> @@ -638,6 +640,23 @@ static void vc4_hdmi_encoder_pre_crtc_configure(struct drm_encoder *encoder)
->>   		return;
->>   	}
->>   
->> +	ret = clk_set_rate(vc4_hdmi->pixel_bvb_clock,
->> +			(hsm_rate > VC4_HSM_MID_CLOCK ? 150000000 : 75000000));
->> +	if (ret) {
->> +		DRM_ERROR("Failed to set pixel bvb clock rate: %d\n", ret);
->> +		clk_disable_unprepare(vc4_hdmi->hsm_clock);
->> +		clk_disable_unprepare(vc4_hdmi->pixel_clock);
->> +		return;
->> +	}
->> +
->> +	ret = clk_prepare_enable(vc4_hdmi->pixel_bvb_clock);
->> +	if (ret) {
->> +		DRM_ERROR("Failed to turn on pixel bvb clock: %d\n", ret);
->> +		clk_disable_unprepare(vc4_hdmi->hsm_clock);
->> +		clk_disable_unprepare(vc4_hdmi->pixel_clock);
->> +		return;
->> +	}
->> +
->>   	if (vc4_hdmi->variant->reset)
->>   		vc4_hdmi->variant->reset(vc4_hdmi);
->>   
->> @@ -1593,6 +1612,12 @@ static int vc5_hdmi_init_resources(struct vc4_hdmi *vc4_hdmi)
->>   		return PTR_ERR(vc4_hdmi->audio_clock);
->>   	}
->>   
->> +	vc4_hdmi->pixel_bvb_clock = devm_clk_get(dev, "bvb");
->> +	if (IS_ERR(vc4_hdmi->pixel_bvb_clock)) {
->> +		DRM_ERROR("Failed to get pixel bvb clock\n");
->> +		return PTR_ERR(vc4_hdmi->pixel_bvb_clock);
->> +	}
->> +
->>   	vc4_hdmi->reset = devm_reset_control_get(dev, NULL);
->>   	if (IS_ERR(vc4_hdmi->reset)) {
->>   		DRM_ERROR("Failed to get HDMI reset line\n");
->> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
->> index 0806c6d9f24e..63c6f8bddf1d 100644
->> --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
->> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
->> @@ -147,6 +147,7 @@ struct vc4_hdmi {
->>   	struct clk *pixel_clock;
->>   	struct clk *hsm_clock;
->>   	struct clk *audio_clock;
->> +	struct clk *pixel_bvb_clock;
->>   
->>   	struct reset_control *reset;
->>   
->
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
