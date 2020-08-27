@@ -2,65 +2,86 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E0FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482FFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36F8C20786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2054420786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:13:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dubMJMWF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgH0GLd (ORCPT
+        id S1727022AbgH0GNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:11:33 -0400
-Received: from mga03.intel.com ([134.134.136.65]:40504 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbgH0GLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:11:32 -0400
-IronPort-SDR: kQuZQJrbRqv70Kd/8W5YT9++n2pjAFTuY9DjsqO/Zi10BZKD8fye6yRdm3rzlY/ooM1R9TF5Js
- 4vw08eXt0eYg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="156432603"
-X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
-   d="scan'208";a="156432603"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 23:11:31 -0700
-IronPort-SDR: dF3te/9eMlBqrdSNu7nKwtGsgVljxjumlayN34tLdJUojd01NVusT20U0Y851NJkBfQ0UfRoTM
- iBA+LI3VK/lg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
-   d="scan'208";a="500515776"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 26 Aug 2020 23:11:30 -0700
-Received: from [10.249.76.175] (vramuthx-MOBL1.gar.corp.intel.com [10.249.76.175])
-        by linux.intel.com (Postfix) with ESMTP id 5338B58069F;
-        Wed, 26 Aug 2020 23:11:28 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v2 2/2] extcon: ptn5150: Set the VBUS and POLARITY
- property state
-To:     Chanwoo Choi <cw00.choi@samsung.com>, linux-kernel@vger.kernel.org
-Cc:     vijaikumar.kanagarajan@gmail.com, krzk@kernel.org,
-        myungjoo.ham@samsung.com, heikki.krogerus@linux.intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com
-References: <20200827035633.37348-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CGME20200827035651epcas1p33a045925293860a361a3be0cf21a2e2a@epcas1p3.samsung.com>
- <20200827035633.37348-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <b44d90d2-e91d-afd4-22c0-f64400ba9e11@samsung.com>
- <1e9360ee-22f6-2135-26c7-a5b25fe7776d@linux.intel.com>
- <55514836-b9cf-e937-b5d5-eb0535d98334@samsung.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <87f86b88-6698-343c-bdbd-75972db593a7@linux.intel.com>
-Date:   Thu, 27 Aug 2020 14:11:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 27 Aug 2020 02:13:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgH0GNk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 02:13:40 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02A84C061258;
+        Wed, 26 Aug 2020 23:13:39 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id i10so5106617ljn.2;
+        Wed, 26 Aug 2020 23:13:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yCsGVzEa07QpG25wdJdogsPOJiE4mf7jTXesPysELoE=;
+        b=dubMJMWFseFCK/JlFJEZLfYxiKZ6SlXQuvC6LDPHmsM/qt1zRg1Ck0pfUj9eZNgeca
+         1Oed9X7K110/5xRKzFTKVqDx6SQ0KndBu5iHQZtMqB5lvLN+N446BxTQ9zvt2jrK8lpk
+         NlU/omUmIKDg58VUNe0U7w4JE3Yq6DwA3bEWQ9ClLc78RoV6y/lTK3skBSwp+GXYhmgD
+         b3zXayl5ujX6cmfCjOv1eKYx/qpEvG7d0RJblcqL2qCFEcC7Gd0JQGD9NHgKcdsJvUDd
+         vUGfgsn0nlYe+s8aqDhU6y42xgHTpLNXUDy79h7dYOuPs4D5gzLQ8BgHU2HVNPzcoM9m
+         GdVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yCsGVzEa07QpG25wdJdogsPOJiE4mf7jTXesPysELoE=;
+        b=Umj3bwsHFOzzut73j8C1rDCoPIkDzyv6/fuVOhTASXk6KnIrqs9SvdXrdFRFNYqVn5
+         er4VwqvoHByCe2PNTcpVxk8MkdA+Ro6Qo5tGqDhAV/CFtOiejtZQ4pAjmfhvUBr/raEr
+         WjCfFEoKQZ1U/KTtNi1BQVfQ8NrLHGb0rQenzBfg3jP82M8Lr3a9Fxj29MmXC72nPCE2
+         FbLlrPq2pOfagmaVLpw8OhYEUvDYk+AUDgiVW4zLdR6Zs1Pae7P+Wj7ow4I7tDnYF/71
+         HmeLe+13sq/sc5qXmvSmXstRtyjTHFWSM5xzJVWw7HRc2y68HUBkmS0S3pCzdbSQb6/X
+         KRHA==
+X-Gm-Message-State: AOAM531XIhgPsVI72CvSV2GZmxLpTzs/tFWpbSMcvsJFpIqgPRwyY4Tz
+        Vlsax18NeLZHqOg9/E3qPUb5+GOYg1I=
+X-Google-Smtp-Source: ABdhPJzpj2rXc21C8Y+4YKa0N4ooD3Kd3IswfRU0tkhitEzjF7/P6HGWsVaPjb6jod4eSKlGxK1Ecg==
+X-Received: by 2002:a2e:8e9a:: with SMTP id z26mr8408692ljk.271.1598508817298;
+        Wed, 26 Aug 2020 23:13:37 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id y64sm260128lfc.50.2020.08.26.23.13.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Aug 2020 23:13:36 -0700 (PDT)
+Subject: Re: [PATCH v2 1/4] brcmfmac: increase F2 watermark for BCM4329
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200827060441.15487-1-digetx@gmail.com>
+ <20200827060441.15487-2-digetx@gmail.com>
+Message-ID: <ba942825-e165-68f1-00d1-81cc66ff518b@gmail.com>
+Date:   Thu, 27 Aug 2020 09:13:00 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <55514836-b9cf-e937-b5d5-eb0535d98334@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200827060441.15487-2-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,129 +89,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+27.08.2020 09:04, Dmitry Osipenko пишет:
+> This patch fixes SDHCI CRC errors during of RX throughput testing on
+> BCM4329 chip if SDIO BUS is clocked above 25MHz. In particular the
+> checksum problem is observed on NVIDIA Tegra20 SoCs. The good watermark
+> value is borrowed from downstream BCMDHD driver and it's matching to the
+> value that is already used for the BCM4339 chip, hence let's re-use it
+> for BCM4329.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
 
-On 27/8/2020 1:35 pm, Chanwoo Choi wrote:
-> Hi,
-> 
-> On 8/27/20 2:17 PM, Ramuthevar, Vadivel MuruganX wrote:
->> Hi,
->>
->> On 27/8/2020 12:51 pm, Chanwoo Choi wrote:
->>> Hi,
->>>
->>> You better to change the 'state' word to 'capability'.
->>> Actually, this patch doesn't change the value of property.
->>> It set the capability value of property.
->>>
->>> "Set the VBUS and POLARITY property capability"
->> Thank you for the review comments, sure will update.
->>>
->>> On 8/27/20 12:56 PM, Ramuthevar,Vadivel MuruganX wrote:
->>>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>>>
->>>> Set the VBUS and POLARITY property state.
->>>
->>> ditto. Need to change the work from 'state' and 'capability'.
->> Noted.
->>>
->>>>
->>>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>>> ---
->>>>    drivers/extcon/extcon-ptn5150.c | 6 ++++++
->>>>    1 file changed, 6 insertions(+)
->>>>
->>>> diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
->>>> index 8b930050a3f1..b5217a61615c 100644
->>>> --- a/drivers/extcon/extcon-ptn5150.c
->>>> +++ b/drivers/extcon/extcon-ptn5150.c
->>>> @@ -279,6 +279,12 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
->>>>            return ret;
->>>>        }
->>>>    +    extcon_set_property_capability(info->edev, EXTCON_USB,
->>>> +                       EXTCON_PROP_USB_VBUS);
->>>> +    extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
->>>> +                       EXTCON_PROP_USB_VBUS);
->>>> +    extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
->>>> +                       EXTCON_PROP_USB_TYPEC_POLARITY);
->>>
->>> Need to add blank line.
->> Noted.
->>>
->>> I understood that you set the property capability
->>> because of get_flipped() function of your patch[1].
->>>
->>> But, I think that you need to change the value of EXTCON_PROP_USB_TYPEC_POLARITY
->>> when changing the state of EXTCON_USB_HOST. The polarity property value is always
->>> zero regardless of EXTCON_USB_HOST state as following: The get_flipped()[1] returns
->>> always the same *flipped value.
->>>
->>>      EXTCON_USB_HOST is 1, EXTCON_PROP_USB_TYPEC_POLARITY is 0
->>>      EXTCON_USB_HOST is 0, EXTCON_PROP_USB_TYPEC_POLARITY is 0
->> by default EXTCON_PROP_USB_TYPEC_POLARITY is 1
-> 
-> If you don't touch the value of EXTCON_PROP_USB_TYPEC_POLARITY property,
-> EXTCON_PROP_USB_TYPEC_POLARITY has default value (0).
-Ok, thanks!
-will update the patch, send it.
+I accidentally missed to add the r-b from Arend that he gave to the v1:
 
-Regards
-Vadivel
-> 
->>>
->>> If EXTCON_PROP_USB_TYPEC_POLARITY value is not related to any behavior,
->>> you don't need to get the property value from extcon consumer driver
->>> like drivers/phy/phy-lgm-usb.c.
->>>
->>> Actually, I don't understand why you don't handle the value
->>> of EXTCON_PROP_USB_TYPEC_POLARITY.
->>>
->>> Or, are there any case of what drivers/phy/phy-lgm-usb.c
->>> uses the different extcon device with EXTCON_PROP_USB_TYPEC_POLARITY property
->>> in the future?
->> Yes, you're right, user connect the different USB cable then we check polarity, accordingly driver proceeds, thanks!
-> 
-> OK.
-> 
->>>
->>> So, do you set the EXTCON_PROP_USB_TYPEC_POLARITY capability
->>> for the extensibility in order to use other extcon device on later?
->> yes, that might be the case as well.
-> 
-> OK.
-> 
->>>
->>>
->>> [1] https://protect2.fireeye.com/v1/url?k=1fb29698-422c0d72-1fb31dd7-0cc47a6cba04-3009aa7184024984&q=1&e=566e4565-e7db-4a90-b036-fc28dbdb742f&u=https%3A%2F%2Fwww.spinics.net%2Flists%2Fdevicetree%2Fmsg371828.html
->>> +static int get_flipped(struct tca_apb *ta, bool *flipped)
->>> +{
->>> +    union extcon_property_value property;
->>> +    int ret;
->>> +
->>> +    ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
->>> +                  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
->>> +    if (ret) {
->>> +        dev_err(ta->phy.dev, "no polarity property from extcon\n");
->>> +        return ret;
->>> +    }
->>> +
->>> +    *flipped = property.intval;
->>> +
->>> +    return ret;
->>> +}
->> Thank you for the gone through my usb-phy patch as well
->>
->> Regards
->> Vadivel
->>>
->>>
->>>>        /* Initialize PTN5150 device and print vendor id and version id */
->>>>        ret = ptn5150_init_dev_type(info);
->>>>        if (ret)
->>>>
->>>
->>>
->>
->>
-> 
-> 
+Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+
