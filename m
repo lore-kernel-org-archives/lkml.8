@@ -2,186 +2,98 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84141C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5D9C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60690207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7944D207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:59:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ITjVYTcb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YKc23FJK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgH0J75 (ORCPT
+        id S1728696AbgH0J76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:59:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44028 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728511AbgH0J7z (ORCPT
+        Thu, 27 Aug 2020 05:59:58 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:24127 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728663AbgH0J74 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:59:55 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D125C061264;
-        Thu, 27 Aug 2020 02:59:53 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id i10so3009427pgk.1;
-        Thu, 27 Aug 2020 02:59:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zSO7t8JLbei6Mkj+1bgztLVBIuuXAqF2TwGRgopH69k=;
-        b=ITjVYTcbuXoM1yEcbIndSTLWrMyJSy40Raf796g4G7i8oOTnmT6K8mShjxcA5+xIFH
-         /reBbClG/4iP8GJwAx538h5OzMEo5mhSeHbmmJxaA6mGOAguwYUUFfIWapqmGxxOotiX
-         K3fBuYX+xZkDNN6cxuotmtAyhya4n+az1GoomW9xJHzi7eepiB6SOFm4nkajoJA0oJ4u
-         XbRTtguZAHtBz6dDtLQjk/88qqviS4Ilkc0+CSjOmK/luPTtawUwUPttsoWROtOwFNv3
-         lkU3u/jLljKU1HWkEV6lVM0dHvdiSKwfiiGE54dQv1mqtAESrs6bLCE2ZeR/RVlHeYQx
-         h8Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zSO7t8JLbei6Mkj+1bgztLVBIuuXAqF2TwGRgopH69k=;
-        b=U6ZjAIZs82FkbmdUhbjrTUJG+fM2pdXIANtw35lq1C7FaD/6UZVgK/Q1L+qcWL1s4/
-         VSUg/HFMi6dSx4Lz/RHNoUfQjaDLYBQ8vqvtWiriM8VCX+rucVwrGdtnRD95v3y5kXhd
-         Xz62ik1iNUjNgH/Uvxi8NdxudlAOkkOnwoHr0xjOF5bD+R6AouH8yf+TXnCg3vFiDZbY
-         OBBPGpvB0SqMSqcYP44GVxOA9hcUlbkrdugDqKSuC7R0IOIkJAE74xQRPU9nEGzb+oCB
-         tyuB8OIv3BKxYxRSLFlzF9CIyREZnMST4l6JVNfBbbnT9VemR+Pj0FgnonqUzF9tzy12
-         0NmQ==
-X-Gm-Message-State: AOAM5307osZFfkn3AlAnU0wNrVZ2P+AbMuHdoFETh82CD5/w0OfZrBfh
-        d8LDoL/uaQjiJvyw3VjsoN7G0Hsvy60=
-X-Google-Smtp-Source: ABdhPJwYwoim+2Ik0snH5X0ro7wAGbQHuVCNT8qXinkkzVCtz5WpWZc1+oqe9KBekX7nkrXfz7DMPw==
-X-Received: by 2002:a65:58c4:: with SMTP id e4mr13752654pgu.108.1598522392452;
-        Thu, 27 Aug 2020 02:59:52 -0700 (PDT)
-Received: from [192.168.1.200] (FL1-111-169-205-196.hyg.mesh.ad.jp. [111.169.205.196])
-        by smtp.gmail.com with ESMTPSA id g17sm1696014pjl.37.2020.08.27.02.59.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 02:59:51 -0700 (PDT)
-Subject: Re: [PATCH v3] exfat: integrates dir-entry getting and validation
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        'Sungjong Seo' <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20200806010250epcas1p482847d6d906fbf0ccd618c7d1cacd12e@epcas1p4.samsung.com>
- <20200806010229.24690-1-kohada.t2@gmail.com>
- <003c01d66edc$edbb1690$c93143b0$@samsung.com>
- <ca3b2b52-1abc-939c-aa11-8c7d12e4eb2e@gmail.com>
- <000001d67787$d3abcbb0$7b036310$@samsung.com>
- <fdaff3a3-99ba-8b9e-bdaf-9bcf9d7208e0@gmail.com>
- <000101d67b44$ac458c80$04d0a580$@samsung.com>
- <d1df9cca-3020-9e1e-0f3d-9db6752a22b6@gmail.com>
- <002e01d67b60$0b7d82a0$227887e0$@samsung.com>
- <7d7ec460-b5ab-68da-658b-2104f393b4e8@gmail.com>
- <004301d67b7a$ff0dcf50$fd296df0$@samsung.com>
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Message-ID: <2b4c4409-7cb8-1651-3966-569636bcc429@gmail.com>
-Date:   Thu, 27 Aug 2020 18:59:48 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <004301d67b7a$ff0dcf50$fd296df0$@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 27 Aug 2020 05:59:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598522396; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=+B5wb6/5W73FKeRbPz+9O5/FmXiWurQF800ttHrQ3mQ=; b=YKc23FJKRlds+At4T6qsyTpPofkGERpnnUpQWimWbgHPuUwGQsiAvwdM3m2Phs219xcyYxRi
+ 9knV2Jk4oEN79XEn8a4BF/1AYrx9WULcQUeML5Tp+VmmjWe9WFgFsGZMwGMA/G+FsfT5ejDU
+ e9BhXvebhejLoUpSBhf5I2zzlN4=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5f47841b7ea9bd29093d5132 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 09:59:55
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 30CA3C4339C; Thu, 27 Aug 2020 09:59:55 +0000 (UTC)
+Received: from hyd-lnxbld210.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: srivasam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3AF61C433C6;
+        Thu, 27 Aug 2020 09:59:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3AF61C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=srivasam@codeaurora.org
+From:   Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
+        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
+        srinivas.kandagatla@linaro.org, rohitkr@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
+Subject: [PATCH 0/5] Qualcomm's lpass-hdmi ASoC driver to support audio over dp port
+Date:   Thu, 27 Aug 2020 15:29:38 +0530
+Message-Id: <1598522378-28963-1-git-send-email-srivasam@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+These patches are to support audio over DP port on Qualcomm's SC7180 LPASS Asoc.
+It includes machine driver, cpu driver, platform driver updates for HDMI path support, 
+device tree documention, lpass variant structure optimization and configuration changes.
+These patches depends on the DP patch series 
+https://patchwork.kernel.org/project/dri-devel/list/?series=332029
 
->>>>>>> -	/* validiate cached dentries */
->>>>>>> -	for (i = 1; i < num_entries; i++) {
->>>>>>> -		ep = exfat_get_dentry_cached(es, i);
->>>>>>> -		if (!exfat_validate_entry(exfat_get_entry_type(ep), &mode))
->>>>>>> +	ep = exfat_get_dentry_cached(es, ENTRY_STREAM);
->>>>>>> +	if (!ep || ep->type != EXFAT_STREAM)
->>>>>>> +		goto free_es;
->>>>>>> +	es->de[ENTRY_STREAM] = ep;
->>>>>>
->>>>>> The value contained in stream-ext dir-entry should not be used
->>>>>> before validating the EntrySet
->>>> checksum.
->>>>>> So I would insert EntrySet checksum validation here.
->>>>>> In that case, the checksum verification loop would be followed by
->>>>>> the TYPE_NAME verification loop, can you acceptable?
->>>>> Yes. That would be great.
->>>>
->>>> OK.
->>>> I'll add TYPE_NAME verification after checksum verification, in next patch.
->>>> However, I think it is enough to validate TYPE_NAME when extracting name.
->>>> Could you please tell me why you think you need TYPE_NAME validation here?
->>> I've told you on previous mail. This function should return validated
->>> dentry set after checking
->>> file->stream->name in sequence.
->>
->> Yes. I understand that the current implementation checks in that order.
->> Sorry, my question was unclear.
->> Why do you think you should leave the TYPE_NAME validation in this function?
->> What kind of problem are you worried about if this function does not validate TYPE_NAME?
->> (for preserve the current behavior?)
-> We have not checked the problem when it is removed because it was implemented
-> according to the specification from the beginning.
+V Sujith Kumar Reddy (5):
+  ASoC: Add sc7180-lpass binding header hdmi define
+  ASoC: dt-bindings: Add dt binding for lpass hdmi
+  ASoC: qcom: Add support for lpass hdmi driver
+  ASoC: qcom: Add support for audio over DP
+  ASoC: qcom: Optimise lpass variant structure
 
-I understand that the main reason to validate TYPE_NAME here is "according to the specification".
-(No one knows the actual problem)
+ .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  |  51 +-
+ include/dt-bindings/sound/sc7180-lpass.h           |   1 +
+ sound/soc/qcom/Kconfig                             |   5 +
+ sound/soc/qcom/Makefile                            |   2 +
+ sound/soc/qcom/lpass-apq8016.c                     |  25 +-
+ sound/soc/qcom/lpass-cpu.c                         |  92 ++-
+ sound/soc/qcom/lpass-hdmi.c                        | 685 +++++++++++++++++++++
+ sound/soc/qcom/lpass-hdmi.h                        | 129 ++++
+ sound/soc/qcom/lpass-ipq806x.c                     |  25 +-
+ sound/soc/qcom/lpass-lpaif-reg.h                   |  51 +-
+ sound/soc/qcom/lpass-platform.c                    | 287 +++++++--
+ sound/soc/qcom/lpass-sc7180.c                      | 147 ++++-
+ sound/soc/qcom/lpass.h                             | 123 +++-
+ 13 files changed, 1472 insertions(+), 151 deletions(-)
+ create mode 100644 sound/soc/qcom/lpass-hdmi.c
+ create mode 100644 sound/soc/qcom/lpass-hdmi.h
 
-First, we should validate as 'dir-entry set' by SecondaryCount and SetChecksum described
-in "6.3 Generic Primary DirectoryEntry Template".
-
-Next, description about validity of 'File dir-entry set' is ...
-7.4 File Directory Entry:
-... For a File directory entry to be valid, exactly one Stream Extension directory entry and at least
-one File Name directory entry must immediately follow the File directory entry.
-7.7 File Name Directory Entry:
-... File Name directory entries are valid only if they immediately follow the Stream Extension
-directory entry as a consecutive series.
-
-It is possible to validate the above correctly, with either exfat_get_dentry_set() or
-exfat_get_uniname_from_name_entries().
-Is this wrong?
-
-> And your v3 patch are
-> already checking the name entries as TYPE_SECONDARY. And it check them with
-> TYPE_NAME again in exfat_get_uniname_from_ext_entry(). 
-
-This is according to "6.3 Generic Primary DirectoryEntry Template".
-"6.3 Generic Primary DirectoryEntry Template" only required TYPE_SECONDARY.
-In v3, there is no checksum validation yet.
-
-> If you check TYPE_NAME
-> with stream->name_len, We don't need to perform the loop for extracting
-> filename from the name entries if stream->name_len or name entry is invalid.
-
-Don't worry, it's a rare case.
-(Do you care about the run-time costs?)
-
-> And I request to prove why we do not need to validate name entries in this
-> function calling from somewhere. 
-
-If you need, it's okey to validate in both.
-However, name-length and type validation and name-extraction should not be separated.
-These are closely related, so these should be placed physically and temporally close.
-
-Well, why it's unnecessary.
-Both can be validate correctly, as I wrote before.
-And, I don't really trust the verification with TYPE_NAME.
-(reliability of validation as 'file dir-entry set' by checksum is much higher)
-
-> So as I suggested earlier, You can make it
-> with an argument flags so that we skip the validation.
-
-No need skip the validation, I think.
-The run-time costs for validation are pretty low.
-The reason I want to remove the validation is because I want to keep the code simple.
-(KISS principle)
-
-
-BR
----
-Tetsuhiro Kohada <kohada.t2@gmail.com>
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
