@@ -2,109 +2,134 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A503FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EECC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 816FB207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B24EF207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:01:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lOH6fqEu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gVD9cVF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbgH0KBA (ORCPT
+        id S1728585AbgH0KBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:01:00 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:24127 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727802AbgH0KA4 (ORCPT
+        Thu, 27 Aug 2020 06:01:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728722AbgH0KBI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:00:56 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598522456; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=g0YFy2eE4lE9AZIT/otbyOAVrUNfiz3bBfsoL1KFWMg=;
- b=lOH6fqEugmTTkRtzLjirNxsh2cnQ4+7dk+bA1aWzzWRO0fDyxIrFTIiWBp8BEYQfYjaVdHXE
- U6lyxKE8KDIaHrCBV08XQIwnwqCJgSn5OfD6oVDRpGkFLnmVRIwcC2k8gX5eY36hWQhSta6/
- iSbSx4YSNzNm71MkYNnVWWc3kn0=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f4784281d69e438cb14ff33 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 10:00:08
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3FF13C433B1; Thu, 27 Aug 2020 10:00:06 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 328F9C433CA;
-        Thu, 27 Aug 2020 10:00:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 328F9C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Thu, 27 Aug 2020 06:01:08 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65342C06121B
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:01:08 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id mw10so2333797pjb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:01:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dVFa87Gzs3By4YvbvT0mRKBEarvG0+o1jlknOHQh1bk=;
+        b=gVD9cVF/zAxIeP1DEiHgj6yUQFF+LV7qSSbBZzzKtjf8+acXK/O8DMW21WfLGW1PvL
+         55bJplcY2uW0RT8/FuAZuvB/frCDSq07yGgRHakqirqysT7ouv0XPTQYLjM2y3/BZN/n
+         tU8MNFIseLrjg06NOCgaMEG0U7szmIdh5LUiRUwSi9pq/QU5ur3x+mjDO4mhbhI92bZs
+         V+eR862RogLZOMZBOJiW8mON1QaLKXtpeJdENV3SjZSv4UKkjIzstlwKYbgl5HDPdg1v
+         4gzLxyxsYkI15HDgu5EtTraNKniO39U8cxmcxOiPgqJ+nhNmyqEkSw1kgwIM5hxD33Su
+         u2BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dVFa87Gzs3By4YvbvT0mRKBEarvG0+o1jlknOHQh1bk=;
+        b=oSR3rKLWpNLMou8sETHHU4d4054DavOG4f/NXo308vk0QE3gVFBROBgvwzp+F1IBcL
+         jBv42jMwC7+mQA+mfxuqs66UgNQImc32kyBEmPeUpc0nkscUknxFPXjCuMo7YslbuzDe
+         gMBur0p1txCRabgzabXKsZsZOECcTfcG0YJ9S666o21dctZ8XhJciAU0xr/2UtHzVeYV
+         R/ndnOs3movnZHFJO4r+EJ/LzV1FTFSLTFsJNRvDReX4gUJ9qISY0DLI2DYscdHmRBK8
+         PLDstpliBYsX3ExMuUp+h8L2iwSYd32yFODD+6oPvyDI9veHGEBphrJRs2/wZnbTFTe6
+         YVxQ==
+X-Gm-Message-State: AOAM532ufNMQlOgrsRy6otIsC98+eR5UoqleDoA11baSxRS0vKHu7EZm
+        n7sbgcEx7XT27bja/wk2R6NqcA==
+X-Google-Smtp-Source: ABdhPJxhWRorvB+gpXZ6w7wfzkzjVUNNRfP/ARhG3lJTv4BmjYQxQZRwWK9rALeVRqpF/QmbZKwOvQ==
+X-Received: by 2002:a17:90a:d3d4:: with SMTP id d20mr9680860pjw.111.1598522467847;
+        Thu, 27 Aug 2020 03:01:07 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id s8sm1809939pgp.36.2020.08.27.03.01.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Aug 2020 03:01:06 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 15:31:04 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Niklas Cassel <nks@flawful.org>
+Subject: Re: [PATCH v2] opp: Power on (virtual) power domains managed by the
+ OPP core
+Message-ID: <20200827100104.yuf2nzb6qras7zcw@vireshk-i7>
+References: <20200826093328.88268-1-stephan@gerhold.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2] mwifiex: don't call del_timer_sync() on uninitialized
- timer
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200821082720.7716-1-penguin-kernel@I-love.SAKURA.ne.jp>
-References: <20200821082720.7716-1-penguin-kernel@I-love.SAKURA.ne.jp>
-To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc:     Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Brian Norris <briannorris@chromium.org>, amitkarwar@gmail.com,
-        andreyknvl@google.com, davem@davemloft.net, dvyukov@google.com,
-        huxinming820@gmail.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, nishants@marvell.com,
-        syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+373e6719b49912399d21@syzkaller.appspotmail.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200827100007.3FF13C433B1@smtp.codeaurora.org>
-Date:   Thu, 27 Aug 2020 10:00:06 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826093328.88268-1-stephan@gerhold.net>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp> wrote:
+On 26-08-20, 11:33, Stephan Gerhold wrote:
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 8b3c3986f589..7e53a7b94c59 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/device.h>
+>  #include <linux/export.h>
+>  #include <linux/pm_domain.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/regulator/consumer.h>
+>  
+>  #include "opp.h"
+> @@ -1964,10 +1965,13 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
+>  		if (!opp_table->genpd_virt_devs[index])
+>  			continue;
+>  
+> +		if (opp_table->genpd_virt_links && opp_table->genpd_virt_links[index])
+> +			device_link_del(opp_table->genpd_virt_links[index]);
+>  		dev_pm_domain_detach(opp_table->genpd_virt_devs[index], false);
+>  		opp_table->genpd_virt_devs[index] = NULL;
+>  	}
+>  
+> +	kfree(opp_table->genpd_virt_links);
+>  	kfree(opp_table->genpd_virt_devs);
+>  	opp_table->genpd_virt_devs = NULL;
+>  }
+> @@ -1999,8 +2003,10 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
+>  {
+>  	struct opp_table *opp_table;
+>  	struct device *virt_dev;
+> -	int index = 0, ret = -EINVAL;
+> +	struct device_link *dev_link;
+> +	int index = 0, ret = -EINVAL, num_devs;
+>  	const char **name = names;
+> +	u32 flags;
+>  
+>  	opp_table = dev_pm_opp_get_opp_table(dev);
+>  	if (IS_ERR(opp_table))
+> @@ -2049,6 +2055,32 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
 
-> syzbot is reporting that del_timer_sync() is called from
-> mwifiex_usb_cleanup_tx_aggr() from mwifiex_unregister_dev() without
-> checking timer_setup() from mwifiex_usb_tx_init() was called [1].
-> 
-> Ganapathi Bhat proposed a possibly cleaner fix, but it seems that
-> that fix was forgotten [2].
-> 
-> "grep -FrB1 'del_timer' drivers/ | grep -FA1 '.function)'" says that
-> currently there are 28 locations which call del_timer[_sync]() only if
-> that timer's function field was initialized (because timer_setup() sets
-> that timer's function field). Therefore, let's use same approach here.
-> 
-> [1] https://syzkaller.appspot.com/bug?id=26525f643f454dd7be0078423e3cdb0d57744959
-> [2] https://lkml.kernel.org/r/CA+ASDXMHt2gq9Hy+iP_BYkWXsSreWdp3_bAfMkNcuqJ3K+-jbQ@mail.gmail.com
-> 
-> Reported-by: syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>
-> Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-> Cc: Brian Norris <briannorris@chromium.org>
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
-> Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+I was about to apply this patch when I noticed that this routine does
+return the array of virtual devices back to the caller, like the qcom
+cpufreq driver in this case. IIRC we did it this way as a generic
+solution for this in the OPP core wasn't preferable.
 
-Patch applied to wireless-drivers-next.git, thanks.
-
-621a3a8b1c0e mwifiex: don't call del_timer_sync() on uninitialized timer
+And so I think again if this patch should be picked instead of letting
+the platform handle this ?
 
 -- 
-https://patchwork.kernel.org/patch/11728607/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+viresh
