@@ -2,85 +2,69 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FB1C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1519D20825
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F6E2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgH0T4W (ORCPT
+        id S1727048AbgH0T5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:56:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbgH0T4V (ORCPT
+        Thu, 27 Aug 2020 15:57:40 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33583 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbgH0T5k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:56:21 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51487C061264;
-        Thu, 27 Aug 2020 12:56:21 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7806D126BEC10;
-        Thu, 27 Aug 2020 12:39:27 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 12:56:10 -0700 (PDT)
-Message-Id: <20200827.125610.1855963268633335218.davem@davemloft.net>
-To:     dhowells@redhat.com
-Cc:     netdev@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 0/7] rxrpc, afs: Fix probing issues
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <159854061331.1382667.9693163318506702951.stgit@warthog.procyon.org.uk>
-References: <159854061331.1382667.9693163318506702951.stgit@warthog.procyon.org.uk>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 27 Aug 2020 12:39:27 -0700 (PDT)
+        Thu, 27 Aug 2020 15:57:40 -0400
+Received: by mail-io1-f65.google.com with SMTP id g14so7172016iom.0;
+        Thu, 27 Aug 2020 12:57:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mw0guraU922S6MNBxpmTvWKEzmeYw8ef+s1RqnYSqcc=;
+        b=qaqmu3sQ7/jMwtZ3rYPCGM1kNq0sO3BYVuRhoNUUUtcln1IN0/V3l4gLcsMvsQ3q9g
+         IWA7A6ajUEXXt9S6C5pd2g5vtst3qAKZ4ct+zk+A+HEdaNRdQyzslj3/wKpbohty8/cI
+         Zfpy/KjoGWZ+uiwJSH5lj5BxpGfC9CUdzN4n5Ee6elxMyFCW0LzabtYI8dzhjZPtOGYR
+         USY+1Tsvk2/8u/xSDnOv0ITkKaPRsSf02o+el45ptcRbEpeoomhSnC9VVFUHOPhz7cD/
+         F6LULWudhx5fsCGU4TIWogJo/pBxmzKef41MIICltGksRO+IA8WaWN9IsWGvia4C9nMr
+         4dXg==
+X-Gm-Message-State: AOAM5304GEYSuz/i2qz3VIlpPGapd3nmHRF2lmgtU+66URNEJtvNq3XS
+        ySJLg9/C2geWoHfE2NQLb1gZHWUSJ4QZIqJcRSg=
+X-Google-Smtp-Source: ABdhPJzj9g4Bi6z6ehNaMrgbd7yprxWAIe9eAWz1heNeg9PvMDqAD3QXkJo8GsOVVzCW9BspJWjCRntAj0rCDls+Fh0=
+X-Received: by 2002:a6b:8dc7:: with SMTP id p190mr5176853iod.209.1598558258904;
+ Thu, 27 Aug 2020 12:57:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200827161237.889877377@infradead.org> <20200827161754.535381269@infradead.org>
+ <20200827190804.GA128237@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+In-Reply-To: <20200827190804.GA128237@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+From:   Cameron <cameron@moodycamel.com>
+Date:   Thu, 27 Aug 2020 15:57:22 -0400
+Message-ID: <CAFCw3do_4TrZSQ6kYQ7Y1RYTuD+PfXRyZFp7gSDs2oUXrBZGqQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH 6/7] freelist: Lock less freelist
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
+        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
+        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
+        oleg@redhat.com, will@kernel.org, paulmck@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
-Date: Thu, 27 Aug 2020 16:03:33 +0100
+On Thu, Aug 27, 2020 at 3:08 PM Boqun Feng <boqun.feng@gmail.com> wrote:
+> So if try_cmpxchg_acquire() fails, we don't have ACQUIRE semantics on
+> read of the new list->head, right? Then probably a
+> smp_mb__after_atomic() is needed in that case?
 
-> 
-> Here are some fixes for rxrpc and afs to fix issues in the RTT measuring in
-> rxrpc and thence the Volume Location server probing in afs:
-> 
->  (1) Move the serial number of a received ACK into a local variable to
->      simplify the next patch.
-> 
->  (2) Fix the loss of RTT samples due to extra interposed ACKs causing
->      baseline information to be discarded too early.  This is a particular
->      problem for afs when it sends a single very short call to probe a
->      server it hasn't talked to recently.
-> 
->  (3) Fix rxrpc_kernel_get_srtt() to indicate whether it actually has seen
->      any valid samples or not.
-> 
->  (4) Remove a field that's set/woken, but never read/waited on.
-> 
->  (5) Expose the RTT and other probe information through procfs to make
->      debugging of this stuff easier.
-> 
->  (6) Fix VL rotation in afs to only use summary information from VL probing
->      and not the probe running state (which gets clobbered when next a
->      probe is issued).
-> 
->  (7) Fix VL rotation to actually return the error aggregated from the probe
->      errors.
-> 
-> The patches are tagged here:
-> 
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
-> 	rxrpc-fixes-20200820
+Yes, there needs to be an acquire on the head after a failed cmpxchg;
+does the atomic_fetch_add following that not have acquire semantics?
 
-Pulled, thanks David.
+Cameron
