@@ -2,156 +2,211 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A016DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F419CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70A5A22B40
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:28:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="u2xiLRRp"
+	by mail.kernel.org (Postfix) with ESMTP id CE35522B49
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:28:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgH0E2o (ORCPT
+        id S1726242AbgH0E25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 00:28:44 -0400
-Received: from mail-bn8nam11on2046.outbound.protection.outlook.com ([40.107.236.46]:58880
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725878AbgH0E2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 00:28:43 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EOeK+sTxk56rxFNHMRZuByABk/qZi7/JA3UlESFQlnDYl5cxArn03Bac61rpfMW/UF013OQCRiOIc6bf0lW714cEC2lYflsOtzGiazaU1hIL46nTsSIUDGBJdRmDofQ0BXT+LDJEmomKJCZGMhfFPcWaowdtTJXs68netSUB1HGV+s6aofzH4ZVkKKcrg3vrICwZPKXwUepImjOh720TxaOPZSubjdWPh4FlNLOqUU5WxYeFpY3tGyy9LmeYi4L/VxA4luAVxfrbovqDBLihzdu0uHCVykBgJQO/k66UwX28XSqpnTK5E4NmGfvkxouN+3dXARje6kotl2vWPXviIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B+bPbadVx/ZxUw8phct8jIUERERsYZrQf59R3fvEu0Q=;
- b=GpHWGlrJYleqptQ/D8aWaotdVFFsNp3qfn+Ky/iO7XbgluEnxoogS/8dhTcG54/B2VxanEO6DSJoUXbSVdwUnnobzKGnCsWtXV9jZuV+d+1eGjOJyDOWE1l7JdKKebEg60zofpSKZvY8MnWYNTkTEXYz7NdWnI0lTT9a1L9N3qdJdHgEfbYIpHwXThuQ5SNBrFp2crxVx6nhvkvAEnSVFXzygQ1EJurq/xbSSxxSBOd7ZSqCLqAOQmjtNtr+oNHFtrCgbWxtvTz12N+nYq0HuEVybW8rlrAATD9Ksk2XrrCcKP7DDmzmrxid75d8xgUqWR6uiBv5udo9gB9edyF+QQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B+bPbadVx/ZxUw8phct8jIUERERsYZrQf59R3fvEu0Q=;
- b=u2xiLRRpcLrmMNkJ+a+S/+oF3Lf0AWsF9+Peb4aODx8v6nV9lGw9MumIs6NnVJI1kjoIYaaDbTCyQ/tUN4lYP4XUtTB6cxxWwtf+rw4zDe8t5m+T7mu6CA+IsD7L/nh5PUNvJhyXY8XcoFc336E5xa1llmqUwaGcSx0xAK+dUqc=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2414.namprd12.prod.outlook.com (2603:10b6:802:2e::31)
- by SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Thu, 27 Aug
- 2020 04:28:41 +0000
-Received: from SN1PR12MB2414.namprd12.prod.outlook.com
- ([fe80::d548:1236:cb4f:1be9]) by SN1PR12MB2414.namprd12.prod.outlook.com
- ([fe80::d548:1236:cb4f:1be9%7]) with mapi id 15.20.3305.032; Thu, 27 Aug 2020
- 04:28:41 +0000
-Subject: Re: [PATCH v2 1/2] drm/amdkfd: Move the ignore_crat check before the
- CRAT table get
-To:     Hanjun Guo <guohanjun@huawei.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
+        Thu, 27 Aug 2020 00:28:57 -0400
+Received: from mga14.intel.com ([192.55.52.115]:8024 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725909AbgH0E25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 00:28:57 -0400
+IronPort-SDR: T/TI0bz9ODJzzKRrsrQWovTJBfhJNsLXGakXm1/E+FBiFkUaHgsKHCKRF6F2RngIL/o7IeF/zK
+ G5DT/wrYMcxQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="155678222"
+X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
+   d="scan'208";a="155678222"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 21:28:56 -0700
+IronPort-SDR: OrKirxth2ChtaVQ7WJutqDI4vbCsA8B7kKjazRo0oUcoJXG6t9eUig0f7dCJ8bRCW9VqRkgKGp
+ uwCVMrdOu39A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
+   d="scan'208";a="500493636"
+Received: from lkp-server01.sh.intel.com (HELO 4f455964fc6c) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 26 Aug 2020 21:28:55 -0700
+Received: from kbuild by 4f455964fc6c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kB9Ww-0001sE-OK; Thu, 27 Aug 2020 04:28:54 +0000
+Date:   Thu, 27 Aug 2020 12:27:57 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-References: <1598430556-18788-1-git-send-email-guohanjun@huawei.com>
-From:   Felix Kuehling <felix.kuehling@amd.com>
-Message-ID: <eb7a2496-c7a6-caeb-8b44-4da07686ce12@amd.com>
-Date:   Thu, 27 Aug 2020 00:28:39 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <1598430556-18788-1-git-send-email-guohanjun@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: YTXPR0101CA0017.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00::30) To SN1PR12MB2414.namprd12.prod.outlook.com
- (2603:10b6:802:2e::31)
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ d4f07268d035721dd055ceb0de98ace6ac5f858b
+Message-ID: <5f47364d.M5xzxvoEKXhfK2Fa%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by YTXPR0101CA0017.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Thu, 27 Aug 2020 04:28:40 +0000
-X-Originating-IP: [142.116.113.11]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0949192a-cc0a-4c8f-4ab3-08d84a41acf0
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2718:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB2718B1BF67B8779EA436B7E392550@SN6PR12MB2718.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gsVZzQQqlVleNdcwmsDymeGhMXxOQK/jX4XoS0cV7d78MGOLZO95upV3unygB9h4+MMTncZ/y6WcB3yTpIIaW4BpPOpWIvUCNkAMoKukvnempvnlUdbsD3zfZIcXxRlZt8lLgYwdRbyWE1bR48nOTpxiZ+J65mkuBN2X8c2jnW5SjrM+Ky8w0AvV96q68uqIymr4OQrulSKcLDhOS9x53kRAju4V39HUzGRQF52dAEHX9qJCAozQ+FO6j96dEyLYfDMdL5SPqcnV0tDQhjZ27BgwgjzJe5AOI7k7NNeAdOU8Vk8/+oytDaMqONmMiYGnfTxmmhBrmgIZ7jT+TW/yHf9qeE6iupaJW9rgMvlxu0tz3oJ1akcOMNXJB5r0AQ67
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2414.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(346002)(366004)(396003)(376002)(316002)(4326008)(16576012)(83380400001)(110136005)(44832011)(2616005)(31686004)(66946007)(8676002)(8936002)(86362001)(52116002)(66556008)(31696002)(66476007)(36756003)(5660300002)(6486002)(2906002)(186003)(26005)(956004)(478600001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: c4i85bEOfIH1ocjTDeQtWQEwgL82HbgIm+hjIIN0vmOQJCT9hDDx0v3Mm7toaXax9jUfGytOwbKxGMkqF/aJJ4zCdVBkpJ9p+S7B93fexyhRLCwwRDiOvKmnsbI+/Pe7sEzJ6B6nMhFsrhDichDofmfCrDlIBdDZc0wpnkLGwF9WURRyEBmX19bHeTg23ITtEyq8yqh+64JHa4J5SSIcidjB62eA/g381N4PZg2NWd+X+oiO5ArRDlM3QCcbHTEEbcZJSMUFjcvq72Tbn0Eqi0b2SSH0KCaLXVQ6pXKdeQcLIh5JVHTKDk792lsaJPG4PlZRMw09v1yEWmwlv6jB3JuhTwQlrTB/PmNpLuLVQ+HCKjmWnxa+TEVdMHBHzsQMzlwXWe2ZJFdIPhWaAWgZ4Kb1yC1X8UVovyaXNkzLDQ4SgC9Bp4Em2HCvTofYMGiXLLehVHL4JdNPCM0Hnftjg3AhNyUuthOnd/cxNLnL7lWPmXqW0WdP0pYW2B+rrwj/dvVyD4zPSxMmC95MwvXX1gpP4kVzjo3CzoUheNmt3a+YkYxZHtTwpNBWkcDeWo3v6YQXVILaVEVApsRrWppYloN2tHkXhSnPh6SYKmuOvSQmf8J6QgkuJjIYTxpxOvYb/VQIHkwKLPqSI7NgBBqK3A==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0949192a-cc0a-4c8f-4ab3-08d84a41acf0
-X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2414.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2020 04:28:40.8723
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zMW6iHz9eXINf33Y7LrCJR69ClzvEGzYU37yxsWpaSDSYckzf8B58wKbpOtNXr9odefOa8nMtbpjOAOKlB6zBg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2718
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/urgent
+branch HEAD: d4f07268d035721dd055ceb0de98ace6ac5f858b  MAINTAINERS: Add entry for HPE Superdome Flex (UV) maintainers
 
-Am 2020-08-26 um 4:29 a.m. schrieb Hanjun Guo:
-> If the ignore_crat is set to non-zero value, it's no point getting
-> the CRAT table, so just move the ignore_crat check before we get the
-> CRAT table.
->
-> Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
-> ---
->  drivers/gpu/drm/amd/amdkfd/kfd_crat.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
-> index 6a250f8..ed77b109 100644
-> --- a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
-> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
-> @@ -764,6 +764,11 @@ int kfd_create_crat_image_acpi(void **crat_image, size_t *size)
->  
->  	*crat_image = NULL;
->  
-> +	if (ignore_crat) {
+elapsed time: 721m
 
-A conflicting change in this area was just submitted on Monday to
-amd-staging-drm-next. You'll need to rebase your patch. It should be
-straight-forward. ignore_crat was replaced with a function call
-kfd_ignore_crat().
+configs tested: 141
+configs skipped: 9
 
-Other than that, your patch series looks good to me. If I don't see an
-update from you in a day or two, I'll fix it up myself and add my R-b.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Thanks,
-  Felix
+arm                                 defconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm64                               defconfig
+mips                        workpad_defconfig
+mips                        maltaup_defconfig
+sh                   rts7751r2dplus_defconfig
+arm                        oxnas_v6_defconfig
+sh                        edosk7705_defconfig
+powerpc                     pseries_defconfig
+arm                        mvebu_v7_defconfig
+c6x                        evmc6472_defconfig
+arm                       multi_v4t_defconfig
+arm                          simpad_defconfig
+sh                          lboxre2_defconfig
+m68k                            q40_defconfig
+arm                              zx_defconfig
+mips                        jmr3927_defconfig
+sh                        sh7757lcr_defconfig
+arc                      axs103_smp_defconfig
+sh                        edosk7760_defconfig
+m68k                          atari_defconfig
+sh                        sh7763rdp_defconfig
+c6x                        evmc6474_defconfig
+mips                      malta_kvm_defconfig
+mips                           jazz_defconfig
+arm                        multi_v5_defconfig
+riscv                            allmodconfig
+m68k                         apollo_defconfig
+sh                ecovec24-romimage_defconfig
+sh                        apsh4ad0a_defconfig
+arm                       spear13xx_defconfig
+arm                        trizeps4_defconfig
+arc                                 defconfig
+m68k                       m5249evb_defconfig
+arm                         palmz72_defconfig
+m68k                          multi_defconfig
+ia64                          tiger_defconfig
+mips                         cobalt_defconfig
+sh                           se7722_defconfig
+sh                   sh7770_generic_defconfig
+mips                         tb0226_defconfig
+powerpc                     skiroot_defconfig
+x86_64                              defconfig
+arm                         lpc18xx_defconfig
+sh                          urquell_defconfig
+mips                         bigsur_defconfig
+ia64                            zx1_defconfig
+arm                      integrator_defconfig
+arm                            zeus_defconfig
+powerpc                 mpc8272_ads_defconfig
+arm                          ixp4xx_defconfig
+openrisc                    or1ksim_defconfig
+arc                          axs103_defconfig
+powerpc                         wii_defconfig
+m68k                        stmark2_defconfig
+sh                                  defconfig
+arc                    vdk_hs38_smp_defconfig
+arc                             nps_defconfig
+arm                  colibri_pxa270_defconfig
+mips                         rt305x_defconfig
+xtensa                generic_kc705_defconfig
+ia64                        generic_defconfig
+x86_64                           alldefconfig
+arc                 nsimosci_hs_smp_defconfig
+xtensa                          iss_defconfig
+arm                         lubbock_defconfig
+powerpc                  storcenter_defconfig
+ia64                      gensparse_defconfig
+arm                           viper_defconfig
+mips                  cavium_octeon_defconfig
+nios2                         10m50_defconfig
+arm                            mmp2_defconfig
+m68k                       m5275evb_defconfig
+m68k                           sun3_defconfig
+sh                          sdk7786_defconfig
+mips                       rbtx49xx_defconfig
+sh                  sh7785lcr_32bit_defconfig
+arm                         orion5x_defconfig
+sh                           se7206_defconfig
+sh                          r7785rp_defconfig
+arm                           h5000_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a002-20200826
+i386                 randconfig-a004-20200826
+i386                 randconfig-a003-20200826
+i386                 randconfig-a005-20200826
+i386                 randconfig-a006-20200826
+i386                 randconfig-a001-20200826
+x86_64               randconfig-a015-20200826
+x86_64               randconfig-a016-20200826
+x86_64               randconfig-a012-20200826
+x86_64               randconfig-a014-20200826
+x86_64               randconfig-a011-20200826
+x86_64               randconfig-a013-20200826
+i386                 randconfig-a013-20200826
+i386                 randconfig-a012-20200826
+i386                 randconfig-a011-20200826
+i386                 randconfig-a016-20200826
+i386                 randconfig-a015-20200826
+i386                 randconfig-a014-20200826
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-
-> +		pr_info("CRAT table disabled by module option\n");
-> +		return -ENODATA;
-> +	}
-> +
->  	/* Fetch the CRAT table from ACPI */
->  	status = acpi_get_table(CRAT_SIGNATURE, 0, &crat_table);
->  	if (status == AE_NOT_FOUND) {
-> @@ -776,11 +781,6 @@ int kfd_create_crat_image_acpi(void **crat_image, size_t *size)
->  		return -EINVAL;
->  	}
->  
-> -	if (ignore_crat) {
-> -		pr_info("CRAT table disabled by module option\n");
-> -		return -ENODATA;
-> -	}
-> -
->  	pcrat_image = kmemdup(crat_table, crat_table->length, GFP_KERNEL);
->  	if (!pcrat_image)
->  		return -ENOMEM;
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
