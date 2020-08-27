@@ -2,120 +2,110 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB227C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B29EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1CA222BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D115622BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:31:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AdhY35Ul"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="b8mxLPPu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgH0NbT (ORCPT
+        id S1728044AbgH0Nbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 09:31:19 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56018 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727992AbgH0NVT (ORCPT
+        Thu, 27 Aug 2020 09:31:31 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50636 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728014AbgH0NWX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:21:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598534464;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zxj3/pnEKNdJXQYKt9vOuqr1Pjo+7bDlTiGFlo7k2bk=;
-        b=AdhY35Ul5Ut+0CwcMY+3YmEM3gx2B2w/Qgna0lmpKg9KDgpG+2nf4e17ozmYUhSPQFWUxe
-        syfZzW0jyrxWKjTi9x787U3hQBDvzCZMwEcvoi7qHEQRmim3q6wCOJN3kc6EXx6oT/62y/
-        6yFWJ883rf5m2myJ6qoT/LtYBKHnAq0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-567-Kv9Ig1K7NFS8Ya33PNgGOQ-1; Thu, 27 Aug 2020 09:21:02 -0400
-X-MC-Unique: Kv9Ig1K7NFS8Ya33PNgGOQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DEE83189E60D;
-        Thu, 27 Aug 2020 13:21:00 +0000 (UTC)
-Received: from redhat.com (ovpn-114-28.rdu2.redhat.com [10.10.114.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E8FB61972A;
-        Thu, 27 Aug 2020 13:20:59 +0000 (UTC)
-Date:   Thu, 27 Aug 2020 09:20:58 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     jpoimboe@redhat.com, jikos@kernel.org, pmladek@suse.com,
-        shuah@kernel.org, live-patching@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/livepatch: Do not check order when using
- "comm" for dmesg checking
-Message-ID: <20200827132058.GA24622@redhat.com>
-References: <20200827110709.26824-1-mbenes@suse.cz>
+        Thu, 27 Aug 2020 09:22:23 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07RD0oGN084176;
+        Thu, 27 Aug 2020 08:00:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598533250;
+        bh=bNdiejgmrP6UyoxidBCnn4mIur5XympzIClUiV4GOpI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=b8mxLPPuz/qNstwFOEFuw9TyyfpFBYHln26sR0eUm3txSf4jqoADDhNjCPwN+SUYk
+         eHTbW63h9keDDONxlm20Pv3iQBclhrGa26WkupSWOb3jcFTsXE+3xGjKPifbeQ0jln
+         iKuYBWCNJl3LrEg3yaNW0JAlXSMuf+LjXouH1hLU=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07RD0o70124320;
+        Thu, 27 Aug 2020 08:00:50 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 27
+ Aug 2020 08:00:49 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 27 Aug 2020 08:00:49 -0500
+Received: from [10.250.227.175] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07RD0mS7108067;
+        Thu, 27 Aug 2020 08:00:48 -0500
+Subject: Re: [net v3 PATCH] net: ethernet: ti: cpsw_new: fix error handling in
+ cpsw_ndo_vlan_rx_kill_vid()
+To:     David Miller <davem@davemloft.net>
+CC:     <kuba@kernel.org>, <grygorii.strashko@ti.com>, <nsekhar@ti.com>,
+        <linux-omap@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200824170100.21319-1-m-karicheri2@ti.com>
+ <20200825.093603.2026695844604591106.davem@davemloft.net>
+From:   Murali Karicheri <m-karicheri2@ti.com>
+Message-ID: <5be2b575-238c-247f-db9a-95680984e26d@ti.com>
+Date:   Thu, 27 Aug 2020 09:00:48 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827110709.26824-1-mbenes@suse.cz>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200825.093603.2026695844604591106.davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 01:07:09PM +0200, Miroslav Benes wrote:
-> check_result() uses "comm" to check expected results of selftests output
-> in dmesg. Everything works fine if timestamps in dmesg are unique. If
-> not, like in this example
+Hi Dave,
+
+On 8/25/20 12:36 PM, David Miller wrote:
+> From: Murali Karicheri <m-karicheri2@ti.com>
+> Date: Mon, 24 Aug 2020 13:01:00 -0400
 > 
-> [   86.844422] test_klp_callbacks_demo: pre_unpatch_callback: test_klp_callbacks_mod -> [MODULE_STATE_LIVE] Normal state
-> [   86.844422] livepatch: 'test_klp_callbacks_demo': starting unpatching transition
+>> +	ret = cpsw_ale_del_vlan(cpsw->ale, vid, 0);
+>> +	if (ret)
+>> +		dev_err(priv->dev, "%s: failed %d: ret %d\n",
+>> +			__func__, __LINE__, ret);
+>> +	ret = cpsw_ale_del_ucast(cpsw->ale, priv->mac_addr,
+>> +				 HOST_PORT_NUM, ALE_VLAN, vid);
+>> +	if (ret)
+>> +		dev_err(priv->dev, "%s: failed %d: ret %d\n",
+>> +			__func__, __LINE__, ret);
+>> +	ret = cpsw_ale_del_mcast(cpsw->ale, priv->ndev->broadcast,
+>> +				 0, ALE_VLAN, vid);
+>> +	if (ret)
+>> +		dev_err(priv->dev, "%s: failed %d: ret %d\n",
+>> +			__func__, __LINE__, ret);
+>>   	cpsw_ale_flush_multicast(cpsw->ale, ALE_PORT_HOST, vid);
 > 
-
-Heh, our assumption that the timestamps would provide sorting wasn't
-true after all.
-
-> , "comm" fails with "comm: file 2 is not in sorted order". Suppress the
-> order checking with --nocheck-order option.
+> These error messages are extremely unhelpful.  You're calling three
+> different functions, yet emitting basically the same __func__ for
+> each of those cases.  No user can send you a useful bug report
+> immediately if they just have func and line.
 > 
-> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
-
-Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
-
-And not so important for selftests, but helpful for backporting efforts:
-
-Fixes: 2f3f651f3756 ("selftests/livepatch: Use "comm" instead of "diff" for dmesg")
-
-> ---
+> Please get rid of the "__func__" and "__line__" stuff completely, it's
+> never advisable to ever use that in my opinion.  Instead, describe
+> which delete operation failed, optionally with the error return.
 > 
-> The strange thing is, I can reproduce the issue easily and reliably on
-> older codestreams (4.12) but not on current upstream in my testing
-> environment. I think the change makes sense regardless though.
-> 
+OK. I had considered your suggestion, but thought having a line number
+would be handy for a developer. Function name would be better. Will
+re-send with changes as you have suggested.
 
-We haven't backported v5.8 changes just yet, so thanks for finding this
-one and posting a fix.
-
--- Joe
-
->  tools/testing/selftests/livepatch/functions.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
-> index 1aba83c87ad3..846c7ed71556 100644
-> --- a/tools/testing/selftests/livepatch/functions.sh
-> +++ b/tools/testing/selftests/livepatch/functions.sh
-> @@ -278,7 +278,7 @@ function check_result {
->  	# help differentiate repeated testing runs.  Remove them with a
->  	# post-comparison sed filter.
->  
-> -	result=$(dmesg | comm -13 "$SAVED_DMESG" - | \
-> +	result=$(dmesg | comm --nocheck-order -13 "$SAVED_DMESG" - | \
->  		 grep -e 'livepatch:' -e 'test_klp' | \
->  		 grep -v '\(tainting\|taints\) kernel' | \
->  		 sed 's/^\[[ 0-9.]*\] //')
-> -- 
-> 2.28.0
-> 
-
+-- 
+Murali Karicheri
+Texas Instruments
