@@ -2,123 +2,107 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058A9C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0BBC433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD2062087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:03:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598565806;
-	bh=yC6+oS9RFVrj0OBPN3ZF3rWZlKGqyG9tt4kU0LcHUD0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cMDkuXECBD4VsGE5WpXYCMiT708sBKGGuNRZjrKSgDls514Rgf7R4gThr1vqj7Uy/
-	 a+QqjMB6b7pNq2X2tRT9OO06FBSeeV7EBXCjpn9URdFpuxRAbJvNFdAU43zYZC2hIl
-	 0CgvWZOehwJUmAtp47OrUA4ksMuuzvtRixJzmotQ=
+	by mail.kernel.org (Postfix) with ESMTP id AA2A620872
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:03:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgH0WD0 (ORCPT
+        id S1727996AbgH0WDa convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 18:03:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40142 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbgH0WDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 18:03:22 -0400
-Received: from earth.universe (dyndsl-037-138-189-082.ewe-ip-backbone.de [37.138.189.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32C0620848;
-        Thu, 27 Aug 2020 22:03:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598565802;
-        bh=yC6+oS9RFVrj0OBPN3ZF3rWZlKGqyG9tt4kU0LcHUD0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o91fyr/0lApJAHUbF3zB1D+/YLQqIscVtzv3WPOBTcub/sBnLWEJ6mrUVd0kelScG
-         bg7RbXIYIZ8VbsLnmCeKaBuO2WtwZMCdzPS2jmL1J2lY0FDuvySeLbSvxNMSKydfbN
-         POLI42LY4pEsJ+pc1FK8QNlOGYXamjt+C2MbK+I8=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 8F5A93C0C82; Fri, 28 Aug 2020 00:03:20 +0200 (CEST)
-Date:   Fri, 28 Aug 2020 00:03:20 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     linux-pm@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] power: pm2301_charger: fix spelling mistake "chargind"
- -> "charging"
-Message-ID: <20200827220320.emd326ges4xvmh57@earth.universe>
-References: <20200805103857.15725-1-colin.king@canonical.com>
+        Thu, 27 Aug 2020 18:03:30 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:52418 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727944AbgH0WD1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 18:03:27 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-59-OGrq4_s1M6OWOpSfz2k_Ug-1; Thu, 27 Aug 2020 23:03:21 +0100
+X-MC-Unique: OGrq4_s1M6OWOpSfz2k_Ug-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 27 Aug 2020 23:03:20 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 27 Aug 2020 23:03:20 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Joe Perches' <joe@perches.com>,
+        Julia Lawall <julia.lawall@inria.fr>
+CC:     Alex Dewar <alex.dewar90@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        cocci <cocci@systeme.lip6.fr>, Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "accessrunner-general@lists.sourceforge.net" 
+        <accessrunner-general@lists.sourceforge.net>
+Subject: RE: [Cocci] [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+Thread-Topic: [Cocci] [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+Thread-Index: AQHWfLDNatYqQRMSW0+Lm7S5UM8VU6lMgaZA
+Date:   Thu, 27 Aug 2020 22:03:20 +0000
+Message-ID: <c3926f18f98e446daad957cd66a94890@AcuMS.aculab.com>
+References: <20200824222322.22962-1-alex.dewar90@gmail.com>
+         <48f2dc90-7852-eaf1-55d7-2c85cf954688@rasmusvillemoes.dk>
+         <20200827071537.GA168593@kroah.com>
+         <20200827131819.7rcl2f5js3hkoqj2@lenovo-laptop>
+         <def24e9e-018c-9712-0d07-d4cbc84f07d9@rasmusvillemoes.dk>
+         <20200827144846.yauuttjaqtxaldxg@lenovo-laptop>
+         <5d1dfb9b031130d4d20763ec621233a19d6a88a2.camel@perches.com>
+         <alpine.DEB.2.22.394.2008272141220.2482@hadrien>
+ <cf9b1ea3716305447be43bffc8f90b7ef7292f5b.camel@perches.com>
+In-Reply-To: <cf9b1ea3716305447be43bffc8f90b7ef7292f5b.camel@perches.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="irgerrldmpxdwxr5"
-Content-Disposition: inline
-In-Reply-To: <20200805103857.15725-1-colin.king@canonical.com>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Joe Perches
+> Sent: 27 August 2020 21:30
+...
+> Perhaps what's necessary is to find any
+> appropriate .show function and change
+> any use of strcpy/sprintf within those
+> function to some other name.
+> 
+> For instance:
+> 
+> drivers/isdn/mISDN/core.c-static ssize_t name_show(struct device *dev,
+> drivers/isdn/mISDN/core.c-                       struct device_attribute *attr, char *buf)
+> drivers/isdn/mISDN/core.c-{
+> drivers/isdn/mISDN/core.c:      strcpy(buf, dev_name(dev));
+> drivers/isdn/mISDN/core.c-      return strlen(buf);
+> drivers/isdn/mISDN/core.c-}
+> drivers/isdn/mISDN/core.c-static DEVICE_ATTR_RO(name);
 
---irgerrldmpxdwxr5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That form ends up calculating the string length twice.
+Better would be:
+	len = strlen(msg);
+	memcpy(buf, msg, len);
+	return len;
 
-Hi,
 
-On Wed, Aug 05, 2020 at 11:38:57AM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->=20
-> There is a spelling mistake in a dev_dbg message. Fix it.
->=20
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
+	David
 
-Thanks, queued.
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
--- Sebastian
-
->  drivers/power/supply/pm2301_charger.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/power/supply/pm2301_charger.c b/drivers/power/supply=
-/pm2301_charger.c
-> index 17749fc90e16..787867805944 100644
-> --- a/drivers/power/supply/pm2301_charger.c
-> +++ b/drivers/power/supply/pm2301_charger.c
-> @@ -396,7 +396,7 @@ static int pm2_int_reg3(void *pm2_data, int val)
-> =20
->  	if (val & (PM2XXX_INT4_ITCHARGINGON)) {
->  		dev_dbg(pm2->dev ,
-> -			"chargind operation has started\n");
-> +			"charging operation has started\n");
->  	}
-> =20
->  	if (val & (PM2XXX_INT4_ITVRESUME)) {
-> --=20
-> 2.27.0
->=20
-
---irgerrldmpxdwxr5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9ILagACgkQ2O7X88g7
-+poolg//QUkPRykffzY0baeQLXfefP7obgkkjTBU5f2BsgVEKU4AJFEGKVf30srg
-nJRXNGfdka6mikKDiWDXEzo7BhwxdYs+pyno0EaIQKnI5rbWaoqeLoUKlGOjrAoO
-/3pgc/HU6wmkTRgkcw2KW1DCbIcP+xsaNXZenlLQDMamHDwT7zQJtaW7LsCufVsz
-fFwkJX0WCn0EzEX+OHHo4eyCWM1xib/a8creF7kmohspXlgiBFq1HvMZbH3mLm5R
-ryU+QoXFht1ViJkwOJ2egChd8rDnOMyfj3AgvFpZbPsYK/arbC1jelMYJX+JELUE
-/4VfJLl2WcM/Vx4KeVql7nwIbkn8aGFWZl5ZLFkNaicq6aUTaRdl9YTm7VUWKZkF
-75yHqAoXDSCb+yAvjVkcOiidu/tnI02nIW/ZbJHCWiwI2/uNX7bPQp2sAXKS1t9O
-MQkTv7Lf+6DT0rFrti3xh9/MbsunusIoARKiz5yipNkqAUW284rrH3lq9GRpK2bU
-upC6hfUGo4k++LHc38zscH5SO1QGaQxo7zaHoYm6FzPF6qfIbfWMG0koLi1QSww4
-3xD/xzufgftvo51LU3CkUpiAcpgTweQtattoEcgzsl0NJr4fNI3d9X7VGUrTX1xJ
-GadXsz25HD4pZu1A4H7cPD7nj8jM4TlvRLx4kPS6ga/MjjgOrUI=
-=0Lqn
------END PGP SIGNATURE-----
-
---irgerrldmpxdwxr5--
