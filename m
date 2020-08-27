@@ -2,101 +2,113 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB50BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81980C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4512087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:15:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598548522;
-	bh=7d2vVl33g5UiCVJFnwcetkTwUUvUDdqtExNCsvMtVQA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NdUrBzMSKr7M+TglxyV8Ji+ILi4UoMAdOfSudvng7VjoW/PBLZVgirMwNXma2uqIF
-	 gJaWXF46+sWjr/BQmkcDYmqsuXqosiHfirJhta59E9CjKjhAEn9LRysW4KevbTNbtj
-	 AIN2x6ffnVlq/nFa5TrSXAFDo6i+sq3mqSh3YtdQ=
+	by mail.kernel.org (Postfix) with ESMTP id 57B4D2087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:15:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UxRhj1E5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgH0RPU (ORCPT
+        id S1727931AbgH0RPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:15:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55962 "EHLO
+        Thu, 27 Aug 2020 13:15:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbgH0RPU (ORCPT
+        with ESMTP id S1726307AbgH0RP2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:15:20 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3E11C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:15:19 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id v12so7267516ljc.10
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:15:19 -0700 (PDT)
+        Thu, 27 Aug 2020 13:15:28 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9742AC061264;
+        Thu, 27 Aug 2020 10:15:28 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id y134so3372809yby.2;
+        Thu, 27 Aug 2020 10:15:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=w12LsIONkHiHf1X1dg76GDH+j4flCrQShoTv3VRea1g=;
-        b=FdZoS6ucloJ1uweiQFAH2mrrb+1/WJBlhrsgmvjk19P/b7Ljnx16lLT1HpN5JdRdK/
-         VrIposFwDAzSuhpYHAVCY+a36L22FJOs6M80hsOnr+RV/TTWtSX6z4ynWZHSRLazKMjY
-         vgE93opHLT4CMsYZMN/zJ22KJnlkKof0ZS/+0=
+        bh=sIZhYAthYWBYdLdFxX62quaSDkTNt7lcxiX/jTX8QP0=;
+        b=UxRhj1E5yWHmK02wVOz5+lpu2UXiBVT2ExRCRprxxH1S4VAKxqdO31TP6ZpqARUlWO
+         vwPD+1LblYV2iK3wmfEDOKH/E5ZTWY6ydGbcMxvQadznmQIGU6CHA0dfBHTC7eN8f8He
+         7A7yyzMnGwaOS1UvpgrILEQD9gg9JlGFxcQ57SBngIrEapInjNk46HGBRfo+d+FiPKwa
+         teLPniL0duptKZinnbwqAFtwwPOSkZwCprfirnyIqNJ5UltaaKsC2y3HDX26vaTuMWXb
+         Cpi8lLlOvSa7K2odaQpDx4415Xhp8pYUFQEjAhJrXBzgLdbHLfMW3V9QfNXdJ7ufcgWi
+         xf3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=w12LsIONkHiHf1X1dg76GDH+j4flCrQShoTv3VRea1g=;
-        b=U5YxUtV/goR3Yh0Cek+0FcCwT6SnzfH3E5+CmYtp+0X8QULvTVdLUZ/KwrKAh3/0Z8
-         raDJkPT0UrcIOG7WRZtKdeWjVTenFvfI3ZMyLcu8aE/7Ju8vuLMuPBAJQRsrM+H/TbsT
-         eSNXYt/RR8WFb7vB6vq8rGql/+hzJTYXO6mV5G8v69K3wQ+SXxboDyTTWIBapBfVW8N2
-         LcDL+h2jMooyE+KaS8Cr8AHV68VAVKpLuW9xFGd44g36TZMOlziM25Ef2QCQSUw/v/VX
-         SZx8jtf/4+CuzK2iEHYENmDt8kqlZdi4GljkmbD1MgrTsQ8F6ryTwVE9Y1/yrdzcaSsr
-         zk+g==
-X-Gm-Message-State: AOAM530VIO97sv7wbF87e1s7I/g3z6y4GKJc3um2Gd6k9Ri6rKg1Qkvu
-        rUT2E+Ua1nYS1TD4BZWxArs/LVJXi4yDeg==
-X-Google-Smtp-Source: ABdhPJxyYu1o/1OPCrPCUySeK2FwElcZysl8QCwsIefyaWEHYej6rx2abbG8dZ5bSzXDr38mUzbhZA==
-X-Received: by 2002:a05:651c:555:: with SMTP id q21mr9589151ljp.6.1598548518080;
-        Thu, 27 Aug 2020 10:15:18 -0700 (PDT)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id w11sm651015lff.62.2020.08.27.10.15.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 10:15:17 -0700 (PDT)
-Received: by mail-lf1-f52.google.com with SMTP id 12so3324091lfb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:15:16 -0700 (PDT)
-X-Received: by 2002:ac2:58d5:: with SMTP id u21mr10296558lfo.31.1598548516405;
- Thu, 27 Aug 2020 10:15:16 -0700 (PDT)
+        bh=sIZhYAthYWBYdLdFxX62quaSDkTNt7lcxiX/jTX8QP0=;
+        b=bhKptUunvL3Fz3FG6teXImsNxSAkkKMxQFXUNLhMcCzBrYd/Te0lD4w2U048HfdXii
+         NSjZIMdpb4dPOsOoxyb5/WubYM6YrsEHAj7WBhoAaMcoXm5kKbBN5XE/SumC66OWbpwG
+         M4pV8JakgmlGKaW3wiUHHwuLOmQ20zcUpvsbFw6iWA7KLTZYwKHCqytmuXdUx+XQQNr2
+         IR/CkAIXk5OtYogfopJwqOHpOLt202MYhjC0YwY0vNV5E9N6eVAAMmG3MbRj/LG2iAew
+         6Bv6bMAa44/YWa8imoius6IXg6Dkoie7bZTjNSreNq3JnzuoDU1RmkU90nMP1+MFDuiM
+         MKpA==
+X-Gm-Message-State: AOAM532vnOuUUzihm8CchfcmaQ2qzdkCUQbiDi7NqGHtsWwlfcYd5XnB
+        FTFsUYWVs5Kc3QK2j3+rfuOT9kFL2zgRH4Il9go=
+X-Google-Smtp-Source: ABdhPJz3x0ltioowCpoW9IFahNqovv85mHc+kMeq8iX9slmaAJEwJxGArTLcXBn+w17+vkNbqQZ20FE/b1rvCTEF6pw=
+X-Received: by 2002:a25:2a58:: with SMTP id q85mr32915263ybq.518.1598548527955;
+ Thu, 27 Aug 2020 10:15:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200827114932.3572699-1-jannh@google.com>
-In-Reply-To: <20200827114932.3572699-1-jannh@google.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 27 Aug 2020 10:15:00 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj2p84Md0dP53NxgBAZcy+x9+fxnQQg9kD4LzZDkYCfXA@mail.gmail.com>
-Message-ID: <CAHk-=wj2p84Md0dP53NxgBAZcy+x9+fxnQQg9kD4LzZDkYCfXA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/7] Fix ELF / FDPIC ELF core dumping, and use
- mmap_lock properly in there
-To:     Jann Horn <jannh@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594919915-5225-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 27 Aug 2020 18:15:02 +0100
+Message-ID: <CA+V-a8t-HHWeo4zwnTuyZHnhc8u_aXqt_KZHr1trnXQB15Jj6A@mail.gmail.com>
+Subject: Re: [PATCH 08/20] dt-bindings: usb: usb-xhci: Document r8a774e1 support
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        alsa-devel <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 4:49 AM Jann Horn <jannh@google.com> wrote:
+Hi Greg,
+
+On Thu, Jul 16, 2020 at 6:19 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
 >
->  13 files changed, 346 insertions(+), 498 deletions(-)
+> Document r8a774e1 xhci support. The driver will use the fallback
+> compatible string "renesas,rcar-gen3-xhci", therefore no driver
+> change is needed.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+Gentle ping.
 
-Me likey. I had one comment, but I don't think it really matters for
-this series. So ack to all of these as far as I'm concerned.
-
-Does anybody else see any problems?
-
-           Linus
+Cheers,
+Prabhakar
