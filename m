@@ -8,66 +8,65 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDC5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E95032177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F23412177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:26:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LwOPTj1p"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GBl5AMzI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgH0OZy (ORCPT
+        id S1728021AbgH0O0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:25:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55224 "EHLO
+        Thu, 27 Aug 2020 10:26:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728039AbgH0OLf (ORCPT
+        with ESMTP id S1728067AbgH0OLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 10:11:35 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3DC6C061232;
-        Thu, 27 Aug 2020 07:01:20 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id m34so3412704pgl.11;
-        Thu, 27 Aug 2020 07:01:20 -0700 (PDT)
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCAB9C06121B;
+        Thu, 27 Aug 2020 07:01:05 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id mw10so2644888pjb.2;
+        Thu, 27 Aug 2020 07:01:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=RcaJJxPUWfTCsa1mpxbpca/AYe7cJ1n1R+MIiQxItQI=;
-        b=LwOPTj1pvyDECYEM6u9LoslIwXMkOHZ1sinF/z63Rf6JDi+QBGcEESSy6Wj2gqBMGH
-         0DvIzZphlwReOYxnq/2QvJH0SdqJEZOL9y5Q/zV7NmzPHhueGz7+ye+HfVh/ZzqAz2ed
-         Dkiysw8psY6+J+hgspfw2/syJu6YK0+QOdtgu7WiAQAIKl9LHA6dwCYHiyfJm5nrbpuv
-         qFHcq1RfwzihK4mAP5ix5ffrRoOBDzT1DEKPyUoPpsW7Psqsj8ikCq4lXhcquvAH59IQ
-         AuE6dB4cxP6DyEmYf0+dKLct/nIGM0HmYiiyU/I7QYcJtqqXYVMzFe2l307Ok6P+9Pt2
-         TmdQ==
+        bh=fedQaMAad6gJKi/QRC5xP0GL2BO40HvVvA1rAXDD1oY=;
+        b=GBl5AMzIlvZhybWGvaLgu6UPCdgkvGDYSc+9qPjQno4yxfhwCK4T/WcfvblLCoSlOL
+         jHyzuyH0+lKkPElF5bECyZbOmcrCvFon/KjgSBzFq+BmtCG6OsZlESBjEWQYfZWQRpKp
+         gEkosSek1khI8cnxG/7misDAlpGUuoPaHOK3AXBVpyHxnKibvXuC4euRH48K0xSAh6Di
+         zTL6vQJIwbWxY2IRLSGutmpunj21ieHy/kt3mm7ujgBS1JYMSvuNspZGJHVNq7fCelhi
+         bSeBxzaOy82dJU8ZI2IZt4aBnY6bW8lhgHfdogY99sNro68ntGYPJSlv+P9BVYyifEY2
+         Cyfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RcaJJxPUWfTCsa1mpxbpca/AYe7cJ1n1R+MIiQxItQI=;
-        b=IQDvAs0fkFitHJG23WUSg+bKwP2YxMz5wfGOyRsbp2CE0hteUvncYKwdK8E4rRYrFg
-         PK3oLguDzSbkY1wH+BC8arz6nUPj9qJDB0/JwQT4n84cTSsan7Gnb1NfFWdzYna+wvQD
-         fVx3D5eIHOiDqXqoCf9kR02C5B9OweP6j4RnFHY9lEAXZNAWKWLn2bxurGNlnrudXPEJ
-         KUbHs29ncJMS+8H5pb0uKcXdmZI75n+iH8zh372nJyb3VB18PF68j9sX8eYsu66MbwvE
-         VgqsMtdRoczI1PjzB5VDruGmJQaHglfudu3VnY2nIKUFZ2fwvZuevAjgnM2LPAvbylfA
-         GE4g==
-X-Gm-Message-State: AOAM531/J2btQBSj4DwuWHS92dAAg4Ar+zjtM3DOJeVAQOy9MhOrFZW8
-        1RtzKD2jsl9AxU+yLLHTO1EIvsdoVxo=
-X-Google-Smtp-Source: ABdhPJxuUw3jHiEDWX+rPzbU1AF7NsH09kaKdhlDQ+HfPvrUeu0mrKynAUYZHEIR3PwkAzngBB3Hhw==
-X-Received: by 2002:a17:902:d697:: with SMTP id v23mr16530841ply.106.1598536879941;
-        Thu, 27 Aug 2020 07:01:19 -0700 (PDT)
+        bh=fedQaMAad6gJKi/QRC5xP0GL2BO40HvVvA1rAXDD1oY=;
+        b=UBG2gRTIK1xx5X3TYgq57Ll6REcIHYqdEW6I7fl9dmcpaouWsIFfccol6CdkCXAHD1
+         pqGbH8d1Do20OGGxKGgOPSp05SK9rO+wmGPe63aKFnN5UnytY8QVaJUn0j0YB5ZcN9qB
+         LKvjW+JG+gl4/5Oyej2dvMAz0KnINLPOCj1NMxHtx4mVYPX/If+HWZTcNt8RmzGqcXkV
+         +eaGbH1iV6WUI4qA3xi7rvAZHxgIJ7POvrVEvKpYTg6ictuYaHCnTKBMnrhxT0VCuODd
+         rUHuIYqGTtzCG+rRRuTXCLyXgr9PEQhxt8RFNH7VBxm1Vph2c/YkzfT7J5szQQpaDJtI
+         R4bg==
+X-Gm-Message-State: AOAM533ZROCxpqHG9F06GKPh31QHtTp23/EeAZH3QjRGGy7DUh/XgS9D
+        3mXeha55lOQTeAdqLzlAS6/6gsbDkwc=
+X-Google-Smtp-Source: ABdhPJz2HOayJnC9uXU68hHAjjsSHbf/scUyiTGvIEs2DN1gP7UgBoRHCysnVIolQEomelhcnIYPPA==
+X-Received: by 2002:a17:90a:630c:: with SMTP id e12mr10571615pjj.17.1598536864878;
+        Thu, 27 Aug 2020 07:01:04 -0700 (PDT)
 Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id fs12sm2371092pjb.21.2020.08.27.07.01.16
+        by smtp.gmail.com with ESMTPSA id fs12sm2371092pjb.21.2020.08.27.07.01.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 07:01:19 -0700 (PDT)
+        Thu, 27 Aug 2020 07:01:04 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH v5 02/20] gpiolib: cdev: replace strncpy with strscpy
-Date:   Thu, 27 Aug 2020 22:00:02 +0800
-Message-Id: <20200827140020.159627-3-warthog618@gmail.com>
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v5 01/20] gpiolib: cdev: desc_to_lineinfo should set info offset
+Date:   Thu, 27 Aug 2020 22:00:01 +0800
+Message-Id: <20200827140020.159627-2-warthog618@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200827140020.159627-1-warthog618@gmail.com>
 References: <20200827140020.159627-1-warthog618@gmail.com>
@@ -78,79 +77,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace usage of strncpy with strscpy to remove -Wstringop-truncation
-warnings.
+Set the value of the line info offset in desc_to_lineinfo, rather than
+relying on it being passed in the info.  This makes the function behave
+as you would expect from the name - it generates the line info
+corresponding to a given GPIO desc.
 
-The structs being populated are zeroed, to prevent stack leakage as
-they are returned to userspace, so strscpy performs the equivalent
-function without the warnings.
-
-Reported-by: kernel test robot <lkp@intel.com>
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
 
-The memset in gpio_desc_to_lineinfo(), in conjunction with the strscpy,
-is necessary as strncpy zero pads the remainder of the destination.
-It also guarantees that the info cannot leak kernel stack to userspace.
-This is useful here, but is even more important for the v2 info, that
-this function is changed to generate in a subsequent patch, as that
-struct contains padding and attribute arrays that also need to be
-initialised.
+There are some instances where this results in the offset being set when
+it is already set in the info, but this is clearer especially considering
+that, as part of the replacement of strncpy with strscpy and to ensure
+kernel stack cannot be leaked to userspace, the info is initially zeroed
+in a subsequent patch.
 
- drivers/gpio/gpiolib-cdev.c | 23 +++++++----------------
- 1 file changed, 7 insertions(+), 16 deletions(-)
+ drivers/gpio/gpiolib-cdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index e95e3eab9867..8b012879fe3f 100644
+index e6c9b78adfc2..e95e3eab9867 100644
 --- a/drivers/gpio/gpiolib-cdev.c
 +++ b/drivers/gpio/gpiolib-cdev.c
 @@ -752,6 +752,7 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
  	bool ok_for_pinctrl;
  	unsigned long flags;
  
-+	memset(info, 0, sizeof(*info));
- 	info->line_offset = gpio_chip_hwgpio(desc);
++	info->line_offset = gpio_chip_hwgpio(desc);
  	/*
  	 * This function takes a mutex so we must check this before taking
-@@ -765,19 +766,11 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+ 	 * the spinlock.
+@@ -933,7 +934,6 @@ static int lineinfo_changed_notify(struct notifier_block *nb,
+ 		return NOTIFY_DONE;
  
- 	spin_lock_irqsave(&gpio_lock, flags);
- 
--	if (desc->name) {
--		strncpy(info->name, desc->name, sizeof(info->name));
--		info->name[sizeof(info->name) - 1] = '\0';
--	} else {
--		info->name[0] = '\0';
--	}
-+	if (desc->name)
-+		strscpy(info->name, desc->name, sizeof(info->name));
- 
--	if (desc->label) {
--		strncpy(info->consumer, desc->label, sizeof(info->consumer));
--		info->consumer[sizeof(info->consumer) - 1] = '\0';
--	} else {
--		info->consumer[0] = '\0';
--	}
-+	if (desc->label)
-+		strscpy(info->consumer, desc->label, sizeof(info->consumer));
- 
- 	/*
- 	 * Userspace only need to know that the kernel is using this GPIO so
-@@ -841,12 +834,10 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 
- 		memset(&chipinfo, 0, sizeof(chipinfo));
- 
--		strncpy(chipinfo.name, dev_name(&gdev->dev),
-+		strscpy(chipinfo.name, dev_name(&gdev->dev),
- 			sizeof(chipinfo.name));
--		chipinfo.name[sizeof(chipinfo.name)-1] = '\0';
--		strncpy(chipinfo.label, gdev->label,
-+		strscpy(chipinfo.label, gdev->label,
- 			sizeof(chipinfo.label));
--		chipinfo.label[sizeof(chipinfo.label)-1] = '\0';
- 		chipinfo.lines = gdev->ngpio;
- 		if (copy_to_user(ip, &chipinfo, sizeof(chipinfo)))
- 			return -EFAULT;
+ 	memset(&chg, 0, sizeof(chg));
+-	chg.info.line_offset = gpio_chip_hwgpio(desc);
+ 	chg.event_type = action;
+ 	chg.timestamp = ktime_get_ns();
+ 	gpio_desc_to_lineinfo(desc, &chg.info);
 -- 
 2.28.0
 
