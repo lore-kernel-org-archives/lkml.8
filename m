@@ -2,102 +2,145 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76414C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5441C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47C17207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:58:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjXHtluf"
+	by mail.kernel.org (Postfix) with ESMTP id BA744207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgH0J6K (ORCPT
+        id S1728445AbgH0J6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:58:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgH0J6J (ORCPT
+        Thu, 27 Aug 2020 05:58:17 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:51235 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726093AbgH0J6O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:58:09 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 587D0C061264;
-        Thu, 27 Aug 2020 02:58:09 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id i13so2358397pjv.0;
-        Thu, 27 Aug 2020 02:58:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tsSPi3tJV6tt9MRH9X9IRqMWBLmb6vhjP03IMQT77sE=;
-        b=WjXHtlufRYtaf/khSMswHWqVqBQduDN9Kgb+Bw4FEZc6pvPVLEGceIvBAlBGwuSLbe
-         MNcSvM+j39nJ2sNxBc3evDkzN/I86r5/Py16Vz3wgLQ/tAcVDpwQe5limKNH9RVpnXwS
-         mg5cgS1yWRSeQMb/9F+Z8cHUjsOAhBuE69X8sTqEDx8O/OHzS4xH32afcL+XZB9aQ02+
-         qIlNYWrzy8KZ7+Ly2FDDuYie8fw2SeZ7/F+0BI3hjqD+jxdjGsLiwqypJiCxKqG74TvQ
-         urqW5930WoJm3kvgGcyRxUaIeK8N+tTMqGNY3GbukxlfhZXfsN3QygqLwL2EHbZcdpcY
-         V3Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tsSPi3tJV6tt9MRH9X9IRqMWBLmb6vhjP03IMQT77sE=;
-        b=dQ2TOpCZ67z7HItodcdFMfo4XUt9UopI9WQS/4ATY65cPv6dF0l0je8S6C1xi8QSZu
-         ee1B3P2QznE9+WnYTNqRTjnSfqkZq2Nh8HyQwj1nf9uIZSNnbDZKvyoUX8pheUjF4k8B
-         YBdgTCNdVhgX9+y5rYkA0oobOfujRGJhRhA7R8zWe4KWaS/m+8R0Ril/Q1d5LS78zzt5
-         4Uc8f5ChZ7ABLM+hTDLvhMbUZp6ePBlhgWhIJM+gZY9UcE79hv9+pVANhmR1fE/wgXJN
-         r0xDBheoISamjwyyrHR3KFKex4UOTrPf+LU+jS8S1ED7sVdjsHLzUXUf1Tl38s/CDYAp
-         C7mQ==
-X-Gm-Message-State: AOAM530lXdJGyqsdvQwRt4W2Sdv9kdWEJSHvmZHaWRQFja/KRtWYsIFG
-        R8WQgTW1mmqc16Jy0Q/uKhhKfE6bIXWdQ68X/FA=
-X-Google-Smtp-Source: ABdhPJxBnaQ1cbucAx/3wJaRhRAn0tdxu0ryrc6qcTtQjsQSGuSpLTIErgLrborEu41xqWA6kPRlcAuseuhhubTXuRQ=
-X-Received: by 2002:a17:90a:2c06:: with SMTP id m6mr10266874pjd.129.1598522287969;
- Thu, 27 Aug 2020 02:58:07 -0700 (PDT)
+        Thu, 27 Aug 2020 05:58:14 -0400
+X-IronPort-AV: E=Sophos;i="5.76,359,1592841600"; 
+   d="scan'208";a="98621923"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 27 Aug 2020 17:58:10 +0800
+Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
+        by cn.fujitsu.com (Postfix) with ESMTP id E5A1F48990D7;
+        Thu, 27 Aug 2020 17:58:08 +0800 (CST)
+Received: from [10.167.225.206] (10.167.225.206) by
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Thu, 27 Aug 2020 17:58:09 +0800
+Subject: Re: [PATCH] fs: Kill DCACHE_DONTCACHE dentry even if
+ DCACHE_REFERENCED is set
+To:     Dave Chinner <david@fromorbit.com>
+CC:     <viro@zeniv.linux.org.uk>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <y-goto@fujitsu.com>
+References: <20200821015953.22956-1-lihao2018.fnst@cn.fujitsu.com>
+ <20200827063748.GA12096@dread.disaster.area>
+From:   "Li, Hao" <lihao2018.fnst@cn.fujitsu.com>
+Message-ID: <6b3b3439-2199-8f00-ceca-d65769e94fe0@cn.fujitsu.com>
+Date:   Thu, 27 Aug 2020 17:58:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.1.1
 MIME-Version: 1.0
-References: <20200825133216.9163-1-valentin.schneider@arm.com>
- <159851487090.20229.14835640470330793284.tip-bot2@tip-bot2>
- <CAHp75VfJumPP=wKuU=OjFB11RUhPp0_5_+ogupQLFeEWKfbybA@mail.gmail.com> <20200827092730.GI1362448@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200827092730.GI1362448@hirez.programming.kicks-ass.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Aug 2020 12:57:51 +0300
-Message-ID: <CAHp75VdK-FMC10utfVO3+7J+UevPKDqrs+w_6XM6MsrC3CPe3g@mail.gmail.com>
-Subject: Re: [tip: sched/core] sched/topology: Move sd_flag_debug out of linux/sched/topology.h
-To:     "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-tip-commits@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200827063748.GA12096@dread.disaster.area>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.167.225.206]
+X-ClientProxiedBy: G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.205) To
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201)
+X-yoursite-MailScanner-ID: E5A1F48990D7.AD97A
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: lihao2018.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 12:27 PM <peterz@infradead.org> wrote:
+On 2020/8/27 14:37, Dave Chinner wrote:
+> On Fri, Aug 21, 2020 at 09:59:53AM +0800, Hao Li wrote:
+>> Currently, DCACHE_REFERENCED prevents the dentry with DCACHE_DONTCACHE
+>> set from being killed, so the corresponding inode can't be evicted. If
+>> the DAX policy of an inode is changed, we can't make policy changing
+>> take effects unless dropping caches manually.
+>>
+>> This patch fixes this problem and flushes the inode to disk to prepare
+>> for evicting it.
+>>
+>> Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
+>> ---
+>>  fs/dcache.c | 3 ++-
+>>  fs/inode.c  | 2 +-
+>>  2 files changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/fs/dcache.c b/fs/dcache.c
+>> index ea0485861d93..486c7409dc82 100644
+>> --- a/fs/dcache.c
+>> +++ b/fs/dcache.c
+>> @@ -796,7 +796,8 @@ static inline bool fast_dput(struct dentry *dentry)
+>>  	 */
+>>  	smp_rmb();
+>>  	d_flags = READ_ONCE(dentry->d_flags);
+>> -	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED;
+>> +	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED
+>> +			| DCACHE_DONTCACHE;
+> Seems reasonable, but you need to update the comment above as to
+> how this flag fits into this code....
+
+Yes. I will change it. Thanks.
+
 >
-> On Thu, Aug 27, 2020 at 11:50:07AM +0300, Andy Shevchenko wrote:
-> > On Thu, Aug 27, 2020 at 10:57 AM tip-bot2 for Valentin Schneider
-> > <tip-bot2@linutronix.de> wrote:
-> > >
-> > > The following commit has been merged into the sched/core branch of tip:
-> >
-> > > Fixes: b6e862f38672 ("sched/topology: Define and assign sched_domain flag metadata")
-> > > Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > Link: https://lkml.kernel.org/r/20200825133216.9163-1-valentin.schneider@arm.com
-> >
-> > Hmm... I'm wondering if this bot is aware of tags given afterwards in
-> > the thread?
+>>  	/* Nothing to do? Dropping the reference was all we needed? */
+>>  	if (d_flags == (DCACHE_REFERENCED | DCACHE_LRU_LIST) && !d_unhashed(dentry))
+>> diff --git a/fs/inode.c b/fs/inode.c
+>> index 72c4c347afb7..5218a8aebd7f 100644
+>> --- a/fs/inode.c
+>> +++ b/fs/inode.c
+>> @@ -1632,7 +1632,7 @@ static void iput_final(struct inode *inode)
+>>  	}
+>>  
+>>  	state = inode->i_state;
+>> -	if (!drop) {
+>> +	if (!drop || (drop && (inode->i_state & I_DONTCACHE))) {
+>>  		WRITE_ONCE(inode->i_state, state | I_WILL_FREE);
+>>  		spin_unlock(&inode->i_lock);
+> What's this supposed to do? We'll only get here with drop set if the
+> filesystem is mounting or unmounting.
+
+The variable drop will also be set to True if I_DONTCACHE is set on
+inode->i_state.
+Although mounting/unmounting will set the drop variable, it won't set
+I_DONTCACHE if I understand correctly. As a result,
+drop && (inode->i_state & I_DONTCACHE) will filter out mounting/unmounting.
+
+> In either case, why does
+> having I_DONTCACHE set require the inode to be written back here
+> before it is evicted from the cache?
+
+Mounting/unmounting won't execute the code snippet which is in that if
+statement, as I have explained above. However, If I_DONTCACHE is set, we
+have to execute this snippet to write back inode.
+
+I_DONTCACHE is set in d_mark_dontcache() which will be called in two
+situations:
+1. DAX policy is changed.
+2. The inode is read through bulkstat in XFS. See commit 5132ba8f2b77
+("xfs: don't cache inodes read through bulkstat") for more details.
+
+For the first case, we have to write back the inode together with its
+dirty pages before evicting.
+For the second case, I think it's also necessary to write back inode before
+evicting.
+
+Thanks,
+Hao Li
+
 >
-> Sorry, your tag came in after I'd already queued the lot.
+> Cheers,
+>
+> Dave.
 
-No problem, just was wondering!
 
 
--- 
-With Best Regards,
-Andy Shevchenko
