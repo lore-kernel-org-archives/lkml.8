@@ -2,136 +2,121 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28137C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CD3C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC82D2087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:32:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A9R5z16C"
+	by mail.kernel.org (Postfix) with ESMTP id 2B47822BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgH0Tck (ORCPT
+        id S1726834AbgH0Td7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:32:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49094 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgH0Tcj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:32:39 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9BEAC061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 12:32:38 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id o13so4094467pgf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 12:32:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3KgI+Ffy60Jb52i0GltPaTDawIx8lqqOtn/Zi/rBptI=;
-        b=A9R5z16CN6WvlZm0tunq0JyZp51UZctogq1aC+iggqI6rMvKuDhecLIz34tloLnCWz
-         zKxbBeeqD6qeCP12ipK5Wc+UA9tbg4bc2rEGGT/wMqj1/sidRgIES6XlTTAeJbZOxpMo
-         qlb6ofY/jYuevaT6o9wjJHm/x40RLesghfyJA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3KgI+Ffy60Jb52i0GltPaTDawIx8lqqOtn/Zi/rBptI=;
-        b=trR+elIoTyLRTF1CBbEzh2ThBlZeZycprll3mYvL9NqSkCFHI6v6NhDrl134kTZOIK
-         TZE3b5zNh35D1DF2r5XpaFLkBGgRWSZv7xS/0qTnCXOThXd/qXTUlSJSc6ACas6Fnk/k
-         h5zFz/9e6dg3+USSbOt+6DNQVI4IcZbTQ8jPR4xmfWhEYqwItzYfWQzI9sG8cVZ7N18q
-         uIa+w5nXgCGHdHzxiEjam+zxRHIqF41gpClLvhJCUZcWsQihkv4aN/VOG4G4mVVAVHzu
-         zuHs7KXjOKbeuEWyJY+SkEctwSc7//rRP5zOEvrTOfELZdUzIsYu3rX2Cbj4TUR4JmBe
-         tslg==
-X-Gm-Message-State: AOAM531m0yn1/iD8VvvxIZtlhBs1ru60VuVsG3bFkNA9AkjrJU+Aw407
-        POe2IzcMzq+vwnowdA73MoZJjUZ0F0aohQ==
-X-Google-Smtp-Source: ABdhPJz/2QT15RMxrrIFH8qZbDy3wDzuO9xMRypgZp6J/3iA167gjtK5MjnylJFI7ktMsAYhOdA/ZQ==
-X-Received: by 2002:a63:8f41:: with SMTP id r1mr15124500pgn.375.1598556758330;
-        Thu, 27 Aug 2020 12:32:38 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d81sm3644696pfd.174.2020.08.27.12.32.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 12:32:37 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 12:32:36 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Ard Biesheuvel <ardb@kernel.org>,
+        Thu, 27 Aug 2020 15:33:59 -0400
+Received: from mga01.intel.com ([192.55.52.88]:43719 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726120AbgH0Td7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 15:33:59 -0400
+IronPort-SDR: +r6fOacdljr8O+XW1cTad84jUIE7pZNHKkJaT1uSMWl6eHa21H0b0ytE/AM0IBxKmAXdvx7cBV
+ bfUPu2xS99zg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="174603365"
+X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
+   d="scan'208";a="174603365"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 12:33:58 -0700
+IronPort-SDR: OPISa7thH3ifFl2p+owBLIitIqmZbW/hl+EP5wSwNVukJNFhzMv4wB+31X5KIa136wfknEKV7P
+ 7teTxH4ipSsQ==
+X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
+   d="scan'208";a="500229981"
+Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.213.179.54]) ([10.213.179.54])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 12:33:57 -0700
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Dave Martin <Dave.Martin@arm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        kernel test robot <lkp@intel.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kbuild-all@lists.01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: Re: lib/crypto/chacha.c:65:1: warning: the frame size of 1604 bytes
- is larger than 1024 bytes
-Message-ID: <202008271229.C1E65D3565@keescook>
-References: <202008271145.xE8qIAjp%lkp@intel.com>
- <20200827080558.GA3024@gondor.apana.org.au>
- <CAMj1kXHJrLtnJWYBKBYRtNHVS6rv51+crMsjLEnSqkud0BBaWw@mail.gmail.com>
- <20200827082447.GA3185@gondor.apana.org.au>
- <CAHk-=wg2RCgmW_KM8Gf9-3VJW1K2-FTXQsGeGHirBFsG5zPbsg@mail.gmail.com>
- <CAHk-=wgXW=YLxGN0QVpp-1w5GDd2pf1W-FqY15poKzoVfik2qA@mail.gmail.com>
- <202008271138.0FA7400@keescook>
- <CAHk-=wjPasyJrDuwDnpHJS2TuQfExwe=px-SzLeN8GFMAQJPmQ@mail.gmail.com>
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <a770d45d-b147-a8c5-b7f8-30d668cbed84@intel.com>
+ <4BDFD364-798C-4537-A88E-F94F101F524B@amacapital.net>
+From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
+Message-ID: <a6de6b9d-d724-271d-72b2-8dd3418ccaed@intel.com>
+Date:   Thu, 27 Aug 2020 12:33:56 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjPasyJrDuwDnpHJS2TuQfExwe=px-SzLeN8GFMAQJPmQ@mail.gmail.com>
+In-Reply-To: <4BDFD364-798C-4537-A88E-F94F101F524B@amacapital.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 12:02:12PM -0700, Linus Torvalds wrote:
-> On Thu, Aug 27, 2020 at 11:42 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Do you mean you checked both gcc and clang and it was only a problem with gcc?
+On 8/27/2020 11:56 AM, Andy Lutomirski wrote:
 > 
-> I didn't check with clang, but Arnd claimed it was fine.
 > 
-> > (If so, I can tweak the "depends" below...)
+>> On Aug 27, 2020, at 11:13 AM, Yu, Yu-cheng <yu-cheng.yu@intel.com> wrote:
+>>
+>> ﻿On 8/27/2020 6:36 AM, Florian Weimer wrote:
+>>> * H. J. Lu:
+>>>>> On Thu, Aug 27, 2020 at 6:19 AM Florian Weimer <fweimer@redhat.com> wrote:
+>>>>>>
+>>>>>> * Dave Martin:
+>>>>>>
+>>>>>>> You're right that this has implications: for i386, libc probably pulls
+>>>>>>> more arguments off the stack than are really there in some situations.
+>>>>>>> This isn't a new problem though.  There are already generic prctls with
+>>>>>>> fewer than 4 args that are used on x86.
+>>>>>>
+>>>>>> As originally posted, glibc prctl would have to know that it has to pull
+>>>>>> an u64 argument off the argument list for ARCH_X86_CET_DISABLE.  But
+>>>>>> then the u64 argument is a problem for arch_prctl as well.
+>>>>>>
+>>>>
+>>>> Argument of ARCH_X86_CET_DISABLE is int and passed in register.
+>>> The commit message and the C source say otherwise, I think (not sure
+>>> about the C source, not a kernel hacker).
+>>
+>> H.J. Lu suggested that we fix x86 arch_prctl() to take four arguments, and then keep MMAP_SHSTK as an arch_prctl().  Because now the map flags and size are all in registers, this also solves problems being pointed out earlier.  Without a wrapper, the shadow stack mmap call (from user space) will be:
+>>
+>> syscall(_NR_arch_prctl, ARCH_X86_CET_MMAP_SHSTK, size, MAP_32BIT).
 > 
-> Ugh.
+> I admit I don’t see a show stopping technical reason we can’t add arguments to an existing syscall, but I’m pretty sure it’s unprecedented, and it doesn’t seem like a good idea.
 > 
-> Instead of making the Makefile even uglier, why don't you just make
-> this all be done in the Kconfig.
-> 
-> Also, I'm not seeing the point of your patch. You didn't actually
-> change anything, you just made a new config variable with the same
-> semantics as the old one.
 
-Hmm? Yeah it did: it disallowed CONFIG_COMPILE_TEST, which you said was
-the missing piece, I thought? (It's hardly the first time COMPILE_TEST
-has collided unhappily with *SAN-ish things.)
+There are nine existing arch_prctl calls now.  If the concern is the 
+extra new arguments getting misused, we can mask them out for the 
+existing calls.  Otherwise, I have not seen anything that can break.
 
-> All of this should be thrown out, and this code should use the proper
-> patterns for configuration entries in the Makefile, ie just
-> 
->   ubsan-cflags-$(CONFIG_UBSAN_OBJECT_SIZE) += -fsanitize=object-size
-
-Yeah, that would be a better pattern for sure.
-
-> and the Kconfig file is the thing that should check if that CC option
-> exists with
-> 
->   config UBSAN_OBJECT_SIZE
->         bool "Check for accesses beyond known object sizes"
->         default UBSAN
->         depends on CLANG  # gcc makes a mess of it
->         depends on $(cc-option,-fsanitize-coverage=trace-pc)
-
-Yup, for sure. I've only recently started poking at the ubsan stuff. I
-can clean it up better.
-
-> Doesn't that all look much cleaner?
-
-Yup!
-
--- 
-Kees Cook
+Yu-cheng
