@@ -7,106 +7,81 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B62C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F36C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1369022B49
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3224E207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:51:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbgH0GvH (ORCPT
+        id S1728008AbgH0Gvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:51:07 -0400
-Received: from mailrelay116.isp.belgacom.be ([195.238.20.143]:45598 "EHLO
-        mailrelay116.isp.belgacom.be" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726123AbgH0GvG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:51:06 -0400
-IronPort-SDR: 7oItj6Q/RRRJl9YHkqWN1IGbOxZ9arKM155BRwRCEg9pcXZdEK7NU/+1Lrh5PIy7IUKFqZF6mO
- aYb68JgGgV4ZXA25qbgWVX8QD5gxFG5meQkk8Ul4Ghu3Nw42fx5+NvAC1c6vhadet25HU6WYpc
- V/cjixsZFVANKBP1PCeQHNxhC3OzXwJVSS5cq+qLIeN5ek4FXwcWqxThVdv5pJzg2mGRmovx7z
- xlmk5rw+YfNZ6PK9On8upWiARih0g7y2Ul5/td+oamG3YvKEdSRgiI8phr8pOA6v3MXd4ayBZZ
- TGc=
-X-Belgacom-Dynamic: yes
-IronPort-PHdr: =?us-ascii?q?9a23=3AjkXQxxWjHsneVasusvsBzDUEbb7V8LGtZVwlr6?=
- =?us-ascii?q?E/grcLSJyIuqrYZRSEvKdThVPEFb/W9+hDw7KP9fy5BypZu83K6SheOLV3FD?=
- =?us-ascii?q?Y9wf0MmAIhBMPXQWbaF9XNKxIAIcJZSVV+9Gu6O0UGUOz3ZlnVv2HgpWVKQk?=
- =?us-ascii?q?a3OgV6PPn6FZDPhMqrye+y54fTYwJVjzahfL9+Nhq7oRjQu8UMnIduNKg8xh?=
- =?us-ascii?q?TUrndUdOld2H9lK0+Ukxvg/Mm74YRt8z5Xu/Iv9s5AVbv1cqElRrFGDzooLn?=
- =?us-ascii?q?446tTzuRbMUQWA6H0cUn4LkhVTGAjK8Av6XpbqvSTksOd2xTSXMtf3TbAwXj?=
- =?us-ascii?q?Si8rtrRRr1gyoJKzI17GfagdF2galGohyuugZ/zpbUbo+LKfRwcKDTc9QVSm?=
- =?us-ascii?q?RORctdSy9MD5mgY4YVE+YNIeBVpJT9qVsUqhu+ABGhCuP1xTBTh3/5x6s62P?=
- =?us-ascii?q?khHwHcwgMvAswBsG7VrNrpN6cZTOe4zKfSwjrYYfNbwiz96IvIcxAnv/6MQa?=
- =?us-ascii?q?h8ftHPxkQ2EQ7Ok1qfp5D/MTyPyuQNr3aU7/BmVe+3hWAqqAV8rDiuy8oslI?=
- =?us-ascii?q?XEiIIbx03Y+Slk3Io4JNK2RkFmbNOqDpZdqiGXOoloT80tX21mtik0x7kGt5?=
- =?us-ascii?q?C7YiQHzJIqzAPcZfyfa4WF5g/vWPyMLTp7mn5pYq+zihey/ES61+HxV8+520?=
- =?us-ascii?q?tQoCVfiNnDrHUN2gTW6siAV/Ry4F+s2S2K1wDP8uFEJl00lbbDJ54h3LEwkp?=
- =?us-ascii?q?0TvFzHHi/xhEr5lquWdkUj+uiz9+TreLHmppiAOIBujgHxL6MumsmlDuQ5NA?=
- =?us-ascii?q?gCR2mb+eKi273/5UD0RKhGgucrnqTarpzWP9kXq6+5DgNPz4ou6g6zDzK839?=
- =?us-ascii?q?QZmXkHIkhFeBWCj4XxNVHBOuv3DfmkjlS3kzdqx/bGMaP9ApnXNXfMjq/tfa?=
- =?us-ascii?q?xh5E5E1Aoz0ddf6opJBb4bPvL8RErxucfFARAjLQy73ePnCNF61oMQRWKDGK?=
- =?us-ascii?q?mZP73OsVWQ/OIgP/GMZJMJuDb6M/Ul5OPugmQjllIGfqmmw4EXaHamEfRiOU?=
- =?us-ascii?q?mZZmDsgtgZG2cQogU+VPDqiEGFUTNLYXa9Qb486SwlB4K4ForDWI+tj6Kb3C?=
- =?us-ascii?q?uhHZ1ZeHpGClaSHnfsbYmEXO0MaC2KKM97jjMETaShS5Mm1Ry2sA/6yrxnLv?=
- =?us-ascii?q?fb+yEBtpLsysJ15+vNmhE27jF0Ecud3H+XT21unWMHWSU23KZhrkx50FuD1r?=
- =?us-ascii?q?J4g/NAH9xJ+/xJShs6NYLbz+FiBdD9QBnOftmSRVa9QdWnATcxQcwtw9MUeE?=
- =?us-ascii?q?lyBYbqsheW0yO0Dro9m7WVCZkw9azAmX78O4I1yGvM3YEigkMgT88JMnep1Y?=
- =?us-ascii?q?Bl8A2GKYfDkkyf34iweKgRxi/G9y/Xw2OEsmlDUx92XLmDV31JNRielsjw+k?=
- =?us-ascii?q?6XF+zmMr8gKAYUkcM=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AxAwD4Vkdf/xCltltfgRCBQ4EeglB?=
- =?us-ascii?q?fjTiSS5AFgX0LAQEBAQEBAQEBNAECBAEBhEyCOyU0CQ4CAwEBAQMCBQEBBgE?=
- =?us-ascii?q?BAQEBAQUEAYYPRYI3IoNHCwEjI4E/EoMmglgpsxozhBCBQ4NFgUKBOIgnhRm?=
- =?us-ascii?q?BQT+EX4oSIgS2UoJtgwyEXJI2DyGgRC2SHpsdhimCEU0gGDuCaVAZDZxoQjA?=
- =?us-ascii?q?3AgYKAQEDCVcBPQGQEwEB?=
-X-IPAS-Result: =?us-ascii?q?A2AxAwD4Vkdf/xCltltfgRCBQ4EeglBfjTiSS5AFgX0LA?=
- =?us-ascii?q?QEBAQEBAQEBNAECBAEBhEyCOyU0CQ4CAwEBAQMCBQEBBgEBAQEBAQUEAYYPR?=
- =?us-ascii?q?YI3IoNHCwEjI4E/EoMmglgpsxozhBCBQ4NFgUKBOIgnhRmBQT+EX4oSIgS2U?=
- =?us-ascii?q?oJtgwyEXJI2DyGgRC2SHpsdhimCEU0gGDuCaVAZDZxoQjA3AgYKAQEDCVcBP?=
- =?us-ascii?q?QGQEwEB?=
-Received: from 16.165-182-91.adsl-dyn.isp.belgacom.be (HELO localhost.localdomain) ([91.182.165.16])
-  by relay.skynet.be with ESMTP; 27 Aug 2020 08:51:01 +0200
-From:   Fabian Frederick <fabf@skynet.be>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Fabian Frederick <fabf@skynet.be>
-Subject: [PATCH 7/7 net-next] vxlan: fix vxlan_find_sock() documentation for l3mdev
-Date:   Thu, 27 Aug 2020 08:50:46 +0200
-Message-Id: <20200827065046.5888-1-fabf@skynet.be>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 27 Aug 2020 02:51:39 -0400
+Received: from mga11.intel.com ([192.55.52.93]:32222 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726123AbgH0Gvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 02:51:38 -0400
+IronPort-SDR: FJOLZp7GuhgT9V7jFyk5ExVwaQ+0JDw4VoshMNvSVKYVIlGMZhLG0iH34qd1lpQC4aJnsxzlO2
+ BPnooTLO1bIA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="153995392"
+X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
+   d="scan'208";a="153995392"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 23:51:37 -0700
+IronPort-SDR: JIzzDn9OhFzxbBRgEzVTX1f/LeBQlkKV1k+ojtu+h/3hBF3kfXdrsGOSjR45iG37syf+LTTtpc
+ TAVZVV2M1gDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
+   d="scan'208";a="444336876"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga004.jf.intel.com with ESMTP; 26 Aug 2020 23:51:34 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     cw00.choi@samsung.com, linux-kernel@vger.kernel.org
+Cc:     vijaikumar.kanagarajan@gmail.com, krzk@kernel.org,
+        myungjoo.ham@samsung.com, heikki.krogerus@linux.intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
+        Ramuthevar Vadivel Murugan 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v3 1/1] extcon: ptn5150: Set the VBUS and POLARITY property capability
+Date:   Thu, 27 Aug 2020 14:51:28 +0800
+Message-Id: <20200827065128.55094-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200827065128.55094-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+References: <20200827065128.55094-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit aab8cc3630e32
-("vxlan: add support for underlay in non-default VRF")
+From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 
-vxlan_find_sock() also checks if socket is assigned to the right
-level 3 master device when lower device is not in the default VRF.
+Set the capability value of property for VBUS and POLARITY.
 
-Signed-off-by: Fabian Frederick <fabf@skynet.be>
+Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 ---
- drivers/net/vxlan.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/extcon/extcon-ptn5150.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index 1501a5633a97e..2c6189e988ba3 100644
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -190,8 +190,9 @@ static inline struct vxlan_rdst *first_remote_rtnl(struct vxlan_fdb *fdb)
- 	return list_first_entry(&fdb->remotes, struct vxlan_rdst, list);
- }
+diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
+index 841c9fe211f1..20d49a54c36e 100644
+--- a/drivers/extcon/extcon-ptn5150.c
++++ b/drivers/extcon/extcon-ptn5150.c
+@@ -275,6 +275,13 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
+ 		return ret;
+ 	}
  
--/* Find VXLAN socket based on network namespace, address family and UDP port
-- * and enabled unshareable flags.
-+/* Find VXLAN socket based on network namespace, address family, UDP port,
-+ * enabled unshareable flags and socket device binding (see l3mdev with
-+ * non-default VRF).
-  */
- static struct vxlan_sock *vxlan_find_sock(struct net *net, sa_family_t family,
- 					  __be16 port, u32 flags, int ifindex)
++	extcon_set_property_capability(info->edev, EXTCON_USB,
++				       EXTCON_PROP_USB_VBUS);
++	extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
++				       EXTCON_PROP_USB_VBUS);
++	extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
++				       EXTCON_PROP_USB_TYPEC_POLARITY);
++
+ 	/* Initialize PTN5150 device and print vendor id and version id */
+ 	ret = ptn5150_init_dev_type(info);
+ 	if (ret)
 -- 
-2.27.0
+2.11.0
 
