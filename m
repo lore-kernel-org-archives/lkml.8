@@ -2,137 +2,156 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4BFC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A016DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B19D206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A5A22B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:28:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JWGdadun"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="u2xiLRRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726147AbgH0E07 (ORCPT
+        id S1726197AbgH0E2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 00:26:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbgH0E05 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 00:26:57 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEB27C0612AC
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 21:26:56 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id q93so2024273pjq.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 21:26:56 -0700 (PDT)
+        Thu, 27 Aug 2020 00:28:44 -0400
+Received: from mail-bn8nam11on2046.outbound.protection.outlook.com ([40.107.236.46]:58880
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725878AbgH0E2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 00:28:43 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EOeK+sTxk56rxFNHMRZuByABk/qZi7/JA3UlESFQlnDYl5cxArn03Bac61rpfMW/UF013OQCRiOIc6bf0lW714cEC2lYflsOtzGiazaU1hIL46nTsSIUDGBJdRmDofQ0BXT+LDJEmomKJCZGMhfFPcWaowdtTJXs68netSUB1HGV+s6aofzH4ZVkKKcrg3vrICwZPKXwUepImjOh720TxaOPZSubjdWPh4FlNLOqUU5WxYeFpY3tGyy9LmeYi4L/VxA4luAVxfrbovqDBLihzdu0uHCVykBgJQO/k66UwX28XSqpnTK5E4NmGfvkxouN+3dXARje6kotl2vWPXviIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B+bPbadVx/ZxUw8phct8jIUERERsYZrQf59R3fvEu0Q=;
+ b=GpHWGlrJYleqptQ/D8aWaotdVFFsNp3qfn+Ky/iO7XbgluEnxoogS/8dhTcG54/B2VxanEO6DSJoUXbSVdwUnnobzKGnCsWtXV9jZuV+d+1eGjOJyDOWE1l7JdKKebEg60zofpSKZvY8MnWYNTkTEXYz7NdWnI0lTT9a1L9N3qdJdHgEfbYIpHwXThuQ5SNBrFp2crxVx6nhvkvAEnSVFXzygQ1EJurq/xbSSxxSBOd7ZSqCLqAOQmjtNtr+oNHFtrCgbWxtvTz12N+nYq0HuEVybW8rlrAATD9Ksk2XrrCcKP7DDmzmrxid75d8xgUqWR6uiBv5udo9gB9edyF+QQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bn7ZvG4ybcooDrNm25U4C10jlmrGjFdQ/FaC/rxAetw=;
-        b=JWGdadunye66WMfXu1P4p7JU12j51p8o/dw5xBp05k4WBlQSeSFjHzokSYn55bVV3o
-         J4tcFBW+K0k9bbB0ds4GyUbQ9KAjULJVcytETxzcrQeP3yifDm/M/suCNnYmsgY5Qzlv
-         bYLOwZvhvgDdXRldn4DmRvNGzykpHvQF1muP3pcCByHjEYtEHbeJDDqUjNpus61Fowov
-         JyoN9QhOtYitibsWLrqe+FQ9q4BVoMTkmiVKZ/RQ8BzwYqbwxbkzyx1YBIYj6oYH/uoi
-         E6OZ9hPBdCD4DEyRV0Y3/EiRxpSeNBUdMXvmYIiHxOPHTWp3rcwr9/3wHDVTWkLGz5kb
-         6DjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bn7ZvG4ybcooDrNm25U4C10jlmrGjFdQ/FaC/rxAetw=;
-        b=tW1D7lvj3DEOpbYk7KQQrdNrBUfqV/qKHEJ7F4jvHu8S5Cr8iLR3L/ViTAwm4pL9gR
-         58t+WqhZQrPPL/agu64Sx2WTXIqpXPpbwD2MCk3i21tqLsi7ix6qF6vJjxxo9u/9XAtx
-         sjssMCpb5mA33Mx6A0XyLrkuEYq6K8TWhW9hAxYZzqxrH1mHaQwdsKNA65s9u9vfaYV0
-         uzyNnJDTJfBP1G3IEGZXY7Jl8CW0Se0h5T6C34DpZQGkI+xe0D9SLqb2Cp5RsUHzg6HO
-         ii0fX6M8Lqik6+rN6S48Hppk2Lk54ZiOCM1GmEYgN58hIlv75ISv9zZ1q93Uf1pPxYLt
-         dCqg==
-X-Gm-Message-State: AOAM5319eajroRPleghQZiCszy0GGNBh0pGok5yc1THHCaEoes8XGLh8
-        pnwkC0VYbwOhzgKSCP/BRwQwhw==
-X-Google-Smtp-Source: ABdhPJynFu/KaCKX/yeZQJO1i0iZEbs8inUUMkKE06wJFLYUgtfBDrVZ4/4+/uHiY6WLXxuxzu5BQQ==
-X-Received: by 2002:a17:90a:f593:: with SMTP id ct19mr9163811pjb.36.1598502416374;
-        Wed, 26 Aug 2020 21:26:56 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id nu14sm631975pjb.19.2020.08.26.21.26.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Aug 2020 21:26:55 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 09:56:53 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Hector Yuan <hector.yuan@mediatek.com>
-Cc:     linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com
-Subject: Re: [PATCH v2 1/2] cpufreq: mediatek-hw: Add support for Mediatek
- cpufreq HW driver
-Message-ID: <20200827042653.5ttsxnjjhpslmrcv@vireshk-i7>
-References: <1597302475-15484-1-git-send-email-hector.yuan@mediatek.com>
- <1597302475-15484-2-git-send-email-hector.yuan@mediatek.com>
- <20200824100619.o6uwnlsaxdgc3l7r@vireshk-i7>
- <1598446624.24220.10.camel@mtkswgap22>
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B+bPbadVx/ZxUw8phct8jIUERERsYZrQf59R3fvEu0Q=;
+ b=u2xiLRRpcLrmMNkJ+a+S/+oF3Lf0AWsF9+Peb4aODx8v6nV9lGw9MumIs6NnVJI1kjoIYaaDbTCyQ/tUN4lYP4XUtTB6cxxWwtf+rw4zDe8t5m+T7mu6CA+IsD7L/nh5PUNvJhyXY8XcoFc336E5xa1llmqUwaGcSx0xAK+dUqc=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2414.namprd12.prod.outlook.com (2603:10b6:802:2e::31)
+ by SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Thu, 27 Aug
+ 2020 04:28:41 +0000
+Received: from SN1PR12MB2414.namprd12.prod.outlook.com
+ ([fe80::d548:1236:cb4f:1be9]) by SN1PR12MB2414.namprd12.prod.outlook.com
+ ([fe80::d548:1236:cb4f:1be9%7]) with mapi id 15.20.3305.032; Thu, 27 Aug 2020
+ 04:28:41 +0000
+Subject: Re: [PATCH v2 1/2] drm/amdkfd: Move the ignore_crat check before the
+ CRAT table get
+To:     Hanjun Guo <guohanjun@huawei.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     linux-kernel@vger.kernel.org
+References: <1598430556-18788-1-git-send-email-guohanjun@huawei.com>
+From:   Felix Kuehling <felix.kuehling@amd.com>
+Message-ID: <eb7a2496-c7a6-caeb-8b44-4da07686ce12@amd.com>
+Date:   Thu, 27 Aug 2020 00:28:39 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <1598430556-18788-1-git-send-email-guohanjun@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: YTXPR0101CA0017.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00::30) To SN1PR12MB2414.namprd12.prod.outlook.com
+ (2603:10b6:802:2e::31)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1598446624.24220.10.camel@mtkswgap22>
-User-Agent: NeoMutt/20180716-391-311a52
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by YTXPR0101CA0017.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b00::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Thu, 27 Aug 2020 04:28:40 +0000
+X-Originating-IP: [142.116.113.11]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 0949192a-cc0a-4c8f-4ab3-08d84a41acf0
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2718:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB2718B1BF67B8779EA436B7E392550@SN6PR12MB2718.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gsVZzQQqlVleNdcwmsDymeGhMXxOQK/jX4XoS0cV7d78MGOLZO95upV3unygB9h4+MMTncZ/y6WcB3yTpIIaW4BpPOpWIvUCNkAMoKukvnempvnlUdbsD3zfZIcXxRlZt8lLgYwdRbyWE1bR48nOTpxiZ+J65mkuBN2X8c2jnW5SjrM+Ky8w0AvV96q68uqIymr4OQrulSKcLDhOS9x53kRAju4V39HUzGRQF52dAEHX9qJCAozQ+FO6j96dEyLYfDMdL5SPqcnV0tDQhjZ27BgwgjzJe5AOI7k7NNeAdOU8Vk8/+oytDaMqONmMiYGnfTxmmhBrmgIZ7jT+TW/yHf9qeE6iupaJW9rgMvlxu0tz3oJ1akcOMNXJB5r0AQ67
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2414.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(346002)(366004)(396003)(376002)(316002)(4326008)(16576012)(83380400001)(110136005)(44832011)(2616005)(31686004)(66946007)(8676002)(8936002)(86362001)(52116002)(66556008)(31696002)(66476007)(36756003)(5660300002)(6486002)(2906002)(186003)(26005)(956004)(478600001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: c4i85bEOfIH1ocjTDeQtWQEwgL82HbgIm+hjIIN0vmOQJCT9hDDx0v3Mm7toaXax9jUfGytOwbKxGMkqF/aJJ4zCdVBkpJ9p+S7B93fexyhRLCwwRDiOvKmnsbI+/Pe7sEzJ6B6nMhFsrhDichDofmfCrDlIBdDZc0wpnkLGwF9WURRyEBmX19bHeTg23ITtEyq8yqh+64JHa4J5SSIcidjB62eA/g381N4PZg2NWd+X+oiO5ArRDlM3QCcbHTEEbcZJSMUFjcvq72Tbn0Eqi0b2SSH0KCaLXVQ6pXKdeQcLIh5JVHTKDk792lsaJPG4PlZRMw09v1yEWmwlv6jB3JuhTwQlrTB/PmNpLuLVQ+HCKjmWnxa+TEVdMHBHzsQMzlwXWe2ZJFdIPhWaAWgZ4Kb1yC1X8UVovyaXNkzLDQ4SgC9Bp4Em2HCvTofYMGiXLLehVHL4JdNPCM0Hnftjg3AhNyUuthOnd/cxNLnL7lWPmXqW0WdP0pYW2B+rrwj/dvVyD4zPSxMmC95MwvXX1gpP4kVzjo3CzoUheNmt3a+YkYxZHtTwpNBWkcDeWo3v6YQXVILaVEVApsRrWppYloN2tHkXhSnPh6SYKmuOvSQmf8J6QgkuJjIYTxpxOvYb/VQIHkwKLPqSI7NgBBqK3A==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0949192a-cc0a-4c8f-4ab3-08d84a41acf0
+X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2414.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2020 04:28:40.8723
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zMW6iHz9eXINf33Y7LrCJR69ClzvEGzYU37yxsWpaSDSYckzf8B58wKbpOtNXr9odefOa8nMtbpjOAOKlB6zBg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2718
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26-08-20, 20:57, Hector Yuan wrote:
-> On Mon, 2020-08-24 at 15:36 +0530, Viresh Kumar wrote:
-> > On 13-08-20, 15:07, Hector Yuan wrote:
-> > >  CONFIG_ARM_ALLWINNER_SUN50I_CPUFREQ_NVMEM=m
-> > >  CONFIG_ARM_ARMADA_37XX_CPUFREQ=y
-> > > +CONFIG_ARM_MEDIATEK_CPUFREQ_HW=m
-> > 
-> > What about a 'default m' in Kconfig itself ?
-> > OK, will update in V3.
 
-Hector, you need to remove (or not add) the right bracket (>) before the
-beginning of your lines. This makes it incredibly difficult to read.
+Am 2020-08-26 um 4:29 a.m. schrieb Hanjun Guo:
+> If the ignore_crat is set to non-zero value, it's no point getting
+> the CRAT table, so just move the ignore_crat check before we get the
+> CRAT table.
+>
+> Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
+> ---
+>  drivers/gpu/drm/amd/amdkfd/kfd_crat.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
+> index 6a250f8..ed77b109 100644
+> --- a/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
+> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_crat.c
+> @@ -764,6 +764,11 @@ int kfd_create_crat_image_acpi(void **crat_image, size_t *size)
+>  
+>  	*crat_image = NULL;
+>  
+> +	if (ignore_crat) {
 
-> > > +	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-> > > +		data = readl_relaxed(base + (i * LUT_ROW_SIZE));
-> > > +		freq = FIELD_GET(LUT_FREQ, data) * 1000;
-> > > +		volt = FIELD_GET(LUT_VOLT, data);
-> > > +		if (freq != prev_freq) {
-> > > +			table[i].frequency = freq;
-> > > +			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
-> > 
-> > Why are you adding OPPs here and rather why using OPP specific stuff
-> > at all in the driver ?
-> > yes, the opp information is read from CPU HW engine.Then add it to the CPU dev OPP one by one.  
+A conflicting change in this area was just submitted on Monday to
+amd-staging-drm-next. You'll need to rebase your patch. It should be
+straight-forward. ignore_crat was replaced with a function call
+kfd_ignore_crat().
 
-I asked a different question, why are you adding OPPs ? You don't need the OPPs
-at all in my opinion. You can just create the frequency table and that's it.
+Other than that, your patch series looks good to me. If I don't see an
+update from you in a day or two, I'll fix it up myself and add my R-b.
 
-> > > +	for_each_possible_cpu(cpu) {
-> > > +		cpu_np = of_cpu_device_node_get(cpu);
-> > > +		if (!cpu_np)
-> > > +			continue;
-> > > +
-> > > +		ret = of_parse_phandle_with_args(cpu_np, "mtk,freq-domain",
-> > 
-> > Where are bindings of this node and how does this look ?
-> > Can refer to the same patch series, I split it to another patch.Each cpu will be group into one frequency domain for the CPU DVFS. 
+Thanks,
+  Felix
 
-That binding only defines "mediatek,cpufreq-hw" and not "mtk,freq-domain".
 
--- 
-viresh
+> +		pr_info("CRAT table disabled by module option\n");
+> +		return -ENODATA;
+> +	}
+> +
+>  	/* Fetch the CRAT table from ACPI */
+>  	status = acpi_get_table(CRAT_SIGNATURE, 0, &crat_table);
+>  	if (status == AE_NOT_FOUND) {
+> @@ -776,11 +781,6 @@ int kfd_create_crat_image_acpi(void **crat_image, size_t *size)
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (ignore_crat) {
+> -		pr_info("CRAT table disabled by module option\n");
+> -		return -ENODATA;
+> -	}
+> -
+>  	pcrat_image = kmemdup(crat_table, crat_table->length, GFP_KERNEL);
+>  	if (!pcrat_image)
+>  		return -ENOMEM;
