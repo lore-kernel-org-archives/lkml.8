@@ -2,119 +2,371 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70295C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B83C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB0520786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D03022BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:12:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jCAO6CFi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j/SBsRh2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgH0HMl (ORCPT
+        id S1728050AbgH0HMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:12:41 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47499 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726882AbgH0HMf (ORCPT
+        Thu, 27 Aug 2020 03:12:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727066AbgH0HMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:12:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598512355;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JL0Nic4lUYEvTQAyILRqVFTBlq5K5PuaRWhSncRHSwg=;
-        b=jCAO6CFiJ9r6N/6UpmAGenQWzEPJIHktVq1NqHm2KN58QA3uTsDaFBuus38oJ3tDapI1IC
-        7wlAuPnRJmNB2qpIqoYQuaEN6W1diKZzGCWrNY5L5bjzveisDExKyUcDVsCZPcvzGSL6rT
-        P1fubMEUWWDu5swIjr1Z4fzsNZh1WXc=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-263-F_7j9Gl-NeKDSTdDslVWvQ-1; Thu, 27 Aug 2020 03:12:33 -0400
-X-MC-Unique: F_7j9Gl-NeKDSTdDslVWvQ-1
-Received: by mail-wr1-f69.google.com with SMTP id f14so1147966wrm.22
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:12:33 -0700 (PDT)
+        Thu, 27 Aug 2020 03:12:38 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31019C061264;
+        Thu, 27 Aug 2020 00:12:38 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id u20so2797869pfn.0;
+        Thu, 27 Aug 2020 00:12:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=9KwsoXZAG9G+8rQLlQKUR+4Ab0l4Bgzk1eV9n41JmtM=;
+        b=j/SBsRh2styerL1koTfBzrM3ybPWpPxe+BHJUd3gPcuOqsTcukdsGe5Qne6umOhrtf
+         LPRIUsuYqp2QWW81nw/UpG/CQAiNJsKax44UiYcFbs4NfffkSB2VyTTvv7jGE69ECPjm
+         E1/+PPkv7JaJPMM4dveRMgPfJweuzMAoSQbjlD7LGX/fcTsYfdVwh+uNnusyzn0lSuQO
+         xSo6wWGtnxuA/1qWQwbM7sW2+ROw4nuZUigdwx+FafAwkGZWmldzIayti1ClHpm7RCmY
+         62vhxzG9f8Vb6vV1wtxxd7zyya3FYl60PhY72d6lN1aG7UWwlgLbePiAQm27ZB+O2w7K
+         Ue5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JL0Nic4lUYEvTQAyILRqVFTBlq5K5PuaRWhSncRHSwg=;
-        b=bMn1Xg/luKJQZfnOdMt00qj0dugmmtEgkbjyo/BQjJcSakOM+HkvW5dz6kJVFuo7sn
-         ge+Adz8WSj49wnlRiEujiMNIMe3KAX9g7E8nSf1hxXyWy8d112ewytuPvHe6pd23JQBq
-         GTIdKKbAlpIyxINNRTDCP8yrbTMGoF6gpBgcUkANrqs8Y4pf/NkCbLxxss8sViLiRxxK
-         oZePj51cDaYq33x3K5wnfWEJeo1bZXluVrR+lYiB/IUG/PoobS0MEil+ZZF4yG+u/FfB
-         1R8HNJgO2aMFiOPsumgTljVOAskr0iGp3SQjgCHMYYEPyr70BQQ9lJ8+QdTGYwGxxupZ
-         V6sg==
-X-Gm-Message-State: AOAM530CwE1ncItvprqrfiNLMDaS9FRbn3BeuHvrUMv0E8w7gSxtxaxM
-        h0+l+4sErfbF6H2ZVldaof0bjLUCUbwYxxZGnFMET544KYKUOcH91wtNi9C1LJMOFT4CkCBroAv
-        FxauPU5P056b6R2MbrsPWhiCR
-X-Received: by 2002:a5d:650b:: with SMTP id x11mr305696wru.46.1598512352239;
-        Thu, 27 Aug 2020 00:12:32 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwUHzxCz2Spgqmv60oYq58isMCoWeEsBIsG0b8y0nTVMsLWHJ63NS9EGPcX3VzzE1QFXWCdbg==
-X-Received: by 2002:a5d:650b:: with SMTP id x11mr305672wru.46.1598512351999;
-        Thu, 27 Aug 2020 00:12:31 -0700 (PDT)
-Received: from steredhat.lan ([5.180.207.22])
-        by smtp.gmail.com with ESMTPSA id h11sm3694657wrb.68.2020.08.27.00.12.30
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=9KwsoXZAG9G+8rQLlQKUR+4Ab0l4Bgzk1eV9n41JmtM=;
+        b=Q/fRL1HGnRUUjxqZRJXtaV9cFtNAR8TcE/SGmnaVVsdL6vWSYCS9IucF7GOgdvif5C
+         oyFjHmR0b9MiOZkDw2u0cfZfJ0mX9zjHzt9CUBXegVTDXxlfB7tgR8CTCPwoUeFbKj0Q
+         OUeKaQFixYf4PVHBhLBJFpWArsFyhFXc1ZDljuE4UsDk8rCzwY8ZotIbjKgVCQFoHSRM
+         18jemXNqv52tK6iBbW+WRej3dm7SUTi3/Lssd5I/3DlAL8CeVqYdcY1c53WcWztSihcM
+         j94P0zQCpbHKJ80pvP8O7oS2Zcl/oekdUm4h8PmBIeESvLIlPqedrtiBnPx0hcF8xuBI
+         aQ0g==
+X-Gm-Message-State: AOAM532z7JWyQT0CNfYT7GVJk7v5I3TCPShg1TDguaM+yZuul3pvvus6
+        IOATtUJUvuzxccVBfwEk3OE=
+X-Google-Smtp-Source: ABdhPJxYEjLQ/AG7YRXyGxrT4w8lJSC3QuxETv+hJv01o4tLHdbE2QJYG6+xHhBxMUTvytYwyAiCUQ==
+X-Received: by 2002:a63:d5f:: with SMTP id 31mr13187731pgn.331.1598512357577;
+        Thu, 27 Aug 2020 00:12:37 -0700 (PDT)
+Received: from localhost (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id t12sm1121357pjv.55.2020.08.27.00.12.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 00:12:31 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 09:12:27 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-fsdevel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <asarai@suse.de>,
-        io-uring@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] io_uring: add IOURING_REGISTER_RESTRICTIONS opcode
-Message-ID: <20200827071227.tozlhvidn3iet6xy@steredhat.lan>
-References: <20200813153254.93731-1-sgarzare@redhat.com>
- <20200813153254.93731-3-sgarzare@redhat.com>
- <202008261245.245E36654@keescook>
+        Thu, 27 Aug 2020 00:12:36 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 17:12:30 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: fsl_espi errors on v5.7.15
+To:     "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "paulus@samba.org" <paulus@samba.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+References: <42107721-614b-96e8-68d9-4b888206562e@alliedtelesis.co.nz>
+        <1020029e-4cb9-62ba-c6d6-e6b9bdf93aac@gmail.com>
+In-Reply-To: <1020029e-4cb9-62ba-c6d6-e6b9bdf93aac@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202008261245.245E36654@keescook>
+Message-Id: <1598510348.1g7wt0s02s.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 12:46:24PM -0700, Kees Cook wrote:
-> On Thu, Aug 13, 2020 at 05:32:53PM +0200, Stefano Garzarella wrote:
-> > +/*
-> > + * io_uring_restriction->opcode values
-> > + */
-> > +enum {
-> > +	/* Allow an io_uring_register(2) opcode */
-> > +	IORING_RESTRICTION_REGISTER_OP,
-> > +
-> > +	/* Allow an sqe opcode */
-> > +	IORING_RESTRICTION_SQE_OP,
-> > +
-> > +	/* Allow sqe flags */
-> > +	IORING_RESTRICTION_SQE_FLAGS_ALLOWED,
-> > +
-> > +	/* Require sqe flags (these flags must be set on each submission) */
-> > +	IORING_RESTRICTION_SQE_FLAGS_REQUIRED,
-> > +
-> > +	IORING_RESTRICTION_LAST
-> > +};
-> 
-> Same thought on enum literals, but otherwise, looks good:
+Excerpts from Heiner Kallweit's message of August 26, 2020 4:38 pm:
+> On 26.08.2020 08:07, Chris Packham wrote:
+>>=20
+>> On 26/08/20 1:48 pm, Chris Packham wrote:
+>>>
+>>> On 26/08/20 10:22 am, Chris Packham wrote:
+>>>> On 25/08/20 7:22 pm, Heiner Kallweit wrote:
+>>>>
+>>>> <snip>
+>>>>> I've been staring at spi-fsl-espi.c for while now and I think I've
+>>>>>> identified a couple of deficiencies that may or may not be related=20
+>>>>>> to my
+>>>>>> issue.
+>>>>>>
+>>>>>> First I think the 'Transfer done but SPIE_DON isn't set' message=20
+>>>>>> can be
+>>>>>> generated spuriously. In fsl_espi_irq() we read the ESPI_SPIE=20
+>>>>>> register.
+>>>>>> We also write back to it to clear the current events. We re-read it =
+in
+>>>>>> fsl_espi_cpu_irq() and complain when SPIE_DON is not set. But we can
+>>>>>> naturally end up in that situation if we're doing a large read.=20
+>>>>>> Consider
+>>>>>> the messages for reading a block of data from a spi-nor chip
+>>>>>>
+>>>>>> =C2=A0 =C2=A0tx =3D READ_OP + ADDR
+>>>>>> =C2=A0 =C2=A0rx =3D data
+>>>>>>
+>>>>>> We setup the transfer and pump out the tx_buf. The first interrupt=20
+>>>>>> goes
+>>>>>> off and ESPI_SPIE has SPIM_DON and SPIM_RXT set. We empty the rx fif=
+o,
+>>>>>> clear ESPI_SPIE and wait for the next interrupt. The next interrupt
+>>>>>> fires and this time we have ESPI_SPIE with just SPIM_RXT set. This
+>>>>>> continues until we've received all the data and we finish with=20
+>>>>>> ESPI_SPIE
+>>>>>> having only SPIM_RXT set. When we re-read it we complain that SPIE_D=
+ON
+>>>>>> isn't set.
+>>>>>>
+>>>>>> The other deficiency is that we only get an interrupt when the=20
+>>>>>> amount of
+>>>>>> data in the rx fifo is above FSL_ESPI_RXTHR. If there are fewer than
+>>>>>> FSL_ESPI_RXTHR left to be received we will never pull them out of=20
+>>>>>> the fifo.
+>>>>>>
+>>>>> SPIM_DON will trigger an interrupt once the last characters have been
+>>>>> transferred, and read the remaining characters from the FIFO.
+>>>>
+>>>> The T2080RM that I have says the following about the DON bit
+>>>>
+>>>> "Last character was transmitted. The last character was transmitted=20
+>>>> and a new command can be written for the next frame."
+>>>>
+>>>> That does at least seem to fit with my assertion that it's all about=20
+>>>> the TX direction. But the fact that it doesn't happen all the time=20
+>>>> throws some doubt on it.
+>>>>
+>>>>> I think the reason I'm seeing some variability is because of how fast
+>>>>>> (or slow) the interrupts get processed and how fast the spi-nor=20
+>>>>>> chip can
+>>>>>> fill the CPUs rx fifo.
+>>>>>>
+>>>>> To rule out timing issues at high bus frequencies I initially asked
+>>>>> for re-testing at lower frequencies. If you e.g. limit the bus to 1 M=
+Hz
+>>>>> or even less, then timing shouldn't be an issue.
+>>>> Yes I've currently got spi-max-frequency =3D <1000000>; in my dts. I=20
+>>>> would also expect a slower frequency would fit my "DON is for TX"=20
+>>>> narrative.
+>>>>> Last relevant functional changes have been done almost 4 years ago.
+>>>>> And yours is the first such report I see. So question is what could=20
+>>>>> be so
+>>>>> special with your setup that it seems you're the only one being=20
+>>>>> affected.
+>>>>> The scenarios you describe are standard, therefore much more people
+>>>>> should be affected in case of a driver bug.
+>>>> Agreed. But even on my hardware (which may have a latent issue=20
+>>>> despite being in the field for going on 5 years) the issue only=20
+>>>> triggers under some fairly specific circumstances.
+>>>>> You said that kernel config impacts how frequently the issue happens.
+>>>>> Therefore question is what's the diff in kernel config, and how could
+>>>>> the differences be related to SPI.
+>>>>
+>>>> It did seem to be somewhat random. Things like CONFIG_PREEMPT have an=20
+>>>> impact but every time I found something that seemed to be having an=20
+>>>> impact I've been able to disprove it. I actually think its about how=20
+>>>> busy the system is which may or may not affect when we get round to=20
+>>>> processing the interrupts.
+>>>>
+>>>> I have managed to get the 'Transfer done but SPIE_DON isn't set!' to=20
+>>>> occur on the T2080RDB.
+>>>>
+>>>> I've had to add the following to expose the environment as a mtd=20
+>>>> partition
+>>>>
+>>>> diff --git a/arch/powerpc/boot/dts/fsl/t208xrdb.dtsi=20
+>>>> b/arch/powerpc/boot/dts/fsl/t208xrdb.dtsi
+>>>> index ff87e67c70da..fbf95fc1fd68 100644
+>>>> --- a/arch/powerpc/boot/dts/fsl/t208xrdb.dtsi
+>>>> +++ b/arch/powerpc/boot/dts/fsl/t208xrdb.dtsi
+>>>> @@ -116,6 +116,15 @@ flash@0 {
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "micron,n25q512ax=
+3",=20
+>>>> "jedec,spi-nor";
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D <0>;
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spi-max-frequency =3D <10000000>=
+; /*=20
+>>>> input clock */
+>>>> +
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 partition@u-boot {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 reg =3D <0x00000000 0x00100000>;
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 label =3D "u-boot";
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 partition@u-boot-env {
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 reg =3D <0x00100000 0x00010000>;
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 label =3D "u-boot-env";
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 };
+>>>>
+>>>> And I'm using the following script to poke at the environment=20
+>>>> (warning if anyone does try this and the bug hits it can render your=20
+>>>> u-boot environment invalid).
+>>>>
+>>>> cat flash/fw_env_test.sh
+>>>> #!/bin/sh
+>>>>
+>>>> generate_fw_env_config()
+>>>> {
+>>>> =C2=A0 cat /proc/mtd | sed 's/[:"]//g' | while read dev size erasesize=
+=20
+>>>> name ; do
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 echo "$dev $size $erasesize $name"
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0 [ "$name" =3D "u-boot-env" ] && echo "/dev/$d=
+ev 0x0000 0x2000=20
+>>>> $erasesize" >/flash/fw_env.config
+>>>> =C2=A0 done
+>>>> }
+>>>>
+>>>> cycles=3D10
+>>>> [ $# -ge 1 ] && cycles=3D$1
+>>>>
+>>>> generate_fw_env_config
+>>>>
+>>>> fw_printenv -c /flash/fw_env.config
+>>>>
+>>>> dmesg -c >/dev/null
+>>>> x=3D0
+>>>> while [ $x -lt $cycles ]; do
+>>>> =C2=A0=C2=A0=C2=A0 fw_printenv -c /flash/fw_env.config >/dev/null || b=
+reak
+>>>> =C2=A0=C2=A0=C2=A0 fw_setenv -c /flash/fw_env.config foo $RANDOM || br=
+eak;
+>>>> =C2=A0=C2=A0=C2=A0 dmesg -c | grep -q fsl_espi && break;
+>>>> =C2=A0=C2=A0=C2=A0 let x=3Dx+1
+>>>> done
+>>>>
+>>>> echo "Ran $x cycles"
+>>>
+>>> I've also now seen the RX FIFO not empty error on the T2080RDB
+>>>
+>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
+>>> fsl_espi ffe110000.spi: SPIE_RXCNT =3D 1, SPIE_TXCNT =3D 32
+>>>
+>>> With my current workaround of emptying the RX FIFO. It seems=20
+>>> survivable. Interestingly it only ever seems to be 1 extra byte in the=20
+>>> RX FIFO and it seems to be after either a READ_SR or a READ_FSR.
+>>>
+>>> fsl_espi ffe110000.spi: tx 70
+>>> fsl_espi ffe110000.spi: rx 03
+>>> fsl_espi ffe110000.spi: Extra RX 00
+>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
+>>> fsl_espi ffe110000.spi: SPIE_RXCNT =3D 1, SPIE_TXCNT =3D 32
+>>> fsl_espi ffe110000.spi: tx 05
+>>> fsl_espi ffe110000.spi: rx 00
+>>> fsl_espi ffe110000.spi: Extra RX 03
+>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
+>>> fsl_espi ffe110000.spi: SPIE_RXCNT =3D 1, SPIE_TXCNT =3D 32
+>>> fsl_espi ffe110000.spi: tx 05
+>>> fsl_espi ffe110000.spi: rx 00
+>>> fsl_espi ffe110000.spi: Extra RX 03
+>>>
+>>> From all the Micron SPI-NOR datasheets I've got access to it is=20
+>>> possible to continually read the SR/FSR. But I've no idea why it=20
+>>> happens some times and not others.
+>>=20
+>> So I think I've got a reproduction and I think I've bisected the problem=
+=20
+>> to commit 3282a3da25bd ("powerpc/64: Implement soft interrupt replay in=20
+>> C"). My day is just finishing now so I haven't applied too much scrutiny=
+=20
+>> to this result. Given the various rabbit holes I've been down on this=20
+>> issue already I'd take this information with a good degree of skepticism=
+.
+>>=20
+> OK, so an easy test should be to re-test with a 5.4 kernel.
+> It doesn't have yet the change you're referring to, and the fsl-espi driv=
+er
+> is basically the same as in 5.7 (just two small changes in 5.7).
 
-Sure, I'll fix the enum in the next version.
+There's 6cc0c16d82f88 and maybe also other interrupt related patches=20
+around this time that could affect book E, so it's good if that exact
+patch is confirmed.
 
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+I've been staring at 3282a3da25bd for a while and nothing immediately=20
+stands out. It doesn't look like the low level handlers do anything
+special (well 0x900 does ack the decrementer, but so does the masked
+handler).
 
-Thanks for the review,
-Stefano
+Can you try this patch and also enable CONFIG_PPC_IRQ_SOFT_MASK_DEBUG?
 
+Thanks,
+Nick
+
+---
+diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
+index bf21ebd36190..10d339042330 100644
+--- a/arch/powerpc/kernel/irq.c
++++ b/arch/powerpc/kernel/irq.c
+@@ -214,7 +214,7 @@ void replay_soft_interrupts(void)
+ 	struct pt_regs regs;
+=20
+ 	ppc_save_regs(&regs);
+-	regs.softe =3D IRQS_ALL_DISABLED;
++	regs.softe =3D IRQS_ENABLED;
+=20
+ again:
+ 	if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
+@@ -349,6 +349,7 @@ notrace void arch_local_irq_restore(unsigned long mask)
+ 		if (IS_ENABLED(CONFIG_PPC_IRQ_SOFT_MASK_DEBUG))
+ 			WARN_ON_ONCE(!(mfmsr() & MSR_EE));
+ 		__hard_irq_disable();
++		local_paca->irq_happened |=3D PACA_IRQ_HARD_DIS;
+ 	} else {
+ 		/*
+ 		 * We should already be hard disabled here. We had bugs
+@@ -368,6 +369,7 @@ notrace void arch_local_irq_restore(unsigned long mask)
+ 		}
+ 	}
+=20
++	preempt_disable();
+ 	irq_soft_mask_set(IRQS_ALL_DISABLED);
+ 	trace_hardirqs_off();
+=20
+@@ -377,6 +379,7 @@ notrace void arch_local_irq_restore(unsigned long mask)
+ 	trace_hardirqs_on();
+ 	irq_soft_mask_set(IRQS_ENABLED);
+ 	__hard_irq_enable();
++	preempt_enable();
+ }
+ EXPORT_SYMBOL(arch_local_irq_restore);
+=20
