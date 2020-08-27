@@ -2,64 +2,109 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADBDBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364FAC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 913742177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03B820678
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:05:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LXle0es/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbgH0PFB (ORCPT
+        id S1728407AbgH0PFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:05:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbgH0PCU (ORCPT
+        Thu, 27 Aug 2020 11:05:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42050 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728218AbgH0PEw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:02:20 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8962BC061264;
-        Thu, 27 Aug 2020 08:02:20 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id ED8B0127A0563;
-        Thu, 27 Aug 2020 07:45:30 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 08:02:16 -0700 (PDT)
-Message-Id: <20200827.080216.426738327667957689.davem@davemloft.net>
-To:     linmiaohe@huawei.com
-Cc:     kuba@kernel.org, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        dsahern@kernel.org, pabeni@redhat.com, fw@strlen.de,
-        edumazet@google.com, steffen.klassert@secunet.com,
-        herbert@gondor.apana.org.au, rdunlap@infradead.org,
-        pablo@netfilter.org, decui@microsoft.com, jakub@cloudflare.com,
-        jeremy@azazel.net, kafai@fb.com, ast@kernel.org,
-        keescook@chromium.org, netdev@vger.kernel.org,
+        Thu, 27 Aug 2020 11:04:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598540691;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=d+vKV7jHyBgx5F+qwazuFqbjaX7j5NcYL/0S6PVquXg=;
+        b=LXle0es/DGb9WXGGySIqX+2zFefeBcz8d8qHGFVfJDEVCKayxaCSHE3ogZwcjqj9SejyO7
+        DvLCPfcHg3S7JZV+kMZ6+fe74ulSqrJb2zm5gO0BWjjd6XCoKZLQnFwUMUoykFJ5WVVv4c
+        ozC+mY6FlU8cy3Q2bQ8kCAkndje0y3o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-425-NZNetU60Nqi4EOKJWVY-PQ-1; Thu, 27 Aug 2020 11:04:48 -0400
+X-MC-Unique: NZNetU60Nqi4EOKJWVY-PQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DA482192AF37;
+        Thu, 27 Aug 2020 15:04:23 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E6A07B9F4;
+        Thu, 27 Aug 2020 15:04:22 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH net 7/7] afs: Fix error handling in VL server rotation
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: Fix some comments
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200827112749.47698-1-linmiaohe@huawei.com>
-References: <20200827112749.47698-1-linmiaohe@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Date:   Thu, 27 Aug 2020 16:04:22 +0100
+Message-ID: <159854066219.1382667.2526502599415329370.stgit@warthog.procyon.org.uk>
+In-Reply-To: <159854061331.1382667.9693163318506702951.stgit@warthog.procyon.org.uk>
+References: <159854061331.1382667.9693163318506702951.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 27 Aug 2020 07:45:31 -0700 (PDT)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
-Date: Thu, 27 Aug 2020 07:27:49 -0400
+The error handling in the VL server rotation in the case of there being no
+contactable servers is not correct.  In such a case, the records of all the
+servers in the list are scanned and the errors and abort codes are mapped
+and prioritised and one error is chosen.  This is then forgotten and the
+default error is used (EDESTADDRREQ).
 
-> Fix some comments, including wrong function name, duplicated word and so
-> on.
-> 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Fix this by using the calculated error.
 
-Applied, thanks.
+Also we need to note whether a server responded on one of its endpoints so
+that we can priorise an error from an abort message over local and network
+errors.
+
+Fixes: 4584ae96ae30 ("afs: Fix missing net error handling")
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ fs/afs/vl_rotate.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/fs/afs/vl_rotate.c b/fs/afs/vl_rotate.c
+index ab2beb4ba20e..c0458c903b31 100644
+--- a/fs/afs/vl_rotate.c
++++ b/fs/afs/vl_rotate.c
+@@ -263,10 +263,14 @@ bool afs_select_vlserver(struct afs_vl_cursor *vc)
+ 	for (i = 0; i < vc->server_list->nr_servers; i++) {
+ 		struct afs_vlserver *s = vc->server_list->servers[i].server;
+ 
++		if (test_bit(AFS_VLSERVER_FL_RESPONDING, &s->flags))
++			e.responded = true;
+ 		afs_prioritise_error(&e, READ_ONCE(s->probe.error),
+ 				     s->probe.abort_code);
+ 	}
+ 
++	error = e.error;
++
+ failed_set_error:
+ 	vc->error = error;
+ failed:
+
+
