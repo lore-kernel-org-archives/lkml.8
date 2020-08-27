@@ -2,125 +2,102 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9550DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A101C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6CC20786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 307CC2084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:25:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598559905;
+	bh=Z2v3nWCgo9XCVbOjcjRlIv4qntJnZTCMqd2Bs+YDMXQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hv1vI5vvB9jkxVxpsIg1jSs2lcurTgLYOHHdjQB7/gq37y4Uo0jnb1ZuhVsD8bBXx
+	 mYQgC1SR4vYxisaS6g8zKsG3foyDMEz39SQHLDXl72qxYzadqXQmZ9TOnGKigIUU/K
+	 vDFbz1wQde5G3P0fzIocyWODuNcFORr7T1B6zO7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgH0UYD (ORCPT
+        id S1726878AbgH0UZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 16:24:03 -0400
-Received: from hosting.gsystem.sk ([212.5.213.30]:42652 "EHLO
-        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgH0UYD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:24:03 -0400
-Received: from [192.168.0.2] (188-167-68-178.dynamic.chello.sk [188.167.68.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 27 Aug 2020 16:25:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726120AbgH0UZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 16:25:03 -0400
+Received: from localhost.localdomain (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by hosting.gsystem.sk (Postfix) with ESMTPSA id 0983B7A02B7;
-        Thu, 27 Aug 2020 22:23:59 +0200 (CEST)
-From:   Ondrej Zary <linux@zary.sk>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH 12/30] net: wireless: cisco: airo: Fix a myriad of coding style issues
-Date:   Thu, 27 Aug 2020 22:23:57 +0200
-User-Agent: KMail/1.9.10
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Lee Jones <lee.jones@linaro.org>, davem@davemloft.net,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        Benjamin Reed <breed@users.sourceforge.net>,
-        Javier Achirica <achirica@users.sourceforge.net>,
-        Jean Tourrilhes <jt@hpl.hp.com>,
-        "Fabrice Bellet" <fabrice@bellet.info>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-References: <20200814113933.1903438-1-lee.jones@linaro.org> <202008172335.02988.linux@zary.sk> <87v9h4le9z.fsf@codeaurora.org>
-In-Reply-To: <87v9h4le9z.fsf@codeaurora.org>
-X-KMail-QuotePrefix: > 
-MIME-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <202008272223.57461.linux@zary.sk>
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ED3420786;
+        Thu, 27 Aug 2020 20:25:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598559903;
+        bh=Z2v3nWCgo9XCVbOjcjRlIv4qntJnZTCMqd2Bs+YDMXQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lDkqedzbyTC46kIrqkNyiRRckninnKreIolfuop1Uv7l6RgG+VpfKw+HjRAeQ//QP
+         AAnnaF5QXtiKShaeQw0AYXlSotpb0VsjPrnNNo8Svv0xyxL3EYH+wuFJRyE8t0jlKK
+         Zi+zT1QydaT+lfsvaTu9gD12vLNhc7utoKJ3wsSs=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>
+Subject: [PATCH] MAINTAINERS: Move Hartmut Knaack to Credits
+Date:   Thu, 27 Aug 2020 22:24:52 +0200
+Message-Id: <20200827202452.27714-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 27 August 2020 09:49:12 Kalle Valo wrote:
-> Ondrej Zary <linux@zary.sk> writes:
-> 
-> > On Monday 17 August 2020 20:27:06 Jesse Brandeburg wrote:
-> >> On Mon, 17 Aug 2020 16:27:01 +0300
-> >> Kalle Valo <kvalo@codeaurora.org> wrote:
-> >> 
-> >> > I was surprised to see that someone was using this driver in 2015, so
-> >> > I'm not sure anymore what to do. Of course we could still just remove
-> >> > it and later revert if someone steps up and claims the driver is still
-> >> > usable. Hmm. Does anyone any users of this driver?
-> >> 
-> >> What about moving the driver over into staging, which is generally the
-> >> way I understood to move a driver slowly out of the kernel?
-> >
-> > Please don't remove random drivers.
-> 
-> We don't want to waste time on obsolete drivers and instead prefer to
-> use our time on more productive tasks. For us wireless maintainers it's
-> really hard to know if old drivers are still in use or if they are just
-> broken.
-> 
-> > I still have the Aironet PCMCIA card and can test the driver.
-> 
-> Great. Do you know if the airo driver still works with recent kernels?
+Hartmut Knaack was an active reviewer and contributor to the IIO
+subsystem and drivers.  However last message on LKML from him was sent
+in October 2015.
 
-Yes, it does.
+In thanks for Hartmut's effort, move him name to the Credits.
 
-$ uname -a
-Linux test 5.7.0-0.bpo.2-686 #1 SMP Debian 5.7.10-1~bpo10+1 (2020-07-30) i686 GNU/Linux
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: linux-iio <linux-iio@vger.kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ CREDITS     | 4 ++++
+ MAINTAINERS | 1 -
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-# dmesg | grep airo
-[   22.002273] airo(): Probing for PCI adapters
-[   22.002422] airo(): Finished probing for PCI adapters
-[   23.796853] airo(): cmd:111 status:7f11 rsp0:2 rsp1:0 rsp2:0
-[   23.796879] airo(): Doing fast bap_reads
-[   24.021208] airo(eth1): Firmware version 5.60.22
-[   24.021238] airo(eth1): WPA supported.
-[   24.021251] airo(eth1): MAC enabled xx:xx:xx:xx:xx:xx
-[   24.062695] airo_cs 0.0 eth35: renamed from eth1
-[   50.308100] airo(eth35): Bad MAC enable reason=eaac, rid=e, offset=0
-[   50.332761] airo(eth35): Bad MAC enable reason=eaac, rid=e, offset=0
-
-# wpa_supplicant -Dwext -ieth35 -c/etc/wpa_supplicant/wpa_supplicant.conf &
-Successfully initialized wpa_supplicant
-rfkill: Cannot get wiphy information
-ioctl[SIOCSIWENCODEEXT]: Invalid argument
-ioctl[SIOCSIWENCODEEXT]: Invalid argument
-eth35: Trying to associate with xx:xx:xx:xx:xx:xx (SSID='MSI' freq=2462 MHz)
-Failed to add supported operating classes IE
-ioctl[SIOCSIWGENIE]: Operation not supported
-eth35: Association request to the driver failed
-eth35: Associated with xx:xx:xx:xx:xx:xx
-eth35: CTRL-EVENT-CONNECTED - Connection to xx:xx:xx:xx:xx:xx completed [id=0 id_str=]
-
-# dhclient -d eth35
-Internet Systems Consortium DHCP Client 4.4.1
-Copyright 2004-2018 Internet Systems Consortium.
-All rights reserved.
-For info, please visit https://www.isc.org/software/dhcp/
-
-Listening on LPF/eth35/yy:yy:yy:yy:yy:yy
-Sending on   LPF/eth35/yy:yy:yy:yy:yy:yy
-Sending on   Socket/fallback
-DHCPDISCOVER on eth35 to 255.255.255.255 port 67 interval 6
-DHCPOFFER of 192.168.1.192 from 192.168.1.254
-DHCPREQUEST for 192.168.1.192 on eth35 to 255.255.255.255 port 67
-DHCPACK of 192.168.1.192 from 192.168.1.254
-bound to 192.168.1.192 -- renewal in 40 seconds.
-
+diff --git a/CREDITS b/CREDITS
+index 32ee70a7562e..edb81e3159b1 100644
+--- a/CREDITS
++++ b/CREDITS
+@@ -1953,6 +1953,10 @@ S: Am Bergfried 10
+ S: 63225 Langen
+ S: Germany
+ 
++N: Hartmut Knaack
++E: knaack.h@gmx.de
++D: IIO subsystem and drivers
++
+ N: Alain L. Knaff
+ E: Alain.Knaff@lll.lu
+ D: floppy driver
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 523ac1602b62..1276833532c4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8532,7 +8532,6 @@ F:	drivers/iio/multiplexer/iio-mux.c
+ 
+ IIO SUBSYSTEM AND DRIVERS
+ M:	Jonathan Cameron <jic23@kernel.org>
+-R:	Hartmut Knaack <knaack.h@gmx.de>
+ R:	Lars-Peter Clausen <lars@metafoo.de>
+ R:	Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+ L:	linux-iio@vger.kernel.org
 -- 
-Ondrej Zary
+2.17.1
+
