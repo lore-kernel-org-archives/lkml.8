@@ -2,95 +2,95 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B88F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA1CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A8A620737
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:09:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598558940;
-	bh=jqbCUCwaNDypOtzCNXSWzew6krtWZkO/KHBOcaEh1TI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wWvYeXWIeRsJhipo66gZr38yr2tVVrxqKwX1imEmnNyfUaLo/MqlX4dUTyN4xaYBO
-	 CLVF6GjUZJaKdyO70S+NeHWLPYDxqRNZQVwnfzemOoEUk7+OuufCYoIeYjjBC2GDAd
-	 j+DIlSm5twDqVAJkOeDmYJVPOK/HmQDjTQBVHZT8=
+	by mail.kernel.org (Postfix) with ESMTP id 79BA320737
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:10:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgH0UI7 (ORCPT
+        id S1726968AbgH0UKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 16:08:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbgH0UI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:08:56 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A4B6208FE;
-        Thu, 27 Aug 2020 20:08:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598558935;
-        bh=jqbCUCwaNDypOtzCNXSWzew6krtWZkO/KHBOcaEh1TI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AXqlSAaruLYKES5GfoaCIjkIXBGmvuw8aRlvNYhegqHJbE3jQLVi2gliQbBq9Z3xE
-         6uyX65ypKowMOFwSzVDeI/hstiynecXeTy62V8G5bGMqAReK88sFO4orKu5nLw2MNK
-         FzV7xOQPilZpKvfXFITbH6G2tnGGsah1K5NuoSBg=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Ray Jui <rjui@broadcom.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, Keerthy <j-keerthy@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 6/6] gpio: zynq: Simplify with dev_err_probe()
-Date:   Thu, 27 Aug 2020 22:08:27 +0200
-Message-Id: <20200827200827.26462-6-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200827200827.26462-1-krzk@kernel.org>
-References: <20200827200827.26462-1-krzk@kernel.org>
+        Thu, 27 Aug 2020 16:10:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55026 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbgH0UKQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 16:10:16 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A13B4C061264;
+        Thu, 27 Aug 2020 13:10:16 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBODv-005kB0-12; Thu, 27 Aug 2020 20:10:15 +0000
+Date:   Thu, 27 Aug 2020 21:10:15 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Ross Zwisler <zwisler@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Mattias Nissler <mnissler@chromium.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Benjamin Gordon <bmgordon@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Dmitry Torokhov <dtor@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Micah Morton <mortonm@google.com>,
+        Raul Rangel <rrangel@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Ross Zwisler <zwisler@google.com>
+Subject: Re: [PATCH v9 1/2] Add a "nosymfollow" mount option.
+Message-ID: <20200827201015.GC1236603@ZenIV.linux.org.uk>
+References: <20200827170947.429611-1-zwisler@google.com>
+ <20200827200801.GB1236603@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827200801.GB1236603@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and also it prints the error value.
+On Thu, Aug 27, 2020 at 09:08:01PM +0100, Al Viro wrote:
+> On Thu, Aug 27, 2020 at 11:09:46AM -0600, Ross Zwisler wrote:
+> > From: Mattias Nissler <mnissler@chromium.org>
+> > 
+> > For mounts that have the new "nosymfollow" option, don't follow symlinks
+> > when resolving paths. The new option is similar in spirit to the
+> > existing "nodev", "noexec", and "nosuid" options, as well as to the
+> > LOOKUP_NO_SYMLINKS resolve flag in the openat2(2) syscall. Various BSD
+> > variants have been supporting the "nosymfollow" mount option for a long
+> > time with equivalent implementations.
+> > 
+> > Note that symlinks may still be created on file systems mounted with
+> > the "nosymfollow" option present. readlink() remains functional, so
+> > user space code that is aware of symlinks can still choose to follow
+> > them explicitly.
+> > 
+> > Setting the "nosymfollow" mount option helps prevent privileged
+> > writers from modifying files unintentionally in case there is an
+> > unexpected link along the accessed path. The "nosymfollow" option is
+> > thus useful as a defensive measure for systems that need to deal with
+> > untrusted file systems in privileged contexts.
+> > 
+> > More information on the history and motivation for this patch can be
+> > found here:
+> > 
+> > https://sites.google.com/a/chromium.org/dev/chromium-os/chromiumos-design-docs/hardening-against-malicious-stateful-data#TOC-Restricting-symlink-traversal
+> > 
+> > Signed-off-by: Mattias Nissler <mnissler@chromium.org>
+> > Signed-off-by: Ross Zwisler <zwisler@google.com>
+> > Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
+> > ---
+> > Changes since v8 [1]:
+> >  * Look for MNT_NOSYMFOLLOW in link->mnt->mnt_flags so we are testing
+> >    the link itself rather than the directory holding the link. (Al Viro)
+> >  * Rebased onto v5.9-rc2.
+> 
+> AFAICS, it applies clean to -rc1; what was the rebase about?
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/gpio/gpio-zynq.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index 53d1387592fd..0b5a17ab996f 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -929,11 +929,9 @@ static int zynq_gpio_probe(struct platform_device *pdev)
- 
- 	/* Retrieve GPIO clock */
- 	gpio->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(gpio->clk)) {
--		if (PTR_ERR(gpio->clk) != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "input clock not found.\n");
--		return PTR_ERR(gpio->clk);
--	}
-+	if (IS_ERR(gpio->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(gpio->clk), "input clock not found.\n");
-+
- 	ret = clk_prepare_enable(gpio->clk);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Unable to enable clock.\n");
--- 
-2.17.1
-
+Applied (to -rc1) and pushed
