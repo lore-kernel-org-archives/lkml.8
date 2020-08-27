@@ -2,99 +2,98 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 721A9C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA031C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA69207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:33:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="oSqcIa3/"
+	by mail.kernel.org (Postfix) with ESMTP id BEF6620738
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598520799;
+	bh=hj3WI8IjaMyp0FgWAa0QJ/wRxCb+fiu5gxIPrEPEPQ8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lgovlxmFoux5N9Y5u5oQS2goQaSt2UdxgyoQ/h9ZvsgKdQsXr3bqLXAg3lefK6skl
+	 k6nrsyX4+Yl1pNI1B9w5FObl2wCzEnoTzitMJ/F/QLiTbtwLgGS8ZtYjnkspFpUFVQ
+	 N3lqZuZee96Du5VpBQtI3MhDzJsQWf7k4uD4lVPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgH0JdN (ORCPT
+        id S1728292AbgH0JdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 27 Aug 2020 05:33:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726826AbgH0JdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 05:33:13 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:3989 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726826AbgH0JdM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:33:12 -0400
-X-UUID: c92f2ad19b8e434ea14cd62c1dd6f4ac-20200827
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=GDw8qw5Cf2+oW80aLaeL2MYzA4FJZY4c7yqCaOQfvls=;
-        b=oSqcIa3/yC/pN03AO49rxAvpF3Iu+dX+UCKbsCS9Cvu8rkfRhECq1oOur6YOZQrtn++ipnFFbUcx7R6cWUhsRdb+bVjKT8ytBFiM0CgLIF0gcxJS4yxm9iaZI2H4Ok8f6FaPwiJxPZPiW8EK34KGGwMO8iZk3gSBIJD9oRrabuI=;
-X-UUID: c92f2ad19b8e434ea14cd62c1dd6f4ac-20200827
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chun-hung.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1959076118; Thu, 27 Aug 2020 17:33:07 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 27 Aug 2020 17:33:04 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 27 Aug 2020 17:33:05 +0800
-From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
-To:     <mirq-linux@rere.qmqm.pl>, Jonathan Hunter <jonathanh@nvidia.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Mao Yong <yong.mao@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>
-CC:     <kernel-team@android.com>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <wsd_upstream@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        Chun-Hung Wu <chun-hung.wu@mediatek.com>
-Subject: [PATCH v1 0/2] mmc: cqhci: Add pre_enable() and post_disable() hook function
-Date:   Thu, 27 Aug 2020 17:33:01 +0800
-Message-ID: <1598520783-25250-1-git-send-email-chun-hung.wu@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07105207CD;
+        Thu, 27 Aug 2020 09:33:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598520793;
+        bh=hj3WI8IjaMyp0FgWAa0QJ/wRxCb+fiu5gxIPrEPEPQ8=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=h75oHKk9C5JRAOyvDpGW+zA2Vz77XGTqhV0jO6IJ3CYDr3O/1lLSvSWW7tuZ+3B5k
+         cClAj2yxblsYOdsI6wxTn2NhkL3BOeIOihR0BgcU11rpkOlDP/9G4J8fIKbBK2ZAmi
+         kH1lvVYuqhHbPXHDl0YZGiUfKhETvNEmmbNqPF14=
+Date:   Thu, 27 Aug 2020 11:33:10 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Marc Zyngier <maz@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] HID: core: Sanitize event code and type when mapping
+ input
+In-Reply-To: <20200826134658.1046338-1-maz@kernel.org>
+Message-ID: <nycvar.YFH.7.76.2008271132050.27422@cbobk.fhfr.pm>
+References: <20200826134658.1046338-1-maz@kernel.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: CCF1C9EE5CC8277C1A06A622833D52EA4C4DF2634262C08F134094BB2ABF89472000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBzZXJpZXMgcHJvdmlkZXMgTWVkaWFUZWsgY3FoY2kgaW1wbGVtZW50YXRpb25zIGFzIGJl
-bG93Og0KICAtIEFkZCBjcWhjaV9ob3N0X29wcy0+cHJlX2VuYWJsZSgpIGFuZCBjcWhjaV9ob3N0
-X29wcy0+cG9zdF9kaXNhYmxlKCkNCiAgLSBJbXBsZW1lbnQgTWVkaWFUZWsncyBob29rIGZ1bmN0
-aW9ucw0KDQpDaHVuLUh1bmcgV3UgKDIpOg0KICBtbWM6IGNxaGNpOiBhZGQgbmV3IGNxaGNpX2hv
-c3Rfb3BzIHByZV9lbmFibGUoKSBhbmQgcG9zdF9kaXNhYmxlKCkNCiAgbW1jOiBtZWRpYXRlazog
-YWRkIHByZV9lbmFibGUoKSBhbmQgcG9zdF9kaXNhYmxlKCkgaG9vayBmdW5jdGlvbg0KDQogZHJp
-dmVycy9tbWMvaG9zdC9jcWhjaS5jICB8ICAgIDYgKysrKysrDQogZHJpdmVycy9tbWMvaG9zdC9j
-cWhjaS5oICB8ICAgIDIgKysNCiBkcml2ZXJzL21tYy9ob3N0L210ay1zZC5jIHwgICAyMiArKysr
-KysrKysrKysrKysrKysrKysrDQogMyBmaWxlcyBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspDQoN
-Ci0tIA0KMS43LjkuNQ0K
+On Wed, 26 Aug 2020, Marc Zyngier wrote:
+
+> When calling into hid_map_usage(), the passed event code is
+> blindly stored as is, even if it doesn't fit in the associated bitmap.
+> 
+> This event code can come from a variety of sources, including devices
+> masquerading as input devices, only a bit more "programmable".
+> 
+> Instead of taking the event code at face value, check that it actually
+> fits the corresponding bitmap, and if it doesn't:
+> - spit out a warning so that we know which device is acting up
+> - NULLify the bitmap pointer so that we catch unexpected uses
+> 
+> Code paths that can make use of untrusted inputs can now check
+> that the mapping was indeed correct and bail out if not.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+> * From v1:
+>   - Dropped the input.c changes, and turned hid_map_usage() into
+>     the validation primitive.
+>   - Handle mapping failures in hidinput_configure_usage() and
+>     mt_touch_input_mapping() (on top of hid_map_usage_clear() which
+>     was already handled)
+
+Benjamin, could you please run this through your regression testing 
+machinery?
+
+It's a non-trivial core change, at the same time I'd like not to postpone 
+it for 5.10 due to its nature.
+
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
 
