@@ -2,93 +2,125 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BD9C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0499C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0A802078A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:50:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="d8HtFsfM"
+	by mail.kernel.org (Postfix) with ESMTP id 7B3E42078A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:50:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598503859;
+	bh=+cpPEpRHrWea3EaXA37NXtLOxUHiIVISGIFqHu9YHYw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1+w6bqmWuEoe7xUk4EHiEoJacd5RHNGEJeZKjdlbP3g8NaEQeiDbHiS2DnMp4wr80
+	 84cenbOM4I3kgbMn+jH9CNoACZr732cZFQ2DmcLYVG0jG0JV8Q4e0rocTA5LtQzLu/
+	 wtP3XhVo37iB2yx64IVxh2sjyeQahx3/i6RMU3ok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgH0EuY (ORCPT
+        id S1726953AbgH0Eu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 00:50:24 -0400
-Received: from ozlabs.org ([203.11.71.1]:59767 "EHLO ozlabs.org"
+        Thu, 27 Aug 2020 00:50:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbgH0EuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 00:50:22 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725909AbgH0Eu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 00:50:58 -0400
+Received: from localhost (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BcVf35t9Gz9sSP;
-        Thu, 27 Aug 2020 14:50:19 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1598503819;
-        bh=k3XRZKjyQdR8rrlEFNPcOxcxfyB8GnsWFLVwqNTjU6Y=;
-        h=Date:From:To:Cc:Subject:From;
-        b=d8HtFsfMTOYRqfcfiFZMbpXcxTcJRB1lqkz7GzzmROthY4CspWwpfJ43y+YSBZ6BF
-         JnIU2h8Kfkxbhz7wcAcxI4qtvZFuMXa9wOGL8xA44x7szAFp5KOaxonjCGkHlKePFO
-         7u/fncx4ZOV79dmmACTR2xJKz1j7xjgucX8Bsgz4zqQ+lqKubHLLF2Tns2URpZxZr2
-         blDd957iAGpi70fj9P5NZCkkUdSmJ8C3V/r1d3D1HSJwcuZKcSGBAcRJuGuk9Yg229
-         WIOoUjt+aB6Oit9/xe28ToxGjZIgKOFc3ztmCEfnrEo5t8e58kDo8U6VbfIrVlinu6
-         ZQVNgCcz28PZQ==
-Date:   Thu, 27 Aug 2020 14:50:17 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after upgrading sphinx
-Message-ID: <20200827145017.47c16c73@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 83FFD2078A;
+        Thu, 27 Aug 2020 04:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598503857;
+        bh=+cpPEpRHrWea3EaXA37NXtLOxUHiIVISGIFqHu9YHYw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ogmDvo7BcJBBKkhGnmqRFROqzQy/a8OAbIU8Iwychd6fiwTamTOOyJ5pOmAz9VL1d
+         PHwNdUTwTLuxlEeq7iry4xV7gpWBBxdiOdkqhPv6lSekSwSkiOuQzcuJZ0eNpSCW2X
+         3A6FtZqYGw5wuC2xzTv6uBJ5/DgOUPY3laT9jRSs=
+Date:   Thu, 27 Aug 2020 10:20:53 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Document qcom,gpi dma binding
+Message-ID: <20200827045053.GG2639@vkoul-mobl>
+References: <20200824084712.2526079-1-vkoul@kernel.org>
+ <20200824084712.2526079-2-vkoul@kernel.org>
+ <20200824174009.GA2948650@bogus>
+ <20200825145131.GS2639@vkoul-mobl>
+ <20200826063246.GW2639@vkoul-mobl>
+ <CAL_JsqKwwirYhrQxCkoUCVnZa_7yNsBDaqgc5TWbLLpeGv17Zw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/D961xeeLGddtmpIjrnMb.xQ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKwwirYhrQxCkoUCVnZa_7yNsBDaqgc5TWbLLpeGv17Zw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/D961xeeLGddtmpIjrnMb.xQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 26-08-20, 08:35, Rob Herring wrote:
+> On Wed, Aug 26, 2020 at 12:32 AM Vinod Koul <vkoul@kernel.org> wrote:
+> >
+> > On 25-08-20, 20:21, Vinod Koul wrote:
+> > > Hey Rob,
+> > >
+> > > On 24-08-20, 11:40, Rob Herring wrote:
+> > > > On Mon, 24 Aug 2020 14:17:10 +0530, Vinod Koul wrote:
+> > > > > Add devicetree binding documentation for GPI DMA controller
+> > > > > implemented on Qualcomm SoCs
+> > > > >
+> > > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > > > > ---
+> > > > >  .../devicetree/bindings/dma/qcom-gpi.yaml     | 87 +++++++++++++++++++
+> > > > >  1 file changed, 87 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/dma/qcom-gpi.yaml
+> > > > >
+> > > >
+> > > >
+> > > > My bot found errors running 'make dt_binding_check' on your patch:
+> > > >
+> > > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: {'description': 'Event ring transfer size compare to channel transfer ring. Event ring length = ev-factor * transfer ring size', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
+> > > >     /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: 'not' is a required property
+> > >
+> > > Okay updating dt-schema I do see this, now the question is what is this
+> > > and what does it mean ;-) I am not sure I comprehend the error message.
+> > > I see this for all the new properties I added as required for this
+> > > device node
+> >
+> > Okay I think I have figured it out, I need to provide ref to
+> > /schemas/types.yaml#definitions/uint32 for this to work, which does
+> > makes sense to me.
+> >
+> >   qcom,max-num-gpii:
+> >     $ref: /schemas/types.yaml#definitions/uint32
+> >     maxItems: 1
+> 
+> uint32 is always 1 item, so drop. Is there a max value you can define?
 
-Hi all,
+Sorry not sure I follow, to clarify you mean drop uint32, if so which
+type to use u8? I can use u8 as max wont be beyond 255.
 
-Today I upgraded ot sphinx v3.2.1 and got the following error from
-"make htmldocs":
+Yes I will define min as well max values too.
 
-Running Sphinx v3.2.1
-enabling CJK for LaTeX builder
+> Otherwise, up to 2^32 - 1 is valid.
 
-Extension error:
-Could not import extension cdomain (exception: cannot import name 'c_funcpt=
-r_sig_re' from 'sphinx.domains.c' (/usr/lib/python3/dist-packages/sphinx/do=
-mains/c.py))
+I see one more warning given by your bot which I am able to reproduce as
+well:
+Documentation/devicetree/bindings/dma/qcom,gpi.example.dt.yaml: example-0: dma-controller@800000:reg:0: [0, 8388608, 0, 393216] is too long
 
-I have downgraded to version 2.4.3 and await suggestions/patches :-)
+So to fix this I added the #address-cells and #size-cells
 
---=20
-Cheers,
-Stephen Rothwell
+        #address-cells = <2>;
+        #size-cells = <2>;
+        reg = <0x0 0x00800000 0x0 0x60000>;
 
---Sig_/D961xeeLGddtmpIjrnMb.xQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+But I am getting the warning, what am I doing incorrect
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9HO4kACgkQAVBC80lX
-0Gxdjwf/RxG6KPaKRlrdpxq9VgDfpWu2yPZF94SQldbr6CrKQh80CmI5BNqGYrq1
-c2U5VNUeqMgKkYlWp+rhb48BFPtPi6xiURd2IKAR7eAeqgkvaP8A5eBdqRAXnVBZ
-6TnZOn7hpiw+rLFJ/ARqo6MyBOboGfduiMY2tyYm48f/8bNnikRt1hDrPAAVZvTD
-BYmQPJHQE2vPOwmynb/Cmq9Z5VgthPw70lgVpEpeoucDf8RXqQYALEaNrozxACMO
-zwkQp3eJeA9T21kE6jTS0ZoFZ1gv0b6KJDMOrtoG98V4pbwPac2JE5IipHivx4Rb
-TDUMlS2HjC+0/qTXQ05G2viwwmv6sQ==
-=iAOp
------END PGP SIGNATURE-----
-
---Sig_/D961xeeLGddtmpIjrnMb.xQ--
+-- 
+~Vinod
