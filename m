@@ -2,48 +2,49 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23555C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BBAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E97B122BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D2D22BEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:12:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XendloUh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="er1QEuRP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgH0RL5 (ORCPT
+        id S1727793AbgH0RMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:11:57 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41036 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727013AbgH0RLz (ORCPT
+        Thu, 27 Aug 2020 13:12:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:48003 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727008AbgH0RMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:11:55 -0400
+        Thu, 27 Aug 2020 13:12:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598548314;
+        s=mimecast20190719; t=1598548326;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=6skhDZK1eBFqInLIv6DlYJCfL20AefptLm3lM0sktaQ=;
-        b=XendloUhFiswFH7LvIYEY6LJUg5M8Fd5YMJtowPxYwGVuSWqYtBzQqKCpyufHdZXnx8JwD
-        T12LdHH8doWvVhlMYG+Lz8ab43uEyS/mjvynEgsk/7DIFLdXJFlHthrxzqIodCHirEOpnR
-        dT7nZAoXe2JHG7E1XP2lAFAVlrpEpK0=
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uchtyp5DVRtl0VqaI00HMpgs89YiVvUyiaRTklLzvhY=;
+        b=er1QEuRPHuLywTHB/SVDbxKutnoeriNLng13OTJoFe/WdG1YuCduMvrjsSKSLLr76Vz/By
+        BfEtw2AjDLz8vAILjiQN2S0iqJrXEw5ya7+a49wY08iWID6WAoW7G2u8VyrSFimbUE/chU
+        AInpE+GufF2Ouww9hu91HRzZYz+shrM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-542-4-_sblBzO3mMfn4CsuUU5Q-1; Thu, 27 Aug 2020 13:11:52 -0400
-X-MC-Unique: 4-_sblBzO3mMfn4CsuUU5Q-1
+ us-mta-524-Spc_LnLqN0aOBBtLmk_-XA-1; Thu, 27 Aug 2020 13:11:57 -0400
+X-MC-Unique: Spc_LnLqN0aOBBtLmk_-XA-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0FAAE425DA;
-        Thu, 27 Aug 2020 17:11:50 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CBFB10ABDD4;
+        Thu, 27 Aug 2020 17:11:56 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.35.206.185])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C73C5D9E8;
-        Thu, 27 Aug 2020 17:11:46 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 72FB15D9E8;
+        Thu, 27 Aug 2020 17:11:50 +0000 (UTC)
 From:   Maxim Levitsky <mlevitsk@redhat.com>
 To:     kvm@vger.kernel.org
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -58,57 +59,73 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Ingo Molnar <mingo@redhat.com>, Joerg Roedel <joro@8bytes.org>,
         Wanpeng Li <wanpengli@tencent.com>,
         Maxim Levitsky <mlevitsk@redhat.com>
-Subject: [PATCH v3 0/8] KVM: nSVM: ondemand nested state allocation + smm fixes
-Date:   Thu, 27 Aug 2020 20:11:37 +0300
-Message-Id: <20200827171145.374620-1-mlevitsk@redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Subject: [PATCH v3 1/8] KVM: SVM: rename a variable in the svm_create_vcpu
+Date:   Thu, 27 Aug 2020 20:11:38 +0300
+Message-Id: <20200827171145.374620-2-mlevitsk@redhat.com>
+In-Reply-To: <20200827171145.374620-1-mlevitsk@redhat.com>
+References: <20200827171145.374620-1-mlevitsk@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series does some refactoring and implements on demand nested sta=
-te area=0D
-This way at least guests that don't use nesting won't waste memory=0D
-on nested state.=0D
-=0D
-This patch series is based on patch series '[PATCH 0/3] Few nSVM bugfixes'=
-=0D
-(patch #7 here should have beeing moved there as well to be honest)=0D
-=0D
-The series was tested with various nested guests, and it seems to work=0D
-as long as I disable the TSC deadline timer (this is unrelated to this=0D
-patch series)=0D
-=0D
-I addressed the review feedback from V2, and added few refactoring=0D
-patches to this series as suggested.=0D
-=0D
-Best regards,=0D
-        Maxim Levitsky=0D
-=0D
-Maxim Levitsky (8):=0D
-  KVM: SVM: rename a variable in the svm_create_vcpu=0D
-  KVM: nSVM: rename nested vmcb to vmcb12=0D
-  KVM: SVM: refactor msr permission bitmap allocation=0D
-  KVM: SVM: use __GFP_ZERO instead of clear_page=0D
-  KVM: SVM: refactor exit labels in svm_create_vcpu=0D
-  KVM: x86: allow kvm_x86_ops.set_efer to return a value=0D
-  KVM: emulator: more strict rsm checks.=0D
-  KVM: nSVM: implement ondemand allocation of the nested state=0D
-=0D
- arch/x86/include/asm/kvm_host.h |   2 +-=0D
- arch/x86/kvm/emulate.c          |  22 ++-=0D
- arch/x86/kvm/svm/nested.c       | 267 ++++++++++++++++++--------------=0D
- arch/x86/kvm/svm/svm.c          | 106 +++++++------=0D
- arch/x86/kvm/svm/svm.h          |  10 +-=0D
- arch/x86/kvm/vmx/vmx.c          |   9 +-=0D
- arch/x86/kvm/x86.c              |   3 +-=0D
- 7 files changed, 243 insertions(+), 176 deletions(-)=0D
-=0D
--- =0D
-2.26.2=0D
-=0D
+The 'page' is to hold the vcpu's vmcb so name it as such to
+avoid confusion.
+
+Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
+---
+ arch/x86/kvm/svm/svm.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 0cfb8c08e744e..722769eaaf8ce 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -1171,7 +1171,7 @@ static void svm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_svm *svm;
+-	struct page *page;
++	struct page *vmcb_page;
+ 	struct page *msrpm_pages;
+ 	struct page *hsave_page;
+ 	struct page *nested_msrpm_pages;
+@@ -1181,8 +1181,8 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+ 	svm = to_svm(vcpu);
+ 
+ 	err = -ENOMEM;
+-	page = alloc_page(GFP_KERNEL_ACCOUNT);
+-	if (!page)
++	vmcb_page = alloc_page(GFP_KERNEL_ACCOUNT);
++	if (!vmcb_page)
+ 		goto out;
+ 
+ 	msrpm_pages = alloc_pages(GFP_KERNEL_ACCOUNT, MSRPM_ALLOC_ORDER);
+@@ -1216,9 +1216,9 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+ 	svm->nested.msrpm = page_address(nested_msrpm_pages);
+ 	svm_vcpu_init_msrpm(svm->nested.msrpm);
+ 
+-	svm->vmcb = page_address(page);
++	svm->vmcb = page_address(vmcb_page);
+ 	clear_page(svm->vmcb);
+-	svm->vmcb_pa = __sme_set(page_to_pfn(page) << PAGE_SHIFT);
++	svm->vmcb_pa = __sme_set(page_to_pfn(vmcb_page) << PAGE_SHIFT);
+ 	svm->asid_generation = 0;
+ 	init_vmcb(svm);
+ 
+@@ -1234,7 +1234,7 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+ free_page2:
+ 	__free_pages(msrpm_pages, MSRPM_ALLOC_ORDER);
+ free_page1:
+-	__free_page(page);
++	__free_page(vmcb_page);
+ out:
+ 	return err;
+ }
+-- 
+2.26.2
 
