@@ -2,106 +2,421 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A01C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01813C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D514E206EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:50:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WJIIbkQP"
+	by mail.kernel.org (Postfix) with ESMTP id D09C22177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:51:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgH0Qub (ORCPT
+        id S1726322AbgH0Qvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:50:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726924AbgH0Qu3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:50:29 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D07FC061264;
-        Thu, 27 Aug 2020 09:50:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Suq6RmjK6UVv4ul6GVoPMckCVMrlCWnO71fryQ+CL5U=; b=WJIIbkQPdfo+0fSSyFE/rSQ1PA
-        OueuGza6VrwoIxjP2FjBHxX3+IW0zd6cb/uBG3QsQc1ONLpSV/d1aJR2IIysD8SGNQglrHXvxyKm8
-        CWheUSTkKiIVQBmrZXQAUAkDd8NjYEYrIUv8Qi70dEZmIrG786nQ4FkUfFitvW/f87OgtGMZ4tHuP
-        t7D+bLauDjSHv/ammitLvqjNO48U7YkTe4PKbNG7gLkduUR8sJK5xBNE25/zvuHuXKOi1TEMJb3uR
-        lUf0IyrHRzWmMkS7Rs4DumwxyLhw1H1miz1Ubu2/0rcMrsaHD2LTqqj8WfbGqiNI9JrfJXktrab3W
-        Kq53tmbQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBL6R-0003jz-4m; Thu, 27 Aug 2020 16:50:19 +0000
-Date:   Thu, 27 Aug 2020 17:50:19 +0100
-From:   "hch@infradead.org" <hch@infradead.org>
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Cc:     "hch@infradead.org" <hch@infradead.org>,
-        "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Huffman, Amber" <amber.huffman@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Message-ID: <20200827165019.GA13414@infradead.org>
-References: <20200821123222.32093-1-kai.heng.feng@canonical.com>
- <20200825062320.GA27116@infradead.org>
- <cd5aa2fef13f14b30c139d03d5256cf93c7195dc.camel@intel.com>
- <20200827063406.GA13738@infradead.org>
- <660c8671a51eec447dc7fab22bacbc9c600508d9.camel@intel.com>
- <20200827162333.GA6822@infradead.org>
- <eb45485d9107440a667e598da99ad949320b77b1.camel@intel.com>
+        Thu, 27 Aug 2020 12:51:55 -0400
+Received: from mout.perfora.net ([74.208.4.196]:47847 "EHLO mout.perfora.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726009AbgH0Qvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 12:51:54 -0400
+Received: from [192.168.0.166] ([47.134.10.147]) by mrelay.perfora.net
+ (mreueus002 [74.208.5.2]) with ESMTPSA (Nemesis) id 0MZBIA-1jumdK33kq-00KuTw;
+ Thu, 27 Aug 2020 18:46:51 +0200
+To:     linux-kernel@vger.kernel.org
+From:   Jody Bruchon <jody@jodybruchon.com>
+Subject: Help with Realtek RTL8156 USB 2.5G NIC not working and cdc_ncm syslog
+ flooding
+Cc:     jody@jodybruchon.com
+Message-ID: <dc255e58-b2dd-6b22-4e24-7a3591c64e27@jodybruchon.com>
+Date:   Thu, 27 Aug 2020 12:46:49 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb45485d9107440a667e598da99ad949320b77b1.camel@intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:U0cuyF1HpNeU4PDANLiwFqT1duKKd3vzkWBI8VTMGGEBVhgNKXm
+ ldKv78XywyOJi2Ub4VOEhtytW3pgmv76W2P964yjcyEGoWoePal+F6vvr6cfrSoecJUyHDQ
+ oIwqX6Vj9UNNO5EWKDl18cdHaR0zRBcbm+0M7QlDdnPHvzOKi8FvJQuJm8ujw7BkN3Wfwvh
+ z8laa2kPH9HBSwwyDwLhw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:l8Al786Tnlk=:FM8UlyqPmvM6tNLODdMPl/
+ vDve9ZHXRECUO08AVw/F9lP63Xzg3p7PjInOov1npYei3cDK+xP4pg1Tq8f78LEhVFK7LyFPT
+ zxv+FKQmvGaOgyk4+Z8Edes46/LxKPQX7XFXBHwLsGBK09ZKLW7eTWfF5mxezMNlhAV+7nEhg
+ 3xGfGuSrkekvS/f1lorpsYd62vn4FQQ1tWBabGkX+E/qm32x2rP4LApOXWPAZChJvlxfxjceI
+ 6uHgr6ZatzxPS6N2kj83+6ldffywlf4TS37EugQ0v4dG3csHo4C2bkA3JTSr4u4mE/2ZgmJzz
+ 28Z917YJlk8zweHvfGSGxRK9B9wKECWIusfmP6OQuDCEAd/TnJQyS7KTpKht4fLTE1gnPu1db
+ 0CpDV9U7tccjUvJlIh9ny1O2nBm1x6hysbTDTJPjV37aN1JpfPh8HZkIQjTe+jn3HBAo0CpaJ
+ phZxcq5SPzVPlX1H/IdWzIPl4lSLi1KZxwedPrcclvHTgI37o14s5zZs+JbBg+9LIwDngWRKz
+ VKEl2xSCHXZM1hP9fXnobxOfT29om5ngvpHw+gNU9sf0r+WoUpnqUPTWpjyGaq15WPGYuhuO8
+ ESyUCRrc2ieVpTcBuDlg3wRoxlKFLj6088wIvSrVpzabzs6qXbgy368sVE7uTGj+lF1pB2ZlR
+ ctzlIiOC9MP3fr7vXuHBj6XQU8dp4sO4HOoLfFzeANmhuXtNGjm69YftgL4YQ90AmSj2wFlfT
+ dvqZD1SAe4Gz5yhrxZics2DlwsPA1+wwB5ubi2ExkLb1KGiAqevPeWifHsoesJjkEvaLAkcB/
+ GdZVKagcTuUSsCOEhgIfaVxPc96+EYU0YbNKsiTFhTHCDp/LhX5rYY9tsOqbjEDw06ZGl2R
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 04:45:53PM +0000, Derrick, Jonathan wrote:
-> Just a few benefits and there are other users with unique use cases:
-> 1. Passthrough of the endpoint to OSes which don't natively support
-> hotplug can enable hotplug for that OS using the guest VMD driver
+Note: please CC me in replies since I'm not subscribed to LKML.
 
-Or they could just write a hotplug driver, which would be more useful
-than writing a hotplug driver.
+I have a RTL8156-based USB 3.0 to 2.5G NBASE-T ethernet adapter made by 
+Plugable and I'm using a recently compiled Linux 5.8.1 (I checked 
+changelogs up to the current 5.8.5 release and didn't see anything 
+relevant mentioned). It's supposed to work with the cdc_ncm driver, but 
+the sheer amount of syslog spam by cdc_ncm regardless of link state is 
+astonishing, and the adapter behaves erratically as well. This is the 
+log spam from one single second with the interface up but no network 
+cable attached:
 
-> 2. Some hypervisors have a limit on the number of devices that can be
-> passed through. VMD endpoint is a single device that expands to many.
+[173944.031631] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.063629] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.095630] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.127628] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.159630] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.191629] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.223631] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.255631] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.287630] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.319630] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.351627] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.383633] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.415627] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.447627] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.479631] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.511631] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.543630] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.575629] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.607628] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.639628] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.671630] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.703629] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.735631] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.767631] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.799622] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.831629] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.863630] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.895634] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.927631] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.959633] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+[173944.991628] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
 
-Or you just fix the hypervisor.  Never mind that this is so much
-less likely than wanting to pass an individual device or VF to a guest,
-which VMD makes impossible (at least without tons of hacks specifically
-for it).
+It's just as bad when the link is up:
 
-> 3. Expansion of possible bus numbers beyond 256 by using other
-> segments.
+[174451.007591] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
+uplink
+[174451.039592] cdc_ncm 2-4:2.0 usb0: network connection: connected
+[174451.071637] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
+uplink
+[174451.103630] cdc_ncm 2-4:2.0 usb0: network connection: connected
+[174451.135630] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
+uplink
+[174451.167630] cdc_ncm 2-4:2.0 usb0: network connection: connected
+[174451.199631] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
+uplink
+[174451.231622] cdc_ncm 2-4:2.0 usb0: network connection: connected
+[174451.263634] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
+uplink
+[174451.295631] cdc_ncm 2-4:2.0 usb0: network connection: connected
+[174451.327629] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
+uplink
+[174451.359628] cdc_ncm 2-4:2.0 usb0: network connection: connected
+[174451.391631] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
+uplink
+[174451.423629] cdc_ncm 2-4:2.0 usb0: network connection: connected
+[174451.455631] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
+uplink
+[174451.487630] cdc_ncm 2-4:2.0 usb0: network connection: connected
+[174451.519632] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
+uplink
+[174451.551629] cdc_ncm 2-4:2.0 usb0: network connection: connected
+[174451.583629] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
+uplink
+[174451.615634] cdc_ncm 2-4:2.0 usb0: network connection: connected
+[174451.647631] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
+uplink
+[174451.679628] cdc_ncm 2-4:2.0 usb0: network connection: connected
+[174451.711632] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
+uplink
+[174451.743631] cdc_ncm 2-4:2.0 usb0: network connection: connected
+[174451.775630] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
+uplink
+[174451.807627] cdc_ncm 2-4:2.0 usb0: network connection: connected
+[174451.839630] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
+uplink
+[174451.871628] cdc_ncm 2-4:2.0 usb0: network connection: connected
+[174451.903631] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
+uplink
+[174451.935628] cdc_ncm 2-4:2.0 usb0: network connection: connected
+[174451.967629] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
+uplink
+[174451.999633] cdc_ncm 2-4:2.0 usb0: network connection: connected
 
-Which we can trivially to with PCI domains.
+This is what the lsusb -v output looks like for the device:
 
-> 4. Custom RAID LED patterns driven by ledctl
+Bus 002 Device 002: ID 0bda:8156 Realtek Semiconductor Corp.
+Device Descriptor:
+   bLength                18
+   bDescriptorType         1
+   bcdUSB               3.20
+   bDeviceClass            0 (Defined at Interface level)
+   bDeviceSubClass         0
+   bDeviceProtocol         0
+   bMaxPacketSize0         9
+   idVendor           0x0bda Realtek Semiconductor Corp.
+   idProduct          0x8156
+   bcdDevice           30.00
+   iManufacturer           1 Realtek
+   iProduct                2 USB 10/100/1G/2.5G LAN
+   iSerial                 6 000000001
+   bNumConfigurations      3
+   Configuration Descriptor:
+     bLength                 9
+     bDescriptorType         2
+     wTotalLength           57
+     bNumInterfaces          1
+     bConfigurationValue     1
+     iConfiguration          0
+     bmAttributes         0xa0
+       (Bus Powered)
+       Remote Wakeup
+     MaxPower              128mA
+     Interface Descriptor:
+       bLength                 9
+       bDescriptorType         4
+       bInterfaceNumber        0
+       bAlternateSetting       0
+       bNumEndpoints           3
+       bInterfaceClass       255 Vendor Specific Class
+       bInterfaceSubClass    255 Vendor Specific Subclass
+       bInterfaceProtocol      0
+       iInterface              0
+       Endpoint Descriptor:
+         bLength                 7
+         bDescriptorType         5
+         bEndpointAddress     0x81  EP 1 IN
+         bmAttributes            2
+           Transfer Type            Bulk
+           Synch Type               None
+           Usage Type               Data
+         wMaxPacketSize     0x0400  1x 1024 bytes
+         bInterval               0
+         bMaxBurst               4
+       Endpoint Descriptor:
+         bLength                 7
+         bDescriptorType         5
+         bEndpointAddress     0x02  EP 2 OUT
+         bmAttributes            2
+           Transfer Type            Bulk
+           Synch Type               None
+           Usage Type               Data
+         wMaxPacketSize     0x0400  1x 1024 bytes
+         bInterval               0
+         bMaxBurst               4
+       Endpoint Descriptor:
+         bLength                 7
+         bDescriptorType         5
+         bEndpointAddress     0x83  EP 3 IN
+         bmAttributes            3
+           Transfer Type            Interrupt
+           Synch Type               None
+           Usage Type               Data
+         wMaxPacketSize     0x0002  1x 2 bytes
+         bInterval              11
+         bMaxBurst               1
+   Configuration Descriptor:
+     bLength                 9
+     bDescriptorType         2
+     wTotalLength          104
+     bNumInterfaces          2
+     bConfigurationValue     2
+     iConfiguration          0
+     bmAttributes         0xa0
+       (Bus Powered)
+       Remote Wakeup
+     MaxPower              128mA
+     Interface Descriptor:
+       bLength                 9
+       bDescriptorType         4
+       bInterfaceNumber        0
+       bAlternateSetting       0
+       bNumEndpoints           1
+       bInterfaceClass         2 Communications
+       bInterfaceSubClass     13
+       bInterfaceProtocol      0
+       iInterface              5 CDC Communications Control
+       CDC Header:
+         bcdCDC               1.10
+       CDC Union:
+         bMasterInterface        0
+         bSlaveInterface         1
+       CDC Ethernet:
+         iMacAddress                      3 8CAE4CDD0417
+         bmEthernetStatistics    0x0031500f
+         wMaxSegmentSize               1518
+         wNumberMCFilters            0x8000
+         bNumberPowerFilters              0
+       UNRECOGNIZED CDC:  06 24 1a 00 01 2b
+       Endpoint Descriptor:
+         bLength                 7
+         bDescriptorType         5
+         bEndpointAddress     0x83  EP 3 IN
+         bmAttributes            3
+           Transfer Type            Interrupt
+           Synch Type               None
+           Usage Type               Data
+         wMaxPacketSize     0x0010  1x 16 bytes
+         bInterval               8
+         bMaxBurst               1
+     Interface Descriptor:
+       bLength                 9
+       bDescriptorType         4
+       bInterfaceNumber        1
+       bAlternateSetting       0
+       bNumEndpoints           0
+       bInterfaceClass        10 CDC Data
+       bInterfaceSubClass      0 Unused
+       bInterfaceProtocol      1
+       iInterface              0
+     Interface Descriptor:
+       bLength                 9
+       bDescriptorType         4
+       bInterfaceNumber        1
+       bAlternateSetting       1
+       bNumEndpoints           2
+       bInterfaceClass        10 CDC Data
+       bInterfaceSubClass      0 Unused
+       bInterfaceProtocol      1
+       iInterface              4 Ethernet Data
+       Endpoint Descriptor:
+         bLength                 7
+         bDescriptorType         5
+         bEndpointAddress     0x81  EP 1 IN
+         bmAttributes            2
+           Transfer Type            Bulk
+           Synch Type               None
+           Usage Type               Data
+         wMaxPacketSize     0x0400  1x 1024 bytes
+         bInterval               0
+         bMaxBurst               4
+       Endpoint Descriptor:
+         bLength                 7
+         bDescriptorType         5
+         bEndpointAddress     0x02  EP 2 OUT
+         bmAttributes            2
+           Transfer Type            Bulk
+           Synch Type               None
+           Usage Type               Data
+         wMaxPacketSize     0x0400  1x 1024 bytes
+         bInterval               0
+         bMaxBurst               4
+   Configuration Descriptor:
+     bLength                 9
+     bDescriptorType         2
+     wTotalLength           98
+     bNumInterfaces          2
+     bConfigurationValue     3
+     iConfiguration          0
+     bmAttributes         0xa0
+       (Bus Powered)
+       Remote Wakeup
+     MaxPower              128mA
+     Interface Descriptor:
+       bLength                 9
+       bDescriptorType         4
+       bInterfaceNumber        0
+       bAlternateSetting       0
+       bNumEndpoints           1
+       bInterfaceClass         2 Communications
+       bInterfaceSubClass      6 Ethernet Networking
+       bInterfaceProtocol      0
+       iInterface              5 CDC Communications Control
+       CDC Header:
+         bcdCDC               1.10
+       CDC Union:
+         bMasterInterface        0
+         bSlaveInterface         1
+       CDC Ethernet:
+         iMacAddress                      3 8CAE4CDD0417
+         bmEthernetStatistics    0x0031500f
+         wMaxSegmentSize               1518
+         wNumberMCFilters            0x8000
+         bNumberPowerFilters              0
+       Endpoint Descriptor:
+         bLength                 7
+         bDescriptorType         5
+         bEndpointAddress     0x83  EP 3 IN
+         bmAttributes            3
+           Transfer Type            Interrupt
+           Synch Type               None
+           Usage Type               Data
+         wMaxPacketSize     0x0010  1x 16 bytes
+         bInterval               8
+         bMaxBurst               1
+     Interface Descriptor:
+       bLength                 9
+       bDescriptorType         4
+       bInterfaceNumber        1
+       bAlternateSetting       0
+       bNumEndpoints           0
+       bInterfaceClass        10 CDC Data
+       bInterfaceSubClass      0 Unused
+       bInterfaceProtocol      0
+       iInterface              0
+     Interface Descriptor:
+       bLength                 9
+       bDescriptorType         4
+       bInterfaceNumber        1
+       bAlternateSetting       1
+       bNumEndpoints           2
+       bInterfaceClass        10 CDC Data
+       bInterfaceSubClass      0 Unused
+       bInterfaceProtocol      0
+       iInterface              4 Ethernet Data
+       Endpoint Descriptor:
+         bLength                 7
+         bDescriptorType         5
+         bEndpointAddress     0x81  EP 1 IN
+         bmAttributes            2
+           Transfer Type            Bulk
+         bEndpointAddress     0x81  EP 1 IN
+         bmAttributes            2
+           Transfer Type            Bulk
+           Synch Type               None
+           Usage Type               Data
+         wMaxPacketSize     0x0400  1x 1024 bytes
+         bInterval               0
+         bMaxBurst               4
+       Endpoint Descriptor:
+         bLength                 7
+         bDescriptorType         5
+         bEndpointAddress     0x02  EP 2 OUT
+         bmAttributes            2
+           Transfer Type            Bulk
+           Synch Type               None
+           Usage Type               Data
+         wMaxPacketSize     0x0400  1x 1024 bytes
+         bInterval               0
+         bMaxBurst               4
+Device Status:     0x001c
+   (Bus Powered)
+   Test Mode
 
-Which you can also do by any other vendor specific way.
+If I do this, then it switches from 'usb0' to 'eth1':
 
-> 
-> I'm not trying to market this. Just pointing out that this isn't
-> "bringing zero actual benefits" to many users.
+/sys/devices/pci0000:00/0000:00:15.0/usb2/2-4 # echo 3 > bConfigurationValue
 
-Which of those are a benefit to a Linux user?  Serious, I really don't
-care if Intel wants to sell VMD as a value add to those that have
-a perceived or in rare cases even real need.  Just let Linux opt out
-of it instead of needing special quirks all over.
+Regardless of whether I try to use it as eth1 or usb0, it does not 
+communicate. I have turned off USB autosuspend for the device, but with 
+no change:
+
+/sys/devices/pci0000:00/0000:00:15.0/usb2/2-4 # cat power/control
+on
+
+At this point, I don't know what else to try. My understanding is that 
+cdc_ncm supports this device and the Realtek-provided driver shouldn't 
+be needed anymore. The r8152 driver already in the kernel doesn't pick 
+up this device.
+
+Any help would be greatly appreciated.
+
+- Jody Bruchon
