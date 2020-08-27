@@ -2,107 +2,107 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1721FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7E9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E702D2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:35:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598524517;
-	bh=j53l6xpN5pfCrGpF8KAKqigp2K/D3ZSlNkM8qZH4iBM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GW0H5Qk7AIb/ZKygCOW3ri5G1Yyo+zVAMGZVdmZ7xvT0A2a21aOWDWWXbeEI3nTQo
-	 2vYF8tlfVMzDgwfmbx3ubuuqVI9E6uCI2aekQIUZLYnFy1enmABm/RF+3HpDWvKax+
-	 zp5GKiU3ainqlbmXX2xZIn8g1Wnd/5GLu01Xw0jQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3D53A22B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:36:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+PGSRJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbgH0KfM (ORCPT
+        id S1728409AbgH0Kgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:35:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728172AbgH0KfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:35:09 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D7AE2080C;
-        Thu, 27 Aug 2020 10:35:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598524508;
-        bh=j53l6xpN5pfCrGpF8KAKqigp2K/D3ZSlNkM8qZH4iBM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1QJbiyzNg3t5cOLZnLALBry05iDYnUfmlvxdMa+gNBq+poiejYDO/HotOcgm2kQrr
-         OCvUO1JJ0veZ52Vd9ETYHdmWCcvQp7Sgv9Q+8D/+HNX9Y+2VVnBweShMgDbzgzeKLu
-         OMBNP7tvMokoJgPZOtwj/knq9U5MtWlwARObRb+4=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kBFFK-0076Gl-U5; Thu, 27 Aug 2020 11:35:07 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 27 Aug 2020 11:35:06 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Thu, 27 Aug 2020 06:36:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726938AbgH0Kg3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 06:36:29 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 184DDC061264;
+        Thu, 27 Aug 2020 03:36:29 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id b17so6963506ejq.8;
+        Thu, 27 Aug 2020 03:36:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1Xk5wiWgS4Q5L7/8sOlC4G0IyshqBfwynQzBeqA7JPE=;
+        b=V+PGSRJjkoP9yqrqeW5JtPOJ7++ToAOtddXdk1f4AMCthl0NjZLn835pe/L5yg/cVi
+         QCzrlqnybm9KdcKh2Rw3L6FIpZgNVQSkY9tLUm3LHGwojPNebQ4avFuV9uzK9YeNRq5B
+         eOGC210XDlydv1wAmRizz6EGUKVs00qAUlbaQibJeo7zDMv5bnxhL4G1nmlwkZST5KBC
+         8Ri6VHCsuZ1BGeUEt0NGuJiLItQeUuTalgAv9fMBfPEBTJtHko7U5KUTGYO2irBe3/Wq
+         B5khHOX5U30vq3NFN29W9hnbrguM5Rpgt5hVQl25fH3lOHH94bdTUTUX+SbrcYhWXSa2
+         d1sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1Xk5wiWgS4Q5L7/8sOlC4G0IyshqBfwynQzBeqA7JPE=;
+        b=cOTjtpunU5IuOsipD+48CVVf2SZbrrdXxgElKCb+IDOdhmxPfs8Esqn760UtvDqy80
+         j1nyjvc/yFSya17/hfW0T1jZ2INexxLHIPyGBPN4E2mGbehF7jnfyt9Xzts8d5NqWyn8
+         z7wnf0gXdyHXFp4tugkNX9vQzKBVRjeOYHJOjmbgZ024H4h2wcIJFyrnHCADzPKBrqEe
+         P7nspsXbzJK1JAO9U12Y5CI+pijm/AAljkVSAZ0pc/EQBy737IvrAFLsDpjl+Ka3qlLG
+         iWOD1VdpMTO667ptH/p8de2xgq0uFPm9s6sTI7M2TKTlkx9zVxJxjYm3zdzziwpZA5dh
+         oEWw==
+X-Gm-Message-State: AOAM5312Pmi5ivXZ4UbI0H+VkroOGeU8kzBVLevUp6+qNf3Pka+p3Dhq
+        VeKTKXeDQZqzx2s4Vwq4Hnc=
+X-Google-Smtp-Source: ABdhPJzAQ7QetvG/p+nPUQF+aP8L/3SRAB0Z6KGq9AW284bvSsDywgYkLyJwD3edhjDJBcULRf2nCw==
+X-Received: by 2002:a17:906:6146:: with SMTP id p6mr20819305ejl.211.1598524587777;
+        Thu, 27 Aug 2020 03:36:27 -0700 (PDT)
+Received: from BV030612LT ([188.24.159.61])
+        by smtp.gmail.com with ESMTPSA id hk14sm1530688ejb.88.2020.08.27.03.36.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 03:36:27 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 13:36:24 +0300
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         linux-actions@lists.infradead.org
-Subject: Re: [PATCH v5 1/3] dt-bindings: interrupt-controller: Add Actions
- SIRQ controller binding
-In-Reply-To: <20200827100629.GA2451538@BV030612LT>
-References: <cover.1597852360.git.cristian.ciocaltea@gmail.com>
- <6bd99d4a7e50904b57bb3ad050725fbb418874b7.1597852360.git.cristian.ciocaltea@gmail.com>
- <20200825220913.GA1423455@bogus> <20200826214220.GA2444747@BV030612LT>
- <CAL_JsqLvXDFL6vFooPYLJ1QnZ7L756fNesXo-LW_scs9rV-zPA@mail.gmail.com>
- <20200827100629.GA2451538@BV030612LT>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <64580e3b9acada6ff4ae9fdef02ac304@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: cristian.ciocaltea@gmail.com, robh@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, afaerber@suse.de, manivannan.sadhasivam@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Subject: Re: [PATCH v2 0/3] Add Actions Semi S500 pinctrl support
+Message-ID: <20200827103624.GB2451538@BV030612LT>
+References: <cover.1596461275.git.cristian.ciocaltea@gmail.com>
+ <CACRpkdaE0HZVN6QxMpA5+509iZ8kZ7A5S5XwuiRoyM=0dpGGSw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaE0HZVN6QxMpA5+509iZ8kZ7A5S5XwuiRoyM=0dpGGSw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-27 11:06, Cristian Ciocaltea wrote:
-> On Wed, Aug 26, 2020 at 04:48:38PM -0600, Rob Herring wrote:
->> On Wed, Aug 26, 2020 at 3:42 PM Cristian Ciocaltea
->> <cristian.ciocaltea@gmail.com> wrote:
-
-[...]
-
->> Ultimately the GIC trigger type has to be
->> something. Is it fixed or passed thru? If the latter, just use 0
->> (IRQ_TYPE_NONE) if the GIC trigger mode is not fixed. Having some sort
->> of translation of the trigger is pretty common.
+On Thu, Aug 27, 2020 at 10:41:23AM +0200, Linus Walleij wrote:
+> On Mon, Aug 3, 2020 at 4:21 PM Cristian Ciocaltea
+> <cristian.ciocaltea@gmail.com> wrote:
 > 
-> Yes, as explained above, the SIRQ controller performs indeed the
-> translation of the incoming signal. So if I understand correctly, your
-> suggestion would be to use the following inside the sirq node:
+> > This patchset adds pinctrl support for Actions Semi S500 SoC.
+> >
+> > Pinmux functions are only accessible for pin groups while pinconf
+> > parameters are available for both pin groups and individual pins.
+> >
+> > The pinctrl driver has been verified using RoseapplePi, the SBC for
+> > which an initial support has been provided via:
+> > https://lore.kernel.org/lkml/cover.1592123160.git.cristian.ciocaltea@gmail.com/
 > 
-> interrupts = <GIC_SPI 13 IRQ_TYPE_NONE>, /* SIRQ0 */
->              [...]
+> No comments on the v2 patch set for more than 2 weeks so patches
+> applied. If people find issues we can make incremental
+> patches.
+> 
+> Thanks!
+> Linus Walleij
 
-Please don't. If you are describing a GIC interrupt, use a
-trigger that actually exists. Given that you have a 1:1
-mapping between input and output, just encode the output
-trigger that matches the input.
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Thanks,
+Cristi
