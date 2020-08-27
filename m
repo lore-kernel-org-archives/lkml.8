@@ -2,49 +2,50 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19612C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 00:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE05AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 00:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E17652074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 00:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD625207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 00:43:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="KTB7nCKM"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="MFuue5Gs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgH0AnM (ORCPT
+        id S1726878AbgH0AnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 20:43:12 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:61848 "EHLO
+        Wed, 26 Aug 2020 20:43:25 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:61903 "EHLO
         smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbgH0AnL (ORCPT
+        with ESMTP id S1726783AbgH0AnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 20:43:11 -0400
+        Wed, 26 Aug 2020 20:43:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1598488992; x=1630024992;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=gJAOuvCNVESTNELiVRxYhjymGe+a8wcK8KsX+jC97+8=;
-  b=KTB7nCKMKR9kI2/NH6sBM1hcZH4bf+L+syEpDok2jtIhRbpvjs5FB/dA
-   OUbJDkQ8QCZC3swXKtxjuWMYWpL3LG65gPF9DopdG9qagC0onxiuhWxHt
-   IiKlbxIPVYrpswF/N170WV7KNur83VPNcVli5te+S1/3V9zZf2uylY8RN
-   o=;
+  t=1598489002; x=1630025002;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=wdaK8LzRgKLMOjujhBnedCH0sIhpOP2arAJ6iiZjYQM=;
+  b=MFuue5GsRBMkCqZmK/CK+AKQrkPC0916MryGxpsIxE4hY9djnt9AF7xq
+   PCZNQFEO+G6TEzQiFqE5IwRE6CK686eGnUO7cNcRxhAgFcEBuzFHZ2NLS
+   383C2p4dhEsKi2lNqwta18A4s+X3XGQFexkJAga1RIvuvxJDuz7AP67wo
+   k=;
 X-IronPort-AV: E=Sophos;i="5.76,357,1592870400"; 
-   d="scan'208";a="70024280"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 27 Aug 2020 00:43:07 +0000
-Received: from EX13MTAUWC002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id C4069A18F5;
-        Thu, 27 Aug 2020 00:43:04 +0000 (UTC)
+   d="scan'208";a="70024348"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 27 Aug 2020 00:43:19 +0000
+Received: from EX13MTAUWC002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id DAF8AA2097;
+        Thu, 27 Aug 2020 00:43:10 +0000 (UTC)
 Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
  EX13MTAUWC002.ant.amazon.com (10.43.162.240) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 27 Aug 2020 00:43:04 +0000
+ id 15.0.1497.2; Thu, 27 Aug 2020 00:43:10 +0000
 Received: from u79c5a0a55de558.ant.amazon.com (10.43.160.192) by
  EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 27 Aug 2020 00:42:58 +0000
+ id 15.0.1497.2; Thu, 27 Aug 2020 00:43:04 +0000
 From:   Alexander Graf <graf@amazon.com>
 To:     <linux-kernel@vger.kernel.org>
 CC:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
@@ -65,10 +66,12 @@ CC:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
         Joel Fernandes <joelaf@google.com>, <joel@joelfernandes.org>,
         <vineethrp@gmail.com>, Chen Yu <yu.c.chen@intel.com>,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 0/3] Add HRTICK support to Core Scheduling
-Date:   Thu, 27 Aug 2020 02:42:47 +0200
-Message-ID: <20200827004250.4853-1-graf@amazon.com>
+Subject: [PATCH 1/3] sched: Allow hrticks to work with core scheduling
+Date:   Thu, 27 Aug 2020 02:42:48 +0200
+Message-ID: <20200827004250.4853-2-graf@amazon.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200827004250.4853-1-graf@amazon.com>
+References: <20200827004250.4853-1-graf@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.43.160.192]
@@ -79,28 +82,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CFS supports a feature called "HRTICK" which allows scheduling
-decisions to be made independent of the HZ tick. That means that
-we can achieve much more fine grained time slices and thus be
-more fair in distributing time to different workloads.
+The core scheduling logic bypasses the scheduling class's
+pick_next_task() which starts the hrtick logic usually. Instead,
+it explicitly calls set_next_task() or leaves the current task
+running without any callback into the CFS scheduler.
 
-Unfortunately, HRTICK currently does not work with the Core
-Scheduling patch set. This patch set adds support for it.
-Feel free to squash bits in where it makes sense.
+To ensure that we still configure the hrtick timer properly when we
+know which task we want to run, let's add an explicit callback to
+the scheduler class which can then be triggered from the core's
+pick_next_task().
 
+With this patch, core scheduling with HRTICK enabled does see
+improved responsiveness on scheduling decisions.
 
-Alex
-
-Alexander Graf (3):
-  sched: Allow hrticks to work with core scheduling
-  sched: Trigger new hrtick if timer expires too fast
-  sched: Use hrticks even with >sched_nr_latency tasks
-
+Signed-off-by: Alexander Graf <graf@amazon.com>
+---
  kernel/sched/core.c  | 13 +++++++++++++
- kernel/sched/fair.c  | 18 ++++++++++++++++--
+ kernel/sched/fair.c  |  9 +++++++++
  kernel/sched/sched.h |  4 ++++
- 3 files changed, 33 insertions(+), 2 deletions(-)
+ 3 files changed, 26 insertions(+)
 
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 0362102fa3d2..72bf837422bf 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4486,6 +4486,12 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 			set_next_task(rq, next);
+ 		}
+ 
++#ifdef CONFIG_SCHED_HRTICK
++		/* Trigger next hrtick after task selection */
++		if (next->sched_class->hrtick_update)
++			next->sched_class->hrtick_update(rq);
++#endif
++
+ 		trace_printk("pick pre selected (%u %u %u): %s/%d %lx\n",
+ 			     rq->core->core_task_seq,
+ 			     rq->core->core_pick_seq,
+@@ -4667,6 +4673,13 @@ next_class:;
+ 
+ done:
+ 	set_next_task(rq, next);
++
++#ifdef CONFIG_SCHED_HRTICK
++	/* Trigger next hrtick after task selection */
++	if (next->sched_class->hrtick_update)
++		next->sched_class->hrtick_update(rq);
++#endif
++
+ 	return next;
+ }
+ 
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 435b460d3c3f..0d4ff3ab2572 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5512,6 +5512,11 @@ static inline void hrtick_update(struct rq *rq)
+ }
+ #endif
+ 
++static void hrtick_update_fair(struct rq *rq)
++{
++	hrtick_update(rq);
++}
++
+ #ifdef CONFIG_SMP
+ static inline unsigned long cpu_util(int cpu);
+ 
+@@ -11391,6 +11396,10 @@ const struct sched_class fair_sched_class = {
+ #ifdef CONFIG_UCLAMP_TASK
+ 	.uclamp_enabled		= 1,
+ #endif
++
++#ifdef CONFIG_SCHED_HRTICK
++	.hrtick_update		= hrtick_update_fair,
++#endif
+ };
+ 
+ #ifdef CONFIG_SCHED_DEBUG
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 6445943d3215..b382e0ee0c87 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1942,6 +1942,10 @@ struct sched_class {
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+ 	void (*task_change_group)(struct task_struct *p, int type);
+ #endif
++
++#ifdef CONFIG_SCHED_HRTICK
++	void (*hrtick_update)(struct rq *rq);
++#endif
+ };
+ 
+ static inline void put_prev_task(struct rq *rq, struct task_struct *prev)
 -- 
 2.26.2
 
