@@ -2,60 +2,118 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0708BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB15C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C39D520737
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00EC920825
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:17:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598559441;
+	bh=cS4GUYfA2mpjTZHcDswZTQuydTNPBBrsH0/C6vnhDiA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=srKKyCFrrcUAIKS4jCUE6rtGNdDMi9iBgEqsmQ3VFpYKBuG2T0N/nei2G9f9fJlK7
+	 9mFApqGCKS8jB9wMU72MmQyKo+oPHy1LJnbdERnFpezxl3W0o/t3vf53WulyqI41s+
+	 Ne71d0T1zUHqocAhiSmmgP62BpnNGdgHoh4hyVWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgH0UO2 (ORCPT
+        id S1726400AbgH0URU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 16:14:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgH0UO2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:14:28 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D3F8C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 13:14:28 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBOHv-005kIa-9b; Thu, 27 Aug 2020 20:14:23 +0000
-Date:   Thu, 27 Aug 2020 21:14:23 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Uros Bizjak <ubizjak@gmail.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH v2] x86: Use xorl %0,%0 in __get_user_asm
-Message-ID: <20200827201423.GD1236603@ZenIV.linux.org.uk>
-References: <20200827180904.96399-1-ubizjak@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827180904.96399-1-ubizjak@gmail.com>
+        Thu, 27 Aug 2020 16:17:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726120AbgH0URT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 16:17:19 -0400
+Received: from localhost.localdomain (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BC4920786;
+        Thu, 27 Aug 2020 20:17:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598559438;
+        bh=cS4GUYfA2mpjTZHcDswZTQuydTNPBBrsH0/C6vnhDiA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bvHdmXIDoLQzRF7VhCRHEwX12kAlsbwwYUsk+qtkeLjd4ADGeeZBBlDCm+gZnUwl9
+         WshnPewgQLn3EUQTVwOvl6Bbc6isRy3REDu4E+T5vkiXcSpJLUMhAX2txXOwJhQIa7
+         28kl0M04Plw+YaeWLCKf7e9S+LHW5pnQkngsERnc=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Subject: [PATCH] MAINTAINERS: Remove bouncing email of Beniamin Bia
+Date:   Thu, 27 Aug 2020 22:17:07 +0200
+Message-Id: <20200827201707.27075-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 08:09:04PM +0200, Uros Bizjak wrote:
-> xorl %0,%0 is equivalent to xorq %0,%0 as both will zero the
-> entire register.  Use xorl %0,%0 for all operand sizes to avoid
-> REX prefix byte when legacy registers are used and to avoid size
-> prefix byte when 16bit registers are used.
-> 
-> Zeroing the full register is OK in this use case.  xorl %0,%0 also
-> breaks register dependency chains, avoiding potential partial
-> register stalls with 8 and 16bit operands.
+Emails to Beniamin Bia bounce with no such address so remove him from
+maintainers.
 
-No objections, but talking about stalls is more than slightly
-ridiculous - we'd just taken a #PF, failed there, flipped
-pt_regs %rip to fixup section, returned from fault and are
-about to fail whatever syscall that had been; a stall here
-is really not an issue...
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Michael Hennerich <Michael.Hennerich@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: linux-iio <linux-iio@vger.kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ MAINTAINERS | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8107b3d5d6df..523ac1602b62 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -967,9 +967,8 @@ F:	Documentation/devicetree/bindings/iio/dac/ad5758.txt
+ F:	drivers/iio/dac/ad5758.c
+ 
+ ANALOG DEVICES INC AD7091R5 DRIVER
+-M:	Beniamin Bia <beniamin.bia@analog.com>
+ L:	linux-iio@vger.kernel.org
+-S:	Supported
++S:	Orphan
+ W:	http://ez.analog.com/community/linux-device-drivers
+ F:	Documentation/devicetree/bindings/iio/adc/adi,ad7091r5.yaml
+ F:	drivers/iio/adc/ad7091r5.c
+@@ -1000,7 +999,6 @@ F:	drivers/iio/adc/ad7292.c
+ 
+ ANALOG DEVICES INC AD7606 DRIVER
+ M:	Michael Hennerich <Michael.Hennerich@analog.com>
+-M:	Beniamin Bia <beniamin.bia@analog.com>
+ L:	linux-iio@vger.kernel.org
+ S:	Supported
+ W:	http://ez.analog.com/community/linux-device-drivers
+@@ -1068,7 +1066,6 @@ F:	drivers/iio/imu/adis16475.c
+ F:	Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
+ 
+ ANALOG DEVICES INC ADM1177 DRIVER
+-M:	Beniamin Bia <beniamin.bia@analog.com>
+ M:	Michael Hennerich <Michael.Hennerich@analog.com>
+ L:	linux-hwmon@vger.kernel.org
+ S:	Supported
+@@ -1136,7 +1133,6 @@ W:	http://ez.analog.com/community/linux-device-drivers
+ F:	drivers/dma/dma-axi-dmac.c
+ 
+ ANALOG DEVICES INC HMC425A DRIVER
+-M:	Beniamin Bia <beniamin.bia@analog.com>
+ M:	Michael Hennerich <michael.hennerich@analog.com>
+ L:	linux-iio@vger.kernel.org
+ S:	Supported
+@@ -16537,7 +16533,6 @@ F:	drivers/staging/rtl8712/
+ 
+ STAGING - SEPS525 LCD CONTROLLER DRIVERS
+ M:	Michael Hennerich <michael.hennerich@analog.com>
+-M:	Beniamin Bia <beniamin.bia@analog.com>
+ L:	linux-fbdev@vger.kernel.org
+ S:	Supported
+ F:	Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+-- 
+2.17.1
+
