@@ -2,88 +2,151 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33786C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2ECE20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:37:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598513829;
-	bh=volXVo8FWRJKn6VNEcDI+eVcLxy+NtoiBEwSOpa0uzs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Yt/keCotm/QYv9nDQwtpEbSEL21c97WgPHFNVkkS8CSMtr18ZcU8ctKvD/YIu18Tb
-	 AxIvEIXLfda0aX3o5BSxjInOju0F+zyo/EMkVnnE2gV/0coHrZ4g5IrN5LChspScDR
-	 uVtrSpQJBxNhRz6cFi4MqoRKBJbVw06rgkQXnIaw=
+	by mail.kernel.org (Postfix) with ESMTP id B1888207DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:37:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a0C34Bju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbgH0HhH (ORCPT
+        id S1727931AbgH0HhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:37:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728081AbgH0HhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:37:06 -0400
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C002022BF5
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 07:37:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598513826;
-        bh=volXVo8FWRJKn6VNEcDI+eVcLxy+NtoiBEwSOpa0uzs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rcoHj8O4M+WGB2HbBtUi4Mq7No2pw3FFa8MlVVLBbreL/PLx0uC8b5kHnT+1vIR0V
-         dmDfrTcCeH0tIBmVbtL/tuTaL1oYQEWf7gXdZYq9/udH5Xx892SIKVUZ3f67VKrhn9
-         OThj3SjWPtg1mjjvz7rgxA8wtbIM0DfxzcrmJZ+Y=
-Received: by mail-ej1-f47.google.com with SMTP id d11so6262627ejt.13
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:37:05 -0700 (PDT)
-X-Gm-Message-State: AOAM531kPfmgYSLrBLPkIJ+026IRrL+0ea3lynrlaiJoEHSh2gph6AE4
-        yL5wAi4fJeL5M0s1TwIX8Jhl+b2nd/nfwuLJq5E=
-X-Google-Smtp-Source: ABdhPJzgxP1osbjwfYUj1JBEmA+ZumWtne7IDni1iBpcoUIOJFP/NI7q5zpMASbPPsfsya4g8DCbWlKB+BXNLAd5T0Y=
-X-Received: by 2002:a17:906:4ec3:: with SMTP id i3mr19144062ejv.215.1598513824336;
- Thu, 27 Aug 2020 00:37:04 -0700 (PDT)
+        Thu, 27 Aug 2020 03:37:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49860 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727814AbgH0HhW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:37:22 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 029CEC06121B
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:37:22 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id z9so4199130wmk.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:37:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=urR5WKC0YHrLgprPWWXo12lMVDtV/KRxTWx7J20eMag=;
+        b=a0C34Bju6/PtF2HVbGdps+jvjmkH5VX28IIWmXqMUfuYbVudhp2bk8xBwXR8uNKw+o
+         E3nFOa10HXBMiVQL1h8zH7EbQtL479qzCL4DwybQfDN2J5VlSTjXBvkkAmD3xryt8vzz
+         LynWRE8fIQ0ilNTH7cX9yWUg4A0Yg5fiUbZxeO3DApzgKjBEknECJMkYtso5J8XFoUJK
+         6yEua+0LQhd6Chdj/b+NSRM1j2Enmb49/qh158+LRO5YLgiwrO8Jhj6eZcNL9GtMUdOl
+         GgcNownqeuRxt4Spk7v03rpkNT7FusZRG/Oms4aC1D7SuT3wr663sfEVdiLo2F7Tq8NX
+         Bs+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=urR5WKC0YHrLgprPWWXo12lMVDtV/KRxTWx7J20eMag=;
+        b=NryLWovpkRLbS2fWMdd79/axV7uwEGfZSvkMPyeehCh8DSMc2O8LYd/rEr1lsHazVF
+         pUjs1ckRb5I1/CBVupF3/lvusre/rKCwfh2736zWY+1+SdC4uOdjd7uKG9LXmJXg+sxM
+         0k4RIBEvpzqzPsQpuLiKkVfbHALCBYnQhbpLzU6PRIjtXdExYkzuF+5dp877C4VVCZoR
+         SmyPIWImQH44mijYxW40Cno0rd9nfVFj0Nn1QTKjh0zUiCGZXvFQfO9yq44gk/gVIOoU
+         +EOc0EuFvTERCnNlcDOxZbUFCFfZJ9gTv3ySu2EkzroUNHCoH3Kr3o/MRZkSTNzZFZV3
+         33QQ==
+X-Gm-Message-State: AOAM53016xci+m8n7rqef8VMJBitnOnA19tIOyMxlbRg/lDFFkDrBNGe
+        y0uPp5S1iLWRihy65Tod6pQHl173uEzv6A==
+X-Google-Smtp-Source: ABdhPJycbiZ1USeLkj9x9uqe4lASaNBJMhV+HNneVNbg3x1BAmNoMIpWWjBG8q3tw6SwjrZIdqJysw==
+X-Received: by 2002:a1c:1d17:: with SMTP id d23mr9716187wmd.187.1598513840622;
+        Thu, 27 Aug 2020 00:37:20 -0700 (PDT)
+Received: from dell ([91.110.221.141])
+        by smtp.gmail.com with ESMTPSA id n24sm3140608wmi.36.2020.08.27.00.37.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 00:37:20 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 08:37:18 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, Maya Erez <merez@codeaurora.org>,
+        wil6210@qti.qualcomm.com
+Subject: [PATCH v2 30/32] wireless: ath: wil6210: pmc: Demote a few
+ nonconformant kernel-doc function headers
+Message-ID: <20200827073718.GV3248864@dell>
+References: <20200821071644.109970-1-lee.jones@linaro.org>
+ <20200821071644.109970-31-lee.jones@linaro.org>
 MIME-Version: 1.0
-References: <1bdd59d511e4acd23aea6af51d06b1cadf09a1b2.1511065331.git.arvind.yadav.cs@gmail.com>
-In-Reply-To: <1bdd59d511e4acd23aea6af51d06b1cadf09a1b2.1511065331.git.arvind.yadav.cs@gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 27 Aug 2020 09:36:53 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPeg0_1gFZWhEvb-LwCiCvEuaZcZ2TQa256ntvuLecF_pw@mail.gmail.com>
-Message-ID: <CAJKOXPeg0_1gFZWhEvb-LwCiCvEuaZcZ2TQa256ntvuLecF_pw@mail.gmail.com>
-Subject: Re: [PATCH 1/3 v3] mfd: ipaq-micro: Fix platform_get_irq's error checking
-To:     Arvind Yadav <arvind.yadav.cs@gmail.com>
-Cc:     lee.jones@linaro.org, maxime.ripard@free-electrons.com,
-        wens@csie.org, linux@armlinux.org.uk,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821071644.109970-31-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 19 Nov 2017 at 05:28, Arvind Yadav <arvind.yadav.cs@gmail.com> wrote:
->
-> The platform_get_irq() function returns negative if an error occurs.
-> zero or positive number on success. platform_get_irq() error checking
-> for zero is not correct.
->
-> Signed-off-by: Arvind Yadav <arvind.yadav.cs@gmail.com>
-> ---
-> changes in v2 :
->               Add failure case '<= 0' instead of '< 0'. If IRQ0 is not valid.
-> changes in v3 :
->               return -EINVAL insted of irq.
->
->  drivers/mfd/ipaq-micro.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Fixes the following W=1 kernel build warning(s):
 
-Hi Arvind,
+ drivers/net/wireless/ath/wil6210/pmc.c:43: warning: Function parameter or member 'wil' not described in 'wil_pmc_alloc'
+ drivers/net/wireless/ath/wil6210/pmc.c:43: warning: Function parameter or member 'num_descriptors' not described in 'wil_pmc_alloc'
+ drivers/net/wireless/ath/wil6210/pmc.c:43: warning: Function parameter or member 'descriptor_size' not described in 'wil_pmc_alloc'
+ drivers/net/wireless/ath/wil6210/pmc.c:229: warning: Function parameter or member 'wil' not described in 'wil_pmc_free'
+ drivers/net/wireless/ath/wil6210/pmc.c:229: warning: Function parameter or member 'send_pmc_cmd' not described in 'wil_pmc_free'
+ drivers/net/wireless/ath/wil6210/pmc.c:307: warning: Function parameter or member 'wil' not described in 'wil_pmc_last_cmd_status'
+ drivers/net/wireless/ath/wil6210/pmc.c:320: warning: Function parameter or member 'filp' not described in 'wil_pmc_read'
+ drivers/net/wireless/ath/wil6210/pmc.c:320: warning: Function parameter or member 'buf' not described in 'wil_pmc_read'
+ drivers/net/wireless/ath/wil6210/pmc.c:320: warning: Function parameter or member 'count' not described in 'wil_pmc_read'
+ drivers/net/wireless/ath/wil6210/pmc.c:320: warning: Function parameter or member 'f_pos' not described in 'wil_pmc_read'
 
-This was never applied. Can you rebase and resend the entire series?
-Or maybe there was a reason to drop it?
+Cc: Maya Erez <merez@codeaurora.org>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-wireless@vger.kernel.org
+Cc: wil6210@qti.qualcomm.com
+Cc: netdev@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/net/wireless/ath/wil6210/pmc.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-Best Regards,
-Krzysztof
+diff --git a/drivers/net/wireless/ath/wil6210/pmc.c b/drivers/net/wireless/ath/wil6210/pmc.c
+index 9b4ca6b256d26..a2f7b4c1da48d 100644
+--- a/drivers/net/wireless/ath/wil6210/pmc.c
++++ b/drivers/net/wireless/ath/wil6210/pmc.c
+@@ -29,8 +29,7 @@ void wil_pmc_init(struct wil6210_priv *wil)
+ 	mutex_init(&wil->pmc.lock);
+ }
+ 
+-/**
+- * Allocate the physical ring (p-ring) and the required
++/* Allocate the physical ring (p-ring) and the required
+  * number of descriptors of required size.
+  * Initialize the descriptors as required by pmc dma.
+  * The descriptors' buffers dwords are initialized to hold
+@@ -221,8 +220,7 @@ void wil_pmc_alloc(struct wil6210_priv *wil,
+ 	mutex_unlock(&pmc->lock);
+ }
+ 
+-/**
+- * Traverse the p-ring and release all buffers.
++/* Traverse the p-ring and release all buffers.
+  * At the end release the p-ring memory
+  */
+ void wil_pmc_free(struct wil6210_priv *wil, int send_pmc_cmd)
+@@ -299,8 +297,7 @@ void wil_pmc_free(struct wil6210_priv *wil, int send_pmc_cmd)
+ 	mutex_unlock(&pmc->lock);
+ }
+ 
+-/**
+- * Status of the last operation requested via debugfs: alloc/free/read.
++/* Status of the last operation requested via debugfs: alloc/free/read.
+  * 0 - success or negative errno
+  */
+ int wil_pmc_last_cmd_status(struct wil6210_priv *wil)
+@@ -311,8 +308,7 @@ int wil_pmc_last_cmd_status(struct wil6210_priv *wil)
+ 	return wil->pmc.last_cmd_status;
+ }
+ 
+-/**
+- * Read from required position up to the end of current descriptor,
++/* Read from required position up to the end of current descriptor,
+  * depends on descriptor size configured during alloc request.
+  */
+ ssize_t wil_pmc_read(struct file *filp, char __user *buf, size_t count,
+-- 
+2.25.1
