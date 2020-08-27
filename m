@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1742AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F543C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E469722CBE
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D876D20825
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:55:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VZt5ChX3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ip5T+hPF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ricYBYUu";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MLNLEXkI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728564AbgH0Hzh (ORCPT
+        id S1728584AbgH0Hzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:55:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52542 "EHLO
+        Thu, 27 Aug 2020 03:55:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728472AbgH0Hyf (ORCPT
+        with ESMTP id S1728469AbgH0Hye (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:54:35 -0400
+        Thu, 27 Aug 2020 03:54:34 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C730EC061234;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AC54C061232;
         Thu, 27 Aug 2020 00:54:34 -0700 (PDT)
 Date:   Thu, 27 Aug 2020 07:54:32 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598514873;
+        s=2020; t=1598514872;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=55cGruY+B0dVQV9P4Eow2/bJcYQE5JD3/Wkynw44aVo=;
-        b=VZt5ChX397znn35MugUEwYuQYUqEKfpcxfjw1dYEPNRA1BWuMwHVB4Wwn6dHb5FnAqZZMY
-        UJu53ba9g6L3p1b9T7RXeY276BT6EPmFGVGoaO7ue7dyZ7mTU/QaUZqloPF2j7CxedJD0A
-        M5vC71d3Cw3WL76XqjlClWoLnOzGOR4/g2VOQoPSarHuOAdWTd1U+xr7cgiNA54/6U7O0L
-        Kn5dSKFcOKYIaVC4LMSVpw7xR+i5OodaZY7wsYbOBUnVP+B8RQ759BYZ2bxU9P51KWbyoc
-        Zw3FhItefaOFlPfqhhlKywhjCTjFHU7gFA9VHAjfYcjNkXVnTlQSIEqVzysh+A==
+        bh=9ChM+Uq35sX54+YM5wxygWB7jqAbga2vQAz560SeCEs=;
+        b=ricYBYUupUDf5io+EkjXMoyQ/Bl3eR1tIy/Ll+xFPsAmVtUEMP2SOBVlTXE6PVysLinX91
+        u3rFfWIVVnC+Fe2UfSbNJ9Un+9Hg7sYajp1KLLWzSJH6FAjOmY1WKH5D+e91FbNtUdgAkm
+        9j0Shz0zSl3InRF2Eh1cb0VXY4alG18OBVoBpFj9DGyj61zubE8eSHkht928l0uJJ4Py0F
+        fp5dOB6vLrDvIV4sdFN7lzqrwLSL/jMoCJwmPNhyQmIZbyK7QB4Bj1Whze4/dGvOcPJtOp
+        sRIr4ZFFKgpOzvuxtgmLrCmy7bEw37izTjSG8ptXCPUDi+OHHpoEgx4Q1Gwgkg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598514873;
+        s=2020e; t=1598514872;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=55cGruY+B0dVQV9P4Eow2/bJcYQE5JD3/Wkynw44aVo=;
-        b=Ip5T+hPFuhpQqJ3b6IowaM1vNt+os1Ac+UqtWbVQZBafrX6gMWZ21RdgLqiV7yrBJHnMYq
-        39wiblKayWe9/wDg==
-From:   "tip-bot2 for Lukasz Luba" <tip-bot2@linutronix.de>
+        bh=9ChM+Uq35sX54+YM5wxygWB7jqAbga2vQAz560SeCEs=;
+        b=MLNLEXkIU7PjV3IepMwisZZYTJHNbOXfyY4LO3ZZP4WI7HxjL6B9SaqlW3iuVR0F3RxECb
+        Za7EiLDWUJ4fLECQ==
+From:   "tip-bot2 for Jiang Biao" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/fair: Fix wrong negative conversion in
- find_energy_efficient_cpu()
-Cc:     Lukasz Luba <lukasz.luba@arm.com>,
+Subject: [tip: sched/core] sched/fair: Simplify the work when reweighting entity
+Cc:     Jiang Biao <benbjiang@tencent.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200810083004.26420-1-lukasz.luba@arm.com>
-References: <20200810083004.26420-1-lukasz.luba@arm.com>
+In-Reply-To: <20200811113209.34057-1-benbjiang@tencent.com>
+References: <20200811113209.34057-1-benbjiang@tencent.com>
 MIME-Version: 1.0
-Message-ID: <159851487259.20229.13312662198883058860.tip-bot2@tip-bot2>
+Message-ID: <159851487221.20229.12705321307195312312.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -75,45 +75,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     da0777d35f47892f359c3f73ea155870bb595700
-Gitweb:        https://git.kernel.org/tip/da0777d35f47892f359c3f73ea155870bb595700
-Author:        Lukasz Luba <lukasz.luba@arm.com>
-AuthorDate:    Mon, 10 Aug 2020 09:30:04 +01:00
+Commit-ID:     1724b95b92979a8ea8e55a4817d05b3bb7750958
+Gitweb:        https://git.kernel.org/tip/1724b95b92979a8ea8e55a4817d05b3bb7750958
+Author:        Jiang Biao <benbjiang@tencent.com>
+AuthorDate:    Tue, 11 Aug 2020 19:32:09 +08:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 26 Aug 2020 12:41:57 +02:00
+CommitterDate: Wed, 26 Aug 2020 12:41:58 +02:00
 
-sched/fair: Fix wrong negative conversion in find_energy_efficient_cpu()
+sched/fair: Simplify the work when reweighting entity
 
-In find_energy_efficient_cpu() 'cpu_cap' could be less that 'util'.
-It might be because of RT, DL (so higher sched class than CFS), irq or
-thermal pressure signal, which reduce the capacity value.
-In such situation the result of 'cpu_cap - util' might be negative but
-stored in the unsigned long. Then it might be compared with other unsigned
-long when uclamp_rq_util_with() reduced the 'util' such that is passes the
-fits_capacity() check.
+The code in reweight_entity() can be simplified.
 
-Prevent this situation and make the arithmetic more safe.
+For a sched entity on the rq, the entity accounting can be replaced by
+cfs_rq instantaneous load updates currently called from within the
+entity accounting.
 
-Fixes: 1d42509e475cd ("sched/fair: Make EAS wakeup placement consider uclamp restrictions")
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+Even though an entity on the rq can't represent a task in
+reweight_entity() (a task is always dequeued before calling this
+function) and so the numa task accounting and the rq->cfs_tasks list
+management of the entity accounting are never called, the redundant
+cfs_rq->nr_running decrement/increment will be avoided.
+
+Signed-off-by: Jiang Biao <benbjiang@tencent.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Link: https://lkml.kernel.org/r/20200810083004.26420-1-lukasz.luba@arm.com
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/20200811113209.34057-1-benbjiang@tencent.com
 ---
- kernel/sched/fair.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/sched/fair.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index abdb54e..90ebaa4 100644
+index 90ebaa4..33699db 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -6594,7 +6594,8 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+@@ -3084,7 +3084,7 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
+ 		/* commit outstanding execution time */
+ 		if (cfs_rq->curr == se)
+ 			update_curr(cfs_rq);
+-		account_entity_dequeue(cfs_rq, se);
++		update_load_sub(&cfs_rq->load, se->load.weight);
+ 	}
+ 	dequeue_load_avg(cfs_rq, se);
  
- 			util = cpu_util_next(cpu, p, cpu);
- 			cpu_cap = capacity_of(cpu);
--			spare_cap = cpu_cap - util;
-+			spare_cap = cpu_cap;
-+			lsub_positive(&spare_cap, util);
+@@ -3100,7 +3100,7 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
  
- 			/*
- 			 * Skip CPUs that cannot satisfy the capacity request.
+ 	enqueue_load_avg(cfs_rq, se);
+ 	if (se->on_rq)
+-		account_entity_enqueue(cfs_rq, se);
++		update_load_add(&cfs_rq->load, se->load.weight);
+ 
+ }
+ 
