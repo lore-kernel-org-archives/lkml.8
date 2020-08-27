@@ -2,142 +2,120 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C0DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF8BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C906520786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8657B20786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:58:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EFRmWYKt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oDiPxqQD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UdpN9e9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbgH0H6E (ORCPT
+        id S1728357AbgH0H6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:58:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52500 "EHLO
+        Thu, 27 Aug 2020 03:58:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728384AbgH0HyX (ORCPT
+        with ESMTP id S1728333AbgH0H6J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:54:23 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA6DDC06121A;
-        Thu, 27 Aug 2020 00:54:22 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 07:54:20 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598514861;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=l3YkGOPEQgwIky67ipFw2aeIOYSOatdnKx07RKeNUrI=;
-        b=EFRmWYKto8JizkRdGPCONVhvd1j+z2hrEckuB9dYgEbUEk7MsYhpwy8Bkbpf/+ROrNy46/
-        agdRupTXNDKaSTbzgfD3KKnOhU5mP8IDx72ol8jHJxnRzvXBioJzbgm6Y2wsPNcC7wMOdV
-        d+N3Eh5BN7F2FT/dIZhyOcqxvnmguoaAjF1tJRrBfmIKfXPNCMBeXY4oWTHNIZzZmdx3xk
-        FBld43DGjO5iASkKp9jB+Zg/+x24/23KCj8hwdckOwOUY+HUhUYPla4esi0L2XRoFItEkc
-        48ZsxgFxyZ/Pf0JjzSFtrWL6WtCFzeJw94pr2K/e7EF9ou9Ytvb1ZMYm+nQ3dA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598514861;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=l3YkGOPEQgwIky67ipFw2aeIOYSOatdnKx07RKeNUrI=;
-        b=oDiPxqQDd9Ro3rFF0wmIRZtplbw/YDVCFILuVh69XdU6bI22eFXo2Vs2lDG5GH1mkemY/3
-        6rvBbBXkYMSeIOBg==
-From:   "tip-bot2 for Boqun Feng" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] lockdep: Reduce the size of lock_list::distance
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200807074238.1632519-6-boqun.feng@gmail.com>
-References: <20200807074238.1632519-6-boqun.feng@gmail.com>
+        Thu, 27 Aug 2020 03:58:09 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD8E5C061264;
+        Thu, 27 Aug 2020 00:58:08 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f26so5340447ljc.8;
+        Thu, 27 Aug 2020 00:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lEBPqYLj1Sfpoe7PvHoeVpAVjO6ud5dnyjMuhp7FHVU=;
+        b=UdpN9e9+xHs/VTWHW2V0XUZN9Egd4mwnCmlizNY/AIPcvPFUdBqRvFNQU8vo2kolFY
+         7y2T/O/r2Ov/tzGqMTcdLnb7fmAI3MyewZNKhgF/msyQT7ep+SBJ9MJYrVL3ZFSf8/lg
+         fgpStsnUu58uIXrIb6sZBB73as3h9JlklSIHZwdaI5fVlpeBSVoP3GSxdwAKRIuGJ0G3
+         uheR2DVPPCDmJOgNe4rZtOHN3FRLjX6JrxavbkinDgK7QGTDkzOPEKPBJSpozg1JeTNn
+         SVy2dKblpo1tKuycek1vObQRq14/QN8FwJFtMEbbj5T1J/lC/ZObD/EoVv5j9sc/krMV
+         mzWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=lEBPqYLj1Sfpoe7PvHoeVpAVjO6ud5dnyjMuhp7FHVU=;
+        b=GFSiPWO5CJh5RhvONpAtEqiyWLJ+ZAdW+3V27joBwBS4hlS8OesAcbieWJYG0PPviX
+         yq236/4jg/kQrdyVwhb6H1ldAnKH2xTB9p/hOfiyxU2HkUKe0tU4rKCtjV8CJBeQSEZA
+         W1IsAPkCTYzH8UhmrCVDq0rAfFSJKkwNHVCUzukIRoepVrVOjvqJhZ5C0Znt06gR0YN/
+         SerhNeqvgoadgNXAlyt/3nGzNwmChLNSlnK/dun6Lb2ZSukQuxoPq5nIa/VRhPywjRtg
+         CrFtIfV6eD9g1ncoCiubdqcPulW7+UJa7AEfNsenopA5leBr6in+EdVQwSJ/tOodA0fJ
+         pZ1Q==
+X-Gm-Message-State: AOAM5331J1dGNIESZwf11TK4h/Aph3zdKQ00E574etiUDcNlQ9nHuw7R
+        ssUId5J19zwHX/P5RsB0qCA=
+X-Google-Smtp-Source: ABdhPJwUG34ZG5RWvvEl84Os0y3M8D8sLpjg17s0tEPZza0pvwK+RE1G6cGDx9RKlYZrA7Z7NkQMOQ==
+X-Received: by 2002:a2e:a370:: with SMTP id i16mr9544469ljn.22.1598515087168;
+        Thu, 27 Aug 2020 00:58:07 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:4853:a15:71d2:9e85:be1:5e21? ([2a00:1fa0:4853:a15:71d2:9e85:be1:5e21])
+        by smtp.gmail.com with ESMTPSA id j6sm297282lja.23.2020.08.27.00.58.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 00:58:06 -0700 (PDT)
+Subject: Re: [PATCH] net: usb: Fix uninit-was-stored issue in
+ asix_read_phy_addr()
+To:     Himadri Pandya <himadrispandya@gmail.com>, davem@davemloft.net,
+        kuba@kernel.org
+Cc:     linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        gregkh@linuxfoundation.org
+References: <20200827065355.15177-1-himadrispandya@gmail.com>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Organization: Brain-dead Software
+Message-ID: <5dd266df-33cf-f351-7253-33a7f589cd56@gmail.com>
+Date:   Thu, 27 Aug 2020 10:57:56 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Message-ID: <159851486062.20229.11037063852084225523.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200827065355.15177-1-himadrispandya@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the locking/core branch of tip:
+Hello!
 
-Commit-ID:     bd76eca10de2eb9998d5125b08e8997cbf5508d5
-Gitweb:        https://git.kernel.org/tip/bd76eca10de2eb9998d5125b08e8997cbf5508d5
-Author:        Boqun Feng <boqun.feng@gmail.com>
-AuthorDate:    Fri, 07 Aug 2020 15:42:24 +08:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 26 Aug 2020 12:42:04 +02:00
+On 27.08.2020 9:53, Himadri Pandya wrote:
 
-lockdep: Reduce the size of lock_list::distance
+> The buffer size is 2 Bytes and we expect to receive the same amount of
+> data. But sometimes we receive less data and run into uninit-was-stored
+> issue upon read. Hence modify the error check on the return value to match
+> with the buffer size as a prevention.
+> 
+> Reported-and-tested by: syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com
+> Signed-off-by: Himadri Pandya <himadrispandya@gmail.com>
+> ---
+>   drivers/net/usb/asix_common.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/usb/asix_common.c b/drivers/net/usb/asix_common.c
+> index e39f41efda3e..7bc6e8f856fe 100644
+> --- a/drivers/net/usb/asix_common.c
+> +++ b/drivers/net/usb/asix_common.c
+> @@ -296,7 +296,7 @@ int asix_read_phy_addr(struct usbnet *dev, int internal)
+>   
+>   	netdev_dbg(dev->net, "asix_get_phy_addr()\n");
+>   
+> -	if (ret < 0) {
+> +	if (ret < 2) {
+>   		netdev_err(dev->net, "Error reading PHYID register: %02x\n", ret);
 
-lock_list::distance is always not greater than MAX_LOCK_DEPTH (which
-is 48 right now), so a u16 will fit. This patch reduces the size of
-lock_list::distance to save space, so that we can introduce other fields
-to help detect recursive read lock deadlocks without increasing the size
-of lock_list structure.
+    Hm... printing possibly negative values as hex?
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200807074238.1632519-6-boqun.feng@gmail.com
----
- include/linux/lockdep.h  | 2 +-
- kernel/locking/lockdep.c | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+[...]
 
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 7cae5ea..2275010 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -54,7 +54,7 @@ struct lock_list {
- 	struct lock_class		*class;
- 	struct lock_class		*links_to;
- 	const struct lock_trace		*trace;
--	int				distance;
-+	u16				distance;
- 
- 	/*
- 	 * The parent field is used to implement breadth-first search, and the
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 150686a..668a983 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1320,7 +1320,7 @@ static struct lock_list *alloc_list_entry(void)
-  */
- static int add_lock_to_list(struct lock_class *this,
- 			    struct lock_class *links_to, struct list_head *head,
--			    unsigned long ip, int distance,
-+			    unsigned long ip, u16 distance,
- 			    const struct lock_trace *trace)
- {
- 	struct lock_list *entry;
-@@ -2489,7 +2489,7 @@ check_deadlock(struct task_struct *curr, struct held_lock *next)
-  */
- static int
- check_prev_add(struct task_struct *curr, struct held_lock *prev,
--	       struct held_lock *next, int distance,
-+	       struct held_lock *next, u16 distance,
- 	       struct lock_trace **const trace)
- {
- 	struct lock_list *entry;
-@@ -2622,7 +2622,7 @@ check_prevs_add(struct task_struct *curr, struct held_lock *next)
- 		goto out_bug;
- 
- 	for (;;) {
--		int distance = curr->lockdep_depth - depth + 1;
-+		u16 distance = curr->lockdep_depth - depth + 1;
- 		hlock = curr->held_locks + depth - 1;
- 
- 		/*
+MBR, Sergei
