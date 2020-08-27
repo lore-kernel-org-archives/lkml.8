@@ -2,127 +2,105 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A7DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8690C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACFCF22B40
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E7120738
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:35:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+RtF9Wl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbgH0Ldi (ORCPT
+        id S1727066AbgH0Le4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 07:33:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:57094 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728534AbgH0L36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 07:29:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DFD211B3;
-        Thu, 27 Aug 2020 04:22:47 -0700 (PDT)
-Received: from [192.168.1.190] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 84D723F68F;
-        Thu, 27 Aug 2020 04:22:45 -0700 (PDT)
-Subject: Re: [PATCH 20/35] arm64: mte: Add in-kernel MTE helpers
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1597425745.git.andreyknvl@google.com>
- <2cf260bdc20793419e32240d2a3e692b0adf1f80.1597425745.git.andreyknvl@google.com>
- <20200827093808.GB29264@gaia> <588f3812-c9d0-8dbe-fce2-1ea89f558bd2@arm.com>
- <20200827111027.GJ29264@gaia>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <921c4ed0-b5b5-bc01-5418-c52d80f1af59@arm.com>
-Date:   Thu, 27 Aug 2020 12:24:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 27 Aug 2020 07:34:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728550AbgH0L37 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 07:29:59 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C332C06123E;
+        Thu, 27 Aug 2020 04:08:34 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id q16so2729576ybk.6;
+        Thu, 27 Aug 2020 04:08:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4AC1iNQgWZrkBSCQYpKpySGolDqTh2HDf1hkAeZFNb4=;
+        b=T+RtF9WlK+QYlzaFRforZObowt16Z/icVvaSdm1jjwL0BDGUHQxVhiDeSCIDIn/cF4
+         +Jfk9BSyfhzclpoE+pdql83jioly+c2MdVx6NLOqCLqCWsfKn3Ao1cjYW7XGKcbi7b+U
+         lMPm9mwtitTgaESAs6c79YF6oXOk0GFbAjfy2CbREnXE5LP9HiOSzDqqm6SpSwKIwp78
+         jol6U5yB2v5SJpmbkCRsn9lIz1UpWha3gERsgWwwi0BiYzt2T8ctaMSbXxTOd937vCr6
+         +e/ereWKyJnAtDM99NFXloqA5EQ1i1oc8Q08QBJG2EdSdwUiYA2aTShsnaRZ5mV5pyJT
+         LM7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4AC1iNQgWZrkBSCQYpKpySGolDqTh2HDf1hkAeZFNb4=;
+        b=r04hRvZH6rcwvRX+/cRGvUFv/2GkV3XgabSorz8yILWPdCehOTI2OO+ohm+29kz8H2
+         /IJFFb9afn0OBe4o/xBJnn9EeN012EA2Yb31d5oPwYacFBRxGKfFnwA+COBEFRgZrRON
+         y47z4xOva9+tJNnKIhrxOjlqB4494nnY0iOYi/pIT02T9X+TlLciJlT8YWhyZWoPUL/U
+         1yqG3SPPMWegXE0/M0UKPIepbIQiOK/M3GW1nJKr/6djtdwuB1RHSQEh+CgKl/LfwwZr
+         PztxWNgFgyeQI1EtM2ouNM+X2cIVoahXLkdOtRjRR9K7CqfSsQzx/fNzhyFz8pkYYijW
+         Lbww==
+X-Gm-Message-State: AOAM5307fAgGfz9DoT3BBnMCsuWPXrf4iuHC+A55rVifiBN0DL2MD9q/
+        8ZYokM/uCiAn6XVYB64uIid7qAKWbddK5RCXWaY=
+X-Google-Smtp-Source: ABdhPJxqcVtXp1n3gyHbu5k3vj5n974w3z1wdNTj6pVg7CQ0rfbSLCDrB4IgRwp3FjMCjoGv8C0ToybrrjeIiLUlXDE=
+X-Received: by 2002:a25:8149:: with SMTP id j9mr28989594ybm.214.1598526513604;
+ Thu, 27 Aug 2020 04:08:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200827111027.GJ29264@gaia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1588542414-14826-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 27 Aug 2020 12:08:07 +0100
+Message-ID: <CA+V-a8v5CtxJQxjSWcvJrPtf9JyYKZeACdc3as_hjM710pk1AQ@mail.gmail.com>
+Subject: Re: [PATCH v2 05/10] dt-bindings: renesas,rcar-dmac: Document r8a7742 support
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Vinod,
 
+On Sun, May 3, 2020 at 10:47 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+>
+> Renesas RZ/G SoC also have the R-Car gen2/3 compatible DMA controllers.
+> Document RZ/G1H (also known as R8A7742) SoC bindings.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  Documentation/devicetree/bindings/dma/renesas,rcar-dmac.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+This patch is not present in linux-next yet, could you please take care of it.
 
-On 8/27/20 12:10 PM, Catalin Marinas wrote:
-> On Thu, Aug 27, 2020 at 11:31:56AM +0100, Vincenzo Frascino wrote:
->> On 8/27/20 10:38 AM, Catalin Marinas wrote:
->>> On Fri, Aug 14, 2020 at 07:27:02PM +0200, Andrey Konovalov wrote:
->>>> +void * __must_check mte_set_mem_tag_range(void *addr, size_t size, u8 tag)
->>>> +{
->>>> +	void *ptr = addr;
->>>> +
->>>> +	if ((!system_supports_mte()) || (size == 0))
->>>> +		return addr;
->>>> +
->>>> +	tag = 0xF0 | (tag & 0xF);
->>>> +	ptr = (void *)__tag_set(ptr, tag);
->>>> +	size = ALIGN(size, MTE_GRANULE_SIZE);
->>>
->>> I think aligning the size is dangerous. Can we instead turn it into a
->>> WARN_ON if not already aligned? At a quick look, the callers of
->>> kasan_{un,}poison_memory() already align the size.
->>
->> The size here is used only for tagging purposes and if we want to tag a
->> subgranule amount of memory we end up tagging the granule anyway. Why do you
->> think it can be dangerous?
-> 
-> In principle, I don't like expanding the size unless you are an
-> allocator. Since this code doesn't control the placement of the object
-> it was given, a warn seems more appropriate.
-> 
-
-That's a good point. Ok, we can change this in a warning.
-
->>>> +/*
->>>> + * Assign allocation tags for a region of memory based on the pointer tag
->>>> + *   x0 - source pointer
->>>> + *   x1 - size
->>>> + *
->>>> + * Note: size is expected to be MTE_GRANULE_SIZE aligned
->>>> + */
->>>> +SYM_FUNC_START(mte_assign_mem_tag_range)
->>>> +	/* if (src == NULL) return; */
->>>> +	cbz	x0, 2f
->>>> +	/* if (size == 0) return; */
->>>
->>> You could skip the cbz here and just document that the size should be
->>> non-zero and aligned. The caller already takes care of this check.
->>
->> I would prefer to keep the check here, unless there is a valid reason, since
->> allocate(0) is a viable option hence tag(x, 0) should be as well. The caller
->> takes care of it in one place, today, but I do not know where the API will be
->> used in future.
-> 
-> That's why I said just document it in the comment above the function.
-> 
-> The check is also insufficient if the size is not aligned to an MTE
-> granule, so it's not really consistent. This function should end with a
-> subs followed by b.gt as cbnz will get stuck in a loop for unaligned
-> size.
-> 
-
-That's correct. Thanks for pointing this out. I currently used it only in places
-where the caller took care to align the size. But in future we cannot know hence
-we should harden the function with what you are suggesting.
-
--- 
-Regards,
-Vincenzo
+Cheers,
+Prabhakar
