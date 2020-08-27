@@ -2,91 +2,102 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0083C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:31:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2F7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E31D2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11648207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:32:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgH0Cb5 (ORCPT
+        id S1727046AbgH0Cch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 22:31:57 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:45328 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726826AbgH0Cb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 22:31:57 -0400
-Received: from [10.130.0.60] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj9wFG0dfEnYOAA--.427S3;
-        Thu, 27 Aug 2020 10:31:35 +0800 (CST)
-Subject: Re: [PATCH] MIPS: Loongson: Fix complie errors without CONFIG_SMP
-To:     Matthew Wilcox <willy@infradead.org>
-References: <1598446407-8845-1-git-send-email-hejinyang@loongson.cn>
- <20200826130122.GR17456@casper.infradead.org>
-Cc:     Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Wed, 26 Aug 2020 22:32:37 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:55042 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727017AbgH0Cch (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 22:32:37 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U6yzcF2_1598495549;
+Received: from localhost(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0U6yzcF2_1598495549)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 27 Aug 2020 10:32:34 +0800
+From:   Xunlei Pang <xlpang@linux.alibaba.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   hejinyang <hejinyang@loongson.cn>
-Message-ID: <5394f030-104c-f191-e581-4f1ed23a85a6@loongson.cn>
-Date:   Thu, 27 Aug 2020 10:31:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
-MIME-Version: 1.0
-In-Reply-To: <20200826130122.GR17456@casper.infradead.org>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxj9wFG0dfEnYOAA--.427S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xw43tr43uF18Ww1kGr47twb_yoW3ZwcEgw
-        4Du3W8JF13XFyvgFZFg3y8Zr4qgF4UWasrGw1rur12934Yqr95XayktrZxuFn8u3y5XrZ7
-        WF4S9FyFvanavjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbx8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE
-        67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
-        AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
-        c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
-        AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWU
-        JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHU
-        DUUUUU=
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Chris Down <chris@chrisdown.name>
+Cc:     Xunlei Pang <xlpang@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH v3] mm: memcg: Fix memcg reclaim soft lockup
+Date:   Thu, 27 Aug 2020 10:32:29 +0800
+Message-Id: <1598495549-67324-1-git-send-email-xlpang@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+We've met softlockup with "CONFIG_PREEMPT_NONE=y", when
+the target memcg doesn't have any reclaimable memory.
 
+It can be easily reproduced as below:
+ watchdog: BUG: soft lockup - CPU#0 stuck for 111s![memcg_test:2204]
+ CPU: 0 PID: 2204 Comm: memcg_test Not tainted 5.9.0-rc2+ #12
+ Call Trace:
+  shrink_lruvec+0x49f/0x640
+  shrink_node+0x2a6/0x6f0
+  do_try_to_free_pages+0xe9/0x3e0
+  try_to_free_mem_cgroup_pages+0xef/0x1f0
+  try_charge+0x2c1/0x750
+  mem_cgroup_charge+0xd7/0x240
+  __add_to_page_cache_locked+0x2fd/0x370
+  add_to_page_cache_lru+0x4a/0xc0
+  pagecache_get_page+0x10b/0x2f0
+  filemap_fault+0x661/0xad0
+  ext4_filemap_fault+0x2c/0x40
+  __do_fault+0x4d/0xf9
+  handle_mm_fault+0x1080/0x1790
 
-On 08/26/2020 09:01 PM, Matthew Wilcox wrote:
-> On Wed, Aug 26, 2020 at 08:53:27PM +0800, Jinyang He wrote:
->> +++ b/arch/mips/include/asm/mach-loongson64/topology.h
->> @@ -4,7 +4,11 @@
->>   
->>   #ifdef CONFIG_NUMA
->>   
->> +#ifdef CONFIG_SMP
->>   #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
->> +#else
->> +#define cpu_to_node(cpu)	0
->> +#endif
-> Are you saying you've enabled NUMA without enabling SMP?  Does that make
-> sense?
+It only happens on our 1-vcpu instances, because there's no chance
+for oom reaper to run to reclaim the to-be-killed process.
 
-NUMA option normally work with more than two nodes, though Loongson64 use it
-default after patch 6fbde6b492dfc761ad60a68fb2cb32b1eb05b786. Loongson64(3A)'s
-each node consists of 4 cpus while it only has 4 cpus. In other words, it has
-only one node while open NUMA. I'm confused it if NUMA deponds on SMP.
+Add a cond_resched() at the upper shrink_node_memcgs() to solve this
+issue, this will mean that we will get a scheduling point for each
+memcg in the reclaimed hierarchy without any dependency on the
+reclaimable memory in that memcg thus making it more predictable.
 
-I'll try fix it with unabling NUMA and SMP later.
+Acked-by: Chris Down <chris@chrisdown.name>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Suggested-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
+---
+ mm/vmscan.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Thanks.:-)
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 99e1796..9727dd8 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2615,6 +2615,14 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+ 		unsigned long reclaimed;
+ 		unsigned long scanned;
+ 
++		/*
++		 * This loop can become CPU-bound when target memcgs
++		 * aren't eligible for reclaim - either because they
++		 * don't have any reclaimable pages, or because their
++		 * memory is explicitly protected. Avoid soft lockups.
++		 */
++		cond_resched();
++
+ 		mem_cgroup_calculate_protection(target_memcg, memcg);
+ 
+ 		if (mem_cgroup_below_min(memcg)) {
+-- 
+1.8.3.1
 
