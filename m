@@ -2,269 +2,152 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03151C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAA2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAD752054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:13:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qDe8RH5s"
+	by mail.kernel.org (Postfix) with ESMTP id 0F3592054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598537647;
+	bh=1Q7icZS15ds10bV/JJK72QK64oZ3hVx5Gs5UoRmJ98Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kgs97xNEqKEqQih5SM4bOxQ/UEzOZPGtYs5dHkUf7GOmyvlOokYy3mQUasyEf00Qx
+	 IcmMWVvbJsZZSwr/nxp+SbhnhZX0hbKkAjFFKNmtSyp9zEZogwiutAbzavvL5BfkQq
+	 MtStBR90ogBBYiW/CznEhciDvDMy5p6Bnz4CXOMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgH0ONQ (ORCPT
+        id S1727992AbgH0OOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:13:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53940 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727864AbgH0OFi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:05:38 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0E47C0619C8;
-        Thu, 27 Aug 2020 07:04:15 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id mw10so2650183pjb.2;
-        Thu, 27 Aug 2020 07:04:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NHFesHMh8urOzDGLF3BG3WK3USIsA8bYlNdGJPsk5Ng=;
-        b=qDe8RH5sDvLJOdA1yQDmBGleVMsL5nq+Ua7MtmBNrNk2SwgsIt6yPuK8b7mLjlN2QV
-         fEUNAcjH3K2fiYX0850kmbi6r8IRWwHVKFlb/Up0gUvPfpILl4rqhNNMuiXV7nPYhAUK
-         qHD7y8WrN5Pb+8ESKuBDB/DsY4HdMgOvZuBf1fMiqUFH9u8MnTUFWRy0pCQfz2Utcwih
-         OHtlo/Rm8tVkKrNu5I1t4oM2NbBRgd4dJ4iqPY2S1hvYV9KPiF0Zlu9vSCPojm1yJy5y
-         hSsJB07q4hDCygZqy/QbsknUkJpyNzwQvt4JUCGur3OsRhGo+PEAKZemdLkgwE6fZhHW
-         2+aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NHFesHMh8urOzDGLF3BG3WK3USIsA8bYlNdGJPsk5Ng=;
-        b=Tm9y1k6qh9Eer3n4+JxLeKEBz33LPBRri/xf7iHbJlBIWnVJp3eTR37aM+XJwIuiDR
-         sR/Ie7mumURsWn7Cv8jJhaUL8Q0ghpTXUmh00pz+O+i8spbknXSO4vpJPIp6ohCgCzQY
-         +1PNpG21IEH0qbQu+oHSmI8LKXXlHVUEsFusLiy13D0KB9xUJvrFt2aw1jvNbjujIWHC
-         fKf5ZHgq4zH985rUPG5TZPAEP3oGkvBvQpY5LTPU+x5jzgP7KMl6H8OrdWcrNXd7cmdR
-         ns/tZ6oau0RrGUsXtcS+nHJkn010ETeFNAzf4U/pUqIWAnSQRVrah8ldd2eioQFDAt89
-         WLyA==
-X-Gm-Message-State: AOAM530di7kFDgZ6qJTYEeRlxqSeGk3PBd59esdOW38kchQVSDswAe4+
-        V7yo8lu5InD7YGMBBpS/MAaZ0LvyJFg=
-X-Google-Smtp-Source: ABdhPJydDw+Mp/wqlKlBrk5r8ON417V78PSY4Ip9cb+pzxSDYc1gyRCDjceHtZAlTMEkgcsDVC9hvg==
-X-Received: by 2002:a17:90a:80ca:: with SMTP id k10mr11030071pjw.86.1598537054844;
-        Thu, 27 Aug 2020 07:04:14 -0700 (PDT)
-Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id fs12sm2371092pjb.21.2020.08.27.07.04.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 07:04:14 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v5 18/20] tools: gpio: port gpio-event-mon to v2 uAPI
-Date:   Thu, 27 Aug 2020 22:00:18 +0800
-Message-Id: <20200827140020.159627-19-warthog618@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200827140020.159627-1-warthog618@gmail.com>
-References: <20200827140020.159627-1-warthog618@gmail.com>
+        Thu, 27 Aug 2020 10:14:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727103AbgH0OFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 10:05:39 -0400
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1C5322BEB;
+        Thu, 27 Aug 2020 14:04:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598537073;
+        bh=1Q7icZS15ds10bV/JJK72QK64oZ3hVx5Gs5UoRmJ98Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tl+yRPpvVOC0YrftA4sgCJVWFb/LkR2nLxpNX/VePMfSIVcRbEGhau8fsoeZ/d0OI
+         xZVlxtTFY0i9XDknPddK0qCJFqCIZIVnM5Jy8AdvN+sYQySrA7Gyqi1qPPd0cpud5u
+         A+WpomofAz4jpRAwffXZ2g9Nlh3BGC56idJL5K74=
+Received: by mail-oi1-f176.google.com with SMTP id u24so4683389oic.7;
+        Thu, 27 Aug 2020 07:04:33 -0700 (PDT)
+X-Gm-Message-State: AOAM532y2h6usRQxL5jap9cB06BgUtqUreMOzehGtv0elTye4BBOOhZ8
+        Cp/nc3r64PSAj4oZfD9CHL1abLAc0Pa+uze9tQ==
+X-Google-Smtp-Source: ABdhPJySPH2tJLgDSKWk2U/55xGLS0GwXwFCXhvqFf81XQitZVSXlRxK+ZH8toMGrmTkit0oRI8rP5SnLYAKkUAuRpc=
+X-Received: by 2002:aca:e1d6:: with SMTP id y205mr7123657oig.152.1598537073171;
+ Thu, 27 Aug 2020 07:04:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200824084712.2526079-1-vkoul@kernel.org> <20200824084712.2526079-2-vkoul@kernel.org>
+ <20200824174009.GA2948650@bogus> <20200825145131.GS2639@vkoul-mobl>
+ <20200826063246.GW2639@vkoul-mobl> <CAL_JsqKwwirYhrQxCkoUCVnZa_7yNsBDaqgc5TWbLLpeGv17Zw@mail.gmail.com>
+ <20200827045053.GG2639@vkoul-mobl>
+In-Reply-To: <20200827045053.GG2639@vkoul-mobl>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 27 Aug 2020 08:04:21 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJw0q4QLGr+Akaxm8YUnLMnUtgJdO5uMqJF7yKuSrX_YA@mail.gmail.com>
+Message-ID: <CAL_JsqJw0q4QLGr+Akaxm8YUnLMnUtgJdO5uMqJF7yKuSrX_YA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Document qcom,gpi dma binding
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Port the gpio-event-mon tool to the latest GPIO uAPI.
+On Wed, Aug 26, 2020 at 10:50 PM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 26-08-20, 08:35, Rob Herring wrote:
+> > On Wed, Aug 26, 2020 at 12:32 AM Vinod Koul <vkoul@kernel.org> wrote:
+> > >
+> > > On 25-08-20, 20:21, Vinod Koul wrote:
+> > > > Hey Rob,
+> > > >
+> > > > On 24-08-20, 11:40, Rob Herring wrote:
+> > > > > On Mon, 24 Aug 2020 14:17:10 +0530, Vinod Koul wrote:
+> > > > > > Add devicetree binding documentation for GPI DMA controller
+> > > > > > implemented on Qualcomm SoCs
+> > > > > >
+> > > > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > > > > > ---
+> > > > > >  .../devicetree/bindings/dma/qcom-gpi.yaml     | 87 +++++++++++=
+++++++++
+> > > > > >  1 file changed, 87 insertions(+)
+> > > > > >  create mode 100644 Documentation/devicetree/bindings/dma/qcom-=
+gpi.yaml
+> > > > > >
+> > > > >
+> > > > >
+> > > > > My bot found errors running 'make dt_binding_check' on your patch=
+:
+> > > > >
+> > > > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindi=
+ngs/dma/qcom-gpi.yaml: properties:qcom,ev-factor: {'description': 'Event ri=
+ng transfer size compare to channel transfer ring. Event ring length =3D ev=
+-factor * transfer ring size', 'maxItems': 1} is not valid under any of the=
+ given schemas (Possible causes of the failure):
+> > > > >     /builds/robherring/linux-dt-review/Documentation/devicetree/b=
+indings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: 'not' is a required p=
+roperty
+> > > >
+> > > > Okay updating dt-schema I do see this, now the question is what is =
+this
+> > > > and what does it mean ;-) I am not sure I comprehend the error mess=
+age.
+> > > > I see this for all the new properties I added as required for this
+> > > > device node
+> > >
+> > > Okay I think I have figured it out, I need to provide ref to
+> > > /schemas/types.yaml#definitions/uint32 for this to work, which does
+> > > makes sense to me.
+> > >
+> > >   qcom,max-num-gpii:
+> > >     $ref: /schemas/types.yaml#definitions/uint32
+> > >     maxItems: 1
+> >
+> > uint32 is always 1 item, so drop. Is there a max value you can define?
+>
+> Sorry not sure I follow, to clarify you mean drop uint32, if so which
+> type to use u8? I can use u8 as max wont be beyond 255.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- tools/gpio/gpio-event-mon.c | 91 +++++++++++++++++++------------------
- 1 file changed, 47 insertions(+), 44 deletions(-)
+maxItems applies to arrays. A uint32 is not an array, so drop 'maxItems'.
 
-diff --git a/tools/gpio/gpio-event-mon.c b/tools/gpio/gpio-event-mon.c
-index 1a303a81aeef..d6a831200c18 100644
---- a/tools/gpio/gpio-event-mon.c
-+++ b/tools/gpio/gpio-event-mon.c
-@@ -23,17 +23,16 @@
- #include <sys/ioctl.h>
- #include <sys/types.h>
- #include <linux/gpio.h>
-+#include "gpio-utils.h"
- 
- int monitor_device(const char *device_name,
- 		   unsigned int line,
--		   uint32_t handleflags,
--		   uint32_t eventflags,
-+		   struct gpio_v2_line_config *config,
- 		   unsigned int loops)
- {
--	struct gpioevent_request req;
--	struct gpiohandle_data data;
-+	struct gpio_v2_line_values values;
- 	char *chrdev_name;
--	int fd;
-+	int cfd, lfd;
- 	int ret;
- 	int i = 0;
- 
-@@ -41,44 +40,39 @@ int monitor_device(const char *device_name,
- 	if (ret < 0)
- 		return -ENOMEM;
- 
--	fd = open(chrdev_name, 0);
--	if (fd == -1) {
-+	cfd = open(chrdev_name, 0);
-+	if (cfd == -1) {
- 		ret = -errno;
- 		fprintf(stderr, "Failed to open %s\n", chrdev_name);
- 		goto exit_free_name;
- 	}
- 
--	req.lineoffset = line;
--	req.handleflags = handleflags;
--	req.eventflags = eventflags;
--	strcpy(req.consumer_label, "gpio-event-mon");
--
--	ret = ioctl(fd, GPIO_GET_LINEEVENT_IOCTL, &req);
--	if (ret == -1) {
--		ret = -errno;
--		fprintf(stderr, "Failed to issue GET EVENT "
--			"IOCTL (%d)\n",
--			ret);
--		goto exit_close_error;
--	}
-+	ret = gpiotools_request_line(device_name, &line, 1, config,
-+				     "gpio-event-mon");
-+	if (ret < 0)
-+		goto exit_device_close;
-+	else
-+		lfd = ret;
- 
- 	/* Read initial states */
--	ret = ioctl(req.fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data);
--	if (ret == -1) {
--		ret = -errno;
--		fprintf(stderr, "Failed to issue GPIOHANDLE GET LINE "
--			"VALUES IOCTL (%d)\n",
-+	values.mask = 1;
-+	values.bits = 0;
-+	ret = gpiotools_get_values(lfd, &values);
-+	if (ret < 0) {
-+		fprintf(stderr,
-+			"Failed to issue GPIO LINE GET VALUES IOCTL (%d)\n",
- 			ret);
--		goto exit_close_error;
-+		goto exit_line_close;
- 	}
- 
- 	fprintf(stdout, "Monitoring line %d on %s\n", line, device_name);
--	fprintf(stdout, "Initial line value: %d\n", data.values[0]);
-+	fprintf(stdout, "Initial line value: %d\n",
-+		gpiotools_test_bit(values.bits, 0));
- 
- 	while (1) {
--		struct gpioevent_data event;
-+		struct gpio_v2_line_event event;
- 
--		ret = read(req.fd, &event, sizeof(event));
-+		ret = read(lfd, &event, sizeof(event));
- 		if (ret == -1) {
- 			if (errno == -EAGAIN) {
- 				fprintf(stderr, "nothing available\n");
-@@ -96,12 +90,14 @@ int monitor_device(const char *device_name,
- 			ret = -EIO;
- 			break;
- 		}
--		fprintf(stdout, "GPIO EVENT %llu: ", event.timestamp);
-+		fprintf(stdout, "GPIO EVENT at %llu on line %d (%d|%d) ",
-+			event.timestamp, event.offset, event.line_seqno,
-+			event.seqno);
- 		switch (event.id) {
--		case GPIOEVENT_EVENT_RISING_EDGE:
-+		case GPIO_V2_LINE_EVENT_RISING_EDGE:
- 			fprintf(stdout, "rising edge");
- 			break;
--		case GPIOEVENT_EVENT_FALLING_EDGE:
-+		case GPIO_V2_LINE_EVENT_FALLING_EDGE:
- 			fprintf(stdout, "falling edge");
- 			break;
- 		default:
-@@ -114,8 +110,11 @@ int monitor_device(const char *device_name,
- 			break;
- 	}
- 
--exit_close_error:
--	if (close(fd) == -1)
-+exit_line_close:
-+	if (close(lfd) == -1)
-+		perror("Failed to close line file");
-+exit_device_close:
-+	if (close(cfd) == -1)
- 		perror("Failed to close GPIO character device file");
- exit_free_name:
- 	free(chrdev_name);
-@@ -140,15 +139,20 @@ void print_usage(void)
- 	);
- }
- 
-+#define EDGE_FLAGS \
-+	(GPIO_V2_LINE_FLAG_EDGE_RISING | \
-+	 GPIO_V2_LINE_FLAG_EDGE_FALLING)
-+
- int main(int argc, char **argv)
- {
- 	const char *device_name = NULL;
- 	unsigned int line = -1;
- 	unsigned int loops = 0;
--	uint32_t handleflags = GPIOHANDLE_REQUEST_INPUT;
--	uint32_t eventflags = 0;
-+	struct gpio_v2_line_config config;
- 	int c;
- 
-+	memset(&config, 0, sizeof(config));
-+	config.flags = GPIO_V2_LINE_FLAG_INPUT;
- 	while ((c = getopt(argc, argv, "c:n:o:dsrf?")) != -1) {
- 		switch (c) {
- 		case 'c':
-@@ -161,16 +165,16 @@ int main(int argc, char **argv)
- 			line = strtoul(optarg, NULL, 10);
- 			break;
- 		case 'd':
--			handleflags |= GPIOHANDLE_REQUEST_OPEN_DRAIN;
-+			config.flags |= GPIO_V2_LINE_FLAG_OPEN_DRAIN;
- 			break;
- 		case 's':
--			handleflags |= GPIOHANDLE_REQUEST_OPEN_SOURCE;
-+			config.flags |= GPIO_V2_LINE_FLAG_OPEN_SOURCE;
- 			break;
- 		case 'r':
--			eventflags |= GPIOEVENT_REQUEST_RISING_EDGE;
-+			config.flags |= GPIO_V2_LINE_FLAG_EDGE_RISING;
- 			break;
- 		case 'f':
--			eventflags |= GPIOEVENT_REQUEST_FALLING_EDGE;
-+			config.flags |= GPIO_V2_LINE_FLAG_EDGE_FALLING;
- 			break;
- 		case '?':
- 			print_usage();
-@@ -182,11 +186,10 @@ int main(int argc, char **argv)
- 		print_usage();
- 		return -1;
- 	}
--	if (!eventflags) {
-+	if (!(config.flags & EDGE_FLAGS)) {
- 		printf("No flags specified, listening on both rising and "
- 		       "falling edges\n");
--		eventflags = GPIOEVENT_REQUEST_BOTH_EDGES;
-+		config.flags |= EDGE_FLAGS;
- 	}
--	return monitor_device(device_name, line, handleflags,
--			      eventflags, loops);
-+	return monitor_device(device_name, line, &config, loops);
- }
--- 
-2.28.0
+>
+> Yes I will define min as well max values too.
+>
+> > Otherwise, up to 2^32 - 1 is valid.
+>
+> I see one more warning given by your bot which I am able to reproduce as
+> well:
+> Documentation/devicetree/bindings/dma/qcom,gpi.example.dt.yaml: example-0=
+: dma-controller@800000:reg:0: [0, 8388608, 0, 393216] is too long
+>
+> So to fix this I added the #address-cells and #size-cells
+>
+>         #address-cells =3D <2>;
+>         #size-cells =3D <2>;
+>         reg =3D <0x0 0x00800000 0x0 0x60000>;
+>
+> But I am getting the warning, what am I doing incorrect
 
+The cell sizes for reg come from the parent node. The default for
+examples is 1 cell each. The easiest thing to do is change reg to
+'<0x00800000 0x60000>'. Otherwise, you'd need to define a parent bus
+node.
+
+Rob
