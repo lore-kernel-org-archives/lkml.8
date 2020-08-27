@@ -2,179 +2,101 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9F2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EB3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BDCA2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45F6C2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:14:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="IWJn97ni"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ugyty4oM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgH0QO1 (ORCPT
+        id S1727780AbgH0QO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:14:27 -0400
-Received: from relayfre-01.paragon-software.com ([176.12.100.13]:41030 "EHLO
-        relayfre-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726123AbgH0QOY (ORCPT
+        Thu, 27 Aug 2020 12:14:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgH0QO5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:14:24 -0400
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-        by relayfre-01.paragon-software.com (Postfix) with ESMTPS id AF977425;
-        Thu, 27 Aug 2020 19:14:22 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paragon-software.com; s=mail; t=1598544862;
-        bh=D0iFd0HwiCnS07gs0PSchR2wvXFcHlxmi/ESrc/MLYU=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=IWJn97ni71VN/PWXAki7hnk+ntwYGe1wO4LKL1xBE4a0V4A92cfa2Y7uarzyI1WtH
-         +RKuHIHPg+Afj9604KaVhLb9dYzAAVgu671kjGVtz9XYBAS+diut93eN2XoBIIOsuw
-         e+SSKufEk8pT3hcrC3tjiwYqfE86rRTtF6Qn7QbM=
-Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Thu, 27 Aug 2020 19:14:21 +0300
-Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
- by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
- id 15.01.1847.003; Thu, 27 Aug 2020 19:14:21 +0300
-From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To:     Joe Perches <joe@perches.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-CC:     =?iso-8859-1?Q?Pali_Roh=E1r?= <pali@kernel.org>
-Subject: RE: [PATCH v2 02/10] fs/ntfs3: Add initialization of super block
-Thread-Topic: [PATCH v2 02/10] fs/ntfs3: Add initialization of super block
-Thread-Index: AdZ30tAfM9dNSlAKR92rLVrbgJq3AAABsW8AASzZqLA=
-Date:   Thu, 27 Aug 2020 16:14:21 +0000
-Message-ID: <83acd2652133437c8d9f62fcc37ad5e4@paragon-software.com>
-References: <caddbe41eaef4622aab8bac24934eed1@paragon-software.com>
- <1ad67130d11ae089fbc46fd373e1e019e1de06f8.camel@perches.com>
-In-Reply-To: <1ad67130d11ae089fbc46fd373e1e019e1de06f8.camel@perches.com>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.30.8.36]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 27 Aug 2020 12:14:57 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ED71C061264;
+        Thu, 27 Aug 2020 09:14:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=e1CYi8h9cIcfFWE3IwWVVfAtEnrhdJEfYw9kxMmTqF4=; b=Ugyty4oMVrd/CQtmGftGd1GHb6
+        aP9yz/7iv/vaDj3FW7ESNBCoYx3laUXuM5AV4erwj+OZQgdgnvrxa4PH8Hd2gXf/dCOSAoyNZ9WPu
+        qRocjg9sCU/zF9nu5tx3vdHkPguoaS7u4wydF6xrUa3c75EDHa2FnOf0Yq6y22FjAWqpCM/j7PPCa
+        bzB/ajdtu2nm89fAAAmawCjU0nvX4B/9d3GSeNBXn1cJMVKmwW9qfeBkoKcy9uSNwkPa2N593nl+x
+        yWBm54w+j6VI/3ly+oNqHEYAYBAClr7AMdK1415pinIZnuatzQhubdkey/nZQBTQkzOR+r3xc4ZKQ
+        8tWI8ghA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBKYA-0003Lq-Ca; Thu, 27 Aug 2020 16:14:54 +0000
+Subject: Re: [PATCH v2] null_blk: add support for max open/active zone limit
+ for zoned devices
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Niklas Cassel <Niklas.Cassel@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200827135018.63644-1-niklas.cassel@wdc.com>
+ <6d9fb163-f9d9-1f2d-d88c-db9d3a6185b4@infradead.org>
+ <CY4PR04MB37513D874343FBD2D682DA0DE7550@CY4PR04MB3751.namprd04.prod.outlook.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <068d4bad-6061-277d-48d3-82a907f8c4a2@infradead.org>
+Date:   Thu, 27 Aug 2020 09:14:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <CY4PR04MB37513D874343FBD2D682DA0DE7550@CY4PR04MB3751.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches <joe@perches.com>
-Sent: Friday, August 21, 2020 10:39 PM
->=20
-> On Fri, 2020-08-21 at 16:25 +0000, Konstantin Komarov wrote:
-> > Initialization of super block for fs/ntfs3
-> []
-> > diff --git a/fs/ntfs3/super.c b/fs/ntfs3/super.c
-> []
-> > +
-> > +/**
-> > + * ntfs_trace() - print preformated ntfs specific messages.
-> > + */
-> > +void __ntfs_trace(const struct super_block *sb, const char *level,
-> > +		  const char *fmt, ...)
->=20
-> This is a printk mechanism.
->=20
-> I suggest renaming this __ntfs_trace function to ntfs_printk
-> as there is a naming expectation conflict with the tracing
-> subsystem.
->=20
-> > +{
-[]
-> > +	else
-> > +		printk("%sntfs3: %s: %pV", level, sb->s_id, &vaf);
-> > +	va_end(args);
-> > +}
->=20
-> Also it would be rather smaller overall object code to
-> change the macros and uses to embed the KERN_<LEVEL> into
-> the format and remove the const char *level argument.
->=20
-> Use printk_get_level to retrieve the level from the format.
->=20
-> see fs/f2fs/super.c for an example.
->=20
-> This could be something like the below with a '\n' addition
-> to the format string to ensure that messages are properly
-> terminated and cannot be interleaved by other subsystems
-> content that might be in another simultaneously running
-> thread starting with KERN_CONT.
->=20
-> void ntfs_printk(const struct super_block *sb, const char *fmt, ...)
-> {
-> 	struct va_format vaf;
-> 	va_list args;
-> 	int level;
->=20
-> 	va_start(args, fmt);
->=20
-> 	level =3D printk_get_level(fmt);
-> 	vaf.fmt =3D printk_skip_level(fmt);
-> 	vaf.va =3D &args;
-> 	if (!sb)
-> 		printk("%c%cntfs3: %pV\n",
-> 		       KERN_SOH_ASCII, level, &vaf);
-> 	else
-> 		printk("%c%cntfs3: %s: %pV\n",
-> 		       KERN_SOH_ASCII, level, sbi->sb->s_id, &vaf);
->=20
-> 	va_end(args);
-> }
->=20
-> > +
-> > +/* prints info about inode using dentry case if */
-> > +void __ntfs_inode_trace(struct inode *inode, const char *level, const =
-char *fmt,
->=20
-> ntfs_inode_printk
->=20
-> > +			...)
-> > +{
-> > +	struct super_block *sb =3D inode->i_sb;
-> > +	ntfs_sb_info *sbi =3D sb->s_fs_info;
-> > +	struct dentry *dentry;
-> > +	const char *name =3D "?";
-> > +	char buf[48];
-> > +	va_list args;
-> > +	struct va_format vaf;
-> > +
-> > +	if (!__ratelimit(&sbi->ratelimit))
-> > +		return;
-> > +
-> > +	dentry =3D d_find_alias(inode);
-> > +	if (dentry) {
-> > +		spin_lock(&dentry->d_lock);
-> > +		name =3D (const char *)dentry->d_name.name;
-> > +	} else {
-> > +		snprintf(buf, sizeof(buf), "r=3D%lx", inode->i_ino);
-> > +		name =3D buf;
-> > +	}
-> > +
-> > +	va_start(args, fmt);
-> > +	vaf.fmt =3D fmt;
-> > +	vaf.va =3D &args;
-> > +	printk("%s%s on %s: %pV", level, name, sb->s_id, &vaf);
-> > +	va_end(args);
-> > +
-> > +	if (dentry) {
-> > +		spin_unlock(&dentry->d_lock);
-> > +		dput(dentry);
-> > +	}
-> > +}
->=20
-> Remove level and use printk_get_level as above.
-> Format string should use '\n' termination here too.
->=20
+On 8/27/20 8:04 AM, Damien Le Moal wrote:
+> On 2020/08/27 23:51, Randy Dunlap wrote:
+>> On 8/27/20 6:50 AM, Niklas Cassel wrote:
+>>> Add support for user space to set a max open zone and a max active zone
+>>> limit via configfs. By default, the default values are 0 == no limit.
+>>
+>> Hi,
+>>
+>> How does a user find out about how to use/set these limits?
+> 
+> For the setting part, this is for testing. So any value, even extreme ones (e.g.
+> 1) would be OK to check that a software correctly handles write accesses to
+> zones for a device that has open/active zone limitations. A more practical way
+> is to reuse values of real devices. For instance, some SMR disks I use have a
+> max open limit of 128 and max active 0 (there is no limit for active zones on
+> SMR disks as ZBC/ZAC specifications do not define this concept).
+> 
+> Another example is our soon to come work on btrfs zone support which shows that
+> at the very least 6 active zones are needed. So tests can be performed with that
+> minimum to check the file system and that its block allocator does not go
+> opening/activating too many zones.
+> 
+> For the using part, the above btrfs example is good: if the FS tries to allocate
+> blocks in too many inactive zones at the same time without first filling out
+> zones already active, it may exceed the limit and writes will fail. The FS must
+> thus be aware of the limits and its block al;locator tuned to limit block
+> allocations within a set of zones smaller than the maximum active limit.
+> 
+> Does this answer your question ?
 
-Thanks for pointing this out and for your effort with the patch, Joe. We wi=
-ll rework logging in V3 so that it's more compliant with Kernel's approach.
+Yes.  Thank you.
+
+-- 
+~Randy
 
