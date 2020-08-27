@@ -2,77 +2,94 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D04C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FA8C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F98F2177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6422177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:58:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgH0P56 (ORCPT
+        id S1728072AbgH0P6H convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:57:58 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53795 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgH0P5y (ORCPT
+        Thu, 27 Aug 2020 11:58:07 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:22881 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726266AbgH0P6G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:57:54 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1kBKHe-0001vw-U6; Thu, 27 Aug 2020 15:57:51 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Evan Quan <evan.quan@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] drm/amdgpu/swsmu: fix potential uint32_t multiplication overflow
-Date:   Thu, 27 Aug 2020 16:57:50 +0100
-Message-Id: <20200827155750.60938-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Thu, 27 Aug 2020 11:58:06 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-127-1uCyu8HkODWHTq8BSgI4eA-1; Thu, 27 Aug 2020 16:58:02 +0100
+X-MC-Unique: 1uCyu8HkODWHTq8BSgI4eA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 27 Aug 2020 16:58:02 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 27 Aug 2020 16:58:02 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        "x86@kernel.org" <x86@kernel.org>
+CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 01/10] fs: don't allow kernel reads and writes without
+ iter ops
+Thread-Topic: [PATCH 01/10] fs: don't allow kernel reads and writes without
+ iter ops
+Thread-Index: AQHWfINAnoKBzQpz30W83mcBiLuV+KlMG9NA
+Date:   Thu, 27 Aug 2020 15:58:02 +0000
+Message-ID: <e5cb22d53c7c4ebea92443b8b6d86e88@AcuMS.aculab.com>
+References: <20200827150030.282762-1-hch@lst.de>
+ <20200827150030.282762-2-hch@lst.de>
+In-Reply-To: <20200827150030.282762-2-hch@lst.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Christoph Hellwig
+> Sent: 27 August 2020 16:00
+> 
+> Don't allow calling ->read or ->write with set_fs as a preparation for
+> killing off set_fs.  All the instances that we use kernel_read/write on
+> are using the iter ops already.
+> 
+> If a file has both the regular ->read/->write methods and the iter
+> variants those could have different semantics for messed up enough
+> drivers.  Also fails the kernel access to them in that case.
 
-The calculation of tmp64 is performed using a 32 bit multiply and then
-is stored in the uint64_t variable tmp64. This indicates that a 64 bit
-result may be expected, so cast crystal_clock_freq to a uint64_t
-to ensure a 64 bit multiplication is being performed to avoid any
-potential 32 bit overflow.
+Is there a real justification for that?
+For system calls supplying both methods makes sense to avoid
+the extra code paths for a simple read/write.
 
-Addresses-Coverity: ("Unintentional integer overflow)"
-Fixes: 13819ef6453c ("drm/amdgpu/swsmu: add smu11 helpers to get manual fan speeds")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/gpu/drm/amd/pm/swsmu/smu11/smu_v11_0.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Any one stupid enough to make them behave differently gets
+what they deserve.
 
-diff --git a/drivers/gpu/drm/amd/pm/swsmu/smu11/smu_v11_0.c b/drivers/gpu/drm/amd/pm/swsmu/smu11/smu_v11_0.c
-index d2a15e6f48be..0a5161d09722 100644
---- a/drivers/gpu/drm/amd/pm/swsmu/smu11/smu_v11_0.c
-+++ b/drivers/gpu/drm/amd/pm/swsmu/smu11/smu_v11_0.c
-@@ -1218,7 +1218,7 @@ int smu_v11_0_get_fan_speed_rpm(struct smu_context *smu,
- 
- 	crystal_clock_freq = amdgpu_asic_get_xclk(adev);
- 
--	tmp64 = 60 * crystal_clock_freq * 10000;
-+	tmp64 = (uint64_t)crystal_clock_freq * 60 * 10000;
- 	do_div(tmp64, (tach_period * 8));
- 	*speed = (uint32_t)tmp64;
- 
--- 
-2.27.0
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
