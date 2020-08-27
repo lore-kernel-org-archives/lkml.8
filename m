@@ -2,193 +2,165 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A68FC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F385FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0844822B4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:54:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598540064;
-	bh=LzWZBpCw/l+Ix/GXPE6nae42Wme8sXfeIYoOLqaRLsQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=KeS27DvwZ0jm6e2RLepNOtKn4jCNKvGA9g+m+xBQDOZExVezJ849AaE+StWStJiHK
-	 Y8O3upwdqKijcNN/EbTfOTUhmASi1wLb0qIe4PxQkdMaxBVtwe6jUQ6ZiVRpGPpvsH
-	 y8PubhV8kNnqIz1uwaadiz/CwPWGxRlLGBsRkc/M=
+	by mail.kernel.org (Postfix) with ESMTP id CF6FB22B4E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:54:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="O3tFzkly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgH0NMV (ORCPT
+        id S1728246AbgH0Oyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 09:12:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48948 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727112AbgH0NKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:10:35 -0400
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi [91.155.214.58])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2095B207CD;
-        Thu, 27 Aug 2020 13:02:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598533367;
-        bh=LzWZBpCw/l+Ix/GXPE6nae42Wme8sXfeIYoOLqaRLsQ=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=y0Z196NIPvRRFED15YhQtorRsjOAL/5EHRTli8FDYNANC23zGBgTup+7OEOHNLZU6
-         yjR68sJL4gcNocA9V4maauV4CZLScAgY4aBIvQ56F73mQ0ZDQz2pwgAcE+d6Fjy4v6
-         tjj2go46yC/493h+pidRAT7l+Uzv/tpbV0gPSOx0=
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Roger Quadros <rogerq@ti.com>, Peter Chen <peter.chen@nxp.com>
-Cc:     Pawel Laszczak <pawell@cadence.com>,
-        Rahul Kumar <kurahul@cadence.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>,
-        "vigneshr@ti.com" <vigneshr@ti.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 3/3] usb: cdns3: Enable workaround for USB2.0 PHY Rx
- compliance test PHY lockup
-In-Reply-To: <b083883d-b8c3-ee16-6b02-8987cade17ed@ti.com>
-References: <20200825120059.12436-1-rogerq@ti.com>
- <20200825120059.12436-4-rogerq@ti.com>
- <20200826031948.GA7646@b29397-desktop>
- <DM6PR07MB5529A43AFDEB25993595DB59DD540@DM6PR07MB5529.namprd07.prod.outlook.com>
- <20200826071504.GA19661@b29397-desktop>
- <DM6PR07MB5529EB2FB7E3380321191B44DD540@DM6PR07MB5529.namprd07.prod.outlook.com>
- <AM7PR04MB71576DF6C03387C7628DBE3A8B540@AM7PR04MB7157.eurprd04.prod.outlook.com>
- <ab38721a-ef48-c6a7-aa33-3085ca7b8852@ti.com>
- <20200827002339.GA17559@b29397-desktop>
- <b083883d-b8c3-ee16-6b02-8987cade17ed@ti.com>
-Date:   Thu, 27 Aug 2020 16:02:39 +0300
-Message-ID: <87sgc8i6mo.fsf@kernel.org>
+        Thu, 27 Aug 2020 10:54:43 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35438 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727790AbgH0NLb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 09:11:31 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07RD2etX144062;
+        Thu, 27 Aug 2020 09:10:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=HdjXcqDCMa7PfGI38qoEfJ39ttLeWRgMbJnQsHWoBQQ=;
+ b=O3tFzklyXjKJ0wcebxbXRYDAu1eHybHYfR3bBCsPzWcWbD0S8h6CoCaHGTOOqtGM7kMN
+ 60Umx/IAsbh/y6gyLvr8Zw19rcVp7vf2iiJXM90MeHQ8/HQtEJMON35lXcf3t7tbbCPe
+ gSzll1k0XE8OqJqjX/ZCKiXrFzdoXn7QztXH8L+vkaZDQOXOJte2/VgyzclycJT3YoD4
+ 51kZ7w7LIXkHsQIs/D6cBfkkwWbjJyhll9fJSqCe0B6xTDrz3zOhEbFVl7IZkHETcVxl
+ G4lkXUqCi0suyS2efjhoM3gWjcrhQ99TaIr/A1KaF1f9Hs949nMqquvVfK6u+xzH4J59 7g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 336a2kej1s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 09:10:49 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07RD4wMu156055;
+        Thu, 27 Aug 2020 09:10:48 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 336a2kej0s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 09:10:48 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07RD7RUl018841;
+        Thu, 27 Aug 2020 13:10:46 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma02fra.de.ibm.com with ESMTP id 332ujrugcj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 13:10:46 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07RDAh3M18743580
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Aug 2020 13:10:43 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5D543A4066;
+        Thu, 27 Aug 2020 13:10:43 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B624EA405C;
+        Thu, 27 Aug 2020 13:10:37 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.79.210.202])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 27 Aug 2020 13:10:37 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     acme@kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, pc@us.ibm.com,
+        jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com,
+        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
+        john.garry@huawei.com, kjain@linux.ibm.com
+Subject: [PATCH v6 0/5] powerpc/perf: Add json file support for hv_24x7 core level events
+Date:   Thu, 27 Aug 2020 18:39:53 +0530
+Message-Id: <20200827130958.189146-1-kjain@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-27_07:2020-08-27,2020-08-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
+ priorityscore=1501 suspectscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008270094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Patchset enhance current runtime parameter support. It introduces new
+fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
+used to specify perpkg events.
 
+The "PerCore" and "PerChip" specifies whether its core or chip events.
+Based on which we can decide which runtime parameter user want to
+access. Now character  '?' can refers different parameter based on user
+requirement.
 
-Hi,
+Initially, every time we want to add new terms like chip, core, thread
+etc, we need to create corrsponding fields in pmu_events and event
+struct.
+This patchset adds an enum called 'aggr_mode_class' which store all these
+aggregation like perchip/percore. It also adds new field 'AggregationMode'
+to capture these terms.
+Now, if user wants to add any new term, they just need to add it in
+the enum defined.
 
-Roger Quadros <rogerq@ti.com> writes:
->>>>>>>>> From: Pawel Laszczak <pawell@cadence.com>
->>>>>>>>>
->>>>>>>>> USB2.0 PHY hangs in Rx Compliance test when the incoming packet
->>>>>>>>> amplitude is varied below and above the Squelch Level of Receiver
->>>>>>>>> during the active packet multiple times.
->>>>>>>>>
->>>>>>>>> Version 1 of the controller allows PHY to be reset when RX fail
->>>>>>>>> condition is detected to work around the above issue. This feature
->>>>>>>>> is disabled by default and needs to be enabled using a bit from
->>>>>>>>> the newly added PHYRST_CFG register. This patch enables the worka=
-round.
->>>>>>>>>
->>>>>>>>> As there is no way to distinguish between the controller version
->>>>>>>>> before the device controller is started we need to rely on a DT
->>>>>>>>> property to decide when to apply the workaround.
->>>>>>>>
->>>>>>>> Pawel, it could know the controller version at cdns3_gadget_start,
->>>>>>>> but the controller starts when it tries to bind gadget driver, at
->>>>>>>> that time, it has already known the controller version.
->>>>>>>>
->>>>>>>> For me, the device controller starts is using USB_CONF.DEVEN (Devi=
-ce
->>>>>>>> Enable) through usb_gadget_connect, I am not sure if it is the same
->>>>>>>> with yours.
->>>>>>>>
->>>>>>>
->>>>>>> Yes in device mode driver knows controller version but this
->>>>>>> workaround Must be enabled also in host mode. In host mode the
->>>>>>> controller doesn't have access to device registers. The controller
->>>>>>> version is placed in device register.
->>>>>>>
->>>>>>
->>>>>> You may suggest your design team adding CHIP_VER register at global
->>>>>> register region, it will easy the software engineer life.
->>>>>>
->>>>> >From what I read, this register is only enabling USB2 PHY reset
->>>>>> software control, it needs for all chips with rev 0x0002450D, and the
->>>>>> place you current change is only for 0x0002450D, right?
->>>>>
->>>>> Even I could say that this workaround should be enabled only for Spec=
-ific USB2
->>>>> PHY  (only 0x0002450D)
->>>>>
->>>>> This bit should not have any impact for Cadence PHY but it can has Im=
-pact for third
->>>>> party PHYs.
->>>>>
->>>>
->>>> So, it is related to specific PHY, but enable this specific PHY reset =
-bit is at controller region, why don't
->>>> put this enable bit at PHY region?
->>>
->>> I think this is related to Controller + PHY combination.
->>> The fix for the issue is via a bit in the controller, so it needs to be=
- managed by the
->>> controller driver.
->>>
->>>>
->>>> So, you use controller's device property to know this specific PHY, ca=
-n controller know this specific
->>>> PHY dynamically?
->>>
->>> Still the PHY will have to tell the controller the enable that bit. How=
- to do that?
->>>
->>> Adding a dt-property that vendors can used was the simplest option.
->>>
->>=20
->> Ok, does all controllers with ver 0x0002450D need this fix? I just think
->> if we introduce a flag stands for ver 0x0002450D in case this ver has
->> other issues in future or just using phy reset enable property?
->>=20
->> Pawel & Roger, what's your opinion?
->>=20
-> I think it is best to keep the flags specific to the issue rather than
-> a one flag for all issues with a specific version. This way you can
-> re-use the flag irrespective of IP version.
+This patchset also adds  changes of adding new structure
+called 'json_event' inside jevents.h
+file to improve the callback prototype inside jevent files.
+Initially, whenever user want to add new field, they need to update
+in all function callback which makes it more and more complex with
+increased number of parmeters.
+With this change, we just need to add it in new structure 'json_event'.
+link to the patch: https://lkml.org/lkml/2020/8/25/217
 
-I second that. Specially when some SoC-manufacturers may implement ECO
-fixes and not change IP revision.
+Changelog:
+v5 -> v6
+- Made changes to improve callback prototype inside jevent file
+  by adding new struture 'json_event' as suggested by Andi Kleen.
 
-> But best case is that Cadence put a IP revision register in common area a=
-s you
-> have previously suggested so driver can automatically apply quirks to spe=
-cific
-> versions.
+- Added Reviewd-by tag from Andi Kleen
 
-little too late for that :-)
+- Made changes suggested by Jiri Olsa and John garry includes:
+  - Removing jevents.h file.
+  - Some nits like freeing je->event mem, adding typedef for func
+    and not allocating mem for json_event structure.
+  - Added free for each field in json_event as suggested by
+    John Garry.
+  - In real_event function, rather then returning fixed structure
+    pointer, used strcpy to copy event to je->event field.
 
-=2D-=20
-balbi
+- Also merge some changes in this patch set from the patch-
+  https://lkml.org/lkml/2020/8/21/222. except nest event
+  change which was using capability of defining metric using other metric.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+- Make power side changes as per new struture added.
 
------BEGIN PGP SIGNATURE-----
+Link to the previous version patchset: https://lkml.org/lkml/2020/8/16/50
 
-iQJFBAEBCAAvFiEElLzh7wn96CXwjh2IzL64meEamQYFAl9Hru8RHGJhbGJpQGtl
-cm5lbC5vcmcACgkQzL64meEamQY8xg//WHz2GcqK1+sGxk+5lOGCP/rWdOLo+WMg
-UgBC36W9zMY0Cchh0rRluRfliavEkvtnIF12d8aQSg1tpqWQ+Mu2S8QwWUJCleaa
-wO77Ocyg3PfAOjHWEnWBJxrOoplNwnza/3uoKVfpPeJrHlqzwH9ibhe7MKdYlO13
-tTEHyGXL2G9tTiiF4KhEC0Q9W86i4lYscTfu9BZaRD0GESrnN+6BkLnBQHG7Eo2R
-fmj0ydezud89ezWtMhfSEXnsxRsylP/Nho5Rrd3mKyY4kL6A07JlGTzsZ5RDQmkp
-6V9MAyvw2IEIe41swFNf3VChP95c7eHmSVXlu0vuoJC+nluTqfHdCSq8LU6G1TQT
-BobJOm8/gSLfgNUua41wOf2HSDg0tNOzQ1FBPwJvphcLfDRJ0ExVjY12poRsaYV8
-ZISZzXrHddMVLOh5f36FeUkzEOVHl4Q13H9CjqOg+ehfqeXaY+iX7i3mVMkfpmsO
-eGCm5UUXxkcyvvlvCFYIcUTiWQ10y+M5Oql/HR5grD2MVEkUbWZyRU56WKRYkYgL
-VsOJ+lHx09MAo7aH2twsq/lf/A5zeo9f9qA/fyV0ppfCJBqeQOzuLGODD5r0zVWG
-F+tOI4MEAJyuQ4bKBPfENenFSck5oonFWZBtpMKYBD3JlG6u53MUFEIrMGTyUnl8
-+ZbqFHkObCI=
-=7clK
------END PGP SIGNATURE-----
---=-=-=--
+Kajol Jain (5):
+  perf/jevents: Remove jevents.h file
+  perf/jevents: Add new structure to pass json fields.
+  perf jevents: Add support for parsing perchip/percore events
+  perf/tools: Pass pmu_event structure as a parameter for
+    arch_get_runtimeparam
+  perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
+
+ tools/perf/arch/powerpc/util/header.c         |   7 +-
+ .../arch/powerpc/power9/nest_metrics.json     |  35 ++-
+ tools/perf/pmu-events/jevents.c               | 247 +++++++++---------
+ tools/perf/pmu-events/jevents.h               |  23 --
+ tools/perf/pmu-events/pmu-events.h            |   6 +
+ tools/perf/util/metricgroup.c                 |   5 +-
+ tools/perf/util/metricgroup.h                 |   3 +-
+ 7 files changed, 166 insertions(+), 160 deletions(-)
+ delete mode 100644 tools/perf/pmu-events/jevents.h
+
+-- 
+2.26.2
+
