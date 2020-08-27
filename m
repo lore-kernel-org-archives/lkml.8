@@ -2,127 +2,104 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 109D4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0056C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEEEC2177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 734232177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:13:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aFD3sXXp"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="h2EAl4WW";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6UalHnpY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbgH0PMs (ORCPT
+        id S1726887AbgH0PMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:12:48 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:19064 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728789AbgH0Lkm (ORCPT
+        Thu, 27 Aug 2020 11:12:46 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:38180 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728488AbgH0Lkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 07:40:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598528435; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=w7fCvr48yy18hQcvWfj5BBx2HYb6MogSv84HemZHdz0=; b=aFD3sXXpZgxZY6BMB54YhpU2jYccOBTAqQ7npsij2mOKxZh+FeX8e71+od5G3tXuMz9+Gcgh
- A9lS2is60pB+pBCJd5kdZkI17oBSUIxLCYssMKoSBzkNZPIVEJsNB/46AFLqcOpltIWEf8t1
- dPTu3dZCaT3+VAWJYxzcvkMHekY=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5f479baa630b177c47077e2d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 11:40:26
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2DE8BC43391; Thu, 27 Aug 2020 11:40:26 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 59F14C433CA;
-        Thu, 27 Aug 2020 11:40:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 59F14C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Maya Erez <merez@codeaurora.org>, wil6210@qti.qualcomm.com
-Subject: Re: [PATCH 12/30] wireless: ath: wil6210: wmi: Correct misnamed function parameter 'ptr_'
-References: <20200826093401.1458456-13-lee.jones@linaro.org>
-        <20200826155625.A5A88C433A1@smtp.codeaurora.org>
-        <20200827063559.GP3248864@dell> <20200827074100.GX3248864@dell>
-Date:   Thu, 27 Aug 2020 14:40:21 +0300
-In-Reply-To: <20200827074100.GX3248864@dell> (Lee Jones's message of "Thu, 27
-        Aug 2020 08:41:00 +0100")
-Message-ID: <877dtkb9lm.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598528428;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=P3QgBTKNJG7+QYcS6GyKNhaEyuGeMTlXl34dj2J4AA8=;
+        b=h2EAl4WWWlzMoSZche7GuRz9vDV4hulRL/yNKrX4IYpD8X8bKaQKHsUHunIkzvAjU9lonk
+        o6WLZy7rIs9RhgGOsghb3rUpQk4jSHzgZWURGmz3Csco6f/P7nvwdMSJE/ogehPuv+5rC7
+        warMfIhWqlwkPQuoKJN2g+i+LDNUXxHF4vDIEEwUkCZ6vY36YFqkU3OQ44W+Ft7oApzcdd
+        UCh57zoldFiIuGgUhp/DtTy/eGhMVyC9SWsR9hcgUTR2LurvkXlypKZ8PlFVt1NhpzBo0M
+        nsAHACuUp5v4fQthtOG+qvGHHkcMsplP2myZR8Jtld0F79OeFhSkNB0HVv9AuA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598528428;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=P3QgBTKNJG7+QYcS6GyKNhaEyuGeMTlXl34dj2J4AA8=;
+        b=6UalHnpY+QLmQ3ZrEX0SSn+b542K0ImKxbbTgSoRRMlmZaa24Ywvi0Ck2PE3mvPJKMIN61
+        Tqc9c0VMwRjavPAQ==
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>
+Subject: [PATCH v1 1/8] time/sched_clock: Use raw_read_seqcount_latch() during suspend
+Date:   Thu, 27 Aug 2020 13:40:37 +0200
+Message-Id: <20200827114044.11173-2-a.darwish@linutronix.de>
+In-Reply-To: <20200827114044.11173-1-a.darwish@linutronix.de>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200827114044.11173-1-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> writes:
+sched_clock uses seqcount_t latching to switch between two storage
+places protected by the sequence counter. This allows it to have
+interruptible, NMI-safe, seqcount_t write side critical sections.
 
-> On Thu, 27 Aug 2020, Lee Jones wrote:
->
->> On Wed, 26 Aug 2020, Kalle Valo wrote:
->> 
->> > Lee Jones <lee.jones@linaro.org> wrote:
->> > 
->> > > Fixes the following W=1 kernel build warning(s):
->> > > 
->> > >  drivers/net/wireless/ath/wil6210/wmi.c:279: warning: Function
->> > > parameter or member 'ptr_' not described in 'wmi_buffer_block'
->> > >  drivers/net/wireless/ath/wil6210/wmi.c:279: warning: Excess
->> > > function parameter 'ptr' description in 'wmi_buffer_block'
->> > > 
->> > > Cc: Maya Erez <merez@codeaurora.org>
->> > > Cc: Kalle Valo <kvalo@codeaurora.org>
->> > > Cc: "David S. Miller" <davem@davemloft.net>
->> > > Cc: Jakub Kicinski <kuba@kernel.org>
->> > > Cc: linux-wireless@vger.kernel.org
->> > > Cc: wil6210@qti.qualcomm.com
->> > > Cc: netdev@vger.kernel.org
->> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
->> > 
->> > Failed to apply:
->> > 
->> > error: patch failed: drivers/net/wireless/ath/wil6210/wmi.c:266
->> > error: drivers/net/wireless/ath/wil6210/wmi.c: patch does not apply
->> > stg import: Diff does not apply cleanly
->> > 
->> > Patch set to Changes Requested.
->> 
->> Are you applying them in order?
->> 
->> It may be affected by:
->> 
->>  wireless: ath: wil6210: wmi: Fix formatting and demote
->> non-conforming function headers
->> 
->> I'll also rebase onto the latest -next and resubmit.
->
-> I just rebased all 3 sets onto the latest -next (next-20200827)
-> without issue.  Not sure what problem you're seeing.  Did you apply
-> the first set before attempting the second?
+Since 7fc26327b756 ("seqlock: Introduce raw_read_seqcount_latch()"),
+raw_read_seqcount_latch() became the standardized way for seqcount_t
+latch read paths. Due to the dependent load, it has one read memory
+barrier less than the currently used raw_read_seqcount() API.
 
-I can't remember the order, patchwork sorts them based on the order they
-have been submitted and that's what I usually use.
+Use raw_read_seqcount_latch() for the suspend path.
 
-Do note that there's a separate tree for drivers in
-drivers/net/wireless/ath:
+Commit aadd6e5caaac ("time/sched_clock: Use raw_read_seqcount_latch()")
+missed changing that instance of raw_read_seqcount().
 
-https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/
+Link: https://lkml.kernel.org/r/20200625085745.GD117543@hirez.programming.kicks-ass.net
+Link: https://lkml.kernel.org/r/20200715092345.GA231464@debian-buster-darwi.lab.linutronix.de
+References: 1809bfa44e10 ("timers, sched/clock: Avoid deadlock during read from NMI")
+Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+---
+ kernel/time/sched_clock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-And it takes a week or two before patches go to linux-next.
-
+diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
+index 1c03eec6ca9b..8c6b5febd7a0 100644
+--- a/kernel/time/sched_clock.c
++++ b/kernel/time/sched_clock.c
+@@ -258,7 +258,7 @@ void __init generic_sched_clock_init(void)
+  */
+ static u64 notrace suspended_sched_clock_read(void)
+ {
+-	unsigned int seq = raw_read_seqcount(&cd.seq);
++	unsigned int seq = raw_read_seqcount_latch(&cd.seq);
+ 
+ 	return cd.read_data[seq & 1].epoch_cyc;
+ }
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.28.0
+
