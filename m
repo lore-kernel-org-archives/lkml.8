@@ -2,121 +2,94 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EF8C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFC2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B53A2207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:36:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H8vbnYW/"
+	by mail.kernel.org (Postfix) with ESMTP id AD5F5207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:36:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgH0GgK (ORCPT
+        id S1727979AbgH0GgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:36:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727957AbgH0GgE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:36:04 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9748BC061263
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 23:36:03 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b18so4186927wrs.7
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 23:36:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=akR5LsWB+L7ENwYAw9D4wcSK8jvQH6F09dbiIXvyFCk=;
-        b=H8vbnYW/S+H7tZZYYO5Fs3PPBaCtYQdePiDEDqJOjsMv5DF6G2r7fYacs24CCUEaAt
-         M3e1iWPRZPukneXLcYdSJGgvQQ826VwRp17Sv20+QJTNJvXWHfkZABR3zVA0DWOcTzdg
-         WEgIW3cZElL+bglDngYnh1LuIaHi/EV/2I1iKVO3m3j4xIQwohTnASGkYv8BwxHFT6Tg
-         htWl0SMTHiOOLoP79DFGPB7xALFkOssU25a1B7AThZesH2WFhTlnyAwyQG09UCxIlfQt
-         dDsHe95PD32mdOGZohe5PKfcsO5FWScCiMzdkncTi71joxY8dybGZxXjcXIt1WNujlh7
-         /dkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=akR5LsWB+L7ENwYAw9D4wcSK8jvQH6F09dbiIXvyFCk=;
-        b=EjTfjZpHv9+pY6azRrDJjyIzA6J+X1zhsKFV5gZ+O+XQ5p+JzTN4H9JIuTxPZGq0P9
-         1+MAANLdAlHK0c6S5lA4GE4WncwePkQzdvXrLs76eDZhZyCKb1/KHS4bCI8IMX1vBXn8
-         41Pt6iUzSQTWHil8OrM+5DpJtLG8zNdBFDUIs9F3M8+i7Mn3xrd1T9VpPQ/NsS/5gVe0
-         cvDVBLO43Frwr7aS5Y7gwcKFxnRNlyWIvAqRrmI0VKFrvPpT77OasbA60hYefMajPJPb
-         uxk9Z8Ff3h8h1Dh7b8Rsx4RQbJ1Au94uNHfMQEqwQevNRoHWH1NPRWMnCFpr0yuvbR+p
-         YeBA==
-X-Gm-Message-State: AOAM533lEwInYuUeoQd8TrYXA4fKGV+QevseLqu9HPukeRgWVexA+77s
-        hMIkxTULMn1GB8E0d1mbihnqsw==
-X-Google-Smtp-Source: ABdhPJyUoPKR71NVAZJhTV3U26Io2C1TwglVVoLwoSOZIX2rFDKJaRv5rbS/qFs4nDKGnwNHN81ydA==
-X-Received: by 2002:a05:6000:1c7:: with SMTP id t7mr879463wrx.145.1598510162237;
-        Wed, 26 Aug 2020 23:36:02 -0700 (PDT)
-Received: from dell ([91.110.221.141])
-        by smtp.gmail.com with ESMTPSA id q11sm3530317wrw.61.2020.08.26.23.36.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 23:36:01 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 07:35:59 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Maya Erez <merez@codeaurora.org>, wil6210@qti.qualcomm.com
-Subject: Re: [PATCH 12/30] wireless: ath: wil6210: wmi: Correct misnamed
- function parameter 'ptr_'
-Message-ID: <20200827063559.GP3248864@dell>
-References: <20200826093401.1458456-13-lee.jones@linaro.org>
- <20200826155625.A5A88C433A1@smtp.codeaurora.org>
+        Thu, 27 Aug 2020 02:36:19 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:53102 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726395AbgH0GfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 02:35:22 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 73AE2A05E37D5DB2E6B2;
+        Thu, 27 Aug 2020 14:35:19 +0800 (CST)
+Received: from [127.0.0.1] (10.174.177.253) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Thu, 27 Aug 2020
+ 14:35:15 +0800
+Subject: Re: [PATCH v3 0/7] bugfix and optimize for drivers/nvdimm
+To:     Oliver O'Halloran <oohall@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Dave Jiang" <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200820021641.3188-1-thunder.leizhen@huawei.com>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <90d93e2e-1124-22ee-81fb-83ffebc3129c@huawei.com>
+Date:   Thu, 27 Aug 2020 14:35:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200826155625.A5A88C433A1@smtp.codeaurora.org>
+In-Reply-To: <20200820021641.3188-1-thunder.leizhen@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.177.253]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020, Kalle Valo wrote:
+Hi all:
+  Any comment? I want to merge patches 1 and 2 into one, then send
+other patches separately.
 
-> Lee Jones <lee.jones@linaro.org> wrote:
+On 2020/8/20 10:16, Zhen Lei wrote:
+> v2 --> v3:
+> 1. Fix spelling error of patch 1 subject: memmory --> memory
+> 2. Add "Reviewed-by: Oliver O'Halloran <oohall@gmail.com>" into patch 1
+> 3. Rewrite patch descriptions of Patch 1, 3, 4
+> 4. Add 3 new trivial patches 5-7, I just found that yesterday.
+> 5. Unify all "subsystem" names to "libnvdimm:"
 > 
-> > Fixes the following W=1 kernel build warning(s):
-> > 
-> >  drivers/net/wireless/ath/wil6210/wmi.c:279: warning: Function parameter or member 'ptr_' not described in 'wmi_buffer_block'
-> >  drivers/net/wireless/ath/wil6210/wmi.c:279: warning: Excess function parameter 'ptr' description in 'wmi_buffer_block'
-> > 
-> > Cc: Maya Erez <merez@codeaurora.org>
-> > Cc: Kalle Valo <kvalo@codeaurora.org>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Jakub Kicinski <kuba@kernel.org>
-> > Cc: linux-wireless@vger.kernel.org
-> > Cc: wil6210@qti.qualcomm.com
-> > Cc: netdev@vger.kernel.org
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> v1 --> v2:
+> 1. Add Fixes for Patch 1-2
+> 2. Slightly change the subject and description of Patch 1
+> 3. Add a new trivial Patch 4, I just found that yesterday.
 > 
-> Failed to apply:
+> v1:
+> I found a memleak when I learned the drivers/nvdimm code today. And I also
+> added a sanity check for priv->bus_desc.provider_name, because strdup()
+> maybe failed. Patch 3 is a trivial source code optimization.
 > 
-> error: patch failed: drivers/net/wireless/ath/wil6210/wmi.c:266
-> error: drivers/net/wireless/ath/wil6210/wmi.c: patch does not apply
-> stg import: Diff does not apply cleanly
 > 
-> Patch set to Changes Requested.
+> Zhen Lei (7):
+>   libnvdimm: fix memory leaks in of_pmem.c
+>   libnvdimm: add sanity check for provider_name in
+>     of_pmem_region_probe()
+>   libnvdimm: simplify walk_to_nvdimm_bus()
+>   libnvdimm: reduce an unnecessary if branch in nd_region_create()
+>   libnvdimm: reduce an unnecessary if branch in nd_region_activate()
+>   libnvdimm: make sure EXPORT_SYMBOL_GPL(nvdimm_flush) close to its
+>     function
+>   libnvdimm: slightly simplify available_slots_show()
+> 
+>  drivers/nvdimm/bus.c         |  7 +++----
+>  drivers/nvdimm/dimm_devs.c   |  5 ++---
+>  drivers/nvdimm/of_pmem.c     |  7 +++++++
+>  drivers/nvdimm/region_devs.c | 13 ++++---------
+>  4 files changed, 16 insertions(+), 16 deletions(-)
+> 
 
-Are you applying them in order?
-
-It may be affected by:
-
- wireless: ath: wil6210: wmi: Fix formatting and demote non-conforming function headers
-
-I'll also rebase onto the latest -next and resubmit.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
