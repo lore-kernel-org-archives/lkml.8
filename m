@@ -2,125 +2,99 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A30C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71A1C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBD232177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:17:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bwQqo9mU"
+	by mail.kernel.org (Postfix) with ESMTP id D3A4A22BEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbgH0SRR (ORCPT
+        id S1727066AbgH0SSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:17:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726250AbgH0SRO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:17:14 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAAE6C06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:17:14 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id t9so4131619pfq.8
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:17:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=soeX4jUjZZZTlITUKQ5pcDSGwYI4DnugTTOq/SNIIW8=;
-        b=bwQqo9mUQZ78SYazcavWuleirnFV8qiGz4YuuoqdE7eRmQ2tSTM68j++Et8BP9GqJr
-         syUBg3Kcg7Q9OgEbN+FAt7t4lGugKe8nLewk7Ughsm9qm/jfjiWsNzpi5+yadtKvRkgD
-         9dkaxNNv0wKsa2fEmJKGhE8yW74+BwsjHwwBM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=soeX4jUjZZZTlITUKQ5pcDSGwYI4DnugTTOq/SNIIW8=;
-        b=tLLrseaPAroNmILRjkZLSqnettukPNuZMp1kjX7BK2yOTkq1jgLxBHIdVZW+MCkuhn
-         ryEh3maZjkRVDfg4TqWss3mjfmCRCXSnV+aZsfCePLuXNFBHPistD/dopxukapOeBbZT
-         5r+LEhNJ+QVX/SmhVkDlRgs5qrbIkvVcEhfDk0Qhbz3mOt/Ld7MtSkXmWo9wL4klomnU
-         JxHTg4HYBddja55HZT7ITAoosTqDUDbU4p8iqYWDaGzolQGXknzE1S3g7RSv2+uguPBS
-         9dLiyib0qubToI6hibj8KByzhhjmhhs7iaoTrcYNEpuivIbVHNXypgTNWvII/6p6to+y
-         15ZA==
-X-Gm-Message-State: AOAM533jH0JplWi/037f3AmL6t4gIsHK1cLL0eKP8ZGk7ez651lnxOk5
-        tTn5rzTMjvorbZPrOtn71EggOQ==
-X-Google-Smtp-Source: ABdhPJxQHJQlJtOpVK3cF7+baxJUjdkujQ9/OnK25Ibx+RalSDrSK6OVeL6QkvgSiagIIwSSDUbj5Q==
-X-Received: by 2002:a17:902:b282:: with SMTP id u2mr11532811plr.47.1598552234468;
-        Thu, 27 Aug 2020 11:17:14 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e29sm3441674pfj.92.2020.08.27.11.17.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 11:17:13 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 11:17:12 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Allen Pais <allen.cryptic@gmail.com>, kuba@kernel.org,
-        jirislaby@kernel.org, mickflemm@gmail.com, mcgrof@kernel.org,
-        chunkeey@googlemail.com, Larry.Finger@lwfinger.net,
-        stas.yakovlev@gmail.com, helmut.schaa@googlemail.com,
-        pkshih@realtek.com, yhchuang@realtek.com, dsd@gentoo.org,
-        kune@deine-taler.de, ath11k@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, b43-dev@lists.infradead.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, Allen Pais <allen.lkml@gmail.com>,
-        Romain Perier <romain.perier@gmail.com>
-Subject: Re: [05/16] atmel: convert tasklets to use new tasklet_setup() API
-Message-ID: <202008271115.A54F087@keescook>
-References: <20200817090637.26887-6-allen.cryptic@gmail.com>
- <20200827132320.B70A9C433AD@smtp.codeaurora.org>
+        Thu, 27 Aug 2020 14:18:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:32922 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726243AbgH0SSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 14:18:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35068101E;
+        Thu, 27 Aug 2020 11:18:17 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C62533F68F;
+        Thu, 27 Aug 2020 11:18:13 -0700 (PDT)
+Subject: Re: [PATCH 13/18] iommu/tegra: Add IOMMU_DOMAIN_DMA support
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     geert+renesas@glider.be, dri-devel@lists.freedesktop.org,
+        linux-tegra@vger.kernel.org, laurent.pinchart@ideasonboard.com,
+        digetx@gmail.com, will@kernel.org, hch@lst.de,
+        linux-samsung-soc@vger.kernel.org, magnus.damm@gmail.com,
+        linux@armlinux.org.uk, jonathanh@nvidia.com, agross@kernel.org,
+        kyungmin.park@samsung.com, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, inki.dae@samsung.com,
+        linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com,
+        linux-arm-kernel@lists.infradead.org, sw0312.kim@samsung.com,
+        linux-kernel@vger.kernel.org, t-kristo@ti.com,
+        iommu@lists.linux-foundation.org
+References: <cover.1597931875.git.robin.murphy@arm.com>
+ <cd11bc7851dbe46db6d14821a942678047331913.1597931876.git.robin.murphy@arm.com>
+ <20200827154502.GA1660457@ulmo>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <f6697e60-286c-f7c7-39d1-fe0784cc3e6d@arm.com>
+Date:   Thu, 27 Aug 2020 19:18:12 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827132320.B70A9C433AD@smtp.codeaurora.org>
+In-Reply-To: <20200827154502.GA1660457@ulmo>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 01:23:20PM +0000, Kalle Valo wrote:
-> Allen Pais <allen.cryptic@gmail.com> wrote:
+On 2020-08-27 16:45, Thierry Reding wrote:
+> On Thu, Aug 20, 2020 at 04:08:32PM +0100, Robin Murphy wrote:
+>> Now that arch/arm is wired up for default domains and iommu-dma,
+>> implement the corresponding driver-side support for DMA domains.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>> ---
+>>   drivers/iommu/tegra-smmu.c | 37 +++++++++++++++++++++----------------
+>>   1 file changed, 21 insertions(+), 16 deletions(-)
 > 
-> > From: Allen Pais <allen.lkml@gmail.com>
-> > 
-> > In preparation for unconditionally passing the
-> > struct tasklet_struct pointer to all tasklet
-> > callbacks, switch to using the new tasklet_setup()
-> > and from_tasklet() to pass the tasklet pointer explicitly
-> > and remove .data field.
-> > 
-> > Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> > Signed-off-by: Allen Pais <allen.lkml@gmail.com>
-> 
-> 11 patches applied to wireless-drivers-next.git, thanks.
-> 
-> a36f50e5b937 atmel: convert tasklets to use new tasklet_setup() API
-> fc6722301428 b43legacy: convert tasklets to use new tasklet_setup() API
-> 427a06beb072 brcmsmac: convert tasklets to use new tasklet_setup() API
-> ae6cf59f80f7 ipw2x00: convert tasklets to use new tasklet_setup() API
-> b81b9d372ac8 iwlegacy: convert tasklets to use new tasklet_setup() API
-> 7433c9690318 intersil: convert tasklets to use new tasklet_setup() API
-> 51c41aa93ef5 mwl8k: convert tasklets to use new tasklet_setup() API
-> aff8e8d02ec2 qtnfmac: convert tasklets to use new tasklet_setup() API
-> a0d6ea9b6e1c rt2x00: convert tasklets to use new tasklet_setup() API
-> d3ccc14dfe95 rtlwifi/rtw88: convert tasklets to use new tasklet_setup() API
-> 26721b02466e zd1211rw: convert tasklets to use new tasklet_setup() API
-> 
-> -- 
-> https://patchwork.kernel.org/patch/11717451/
-> 
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> We can't do that yet because it will currently still break for use-cases
+> such as display where we don't properly set up identity mappings during
+> boot. The result is that the dma-iommu code will enable translations
+> before the driver gets a chance to set up any mappings and if the
+> display controller was left on by the bootloader, scanning out a splash
+> screen, this causes faults between the point where dma-iommu is being
+> set up for the display controller and where the display controller
+> starts mapping its own buffers (rather than the ones mapped by the
+> bootloader).
 
-FWIW, I don't think a revert is needed here to wait for the from_tasket()
--> container_from() API to land since from_tasklet() is already being
-used by other trees. Let's just get this done so we can get closer to
-ripping out the old tasklet API. We'll have to do a treewide
-from_timer(), from_tasklet() -> container_from() anyway...
+Rest assured that I understand the situation all too well ;) As with 
+tegra-gart, the unspoken point here is that since tegra-smmu implements 
+of_xlate(), then arm_setup_iommu_dma_ops() must already be causing the 
+exact same problem, no? This patch only seeks to move any existing 
+behaviour over to the common backend, regardless of whether it was ever 
+really appropriate in the first place.
 
--- 
-Kees Cook
+> That said, I do have a series that I've been carrying around for longer
+> than I've wanted that does exactly this for Tegra SMMU and I'd prefer if
+> you could drop this particular change from your series so that I can
+> keep working on resolving the identity mapping issues first.
+
+That would mean you'd see a functional change from the final patch, 
+wherein nothing would ever be able to get translation unless drivers do 
+their own explicit IOMMU API management. If you definitely want that 
+change then OK, but it would still be nice to do it "properly" with 
+IOMMU_DOMAIN_IDENTITY support, rather than just forcibly failing default 
+domain allocation. I'm having a go at reworking the tegra-gart patch in 
+that direction, so I can certainly try it for tegra-smmu as well.
+
+Robin.
