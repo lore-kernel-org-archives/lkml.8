@@ -2,159 +2,189 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E99C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B500C433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2CA120825
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:28:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SauBhEq5"
+	by mail.kernel.org (Postfix) with ESMTP id 6C39820825
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgH0V2v (ORCPT
+        id S1727772AbgH0V3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 17:28:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgH0V2u (ORCPT
+        Thu, 27 Aug 2020 17:29:53 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:58701 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726234AbgH0V3x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 17:28:50 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43F5EC061264;
-        Thu, 27 Aug 2020 14:28:50 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id j25so9601910ejk.9;
-        Thu, 27 Aug 2020 14:28:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MudIXoKUDqSknmPj/caKgZlvDH12bbOJiw81zZd1bYI=;
-        b=SauBhEq5qA71mmA7JQu8/eckKealUKb30ggwypDgyDeVOgFDJLM/FdzAKYe6H9yhTI
-         fWHNLJ/GUUt/KA7bMd9yNLil1xo85K2E4AOtLX9CEgUSW3gPhQLl4JgmSZOb3scnVusd
-         WZsqlgkaAto7kpwWLiIlBlBvgVhwlkjxzKmesDBJ5r6R9ZUVjJFD4/ugo61Mh+/YPy8x
-         pE9HySyyuwrdJHY+oNrF5TUcR4mhDJ2co8wh1CgFSg2PgPQm0S4ung9cxlE313GG6H25
-         9rC9Xi3p6burgSHmj1tAaP1Rsh8NsdkmKvVV3SQboGoudkj4bpAa9Nck1r6xozOiSR77
-         or0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MudIXoKUDqSknmPj/caKgZlvDH12bbOJiw81zZd1bYI=;
-        b=tgdG4f8XIRga3EoxVeySWo/sd7m71EAvsyrRhD+gLy1oK+tXqqBCV3lAFiARc0MXtl
-         dqoI9gZoliD663fxMLoYwORhUJ2DR+ci5oEmXWSaMHV5bnGn3TkSM2r3yZ4bLEyjPxS4
-         fsi+rlZDSo6GhOup2GD4uDY8mWM+HB5f7u8E4hvYPCmdLNtPr2EfkHVWLD8BURWLILeu
-         V6+X5Q8Z4sapokgodIeOdwHbohf9Na2BCC3oHXyjxp+kTRUTIySd5ccwdiADkfT1HSkv
-         Wagbow+o37sE3tCHnVe1sSGciI7b0BNrmOE23eTMCy+FuffPTQ1xnWXtuQiDrs9AZ8Nd
-         uWFg==
-X-Gm-Message-State: AOAM531hRsI9l2KMia+Fs/BXbvlUnz8BhmhgOGxJlvqK2ZsYZcz6rsXi
-        iplZPh9mET/F6iMERLl9Hlo=
-X-Google-Smtp-Source: ABdhPJz9ug63cUy1fjH28bqnvS728TAER2TxeKFJgBiUWcyCyO6a5pdFwGsSikdmvt1Z3z8yBS9xAA==
-X-Received: by 2002:a17:906:656:: with SMTP id t22mr13692846ejb.392.1598563728933;
-        Thu, 27 Aug 2020 14:28:48 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:a137:4925:7b50:2e1c? ([2a01:110f:b59:fd00:a137:4925:7b50:2e1c])
-        by smtp.gmail.com with ESMTPSA id t21sm2510721ejr.62.2020.08.27.14.28.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 14:28:48 -0700 (PDT)
-Subject: Re: [PATCH] leds: pwm: Allow automatic labels for DT based devices
-To:     Alexander Dahl <ada@thorsis.com>, linux-leds@vger.kernel.org
-Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-kernel@vger.kernel.org, Alexander Dahl <post@lespocky.de>
-References: <20200826093737.29008-1-ada@thorsis.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <d6f69d4a-3e46-cad4-5756-4d15e5ef95ba@gmail.com>
-Date:   Thu, 27 Aug 2020 23:28:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 27 Aug 2020 17:29:53 -0400
+X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
+   d="scan'208";a="465007305"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 23:29:49 +0200
+Date:   Thu, 27 Aug 2020 23:29:49 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Joe Perches <joe@perches.com>
+cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        cocci <cocci@systeme.lip6.fr>, Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        accessrunner-general@lists.sourceforge.net
+Subject: Re: [Cocci] [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+In-Reply-To: <cf9b1ea3716305447be43bffc8f90b7ef7292f5b.camel@perches.com>
+Message-ID: <alpine.DEB.2.22.394.2008272329250.2482@hadrien>
+References: <20200824222322.22962-1-alex.dewar90@gmail.com>  <48f2dc90-7852-eaf1-55d7-2c85cf954688@rasmusvillemoes.dk>  <20200827071537.GA168593@kroah.com>  <20200827131819.7rcl2f5js3hkoqj2@lenovo-laptop>  <def24e9e-018c-9712-0d07-d4cbc84f07d9@rasmusvillemoes.dk>
+  <20200827144846.yauuttjaqtxaldxg@lenovo-laptop>  <5d1dfb9b031130d4d20763ec621233a19d6a88a2.camel@perches.com>  <alpine.DEB.2.22.394.2008272141220.2482@hadrien> <cf9b1ea3716305447be43bffc8f90b7ef7292f5b.camel@perches.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-In-Reply-To: <20200826093737.29008-1-ada@thorsis.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexander,
 
-On 8/26/20 11:37 AM, Alexander Dahl wrote:
-> From: Alexander Dahl <post@lespocky.de>
-> 
-> If LEDs are configured through device tree and the property 'label' is
-> omitted, the label is supposed to be generated from the properties
-> 'function' and 'color' if present.  While this works fine for e.g. the
-> 'leds-gpio' driver, it did not for 'leds-pwm'.
-> 
-> The reason is, you get this label naming magic only if you add a LED
-> device through 'devm_led_classdev_register_ext()' and pass a pointer to
-> the current device tree node.  The approach to fix this was adopted from
-> the 'leds-gpio' driver.
-> 
-> For the following node from dts the LED appeared as 'led5' in sysfs
-> before and as 'red:debug' after this change.
-> 
->          pwm_leds {
->                  compatible = "pwm-leds";
-> 
->                  led5 {
->                          function = LED_FUNCTION_DEBUG;
->                          color = <LED_COLOR_ID_RED>;
->                          pwms = <&pwm0 2 10000000 0>;
->                          max-brightness = <127>;
-> 
->                          linux,default-trigger = "heartbeat";
->                          panic-indicator;
->                  };
->          };
-> 
-> Signed-off-by: Alexander Dahl <post@lespocky.de>
-> ---
-> 
-> Notes:
->      v1: based on v5.9-rc2, backport on v5.4.59 also works
-> 
->   drivers/leds/leds-pwm.c | 9 ++++++++-
->   1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-> index ef7b91bd2064..a27a1d75a3e9 100644
-> --- a/drivers/leds/leds-pwm.c
-> +++ b/drivers/leds/leds-pwm.c
-> @@ -65,6 +65,7 @@ static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
->   		       struct led_pwm *led, struct fwnode_handle *fwnode)
->   {
->   	struct led_pwm_data *led_data = &priv->leds[priv->num_leds];
-> +	struct led_init_data init_data = {};
->   	int ret;
->   
->   	led_data->active_low = led->active_low;
-> @@ -90,7 +91,13 @@ static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
->   
->   	pwm_init_state(led_data->pwm, &led_data->pwmstate);
->   
-> -	ret = devm_led_classdev_register(dev, &led_data->cdev);
-> +	if (fwnode) {
-> +		init_data.fwnode = fwnode;
-> +		ret = devm_led_classdev_register_ext(dev, &led_data->cdev,
-> +						     &init_data);
-> +	} else {
-> +		ret = devm_led_classdev_register(dev, &led_data->cdev);
-> +	}
->   	if (ret) {
->   		dev_err(dev, "failed to register PWM led for %s: %d\n",
->   			led->name, ret);
-> 
 
-This part looks good, but corresponding update of
-Documentation/devicetree/bindings/leds/leds-pwm.txt is needed as well.
-It would be good to switch to yaml by this occassion.
+On Thu, 27 Aug 2020, Joe Perches wrote:
 
--- 
-Best regards,
-Jacek Anaszewski
+> On Thu, 2020-08-27 at 21:42 +0200, Julia Lawall wrote:
+> >
+> > On Thu, 27 Aug 2020, Joe Perches wrote:
+> >
+> > > On Thu, 2020-08-27 at 15:48 +0100, Alex Dewar wrote:
+> > > > On Thu, Aug 27, 2020 at 03:41:06PM +0200, Rasmus Villemoes wrote:
+> > > > > On 27/08/2020 15.18, Alex Dewar wrote:
+> > > > > > On Thu, Aug 27, 2020 at 09:15:37AM +0200, Greg Kroah-Hartman wrote:
+> > > > > > > On Thu, Aug 27, 2020 at 08:42:06AM +0200, Rasmus Villemoes wrote:
+> > > > > > > > On 25/08/2020 00.23, Alex Dewar wrote:
+> > > > > > > > > kernel/cpu.c: don't use snprintf() for sysfs attrs
+> > > > > > > > >
+> > > > > > > > > As per the documentation (Documentation/filesystems/sysfs.rst),
+> > > > > > > > > snprintf() should not be used for formatting values returned by sysfs.
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > Can we have a sysfs_sprintf() (could just be a macro that does sprintf)
+> > > > > > > > to make it clear to the next reader that we know we're in a sysfs show
+> > > > > > > > method? It would make auditing uses of sprintf() much easier.
+> > > > > > >
+> > > > > > > Code churn to keep code checkers quiet for pointless reasons?  What
+> > > > > > > could go wrong with that...
+> > > > >
+> > > > > I did not (mean to) suggest replacing existing sprintf() calls in sysfs
+> > > > > show methods. But when changes _are_ being made, such as when replacing
+> > > > > snprintf() calls for whatever reasons, can we please not make it harder
+> > > > > for people doing manual audits (those are "code checkers" as well, I
+> > > > > suppose, but they do tend to only make noise when finding something).
+> > > > >
+> > > > > > > It should be pretty obvious to any reader that you are in a sysfs show
+> > > > > > > method, as almost all of them are trivially tiny and obvious.
+> > > > >
+> > > > > git grep doesn't immediately show that, not even with a suitable -C
+> > > > > argument, as you can't really know the potential callers unless you open
+> > > > > the file and see that the function is only assigned as a .show method.
+> > > > > And even that can be a pain because it's all hidden behind five levels
+> > > > > of magic macros that build identifiers with ##.
+> > > > >
+> > > > > > Perhaps I should have mentioned this in the commit message, but the problem
+> > > > > > is that snprintf() doesn't return the number of bytes written to the
+> > > > > > destination buffer,
+> > > > >
+> > > > > I'm perfectly well aware of that, TYVM (you may want to 'git log
+> > > > > --author Villemoes lib/vsprintf.c').
+> > > > >
+> > > > >  but the number of bytes that *would have been written if
+> > > > > > they fitted*, which may be more than the bounds specified [1]. So "return
+> > > > > > snprintf(...)" for sysfs attributes is an antipattern. If you need bounded
+> > > > > > string ops, scnprintf() is the way to go. Using snprintf() can give a
+> > > > > > false sense of security, because it isn't necessarily safe.
+> > > > >
+> > > > > Huh? This all seems utterly irrelevant WRT a change that replaces
+> > > > > PAGE_SIZE by INT_MAX (because that's what sprintf() is going to pretend
+> > > > > you passed). You get the same return value.
+> > > > >
+> > > > > But I'm not at all concerned about whether one passes the proper buffer
+> > > > > size or not in sysfs show methods; with my embedded hat on, I'm all for
+> > > > > saving a few bytes of .text here and there. The problem, as far as I'm
+> > > > > concerned, is merely that adding sprintf() callers makes it harder to
+> > > > > find the problematic sprintf() instances.
+> > > > >
+> > > >
+> > > > Apologies, I think I might have expressed myself poorly, being a kernel noob
+> > > > ;-). I know that this is a stylistic change rather than a functional
+> > > > one -- I meant that I was hoping that it would be helpful to get rid of bad
+> > > > uses of snprintf().
+> > > >
+> > > > I really like your idea of helper methods though :-). If in show()
+> > > > methods we could have something like:
+> > > > 	return sysfs_itoa(buf, i);
+> > > > in place of:
+> > > > 	return sprintf(buf, "%d\n", i);
+> > > >
+> > > > ... then we wouldn't be introducing any new calls to sprintf() as you
+> > > > say, but we'd still be removing a call to snprintf() (which also may be
+> > > > problematic). Plus we'd have type checking on the argument.
+> > > >
+> > > > For returning strings, we could have a bounded and unbounded variant of
+> > > > the function. As it seems like only single values should be returned via
+> > > > sysfs, if we did things this way then it would only be these
+> > > > string-returning functions which could cause buffer overflow problems
+> > > > and kernel devs could focus their attention accordingly...
+> > > >
+> > > > What do people think? I'm happy to have a crack, provided this is
+> > > > actually a sensible thing to do! I'm looking for a newbie-level project
+> > > > to get started with.
+> > >
+> > > Not a bad idea.
+> > >
+> > > Coccinelle should be able to transform the various .show
+> > > methods to something sysfs_ prefixed in a fairly automated
+> > > way.
+> >
+> > Something like
+> >
+> > identifier f;
+> > fresh identifier = "sysfs" ## f;
+> >
+> > may be useful.  Let me know if further help is needed.
+>
+> Perhaps it's a bit more complicated.
+>
+> Perhaps what's necessary is to find any
+> appropriate .show function and change
+> any use of strcpy/sprintf within those
+> function to some other name.
+>
+> For instance:
+>
+> drivers/isdn/mISDN/core.c-static ssize_t name_show(struct device *dev,
+> drivers/isdn/mISDN/core.c-                       struct device_attribute *attr, char *buf)
+> drivers/isdn/mISDN/core.c-{
+> drivers/isdn/mISDN/core.c:      strcpy(buf, dev_name(dev));
+> drivers/isdn/mISDN/core.c-      return strlen(buf);
+> drivers/isdn/mISDN/core.c-}
+> drivers/isdn/mISDN/core.c-static DEVICE_ATTR_RO(name);
+>
+> and macroized uses like:
+>
+> drivers/base/node.c-#define CACHE_ATTR(name, fmt)                                               \
+> drivers/base/node.c-static ssize_t name##_show(struct device *dev,                              \
+> drivers/base/node.c-                       struct device_attribute *attr,               \
+> drivers/base/node.c-                       char *buf)                                   \
+> drivers/base/node.c-{                                                                   \
+> drivers/base/node.c-    return sprintf(buf, fmt "\n", to_cache_info(dev)->cache_attrs.name);\
+> drivers/base/node.c-}                                                                   \
+> drivers/base/node.c:DEVICE_ATTR_RO(name);
+> drivers/base/node.c-
+> drivers/base/node.c-CACHE_ATTR(size, "%llu")
+> drivers/base/node.c-CACHE_ATTR(line_size, "%u")
+> drivers/base/node.c-CACHE_ATTR(indexing, "%u")
+> drivers/base/node.c-CACHE_ATTR(write_policy, "%u")
+
+Coccinelle would fail on these.
+
+julia
