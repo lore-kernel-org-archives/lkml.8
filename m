@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D764C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A0DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA1F20737
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114EC20737
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:05:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SzuTbeJL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="it1TP+nh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgH0RFo (ORCPT
+        id S1727863AbgH0RFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:05:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21576 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727863AbgH0RFR (ORCPT
+        Thu, 27 Aug 2020 13:05:54 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23759 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727833AbgH0RFH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:05:17 -0400
+        Thu, 27 Aug 2020 13:05:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598547916;
+        s=mimecast20190719; t=1598547906;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=3ROoCGGpTRrb/9L2mOI1+wpaSOaUSIzU0RUeWqIshIE=;
-        b=SzuTbeJLA1eZrsQiXws5FOfQQEJzO8d5aM4+xc9IvcE6tqBx2zegV0KQVkqVYPBhuU+OWd
-        3emUKSt8qSUa2yPP4aX3XZU8DeAsXjWEhEeQlPoVEG6+dM9/Eyq4dfLOzA25qNdJqGfqx3
-        gY5SkewWVzGmGTZD+ouU/zrbdFzvUvs=
+        bh=W/YGWSLvG6lY5R83KUArknDiX8BRYjrRNnmUZit1EZI=;
+        b=it1TP+nhbyvKMKD4sqVyQ2F5VGiXfY8qo4YyFAMugQBl3TrpEnW7rTZcB7M0woaKZ2VAaz
+        cD5Wlt+s2+PyJMwxJwnnyVfMUhc+fxK7F1YFtFFuCtzy2XddU53PCZ66qjVSN4cA5LVXFC
+        AeyZ026sMq7Roh4HzottpeSNQ0JOOXs=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-189-e8aQGa0rPeqZdyR92wyf6A-1; Thu, 27 Aug 2020 13:05:14 -0400
-X-MC-Unique: e8aQGa0rPeqZdyR92wyf6A-1
+ us-mta-574-6nczjpt-Ol2xEaivnHONIQ-1; Thu, 27 Aug 2020 13:05:04 -0400
+X-MC-Unique: 6nczjpt-Ol2xEaivnHONIQ-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CB00010ABDC4;
-        Thu, 27 Aug 2020 17:05:12 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41B1818BFEC4;
+        Thu, 27 Aug 2020 17:05:02 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.35.206.185])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6384619D7D;
-        Thu, 27 Aug 2020 17:05:09 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AEB3B196F3;
+        Thu, 27 Aug 2020 17:04:56 +0000 (UTC)
 From:   Maxim Levitsky <mlevitsk@redhat.com>
 To:     kvm@vger.kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@alien8.de>,
@@ -58,9 +58,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@alien8.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Maxim Levitsky <mlevitsk@redhat.com>
-Subject: [PATCH 7/8] KVM: emulator: more strict rsm checks.
-Date:   Thu, 27 Aug 2020 20:04:33 +0300
-Message-Id: <20200827170434.284680-8-mlevitsk@redhat.com>
+Subject: [PATCH 5/8] KVM: SVM: refactor exit labels in svm_create_vcpu
+Date:   Thu, 27 Aug 2020 20:04:31 +0300
+Message-Id: <20200827170434.284680-6-mlevitsk@redhat.com>
 In-Reply-To: <20200827170434.284680-1-mlevitsk@redhat.com>
 References: <20200827170434.284680-1-mlevitsk@redhat.com>
 MIME-Version: 1.0
@@ -71,69 +71,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't ignore return values in rsm_load_state_64/32 to avoid
-loading invalid state from SMM state area if it was tampered with
-by the guest.
+Kernel coding style suggests not to use labels like error1,error2
 
-This is primarly intended to avoid letting guest set bits in EFER
-(like EFER.SVME when nesting is disabled) by manipulating SMM save area.
-
-The DR checks are probably redundant, since the code sets them to fixed
-value, but it won't hurt to have them
-
+Suggested-by: Jim Mattson <jmattson@google.com>
 Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
 ---
- arch/x86/kvm/emulate.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ arch/x86/kvm/svm/svm.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-index d0e2825ae6174..1d450d7710d63 100644
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -2505,9 +2505,14 @@ static int rsm_load_state_32(struct x86_emulate_ctxt *ctxt,
- 		*reg_write(ctxt, i) = GET_SMSTATE(u32, smstate, 0x7fd0 + i * 4);
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 290b2d0cd78e3..b617579095277 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -1196,11 +1196,11 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
  
- 	val = GET_SMSTATE(u32, smstate, 0x7fcc);
--	ctxt->ops->set_dr(ctxt, 6, (val & DR6_VOLATILE) | DR6_FIXED_1);
-+
-+	if (ctxt->ops->set_dr(ctxt, 6, (val & DR6_VOLATILE) | DR6_FIXED_1))
-+		return X86EMUL_UNHANDLEABLE;
-+
- 	val = GET_SMSTATE(u32, smstate, 0x7fc8);
--	ctxt->ops->set_dr(ctxt, 7, (val & DR7_VOLATILE) | DR7_FIXED_1);
-+
-+	if (ctxt->ops->set_dr(ctxt, 7, (val & DR7_VOLATILE) | DR7_FIXED_1))
-+		return X86EMUL_UNHANDLEABLE;
+ 	hsave_page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
+ 	if (!hsave_page)
+-		goto free_page1;
++		goto error_free_vmcb_page;
  
- 	selector =                 GET_SMSTATE(u32, smstate, 0x7fc4);
- 	set_desc_base(&desc,       GET_SMSTATE(u32, smstate, 0x7f64));
-@@ -2560,16 +2565,23 @@ static int rsm_load_state_64(struct x86_emulate_ctxt *ctxt,
- 	ctxt->eflags = GET_SMSTATE(u32, smstate, 0x7f70) | X86_EFLAGS_FIXED;
+ 	err = avic_init_vcpu(svm);
+ 	if (err)
+-		goto free_page2;
++		goto error_free_hsave_page;
  
- 	val = GET_SMSTATE(u32, smstate, 0x7f68);
--	ctxt->ops->set_dr(ctxt, 6, (val & DR6_VOLATILE) | DR6_FIXED_1);
-+
-+	if (ctxt->ops->set_dr(ctxt, 6, (val & DR6_VOLATILE) | DR6_FIXED_1))
-+		return X86EMUL_UNHANDLEABLE;
-+
- 	val = GET_SMSTATE(u32, smstate, 0x7f60);
--	ctxt->ops->set_dr(ctxt, 7, (val & DR7_VOLATILE) | DR7_FIXED_1);
-+
-+	if (ctxt->ops->set_dr(ctxt, 7, (val & DR7_VOLATILE) | DR7_FIXED_1))
-+		return X86EMUL_UNHANDLEABLE;
+ 	/* We initialize this flag to true to make sure that the is_running
+ 	 * bit would be set the first time the vcpu is loaded.
+@@ -1212,11 +1212,11 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
  
- 	cr0 =                       GET_SMSTATE(u64, smstate, 0x7f58);
- 	cr3 =                       GET_SMSTATE(u64, smstate, 0x7f50);
- 	cr4 =                       GET_SMSTATE(u64, smstate, 0x7f48);
- 	ctxt->ops->set_smbase(ctxt, GET_SMSTATE(u32, smstate, 0x7f00));
- 	val =                       GET_SMSTATE(u64, smstate, 0x7ed0);
--	ctxt->ops->set_msr(ctxt, MSR_EFER, val & ~EFER_LMA);
-+
-+	if (ctxt->ops->set_msr(ctxt, MSR_EFER, val & ~EFER_LMA))
-+		return X86EMUL_UNHANDLEABLE;
+ 	svm->msrpm = svm_vcpu_init_msrpm();
+ 	if (!svm->msrpm)
+-		goto free_page2;
++		goto error_free_hsave_page;
  
- 	selector =                  GET_SMSTATE(u32, smstate, 0x7e90);
- 	rsm_set_desc_flags(&desc,   GET_SMSTATE(u32, smstate, 0x7e92) << 8);
+ 	svm->nested.msrpm = svm_vcpu_init_msrpm();
+ 	if (!svm->nested.msrpm)
+-		goto free_page3;
++		goto error_free_msrpm;
+ 
+ 	svm->vmcb = page_address(vmcb_page);
+ 	svm->vmcb_pa = __sme_set(page_to_pfn(vmcb_page) << PAGE_SHIFT);
+@@ -1228,11 +1228,11 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+ 
+ 	return 0;
+ 
+-free_page3:
++error_free_msrpm:
+ 	svm_vcpu_free_msrpm(svm->msrpm);
+-free_page2:
++error_free_hsave_page:
+ 	__free_page(hsave_page);
+-free_page1:
++error_free_vmcb_page:
+ 	__free_page(vmcb_page);
+ out:
+ 	return err;
 -- 
 2.26.2
 
