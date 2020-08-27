@@ -2,153 +2,198 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 458E9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239DCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECB922CAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:27:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="S+GpaOsO"
+	by mail.kernel.org (Postfix) with ESMTP id 05DAA22CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbgH0LZ6 (ORCPT
+        id S1728512AbgH0L36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 07:25:58 -0400
-Received: from mail-eopbgr150071.outbound.protection.outlook.com ([40.107.15.71]:34894
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726395AbgH0LQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 07:29:58 -0400
+Received: from mga06.intel.com ([134.134.136.31]:25895 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728001AbgH0LQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 07:16:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M8PcMpkkny/zChFtgZNULtVOyUYOASMjrIaD4TE4K+dYnPYQciA3BaL1uJmV5tsEG/1GmXvd7FAvBuV9thObiKj6QWeyQx9VCm+9kXMxgv5febF7Jo1Gf5gwZyq2KB2pFqzNJ5pBYiOCqwnxO5H7ikHuKmhN+P4aw1ejZh3PxMbOgwI41/CodMggLZHRxyGAsBOaMXGs+HjpMS91mm23DwOikVaobVxoWse5o3/tXbdBwOGCKlLYaiT3IIy5OIXAcbbKyETZQpBEm/oFrBfMqz3Q+WN/EFidq73FiSQvssMB/bkbU8AvJdO71lhBFAtc951pr32avqiorXSV438yMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RL09PsZity/orIstjfA5XVgVAXcyxlhY3rX0Arc+18U=;
- b=DMPJ6ey+P3gTJEc3G5pPpH78zLM6eFB/tIIbRJxymKlNbIiUYw5mj2yuM3Nzcy/gP44Id+VuER712FYAZ4IaqP1Z15Go1RgqAqgjTE5SOyjgRsEvPsdqB1Ap7IPvmaxZo8yufP9QkZuLAPZf/Ky1HP7Hfp/H/FUjZ9QI2BBDFyVpnE+gEgCYK4wJP3uJ885TfI6ImNCcVx20ab+RvqTaU6Igje6PsAoC3mnF67eHzgKLJyKAWTonYV0DPLx54HpSxkyhPbnGbJ6qgPhvQ5oQNnfleTBUUILik4azp5qk0wPoIac1Gy5jCQNozIGS7aSnvn9sLUckT93CDG9cZpr3mA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RL09PsZity/orIstjfA5XVgVAXcyxlhY3rX0Arc+18U=;
- b=S+GpaOsODAmLr2AM8L6EumCNd7ruGnxtoUc6QdRQ9/xBxztgu8L5KdUyASrXp/83K1gTAdUyFgoaXtId/CGi9/eAMz8q+I6yQiVQaQTizGCV3QSRuADMptmkD5H4iOVhy0mmSviJ+hwvI7T5RqXntoxE3UCCsaiO2AGlvHzAL1U=
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
- by AM6PR04MB4421.eurprd04.prod.outlook.com (2603:10a6:20b:21::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Thu, 27 Aug
- 2020 11:14:59 +0000
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1023:be8d:40c:efe1]) by AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1023:be8d:40c:efe1%3]) with mapi id 15.20.3305.032; Thu, 27 Aug 2020
- 11:14:59 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Roger Quadros <rogerq@ti.com>
-CC:     "balbi@kernel.org" <balbi@kernel.org>,
-        "pawell@cadence.com" <pawell@cadence.com>,
-        "kurahul@cadence.com" <kurahul@cadence.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>,
-        "vigneshr@ti.com" <vigneshr@ti.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: usb: cdns,usb3: Add cdns,phyrst-a-enable
- property
-Thread-Topic: [PATCH 2/3] dt-bindings: usb: cdns,usb3: Add
- cdns,phyrst-a-enable property
-Thread-Index: AQHWetjF2mYsQKwgvU+3PPFGyTZfuKlL0I2A
-Date:   Thu, 27 Aug 2020 11:14:59 +0000
-Message-ID: <20200827111343.GB5983@b29397-desktop>
-References: <20200825120059.12436-1-rogerq@ti.com>
- <20200825120059.12436-3-rogerq@ti.com>
-In-Reply-To: <20200825120059.12436-3-rogerq@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: ti.com; dkim=none (message not signed)
- header.d=none;ti.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7d5b8407-6b4f-4b5b-1aa9-08d84a7a6fe1
-x-ms-traffictypediagnostic: AM6PR04MB4421:
-x-microsoft-antispam-prvs: <AM6PR04MB442168F3D1B663C2B71114098B550@AM6PR04MB4421.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dCoDbWN4ta6zMkCrAcNHNOUg1gRPFSQPqFWLHUXTo4gIUsmch2794OGlbncgN3fJsNF7juIwBA5NIeoghQEXzdnpQkGRJPteNBE30Dc+W/nVE8hhw+NMyvB9UbmjNjvANJiu2jXHaik3ACL+Bkt/2Vo07W54q1q+LM94HK1aNN6X/X07wlNH1S3c16atLycPnd39hY5kG4vJInAMADLJ3WnTpHgo+P1YH3MEmCw3TguE4EEaF3PLFau0L+gzKsgW5A59DI7oIdBf4//W4ZRnbDEsi5s6voV/bNN54tr4xtj2vey+vd/507F2njczK+8ejC8oEYHzgcPiKD4xSFiZrTL+I7JO4OdrxFrvNa2TXlgkFyAHnNONX9/sGfN9iDT7
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(7916004)(366004)(396003)(136003)(376002)(346002)(39860400002)(7416002)(44832011)(76116006)(66556008)(33656002)(64756008)(66476007)(66946007)(66446008)(26005)(8676002)(33716001)(91956017)(4326008)(186003)(5660300002)(6506007)(8936002)(316002)(2906002)(83380400001)(6486002)(54906003)(53546011)(71200400001)(86362001)(6916009)(6512007)(1076003)(478600001)(9686003)(142933001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: n1+d+v1Dr0MhRWI0Sn+UeV4bZYppU+6rAitdAyS0naRyRywc6Crs27ywZ7MEvdLwrzljQdVjQ1AqmtbheTOwhVeb1LZkMAozQfhoTXsAlnq1VpPt0qgZ1ne/8o+tjaX8TA0xnMQCZqzVTgyRYVqvuqE2xUWFKpkoV9gC/UgKJeokqikNJEHsOBxUyDDKaVgu4Y8LDoWXpwL1NLIslV1H8W2k9C8fIp2SF64+53G88yIG+u7fvnSxI7TenjUz189Yn8qApG+/2cl+/noaAlqWMy2ILPXpZwIF8nyy3b7lRoYOXt56KK3p/DZyXdsaxjIuZhBm5RHLnGcrnW53/2jNg/N/Nq7c884eOp9KNp8CAmLfmYvemNabzDUd7kJEc+TIz+JF2BIF4eIoFvmda925Ws6h69N5Jz4mf6SRq4VhW33Jrp5ag2ejlBViMZtJNhZGDpvppNvMUehm8mHFgOId20O9AxHDN2qmpnKiTDe++xz73Y4D9F7VXaAkhxU89eGEWFlpg/L/NBOo8Jx/DNpQyDjRl3dTLG3Wn9Voe7tyP2gKe1/bEuFmxJCL5RtjuaKhSpt49OVIuTgl1IGpo70IqLp1kTvSBbe30h5DJ1br3g9XOulIcQ3xAGQCRee9gc5fh5xpKXx7/wF1WGj46Fzr+Q==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <BB83B0331D587845BA644C178C701995@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+IronPort-SDR: fZA/Uwmv6ju5YRAP+EE6lkqv+etZSSE1Zz3eOsXxZfpX3+Lj1W8dGqLstaPFuEfEyRLK5bVGw6
+ zj+Q95yUQrNw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="218008691"
+X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
+   d="scan'208";a="218008691"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 03:57:05 -0700
+IronPort-SDR: 5VR6ccig7DZlLiO+sMhEo+Emle4xy6LXWOE2nLy+9HD06TFwaDF3kjkmYll9QnidBP84HuExZ0
+ bWSumeroZ0Jw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
+   d="scan'208";a="299810019"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga006.jf.intel.com with SMTP; 27 Aug 2020 03:57:01 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Thu, 27 Aug 2020 13:57:01 +0300
+Date:   Thu, 27 Aug 2020 13:57:01 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Algea Cao <algea.cao@rock-chips.com>
+Cc:     mripard@kernel.org, tzimmermann@suse.de,
+        linux-kernel@vger.kernel.org, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, maarten.lankhorst@linux.intel.com,
+        daniel@ffwll.ch, linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] drm: Parse Colorimetry data block from EDID
+Message-ID: <20200827105701.GS6112@intel.com>
+References: <20200826142328.131144-1-algea.cao@rock-chips.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d5b8407-6b4f-4b5b-1aa9-08d84a7a6fe1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2020 11:14:59.5747
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sxPOuhysHASS+d7PRrefyGFvgG0vArJrepg28/QCjuNBKN1CeHvxWXC4E2qwsaG1p+J0qIwsixoVZyKcgwqEkQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4421
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200826142328.131144-1-algea.cao@rock-chips.com>
+X-Patchwork-Hint: comment
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-08-25 15:00:58, Roger Quadros wrote:
-> Controller version 0x0002450D has USB2 PHY RX sensitivity issues
-> that needs to be worked around by enabling phyrst-a-enable bit
-> in PHYRST_CFG register.
->=20
-> There is no way to distinguish between the controller version
-> before the device controller is started so we need to add this
-> DT property.
+On Wed, Aug 26, 2020 at 10:23:28PM +0800, Algea Cao wrote:
+> CEA 861.3 spec adds colorimetry data block for HDMI.
+> Parsing the block to get the colorimetry data from
+> panel.
 
-Maybe you should say "There is no way to know controller version
-at host mode, but this workaround needs for both host and device
-mode, so we have to add this DT property", the same for the comments
-of your driver code patch.
+And what exactly do you want to do with that data?
 
-Peter
->=20
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> 
+> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
 > ---
->  Documentation/devicetree/bindings/usb/cdns,usb3.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/usb/cdns,usb3.yaml b/Docum=
-entation/devicetree/bindings/usb/cdns,usb3.yaml
-> index 7bc0263accee..e670adc955e1 100644
-> --- a/Documentation/devicetree/bindings/usb/cdns,usb3.yaml
-> +++ b/Documentation/devicetree/bindings/usb/cdns,usb3.yaml
-> @@ -58,6 +58,10 @@ properties:
->        buffers expressed in KB
->      $ref: /schemas/types.yaml#/definitions/uint32
-> =20
-> +  cdns,phyrst-a-enable:
-> +    description: Enable resetting of PHY if Rx fail is detected
-> +    type: boolean
+> 
+>  drivers/gpu/drm/drm_edid.c  | 45 +++++++++++++++++++++++++++++++++++++
+>  include/drm/drm_connector.h |  3 +++
+>  include/drm/drm_edid.h      | 14 ++++++++++++
+>  3 files changed, 62 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+> index 31496b6cfc56..67e607c04492 100644
+> --- a/drivers/gpu/drm/drm_edid.c
+> +++ b/drivers/gpu/drm/drm_edid.c
+> @@ -3223,6 +3223,7 @@ add_detailed_modes(struct drm_connector *connector, struct edid *edid,
+>  #define VIDEO_BLOCK     0x02
+>  #define VENDOR_BLOCK    0x03
+>  #define SPEAKER_BLOCK	0x04
+> +#define COLORIMETRY_DATA_BLOCK		0x5
+>  #define HDR_STATIC_METADATA_BLOCK	0x6
+>  #define USE_EXTENDED_TAG 0x07
+>  #define EXT_VIDEO_CAPABILITY_BLOCK 0x00
+> @@ -4309,6 +4310,48 @@ static void fixup_detailed_cea_mode_clock(struct drm_display_mode *mode)
+>  	mode->clock = clock;
+>  }
+>  
+> +static bool cea_db_is_hdmi_colorimetry_data_block(const u8 *db)
+> +{
+> +	if (cea_db_tag(db) != USE_EXTENDED_TAG)
+> +		return false;
 > +
->  required:
->    - compatible
->    - reg
-> --=20
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->=20
+> +	if (db[1] != COLORIMETRY_DATA_BLOCK)
+> +		return false;
+> +
+> +	if (cea_db_payload_len(db) < 2)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +static void
+> +drm_parse_colorimetry_data_block(struct drm_connector *connector, const u8 *db)
+> +{
+> +	struct drm_hdmi_info *info = &connector->display_info.hdmi;
+> +
+> +	if (db[2] & DRM_EDID_CLRMETRY_xvYCC_601)
+> +		info->colorimetry |= DRM_EDID_CLRMETRY_xvYCC_601;
+> +	if (db[2] & DRM_EDID_CLRMETRY_xvYCC_709)
+> +		info->colorimetry |= DRM_EDID_CLRMETRY_xvYCC_709;
+> +	if (db[2] & DRM_EDID_CLRMETRY_sYCC_601)
+> +		info->colorimetry |= DRM_EDID_CLRMETRY_sYCC_601;
+> +	if (db[2] & DRM_EDID_CLRMETRY_ADBYCC_601)
+> +		info->colorimetry |= DRM_EDID_CLRMETRY_ADBYCC_601;
+> +	if (db[2] & DRM_EDID_CLRMETRY_ADB_RGB)
+> +		info->colorimetry |= DRM_EDID_CLRMETRY_ADB_RGB;
+> +	if (db[2] & DRM_EDID_CLRMETRY_BT2020_CYCC)
+> +		info->colorimetry |= DRM_EDID_CLRMETRY_BT2020_CYCC;
+> +	if (db[2] & DRM_EDID_CLRMETRY_BT2020_YCC)
+> +		info->colorimetry |= DRM_EDID_CLRMETRY_BT2020_YCC;
+> +	if (db[2] & DRM_EDID_CLRMETRY_BT2020_RGB)
+> +		info->colorimetry |= DRM_EDID_CLRMETRY_BT2020_RGB;
+> +	/* Byte 4 Bit 7: DCI-P3 */
+> +	if (db[3] & BIT(7))
+> +		info->colorimetry |= DRM_EDID_CLRMETRY_DCI_P3;
+> +
+> +	DRM_DEBUG_KMS("Supported Colorimetry 0x%x\n", info->colorimetry);
+> +}
+> +
+>  static bool cea_db_is_hdmi_hdr_metadata_block(const u8 *db)
+>  {
+>  	if (cea_db_tag(db) != USE_EXTENDED_TAG)
+> @@ -4994,6 +5037,8 @@ static void drm_parse_cea_ext(struct drm_connector *connector,
+>  			drm_parse_vcdb(connector, db);
+>  		if (cea_db_is_hdmi_hdr_metadata_block(db))
+>  			drm_parse_hdr_metadata_block(connector, db);
+> +		if (cea_db_is_hdmi_colorimetry_data_block(db))
+> +			drm_parse_colorimetry_data_block(connector, db);
+>  	}
+>  }
+>  
+> diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+> index af145608b5ed..d599c3b9e881 100644
+> --- a/include/drm/drm_connector.h
+> +++ b/include/drm/drm_connector.h
+> @@ -207,6 +207,9 @@ struct drm_hdmi_info {
+>  
+>  	/** @y420_dc_modes: bitmap of deep color support index */
+>  	u8 y420_dc_modes;
+> +
+> +	/* @colorimetry: bitmap of supported colorimetry modes */
+> +	u16 colorimetry;
+>  };
+>  
+>  /**
+> diff --git a/include/drm/drm_edid.h b/include/drm/drm_edid.h
+> index cfa4f5af49af..98fa78c2f82d 100644
+> --- a/include/drm/drm_edid.h
+> +++ b/include/drm/drm_edid.h
+> @@ -229,6 +229,20 @@ struct detailed_timing {
+>  				    DRM_EDID_YCBCR420_DC_36 | \
+>  				    DRM_EDID_YCBCR420_DC_30)
+>  
+> +/*
+> + * Supported Colorimetry from colorimetry data block
+> + * as per CEA 861-G spec
+> + */
+> +#define DRM_EDID_CLRMETRY_xvYCC_601   (1 << 0)
+> +#define DRM_EDID_CLRMETRY_xvYCC_709   (1 << 1)
+> +#define DRM_EDID_CLRMETRY_sYCC_601    (1 << 2)
+> +#define DRM_EDID_CLRMETRY_ADBYCC_601  (1 << 3)
+> +#define DRM_EDID_CLRMETRY_ADB_RGB     (1 << 4)
+> +#define DRM_EDID_CLRMETRY_BT2020_CYCC (1 << 5)
+> +#define DRM_EDID_CLRMETRY_BT2020_YCC  (1 << 6)
+> +#define DRM_EDID_CLRMETRY_BT2020_RGB  (1 << 7)
+> +#define DRM_EDID_CLRMETRY_DCI_P3      (1 << 15)
+> +
+>  /* ELD Header Block */
+>  #define DRM_ELD_HEADER_BLOCK_SIZE	4
+>  
+> -- 
+> 2.25.1
+> 
+> 
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
---=20
-
-Thanks,
-Peter Chen=
+-- 
+Ville Syrjälä
+Intel
