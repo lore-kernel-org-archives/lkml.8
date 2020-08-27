@@ -2,99 +2,128 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D56C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3FEC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAD142087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1812E207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:17:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Sn1Xn765"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgH0WQL (ORCPT
+        id S1727924AbgH0WQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 18:16:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46332 "EHLO
+        Thu, 27 Aug 2020 18:16:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbgH0WQL (ORCPT
+        with ESMTP id S1726266AbgH0WQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 18:16:11 -0400
-X-Greylist: delayed 498 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 27 Aug 2020 15:16:11 PDT
-Received: from forward103o.mail.yandex.net (forward103o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::606])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CFD7C061264;
-        Thu, 27 Aug 2020 15:16:11 -0700 (PDT)
-Received: from mxback19g.mail.yandex.net (mxback19g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:319])
-        by forward103o.mail.yandex.net (Yandex) with ESMTP id 9AC325F80893;
-        Fri, 28 Aug 2020 01:07:46 +0300 (MSK)
-Received: from sas1-26681efc71ef.qloud-c.yandex.net (sas1-26681efc71ef.qloud-c.yandex.net [2a02:6b8:c08:37a4:0:640:2668:1efc])
-        by mxback19g.mail.yandex.net (mxback/Yandex) with ESMTP id P9J391dcLH-7jtmO9Xh;
-        Fri, 28 Aug 2020 01:07:46 +0300
-Received: by sas1-26681efc71ef.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id A1zBdMv5Ry-7il8Afes;
-        Fri, 28 Aug 2020 01:07:44 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Lach <iam@lach.pw>
-To:     ja@ssi.bg
-Cc:     iam@lach.pw, "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: [PATCH] Remove ipvs v6 dependency on iptables
-Date:   Fri, 28 Aug 2020 03:07:15 +0500
-Message-Id: <20200827220715.6508-1-iam@lach.pw>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <alpine.LFD.2.23.451.2008272357240.4567@ja.home.ssi.bg>
-References: <alpine.LFD.2.23.451.2008272357240.4567@ja.home.ssi.bg>
+        Thu, 27 Aug 2020 18:16:59 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48C2BC06121B
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 15:16:59 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id n3so3239079pjq.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 15:16:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lLmbzoSbX37WRFYQW3L/1ffMVUDf88bIb2L15ySX4bI=;
+        b=Sn1Xn765zecNGssYNGAzm6wFGVk/ZUhv3yF24YKSHrrm6U0gqIZZZDxVzDAyNtP0T4
+         cXAMTSit0hEdTaUdP8eWW8XSdX0PhQMN7+d7nso/G2BMTeqMHmL3Cdk9S54CZ6SMe7Zl
+         DkBln/HezvkLX2GPBY0Q+sV4MPupwJjvZ0xzE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lLmbzoSbX37WRFYQW3L/1ffMVUDf88bIb2L15ySX4bI=;
+        b=G0EKcRLDoZkBmCrXGOyZnXnVxECdRqnoDZbZfn/q9xZdvwb3vBylRt5JGbUX0lqeCT
+         UQ/Qh91Lt8EMm6IPaOOelCYNSs7gx9LqfvUEIRWKAvSPiy6jhsoaYDwomHQOEzsezZ85
+         KEHhnGnrdMboOdoKUtlDLkF7Nna54MHH6/LvaAnOg2ovyhx+3wkyICNmSUHEjifIcb6U
+         nEZEtHlXrZjEYlOW43PLQ9SlWIAGnEdPCcXQWpMsm59dVN46vwpDAin/IBntRJPE95Fi
+         kUMMh2UDUdTHhYVdBJT08xraJd9F7xjrVjz0EEPnBd/prgBaOg+qmnxlxIhU2i/mffTo
+         NI0w==
+X-Gm-Message-State: AOAM531lw83J9eJuJ0J6eIKcWu5+iUQeNZigshaYFVStn7xv8CPISNG7
+        py3Js91tD1+VxFl+XA9NnhoZQw==
+X-Google-Smtp-Source: ABdhPJxc4Utn2CJ+IfyCfdMPjgDjTvD7I3FRBoJwWEMSO3xb8hDq51v6hjQN8kpG25RPcBppMWR8wg==
+X-Received: by 2002:a17:90a:19c2:: with SMTP id 2mr845122pjj.6.1598566618642;
+        Thu, 27 Aug 2020 15:16:58 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id lw2sm3005169pjb.34.2020.08.27.15.16.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 15:16:57 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 15:16:56 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Alex Dewar <alex.dewar90@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        cocci <cocci@systeme.lip6.fr>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "accessrunner-general@lists.sourceforge.net" 
+        <accessrunner-general@lists.sourceforge.net>
+Subject: Re: [Cocci] [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+Message-ID: <202008271516.ED209B68@keescook>
+References: <48f2dc90-7852-eaf1-55d7-2c85cf954688@rasmusvillemoes.dk>
+ <20200827071537.GA168593@kroah.com>
+ <20200827131819.7rcl2f5js3hkoqj2@lenovo-laptop>
+ <def24e9e-018c-9712-0d07-d4cbc84f07d9@rasmusvillemoes.dk>
+ <20200827144846.yauuttjaqtxaldxg@lenovo-laptop>
+ <5d1dfb9b031130d4d20763ec621233a19d6a88a2.camel@perches.com>
+ <alpine.DEB.2.22.394.2008272141220.2482@hadrien>
+ <cf9b1ea3716305447be43bffc8f90b7ef7292f5b.camel@perches.com>
+ <c3926f18f98e446daad957cd66a94890@AcuMS.aculab.com>
+ <ca08f34a5aaa3e9031a934296dd97fc806dab66f.camel@perches.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ca08f34a5aaa3e9031a934296dd97fc806dab66f.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This dependency was added in 63dca2c0b0e7a92cb39d1b1ecefa32ffda201975, because this commit had dependency on
-ipv6_find_hdr, which was located in iptables-specific code
+On Thu, Aug 27, 2020 at 03:11:57PM -0700, Joe Perches wrote:
+> On Thu, 2020-08-27 at 22:03 +0000, David Laight wrote:
+> > From: Joe Perches
+> > > Sent: 27 August 2020 21:30
+> > ...
+> > > Perhaps what's necessary is to find any
+> > > appropriate .show function and change
+> > > any use of strcpy/sprintf within those
+> > > function to some other name.
+> > > 
+> > > For instance:
+> > > 
+> > > drivers/isdn/mISDN/core.c-static ssize_t name_show(struct device *dev,
+> > > drivers/isdn/mISDN/core.c-                       struct device_attribute *attr, char *buf)
+> > > drivers/isdn/mISDN/core.c-{
+> > > drivers/isdn/mISDN/core.c:      strcpy(buf, dev_name(dev));
+> > > drivers/isdn/mISDN/core.c-      return strlen(buf);
+> > > drivers/isdn/mISDN/core.c-}
+> > > drivers/isdn/mISDN/core.c-static DEVICE_ATTR_RO(name);
+> > 
+> > That form ends up calculating the string length twice.
+> > Better would be:
+> > 	len = strlen(msg);
+> > 	memcpy(buf, msg, len);
+> > 	return len;
+> 
+> or given clang's requirement for stpcpy
+> 
+> 	return stpcpy(buf, dev_name(dev)) - buf;
+> 
+> (I do not advocate for this ;)
 
-But it is no longer required, because f8f626754ebeca613cf1af2e6f890cfde0e74d5b moved them to a more common location
----
- include/net/ip_vs.h        | 3 ---
- net/netfilter/ipvs/Kconfig | 1 -
- 2 files changed, 4 deletions(-)
+Heh. And humans aren't allowed to use stpcpy() in the kernel. :)
 
-diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-index 9a59a3378..d609e957a 100644
---- a/include/net/ip_vs.h
-+++ b/include/net/ip_vs.h
-@@ -25,9 +25,6 @@
- #include <linux/ip.h>
- #include <linux/ipv6.h>			/* for struct ipv6hdr */
- #include <net/ipv6.h>
--#if IS_ENABLED(CONFIG_IP_VS_IPV6)
--#include <linux/netfilter_ipv6/ip6_tables.h>
--#endif
- #if IS_ENABLED(CONFIG_NF_CONNTRACK)
- #include <net/netfilter/nf_conntrack.h>
- #endif
-diff --git a/net/netfilter/ipvs/Kconfig b/net/netfilter/ipvs/Kconfig
-index 2c1593089..eb0e329f9 100644
---- a/net/netfilter/ipvs/Kconfig
-+++ b/net/netfilter/ipvs/Kconfig
-@@ -29,7 +29,6 @@ if IP_VS
- config	IP_VS_IPV6
- 	bool "IPv6 support for IPVS"
- 	depends on IPV6 = y || IP_VS = IPV6
--	select IP6_NF_IPTABLES
- 	select NF_DEFRAG_IPV6
- 	help
- 	  Add IPv6 support to IPVS.
---
-2.28.0
-
+-- 
+Kees Cook
