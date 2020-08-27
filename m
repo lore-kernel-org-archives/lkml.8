@@ -2,122 +2,77 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95695C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C939C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1C6207DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 718612087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:38:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KyfY5s0G"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z7SqmyJp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgH0Qh6 (ORCPT
+        id S1727015AbgH0QiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:37:58 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52634 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbgH0Qh4 (ORCPT
+        Thu, 27 Aug 2020 12:38:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbgH0QiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:37:56 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07RGbLba105509;
-        Thu, 27 Aug 2020 11:37:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598546241;
-        bh=Mx//Pdg+H+WkwhXnTFfk3IX8zqYVvEgOrHOAmDMt3XE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=KyfY5s0Gb9luwYKdK1rAQT4Zj+f1oPnNq78Pbr60bnNy52+9eapXOUV6H2Ru5g2yS
-         4pOyM7Gp4NbsADNvGdEwxhvLOvLOF8bKwei924xKyA5kqHL3/XLZycl2T495BNRmOX
-         4V8sVKqszHpzKPHg8qB/u+RHllu9hYG+8aH6FJYs=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07RGbL3Q073020
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 27 Aug 2020 11:37:21 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 27
- Aug 2020 11:37:21 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 27 Aug 2020 11:37:21 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07RGbJRN116794;
-        Thu, 27 Aug 2020 11:37:19 -0500
-Subject: Re: [PATCH v3] memory: omap-gpmc: Fix build error without CONFIG_OF
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-CC:     <tony@atomide.com>, <ladis@linux-mips.org>,
-        <bbrezillon@kernel.org>, <peter.ujfalusi@ti.com>,
-        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200826125919.22172-1-yuehaibing@huawei.com>
- <20200827125316.20780-1-yuehaibing@huawei.com>
- <20200827132154.GB4384@kozik-lap>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <45d3fa05-01e8-c879-e314-ae627ca4c266@ti.com>
-Date:   Thu, 27 Aug 2020 19:37:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 27 Aug 2020 12:38:15 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3F7FC061264;
+        Thu, 27 Aug 2020 09:38:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=mDFQ2s0k9HxGt4psywikvnGRm5yDAwltz2heB0RkVKI=; b=Z7SqmyJpqfjBsisDmF/TVZ0Ht1
+        PjQ1Xp2mYa3WVDqVDdbWYK9Q/RuPJcdtHCS51QFY9DDNFjW5PeDsfcK/VNWLTBJaRW00YegfpXDzO
+        ZiKkXdCZLM5IGJvs1z6HGrHNSfU4Ao6otK9UMbeukrfLcisI4hwSStaTYPHk/sJgXpHu7WHuNFnzw
+        Lsk2Ln0mT6wZxRYIpm4E1UyHEvHxRym96GMP9JpYJeaefjBoCxPFI+HJPcZWTb+Lw5TCjlZpk86Hw
+        rwa+X4aZpSAHHNUAMNU59Qs2CBfZmPG26JWVPaSL4dIgS9tO1mdjM7NApAgKnlMpEVUgufbuHhkSz
+        hS1N3Psw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBKuS-0002nE-BW; Thu, 27 Aug 2020 16:37:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8FF8B3006D0;
+        Thu, 27 Aug 2020 18:37:55 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 435622C42E940; Thu, 27 Aug 2020 18:37:55 +0200 (CEST)
+Date:   Thu, 27 Aug 2020 18:37:55 +0200
+From:   peterz@infradead.org
+To:     linux-kernel@vger.kernel.org, mhiramat@kernel.org
+Cc:     Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
+        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
+        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
+        cameron@moodycamel.com, oleg@redhat.com, will@kernel.org,
+        paulmck@kernel.org
+Subject: Re: [RFC][PATCH 6/7] freelist: Lock less freelist
+Message-ID: <20200827163755.GK1362448@hirez.programming.kicks-ass.net>
+References: <20200827161237.889877377@infradead.org>
+ <20200827161754.535381269@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200827132154.GB4384@kozik-lap>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827161754.535381269@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 27, 2020 at 06:12:43PM +0200, Peter Zijlstra wrote:
+> +struct freelist_node {
+> +	atomic_t		refs;
+> +	struct freelist_node	*next;
+> +};
 
+Bah, the next patch relies on this structure to be ordered the other
+way around.
 
-On 27/08/2020 16:21, Krzysztof Kozlowski wrote:
-> On Thu, Aug 27, 2020 at 08:53:16PM +0800, YueHaibing wrote:
->> If CONFIG_OF is n, gcc fails:
->>
->> drivers/memory/omap-gpmc.o: In function `gpmc_omap_onenand_set_timings':
->> omap-gpmc.c:(.text+0x2a88): undefined reference to `gpmc_read_settings_dt'
->>
->> Add gpmc_read_settings_dt() helper function, which zero the gpmc_settings
->> so the caller doesn't proceed with random/invalid settings.
->>
->> Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> ---
->> v3: zero gpmc_settings
->> v2: add gpmc_read_settings_dt() stub
->> ---
->>   drivers/memory/omap-gpmc.c | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
->> index cd9e80748591..e026b4cd3612 100644
->> --- a/drivers/memory/omap-gpmc.c
->> +++ b/drivers/memory/omap-gpmc.c
->> @@ -2310,6 +2310,10 @@ static void gpmc_probe_dt_children(struct platform_device *pdev)
->>   	}
->>   }
->>   #else
->> +void gpmc_read_settings_dt(struct device_node *np, struct gpmc_settings *p)
->> +{
->> +	memset(p, 0, sizeof(struct gpmc_settings));
-> 
-> sizeof(*p) but if patch is otherwise ok (got review/ack) then I can fix
-> it while applying.
-> 
-> If there is resend, please fix it as well.
-
-With the sizeof(*p) change.
-
-Acked-by: Roger Quadros <rogerq@ti.com>
-
-cheers,
--roger
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Clearly writing code and listening to talks isn't ideal :-)
