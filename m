@@ -2,133 +2,99 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 953B9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B58AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 538DE207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:06:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598555219;
-	bh=vTHK2xAuoLPvz0B5okzq225ClGRruZ/zZapxLoQ371o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SFZO/tT4l6cG3yfM3EdRM/w2qUUqZdiJMLdXVBNg6B9bMnCr+q9T0GX2vIY06t0QW
-	 kOqv5BXrV9CHsKya+/kaaAEy3tLCAClOL13+igKeyp5x0x/OtrTt1eEQLogS5c16WO
-	 dEpdzrCEHjzm1lq2+2T8AfWCWMlnvORV/97IFE0s=
+	by mail.kernel.org (Postfix) with ESMTP id 04A0222B4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:07:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ljY2+3je"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgH0TG6 (ORCPT
+        id S1727849AbgH0THp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:06:58 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:44241 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbgH0TG5 (ORCPT
+        Thu, 27 Aug 2020 15:07:45 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9007 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbgH0THo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:06:57 -0400
-Received: by mail-ej1-f67.google.com with SMTP id bo3so9096917ejb.11;
-        Thu, 27 Aug 2020 12:06:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kX9eyuUyhq2QFDZPTT8K+fKfXv//9k/lun1Oefq69vQ=;
-        b=kr2oH/9CxNs7iz8r8DpKFNCTMyQ28aGdp3TLDbLX5ElLn2zM/9q9ONlrMid5RvBVJi
-         hjrxUbIVBwwNHG+Z0AcPDDAqcIZJ2Nk8ZOMjfQyFFHZeTq1yKxXeJtYFCn66Vss7wQEE
-         CrJH2gdkN5y/i0sILTpZmY+D95+3Nn2ComTA8q+JmtKsJv+JQsGHzA9s347OUm+aLcUi
-         b1VsdC5HhtupuibhJwnYGizsrJFxu+PcwyZ0PZXhAC0It5CxjJcWKd1XRzr3hfuMZRSf
-         Ik5IpaDMmu9IV11nn3JLpMzthBQVZ4HIAS54WSDTR0UZbBvLNd9JkOH7lWt1DnX62KgP
-         tbcg==
-X-Gm-Message-State: AOAM533p9tc3H6iMApibp4zFbz+Sg86BQHmy9naKiUYoBIzLaFKTgNJV
-        8lBnIFG9/lP1fk7p82yiWNxNu/vPWcjdUmdF
-X-Google-Smtp-Source: ABdhPJwErb1TPe6yej5LwLYtNxfx1kujrjSq4jsHJ5VaVSvbdjyWgjoSXSM2n9G+Y0DfBXVTqlVBtw==
-X-Received: by 2002:a17:906:37c1:: with SMTP id o1mr22299708ejc.279.1598555215565;
-        Thu, 27 Aug 2020 12:06:55 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id w20sm2629985ejc.77.2020.08.27.12.06.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Aug 2020 12:06:54 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 21:06:52 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Etienne Carriere <etienne.carriere@st.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] iio: adc: stm32: Simplify with dev_err_probe()
-Message-ID: <20200827190652.GD6196@kozik-lap>
-References: <20200826161818.20969-1-krzk@kernel.org>
- <CAHp75Vf3s0+RrHnBoO4y4+t4Egth4uyYwtO5iPt9DbLJcunL6g@mail.gmail.com>
+        Thu, 27 Aug 2020 15:07:44 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4804720000>; Thu, 27 Aug 2020 12:07:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 27 Aug 2020 12:07:44 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 27 Aug 2020 12:07:44 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
+ 2020 19:07:44 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 27 Aug 2020 19:07:44 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f4804800000>; Thu, 27 Aug 2020 12:07:44 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH] mm/migrate: remove cpages-- in migrate_vma_finalize()
+Date:   Thu, 27 Aug 2020 12:07:34 -0700
+Message-ID: <20200827190735.12752-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vf3s0+RrHnBoO4y4+t4Egth4uyYwtO5iPt9DbLJcunL6g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598555250; bh=awbwyASLbtxTy+p22pc3l4aK1xu021e4G6SblCHI+0g=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=ljY2+3je4EroVqmCgZoKwHcalhm5yEcj7rQPPx1nCADDR52KoUWZg3TLrd+qJoYwT
+         9l/WHI0bRC21ZOv8ymmoUwz4EwXWnz1GMoBwgAXV0d1eprBJEOtNyfLs8SO0mdhHZH
+         zbzkGKauJqekAxEImu5+y+Wps7gnyxZdNDoJ+bZ0JjCm7w1uB4k/zWUJGpuwwRXwk6
+         5XhtGInICZfCBvfc1vlnrDXuOoKqUN0dBkpq4fDPjihvr7DcSug5/dHlD6IRaXMUII
+         b77Pig/yFYU4fNeAWt4z2SuzHw4abqPGMWoSvekPnikVPwoUqyvQxODTj8yOrRNw6O
+         uQIdkomlt7+EA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 11:27:12AM +0300, Andy Shevchenko wrote:
-> On Wed, Aug 26, 2020 at 7:19 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > Common pattern of handling deferred probe can be simplified with
-> > dev_err_probe().  Less code and also it prints the error value.
-> 
-> 
-> 
-> 
-> 
-> 
-> >         priv->aclk = devm_clk_get(&pdev->dev, "adc");
-> >         if (IS_ERR(priv->aclk)) {
-> >                 ret = PTR_ERR(priv->aclk);
-> > -               if (ret != -ENOENT) {
-> > -                       if (ret != -EPROBE_DEFER)
-> > -                               dev_err(&pdev->dev, "Can't get 'adc' clock\n");
-> > -                       return ret;
-> > -               }
-> > +               if (ret != -ENOENT)
-> > +                       return dev_err_probe(&pdev->dev, ret, "Can't get 'adc' clock\n");
-> > +
-> >                 priv->aclk = NULL;
-> >         }
-> >
-> >         priv->bclk = devm_clk_get(&pdev->dev, "bus");
-> >         if (IS_ERR(priv->bclk)) {
-> >                 ret = PTR_ERR(priv->bclk);
-> > -               if (ret != -ENOENT) {
-> > -                       if (ret != -EPROBE_DEFER)
-> > -                               dev_err(&pdev->dev, "Can't get 'bus' clock\n");
-> > -                       return ret;
-> > -               }
-> > +               if (ret != -ENOENT)
-> > +                       return dev_err_probe(&pdev->dev, ret, "Can't get 'bus' clock\n");
-> > +
-> >                 priv->bclk = NULL;
-> >         }
-> 
-> Again, devm_clk_get_optional() and even, if it exists,
-> devm_clk_bulk_get_optional().
+The variable struct migrate_vma->cpages is only used in
+migrate_vma_setup(). There is no need to decrement it in
+migrate_vma_finalize() since it is never checked.
 
-Sure.
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+---
 
-> 
-> Please, revisit all patches on this topic.
+This applies to linux-mm and is for Andrew Morton's tree.
 
-I'll check them.
+ mm/migrate.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-
-Best regards,
-Krzysztof
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 0b945c8031be..eb859f7a9811 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -3087,7 +3087,6 @@ void migrate_vma_finalize(struct migrate_vma *migrate=
+)
+=20
+ 		remove_migration_ptes(page, newpage, false);
+ 		unlock_page(page);
+-		migrate->cpages--;
+=20
+ 		if (is_zone_device_page(page))
+ 			put_page(page);
+--=20
+2.20.1
 
