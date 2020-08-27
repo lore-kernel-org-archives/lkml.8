@@ -2,139 +2,577 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 047A2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C661C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFEF122B4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20F2A2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:45:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bxrgwWZs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LcrpKLdo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgH0Opc (ORCPT
+        id S1728071AbgH0Opl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:45:32 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:38928 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgH0Oiz (ORCPT
+        Thu, 27 Aug 2020 10:45:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53972 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728146AbgH0ODq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:38:55 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07REcf84051246;
-        Thu, 27 Aug 2020 09:38:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598539121;
-        bh=jcZmBfUXVLDbmP9+jachlmxqxGc7XxXtsRG81uIPyOc=;
-        h=From:To:Subject:Date;
-        b=bxrgwWZsT0eo3uU5wZi3d55LQmuKmlv71gcbgKBU8gYiWowUjA/XwRAIz+S/RLagB
-         ZPt09NaVK4rFoKkm5aNTZyWjyNdYmY3FGpnvd10+9/Igj3p2dT2pMy1YaZ6BAGK3kV
-         eKkRgWxDaPQs+4De/MzBtRSdV3LWyNHEfRKKcGCs=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07REcfO7085833
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 27 Aug 2020 09:38:41 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 27
- Aug 2020 09:38:41 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 27 Aug 2020 09:38:41 -0500
-Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07REcdw8129109;
-        Thu, 27 Aug 2020 09:38:39 -0500
-From:   Murali Karicheri <m-karicheri2@ti.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>,
-        <grygorii.strashko@ti.com>, <nsekhar@ti.com>,
-        <linux-omap@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net v4] net: ethernet: ti: cpsw_new: fix error handling in cpsw_ndo_vlan_rx_kill_vid()
-Date:   Thu, 27 Aug 2020 10:38:39 -0400
-Message-ID: <20200827143839.32327-1-m-karicheri2@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 27 Aug 2020 10:03:46 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 033CBC0611E9;
+        Thu, 27 Aug 2020 07:02:18 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id mw10so2647057pjb.2;
+        Thu, 27 Aug 2020 07:02:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=y+cUd9jWxq4U7fz9yy/sM6N4SjlSfrDO3xMgWNGotCU=;
+        b=LcrpKLdobe1+E32kIL9OeBOKyk120ANlkfFmqBnkgxGvSbaMg+M7PXl3hd7tpv2727
+         yVIcPtH07vJgIf93/FBxE0LYEdFSsbaWqaVjHKZQMVpp+mUgDDOdj8KYqfaOXMjS/lo6
+         3YYWd9cmkabcJX/fKYIVCqGsRedwQIA/bePv+6jt2Z3VMw9Zjk03TfZ1cqWhrnkbsoT+
+         o4ISh8vm+RAl9k0ms5dMlmOumh1S7ZzfiimHgze794gIXU9/GDwWWfDMFVvbpf1pdAbX
+         ReIONfxwDOuylPA7QYyPdZ3iBSrsugw8cQNnUuSX8GcumlEU/TrEmVc+OyYl7Hv6D+4S
+         5T4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=y+cUd9jWxq4U7fz9yy/sM6N4SjlSfrDO3xMgWNGotCU=;
+        b=C+kDKpyUdFaFza4JHrJFwjO5HevgRwzXiYi/PSZXDa2lixl/SN5C4EvSk2+WoGVDqJ
+         Hff32cKucCDHPL2HBVaFyrg5sS1UYam5VCIZNzmKpI+4cEBeuWzm1sn3/MPrPX1D28f+
+         DFk97OYrZggdZydb/PJyPg3Ot6YMVRb4Uguuwxj7w7inbDUhk6N2Oc1knD5ROpAu2vsj
+         /T7UrVpdFN3lAfrvheevOOYCWhSlguIoyY8PWOU1fDTkiorf6ND6+YP9LQrM3gNSTh92
+         f78YgaDPYjcfw3/4RZ//gZEsQZEf1Y00E4a3htp6282d/Y/8/fQkwwtbgp7hFctrDe2A
+         dmAg==
+X-Gm-Message-State: AOAM533fHbvN0Yys6YAxbuHjUQB1biLUKOeiVEROuJdhpt6jzhIko11k
+        roAxMpNE8sL2SEtDVDZSeKcySLZWpqI=
+X-Google-Smtp-Source: ABdhPJyW63FqDnI3CTVN4jNI/AXiWZNEuwJfgY/g4f5OklrWy2oOOGcgFjDmvg4t7FlixjgDz81tjQ==
+X-Received: by 2002:a17:90b:138d:: with SMTP id hr13mr10224922pjb.14.1598536936711;
+        Thu, 27 Aug 2020 07:02:16 -0700 (PDT)
+Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id fs12sm2371092pjb.21.2020.08.27.07.02.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 07:02:15 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v5 07/20] gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL and GPIO_V2_LINE_GET_VALUES_IOCTL
+Date:   Thu, 27 Aug 2020 22:00:07 +0800
+Message-Id: <20200827140020.159627-8-warthog618@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200827140020.159627-1-warthog618@gmail.com>
+References: <20200827140020.159627-1-warthog618@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes a bunch of issues in cpsw_ndo_vlan_rx_kill_vid()
+Add support for requesting lines using the GPIO_V2_GET_LINE_IOCTL, and
+returning their current values using GPIO_V2_LINE_GET_VALUES_IOCTL.
 
- - pm_runtime_get_sync() returns non zero value. This results in
-   non zero value return to caller which will be interpreted as error.
-   So overwrite ret with zero.
- - If VID matches with port VLAN VID, then set error code.
- - Currently when VLAN interface is deleted, all of the VLAN mc addresses
-   are removed from ALE table, however the return values from ale function
-   calls are not checked. These functions can return error code -ENOENT.
-   But that shouldn't happen in a normal case. So add error print to
-   catch the situations so that these can be investigated and addressed.
-   return zero in these cases as these are not real error case, but only
-   serve to catch ALE table update related issues and help address the
-   same in the driver.
+The struct linereq implementation is based on the v1 struct linehandle
+implementation.
 
-Fixes: ed3525eda4c4 ("net: ethernet: ti: introduce cpsw switchdev based driver part 1 - dual-emac")
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- v4 - updated error message with name of the function failed.
- v3 - updated commit description to describe error check related to
-      port vlan VID
- v2 - updated comments from Grygorii, also return error code if VID
- drivers/net/ethernet/ti/cpsw_new.c | 27 +++++++++++++++++++++------
- 1 file changed, 21 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
-index 8d0a2bc7128d..8ed78577cded 100644
---- a/drivers/net/ethernet/ti/cpsw_new.c
-+++ b/drivers/net/ethernet/ti/cpsw_new.c
-@@ -1032,19 +1032,34 @@ static int cpsw_ndo_vlan_rx_kill_vid(struct net_device *ndev,
- 		return ret;
- 	}
+The linereq_ioctl() is a simple wrapper around linereq_get_values() here,
+but will be extended with other ioctls in subsequent patches.
+
+Similarly, the struct line only contains the desc here, but will receive
+the edge detector and debouncer fields in subsequent patches.
+
+Changes for v5:
+ - as per cover letter
+
+Changes for v4:
+ - fix handling of mask in line_get_values
+
+ drivers/gpio/gpiolib-cdev.c | 418 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 418 insertions(+)
+
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index 8b012879fe3f..1c0ed493cb83 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -1,7 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0
  
-+	/* reset the return code as pm_runtime_get_sync() can return
-+	 * non zero values as well.
-+	 */
-+	ret = 0;
- 	for (i = 0; i < cpsw->data.slaves; i++) {
- 		if (cpsw->slaves[i].ndev &&
--		    vid == cpsw->slaves[i].port_vlan)
-+		    vid == cpsw->slaves[i].port_vlan) {
-+			ret = -EINVAL;
- 			goto err;
-+		}
- 	}
+ #include <linux/anon_inodes.h>
++#include <linux/atomic.h>
+ #include <linux/bitmap.h>
++#include <linux/build_bug.h>
+ #include <linux/cdev.h>
+ #include <linux/compat.h>
+ #include <linux/device.h>
+@@ -34,6 +36,7 @@
+  * GPIO line handle management
+  */
  
- 	dev_dbg(priv->dev, "removing vlanid %d from vlan filter\n", vid);
--	cpsw_ale_del_vlan(cpsw->ale, vid, 0);
--	cpsw_ale_del_ucast(cpsw->ale, priv->mac_addr,
--			   HOST_PORT_NUM, ALE_VLAN, vid);
--	cpsw_ale_del_mcast(cpsw->ale, priv->ndev->broadcast,
--			   0, ALE_VLAN, vid);
-+	ret = cpsw_ale_del_vlan(cpsw->ale, vid, 0);
-+	if (ret)
-+		dev_err(priv->dev, "cpsw_ale_del_vlan() failed: ret %d\n", ret);
-+	ret = cpsw_ale_del_ucast(cpsw->ale, priv->mac_addr,
-+				 HOST_PORT_NUM, ALE_VLAN, vid);
-+	if (ret)
-+		dev_err(priv->dev, "cpsw_ale_del_ucast() failed: ret %d\n",
-+			ret);
-+	ret = cpsw_ale_del_mcast(cpsw->ale, priv->ndev->broadcast,
-+				 0, ALE_VLAN, vid);
-+	if (ret)
-+		dev_err(priv->dev, "cpsw_ale_del_mcast failed. ret %d\n",
-+			ret);
- 	cpsw_ale_flush_multicast(cpsw->ale, ALE_PORT_HOST, vid);
-+	ret = 0;
- err:
- 	pm_runtime_put(cpsw->dev);
++#ifdef CONFIG_GPIO_CDEV_V1
+ /**
+  * struct linehandle_state - contains the state of a userspace handle
+  * @gdev: the GPIO device the handle pertains to
+@@ -376,6 +379,396 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
+ 	linehandle_free(lh);
  	return ret;
+ }
++#endif /* CONFIG_GPIO_CDEV_V1 */
++
++/**
++ * struct line - contains the state of a requested line
++ * @desc: the GPIO descriptor for this line.
++ */
++struct line {
++	struct gpio_desc *desc;
++};
++
++/**
++ * struct linereq - contains the state of a userspace line request
++ * @gdev: the GPIO device the line request pertains to
++ * @label: consumer label used to tag GPIO descriptors
++ * @num_lines: the number of lines in the lines array
++ * @lines: the lines held by this line request, with @num_lines elements.
++ */
++struct linereq {
++	struct gpio_device *gdev;
++	const char *label;
++	u32 num_lines;
++	struct line lines[];
++};
++
++#define GPIO_V2_LINE_BIAS_FLAGS \
++	(GPIO_V2_LINE_FLAG_BIAS_PULL_UP | \
++	 GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN | \
++	 GPIO_V2_LINE_FLAG_BIAS_DISABLED)
++
++#define GPIO_V2_LINE_DIRECTION_FLAGS \
++	(GPIO_V2_LINE_FLAG_INPUT | \
++	 GPIO_V2_LINE_FLAG_OUTPUT)
++
++#define GPIO_V2_LINE_DRIVE_FLAGS \
++	(GPIO_V2_LINE_FLAG_OPEN_DRAIN | \
++	 GPIO_V2_LINE_FLAG_OPEN_SOURCE)
++
++#define GPIO_V2_LINE_VALID_FLAGS \
++	(GPIO_V2_LINE_FLAG_ACTIVE_LOW | \
++	 GPIO_V2_LINE_DIRECTION_FLAGS | \
++	 GPIO_V2_LINE_DRIVE_FLAGS | \
++	 GPIO_V2_LINE_BIAS_FLAGS)
++
++static u64 gpio_v2_line_config_flags(struct gpio_v2_line_config *lc,
++				     unsigned int line_idx)
++{
++	unsigned int i;
++	u64 mask = BIT_ULL(line_idx);
++
++	for (i = 0; i < lc->num_attrs; i++) {
++		if ((lc->attrs[i].attr.id == GPIO_V2_LINE_ATTR_ID_FLAGS) &&
++		    (lc->attrs[i].mask & mask))
++			return lc->attrs[i].attr.flags;
++	}
++	return lc->flags;
++}
++
++static int gpio_v2_line_config_output_value(struct gpio_v2_line_config *lc,
++					    unsigned int line_idx)
++{
++	unsigned int i;
++	u64 mask = BIT_ULL(line_idx);
++
++	for (i = 0; i < lc->num_attrs; i++) {
++		if ((lc->attrs[i].attr.id == GPIO_V2_LINE_ATTR_ID_OUTPUT_VALUES) &&
++		    (lc->attrs[i].mask & mask))
++			return !!(lc->attrs[i].attr.values & mask);
++	}
++	return 0;
++}
++
++static int gpio_v2_line_flags_validate(u64 flags)
++{
++	/* Return an error if an unknown flag is set */
++	if (flags & ~GPIO_V2_LINE_VALID_FLAGS)
++		return -EINVAL;
++
++	/*
++	 * Do not allow both INPUT & OUTPUT flags to be set as they are
++	 * contradictory.
++	 */
++	if ((flags & GPIO_V2_LINE_FLAG_INPUT) &&
++	    (flags & GPIO_V2_LINE_FLAG_OUTPUT))
++		return -EINVAL;
++
++	/*
++	 * Do not allow OPEN_SOURCE & OPEN_DRAIN flags in a single request. If
++	 * the hardware actually supports enabling both at the same time the
++	 * electrical result would be disastrous.
++	 */
++	if ((flags & GPIO_V2_LINE_FLAG_OPEN_DRAIN) &&
++	    (flags & GPIO_V2_LINE_FLAG_OPEN_SOURCE))
++		return -EINVAL;
++
++	/* Drive requires explicit output direction. */
++	if ((flags & GPIO_V2_LINE_DRIVE_FLAGS) &&
++	    !(flags & GPIO_V2_LINE_FLAG_OUTPUT))
++		return -EINVAL;
++
++	/* Bias requires explicit direction. */
++	if ((flags & GPIO_V2_LINE_BIAS_FLAGS) &&
++	    !(flags & GPIO_V2_LINE_DIRECTION_FLAGS))
++		return -EINVAL;
++
++	/* Only one bias flag can be set. */
++	if (((flags & GPIO_V2_LINE_FLAG_BIAS_DISABLED) &&
++	     (flags & (GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN |
++		       GPIO_V2_LINE_FLAG_BIAS_PULL_UP))) ||
++	    ((flags & GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN) &&
++	     (flags & GPIO_V2_LINE_FLAG_BIAS_PULL_UP)))
++		return -EINVAL;
++
++	return 0;
++}
++
++static int gpio_v2_line_config_validate(struct gpio_v2_line_config *lc,
++					unsigned int num_lines)
++{
++	unsigned int i;
++	u64 flags;
++	int ret;
++
++	if (lc->num_attrs > GPIO_V2_LINE_NUM_ATTRS_MAX)
++		return -EINVAL;
++
++	if (memchr_inv(lc->padding, 0, sizeof(lc->padding)))
++		return -EINVAL;
++
++	for (i = 0; i < num_lines; i++) {
++		flags = gpio_v2_line_config_flags(lc, i);
++		ret = gpio_v2_line_flags_validate(flags);
++		if (ret)
++			return ret;
++	}
++	return 0;
++}
++
++static void gpio_v2_line_config_flags_to_desc_flags(u64 flags,
++						    unsigned long *flagsp)
++{
++	assign_bit(FLAG_ACTIVE_LOW, flagsp,
++		   flags & GPIO_V2_LINE_FLAG_ACTIVE_LOW);
++	if (flags & GPIO_V2_LINE_FLAG_OUTPUT)
++		set_bit(FLAG_IS_OUT, flagsp);
++	else if (flags & GPIO_V2_LINE_FLAG_INPUT)
++		clear_bit(FLAG_IS_OUT, flagsp);
++	assign_bit(FLAG_OPEN_DRAIN, flagsp,
++		   flags & GPIO_V2_LINE_FLAG_OPEN_DRAIN);
++	assign_bit(FLAG_OPEN_SOURCE, flagsp,
++		   flags & GPIO_V2_LINE_FLAG_OPEN_SOURCE);
++	assign_bit(FLAG_PULL_UP, flagsp,
++		   flags & GPIO_V2_LINE_FLAG_BIAS_PULL_UP);
++	assign_bit(FLAG_PULL_DOWN, flagsp,
++		   flags & GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN);
++	assign_bit(FLAG_BIAS_DISABLE, flagsp,
++		   flags & GPIO_V2_LINE_FLAG_BIAS_DISABLED);
++}
++
++static long linereq_get_values(struct linereq *lr, void __user *ip)
++{
++	struct gpio_v2_line_values lv;
++	DECLARE_BITMAP(vals, GPIO_V2_LINES_MAX);
++	struct gpio_desc **descs;
++	unsigned int i, didx, num_get;
++	int ret;
++
++	/* NOTE: It's ok to read values of output lines. */
++	if (copy_from_user(&lv, ip, sizeof(lv)))
++		return -EFAULT;
++
++	for (num_get = 0, i = 0; i < lr->num_lines; i++) {
++		if (lv.mask & BIT_ULL(i)) {
++			num_get++;
++			descs = &lr->lines[i].desc;
++		}
++	}
++
++	if (num_get == 0)
++		return -EINVAL;
++
++	if (num_get != 1) {
++		descs = kmalloc_array(num_get, sizeof(*descs), GFP_KERNEL);
++		for (didx = 0, i = 0; i < lr->num_lines; i++) {
++			if (lv.mask & BIT_ULL(i)) {
++				descs[didx] = lr->lines[i].desc;
++				didx++;
++			}
++		}
++	}
++	ret = gpiod_get_array_value_complex(false, true, num_get,
++					    descs, NULL, vals);
++
++	if (num_get != 1)
++		kfree(descs);
++	if (ret)
++		return ret;
++
++	lv.bits = 0;
++	for (didx = 0, i = 0; i < lr->num_lines; i++) {
++		if (lv.mask & BIT_ULL(i)) {
++			if (test_bit(didx, vals))
++				lv.bits |= BIT_ULL(i);
++			didx++;
++		}
++	}
++
++	if (copy_to_user(ip, &lv, sizeof(lv)))
++		return -EFAULT;
++
++	return 0;
++}
++
++static long linereq_ioctl(struct file *file, unsigned int cmd,
++			  unsigned long arg)
++{
++	struct linereq *lr = file->private_data;
++	void __user *ip = (void __user *)arg;
++
++	if (cmd == GPIO_V2_LINE_GET_VALUES_IOCTL)
++		return linereq_get_values(lr, ip);
++
++	return -EINVAL;
++}
++
++#ifdef CONFIG_COMPAT
++static long linereq_ioctl_compat(struct file *file, unsigned int cmd,
++				 unsigned long arg)
++{
++	return linereq_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
++}
++#endif
++
++static void linereq_free(struct linereq *lr)
++{
++	unsigned int i;
++
++	for (i = 0; i < lr->num_lines; i++) {
++		if (lr->lines[i].desc)
++			gpiod_free(lr->lines[i].desc);
++	}
++	kfree(lr->label);
++	put_device(&lr->gdev->dev);
++	kfree(lr);
++}
++
++static int linereq_release(struct inode *inode, struct file *file)
++{
++	struct linereq *lr = file->private_data;
++
++	linereq_free(lr);
++	return 0;
++}
++
++static const struct file_operations line_fileops = {
++	.release = linereq_release,
++	.owner = THIS_MODULE,
++	.llseek = noop_llseek,
++	.unlocked_ioctl = linereq_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl = linereq_ioctl_compat,
++#endif
++};
++
++static int linereq_create(struct gpio_device *gdev, void __user *ip)
++{
++	struct gpio_v2_line_request ulr;
++	struct gpio_v2_line_config *lc;
++	struct linereq *lr;
++	struct file *file;
++	unsigned long flags;
++	unsigned int i;
++	int fd, ret;
++
++	if (copy_from_user(&ulr, ip, sizeof(ulr)))
++		return -EFAULT;
++
++	if ((ulr.num_lines == 0) || (ulr.num_lines > GPIO_V2_LINES_MAX))
++		return -EINVAL;
++
++	if (memchr_inv(ulr.padding, 0, sizeof(ulr.padding)))
++		return -EINVAL;
++
++	lc = &ulr.config;
++	ret = gpio_v2_line_config_validate(lc, ulr.num_lines);
++	if (ret)
++		return ret;
++
++	lr = kzalloc(struct_size(lr, lines, ulr.num_lines), GFP_KERNEL);
++	if (!lr)
++		return -ENOMEM;
++
++	lr->gdev = gdev;
++	get_device(&gdev->dev);
++
++	/* Make sure this is terminated */
++	ulr.consumer[sizeof(ulr.consumer)-1] = '\0';
++	if (strlen(ulr.consumer)) {
++		lr->label = kstrdup(ulr.consumer, GFP_KERNEL);
++		if (!lr->label) {
++			ret = -ENOMEM;
++			goto out_free_linereq;
++		}
++	}
++
++	lr->num_lines = ulr.num_lines;
++
++	/* Request each GPIO */
++	for (i = 0; i < ulr.num_lines; i++) {
++		u32 offset = ulr.offsets[i];
++		struct gpio_desc *desc = gpiochip_get_desc(gdev->chip, offset);
++
++		if (IS_ERR(desc)) {
++			ret = PTR_ERR(desc);
++			goto out_free_linereq;
++		}
++
++		ret = gpiod_request(desc, lr->label);
++		if (ret)
++			goto out_free_linereq;
++
++		lr->lines[i].desc = desc;
++		flags = gpio_v2_line_config_flags(lc, i);
++		gpio_v2_line_config_flags_to_desc_flags(flags, &desc->flags);
++
++		ret = gpiod_set_transitory(desc, false);
++		if (ret < 0)
++			goto out_free_linereq;
++
++		/*
++		 * Lines have to be requested explicitly for input
++		 * or output, else the line will be treated "as is".
++		 */
++		if (flags & GPIO_V2_LINE_FLAG_OUTPUT) {
++			int val = gpio_v2_line_config_output_value(lc, i);
++
++			ret = gpiod_direction_output(desc, val);
++			if (ret)
++				goto out_free_linereq;
++		} else if (flags & GPIO_V2_LINE_FLAG_INPUT) {
++			ret = gpiod_direction_input(desc);
++			if (ret)
++				goto out_free_linereq;
++		}
++
++		blocking_notifier_call_chain(&desc->gdev->notifier,
++					     GPIOLINE_CHANGED_REQUESTED, desc);
++
++		dev_dbg(&gdev->dev, "registered chardev handle for line %d\n",
++			offset);
++	}
++
++	fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
++	if (fd < 0) {
++		ret = fd;
++		goto out_free_linereq;
++	}
++
++	file = anon_inode_getfile("gpio-line", &line_fileops, lr,
++				  O_RDONLY | O_CLOEXEC);
++	if (IS_ERR(file)) {
++		ret = PTR_ERR(file);
++		goto out_put_unused_fd;
++	}
++
++	ulr.fd = fd;
++	if (copy_to_user(ip, &ulr, sizeof(ulr))) {
++		/*
++		 * fput() will trigger the release() callback, so do not go onto
++		 * the regular error cleanup path here.
++		 */
++		fput(file);
++		put_unused_fd(fd);
++		return -EFAULT;
++	}
++
++	fd_install(fd, file);
++
++	dev_dbg(&gdev->dev, "registered chardev handle for %d lines\n",
++		lr->num_lines);
++
++	return 0;
++
++out_put_unused_fd:
++	put_unused_fd(fd);
++out_free_linereq:
++	linereq_free(lr);
++	return ret;
++}
++
++#ifdef CONFIG_GPIO_CDEV_V1
+ 
+ /*
+  * GPIO line event management
+@@ -745,6 +1138,8 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 	return ret;
+ }
+ 
++#endif /* CONFIG_GPIO_CDEV_V1 */
++
+ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+ 				  struct gpioline_info *info)
+ {
+@@ -842,6 +1237,7 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 		if (copy_to_user(ip, &chipinfo, sizeof(chipinfo)))
+ 			return -EFAULT;
+ 		return 0;
++#ifdef CONFIG_GPIO_CDEV_V1
+ 	} else if (cmd == GPIO_GET_LINEINFO_IOCTL) {
+ 		struct gpioline_info lineinfo;
+ 
+@@ -884,6 +1280,9 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 		}
+ 
+ 		return 0;
++#endif /* CONFIG_GPIO_CDEV_V1 */
++	} else if (cmd == GPIO_V2_GET_LINE_IOCTL) {
++		return linereq_create(gdev, ip);
+ 	} else if (cmd == GPIO_GET_LINEINFO_UNWATCH_IOCTL) {
+ 		if (copy_from_user(&offset, ip, sizeof(offset)))
+ 			return -EFAULT;
+@@ -1104,6 +1503,25 @@ int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
+ 		 MAJOR(devt), gdev->id);
+ 
+ 	return 0;
++	/*
++	 * array sizes must ensure 64-bit alignment and not create holes in
++	 * the struct packing.
++	 */
++	BUILD_BUG_ON(IS_ALIGNED(GPIO_V2_LINES_MAX, 2));
++	BUILD_BUG_ON(IS_ALIGNED(GPIO_MAX_NAME_SIZE, 8));
++
++	/*
++	 * check that uAPI structs are 64-bit aligned for 32/64-bit
++	 * compatibility
++	 */
++	BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_attribute), 8));
++	BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_config_attribute), 8));
++	BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_config), 8));
++	BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_request), 8));
++	BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_info), 8));
++	BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_info_changed), 8));
++	BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_event), 8));
++	BUILD_BUG_ON(IS_ALIGNED(sizeof(struct gpio_v2_line_values), 8));
+ }
+ 
+ void gpiolib_cdev_unregister(struct gpio_device *gdev)
 -- 
-2.17.1
+2.28.0
 
