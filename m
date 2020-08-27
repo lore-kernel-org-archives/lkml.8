@@ -2,131 +2,82 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A380C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B920AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8470922CF8
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E172177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgH0JVi (ORCPT
+        id S1728139AbgH0JWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:21:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35378 "EHLO mx2.suse.de"
+        Thu, 27 Aug 2020 05:22:33 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:54416 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbgH0JVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:21:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 4B7D7B712;
-        Thu, 27 Aug 2020 09:22:07 +0000 (UTC)
-Subject: Re: [PATCH] drm/mgag200: fix spelling mistake "expeced" -> "expected"
-To:     Colin King <colin.king@canonical.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200826084727.42703-1-colin.king@canonical.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Message-ID: <63a54e7a-38ce-d32f-f7c0-ca04707ae8de@suse.de>
-Date:   Thu, 27 Aug 2020 11:21:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200826084727.42703-1-colin.king@canonical.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="fPWsxPpPJj3E4g7J17m5zELBoVw8eziG9"
+        id S1727772AbgH0JW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:22:28 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 037431A0C3D;
+        Thu, 27 Aug 2020 11:22:27 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E7E081A0455;
+        Thu, 27 Aug 2020 11:22:23 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B3E99402EB;
+        Thu, 27 Aug 2020 11:22:19 +0200 (CEST)
+From:   Qiang Zhao <qiang.zhao@nxp.com>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        robh+dt@kernel.org
+Cc:     linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Zhao Qiang <qiang.zhao@nxp.com>
+Subject: [PATCH 1/3] dt-bindings: rtc-2127: Add bindings for nxp,rtc-2127.txt
+Date:   Thu, 27 Aug 2020 17:14:39 +0800
+Message-Id: <20200827091441.12972-1-qiang.zhao@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---fPWsxPpPJj3E4g7J17m5zELBoVw8eziG9
-Content-Type: multipart/mixed; boundary="FoGFcXpSXbDSMaDgetwZhxIi6Q8ObDg3w";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Colin King <colin.king@canonical.com>, Dave Airlie <airlied@redhat.com>,
- Daniel Vetter <daniel@ffwll.ch>, Sam Ravnborg <sam@ravnborg.org>,
- dri-devel@lists.freedesktop.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <63a54e7a-38ce-d32f-f7c0-ca04707ae8de@suse.de>
-Subject: Re: [PATCH] drm/mgag200: fix spelling mistake "expeced" -> "expected"
-References: <20200826084727.42703-1-colin.king@canonical.com>
-In-Reply-To: <20200826084727.42703-1-colin.king@canonical.com>
+From: Zhao Qiang <qiang.zhao@nxp.com>
 
---FoGFcXpSXbDSMaDgetwZhxIi6Q8ObDg3w
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Add bindings for nxp,rtc-2127
 
-Hi
+Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+---
+ Documentation/devicetree/bindings/rtc/nxp,rtc-2127.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/nxp,rtc-2127.txt
 
-Am 26.08.20 um 10:47 schrieb Colin King:
-> From: Colin Ian King <colin.king@canonical.com>
->=20
-> There is a spelling mistake in a drm_warn message. Fix it.
->=20
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+diff --git a/Documentation/devicetree/bindings/rtc/nxp,rtc-2127.txt b/Documentation/devicetree/bindings/rtc/nxp,rtc-2127.txt
+new file mode 100644
+index 0000000..c822e10
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/nxp,rtc-2127.txt
+@@ -0,0 +1,18 @@
++NXP PCF2127 SPI Real Time Clock
++
++Required properties:
++- compatible: should be: "nxp,pcf2127"
++                      or "nxp,pcf2129"
++- reg: should be the SPI slave chipselect address
++
++Optional properties:
++- no-watchdog: PCF2127 is not used as watchdog
++
++Example:
++
++pcf2127: rtc@51 {
++	compatible = "nxp,pcf2127";
++	reg = <0x51>;
++	interrupts = <0 150 0x4>;
++	no-watchdog;
++};
+-- 
+2.7.4
 
-Thanks! Applied to drm-misc-next.
-
-Best regards
-Thomas
-
-> ---
->  drivers/gpu/drm/mgag200/mgag200_drv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.c b/drivers/gpu/drm/mg=
-ag200/mgag200_drv.c
-> index b282b0e42c2d..771b26aeee19 100644
-> --- a/drivers/gpu/drm/mgag200/mgag200_drv.c
-> +++ b/drivers/gpu/drm/mgag200/mgag200_drv.c
-> @@ -168,7 +168,7 @@ static void mgag200_g200_interpret_bios(struct mga_=
-device *mdev,
->  		return;
->  	}
->  	if (pins_len !=3D expected_length[version]) {
-> -		drm_warn(dev, "Unexpected BIOS PInS size: %d expeced: %d\n",
-> +		drm_warn(dev, "Unexpected BIOS PInS size: %d expected: %d\n",
->  			 pins_len, expected_length[version]);
->  		return;
->  	}
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---FoGFcXpSXbDSMaDgetwZhxIi6Q8ObDg3w--
-
---fPWsxPpPJj3E4g7J17m5zELBoVw8eziG9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQFIBAEBCAAyFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl9Hex4UHHR6aW1tZXJt
-YW5uQHN1c2UuZGUACgkQaA3BHVMLeiOBQAgAiL4kFTimHbHupiRn5WOvA4vbyT6w
-lwXW36ZGshiV84ZvnTQ0/IboK15tbYUBcf/AgfkoVDsG4DTyI40z5W/e/ULzM7EA
-ePIjzJb0dPPyAEzo2GIL6Xxp8zfAwP3U6OXrlYYPlVLaIh53qYVD9+oTHgRln2LZ
-e/hVlpck4I4ZknAWnvSEi3h2dfWSdgUe7BwfJkr6aha0REAO0sZ5KQ7WMQL4a3Xs
-dGti4fST0KPjaNVsj01ism/v0Vso3J7Hn8bNrc0UqHOS/Vy1gwJw1hLr3KU9Tras
-S9MFDhVG7t6EzdjtJ86dBQ6Us+b8XGbiUUGO0ivrbbfsi6pg7y3eNp4SaA==
-=jjLa
------END PGP SIGNATURE-----
-
---fPWsxPpPJj3E4g7J17m5zELBoVw8eziG9--
