@@ -2,134 +2,152 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 00:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A698CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 00:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C23E2074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 00:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BAD520791
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 00:50:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="f1EejFRX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+6UCaLJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgH0Anf (ORCPT
+        id S1726873AbgH0AuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 20:43:35 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:46840 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbgH0Anb (ORCPT
+        Wed, 26 Aug 2020 20:50:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbgH0AuS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 20:43:31 -0400
+        Wed, 26 Aug 2020 20:50:18 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2559AC0613ED;
+        Wed, 26 Aug 2020 17:50:18 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id nv17so1723078pjb.3;
+        Wed, 26 Aug 2020 17:50:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1598489011; x=1630025011;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=wDxB/VNmRm4ZX9/6Z+F1UfgtAa9IU/DR4ghr8IRJ3PE=;
-  b=f1EejFRX2S6NEoXbHezYhw1fzTD3ycXwEylcw1UvDRd+93j9TSMCmFyB
-   STiKBuLiLD8t4etZ8kd0AJKvGBCf5rUmSNy00LWxLiPgxVejllB3467zA
-   QbZ2xVOBSa5OMS6gt6BAHh4CgY8K1L+5rl2XXFup7YKB6GFNmZtUq9hHN
-   4=;
-X-IronPort-AV: E=Sophos;i="5.76,357,1592870400"; 
-   d="scan'208";a="51670639"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 27 Aug 2020 00:43:30 +0000
-Received: from EX13MTAUWC002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id 64BEEA0328;
-        Thu, 27 Aug 2020 00:43:22 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC002.ant.amazon.com (10.43.162.240) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 27 Aug 2020 00:43:21 +0000
-Received: from u79c5a0a55de558.ant.amazon.com (10.43.160.192) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 27 Aug 2020 00:43:15 +0000
-From:   Alexander Graf <graf@amazon.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Tim Chen" <tim.c.chen@linux.intel.com>, <mingo@kernel.org>,
-        <tglx@linutronix.de>, <pjt@google.com>,
-        <torvalds@linux-foundation.org>, <subhra.mazumdar@oracle.com>,
-        <fweisbec@gmail.com>, <keescook@chromium.org>,
-        <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        "Pawan Gupta" <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>, <joel@joelfernandes.org>,
-        <vineethrp@gmail.com>, Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 3/3] sched: Use hrticks even with >sched_nr_latency tasks
-Date:   Thu, 27 Aug 2020 02:42:50 +0200
-Message-ID: <20200827004250.4853-4-graf@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200827004250.4853-1-graf@amazon.com>
-References: <20200827004250.4853-1-graf@amazon.com>
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=01YFLAfnv3/LfrQ6AMD8+CvxGlBa3HTAm4LPxhm+Idg=;
+        b=B+6UCaLJsBl1hMKapCRgSQ6Hwd2zFxjYus6Y15XT4Cy9iuC8ij/N26dD3haZb+kVkp
+         Q13NM075KRBNz2OfKiS7OD00MMpazEN/zLVx3ipNB1BkhkPJIKpnB2ekxbJ9YebgcZzn
+         ZuIJMANcMnPpHYPgx1iWWi06PvRjJwLWlFxCJsJyrfrZliFoc8lGJrG+kg4v+wa7QXJ8
+         +p2eNUTfwZe3P43Gl0ThINYRBvwEhRpQzpB0PF9UUfob6rsAwrtKFKXDd0gfMzNb1Ojj
+         YpiXAKz4EjEnaCAtbSC8Z+s6jdNhMVPFCNIavFy5HJEVDvWykUVfYwbEeriI85pTqCYQ
+         YHWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=01YFLAfnv3/LfrQ6AMD8+CvxGlBa3HTAm4LPxhm+Idg=;
+        b=PfuH5RRICPzfNudKvONBjMd3T9YhRRkkhtPuUdaSD6w1L+zshkt3UX/vCHjq48gob6
+         Bq78xcRI3qZpl+qEsdWa8yb5CAfKSBgP2xTMQ4yA3FKMBLujo4eMed2k29UQB7lvv03N
+         VA56Nocw5l9ynLZpAPFaLWzydo25TWLbTBrAH28Ri7iTJCaufyb8efAuaVMzAixDNHyu
+         bEWV2Qoa1pqpxK+aYe/htsXxi/4Z/AcoWaoKytP59sZzqRicWSIRvVYwX6w3u1H0wNsa
+         zaiA48PA7EO1QVMpbFukgKowIMMMWVoHQyEp3lBaPzFes/eA6pceMVPj4ZKCcCF46shD
+         9FdA==
+X-Gm-Message-State: AOAM530PXCvhYmSyCgfnaCOJXfd8BGiznrmJV9yfLqd7dzqTtRmLC0hI
+        p4lPy+34mosY9QkdVrN0xCY=
+X-Google-Smtp-Source: ABdhPJyWvL6MEsyGNAUHVPFOU5eGcHfZh0/qeMDJL3X6V0nlT7oVAouiH6CJpFg5RGEU7VyhfouOeg==
+X-Received: by 2002:a17:90a:c704:: with SMTP id o4mr8207536pjt.146.1598489417589;
+        Wed, 26 Aug 2020 17:50:17 -0700 (PDT)
+Received: from f3 (ae055068.dynamic.ppp.asahi-net.or.jp. [14.3.55.68])
+        by smtp.gmail.com with ESMTPSA id z23sm209360pgv.57.2020.08.26.17.50.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 17:50:16 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 09:50:10 +0900
+From:   Benjamin Poirier <benjamin.poirier@gmail.com>
+To:     Coiby Xu <coiby.xu@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Manish Chopra <manishc@marvell.com>,
+        "supporter:QLOGIC QLGE 10Gb ETHERNET DRIVER" 
+        <GR-Linux-NIC-Dev@marvell.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "open list:QLOGIC QLGE 10Gb ETHERNET DRIVER" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] staging: qlge: fix build breakage with dumping enabled
+Message-ID: <20200827005010.GA46897@f3>
+References: <20200826232735.104077-1-coiby.xu@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.192]
-X-ClientProxiedBy: EX13D28UWC002.ant.amazon.com (10.43.162.145) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200826232735.104077-1-coiby.xu@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When hrticks are enabled, we configure an hrtimer fire at the exact point
-in time when we would like to have a rescheduling event occur.
+On 2020-08-27 07:27 +0800, Coiby Xu wrote:
+> This fixes commit 0107635e15ac
+> ("staging: qlge: replace pr_err with netdev_err") which introduced an
+> build breakage of missing `struct ql_adapter *qdev` for some functions
+> and a warning of type mismatch with dumping enabled, i.e.,
+> 
+> $ make CFLAGS_MODULE="QL_ALL_DUMP=1 QL_OB_DUMP=1 QL_CB_DUMP=1 \
+>   QL_IB_DUMP=1 QL_REG_DUMP=1 QL_DEV_DUMP=1" M=drivers/staging/qlge
+> 
+> qlge_dbg.c: In function ‘ql_dump_ob_mac_rsp’:
+> qlge_dbg.c:2051:13: error: ‘qdev’ undeclared (first use in this function); did you mean ‘cdev’?
+>  2051 |  netdev_err(qdev->ndev, "%s\n", __func__);
+>       |             ^~~~
+> qlge_dbg.c: In function ‘ql_dump_routing_entries’:
+> qlge_dbg.c:1435:10: warning: format ‘%s’ expects argument of type ‘char *’, but argument 3 has type ‘int’ [-Wformat=]
+>  1435 |        "%s: Routing Mask %d = 0x%.08x\n",
+>       |         ~^
+>       |          |
+>       |          char *
+>       |         %d
+>  1436 |        i, value);
+>       |        ~
+>       |        |
+>       |        int
+> qlge_dbg.c:1435:37: warning: format ‘%x’ expects a matching ‘unsigned int’ argument [-Wformat=]
+>  1435 |        "%s: Routing Mask %d = 0x%.08x\n",
+>       |                                 ~~~~^
+>       |                                     |
+>       |                                     unsigned int
+> 
+> Fixes: 0107635e15ac ("staging: qlge: replace pr_err with netdev_err")
+> Reported-by: Benjamin Poirier <benjamin.poirier@gmail.com>
+> Suggested-by: Benjamin Poirier <benjamin.poirier@gmail.com>
+> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+> ---
+>  drivers/staging/qlge/qlge.h      | 20 ++++++++++----------
+>  drivers/staging/qlge/qlge_dbg.c  | 24 ++++++++++++++++++------
+>  drivers/staging/qlge/qlge_main.c |  8 ++++----
+>  3 files changed, 32 insertions(+), 20 deletions(-)
+> 
+[...]
+> @@ -1632,6 +1635,8 @@ void ql_dump_wqicb(struct wqicb *wqicb)
+> 
+>  void ql_dump_tx_ring(struct tx_ring *tx_ring)
+>  {
+> +	struct ql_adapter *qdev = tx_ring->qdev;
+> +
+>  	if (!tx_ring)
+>  		return;
 
-However, the current code disables that logic when the number of currently
-running tasks exceeds sched_nr_latency. sched_nr_latency describes the point
-at which CFS resorts to giving each task sched_min_granularity slices.
+Given the null check for tx_ring, it seems unwise to dereference tx_ring
+before the check.
 
-However, these slices may well be smaller than the HZ tick and we thus may
-still want to use hrticks to ensure that we can actually slice the CPU time
-at sched_min_granularity.
+Looking at ql_dump_all(), I'm not sure that the check is needed at all
+though. Maybe it should be removed.
 
-This patch changes the logic to still enable hrticks if sched_min_granularity
-is smaller than the HZ tick would allow us to account with. That way systems
-with HZ=1000 will usually resort to the HZ tick while systems at lower HZ values
-will keep using hrticks.
+Same problem in ql_dump_rx_ring().
 
-Signed-off-by: Alexander Graf <graf@amazon.com>
----
- kernel/sched/fair.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+>  	netdev_err(qdev->ndev, "===================== Dumping tx_ring %d ===============\n",
+> @@ -1657,6 +1662,8 @@ void ql_dump_tx_ring(struct tx_ring *tx_ring)
+>  void ql_dump_ricb(struct ricb *ricb)
+>  {
+>  	int i;
+> +	struct ql_adapter *qdev =
+> +		container_of(ricb, struct ql_adapter, ricb);
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 66e7aae8b15e..0092bba52edf 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5502,7 +5502,8 @@ static void hrtick_update(struct rq *rq)
- 	if (!hrtick_enabled(rq) || curr->sched_class != &fair_sched_class)
- 		return;
- 
--	if (cfs_rq_of(&curr->se)->nr_running < sched_nr_latency)
-+	if ((cfs_rq_of(&curr->se)->nr_running < sched_nr_latency) ||
-+	    (sysctl_sched_min_granularity < (HZ * 1000000)))
- 		hrtick_start_fair(rq, curr);
- }
- #else /* !CONFIG_SCHED_HRTICK */
--- 
-2.26.2
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+Here, davem would point out that the variables are not declared in
+"reverse xmas tree" order.
