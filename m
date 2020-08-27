@@ -2,98 +2,131 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C3CC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3ABC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94E7B2076C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E03F2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:15:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YpT/6OF/"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="N/FelhPI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgH0DMb (ORCPT
+        id S1726878AbgH0DPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 23:12:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbgH0DMa (ORCPT
+        Wed, 26 Aug 2020 23:15:55 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:26438 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbgH0DPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 23:12:30 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5700FC0612A3;
-        Wed, 26 Aug 2020 20:12:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=xeNavqw5VrEUhK1uC5SznmQUTraq5Hr4BCCsMByRsaI=; b=YpT/6OF/Gpyyb1tY7UT8DwNc0I
-        tFI/88DFWeXSQmA721mD00+5P8ucXGbX9dP60A+99p1JQPchNJh1Xq9kPw7LRbJwt3hiWzmTKz/KH
-        dws/BCGIKixIhx17rIDQv0MWEbrxnbUXmyNZcDpw2eD/+78PYE2z0gp9K0mVRT5KUevIistUUAP0I
-        6caaYXd9pcpPBoDi4/MQ+1mmaa8XYNMQw/MaXcYFKKOiW2K7xwTVECPjpqqxwOOngzrL5GEUT3GFr
-        dGeIDdBreF/qwOahd84rmbAi6wqIaXQxvBGAzJbuKgiMdIfu8ahGG/eumx1Bvw3jDTBpxH0XSLrwe
-        /mK/z8fQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kB8Km-0001jN-Il; Thu, 27 Aug 2020 03:12:16 +0000
-Date:   Thu, 27 Aug 2020 04:12:16 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     hejinyang <hejinyang@loongson.cn>
-Cc:     Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH] MIPS: Loongson: Fix complie errors without CONFIG_SMP
-Message-ID: <20200827031216.GB14765@casper.infradead.org>
-References: <1598446407-8845-1-git-send-email-hejinyang@loongson.cn>
- <20200826130122.GR17456@casper.infradead.org>
- <5394f030-104c-f191-e581-4f1ed23a85a6@loongson.cn>
+        Wed, 26 Aug 2020 23:15:53 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200827031550epoutp037867b6a4743512b1609d15f08d2791c7~vAZlTymsQ1422014220epoutp035
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:15:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200827031550epoutp037867b6a4743512b1609d15f08d2791c7~vAZlTymsQ1422014220epoutp035
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598498150;
+        bh=GZ8Ba8ECy4RfPgNcJZjrCr0xOmy66RiGHAKlrAMPnb8=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=N/FelhPIwo/fqn9z4g6SHJqtoJ3GZ+gLad6NiXZtiWxUJgaJd++dqReqOwGaiyaS7
+         zXh3xIyJbFapjFDtqQnbcTPnaW8rSOV3zx5k9dTR2Ukb6/6LRae0979rV1uXJRsO0g
+         fufMUoAEQW+Owe+w9NEKyf1No+039xAJF+Kr5vw8=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200827031550epcas1p1c393aeadc3593b3e87b95f89eb133ec0~vAZkuqdHs1209312093epcas1p1w;
+        Thu, 27 Aug 2020 03:15:50 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.165]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4BcSY144qRzMqYkY; Thu, 27 Aug
+        2020 03:15:49 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        B9.95.28578.565274F5; Thu, 27 Aug 2020 12:15:49 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200827031549epcas1p30dce17a8b2e3db1fd99b1260863bc5a4~vAZj0-NTn2179521795epcas1p3a;
+        Thu, 27 Aug 2020 03:15:49 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200827031549epsmtrp1546877ac1f5af5f2d66d5a3e9b6c8c8f~vAZj0YD7c1840018400epsmtrp1D;
+        Thu, 27 Aug 2020 03:15:49 +0000 (GMT)
+X-AuditID: b6c32a39-8c9ff70000006fa2-c8-5f472565652a
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        32.D7.08382.565274F5; Thu, 27 Aug 2020 12:15:49 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200827031549epsmtip208b72bcba134430ad1dea8e483790678~vAZjqOk5_1371913719epsmtip2n;
+        Thu, 27 Aug 2020 03:15:49 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
+Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
+        <mori.takahiro@ab.mitsubishielectric.co.jp>,
+        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
+        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200826011830.14646-1-kohada.t2@gmail.com>
+Subject: RE: [PATCH] exfat: fix pointer error checking
+Date:   Thu, 27 Aug 2020 12:15:49 +0900
+Message-ID: <011001d67c20$5cdc56b0$16950410$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5394f030-104c-f191-e581-4f1ed23a85a6@loongson.cn>
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHVVZ9sPe6nCxYyQFpEVfRu64wY6ALX1/06qTavbqA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDJsWRmVeSWpSXmKPExsWy7bCmvm6qqnu8wcIz8hY/5t5msXhzciqL
+        xZ69J1ksLu+aw2Zx+f8nFotlXyazWGz5d4TVgd3jy5zj7B5tk/+xezQfW8nmsXPWXXaPvi2r
+        GD0+b5ILYIvKsclITUxJLVJIzUvOT8nMS7dV8g6Od443NTMw1DW0tDBXUshLzE21VXLxCdB1
+        y8wBukVJoSwxpxQoFJBYXKykb2dTlF9akqqQkV9cYquUWpCSU2BoUKBXnJhbXJqXrpecn2tl
+        aGBgZApUmZCTcWO1Z8EVxoqFr8+xNjCuY+xi5OSQEDCRaGt7wtzFyMUhJLCDUeJ60192COcT
+        o8TX0/PZIJxvjBJzf7ezw7Q86utghEjsZZS4N287VP9LRomll7+zgFSxCehK/Puznw3EFhHQ
+        kzh58jrYKGaBRiaJ5Se+MIMkOAUsJa6cuww2VljATGLn3vWsIDaLgKrEidZjQCs4OHiBatbM
+        ygMJ8woISpyc+QRsPrOAvMT2t3OYIS5SkPj5dBkrxC4riQtPJ7FB1IhIzO5sAztOQmAuh0TP
+        zVYWiAYXiUk/3kPZwhKvjm+Bek1K4mV/GzvIXgmBaomP+6HmdzBKvPhuC2EbS9xcv4EVpIRZ
+        QFNi/S59iLCixM7fcxkh1vJJvPvawwoxhVeio00IokRVou/SYSYIW1qiq/0D+wRGpVlIHpuF
+        5LFZSB6YhbBsASPLKkax1ILi3PTUYsMCU+S43sQITqZaljsYp7/9oHeIkYmD8RCjBAezkgiv
+        4EXneCHelMTKqtSi/Pii0pzU4kOMpsCQnsgsJZqcD0zneSXxhqZGxsbGFiZm5mamxkrivA9v
+        KcQLCaQnlqRmp6YWpBbB9DFxcEo1MNUfPCshtbK2WrB9T/lD998bjsz9/vClpLafemjFi5u5
+        ex+w3OEX/LI3VVKt7fKRSe+/5HyS/512WOuGTVCvGM/MaZXr4uY1BZ5+/qfr/8Mv24pXeS7i
+        nbOLcavOmmMm7c+O/V58bh7HrkeRR3PkU/3/Lnplk63nuzmUacaGHA3dGeXK7e1n9Dmt7Z2u
+        LtMttj+7lL2Hc/4qwyB/5jR+L9GH193tnRPaF/9gO9SY3H7scOGH3OqPz4T+zPir9WQmI9fu
+        8tC97dHKUZfPdtst5zfKCXzlH6jz4rWl0cGJgi3sursKX/+O3bJQLPWYuVvikYmJynK+cWdf
+        3dqz4d1FplJ1z5C1FR8fmmsnSq/5n6PEUpyRaKjFXFScCABl4GCsLwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphkeLIzCtJLcpLzFFi42LZdlhJXjdV1T3e4OVtTosfc2+zWLw5OZXF
+        Ys/ekywWl3fNYbO4/P8Ti8WyL5NZLLb8O8LqwO7xZc5xdo+2yf/YPZqPrWTz2DnrLrtH35ZV
+        jB6fN8kFsEVx2aSk5mSWpRbp2yVwZdxY7VlwhbFi4etzrA2M6xi7GDk5JARMJB71dYDZQgK7
+        GSUaLilAxKUljp04w9zFyAFkC0scPlzcxcgFVPKcUWL/kznsIDVsAroS//7sZwOxRQT0JE6e
+        vM4GUsQs0Mwk8e3ZEmaIji5GiU+f5oJ1cApYSlw5dxnMFhYwk9i5dz0riM0ioCpxovUYI8g2
+        XqCaNbPyQMK8AoISJ2c+YQEJMwMtaNsIdiezgLzE9rdzmCHuVJD4+XQZK8QNVhIXnk5ig6gR
+        kZjd2cY8gVF4FpJJsxAmzUIyaRaSjgWMLKsYJVMLinPTc4sNCwzzUsv1ihNzi0vz0vWS83M3
+        MYIjSktzB+P2VR/0DjEycTAeYpTgYFYS4RW86BwvxJuSWFmVWpQfX1Sak1p8iFGag0VJnPdG
+        4cI4IYH0xJLU7NTUgtQimCwTB6dUAxNP1btrH4R0hOKdstgltV6py03tXl560alZbsOdtIrs
+        q93xKY1PXxmzrIzWalsjdNB9frizo9rj9Vv3GbxTjmFZpuww+cupPnlDbZX+2N1x3+f/dWXc
+        dt/J4Fttza4XnHn+zyb+iaoTl037WzK98/S3oiYF6+fqIuK3ouZNK8qtnH+40X1dSEHwpru5
+        Kdsjn0U4WAobZ/sJZXd8C2DJaDB6M2fFmtaNHkqb+l2ZWFRyyzRDL7iEvA5LPhbeYrV16RXm
+        z2si3yjYCwWp171eVWARed1ywuOed7uEY7mPbFT+wxq+Ze9Cw8VmofdXJVru0vnR4MDgtG5u
+        e7f62WO8Sh55VxYUluRn8zE/eSKrxFKckWioxVxUnAgANUJ+RhcDAAA=
+X-CMS-MailID: 20200827031549epcas1p30dce17a8b2e3db1fd99b1260863bc5a4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200826011839epcas1p497990de9fdc044d0cad134c8f7bfd0f5
+References: <CGME20200826011839epcas1p497990de9fdc044d0cad134c8f7bfd0f5@epcas1p4.samsung.com>
+        <20200826011830.14646-1-kohada.t2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 10:31:33AM +0800, hejinyang wrote:
+> Fix missing result check of exfat_build_inode().
+> And use PTR_ERR_OR_ZERO instead of PTR_ERR.
 > 
-> 
-> On 08/26/2020 09:01 PM, Matthew Wilcox wrote:
-> > On Wed, Aug 26, 2020 at 08:53:27PM +0800, Jinyang He wrote:
-> > > +++ b/arch/mips/include/asm/mach-loongson64/topology.h
-> > > @@ -4,7 +4,11 @@
-> > >   #ifdef CONFIG_NUMA
-> > > +#ifdef CONFIG_SMP
-> > >   #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
-> > > +#else
-> > > +#define cpu_to_node(cpu)	0
-> > > +#endif
-> > Are you saying you've enabled NUMA without enabling SMP?  Does that make
-> > sense?
-> 
-> NUMA option normally work with more than two nodes, though Loongson64 use it
-> default after patch 6fbde6b492dfc761ad60a68fb2cb32b1eb05b786. Loongson64(3A)'s
-> each node consists of 4 cpus while it only has 4 cpus. In other words, it has
-> only one node while open NUMA. I'm confused it if NUMA deponds on SMP.
-> 
-> I'll try fix it with unabling NUMA and SMP later.
+> Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
+Pushed it to exfat #dev.
+Thanks for your patch!
 
-mips:
-config NUMA
-        bool "NUMA Support"
-        depends on SYS_SUPPORTS_NUMA
-
-x86:
-config NUMA
-        bool "NUMA Memory Allocation and Scheduler Support"
-        depends on SMP
-
-If you had a good reason for enabling NUMA without enabling SMP (CPU-less
-memory nodes?), that'd be an interesting discussion to have.  Since your
-hardware seems to have SMP by default, I'd suggest just adding the missing
-'depends'.
