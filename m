@@ -2,193 +2,415 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1466C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4203C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86B64207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A63207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:01:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=exactco.de header.i=@exactco.de header.b="lJtI+67S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgH0VBl (ORCPT
+        id S1727815AbgH0VB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 17:01:41 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41417 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgH0VBk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 17:01:40 -0400
-Received: by mail-lj1-f194.google.com with SMTP id f26so7983530ljc.8;
-        Thu, 27 Aug 2020 14:01:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=KxNcRg+6YklAZRX3UfhSSAfkYXt8ik61k8vNbfFaB8M=;
-        b=pJmaR9xi2RE4Q3T53prCvIH446W1JbkyAYOZ0ZHzNqGm3n5a+u5AkrODoI1xvcucls
-         daPh/uPOwMJHFh7EbF8mIQkjNGztnjH80ySFS58qgeER8CTkRUWtOXEeOqPIudGM0a3e
-         Q+jt8XJcInAIJT4kEJqYFVvk39pwzYqXfxsfyG4fjjnm25ngXvAuzpTddvVui0Dlln21
-         LUf2rgjJfy31xpLOipYi6+h4mjndOZW1ajVDMJTdcl8unAbIeZr/cxpaBcsqY3/tjPKt
-         G1GCeWdXQN1Wl4RnugLovh2CaUxbmKP0pzF1u4bgkqQ6QYbJjY5GnHkoM1/G4ysbvny4
-         g4oQ==
-X-Gm-Message-State: AOAM531svG6AIN/EKciBSB1klteES3c6hVnojKJ2inPkG7D1jl6P+AIP
-        KwbWZ9r8nQ09FAIO27P8GSo=
-X-Google-Smtp-Source: ABdhPJxWRFm1Ev6U1BdHy9QuXj/V0oVeW50GQFSapy+UuxTW0WEYMYHL3g7CGm0QEhfoIx7lIMmwsw==
-X-Received: by 2002:a05:651c:513:: with SMTP id o19mr11036575ljp.379.1598562097796;
-        Thu, 27 Aug 2020 14:01:37 -0700 (PDT)
-Received: from [192.168.1.8] ([213.87.147.111])
-        by smtp.gmail.com with ESMTPSA id x17sm717163ljm.0.2020.08.27.14.01.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 14:01:37 -0700 (PDT)
-To:     Julia Lawall <julia.lawall@inria.fr>, Joe Perches <joe@perches.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org, cocci <cocci@systeme.lip6.fr>,
-        accessrunner-general@lists.sourceforge.net,
-        Alex Dewar <alex.dewar90@gmail.com>
-References: <20200824222322.22962-1-alex.dewar90@gmail.com>
- <48f2dc90-7852-eaf1-55d7-2c85cf954688@rasmusvillemoes.dk>
- <20200827071537.GA168593@kroah.com>
- <20200827131819.7rcl2f5js3hkoqj2@lenovo-laptop>
- <def24e9e-018c-9712-0d07-d4cbc84f07d9@rasmusvillemoes.dk>
- <20200827144846.yauuttjaqtxaldxg@lenovo-laptop>
- <5d1dfb9b031130d4d20763ec621233a19d6a88a2.camel@perches.com>
- <alpine.DEB.2.22.394.2008272141220.2482@hadrien>
-From:   Denis Efremov <efremov@linux.com>
-Autocrypt: addr=efremov@linux.com; keydata=
- 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
-Subject: Re: [Cocci] [PATCH] usb: atm: don't use snprintf() for sysfs attrs
-Message-ID: <5853c58e-7d26-2cf9-6cbf-698ecd93cbf9@linux.com>
-Date:   Fri, 28 Aug 2020 00:01:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.22.394.2008272141220.2482@hadrien>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 27 Aug 2020 17:01:57 -0400
+Received: from mx.exactcode.de ([144.76.154.42]:33436 "EHLO mx.exactcode.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726120AbgH0VBz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 17:01:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=exactco.de; s=x;
+        h=Content-Transfer-Encoding:Content-Type:Mime-Version:References:In-Reply-To:From:Subject:Cc:To:Message-Id:Date; bh=hudxmsYTeQ0OEy73Q43NWupYmrn7+QWqcO2CLQQZWcE=;
+        b=lJtI+67SZpVq5HY8gmy0Ri8ro9zgWnuHVyCicDZZVp4Pn+1P9juGQ2EWMNAhDslHeOW43IcjqHGTbXLHWuMFYPcdyskeSCINodsbUAM8qIZP+40/s3SPXy9v7Qu+Ph9YS9v930B7tVDalhZJ27OVVE8/mWYAiPIdj1wUoqpDDMo=;
+Received: from exactco.de ([90.187.5.221])
+        by mx.exactcode.de with esmtp (Exim 4.82)
+        (envelope-from <rene@exactcode.com>)
+        id 1kBP2K-0001Go-P5; Thu, 27 Aug 2020 21:02:20 +0000
+Received: from [192.168.2.130] (helo=localhost)
+        by exactco.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.86_2)
+        (envelope-from <rene@exactcode.com>)
+        id 1kBOjz-0005v0-9j; Thu, 27 Aug 2020 20:43:25 +0000
+Date:   Thu, 27 Aug 2020 23:01:28 +0200 (CEST)
+Message-Id: <20200827.230128.2175364115734830909.rene@exactcode.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     himanshu.madhani@oracle.com
+Subject: [PATCH] use cpu_to_le{16,32} instead of __constant_cpu_to_
+From:   Rene Rebe <rene@exactcode.com>
+In-Reply-To: <c7daea00-410d-2073-bf52-2abda9acdf8e@acm.org>
+References: <b7719680-e451-5687-1fb7-c8c059a880d4@acm.org>
+        <2C755628-1426-4BA4-B2A3-AD059BB0F605@exactcode.com>
+        <c7daea00-410d-2073-bf52-2abda9acdf8e@acm.org>
+X-Mailer: Mew version 6.8 on Emacs 27.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Bart Van Assche <bvanassche@acm.org> wrote:
 
-On 8/27/20 10:42 PM, Julia Lawall wrote:
-> 
-> 
-> On Thu, 27 Aug 2020, Joe Perches wrote:
-> 
->> On Thu, 2020-08-27 at 15:48 +0100, Alex Dewar wrote:
->>> On Thu, Aug 27, 2020 at 03:41:06PM +0200, Rasmus Villemoes wrote:
->>>> On 27/08/2020 15.18, Alex Dewar wrote:
->>>>> On Thu, Aug 27, 2020 at 09:15:37AM +0200, Greg Kroah-Hartman wrote:
->>>>>> On Thu, Aug 27, 2020 at 08:42:06AM +0200, Rasmus Villemoes wrote:
->>>>>>> On 25/08/2020 00.23, Alex Dewar wrote:
->>>>>>>> kernel/cpu.c: don't use snprintf() for sysfs attrs
->>>>>>>>
->>>>>>>> As per the documentation (Documentation/filesystems/sysfs.rst),
->>>>>>>> snprintf() should not be used for formatting values returned by sysfs.
+> Hi Ren=E9,
+> =
 
-Just FYI, I've send an addition to the device_attr_show.cocci script[1] to turn
-simple cases of snprintf (e.g. "%i") to sprintf. Looks like many developers would
-like it more than changing snprintf to scnprintf. As for me, I don't like the idea
-of automated altering of the original logic from bounded snprint to unbouded one
-with sprintf.
+> Whether __constant_cpu_to_le16() is used or cpu_to_le16(), the compil=
+er
+> generates exactly the same code. The name of the cpu_to_le16() functi=
+on however
+> is shorter. I recommend cpu_to_le16() because of its shorter name and=
+ because
+> that's what other kernel drivers use.
 
-[1] https://lkml.org/lkml/2020/8/13/786
+So following your recommendation here is a RFC removing all the other
+few remaining __constant_cpu_to_le{16,32} instances.
 
-Regarding current device_attr_show.cocci implementation, it detects the functions
-by declaration:
-ssize_t any_name(struct device *dev, struct device_attribute *attr, char *buf)
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/q=
+la_target.c
+index fbb80a043b4f..3de6bf94ccc0 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -3583,7 +3583,7 @@ static int __qlt_send_term_imm_notif(struct scsi_=
+qla_host *vha,
+ =
 
-and I limited the check to:
-"return snprintf"
-pattern because there are already too many warnings.
+ 	/* terminate */
+ 	nack->u.isp24.flags |=3D
+-		__constant_cpu_to_le16(NOTIFY_ACK_FLAGS_TERMINATE);
++		cpu_to_le16(NOTIFY_ACK_FLAGS_TERMINATE);
+ =
 
-Actually, it looks more correct to check for:
-ssize_t show(struct device *dev, struct device_attribute *attr, char *buf)
-{
-        <...
-*       snprintf@p(...);
-        ...>
-}
+ 	nack->u.isp24.srr_rx_id =3D ntfy->u.isp24.srr_rx_id;
+ 	nack->u.isp24.status =3D ntfy->u.isp24.status;
+diff --git a/drivers/scsi/qla2xxx/qla_tmpl.c b/drivers/scsi/qla2xxx/qla=
+_tmpl.c
+index 8dc82cfd38b2..f83b2f5fb490 100644
+--- a/drivers/scsi/qla2xxx/qla_tmpl.c
++++ b/drivers/scsi/qla2xxx/qla_tmpl.c
+@@ -912,7 +912,7 @@ qla27xx_driver_info(struct qla27xx_fwdt_template *t=
+mp)
+ 	tmp->driver_info[0] =3D cpu_to_le32(
+ 		v[3] << 24 | v[2] << 16 | v[1] << 8 | v[0]);
+ 	tmp->driver_info[1] =3D cpu_to_le32(v[5] << 8 | v[4]);
+-	tmp->driver_info[2] =3D __constant_cpu_to_le32(0x12345678);
++	tmp->driver_info[2] =3D cpu_to_le32(0x12345678);
+ }
+ =
 
-This pattern should also highlight the snprintf calls there we save returned
-value in a var, e.g.:
+ static void
+diff --git a/drivers/scsi/qla4xxx/ql4_init.c b/drivers/scsi/qla4xxx/ql4=
+_init.c
+index 4a7ef971a387..cc4cd54eb7a8 100644
+--- a/drivers/scsi/qla4xxx/ql4_init.c
++++ b/drivers/scsi/qla4xxx/ql4_init.c
+@@ -120,8 +120,8 @@ int qla4xxx_init_rings(struct scsi_qla_host *ha)
+ 		 * the interrupt_handler to think there are responses to be
+ 		 * processed when there aren't.
+ 		 */
+-		ha->shadow_regs->req_q_out =3D __constant_cpu_to_le32(0);
+-		ha->shadow_regs->rsp_q_in =3D __constant_cpu_to_le32(0);
++		ha->shadow_regs->req_q_out =3D cpu_to_le32(0);
++		ha->shadow_regs->rsp_q_in =3D cpu_to_le32(0);
+ 		wmb();
+ =
 
-ret += snprintf(...);
-...
-ret += snprintf(...);
-...
-ret += snprintf(...);
+ 		writel(0, &ha->reg->req_q_in);
+diff --git a/drivers/scsi/qla4xxx/ql4_iocb.c b/drivers/scsi/qla4xxx/ql4=
+_iocb.c
+index a8df2d7eb069..dd25f917b5e6 100644
+--- a/drivers/scsi/qla4xxx/ql4_iocb.c
++++ b/drivers/scsi/qla4xxx/ql4_iocb.c
+@@ -161,7 +161,7 @@ static void qla4xxx_build_scsi_iocbs(struct srb *sr=
+b,
+ =
 
-return ret;
+ 	if (!scsi_bufflen(cmd) || cmd->sc_data_direction =3D=3D DMA_NONE) {
+ 		/* No data being transferred */
+-		cmd_entry->ttlByteCnt =3D __constant_cpu_to_le32(0);
++		cmd_entry->ttlByteCnt =3D cpu_to_le32(0);
+ 		return;
+ 	}
+ =
 
-> 
-> Something like
-> 
-> identifier f;
-> fresh identifier = "sysfs" ## f;
-> 
-> may be useful.  Let me know if further help is needed.
+diff --git a/drivers/scsi/qla4xxx/ql4_mbx.c b/drivers/scsi/qla4xxx/ql4_=
+mbx.c
+index bc8de7d402d5..02396da2acd4 100644
+--- a/drivers/scsi/qla4xxx/ql4_mbx.c
++++ b/drivers/scsi/qla4xxx/ql4_mbx.c
+@@ -646,8 +646,8 @@ int qla4xxx_initialize_fw_cb(struct scsi_qla_host *=
+ ha)
+ 	/* Fill in the request and response queue information. */
+ 	init_fw_cb->rqq_consumer_idx =3D cpu_to_le16(ha->request_out);
+ 	init_fw_cb->compq_producer_idx =3D cpu_to_le16(ha->response_in);
+-	init_fw_cb->rqq_len =3D __constant_cpu_to_le16(REQUEST_QUEUE_DEPTH);
+-	init_fw_cb->compq_len =3D __constant_cpu_to_le16(RESPONSE_QUEUE_DEPTH=
+);
++	init_fw_cb->rqq_len =3D cpu_to_le16(REQUEST_QUEUE_DEPTH);
++	init_fw_cb->compq_len =3D cpu_to_le16(RESPONSE_QUEUE_DEPTH);
+ 	init_fw_cb->rqq_addr_lo =3D cpu_to_le32(LSDW(ha->request_dma));
+ 	init_fw_cb->rqq_addr_hi =3D cpu_to_le32(MSDW(ha->request_dma));
+ 	init_fw_cb->compq_addr_lo =3D cpu_to_le32(LSDW(ha->response_dma));
+@@ -657,20 +657,20 @@ int qla4xxx_initialize_fw_cb(struct scsi_qla_host=
+ * ha)
+ =
 
-Initially, I wrote the rule to search for DEVICE_ATTR(..., ..., func_name, ...)
-functions. However, it looks like matching function prototype is enough. At least,
-I failed to find false positives. I rejected the initial DEVICE_ATTR() searching
-because I thought that it's impossible to handle DEVICE_ATTR_RO()/DEVICE_ATTR_RW()
-macroses with coccinelle as they "generate" function names internally with
-"##". "fresh identifier" should really help here, but now I doubt it's required in
-device_attr_show.cocci, function prototype is enough.
+ 	/* Set up required options. */
+ 	init_fw_cb->fw_options |=3D
+-		__constant_cpu_to_le16(FWOPT_SESSION_MODE |
++		cpu_to_le16(FWOPT_SESSION_MODE |
+ 				       FWOPT_INITIATOR_MODE);
+ =
 
-Thanks,
-Denis
+ 	if (is_qla80XX(ha))
+ 		init_fw_cb->fw_options |=3D
+-		    __constant_cpu_to_le16(FWOPT_ENABLE_CRBDB);
++		    cpu_to_le16(FWOPT_ENABLE_CRBDB);
+ =
 
+-	init_fw_cb->fw_options &=3D __constant_cpu_to_le16(~FWOPT_TARGET_MODE=
+);
++	init_fw_cb->fw_options &=3D cpu_to_le16(~FWOPT_TARGET_MODE);
+ =
+
+ 	init_fw_cb->add_fw_options =3D 0;
+ 	init_fw_cb->add_fw_options |=3D
+-			__constant_cpu_to_le16(ADFWOPT_SERIALIZE_TASK_MGMT);
++			cpu_to_le16(ADFWOPT_SERIALIZE_TASK_MGMT);
+ 	init_fw_cb->add_fw_options |=3D
+-			__constant_cpu_to_le16(ADFWOPT_AUTOCONN_DISABLE);
++			cpu_to_le16(ADFWOPT_AUTOCONN_DISABLE);
+ =
+
+ 	if (qla4xxx_set_ifcb(ha, &mbox_cmd[0], &mbox_sts[0], init_fw_cb_dma)
+ 		!=3D QLA_SUCCESS) {
+@@ -1614,7 +1614,7 @@ int qla4xxx_get_chap(struct scsi_qla_host *ha, ch=
+ar *username, char *password,
+ =
+
+ 	strlcpy(password, chap_table->secret, QL4_CHAP_MAX_SECRET_LEN);
+ 	strlcpy(username, chap_table->name, QL4_CHAP_MAX_NAME_LEN);
+-	chap_table->cookie =3D __constant_cpu_to_le16(CHAP_VALID_COOKIE);
++	chap_table->cookie =3D cpu_to_le16(CHAP_VALID_COOKIE);
+ =
+
+ exit_get_chap:
+ 	dma_pool_free(ha->chap_dma_pool, chap_table, chap_dma);
+@@ -1656,7 +1656,7 @@ int qla4xxx_set_chap(struct scsi_qla_host *ha, ch=
+ar *username, char *password,
+ 	chap_table->secret_len =3D strlen(password);
+ 	strncpy(chap_table->secret, password, MAX_CHAP_SECRET_LEN - 1);
+ 	strncpy(chap_table->name, username, MAX_CHAP_NAME_LEN - 1);
+-	chap_table->cookie =3D __constant_cpu_to_le16(CHAP_VALID_COOKIE);
++	chap_table->cookie =3D cpu_to_le16(CHAP_VALID_COOKIE);
+ =
+
+ 	if (is_qla40XX(ha)) {
+ 		chap_size =3D MAX_CHAP_ENTRIES_40XX * sizeof(*chap_table);
+@@ -1722,7 +1722,7 @@ int qla4xxx_get_uni_chap_at_index(struct scsi_qla=
+_host *ha, char *username,
+ =
+
+ 	mutex_lock(&ha->chap_sem);
+ 	chap_table =3D (struct ql4_chap_table *)ha->chap_list + chap_index;
+-	if (chap_table->cookie !=3D __constant_cpu_to_le16(CHAP_VALID_COOKIE)=
+) {
++	if (chap_table->cookie !=3D cpu_to_le16(CHAP_VALID_COOKIE)) {
+ 		rval =3D QLA_ERROR;
+ 		goto exit_unlock_uni_chap;
+ 	}
+@@ -1785,7 +1785,7 @@ int qla4xxx_get_chap_index(struct scsi_qla_host *=
+ha, char *username,
+ 	for (i =3D 0; i < max_chap_entries; i++) {
+ 		chap_table =3D (struct ql4_chap_table *)ha->chap_list + i;
+ 		if (chap_table->cookie !=3D
+-		    __constant_cpu_to_le16(CHAP_VALID_COOKIE)) {
++		    cpu_to_le16(CHAP_VALID_COOKIE)) {
+ 			if (i > MAX_RESRV_CHAP_IDX && free_index =3D=3D -1)
+ 				free_index =3D i;
+ 			continue;
+@@ -2106,18 +2106,18 @@ int qla4xxx_set_param_ddbentry(struct scsi_qla_=
+host *ha,
+ =
+
+ 	if (conn->max_recv_dlength)
+ 		fw_ddb_entry->iscsi_max_rcv_data_seg_len =3D
+-		  __constant_cpu_to_le16((conn->max_recv_dlength / BYTE_UNITS));
++		  cpu_to_le16((conn->max_recv_dlength / BYTE_UNITS));
+ =
+
+ 	if (sess->max_r2t)
+ 		fw_ddb_entry->iscsi_max_outsnd_r2t =3D cpu_to_le16(sess->max_r2t);
+ =
+
+ 	if (sess->first_burst)
+ 		fw_ddb_entry->iscsi_first_burst_len =3D
+-		       __constant_cpu_to_le16((sess->first_burst / BYTE_UNITS));
++		       cpu_to_le16((sess->first_burst / BYTE_UNITS));
+ =
+
+ 	if (sess->max_burst)
+ 		fw_ddb_entry->iscsi_max_burst_len =3D
+-			__constant_cpu_to_le16((sess->max_burst / BYTE_UNITS));
++			cpu_to_le16((sess->max_burst / BYTE_UNITS));
+ =
+
+ 	if (sess->time2wait)
+ 		fw_ddb_entry->iscsi_def_time2wait =3D
+diff --git a/drivers/scsi/qla4xxx/ql4_nx.c b/drivers/scsi/qla4xxx/ql4_n=
+x.c
+index 038e19b1e3c2..484f5093ff71 100644
+--- a/drivers/scsi/qla4xxx/ql4_nx.c
++++ b/drivers/scsi/qla4xxx/ql4_nx.c
+@@ -3678,7 +3678,7 @@ qla4_82xx_read_flash_data(struct scsi_qla_host *h=
+a, uint32_t *dwptr,
+ 			    "Do ROM fast read failed\n");
+ 			goto done_read;
+ 		}
+-		dwptr[i] =3D __constant_cpu_to_le32(val);
++		dwptr[i] =3D cpu_to_le32(val);
+ 	}
+ =
+
+ done_read:
+@@ -3741,9 +3741,9 @@ qla4_8xxx_get_flt_info(struct scsi_qla_host *ha, =
+uint32_t flt_addr)
+ 			goto no_flash_data;
+ 	}
+ =
+
+-	if (*wptr =3D=3D __constant_cpu_to_le16(0xffff))
++	if (*wptr =3D=3D cpu_to_le16(0xffff))
+ 		goto no_flash_data;
+-	if (flt->version !=3D __constant_cpu_to_le16(1)) {
++	if (flt->version !=3D cpu_to_le16(1)) {
+ 		DEBUG2(ql4_printk(KERN_INFO, ha, "Unsupported FLT detected: "
+ 			"version=3D0x%x length=3D0x%x checksum=3D0x%x.\n",
+ 			le16_to_cpu(flt->version), le16_to_cpu(flt->length),
+@@ -3846,7 +3846,7 @@ qla4_82xx_get_fdt_info(struct scsi_qla_host *ha)
+ 	qla4_82xx_read_optrom_data(ha, (uint8_t *)ha->request_ring,
+ 	    hw->flt_region_fdt << 2, OPTROM_BURST_SIZE);
+ =
+
+-	if (*wptr =3D=3D __constant_cpu_to_le16(0xffff))
++	if (*wptr =3D=3D cpu_to_le16(0xffff))
+ 		goto no_flash_data;
+ =
+
+ 	if (fdt->sig[0] !=3D 'Q' || fdt->sig[1] !=3D 'L' || fdt->sig[2] !=3D =
+'I' ||
+@@ -3903,7 +3903,7 @@ qla4_82xx_get_idc_param(struct scsi_qla_host *ha)=
+
+ 	qla4_82xx_read_optrom_data(ha, (uint8_t *)ha->request_ring,
+ 			QLA82XX_IDC_PARAM_ADDR , 8);
+ =
+
+-	if (*wptr =3D=3D __constant_cpu_to_le32(0xffffffff)) {
++	if (*wptr =3D=3D cpu_to_le32(0xffffffff)) {
+ 		ha->nx_dev_init_timeout =3D ROM_DEV_INIT_TIMEOUT;
+ 		ha->nx_reset_timeout =3D ROM_DRV_RESET_ACK_TIMEOUT;
+ 	} else {
+diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_o=
+s.c
+index bab87e47b238..0dd472131db0 100644
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -704,7 +704,7 @@ static int qla4xxx_get_chap_by_index(struct scsi_ql=
+a_host *ha,
+ =
+
+ 	*chap_entry =3D (struct ql4_chap_table *)ha->chap_list + chap_index;
+ 	if ((*chap_entry)->cookie !=3D
+-	     __constant_cpu_to_le16(CHAP_VALID_COOKIE)) {
++	     cpu_to_le16(CHAP_VALID_COOKIE)) {
+ 		rval =3D QLA_ERROR;
+ 		*chap_entry =3D NULL;
+ 	} else {
+@@ -748,7 +748,7 @@ static int qla4xxx_find_free_chap_index(struct scsi=
+_qla_host *ha,
+ 		chap_table =3D (struct ql4_chap_table *)ha->chap_list + i;
+ =
+
+ 		if ((chap_table->cookie !=3D
+-		    __constant_cpu_to_le16(CHAP_VALID_COOKIE)) &&
++		    cpu_to_le16(CHAP_VALID_COOKIE)) &&
+ 		   (i > MAX_RESRV_CHAP_IDX)) {
+ 				free_index =3D i;
+ 				break;
+@@ -797,7 +797,7 @@ static int qla4xxx_get_chap_list(struct Scsi_Host *=
+shost, uint16_t chap_tbl_idx,
+ 	for (i =3D chap_tbl_idx; i < max_chap_entries; i++) {
+ 		chap_table =3D (struct ql4_chap_table *)ha->chap_list + i;
+ 		if (chap_table->cookie !=3D
+-		    __constant_cpu_to_le16(CHAP_VALID_COOKIE))
++		    cpu_to_le16(CHAP_VALID_COOKIE))
+ 			continue;
+ =
+
+ 		chap_rec->chap_tbl_idx =3D i;
+@@ -928,7 +928,7 @@ static int qla4xxx_delete_chap(struct Scsi_Host *sh=
+ost, uint16_t chap_tbl_idx)
+ 		goto exit_delete_chap;
+ 	}
+ =
+
+-	chap_table->cookie =3D __constant_cpu_to_le16(0xFFFF);
++	chap_table->cookie =3D cpu_to_le16(0xFFFF);
+ =
+
+ 	offset =3D FLASH_CHAP_OFFSET |
+ 			(chap_tbl_idx * sizeof(struct ql4_chap_table));
+@@ -6050,7 +6050,7 @@ static int qla4xxx_get_bidi_chap(struct scsi_qla_=
+host *ha, char *username,
+ 	for (i =3D 0; i < max_chap_entries; i++) {
+ 		chap_table =3D (struct ql4_chap_table *)ha->chap_list + i;
+ 		if (chap_table->cookie !=3D
+-		    __constant_cpu_to_le16(CHAP_VALID_COOKIE)) {
++		    cpu_to_le16(CHAP_VALID_COOKIE)) {
+ 			continue;
+ 		}
+ =
+
+diff --git a/fs/cifs/smb2status.h b/fs/cifs/smb2status.h
+index 7505056e9580..3d5ef02f1416 100644
+--- a/fs/cifs/smb2status.h
++++ b/fs/cifs/smb2status.h
+@@ -29,7 +29,7 @@
+  *  C is set if "customer defined" error, N bit is reserved and MBZ
+  */
+ =
+
+-#define STATUS_SEVERITY_SUCCESS __constant_cpu_to_le32(0x0000)
++#define STATUS_SEVERITY_SUCCESS cpu_to_le32(0x0000)
+ #define STATUS_SEVERITY_INFORMATIONAL cpu_to_le32(0x0001)
+ #define STATUS_SEVERITY_WARNING cpu_to_le32(0x0002)
+ #define STATUS_SEVERITY_ERROR cpu_to_le32(0x0003)
+diff --git a/fs/jffs2/nodelist.h b/fs/jffs2/nodelist.h
+index 8ff4d1a1e774..230a5a7fdafa 100644
+--- a/fs/jffs2/nodelist.h
++++ b/fs/jffs2/nodelist.h
+@@ -59,8 +59,8 @@
+ #define cpu_to_je32(x) ((jint32_t){cpu_to_le32(x)})
+ #define cpu_to_jemode(x) ((jmode_t){cpu_to_le32(os_to_jffs2_mode(x))})=
+
+ =
+
+-#define constant_cpu_to_je16(x) ((jint16_t){__constant_cpu_to_le16(x)}=
+)
+-#define constant_cpu_to_je32(x) ((jint32_t){__constant_cpu_to_le32(x)}=
+)
++#define constant_cpu_to_je16(x) ((jint16_t){cpu_to_le16(x)})
++#define constant_cpu_to_je32(x) ((jint32_t){cpu_to_le32(x)})
+ =
+
+ #define je16_to_cpu(x) (le16_to_cpu(x.v16))
+ #define je32_to_cpu(x) (le32_to_cpu(x.v32))
+
+
+-- =
+
+  Ren=E9 Rebe, ExactCODE GmbH, Lietzenburger Str. 42, DE-10789 Berlin
+  https://exactcode.com | https://t2sde.org | https://rene.rebe.de
