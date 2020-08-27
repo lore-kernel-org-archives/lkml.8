@@ -2,161 +2,79 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDC1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB07C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71BD7207DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:42:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CIuYdkT+"
+	by mail.kernel.org (Postfix) with ESMTP id 5792020738
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgH0HmW (ORCPT
+        id S1728157AbgH0Hn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:42:22 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:51638 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgH0HmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:42:21 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598514140; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
- To: From: Sender; bh=9qnthhnWenta0Q9mzx17Q48ImmKaAAh3E0dlFmqXnTA=; b=CIuYdkT+deeBtLz0m/iv7vUGGo9GpYiF9iEOV9HUYNRG6NCS0i70+PV6FP4h22lLNwhFb+DC
- GMFA3SHgqY/dEbkt9K17SmlsEbfaCadyHDR4ooqrbwHUlP8M0VrSlTTW5VezGM5wygqMaSSu
- X8X1rIZtgvDJGvyET7G/xYuKPi4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5f4763db4413b7d5dbe882f8 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 07:42:19
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 41603C433CB; Thu, 27 Aug 2020 07:42:19 +0000 (UTC)
-Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E4ECCC433CA;
-        Thu, 27 Aug 2020 07:42:14 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E4ECCC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        Martin Langer <martin-langer@gmx.de>,
-        Stefano Brivio <stefano.brivio@polimi.it>,
-        Michael Buesch <m@bues.ch>, van Dyk <kugelfang@gentoo.org>,
-        Andreas Jaggi <andreas.jaggi@waterwave.ch>,
-        Albert Herranz <albert_herranz@yahoo.es>,
-        linux-wireless@vger.kernel.org, b43-dev@lists.infradead.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 07/30] net: wireless: broadcom: b43: main: Add braces around empty statements
-References: <20200814113933.1903438-1-lee.jones@linaro.org>
-        <20200814113933.1903438-8-lee.jones@linaro.org>
-        <87v9hll0ro.fsf@codeaurora.org> <20200814164322.GP4354@dell>
-        <87eeo9kulw.fsf@codeaurora.org> <20200817085018.GT4354@dell>
-Date:   Thu, 27 Aug 2020 10:42:12 +0300
-In-Reply-To: <20200817085018.GT4354@dell> (Lee Jones's message of "Mon, 17 Aug
-        2020 09:50:18 +0100")
-Message-ID: <87zh6gleln.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Thu, 27 Aug 2020 03:43:59 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:18616 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726851AbgH0Hn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:43:57 -0400
+Received: from localhost.localdomain (unknown [210.32.144.184])
+        by mail-app2 (Coremail) with SMTP id by_KCgAH8J4tZEdfKIg7Ag--.5581S4;
+        Thu, 27 Aug 2020 15:43:45 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] btrfs: ref-verify: Fix memleak in add_extent_data_ref
+Date:   Thu, 27 Aug 2020 15:43:39 +0800
+Message-Id: <20200827074339.22950-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgAH8J4tZEdfKIg7Ag--.5581S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7GF4UXr1kJry3Ar4rCF17KFg_yoWxCrX_Ka
+        yfCr18Wr1UWw1UCw18Kan7JrZ5Awn5Kr1UXws2kF12kw42qFyFgFZ7Xrs8G3Z8GrW7GF9x
+        GrZFvF13u347ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48J
+        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_
+        Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
+        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+        9x0JUBpB-UUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0EBlZdtPrBDAAXsS
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> writes:
+When lookup_root_entry() fails, ref should be freed
+just like when insert_ref_entry() fails.
 
-> On Fri, 14 Aug 2020, Kalle Valo wrote:
->
->> Lee Jones <lee.jones@linaro.org> writes:
->>=20
->> > On Fri, 14 Aug 2020, Kalle Valo wrote:
->> >
->> >> Lee Jones <lee.jones@linaro.org> writes:
->> >>=20
->> >> > Fixes the following W=3D1 kernel build warning(s):
->> >> >
->> >> >  drivers/net/wireless/broadcom/b43/main.c: In function =E2=80=98b43=
-_dummy_transmission=E2=80=99:
->> >> >  drivers/net/wireless/broadcom/b43/main.c:785:3: warning: suggest
->> >> > braces around empty body in an =E2=80=98if=E2=80=99 statement [-Wem=
-pty-body]
->> >> >  drivers/net/wireless/broadcom/b43/main.c: In function =E2=80=98b43=
-_do_interrupt_thread=E2=80=99:
->> >> >  drivers/net/wireless/broadcom/b43/main.c:2017:3: warning: suggest
->> >> > braces around empty body in an =E2=80=98if=E2=80=99 statement [-Wem=
-pty-body]
->> >> >
->> >> > Cc: Kalle Valo <kvalo@codeaurora.org>
->> >> > Cc: "David S. Miller" <davem@davemloft.net>
->> >> > Cc: Jakub Kicinski <kuba@kernel.org>
->> >> > Cc: Martin Langer <martin-langer@gmx.de>
->> >> > Cc: Stefano Brivio <stefano.brivio@polimi.it>
->> >> > Cc: Michael Buesch <m@bues.ch>
->> >> > Cc: van Dyk <kugelfang@gentoo.org>
->> >> > Cc: Andreas Jaggi <andreas.jaggi@waterwave.ch>
->> >> > Cc: Albert Herranz <albert_herranz@yahoo.es>
->> >> > Cc: linux-wireless@vger.kernel.org
->> >> > Cc: b43-dev@lists.infradead.org
->> >> > Cc: netdev@vger.kernel.org
->> >> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
->> >> > ---
->> >> >  drivers/net/wireless/broadcom/b43/main.c | 6 ++++--
->> >> >  1 file changed, 4 insertions(+), 2 deletions(-)
->> >>=20
->> >> Please don't copy the full directory structure to the title. I'll cha=
-nge
->> >> the title to more simple version:
->> >>=20
->> >> b43: add braces around empty statements
->> >
->> > This seems to go the other way.
->> >
->> > "net: wireless: b43" seems sensible.
->>=20
->> Sorry, not understanding what you mean here.
->
-> So I agree that:
->
->   "net: wireless: broadcom: b43: main"
->
-> ... seems unnecessarily long and verbose.  However, IMHO:
->
->   "b43:"
->
-> ... is too short and not forthcoming enough.  Obviously this fine when
-> something like `git log -- net/wireless`, as you already know what the
-> patch pertains to, however when someone who is not in the know (like I
-> would be) does `git log` and sees a "b43:" patch, they would have no
-> idea which subsystem this patch is adapting.  Even:
->
->   "wireless: b43:"
->
-> ... would be worlds better.
->
-> A Git log which omitted all subsystem tags would be of limited use.
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ fs/btrfs/ref-verify.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-There are good reasons why the style is like it is. If I would start
-adding "wireless:" tags to the title it would clutter 'git log
---oneline' and gitk output, which I use all the time. And I'm not
-interested making my work harder, there would need to be really strong
-reasons why I would even recondiser changing it.
+diff --git a/fs/btrfs/ref-verify.c b/fs/btrfs/ref-verify.c
+index 7f03dbe5b609..712f5cfde404 100644
+--- a/fs/btrfs/ref-verify.c
++++ b/fs/btrfs/ref-verify.c
+@@ -419,6 +419,7 @@ static int add_extent_data_ref(struct btrfs_fs_info *fs_info,
+ 	if (!re) {
+ 		spin_unlock(&fs_info->ref_verify_lock);
+ 		btrfs_err(fs_info, "missing root in new block entry?");
++		kfree(ref);
+ 		return -EINVAL;
+ 	}
+ 	re->num_refs += num_refs;
+-- 
+2.17.1
 
-BTW, this is also documented in our wiki:
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes#commit_title_is_wrong
-
---=20
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
