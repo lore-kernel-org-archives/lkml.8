@@ -2,160 +2,83 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0693C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA62C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83AB722D01
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:38:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91A222B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:40:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="L//sqCAw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbgH0Kia (ORCPT
+        id S1728400AbgH0KkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:38:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53540 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 06:40:13 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:47972 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbgH0KiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:38:25 -0400
-Received: from gaia (unknown [46.69.195.127])
+        id S1728555AbgH0KkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 06:40:10 -0400
+Received: from zn.tnic (p200300ec2f104500a980b16b3f9103d9.dip0.t-ipconnect.de [IPv6:2003:ec:2f10:4500:a980:b16b:3f91:3d9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01EF022B40;
-        Thu, 27 Aug 2020 10:38:21 +0000 (UTC)
-Date:   Thu, 27 Aug 2020 11:38:19 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        kasan-dev@googlegroups.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 24/35] arm64: mte: Switch GCR_EL1 in kernel entry and exit
-Message-ID: <20200827103819.GE29264@gaia>
-References: <cover.1597425745.git.andreyknvl@google.com>
- <ec314a9589ef8db18494d533b6eaf1fd678dc010.1597425745.git.andreyknvl@google.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 400221EC037C;
+        Thu, 27 Aug 2020 12:40:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1598524804;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=8mEIx/a3yrzoKPFt6Yw2usL4Qm923jMWVkTk06lBsNQ=;
+        b=L//sqCAwjZGwmVXuFDW8sL4eoTT4XyJZgIGi5kN0gd9QXF1ygzZ0qlS5ou+49LLJbAVwD+
+        wSC9yFS7ImOYWMXM7BQ1ljuYJwbN4qBZf6TFkzI5EBeEUo1hLvBRVxldj6poARf1eDIfrI
+        QBEgMqCnez+tMgf4g1JTbGkCx5nVkNw=
+Date:   Thu, 27 Aug 2020 12:40:00 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Alison Wang <alison.wang@nxp.com>
+Cc:     James Morse <james.morse@arm.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "rrichter@marvell.com" <rrichter@marvell.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH] edac: nxp: Add L1 and L2 error detection for
+ A53 and A72 cores
+Message-ID: <20200827104000.GB30897@zn.tnic>
+References: <20200709082215.12829-1-alison.wang@nxp.com>
+ <92811e33-2f57-244b-4b50-c2831b09b835@arm.com>
+ <VI1PR04MB4062A3BF31A7002AD45E5200F4570@VI1PR04MB4062.eurprd04.prod.outlook.com>
+ <f962eb83-da13-a5de-9f06-b1b987f1e621@arm.com>
+ <VI1PR04MB4062B4701339466752BFDDE9F4540@VI1PR04MB4062.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ec314a9589ef8db18494d533b6eaf1fd678dc010.1597425745.git.andreyknvl@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <VI1PR04MB4062B4701339466752BFDDE9F4540@VI1PR04MB4062.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 07:27:06PM +0200, Andrey Konovalov wrote:
-> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-> index cde127508e38..a17fefb0571b 100644
-> --- a/arch/arm64/kernel/entry.S
-> +++ b/arch/arm64/kernel/entry.S
-> @@ -172,6 +172,29 @@ alternative_else_nop_endif
->  #endif
->  	.endm
->  
-> +	/* Note: tmp should always be a callee-saved register */
+On Wed, Aug 26, 2020 at 03:03:15AM +0000, Alison Wang wrote:
+> [Alison] I have a look at this patch. This patch doesn't complete all
+> the functions in my patch.
 
-Why callee-saved? Do you preserve it anywhere here?
+Yep, but pls work together to see if a single driver can support your hw
+too.
 
-> +	.macro mte_restore_gcr, el, tsk, tmp, tmp2
-> +#ifdef CONFIG_ARM64_MTE
-> +alternative_if_not ARM64_MTE
-> +	b	1f
-> +alternative_else_nop_endif
-> +	.if	\el == 0
-> +	ldr	\tmp, [\tsk, #THREAD_GCR_EL1_USER]
-> +	.else
-> +	ldr_l	\tmp, gcr_kernel_excl
-> +	.endif
-> +	/*
-> +	 * Calculate and set the exclude mask preserving
-> +	 * the RRND (bit[16]) setting.
-> +	 */
-> +	mrs_s	\tmp2, SYS_GCR_EL1
-> +	bfi	\tmp2, \tmp, #0, #16
-> +	msr_s	SYS_GCR_EL1, \tmp2
-> +	isb
-> +1:
-> +#endif
-> +	.endm
-> +
->  	.macro	kernel_entry, el, regsize = 64
->  	.if	\regsize == 32
->  	mov	w0, w0				// zero upper 32 bits of x0
-> @@ -209,6 +232,8 @@ alternative_else_nop_endif
->  
->  	ptrauth_keys_install_kernel tsk, x20, x22, x23
->  
-> +	mte_restore_gcr 1, tsk, x22, x23
-> +
->  	scs_load tsk, x20
->  	.else
->  	add	x21, sp, #S_FRAME_SIZE
-> @@ -386,6 +411,8 @@ alternative_else_nop_endif
->  	/* No kernel C function calls after this as user keys are set. */
->  	ptrauth_keys_install_user tsk, x0, x1, x2
->  
-> +	mte_restore_gcr 0, tsk, x0, x1
-> +
->  	apply_ssbd 0, x0, x1
->  	.endif
->  
-> @@ -957,6 +984,7 @@ SYM_FUNC_START(cpu_switch_to)
->  	mov	sp, x9
->  	msr	sp_el0, x1
->  	ptrauth_keys_install_kernel x1, x8, x9, x10
-> +	mte_restore_gcr 1, x1, x8, x9
->  	scs_save x0, x8
->  	scs_load x1, x8
->  	ret
+> It is just to report errors, but error injection function is all
+> removed.
 
-Since we set GCR_EL1 on exception entry and return, why is this needed?
-We don't have a per-kernel thread GCR_EL1, it's global to all threads,
-so I think cpu_switch_to() should not be touched.
+Right, because you can't use that on this hw, apparently.
 
-> diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
-> index 7717ea9bc2a7..cfac7d02f032 100644
-> --- a/arch/arm64/kernel/mte.c
-> +++ b/arch/arm64/kernel/mte.c
-> @@ -18,10 +18,14 @@
->  
->  #include <asm/barrier.h>
->  #include <asm/cpufeature.h>
-> +#include <asm/kasan.h>
-> +#include <asm/kprobes.h>
->  #include <asm/mte.h>
->  #include <asm/ptrace.h>
->  #include <asm/sysreg.h>
->  
-> +u64 gcr_kernel_excl __read_mostly;
-
-Could we make this __ro_after_init?
-
-> +
->  static void mte_sync_page_tags(struct page *page, pte_t *ptep, bool check_swap)
->  {
->  	pte_t old_pte = READ_ONCE(*ptep);
-> @@ -115,6 +119,13 @@ void * __must_check mte_set_mem_tag_range(void *addr, size_t size, u8 tag)
->  	return ptr;
->  }
->  
-> +void mte_init_tags(u64 max_tag)
-> +{
-> +	u64 incl = ((1ULL << ((max_tag & MTE_TAG_MAX) + 1)) - 1);
-
-I'd rather use GENMASK here, it is more readable.
+Also note that you should disable error injection in production for
+obvious reasons. Thus all the error injection stuff in EDAC is behind
+CONFIG_EDAC_DEBUG which should be off in production kernels.
 
 -- 
-Catalin
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
