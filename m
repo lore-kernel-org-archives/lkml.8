@@ -2,96 +2,187 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E073C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A481FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 012142087D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7870822CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:15:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598541335;
+	bh=cEjm4UlbBMPWGbgIopyTUYmvQaJ0GXlaku6V6ViozRg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=i+8wQLkeWQY0ovHmZKukVF7QNSlgYUoL8fyiCDK8N4hjBk49p3lZ6gR/mOLXd5+uD
+	 Xfqfb74Ms3GmZHdaFvVMYJMaDva4l94Bb4auxS/hzudhILFXcsWk594FnzzMc0dSAc
+	 3n3pyvO3+CUNy+2G+rhC76dm3FpXfgXwCBCviRQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbgH0PPI (ORCPT
+        id S1728268AbgH0PPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:15:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:57244 "EHLO foss.arm.com"
+        Thu, 27 Aug 2020 11:15:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728478AbgH0LjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 07:39:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E8EF113E;
-        Thu, 27 Aug 2020 04:15:08 -0700 (PDT)
-Received: from [192.168.1.190] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F18283F68F;
-        Thu, 27 Aug 2020 04:15:05 -0700 (PDT)
-Subject: Re: [PATCH 26/35] kasan, arm64: Enable TBI EL1
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1597425745.git.andreyknvl@google.com>
- <518da1e5169a4e343caa3c37feed5ad551b77a34.1597425745.git.andreyknvl@google.com>
- <20200827104033.GF29264@gaia> <9c53dfaa-119e-b12e-1a91-1f67f4aef503@arm.com>
- <20200827111344.GK29264@gaia>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <d6695105-0484-2013-1012-fa977644e8ad@arm.com>
-Date:   Thu, 27 Aug 2020 12:17:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1728691AbgH0Lib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 07:38:31 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61E592073A;
+        Thu, 27 Aug 2020 11:37:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598528273;
+        bh=cEjm4UlbBMPWGbgIopyTUYmvQaJ0GXlaku6V6ViozRg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KR6uba1Hdptq3GIGj2zlhWYR67rr4oL0448CEbb30/2jve4OvrSVRemt73hbHSKN8
+         fbwS64tMbduPQzCK3rFYeijyQA+4bm17xIg9bgZ4+x0H4ScI6qvHAMjv3ew1VI5tsq
+         VYL4xVj6TkAiLZFh6d4zSBtov5+VbkMyBCXZmRyQ=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
+Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, x86@kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        linux-arch@vger.kernel.org
+Subject: [PATCH v2 15/15] kprobes: Free kretprobe_instance with rcu callback
+Date:   Thu, 27 Aug 2020 20:37:49 +0900
+Message-Id: <159852826969.707944.15092569392287597887.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <159852811819.707944.12798182250041968537.stgit@devnote2>
+References: <159852811819.707944.12798182250041968537.stgit@devnote2>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-In-Reply-To: <20200827111344.GK29264@gaia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Free kretprobe_instance with rcu callback instead of directly
+freeing the object in the kretprobe handler context.
 
+This will make kretprobe run safer in NMI context.
 
-On 8/27/20 12:13 PM, Catalin Marinas wrote:
-> On Thu, Aug 27, 2020 at 12:05:55PM +0100, Vincenzo Frascino wrote:
->> On 8/27/20 11:40 AM, Catalin Marinas wrote:
->>> On Fri, Aug 14, 2020 at 07:27:08PM +0200, Andrey Konovalov wrote:
->>>> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
->>>> index 152d74f2cc9c..6880ddaa5144 100644
->>>> --- a/arch/arm64/mm/proc.S
->>>> +++ b/arch/arm64/mm/proc.S
->>>> @@ -38,7 +38,7 @@
->>>>  /* PTWs cacheable, inner/outer WBWA */
->>>>  #define TCR_CACHE_FLAGS	TCR_IRGN_WBWA | TCR_ORGN_WBWA
->>>>  
->>>> -#ifdef CONFIG_KASAN_SW_TAGS
->>>> +#if defined(CONFIG_KASAN_SW_TAGS) || defined(CONFIG_KASAN_HW_TAGS)
->>>>  #define TCR_KASAN_FLAGS TCR_TBI1
->>>>  #else
->>>>  #define TCR_KASAN_FLAGS 0
->>>
->>> I prefer to turn TBI1 on only if MTE is present. So on top of the v8
->>> user series, just do this in __cpu_setup.
->>
->> Not sure I understand... Enabling TBI1 only if MTE is present would break
->> KASAN_SW_TAGS which is based on TBI1 but not on MTE.
-> 
-> You keep the KASAN_SW_TAGS as above but for HW_TAGS, only set TBI1 later
-> in __cpu_setup().
-> 
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ include/linux/kprobes.h |    3 ++-
+ kernel/kprobes.c        |   25 ++++++-------------------
+ 2 files changed, 8 insertions(+), 20 deletions(-)
 
-Ok, sounds good.
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index 46a7afcf5ec0..97557f820d9b 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -160,6 +160,7 @@ struct kretprobe_instance {
+ 	struct kretprobe *rp;
+ 	kprobe_opcode_t *ret_addr;
+ 	struct task_struct *task;
++	struct rcu_head rcu;
+ 	void *fp;
+ 	char data[];
+ };
+@@ -395,7 +396,7 @@ int register_kretprobes(struct kretprobe **rps, int num);
+ void unregister_kretprobes(struct kretprobe **rps, int num);
+ 
+ void kprobe_flush_task(struct task_struct *tk);
+-void recycle_rp_inst(struct kretprobe_instance *ri, struct hlist_head *head);
++void recycle_rp_inst(struct kretprobe_instance *ri);
+ 
+ int disable_kprobe(struct kprobe *kp);
+ int enable_kprobe(struct kprobe *kp);
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 311033e4b8e4..c19b8ccc67ec 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1223,8 +1223,7 @@ void kprobes_inc_nmissed_count(struct kprobe *p)
+ }
+ NOKPROBE_SYMBOL(kprobes_inc_nmissed_count);
+ 
+-void recycle_rp_inst(struct kretprobe_instance *ri,
+-		     struct hlist_head *head)
++void recycle_rp_inst(struct kretprobe_instance *ri)
+ {
+ 	struct kretprobe *rp = ri->rp;
+ 
+@@ -1236,8 +1235,7 @@ void recycle_rp_inst(struct kretprobe_instance *ri,
+ 		hlist_add_head(&ri->hlist, &rp->free_instances);
+ 		raw_spin_unlock(&rp->lock);
+ 	} else
+-		/* Unregistering */
+-		hlist_add_head(&ri->hlist, head);
++		kfree_rcu(ri, rcu);
+ }
+ NOKPROBE_SYMBOL(recycle_rp_inst);
+ 
+@@ -1313,7 +1311,7 @@ void kprobe_busy_end(void)
+ void kprobe_flush_task(struct task_struct *tk)
+ {
+ 	struct kretprobe_instance *ri;
+-	struct hlist_head *head, empty_rp;
++	struct hlist_head *head;
+ 	struct hlist_node *tmp;
+ 	unsigned long hash, flags = 0;
+ 
+@@ -1323,19 +1321,14 @@ void kprobe_flush_task(struct task_struct *tk)
+ 
+ 	kprobe_busy_begin();
+ 
+-	INIT_HLIST_HEAD(&empty_rp);
+ 	hash = hash_ptr(tk, KPROBE_HASH_BITS);
+ 	head = &kretprobe_inst_table[hash];
+ 	kretprobe_table_lock(hash, &flags);
+ 	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
+ 		if (ri->task == tk)
+-			recycle_rp_inst(ri, &empty_rp);
++			recycle_rp_inst(ri);
+ 	}
+ 	kretprobe_table_unlock(hash, &flags);
+-	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
+-		hlist_del(&ri->hlist);
+-		kfree(ri);
+-	}
+ 
+ 	kprobe_busy_end();
+ }
+@@ -1936,13 +1929,12 @@ unsigned long __kretprobe_trampoline_handler(struct pt_regs *regs,
+ 					void *frame_pointer)
+ {
+ 	struct kretprobe_instance *ri = NULL;
+-	struct hlist_head *head, empty_rp;
++	struct hlist_head *head;
+ 	struct hlist_node *tmp;
+ 	unsigned long flags, orig_ret_address = 0;
+ 	kprobe_opcode_t *correct_ret_addr = NULL;
+ 	bool skipped = false;
+ 
+-	INIT_HLIST_HEAD(&empty_rp);
+ 	kretprobe_hash_lock(current, &head, &flags);
+ 
+ 	/*
+@@ -2009,7 +2001,7 @@ unsigned long __kretprobe_trampoline_handler(struct pt_regs *regs,
+ 			__this_cpu_write(current_kprobe, &kprobe_busy);
+ 		}
+ 
+-		recycle_rp_inst(ri, &empty_rp);
++		recycle_rp_inst(ri);
+ 
+ 		if (orig_ret_address != trampoline_address)
+ 			/*
+@@ -2022,11 +2014,6 @@ unsigned long __kretprobe_trampoline_handler(struct pt_regs *regs,
+ 
+ 	kretprobe_hash_unlock(current, &flags);
+ 
+-	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
+-		hlist_del(&ri->hlist);
+-		kfree(ri);
+-	}
+-
+ 	return orig_ret_address;
+ }
+ NOKPROBE_SYMBOL(__kretprobe_trampoline_handler)
 
--- 
-Regards,
-Vincenzo
