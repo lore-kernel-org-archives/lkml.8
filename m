@@ -3,215 +3,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65314C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBEAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4124D207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:03:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83CEF2075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:05:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XMFTr9tV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zO5xaZyH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbgH0KD4 (ORCPT
+        id S1728521AbgH0KFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:03:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44654 "EHLO
+        Thu, 27 Aug 2020 06:05:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728310AbgH0KDy (ORCPT
+        with ESMTP id S1728373AbgH0KFU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:03:54 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E88C061264;
-        Thu, 27 Aug 2020 03:03:53 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id a65so4597467wme.5;
-        Thu, 27 Aug 2020 03:03:53 -0700 (PDT)
+        Thu, 27 Aug 2020 06:05:20 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E84B2C06121B
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:05:19 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id k18so3104106pfp.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:05:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=P77OjdgSVrs1pV3ulE59aHFIhH+ydWYh3mBhaqATpgo=;
-        b=XMFTr9tVl/x4UBOBhwEoZx9P/wMBMJogiYORKo1QLMt6s8t3aH47qy57Z63cuJy6a7
-         hLqcHTD0DG1RsuWnHIdQK/c3Y4YlibYVpb40gHEGnOKRDFuD+xUoHssi3XA7TsukLXZ/
-         LHvd6QLcjjRkdkB73PTEtrHvfaTdOZRMsx7ziN1EAHS4DVrbZ0o+Hncc3Ex5V5iXEnYJ
-         k8R2OCfUK3sSbuLAtHLadBTiy9QE44ofQIr7GZgnt7BhYD1GPq9vXpywjKovoZJz4ViG
-         gEZ4ZMxVJC+7FJdzILHI70OnJfDgICffpskEfHiAOKFdulGf30AYg+jctfR8ViNVJsvn
-         qgqw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MY9vWqi8io8Q/KjFZpL5UnBPSsLhfZfobXaFG+SgOqk=;
+        b=zO5xaZyH5NBB+g4FkyMZLdJPv05aiY5r0BLK9s2kZG019uiBNqS4nZLXOUc3mRpPI2
+         5FrqdwuJl2R/C8CN2uQD3HjvsFD5uHOwL/StxxRfaPssdEomiavjQqsuqN6uv1uxrHC4
+         wr3MU2wmm+AUJupiwa4JH4lkULPVfIDAN28ujoeEMVPBQ5T+5Px6ffPlLZjrwbSQfLQb
+         lT+8MrZAHcHmkH8EDl51eBhkxPLl/ZOhyZIQ0dygBVEWKmOBkUFMTg250ikuM6GVsqm1
+         nrGVdfiQM0NN+XA27rxEbfTXhJ/WY8fYlI9irkBP7FR0KwmMwPjsAgigSZp3xv/2GV3+
+         1z8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=P77OjdgSVrs1pV3ulE59aHFIhH+ydWYh3mBhaqATpgo=;
-        b=RE2vdvU+jqK4rfDTXwDEKmCqYtEKLZ0dgrosA5cwHLspmwrkIM2kgC2VHawNxXhcMP
-         Wrk02u/HgovHr6nObjW1L369olwvBGWI52XmkLbtuBcOp7d1aeEm5uf+/jOx5/65PwuK
-         XlUkyiVXNXrNQyhbTgUYVJw5W7vxCmle9ti5fnYpiXyVHHJ7UNbWtsTIcqP/A7Go8gHy
-         kXlKwxEsiGgnifvgv6Ap2+EML3s4HYc44v73tTByb9adPowFkmjyWOMdUdqLmpZ1XNaa
-         U1R1ZFUpgTYJV2yLY1IM9G4QynEuEKm35sKQ9dtnvFpHLgzK4eBdRLJD5XvvlS84+lT6
-         KtjA==
-X-Gm-Message-State: AOAM531C6x0p/XjBHzjJyHaRLPGrliK30udn0gocHVEUhMkudPwsBIc/
-        VeUm58slTaMuC10lrdxO4qtTgOeawKi+NA==
-X-Google-Smtp-Source: ABdhPJy0dRPhZCuViCq8m2QlMCz6uEz38kuyN8jKB+CT3sdi+Qn/nenwqTLS4GhPUOGsx0NoxIby1Q==
-X-Received: by 2002:a7b:c5c6:: with SMTP id n6mr10974844wmk.120.1598522631666;
-        Thu, 27 Aug 2020 03:03:51 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.119.187])
-        by smtp.gmail.com with ESMTPSA id b131sm4538541wmc.8.2020.08.27.03.03.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 03:03:50 -0700 (PDT)
-Subject: Re: [PATCH v4 09/17] arm64: dts: mt8183: add encoder node
-To:     Alexandre Courbot <acourbot@chromium.org>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Maoguang Meng <maoguang.meng@mediatek.com>
-Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200821103608.2310097-1-acourbot@chromium.org>
- <20200821103608.2310097-10-acourbot@chromium.org>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <02eaeace-22dd-02ea-7162-90200fe1cffe@gmail.com>
-Date:   Thu, 27 Aug 2020 12:03:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        bh=MY9vWqi8io8Q/KjFZpL5UnBPSsLhfZfobXaFG+SgOqk=;
+        b=rVEwhxqhf8S09EEO1exOP1N2Yi46Udpn9Un5hc+1OJvGxDp0zBHqg6R/IJ9nGBDsF5
+         0alsQEVGFsvOI9dwUzo3dNc9jT+pufIe5DS4+HDW50e4aapMTBmBUpoubToZkHj+Tipx
+         hBPOe3wXBvxcFXQZ+y3pizlm1LKWp+N/WZgT65xJYyDyAG5A7SEnRDprK9X/b23NAfdK
+         NDu8TFFmKz5drln6Ij5SNKY1gMhCnijpcb/Vphezv4NsV9gg1fP7dFKWnF+4sgH0OKmo
+         Sl8dJm2fYfBcrurpR7zmwlCy9xvginNHZECkvowE6ywaHZv+Dln1roGwttvg0PFvEd3K
+         Tiyw==
+X-Gm-Message-State: AOAM532pfloN6IPycPA1/u1EttWT8H/sKLwCYmrUC0LxdrgRFg60dc1D
+        SwM2/X+s/8uUDm4BcuIZOOKIRQ==
+X-Google-Smtp-Source: ABdhPJxc3HNQBhVYTuNOywoWV07oFElapsdKQi1sNWkbDWdd6btWY5ytriyBJr0/a4vXEGR1/V7ZXA==
+X-Received: by 2002:a65:4847:: with SMTP id i7mr13871837pgs.385.1598522719424;
+        Thu, 27 Aug 2020 03:05:19 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id lt23sm1751841pjb.52.2020.08.27.03.05.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Aug 2020 03:05:18 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] opp: Drop unnecessary check frmo dev_pm_opp_attach_genpd()
+Date:   Thu, 27 Aug 2020 15:35:15 +0530
+Message-Id: <88c8522b556d15bd44b8388d47cf25ac6f06b057.1598522635.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
 MIME-Version: 1.0
-In-Reply-To: <20200821103608.2310097-10-acourbot@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Since commit c0ab9e0812da ("opp: Allocate genpd_virt_devs from
+dev_pm_opp_attach_genpd()"), the allocation of the virtual devices is
+moved to dev_pm_opp_attach_genpd() and this check isn't required anymore
+as it will always fail. Drop it.
 
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/opp/core.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-On 21/08/2020 12:36, Alexandre Courbot wrote:
-> Now that the MT8183 encoder driver is ready, add its DT node. Also pull
-> the iommu and scp ones, which the encoder depends upon.
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index 8b3c3986f589..000d0fcb4680 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -2031,12 +2031,6 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
+ 			goto err;
+ 		}
+ 
+-		if (opp_table->genpd_virt_devs[index]) {
+-			dev_err(dev, "Genpd virtual device already set %s\n",
+-				*name);
+-			goto err;
+-		}
+-
+ 		virt_dev = dev_pm_domain_attach_by_name(dev, *name);
+ 		if (IS_ERR(virt_dev)) {
+ 			ret = PTR_ERR(virt_dev);
+-- 
+2.25.0.rc1.19.g042ed3e048af
 
-Please don't do that. Instead of pulling in other DT nodes, it would be handy to 
-get a reference of the series this is based on.
-
-Let me try to hunt them down now :)
-
-Regards,
-Matthias
-
-> 
-> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-> ---
->   arch/arm64/boot/dts/mediatek/mt8183-evb.dts   | 10 ++++++
->   .../arm64/boot/dts/mediatek/mt8183-kukui.dtsi | 12 +++++++
->   arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 36 +++++++++++++++++++
->   3 files changed, 58 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> index ae405bd8f06b..9e77b420eee8 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> @@ -25,6 +25,16 @@ memory@40000000 {
->   	chosen {
->   		stdout-path = "serial0:921600n8";
->   	};
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +		scp_mem_reserved: scp_mem_region {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0 0x50000000 0 0x2900000>;
-> +			no-map;
-> +		};
-> +	};
->   };
->   
->   &auxadc {
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-> index f0a070535b34..3c763be658da 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-> @@ -90,6 +90,18 @@ pp3300_alw: regulator6 {
->   		regulator-max-microvolt = <3300000>;
->   	};
->   
-> +	reserved_memory: reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		scp_mem_reserved: scp_mem_region {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0 0x50000000 0 0x2900000>;
-> +			no-map;
-> +		};
-> +	};
-> +
->   	max98357a: codec0 {
->   		compatible = "maxim,max98357a";
->   		sdmode-gpios = <&pio 175 0>;
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> index 102105871db2..8f77eea6df27 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> @@ -8,6 +8,7 @@
->   #include <dt-bindings/clock/mt8183-clk.h>
->   #include <dt-bindings/interrupt-controller/arm-gic.h>
->   #include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/memory/mt8183-larb-port.h>
->   #include <dt-bindings/reset-controller/mt8183-resets.h>
->   #include <dt-bindings/phy/phy.h>
->   #include "mt8183-pinfunc.h"
-> @@ -339,6 +340,25 @@ pwrap: pwrap@1000d000 {
->   			clock-names = "spi", "wrap";
->   		};
->   
-> +		iommu: iommu@10205000 {
-> +			compatible = "mediatek,mt8183-m4u";
-> +			reg = <0 0x10205000 0 0x1000>;
-> +			interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_LOW>;
-> +			#iommu-cells = <1>;
-> +		};
-> +
-> +		scp: scp@10500000 {
-> +			compatible = "mediatek,mt8183-scp";
-> +			reg = <0 0x10500000 0 0x80000>,
-> +			      <0 0x105c0000 0 0x19080>;
-> +			reg-names = "sram", "cfg";
-> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&infracfg CLK_INFRA_SCPSYS>;
-> +			clock-names = "main";
-> +			memory-region = <&scp_mem_reserved>;
-> +			status = "disabled";
-> +		};
-> +
->   		systimer: timer@10017000 {
->   			compatible = "mediatek,mt8183-timer",
->   				     "mediatek,mt6765-timer";
-> @@ -772,6 +792,22 @@ vencsys: syscon@17000000 {
->   			#clock-cells = <1>;
->   		};
->   
-> +		vcodec_enc: vcodec@17020000 {
-> +			compatible = "mediatek,mt8183-vcodec-enc";
-> +			reg = <0 0x17020000 0 0x1000>;
-> +			interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_LOW>;
-> +			iommus = <&iommu M4U_PORT_VENC_REC>,
-> +				 <&iommu M4U_PORT_VENC_BSDMA>,
-> +				 <&iommu M4U_PORT_VENC_RD_COMV>,
-> +				 <&iommu M4U_PORT_VENC_CUR_LUMA>,
-> +				 <&iommu M4U_PORT_VENC_CUR_CHROMA>,
-> +				 <&iommu M4U_PORT_VENC_REF_LUMA>,
-> +				 <&iommu M4U_PORT_VENC_REF_CHROMA>;
-> +			mediatek,scp = <&scp>;
-> +			clocks = <&vencsys CLK_VENC_VENC>;
-> +			clock-names = "MT_CG_VENC";
-> +		};
-> +
->   		ipu_conn: syscon@19000000 {
->   			compatible = "mediatek,mt8183-ipu_conn", "syscon";
->   			reg = <0 0x19000000 0 0x1000>;
-> 
