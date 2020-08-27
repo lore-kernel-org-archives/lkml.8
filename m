@@ -2,113 +2,104 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA630C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD00622B47
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88F020786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgH0GpJ (ORCPT
+        id S1727961AbgH0GqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:45:09 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40307 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727786AbgH0GpC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:45:02 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 185so5150702ljj.7;
-        Wed, 26 Aug 2020 23:45:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Z1FtQqybTk7XeGKn+tbU1SxGG4A7Kn9b4E+VmVIA+4E=;
-        b=QM0hma1AoivbeZTjGzIW4YhCx8nVHOSaSI1MOjB7VelmqZ53MhHZZ98537VNZYWkua
-         YfqvI8NwNNGrZlJk1MKCTBsQvmGQJJHqpPI9TuwVaVgYdrOojZU2huKe23m9128My5UT
-         nDr2LLnRloAAKHkLMusX/2R0hFkNaP7GDLjioIonO4auMgnuUTu5ma3uWkNJgtPItDog
-         VmmiqAI08mITBXkX+Hdf5pz0cMGiXLURBeOC8MDIWfu8NvEtOMEt4IeA3tIo13H66BfF
-         27grsA+hwqY65vFbkzpCiaGzHwG5sUKFUC9F4F1KVOKhDLDTchxygDmYatRPFE+GemOY
-         NNOQ==
-X-Gm-Message-State: AOAM532Zo41RZYhRTHGmNgPRDXbpGCswj67wr+2vCsdFlo6h5vMzuGHS
-        8HbCHemuvSrC2WmnbQFhKhVbNaLFPjU=
-X-Google-Smtp-Source: ABdhPJy/YgtnYLAzwc+zepGvHr3uKojbRx+/ttpKqGkFdWBQ+Mih5iRHExuBfwddNNTBXj4VSYR47g==
-X-Received: by 2002:a2e:9284:: with SMTP id d4mr8696417ljh.64.1598510699078;
-        Wed, 26 Aug 2020 23:44:59 -0700 (PDT)
-Received: from localhost.localdomain ([213.87.147.111])
-        by smtp.googlemail.com with ESMTPSA id j17sm282159lfr.32.2020.08.26.23.44.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 23:44:58 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     linux-crypto@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] crypto: sun8i-ss - use kfree_sensitive()
-Date:   Thu, 27 Aug 2020 09:44:02 +0300
-Message-Id: <20200827064402.7130-5-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200827064402.7130-1-efremov@linux.com>
-References: <20200827064402.7130-1-efremov@linux.com>
+        Thu, 27 Aug 2020 02:46:01 -0400
+Received: from mga18.intel.com ([134.134.136.126]:3564 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726882AbgH0Gp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 02:45:59 -0400
+IronPort-SDR: UxdRk3eXKp44EuIdGe6/N7CSC0Okx5OasHBuyi5J3iZyw8C/bFJzakxE7MXATLwYg9/rmqx8Zq
+ ReY3H39f7qPA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="144109102"
+X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
+   d="scan'208";a="144109102"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 23:45:58 -0700
+IronPort-SDR: bhh5IeRvAmjU2S8givn05HqpKnUHorYxlVY0p7rP2Tn8QhhVJFBnGpvTYH7lMm/wUXMEH+gUcm
+ Mmwrulc9/cmQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
+   d="scan'208";a="337069793"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by FMSMGA003.fm.intel.com with ESMTP; 26 Aug 2020 23:45:51 -0700
+Subject: Re: Broadcom WiFi SDIO performance regression after commit "mmc:
+ sdhci: Remove finish_tasklet"
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        brcm80211-dev-list@cypress.com,
+        brcm80211-dev-list.pdl@broadcom.com,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <5cf1af89-6026-09ad-7f20-82e19ad49fa1@gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <9332715c-6ee5-fce3-8b93-305823d5a551@intel.com>
+Date:   Thu, 27 Aug 2020 09:45:16 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <5cf1af89-6026-09ad-7f20-82e19ad49fa1@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use kfree_sensitive() instead of open-coding it.
+On 27/08/20 9:07 am, Dmitry Osipenko wrote:
+> Hello!
+> 
+> I was debugging WiFi performance problems on Acer A500 tablet device
+> that has BCM4329 WiFi chip which is connected to NVIDIA Terga20 SoC via
+> SDIO and found that the following commit causes a solid 5-10 Mbit/s of
+> WiFi throughput regression after 5.2 kernel:
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- .../crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c   | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+What is that in percentage terms?
 
-diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
-index 7b39b4495571..deb8b39a86db 100644
---- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
-+++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
-@@ -368,10 +368,7 @@ void sun8i_ss_cipher_exit(struct crypto_tfm *tfm)
- {
- 	struct sun8i_cipher_tfm_ctx *op = crypto_tfm_ctx(tfm);
- 
--	if (op->key) {
--		memzero_explicit(op->key, op->keylen);
--		kfree(op->key);
--	}
-+	kfree_sensitive(op->key);
- 	crypto_free_skcipher(op->fallback_tfm);
- 	pm_runtime_put_sync(op->ss->dev);
- }
-@@ -393,10 +390,7 @@ int sun8i_ss_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
- 		dev_dbg(ss->dev, "ERROR: Invalid keylen %u\n", keylen);
- 		return -EINVAL;
- 	}
--	if (op->key) {
--		memzero_explicit(op->key, op->keylen);
--		kfree(op->key);
--	}
-+	kfree_sensitive(op->key);
- 	op->keylen = keylen;
- 	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
- 	if (!op->key)
-@@ -419,10 +413,7 @@ int sun8i_ss_des3_setkey(struct crypto_skcipher *tfm, const u8 *key,
- 		return -EINVAL;
- 	}
- 
--	if (op->key) {
--		memzero_explicit(op->key, op->keylen);
--		kfree(op->key);
--	}
-+	kfree_sensitive(op->key);
- 	op->keylen = keylen;
- 	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
- 	if (!op->key)
--- 
-2.26.2
+> 
+> commit c07a48c2651965e84d35cf193dfc0e5f7892d612
+> Author: Adrian Hunter <adrian.hunter@intel.com>
+> Date:   Fri Apr 5 15:40:20 2019 +0300
+> 
+>     mmc: sdhci: Remove finish_tasklet
+> 
+>     Remove finish_tasklet. Requests that require DMA-unmapping or
+> sdhci_reset
+>     are completed either in the IRQ thread or a workqueue if the
+> completion is
+>     not initiated by the IRQ.
+> 
+> Reverting the offending commit on top of recent linux-next resolves the
+> problem.
+> 
+> Ulf / Adrian, do you have any ideas what could be done in regards to
+> restoring the SDIO performance? Should we just revert the offending commit?
+> 
 
+Unfortunately I think we are past the point of returning to the tasklet.
+
+sdhci can complete requests in the irq handler but only if ->pre_req() and
+->post_req() are used, which is not supported by SDIO at present.  pre_req
+and post_req were introduced to reduce latency for the block driver, so it
+seems reasonable perhaps to look at using them in SDIO as well.
