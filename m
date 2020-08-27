@@ -2,104 +2,162 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C37FBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CDCC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9115920791
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7179E2068E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598549711;
-	bh=SJFyBgJjnJWvokiUuxx31nRuuPCwZwc1QPvpFnDbkBI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hPY2SZY3pw+tH1PFyKjN+WMT8umXyzn8YPJspt4RMqIwBibH15L5lhZv1nWk7wrlz
-	 Drz9YJko/dh5TPipBCtHUMNdbSc1RoX/7f1WTJU85a/5hCLgeXxDlLsRBCwWcA6AX4
-	 HchoHxoHispdar4/rQIX5hHO8iMl/yxUwZtrUM7c=
+	s=default; t=1598550156;
+	bh=zyfUowNsWV1AH9t2Y/OhVrtMRfKaUwAivYAzLDicwBM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=rkEYnmVEeIcFStfCUot0u1WB/yYcptaaRtkmb8Rcp3apO3BZUxX6WFuJzpqMiUwjl
+	 91Uyke872/JpDUsdyJYeQni+SB3CMnaXwmijRiZgFRBO6l5kSb7yUr2LKjSn9kZiwx
+	 ElvQRfIiKYsJPCyApNBGHTvxj6llGGm8GXqRM+1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgH0RfK (ORCPT
+        id S1726880AbgH0Rmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:35:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59056 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726880AbgH0RfJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:35:09 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AA74C06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:35:09 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id y26so3373904lfe.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:35:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+BC/JcdsJrh7D1baGdsMISOmKuvWwQO6PTtPOyfbkKo=;
-        b=eCSI0FOCZRGoIZSFsgWImch53XxylRdRW9nBxdCujM9/5e9Icmd99didgqiTQNpgqR
-         sKrz0tsPtlMub2w7SYON4tyaIZXXNlhBhfBuwtSxuJO7vV+6HrKtKFS4DbuKiBlL7msf
-         NRDW5/K/GBZxy0t/NmYf5fzKOw12bYm48anO8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+BC/JcdsJrh7D1baGdsMISOmKuvWwQO6PTtPOyfbkKo=;
-        b=AR4/hMvINPojaYBgVWqMMwqvJzEcPXq5RP9tID92/IIcehFprHIKgrh11Z4feIi7ls
-         f26RjqAJVKqNJpsz1X5Y7wdhOH+CMJHO3xEw+2w6R7/tGPKsPnvWx4AzCwyosQgNyZfL
-         57OMnEKyL5JEkSSFOhcBqmPvHd09ZMM3ga0Ay7ktuKQP/hWbylcCysx8jJZXjSoIMTnJ
-         tNoeEO5xVsBNltJ4UBq+NmpVpSfBqDl8q4xv5nweqjaiywK3T3uIvmgmso+TnpfgLsi2
-         ltiF6Hd6rDA71XH/k06fv5cErLrKzBkFd62vCVciOhZkguHTopK9IkO8KH/beXMHWUaA
-         1ySA==
-X-Gm-Message-State: AOAM531I7+h6Ohkp3nFuJcxm9K3XOzy4sHSTFpUxcW0OCZIzqgxVU80f
-        W3/1bcBJdjuybd++fnBfC2uJBqD8ZRquxA==
-X-Google-Smtp-Source: ABdhPJz2/sYqNllxdyJ6TUK37FoS+mqo5821eHlb7FE95FdowzJEBTCMwmg6t4z4K8tNtTDIJLhCAw==
-X-Received: by 2002:ac2:5683:: with SMTP id 3mr10316797lfr.69.1598549706602;
-        Thu, 27 Aug 2020 10:35:06 -0700 (PDT)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id f12sm354229lfj.50.2020.08.27.10.35.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 10:35:05 -0700 (PDT)
-Received: by mail-lf1-f42.google.com with SMTP id x77so2348449lfa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:35:05 -0700 (PDT)
-X-Received: by 2002:ac2:58db:: with SMTP id u27mr5435779lfo.142.1598549704843;
- Thu, 27 Aug 2020 10:35:04 -0700 (PDT)
+        Thu, 27 Aug 2020 13:42:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726307AbgH0Rmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 13:42:33 -0400
+Received: from coco.lan (ip5f5ad5a8.dynamic.kabel-deutschland.de [95.90.213.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A2762087E;
+        Thu, 27 Aug 2020 17:42:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598550152;
+        bh=zyfUowNsWV1AH9t2Y/OhVrtMRfKaUwAivYAzLDicwBM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=07ZU3viQ9K4W/2j7rtUmnY13uTbszZo4JxebwRXpVTU0rbPDvX8crv4sulA5txXDE
+         kYmlUOuNr9MdYmatsOfu9hXzg5jshHEN71HClrwf41F7Sbk0qcHLXN5PzjHJnVgRLn
+         r0uWVOa7IlmgAj8HdF77sDzEoeitLX/MPi0J6RwU=
+Date:   Thu, 27 Aug 2020 19:42:25 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Steve deRosier <derosier@gmail.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>, linuxarm@huawei.com,
+        mauro.chehab@huawei.com, John Stultz <john.stultz@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Maital Hahn <maitalm@ti.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Raz Bouganim <r-bouganim@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Fuqian Huang <huangfq.daxian@gmail.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Revert "wlcore: Adding suppoprt for IGTK key in wlcore
+ driver"
+Message-ID: <20200827194225.281eb7dc@coco.lan>
+In-Reply-To: <CALLGbRL+duiHFd3w7hcD=u47k+JM5rLpOkMrRpW0aQm=oTfUnA@mail.gmail.com>
+References: <f0a2cb7ea606f1a284d4c23cbf983da2954ce9b6.1598420968.git.mchehab+huawei@kernel.org>
+        <CALLGbRL+duiHFd3w7hcD=u47k+JM5rLpOkMrRpW0aQm=oTfUnA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <202008271145.xE8qIAjp%lkp@intel.com> <20200827080558.GA3024@gondor.apana.org.au>
- <CAMj1kXHJrLtnJWYBKBYRtNHVS6rv51+crMsjLEnSqkud0BBaWw@mail.gmail.com> <20200827082447.GA3185@gondor.apana.org.au>
-In-Reply-To: <20200827082447.GA3185@gondor.apana.org.au>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 27 Aug 2020 10:34:48 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg2RCgmW_KM8Gf9-3VJW1K2-FTXQsGeGHirBFsG5zPbsg@mail.gmail.com>
-Message-ID: <CAHk-=wg2RCgmW_KM8Gf9-3VJW1K2-FTXQsGeGHirBFsG5zPbsg@mail.gmail.com>
-Subject: Re: lib/crypto/chacha.c:65:1: warning: the frame size of 1604 bytes
- is larger than 1024 bytes
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        kernel test robot <lkp@intel.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kbuild-all@lists.01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 1:25 AM Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> Interestingly this particular file fails with those options on
-> gcc 8, 9 and 10.
+Em Thu, 27 Aug 2020 08:48:30 -0700
+Steve deRosier <derosier@gmail.com> escreveu:
 
-How are you guys testing? I have UBSAN and GCOV on, and don't see
-crazy frames on either i386 or x86-64.
+> On Tue, Aug 25, 2020 at 10:49 PM Mauro Carvalho Chehab
+> <mchehab+huawei@kernel.org> wrote:
+> >
+> > This patch causes a regression betwen Kernel 5.7 and 5.8 at wlcore:
+> > with it applied, WiFi stops working, and the Kernel starts printing
+> > this message every second:
+> >
+> >    wlcore: PHY firmware version: Rev 8.2.0.0.242
+> >    wlcore: firmware booted (Rev 8.9.0.0.79)
+> >    wlcore: ERROR command execute failure 14  
+> 
+> Only if NO firmware for the device in question supports the `KEY_IGTK`
+> value, then this revert is appropriate. Otherwise, it likely isn't.
 
-I see 72 bytes and 64 bytes respectively for chacha_permute() (plus
-the register pushes, which is about the same size)
+Yeah, that's what I suspect too: some specific firmware is required
+for KEY_IGTK to work.
 
-                  Linus
+>  My suspicion is that the feature that `KEY_IGTK` is enabling is
+> specific to a newer firmware that Mauro hasn't upgraded to. What the
+> OP should do is find the updated firmware and give it a try.
+
+I didn't try checking if linux-firmware tree has a newer version on
+it. I'm using Debian Bullseye on this device. So, I suspect that
+it may have a relatively new firmware.
+
+Btw, that's also the version that came together with Fedora 32:
+
+	$ strings /lib/firmware/ti-connectivity/wl18xx-fw-4.bin |grep FRev
+	FRev 8.9.0.0.79
+	FRev 8.2.0.0.242
+
+Looking at:
+	https://git.ti.com/cgit/wilink8-wlan/wl18xx_fw/
+
+It sounds that there's a newer version released this year:
+
+	2020-05-28	Updated to FW 8.9.0.0.81
+	2018-07-29	Updated to FW 8.9.0.0.79
+
+However, it doesn't reached linux-firmware upstream yet:
+
+	$ git log --pretty=oneline ti-connectivity/wl18xx-fw-4.bin
+	3a5103fc3c29 wl18xx: update firmware file 8.9.0.0.79
+	65b1c68c63f9 wl18xx: update firmware file 8.9.0.0.76
+	dbb85a5154a5 wl18xx: update firmware file
+	69a250dd556b wl18xx: update firmware file
+	dbe3f134bb69 wl18xx: update firmware file, remove conf file
+	dab4b79b3fbc wl18xx: add version 4 of the wl18xx firmware
+
+> AND - since there's some firmware the feature doesn't work with, the
+> driver should be fixed to detect the running firmware version and not
+> do things that the firmware doesn't support.  AND the firmware writer
+> should also make it so the firmware doesn't barf on bad input and
+> instead rejects it politely.
+
+Agreed. The main issue here seems to be that the current patch
+assumes that this feature is available. A proper approach would 
+be to check if this feature is available before trying to use it.
+
+Now, I dunno if version 8.9.0.0.81 has what's required for it to
+work - or if KEY_IGTK require some custom firmware version.
+
+If it works with such version, one way would be to add a check
+for this specific version, disabling KEY_IGTK otherwise.
+
+Also, someone from TI should be sending the newer version to
+be added at linux-firmware.
+
+I'll try to do a test maybe tomorrow.
+
+> But I will say I'm making an educated guess; while I have played with
+> the TI devices in the past, it was years ago and I won't claim to be
+> an expert. I also am unable to fix it myself at this time.
+> 
+> I'd just rather see it fixed properly instead of a knee-jerk reaction
+> of reverting it simply because the OP doesn't have current firmware.
+
+> And let's revisit the discussion of having a kernel splat because an
+> unrelated piece of code fails yet the driver does exactly what it is
+> supposed to do. We shouldn't be dumping registers and stack-trace when
+> the code that crashed has nothing to do with the registers and
+> stack-trace outputted. It is a false positive.  A simple printk WARN
+> or ERROR should output notifying us that the chip firmware has crashed
+> and why.  IMHO.
+
+Thanks,
+Mauro
