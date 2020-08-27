@@ -2,80 +2,137 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51660C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6887FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21F2E207DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46D7722CF8
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:48:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uCHxCyol"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbgH0Ts2 (ORCPT
+        id S1727835AbgH0Ts0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:48:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51592 "EHLO
+        Thu, 27 Aug 2020 15:48:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbgH0TsZ (ORCPT
+        with ESMTP id S1726243AbgH0TsZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 15:48:25 -0400
-Received: from forward105j.mail.yandex.net (forward105j.mail.yandex.net [IPv6:2a02:6b8:0:801:2::108])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99AFAC06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 12:48:22 -0700 (PDT)
-Received: from mxback17j.mail.yandex.net (mxback17j.mail.yandex.net [IPv6:2a02:6b8:0:1619::93])
-        by forward105j.mail.yandex.net (Yandex) with ESMTP id 5611BB20D8C;
-        Thu, 27 Aug 2020 22:48:17 +0300 (MSK)
-Received: from iva7-f62245f79210.qloud-c.yandex.net (iva7-f62245f79210.qloud-c.yandex.net [2a02:6b8:c0c:2e83:0:640:f622:45f7])
-        by mxback17j.mail.yandex.net (mxback/Yandex) with ESMTP id cCPYONAQh0-mGbekdjK;
-        Thu, 27 Aug 2020 22:48:17 +0300
-Received: by iva7-f62245f79210.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id JKX2XogRXs-mEnG4U43;
-        Thu, 27 Aug 2020 22:48:15 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Lach <iam@lach.pw>
-Cc:     iam@lach.pw, Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Julian Anastasov <ja@ssi.bg>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Remove ipvs v6 dependency on iptables
-Date:   Fri, 28 Aug 2020 00:48:02 +0500
-Message-Id: <20200827194802.1164-1-iam@lach.pw>
-X-Mailer: git-send-email 2.28.0
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99A40C061264;
+        Thu, 27 Aug 2020 12:48:24 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 67so4087006pgd.12;
+        Thu, 27 Aug 2020 12:48:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kacN1ThtNH5U40mcv/4k6dMARnX9bfV0PWOTTEKKot4=;
+        b=uCHxCyolCflVbO+WUbO5LZqzBxHhrvlh9Pfc4sUAey8ZLgzdCoqYIrLEdx8BpwQcBh
+         s2GFIussGGUrYPA0MF7HrS5LyrCzsMV7f3icVtHxQDnUdBsayujKjO4yklbNWparyLk6
+         6s/hYZYO7z9qF50wRRq3vSxKkZRtHXpiiZPUoABcbB8tpDAXLFRK8W47KyZVcZSsbKFl
+         GcpeBcMwA/NHfGzT7yOp5nwKgLoqG3eJzac9x4Zrkxu9rtMnmOVUdbEfRzxdmbXvjGpK
+         VnntcUFcoKeILOSwGYEdjuUalT1APy+Ayiduu0gb6oeP6w5roa17Qj+Rtnan3NJD4kzq
+         Izgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kacN1ThtNH5U40mcv/4k6dMARnX9bfV0PWOTTEKKot4=;
+        b=PTVrxoC6Aq8WsUFosIuRYITdoY/mGXxZ6HZVHB0QP7dnVgNFDezq7MxOszfhWppgIj
+         O993P1gaNgaLGMZqr1ZgT7CFS0OVd7Z9faQGcwrj15/yZpx3Ch0fh26kCgQpYReuhu9W
+         K84mjp5ZWHlwXEVEdPNZQLG3RRvjheMhrkyAW1mKSoZaILi0aY3VJxAhrHdEXfp0HJYg
+         cTkfHi3A0VIAoRgXAeqRq2rTbli4aqgtCG2LOrhrS1AjLIkyfvmccFlER5Wf/2SI0ayd
+         TQJIfEJu1T6MKq82liG7Q0XYcu+dyqi1I7JWi5q8yYbdPHHH6KBXjy9RsRbapdAzY6BV
+         UWdg==
+X-Gm-Message-State: AOAM531oMJe4txpYVB0wHcmn1c8fI3Nf5zJud90sNgx1nlGTl2bgLfgw
+        /PHHDNfizqlOXf8nGlo+z8/v3/U2bVnygH7gBko=
+X-Google-Smtp-Source: ABdhPJzMBvf3SlQ4MXHwemF7WLO50QwdlrwNqcBo2uex50d1LsuaXz279AsMkddgVB3byOEu0XId2Ie0ozFdCkvrviw=
+X-Received: by 2002:a17:902:407:: with SMTP id 7mr17541240ple.167.1598557703780;
+ Thu, 27 Aug 2020 12:48:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200827192642.1725-1-krzk@kernel.org> <20200827192642.1725-5-krzk@kernel.org>
+In-Reply-To: <20200827192642.1725-5-krzk@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 27 Aug 2020 22:48:07 +0300
+Message-ID: <CAHp75VepFzdeN=jaXvmSmkQauDJfgSU5ut3hA6a+Cer_SC52Og@mail.gmail.com>
+Subject: Re: [PATCH v2 05/18] iio: adc: ltc2497: Simplify with dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Beniamin Bia <beniamin.bia@analog.com>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This dependency was added in 63dca2c0b0e7a92cb39d1b1ecefa32ffda201975, because this commit had dependency on
-ipv6_find_hdr, which was located in iptables-specific code
+On Thu, Aug 27, 2020 at 10:27 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
 
-But it is no longer required, because f8f626754ebeca613cf1af2e6f890cfde0e74d5b moved them to a more common location
----
- net/netfilter/ipvs/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-diff --git a/net/netfilter/ipvs/Kconfig b/net/netfilter/ipvs/Kconfig
-index 2c1593089..eb0e329f9 100644
---- a/net/netfilter/ipvs/Kconfig
-+++ b/net/netfilter/ipvs/Kconfig
-@@ -29,7 +29,6 @@ if IP_VS
- config	IP_VS_IPV6
- 	bool "IPv6 support for IPVS"
- 	depends on IPV6 = y || IP_VS = IPV6
--	select IP6_NF_IPTABLES
- 	select NF_DEFRAG_IPV6
- 	help
- 	  Add IPv6 support to IPVS.
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
+> ---
+>
+> Changes since v1:
+> 1. Wrap dev_err_probe() lines at 100 character
+> ---
+>  drivers/iio/adc/ltc2497-core.c | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/iio/adc/ltc2497-core.c b/drivers/iio/adc/ltc2497-core.c
+> index 9b8fd9c32364..d337ed96bbb0 100644
+> --- a/drivers/iio/adc/ltc2497-core.c
+> +++ b/drivers/iio/adc/ltc2497-core.c
+> @@ -180,13 +180,8 @@ int ltc2497core_probe(struct device *dev, struct iio_dev *indio_dev)
+>                 return ret;
+>
+>         ddata->ref = devm_regulator_get(dev, "vref");
+> -       if (IS_ERR(ddata->ref)) {
+> -               if (PTR_ERR(ddata->ref) != -EPROBE_DEFER)
+> -                       dev_err(dev, "Failed to get vref regulator: %pe\n",
+> -                               ddata->ref);
+> -
+> -               return PTR_ERR(ddata->ref);
+> -       }
+> +       if (IS_ERR(ddata->ref))
+> +               return dev_err_probe(dev, PTR_ERR(ddata->ref), "Failed to get vref regulator\n");
+>
+>         ret = regulator_enable(ddata->ref);
+>         if (ret < 0) {
+> --
+> 2.17.1
+>
+
+
 -- 
-2.28.0
-
+With Best Regards,
+Andy Shevchenko
