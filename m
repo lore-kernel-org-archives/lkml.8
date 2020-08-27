@@ -2,96 +2,130 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E25BC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E01C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA50E22B40
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F68D2177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:26:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IXXgjsgW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c7RsnWL2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgH0GXs (ORCPT
+        id S1726882AbgH0G0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:23:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38290 "EHLO
+        Thu, 27 Aug 2020 02:26:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgH0GXq (ORCPT
+        with ESMTP id S1726199AbgH0G0u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:23:46 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31BEAC06125E;
-        Wed, 26 Aug 2020 23:23:46 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id f24so3852014edw.10;
-        Wed, 26 Aug 2020 23:23:46 -0700 (PDT)
+        Thu, 27 Aug 2020 02:26:50 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A346C06125E
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 23:26:50 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id p37so2625039pgl.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 23:26:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3zWlNNLcebc5+UDnlwc66ao5mF5z9QibVWSnplcPmXs=;
-        b=IXXgjsgW0GMVWya7DBLaF21KfvO3EMysGfU6BSrKcTom85rkgWY2rRZygdk3/wF8Rg
-         bbCjDkIsHEEwXiKBKZO3BDHCPI11l8rpJr88H8UZRq9xE6H1t8zcJ8dXFkhFCgTELuAG
-         aF1fgkOtIa88AShMeEZ5ifluHtj/RlFDSvJAZpLuK1Kvjgj10i72Ff4ozn2hYP32q+VN
-         jg64PhVTq53pnurJBaHHBG93lP9sqjC5g/5gZTQlVKMEabX5lLzlB3Sv7kwai7F7H4fR
-         yBTbTsJ8suxI5vJz3emnJa5Uibqp97gJ8L5I8K8ZLLVbskdRqX7SEaEUtxu3LuMPtUxc
-         /3IA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YNHyAuR7GB3EfiCouUkXKnHb9Hzrnqg6mjMpHBgNiO8=;
+        b=c7RsnWL2XAhTx7DSd2Pafooc6DvgnJ2jSwpvJHQhuxQ+30JZQ3lZ7R78LrzdmkmoZ+
+         mgtyt4+05RvlXNm5faEyrtJe7n7P9B1VYa4sch/ht6IAYDMogrykF50nGFbl3gh7u609
+         5Z9tasKQ2aj1JEgOWF1l/5PMrvg1rgN7Ni4sVw/YWReBzYqLGCiXiALOZV9BmD4WWLKC
+         /KQHUX8o+J+DhwCWNku/hJ/FB09sGWIaTIzrTLEba18Dqpt+Lvc74/DaJIeL3Cx8Mom5
+         pdHIm5ykyAdQjQ6LEKBd24/g3QdjVRa/E5itZi6+Nnmz4EMpTXiZv3aJmzE049xltd8z
+         YUCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3zWlNNLcebc5+UDnlwc66ao5mF5z9QibVWSnplcPmXs=;
-        b=lFDR36F2tFOHbUmPmhzMx5jSvxFanOshJN4LqN8DkZGOmALTh4K4uYdNJsQWYs3Vck
-         KuVFb62TneNj+ZEZ7Z2Tim6nV6SCpa2fQD1hz9i7ZclGWFqql+J+d4GugWlgmvzoR/Vi
-         6OfgkV1ju7XR5S9D8guOG/6zCgNqoiM/pOx8+wINXcVEKOM51Qlk2e+AFdTyYCMJUNJu
-         A+osZ5VDgyOf/xzfl3ELi44C2fKKuUcWXy2IM1bfDC/swI0UURoCaIPgsewdhMv+Ni5l
-         lv21Jp6qMlzmaULSL69IRnfihjVnCmhvEgGpLEiv7FBCYliBdR8HYD7Xz13PGgpynxB4
-         5ZyA==
-X-Gm-Message-State: AOAM532ohRSlx9hdxxDKkLSYsVNlyl2+ZE48MSeZIM3y6g5JeYMEalZQ
-        EvoSuUVPwjUiqGzkBctQhXTx5eYuHVQu+MIesY4=
-X-Google-Smtp-Source: ABdhPJzGyoszCyB1gP7s9vg+kvlr7AQo49xluw5D8n9lmc5iQ3GKoMjOhpZO/cbm7xAU5c8+0f1zDgQ3Da/SQKbb/jw=
-X-Received: by 2002:a05:6402:3da:: with SMTP id t26mr13402854edw.213.1598509424857;
- Wed, 26 Aug 2020 23:23:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YNHyAuR7GB3EfiCouUkXKnHb9Hzrnqg6mjMpHBgNiO8=;
+        b=VraveXXQf6LDar0l76wAlQwKNxeCm98zfHEDwf8cYvuz6aQU0f2UOGMiE+cl+SiP4I
+         ispO54WTrtEAMhQugm76/a0XJR2ThDE9x52GXunJ7MW4/z8lVMwF1eImaFmgxSTnOIER
+         2ct2epH6Gzy++dxtvGAuIvo9bmFubGwS4MKmbQWs6ert7PQZoaF7f4MqpWGV5oaDGja3
+         7Gw8hT9mVP0h9oxi55bFDOxFCMS7T9sMMqoxbefsSLTZ3TJOMlgYIs/j9YQxps9Rt/rv
+         ztTiF1X4TQh38ph9ASGpeDoZLhU0qbAJ4Lae3x704ge1oxRUhn+QHP94GzdzWIpMjcc/
+         WF8g==
+X-Gm-Message-State: AOAM533eD6NnTYY4zPaxlHFA4hQuYAhURwUAcms7jo2uDvf6JB+UeCJG
+        KNg8CwxRoWUeOxiopJxAk0Lh+g==
+X-Google-Smtp-Source: ABdhPJy6oNZf/4jPilo5d2a1xo9dBeE04Aa29ksfbQDk9Sq8XqX5IklGaZ3ChV7cRwosSpvmM3Ue1w==
+X-Received: by 2002:a62:a10f:: with SMTP id b15mr15494230pff.253.1598509609722;
+        Wed, 26 Aug 2020 23:26:49 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id z1sm1322747pff.178.2020.08.26.23.26.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Aug 2020 23:26:48 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 11:56:46 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Yue Hu <zbestahu@gmail.com>
+Cc:     rafael.j.wysocki@intel.com,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        huyue2@yulong.com, zbestahu@163.com
+Subject: Re: [PATCH] thermal: sysfs: fall back to vzalloc for cooling
+ device's statistics
+Message-ID: <20200827062646.adruzyyqq5uzlteq@vireshk-i7>
+References: <20200818063005.13828-1-zbestahu@gmail.com>
+ <40b69f97-46e5-d62e-0d2f-604dfd4dafa1@linaro.org>
+ <20200826101319.00003048.zbestahu@gmail.com>
+ <c3fd7949-b33a-aca3-8dd5-1c2df35fb63d@linaro.org>
+ <20200827120327.00003740.zbestahu@gmail.com>
+ <20200827051401.yryitpgq2gi3nkbh@vireshk-i7>
+ <20200827142003.000071c1.zbestahu@gmail.com>
 MIME-Version: 1.0
-References: <20200825052532.15301-1-xiangxia.m.yue@gmail.com> <20200826103137.GC3356257@kroah.com>
-In-Reply-To: <20200826103137.GC3356257@kroah.com>
-From:   Tonghao Zhang <xiangxia.m.yue@gmail.com>
-Date:   Thu, 27 Aug 2020 14:21:19 +0800
-Message-ID: <CAMDZJNWWXm_9VtCEJZJ_OWQbbeu_yJhdyf8-0iibTe9aqJ4eXw@mail.gmail.com>
-Subject: Re: [PATCH net backport 5.6.14-5.8.3 v1] net: openvswitch: introduce
- common code for flushing flows
-To:     Greg KH <greg@kroah.com>
-Cc:     sashal@kernel.org, stable@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        =?UTF-8?B?Sm9oYW4gS27DtsO2cw==?= <jknoos@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827142003.000071c1.zbestahu@gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 6:31 PM Greg KH <greg@kroah.com> wrote:
->
-> On Tue, Aug 25, 2020 at 01:25:32PM +0800, xiangxia.m.yue@gmail.com wrote:
-> > From: Tonghao Zhang <xiangxia.m.yue@gmail.com>
-> >
-> > [ Upstream commit 77b981c82c1df7c7ad32a046f17f007450b46954 ]
->
-> That is not what this commit is :(
->
-> Please fix up and resend with the correct commit.
-Sorry for that. v2 is sent, please review.
-http://patchwork.ozlabs.org/project/netdev/patch/20200827061952.5789-1-xiangxia.m.yue@gmail.com/
-> thanks,
->
-> greg k-h
+On 27-08-20, 14:20, Yue Hu wrote:
+> Currenly, drivers/video/backlight does not call thermal_of_cooling_device_register()
+> to register thermal cooling device. The issue happened in msm-4.19 kernel for
+> QCOM/Android platform. Backlight in msm-4.19 kernel will register thermal cooling
+> device as below:
+> 
+> +static int bd_cdev_get_max_brightness(struct thermal_cooling_device *cdev,
+> +                                 unsigned long *state)
+> +{
+> + struct backlight_device *bd = (struct backlight_device *)cdev->devdata;
+> +
+> + *state = bd->props.max_brightness;
+> +
+> + return 0;
+> +}
+> 
+> 
+> +static struct thermal_cooling_device_ops bd_cdev_ops = {
+> + .get_max_state = bd_cdev_get_max_brightness,
+> 
+> +static void backlight_cdev_register(struct device *parent,
+> +                             struct backlight_device *bd)
+> +{
+> + if (of_find_property(parent->of_node, "#cooling-cells", NULL)) {
+> +         bd->cdev = thermal_of_cooling_device_register(parent->of_node,
+> +                         (char *)dev_name(&bd->dev), bd, &bd_cdev_ops);
+> 
+> And the bd->props.max_brightness is getting from video/backlight/qcom-wled.c. Maybe
+> the driver should not assign 1024 to states/max_brightness. I'm not sure about it.
+> So i consider to change memory allocation methord. That's the origin of the patch.
 
+Thanks for the details. So this is not about upstream tree, as a rule
+we aren't going to make changes here for any downstream tree.
 
+Now coming back to the downstream driver, I also don't see a point in
+returning bd->props.max_brightness as the max number of states there.
+Maybe have 10 states, each occupying bd->props.max_brightness/10
+brightness and so you will end up with 10 states only. But yeah,
+whatever downstream decides on that.
 
 -- 
-Best regards, Tonghao
+viresh
