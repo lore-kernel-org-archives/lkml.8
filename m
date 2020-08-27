@@ -2,106 +2,86 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA14C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1384CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 470392087D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:23:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XTIDtUKL"
+	by mail.kernel.org (Postfix) with ESMTP id DB3DA2087D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:23:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgH0PXV (ORCPT
+        id S1727020AbgH0PXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:23:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727802AbgH0L37 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 07:29:59 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6455C06123D;
-        Thu, 27 Aug 2020 04:28:00 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id k20so4103481otr.1;
-        Thu, 27 Aug 2020 04:28:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=k625p4G1ECZOtwn1k2tuoTbtrkLs0SeTZjD+MKyFwgY=;
-        b=XTIDtUKLznQZ3eFoodQ5ObQE+hlE31ej9LC3XXt2V/IhgiW3AfvLs50Pqf0zA8+Ac7
-         5q74EL3RhwZdjHjCLZbNG8J7+hRW+0BKgfM+V0Ndh86ZpCkzCFmo6EE2wJszoZUm8VeM
-         Y5wn2AgldTpAf0OlqKEMaQ8iFmekMhQiO/b3QnfLFt4p3nWIGC9Rp/oHkqWtSLNTD9Xy
-         BMsNcX5cB3OaCJ06Avbp1dTk+nZGLZ6RHLEF1hoP51L5dBlr4eZAVNHaFdsu88JRT2sK
-         xgCpu5AGzSjTsBcifL6FhiRtS25WtSUDDRFddUDXEs5KBsGp6tdFrXSXUwb91Om2X1Rd
-         NQdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=k625p4G1ECZOtwn1k2tuoTbtrkLs0SeTZjD+MKyFwgY=;
-        b=Fxi/c1MD/14a6iEG1rTZjkmLaVkISdJ1um4o0B7ddZXmXVDDH+Ef74jInDP7uvLXHY
-         iHy2iT58+pxEROsGHq3MuyN9WAdciKjKHyzYFOQdlITLJW9aJCCRC5v5f0NlgdX1w5gg
-         I/+vdqFEVaU+GzdXYa1JU5/yEAxcm9RnL1VZD2MRDq/V9Iq7U2RVDAdcJVX0CklHBrTl
-         OyXeJKHk2EVhNeg/afsAgFitR7/KqLIlLLMCxz9i/ClunchTokw9h3SgvNq0USwPVXae
-         gZ1r1wvp/MfrR93TQORKAr62U/6EtmLl/fCbEhFJQsW3E1Nz0ZKJVZ0+zCe2baaFsgCT
-         1MAg==
-X-Gm-Message-State: AOAM533REwMGlUaI5XIvHcogwNzbR3CH2DLhfNMnI9Y1WByGSSIlvMJh
-        CoA2SmalBSDTsiXXrw0gaUbslbAENw8Ff+IyfE0=
-X-Google-Smtp-Source: ABdhPJyPcLPDh2dczuD4C4JhbPC3GweS3vl1yW5srMZV0DS8qhBoE7ckUH241CvoCU6Ggn858A1mofPXnr/blrDJ0SQ=
-X-Received: by 2002:a9d:a2b:: with SMTP id 40mr13528946otg.308.1598527680174;
- Thu, 27 Aug 2020 04:28:00 -0700 (PDT)
+        Thu, 27 Aug 2020 11:23:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:57092 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728465AbgH0L36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 07:29:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD5041045;
+        Thu, 27 Aug 2020 04:03:44 -0700 (PDT)
+Received: from [192.168.1.190] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 858883F68F;
+        Thu, 27 Aug 2020 04:03:42 -0700 (PDT)
+Subject: Re: [PATCH 26/35] kasan, arm64: Enable TBI EL1
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Branislav Rankov <Branislav.Rankov@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1597425745.git.andreyknvl@google.com>
+ <518da1e5169a4e343caa3c37feed5ad551b77a34.1597425745.git.andreyknvl@google.com>
+ <20200827104033.GF29264@gaia>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <9c53dfaa-119e-b12e-1a91-1f67f4aef503@arm.com>
+Date:   Thu, 27 Aug 2020 12:05:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
- <159646180259.1784947.223853053048725752.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159646180259.1784947.223853053048725752.stgit@warthog.procyon.org.uk>
-Reply-To: mtk.manpages@gmail.com
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date:   Thu, 27 Aug 2020 13:27:48 +0200
-Message-ID: <CAKgNAkgAjEnvPvi66Jd+XLvogy_w8TT5egJwFGmrM2BQGWii=g@mail.gmail.com>
-Subject: Re: [PATCH 02/18] fsinfo: Add fsinfo() syscall to query filesystem
- information [ver #21]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ian Kent <raven@themaw.net>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200827104033.GF29264@gaia>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello David,
+On 8/27/20 11:40 AM, Catalin Marinas wrote:
+> On Fri, Aug 14, 2020 at 07:27:08PM +0200, Andrey Konovalov wrote:
+>> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+>> index 152d74f2cc9c..6880ddaa5144 100644
+>> --- a/arch/arm64/mm/proc.S
+>> +++ b/arch/arm64/mm/proc.S
+>> @@ -38,7 +38,7 @@
+>>  /* PTWs cacheable, inner/outer WBWA */
+>>  #define TCR_CACHE_FLAGS	TCR_IRGN_WBWA | TCR_ORGN_WBWA
+>>  
+>> -#ifdef CONFIG_KASAN_SW_TAGS
+>> +#if defined(CONFIG_KASAN_SW_TAGS) || defined(CONFIG_KASAN_HW_TAGS)
+>>  #define TCR_KASAN_FLAGS TCR_TBI1
+>>  #else
+>>  #define TCR_KASAN_FLAGS 0
+> 
+> I prefer to turn TBI1 on only if MTE is present. So on top of the v8
+> user series, just do this in __cpu_setup.
+> 
 
-On Mon, 3 Aug 2020 at 15:37, David Howells <dhowells@redhat.com> wrote:
->
-> Add a system call to allow filesystem information to be queried.  A request
-> value can be given to indicate the desired attribute.  Support is provided
-> for enumerating multi-value attributes.
-
-Do we have an up to date manual page for this system call?
-
-Could you please (re)post to the same CC as this mail, plus linux-man@?
-
-Thanks,
-
-Michael
+Not sure I understand... Enabling TBI1 only if MTE is present would break
+KASAN_SW_TAGS which is based on TBI1 but not on MTE.
 
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Regards,
+Vincenzo
