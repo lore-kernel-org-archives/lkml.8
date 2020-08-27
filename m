@@ -2,86 +2,114 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA68C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F55C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94B41207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 337D92177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:29:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U4LFu1sb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgH0N1e (ORCPT
+        id S1728067AbgH0N2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 09:27:34 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10338 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727781AbgH0NTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 09:28:49 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55317 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727949AbgH0NTT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 09:19:19 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C3F82C315B0D3867DA47;
-        Thu, 27 Aug 2020 21:00:57 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 27 Aug 2020
- 21:00:46 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <b.zolnierkie@samsung.com>, <yanaijie@huawei.com>,
-        <dri-devel@lists.freedesktop.org>, <linux-fbdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] video: fbdev: remove set but not used 'ulCoreClock'
-Date:   Thu, 27 Aug 2020 21:00:28 +0800
-Message-ID: <20200827130028.428893-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.25.4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598534339;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BnfuzY1Orxo7bXipPlzF8Clju2SuIQM+XAiS/9TLc4c=;
+        b=U4LFu1sbOb556W1a7RVM62NKge/9fg1tid0vhk/gHB/JPsbi+z+BxGA88RIoWo1naSSAzM
+        1JJa1MXEZngXHhxXvSbq6BngRaFLU4eFhFRfnFNuNj4h2jufarSZCd6GIL3JUfVD0F/B1V
+        QQp+JXq9O1Hv4Wj1ju4WenVLqpHdjyY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-215-G8iNeAfnO7-2I6RDlA4A7Q-1; Thu, 27 Aug 2020 09:18:55 -0400
+X-MC-Unique: G8iNeAfnO7-2I6RDlA4A7Q-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25ED657050;
+        Thu, 27 Aug 2020 13:18:52 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-112-37.ams2.redhat.com [10.36.112.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C26375D9E8;
+        Thu, 27 Aug 2020 13:18:40 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     "Yu\, Yu-cheng" <yu-cheng.yu@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for shadow stack
+References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
+        <20200825002540.3351-26-yu-cheng.yu@intel.com>
+        <CALCETrVpLnZGfWWLpJO+aZ9aBbx5KGaCskejXiCXF1GtsFFoPg@mail.gmail.com>
+        <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com>
+        <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+        <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
+        <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
+        <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
+        <20200826164604.GW6642@arm.com>
+        <87ft892vvf.fsf@oldenburg2.str.redhat.com>
+        <20200826170841.GX6642@arm.com>
+Date:   Thu, 27 Aug 2020 15:18:39 +0200
+In-Reply-To: <20200826170841.GX6642@arm.com> (Dave Martin's message of "Wed,
+        26 Aug 2020 18:08:42 +0100")
+Message-ID: <87tuwow7kg.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.127.227]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This addresses the following gcc warning with "make W=1":
+* Dave Martin:
 
-drivers/video/fbdev/kyro/STG4000InitDevice.c: In function
-‘SetCoreClockPLL’:
-drivers/video/fbdev/kyro/STG4000InitDevice.c:247:6: warning: variable
-‘ulCoreClock’ set but not used [-Wunused-but-set-variable] // yanaijie
-fixed
-  247 |  u32 ulCoreClock;
-      |      ^~~~~~~~~~~
+> You're right that this has implications: for i386, libc probably pulls
+> more arguments off the stack than are really there in some situations.
+> This isn't a new problem though.  There are already generic prctls with
+> fewer than 4 args that are used on x86.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- drivers/video/fbdev/kyro/STG4000InitDevice.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+As originally posted, glibc prctl would have to know that it has to pull
+an u64 argument off the argument list for ARCH_X86_CET_DISABLE.  But
+then the u64 argument is a problem for arch_prctl as well.
 
-diff --git a/drivers/video/fbdev/kyro/STG4000InitDevice.c b/drivers/video/fbdev/kyro/STG4000InitDevice.c
-index 1d3f2080aa6f..edaeec2d9590 100644
---- a/drivers/video/fbdev/kyro/STG4000InitDevice.c
-+++ b/drivers/video/fbdev/kyro/STG4000InitDevice.c
-@@ -244,7 +244,6 @@ int SetCoreClockPLL(volatile STG4000REG __iomem *pSTGReg, struct pci_dev *pDev)
- {
- 	u32 F, R, P;
- 	u16 core_pll = 0, sub;
--	u32 ulCoreClock;
- 	u32 tmp;
- 	u32 ulChipSpeed;
- 
-@@ -282,7 +281,7 @@ int SetCoreClockPLL(volatile STG4000REG __iomem *pSTGReg, struct pci_dev *pDev)
- 	if (ulChipSpeed == 0)
- 		return -EINVAL;
- 
--	ulCoreClock = ProgramClock(REF_FREQ, CORE_PLL_FREQ, &F, &R, &P);
-+	ProgramClock(REF_FREQ, CORE_PLL_FREQ, &F, &R, &P);
- 
- 	core_pll |= ((P) | ((F - 2) << 2) | ((R - 2) << 11));
- 
--- 
-2.25.4
+Thanks,
+Florian
 
