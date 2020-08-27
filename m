@@ -2,147 +2,115 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CB6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E332DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B92C2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7542054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:48:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HDO4OhGK"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="xS4StaPp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgH0OsC (ORCPT
+        id S1728103AbgH0OsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:48:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45822 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727095AbgH0Olk (ORCPT
+        Thu, 27 Aug 2020 10:48:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727877AbgH0ODp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:41:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598539297;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kSkJbE4XJrwDOFMLE7e16e7obrhoIIgU7bHmd2/ZWC4=;
-        b=HDO4OhGKNgBp6QYNS+SMvx8dHCbko6RogmMZ74Dh+Hq4tb0wkUURO32DpxPnFUVQAmErFO
-        a8f2AezJ1fzN3G2e2Ph+Mak+eWOsR666JDxlq01XFeZ1SV/j8cmiSes3isrRCUT2STRJcG
-        jM9IF3JyYv48+A3CGkxEPmlrP5tYuWE=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-Bf86DHbhNh-G4ylUDx6UQw-1; Thu, 27 Aug 2020 10:41:35 -0400
-X-MC-Unique: Bf86DHbhNh-G4ylUDx6UQw-1
-Received: by mail-wm1-f72.google.com with SMTP id p184so2208979wmp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 07:41:35 -0700 (PDT)
+        Thu, 27 Aug 2020 10:03:45 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C02B0C06123F
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 07:01:46 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id x12so4586426qtp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 07:01:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dfRzlPwQNyPtrYJ/iS+qwie4ofTE9hR5y2kv8hIuyaA=;
+        b=xS4StaPpTGC1Pj9KQLMY1y4Hh+DxvuykLCRhRCCR2ks3lS4BDPvs2wAKBG5COFaV+Z
+         5a4iKQJRjfMzWvoEDRU+GIkjB6GHtWfHpJ/EnWEgGdhu+csIuY3GLUOjg1fPvtbeBDw/
+         9kG7Tk4zkmcZbKeDMfK5TOyej+CKEs9zTCMzbx1iaTd9NO7CLzwhQUxNiMJes9ogin7K
+         p8BpEdUk6FDEm+vs2kKUij8P4AbrVwzMbgEd5ySyVT+NMACU39HJ5japIJqtRQdyteCb
+         vS/QIbWLJazcKT9ZK+bYjwJJ0I2rU8smS8FdNM9Y4fMY0myIX8+sxThkICielkbfW1wJ
+         gykg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=kSkJbE4XJrwDOFMLE7e16e7obrhoIIgU7bHmd2/ZWC4=;
-        b=PlIINuII8xHFY6ojPWIxjljigZsD3hXUI1m5w+5dQuvuf5Fa1eXpFhAxlVUheMG9au
-         XKybZ/uNXR7y2xbZYv+DFEmy9isVMUcOvAaB4P6YiRiNbh6Mwz1jgBce9zcChFsjWMFh
-         aYdNaVmY40Czf/jWQCZCkeI4cr3UxfobMQ+QaCjpnrUbDzPZynws5mOdldJJDJC0e+jj
-         /mpeqFRUP6L6lToyZ7dV61jiZ1cUflBrPOX7y+1lKqAFi/XR7dDa9i67QQlKEJRusGoy
-         zLaIlX/afCGzCoEQLkXHLnBsQe7UhiGI92iEKyczXwbswaXB2IHmXaFXKY56e0zcTVmM
-         gHWw==
-X-Gm-Message-State: AOAM531BNbCGkUkelrbEBcRmnqi9qWzHeFCUlWwRyUYhqFoty3lgZu84
-        G/mZuXwMJHlXhxMooIv5gPUp6Bb5+ecgF5HNNuaJJwX8p7KN+UzXLbs402ZqdZlzvWyfvB+YNT8
-        b0yLI/Ij1FCAhWDAqu2NZOnlg
-X-Received: by 2002:a05:600c:2292:: with SMTP id 18mr11627451wmf.136.1598539294166;
-        Thu, 27 Aug 2020 07:41:34 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwLjn6ioesLZuvJno4GpX4fuvfwIAu0+UbwSF5co10COtOk6HNz4fDGRY0086+HvxSJxGfKEA==
-X-Received: by 2002:a05:600c:2292:: with SMTP id 18mr11627429wmf.136.1598539293910;
-        Thu, 27 Aug 2020 07:41:33 -0700 (PDT)
-Received: from steredhat.lan ([5.170.39.106])
-        by smtp.gmail.com with ESMTPSA id a3sm5579959wme.34.2020.08.27.07.41.32
+        bh=dfRzlPwQNyPtrYJ/iS+qwie4ofTE9hR5y2kv8hIuyaA=;
+        b=XYD6zVm+z4+EkH8UfY5JyhFNAThxBTtBZNV8t/6p2DWOwLZDtjOxtGStRw+sG7Bbbm
+         Deof0Uq8+A70MJ02g+yNyraxR9qPU/x6/V9wIE94z83xYiL3om5oNrw1T7444lyAOG1z
+         BmCVAKTzqj4kD5ML4yWcpjTsGVGW0oTYk3/1rCpwCfbqnnsEW3JKWXs+QHGExQLppWst
+         iogdbwHnBnuYW6vIE08UKOItCV64ZJSsEa/AY1O2orA4F4TtNIYByTMSWwcWfHmSmK1C
+         SyfGPA2pTorekJL82p0tnxcHYDuucT12U04q+Ti62C2YndZcB3KxcdSGXybxIPmbdmJp
+         szGg==
+X-Gm-Message-State: AOAM531+myGdeI/cQQ3DdmOjh5buj7EDzqG32NZdBdhTK2ZjMvgDim2Y
+        suU+DiXsa4eVhoTGoto08phvDw==
+X-Google-Smtp-Source: ABdhPJwHe/G+MpJjSZgeTDwatG8hgzZOb57B0FlRcGdq6AtF9uloUz2i4857L2RN01YtIeqdvZ25sg==
+X-Received: by 2002:ac8:4c86:: with SMTP id j6mr19065010qtv.65.1598536906039;
+        Thu, 27 Aug 2020 07:01:46 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:412a])
+        by smtp.gmail.com with ESMTPSA id o47sm1860852qtk.19.2020.08.27.07.01.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 07:41:33 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 16:41:29 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Aleksa Sarai <asarai@suse.de>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
-        Kees Cook <keescook@chromium.org>,
-        Jeff Moyer <jmoyer@redhat.com>
-Subject: Re: [PATCH v5 0/3] io_uring: add restrictions to support untrusted
- applications and guests
-Message-ID: <20200827144129.5yvu2icj7a5jfp3p@steredhat.lan>
-References: <20200827134044.82821-1-sgarzare@redhat.com>
- <2ded8df7-6dcb-ee8a-c1fd-e0c420b7b95d@kernel.dk>
- <20200827141002.an34n2nx6m4dfhce@steredhat.lan>
- <f7c0ff79-87c0-6c7e-b048-b82a45d0f44a@kernel.dk>
+        Thu, 27 Aug 2020 07:01:45 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 10:00:28 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Xunlei Pang <xlpang@linux.alibaba.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Chris Down <chris@chrisdown.name>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v3] mm: memcg: Fix memcg reclaim soft lockup
+Message-ID: <20200827140028.GA1002856@cmpxchg.org>
+References: <1598495549-67324-1-git-send-email-xlpang@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f7c0ff79-87c0-6c7e-b048-b82a45d0f44a@kernel.dk>
+In-Reply-To: <1598495549-67324-1-git-send-email-xlpang@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 08:10:49AM -0600, Jens Axboe wrote:
-> On 8/27/20 8:10 AM, Stefano Garzarella wrote:
-> > On Thu, Aug 27, 2020 at 07:50:44AM -0600, Jens Axboe wrote:
-> >> On 8/27/20 7:40 AM, Stefano Garzarella wrote:
-> >>> v5:
-> >>>  - explicitly assigned enum values [Kees]
-> >>>  - replaced kmalloc/copy_from_user with memdup_user [kernel test robot]
-> >>>  - added Kees' R-b tags
-> >>>
-> >>> v4: https://lore.kernel.org/io-uring/20200813153254.93731-1-sgarzare@redhat.com/
-> >>> v3: https://lore.kernel.org/io-uring/20200728160101.48554-1-sgarzare@redhat.com/
-> >>> RFC v2: https://lore.kernel.org/io-uring/20200716124833.93667-1-sgarzare@redhat.com
-> >>> RFC v1: https://lore.kernel.org/io-uring/20200710141945.129329-1-sgarzare@redhat.com
-> >>>
-> >>> Following the proposal that I send about restrictions [1], I wrote this series
-> >>> to add restrictions in io_uring.
-> >>>
-> >>> I also wrote helpers in liburing and a test case (test/register-restrictions.c)
-> >>> available in this repository:
-> >>> https://github.com/stefano-garzarella/liburing (branch: io_uring_restrictions)
-> >>>
-> >>> Just to recap the proposal, the idea is to add some restrictions to the
-> >>> operations (sqe opcode and flags, register opcode) to safely allow untrusted
-> >>> applications or guests to use io_uring queues.
-> >>>
-> >>> The first patch changes io_uring_register(2) opcodes into an enumeration to
-> >>> keep track of the last opcode available.
-> >>>
-> >>> The second patch adds IOURING_REGISTER_RESTRICTIONS opcode and the code to
-> >>> handle restrictions.
-> >>>
-> >>> The third patch adds IORING_SETUP_R_DISABLED flag to start the rings disabled,
-> >>> allowing the user to register restrictions, buffers, files, before to start
-> >>> processing SQEs.
-> >>>
-> >>> Comments and suggestions are very welcome.
-> >>
-> >> Looks good to me, just a few very minor comments in patch 2. If you
-> >> could fix those up, let's get this queued for 5.10.
-> >>
-> > 
-> > Sure, I'll fix the issues. This is great :-)
+On Thu, Aug 27, 2020 at 10:32:29AM +0800, Xunlei Pang wrote:
+> We've met softlockup with "CONFIG_PREEMPT_NONE=y", when
+> the target memcg doesn't have any reclaimable memory.
 > 
-> Thanks! I'll pull in your liburing tests as well once we get the kernel
-> side sorted.
+> It can be easily reproduced as below:
+>  watchdog: BUG: soft lockup - CPU#0 stuck for 111s![memcg_test:2204]
+>  CPU: 0 PID: 2204 Comm: memcg_test Not tainted 5.9.0-rc2+ #12
+>  Call Trace:
+>   shrink_lruvec+0x49f/0x640
+>   shrink_node+0x2a6/0x6f0
+>   do_try_to_free_pages+0xe9/0x3e0
+>   try_to_free_mem_cgroup_pages+0xef/0x1f0
+>   try_charge+0x2c1/0x750
+>   mem_cgroup_charge+0xd7/0x240
+>   __add_to_page_cache_locked+0x2fd/0x370
+>   add_to_page_cache_lru+0x4a/0xc0
+>   pagecache_get_page+0x10b/0x2f0
+>   filemap_fault+0x661/0xad0
+>   ext4_filemap_fault+0x2c/0x40
+>   __do_fault+0x4d/0xf9
+>   handle_mm_fault+0x1080/0x1790
+> 
+> It only happens on our 1-vcpu instances, because there's no chance
+> for oom reaper to run to reclaim the to-be-killed process.
+> 
+> Add a cond_resched() at the upper shrink_node_memcgs() to solve this
+> issue, this will mean that we will get a scheduling point for each
+> memcg in the reclaimed hierarchy without any dependency on the
+> reclaimable memory in that memcg thus making it more predictable.
+> 
+> Acked-by: Chris Down <chris@chrisdown.name>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Suggested-by: Michal Hocko <mhocko@suse.com>
+> Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
 
-Yeah. Let me know if you'd prefer that I send patches on io-uring ML.
-
-About io-uring UAPI, do you think we should set explicitly the enum
-values also for IOSQE_*_BIT and IORING_OP_*?
-
-I can send a separated patch for this.
-
-Thanks,
-Stefano
-
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
