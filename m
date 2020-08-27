@@ -2,147 +2,125 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69F2C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A30C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7954822B4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBD232177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:17:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wSFnOytp"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bwQqo9mU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgH0SQU (ORCPT
+        id S1726289AbgH0SRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:16:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37202 "EHLO
+        Thu, 27 Aug 2020 14:17:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgH0SQS (ORCPT
+        with ESMTP id S1726250AbgH0SRO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:16:18 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE8FC061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:16:18 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id t23so7505326ljc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:16:18 -0700 (PDT)
+        Thu, 27 Aug 2020 14:17:14 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAAE6C06121B
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:17:14 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id t9so4131619pfq.8
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:17:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BMtVJeUzPW/21lgl19SChHP4cZE4M9iPKQteLK365hc=;
-        b=wSFnOytpcvV49hUor1Rhdq4fcuf+m8XOkFWmRJFZONnZr5+2pKLo+thilZqINwctis
-         Lih/hDbQknTYZiybi6yukykCPU/WuKeauT6TYHuuzPC2WcCYX/EwIZ4xgLFQESP8pBvg
-         AuogxTrIHrNP7sZx5EiOukhE+A0WhNOPsuhU0/B6gSEuRBpdPaFS+oTNWCU0Y/txxi99
-         nkpUElLoghA9MMX+xLCn49XPBXwSzET5O96KWH1urHfmWqEW3bVymWP4gtDJDAJB6j+W
-         9xB/QzVEqvL5GGvXEOdRp9v0sdiTttXrn9JCLjxoQlhZ+2ievLWVO5tsWO8+SWalt9yc
-         1YRw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=soeX4jUjZZZTlITUKQ5pcDSGwYI4DnugTTOq/SNIIW8=;
+        b=bwQqo9mUQZ78SYazcavWuleirnFV8qiGz4YuuoqdE7eRmQ2tSTM68j++Et8BP9GqJr
+         syUBg3Kcg7Q9OgEbN+FAt7t4lGugKe8nLewk7Ughsm9qm/jfjiWsNzpi5+yadtKvRkgD
+         9dkaxNNv0wKsa2fEmJKGhE8yW74+BwsjHwwBM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BMtVJeUzPW/21lgl19SChHP4cZE4M9iPKQteLK365hc=;
-        b=RcmrOqf/7K6nLl5ztOKTbKvHmrjOB1NEhQaI2/0c3M5nMyAt1UpZWw89E+KD5KSD0p
-         GZ4G/K48gf1BxzQq5rOtA/SHKiOtGR0mmaDljJ+oGvAigoeVOhWvaF5JfFeFcsgNosi0
-         9eQvdTVkmjRCPBHBkJWWW5/hWVo207J2XMC7wEQAjVQCHePGcmiLG+B7OwCcJJ0rfLcL
-         ZupwhYmC4wSNvjl2CtxHm/wU20i+uXw05msV4OF9gWN2CP/p9GxSZ0ikZEhkvwMIynhc
-         7C99uc1Vx/gwQfgzhzuvxuw7PLlfprmrmb8RGA1PCyeuGvFhij/CZbAtPOcI3SiSa74w
-         A+Aw==
-X-Gm-Message-State: AOAM531DEc25BczB6d204pUw9LvSdYAcPBHGyAaMm1P5gUgnW6d2TAjO
-        Dy2kyLSfUO2bqh4me0nUJxq4xQ==
-X-Google-Smtp-Source: ABdhPJyRXbMmaqx33BlJbVeirHn2s23BP4VtRqpHZtPTTzbS8hQiyMwTkQPXvTPUnMPGqyp4G53J/w==
-X-Received: by 2002:a05:651c:310:: with SMTP id a16mr9665626ljp.250.1598552176768;
-        Thu, 27 Aug 2020 11:16:16 -0700 (PDT)
-Received: from [192.168.1.211] ([188.162.64.50])
-        by smtp.gmail.com with ESMTPSA id s4sm615367lja.124.2020.08.27.11.16.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 11:16:15 -0700 (PDT)
-Subject: Re: [PATCH 4/5] soundwire: qcom: avoid dependency on CONFIG_SLIMBUS
-To:     Jonathan Marek <jonathan@marek.ca>, alsa-devel@alsa-project.org
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>
-References: <20200608204347.19685-1-jonathan@marek.ca>
- <20200608204347.19685-5-jonathan@marek.ca>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Message-ID: <43fdb4d4-0adc-28f2-b4a5-e0594b9a3044@linaro.org>
-Date:   Thu, 27 Aug 2020 21:16:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=soeX4jUjZZZTlITUKQ5pcDSGwYI4DnugTTOq/SNIIW8=;
+        b=tLLrseaPAroNmILRjkZLSqnettukPNuZMp1kjX7BK2yOTkq1jgLxBHIdVZW+MCkuhn
+         ryEh3maZjkRVDfg4TqWss3mjfmCRCXSnV+aZsfCePLuXNFBHPistD/dopxukapOeBbZT
+         5r+LEhNJ+QVX/SmhVkDlRgs5qrbIkvVcEhfDk0Qhbz3mOt/Ld7MtSkXmWo9wL4klomnU
+         JxHTg4HYBddja55HZT7ITAoosTqDUDbU4p8iqYWDaGzolQGXknzE1S3g7RSv2+uguPBS
+         9dLiyib0qubToI6hibj8KByzhhjmhhs7iaoTrcYNEpuivIbVHNXypgTNWvII/6p6to+y
+         15ZA==
+X-Gm-Message-State: AOAM533jH0JplWi/037f3AmL6t4gIsHK1cLL0eKP8ZGk7ez651lnxOk5
+        tTn5rzTMjvorbZPrOtn71EggOQ==
+X-Google-Smtp-Source: ABdhPJxQHJQlJtOpVK3cF7+baxJUjdkujQ9/OnK25Ibx+RalSDrSK6OVeL6QkvgSiagIIwSSDUbj5Q==
+X-Received: by 2002:a17:902:b282:: with SMTP id u2mr11532811plr.47.1598552234468;
+        Thu, 27 Aug 2020 11:17:14 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e29sm3441674pfj.92.2020.08.27.11.17.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 11:17:13 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 11:17:12 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Allen Pais <allen.cryptic@gmail.com>, kuba@kernel.org,
+        jirislaby@kernel.org, mickflemm@gmail.com, mcgrof@kernel.org,
+        chunkeey@googlemail.com, Larry.Finger@lwfinger.net,
+        stas.yakovlev@gmail.com, helmut.schaa@googlemail.com,
+        pkshih@realtek.com, yhchuang@realtek.com, dsd@gentoo.org,
+        kune@deine-taler.de, ath11k@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, b43-dev@lists.infradead.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, Allen Pais <allen.lkml@gmail.com>,
+        Romain Perier <romain.perier@gmail.com>
+Subject: Re: [05/16] atmel: convert tasklets to use new tasklet_setup() API
+Message-ID: <202008271115.A54F087@keescook>
+References: <20200817090637.26887-6-allen.cryptic@gmail.com>
+ <20200827132320.B70A9C433AD@smtp.codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200608204347.19685-5-jonathan@marek.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827132320.B70A9C433AD@smtp.codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/06/2020 23:43, Jonathan Marek wrote:
-> The driver may be used without slimbus, so don't depend on slimbus.
+On Thu, Aug 27, 2020 at 01:23:20PM +0000, Kalle Valo wrote:
+> Allen Pais <allen.cryptic@gmail.com> wrote:
 > 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->   drivers/soundwire/Kconfig | 1 -
->   drivers/soundwire/qcom.c  | 5 +++++
->   2 files changed, 5 insertions(+), 1 deletion(-)
+> > From: Allen Pais <allen.lkml@gmail.com>
+> > 
+> > In preparation for unconditionally passing the
+> > struct tasklet_struct pointer to all tasklet
+> > callbacks, switch to using the new tasklet_setup()
+> > and from_tasklet() to pass the tasklet pointer explicitly
+> > and remove .data field.
+> > 
+> > Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> > Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 > 
-> diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
-> index fa2b4ab92ed9..d121cf739090 100644
-> --- a/drivers/soundwire/Kconfig
-> +++ b/drivers/soundwire/Kconfig
-> @@ -33,7 +33,6 @@ config SOUNDWIRE_INTEL
->   
->   config SOUNDWIRE_QCOM
->   	tristate "Qualcomm SoundWire Master driver"
-> -	depends on SLIMBUS
-
-I'd suggest:
-depends on SLIMBUS || !SLIMBUS #if SLIMBUS=m, this can not be builtin
-
-This would allow building both SLIMBUS and SOUNDWIRE_QCOM as modules
-
->   	depends on SND_SOC
->   	help
->   	  SoundWire Qualcomm Master driver.
-> diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
-> index 14334442615f..ac81c64768ea 100644
-> --- a/drivers/soundwire/qcom.c
-> +++ b/drivers/soundwire/qcom.c
-> @@ -769,13 +769,18 @@ static int qcom_swrm_probe(struct platform_device *pdev)
->   	if (!ctrl)
->   		return -ENOMEM;
->   
-> +#ifdef CONFIG_SLIMBUS
-
-and then #if IS_ENABLED(CONFIG_SLIBMUS) here
-
->   	if (dev->parent->bus == &slimbus_bus) {
-> +#else
-> +	if (false) {
-> +#endif
->   		ctrl->reg_read = qcom_swrm_ahb_reg_read;
->   		ctrl->reg_write = qcom_swrm_ahb_reg_write;
->   		ctrl->regmap = dev_get_regmap(dev->parent, NULL);
->   		if (!ctrl->regmap)
->   			return -EINVAL;
->   	} else {
-> +
->   		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->   
->   		ctrl->reg_read = qcom_swrm_cpu_reg_read;
+> 11 patches applied to wireless-drivers-next.git, thanks.
 > 
+> a36f50e5b937 atmel: convert tasklets to use new tasklet_setup() API
+> fc6722301428 b43legacy: convert tasklets to use new tasklet_setup() API
+> 427a06beb072 brcmsmac: convert tasklets to use new tasklet_setup() API
+> ae6cf59f80f7 ipw2x00: convert tasklets to use new tasklet_setup() API
+> b81b9d372ac8 iwlegacy: convert tasklets to use new tasklet_setup() API
+> 7433c9690318 intersil: convert tasklets to use new tasklet_setup() API
+> 51c41aa93ef5 mwl8k: convert tasklets to use new tasklet_setup() API
+> aff8e8d02ec2 qtnfmac: convert tasklets to use new tasklet_setup() API
+> a0d6ea9b6e1c rt2x00: convert tasklets to use new tasklet_setup() API
+> d3ccc14dfe95 rtlwifi/rtw88: convert tasklets to use new tasklet_setup() API
+> 26721b02466e zd1211rw: convert tasklets to use new tasklet_setup() API
+> 
+> -- 
+> https://patchwork.kernel.org/patch/11717451/
+> 
+> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
+FWIW, I don't think a revert is needed here to wait for the from_tasket()
+-> container_from() API to land since from_tasklet() is already being
+used by other trees. Let's just get this done so we can get closer to
+ripping out the old tasklet API. We'll have to do a treewide
+from_timer(), from_tasklet() -> container_from() anyway...
 
 -- 
-With best wishes
-Dmitry
+Kees Cook
