@@ -2,183 +2,176 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C39C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7540C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 009A5207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:27:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="MArYJ3D2"
+	by mail.kernel.org (Postfix) with ESMTP id AFC2620872
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:28:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgH0W1g (ORCPT
+        id S1727923AbgH0W2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 18:27:36 -0400
-Received: from gateway20.websitewelcome.com ([192.185.65.13]:17399 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726234AbgH0W1g (ORCPT
+        Thu, 27 Aug 2020 18:28:17 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:45773 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbgH0W2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 18:27:36 -0400
-X-Greylist: delayed 1464 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Aug 2020 18:27:35 EDT
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 0BE29400C5F70
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 15:39:25 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id BPzCkfvEcOIGpBPzCkEjWa; Thu, 27 Aug 2020 17:03:10 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=FvnhuzSdN+I0gWQnpuvrEB9W+fGpRmA5GbAp6gB4udY=; b=MArYJ3D2+4E6+pJ/Dtakgk6Kfg
-        kWLKHcUH6+X9nwJJ6liJaTDCcJ+hcWXbxJw5qA0iZXqbd4pfBv7n83I52Rzxcnjc9lUAyWHzcTXfc
-        0Oq3u6lZ3vDXEIKmxbhDvdtJWi6BwknB0FgpUoW+UT5c35mhd6jEebULlORRLcbzVZ01ePcm94N94
-        M0RbXEyY7mDjedn8/UTGz6t96PKz4mk/RVWopJ5zta3qrpLSs8nz51ZvOCciIAp4EYTDjJR23KNMB
-        39q6mQ4rLaUSboLurgoXXCK4XdNMiS2z+Hig6aE0vFLUraX7IEctP/DehqbaaLU2+XTVhvpwckRKN
-        GIRWVwiw==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:54518 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1kBPzC-00128n-BY; Thu, 27 Aug 2020 17:03:10 -0500
-To:     Denis Efremov <efremov@linux.com>, Jan Kara <jack@suse.com>
-Cc:     linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
-References: <20200827151923.40067-1-efremov@linux.com>
- <20200827212530.48013-1-efremov@linux.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Subject: Re: [PATCH v2] udf: Use kvzalloc() in udf_sb_alloc_bitmap()
-Message-ID: <0caaeb1e-6f71-b97f-f86c-22819c30e31f@embeddedor.com>
-Date:   Thu, 27 Aug 2020 17:09:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 27 Aug 2020 18:28:16 -0400
+Received: by mail-io1-f71.google.com with SMTP id q5so4892900ion.12
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 15:28:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=sfsNcaggWfK0yNjpNiqr1Uope//+z/yI7A8OJwlBPcM=;
+        b=nKbnUuj34OJYB4NFKZO20dJ60+hfGjPbIDJTGSAied2QQdumm3mP0hOnnqqn1OdYhq
+         Az7K8H7X/6ZxOm+CjbDF0ah927Bv4UStDpdNvDYD8E5mUDb/8PVZYZedgnTiNa0sUxlC
+         OtEK0pCLhRbSZWzx56h10fBUYVH5geqNAaRb83MOvAWmmx5rOiL8IJlcCB7RTV/mHsIN
+         kvWIPARnmyEbYndazWBh/UnTCCnyg3Qp7LkQoJJrjP82z3kDyk7WwS11mZPR+G6Lxmh5
+         rAuIqn2BgctIbWpQjdrK5+e5cq2gjgmgi+7aQ/pgo27WuAjap9a3j7A6qAgbN6P8H1KO
+         rJsw==
+X-Gm-Message-State: AOAM531VslwW0Fc748+RZO6JXyM0t8BlnSHGM/6Po/jUYnRMShzgr9IM
+        xaUiZGZkSGEl85qbWccRR2AZadrCzpPv1GK545Ue9+U0kcTt
+X-Google-Smtp-Source: ABdhPJyvj5uFHnai6YbZnL07mjqROiuohiY3ojkh8SeHRI23UEbn8OaqhnvZIukCuJQX5kmTPt8NjYhP5K/g0RRA42Lt/bkP7o9V
 MIME-Version: 1.0
-In-Reply-To: <20200827212530.48013-1-efremov@linux.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1kBPzC-00128n-BY
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:54518
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+X-Received: by 2002:a5d:954f:: with SMTP id a15mr19066704ios.53.1598567295373;
+ Thu, 27 Aug 2020 15:28:15 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 15:28:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ca5cfb05ade37394@google.com>
+Subject: memory leak in prepare_creds
+From:   syzbot <syzbot+71c4697e27c99fddcf17@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, bernd.edlinger@hotmail.de,
+        dhowells@redhat.com, ebiederm@xmission.com, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, mhocko@suse.com, shakeelb@google.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    c3d8f220 Merge tag 'kbuild-fixes-v5.9' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14bf4f5e900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=948134d9ff96e950
+dashboard link: https://syzkaller.appspot.com/bug?extid=71c4697e27c99fddcf17
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=115a5519900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+71c4697e27c99fddcf17@syzkaller.appspotmail.com
+
+BUG: memory leak
+unreferenced object 0xffff88812a413f00 (size 168):
+  comm "syz-executor.0", pid 6554, jiffies 4294953946 (age 13.120s)
+  hex dump (first 32 bytes):
+    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000008b882031>] prepare_creds+0x25/0x2f0 kernel/cred.c:258
+    [<000000001d1756e8>] copy_creds+0x2e/0x1d1 kernel/cred.c:358
+    [<00000000a3a640ca>] copy_process+0x50c/0x1f20 kernel/fork.c:1949
+    [<00000000a1ad8dee>] _do_fork+0xad/0x530 kernel/fork.c:2428
+    [<0000000070af4cd7>] __do_sys_clone+0x76/0xa0 kernel/fork.c:2545
+    [<000000001470b5cf>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+    [<00000000b4c4b313>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88811b54e440 (size 32):
+  comm "syz-executor.0", pid 6554, jiffies 4294953946 (age 13.120s)
+  hex dump (first 32 bytes):
+    01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000138403e6>] kmalloc include/linux/slab.h:559 [inline]
+    [<00000000138403e6>] kzalloc include/linux/slab.h:666 [inline]
+    [<00000000138403e6>] lsm_cred_alloc security/security.c:532 [inline]
+    [<00000000138403e6>] security_prepare_creds+0x97/0xc0 security/security.c:1631
+    [<0000000051662e48>] prepare_creds+0x1e1/0x2f0 kernel/cred.c:285
+    [<000000001d1756e8>] copy_creds+0x2e/0x1d1 kernel/cred.c:358
+    [<00000000a3a640ca>] copy_process+0x50c/0x1f20 kernel/fork.c:1949
+    [<00000000a1ad8dee>] _do_fork+0xad/0x530 kernel/fork.c:2428
+    [<0000000070af4cd7>] __do_sys_clone+0x76/0xa0 kernel/fork.c:2545
+    [<000000001470b5cf>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+    [<00000000b4c4b313>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88812a657a00 (size 256):
+  comm "syz-executor.0", pid 6790, jiffies 4294953946 (age 13.120s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    a0 e1 14 2b 81 88 ff ff 80 74 8f 16 81 88 ff ff  ...+.....t......
+  backtrace:
+    [<0000000053e1d866>] kmem_cache_zalloc include/linux/slab.h:656 [inline]
+    [<0000000053e1d866>] __alloc_file+0x23/0x120 fs/file_table.c:101
+    [<000000000d5d3703>] alloc_empty_file+0x4f/0xe0 fs/file_table.c:151
+    [<0000000091abea17>] alloc_file+0x31/0x160 fs/file_table.c:193
+    [<000000004bfab74c>] alloc_file_pseudo+0xae/0x120 fs/file_table.c:233
+    [<00000000fc9b3b90>] anon_inode_getfile fs/anon_inodes.c:91 [inline]
+    [<00000000fc9b3b90>] anon_inode_getfile+0x8e/0x100 fs/anon_inodes.c:74
+    [<00000000cbd9d057>] anon_inode_getfd+0x42/0x90 fs/anon_inodes.c:136
+    [<00000000589d6af2>] bpf_map_new_fd kernel/bpf/syscall.c:686 [inline]
+    [<00000000589d6af2>] bpf_map_new_fd kernel/bpf/syscall.c:678 [inline]
+    [<00000000589d6af2>] map_create kernel/bpf/syscall.c:872 [inline]
+    [<00000000589d6af2>] __do_sys_bpf+0x67c/0x2450 kernel/bpf/syscall.c:4160
+    [<000000001470b5cf>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+    [<00000000b4c4b313>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88812a73db50 (size 16):
+  comm "syz-executor.0", pid 6790, jiffies 4294953946 (age 13.120s)
+  hex dump (first 16 bytes):
+    01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000008ddd472b>] kmem_cache_zalloc include/linux/slab.h:656 [inline]
+    [<000000008ddd472b>] lsm_file_alloc security/security.c:567 [inline]
+    [<000000008ddd472b>] security_file_alloc+0x2e/0xc0 security/security.c:1455
+    [<0000000079d891d7>] __alloc_file+0x61/0x120 fs/file_table.c:106
+    [<000000000d5d3703>] alloc_empty_file+0x4f/0xe0 fs/file_table.c:151
+    [<0000000091abea17>] alloc_file+0x31/0x160 fs/file_table.c:193
+    [<000000004bfab74c>] alloc_file_pseudo+0xae/0x120 fs/file_table.c:233
+    [<00000000fc9b3b90>] anon_inode_getfile fs/anon_inodes.c:91 [inline]
+    [<00000000fc9b3b90>] anon_inode_getfile+0x8e/0x100 fs/anon_inodes.c:74
+    [<00000000cbd9d057>] anon_inode_getfd+0x42/0x90 fs/anon_inodes.c:136
+    [<00000000589d6af2>] bpf_map_new_fd kernel/bpf/syscall.c:686 [inline]
+    [<00000000589d6af2>] bpf_map_new_fd kernel/bpf/syscall.c:678 [inline]
+    [<00000000589d6af2>] map_create kernel/bpf/syscall.c:872 [inline]
+    [<00000000589d6af2>] __do_sys_bpf+0x67c/0x2450 kernel/bpf/syscall.c:4160
+    [<000000001470b5cf>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+    [<00000000b4c4b313>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+BUG: memory leak
+unreferenced object 0xffff88812a419240 (size 168):
+  comm "syz-executor.0", pid 6554, jiffies 4294954493 (age 7.650s)
+  hex dump (first 32 bytes):
+    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000008b882031>] prepare_creds+0x25/0x2f0 kernel/cred.c:258
+    [<000000001d1756e8>] copy_creds+0x2e/0x1d1 kernel/cred.c:358
+    [<00000000a3a640ca>] copy_process+0x50c/0x1f20 kernel/fork.c:1949
+    [<00000000a1ad8dee>] _do_fork+0xad/0x530 kernel/fork.c:2428
+    [<0000000070af4cd7>] __do_sys_clone+0x76/0xa0 kernel/fork.c:2545
+    [<000000001470b5cf>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+    [<00000000b4c4b313>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
 
-On 8/27/20 16:25, Denis Efremov wrote:
-> Use kvzalloc() in udf_sb_alloc_bitmap() instead of open-coding it.
-> Size computation wrapped in struct_size() macro to prevent potential
-> integer overflows.
-> 
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
 
-Please, comment here what changed in v2, vn... e.g.:
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Changes in v2:
- - Use struct_size() helper.
-
-
->  fs/udf/super.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/udf/super.c b/fs/udf/super.c
-> index 1c42f544096d..bdf51bea54f3 100644
-> --- a/fs/udf/super.c
-> +++ b/fs/udf/super.c
-> @@ -1010,14 +1010,9 @@ static struct udf_bitmap *udf_sb_alloc_bitmap(struct super_block *sb, u32 index)
->  	int size;
->  
->  	nr_groups = udf_compute_nr_groups(sb, index);
-> -	size = sizeof(struct udf_bitmap) +
-> -		(sizeof(struct buffer_head *) * nr_groups);
-> -
-> -	if (size <= PAGE_SIZE)
-> -		bitmap = kzalloc(size, GFP_KERNEL);
-> -	else
-> -		bitmap = vzalloc(size); /* TODO: get rid of vzalloc */
-> +	size = struct_size(bitmap, s_block_bitmap, nr_groups);
->  
-> +	bitmap = kvzalloc(size, GFP_KERNEL);
-
-Why not this:
-
-bitmap = kvzalloc(struct_size(bitmap, s_block_bitmap, nr_groups),
-		  GFP_KERNEL);
-
-and you can also get rid of _size_ entirely.
-
-Thanks
---
-Gustavo
-
->  	if (!bitmap)
->  		return NULL;
->  
-> 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
