@@ -2,310 +2,153 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D507C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458E9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D938822CBB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ECB922CAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:27:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EL2B7xRo"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="S+GpaOsO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgH0LWI (ORCPT
+        id S1728473AbgH0LZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 07:22:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726938AbgH0LQi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 07:16:38 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA429C061238;
-        Thu, 27 Aug 2020 04:05:05 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id n26so80873edv.13;
-        Thu, 27 Aug 2020 04:05:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=naFt+Blfmi1/PTm3cjJaXUe+Z1yMpY7OBP3DllMN5U4=;
-        b=EL2B7xRo+FDvtMZrlXtQlPYPM4iOOoiSSWJ5UF7uGQoCFQ4j//Knd5kD8i7oMau2fj
-         KBauANVs051oyggZx5VXNuixtb9y4k+zQQCvCEIqCDQuWlsQvUBlblwIFh29Z+ianBVL
-         SF0WRfsRCE3Ptcr6d7QstgUX/UCsiAlZd3fEs5jEyAGnLkFD8c+kN1zlstODJSsoABiO
-         oRAuA8uDZ8cfaXj2tFh5e4CFt+q9MZg8XW/JhjO80zTU2rqzMtnPdY/1nfhDkPhwYB7/
-         ZmMdS+fYbaAxqZJVHk8v4/xP6ZWMs6dRwCIfO2P4NCmX1FWU7eRY5ENE4AlNuGJzRUcF
-         lm1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=naFt+Blfmi1/PTm3cjJaXUe+Z1yMpY7OBP3DllMN5U4=;
-        b=L3AE958VMnK67SlsoBz8zV+qduvQ7oIuc4+23cEcPeKe57zFtae9BVwzPS+yqbAagt
-         IBoVXNuwEIyaT0jmhKyS9grHhkbvjotDkP1jR747zst4m20WVc+lgbNOAprU9xFIl8u/
-         xS0tDPxFBK5LLsEB0m56V0iG9vGnOOwBUMc66/W8p0jhYQ9a8MQjrraU09PcrUeU1RH9
-         yPUwMcKEqz9xvYf+EhhIHNaLDLJhUkreqX58GG3nDmB/mkXPX3VB/M2M57M/6eGRjxVW
-         KgNyZ+KonwbBSzYZQ4LVhIR3mVXucECOhCrE7l85ATpsSOIE7dReO36HWi1k/yRyrB+V
-         ydVw==
-X-Gm-Message-State: AOAM530SIHY1OGHGOk0Q4U5taNyTrVnntNvLBEsJUL51qv8cLgF6wFNR
-        QYbMOGbh84UdDtSvGO2IS3GbXBNZy5Q=
-X-Google-Smtp-Source: ABdhPJyxNe338xjkH6Ig7p7JD0cl3SrMBMuSi5cISyTOlAePekrpvLg50LX8BTRRwUZOAHRb37tfaA==
-X-Received: by 2002:a50:de04:: with SMTP id z4mr19630405edk.10.1598526304073;
-        Thu, 27 Aug 2020 04:05:04 -0700 (PDT)
-Received: from ?IPv6:2001:a61:253c:4c01:2cf1:7133:9da2:66a9? ([2001:a61:253c:4c01:2cf1:7133:9da2:66a9])
-        by smtp.gmail.com with ESMTPSA id eb5sm1633894ejc.94.2020.08.27.04.05.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 04:05:03 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] Add manpage for fspick(2)
-To:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk
-References: <159827188271.306468.16962617119460123110.stgit@warthog.procyon.org.uk>
- <159827189767.306468.1803062787718957199.stgit@warthog.procyon.org.uk>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <b968aced-c375-4c85-b086-9874d12e07f4@gmail.com>
-Date:   Thu, 27 Aug 2020 13:05:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <159827189767.306468.1803062787718957199.stgit@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=utf-8
+        Thu, 27 Aug 2020 07:25:58 -0400
+Received: from mail-eopbgr150071.outbound.protection.outlook.com ([40.107.15.71]:34894
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726395AbgH0LQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 07:16:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M8PcMpkkny/zChFtgZNULtVOyUYOASMjrIaD4TE4K+dYnPYQciA3BaL1uJmV5tsEG/1GmXvd7FAvBuV9thObiKj6QWeyQx9VCm+9kXMxgv5febF7Jo1Gf5gwZyq2KB2pFqzNJ5pBYiOCqwnxO5H7ikHuKmhN+P4aw1ejZh3PxMbOgwI41/CodMggLZHRxyGAsBOaMXGs+HjpMS91mm23DwOikVaobVxoWse5o3/tXbdBwOGCKlLYaiT3IIy5OIXAcbbKyETZQpBEm/oFrBfMqz3Q+WN/EFidq73FiSQvssMB/bkbU8AvJdO71lhBFAtc951pr32avqiorXSV438yMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RL09PsZity/orIstjfA5XVgVAXcyxlhY3rX0Arc+18U=;
+ b=DMPJ6ey+P3gTJEc3G5pPpH78zLM6eFB/tIIbRJxymKlNbIiUYw5mj2yuM3Nzcy/gP44Id+VuER712FYAZ4IaqP1Z15Go1RgqAqgjTE5SOyjgRsEvPsdqB1Ap7IPvmaxZo8yufP9QkZuLAPZf/Ky1HP7Hfp/H/FUjZ9QI2BBDFyVpnE+gEgCYK4wJP3uJ885TfI6ImNCcVx20ab+RvqTaU6Igje6PsAoC3mnF67eHzgKLJyKAWTonYV0DPLx54HpSxkyhPbnGbJ6qgPhvQ5oQNnfleTBUUILik4azp5qk0wPoIac1Gy5jCQNozIGS7aSnvn9sLUckT93CDG9cZpr3mA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RL09PsZity/orIstjfA5XVgVAXcyxlhY3rX0Arc+18U=;
+ b=S+GpaOsODAmLr2AM8L6EumCNd7ruGnxtoUc6QdRQ9/xBxztgu8L5KdUyASrXp/83K1gTAdUyFgoaXtId/CGi9/eAMz8q+I6yQiVQaQTizGCV3QSRuADMptmkD5H4iOVhy0mmSviJ+hwvI7T5RqXntoxE3UCCsaiO2AGlvHzAL1U=
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
+ by AM6PR04MB4421.eurprd04.prod.outlook.com (2603:10a6:20b:21::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Thu, 27 Aug
+ 2020 11:14:59 +0000
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1023:be8d:40c:efe1]) by AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1023:be8d:40c:efe1%3]) with mapi id 15.20.3305.032; Thu, 27 Aug 2020
+ 11:14:59 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Roger Quadros <rogerq@ti.com>
+CC:     "balbi@kernel.org" <balbi@kernel.org>,
+        "pawell@cadence.com" <pawell@cadence.com>,
+        "kurahul@cadence.com" <kurahul@cadence.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: usb: cdns,usb3: Add cdns,phyrst-a-enable
+ property
+Thread-Topic: [PATCH 2/3] dt-bindings: usb: cdns,usb3: Add
+ cdns,phyrst-a-enable property
+Thread-Index: AQHWetjF2mYsQKwgvU+3PPFGyTZfuKlL0I2A
+Date:   Thu, 27 Aug 2020 11:14:59 +0000
+Message-ID: <20200827111343.GB5983@b29397-desktop>
+References: <20200825120059.12436-1-rogerq@ti.com>
+ <20200825120059.12436-3-rogerq@ti.com>
+In-Reply-To: <20200825120059.12436-3-rogerq@ti.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: ti.com; dkim=none (message not signed)
+ header.d=none;ti.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7d5b8407-6b4f-4b5b-1aa9-08d84a7a6fe1
+x-ms-traffictypediagnostic: AM6PR04MB4421:
+x-microsoft-antispam-prvs: <AM6PR04MB442168F3D1B663C2B71114098B550@AM6PR04MB4421.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dCoDbWN4ta6zMkCrAcNHNOUg1gRPFSQPqFWLHUXTo4gIUsmch2794OGlbncgN3fJsNF7juIwBA5NIeoghQEXzdnpQkGRJPteNBE30Dc+W/nVE8hhw+NMyvB9UbmjNjvANJiu2jXHaik3ACL+Bkt/2Vo07W54q1q+LM94HK1aNN6X/X07wlNH1S3c16atLycPnd39hY5kG4vJInAMADLJ3WnTpHgo+P1YH3MEmCw3TguE4EEaF3PLFau0L+gzKsgW5A59DI7oIdBf4//W4ZRnbDEsi5s6voV/bNN54tr4xtj2vey+vd/507F2njczK+8ejC8oEYHzgcPiKD4xSFiZrTL+I7JO4OdrxFrvNa2TXlgkFyAHnNONX9/sGfN9iDT7
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(7916004)(366004)(396003)(136003)(376002)(346002)(39860400002)(7416002)(44832011)(76116006)(66556008)(33656002)(64756008)(66476007)(66946007)(66446008)(26005)(8676002)(33716001)(91956017)(4326008)(186003)(5660300002)(6506007)(8936002)(316002)(2906002)(83380400001)(6486002)(54906003)(53546011)(71200400001)(86362001)(6916009)(6512007)(1076003)(478600001)(9686003)(142933001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: n1+d+v1Dr0MhRWI0Sn+UeV4bZYppU+6rAitdAyS0naRyRywc6Crs27ywZ7MEvdLwrzljQdVjQ1AqmtbheTOwhVeb1LZkMAozQfhoTXsAlnq1VpPt0qgZ1ne/8o+tjaX8TA0xnMQCZqzVTgyRYVqvuqE2xUWFKpkoV9gC/UgKJeokqikNJEHsOBxUyDDKaVgu4Y8LDoWXpwL1NLIslV1H8W2k9C8fIp2SF64+53G88yIG+u7fvnSxI7TenjUz189Yn8qApG+/2cl+/noaAlqWMy2ILPXpZwIF8nyy3b7lRoYOXt56KK3p/DZyXdsaxjIuZhBm5RHLnGcrnW53/2jNg/N/Nq7c884eOp9KNp8CAmLfmYvemNabzDUd7kJEc+TIz+JF2BIF4eIoFvmda925Ws6h69N5Jz4mf6SRq4VhW33Jrp5ag2ejlBViMZtJNhZGDpvppNvMUehm8mHFgOId20O9AxHDN2qmpnKiTDe++xz73Y4D9F7VXaAkhxU89eGEWFlpg/L/NBOo8Jx/DNpQyDjRl3dTLG3Wn9Voe7tyP2gKe1/bEuFmxJCL5RtjuaKhSpt49OVIuTgl1IGpo70IqLp1kTvSBbe30h5DJ1br3g9XOulIcQ3xAGQCRee9gc5fh5xpKXx7/wF1WGj46Fzr+Q==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <BB83B0331D587845BA644C178C701995@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d5b8407-6b4f-4b5b-1aa9-08d84a7a6fe1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2020 11:14:59.5747
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sxPOuhysHASS+d7PRrefyGFvgG0vArJrepg28/QCjuNBKN1CeHvxWXC4E2qwsaG1p+J0qIwsixoVZyKcgwqEkQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4421
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello David,
+On 20-08-25 15:00:58, Roger Quadros wrote:
+> Controller version 0x0002450D has USB2 PHY RX sensitivity issues
+> that needs to be worked around by enabling phyrst-a-enable bit
+> in PHYRST_CFG register.
+>=20
+> There is no way to distinguish between the controller version
+> before the device controller is started so we need to add this
+> DT property.
 
-On 8/24/20 2:24 PM, David Howells wrote:
-> Add a manual page to document the fspick() system call.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
+Maybe you should say "There is no way to know controller version
+at host mode, but this workaround needs for both host and device
+mode, so we have to add this DT property", the same for the comments
+of your driver code patch.
+
+Peter
+>=20
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
 > ---
-> 
->  man2/fspick.2 |  180 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 180 insertions(+)
->  create mode 100644 man2/fspick.2
-> 
-> diff --git a/man2/fspick.2 b/man2/fspick.2
-> new file mode 100644
-> index 000000000..72bf645dd
-> --- /dev/null
-> +++ b/man2/fspick.2
-> @@ -0,0 +1,180 @@
-> +'\" t
-> +.\" Copyright (c) 2020 David Howells <dhowells@redhat.com>
-> +.\"
-> +.\" %%%LICENSE_START(VERBATIM)
-> +.\" Permission is granted to make and distribute verbatim copies of this
-> +.\" manual provided the copyright notice and this permission notice are
-> +.\" preserved on all copies.
-> +.\"
-> +.\" Permission is granted to copy and distribute modified versions of this
-> +.\" manual under the conditions for verbatim copying, provided that the
-> +.\" entire resulting derived work is distributed under the terms of a
-> +.\" permission notice identical to this one.
-> +.\"
-> +.\" Since the Linux kernel and libraries are constantly changing, this
-> +.\" manual page may be incorrect or out-of-date.  The author(s) assume no
-> +.\" responsibility for errors or omissions, or for damages resulting from
-> +.\" the use of the information contained herein.  The author(s) may not
-> +.\" have taken the same level of care in the production of this manual,
-> +.\" which is licensed free of charge, as they might when working
-> +.\" professionally.
-> +.\"
-> +.\" Formatted or processed versions of this manual, if unaccompanied by
-> +.\" the source, must acknowledge the copyright and authors of this work.
-> +.\" %%%LICENSE_END
-> +.\"
-> +.TH FSPICK 2 2020-08-24 "Linux" "Linux Programmer's Manual"
-> +.SH NAME
-> +fspick \- Select filesystem for reconfiguration
-> +.SH SYNOPSIS
-> +.nf
-> +.B #include <sys/types.h>
-> +.B #include <sys/mount.h>
-> +.B #include <unistd.h>
-> +.BR "#include <fcntl.h>           " "/* Definition of AT_* constants */"
-> +.PP
-> +.BI "int fspick(int " dirfd ", const char *" pathname ", unsigned int " flags );
-> +.fi
-> +.PP
-> +.IR Note :
-> +There is no glibc wrapper for this system call.
-> +.SH DESCRIPTION
-> +.PP
-> +.BR fspick ()
-> +creates a new filesystem configuration context within the kernel and attaches a
-> +pre-existing superblock to it so that it can be reconfigured (similar to
-> +.BR mount (8)
-> +with the "-o remount" option).  The configuration context is marked as being in
-> +reconfiguration mode and attached to a file descriptor, which is returned to
-> +the caller.  The file descriptor can be marked close-on-exec by setting
-> +.B FSPICK_CLOEXEC
-> +in
-> +.IR flags .
-> +.PP
-> +The target is whichever superblock backs the object determined by
-> +.IR dfd ", " pathname " and " flags .
-> +The following can be set in
-> +.I flags
-> +to control the pathwalk to that object:
-> +.TP
-> +.B FSPICK_SYMLINK_NOFOLLOW
-> +Don't follow symbolic links in the final component of the path.
-> +.TP
-> +.B FSPICK_NO_AUTOMOUNT
-> +Don't follow automounts in the final component of the path.
-> +.TP
-> +.B FSPICK_EMPTY_PATH
-> +Allow an empty string to be specified as the pathname.  This allows
-> +.I dirfd
-> +to specify the target mount exactly.
-> +.PP
-> +After calling fspick(), the file descriptor should be passed to the
-> +.BR fsconfig (2)
-> +system call, using that to specify the desired changes to filesystem and
+>  Documentation/devicetree/bindings/usb/cdns,usb3.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/usb/cdns,usb3.yaml b/Docum=
+entation/devicetree/bindings/usb/cdns,usb3.yaml
+> index 7bc0263accee..e670adc955e1 100644
+> --- a/Documentation/devicetree/bindings/usb/cdns,usb3.yaml
+> +++ b/Documentation/devicetree/bindings/usb/cdns,usb3.yaml
+> @@ -58,6 +58,10 @@ properties:
+>        buffers expressed in KB
+>      $ref: /schemas/types.yaml#/definitions/uint32
+> =20
+> +  cdns,phyrst-a-enable:
+> +    description: Enable resetting of PHY if Rx fail is detected
+> +    type: boolean
+> +
+>  required:
+>    - compatible
+>    - reg
+> --=20
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>=20
 
-Better: s/using that/in order/
-
-> +security parameters.
-> +.PP
-> +When the parameters are all set, the
-> +.BR fsconfig ()
-> +system call should then be called again with
-> +.B FSCONFIG_CMD_RECONFIGURE
-> +as the command argument to effect the reconfiguration.
-> +.PP
-> +After the reconfiguration has taken place, the context is wiped clean (apart
-> +from the superblock attachment, which remains) and can be reused to make
-> +another reconfiguration.
-> +.PP
-> +The file descriptor also serves as a channel by which more comprehensive error,
-> +warning and information messages may be retrieved from the kernel using
-> +.BR read (2).
-> +.SS Message Retrieval Interface
-> +The context file descriptor may be queried for message strings at any time by
-
-s/descriptor/descriptor returned by fspick()/
-
-> +calling
-> +.BR read (2)
-> +on the file descriptor.  This will return formatted messages that are prefixed
-> +to indicate their class:
-> +.TP
-> +\fB"e <message>"\fP
-> +An error message string was logged.
-> +.TP
-> +\fB"i <message>"\fP
-> +An informational message string was logged.
-> +.TP
-> +\fB"w <message>"\fP
-> +An warning message string was logged.
-> +.PP
-> +Messages are removed from the queue as they're read and the queue has a limited
-> +depth of 8 messages, so it's possible for some to get lost.
-
-What if there are no pending error messages to retrieve? What does
-read() do in that case? Please add an explanation here.
-
-> +.SH RETURN VALUE
-> +On success, the function returns a file descriptor.  On error, \-1 is returned,
-> +and
-> +.I errno
-> +is set appropriately.
-> +.SH ERRORS
-> +The error values given below result from filesystem type independent errors.
-> +Additionally, each filesystem type may have its own special errors and its own
-> +special behavior.  See the Linux kernel source code for details.
-> +.TP
-> +.B EACCES
-> +A component of a path was not searchable.
-> +(See also
-> +.BR path_resolution (7).)
-> +.TP
-> +.B EFAULT
-> +.I pathname
-> +points outside the user address space.
-> +.TP
-> +.B EINVAL
-> +.I flags
-> +includes an undefined value.
-> +.TP
-> +.B ELOOP
-> +Too many links encountered during pathname resolution.
-> +.TP
-> +.B EMFILE
-> +The system has too many open files to create more.
-> +.TP
-> +.B ENFILE
-> +The process has too many open files to create more.
-> +.TP
-> +.B ENAMETOOLONG
-> +A pathname was longer than
-> +.BR MAXPATHLEN .
-
-MAXPATHLEN is not, I think, a constant known in user space. What is this?
-Should it be PATH_MAX?
-
-> +.TP
-> +.B ENOENT
-> +A pathname was empty or had a nonexistent component.
-> +.TP
-> +.B ENOMEM
-> +The kernel could not allocate sufficient memory to complete the call.
-> +.TP
-> +.B EPERM
-> +The caller does not have the required privileges.
-
-Please note the necessary capability here. Also, there was no mention of 
-capabilities/privileges in DESCRIPTION. Should there have been?
-
-> +.SH CONFORMING TO
-> +These functions are Linux-specific and should not be used in programs intended
-> +to be portable.
-> +.SH VERSIONS
-> +.BR fsopen "(), " fsmount "() and " fspick ()
-> +were added to Linux in kernel 5.2.
-> +.SH EXAMPLES
-> +To illustrate the process, here's an example whereby this can be used to
-> +reconfigure a filesystem:
-> +.PP
-> +.in +4n
-> +.nf
-> +sfd = fspick(AT_FDCWD, "/mnt", FSPICK_NO_AUTOMOUNT | FSPICK_CLOEXEC);
-> +fsconfig(sfd, FSCONFIG_SET_FLAG, "ro", NULL, 0);
-> +fsconfig(sfd, FSCONFIG_SET_STRING, "user_xattr", "false", 0);
-> +fsconfig(sfd, FSCONFIG_CMD_RECONFIGURE, NULL, NULL, 0);
-> +.fi
-> +.in
-> +.PP
-> +.SH NOTES
-> +Glibc does not (yet) provide a wrapper for the
-> +.BR fspick "()"
-> +system call; call it using
-> +.BR syscall (2).
-> +.SH SEE ALSO
-> +.BR mountpoint (1),
-> +.BR fsconfig (2),
-> +.BR fsopen (2),
-> +.BR path_resolution (7),
-> +.BR mount (8)
+--=20
 
 Thanks,
-
-Michael
-
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Peter Chen=
