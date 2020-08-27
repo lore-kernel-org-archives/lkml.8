@@ -2,83 +2,215 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D684C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3600BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 214832087D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D3CC2087D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:38:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pskKla1k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgH0Ohl (ORCPT
+        id S1727784AbgH0Oig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:37:41 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:42904 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728043AbgH0OdC (ORCPT
+        Thu, 27 Aug 2020 10:38:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbgH0OEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:33:02 -0400
-Received: from [78.134.86.56] (port=49228 helo=melee.fritz.box)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1kBIxY-0006H2-J7; Thu, 27 Aug 2020 16:33:00 +0200
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     linux-fpga@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Moritz Fischer <mdf@kernel.org>, Tom Rix <trix@redhat.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anatolij Gustschin <agust@denx.de>
-Subject: [PATCH v2 1/5] fpga manager: xilinx-spi: remove stray comment
-Date:   Thu, 27 Aug 2020 16:32:45 +0200
-Message-Id: <20200827143249.10973-1-luca@lucaceresoli.net>
+        Thu, 27 Aug 2020 10:04:00 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06D05C0619C6;
+        Thu, 27 Aug 2020 07:03:30 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u20so3591930pfn.0;
+        Thu, 27 Aug 2020 07:03:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ADP2aGUDRbAJ2fzGJ4u2MgmoEkak0G6DX7jqH1kdmdo=;
+        b=pskKla1kOyTKpAXy0EvUaMGChf4lXWttIW4Ki8kiHdDF3GuvOKv5yHvwTVQ/kTwiOG
+         wEHq2OtPfKz1Q5p9IbYEIcJxrS1oH5LpAQ1PPjz+9jHDvXIJbKlPrPEjF+DNtlA6smww
+         hN7j4Vz+ZTK1xG4GhRibUGUXmdFKRrcdh1Idv3YHyzDU3/PBgdo7wCw7dp0gsi0cDVRC
+         ISeiI9BULQfftcuJizPk/96hIBV6YBwSsAAQmDRm37Q7o4kiLnV99/FI2QL1T8FhkVwp
+         K7bufUUGHUiK/18jl3B9UhemG5wQOkzHl95rdCOAjxdfXh7pb/zFL+/6dsVfrM55EqfW
+         jy9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ADP2aGUDRbAJ2fzGJ4u2MgmoEkak0G6DX7jqH1kdmdo=;
+        b=OXq8Ncme4GdzvixYHAkjV5OEZTUm1dPtnGrd3YpMfpon0YbuDqEHyU8yR9Jm3qU084
+         Gl23G0HC07OpkxKOMhTiB+NVS7bF14hb5WL5duRUAqReCOzQQ4/wMzRCJTWUC/OzMpW1
+         Mm2TS80TjWVxsDY3Sh6OJeyeYcPaItRs2Ky953Lhg8lBftzTkHJvGLGi0HnDMove/6c8
+         729zQJklJ08wmMpOTDrgDMbWKCtNNtcqmaKaz36IcN7f8eq4Enw6U0Fx4zcWYyVbqHWw
+         /keyJtdVT26XR/1RCNR0qOGuuOzbsf3/MJ8SqUZu5e/kGrggSNNS1tlNPmFm+CbulEFh
+         f5Rg==
+X-Gm-Message-State: AOAM530aIPfnXtg1HOuSSEPQsC1qlApxOo3Ng4t2iHBPJVgU5yp+se1S
+        53xnS+hD3cz654lTjcl5ihF2LNZiRJg=
+X-Google-Smtp-Source: ABdhPJyd95QYOnXT2VOz7fgHmCWIqzI9VrAx9XEgx8YJFP8cGJeCWM2UsLlEUUZzCv5IK2/QEWy5KQ==
+X-Received: by 2002:a17:902:b497:: with SMTP id y23mr15864709plr.251.1598537009145;
+        Thu, 27 Aug 2020 07:03:29 -0700 (PDT)
+Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id fs12sm2371092pjb.21.2020.08.27.07.03.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 07:03:28 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v5 14/20] tools: gpio: port lsgpio to v2 uAPI
+Date:   Thu, 27 Aug 2020 22:00:14 +0800
+Message-Id: <20200827140020.159627-15-warthog618@gmail.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200827140020.159627-1-warthog618@gmail.com>
+References: <20200827140020.159627-1-warthog618@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove comment committed by mistake.
+Port the lsgpio tool to the latest GPIO uAPI.
 
-Fixes: dd2784c01d93 ("fpga manager: xilinx-spi: check INIT_B pin during write_init")
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
+ tools/gpio/lsgpio.c | 60 ++++++++++++++++++++++++++++-----------------
+ 1 file changed, 38 insertions(+), 22 deletions(-)
 
-Changes in v2: none.
-
-Note: Moritz replied "Applied to for-next", but it doesn't show up yet.
----
- drivers/fpga/xilinx-spi.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
-index 2967aa2a74e2..502fae0d1d85 100644
---- a/drivers/fpga/xilinx-spi.c
-+++ b/drivers/fpga/xilinx-spi.c
-@@ -57,7 +57,6 @@ static int wait_for_init_b(struct fpga_manager *mgr, int value,
+diff --git a/tools/gpio/lsgpio.c b/tools/gpio/lsgpio.c
+index b08d7a5e779b..deda38244026 100644
+--- a/tools/gpio/lsgpio.c
++++ b/tools/gpio/lsgpio.c
+@@ -25,57 +25,73 @@
  
- 	if (conf->init_b) {
- 		while (time_before(jiffies, timeout)) {
--			/* dump_state(conf, "wait for init_d .."); */
- 			if (gpiod_get_value(conf->init_b) == value)
- 				return 0;
- 			usleep_range(100, 400);
+ struct gpio_flag {
+ 	char *name;
+-	unsigned long mask;
++	unsigned long long mask;
+ };
+ 
+ struct gpio_flag flagnames[] = {
+ 	{
+-		.name = "kernel",
+-		.mask = GPIOLINE_FLAG_KERNEL,
++		.name = "used",
++		.mask = GPIO_V2_LINE_FLAG_USED,
++	},
++	{
++		.name = "input",
++		.mask = GPIO_V2_LINE_FLAG_INPUT,
+ 	},
+ 	{
+ 		.name = "output",
+-		.mask = GPIOLINE_FLAG_IS_OUT,
++		.mask = GPIO_V2_LINE_FLAG_OUTPUT,
+ 	},
+ 	{
+ 		.name = "active-low",
+-		.mask = GPIOLINE_FLAG_ACTIVE_LOW,
++		.mask = GPIO_V2_LINE_FLAG_ACTIVE_LOW,
+ 	},
+ 	{
+ 		.name = "open-drain",
+-		.mask = GPIOLINE_FLAG_OPEN_DRAIN,
++		.mask = GPIO_V2_LINE_FLAG_OPEN_DRAIN,
+ 	},
+ 	{
+ 		.name = "open-source",
+-		.mask = GPIOLINE_FLAG_OPEN_SOURCE,
++		.mask = GPIO_V2_LINE_FLAG_OPEN_SOURCE,
+ 	},
+ 	{
+ 		.name = "pull-up",
+-		.mask = GPIOLINE_FLAG_BIAS_PULL_UP,
++		.mask = GPIO_V2_LINE_FLAG_BIAS_PULL_UP,
+ 	},
+ 	{
+ 		.name = "pull-down",
+-		.mask = GPIOLINE_FLAG_BIAS_PULL_DOWN,
++		.mask = GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN,
+ 	},
+ 	{
+ 		.name = "bias-disabled",
+-		.mask = GPIOLINE_FLAG_BIAS_DISABLE,
++		.mask = GPIO_V2_LINE_FLAG_BIAS_DISABLED,
+ 	},
+ };
+ 
+-void print_flags(unsigned long flags)
++static void print_attributes(struct gpio_v2_line_info *info)
+ {
+ 	int i;
+-	int printed = 0;
++	const char *field_format = "%s";
+ 
+ 	for (i = 0; i < ARRAY_SIZE(flagnames); i++) {
+-		if (flags & flagnames[i].mask) {
+-			if (printed)
+-				fprintf(stdout, " ");
+-			fprintf(stdout, "%s", flagnames[i].name);
+-			printed++;
++		if (info->flags & flagnames[i].mask) {
++			fprintf(stdout, field_format, flagnames[i].name);
++			field_format = ", %s";
+ 		}
+ 	}
++
++	if ((info->flags & GPIO_V2_LINE_FLAG_EDGE_RISING) &&
++	    (info->flags & GPIO_V2_LINE_FLAG_EDGE_FALLING))
++		fprintf(stdout, field_format, "both-edges");
++	else if (info->flags & GPIO_V2_LINE_FLAG_EDGE_RISING)
++		fprintf(stdout, field_format, "rising-edge");
++	else if (info->flags & GPIO_V2_LINE_FLAG_EDGE_FALLING)
++		fprintf(stdout, field_format, "falling-edge");
++
++	for (i = 0; i < info->num_attrs; i++) {
++		if (info->attrs[i].id == GPIO_V2_LINE_ATTR_ID_DEBOUNCE)
++			fprintf(stdout, ", debounce_period=%dusec",
++				info->attrs[0].debounce_period);
++	}
+ }
+ 
+ int list_device(const char *device_name)
+@@ -109,18 +125,18 @@ int list_device(const char *device_name)
+ 
+ 	/* Loop over the lines and print info */
+ 	for (i = 0; i < cinfo.lines; i++) {
+-		struct gpioline_info linfo;
++		struct gpio_v2_line_info linfo;
+ 
+ 		memset(&linfo, 0, sizeof(linfo));
+-		linfo.line_offset = i;
++		linfo.offset = i;
+ 
+-		ret = ioctl(fd, GPIO_GET_LINEINFO_IOCTL, &linfo);
++		ret = ioctl(fd, GPIO_V2_GET_LINEINFO_IOCTL, &linfo);
+ 		if (ret == -1) {
+ 			ret = -errno;
+ 			perror("Failed to issue LINEINFO IOCTL\n");
+ 			goto exit_close_error;
+ 		}
+-		fprintf(stdout, "\tline %2d:", linfo.line_offset);
++		fprintf(stdout, "\tline %2d:", linfo.offset);
+ 		if (linfo.name[0])
+ 			fprintf(stdout, " \"%s\"", linfo.name);
+ 		else
+@@ -131,7 +147,7 @@ int list_device(const char *device_name)
+ 			fprintf(stdout, " unused");
+ 		if (linfo.flags) {
+ 			fprintf(stdout, " [");
+-			print_flags(linfo.flags);
++			print_attributes(&linfo);
+ 			fprintf(stdout, "]");
+ 		}
+ 		fprintf(stdout, "\n");
 -- 
 2.28.0
 
