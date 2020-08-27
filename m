@@ -2,155 +2,73 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166B7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE95C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F03752054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E802054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:54:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="mKy0+Na1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgH0Oxj (ORCPT
+        id S1728153AbgH0OyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:53:39 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:3877 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728013AbgH0OxX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:53:23 -0400
-X-IronPort-AV: E=Sophos;i="5.76,359,1592838000"; 
-   d="scan'208";a="55482017"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 27 Aug 2020 23:53:22 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 9829A40065C9;
-        Thu, 27 Aug 2020 23:53:20 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH 2/2] arm64: dts: renesas: r8a774e1: Add cpuidle support for CA5x cores
-Date:   Thu, 27 Aug 2020 15:53:15 +0100
-Message-Id: <20200827145315.26261-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200827145315.26261-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200827145315.26261-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Thu, 27 Aug 2020 10:54:04 -0400
+Received: from crapouillou.net ([89.234.176.41]:38886 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727108AbgH0NOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 09:14:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1598534071; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=WwRPballsUTfHg7LtDod/X0oRDgxUAPVDJxMko1nRlE=;
+        b=mKy0+Na1sG/NaDKdMbQ4pKIYpLLjmD2l24mz7kELAOQAvVNaIjzM7qn5E8qWav1QMcY06v
+        a/rCQNHBlv01f7orOOgyCrXMnky+0xaOG8LTanL58v0IVm6whkD6/wwQHayDqFQeDlfdt3
+        4xqyMvO7jvQBBuKgY8AmZNU8DUlxLiA=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Felipe Balbi <balbi@kernel.org>,
+        =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0?= <zhouyanjie@wanyeetech.com>,
+        =?UTF-8?q?=E5=91=A8=E6=AD=A3?= <sernia.zhou@foxmail.com>,
+        =?UTF-8?q?=E6=BC=86=E9=B9=8F=E6=8C=AF?= <aric.pzqi@ingenic.com>
+Cc:     od@zcrc.me, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2] USB: PHY: JZ4770: Fix uninitialized value written to HW register
+Date:   Thu, 27 Aug 2020 15:14:25 +0200
+Message-Id: <20200827131425.75998-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable cpuidle (core shutdown) support for RZ/G2H CA5x cores.
+The 'reg' value was written to a hardware register in
+ingenic_usb_phy_init(), while not being initialized anywhere.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Fixes: 2a6c0b82e651 ("USB: PHY: JZ4770: Add support for new Ingenic SoCs.")
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/arm64/boot/dts/renesas/r8a774e1.dtsi | 30 +++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ drivers/usb/phy/phy-jz4770.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-index 34fdb9a0c325..e5445ba99e84 100644
---- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-@@ -127,6 +127,7 @@
- 			power-domains = <&sysc R8A774E1_PD_CA57_CPU0>;
- 			next-level-cache = <&L2_CA57>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 			dynamic-power-coefficient = <854>;
- 			clocks = <&cpg CPG_CORE R8A774E1_CLK_Z>;
- 			operating-points-v2 = <&cluster0_opp>;
-@@ -141,6 +142,7 @@
- 			power-domains = <&sysc R8A774E1_PD_CA57_CPU1>;
- 			next-level-cache = <&L2_CA57>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 			clocks = <&cpg CPG_CORE R8A774E1_CLK_Z>;
- 			operating-points-v2 = <&cluster0_opp>;
- 			capacity-dmips-mhz = <1024>;
-@@ -154,6 +156,7 @@
- 			power-domains = <&sysc R8A774E1_PD_CA57_CPU2>;
- 			next-level-cache = <&L2_CA57>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 			clocks = <&cpg CPG_CORE R8A774E1_CLK_Z>;
- 			operating-points-v2 = <&cluster0_opp>;
- 			capacity-dmips-mhz = <1024>;
-@@ -167,6 +170,7 @@
- 			power-domains = <&sysc R8A774E1_PD_CA57_CPU3>;
- 			next-level-cache = <&L2_CA57>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_1>;
- 			clocks = <&cpg CPG_CORE R8A774E1_CLK_Z>;
- 			operating-points-v2 = <&cluster0_opp>;
- 			capacity-dmips-mhz = <1024>;
-@@ -180,6 +184,7 @@
- 			power-domains = <&sysc R8A774E1_PD_CA53_CPU0>;
- 			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_1>;
- 			#cooling-cells = <2>;
- 			dynamic-power-coefficient = <277>;
- 			clocks = <&cpg CPG_CORE R8A774E1_CLK_Z2>;
-@@ -194,6 +199,7 @@
- 			power-domains = <&sysc R8A774E1_PD_CA53_CPU1>;
- 			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_1>;
- 			clocks = <&cpg CPG_CORE R8A774E1_CLK_Z2>;
- 			operating-points-v2 = <&cluster1_opp>;
- 			capacity-dmips-mhz = <535>;
-@@ -206,6 +212,7 @@
- 			power-domains = <&sysc R8A774E1_PD_CA53_CPU2>;
- 			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_1>;
- 			clocks = <&cpg CPG_CORE R8A774E1_CLK_Z2>;
- 			operating-points-v2 = <&cluster1_opp>;
- 			capacity-dmips-mhz = <535>;
-@@ -218,6 +225,7 @@
- 			power-domains = <&sysc R8A774E1_PD_CA53_CPU3>;
- 			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_1>;
- 			clocks = <&cpg CPG_CORE R8A774E1_CLK_Z2>;
- 			operating-points-v2 = <&cluster1_opp>;
- 			capacity-dmips-mhz = <535>;
-@@ -236,6 +244,28 @@
- 			cache-unified;
- 			cache-level = <2>;
- 		};
-+
-+		idle-states {
-+			entry-method = "psci";
-+
-+			CPU_SLEEP_0: cpu-sleep-0 {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x0010000>;
-+				local-timer-stop;
-+				entry-latency-us = <400>;
-+				exit-latency-us = <500>;
-+				min-residency-us = <4000>;
-+			};
-+
-+			CPU_SLEEP_1: cpu-sleep-1 {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x0010000>;
-+				local-timer-stop;
-+				entry-latency-us = <700>;
-+				exit-latency-us = <700>;
-+				min-residency-us = <5000>;
-+			};
-+		};
- 	};
+diff --git a/drivers/usb/phy/phy-jz4770.c b/drivers/usb/phy/phy-jz4770.c
+index d4ee3cb721ea..f6d3731581eb 100644
+--- a/drivers/usb/phy/phy-jz4770.c
++++ b/drivers/usb/phy/phy-jz4770.c
+@@ -176,6 +176,7 @@ static int ingenic_usb_phy_init(struct usb_phy *phy)
  
- 	extal_clk: extal {
+ 	/* Wait for PHY to reset */
+ 	usleep_range(30, 300);
++	reg = readl(priv->base + REG_USBPCR_OFFSET);
+ 	writel(reg & ~USBPCR_POR, priv->base + REG_USBPCR_OFFSET);
+ 	usleep_range(300, 1000);
+ 
 -- 
-2.17.1
+2.28.0
 
