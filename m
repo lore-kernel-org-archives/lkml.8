@@ -2,245 +2,151 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 226A1C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A840C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F40292080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:19:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598541553;
-	bh=BQJgGx0WZxmBAOL4TvjzTRBHVFKglf3uZbHr3G4N01w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=czB3ieWBr0YoSivkuSlnFsw32sxSTMDKNE0K00BsCF66L41yWZziuz6zHlYyxiz9b
-	 yijxqTxpB93JURKzSj3QabWRVsMh6FPjQvbFlMarP27fuWFSZBz/qaJqVvAogWKFUQ
-	 xUSq2y94MENZBU4s2L4kuWBQziNjYkRcAwfADX6Y=
+	by mail.kernel.org (Postfix) with ESMTP id 4725E2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:19:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgH0PTL (ORCPT
+        id S1728370AbgH0PTd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:19:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49552 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgH0Lfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 07:35:34 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F78320738;
-        Thu, 27 Aug 2020 11:35:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598528133;
-        bh=BQJgGx0WZxmBAOL4TvjzTRBHVFKglf3uZbHr3G4N01w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mWlBajFQU/x1YISr4rnZGrBesn7WDcSpzDexI2Ckd3qe2iGPPVjnE9X/5HDlaxM0m
-         InhPOl4T/IjoNHqOp2Ls8CKNE7LeI+O/vaxSQcSvkrfoRMiGGE8drNREa3AqigQ7XZ
-         6/AmhwBtCoDCLU7JEBb9VZh6MbhrBaZbKQWGxw1g=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, x86@kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        linux-arch@vger.kernel.org
-Subject: [PATCH v2 01/15] kprobes: Add generic kretprobe trampoline handler
-Date:   Thu, 27 Aug 2020 20:35:29 +0900
-Message-Id: <159852812960.707944.11813912369089948512.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <159852811819.707944.12798182250041968537.stgit@devnote2>
-References: <159852811819.707944.12798182250041968537.stgit@devnote2>
-User-Agent: StGit/0.19
+        Thu, 27 Aug 2020 11:19:33 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:40950 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727814AbgH0PTQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 11:19:16 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1kBJfz-007FA8-US; Thu, 27 Aug 2020 09:18:55 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1kBJfy-0007id-QG; Thu, 27 Aug 2020 09:18:55 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Wang Long <w@laoqinren.net>
+Cc:     netdev@vger.kernel.org, davem@davemloft.net, kuznet@ms2.inr.ac.ru,
+        yoshfuji@linux-ipv6.org, kuba@kernel.org, edumazet@google.com,
+        eric.dumazet@gmail.com, opurdila@ixiacom.com,
+        vegard.nossum@gmail.com, LKML <linux-kernel@vger.kernel.org>
+References: <40f6ec87-0c27-ca6f-383b-0602e78b0802@laoqinren.net>
+Date:   Thu, 27 Aug 2020 10:15:11 -0500
+In-Reply-To: <40f6ec87-0c27-ca6f-383b-0602e78b0802@laoqinren.net>+B0013AC41EFFDC1F
+        (Wang Long's message of "Thu, 27 Aug 2020 19:03:25 +0800")
+Message-ID: <878se0ktmo.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-XM-SPF: eid=1kBJfy-0007id-QG;;;mid=<878se0ktmo.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/Nt7wifU2j/ZN8Vtlw5gW64Ra5vWe7El4=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: RFC: inet_timewait_sock->tw_timer list corruption
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a generic kretprobe trampoline handler for unifying
-the all cloned /arch/* kretprobe trampoline handlers.
+Wang Long <w@laoqinren.net> writes:
 
-The generic kretprobe trampoline handler is based on the
-x86 implementation, because it is the latest implementation.
-It has frame pointer checking, kprobe_busy_begin/end and
-return address fixup for user handlers.
+> Hi，
+>
+> we encountered a kernel panic as following:
+>
+> [4394470.273792] general protection fault: 0000 [#1] SMP NOPTI
+> [4394470.274038] CPU: 0 PID: 0 Comm: swapper/0 Kdump: loaded Tainted: G    W
+> --------- -  - 4.18.0-80.el8.x86_64 #1
+> [4394470.274477] Hardware name: Sugon I620-G30/60P24-US, BIOS MJGS1223
+> 04/07/2020
+> [4394470.274727] RIP: 0010:run_timer_softirq+0x34e/0x440
+> [4394470.274957] Code: 84 3f ff ff ff 49 8b 04 24 48 85 c0 74 58 49 8b 1c 24 48
+> 89 5d 08 0f 1f 44 00 00 48 8b 03 48 8b 53 08 48 85 c0 48 89 02 74 04 <48> 89 50
+> 08 f6 43 22 20 48 c7 43 08 00 00 00 00 48 89 ef 4c 89 2b
+> [4394470.275505] RSP: 0018:ffff88f000803ee0 EFLAGS: 00010086
+> [4394470.275783] RAX: dead000000000200 RBX: ffff88e5e33ea078 RCX:
+> 0000000000000100
+> [4394470.276087] RDX: ffff88f000803ee8 RSI: 0000000000000000 RDI:
+> ffff88f00081aa00
+> [4394470.276391] RBP: ffff88f00081aa00 R08: 0000000000000001 R09:
+> 0000000000000000
+> [4394470.276697] R10: ffff88e5e33eb1f0 R11: 0000000000000000 R12:
+> ffff88f000803ee8
+> [4394470.277030] R13: dead000000000200 R14: ffff88f000803ee0 R15:
+> 0000000000000000
+> [4394470.277350] FS:  0000000000000000(0000) GS:ffff88f000800000(0000)
+> knlGS:0000000000000000
+> [4394470.277684] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [4394470.278020] CR2: 00007f200eddd160 CR3: 0000000e0b20a002 CR4:
+> 00000000007606f0
+> [4394470.278412] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+> 0000000000000000
+> [4394470.278799] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+> 0000000000000400
+> [4394470.279194] PKRU: 55555554
+> [4394470.279543] Call Trace:
+> [4394470.279889]  <IRQ>
+> [4394470.280237]  ? __hrtimer_init+0xb0/0xb0
+> [4394470.280618]  ? sched_clock+0x5/0x10
+> [4394470.281000]  __do_softirq+0xe8/0x2ef
+> [4394470.281397]  irq_exit+0xf1/0x100
+> [4394470.281761]  smp_apic_timer_interrupt+0x74/0x130
+> [4394470.282132]  apic_timer_interrupt+0xf/0x20
+> [4394470.282548]  </IRQ>
+> [4394470.282954] RIP: 0010:cpuidle_enter_state+0xa0/0x2b0
+> [4394470.283341] Code: 8b 3d 6c fb 59 4c e8 0f ed a6 ff 48 89 c3 0f 1f 44 00 00
+> 31 ff e8 80 00 a7 ff 45 84 f6 0f 85 c3 01 00 00 fb 66 0f 1f 44 00 00 <4c> 29 fb
+> 48 ba cf f7 53 e3 a5 9b c4 20 48 89 d8 48 c1 fb 3f 48 f7
+> [4394470.284219] RSP: 0018:ffffffffb4603e78 EFLAGS: 00000246 ORIG_RAX:
+> ffffffffffffff13
+> [4394470.284671] RAX: ffff88f000823080 RBX: 000f9cbf579e86c6 RCX:
+> 000000000000001f
+> [4394470.285129] RDX: 000f9cbf579e86c6 RSI: 0000000037a6f674 RDI:
+> 0000000000000000
+> [4394470.285623] RBP: 0000000000000002 R08: 00000000000000c4 R09:
+> 0000000000000027
+> [4394470.286088] R10: ffffffffb4603e58 R11: 000000000000004c R12:
+> ffff88f00082df00
+> [4394470.286566] R13: ffffffffb4724118 R14: 0000000000000000 R15:
+> 000f9cbf579d44e0
+> [4394470.287045]  ? cpuidle_enter_state+0x90/0x2b0
+> [4394470.287527]  do_idle+0x200/0x280
+> [4394470.288010]  cpu_startup_entry+0x6f/0x80
+> [4394470.288501]  start_kernel+0x533/0x553
+> [4394470.288994]  secondary_startup_64+0xb7/0xc0
+>
+>
+> After analysis, we found that the timer which expires has timer->entry.next ==
+> POISON2 !(the list corruption )
+>
+> the crash scenario is the same as https://lkml.org/lkml/2017/3/21/732,
+>
+> I cannot reproduce this issue, but I found that the timer cause crash is the
+> inet_timewait_sock->tw_timer(its callback function is tw_timer_handler), and the
+> value of tcp_tw_reuse is 1.
+>
+> # cat /proc/sys/net/ipv4/tcp_tw_reuse
+> 1
+>
+> In the production environment, we encountered this problem many times, and every
+> time it was a problem with the inet_timewait_sock->tw_timer.
+>
+> Do anyone have any ideas for this issue? Thanks.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- include/linux/kprobes.h |   32 +++++++++++++--
- kernel/kprobes.c        |  101 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 129 insertions(+), 4 deletions(-)
+You might enble list debugging if it isn't already.  That might give you
+enough information to track this down.
 
-diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-index 9be1bff4f586..46a7afcf5ec0 100644
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -187,10 +187,38 @@ static inline int kprobes_built_in(void)
- 	return 1;
- }
- 
-+extern struct kprobe kprobe_busy;
-+void kprobe_busy_begin(void);
-+void kprobe_busy_end(void);
-+
- #ifdef CONFIG_KRETPROBES
- extern void arch_prepare_kretprobe(struct kretprobe_instance *ri,
- 				   struct pt_regs *regs);
- extern int arch_trampoline_kprobe(struct kprobe *p);
-+
-+/* If the trampoline handler called from a kprobe, use this version */
-+unsigned long __kretprobe_trampoline_handler(struct pt_regs *regs,
-+				unsigned long trampoline_address,
-+				void *frame_pointer);
-+
-+static nokprobe_inline
-+unsigned long kretprobe_trampoline_handler(struct pt_regs *regs,
-+				unsigned long trampoline_address,
-+				void *frame_pointer)
-+{
-+	unsigned long ret;
-+	/*
-+	 * Set a dummy kprobe for avoiding kretprobe recursion.
-+	 * Since kretprobe never runs in kprobe handler, any kprobe must not
-+	 * be running at this point.
-+	 */
-+	kprobe_busy_begin();
-+	ret = __kretprobe_trampoline_handler(regs, trampoline_address, frame_pointer);
-+	kprobe_busy_end();
-+
-+	return ret;
-+}
-+
- #else /* CONFIG_KRETPROBES */
- static inline void arch_prepare_kretprobe(struct kretprobe *rp,
- 					struct pt_regs *regs)
-@@ -354,10 +382,6 @@ static inline struct kprobe_ctlblk *get_kprobe_ctlblk(void)
- 	return this_cpu_ptr(&kprobe_ctlblk);
- }
- 
--extern struct kprobe kprobe_busy;
--void kprobe_busy_begin(void);
--void kprobe_busy_end(void);
--
- kprobe_opcode_t *kprobe_lookup_name(const char *name, unsigned int offset);
- int register_kprobe(struct kprobe *p);
- void unregister_kprobe(struct kprobe *p);
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 287b263c9cb9..cbd2ad1af7b7 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1927,6 +1927,107 @@ unsigned long __weak arch_deref_entry_point(void *entry)
- }
- 
- #ifdef CONFIG_KRETPROBES
-+
-+unsigned long __kretprobe_trampoline_handler(struct pt_regs *regs,
-+					unsigned long trampoline_address,
-+					void *frame_pointer)
-+{
-+	struct kretprobe_instance *ri = NULL;
-+	struct hlist_head *head, empty_rp;
-+	struct hlist_node *tmp;
-+	unsigned long flags, orig_ret_address = 0;
-+	kprobe_opcode_t *correct_ret_addr = NULL;
-+	bool skipped = false;
-+
-+	INIT_HLIST_HEAD(&empty_rp);
-+	kretprobe_hash_lock(current, &head, &flags);
-+
-+	/*
-+	 * It is possible to have multiple instances associated with a given
-+	 * task either because multiple functions in the call path have
-+	 * return probes installed on them, and/or more than one
-+	 * return probe was registered for a target function.
-+	 *
-+	 * We can handle this because:
-+	 *     - instances are always pushed into the head of the list
-+	 *     - when multiple return probes are registered for the same
-+	 *	 function, the (chronologically) first instance's ret_addr
-+	 *	 will be the real return address, and all the rest will
-+	 *	 point to kretprobe_trampoline.
-+	 */
-+	hlist_for_each_entry(ri, head, hlist) {
-+		if (ri->task != current)
-+			/* another task is sharing our hash bucket */
-+			continue;
-+		/*
-+		 * Return probes must be pushed on this hash list correct
-+		 * order (same as return order) so that it can be popped
-+		 * correctly. However, if we find it is pushed it incorrect
-+		 * order, this means we find a function which should not be
-+		 * probed, because the wrong order entry is pushed on the
-+		 * path of processing other kretprobe itself.
-+		 */
-+		if (ri->fp != frame_pointer) {
-+			if (!skipped)
-+				pr_warn("kretprobe is stacked incorrectly. Trying to fixup.\n");
-+			skipped = true;
-+			continue;
-+		}
-+
-+		orig_ret_address = (unsigned long)ri->ret_addr;
-+		if (skipped)
-+			pr_warn("%ps must be blacklisted because of incorrect kretprobe order\n",
-+				ri->rp->kp.addr);
-+
-+		if (orig_ret_address != trampoline_address)
-+			/*
-+			 * This is the real return address. Any other
-+			 * instances associated with this task are for
-+			 * other calls deeper on the call stack
-+			 */
-+			break;
-+	}
-+
-+	kretprobe_assert(ri, orig_ret_address, trampoline_address);
-+
-+	correct_ret_addr = ri->ret_addr;
-+	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
-+		if (ri->task != current)
-+			/* another task is sharing our hash bucket */
-+			continue;
-+		if (ri->fp != frame_pointer)
-+			continue;
-+
-+		orig_ret_address = (unsigned long)ri->ret_addr;
-+		if (ri->rp && ri->rp->handler) {
-+			__this_cpu_write(current_kprobe, &ri->rp->kp);
-+			ri->ret_addr = correct_ret_addr;
-+			ri->rp->handler(ri, regs);
-+			__this_cpu_write(current_kprobe, &kprobe_busy);
-+		}
-+
-+		recycle_rp_inst(ri, &empty_rp);
-+
-+		if (orig_ret_address != trampoline_address)
-+			/*
-+			 * This is the real return address. Any other
-+			 * instances associated with this task are for
-+			 * other calls deeper on the call stack
-+			 */
-+			break;
-+	}
-+
-+	kretprobe_hash_unlock(current, &flags);
-+
-+	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
-+		hlist_del(&ri->hlist);
-+		kfree(ri);
-+	}
-+
-+	return orig_ret_address;
-+}
-+NOKPROBE_SYMBOL(__kretprobe_trampoline_handler)
-+
- /*
-  * This kprobe pre_handler is registered with every kretprobe. When probe
-  * hits it will set up the return probe.
+You might also contact redhat support as it appears you are running a
+redhat kernel.
+
+Eric
 
