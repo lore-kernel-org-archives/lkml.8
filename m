@@ -2,107 +2,139 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED722C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E69B7207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8369207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:40:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QqH/zx43"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgH0Ghy (ORCPT
+        id S1727048AbgH0GkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:37:54 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:56106 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726395AbgH0Ghy (ORCPT
+        Thu, 27 Aug 2020 02:40:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgH0GkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:37:54 -0400
-Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id A365D823E11;
-        Thu, 27 Aug 2020 16:37:49 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1kBBXg-00054k-Du; Thu, 27 Aug 2020 16:37:48 +1000
-Date:   Thu, 27 Aug 2020 16:37:48 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Hao Li <lihao2018.fnst@cn.fujitsu.com>
-Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, y-goto@fujitsu.com
-Subject: Re: [PATCH] fs: Kill DCACHE_DONTCACHE dentry even if
- DCACHE_REFERENCED is set
-Message-ID: <20200827063748.GA12096@dread.disaster.area>
-References: <20200821015953.22956-1-lihao2018.fnst@cn.fujitsu.com>
+        Thu, 27 Aug 2020 02:40:11 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B489C061263;
+        Wed, 26 Aug 2020 23:40:10 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d19so2634172pgl.10;
+        Wed, 26 Aug 2020 23:40:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=yGkIPkY7/Tr/n+KRhzB9iJ20Ouni7SAtUbHMAKz35wI=;
+        b=QqH/zx43d2rOZerZHqtZMr0OSasSdneyzqwJa7nTSebiJ6jXPcp0TFCoaPtDwFoj9B
+         TrZv4WoSbbFulbWUG3FSZupMWPiPDDe6UY+U4MeanKPN90dvzx/jBt7/LYRbPIayhhrp
+         j8Cq2B44q5ZRvcLaholdJJUe5SAb2B9DCMFs9xe59RBX8PRJByLsLDdaOKxc4jUiD29m
+         QlnMuexn934jkeAYw6mg7HO1Up7XcTQ626AICKEfTnH2PiTsApk+yjoYtGFXh5ZpYHv4
+         ccCj9WMHPjUjMRxpKJpnlU75UgBYE56kdU+cgPivhtq8b68zSHWaM86x9Pimab6m6a0J
+         Pu7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=yGkIPkY7/Tr/n+KRhzB9iJ20Ouni7SAtUbHMAKz35wI=;
+        b=ZCfp1/jQp4TOrlEmJ9Au7zQ+VsUYiheNr2SZu4isM5SHGTzXkFBEMbucM1vk4E6feg
+         Ji3JJyl61eXSf3Ul13nUr9px95YDWTxavTsIlgSkwbZUfB18YO7R2FuyayrURjAFNyKj
+         9o6+lKXhd9lO7M/VAjKR56JLuF0IWowvw8+1qTXMk8I8oh9ypBwSt3ejGkkf3kw4dgtx
+         6vFJiB/d7g9IIpN+nk4rTzAtndjqFwyJaJ45+jDy3KntOK0ch8AheT5zX4+Y7q/ntgnV
+         1jXr9LUJUrv6RRNiNJlB+2jp6uUIv0z3DWkctolskla0beptsizl00uXIEtdwymIzMBv
+         fgvQ==
+X-Gm-Message-State: AOAM5326Tvlm6ucRzaSLCSljRXklTTC+9D968YrPfILScMuo0iQZSJoi
+        80jX4kUYI7nIXvrbv14mL4Q=
+X-Google-Smtp-Source: ABdhPJzQtgYzuS98QoVEnuOTvC5luZC8+B5zrYxKkEtmHPR6yUALmNwc1xBoVigfmnWDJJlOIkl4qg==
+X-Received: by 2002:a63:e245:: with SMTP id y5mr13294914pgj.51.1598510410118;
+        Wed, 26 Aug 2020 23:40:10 -0700 (PDT)
+Received: from localhost ([124.156.176.71])
+        by smtp.gmail.com with ESMTPSA id c3sm1430751pfd.137.2020.08.26.23.40.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Aug 2020 23:40:09 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 14:40:13 +0800
+From:   Yue Hu <zbestahu@gmail.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     rafael.j.wysocki@intel.com,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        huyue2@yulong.com, zbestahu@163.com
+Subject: Re: [PATCH] thermal: sysfs: fall back to vzalloc for cooling
+ device's statistics
+Message-ID: <20200827144013.00004e01.zbestahu@gmail.com>
+In-Reply-To: <20200827062646.adruzyyqq5uzlteq@vireshk-i7>
+References: <20200818063005.13828-1-zbestahu@gmail.com>
+        <40b69f97-46e5-d62e-0d2f-604dfd4dafa1@linaro.org>
+        <20200826101319.00003048.zbestahu@gmail.com>
+        <c3fd7949-b33a-aca3-8dd5-1c2df35fb63d@linaro.org>
+        <20200827120327.00003740.zbestahu@gmail.com>
+        <20200827051401.yryitpgq2gi3nkbh@vireshk-i7>
+        <20200827142003.000071c1.zbestahu@gmail.com>
+        <20200827062646.adruzyyqq5uzlteq@vireshk-i7>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821015953.22956-1-lihao2018.fnst@cn.fujitsu.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=KcmsTjQD c=1 sm=1 tr=0 cx=a_idp_d
-        a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
-        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=omOdbC7AAAAA:8 a=7-415B0cAAAA:8
-        a=by_5GhPrgXZcAFhFJM8A:9 a=CjuIK1q_8ugA:10 a=baC4JDFNLZpnPwus_NF9:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 09:59:53AM +0800, Hao Li wrote:
-> Currently, DCACHE_REFERENCED prevents the dentry with DCACHE_DONTCACHE
-> set from being killed, so the corresponding inode can't be evicted. If
-> the DAX policy of an inode is changed, we can't make policy changing
-> take effects unless dropping caches manually.
+On Thu, 27 Aug 2020 11:56:46 +0530
+Viresh Kumar <viresh.kumar@linaro.org> wrote:
+
+> On 27-08-20, 14:20, Yue Hu wrote:
+> > Currenly, drivers/video/backlight does not call thermal_of_cooling_device_register()
+> > to register thermal cooling device. The issue happened in msm-4.19 kernel for
+> > QCOM/Android platform. Backlight in msm-4.19 kernel will register thermal cooling
+> > device as below:
+> > 
+> > +static int bd_cdev_get_max_brightness(struct thermal_cooling_device *cdev,
+> > +                                 unsigned long *state)
+> > +{
+> > + struct backlight_device *bd = (struct backlight_device *)cdev->devdata;
+> > +
+> > + *state = bd->props.max_brightness;
+> > +
+> > + return 0;
+> > +}
+> > 
+> > 
+> > +static struct thermal_cooling_device_ops bd_cdev_ops = {
+> > + .get_max_state = bd_cdev_get_max_brightness,
+> > 
+> > +static void backlight_cdev_register(struct device *parent,
+> > +                             struct backlight_device *bd)
+> > +{
+> > + if (of_find_property(parent->of_node, "#cooling-cells", NULL)) {
+> > +         bd->cdev = thermal_of_cooling_device_register(parent->of_node,
+> > +                         (char *)dev_name(&bd->dev), bd, &bd_cdev_ops);
+> > 
+> > And the bd->props.max_brightness is getting from video/backlight/qcom-wled.c. Maybe
+> > the driver should not assign 1024 to states/max_brightness. I'm not sure about it.
+> > So i consider to change memory allocation methord. That's the origin of the patch.  
 > 
-> This patch fixes this problem and flushes the inode to disk to prepare
-> for evicting it.
+> Thanks for the details. So this is not about upstream tree, as a rule
+> we aren't going to make changes here for any downstream tree.
+
+I at first thought it's a possible issue in upstream tree.
+
 > 
-> Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
-> ---
->  fs/dcache.c | 3 ++-
->  fs/inode.c  | 2 +-
->  2 files changed, 3 insertions(+), 2 deletions(-)
+> Now coming back to the downstream driver, I also don't see a point in
+> returning bd->props.max_brightness as the max number of states there.
+> Maybe have 10 states, each occupying bd->props.max_brightness/10
+> brightness and so you will end up with 10 states only. But yeah,
+> whatever downstream decides on that.
 > 
-> diff --git a/fs/dcache.c b/fs/dcache.c
-> index ea0485861d93..486c7409dc82 100644
-> --- a/fs/dcache.c
-> +++ b/fs/dcache.c
-> @@ -796,7 +796,8 @@ static inline bool fast_dput(struct dentry *dentry)
->  	 */
->  	smp_rmb();
->  	d_flags = READ_ONCE(dentry->d_flags);
-> -	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED;
-> +	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED
-> +			| DCACHE_DONTCACHE;
 
-Seems reasonable, but you need to update the comment above as to
-how this flag fits into this code....
+Got it.
 
->  	/* Nothing to do? Dropping the reference was all we needed? */
->  	if (d_flags == (DCACHE_REFERENCED | DCACHE_LRU_LIST) && !d_unhashed(dentry))
-> diff --git a/fs/inode.c b/fs/inode.c
-> index 72c4c347afb7..5218a8aebd7f 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -1632,7 +1632,7 @@ static void iput_final(struct inode *inode)
->  	}
->  
->  	state = inode->i_state;
-> -	if (!drop) {
-> +	if (!drop || (drop && (inode->i_state & I_DONTCACHE))) {
->  		WRITE_ONCE(inode->i_state, state | I_WILL_FREE);
->  		spin_unlock(&inode->i_lock);
-
-What's this supposed to do? We'll only get here with drop set if the
-filesystem is mounting or unmounting. In either case, why does
-having I_DONTCACHE set require the inode to be written back here
-before it is evicted from the cache?
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Thx.
