@@ -2,115 +2,147 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E96132054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E18C22B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:57:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgH0O4z (ORCPT
+        id S1728282AbgH0O5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:56:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60220 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 10:57:08 -0400
+Received: from mga12.intel.com ([192.55.52.136]:40761 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728252AbgH0O4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:56:48 -0400
-Received: from gaia (unknown [46.69.195.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728835AbgH0Mjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 08:39:51 -0400
+IronPort-SDR: U0MCHEVj2fd/+DS81q6xK9UDqxrTf/8twybOvXIgUq+Cqcv4weObSiAkMn3rfMNsMzy+J8qMlj
+ 1jNSHlESN7Iw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="136018002"
+X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
+   d="scan'208";a="136018002"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 05:39:42 -0700
+IronPort-SDR: I7hnSZngTxMG/hXNGX0xkQrL0Q7Wfki/FrL/5joXObE0KoYnr9my145U9REKhnegDidLpnUxab
+ HAkdoz1iS80Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
+   d="scan'208";a="475191064"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 27 Aug 2020 05:39:41 -0700
+Received: from [10.251.24.169] (kliang2-MOBL.ccr.corp.intel.com [10.251.24.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 178032054F;
-        Thu, 27 Aug 2020 14:56:44 +0000 (UTC)
-Date:   Thu, 27 Aug 2020 15:56:42 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 21/35] arm64: mte: Add in-kernel tag fault handler
-Message-ID: <20200827145642.GO29264@gaia>
-References: <cover.1597425745.git.andreyknvl@google.com>
- <f173aacd755e4644485c551198549ac52d1eb650.1597425745.git.andreyknvl@google.com>
- <20200827095429.GC29264@gaia>
- <CAAeHK+xHQDMsTehppknjNTEMFh18ufWB1XLUGdVFoc-QZ-mVrw@mail.gmail.com>
- <20200827131045.GM29264@gaia>
- <CAAeHK+xraz7E41b4LW6VW9xOH51UoZ+odNEDrDGtaJ71n=bQ3A@mail.gmail.com>
+        by linux.intel.com (Postfix) with ESMTPS id 07989580810;
+        Thu, 27 Aug 2020 05:39:40 -0700 (PDT)
+Subject: Re: [PATCH 0/4] TopDown metrics support for Ice Lake (perf tool)
+To:     Jiri Olsa <jolsa@redhat.com>, acme@kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, eranian@google.com,
+        ak@linux.intel.com
+References: <20200820164532.8011-1-kan.liang@linux.intel.com>
+ <20200826155441.GA783610@krava>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <7dafad06-0486-753c-1927-e5ea676fdadf@linux.intel.com>
+Date:   Thu, 27 Aug 2020 08:39:39 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAeHK+xraz7E41b4LW6VW9xOH51UoZ+odNEDrDGtaJ71n=bQ3A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200826155441.GA783610@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 03:34:42PM +0200, Andrey Konovalov wrote:
-> On Thu, Aug 27, 2020 at 3:10 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > On Thu, Aug 27, 2020 at 02:31:23PM +0200, Andrey Konovalov wrote:
-> > > On Thu, Aug 27, 2020 at 11:54 AM Catalin Marinas
-> > > <catalin.marinas@arm.com> wrote:
-> > > > On Fri, Aug 14, 2020 at 07:27:03PM +0200, Andrey Konovalov wrote:
-> > > > > +static int do_tag_recovery(unsigned long addr, unsigned int esr,
-> > > > > +                        struct pt_regs *regs)
-> > > > > +{
-> > > > > +     report_tag_fault(addr, esr, regs);
-> > > > > +
-> > > > > +     /* Skip over the faulting instruction and continue: */
-> > > > > +     arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
-> > > >
-> > > > Ooooh, do we expect the kernel to still behave correctly after this? I
-> > > > thought the recovery means disabling tag checking altogether and
-> > > > restarting the instruction rather than skipping over it.
-[...]
-> > > Can we disable MTE, reexecute the instruction, and then reenable MTE,
-> > > or something like that?
-> >
-> > If you want to preserve the MTE enabled, you could single-step the
-> > instruction or execute it out of line, though it's a bit more convoluted
-> > (we have a similar mechanism for kprobes/uprobes).
-> >
-> > Another option would be to attempt to set the matching tag in memory,
-> > under the assumption that it is writable (if it's not, maybe it's fine
-> > to panic). Not sure how this interacts with the slub allocator since,
-> > presumably, the logical tag in the pointer is wrong rather than the
-> > allocation one.
-> >
-> > Yet another option would be to change the tag in the register and
-> > re-execute but this may confuse the compiler.
+
+
+On 8/26/2020 11:54 AM, Jiri Olsa wrote:
+> On Thu, Aug 20, 2020 at 09:45:28AM -0700, kan.liang@linux.intel.com wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> The kernel patches have been merged into the tip's perf/core branch.
+>> The patch set is on top of commit 2cb5383b30d4 ("perf/x86/intel: Support
+>> per-thread RDPMC TopDown metrics") of the tip's perf/core branch.
+>>
+>> The changes for the perf tool include:
+>> - Extend --topdown option to support per thread TopDown metrics
+>> - Support sample-read topdown metric group
+>> - Add a complete document for the TopDown usage.
+>>
+>> Ice Lake has support for measuring the level 1 TopDown metrics
+>> directly in hardware. This is implemented by an additional METRICS
+>> register, and a new Fixed Counter 3 that measures pipeline SLOTS.
+>>
+>> New in Icelake
+>> - Do not require generic counters. This allows to collect TopDown always
+>>    in addition to other events.
+>> - Measuring TopDown per thread/process instead of only per core
+>>
+>> For the Ice Lake implementation of performance metrics, the values in
+>> PERF_METRICS MSR are derived from fixed counter 3. Software should start
+>> both registers, PERF_METRICS and fixed counter 3, from zero.
+>> Additionally, software is recommended to periodically clear both
+>> registers in order to maintain accurate measurements. The latter is
+>> required for certain scenarios that involve sampling metrics at high
+>> rates. Software should always write fixed counter 3 before write to
+>> PERF_METRICS.
+>>
+>> IA32_PERF_GLOBAL_STATUS. OVF_PERF_METRICS[48]: If this bit is set,
+>> it indicates that some PERF_METRICS-related counter has overflowed and
+>> a PMI is triggered. Software has to synchronize, e.g. re-start,
+>> PERF_METRICS as well as fixed counter 3. Otherwise, PERF_METRICS may
+>> return invalid values.
+>>
+>> Limitation
+>> - To get accurate result and avoid reading the METRICS register multiple
+>>    times, the TopDown metrics events and SLOTS event have to be in the
+>>    same group.
+>> - METRICS and SLOTS registers have to be cleared after each read by SW.
+>>    That is to prevent the lose of precision.
+>> - Cannot do sampling read SLOTS and TopDown metric events
+>>
+>> Please refer SDM Vol3, 18.3.9.3 Performance Metrics for the details of
+>> TopDown metrics.
+>>
+>> Andi Kleen (2):
+>>    perf stat: Support new per thread TopDown metrics
+>>    perf, tools: Add documentation for topdown metrics
+>>
+>> Kan Liang (2):
+>>    perf tools: Rename group to topdown
+>>    perf record: Support sample-read topdown metric group
 > 
-> Which one of these would be simpler to implement?
+> I don't have Ice lake to actualy check, but it looks good
+> 
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
+> 
 
-Either 2 or 3 would be simpler (re-tag the memory location or the
-pointer) with the caveats I mentioned. Also, does the slab allocator
-need to touch the memory on free with a tagged pointer? Otherwise slab
-may hit an MTE fault itself.
 
-> Perhaps we could somehow only skip faulting instructions that happen
-> in the KASAN test module?.. Decoding stack trace would be an option,
-> but that's a bit weird.
+Thanks Jirka for the review.
 
-If you want to restrict this to the KASAN tests, just add some
-MTE-specific accessors with a fixup entry similar to get_user/put_user.
-__do_kernel_fault() (if actually called) will invoke the fixup code
-which skips the access and returns an error. This way KASAN tests can
-actually verify that tag checking works, I'd find this a lot more
-useful.
+Hi Arnaldo,
 
--- 
-Catalin
+Andi has a comment regarding a grammar error in the printf message. I 
+once plan to apply a fix in the next version. I'm not sure whether you 
+will have more comments for this patch set.
+If yes, I will wait for the comments.
+If not, should I send a V2 patch set with this fixed?
+
+On 8/20/2020 4:05 PM, Andi Kleen wrote:
+ >> +				fprintf(stat_config.output,
+ >> +					"Topdown accuracy may decreases when measuring long period.\n"
+ > "may decrease" ... "long periods".
+ >
+ > (s needs to move to the end)
+
+
+Thanks,
+Kan
