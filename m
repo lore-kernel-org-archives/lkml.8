@@ -2,77 +2,135 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4282CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33285C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10C972080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:04:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="pda0FoJy"
+	by mail.kernel.org (Postfix) with ESMTP id 1025B2087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:04:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598544298;
+	bh=rwQ/I+StX+hW3DzS8e/XvFVLw192KlfoLbzKaXNNNho=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mgrqNcHdlBBF8RofZZCKvsY7MVCGHC4+z7sP2ZyFtt/8AY9Cibv9y828Bnza0pXzw
+	 UjaxSm/Fzelf+Dz0u2W+3GxCN7+wFOjwSjED0/9K0rK9ha5l6f6AxFQdBaA739N3Vr
+	 yP1JN1ErY2A/xALyune8wUZtnWfAGUxzxNR5qa5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgH0QES (ORCPT
+        id S1727901AbgH0QE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:04:18 -0400
-Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:47066 "EHLO
-        relaydlg-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726232AbgH0QEP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:04:15 -0400
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id 7BC108224D;
-        Thu, 27 Aug 2020 19:04:12 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paragon-software.com; s=mail; t=1598544252;
-        bh=bUOXK6u27L4klWcRinmN6IcOpvxrHqpRrAZnW1Wp9Ww=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=pda0FoJy02F9y4i/MgdpB+xyv/Jg5EROB7yYv/JFU7xauRpU7NxB529j50QAWyWfU
-         htmqCrJfo0hebLYHglLFrAmSA43b3qqTVL3M6a8+h0wF8IpD3X5DcTD9TqN2vdJPz3
-         upd56W+3i8OLwvND7ouvujjWkBzia3/SLFYt97pw=
-Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Thu, 27 Aug 2020 19:04:12 +0300
-Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
- by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
- id 15.01.1847.003; Thu, 27 Aug 2020 19:04:12 +0300
-From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-CC:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>
-Subject: RE: [PATCH v2 02/10] fs/ntfs3: Add initialization of super block
-Thread-Topic: [PATCH v2 02/10] fs/ntfs3: Add initialization of super block
-Thread-Index: AdZ30tAfM9dNSlAKR92rLVrbgJq3AP//6yCA//Z5wbA=
-Date:   Thu, 27 Aug 2020 16:04:11 +0000
-Message-ID: <7db29d4314b24ff68526cb816ebae3a3@paragon-software.com>
-References: <caddbe41eaef4622aab8bac24934eed1@paragon-software.com>
- <5dfec6f4-0688-217d-587b-ec26f0bb9727@infradead.org>
-In-Reply-To: <5dfec6f4-0688-217d-587b-ec26f0bb9727@infradead.org>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.30.8.36]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 27 Aug 2020 12:04:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbgH0QEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 12:04:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABD8E2087C;
+        Thu, 27 Aug 2020 16:04:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598544293;
+        bh=rwQ/I+StX+hW3DzS8e/XvFVLw192KlfoLbzKaXNNNho=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uzFH5E1V0v6VtsHnccLbsHLdtZ1RhFXnwf06Oo61n+DzUzOMylTsokXN9OnGNSGoM
+         iS4ukL3VI8o5PrGu9/VL17TssOd0kyPNiQ08wnRISXRxHy/sx7ITH83rXvmph8lkuH
+         FzQI/ClSexFV4js1QzHN1YxTDDWC0k9EAAdhN5QQ=
+Date:   Thu, 27 Aug 2020 18:05:06 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Laura Abbott <laura@labbott.name>
+Cc:     sumit.semwal@linaro.org, john.stultz@linaro.org,
+        devel@driverdev.osuosl.org, linaro-mm-sig@lists.linaro.org,
+        Shuah Khan <shuah@kernel.org>, Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Suren Baghdasaryan <surenb@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Hridya Valsaraju <hridya@google.com>, kernel-team@android.com,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Christian Brauner <christian@brauner.io>
+Subject: Re: [PATCH] staging: ion: remove from the tree
+Message-ID: <20200827160506.GC684514@kroah.com>
+References: <20200827123627.538189-1-gregkh@linuxfoundation.org>
+ <3d8de519-65b3-123b-8ace-e820982884e0@labbott.name>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3d8de519-65b3-123b-8ace-e820982884e0@labbott.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUmFuZHkgRHVubGFwIDxyZHVubGFwQGluZnJhZGVhZC5vcmc+DQpTZW50OiBGcmlkYXks
-IEF1Z3VzdCAyMSwgMjAyMCA4OjM2IFBNDQo+IE9uIDgvMjEvMjAgOToyNSBBTSwgS29uc3RhbnRp
-biBLb21hcm92IHdyb3RlOg0KPiANCj4gDQo+ID4gKy8qIE86QkFHOkJBRDooQTtPSUNJO0ZBOzs7
-V0QpICovDQo+IA0KPiBXaGF0IGlzIHRoYXQgbm90YXRpb24sIHBsZWFzZT8NCj4gDQoNCkFwb2xv
-Z2llcy4gSXQncyBNUydzIFNTREwuIFdlIHdpbGwgaGF2ZSBpdCBleHBsYWluZWQgYSBiaXQgbW9y
-ZSBpbiBWMy4NCg0KPiA+ICtjb25zdCB1OCBzX2Rpcl9zZWN1cml0eVtdIF9fYWxpZ25lZCg4KSA9
-IHsNCltdDQo+IA0KPiANCj4gPiArTU9EVUxFX0FVVEhPUigiS29uc3RhbnRpbiAgIEtvbWFyb3Yi
-KTsNCj4gDQo+IERyb3Agb25lIHNwYWNlIGluIHRoZSBuYW1lLg0KPiANCg0KRG9uZSwgd2lsbCBi
-ZSBwb3N0ZWQgd2l0aCBWMy4NCg0KPiANCj4gdGhhbmtzLg0KPiAtLQ0KPiB+UmFuZHkNCg0K
+On Thu, Aug 27, 2020 at 09:31:27AM -0400, Laura Abbott wrote:
+> On 8/27/20 8:36 AM, Greg Kroah-Hartman wrote:
+> > The ION android code has long been marked to be removed, now that we
+> > dma-buf support merged into the real part of the kernel.
+> > 
+> > It was thought that we could wait to remove the ion kernel at a later
+> > time, but as the out-of-tree Android fork of the ion code has diverged
+> > quite a bit, and any Android device using the ion interface uses that
+> > forked version and not this in-tree version, the in-tree copy of the
+> > code is abandonded and not used by anyone.
+> > 
+> > Combine this abandoned codebase with the need to make changes to it in
+> > order to keep the kernel building properly, which then causes merge
+> > issues when merging those changes into the out-of-tree Android code, and
+> > you end up with two different groups of people (the in-kernel-tree
+> > developers, and the Android kernel developers) who are both annoyed at
+> > the current situation.  Because of this problem, just drop the in-kernel
+> > copy of the ion code now, as it's not used, and is only causing problems
+> > for everyone involved.
+> > 
+> > Cc: "Arve Hjønnevåg" <arve@android.com>
+> > Cc: "Christian König" <christian.koenig@amd.com>
+> > Cc: Christian Brauner <christian@brauner.io>
+> > Cc: Christoph Hellwig <hch@infradead.org>
+> > Cc: Hridya Valsaraju <hridya@google.com>
+> > Cc: Joel Fernandes <joel@joelfernandes.org>
+> > Cc: John Stultz <john.stultz@linaro.org>
+> > Cc: Laura Abbott <laura@labbott.name>
+> > Cc: Martijn Coenen <maco@android.com>
+> > Cc: Shuah Khan <shuah@kernel.org>
+> > Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> > Cc: Suren Baghdasaryan <surenb@google.com>
+> > Cc: Todd Kjos <tkjos@android.com>
+> > Cc: devel@driverdev.osuosl.org
+> > Cc: dri-devel@lists.freedesktop.org
+> > Cc: linaro-mm-sig@lists.linaro.org
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> We discussed this at the Android MC on Monday and the plan was to
+> remove it after the next LTS release.
+
+I know it was discussed, my point is that it is actually causing
+problems now (with developers who want to change the internal kernel api
+hitting issues, and newbies trying to clean up code in ways that isn't
+exactly optimal wasting maintainer cycles), and that anyone who uses
+this code, is not actually using this version of the code.  Everyone who
+relies on ion right now, is using the version that is in the Android
+common kernel tree, which has diverged from this in-kernel way quite a
+bit now for the reason that we didn't want to take any of those new
+features in the in-kernel version.
+
+So this is a problem that we have caused by just wanting to wait, no one
+is using this code, combined with it causing problems for the upstream
+developers.
+
+There is nothing "magic" about the last kernel of the year that requires
+this code to sit here until then.  At that point in time, all users
+will, again, be using the forked Android kernel version, and if we
+delete this now here, that fork can remain just fine, with the added
+benifit of it reducing developer workloads here in-kernel.
+
+So why wait?
+
+thanks,
+
+greg k-h
