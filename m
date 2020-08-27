@@ -2,103 +2,77 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3ED3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13DE5207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:14:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598530483;
-	bh=FJ6VppXfhXdONz0GZcmIu4gnd/OYSpzCj9s6sDvRBk8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Ehjx01SniFs8mmgnCoDgeACjE5ZYyRun+PnualrGYR8QazGRsgyGCFndnCLnvQibg
-	 S/6E/SCBXKes7Uu6r/2G0kwowrPuwUTA4GFKZjbHPzdIIy3N9dgjXA5k0AI0XIO/Iu
-	 XnQPjo2cn2TwKCJtbfNBMEKr3KoBpRd4AlieY0BQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7FD7D22B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbgH0MOi (ORCPT
+        id S1729040AbgH0MPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 08:14:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55044 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 08:15:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59598 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728746AbgH0Lu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 07:50:58 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 483462177B;
-        Thu, 27 Aug 2020 11:50:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598529032;
-        bh=FJ6VppXfhXdONz0GZcmIu4gnd/OYSpzCj9s6sDvRBk8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=t9vHXty5w3CKX05loqhbwow0e6e7zcsqhVW3Z5ib1F3qjHrP3er+YBf9Ahw0hln3i
-         xBNS1q6YfTMpN3ox8Nk1QPPIYG5+uzEIXx9AvzFhHXkbExJrWm5fowdaPnZBFy893t
-         ex/4B4P90OzkDQ0SDC3xbjIaHIeYJOLuvU5jcmzU=
-Date:   Thu, 27 Aug 2020 20:50:28 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, Eddy Wu <Eddy_Wu@trendmicro.com>,
-        x86@kernel.org, "David S . Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH v2 15/15] kprobes: Free kretprobe_instance with rcu
- callback
-Message-Id: <20200827205028.964ca2ac4cd79d4e6cee7f9f@kernel.org>
-In-Reply-To: <20200827114807.GA2674@hirez.programming.kicks-ass.net>
-References: <159852811819.707944.12798182250041968537.stgit@devnote2>
-        <159852826969.707944.15092569392287597887.stgit@devnote2>
-        <20200827114807.GA2674@hirez.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1728820AbgH0Lxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 07:53:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 1F147AC50;
+        Thu, 27 Aug 2020 11:07:43 +0000 (UTC)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     jpoimboe@redhat.com, jikos@kernel.org, pmladek@suse.com,
+        joe.lawrence@redhat.com, shuah@kernel.org
+Cc:     live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>
+Subject: [PATCH] selftests/livepatch: Do not check order when using "comm" for dmesg checking
+Date:   Thu, 27 Aug 2020 13:07:09 +0200
+Message-Id: <20200827110709.26824-1-mbenes@suse.cz>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 13:48:07 +0200
-peterz@infradead.org wrote:
+check_result() uses "comm" to check expected results of selftests output
+in dmesg. Everything works fine if timestamps in dmesg are unique. If
+not, like in this example
 
-> On Thu, Aug 27, 2020 at 08:37:49PM +0900, Masami Hiramatsu wrote:
-> > Free kretprobe_instance with rcu callback instead of directly
-> > freeing the object in the kretprobe handler context.
-> > 
-> > This will make kretprobe run safer in NMI context.
-> > 
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  include/linux/kprobes.h |    3 ++-
-> >  kernel/kprobes.c        |   25 ++++++-------------------
-> >  2 files changed, 8 insertions(+), 20 deletions(-)
-> > 
-> > diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-> > index 46a7afcf5ec0..97557f820d9b 100644
-> > --- a/include/linux/kprobes.h
-> > +++ b/include/linux/kprobes.h
-> > @@ -160,6 +160,7 @@ struct kretprobe_instance {
-> >  	struct kretprobe *rp;
-> >  	kprobe_opcode_t *ret_addr;
-> >  	struct task_struct *task;
-> > +	struct rcu_head rcu;
-> >  	void *fp;
-> >  	char data[];
-> >  };
-> 
-> You can stick the rcu_head in a union with hlist.
+[   86.844422] test_klp_callbacks_demo: pre_unpatch_callback: test_klp_callbacks_mod -> [MODULE_STATE_LIVE] Normal state
+[   86.844422] livepatch: 'test_klp_callbacks_demo': starting unpatching transition
 
-Indeed. OK, I'll update it.
+, "comm" fails with "comm: file 2 is not in sorted order". Suppress the
+order checking with --nocheck-order option.
 
-Thank you!
+Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+---
 
+The strange thing is, I can reproduce the issue easily and reliably on
+older codestreams (4.12) but not on current upstream in my testing
+environment. I think the change makes sense regardless though.
 
+ tools/testing/selftests/livepatch/functions.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
+index 1aba83c87ad3..846c7ed71556 100644
+--- a/tools/testing/selftests/livepatch/functions.sh
++++ b/tools/testing/selftests/livepatch/functions.sh
+@@ -278,7 +278,7 @@ function check_result {
+ 	# help differentiate repeated testing runs.  Remove them with a
+ 	# post-comparison sed filter.
+ 
+-	result=$(dmesg | comm -13 "$SAVED_DMESG" - | \
++	result=$(dmesg | comm --nocheck-order -13 "$SAVED_DMESG" - | \
+ 		 grep -e 'livepatch:' -e 'test_klp' | \
+ 		 grep -v '\(tainting\|taints\) kernel' | \
+ 		 sed 's/^\[[ 0-9.]*\] //')
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.28.0
+
