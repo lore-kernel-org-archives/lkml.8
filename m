@@ -2,134 +2,86 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EECC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43671C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B24EF207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:01:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gVD9cVF/"
+	by mail.kernel.org (Postfix) with ESMTP id 2175E20825
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgH0KBS (ORCPT
+        id S1728512AbgH0KCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:01:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728722AbgH0KBI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:01:08 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65342C06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:01:08 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mw10so2333797pjb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:01:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dVFa87Gzs3By4YvbvT0mRKBEarvG0+o1jlknOHQh1bk=;
-        b=gVD9cVF/zAxIeP1DEiHgj6yUQFF+LV7qSSbBZzzKtjf8+acXK/O8DMW21WfLGW1PvL
-         55bJplcY2uW0RT8/FuAZuvB/frCDSq07yGgRHakqirqysT7ouv0XPTQYLjM2y3/BZN/n
-         tU8MNFIseLrjg06NOCgaMEG0U7szmIdh5LUiRUwSi9pq/QU5ur3x+mjDO4mhbhI92bZs
-         V+eR862RogLZOMZBOJiW8mON1QaLKXtpeJdENV3SjZSv4UKkjIzstlwKYbgl5HDPdg1v
-         4gzLxyxsYkI15HDgu5EtTraNKniO39U8cxmcxOiPgqJ+nhNmyqEkSw1kgwIM5hxD33Su
-         u2BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dVFa87Gzs3By4YvbvT0mRKBEarvG0+o1jlknOHQh1bk=;
-        b=oSR3rKLWpNLMou8sETHHU4d4054DavOG4f/NXo308vk0QE3gVFBROBgvwzp+F1IBcL
-         jBv42jMwC7+mQA+mfxuqs66UgNQImc32kyBEmPeUpc0nkscUknxFPXjCuMo7YslbuzDe
-         gMBur0p1txCRabgzabXKsZsZOECcTfcG0YJ9S666o21dctZ8XhJciAU0xr/2UtHzVeYV
-         R/ndnOs3movnZHFJO4r+EJ/LzV1FTFSLTFsJNRvDReX4gUJ9qISY0DLI2DYscdHmRBK8
-         PLDstpliBYsX3ExMuUp+h8L2iwSYd32yFODD+6oPvyDI9veHGEBphrJRs2/wZnbTFTe6
-         YVxQ==
-X-Gm-Message-State: AOAM532ufNMQlOgrsRy6otIsC98+eR5UoqleDoA11baSxRS0vKHu7EZm
-        n7sbgcEx7XT27bja/wk2R6NqcA==
-X-Google-Smtp-Source: ABdhPJxhWRorvB+gpXZ6w7wfzkzjVUNNRfP/ARhG3lJTv4BmjYQxQZRwWK9rALeVRqpF/QmbZKwOvQ==
-X-Received: by 2002:a17:90a:d3d4:: with SMTP id d20mr9680860pjw.111.1598522467847;
-        Thu, 27 Aug 2020 03:01:07 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id s8sm1809939pgp.36.2020.08.27.03.01.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Aug 2020 03:01:06 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 15:31:04 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Niklas Cassel <nks@flawful.org>
-Subject: Re: [PATCH v2] opp: Power on (virtual) power domains managed by the
- OPP core
-Message-ID: <20200827100104.yuf2nzb6qras7zcw@vireshk-i7>
-References: <20200826093328.88268-1-stephan@gerhold.net>
+        Thu, 27 Aug 2020 06:02:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726988AbgH0KCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 06:02:01 -0400
+Received: from gaia (unknown [46.69.195.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71C892075B;
+        Thu, 27 Aug 2020 10:01:58 +0000 (UTC)
+Date:   Thu, 27 Aug 2020 11:01:56 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        kasan-dev@googlegroups.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Branislav Rankov <Branislav.Rankov@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 22/35] arm64: mte: Enable in-kernel MTE
+Message-ID: <20200827100155.GD29264@gaia>
+References: <cover.1597425745.git.andreyknvl@google.com>
+ <6a83a47d9954935d37a654978e96c951cc56a2f6.1597425745.git.andreyknvl@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200826093328.88268-1-stephan@gerhold.net>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <6a83a47d9954935d37a654978e96c951cc56a2f6.1597425745.git.andreyknvl@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26-08-20, 11:33, Stephan Gerhold wrote:
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 8b3c3986f589..7e53a7b94c59 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -17,6 +17,7 @@
->  #include <linux/device.h>
->  #include <linux/export.h>
->  #include <linux/pm_domain.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/regulator/consumer.h>
+On Fri, Aug 14, 2020 at 07:27:04PM +0200, Andrey Konovalov wrote:
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index 4d3abb51f7d4..4d94af19d8f6 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -1670,6 +1670,9 @@ static void cpu_enable_mte(struct arm64_cpu_capabilities const *cap)
+>  	write_sysreg_s(0, SYS_TFSR_EL1);
+>  	write_sysreg_s(0, SYS_TFSRE0_EL1);
 >  
->  #include "opp.h"
-> @@ -1964,10 +1965,13 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
->  		if (!opp_table->genpd_virt_devs[index])
->  			continue;
->  
-> +		if (opp_table->genpd_virt_links && opp_table->genpd_virt_links[index])
-> +			device_link_del(opp_table->genpd_virt_links[index]);
->  		dev_pm_domain_detach(opp_table->genpd_virt_devs[index], false);
->  		opp_table->genpd_virt_devs[index] = NULL;
->  	}
->  
-> +	kfree(opp_table->genpd_virt_links);
->  	kfree(opp_table->genpd_virt_devs);
->  	opp_table->genpd_virt_devs = NULL;
->  }
-> @@ -1999,8 +2003,10 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
->  {
->  	struct opp_table *opp_table;
->  	struct device *virt_dev;
-> -	int index = 0, ret = -EINVAL;
-> +	struct device_link *dev_link;
-> +	int index = 0, ret = -EINVAL, num_devs;
->  	const char **name = names;
-> +	u32 flags;
->  
->  	opp_table = dev_pm_opp_get_opp_table(dev);
->  	if (IS_ERR(opp_table))
-> @@ -2049,6 +2055,32 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
+> +	/* Enable Match-All at EL1 */
+> +	sysreg_clear_set(tcr_el1, 0, SYS_TCR_EL1_TCMA1);
+> +
+>  	/*
+>  	 * CnP must be enabled only after the MAIR_EL1 register has been set
+>  	 * up. Inconsistent MAIR_EL1 between CPUs sharing the same TLB may
+> @@ -1687,6 +1690,9 @@ static void cpu_enable_mte(struct arm64_cpu_capabilities const *cap)
+>  	mair &= ~MAIR_ATTRIDX(MAIR_ATTR_MASK, MT_NORMAL_TAGGED);
+>  	mair |= MAIR_ATTRIDX(MAIR_ATTR_NORMAL_TAGGED, MT_NORMAL_TAGGED);
+>  	write_sysreg_s(mair, SYS_MAIR_EL1);
+> +
+> +	/* Enable MTE Sync Mode for EL1 */
+> +	sysreg_clear_set(sctlr_el1, SCTLR_ELx_TCF_MASK, SCTLR_ELx_TCF_SYNC);
 
-I was about to apply this patch when I noticed that this routine does
-return the array of virtual devices back to the caller, like the qcom
-cpufreq driver in this case. IIRC we did it this way as a generic
-solution for this in the OPP core wasn't preferable.
-
-And so I think again if this patch should be picked instead of letting
-the platform handle this ?
+In the 8th incarnation of the user MTE patches, this initialisation
+moved to proc.S before the MMU is initialised. When rebasing, please
+take this into account.
 
 -- 
-viresh
+Catalin
