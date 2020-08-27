@@ -2,139 +2,143 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B580C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF832054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8EC2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:10:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VoR6tt84"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgH0OJr (ORCPT
+        id S1728048AbgH0OKN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:09:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:58514 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727056AbgH0OEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:04:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B2C8101E;
-        Thu, 27 Aug 2020 06:53:39 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 889CB3F68F;
-        Thu, 27 Aug 2020 06:53:33 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 14:53:31 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mel Gorman <mgorman@suse.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 5.8 130/232] sched/uclamp: Protect uclamp fast path code
- with static key
-Message-ID: <20200827135330.246pbwc7h5gvdli7@e107158-lin.cambridge.arm.com>
-References: <20200820091612.692383444@linuxfoundation.org>
- <20200820091619.114657136@linuxfoundation.org>
+        Thu, 27 Aug 2020 10:10:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727015AbgH0OEV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 10:04:21 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A65E3C0619C7;
+        Thu, 27 Aug 2020 07:03:41 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id g29so2422615pgl.2;
+        Thu, 27 Aug 2020 07:03:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LIt8SU895oGklP+2kcXOf7XSm/B7RkLFz7bfNOknIlU=;
+        b=VoR6tt84zLXjyu1g76/nMxTcuqWYBpv1/t4SevALg59qHWTSskUXgUXFLsg9CNGGse
+         +V9BBRagon9lXBR9Q7w/nzSnXXPxfr2IcCvlwyt97rZVhxOU+jwP6i4qATzheSTSy3G7
+         PtDq4FfBh7c1OOgGPMiaubiw54m0kfWWBV3lnkGIsvFI4i99+Q0eI7vhyuQ0QXmIDMEC
+         F+QiTsyf9NSb7zkLBxsbdrpgKeijNcTkElHOPUdrOn6ycJO59b8QDdQzSfkfeSxXVBtx
+         gXGrHXkr51/ijBiptBS6ezjgPj56om6D6fwgP5AD8ydt3DFgjHuzNN8aevwhJ5H6YNAt
+         KrXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LIt8SU895oGklP+2kcXOf7XSm/B7RkLFz7bfNOknIlU=;
+        b=fXy4lrGWoAaZp+/I36I60aeRPBNLztEspvQpG430L7aZZj3xmmn3uxm7ovSEaHjoZ9
+         t+NvMEC9cehJzP/VlNv4/RdSpvf9T9YQS9+HRZv/hWK457PzEgYSpmelDZdiQPPNgcuD
+         KCiMkXYDKqM7TuaMvnbT/3xFLvkaD4Xyl56sTidvk4VQhDh3YKUlFg4VI93ScuZqW1jl
+         DIWuD3amaShlO8QZrYnvfF8mGRSmtSb9wo4tB/BxGtPal5ojAWBBkkSRnZmSNwAwm6bO
+         TLn0cQbaJRQAk99xT0BYF3ENRTxtbLc9PUSgjw2SbobmRfp6OzQUB1hoxa0vux2SWO4G
+         TV9w==
+X-Gm-Message-State: AOAM533HQOKzhTE463cx83Vg9mLjFd09CRWtr2VmIbmvIZ080rn2t8ih
+        p9QExXjL41BE6AAHIYyyHfNdJsEvyV4=
+X-Google-Smtp-Source: ABdhPJyJ/ZgY7b2VbYL/BPBj3JPSkbnWBQ8Z9sDUnv9kTvMszM5VRKCaJ1X5lNlS6vUENRLqRPBbig==
+X-Received: by 2002:a17:902:c284:: with SMTP id i4mr16226956pld.287.1598537020709;
+        Thu, 27 Aug 2020 07:03:40 -0700 (PDT)
+Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id fs12sm2371092pjb.21.2020.08.27.07.03.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 07:03:40 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v5 15/20] tools: gpio: port gpio-watch to v2 uAPI
+Date:   Thu, 27 Aug 2020 22:00:15 +0800
+Message-Id: <20200827140020.159627-16-warthog618@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200827140020.159627-1-warthog618@gmail.com>
+References: <20200827140020.159627-1-warthog618@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200820091619.114657136@linuxfoundation.org>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/20/20 11:19, Greg Kroah-Hartman wrote:
-> From: Qais Yousef <qais.yousef@arm.com>
-> 
-> [ Upstream commit 46609ce227039fd192e0ecc7d940bed587fd2c78 ]
-> 
-> There is a report that when uclamp is enabled, a netperf UDP test
-> regresses compared to a kernel compiled without uclamp.
-> 
-> https://lore.kernel.org/lkml/20200529100806.GA3070@suse.de/
-> 
-> While investigating the root cause, there were no sign that the uclamp
-> code is doing anything particularly expensive but could suffer from bad
-> cache behavior under certain circumstances that are yet to be
-> understood.
-> 
-> https://lore.kernel.org/lkml/20200616110824.dgkkbyapn3io6wik@e107158-lin/
-> 
-> To reduce the pressure on the fast path anyway, add a static key that is
-> by default will skip executing uclamp logic in the
-> enqueue/dequeue_task() fast path until it's needed.
-> 
-> As soon as the user start using util clamp by:
-> 
-> 	1. Changing uclamp value of a task with sched_setattr()
-> 	2. Modifying the default sysctl_sched_util_clamp_{min, max}
-> 	3. Modifying the default cpu.uclamp.{min, max} value in cgroup
-> 
-> We flip the static key now that the user has opted to use util clamp.
-> Effectively re-introducing uclamp logic in the enqueue/dequeue_task()
-> fast path. It stays on from that point forward until the next reboot.
-> 
-> This should help minimize the effect of util clamp on workloads that
-> don't need it but still allow distros to ship their kernels with uclamp
-> compiled in by default.
-> 
-> SCHED_WARN_ON() in uclamp_rq_dec_id() was removed since now we can end
-> up with unbalanced call to uclamp_rq_dec_id() if we flip the key while
-> a task is running in the rq. Since we know it is harmless we just
-> quietly return if we attempt a uclamp_rq_dec_id() when
-> rq->uclamp[].bucket[].tasks is 0.
-> 
-> In schedutil, we introduce a new uclamp_is_enabled() helper which takes
-> the static key into account to ensure RT boosting behavior is retained.
-> 
-> The following results demonstrates how this helps on 2 Sockets Xeon E5
-> 2x10-Cores system.
-> 
->                                    nouclamp                 uclamp      uclamp-static-key
-> Hmean     send-64         162.43 (   0.00%)      157.84 *  -2.82%*      163.39 *   0.59%*
-> Hmean     send-128        324.71 (   0.00%)      314.78 *  -3.06%*      326.18 *   0.45%*
-> Hmean     send-256        641.55 (   0.00%)      628.67 *  -2.01%*      648.12 *   1.02%*
-> Hmean     send-1024      2525.28 (   0.00%)     2448.26 *  -3.05%*     2543.73 *   0.73%*
-> Hmean     send-2048      4836.14 (   0.00%)     4712.08 *  -2.57%*     4867.69 *   0.65%*
-> Hmean     send-3312      7540.83 (   0.00%)     7425.45 *  -1.53%*     7621.06 *   1.06%*
-> Hmean     send-4096      9124.53 (   0.00%)     8948.82 *  -1.93%*     9276.25 *   1.66%*
-> Hmean     send-8192     15589.67 (   0.00%)    15486.35 *  -0.66%*    15819.98 *   1.48%*
-> Hmean     send-16384    26386.47 (   0.00%)    25752.25 *  -2.40%*    26773.74 *   1.47%*
-> 
-> The perf diff between nouclamp and uclamp-static-key when uclamp is
-> disabled in the fast path:
-> 
->      8.73%     -1.55%  [kernel.kallsyms]        [k] try_to_wake_up
->      0.07%     +0.04%  [kernel.kallsyms]        [k] deactivate_task
->      0.13%     -0.02%  [kernel.kallsyms]        [k] activate_task
-> 
-> The diff between nouclamp and uclamp-static-key when uclamp is enabled
-> in the fast path:
-> 
->      8.73%     -0.72%  [kernel.kallsyms]        [k] try_to_wake_up
->      0.13%     +0.39%  [kernel.kallsyms]        [k] activate_task
->      0.07%     +0.38%  [kernel.kallsyms]        [k] deactivate_task
-> 
-> Fixes: 69842cba9ace ("sched/uclamp: Add CPU's clamp buckets refcounting")
-> Reported-by: Mel Gorman <mgorman@suse.de>
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Tested-by: Lukasz Luba <lukasz.luba@arm.com>
-> Link: https://lkml.kernel.org/r/20200630112123.12076-3-qais.yousef@arm.com
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
+Port the gpio-watch tool to the latest GPIO uAPI.
 
-Greg/Peter/Mel
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ tools/gpio/gpio-watch.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-Should this go to 5.4 too? Not saying it should, but I don't know if distros
-could care about potential performance hit that this patch addresses.
+diff --git a/tools/gpio/gpio-watch.c b/tools/gpio/gpio-watch.c
+index 5cea24fddfa7..6f048350a27e 100644
+--- a/tools/gpio/gpio-watch.c
++++ b/tools/gpio/gpio-watch.c
+@@ -21,8 +21,8 @@
+ 
+ int main(int argc, char **argv)
+ {
+-	struct gpioline_info_changed chg;
+-	struct gpioline_info req;
++	struct gpio_v2_line_info_changed chg;
++	struct gpio_v2_line_info req;
+ 	struct pollfd pfd;
+ 	int fd, i, j, ret;
+ 	char *event, *end;
+@@ -40,11 +40,11 @@ int main(int argc, char **argv)
+ 	for (i = 0, j = 2; i < argc - 2; i++, j++) {
+ 		memset(&req, 0, sizeof(req));
+ 
+-		req.line_offset = strtoul(argv[j], &end, 0);
++		req.offset = strtoul(argv[j], &end, 0);
+ 		if (*end != '\0')
+ 			goto err_usage;
+ 
+-		ret = ioctl(fd, GPIO_GET_LINEINFO_WATCH_IOCTL, &req);
++		ret = ioctl(fd, GPIO_V2_GET_LINEINFO_WATCH_IOCTL, &req);
+ 		if (ret) {
+ 			perror("unable to set up line watch");
+ 			return EXIT_FAILURE;
+@@ -71,13 +71,13 @@ int main(int argc, char **argv)
+ 			}
+ 
+ 			switch (chg.event_type) {
+-			case GPIOLINE_CHANGED_REQUESTED:
++			case GPIO_V2_LINE_CHANGED_REQUESTED:
+ 				event = "requested";
+ 				break;
+-			case GPIOLINE_CHANGED_RELEASED:
++			case GPIO_V2_LINE_CHANGED_RELEASED:
+ 				event = "released";
+ 				break;
+-			case GPIOLINE_CHANGED_CONFIG:
++			case GPIO_V2_LINE_CHANGED_CONFIG:
+ 				event = "config changed";
+ 				break;
+ 			default:
+@@ -87,7 +87,7 @@ int main(int argc, char **argv)
+ 			}
+ 
+ 			printf("line %u: %s at %llu\n",
+-			       chg.info.line_offset, event, chg.timestamp);
++			       chg.info.offset, event, chg.timestamp);
+ 		}
+ 	}
+ 
+-- 
+2.28.0
 
-Thanks
-
---
-Qais Yousef
