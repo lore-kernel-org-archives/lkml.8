@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD33C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E9BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B311D2177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B04822B4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:19:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q6A4v1RE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TvVNg0zL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgH0STF (ORCPT
+        id S1727883AbgH0STJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:19:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37608 "EHLO
+        Thu, 27 Aug 2020 14:19:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727784AbgH0SSw (ORCPT
+        with ESMTP id S1726938AbgH0SSy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:18:52 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B3C5C061232;
-        Thu, 27 Aug 2020 11:18:52 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id kx11so3015213pjb.5;
-        Thu, 27 Aug 2020 11:18:52 -0700 (PDT)
+        Thu, 27 Aug 2020 14:18:54 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D839C061264;
+        Thu, 27 Aug 2020 11:18:54 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id y206so4129919pfb.10;
+        Thu, 27 Aug 2020 11:18:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CatPPhK9A3iq+4G8OsLNJjr5wv7C3OYfFC9OHG8z8x0=;
-        b=q6A4v1REhzHsXoNtbR/YkAu6EirCTqIxVdqQrdtGv88d2YYEly07YjSadVqqijOhcL
-         HK1NZA41gHW0VCi00hdDcd2Yiwo3dXPraXqu9x5kH14otsMXVJKOhbZncqwFQ6wtY4MI
-         oSApTjReTTfXmUTQORZHLoV0KASDM0AqvRDbT9H2gXkWoHGYdNsKo3LPdM3cUVYG9fhq
-         5CBlC4TRalTx2+9jlQO6B1+RnBFc3xU22LauRlPi2ztFSr+HMOSvvvlQAtfm2dV7ZeZ/
-         WbA2+ihi007Hhh2PL1/8s8Ogk5vHkVDNLz4XPGeWiEXEJCckiPlkV61H52ONDHum9nro
-         Ah+A==
+        bh=qWEGjrPVeQY7q74ALv9YEvs+7dg18MaH1fONO0hwUXo=;
+        b=TvVNg0zLEaMe/if7bHVLqge2Wq5YSHCcoXWdEI7NaQNxXsrF5bxaxu4FCs/CTTaypv
+         7NNo87iPUdgYUvV0m6KxvCslkLZCRmZVNRN77P1eQvnIl5XmRDEXwCQus4O58iqOHU1w
+         A3tpPuT86C9ReSMobznRt8KLSxWVHZZWJP2+lkDqbiITm0ML7ldqC1RjKZZTJI/2bLjz
+         VRNLg5mEW7i7946zyRwvfdQV+5k+eGOUIV87w0RCJODLdxE8gjspNW9BbWFyIiD6qzyI
+         RfGCISl+TF1WkKdLP6xmepnMDhdCseM6pEf6tlhqNskSFe89wmjpP82M3XjDW/o77/KO
+         R7KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CatPPhK9A3iq+4G8OsLNJjr5wv7C3OYfFC9OHG8z8x0=;
-        b=CimO2tE22TvM2Q7tunc38s26L5xG7JUxZyBiWaYC5pMwZ+gy1kTFerzi5QcBMMmit4
-         qJhjBfbQt/nIDBnLs3IKWjHy6ve1NOgaSVDSlSoIfmRmYQhzb6apGhs371t5YoR87mAC
-         /rYzHIl/mL4cF+Nzp0AkpdWpdMfeE6nzlg3uo1PZuFgULCAhfnuEYAQ+Wy+bvrX4vx6l
-         ZiK06ORjucH6xqn4iH5HPQW5rkwKsCS83gfe3Nhh+pZtzb/ezJ4HVnTLAt9BH71BosrR
-         Lm7xuvan35XnJ9r95mwWlNbkfGOnzdaO3mtN18DCNpOJH2qRZGkL8LZyyTQmY2Z92m00
-         wmRg==
-X-Gm-Message-State: AOAM531ItBMEGWgRqzprTnmElWRcw5DQGvrsGM6FZY/ynjhCS28H27jU
-        9PgcHkuzAVlTNLhPKl4/dOg=
-X-Google-Smtp-Source: ABdhPJyMqHpvSpd3C9HlHIRazuypsiroUjSp4k/vGcBtgRM2tm00Y+6yPc4yLyhg+f8pNQELqsUljA==
-X-Received: by 2002:a17:90a:ad05:: with SMTP id r5mr104112pjq.186.1598552331809;
-        Thu, 27 Aug 2020 11:18:51 -0700 (PDT)
+        bh=qWEGjrPVeQY7q74ALv9YEvs+7dg18MaH1fONO0hwUXo=;
+        b=ebwFe8M3UmCegyTghaJMsXw02Asbj+zd/RIXdFywKnWbAKVGrzAiCGHk0YPZfhbmZ+
+         P3j/Cvo9lyVkMYJMnP/KEw5JpZ6cCcprsKmpv/q9l+pIIOW5YYljJw7P5KfxBdxzHG/I
+         XUBJCoboNhbgxrOuSZIg3TjtaMAYaOsseIEWvY+qEtJuljiSbovDxT0H64YauDETM87x
+         453LPkV653xoGmU/UhZtiCoXmBpxG0wK+MDvveRRH8FyjuR10Hvj14za385fQPvi1+F0
+         Fn6AVgXxx1NykLapP6+8DH5Os8rQDcejR2gKO/GuhQVBSpaFUB7tGTaS/LhsRvNoYC/l
+         t/mQ==
+X-Gm-Message-State: AOAM533Gjwf0cMiTuh6NQAdap29ot9n/VfsuuUuOma2BKwGjRrv3kg0k
+        ejgEFaHUxTUnsJWVtftbBIg=
+X-Google-Smtp-Source: ABdhPJzx3hkAE/P+tGjBhOPy9WW8+9VI2y0iNI9hLyVjFfHn8On9W36EQudYnNUXxbLvn4hv4ya4mA==
+X-Received: by 2002:a63:4c11:: with SMTP id z17mr15248438pga.152.1598552333632;
+        Thu, 27 Aug 2020 11:18:53 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id q18sm3580179pfn.106.2020.08.27.11.18.50
+        by smtp.gmail.com with ESMTPSA id q18sm3580179pfn.106.2020.08.27.11.18.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 11:18:51 -0700 (PDT)
+        Thu, 27 Aug 2020 11:18:53 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -75,9 +75,9 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         linux-spi@vger.kernel.org (open list:SPI SUBSYSTEM),
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 3/5] ARM: dts: NSP: Fixed QSPI compatible string
-Date:   Thu, 27 Aug 2020 11:18:40 -0700
-Message-Id: <20200827181842.1000451-4-f.fainelli@gmail.com>
+Subject: [PATCH 4/5] ARM: dts: BCM5301X: Fixed QSPI compatible string
+Date:   Thu, 27 Aug 2020 11:18:41 -0700
+Message-Id: <20200827181842.1000451-5-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200827181842.1000451-1-f.fainelli@gmail.com>
 References: <20200827181842.1000451-1-f.fainelli@gmail.com>
@@ -91,25 +91,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 The string was incorrectly defined before from least to most
 specific, swap the compatible strings accordingly.
 
-Fixes: 329f98c1974e ("ARM: dts: NSP: Add QSPI nodes to NSPI and bcm958625k DTSes")
+Fixes: 1c8f40650723 ("ARM: dts: BCM5301X: convert to iProc QSPI")
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm/boot/dts/bcm-nsp.dtsi | 2 +-
+ arch/arm/boot/dts/bcm5301x.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 0346ea621f0f..c846fa3c244d 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -284,7 +284,7 @@ nand: nand@26000 {
- 		};
+diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+index 2d9b4dd05830..0016720ce530 100644
+--- a/arch/arm/boot/dts/bcm5301x.dtsi
++++ b/arch/arm/boot/dts/bcm5301x.dtsi
+@@ -488,7 +488,7 @@ nand: nand@18028000 {
+ 	};
  
- 		qspi: spi@27200 {
--			compatible = "brcm,spi-bcm-qspi", "brcm,spi-nsp-qspi";
-+			compatible = "brcm,spi-nsp-qspi", "brcm,spi-bcm-qspi";
- 			reg = <0x027200 0x184>,
- 			      <0x027000 0x124>,
- 			      <0x11c408 0x004>,
+ 	spi@18029200 {
+-		compatible = "brcm,spi-bcm-qspi", "brcm,spi-nsp-qspi";
++		compatible = "brcm,spi-nsp-qspi", "brcm,spi-bcm-qspi";
+ 		reg = <0x18029200 0x184>,
+ 		      <0x18029000 0x124>,
+ 		      <0x1811b408 0x004>,
 -- 
 2.25.1
 
