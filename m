@@ -2,237 +2,102 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB903C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4456C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A14DC20848
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFDD520872
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:55:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="op2Qm5am"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MeAnpLG4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgH0WzW (ORCPT
+        id S1728027AbgH0WzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 18:55:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52484 "EHLO
+        Thu, 27 Aug 2020 18:55:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727926AbgH0WzV (ORCPT
+        with ESMTP id S1727926AbgH0WzW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 18:55:21 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F2C0C06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 15:55:20 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id e5so2858845qvr.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 15:55:20 -0700 (PDT)
+        Thu, 27 Aug 2020 18:55:22 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6897BC061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 15:55:22 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id t6so8278655ljk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 15:55:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NHx4KMeBVqAEMcvmg+uxPNQTDNwjuyTGo6Fp5UGmNpc=;
-        b=op2Qm5amYr8FYy6AuUQgIYoKgfozkFQUdmXFahqeVChi+S5KQKAk/L/TC/Xz1QTH45
-         emVS3RzguX4GrJD4kBbApfD9YazKWBZ/W+Oni0NXbPTudwJJgOIEt0wvFjjN34g1+t6q
-         +gFvS6+xsog892OIkzvs+Q4XH0AxJUev0UnLw=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qb0Ec8fDQudSKqvQFmwnBIuKxE0k0ElPX6kr8ZppFm8=;
+        b=MeAnpLG4pG2Ikxmbpy6Cs2fX3iTsHcQCQzPEKb4qfBmXfZTbxuDZ6g4JEVaZgTEKKX
+         8FlO10kwzHHTDncetdmSpJi3tOJnfsSngYRqcZfVB9EpeO6DmhzghwCA69NW5MUB7BaS
+         P3VcgSt11sTkF4YuIng6D1f56oMTRF5wN7rYphD/lwg+wF7N/EwZVVt2h6redx6XRvRl
+         zA0raTj6jLEgtK1f+66Rbr1ZudmIpRDXRXweJjjDmmiVEMiSHBmji98Fp1PqW5qoXTur
+         JoqgtkbQMK1+nuke+LwvH7Ah/pH7u6nOh3R1W58mJ20j0n8GsyXP/BEvJ5ZPBsnb/hFW
+         2eQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NHx4KMeBVqAEMcvmg+uxPNQTDNwjuyTGo6Fp5UGmNpc=;
-        b=WHqU+WpsezJjGs8wY5wv34IK3Nxq8hBJzCl1OTLncFig5mVvPNItusU8/l1n7u5kfH
-         /jUyuV/iiS4xA0Tarf5uX/TD0Ftl+KXIGxP+qcLWAySmrr0RVQs7YV2T61OCcpTxMVl6
-         6ipo3dDEKnoBNNgmBDwcUvHofEcGHbbbs1ixsjakJa20Bf070J1KuBJt1nZDSEEeAln7
-         n1MSWRUaSG5yYItQ2hiVfdrgXwdnTf1xSx03eDCDnCHeeza9srjgoWAV//suZgGBwFuk
-         AtiQRTTTOxC2027E1eAbo+fvm3UcwXS+8ntLZr2QMsVNO3itATyeQB6a/prsQhFWAzBC
-         F4uw==
-X-Gm-Message-State: AOAM533GtPWI5LiCkXoZ/wKdC8TF27XzhMjIQLgd2BTEKBmgFeQkM7K2
-        4riNjpMN2yHBg1YofNUPyx9D0A==
-X-Google-Smtp-Source: ABdhPJwWphO4IpBJnpjSbzSjba1dtuBPtZWmRrMTNz5wxGv2ycBixUQUHchwLW2z8lY+RwcnzUjOdw==
-X-Received: by 2002:ad4:4dc5:: with SMTP id cw5mr21218710qvb.238.1598568919791;
-        Thu, 27 Aug 2020 15:55:19 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id u41sm3232432qth.42.2020.08.27.15.55.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 15:55:19 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 18:55:18 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
-        dave@stgolabs.net, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neeraj.iitr10@gmail.com, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>, vineethrp@gmail.com
-Subject: Re: [PATCH v4 -rcu 1/4] rcu/segcblist: Do not depend on rcl->len to
- store the segcb len during merge
-Message-ID: <20200827225518.GB3821640@google.com>
-References: <20200825024842.3408659-1-joel@joelfernandes.org>
- <20200825024842.3408659-2-joel@joelfernandes.org>
- <20200825200809.GW2855@paulmck-ThinkPad-P72>
- <20200825224723.GB579506@google.com>
- <20200826142028.GN2855@paulmck-ThinkPad-P72>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qb0Ec8fDQudSKqvQFmwnBIuKxE0k0ElPX6kr8ZppFm8=;
+        b=LLiCuQGszV/1jsjgw5LlzX+Ua4AekvcUmI7UxtkFrO3AcX335J7PFLv2hzYa4i2sul
+         NaA1Tba44AUn7aA5wtwUv95JqBgoPNbnzOVOJQmxwIDMJi/ZwCRV4BvW+B7Bs05Ny8Aw
+         aBihtKNZEBnjawP3wjB+LK8lGjP0RS7VAI1iS3zp87Mgzur7enfuLg9wYAXg52kB9TWc
+         oo6a6RcYrhjWdo/kKHIVKYNKS0lBxzfuQH0xAobzT0r6CR9fRwYc3sP7rTdo2tH9K+HJ
+         2xokQ0cvAOliK+1fQqSjkXdpK6neezXfFruTrJ0OM7bJRbT428Ggd6pxi2d6GlDIPtzQ
+         zD6Q==
+X-Gm-Message-State: AOAM5326mFvTly5EoqoRaEPGh7WC1z/O5xVEQR6oHSibe5G5X+iWJJTZ
+        ff3Ztl7ViniqKxMAcluCbwTDWnM66PtyzYlE8KpgxA==
+X-Google-Smtp-Source: ABdhPJyauiwVNK3F8aHtjkSSue45fsdrC/ZAP+yDT7A1hDKs5ujzLl8YJlHq93WLvkvXZHRQtIN75jL/gr1bSV1yhnE=
+X-Received: by 2002:a2e:81d9:: with SMTP id s25mr10355947ljg.104.1598568920739;
+ Thu, 27 Aug 2020 15:55:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826142028.GN2855@paulmck-ThinkPad-P72>
+References: <20200804091603.541-1-a.fatoum@pengutronix.de>
+In-Reply-To: <20200804091603.541-1-a.fatoum@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Aug 2020 00:55:09 +0200
+Message-ID: <CACRpkdb9NBpS3yvvX+G8NWgVdSqR5vd6DxP2rT7GCuB0ObnvHg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: siox: indicate exclusive support of threaded IRQs
+To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc:     Thorsten Scherer <t.scherer@eckelmann.de>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 07:20:28AM -0700, Paul E. McKenney wrote:
-[...]
-> > > Or better yet, please see below, which should allow getting rid of both
-> > > of them.
-> > > 
-> > > >  	rcu_segcblist_extract_done_cbs(src_rsclp, &donecbs);
-> > > >  	rcu_segcblist_extract_pend_cbs(src_rsclp, &pendcbs);
-> > > > -	rcu_segcblist_insert_count(dst_rsclp, &donecbs);
-> > > > +
-> > > > +	rcu_segcblist_add_len(dst_rsclp, src_len);
-> > > >  	rcu_segcblist_insert_done_cbs(dst_rsclp, &donecbs);
-> > > >  	rcu_segcblist_insert_pend_cbs(dst_rsclp, &pendcbs);
-> > > 
-> > > Rather than adding the blank lines, why not have the rcu_cblist structures
-> > > carry the lengths?  You are already adjusting one of the two call sites
-> > > that care (rcu_do_batch()), and the other is srcu_invoke_callbacks().
-> > > That should shorten this function a bit more.  And make callback handling
-> > > much more approachable, I suspect.
-> > 
-> > Sorry, I did not understand. The rcu_cblist structure already has a length
-> > field. I do modify rcu_segcblist_extract_done_cbs() and
-> > rcu_segcblist_extract_pend_cbs() to carry the length already, in a later
-> > patch.
-> > 
-> > Just to emphasize, this patch is just a small refactor to avoid an issue in
-> > later patches. It aims to keep current functionality unchanged.
-> 
-> True enough.  I am just suggesting that an equally small refactor in
-> a slightly different direction should get to a better place.  The key
-> point enabling this slightly different direction is that this code is
-> an exception to the "preserve ->cblist.len" rule because it is invoked
-> only from the CPU hotplug code.
-> 
-> So you could use the rcu_cblist .len field to update the ->cblist.len
-> field, thus combining the _cbs and _count updates.  One thing that helps
-> is that setting th e rcu_cblist .len field doesn't hurt the other use
-> cases that require careful handling of ->cblist.len.
+Hi Ahmad,
 
-Thank you for the ideas. I am trying something like this on top of this
-series based on the ideas. One thing I concerned a bit is if getting rid of
-the rcu_segcblist_xchg_len() function (which has memory barriers in them)
-causes issues in the hotplug path. I am now directly updating the length
-without additional memory barriers. I will test it more and try to reason
-more about it as well.
+On Tue, Aug 4, 2020 at 11:18 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
 
----8<-----------------------
+> Generic GPIO consumers like gpio-keys use request_any_context_irq()
+> to request a threaded handler if irq_settings_is_nested_thread() ==
+> true or a hardirq handler otherwise.
+>
+> Drivers using handle_nested_irq() must be sure that the nested
+> IRQs were requested with threaded handlers, because the IRQ
+> is handled by calling action->thread_fn().
+>
+> The gpio-siox driver dispatches IRQs via handle_nested_irq,
+> but has irq_settings_is_nested_thread() == false.
+>
+> Set gpio_irq_chip::threaded to remedy this.
+>
+> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-From: Joel Fernandes <joelaf@google.com>
-Date: Thu, 27 Aug 2020 18:30:25 -0400
-Subject: [PATCH] fixup! rcu/segcblist: Do not depend on donecbs ->len to store
- the segcb len during merge
+I think we concluded we want to apply this patch, but with
+a fixed commit text, can you send a V2? (Or ask Uwe if he wants
+to pick it up and write the text.)
 
-Signed-off-by: Joel Fernandes <joelaf@google.com>
----
- kernel/rcu/rcu_segcblist.c | 38 ++++----------------------------------
- 1 file changed, 4 insertions(+), 34 deletions(-)
-
-diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-index 79c2cbe388c5..c33abbc97a07 100644
---- a/kernel/rcu/rcu_segcblist.c
-+++ b/kernel/rcu/rcu_segcblist.c
-@@ -175,26 +175,6 @@ void rcu_segcblist_inc_len(struct rcu_segcblist *rsclp)
- 	rcu_segcblist_add_len(rsclp, 1);
- }
- 
--/*
-- * Exchange the numeric length of the specified rcu_segcblist structure
-- * with the specified value.  This can cause the ->len field to disagree
-- * with the actual number of callbacks on the structure.  This exchange is
-- * fully ordered with respect to the callers accesses both before and after.
-- */
--static long rcu_segcblist_xchg_len(struct rcu_segcblist *rsclp, long v)
--{
--#ifdef CONFIG_RCU_NOCB_CPU
--	return atomic_long_xchg(&rsclp->len, v);
--#else
--	long ret = rsclp->len;
--
--	smp_mb(); /* Up to the caller! */
--	WRITE_ONCE(rsclp->len, v);
--	smp_mb(); /* Up to the caller! */
--	return ret;
--#endif
--}
--
- /*
-  * Initialize an rcu_segcblist structure.
-  */
-@@ -361,6 +341,7 @@ void rcu_segcblist_extract_done_cbs(struct rcu_segcblist *rsclp,
- 		if (rsclp->tails[i] == rsclp->tails[RCU_DONE_TAIL])
- 			WRITE_ONCE(rsclp->tails[i], &rsclp->head);
- 	rcu_segcblist_set_seglen(rsclp, RCU_DONE_TAIL, 0);
-+	rcu_segcblist_add_len(rsclp, -(rclp->len));
- }
- 
- /*
-@@ -414,17 +395,7 @@ void rcu_segcblist_extract_pend_cbs(struct rcu_segcblist *rsclp,
- 		WRITE_ONCE(rsclp->tails[i], rsclp->tails[RCU_DONE_TAIL]);
- 		rcu_segcblist_set_seglen(rsclp, i, 0);
- 	}
--}
--
--/*
-- * Insert counts from the specified rcu_cblist structure in the
-- * specified rcu_segcblist structure.
-- */
--void rcu_segcblist_insert_count(struct rcu_segcblist *rsclp,
--				struct rcu_cblist *rclp)
--{
--	rcu_segcblist_add_len(rsclp, rclp->len);
--	rclp->len = 0;
-+	rcu_segcblist_add_len(rsclp, -(rclp->len));
- }
- 
- /*
-@@ -448,6 +419,7 @@ void rcu_segcblist_insert_done_cbs(struct rcu_segcblist *rsclp,
- 			break;
- 	rclp->head = NULL;
- 	rclp->tail = &rclp->head;
-+	rcu_segcblist_add_len(rsclp, rclp->len);
- }
- 
- /*
-@@ -463,6 +435,7 @@ void rcu_segcblist_insert_pend_cbs(struct rcu_segcblist *rsclp,
- 	rcu_segcblist_add_seglen(rsclp, RCU_NEXT_TAIL, rclp->len);
- 	WRITE_ONCE(*rsclp->tails[RCU_NEXT_TAIL], rclp->head);
- 	WRITE_ONCE(rsclp->tails[RCU_NEXT_TAIL], rclp->tail);
-+	rcu_segcblist_add_len(rsclp, rclp->len);
- }
- 
- /*
-@@ -601,16 +574,13 @@ void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
- {
- 	struct rcu_cblist donecbs;
- 	struct rcu_cblist pendcbs;
--	long src_len;
- 
- 	rcu_cblist_init(&donecbs);
- 	rcu_cblist_init(&pendcbs);
- 
--	src_len = rcu_segcblist_xchg_len(src_rsclp, 0);
- 	rcu_segcblist_extract_done_cbs(src_rsclp, &donecbs);
- 	rcu_segcblist_extract_pend_cbs(src_rsclp, &pendcbs);
- 
--	rcu_segcblist_add_len(dst_rsclp, src_len);
- 	rcu_segcblist_insert_done_cbs(dst_rsclp, &donecbs);
- 	rcu_segcblist_insert_pend_cbs(dst_rsclp, &pendcbs);
- 
--- 
-2.28.0.402.g5ffc5be6b7-goog
-
+Yours,
+Linus Walleij
