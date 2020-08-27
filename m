@@ -2,421 +2,209 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01813C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE94C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D09C22177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1610C22B4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:52:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h0P8ksLv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbgH0Qvz (ORCPT
+        id S1726858AbgH0QwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:51:55 -0400
-Received: from mout.perfora.net ([74.208.4.196]:47847 "EHLO mout.perfora.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbgH0Qvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:51:54 -0400
-Received: from [192.168.0.166] ([47.134.10.147]) by mrelay.perfora.net
- (mreueus002 [74.208.5.2]) with ESMTPSA (Nemesis) id 0MZBIA-1jumdK33kq-00KuTw;
- Thu, 27 Aug 2020 18:46:51 +0200
-To:     linux-kernel@vger.kernel.org
-From:   Jody Bruchon <jody@jodybruchon.com>
-Subject: Help with Realtek RTL8156 USB 2.5G NIC not working and cdc_ncm syslog
- flooding
-Cc:     jody@jodybruchon.com
-Message-ID: <dc255e58-b2dd-6b22-4e24-7a3591c64e27@jodybruchon.com>
-Date:   Thu, 27 Aug 2020 12:46:49 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 27 Aug 2020 12:52:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbgH0QwE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 12:52:04 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33492C061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:52:04 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id cs12so2923144qvb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:52:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :organization:user-agent:mime-version:content-transfer-encoding;
+        bh=pMOP7GvtalnvE1bAalLKdMDTFVojjFa/CIZrykJhyA0=;
+        b=h0P8ksLv0SkYmJK3zzvDr/R7THSzA72QP3N2IwSzwKpJ3iiNMHxFi/mQ5kzKYteTfz
+         fQyLTnyLdIHB3Gaa1yTROhP6k90swdorDE4WYoa6fySeP32+qdkuNRsu06JLnpLRR7u0
+         g8PhQElen69O4YP4hvfTiIkqWRYB8+3JLN8aTIHWcjAo0NmCwJAk1BWOPkVGyACdgvGQ
+         BMRiELtJhmECatPKpRBEQVtmOLOrAjywEKaK03Yvwujqgd4uT+UDH0xI9AaijUSfprMv
+         //0ZILqH1SsviV/dU8hcaAB6fycLMW70fjo1LRHld16XoyvT99lWozl+qEiS6PSYaeOs
+         EKlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=pMOP7GvtalnvE1bAalLKdMDTFVojjFa/CIZrykJhyA0=;
+        b=a92KI65nc5qAevB+1oY16sliY7BsodmK3jME7A/jGIdcGKqJ9O3E6egGesTYzTU5WE
+         WwihCYsOPCHIWJQr4/gjYwuQ0vJGija25I1gn13eY8fj60XZmUICRKIo6gl+XRTc8Yyo
+         ZNrewZ4CNeR55WYKcUIqQ8Mkv9IUloRwLdYuBabtkHZHgEM62DuG38RLcpSF77As/Jly
+         U7e0QCI1y5ClxLgL2d6IFQFJLgB7mWJeiR52Nlu/8KrxdsU6q/3dNd+q4eSIgg2bVlFZ
+         f9imhmVB0dvI9ahX5u9ZYIG9Hzm9gHrf0R3u6EFjqC+53agjkASG72oqip0PkLtMlDJH
+         uMYg==
+X-Gm-Message-State: AOAM532D15X2Hn75Fg8aOaVzvXJM/S9G0VIJxl0/sQ5fgzIFwvkNZWb0
+        J/GZoE0edEBHIZlY/CmTxR4=
+X-Google-Smtp-Source: ABdhPJznHTMFGAjs5NYYi+b0cJT1FwNBBwSRZP0u9ZT/YI0/vD4D9CZvvaieHmHltQaSxwLwZTuURA==
+X-Received: by 2002:ad4:5764:: with SMTP id r4mr2903921qvx.73.1598547123085;
+        Thu, 27 Aug 2020 09:52:03 -0700 (PDT)
+Received: from LeoBras ([2804:14d:8084:8e41:9b0d:571e:a65:b5d8])
+        by smtp.gmail.com with ESMTPSA id e13sm2139022qkg.124.2020.08.27.09.51.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 09:52:02 -0700 (PDT)
+Message-ID: <c67c66e466ad27d15aa2b970c48d2336d95b2971.camel@gmail.com>
+Subject: Re: [PATCH v1 02/10] powerpc/kernel/iommu: Align size for
+ IOMMU_PAGE_SIZE on iommu_*_coherent()
+From:   Leonardo Bras <leobras.c@gmail.com>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Joel Stanley <joel@jms.id.au>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Brian King <brking@linux.vnet.ibm.com>,
+        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
+        David Dai <zdai@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Thu, 27 Aug 2020 13:51:54 -0300
+In-Reply-To: <7b9640e0-568f-1470-40f4-a3ccec8abcf2@ozlabs.ru>
+References: <20200817234033.442511-1-leobras.c@gmail.com>
+         <20200817234033.442511-3-leobras.c@gmail.com>
+         <7b9640e0-568f-1470-40f4-a3ccec8abcf2@ozlabs.ru>
+Organization: IBM
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:U0cuyF1HpNeU4PDANLiwFqT1duKKd3vzkWBI8VTMGGEBVhgNKXm
- ldKv78XywyOJi2Ub4VOEhtytW3pgmv76W2P964yjcyEGoWoePal+F6vvr6cfrSoecJUyHDQ
- oIwqX6Vj9UNNO5EWKDl18cdHaR0zRBcbm+0M7QlDdnPHvzOKi8FvJQuJm8ujw7BkN3Wfwvh
- z8laa2kPH9HBSwwyDwLhw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:l8Al786Tnlk=:FM8UlyqPmvM6tNLODdMPl/
- vDve9ZHXRECUO08AVw/F9lP63Xzg3p7PjInOov1npYei3cDK+xP4pg1Tq8f78LEhVFK7LyFPT
- zxv+FKQmvGaOgyk4+Z8Edes46/LxKPQX7XFXBHwLsGBK09ZKLW7eTWfF5mxezMNlhAV+7nEhg
- 3xGfGuSrkekvS/f1lorpsYd62vn4FQQ1tWBabGkX+E/qm32x2rP4LApOXWPAZChJvlxfxjceI
- 6uHgr6ZatzxPS6N2kj83+6ldffywlf4TS37EugQ0v4dG3csHo4C2bkA3JTSr4u4mE/2ZgmJzz
- 28Z917YJlk8zweHvfGSGxRK9B9wKECWIusfmP6OQuDCEAd/TnJQyS7KTpKht4fLTE1gnPu1db
- 0CpDV9U7tccjUvJlIh9ny1O2nBm1x6hysbTDTJPjV37aN1JpfPh8HZkIQjTe+jn3HBAo0CpaJ
- phZxcq5SPzVPlX1H/IdWzIPl4lSLi1KZxwedPrcclvHTgI37o14s5zZs+JbBg+9LIwDngWRKz
- VKEl2xSCHXZM1hP9fXnobxOfT29om5ngvpHw+gNU9sf0r+WoUpnqUPTWpjyGaq15WPGYuhuO8
- ESyUCRrc2ieVpTcBuDlg3wRoxlKFLj6088wIvSrVpzabzs6qXbgy368sVE7uTGj+lF1pB2ZlR
- ctzlIiOC9MP3fr7vXuHBj6XQU8dp4sO4HOoLfFzeANmhuXtNGjm69YftgL4YQ90AmSj2wFlfT
- dvqZD1SAe4Gz5yhrxZics2DlwsPA1+wwB5ubi2ExkLb1KGiAqevPeWifHsoesJjkEvaLAkcB/
- GdZVKagcTuUSsCOEhgIfaVxPc96+EYU0YbNKsiTFhTHCDp/LhX5rYY9tsOqbjEDw06ZGl2R
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Note: please CC me in replies since I'm not subscribed to LKML.
+On Sat, 2020-08-22 at 20:07 +1000, Alexey Kardashevskiy wrote:
+> 
+> On 18/08/2020 09:40, Leonardo Bras wrote:
+> > Both iommu_alloc_coherent() and iommu_free_coherent() assume that once
+> > size is aligned to PAGE_SIZE it will be aligned to IOMMU_PAGE_SIZE.
+> 
+> The only case when it is not aligned is when IOMMU_PAGE_SIZE > PAGE_SIZE
+> which is unlikely but not impossible, we could configure the kernel for
+> 4K system pages and 64K IOMMU pages I suppose. Do we really want to do
+> this here, or simply put WARN_ON(tbl->it_page_shift > PAGE_SHIFT)?
 
-I have a RTL8156-based USB 3.0 to 2.5G NBASE-T ethernet adapter made by 
-Plugable and I'm using a recently compiled Linux 5.8.1 (I checked 
-changelogs up to the current 5.8.5 release and didn't see anything 
-relevant mentioned). It's supposed to work with the cdc_ncm driver, but 
-the sheer amount of syslog spam by cdc_ncm regardless of link state is 
-astonishing, and the adapter behaves erratically as well. This is the 
-log spam from one single second with the interface up but no network 
-cable attached:
+I think it would be better to keep the code as much generic as possible
+regarding page sizes. 
 
-[173944.031631] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.063629] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.095630] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.127628] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.159630] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.191629] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.223631] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.255631] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.287630] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.319630] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.351627] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.383633] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.415627] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.447627] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.479631] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.511631] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.543630] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.575629] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.607628] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.639628] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.671630] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.703629] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.735631] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.767631] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.799622] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.831629] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.863630] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.895634] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.927631] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.959633] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
-[173944.991628] cdc_ncm 2-4:2.0 usb0: network connection: disconnected
+> Because if we want the former (==support), then we'll have to align the
+> size up to the bigger page size when allocating/zeroing system pages,
+> etc. 
 
-It's just as bad when the link is up:
+This part I don't understand. Why do we need to align everything to the
+bigger pagesize? 
 
-[174451.007591] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
-uplink
-[174451.039592] cdc_ncm 2-4:2.0 usb0: network connection: connected
-[174451.071637] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
-uplink
-[174451.103630] cdc_ncm 2-4:2.0 usb0: network connection: connected
-[174451.135630] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
-uplink
-[174451.167630] cdc_ncm 2-4:2.0 usb0: network connection: connected
-[174451.199631] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
-uplink
-[174451.231622] cdc_ncm 2-4:2.0 usb0: network connection: connected
-[174451.263634] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
-uplink
-[174451.295631] cdc_ncm 2-4:2.0 usb0: network connection: connected
-[174451.327629] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
-uplink
-[174451.359628] cdc_ncm 2-4:2.0 usb0: network connection: connected
-[174451.391631] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
-uplink
-[174451.423629] cdc_ncm 2-4:2.0 usb0: network connection: connected
-[174451.455631] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
-uplink
-[174451.487630] cdc_ncm 2-4:2.0 usb0: network connection: connected
-[174451.519632] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
-uplink
-[174451.551629] cdc_ncm 2-4:2.0 usb0: network connection: connected
-[174451.583629] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
-uplink
-[174451.615634] cdc_ncm 2-4:2.0 usb0: network connection: connected
-[174451.647631] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
-uplink
-[174451.679628] cdc_ncm 2-4:2.0 usb0: network connection: connected
-[174451.711632] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
-uplink
-[174451.743631] cdc_ncm 2-4:2.0 usb0: network connection: connected
-[174451.775630] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
-uplink
-[174451.807627] cdc_ncm 2-4:2.0 usb0: network connection: connected
-[174451.839630] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
-uplink
-[174451.871628] cdc_ncm 2-4:2.0 usb0: network connection: connected
-[174451.903631] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
-uplink
-[174451.935628] cdc_ncm 2-4:2.0 usb0: network connection: connected
-[174451.967629] cdc_ncm 2-4:2.0 usb0: 2500 mbit/s downlink 2500 mbit/s 
-uplink
-[174451.999633] cdc_ncm 2-4:2.0 usb0: network connection: connected
+I mean, is not that enough that the range [ret, ret + size[ is both
+allocated by mm and mapped on a iommu range?
 
-This is what the lsusb -v output looks like for the device:
+Suppose a iommu_alloc_coherent() of 16kB on PAGESIZE = 4k and
+IOMMU_PAGE_SIZE() == 64k.
+Why 4 * cpu_pages mapped by a 64k IOMMU page is not enough? 
+All the space the user asked for is allocated and mapped for DMA.
 
-Bus 002 Device 002: ID 0bda:8156 Realtek Semiconductor Corp.
-Device Descriptor:
-   bLength                18
-   bDescriptorType         1
-   bcdUSB               3.20
-   bDeviceClass            0 (Defined at Interface level)
-   bDeviceSubClass         0
-   bDeviceProtocol         0
-   bMaxPacketSize0         9
-   idVendor           0x0bda Realtek Semiconductor Corp.
-   idProduct          0x8156
-   bcdDevice           30.00
-   iManufacturer           1 Realtek
-   iProduct                2 USB 10/100/1G/2.5G LAN
-   iSerial                 6 000000001
-   bNumConfigurations      3
-   Configuration Descriptor:
-     bLength                 9
-     bDescriptorType         2
-     wTotalLength           57
-     bNumInterfaces          1
-     bConfigurationValue     1
-     iConfiguration          0
-     bmAttributes         0xa0
-       (Bus Powered)
-       Remote Wakeup
-     MaxPower              128mA
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        0
-       bAlternateSetting       0
-       bNumEndpoints           3
-       bInterfaceClass       255 Vendor Specific Class
-       bInterfaceSubClass    255 Vendor Specific Subclass
-       bInterfaceProtocol      0
-       iInterface              0
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x81  EP 1 IN
-         bmAttributes            2
-           Transfer Type            Bulk
-           Synch Type               None
-           Usage Type               Data
-         wMaxPacketSize     0x0400  1x 1024 bytes
-         bInterval               0
-         bMaxBurst               4
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x02  EP 2 OUT
-         bmAttributes            2
-           Transfer Type            Bulk
-           Synch Type               None
-           Usage Type               Data
-         wMaxPacketSize     0x0400  1x 1024 bytes
-         bInterval               0
-         bMaxBurst               4
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x83  EP 3 IN
-         bmAttributes            3
-           Transfer Type            Interrupt
-           Synch Type               None
-           Usage Type               Data
-         wMaxPacketSize     0x0002  1x 2 bytes
-         bInterval              11
-         bMaxBurst               1
-   Configuration Descriptor:
-     bLength                 9
-     bDescriptorType         2
-     wTotalLength          104
-     bNumInterfaces          2
-     bConfigurationValue     2
-     iConfiguration          0
-     bmAttributes         0xa0
-       (Bus Powered)
-       Remote Wakeup
-     MaxPower              128mA
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        0
-       bAlternateSetting       0
-       bNumEndpoints           1
-       bInterfaceClass         2 Communications
-       bInterfaceSubClass     13
-       bInterfaceProtocol      0
-       iInterface              5 CDC Communications Control
-       CDC Header:
-         bcdCDC               1.10
-       CDC Union:
-         bMasterInterface        0
-         bSlaveInterface         1
-       CDC Ethernet:
-         iMacAddress                      3 8CAE4CDD0417
-         bmEthernetStatistics    0x0031500f
-         wMaxSegmentSize               1518
-         wNumberMCFilters            0x8000
-         bNumberPowerFilters              0
-       UNRECOGNIZED CDC:  06 24 1a 00 01 2b
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x83  EP 3 IN
-         bmAttributes            3
-           Transfer Type            Interrupt
-           Synch Type               None
-           Usage Type               Data
-         wMaxPacketSize     0x0010  1x 16 bytes
-         bInterval               8
-         bMaxBurst               1
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        1
-       bAlternateSetting       0
-       bNumEndpoints           0
-       bInterfaceClass        10 CDC Data
-       bInterfaceSubClass      0 Unused
-       bInterfaceProtocol      1
-       iInterface              0
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        1
-       bAlternateSetting       1
-       bNumEndpoints           2
-       bInterfaceClass        10 CDC Data
-       bInterfaceSubClass      0 Unused
-       bInterfaceProtocol      1
-       iInterface              4 Ethernet Data
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x81  EP 1 IN
-         bmAttributes            2
-           Transfer Type            Bulk
-           Synch Type               None
-           Usage Type               Data
-         wMaxPacketSize     0x0400  1x 1024 bytes
-         bInterval               0
-         bMaxBurst               4
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x02  EP 2 OUT
-         bmAttributes            2
-           Transfer Type            Bulk
-           Synch Type               None
-           Usage Type               Data
-         wMaxPacketSize     0x0400  1x 1024 bytes
-         bInterval               0
-         bMaxBurst               4
-   Configuration Descriptor:
-     bLength                 9
-     bDescriptorType         2
-     wTotalLength           98
-     bNumInterfaces          2
-     bConfigurationValue     3
-     iConfiguration          0
-     bmAttributes         0xa0
-       (Bus Powered)
-       Remote Wakeup
-     MaxPower              128mA
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        0
-       bAlternateSetting       0
-       bNumEndpoints           1
-       bInterfaceClass         2 Communications
-       bInterfaceSubClass      6 Ethernet Networking
-       bInterfaceProtocol      0
-       iInterface              5 CDC Communications Control
-       CDC Header:
-         bcdCDC               1.10
-       CDC Union:
-         bMasterInterface        0
-         bSlaveInterface         1
-       CDC Ethernet:
-         iMacAddress                      3 8CAE4CDD0417
-         bmEthernetStatistics    0x0031500f
-         wMaxSegmentSize               1518
-         wNumberMCFilters            0x8000
-         bNumberPowerFilters              0
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x83  EP 3 IN
-         bmAttributes            3
-           Transfer Type            Interrupt
-           Synch Type               None
-           Usage Type               Data
-         wMaxPacketSize     0x0010  1x 16 bytes
-         bInterval               8
-         bMaxBurst               1
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        1
-       bAlternateSetting       0
-       bNumEndpoints           0
-       bInterfaceClass        10 CDC Data
-       bInterfaceSubClass      0 Unused
-       bInterfaceProtocol      0
-       iInterface              0
-     Interface Descriptor:
-       bLength                 9
-       bDescriptorType         4
-       bInterfaceNumber        1
-       bAlternateSetting       1
-       bNumEndpoints           2
-       bInterfaceClass        10 CDC Data
-       bInterfaceSubClass      0 Unused
-       bInterfaceProtocol      0
-       iInterface              4 Ethernet Data
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x81  EP 1 IN
-         bmAttributes            2
-           Transfer Type            Bulk
-         bEndpointAddress     0x81  EP 1 IN
-         bmAttributes            2
-           Transfer Type            Bulk
-           Synch Type               None
-           Usage Type               Data
-         wMaxPacketSize     0x0400  1x 1024 bytes
-         bInterval               0
-         bMaxBurst               4
-       Endpoint Descriptor:
-         bLength                 7
-         bDescriptorType         5
-         bEndpointAddress     0x02  EP 2 OUT
-         bmAttributes            2
-           Transfer Type            Bulk
-           Synch Type               None
-           Usage Type               Data
-         wMaxPacketSize     0x0400  1x 1024 bytes
-         bInterval               0
-         bMaxBurst               4
-Device Status:     0x001c
-   (Bus Powered)
-   Test Mode
 
-If I do this, then it switches from 'usb0' to 'eth1':
+> Bigger pages are not the case here as I understand it.
 
-/sys/devices/pci0000:00/0000:00:15.0/usb2/2-4 # echo 3 > bConfigurationValue
+I did not get this part, what do you mean?
 
-Regardless of whether I try to use it as eth1 or usb0, it does not 
-communicate. I have turned off USB autosuspend for the device, but with 
-no change:
+> > Update those functions to guarantee alignment with requested size
+> > using IOMMU_PAGE_ALIGN() before doing iommu_alloc() / iommu_free().
+> > 
+> > Also, on iommu_range_alloc(), replace ALIGN(n, 1 << tbl->it_page_shift)
+> > with IOMMU_PAGE_ALIGN(n, tbl), which seems easier to read.
+> > 
+> > Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
+> > ---
+> >  arch/powerpc/kernel/iommu.c | 17 +++++++++--------
+> >  1 file changed, 9 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
+> > index 9704f3f76e63..d7086087830f 100644
+> > --- a/arch/powerpc/kernel/iommu.c
+> > +++ b/arch/powerpc/kernel/iommu.c
+> > @@ -237,10 +237,9 @@ static unsigned long iommu_range_alloc(struct device *dev,
+> >  	}
+> >  
+> >  	if (dev)
+> > -		boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
+> > -				      1 << tbl->it_page_shift);
+> > +		boundary_size = IOMMU_PAGE_ALIGN(dma_get_seg_boundary(dev) + 1, tbl);
+> 
+> Run checkpatch.pl, should complain about a long line.
 
-/sys/devices/pci0000:00/0000:00:15.0/usb2/2-4 # cat power/control
-on
+It's 86 columns long, which is less than the new limit of 100 columns
+Linus announced a few weeks ago. checkpatch.pl was updated too:
+https://www.phoronix.com/scan.php?page=news_item&px=Linux-Kernel-Deprecates-80-Col
 
-At this point, I don't know what else to try. My understanding is that 
-cdc_ncm supports this device and the Realtek-provided driver shouldn't 
-be needed anymore. The r8152 driver already in the kernel doesn't pick 
-up this device.
 
-Any help would be greatly appreciated.
+> 
+> 
+> >  	else
+> > -		boundary_size = ALIGN(1UL << 32, 1 << tbl->it_page_shift);
+> > +		boundary_size = IOMMU_PAGE_ALIGN(1UL << 32, tbl);
+> >  	/* 4GB boundary for iseries_hv_alloc and iseries_hv_map */
+> >  
+> >  	n = iommu_area_alloc(tbl->it_map, limit, start, npages, tbl->it_offset,
+> > @@ -858,6 +857,7 @@ void *iommu_alloc_coherent(struct device *dev, struct iommu_table *tbl,
+> >  	unsigned int order;
+> >  	unsigned int nio_pages, io_order;
+> >  	struct page *page;
+> > +	size_t size_io = size;
+> >  
+> >  	size = PAGE_ALIGN(size);
+> >  	order = get_order(size);
+> > @@ -884,8 +884,9 @@ void *iommu_alloc_coherent(struct device *dev, struct iommu_table *tbl,
+> >  	memset(ret, 0, size);
+> >  
+> >  	/* Set up tces to cover the allocated range */
+> > -	nio_pages = size >> tbl->it_page_shift;
+> > -	io_order = get_iommu_order(size, tbl);
+> > +	size_io = IOMMU_PAGE_ALIGN(size_io, tbl);
+> > +	nio_pages = size_io >> tbl->it_page_shift;
+> > +	io_order = get_iommu_order(size_io, tbl);
+> >  	mapping = iommu_alloc(dev, tbl, ret, nio_pages, DMA_BIDIRECTIONAL,
+> >  			      mask >> tbl->it_page_shift, io_order, 0);
+> >  	if (mapping == DMA_MAPPING_ERROR) {
+> > @@ -900,11 +901,11 @@ void iommu_free_coherent(struct iommu_table *tbl, size_t size,
+> >  			 void *vaddr, dma_addr_t dma_handle)
+> >  {
+> >  	if (tbl) {
+> > -		unsigned int nio_pages;
+> > +		size_t size_io = IOMMU_PAGE_ALIGN(size, tbl);
+> > +		unsigned int nio_pages = size_io >> tbl->it_page_shift;
+> >  
+> > -		size = PAGE_ALIGN(size);
+> > -		nio_pages = size >> tbl->it_page_shift;
+> >  		iommu_free(tbl, dma_handle, nio_pages);
+> > +
+> 
+> Unrelated new line.
 
-- Jody Bruchon
+Will be removed. Thanks!
+
+> 
+> 
+> >  		size = PAGE_ALIGN(size);
+> >  		free_pages((unsigned long)vaddr, get_order(size));
+> >  	}
+> > 
+
