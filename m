@@ -2,135 +2,111 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 960A5C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CE0C433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72884207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:45:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WsbvAKcE"
+	by mail.kernel.org (Postfix) with ESMTP id A3A53207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598571983;
+	bh=WuN9B34LzV+WTdN5AAx7tMjnWGBPJVTM+zsy0W61vqI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bu6PdozTVQW1+Y/OFLKykyhG+j6L/NsQu6Z4F6CtGcg0kyWo11+d4dFJxFn4Kli0/
+	 AE1CBufnoGFm3h5L2jGBYRmS57nC6pR0Ib5MoHRrwYwQFt8GSKd6zyIoO64vkm/hXS
+	 XU5SNL3cHjjSWwGOcJ2bztP6fSfUnAyUZwE+uX/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbgH0Xp6 (ORCPT
+        id S1728085AbgH0XqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 19:45:58 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:51100 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgH0Xp4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 19:45:56 -0400
-Received: from [192.168.1.17] (50-47-107-221.evrt.wa.frontiernet.net [50.47.107.221])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 1CC6320B7178;
-        Thu, 27 Aug 2020 16:45:56 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1CC6320B7178
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1598571956;
-        bh=FJqikQav9TJ+GnVPWDsN8BNbcytAK+HjdY2jfLtP0aM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WsbvAKcE0/CZQfjLnQASjVsbyukjVY6THg5Qjhuk0kruv/he2lSXMXjM5X/CWLnNA
-         teAOjSfXkRmH2Hhjq0qXBQ0nlsCF/otXVjHW6Ix9zIP8Agm9gCrf27Muo/m9HUmGqQ
-         xaXJNRoqjXiRwfZxd0z9UL6Fmm3hHIrOnlXDHU8I=
-Subject: Re: [PATCH 1/4] drivers: hv: dxgkrnl: core code
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, iourit@microsoft.com,
-        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
-References: <20200814123856.3880009-1-sashal@kernel.org>
- <20200814123856.3880009-2-sashal@kernel.org>
- <20200814125729.GB56456@kroah.com>
-From:   Iouri Tarassov <iourit@linux.microsoft.com>
-Message-ID: <8bf27b82-bdd9-6486-fbc9-aa6f7a3312e0@linux.microsoft.com>
-Date:   Thu, 27 Aug 2020 16:45:55 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 27 Aug 2020 19:46:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726147AbgH0XqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 19:46:22 -0400
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B0C720C09
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 23:46:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598571981;
+        bh=WuN9B34LzV+WTdN5AAx7tMjnWGBPJVTM+zsy0W61vqI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tBi+YX5JtPQczBiO05W9F5ZP739Ts1GRyM8mvOvl/GR8Cm7ZQmsuGKUPaSTzAdU05
+         wSGs1hpiFVtz1EpSoDjhL5S6gs1D3esyPeMTuMdkbpn1Dmjg60I3T79rJmgGVRtAJz
+         un3M6jy9tqRSbFPbQJasWRxguUndBWATe52iDdts=
+Received: by mail-ej1-f43.google.com with SMTP id o18so9961656eje.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 16:46:21 -0700 (PDT)
+X-Gm-Message-State: AOAM530YPg5EVf4e9S8QqaaBwk5ErQqnh6htnTEkzHsDjrt1RIcplNer
+        en3eguqAqtYLS01iQeTQM0kDGV06whN+1imbSw==
+X-Google-Smtp-Source: ABdhPJwOl/tRuPJoLPgbirz4Djn6rAAeOTWUMMwHZS2nr/HOlGX4LL/IA2S6rKrQkxqp557HPNIsWsEIZg6W73JHyf8=
+X-Received: by 2002:a17:906:15cc:: with SMTP id l12mr24340249ejd.7.1598571979711;
+ Thu, 27 Aug 2020 16:46:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200814125729.GB56456@kroah.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200819081752.4805-1-linux@fw-web.de> <20200819081752.4805-4-linux@fw-web.de>
+ <trinity-14a1b182-38ab-4f84-bb72-94d448b05fd5-1597994235320@3c-app-gmx-bs37>
+ <81276d4c-8883-8bfd-d7d0-9b9ac025ed97@gmail.com> <trinity-ddd51146-41eb-49ae-9456-4588450d31aa-1598535710011@3c-app-gmx-bap26>
+ <e0edfd9f-5916-80ee-3bef-92d7050f97db@gmail.com>
+In-Reply-To: <e0edfd9f-5916-80ee-3bef-92d7050f97db@gmail.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Fri, 28 Aug 2020 07:46:07 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9R24-tcAMSfDhxLEXDFPAbMd5fYm8EwGODDMpULq-UZA@mail.gmail.com>
+Message-ID: <CAAOTY_9R24-tcAMSfDhxLEXDFPAbMd5fYm8EwGODDMpULq-UZA@mail.gmail.com>
+Subject: Re: Aw: Re: [PATCH v5 3/7] drm/mediatek: disable tmds on mt2701
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Frank Wunderlich <linux@fw-web.de>,
+        chunkuang Hu <chunkuang.hu@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Frank:
 
-On 8/14/2020 5:57 AM, Greg KH wrote:
-> On Fri, Aug 14, 2020 at 08:38:53AM -0400, Sasha Levin wrote:
-> > Add support for a Hyper-V based vGPU implementation that exposes the
-> > DirectX API to Linux userspace.
+Matthias Brugger <matthias.bgg@gmail.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=88=
+27=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8810:28=E5=AF=AB=E9=81=93=EF=
+=BC=9A
 >
-> Api questions:
 >
-> > +struct d3dkmthandle {
-> > +	union {
-> > +		struct {
-> > +			u32 instance	:  6;
-> > +			u32 index	: 24;
-> > +			u32 unique	: 2;
 >
-> What is the endian of this?
+> On 27/08/2020 15:41, Frank Wunderlich wrote:
+> > Hi Matthias,
+> >
+> > any opinions about the dts-changes?
+> >
 >
-> > +		};
-> > +		u32 v;
-> > +	};
-> > +};
-> > +
-> > +extern const struct d3dkmthandle zerohandle;
-> > +
-The definition is the same as on the Windows side. The driver 
-communicates with a Windows host, so I do not expect any issues with 
-endiannes. Windows currently runs only on the little endian platforms.
-User mode applications see this as an opaque 32 bit value 
-(D3DKMTHANDLE). I prefer not to use the u32 definition to avoid mistakes 
-when another integer or a 64-bit handle is assigned to the handle or  
-the handle is assigned to a 64 or 32 bit integer variable. There are 
-many handles in the driver model (shared NT handle, d3dkmthandle, etc). 
-Using a specific type allows to avoid assigning one handle to another.
-> > +struct ntstatus {
-> > +	union {
-> > +		struct {
-> > +			int code	: 16;
-> > +			int facility	: 13;
-> > +			int customer	: 1;
-> > +			int severity	: 2;
+> they look good to me.
 >
-> Same here.
+> > maybe series except the tmds-Patch get merged...so i add it only to my =
+own repo till we find a better way?
+> > currently mainline does not support hdmi at all for the board. the tmds=
+-patch is only a fix for specific resolutions which have a "flickering" wit=
+hout this Patch.
+> >
 >
-> Are these things that cross the user/kernel boundry?
+> Well let's see what CK's opinion.
 >
-> And why int on one and u32 on the other?
->
-> > +		};
-> > +		int v;
-> > +	};
-> > +};
-> > +
-"struct ntstatus" follows the definition for NTSTATUS on the Windows 
-side. NTSTATUS is an integer where the negative values indicate errors. 
-It is success otherwise. NTSTATUS is returned by the VM bus messages 
-from host. IOCTLs from the driver return Linux negative error code or 
-NTSTATUS positive success codes. DxCore applications expect certain 
-positive success codes. DxCore is a shared library, which translates the 
-D3DKMT* Windows interface to Linux ioctls. Applications link with DxCore 
-to use a paravirtualized GPU.
-D3DKMTHANDLE is a 32-bit unsigned value (bitfield), not an integer.
-> > +struct winluid {
-> > +	uint a;
-> > +	uint b;
->
-> And now uint?  Come on, be consistent please :)
-Sorry about this. This came from the Windows size where we use UINT a 
-lot. All uints will be replaced by u32 in the next patch set.
->
-> thanks,
->
-> greg k-h
->
-Thank you
-Iouri
 
+Because no one has comment on this patch, I could apply this patch but
+I need you to add more experiment information so if someone meets
+another bug, he could fix his bug and consider your problem.
+
+Regards,
+Chun-Kuang.
+
+> Regards,
+> Matthias
