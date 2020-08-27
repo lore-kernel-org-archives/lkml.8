@@ -2,100 +2,203 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5E4C433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76DDC433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A86320848
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B42DA20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgH0WMC (ORCPT
+        id S1727895AbgH0WMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 18:12:02 -0400
-Received: from smtprelay0213.hostedemail.com ([216.40.44.213]:35818 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726256AbgH0WMC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 18:12:02 -0400
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave06.hostedemail.com (Postfix) with ESMTP id 854B78123E2F;
-        Thu, 27 Aug 2020 22:12:01 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 74415182CED34;
-        Thu, 27 Aug 2020 22:12:00 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: fly24_1910e5127070
-X-Filterd-Recvd-Size: 2747
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 27 Aug 2020 22:11:58 +0000 (UTC)
-Message-ID: <ca08f34a5aaa3e9031a934296dd97fc806dab66f.camel@perches.com>
-Subject: Re: [Cocci] [PATCH] usb: atm: don't use snprintf() for sysfs attrs
-From:   Joe Perches <joe@perches.com>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        Julia Lawall <julia.lawall@inria.fr>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        cocci <cocci@systeme.lip6.fr>, Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "accessrunner-general@lists.sourceforge.net" 
-        <accessrunner-general@lists.sourceforge.net>
-Date:   Thu, 27 Aug 2020 15:11:57 -0700
-In-Reply-To: <c3926f18f98e446daad957cd66a94890@AcuMS.aculab.com>
-References: <20200824222322.22962-1-alex.dewar90@gmail.com>
-         <48f2dc90-7852-eaf1-55d7-2c85cf954688@rasmusvillemoes.dk>
-         <20200827071537.GA168593@kroah.com>
-         <20200827131819.7rcl2f5js3hkoqj2@lenovo-laptop>
-         <def24e9e-018c-9712-0d07-d4cbc84f07d9@rasmusvillemoes.dk>
-         <20200827144846.yauuttjaqtxaldxg@lenovo-laptop>
-         <5d1dfb9b031130d4d20763ec621233a19d6a88a2.camel@perches.com>
-         <alpine.DEB.2.22.394.2008272141220.2482@hadrien>
-         <cf9b1ea3716305447be43bffc8f90b7ef7292f5b.camel@perches.com>
-         <c3926f18f98e446daad957cd66a94890@AcuMS.aculab.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Thu, 27 Aug 2020 18:12:41 -0400
+Received: from mga14.intel.com ([192.55.52.115]:40473 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726236AbgH0WMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 18:12:41 -0400
+IronPort-SDR: cHmzA88ZwN5xbMI7d7WHGbq/XoZl4WIrzJarVkzMP+9321pz7uD2dBY2nWhUe3H5wCBYb7A+TD
+ T3IqbXsCtU/Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="155832772"
+X-IronPort-AV: E=Sophos;i="5.76,361,1592895600"; 
+   d="scan'208";a="155832772"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 15:12:38 -0700
+IronPort-SDR: GtT75zGTDFWlqVBGqzWkzzdQwwZYsU3HXIXuUIZOmXLIS6mMGG+akMQuX+EmQWldpFv6PBYVkQ
+ iBwH0J4irINQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,361,1592895600"; 
+   d="scan'208";a="475407299"
+Received: from lkp-server01.sh.intel.com (HELO 4f455964fc6c) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 27 Aug 2020 15:12:36 -0700
+Received: from kbuild by 4f455964fc6c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kBQ8K-0002KX-4I; Thu, 27 Aug 2020 22:12:36 +0000
+Date:   Fri, 28 Aug 2020 06:12:32 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/cleanups] BUILD SUCCESS
+ e33ab2064836600603289ad2ed0ca3424f395fa8
+Message-ID: <5f482fd0.r3kpibebHCzkURSs%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-08-27 at 22:03 +0000, David Laight wrote:
-> From: Joe Perches
-> > Sent: 27 August 2020 21:30
-> ...
-> > Perhaps what's necessary is to find any
-> > appropriate .show function and change
-> > any use of strcpy/sprintf within those
-> > function to some other name.
-> > 
-> > For instance:
-> > 
-> > drivers/isdn/mISDN/core.c-static ssize_t name_show(struct device *dev,
-> > drivers/isdn/mISDN/core.c-                       struct device_attribute *attr, char *buf)
-> > drivers/isdn/mISDN/core.c-{
-> > drivers/isdn/mISDN/core.c:      strcpy(buf, dev_name(dev));
-> > drivers/isdn/mISDN/core.c-      return strlen(buf);
-> > drivers/isdn/mISDN/core.c-}
-> > drivers/isdn/mISDN/core.c-static DEVICE_ATTR_RO(name);
-> 
-> That form ends up calculating the string length twice.
-> Better would be:
-> 	len = strlen(msg);
-> 	memcpy(buf, msg, len);
-> 	return len;
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cleanups
+branch HEAD: e33ab2064836600603289ad2ed0ca3424f395fa8  x86/mpparse: Remove duplicate io_apic.h include
 
-or given clang's requirement for stpcpy
+elapsed time: 723m
 
-	return stpcpy(buf, dev_name(dev)) - buf;
+configs tested: 132
+configs skipped: 73
 
-(I do not advocate for this ;)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+riscv                    nommu_k210_defconfig
+mips                     decstation_defconfig
+arm                   milbeaut_m10v_defconfig
+powerpc                mpc7448_hpc2_defconfig
+sh                              ul2_defconfig
+sh                ecovec24-romimage_defconfig
+arm                      pxa255-idp_defconfig
+mips                           ip32_defconfig
+sh                           se7721_defconfig
+powerpc                         ps3_defconfig
+arm                             rpc_defconfig
+sh                            shmin_defconfig
+arm                         s3c2410_defconfig
+m68k                        m5272c3_defconfig
+sh                            migor_defconfig
+arm                        multi_v7_defconfig
+sparc64                          alldefconfig
+arm                          pxa168_defconfig
+ia64                             allmodconfig
+sh                        sh7763rdp_defconfig
+arm                         orion5x_defconfig
+powerpc                  mpc885_ads_defconfig
+powerpc                     pq2fads_defconfig
+mips                           xway_defconfig
+m68k                          sun3x_defconfig
+mips                          malta_defconfig
+arm                           spitz_defconfig
+mips                       rbtx49xx_defconfig
+powerpc                     mpc5200_defconfig
+mips                           ip22_defconfig
+sh                         apsh4a3a_defconfig
+microblaze                      mmu_defconfig
+microblaze                          defconfig
+arc                           tb10x_defconfig
+sh                        sh7757lcr_defconfig
+mips                      maltaaprp_defconfig
+arm                    vt8500_v6_v7_defconfig
+sh                             sh03_defconfig
+arm                         mv78xx0_defconfig
+arc                              allyesconfig
+sh                          sdk7780_defconfig
+c6x                         dsk6455_defconfig
+arc                              alldefconfig
+arm                  colibri_pxa270_defconfig
+mips                       lemote2f_defconfig
+m68k                         apollo_defconfig
+sh                        edosk7760_defconfig
+sh                           sh2007_defconfig
+sh                          urquell_defconfig
+sparc                            allyesconfig
+sh                         microdev_defconfig
+sh                           se7712_defconfig
+arm                        magician_defconfig
+c6x                        evmc6678_defconfig
+sparc                               defconfig
+arc                    vdk_hs38_smp_defconfig
+sh                        apsh4ad0a_defconfig
+arm                         bcm2835_defconfig
+mips                     loongson1b_defconfig
+mips                            ar7_defconfig
+arc                            hsdk_defconfig
+alpha                               defconfig
+arm                          exynos_defconfig
+powerpc                      tqm8xx_defconfig
+arm                       aspeed_g4_defconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a003-20200827
+x86_64               randconfig-a002-20200827
+x86_64               randconfig-a001-20200827
+x86_64               randconfig-a005-20200827
+x86_64               randconfig-a006-20200827
+x86_64               randconfig-a004-20200827
+i386                 randconfig-a002-20200828
+i386                 randconfig-a005-20200828
+i386                 randconfig-a003-20200828
+i386                 randconfig-a004-20200828
+i386                 randconfig-a001-20200828
+i386                 randconfig-a006-20200828
+i386                 randconfig-a002-20200827
+i386                 randconfig-a004-20200827
+i386                 randconfig-a003-20200827
+i386                 randconfig-a005-20200827
+i386                 randconfig-a006-20200827
+i386                 randconfig-a001-20200827
+i386                 randconfig-a013-20200827
+i386                 randconfig-a012-20200827
+i386                 randconfig-a011-20200827
+i386                 randconfig-a016-20200827
+i386                 randconfig-a015-20200827
+i386                 randconfig-a014-20200827
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
