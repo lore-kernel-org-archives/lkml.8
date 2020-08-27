@@ -2,131 +2,123 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A855CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BD6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8A422B4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:27:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KRWGGRmd"
+	by mail.kernel.org (Postfix) with ESMTP id 0479822D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:28:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgH0O1E (ORCPT
+        id S1727885AbgH0O23 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:27:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:37819 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727860AbgH0OQk (ORCPT
+        Thu, 27 Aug 2020 10:28:29 -0400
+Received: from jptosegrel01.sonyericsson.com ([124.215.201.71]:18340 "EHLO
+        JPTOSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727103AbgH0OQm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:16:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598537756;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7mpQ/nk/cQTcpyoT6ZpURcUTf2Am8I9UP1TziC1aL0c=;
-        b=KRWGGRmdeZvSM/iGMdxX6h5WNobFAacXFq32l9dXBw+dx1NcND7GKDBklp50H9rSAmP+R8
-        VIPfg/g3FXSGCKYnQGFMceWntxhaUvTZJbAIieOyP7J2FE67Uy1LlWQTC2u21ijyF2y0OT
-        m1p2t0xEw1CDq3rrY9+dHVFS3IYcoUo=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-562-JMfYdDJHMOO7743Y3S4CbA-1; Thu, 27 Aug 2020 10:15:52 -0400
-X-MC-Unique: JMfYdDJHMOO7743Y3S4CbA-1
-Received: by mail-qk1-f200.google.com with SMTP id v16so4903579qka.18
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 07:15:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7mpQ/nk/cQTcpyoT6ZpURcUTf2Am8I9UP1TziC1aL0c=;
-        b=op8q5z2ASx/2e6ZKTRJhqKq3KQx1jxoQVbbMdRQq1suvtRGwxC8A0K6grTvS65o0UI
-         n43KHFzLKyZuOIa0/0iZux1lVndTttv/QQzZQGMCk/r1VgLQUEWehmrGUrxkK85UMIrP
-         2t2oA5d90s5W5bCVdzRrH1AsXep9PaOkktyBE67E3vm2clrSp5S49lqv4AUcxF9pL1KK
-         nlJf1LlXSL8FgxnGXzvJZ3m9fhCzK1Hre7PDAj2xSFtc8jFDDTNz8KOyNzQeNSOurRZl
-         QOnDlh/tk09B7hL10iX3+Os8Xsm2X4YYFM+jd+kv/+7kppZfSDjJs6s+iXF86tTxy2x+
-         7lPg==
-X-Gm-Message-State: AOAM533ekcf6tqhyvaYvrK//JzTSJGl0NqMUdR+HAK7ixh2RRplCk5ev
-        el68QWwjsxBY8EbNoRUsITG5dzEwDq8StE6YywLaV3DTLmea/2NP5PM0Yve5MlxTdu+374Nk0v7
-        +H1CDf/QL71wKzIkyNDpq10kB
-X-Received: by 2002:aed:3bb8:: with SMTP id r53mr3174844qte.289.1598537751928;
-        Thu, 27 Aug 2020 07:15:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwZQdefdIdYSXybj/P7LL8lVaFJUvvHCe3YBya4y4MISL6pwCTDTWgq7tbWmkHd8slSaJbDZQ==
-X-Received: by 2002:aed:3bb8:: with SMTP id r53mr3174815qte.289.1598537751620;
-        Thu, 27 Aug 2020 07:15:51 -0700 (PDT)
-Received: from xz-x1 (bras-vprn-toroon474qw-lp130-11-70-53-122-15.dsl.bell.ca. [70.53.122.15])
-        by smtp.gmail.com with ESMTPSA id y24sm1795095qtv.71.2020.08.27.07.15.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 07:15:50 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 10:15:49 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     "Maya B . Gokhale" <gokhale2@llnl.gov>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Marty Mcfadden <mcfadden8@llnl.gov>,
-        Kirill Shutemov <kirill@shutemov.name>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Jan Kara <jack@suse.cz>, Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 0/4] mm: Simplfy cow handling
-Message-ID: <20200827141549.GA6059@xz-x1>
-References: <20200821234958.7896-1-peterx@redhat.com>
+        Thu, 27 Aug 2020 10:16:42 -0400
+X-Greylist: delayed 672 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Aug 2020 10:16:39 EDT
+Subject: Re: [RFC PATCH] selinux: Add denied trace with permssion filter
+To:     Paul Moore <paul@paul-moore.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>
+References: <CAHC9VhRuvK55JVyHOxckThbRQ7sCwkeZsudwCaBo2f5G4g11VA@mail.gmail.com>
+ <20200824132252.31261-1-peter.enderborg@sony.com>
+ <20200824132252.31261-2-peter.enderborg@sony.com>
+ <CAHC9VhR8PscKpA5BrgTNj8cq_eQ6svqru6UXidc=v5+Ha+PM7Q@mail.gmail.com>
+ <6cbe5d27-ebb2-70a6-bad4-31c9f310eff2@sony.com>
+ <CAHC9VhRGaE4FwE8iXo_zeAPdimE9ryMR+r4Jcq=ZpF_2aTJxzQ@mail.gmail.com>
+ <59fa190f-37c0-79f3-ea46-8f821d820e1c@sony.com>
+ <CAHC9VhRE94YVK5bTcqqbNYJu-EwjbcwjSFgqV8jkyLn9HD39Ag@mail.gmail.com>
+From:   peter enderborg <peter.enderborg@sony.com>
+Message-ID: <abaccc15-85a8-24d2-4481-8303e3a42362@sony.com>
+Date:   Thu, 27 Aug 2020 16:04:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200821234958.7896-1-peterx@redhat.com>
+In-Reply-To: <CAHC9VhRE94YVK5bTcqqbNYJu-EwjbcwjSFgqV8jkyLn9HD39Ag@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-GB
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=FfdJO626 c=1 sm=1 tr=0 a=9drRLWArJOlETflmpfiyCA==:117 a=IkcTkHD0fZMA:10 a=y4yBn9ojGxQA:10 a=z6gsHLkEAAAA:8 a=RpNjiQI2AAAA:8 a=AKTmbaUPI3psir6HZzAA:9 a=jpIH26JlB8aEU1M81S3jpgcb7nU=:19 a=QEXdDO2ut3YA:10 a=d-OLMTCWyvARjPbQ-enb:22
+X-SEG-SpamProfiler-Score: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 07:49:54PM -0400, Peter Xu wrote:
-> This is a small series that I picked up from Linus's suggestion [0] to simplify
-> cow handling (and also more strict) by checking against page refcounts rather
-> than mapcounts.
-> 
-> I'm CCing the author and reviewer of commit 52d1e606ee73 on ksm ("mm: reuse
-> only-pte-mapped KSM page in do_wp_page()", 2019-03-05).  Please shoot if
-> there's any reason to keep the logic, or it'll be removed in this series.  For
-> more information, please refer to [3,4].
-> 
-> The new mm counter in the last patch can be seen as RFC, depending on whether
-> anyone dislikes it... I used it majorly for observing the page reuses, so it is
-> kind of optional.
-> 
-> Two tests I did:
-> 
->   - Run a busy loop dirty program [1] that uses 6G of memory, restrict to 1G
->     RAM + 5G swap (cgroup).  A few hours later, all things still look good.
->     Make sure to observe (still massive) correct page reuses using the new
->     counter using the last patch, probably when swapping in.
-> 
->   - Run umapsort [2] to make sure uffd-wp will work again after applying this
->     series upon master 5.9-rc1 (5.9-rc1 is broken).
-> 
-> In all cases, I must confess it's quite pleased to post a series with diffstat
-> like this...  Hopefully this won't break anyone but only to make everything
-> better.
-> 
-> Please review, thanks.
-> 
-> [0] https://lore.kernel.org/lkml/CAHk-=wjn90-=s6MBerxTuP=-FVEZtR-LpoH9eenEQ3A-QfKTZw@mail.gmail.com
-> [1] https://github.com/xzpeter/clibs/blob/master/bsd/mig_mon/mig_mon.c
-> [2] https://github.com/LLNL/umap-apps/blob/develop/src/umapsort/umapsort.cpp
-> [3] https://lore.kernel.org/lkml/CAHk-=wh0syDtNzt9jGyHRV0r1pVX5gkdJWdenwmvy=dq0AL5mA@mail.gmail.com
-> [4] https://lore.kernel.org/lkml/CAHk-=wj5Oyg0LeAxSw_vizerm=sLd=sHfcVecZMKPZn6kNbbXA@mail.gmail.com
+On 8/27/20 3:30 PM, Paul Moore wrote:
+> On Wed, Aug 26, 2020 at 11:06 AM peter enderborg
+> <peter.enderborg@sony.com> wrote:
+>> On 8/26/20 4:45 PM, Paul Moore wrote:
+>>> On Wed, Aug 26, 2020 at 10:34 AM peter enderborg
+>>> <peter.enderborg@sony.com> wrote:
+>>>> On 8/26/20 3:42 PM, Paul Moore wrote:
+>>>>> On Mon, Aug 24, 2020 at 9:23 AM Peter Enderborg
+>>>>> <peter.enderborg@sony.com> wrote:
+>>>>>> This adds tracing of all denies. They are grouped with trace_seq for
+>>>>>> each audit.
+>>>>>>
+>>>>>> A filter can be inserted with a write to it's filter section.
+>>>>>>
+>>>>>> echo "permission==\"entrypoint\"" > events/avc/selinux_denied/filter
+>>>>>>
+>>>>>> A output will be like:
+>>>>>>           runcon-1046  [002] .N..   156.351738: selinux_denied:
+>>>>>>           trace_seq=2 result=-13
+>>>>>>           scontext=system_u:system_r:cupsd_t:s0-s0:c0.
+>>>>>>           c1023 tcontext=system_u:object_r:bin_t:s0
+>>>>>>           tclass=file permission=entrypoint
+>>>>>>
+>>>>>> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
+>>>>>> ---
+>>>>>>  include/trace/events/avc.h | 37 +++++++++++++++++++++++++++++++++++++
+>>>>>>  security/selinux/avc.c     | 27 +++++++++++++++++++++++++--
+>>>>>>  2 files changed, 62 insertions(+), 2 deletions(-)
+>>>>> My most significant comment is that I don't think we want, or need,
+>>>>> two trace points in the avc_audit_post_callback() function.  Yes, I
+>>>>> understand they are triggered slightly differently, but from my
+>>>>> perspective there isn't enough difference between the two tracepoints
+>>>>> to warrant including both.  However, while the tracepoints may be
+>>>> We tried that but that was problematic too.
+>>> My apologies if I was on that thread, but can you remind me why it was
+>>> a problem?  Why can't we use a single tracepoint to capture the AVC
+>>> information?
+>> The problem is parsing the event.
+>>
+>> https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_2020_8_18_842&d=DwIBaQ&c=fP4tf--1dS0biCFlB0saz0I0kjO5v7-GLPtvShAo4cc&r=oO5HuGEGxznA2F3djiiYxmxxWQonw0h6Sks-BEoB4ys&m=qmi2ROWsLC_0mLLhHkpb71j1YoicydLh-7l4cOsLYcY&s=iS3eZr3TFrN5I7BbnvPFYOKd6DfW1FHTFcwI7joS_fk&e= 
+>>
+>> https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_2020_8_21_526&d=DwIBaQ&c=fP4tf--1dS0biCFlB0saz0I0kjO5v7-GLPtvShAo4cc&r=oO5HuGEGxznA2F3djiiYxmxxWQonw0h6Sks-BEoB4ys&m=qmi2ROWsLC_0mLLhHkpb71j1YoicydLh-7l4cOsLYcY&s=9OsLN0Y5mUWxEAAqUE6K4PS57Pn1XyZz7GXak6uc_Ls&e= 
+>>
+>> and the "single list" version
+>>
+>> https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_2020_8_17_1346&d=DwIBaQ&c=fP4tf--1dS0biCFlB0saz0I0kjO5v7-GLPtvShAo4cc&r=oO5HuGEGxznA2F3djiiYxmxxWQonw0h6Sks-BEoB4ys&m=qmi2ROWsLC_0mLLhHkpb71j1YoicydLh-7l4cOsLYcY&s=tWSY2ry2IT6RcT5BIUwMuqBL_yPObDE1VljbLqI1zrA&e= 
+>>
+>> With this patch we follow standard message format so no plugin should be needed.
+> I'm evidently missing something very fundamental (likely), and/or I'm
+> just not communicating very clearly (also likely), because the above
+> links don't appear to make any sense with respect to my question.
+>
+> Let me try a reset ... Why can't we basically take the
+> "selinux_denied" TRACE_EVENT implementation in your patch and use it
+> to replace the "selinux_audited" TRACE_EVENT in the selinux/next tree
+> (of course with the necessary changes to the AVC callback code)?
+>
+> If the "selinux_denied" implementation is valid from a tracing point
+> of view, why can we not do this?  Of course if the "selinux_denied"
+> implementation is not a valid TRACE_EVENT then I'm not sure why this
+> was suggested for SELinux :)
+>
+Im happly fine with replacing the selinux_audited with selinux_denied.  However it is the case where there are more than one denial at the same time. Im not sure how and when it might happen.
+When that happen we got more than one event. I have no problems with that, but im not sure if the debug tools and perf can make sense of that.
 
-Is there more comments for this series on either reviews, or suggested tests to
-carry out (before a broader trial)?
+A other feature with the selinux_audited event it might be inserted on other places in the code too.  A denial is sort of final.
 
-Thanks,
 
--- 
-Peter Xu
 
