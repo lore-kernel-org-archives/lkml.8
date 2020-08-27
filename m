@@ -2,149 +2,98 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201F9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3362822B4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:57:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yMZhFN+v"
+	by mail.kernel.org (Postfix) with ESMTP id F27582054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:57:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgH0O5a (ORCPT
+        id S1728403AbgH0O5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:57:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729041AbgH0M0v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 08:26:51 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8208FC061232
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 05:16:11 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id k15so1381801wrn.10
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 05:16:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=vG3GFaecRjYGM2orq3QNH3b5bYkLOVwGTg6XiPpRXIc=;
-        b=yMZhFN+veq01+ehZQeqqK0HhK+dnG66FHF62HBnjdjO+Hxk1KWY1W2dTxqnSlNWsZb
-         7NrCYLjtmqs8ZZRBa1rC7WJ+Fjl6xAalt7mPJS+1ciGUOenIil2PbkxIpAV8m+xON24p
-         HlWXtWju0lBA7bVapsr3Q4oD5pC6WldpEU2YOmxfKxAcyd8K2oUU9qweG4mXKEsTB//l
-         vsz1L7puUsSszPyf/ABcYrck5b6BVOl27XPFXKmjgwOEjrDx60iguNCzKJY7rn6dfh/l
-         RTN/txEfeuFNtKyzHnl9bkOrB6H71cOMb8l4Kh0J7GQC2JCosNHe8GyzjufyIM5WRK2o
-         eZ8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=vG3GFaecRjYGM2orq3QNH3b5bYkLOVwGTg6XiPpRXIc=;
-        b=d92NvJtVbcJHjfjjBj6zN6OMzboGBr+q04j55I8vCZgwUvBhJCVt2yRSr4IVXiznG0
-         oNiZiw5SjXRRydR2AOH4TelJIDMUZdDPMiSRjtEZoFMNHp6V1MzbtF1UPH7UDX4pgTBp
-         T9FTffRbehHRI/4JB+iWWYHUpqW0bbQO+eeEvWxty/haMW2V9dpl9UiZji3V1wrmI+39
-         g7lopXRXhnXJlumD22UfoHooNMPbnmfNWWBjNj9IBUzhmSRrEnnj79zwmyHXNEJPTdGk
-         8nQHNC3S1oQgop0DBvDKot/l1h8OWRQj/Kv4Nr21KKBHa6GQVjt1sdtaPCbM+3Ww4QiT
-         8OiA==
-X-Gm-Message-State: AOAM530MQJMrfkM36YFtvewIAAiw2FeXoKkcqv4aDOJHYv5U4cZjk/HF
-        1BFWtqVjfxZo7/CeFoAsXC1XuA==
-X-Google-Smtp-Source: ABdhPJxbyF8d5EcngGv3DhfuYhCjndliOt2vwoniXJmdB+7PavRwuar4fgzUKdUkIYi3702fUNwjyw==
-X-Received: by 2002:a5d:6987:: with SMTP id g7mr1722186wru.173.1598530570226;
-        Thu, 27 Aug 2020 05:16:10 -0700 (PDT)
-Received: from dell ([91.110.221.141])
-        by smtp.gmail.com with ESMTPSA id m10sm4756714wmi.9.2020.08.27.05.16.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 05:16:09 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 13:16:07 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Maya Erez <merez@codeaurora.org>, wil6210@qti.qualcomm.com
-Subject: Re: [PATCH 12/30] wireless: ath: wil6210: wmi: Correct misnamed
- function parameter 'ptr_'
-Message-ID: <20200827121607.GF1627017@dell>
-References: <20200826093401.1458456-13-lee.jones@linaro.org>
- <20200826155625.A5A88C433A1@smtp.codeaurora.org>
- <20200827063559.GP3248864@dell>
- <20200827074100.GX3248864@dell>
- <877dtkb9lm.fsf@codeaurora.org>
+        Thu, 27 Aug 2020 10:57:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50126 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728984AbgH0MZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 08:25:28 -0400
+Received: from gaia (unknown [46.69.195.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D0BA207CD;
+        Thu, 27 Aug 2020 12:16:06 +0000 (UTC)
+Date:   Thu, 27 Aug 2020 13:16:04 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Branislav Rankov <Branislav.Rankov@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 24/35] arm64: mte: Switch GCR_EL1 in kernel entry and exit
+Message-ID: <20200827121604.GL29264@gaia>
+References: <cover.1597425745.git.andreyknvl@google.com>
+ <ec314a9589ef8db18494d533b6eaf1fd678dc010.1597425745.git.andreyknvl@google.com>
+ <20200827103819.GE29264@gaia>
+ <8affcfbe-b8b4-0914-1651-368f669ddf85@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <877dtkb9lm.fsf@codeaurora.org>
+In-Reply-To: <8affcfbe-b8b4-0914-1651-368f669ddf85@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020, Kalle Valo wrote:
+On Thu, Aug 27, 2020 at 11:56:49AM +0100, Vincenzo Frascino wrote:
+> On 8/27/20 11:38 AM, Catalin Marinas wrote:
+> > On Fri, Aug 14, 2020 at 07:27:06PM +0200, Andrey Konovalov wrote:
+> >> diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
+> >> index 7717ea9bc2a7..cfac7d02f032 100644
+> >> --- a/arch/arm64/kernel/mte.c
+> >> +++ b/arch/arm64/kernel/mte.c
+> >> @@ -18,10 +18,14 @@
+> >>  
+> >>  #include <asm/barrier.h>
+> >>  #include <asm/cpufeature.h>
+> >> +#include <asm/kasan.h>
+> >> +#include <asm/kprobes.h>
+> >>  #include <asm/mte.h>
+> >>  #include <asm/ptrace.h>
+> >>  #include <asm/sysreg.h>
+> >>  
+> >> +u64 gcr_kernel_excl __read_mostly;
+> > 
+> > Could we make this __ro_after_init?
+> 
+> Yes, it makes sense, it should be updated only once through mte_init_tags().
+> 
+> Something to consider though here is that this might not be the right approach
+> if in future we want to add stack tagging. In such a case we need to know the
+> kernel exclude mask before any C code is executed. Initializing the mask via
+> mte_init_tags() it is too late.
 
-> Lee Jones <lee.jones@linaro.org> writes:
-> 
-> > On Thu, 27 Aug 2020, Lee Jones wrote:
-> >
-> >> On Wed, 26 Aug 2020, Kalle Valo wrote:
-> >> 
-> >> > Lee Jones <lee.jones@linaro.org> wrote:
-> >> > 
-> >> > > Fixes the following W=1 kernel build warning(s):
-> >> > > 
-> >> > >  drivers/net/wireless/ath/wil6210/wmi.c:279: warning: Function
-> >> > > parameter or member 'ptr_' not described in 'wmi_buffer_block'
-> >> > >  drivers/net/wireless/ath/wil6210/wmi.c:279: warning: Excess
-> >> > > function parameter 'ptr' description in 'wmi_buffer_block'
-> >> > > 
-> >> > > Cc: Maya Erez <merez@codeaurora.org>
-> >> > > Cc: Kalle Valo <kvalo@codeaurora.org>
-> >> > > Cc: "David S. Miller" <davem@davemloft.net>
-> >> > > Cc: Jakub Kicinski <kuba@kernel.org>
-> >> > > Cc: linux-wireless@vger.kernel.org
-> >> > > Cc: wil6210@qti.qualcomm.com
-> >> > > Cc: netdev@vger.kernel.org
-> >> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> >> > 
-> >> > Failed to apply:
-> >> > 
-> >> > error: patch failed: drivers/net/wireless/ath/wil6210/wmi.c:266
-> >> > error: drivers/net/wireless/ath/wil6210/wmi.c: patch does not apply
-> >> > stg import: Diff does not apply cleanly
-> >> > 
-> >> > Patch set to Changes Requested.
-> >> 
-> >> Are you applying them in order?
-> >> 
-> >> It may be affected by:
-> >> 
-> >>  wireless: ath: wil6210: wmi: Fix formatting and demote
-> >> non-conforming function headers
-> >> 
-> >> I'll also rebase onto the latest -next and resubmit.
-> >
-> > I just rebased all 3 sets onto the latest -next (next-20200827)
-> > without issue.  Not sure what problem you're seeing.  Did you apply
-> > the first set before attempting the second?
-> 
-> I can't remember the order, patchwork sorts them based on the order they
-> have been submitted and that's what I usually use.
-> 
-> Do note that there's a separate tree for drivers in
-> drivers/net/wireless/ath:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/
-> 
-> And it takes a week or two before patches go to linux-next.
+It depends on how stack tagging ends up in the kernel, whether it uses
+ADDG/SUBG or not. If it's only IRG, I think it can cope with changing
+the GCR_EL1.Excl in the middle of a function.
 
-Understood.  Thank you.
+> I was thinking to add a compilation define instead of having gcr_kernel_excl in
+> place. This might not work if the kernel excl mask is meant to change during the
+> execution.
+
+A macro with the default value works for me. That's what it basically is
+currently, only that it ends up in a variable.
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Catalin
