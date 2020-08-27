@@ -2,143 +2,149 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5D6222CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598546376;
-	bh=9/ac13JQo1bQIoTAtId4klh0RJxLdy34KcJ9kyGT9W4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oACeGESPF8u2CFcbbn/qARRfU1pgjv4TVp7bBDGYZ3t5MdZrp6ZUUXarYprA0HX/Q
-	 PKpPEHJnTqos3kSAoyGSx5z+j87BEvO/azVW24MMcRIxYyNuZQK4JbhtTvJXh8CKbs
-	 FDCl8hbqBa0n59Ip/TgI6g1s5lJJAroLDaxTvWUA=
+	by mail.kernel.org (Postfix) with ESMTP id 640C62177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:39:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgH0Qje (ORCPT
+        id S1727959AbgH0Qjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:39:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45662 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 12:39:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:60436 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727924AbgH0QjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727913AbgH0QjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 12:39:22 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92EBB22BEB;
-        Thu, 27 Aug 2020 16:39:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598546362;
-        bh=9/ac13JQo1bQIoTAtId4klh0RJxLdy34KcJ9kyGT9W4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WtNv/Z+p/+5WWWbzwHCI9HLa0XFfJu1cMYDZ4Tz806jl4E33lduYE6I/iH/buOZrD
-         QCu/h5Wb2/NLS8nHfdt1m1H+uc9Czs6SJ015Spzi3Sd5QUxebAQuS/BNt3gYvKTHs8
-         b+RI5x3A5nKkhAai7Cl3qby/3w9418Kkho/Nq39s=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, x86@kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        linux-arch@vger.kernel.org, guoren@kernel.org
-Subject: [PATCH v3 05/16] arc: kprobes: Use generic kretprobe trampoline handler
-Date:   Fri, 28 Aug 2020 01:39:19 +0900
-Message-Id: <159854635881.736475.10379062426732820425.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <159854631442.736475.5062989489155389472.stgit@devnote2>
-References: <159854631442.736475.5062989489155389472.stgit@devnote2>
-User-Agent: StGit/0.19
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B32A931B;
+        Thu, 27 Aug 2020 09:39:21 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B300E3F66B;
+        Thu, 27 Aug 2020 09:39:20 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 17:39:18 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Lukasz Luba <lukasz.luba@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.8 130/232] sched/uclamp: Protect uclamp fast path code
+ with static key
+Message-ID: <20200827163918.xvpstc7vpn6moyjp@e107158-lin.cambridge.arm.com>
+References: <20200820091612.692383444@linuxfoundation.org>
+ <20200820091619.114657136@linuxfoundation.org>
+ <20200827135330.246pbwc7h5gvdli7@e107158-lin.cambridge.arm.com>
+ <20200827155518.GA682821@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200827155518.GA682821@kroah.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- arch/arc/kernel/kprobes.c |   55 ++-------------------------------------------
- 1 file changed, 3 insertions(+), 52 deletions(-)
+On 08/27/20 17:55, Greg Kroah-Hartman wrote:
+> On Thu, Aug 27, 2020 at 02:53:31PM +0100, Qais Yousef wrote:
+> > On 08/20/20 11:19, Greg Kroah-Hartman wrote:
+> > > From: Qais Yousef <qais.yousef@arm.com>
+> > > 
+> > > [ Upstream commit 46609ce227039fd192e0ecc7d940bed587fd2c78 ]
+> > > 
+> > > There is a report that when uclamp is enabled, a netperf UDP test
+> > > regresses compared to a kernel compiled without uclamp.
+> > > 
+> > > https://lore.kernel.org/lkml/20200529100806.GA3070@suse.de/
+> > > 
+> > > While investigating the root cause, there were no sign that the uclamp
+> > > code is doing anything particularly expensive but could suffer from bad
+> > > cache behavior under certain circumstances that are yet to be
+> > > understood.
+> > > 
+> > > https://lore.kernel.org/lkml/20200616110824.dgkkbyapn3io6wik@e107158-lin/
+> > > 
+> > > To reduce the pressure on the fast path anyway, add a static key that is
+> > > by default will skip executing uclamp logic in the
+> > > enqueue/dequeue_task() fast path until it's needed.
+> > > 
+> > > As soon as the user start using util clamp by:
+> > > 
+> > > 	1. Changing uclamp value of a task with sched_setattr()
+> > > 	2. Modifying the default sysctl_sched_util_clamp_{min, max}
+> > > 	3. Modifying the default cpu.uclamp.{min, max} value in cgroup
+> > > 
+> > > We flip the static key now that the user has opted to use util clamp.
+> > > Effectively re-introducing uclamp logic in the enqueue/dequeue_task()
+> > > fast path. It stays on from that point forward until the next reboot.
+> > > 
+> > > This should help minimize the effect of util clamp on workloads that
+> > > don't need it but still allow distros to ship their kernels with uclamp
+> > > compiled in by default.
+> > > 
+> > > SCHED_WARN_ON() in uclamp_rq_dec_id() was removed since now we can end
+> > > up with unbalanced call to uclamp_rq_dec_id() if we flip the key while
+> > > a task is running in the rq. Since we know it is harmless we just
+> > > quietly return if we attempt a uclamp_rq_dec_id() when
+> > > rq->uclamp[].bucket[].tasks is 0.
+> > > 
+> > > In schedutil, we introduce a new uclamp_is_enabled() helper which takes
+> > > the static key into account to ensure RT boosting behavior is retained.
+> > > 
+> > > The following results demonstrates how this helps on 2 Sockets Xeon E5
+> > > 2x10-Cores system.
+> > > 
+> > >                                    nouclamp                 uclamp      uclamp-static-key
+> > > Hmean     send-64         162.43 (   0.00%)      157.84 *  -2.82%*      163.39 *   0.59%*
+> > > Hmean     send-128        324.71 (   0.00%)      314.78 *  -3.06%*      326.18 *   0.45%*
+> > > Hmean     send-256        641.55 (   0.00%)      628.67 *  -2.01%*      648.12 *   1.02%*
+> > > Hmean     send-1024      2525.28 (   0.00%)     2448.26 *  -3.05%*     2543.73 *   0.73%*
+> > > Hmean     send-2048      4836.14 (   0.00%)     4712.08 *  -2.57%*     4867.69 *   0.65%*
+> > > Hmean     send-3312      7540.83 (   0.00%)     7425.45 *  -1.53%*     7621.06 *   1.06%*
+> > > Hmean     send-4096      9124.53 (   0.00%)     8948.82 *  -1.93%*     9276.25 *   1.66%*
+> > > Hmean     send-8192     15589.67 (   0.00%)    15486.35 *  -0.66%*    15819.98 *   1.48%*
+> > > Hmean     send-16384    26386.47 (   0.00%)    25752.25 *  -2.40%*    26773.74 *   1.47%*
+> > > 
+> > > The perf diff between nouclamp and uclamp-static-key when uclamp is
+> > > disabled in the fast path:
+> > > 
+> > >      8.73%     -1.55%  [kernel.kallsyms]        [k] try_to_wake_up
+> > >      0.07%     +0.04%  [kernel.kallsyms]        [k] deactivate_task
+> > >      0.13%     -0.02%  [kernel.kallsyms]        [k] activate_task
+> > > 
+> > > The diff between nouclamp and uclamp-static-key when uclamp is enabled
+> > > in the fast path:
+> > > 
+> > >      8.73%     -0.72%  [kernel.kallsyms]        [k] try_to_wake_up
+> > >      0.13%     +0.39%  [kernel.kallsyms]        [k] activate_task
+> > >      0.07%     +0.38%  [kernel.kallsyms]        [k] deactivate_task
+> > > 
+> > > Fixes: 69842cba9ace ("sched/uclamp: Add CPU's clamp buckets refcounting")
+> > > Reported-by: Mel Gorman <mgorman@suse.de>
+> > > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > Tested-by: Lukasz Luba <lukasz.luba@arm.com>
+> > > Link: https://lkml.kernel.org/r/20200630112123.12076-3-qais.yousef@arm.com
+> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > > ---
+> > 
+> > Greg/Peter/Mel
+> > 
+> > Should this go to 5.4 too? Not saying it should, but I don't know if distros
+> > could care about potential performance hit that this patch addresses.
+> 
+> If you want to provide a backported version of this to 5.4.y, that you
+> have tested that works properly, I will be glad to queue it up.
 
-diff --git a/arch/arc/kernel/kprobes.c b/arch/arc/kernel/kprobes.c
-index 7d3efe83cba7..da615684240b 100644
---- a/arch/arc/kernel/kprobes.c
-+++ b/arch/arc/kernel/kprobes.c
-@@ -388,6 +388,7 @@ void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
- {
- 
- 	ri->ret_addr = (kprobe_opcode_t *) regs->blink;
-+	ri->fp = NULL;
- 
- 	/* Replace the return addr with trampoline addr */
- 	regs->blink = (unsigned long)&kretprobe_trampoline;
-@@ -396,58 +397,8 @@ void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
- static int __kprobes trampoline_probe_handler(struct kprobe *p,
- 					      struct pt_regs *regs)
- {
--	struct kretprobe_instance *ri = NULL;
--	struct hlist_head *head, empty_rp;
--	struct hlist_node *tmp;
--	unsigned long flags, orig_ret_address = 0;
--	unsigned long trampoline_address = (unsigned long)&kretprobe_trampoline;
--
--	INIT_HLIST_HEAD(&empty_rp);
--	kretprobe_hash_lock(current, &head, &flags);
--
--	/*
--	 * It is possible to have multiple instances associated with a given
--	 * task either because an multiple functions in the call path
--	 * have a return probe installed on them, and/or more than one return
--	 * return probe was registered for a target function.
--	 *
--	 * We can handle this because:
--	 *     - instances are always inserted at the head of the list
--	 *     - when multiple return probes are registered for the same
--	 *       function, the first instance's ret_addr will point to the
--	 *       real return address, and all the rest will point to
--	 *       kretprobe_trampoline
--	 */
--	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
--		if (ri->task != current)
--			/* another task is sharing our hash bucket */
--			continue;
--
--		if (ri->rp && ri->rp->handler)
--			ri->rp->handler(ri, regs);
--
--		orig_ret_address = (unsigned long)ri->ret_addr;
--		recycle_rp_inst(ri, &empty_rp);
--
--		if (orig_ret_address != trampoline_address) {
--			/*
--			 * This is the real return address. Any other
--			 * instances associated with this task are for
--			 * other calls deeper on the call stack
--			 */
--			break;
--		}
--	}
--
--	kretprobe_assert(ri, orig_ret_address, trampoline_address);
--	regs->ret = orig_ret_address;
--
--	kretprobe_hash_unlock(current, &flags);
--
--	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
--		hlist_del(&ri->hlist);
--		kfree(ri);
--	}
-+	regs->ret = __kretprobe_trampoline_handler(regs,
-+				(unsigned long)&kretprobe_trampoline, NULL);
- 
- 	/* By returning a non zero value, we are telling the kprobe handler
- 	 * that we don't want the post_handler to run
+The conflict was simple enough to resolve. I'll test them tomorrow and post
+2 patches.
 
+Thanks!
+
+--
+Qais Yousef
