@@ -7,260 +7,145 @@ X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 548F8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23B1222BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:29:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E542080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:33:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fKkwMSCT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KBNvfVk4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgH0K3y (ORCPT
+        id S1728329AbgH0KdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:29:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgH0K3v (ORCPT
+        Thu, 27 Aug 2020 06:33:06 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34138 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726938AbgH0KdF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:29:51 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05270C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:29:51 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 5so3943935otp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:29:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VqVqosFrIbjcMckf+U3+gM0HZKqC0WuU3mUX+w73JZU=;
-        b=fKkwMSCT3+pj22gsTIywq7R4LB1He2LTSACwbCTdIGXidzMgQfHh+U6FSnM8xecppd
-         QbXBqCxhAsd24Zw+4HglaCDRXu6RFTP2NAQgwkA/Ipe/S4qcfzbCDRpQJMhf3j420AC1
-         7T9kCyCWVet5iClQ592TiqqC6sAFi5/3YYlm8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VqVqosFrIbjcMckf+U3+gM0HZKqC0WuU3mUX+w73JZU=;
-        b=SobTro9Ao/o4tSg6UOl7eCQNd2foORs/ICIsswWfgvEpmkBZUqgZB//BiUQWoyrPnq
-         wRpp3Dl+qUSkBo3CR86HczdfLEx2PlONYuaBvofmq7VGHLsuIofvqOEtTWwihq01Z+Zm
-         h7BfAqjn48KSg2tGRFjIyy00AKakUTRi2ybbvHMhU6XhXedScgl48XOfM0WH0s9bo45k
-         wMiLX+EJGACmU1gjfcJyhfu0q6eB5+lAZfTLdtXC5nNHvzqfsRQWZbvzzMYJ5x8Fvor0
-         1ZjErsKzqkR5r+wf+3Wjo0YIz9cXpI3U+LUOJZ9HPZoKAh1h4UsGYSh3ysuT05I7GV+M
-         4FSw==
-X-Gm-Message-State: AOAM532LdG8VfK0KOE8BfPCZF/5D1L1NS5G8Zc6MSMblCLSrR8Id7b0k
-        vNsi4cr+JCklJkHPxwxQSqur40yU8ZcnNA==
-X-Google-Smtp-Source: ABdhPJwkcO9QWwwz/du8z8WkID4wlrd4jorJU6G8Al08TCuowAGvQYPn0eUYkCDfqPjuRQEbZCH5AQ==
-X-Received: by 2002:a05:6830:1259:: with SMTP id s25mr13755210otp.203.1598524189659;
-        Thu, 27 Aug 2020 03:29:49 -0700 (PDT)
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com. [209.85.210.53])
-        by smtp.gmail.com with ESMTPSA id w13sm388409oiw.50.2020.08.27.03.29.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 03:29:48 -0700 (PDT)
-Received: by mail-ot1-f53.google.com with SMTP id a65so3962719otc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:29:48 -0700 (PDT)
-X-Received: by 2002:a9d:5f0c:: with SMTP id f12mr12086496oti.141.1598524187719;
- Thu, 27 Aug 2020 03:29:47 -0700 (PDT)
+        Thu, 27 Aug 2020 06:33:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598524383;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xVl6R1XwWuiNXr6HJxlhlEi6Bd9mQNsLml7GXEW9cbY=;
+        b=KBNvfVk4wLbCc/T/Ta6KRmLbtmKwx4c5cQKU+lHP2ah3eRmMe/+ly7owokNLHn6AsWnH6H
+        4UFjgt43kV2cz7sECxWNrZazCM+6NF0bQ59K7aW3JSHFVBA/S00qT4dkN2tNIVTdTWdv1Y
+        TJ/LQEVgniya4j01jEk3L1q/dP4UUiA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-275-bdNbO0IPPrq-tf0swTDF9Q-1; Thu, 27 Aug 2020 06:33:00 -0400
+X-MC-Unique: bdNbO0IPPrq-tf0swTDF9Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84F94803F58;
+        Thu, 27 Aug 2020 10:32:46 +0000 (UTC)
+Received: from gondolin (ovpn-113-237.ams2.redhat.com [10.36.113.237])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E5D97196F3;
+        Thu, 27 Aug 2020 10:32:42 +0000 (UTC)
+Date:   Thu, 27 Aug 2020 12:32:40 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v10 01/16] s390/vfio-ap: add version vfio_ap module
+Message-ID: <20200827123240.42e0c787.cohuck@redhat.com>
+In-Reply-To: <ca016eca-1ee7-2d0f-c2ec-3ef147b6216a@linux.ibm.com>
+References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+        <20200821195616.13554-2-akrowiak@linux.ibm.com>
+        <20200825120432.13a1b444.cohuck@redhat.com>
+        <ca016eca-1ee7-2d0f-c2ec-3ef147b6216a@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <20200821103608.2310097-1-acourbot@chromium.org>
- <20200821103608.2310097-10-acourbot@chromium.org> <02eaeace-22dd-02ea-7162-90200fe1cffe@gmail.com>
- <CAPBb6MWZRKpg-rs7X_j3tqqsYHy=NkEMN1NdZwPS9zo-0whTJw@mail.gmail.com> <184d895c-239e-3f23-970e-6a9563235cd9@gmail.com>
-In-Reply-To: <184d895c-239e-3f23-970e-6a9563235cd9@gmail.com>
-From:   Alexandre Courbot <acourbot@chromium.org>
-Date:   Thu, 27 Aug 2020 19:29:35 +0900
-X-Gmail-Original-Message-ID: <CAPBb6MXrUNqWr=3KBPbJkXGmz=gL0aq_QuUQ5u_crR3yyDBvpw@mail.gmail.com>
-Message-ID: <CAPBb6MXrUNqWr=3KBPbJkXGmz=gL0aq_QuUQ5u_crR3yyDBvpw@mail.gmail.com>
-Subject: Re: [PATCH v4 09/17] arm64: dts: mt8183: add encoder node
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+On Wed, 26 Aug 2020 10:49:47 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-On Thu, Aug 27, 2020 at 7:23 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
->
-> Hi Alexandre,
->
-> On 27/08/2020 12:10, Alexandre Courbot wrote:
-> > On Thu, Aug 27, 2020 at 7:03 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
+> On 8/25/20 6:04 AM, Cornelia Huck wrote:
+> > On Fri, 21 Aug 2020 15:56:01 -0400
+> > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+> >  
+> >> Let's set a version for the vfio_ap module so that automated regression
+> >> tests can determine whether dynamic configuration tests can be run or
+> >> not.
 > >>
+> >> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> >> ---
+> >>   drivers/s390/crypto/vfio_ap_drv.c | 2 ++
+> >>   1 file changed, 2 insertions(+)
 > >>
-> >>
-> >> On 21/08/2020 12:36, Alexandre Courbot wrote:
-> >>> Now that the MT8183 encoder driver is ready, add its DT node. Also pull
-> >>> the iommu and scp ones, which the encoder depends upon.
-> >>
-> >> Please don't do that. Instead of pulling in other DT nodes, it would be handy to
-> >> get a reference of the series this is based on.
-> >>
-> >> Let me try to hunt them down now :)
+> >> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+> >> index be2520cc010b..f4ceb380dd61 100644
+> >> --- a/drivers/s390/crypto/vfio_ap_drv.c
+> >> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+> >> @@ -17,10 +17,12 @@
+> >>   
+> >>   #define VFIO_AP_ROOT_NAME "vfio_ap"
+> >>   #define VFIO_AP_DEV_NAME "matrix"
+> >> +#define VFIO_AP_MODULE_VERSION "1.2.0"
+> >>   
+> >>   MODULE_AUTHOR("IBM Corporation");
+> >>   MODULE_DESCRIPTION("VFIO AP device driver, Copyright IBM Corp. 2018");
+> >>   MODULE_LICENSE("GPL v2");
+> >> +MODULE_VERSION(VFIO_AP_MODULE_VERSION);
+> >>   
+> >>   static struct ap_driver vfio_ap_drv;
+> >>     
+> > Setting a version manually has some drawbacks:
+> > - tools wanting to check for capabilities need to keep track which
+> >    versions support which features
+> > - you need to remember to actually bump the version when adding a new,
+> >    visible feature
+> > (- selective downstream backports may get into a pickle, but that's
+> > arguably not your problem)
 > >
-> > Sorry, I'm not sure to understand - do you mean each node should come
-> > with its own patch? Or that all the code should be merged before
-> > sending these nodes? The rest of this series should land into the
-> > media tree soon, if you prefer I can resend this patch separately once
-> > that happens.
-> >
->
-> What I'm talking about is the case when you send a series that's based on
-> another one and the latter is not yet accepted in Torvalds tree. In that case it
-> helps to point to the series you expect to be included as well.
->
-> In this case the SCP series was merged long time ago, but I missed the DTS
-> change. It would have been good if you would have added that information in your
-> series, instead of directly pulling in the SCP node.
+> > Is there no way for a tool to figure out whether this is supported?
+> > E.g., via existence of a sysfs file, or via a known error that will
+> > occur. If not, it's maybe better to expose known capabilities via a
+> > generic interface.  
+> 
+> This patch series introduces a new mediated device sysfs attribute,
+> guest_matrix, so the automated tests could check for the existence
+> of that interface. The problem I have with that is it will work for
+> this version of the vfio_ap device driver - which may be all that is
+> ever needed - but does not account for future enhancements
+> which may need to be detected by tooling or automated tests.
+> It seems to me that regardless of how a tool detects whether
+> a feature is supported or not, it will have to keep track of that
+> somehow.
 
-Sorry about that, actually I was not even aware of this patch (or
-maybe I just forgot about it due to its date).
+Which enhancements? If you change the interface in an incompatible way,
+you have a different problem anyway. If someone trying to use the
+enhanced version of the interface gets an error on a kernel providing
+an older version of the interface, that's a reasonable way to discover
+support.
 
->
-> For the iommu node: I understand that there was never a patch adding the node
-> (at least I wasn't able to find one). So I'd prefer to have it send as a
-> separate patch of this series.
->
-> Regarding this series now. If you want just resend the two DTS patches (iommu
-> and vcodec_enc) once the rest of this series got accpeted. If for any other
-> reason you have to send a v5, then feel free to include both in v5.
+I think "discover device driver capabilities by probing" is less
+burdensome and error prone than trying to match up capabilities with a
+version number. If you expose a version number, a tool would still have
+to probe that version number, and then consult with a list of features
+per version, which can easily go out of sync.
 
-Absolutely. I will wait until the patches land into the media tree and
-send you two DT-only patches.
+> Can you provide more details about this generic interface of
+> which you speak?
 
-Thanks for the explanation!
+If that is really needed, I'd probably do a driver sysfs attribute that
+exposes a list of documented capabilities (as integer values, or as a
+bit.) But since tools can simply check for guest_matrix to find out
+about support for this feature here, it seems like overkill to me --
+unless you have a multitude of features waiting in queue that need to
+be made discoverable.
 
->
-> Hope I explained myself now :)
->
-> Regards,
-> Matthias
->
-> >>
-> >> Regards,
-> >> Matthias
-> >>
-> >>>
-> >>> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-> >>> ---
-> >>>    arch/arm64/boot/dts/mediatek/mt8183-evb.dts   | 10 ++++++
-> >>>    .../arm64/boot/dts/mediatek/mt8183-kukui.dtsi | 12 +++++++
-> >>>    arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 36 +++++++++++++++++++
-> >>>    3 files changed, 58 insertions(+)
-> >>>
-> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> >>> index ae405bd8f06b..9e77b420eee8 100644
-> >>> --- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> >>> @@ -25,6 +25,16 @@ memory@40000000 {
-> >>>        chosen {
-> >>>                stdout-path = "serial0:921600n8";
-> >>>        };
-> >>> +     reserved-memory {
-> >>> +             #address-cells = <2>;
-> >>> +             #size-cells = <2>;
-> >>> +             ranges;
-> >>> +             scp_mem_reserved: scp_mem_region {
-> >>> +                     compatible = "shared-dma-pool";
-> >>> +                     reg = <0 0x50000000 0 0x2900000>;
-> >>> +                     no-map;
-> >>> +             };
-> >>> +     };
-> >>>    };
-> >>>
-> >>>    &auxadc {
-> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-> >>> index f0a070535b34..3c763be658da 100644
-> >>> --- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-> >>> @@ -90,6 +90,18 @@ pp3300_alw: regulator6 {
-> >>>                regulator-max-microvolt = <3300000>;
-> >>>        };
-> >>>
-> >>> +     reserved_memory: reserved-memory {
-> >>> +             #address-cells = <2>;
-> >>> +             #size-cells = <2>;
-> >>> +             ranges;
-> >>> +
-> >>> +             scp_mem_reserved: scp_mem_region {
-> >>> +                     compatible = "shared-dma-pool";
-> >>> +                     reg = <0 0x50000000 0 0x2900000>;
-> >>> +                     no-map;
-> >>> +             };
-> >>> +     };
-> >>> +
-> >>>        max98357a: codec0 {
-> >>>                compatible = "maxim,max98357a";
-> >>>                sdmode-gpios = <&pio 175 0>;
-> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> >>> index 102105871db2..8f77eea6df27 100644
-> >>> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> >>> @@ -8,6 +8,7 @@
-> >>>    #include <dt-bindings/clock/mt8183-clk.h>
-> >>>    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >>>    #include <dt-bindings/interrupt-controller/irq.h>
-> >>> +#include <dt-bindings/memory/mt8183-larb-port.h>
-> >>>    #include <dt-bindings/reset-controller/mt8183-resets.h>
-> >>>    #include <dt-bindings/phy/phy.h>
-> >>>    #include "mt8183-pinfunc.h"
-> >>> @@ -339,6 +340,25 @@ pwrap: pwrap@1000d000 {
-> >>>                        clock-names = "spi", "wrap";
-> >>>                };
-> >>>
-> >>> +             iommu: iommu@10205000 {
-> >>> +                     compatible = "mediatek,mt8183-m4u";
-> >>> +                     reg = <0 0x10205000 0 0x1000>;
-> >>> +                     interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_LOW>;
-> >>> +                     #iommu-cells = <1>;
-> >>> +             };
-> >>> +
-> >>> +             scp: scp@10500000 {
-> >>> +                     compatible = "mediatek,mt8183-scp";
-> >>> +                     reg = <0 0x10500000 0 0x80000>,
-> >>> +                           <0 0x105c0000 0 0x19080>;
-> >>> +                     reg-names = "sram", "cfg";
-> >>> +                     interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> >>> +                     clocks = <&infracfg CLK_INFRA_SCPSYS>;
-> >>> +                     clock-names = "main";
-> >>> +                     memory-region = <&scp_mem_reserved>;
-> >>> +                     status = "disabled";
-> >>> +             };
-> >>> +
-> >>>                systimer: timer@10017000 {
-> >>>                        compatible = "mediatek,mt8183-timer",
-> >>>                                     "mediatek,mt6765-timer";
-> >>> @@ -772,6 +792,22 @@ vencsys: syscon@17000000 {
-> >>>                        #clock-cells = <1>;
-> >>>                };
-> >>>
-> >>> +             vcodec_enc: vcodec@17020000 {
-> >>> +                     compatible = "mediatek,mt8183-vcodec-enc";
-> >>> +                     reg = <0 0x17020000 0 0x1000>;
-> >>> +                     interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_LOW>;
-> >>> +                     iommus = <&iommu M4U_PORT_VENC_REC>,
-> >>> +                              <&iommu M4U_PORT_VENC_BSDMA>,
-> >>> +                              <&iommu M4U_PORT_VENC_RD_COMV>,
-> >>> +                              <&iommu M4U_PORT_VENC_CUR_LUMA>,
-> >>> +                              <&iommu M4U_PORT_VENC_CUR_CHROMA>,
-> >>> +                              <&iommu M4U_PORT_VENC_REF_LUMA>,
-> >>> +                              <&iommu M4U_PORT_VENC_REF_CHROMA>;
-> >>> +                     mediatek,scp = <&scp>;
-> >>> +                     clocks = <&vencsys CLK_VENC_VENC>;
-> >>> +                     clock-names = "MT_CG_VENC";
-> >>> +             };
-> >>> +
-> >>>                ipu_conn: syscon@19000000 {
-> >>>                        compatible = "mediatek,mt8183-ipu_conn", "syscon";
-> >>>                        reg = <0 0x19000000 0 0x1000>;
-> >>>
