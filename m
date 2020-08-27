@@ -2,127 +2,214 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADA1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C37C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D010422B40
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CEF42177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:09:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uqbnw1NL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="knXWjKeE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbgH0PJD (ORCPT
+        id S1728234AbgH0PJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:09:03 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:47227 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726894AbgH0PDs (ORCPT
+        Thu, 27 Aug 2020 11:09:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727901AbgH0PAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:03:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598540626;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=MRq9+5xgrQHKZertQauIoLwEhLjJ0ViDikkY3PeptZU=;
-        b=Uqbnw1NLtZxvw/Skw0Zl7Th5OrY5Pt+1YgckSiTRYX2730vsHUIccHYtEXClQzhEw97b2b
-        4O78TIW9k5rfS7ip3La6qeVOhM0o6cwOThMq7xz3b9iIrz7+QP1gv2alXT9J+tbd8B6Suw
-        4Bf5Zb1fwMhfBXjmBxPxkwUnkPC7ofI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-495-M4s7KFOuN96yMRqXhSKjtQ-1; Thu, 27 Aug 2020 11:03:44 -0400
-X-MC-Unique: M4s7KFOuN96yMRqXhSKjtQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84579100CF7E;
-        Thu, 27 Aug 2020 15:03:35 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 329DD5D990;
-        Thu, 27 Aug 2020 15:03:34 +0000 (UTC)
-Subject: [PATCH net 0/7] rxrpc, afs: Fix probing issues
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 27 Aug 2020 16:03:33 +0100
-Message-ID: <159854061331.1382667.9693163318506702951.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+        Thu, 27 Aug 2020 11:00:47 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0EDC061264;
+        Thu, 27 Aug 2020 08:00:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=B6771Z78+EjFEl66FRYSdFSUZAia5cb3z6J6dPED0dc=; b=knXWjKeEqARgnI/Ym4VKx3eyBp
+        J1+42pWzyuc3J49bkSBoybqBRrOv8WWSCYaIN6NoplfaUUydPXKxiZ6z6xT9Ry4rUwFTfyY+/C6+D
+        5UmYO8YpyY4ua4EYKq32hh1ZqrVKsCF2Z+nEwOij4HA2SI7/VjZOz0BTQdOkxx/s4wLYAymkhbM7x
+        5kRNOISkygbyodgWy0F6ZpHrxZ8fWpHf1/9kwooaeddfUbmpA6F7O6JFpvVVq9yvmi5fHIN2Gphc6
+        cAQqhk82TMgKVWi4WcSN+JoeQ+qNccAHkDoHHRPPNYSCYWQOvYimZnD+5ZhZJJrKksuNLPCVzh0+6
+        4CGOzRrA==;
+Received: from [2001:4bb8:18c:45ba:9892:9e86:5202:32f0] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBJOK-00045C-DF; Thu, 27 Aug 2020 15:00:40 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 06/10] x86: move PAGE_OFFSET, TASK_SIZE & friends to page_{32,64}_types.h
+Date:   Thu, 27 Aug 2020 17:00:26 +0200
+Message-Id: <20200827150030.282762-7-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200827150030.282762-1-hch@lst.de>
+References: <20200827150030.282762-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+At least for 64-bit this moves them closer to some of the defines
+they are based on, and it prepares for using the TASK_SIZE_MAX
+definition from assembly.
 
-Here are some fixes for rxrpc and afs to fix issues in the RTT measuring in
-rxrpc and thence the Volume Location server probing in afs:
-
- (1) Move the serial number of a received ACK into a local variable to
-     simplify the next patch.
-
- (2) Fix the loss of RTT samples due to extra interposed ACKs causing
-     baseline information to be discarded too early.  This is a particular
-     problem for afs when it sends a single very short call to probe a
-     server it hasn't talked to recently.
-
- (3) Fix rxrpc_kernel_get_srtt() to indicate whether it actually has seen
-     any valid samples or not.
-
- (4) Remove a field that's set/woken, but never read/waited on.
-
- (5) Expose the RTT and other probe information through procfs to make
-     debugging of this stuff easier.
-
- (6) Fix VL rotation in afs to only use summary information from VL probing
-     and not the probe running state (which gets clobbered when next a
-     probe is issued).
-
- (7) Fix VL rotation to actually return the error aggregated from the probe
-     errors.
-
-The patches are tagged here:
-
-	git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
-	rxrpc-fixes-20200820
-
-and can also be found on the following branch:
-
-	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=rxrpc-fixes
-
-David
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
-David Howells (7):
-      rxrpc: Keep the ACK serial in a var in rxrpc_input_ack()
-      rxrpc: Fix loss of RTT samples due to interposed ACK
-      rxrpc: Make rxrpc_kernel_get_srtt() indicate validity
-      afs: Remove afs_vlserver->probe.have_result
-      afs: Expose information from afs_vlserver through /proc for debugging
-      afs: Don't use VL probe running state to make decisions outside probe code
-      afs: Fix error handling in VL server rotation
+ arch/x86/include/asm/page_32_types.h | 11 +++++++
+ arch/x86/include/asm/page_64_types.h | 38 +++++++++++++++++++++
+ arch/x86/include/asm/processor.h     | 49 ----------------------------
+ 3 files changed, 49 insertions(+), 49 deletions(-)
 
-
- fs/afs/fs_probe.c            |   4 +-
- fs/afs/internal.h            |  14 +++--
- fs/afs/proc.c                |   5 ++
- fs/afs/vl_list.c             |   1 +
- fs/afs/vl_probe.c            |  82 ++++++++++++++++-----------
- fs/afs/vl_rotate.c           |   7 ++-
- include/net/af_rxrpc.h       |   2 +-
- include/trace/events/rxrpc.h |  27 +++++++--
- net/rxrpc/ar-internal.h      |  13 +++--
- net/rxrpc/call_object.c      |   1 +
- net/rxrpc/input.c            | 104 ++++++++++++++++++++---------------
- net/rxrpc/output.c           |  82 ++++++++++++++++++++-------
- net/rxrpc/peer_object.c      |  16 +++++-
- net/rxrpc/rtt.c              |   3 +-
- 14 files changed, 241 insertions(+), 120 deletions(-)
-
+diff --git a/arch/x86/include/asm/page_32_types.h b/arch/x86/include/asm/page_32_types.h
+index 565ad755c785e2..26236925fb2c36 100644
+--- a/arch/x86/include/asm/page_32_types.h
++++ b/arch/x86/include/asm/page_32_types.h
+@@ -41,6 +41,17 @@
+ #define __VIRTUAL_MASK_SHIFT	32
+ #endif	/* CONFIG_X86_PAE */
+ 
++/*
++ * User space process size: 3GB (default).
++ */
++#define IA32_PAGE_OFFSET	PAGE_OFFSET
++#define TASK_SIZE		PAGE_OFFSET
++#define TASK_SIZE_LOW		TASK_SIZE
++#define TASK_SIZE_MAX		TASK_SIZE
++#define DEFAULT_MAP_WINDOW	TASK_SIZE
++#define STACK_TOP		TASK_SIZE
++#define STACK_TOP_MAX		STACK_TOP
++
+ /*
+  * Kernel image size is limited to 512 MB (see in arch/x86/kernel/head_32.S)
+  */
+diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
+index 288b065955b729..996595c9897e0a 100644
+--- a/arch/x86/include/asm/page_64_types.h
++++ b/arch/x86/include/asm/page_64_types.h
+@@ -58,6 +58,44 @@
+ #define __VIRTUAL_MASK_SHIFT	47
+ #endif
+ 
++/*
++ * User space process size.  This is the first address outside the user range.
++ * There are a few constraints that determine this:
++ *
++ * On Intel CPUs, if a SYSCALL instruction is at the highest canonical
++ * address, then that syscall will enter the kernel with a
++ * non-canonical return address, and SYSRET will explode dangerously.
++ * We avoid this particular problem by preventing anything executable
++ * from being mapped at the maximum canonical address.
++ *
++ * On AMD CPUs in the Ryzen family, there's a nasty bug in which the
++ * CPUs malfunction if they execute code from the highest canonical page.
++ * They'll speculate right off the end of the canonical space, and
++ * bad things happen.  This is worked around in the same way as the
++ * Intel problem.
++ *
++ * With page table isolation enabled, we map the LDT in ... [stay tuned]
++ */
++#define TASK_SIZE_MAX	((1UL << __VIRTUAL_MASK_SHIFT) - PAGE_SIZE)
++
++#define DEFAULT_MAP_WINDOW	((1UL << 47) - PAGE_SIZE)
++
++/* This decides where the kernel will search for a free chunk of vm
++ * space during mmap's.
++ */
++#define IA32_PAGE_OFFSET	((current->personality & ADDR_LIMIT_3GB) ? \
++					0xc0000000 : 0xFFFFe000)
++
++#define TASK_SIZE_LOW		(test_thread_flag(TIF_ADDR32) ? \
++					IA32_PAGE_OFFSET : DEFAULT_MAP_WINDOW)
++#define TASK_SIZE		(test_thread_flag(TIF_ADDR32) ? \
++					IA32_PAGE_OFFSET : TASK_SIZE_MAX)
++#define TASK_SIZE_OF(child)	((test_tsk_thread_flag(child, TIF_ADDR32)) ? \
++					IA32_PAGE_OFFSET : TASK_SIZE_MAX)
++
++#define STACK_TOP		TASK_SIZE_LOW
++#define STACK_TOP_MAX		TASK_SIZE_MAX
++
+ /*
+  * Maximum kernel image size is limited to 1 GiB, due to the fixmap living
+  * in the next 1 GiB (see level2_kernel_pgt in arch/x86/kernel/head_64.S).
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 97143d87994c24..1618eeb08361a9 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -782,17 +782,6 @@ static inline void spin_lock_prefetch(const void *x)
+ })
+ 
+ #ifdef CONFIG_X86_32
+-/*
+- * User space process size: 3GB (default).
+- */
+-#define IA32_PAGE_OFFSET	PAGE_OFFSET
+-#define TASK_SIZE		PAGE_OFFSET
+-#define TASK_SIZE_LOW		TASK_SIZE
+-#define TASK_SIZE_MAX		TASK_SIZE
+-#define DEFAULT_MAP_WINDOW	TASK_SIZE
+-#define STACK_TOP		TASK_SIZE
+-#define STACK_TOP_MAX		STACK_TOP
+-
+ #define INIT_THREAD  {							  \
+ 	.sp0			= TOP_OF_INIT_STACK,			  \
+ 	.sysenter_cs		= __KERNEL_CS,				  \
+@@ -802,44 +791,6 @@ static inline void spin_lock_prefetch(const void *x)
+ #define KSTK_ESP(task)		(task_pt_regs(task)->sp)
+ 
+ #else
+-/*
+- * User space process size.  This is the first address outside the user range.
+- * There are a few constraints that determine this:
+- *
+- * On Intel CPUs, if a SYSCALL instruction is at the highest canonical
+- * address, then that syscall will enter the kernel with a
+- * non-canonical return address, and SYSRET will explode dangerously.
+- * We avoid this particular problem by preventing anything executable
+- * from being mapped at the maximum canonical address.
+- *
+- * On AMD CPUs in the Ryzen family, there's a nasty bug in which the
+- * CPUs malfunction if they execute code from the highest canonical page.
+- * They'll speculate right off the end of the canonical space, and
+- * bad things happen.  This is worked around in the same way as the
+- * Intel problem.
+- *
+- * With page table isolation enabled, we map the LDT in ... [stay tuned]
+- */
+-#define TASK_SIZE_MAX	((1UL << __VIRTUAL_MASK_SHIFT) - PAGE_SIZE)
+-
+-#define DEFAULT_MAP_WINDOW	((1UL << 47) - PAGE_SIZE)
+-
+-/* This decides where the kernel will search for a free chunk of vm
+- * space during mmap's.
+- */
+-#define IA32_PAGE_OFFSET	((current->personality & ADDR_LIMIT_3GB) ? \
+-					0xc0000000 : 0xFFFFe000)
+-
+-#define TASK_SIZE_LOW		(test_thread_flag(TIF_ADDR32) ? \
+-					IA32_PAGE_OFFSET : DEFAULT_MAP_WINDOW)
+-#define TASK_SIZE		(test_thread_flag(TIF_ADDR32) ? \
+-					IA32_PAGE_OFFSET : TASK_SIZE_MAX)
+-#define TASK_SIZE_OF(child)	((test_tsk_thread_flag(child, TIF_ADDR32)) ? \
+-					IA32_PAGE_OFFSET : TASK_SIZE_MAX)
+-
+-#define STACK_TOP		TASK_SIZE_LOW
+-#define STACK_TOP_MAX		TASK_SIZE_MAX
+-
+ #define INIT_THREAD  {						\
+ 	.addr_limit		= KERNEL_DS,			\
+ }
+-- 
+2.28.0
 
