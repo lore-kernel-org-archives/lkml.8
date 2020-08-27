@@ -2,79 +2,113 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 988A92177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6932A22B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:38:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GDQ1TKl2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbgH0MiO (ORCPT
+        id S1729104AbgH0Miw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 08:38:14 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:42223 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728957AbgH0MMs (ORCPT
+        Thu, 27 Aug 2020 08:38:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728955AbgH0MOF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 08:12:48 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1618609|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.0266949-0.00317964-0.970125;FP=10364181428023396474|1|1|9|0|-1|-1|-1;HT=e01l04362;MF=frank@allwinnertech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.IOlFrJR_1598530361;
-Received: from allwinnertech.com(mailfrom:frank@allwinnertech.com fp:SMTPD_---.IOlFrJR_1598530361)
-          by smtp.aliyun-inc.com(10.147.42.198);
-          Thu, 27 Aug 2020 20:12:45 +0800
-From:   Frank Lee <frank@allwinnertech.com>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
-Cc:     linux-kernel@vger.kernel.org, tiny.windzz@gmail.com,
-        Yangtao Li <frank@allwinnertech.com>
-Subject: [PATCH] sched: idle: Change the cpu_idle_poll() return type to void
-Date:   Thu, 27 Aug 2020 20:12:25 +0800
-Message-Id: <20200827121225.2991-1-frank@allwinnertech.com>
-X-Mailer: git-send-email 2.28.0
+        Thu, 27 Aug 2020 08:14:05 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 002FFC06121B
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 05:14:04 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id c18so620943wrm.9
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 05:14:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ekjfb6Sf6mANsgF0KqhEnPQMEOzKt6dtLU96j3CPtgg=;
+        b=GDQ1TKl2/iDAzJxhE1Z5lMfgwiQlwWjbf09jpTl2+AuUDzQ/wJheaaCy3mYuelKJca
+         qhRxSWX09KbStDspCwPlp1EJRTJ56oycoh97ud+3Ctd4QTV/cFH7r0zoDOglv8RV1N22
+         eJIaiDXU9hFKuFYwjuxcXgVO6ZEyXectjOH1txFrysGx+gQjqLlxGZhVE9V2ficAsh89
+         52cnO2neBd5hSLef6IfzxWlmU6qJQZZkI1FzE5FSAMCMzRlkeoxH1USuvwQIJCh+5thJ
+         qFxCkow5jLYNFOI+36aJ3LiaZzNDQX5Z2P5/802qs43HA7OhBwpA48MZ3SxfUHJWXm0y
+         caCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ekjfb6Sf6mANsgF0KqhEnPQMEOzKt6dtLU96j3CPtgg=;
+        b=XXQWvA34SLP7ibYNOYigLXFJ/Uc0LWuZqib02zCz82hPjCGtQkBBf6icVABc9vYsy8
+         /bWmVzEpYVudJiZSHFzjokNbRt+q7WNu/PCkVsreVbw15LIGO08Mvx0qaAZ+MNVFqTPo
+         gJlbcBI8Sv6cOwKQGpL6YimJgqKqNof+frvbLUAqz/v9Rfata3NLAxEWFucWks2mh7pS
+         O1TVR45kCJSbKJ6LO4v9NGb1Ea7a2Cg94yI7oYYTfWRFiKRWv/z2sCUQ8Hqi8iQ3G2Dg
+         jJfLXtcyAwccE1nX1UXJiv4dYIDMk9ST5Mp8Mr7HDIxYF+Tg9ax8fdUv/gfkbwNxr9x0
+         xACw==
+X-Gm-Message-State: AOAM531dQ/UGgFiudUFuKNcIctukkoMqRBS6ATFHx+ahlKg6VAXoQMze
+        Os5KoRgpKRgK9ct/98NbgdXHgw==
+X-Google-Smtp-Source: ABdhPJzomTvDIDWXCuEcyS33gAAp/nwPzZVLkwg48iNvf3HKA7HDg+tln7igV6uhPtB69oGfCXuhAQ==
+X-Received: by 2002:adf:e78b:: with SMTP id n11mr2056985wrm.256.1598530443604;
+        Thu, 27 Aug 2020 05:14:03 -0700 (PDT)
+Received: from dell ([91.110.221.141])
+        by smtp.gmail.com with ESMTPSA id 3sm4533378wms.36.2020.08.27.05.14.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 05:14:02 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 13:14:01 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 00/30] Set 3: Rid W=1 warnings in Wireless
+Message-ID: <20200827121401.GD1627017@dell>
+References: <20200826093401.1458456-1-lee.jones@linaro.org>
+ <87y2m09tye.fsf@codeaurora.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <87y2m09tye.fsf@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <frank@allwinnertech.com>
+On Thu, 27 Aug 2020, Kalle Valo wrote:
 
-No one cares about the return value of this function, which only
-increases the time spent in idle loop. Let's drop it.
+> Lee Jones <lee.jones@linaro.org> writes:
+> 
+> > This set is part of a larger effort attempting to clean-up W=1
+> > kernel builds, which are currently overwhelmingly riddled with
+> > niggly little warnings.
+> >
+> > There are quite a few W=1 warnings in the Wireless.  My plan
+> > is to work through all of them over the next few weeks.
+> > Hopefully it won't be too long before drivers/net/wireless
+> > builds clean with W=1 enabled.
+> 
+> How much patches are there going to be? I was first positive about the
+> idea but now I am really starting to wonder if this is worth the effort,
+> these patches are spamming my patchwork significantly and taking too
+> much time. At least please hold of on any new patches for at least a
+> week so I can catch up with all patches I have.
 
-Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+1 more set to go.  drivers/wireless was pretty dirty in this regard
+starting with over 6000 warnings.
 
----
- kernel/sched/idle.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> And like I said already before, follow the title style we use so that I
+> don't need to edit every patch myself:
+> 
+> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#commit_title_is_wrong
 
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index 6bf34986f45c..5250a7c466e6 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -52,7 +52,7 @@ static int __init cpu_idle_nopoll_setup(char *__unused)
- __setup("hlt", cpu_idle_nopoll_setup);
- #endif
- 
--static noinline int __cpuidle cpu_idle_poll(void)
-+static noinline void __cpuidle cpu_idle_poll(void)
- {
- 	rcu_idle_enter();
- 	trace_cpu_idle_rcuidle(0, smp_processor_id());
-@@ -65,8 +65,6 @@ static noinline int __cpuidle cpu_idle_poll(void)
- 	start_critical_timings();
- 	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, smp_processor_id());
- 	rcu_idle_exit();
--
--	return 1;
- }
- 
- /* Weak implementations for optional arch specific functions */
+Sure.
+
 -- 
-2.28.0
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
