@@ -2,154 +2,218 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC97C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6082CC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2C422B4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BBA220786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:05:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rCZTcFgO"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="J+h2PSPa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbgH0IF0 (ORCPT
+        id S1728072AbgH0IFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:05:26 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:10328 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726938AbgH0IFS (ORCPT
+        Thu, 27 Aug 2020 04:05:32 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:26299 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727823AbgH0IF1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:05:18 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598515517; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=zQO2GzozA8sQXnZkgAClT/IdLNR4xXuVsQZt1/cnkGE=; b=rCZTcFgOz7EEHcs7tGZd5HnTznt9gyeM8GXA0rlUvBcTqPjpX+CwTE841HbY2H7xbwFrdSxv
- rVwrecBR37QuTqNCvqEgkUTFuBdQkviSnaChN+Ms7LuhNYYRpXnLIRQLtmU16kdaGNvycpEz
- iAUCIGzqlkJOWMWuXz+LmZok99Y=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5f47693c4b23cecfe2810a1b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 08:05:16
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 73A21C433A0; Thu, 27 Aug 2020 08:05:15 +0000 (UTC)
-Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 66C1FC433CA;
-        Thu, 27 Aug 2020 08:05:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 66C1FC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Maital Hahn <maitalm@ti.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Raz Bouganim <r-bouganim@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Fuqian Huang <huangfq.daxian@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "wlcore: Adding suppoprt for IGTK key in wlcore driver"
-References: <f0a2cb7ea606f1a284d4c23cbf983da2954ce9b6.1598420968.git.mchehab+huawei@kernel.org>
-Date:   Thu, 27 Aug 2020 11:05:08 +0300
-In-Reply-To: <f0a2cb7ea606f1a284d4c23cbf983da2954ce9b6.1598420968.git.mchehab+huawei@kernel.org>
-        (Mauro Carvalho Chehab's message of "Wed, 26 Aug 2020 07:49:34 +0200")
-Message-ID: <87imd4ldjf.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Thu, 27 Aug 2020 04:05:27 -0400
+X-UUID: 13d119ae36ce4216b0ccab2afddfc3a6-20200827
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=/rUhkoefWsM5J0GijhaCYXHwxwTlQ+3R3C/h84JxZFE=;
+        b=J+h2PSPaarqfpv0DIgAt6LG0VGlOjsgSy00KPYQHxRqBA+Oe9oMv68PUczGEteoqZQIOKbjcXJMrMay+OtC8SDQcHrdD923JMX93rjEH2Gji2vswr9PYeiG+oIfhcu9RwRbOqIqPMI3pjXfjuHMon4yyQuARrr1k4PIn5qA7LwI=;
+X-UUID: 13d119ae36ce4216b0ccab2afddfc3a6-20200827
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 727189691; Thu, 27 Aug 2020 16:05:01 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS32N2.mediatek.inc
+ (172.27.4.72) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 27 Aug
+ 2020 16:05:00 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 27 Aug 2020 16:05:00 +0800
+Message-ID: <1598515415.21253.22.camel@mhfsdcap03>
+Subject: Re: [PATCH v2 1/2] usb typec: mt6360: Add support for mt6360 Type-C
+ driver
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     cy_huang <u0084500@gmail.com>
+CC:     <gregkh@linuxfoundation.org>, <robh+dt@kernel.org>,
+        <matthias.bgg@gmail.com>, <linux@roeck-us.net>,
+        <heikki.krogerus@linux.intel.com>, <cy_huang@richtek.com>,
+        <gene_chen@richtek.com>, <linux-usb@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Thu, 27 Aug 2020 16:03:35 +0800
+In-Reply-To: <1598503859-29620-1-git-send-email-u0084500@gmail.com>
+References: <1598503859-29620-1-git-send-email-u0084500@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain
+X-TM-SNTS-SMTP: 612050C4527837B516ECA7941497B19744ADC0CD97CB56446CFC6A88A99B35DC2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+T24gVGh1LCAyMDIwLTA4LTI3IGF0IDEyOjUwICswODAwLCBjeV9odWFuZyB3cm90ZToNCj4gRnJv
+bTogQ2hpWXVhbiBIdWFuZyA8Y3lfaHVhbmdAcmljaHRlay5jb20+DQo+IA0KPiBNZWRpYXRlayBN
+VDYzNjAgaXMgYSBtdWx0aS1mdW5jdGlvbmFsIElDIHRoYXQgaW5jbHVkZXMgVVNCIFR5cGUtQy4N
+Cj4gSXQgd29ya3Mgd2l0aCBUeXBlLUMgUG9ydCBDb250cm9sbGVyIE1hbmFnZXIgdG8gcHJvdmlk
+ZSBVU0IgUEQNCj4gYW5kIFVTQiBUeXBlLUMgZnVuY3Rpb25hbGl0aWVzLg0KPiANCj4gQWRkIGZp
+eCB0byBQcmV2ZW50IHRoZSByYWNlIGNvbmRpdGlvbiBmcm9tIGludGVycnVwdCBhbmQgdGNwY2kg
+cG9ydCB1bnJlZ2lzdGVyDQo+IGR1cmluZyBtb2R1bGUgcmVtb3ZlLg0KPiANCj4gU2lnbmVkLW9m
+Zi1ieTogQ2hpWXVhbiBIdWFuZyA8Y3lfaHVhbmdAcmljaHRlay5jb20+DQo+IC0tLQ0KPiAgZHJp
+dmVycy91c2IvdHlwZWMvdGNwbS9LY29uZmlnICAgICAgICB8ICAgOCArKw0KPiAgZHJpdmVycy91
+c2IvdHlwZWMvdGNwbS9NYWtlZmlsZSAgICAgICB8ICAgMSArDQo+ICBkcml2ZXJzL3VzYi90eXBl
+Yy90Y3BtL3RjcGNpX210NjM2MC5jIHwgMjEzICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysNCkNhbiB5b3UgYXZvaWQgdXNpbmcgc3BlY2lhbCBTb0MgbmFtZSBpbiBmaWxlIG5hbWU/
+DQpJdCdzIG5vdCBjbGVhciBpZiB5b3UgbGF0ZXIgc3VwcG9ydCBuZXcgU29DIGluIHRoZSBkcml2
+ZXIsIGUuZy4gbXQ2M3h4Pw0KDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDIyMiBpbnNlcnRpb25zKCsp
+DQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy91c2IvdHlwZWMvdGNwbS90Y3BjaV9tdDYz
+NjAuYw0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL3R5cGVjL3RjcG0vS2NvbmZpZyBi
+L2RyaXZlcnMvdXNiL3R5cGVjL3RjcG0vS2NvbmZpZw0KPiBpbmRleCBmYTNmMzkzLi41OGE2NGUx
+IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3VzYi90eXBlYy90Y3BtL0tjb25maWcNCj4gKysrIGIv
+ZHJpdmVycy91c2IvdHlwZWMvdGNwbS9LY29uZmlnDQo+IEBAIC0yNyw2ICsyNywxNCBAQCBjb25m
+aWcgVFlQRUNfUlQxNzExSA0KPiAgCSAgVHlwZS1DIFBvcnQgQ29udHJvbGxlciBNYW5hZ2VyIHRv
+IHByb3ZpZGUgVVNCIFBEIGFuZCBVU0INCj4gIAkgIFR5cGUtQyBmdW5jdGlvbmFsaXRpZXMuDQo+
+ICANCj4gK2NvbmZpZyBUWVBFQ19NVDYzNjANCj4gKwl0cmlzdGF0ZSAiTWVkaWF0ZWsgTVQ2MzYw
+IFR5cGUtQyBkcml2ZXIiDQo+ICsJZGVwZW5kcyBvbiBNRkRfTVQ2MzYwDQo+ICsJaGVscA0KPiAr
+CSAgTWVkaWF0ZWsgTVQ2MzYwIGlzIGEgbXVsdGktZnVuY3Rpb25hbCBJQyB0aGF0IGluY2x1ZGVz
+DQo+ICsJICBVU0IgVHlwZS1DLiBJdCB3b3JrcyB3aXRoIFR5cGUtQyBQb3J0IENvbnRyb2xsZXIg
+TWFuYWdlcg0KPiArCSAgdG8gcHJvdmlkZSBVU0IgUEQgYW5kIFVTQiBUeXBlLUMgZnVuY3Rpb25h
+bGl0aWVzLg0KPiArDQo+ICBlbmRpZiAjIFRZUEVDX1RDUENJDQo+ICANCj4gIGNvbmZpZyBUWVBF
+Q19GVVNCMzAyDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi90eXBlYy90Y3BtL01ha2VmaWxl
+IGIvZHJpdmVycy91c2IvdHlwZWMvdGNwbS9NYWtlZmlsZQ0KPiBpbmRleCBhNWZmNmM4Li43NTky
+Y2NiIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3VzYi90eXBlYy90Y3BtL01ha2VmaWxlDQo+ICsr
+KyBiL2RyaXZlcnMvdXNiL3R5cGVjL3RjcG0vTWFrZWZpbGUNCj4gQEAgLTUsMyArNSw0IEBAIG9i
+ai0kKENPTkZJR19UWVBFQ19XQ09WRSkJKz0gdHlwZWNfd2NvdmUubw0KPiAgdHlwZWNfd2NvdmUt
+eQkJCTo9IHdjb3ZlLm8NCj4gIG9iai0kKENPTkZJR19UWVBFQ19UQ1BDSSkJKz0gdGNwY2kubw0K
+PiAgb2JqLSQoQ09ORklHX1RZUEVDX1JUMTcxMUgpCSs9IHRjcGNpX3J0MTcxMWgubw0KPiArb2Jq
+LSQoQ09ORklHX1RZUEVDX01UNjM2MCkJKz0gdGNwY2lfbXQ2MzYwLm8NCj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvdXNiL3R5cGVjL3RjcG0vdGNwY2lfbXQ2MzYwLmMgYi9kcml2ZXJzL3VzYi90eXBl
+Yy90Y3BtL3RjcGNpX210NjM2MC5jDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAw
+MDAwMDAwLi5hMzgxYjVkDQo+IC0tLSAvZGV2L251bGwNCj4gKysrIGIvZHJpdmVycy91c2IvdHlw
+ZWMvdGNwbS90Y3BjaV9tdDYzNjAuYw0KPiBAQCAtMCwwICsxLDIxMyBAQA0KPiArLy8gU1BEWC1M
+aWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb25seQ0KPiArLy8NCj4gKy8vIENvcHlyaWdodCAo
+QykgMjAyMCBNZWRpYVRlayBJbmMuDQo+ICsvLw0KPiArLy8gQXV0aG9yOiBDaGlZdWFuIEh1YW5n
+IDxjeV9odWFuZ0ByaWNodGVrLmNvbT4NClVzZSAvKiAqLyBleGNlcHQgU1BEWD8NCg0KPiArDQo+
+ICsjaW5jbHVkZSA8bGludXgvaW50ZXJydXB0Lmg+DQo+ICsjaW5jbHVkZSA8bGludXgva2VybmVs
+Lmg+DQo+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ICsjaW5jbHVkZSA8bGludXgvb2Yu
+aD4NCj4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gKyNpbmNsdWRlIDxs
+aW51eC9yZWdtYXAuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC91c2IvdGNwbS5oPg0KPiArDQo+ICsj
+aW5jbHVkZSAidGNwY2kuaCINCj4gKw0KPiArI2RlZmluZSBNVDYzNjBfUkVHX1ZDT05OQ1RSTDEJ
+MHg4Qw0KPiArI2RlZmluZSBNVDYzNjBfUkVHX01PREVDVFJMMgkweDhGDQo+ICsjZGVmaW5lIE1U
+NjM2MF9SRUdfU1dSRVNFVAkweEEwDQo+ICsjZGVmaW5lIE1UNjM2MF9SRUdfREVCQ1RSTDEJMHhB
+MQ0KPiArI2RlZmluZSBNVDYzNjBfUkVHX0RSUENUUkwxCTB4QTINCj4gKyNkZWZpbmUgTVQ2MzYw
+X1JFR19EUlBDVFJMMgkweEEzDQo+ICsjZGVmaW5lIE1UNjM2MF9SRUdfSTJDVE9SU1QJMHhCRg0K
+PiArI2RlZmluZSBNVDYzNjBfUkVHX1JYQ1RSTDIJMHhDRg0KPiArI2RlZmluZSBNVDYzNjBfUkVH
+X0NURENUUkwyCTB4RUMNCj4gKw0KPiArLyogTVQ2MzYwX1JFR19WQ09OTkNUUkwxICovDQo+ICsj
+ZGVmaW5lIE1UNjM2MF9WQ09OTkNMX0VOQUJMRQlCSVQoMCkNCj4gKy8qIE1UNjM2MF9SRUdfUlhD
+VFJMMiAqLw0KPiArI2RlZmluZSBNVDYzNjBfT1BFTjQwTV9FTkFCTEUJQklUKDcpDQo+ICsvKiBN
+VDYzNjBfUkVHX0NURENUUkwyICovDQo+ICsjZGVmaW5lIE1UNjM2MF9SUE9ORVNIT1RfRU5BQkxF
+CUJJVCg2KQ0KPiArDQo+ICtzdHJ1Y3QgbXQ2MzYwX3RjcGNfaW5mbyB7DQo+ICsJc3RydWN0IHRj
+cGNpX2RhdGEgdGRhdGE7DQo+ICsJc3RydWN0IHRjcGNpICp0Y3BjaTsNCj4gKwlzdHJ1Y3QgZGV2
+aWNlICpkZXY7DQo+ICsJaW50IGlycTsNCj4gK307DQo+ICsNCj4gK3N0YXRpYyBpbmxpbmUgaW50
+IG10NjM2MF90Y3BjX3JlYWQxNihzdHJ1Y3QgcmVnbWFwICpyZWdtYXAsDQo+ICsJCQkJICAgICB1
+bnNpZ25lZCBpbnQgcmVnLCB1MTYgKnZhbCkNCj4gK3sNCj4gKwlyZXR1cm4gcmVnbWFwX3Jhd19y
+ZWFkKHJlZ21hcCwgcmVnLCB2YWwsIHNpemVvZih1MTYpKTsNCj4gK30NCj4gKw0KPiArc3RhdGlj
+IGlubGluZSBpbnQgbXQ2MzYwX3RjcGNfd3JpdGUxNihzdHJ1Y3QgcmVnbWFwICpyZWdtYXAsDQo+
+ICsJCQkJICAgICAgdW5zaWduZWQgaW50IHJlZywgdTE2IHZhbCkNCj4gK3sNCj4gKwlyZXR1cm4g
+cmVnbWFwX3Jhd193cml0ZShyZWdtYXAsIHJlZywgJnZhbCwgc2l6ZW9mKHUxNikpOw0KPiArfQ0K
+PiArDQo+ICtzdGF0aWMgaW50IG10NjM2MF90Y3BjX2luaXQoc3RydWN0IHRjcGNpICp0Y3BjaSwg
+c3RydWN0IHRjcGNpX2RhdGEgKnRkYXRhKQ0KPiArew0KPiArCXN0cnVjdCByZWdtYXAgKnJlZ21h
+cCA9IHRkYXRhLT5yZWdtYXA7DQo+ICsJaW50IHJldDsNCj4gKw0KPiArCXJldCA9IHJlZ21hcF93
+cml0ZShyZWdtYXAsIE1UNjM2MF9SRUdfU1dSRVNFVCwgMHgwMSk7DQo+ICsJaWYgKHJldCkNCj4g
+KwkJcmV0dXJuIHJldDsNCj4gKw0KPiArCS8qIGFmdGVyIHJlc2V0IGNvbW1hbmQsIHdhaXQgMX4y
+bXMgdG8gd2FpdCBJQyBhY3Rpb24gKi8NCj4gKwl1c2xlZXBfcmFuZ2UoMTAwMCwgMjAwMCk7DQo+
+ICsNCj4gKwkvKiB3cml0ZSBhbGwgYWxlcnQgdG8gbWFza2VkICovDQo+ICsJcmV0ID0gbXQ2MzYw
+X3RjcGNfd3JpdGUxNihyZWdtYXAsIFRDUENfQUxFUlRfTUFTSywgMCk7DQo+ICsJaWYgKHJldCkN
+Cj4gKwkJcmV0dXJuIHJldDsNCj4gKw0KPiArCS8qIGNvbmZpZyBJMkMgdGltZW91dCByZXNldCBl
+bmFibGUgLCBhbmQgdGltZW91dCB0byAyMDBtcyAqLw0KPiArCXJldCA9IHJlZ21hcF93cml0ZShy
+ZWdtYXAsIE1UNjM2MF9SRUdfSTJDVE9SU1QsIDB4OEYpOw0KPiArCWlmIChyZXQpDQo+ICsJCXJl
+dHVybiByZXQ7DQo+ICsNCj4gKwkvKiBjb25maWcgQ0MgRGV0ZWN0IERlYm91bmNlIDogMjYuNyp2
+YWwgdXMgKi8NCj4gKwlyZXQgPSByZWdtYXBfd3JpdGUocmVnbWFwLCBNVDYzNjBfUkVHX0RFQkNU
+UkwxLCAweDEwKTsNCj4gKwlpZiAocmV0KQ0KPiArCQlyZXR1cm4gcmV0Ow0KPiArDQo+ICsJLyog
+RFJQIFRvZ2dsZSBDeWNsZSA6IDUxLjIgKyA2LjQqdmFsIG1zICovDQo+ICsJcmV0ID0gcmVnbWFw
+X3dyaXRlKHJlZ21hcCwgTVQ2MzYwX1JFR19EUlBDVFJMMSwgNCk7DQo+ICsJaWYgKHJldCkNCj4g
+KwkJcmV0dXJuIHJldDsNCj4gKw0KPiArCS8qIERSUCBEdXl0IEN0cmwgOiBkY1NSQzogLzEwMjQg
+Ki8NCj4gKwlyZXQgPSBtdDYzNjBfdGNwY193cml0ZTE2KHJlZ21hcCwgTVQ2MzYwX1JFR19EUlBD
+VFJMMiwgMzMwKTsNCj4gKwlpZiAocmV0KQ0KPiArCQlyZXR1cm4gcmV0Ow0KPiArDQo+ICsJLyog
+RW5hYmxlIFZDT05OIEN1cnJlbnQgTGltaXQgZnVuY3Rpb24gKi8NCj4gKwlyZXQgPSByZWdtYXBf
+dXBkYXRlX2JpdHMocmVnbWFwLCBNVDYzNjBfUkVHX1ZDT05OQ1RSTDEsIE1UNjM2MF9WQ09OTkNM
+X0VOQUJMRSwNCj4gKwkJCQkgTVQ2MzYwX1ZDT05OQ0xfRU5BQkxFKTsNCj4gKwlpZiAocmV0KQ0K
+PiArCQlyZXR1cm4gcmV0Ow0KPiArDQo+ICsJLyogRW5hYmxlIGNjIG9wZW4gNDBtcyB3aGVuIHBt
+aWMgc2VuZCB2c3lzdXYgc2lnbmFsICovDQo+ICsJcmV0ID0gcmVnbWFwX3VwZGF0ZV9iaXRzKHJl
+Z21hcCwgTVQ2MzYwX1JFR19SWENUUkwyLCBNVDYzNjBfT1BFTjQwTV9FTkFCTEUsDQo+ICsJCQkJ
+IE1UNjM2MF9PUEVONDBNX0VOQUJMRSk7DQo+ICsJaWYgKHJldCkNCj4gKwkJcmV0dXJuIHJldDsN
+Cj4gKw0KPiArCS8qIEVuYWJsZSBScGRldCBvbmVzaG90IGRldGVjdGlvbiAqLw0KPiArCXJldCA9
+IHJlZ21hcF91cGRhdGVfYml0cyhyZWdtYXAsIE1UNjM2MF9SRUdfQ1REQ1RSTDIsIE1UNjM2MF9S
+UE9ORVNIT1RfRU5BQkxFLA0KPiArCQkJCSBNVDYzNjBfUlBPTkVTSE9UX0VOQUJMRSk7DQo+ICsJ
+aWYgKHJldCkNCj4gKwkJcmV0dXJuIHJldDsNCj4gKw0KPiArCS8qIFNldCBzaGlwcGluZyBtb2Rl
+IG9mZiwgQVVUT0lETEUgb24gKi8NCj4gKwlyZXR1cm4gcmVnbWFwX3dyaXRlKHJlZ21hcCwgTVQ2
+MzYwX1JFR19NT0RFQ1RSTDIsIDB4N0EpOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgaXJxcmV0dXJu
+X3QgbXQ2MzYwX2lycShpbnQgaXJxLCB2b2lkICpkZXZfaWQpDQo+ICt7DQo+ICsJc3RydWN0IG10
+NjM2MF90Y3BjX2luZm8gKm10aSA9IGRldl9pZDsNCj4gKw0KPiArCXJldHVybiB0Y3BjaV9pcnEo
+bXRpLT50Y3BjaSk7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBpbnQgbXQ2MzYwX3RjcGNfcHJvYmUo
+c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gK3sNCj4gKwlzdHJ1Y3QgbXQ2MzYwX3Rj
+cGNfaW5mbyAqbXRpOw0KPiArCWludCByZXQ7DQo+ICsNCj4gKwltdGkgPSBkZXZtX2t6YWxsb2Mo
+JnBkZXYtPmRldiwgc2l6ZW9mKCptdGkpLCBHRlBfS0VSTkVMKTsNCj4gKwlpZiAoIW10aSkNCj4g
+KwkJcmV0dXJuIC1FTk9NRU07DQo+ICsNCj4gKwltdGktPmRldiA9ICZwZGV2LT5kZXY7DQo+ICsN
+Cj4gKwltdGktPnRkYXRhLnJlZ21hcCA9IGRldl9nZXRfcmVnbWFwKHBkZXYtPmRldi5wYXJlbnQs
+IE5VTEwpOw0KPiArCWlmICghbXRpLT50ZGF0YS5yZWdtYXApIHsNCj4gKwkJZGV2X2VycigmcGRl
+di0+ZGV2LCAiRmFpbGVkIHRvIGdldCBwYXJlbnQgcmVnbWFwXG4iKTsNCj4gKwkJcmV0dXJuIC1F
+Tk9ERVY7DQo+ICsJfQ0KPiArDQo+ICsJbXRpLT5pcnEgPSBwbGF0Zm9ybV9nZXRfaXJxX2J5bmFt
+ZShwZGV2LCAiUERfSVJRQiIpOw0KPiArCWlmIChtdGktPmlycSA8IDApIHsNCj4gKwkJZGV2X2Vy
+cigmcGRldi0+ZGV2LCAiRmFpbGVkIHRvIGdldCBQRF9JUlFCIGlycVxuIik7DQpObyBuZWVkIGFk
+ZCBlcnJvciBsb2csIHBsYXRmb3JtX2dldF9pcnFfYnluYW1lIHdpbGwgcHJpbnQgaXQNCg0KPiAr
+CQlyZXR1cm4gbXRpLT5pcnE7DQo+ICsJfQ0KPiArDQo+ICsJbXRpLT50ZGF0YS5pbml0ID0gbXQ2
+MzYwX3RjcGNfaW5pdDsNCj4gKwltdGktPnRjcGNpID0gdGNwY2lfcmVnaXN0ZXJfcG9ydCgmcGRl
+di0+ZGV2LCAmbXRpLT50ZGF0YSk7DQo+ICsJaWYgKElTX0VSUl9PUl9OVUxMKG10aS0+dGNwY2kp
+KSB7DQpVc2UgSVNfRVJSKCk/IGl0IHNlZW1zIG5vdCByZXR1cm4gTlVMTA0KPiArCQlkZXZfZXJy
+KCZwZGV2LT5kZXYsICJGYWlsZWQgdG8gcmVnaXN0ZXIgdGNwY2kgcG9ydFxuIik7DQo+ICsJCXJl
+dHVybiBQVFJfRVJSKG10aS0+dGNwY2kpOw0KSWYgcmV0dXJuIE5VTEwsIHRoaXMgbWF5IHJldHVy
+biAwPw0KDQo+ICsJfQ0KPiArDQo+ICsJcmV0ID0gZGV2bV9yZXF1ZXN0X3RocmVhZGVkX2lycSht
+dGktPmRldiwgbXRpLT5pcnEsIE5VTEwsIG10NjM2MF9pcnEsIElSUUZfT05FU0hPVCwNCj4gKwkJ
+CQkJZGV2X25hbWUoJnBkZXYtPmRldiksIG10aSk7DQo+ICsJaWYgKHJldCkgew0KPiArCQlkZXZf
+ZXJyKG10aS0+ZGV2LCAiRmFpbGVkIHRvIHJlZ2lzdGVyIGlycVxuIik7DQo+ICsJCXRjcGNpX3Vu
+cmVnaXN0ZXJfcG9ydChtdGktPnRjcGNpKTsNCj4gKwkJcmV0dXJuIHJldDsNCj4gKwl9DQo+ICsN
+Cj4gKwlkZXZpY2VfaW5pdF93YWtldXAoJnBkZXYtPmRldiwgdHJ1ZSk7DQo+ICsJcGxhdGZvcm1f
+c2V0X2RydmRhdGEocGRldiwgbXRpKTsNCj4gKw0KPiArCXJldHVybiAwOw0KPiArfQ0KPiArDQo+
+ICtzdGF0aWMgaW50IG10NjM2MF90Y3BjX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpw
+ZGV2KQ0KPiArew0KPiArCXN0cnVjdCBtdDYzNjBfdGNwY19pbmZvICptdGkgPSBwbGF0Zm9ybV9n
+ZXRfZHJ2ZGF0YShwZGV2KTsNCj4gKw0KPiArCWRpc2FibGVfaXJxKG10aS0+aXJxKTsNCm5lZWQg
+c3luYz8NCg0KPiArCXRjcGNpX3VucmVnaXN0ZXJfcG9ydChtdGktPnRjcGNpKTsNCj4gKwlyZXR1
+cm4gMDsNCj4gK30NCj4gKw0KPiArc3RhdGljIGludCBfX21heWJlX3VudXNlZCBtdDYzNjBfdGNw
+Y19zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gK3sNCj4gKwlzdHJ1Y3QgbXQ2MzYwX3Rj
+cGNfaW5mbyAqbXRpID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQo+ICsNCj4gKwlpZiAoZGV2aWNl
+X21heV93YWtldXAoZGV2KSkNCj4gKwkJZW5hYmxlX2lycV93YWtlKG10aS0+aXJxKTsNCj4gKw0K
+PiArCXJldHVybiAwOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIG10
+NjM2MF90Y3BjX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ICt7DQo+ICsJc3RydWN0IG10
+NjM2MF90Y3BjX2luZm8gKm10aSA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPiArDQo+ICsJaWYg
+KGRldmljZV9tYXlfd2FrZXVwKGRldikpDQo+ICsJCWRpc2FibGVfaXJxX3dha2UobXRpLT5pcnEp
+Ow0KPiArDQo+ICsJcmV0dXJuIDA7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBTSU1QTEVfREVWX1BN
+X09QUyhtdDYzNjBfdGNwY19wbV9vcHMsIG10NjM2MF90Y3BjX3N1c3BlbmQsIG10NjM2MF90Y3Bj
+X3Jlc3VtZSk7DQo+ICsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIF9fbWF5
+YmVfdW51c2VkIG10NjM2MF90Y3BjX29mX2lkW10gPSB7DQo+ICsJeyAuY29tcGF0aWJsZSA9ICJt
+ZWRpYXRlayxtdDYzNjAtdGNwYyIsIH0sDQo+ICsJe30sDQo+ICt9Ow0KPiArTU9EVUxFX0RFVklD
+RV9UQUJMRShvZiwgbXQ2MzYwX3RjcGNfb2ZfaWQpOw0KPiArDQo+ICtzdGF0aWMgc3RydWN0IHBs
+YXRmb3JtX2RyaXZlciBtdDYzNjBfdGNwY19kcml2ZXIgPSB7DQo+ICsJLmRyaXZlciA9IHsNCj4g
+KwkJLm5hbWUgPSAibXQ2MzYwLXRjcGMiLA0KPiArCQkucG0gPSAmbXQ2MzYwX3RjcGNfcG1fb3Bz
+LA0KPiArCQkub2ZfbWF0Y2hfdGFibGUgPSBtdDYzNjBfdGNwY19vZl9pZCwNCj4gKwl9LA0KPiAr
+CS5wcm9iZSA9IG10NjM2MF90Y3BjX3Byb2JlLA0KPiArCS5yZW1vdmUgPSBtdDYzNjBfdGNwY19y
+ZW1vdmUsDQo+ICt9Ow0KPiArbW9kdWxlX3BsYXRmb3JtX2RyaXZlcihtdDYzNjBfdGNwY19kcml2
+ZXIpOw0KPiArDQo+ICtNT0RVTEVfQVVUSE9SKCJDaGlZdWFuIEh1YW5nIDxjeV9odWFuZ0ByaWNo
+dGVrLmNvbT4iKTsNCj4gK01PRFVMRV9ERVNDUklQVElPTigiTVQ2MzYwIFVTQiBUeXBlLUMgUG9y
+dCBDb250cm9sbGVyIEludGVyZmFjZSBEcml2ZXIiKTsNCj4gK01PRFVMRV9MSUNFTlNFKCJHUEwg
+djIiKTsNCg0K
 
-> This patch causes a regression betwen Kernel 5.7 and 5.8 at wlcore:
-> with it applied, WiFi stops working, and the Kernel starts printing
-> this message every second:
->
->    wlcore: PHY firmware version: Rev 8.2.0.0.242
->    wlcore: firmware booted (Rev 8.9.0.0.79)
->    wlcore: ERROR command execute failure 14
->    ------------[ cut here ]------------
->    WARNING: CPU: 0 PID: 133 at drivers/net/wireless/ti/wlcore/main.c:795 wl12xx_queue_recovery_work.part.0+0x6c/0x74 [wlcore]
->    Modules linked in: wl18xx wlcore mac80211 libarc4 cfg80211 rfkill snd_soc_hdmi_codec crct10dif_ce wlcore_sdio adv7511 cec kirin9xx_drm(C) kirin9xx_dw_drm_dsi(C) drm_kms_helper drm ip_tables x_tables ipv6 nf_defrag_ipv6
->    CPU: 0 PID: 133 Comm: kworker/0:1 Tainted: G        WC        5.8.0+ #186
->    Hardware name: HiKey970 (DT)
->    Workqueue: events_freezable ieee80211_restart_work [mac80211]
->    pstate: 60000005 (nZCv daif -PAN -UAO BTYPE=--)
->    pc : wl12xx_queue_recovery_work.part.0+0x6c/0x74 [wlcore]
->    lr : wl12xx_queue_recovery_work+0x24/0x30 [wlcore]
->    sp : ffff8000126c3a60
->    x29: ffff8000126c3a60 x28: 00000000000025de
->    x27: 0000000000000010 x26: 0000000000000005
->    x25: ffff0001a5d49e80 x24: ffff8000092cf580
->    x23: ffff0001b7c12623 x22: ffff0001b6fcf2e8
->    x21: ffff0001b7e46200 x20: 00000000fffffffb
->    x19: ffff0001a78e6400 x18: 0000000000000030
->    x17: 0000000000000001 x16: 0000000000000001
->    x15: ffff0001b7e46670 x14: ffffffffffffffff
->    x13: ffff8000926c37d7 x12: ffff8000126c37e0
->    x11: ffff800011e01000 x10: ffff8000120526d0
->    x9 : 0000000000000000 x8 : 3431206572756c69
->    x7 : 6166206574756365 x6 : 0000000000000c2c
->    x5 : 0000000000000000 x4 : ffff0001bf1361e8
->    x3 : ffff0001bf1790b0 x2 : 0000000000000000
->    x1 : ffff0001a5d49e80 x0 : 0000000000000001
->    Call trace:
->     wl12xx_queue_recovery_work.part.0+0x6c/0x74 [wlcore]
->     wl12xx_queue_recovery_work+0x24/0x30 [wlcore]
->     wl1271_cmd_set_sta_key+0x258/0x25c [wlcore]
->     wl1271_set_key+0x7c/0x2dc [wlcore]
->     wlcore_set_key+0xe4/0x360 [wlcore]
->     wl18xx_set_key+0x48/0x1d0 [wl18xx]
->     wlcore_op_set_key+0xa4/0x180 [wlcore]
->     ieee80211_key_enable_hw_accel+0xb0/0x2d0 [mac80211]
->     ieee80211_reenable_keys+0x70/0x110 [mac80211]
->     ieee80211_reconfig+0xa00/0xca0 [mac80211]
->     ieee80211_restart_work+0xc4/0xfc [mac80211]
->     process_one_work+0x1cc/0x350
->     worker_thread+0x13c/0x470
->     kthread+0x154/0x160
->     ret_from_fork+0x10/0x30
->    ---[ end trace b1f722abf9af5919 ]---
->    wlcore: WARNING could not set keys
->    wlcore: ERROR Could not add or replace key
->    wlan0: failed to set key (4, ff:ff:ff:ff:ff:ff) to hardware (-5)
->    wlcore: Hardware recovery in progress. FW ver: Rev 8.9.0.0.79
->    wlcore: pc: 0x0, hint_sts: 0x00000040 count: 39
->    wlcore: down
->    wlcore: down
->    ieee80211 phy0: Hardware restart was requested
->    mmc_host mmc0: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
->    mmc_host mmc0: Bus speed (slot 0) = 25000000Hz (slot req 25000000Hz, actual 25000000HZ div = 0)
->    wlcore: PHY firmware version: Rev 8.2.0.0.242
->    wlcore: firmware booted (Rev 8.9.0.0.79)
->    wlcore: ERROR command execute failure 14
->    ------------[ cut here ]------------
->
-> Tested on Hikey 970.
->
-> This reverts commit 2b7aadd3b9e17e8b81eeb8d9cc46756ae4658265.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-Raz, do you have a fix for this? Or should I just queue this revert to
-v5.9?
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
