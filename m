@@ -2,104 +2,107 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B06AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 321AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60EA22087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:06:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598551614;
-	bh=6QltA7bFHSSY80S0oagTuUAAGfxrCWlRjC5dY1Zu3mA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vLPA1XeK+182I1ohb9ZxtPyoYTu1p92MaB7ohkJoqhsHjQAPsHAHwH10s3T9NUSy9
-	 0J54JADb8sOp5/SdEfip9hMV/DXMmxJ3F4yyfKPJ+3dQL57zzIqD8F+fM6kfFsWbSG
-	 4/yXIYHkznjEk5liEe9fmgDRdw1cgdJrXNcGK3Wc=
+	by mail.kernel.org (Postfix) with ESMTP id 03A5D2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:08:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="gVsG4nbl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgH0SGw (ORCPT
+        id S1727783AbgH0SIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:06:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35706 "EHLO
+        Thu, 27 Aug 2020 14:08:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbgH0SGs (ORCPT
+        with ESMTP id S1727048AbgH0SH7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:06:48 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65BFCC061232
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:06:48 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id y2so7480392ljc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:06:48 -0700 (PDT)
+        Thu, 27 Aug 2020 14:07:59 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4455C06121B
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:07:58 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id j25so8894648ejk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:07:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7U2YQUo5PvChApZK/cKK/V+bD5P2TFvYUwUUfL3IKr8=;
-        b=V+YFpBqcArUu/7w7NBd4zYiujYYZd0XbXg3pMzUSnwQHkdzIY7nP3mP+VimDcTthyi
-         LlD3xPgdurxv9ctSZwPOT/zU/BV4vftgYTphIZCwjwJtNjyaIwWnhXCoLDg9QLVljgtJ
-         MDCUHybVVKKZURhQ+X8r3p5PJ1lUGBFZYBCuQ=
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=X3yZk4R92/MWzVrt+vnYcwH9WkmjTyPPJoHeGH+6ZfI=;
+        b=gVsG4nblq60V5WQE20uNem0i8ZWEjFlXUgY1QEYqw0+8GrhUOSNTloxcWQky/H00yz
+         SokChI0VSHdZVRL2uFUtsdQZb37+c4vwHyC4tKMzLrY2rtF0fdH9Ythr85tApJaSrTTu
+         W1ADxHAjQTR/9o13N06/BJcK7O29NTPzgth0w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7U2YQUo5PvChApZK/cKK/V+bD5P2TFvYUwUUfL3IKr8=;
-        b=UN9KKoBWeDyftw8YlkC9ZKRYMKgL1qManXYXtyR8qC74az3+3fZVCGUU4jdWjE78tQ
-         uAybULSQw/chCOq0w8W/l9sa71/ynHP0PIDofEJNmfj0Jtpi2SKXv7tGCFBycqmmRHBJ
-         DHqjSUbLl04c0oWNVNwbW2h37f4aeuCiaYZ4Rw+l2ml1SLbbNhZd07f51W/ITxu7l+G+
-         oYqN6g34VyalK6WYmPyop+GPZZ8pgPWw5f64YRAS0G7623HjdsfTizpd5s+5jFxnDNkj
-         BhLsgPsB5mYH27byj0xIESi21rgTS9d8emvJEHhdK9XqjE0AxSlge5Kz1iodU8MOS5GS
-         QPtQ==
-X-Gm-Message-State: AOAM5303DazYQLezA+vgKVWk9rD44hHlUdjH2P/CIdEXf32LnO6nxGMU
-        34DwGFxKUGvVuNf4WLwpLxRe0S2pGXBNvw==
-X-Google-Smtp-Source: ABdhPJy7BH8smnX7HHP0bGd00CLwldRGzdSVLI1007ni2BM+HiK/ikwR0PQBP6E1bwMmwoHIX3Y7BA==
-X-Received: by 2002:a2e:5018:: with SMTP id e24mr10909857ljb.261.1598551606397;
-        Thu, 27 Aug 2020 11:06:46 -0700 (PDT)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id j17sm686934lfr.32.2020.08.27.11.06.45
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=X3yZk4R92/MWzVrt+vnYcwH9WkmjTyPPJoHeGH+6ZfI=;
+        b=JUffPIto3la2Dab9Frg7KXfr2fo6iSgqOB9x5PYRTM+5VYN4u5PfuKIcAYycr3eOon
+         8cT7cc19CJ4xdcYQRo6545ntLsDkviwf4Qe8Im4pWooQkCCBr2szIrpdUSZQcea9P4AN
+         XfehDBHyM5JpGpC6dlNqR08nh8095hhbaloZZzmGKguGzG+ShDQrarsnUlp9xqhBgZ8j
+         Azbt9s3cPf8SMUpom0nRJ8UJuDzZDR56LOpr1rmYL+KKcGXDTXed8BEVOyYoYRp/zT2t
+         jeSobEAe7X1ndnOZyNy283UjU9fh9pii7eNmfQCXJV1UD7yVHTb9GmWNDK2zlClMFYZv
+         DjPg==
+X-Gm-Message-State: AOAM530ToxIBV/IOqDLrnzszL5ddXXA39Ke7BVYAgAp9b1ev4DHoc8c1
+        y5lhF8vlTMyyfnaSq0LbdeJBLA==
+X-Google-Smtp-Source: ABdhPJw8kfIPfi1jXBfW6zXPsvYI8am98QM4D+P7OxSLeYQRDW7CFkG7BemTRFu9usIJlHgrOTMQ8w==
+X-Received: by 2002:a17:906:2e98:: with SMTP id o24mr21267780eji.229.1598551677360;
+        Thu, 27 Aug 2020 11:07:57 -0700 (PDT)
+Received: from [192.168.1.149] (5.186.112.31.cgn.fibianet.dk. [5.186.112.31])
+        by smtp.gmail.com with ESMTPSA id u6sm2452164ejf.98.2020.08.27.11.07.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 11:06:45 -0700 (PDT)
-Received: by mail-lf1-f44.google.com with SMTP id d2so3416082lfj.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:06:45 -0700 (PDT)
-X-Received: by 2002:a05:6512:50c:: with SMTP id o12mr3180051lfb.192.1598551604725;
- Thu, 27 Aug 2020 11:06:44 -0700 (PDT)
+        Thu, 27 Aug 2020 11:07:56 -0700 (PDT)
+Subject: Re: [PATCH] linux/kernel.h: add container_from()
+To:     Allen Pais <allen.lkml@gmail.com>, torvalds@linux-foundation.org
+Cc:     akpm@linux-foundation.org, keescook@chromium.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jens Axboe <axboe@kernel.dk>
+References: <20200827013636.149307-1-allen.lkml@gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <2176d7e4-2949-e922-1988-fa5eedfc2220@rasmusvillemoes.dk>
+Date:   Thu, 27 Aug 2020 20:07:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200827150030.282762-1-hch@lst.de> <20200827150030.282762-6-hch@lst.de>
-In-Reply-To: <20200827150030.282762-6-hch@lst.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 27 Aug 2020 11:06:28 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wipbWD66sU7etETXwDW5NRsU2vnbDpXXQ5i94hiTcawyw@mail.gmail.com>
-Message-ID: <CAHk-=wipbWD66sU7etETXwDW5NRsU2vnbDpXXQ5i94hiTcawyw@mail.gmail.com>
-Subject: Re: [PATCH 05/10] lkdtm: disable set_fs-based tests for !CONFIG_SET_FS
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200827013636.149307-1-allen.lkml@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 8:00 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> Once we can't manipulate the address limit, we also can't test what
-> happens when the manipulation is abused.
+On 27/08/2020 03.36, Allen Pais wrote:
+> Introduce container_from() as a generic helper instead of
+> sub-systems defining a private from_* API
+> (Eg: from_tasklets recently introduced in
+> 12cc923f1ccc: Tasklet: Introduce new initialization API)
+> 
+> The helper is similar to container_of() in argument order
+> with the difference of naming the containing structure instead
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Just remove these tests entirely.
+> of having to specify its type.
+> 
 
-Once set_fs() doesn't exist on x86, the tests no longer make any sense
-what-so-ever, because test coverage will be basically zero.
+> +/**
+> + * container_from - cast a member of a structure out to the containing structure
+> + * @ptr:	the pointer to the member.
+> + * @container:	the type of the container struct.
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This seems to have been copy-pasted from container_of? Shouldn't
+@container be the (local) value we're storing into? As in foo =
+container_from(..., foo, ...)? Or am I misunderstanding the purpose of this?
 
-So don't make the code uglier just to maintain a fiction that
-something is tested when it isn't really.
+[And I think it would read nicer if the bikeshed was called
+to_container(), but don't care deeply.]
 
-                 Linus
+Rasmus
