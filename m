@@ -2,109 +2,121 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20888C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65957C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4BD620707
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354A820707
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:41:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HcOa46Bg"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="E/SbbEeS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="l6+I15Gu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgH0PlT (ORCPT
+        id S1727845AbgH0Pl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:41:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgH0PlS (ORCPT
+        Thu, 27 Aug 2020 11:41:27 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:53113 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726266AbgH0PlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:41:18 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33459C06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 08:41:18 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id u20so3821779pfn.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 08:41:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KAAg1wT74J1TPJUNvinItqB9ZDfNPLN786c1MlpJyJo=;
-        b=HcOa46BgqN+2jqdrRcLqoGUNKCWiiC56FiwTZkCLIJQpGgLTSezUDkrs6g3rH3dvkK
-         baaNuoyYgOtHoDWGgn9cwl83bP/Y7T+B2ksAhCsEj7XV98ZLGFv7t6Vailve/m+yykIn
-         y/hJA/+Drd7ckQF7iuIEATvkgCIyNClTwOeGs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KAAg1wT74J1TPJUNvinItqB9ZDfNPLN786c1MlpJyJo=;
-        b=YOu3INUegnT1rnr31pq3GX/tK3qAlE61+v3SOqrSDBFJLFYZLiW2rcSCCAGbdeq6eL
-         +MVuDabtH6iOHmaYAMe/krZHx5+y8lFigqM6COH8/yxH9tp4qEb6zy79YwpHiOpSqRWr
-         v8BnY0sPlSQcdcnYljJFaWPG3TLvAVruKAg2beB49TsVwpkpFhvreHa8Z6ivY5p92YCR
-         wNJBn4mutfMXFMnVWLCxrW/OFaLWUNxg8vUvFeQbDX8qlSXKiOP15wxJiPnZeA1Xb5Ov
-         x/BJOT7sD5/dHfTLytxY6PnqBa3V5uo7oV1R/ESJvpTb4OuCiluu4AiG0+ENMkyrvpQr
-         jp9w==
-X-Gm-Message-State: AOAM533//DWt0diHNw7reUQb52UkJ8QB2mUg6BxhYCWpTVt6eurgIljH
-        1uUGzrrRcxsL8Hbisc7t4drUrA==
-X-Google-Smtp-Source: ABdhPJxt8TMgiAOegn4WkDsoSiNkpDn4sIcrWZ/XR6jPZbmFJWUQipH2JkHFxL3Vln+YLYuqX3HtXw==
-X-Received: by 2002:a63:7018:: with SMTP id l24mr14452680pgc.55.1598542877503;
-        Thu, 27 Aug 2020 08:41:17 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id q34sm2642066pgl.28.2020.08.27.08.41.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 08:41:17 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     vbadigan@codeaurora.org, Douglas Anderson <dianders@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-Subject: [PATCH] mmc: sdhci-msm: We need to restore_dll_config for sc7180
-Date:   Thu, 27 Aug 2020 08:41:05 -0700
-Message-Id: <20200827084102.1.I7a5f56b411071eeecae84b7e33981d39170ccf2a@changeid>
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+        Thu, 27 Aug 2020 11:41:25 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id E7620580189;
+        Thu, 27 Aug 2020 11:41:23 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Thu, 27 Aug 2020 11:41:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=5kjKXc18Mu8gbbHx1ieZ1Dlzopi
+        c4BvIVhQuWyLHDzc=; b=E/SbbEeS7mdWMbtVEiwC7QsoNlhw0jZSbz/5Mql10Lx
+        Q7ukAac1iGuPFOKtcAmqXRQFH6XvNp5YR/3Mh04lTQUQkR+w0KP3qJW09EnF9n8B
+        xlJWjyMwC57Ut5mR01wdlQ5dDyEW5xn4z3af0uZ0jLj8IL3NAGusRwDE+pkZ62aU
+        gCbRj0hezNzGNuqz+eOww2oKuaBn6yRRkKu51pm+zyNf6w8UTUR2RNFiN/QLlaJ2
+        QfH5uULGWNB8kSDZkK1pASj7OwhdoMMNvLh/aG3zQZvHG6DypfsG3BFBF9p8SJCj
+        C/iQgYLL+mivb5BtztlRKxkLuD2IfDDFnsnDQc3P4kw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=5kjKXc
+        18Mu8gbbHx1ieZ1Dlzopic4BvIVhQuWyLHDzc=; b=l6+I15GuAxpFB8YtSRbE1s
+        Y8xGYtkcBStDbRyKFUg2ESe+koMvKa+o2zuLuGOg/GU/7w/EnmAMMTvjkCHSs2Ig
+        LjU4+XwSfim3NAmyLeBysI20DgThUcwR9Tm2O/wBUDN+YD6dsiSIZPp6NvLfjOf8
+        h+SyTSKyHrA7SUxIVlqUTujAazp6czMm/q5ljSc3CWfoOPS9J4DeUg8iQJnJ1J0a
+        he0heNeFiupUVM3dsGTy1o3IGAxgBjjCm29w5Sc3iTQ6VCcgTsgWZYLMXAVRPCWd
+        Xe9LyyBcP59VQAf1D3tExhhE6CAf2AZ1wRYCtuj9W6PkQCdeYKh9InkOTBTKSHDw
+        ==
+X-ME-Sender: <xms:IdRHX2hu0jZ6A9mtK_k4EfA-FHZTPF9uEIFZMtDeKHQAyFuAEx7UOA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvgedgkeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepuddvudfhkeekhefgffetffelgffftdehffduffegveetffehueeivddvjedv
+    gfevnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:IdRHX3COoKZWmhu6z4ZWlBXFW0xuOyeln6lVhkLkBvjk3A5tFIN-yA>
+    <xmx:IdRHX-Gd9ZhZw2KSvA16SUrx1HF-7eVNO3Tkl2hCm0bhxUv2qlnjKw>
+    <xmx:IdRHX_TKu7odB_HGKP-LBqIAYKZPOPqNAPAqKpoqhsMxrBCjS6irLA>
+    <xmx:I9RHX7eQ6XS2mAMtW8CI-LdK9OMLEaXw_uJBApKYgM4x8dLy86hp4w>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6E044306005F;
+        Thu, 27 Aug 2020 11:41:21 -0400 (EDT)
+Date:   Thu, 27 Aug 2020 17:41:19 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     =?utf-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
+Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        yong.deng@magewell.com, p.zabel@pengutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH 5/7] media: sunxi: sun6i-csi: Add support of MIPI CSI-2
+ for A83T
+Message-ID: <20200827154119.ljxvjb2fe7xeg2xo@gilmour.lan>
+References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
+ <20200821145935.20346-6-kevin.lhopital@bootlin.com>
+ <20200825143704.qkg2re5bxm2cufnd@gilmour.lan>
+ <20200826111728.21d52c34@lhopital-XPS-13-9360>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="frux7y34gyxq2g4n"
+Content-Disposition: inline
+In-Reply-To: <20200826111728.21d52c34@lhopital-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Although sc7180 is supposed to have a hardware fix that means that we
-don't have to restore the DLL config like we did with sdm845,
-apparently the hardware fix doesn't work in all cases.  Until it's
-understood under exactly which cases we the hardware fix malfunctions,
-let's go back to restoring the DLL config whenever we do runtime
-resume.  This is safe and gets things working again.
 
-NOTE: we don't need to introduce a whole new "struct
-sdhci_msm_variant_info" for sc7180 since it would be exactly the same
-as the sdm845 one.  We'll just refer to that one.
+--frux7y34gyxq2g4n
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+On Wed, Aug 26, 2020 at 11:17:28AM +0200, K=E9vin L'h=F4pital wrote:
+> > > +	mdelay(10); =20
+> >=20
+> > Why do you need an mdelay here?
+>=20
+> yes a msleep could be more correct here.
 
- drivers/mmc/host/sdhci-msm.c | 1 +
- 1 file changed, 1 insertion(+)
+My question was more about whether/why you need one in the first place,
+not necessarily how you would implement that delay.
 
-diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index b7e47107a31a..a88db3f376bd 100644
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -2148,6 +2148,7 @@ static const struct sdhci_msm_variant_info sm8250_sdhci_var = {
- static const struct of_device_id sdhci_msm_dt_match[] = {
- 	{.compatible = "qcom,sdhci-msm-v4", .data = &sdhci_msm_mci_var},
- 	{.compatible = "qcom,sdhci-msm-v5", .data = &sdhci_msm_v5_var},
-+	{.compatible = "qcom,sc7180-sdhci", .data = &sdm845_sdhci_var},
- 	{.compatible = "qcom,sdm845-sdhci", .data = &sdm845_sdhci_var},
- 	{.compatible = "qcom,sm8250-sdhci", .data = &sm8250_sdhci_var},
- 	{},
--- 
-2.28.0.297.g1956fa8f8d-goog
+Maxime
 
+--frux7y34gyxq2g4n
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0fUHwAKCRDj7w1vZxhR
+xe20AP9MrwIj1p6+Wb9mEL56E2ynthsYRloqePkJXIFLXvvYKwD/bsjv+odRNGt0
+Wkpfn5tU6gwLEWbuHgviKzUwChkfHA4=
+=ZP4Z
+-----END PGP SIGNATURE-----
+
+--frux7y34gyxq2g4n--
