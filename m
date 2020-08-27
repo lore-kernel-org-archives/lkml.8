@@ -2,68 +2,68 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B85C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 00:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8037CC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0598A20791
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 00:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA512073A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:02:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCSyDD8O"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jT0escb3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgH0A7k (ORCPT
+        id S1726825AbgH0BCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 20:59:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43816 "EHLO
+        Wed, 26 Aug 2020 21:02:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbgH0A7j (ORCPT
+        with ESMTP id S1726148AbgH0BCs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 20:59:39 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5311BC061786;
-        Wed, 26 Aug 2020 17:59:39 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id f26so4475787ljc.8;
-        Wed, 26 Aug 2020 17:59:39 -0700 (PDT)
+        Wed, 26 Aug 2020 21:02:48 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 798B1C061795;
+        Wed, 26 Aug 2020 18:02:48 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id q93so1806715pjq.0;
+        Wed, 26 Aug 2020 18:02:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YgOXZpwH0ewXs82/jjLYcaOpq5EI/CmvwmT22mI/C+I=;
-        b=CCSyDD8O7rzYso7ZxMulzYe48S5Am/phI+EblCtlKt+rLexTw4fds0VFjNnKnM0e3j
-         Dl4C3egtwiHrZAiCIVqfNfJiq2lQIgy6mKMhDZ7tH5lNHVz975QeBczqyf67zJTJ1AEd
-         NsyTVyQquWKdsibgKTptCHrI+A3xZlCdjnqgwR+vKxdv4oapWTkuxtVw0XV/wEsCBTNf
-         DWQYTlaFfyEfYH7+VDA9/OWhxoJuUgDHAatz2ERh4GM+2G8kUK5oAIgBbzdssv5LhQnQ
-         6GhqukSepVgzIEiDMSi7484mWmdx53v9NJMvvwvSeE4s3isAt1w0V/wmikBjcs6DmHfK
-         HJ4A==
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aEHjPYOnd6oLhAz099CXgJXhYfDhe4uUMY6k0zBbbpI=;
+        b=jT0escb3is6K1eZ4R4uWXgKJSYB4sGkaDhoKZaKHd9ii1DT4GGUdz4nZ1gsSqObxbK
+         MlWZH6ayqmw5OBQ9SRe/3yr1dgJt2saBcKQGpyYJbI1+at9e++tNasmfwbv7uiKGKdEH
+         WwpP1SjQK56gMIy1BZtyhqV46NrmMaqM3SSBmoCwpCl4m1RmkMts8f725I+9QhZ4K+Re
+         Q3bZzy61HOBfGs0YMWbUPrLeUAm3+18suWkZOgUPrRkjcKVOATIxHVhkyE9BxKXgcm3J
+         RcNk8oPLzh4CorpbK2OgyVzndi02VzhlXXjWDbJfvF+MSp4t7ogs6VJpAxUoKgJGR3pl
+         RjhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YgOXZpwH0ewXs82/jjLYcaOpq5EI/CmvwmT22mI/C+I=;
-        b=KIyGDnBZo3HaQUPbTiwhbRLLUwQvilcPzsX8sROz6XTJWKaNzIzrXNCInBTeIFwjJh
-         gRSBrWdmFVy+HwmTHvdIluDWM0WoM9PS2GasXWUUjhwy3ndzbxx69lhCXLlmU9jGxks3
-         3ji+s3RerwVnHyxL4KtJuDHtKYgdW4kvYyVgoEPomQQkA4PfHI7iRTo783fLeVqjle8h
-         /O39utYx8KYV+8hTe8rf2mntrgHOqiNMm0hWc4IcObO/IFKyN34h4vdn0jiQZs0fQcL6
-         Z4NtG/FXfFrMV88H7JrUTMt2k01cvCUerJsvDHcWDgSDNEEfcbT5tHlMzmy4zG3nLw+i
-         yZTw==
-X-Gm-Message-State: AOAM530YwBAt2Eus8g5SHuRPNhx1hjMU5g6VGYysWAmCkiE7SnF9+KNk
-        a4IouJ7kPVAzIvCiIFH6MzXFlGRhFgz9Z8KWeiGlKNaZ+Gg=
-X-Google-Smtp-Source: ABdhPJwH0lHwaLAzuFrgZmCUe1ZFD2AyR6rf6tblOaXajPSE84HmKfejrTd84DR4UlFsowLyiTELrWCu0CPcnfYSIgQ=
-X-Received: by 2002:a2e:160d:: with SMTP id w13mr8936438ljd.470.1598489974771;
- Wed, 26 Aug 2020 17:59:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <1598440602-8648-1-git-send-email-u0084500@gmail.com> <a7d1a5d9-97e9-bcf6-23f4-2c4be356913f@roeck-us.net>
-In-Reply-To: <a7d1a5d9-97e9-bcf6-23f4-2c4be356913f@roeck-us.net>
-From:   =?UTF-8?B?5ZWf5Y6f6buD?= <u0084500@gmail.com>
-Date:   Thu, 27 Aug 2020 08:59:23 +0800
-Message-ID: <CADiBU3_x5-P8A0erchFpWucX4_R8M01-CdOJv38FjrPGSn+55A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] usb typec: mt6360: Add support for mt6360 Type-C driver
-To:     Guenter Roeck <linux@roeck-us.net>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=aEHjPYOnd6oLhAz099CXgJXhYfDhe4uUMY6k0zBbbpI=;
+        b=fA+Q8vwwaF72RR4f3yhpaH8W1tmdZrlMuSCUqNyC7TQSFAcMH8QBocOcwkRPfwnDR+
+         LJEUMIvT2e8rbFt6Do+k9aJDB49vOeDKFxyubT65JP2DXuJSFQDcD8JsBH8ihZl6o7ZP
+         XT+k1VaFN6UX7F+Lywh04G/DPW+yC0Hn1EXpoxIhpEwFnQv+AnOenhIpHfIcrVtk1LkS
+         AQe1qmh+RYYxpNTK1JB8AJKGFGgWowSGHvrB647jqKii5b6WtrT2aX9Xn+AGcDsd13XI
+         rJlgZl27SPp+0Z9qFqe8GFXqwoGcQ0H65YQjaWwnzJYgT41LYE0CszcOa9LDgeZgNGSp
+         9ahA==
+X-Gm-Message-State: AOAM532K8gq1yWdqqP/qThJo4LYz9n+yaEee/0SGHzAlXa5cgItC8dnZ
+        IEat12tPZSDyUdy6rOcaicv133uAQQ0=
+X-Google-Smtp-Source: ABdhPJzoWNpDb/2Zum2cV/0MKUuZPsZdi45n9UqsZvjV6/tcO+IblLgwKVxpUyhSrXEDGzm+gbTeEQ==
+X-Received: by 2002:a17:90a:b296:: with SMTP id c22mr8830412pjr.170.1598490167824;
+        Wed, 26 Aug 2020 18:02:47 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q18sm408188pfn.106.2020.08.26.18.02.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Aug 2020 18:02:46 -0700 (PDT)
+Subject: Re: [PATCH 1/2] usb typec: mt6360: Add support for mt6360 Type-C
+ driver
+To:     =?UTF-8?B?5ZWf5Y6f6buD?= <u0084500@gmail.com>
 Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
         matthias.bgg@gmail.com,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
@@ -71,299 +71,80 @@ Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
         linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <1598440602-8648-1-git-send-email-u0084500@gmail.com>
+ <a7d1a5d9-97e9-bcf6-23f4-2c4be356913f@roeck-us.net>
+ <CADiBU3_x5-P8A0erchFpWucX4_R8M01-CdOJv38FjrPGSn+55A@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <627dd188-9379-1179-432e-b53948052823@roeck-us.net>
+Date:   Wed, 26 Aug 2020 18:02:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CADiBU3_x5-P8A0erchFpWucX4_R8M01-CdOJv38FjrPGSn+55A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guenter Roeck <linux@roeck-us.net> =E6=96=BC 2020=E5=B9=B48=E6=9C=8827=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=884:44=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On 8/26/20 4:16 AM, cy_huang wrote:
-> > From: ChiYuan Huang <cy_huang@richtek.com>
-> >
-> > Mediatek MT6360 is a multi-functional IC that includes USB Type-C.
-> > It works with Type-C Port Controller Manager to provide USB PD
-> > and USB Type-C functionalities.
-> >
-> > Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
-> > ---
-> >  drivers/usb/typec/tcpm/Kconfig        |   8 ++
-> >  drivers/usb/typec/tcpm/Makefile       |   1 +
-> >  drivers/usb/typec/tcpm/tcpci_mt6360.c | 212 ++++++++++++++++++++++++++=
-++++++++
-> >  3 files changed, 221 insertions(+)
-> >  create mode 100644 drivers/usb/typec/tcpm/tcpci_mt6360.c
-> >
-> > diff --git a/drivers/usb/typec/tcpm/Kconfig b/drivers/usb/typec/tcpm/Kc=
-onfig
-> > index fa3f393..58a64e1 100644
-> > --- a/drivers/usb/typec/tcpm/Kconfig
-> > +++ b/drivers/usb/typec/tcpm/Kconfig
-> > @@ -27,6 +27,14 @@ config TYPEC_RT1711H
-> >         Type-C Port Controller Manager to provide USB PD and USB
-> >         Type-C functionalities.
-> >
-> > +config TYPEC_MT6360
-> > +     tristate "Mediatek MT6360 Type-C driver"
-> > +     depends on MFD_MT6360
-> > +     help
-> > +       Mediatek MT6360 is a multi-functional IC that includes
-> > +       USB Type-C. It works with Type-C Port Controller Manager
-> > +       to provide USB PD and USB Type-C functionalities.
-> > +
-> >  endif # TYPEC_TCPCI
-> >
-> >  config TYPEC_FUSB302
-> > diff --git a/drivers/usb/typec/tcpm/Makefile b/drivers/usb/typec/tcpm/M=
-akefile
-> > index a5ff6c8..7592ccb 100644
-> > --- a/drivers/usb/typec/tcpm/Makefile
-> > +++ b/drivers/usb/typec/tcpm/Makefile
-> > @@ -5,3 +5,4 @@ obj-$(CONFIG_TYPEC_WCOVE)     +=3D typec_wcove.o
-> >  typec_wcove-y                        :=3D wcove.o
-> >  obj-$(CONFIG_TYPEC_TCPCI)    +=3D tcpci.o
-> >  obj-$(CONFIG_TYPEC_RT1711H)  +=3D tcpci_rt1711h.o
-> > +obj-$(CONFIG_TYPEC_MT6360)   +=3D tcpci_mt6360.o
-> > diff --git a/drivers/usb/typec/tcpm/tcpci_mt6360.c b/drivers/usb/typec/=
-tcpm/tcpci_mt6360.c
-> > new file mode 100644
-> > index 00000000..6a28193
-> > --- /dev/null
-> > +++ b/drivers/usb/typec/tcpm/tcpci_mt6360.c
-> > @@ -0,0 +1,212 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +//
-> > +// Copyright (C) 2020 MediaTek Inc.
-> > +//
-> > +// Author: ChiYuan Huang <cy_huang@richtek.com>
-> > +
-> > +#include <linux/interrupt.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/usb/tcpm.h>
->
-> Is that needed ?
-Ah, sorry, for some testing, I forget to remove it.
->
-> > +
-> > +#include "tcpci.h"
-> > +
-> > +#define MT6360_REG_VCONNCTRL1        0x8C
-> > +#define MT6360_REG_MODECTRL2 0x8F
-> > +#define MT6360_REG_SWRESET   0xA0
-> > +#define MT6360_REG_DEBCTRL1  0xA1
-> > +#define MT6360_REG_DRPCTRL1  0xA2
-> > +#define MT6360_REG_DRPCTRL2  0xA3
-> > +#define MT6360_REG_I2CTORST  0xBF
-> > +#define MT6360_REG_RXCTRL2   0xCF
-> > +#define MT6360_REG_CTDCTRL2  0xEC
-> > +
-> > +/* MT6360_REG_VCONNCTRL1 */
-> > +#define MT6360_VCONNCL_ENABLE        BIT(0)
-> > +/* MT6360_REG_RXCTRL2 */
-> > +#define MT6360_OPEN40M_ENABLE        BIT(7)
-> > +/* MT6360_REG_CTDCTRL2 */
-> > +#define MT6360_RPONESHOT_ENABLE      BIT(6)
-> > +
-> > +struct mt6360_tcpc_info {
-> > +     struct tcpci_data tdata;
-> > +     struct tcpci *tcpci;
-> > +     struct device *dev;
-> > +     int irq;
-> > +};
-> > +
-> > +static inline int mt6360_tcpc_read16(struct regmap *regmap,
-> > +                                  unsigned int reg, u16 *val)
-> > +{
-> > +     return regmap_raw_read(regmap, reg, val, sizeof(u16));
-> > +}
-> > +
-> > +static inline int mt6360_tcpc_write16(struct regmap *regmap,
-> > +                                   unsigned int reg, u16 val)
-> > +{
-> > +     return regmap_raw_write(regmap, reg, &val, sizeof(u16));
-> > +}
-> > +
-> > +static int mt6360_tcpc_init(struct tcpci *tcpci, struct tcpci_data *td=
-ata)
-> > +{
-> > +     struct regmap *regmap =3D tdata->regmap;
-> > +     int ret;
-> > +
-> > +     ret =3D regmap_write(regmap, MT6360_REG_SWRESET, 0x01);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     /* after reset command, wait 1~2ms to wait IC action */
-> > +     usleep_range(1000, 2000);
-> > +
-> > +     /* write all alert to masked */
-> > +     ret =3D mt6360_tcpc_write16(regmap, TCPC_ALERT_MASK, 0);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     /* config I2C timeout reset enable , and timeout to 200ms */
-> > +     ret =3D regmap_write(regmap, MT6360_REG_I2CTORST, 0x8F);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     /* config CC Detect Debounce : 26.7*val us */
-> > +     ret =3D regmap_write(regmap, MT6360_REG_DEBCTRL1, 0x10);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     /* DRP Toggle Cycle : 51.2 + 6.4*val ms */
-> > +     ret =3D regmap_write(regmap, MT6360_REG_DRPCTRL1, 4);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     /* DRP Duyt Ctrl : dcSRC: /1024 */
-> > +     ret =3D mt6360_tcpc_write16(regmap, MT6360_REG_DRPCTRL2, 330);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     /* Enable VCONN Current Limit function */
-> > +     ret =3D regmap_update_bits(regmap, MT6360_REG_VCONNCTRL1, MT6360_=
-VCONNCL_ENABLE,
-> > +                              MT6360_VCONNCL_ENABLE);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     /* Enable cc open 40ms when pmic send vsysuv signal */
-> > +     ret =3D regmap_update_bits(regmap, MT6360_REG_RXCTRL2, MT6360_OPE=
-N40M_ENABLE,
-> > +                              MT6360_OPEN40M_ENABLE);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     /* Enable Rpdet oneshot detection */
-> > +     ret =3D regmap_update_bits(regmap, MT6360_REG_CTDCTRL2, MT6360_RP=
-ONESHOT_ENABLE,
-> > +                              MT6360_RPONESHOT_ENABLE);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     /* Set shipping mode off, AUTOIDLE on */
-> > +     return regmap_write(regmap, MT6360_REG_MODECTRL2, 0x7A);
-> > +}
-> > +
-> > +static irqreturn_t mt6360_irq(int irq, void *dev_id)
-> > +{
-> > +     struct mt6360_tcpc_info *mti =3D dev_id;
-> > +
-> > +     return tcpci_irq(mti->tcpci);
-> > +}
-> > +
-> > +static int mt6360_tcpc_probe(struct platform_device *pdev)
-> > +{
-> > +     struct mt6360_tcpc_info *mti;
-> > +     int ret;
-> > +
-> > +     mti =3D devm_kzalloc(&pdev->dev, sizeof(*mti), GFP_KERNEL);
-> > +     if (!mti)
-> > +             return -ENOMEM;
-> > +
-> > +     mti->dev =3D &pdev->dev;
-> > +
-> > +     mti->tdata.regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
-> > +     if (!mti->tdata.regmap) {
-> > +             dev_err(&pdev->dev, "Failed to get parent regmap\n");
-> > +             return -ENODEV;
-> > +     }
-> > +
-> > +     mti->irq =3D platform_get_irq_byname(pdev, "PD_IRQB");
-> > +     if (mti->irq < 0) {
-> > +             dev_err(&pdev->dev, "Failed to get PD_IRQB irq\n");
-> > +             return mti->irq;
-> > +     }
-> > +
-> > +     mti->tdata.init =3D mt6360_tcpc_init;
-> > +     mti->tcpci =3D tcpci_register_port(&pdev->dev, &mti->tdata);
-> > +     if (IS_ERR_OR_NULL(mti->tcpci)) {
-> > +             dev_err(&pdev->dev, "Failed to register tcpci port\n");
-> > +             return PTR_ERR(mti->tcpci);
-> > +     }
-> > +
-> > +     ret =3D devm_request_threaded_irq(mti->dev, mti->irq, NULL, mt636=
-0_irq, IRQF_ONESHOT,
-> > +                                     dev_name(&pdev->dev), mti);
-> > +     if (ret) {
-> > +             dev_err(mti->dev, "Failed to register irq\n");
-> > +             tcpci_unregister_port(mti->tcpci);
-> > +             return ret;
-> > +     }
-> > +
-> > +     device_init_wakeup(&pdev->dev, true);
-> > +     platform_set_drvdata(pdev, mti);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int mt6360_tcpc_remove(struct platform_device *pdev)
-> > +{
-> > +     struct mt6360_tcpc_info *mti =3D platform_get_drvdata(pdev);
-> > +
-> > +     tcpci_unregister_port(mti->tcpci);
->
-> That leaves interrupts enabled, which might be racy
-> because interrupts are still enabled here.
-M..., yes, it will cause the race condition during module remove.
-I'll add disable_irq before tcpci unregister to prevent it.
->
-> Guenter
->
-> > +     return 0;
-> > +}
-> > +
-> > +static int __maybe_unused mt6360_tcpc_suspend(struct device *dev)
-> > +{
-> > +     struct mt6360_tcpc_info *mti =3D dev_get_drvdata(dev);> +
-> > +     if (device_may_wakeup(dev))
-> > +             enable_irq_wake(mti->irq);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int __maybe_unused mt6360_tcpc_resume(struct device *dev)
-> > +{
-> > +     struct mt6360_tcpc_info *mti =3D dev_get_drvdata(dev);
-> > +
-> > +     if (device_may_wakeup(dev))
-> > +             disable_irq_wake(mti->irq);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static SIMPLE_DEV_PM_OPS(mt6360_tcpc_pm_ops, mt6360_tcpc_suspend, mt63=
-60_tcpc_resume);
-> > +
-> > +static const struct of_device_id __maybe_unused mt6360_tcpc_of_id[] =
-=3D {
-> > +     { .compatible =3D "mediatek,mt6360-tcpc", },
-> > +     {},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, mt6360_tcpc_of_id);
-> > +
-> > +static struct platform_driver mt6360_tcpc_driver =3D {
-> > +     .driver =3D {
-> > +             .name =3D "mt6360-tcpc",
-> > +             .pm =3D &mt6360_tcpc_pm_ops,
-> > +             .of_match_table =3D mt6360_tcpc_of_id,
-> > +     },
-> > +     .probe =3D mt6360_tcpc_probe,
-> > +     .remove =3D mt6360_tcpc_remove,
-> > +};
-> > +module_platform_driver(mt6360_tcpc_driver);
-> > +
-> > +MODULE_AUTHOR("ChiYuan Huang <cy_huang@richtek.com>");
-> > +MODULE_DESCRIPTION("MT6360 USB Type-C Port Controller Interface Driver=
-");
-> > +MODULE_LICENSE("GPL v2");
-> >
->
+On 8/26/20 5:59 PM, 啟原黃 wrote:
+[ ... ]
+>>> +static int mt6360_tcpc_remove(struct platform_device *pdev)
+>>> +{
+>>> +     struct mt6360_tcpc_info *mti = platform_get_drvdata(pdev);
+>>> +
+>>> +     tcpci_unregister_port(mti->tcpci);
+>>
+>> That leaves interrupts enabled, which might be racy
+>> because interrupts are still enabled here.
+> M..., yes, it will cause the race condition during module remove.
+> I'll add disable_irq before tcpci unregister to prevent it.
+
+Or just set TCPC_ALERT_MASK to 0, as in tcpci.c.
+
+Guenter
