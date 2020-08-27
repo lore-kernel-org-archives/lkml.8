@@ -2,145 +2,90 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5441C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3560C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA744207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B90D207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:58:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgH0J6R (ORCPT
+        id S1728520AbgH0J6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:58:17 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:51235 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726093AbgH0J6O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:58:14 -0400
-X-IronPort-AV: E=Sophos;i="5.76,359,1592841600"; 
-   d="scan'208";a="98621923"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 27 Aug 2020 17:58:10 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id E5A1F48990D7;
-        Thu, 27 Aug 2020 17:58:08 +0800 (CST)
-Received: from [10.167.225.206] (10.167.225.206) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Thu, 27 Aug 2020 17:58:09 +0800
-Subject: Re: [PATCH] fs: Kill DCACHE_DONTCACHE dentry even if
- DCACHE_REFERENCED is set
-To:     Dave Chinner <david@fromorbit.com>
-CC:     <viro@zeniv.linux.org.uk>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <y-goto@fujitsu.com>
-References: <20200821015953.22956-1-lihao2018.fnst@cn.fujitsu.com>
- <20200827063748.GA12096@dread.disaster.area>
-From:   "Li, Hao" <lihao2018.fnst@cn.fujitsu.com>
-Message-ID: <6b3b3439-2199-8f00-ceca-d65769e94fe0@cn.fujitsu.com>
-Date:   Thu, 27 Aug 2020 17:58:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.1.1
-MIME-Version: 1.0
-In-Reply-To: <20200827063748.GA12096@dread.disaster.area>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.167.225.206]
-X-ClientProxiedBy: G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.205) To
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201)
-X-yoursite-MailScanner-ID: E5A1F48990D7.AD97A
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: lihao2018.fnst@cn.fujitsu.com
+        Thu, 27 Aug 2020 05:58:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37232 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727030AbgH0J6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:58:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 21B26AD7A;
+        Thu, 27 Aug 2020 09:59:03 +0000 (UTC)
+From:   Daniel Wagner <dwagner@suse.de>
+To:     linux-scsi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Nilesh Javali <njavali@marvell.com>,
+        Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH 2/4] qla2xxx: Simplify return value logic in qla2x00_get_sp_from_handle()
+Date:   Thu, 27 Aug 2020 11:58:27 +0200
+Message-Id: <20200827095829.63871-3-dwagner@suse.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20200827095829.63871-1-dwagner@suse.de>
+References: <20200827095829.63871-1-dwagner@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/27 14:37, Dave Chinner wrote:
-> On Fri, Aug 21, 2020 at 09:59:53AM +0800, Hao Li wrote:
->> Currently, DCACHE_REFERENCED prevents the dentry with DCACHE_DONTCACHE
->> set from being killed, so the corresponding inode can't be evicted. If
->> the DAX policy of an inode is changed, we can't make policy changing
->> take effects unless dropping caches manually.
->>
->> This patch fixes this problem and flushes the inode to disk to prepare
->> for evicting it.
->>
->> Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
->> ---
->>  fs/dcache.c | 3 ++-
->>  fs/inode.c  | 2 +-
->>  2 files changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/fs/dcache.c b/fs/dcache.c
->> index ea0485861d93..486c7409dc82 100644
->> --- a/fs/dcache.c
->> +++ b/fs/dcache.c
->> @@ -796,7 +796,8 @@ static inline bool fast_dput(struct dentry *dentry)
->>  	 */
->>  	smp_rmb();
->>  	d_flags = READ_ONCE(dentry->d_flags);
->> -	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED;
->> +	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED
->> +			| DCACHE_DONTCACHE;
-> Seems reasonable, but you need to update the comment above as to
-> how this flag fits into this code....
+Refactor qla2x00_get_sp_from_handle() to avoid the unecessary
+goto if early returns are used. With this we can also avoid
+preinitilzing the sp pointer.
 
-Yes. I will change it. Thanks.
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+---
+ drivers/scsi/qla2xxx/qla_isr.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
->
->>  	/* Nothing to do? Dropping the reference was all we needed? */
->>  	if (d_flags == (DCACHE_REFERENCED | DCACHE_LRU_LIST) && !d_unhashed(dentry))
->> diff --git a/fs/inode.c b/fs/inode.c
->> index 72c4c347afb7..5218a8aebd7f 100644
->> --- a/fs/inode.c
->> +++ b/fs/inode.c
->> @@ -1632,7 +1632,7 @@ static void iput_final(struct inode *inode)
->>  	}
->>  
->>  	state = inode->i_state;
->> -	if (!drop) {
->> +	if (!drop || (drop && (inode->i_state & I_DONTCACHE))) {
->>  		WRITE_ONCE(inode->i_state, state | I_WILL_FREE);
->>  		spin_unlock(&inode->i_lock);
-> What's this supposed to do? We'll only get here with drop set if the
-> filesystem is mounting or unmounting.
-
-The variable drop will also be set to True if I_DONTCACHE is set on
-inode->i_state.
-Although mounting/unmounting will set the drop variable, it won't set
-I_DONTCACHE if I understand correctly. As a result,
-drop && (inode->i_state & I_DONTCACHE) will filter out mounting/unmounting.
-
-> In either case, why does
-> having I_DONTCACHE set require the inode to be written back here
-> before it is evicted from the cache?
-
-Mounting/unmounting won't execute the code snippet which is in that if
-statement, as I have explained above. However, If I_DONTCACHE is set, we
-have to execute this snippet to write back inode.
-
-I_DONTCACHE is set in d_mark_dontcache() which will be called in two
-situations:
-1. DAX policy is changed.
-2. The inode is read through bulkstat in XFS. See commit 5132ba8f2b77
-("xfs: don't cache inodes read through bulkstat") for more details.
-
-For the first case, we have to write back the inode together with its
-dirty pages before evicting.
-For the second case, I think it's also necessary to write back inode before
-evicting.
-
-Thanks,
-Hao Li
-
->
-> Cheers,
->
-> Dave.
-
-
+diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+index 27bcd346af7c..5d278155e4e7 100644
+--- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -1716,7 +1716,7 @@ qla2x00_get_sp_from_handle(scsi_qla_host_t *vha, const char *func,
+ {
+ 	struct qla_hw_data *ha = vha->hw;
+ 	sts_entry_t *pkt = iocb;
+-	srb_t *sp = NULL;
++	srb_t *sp;
+ 	uint16_t index;
+ 
+ 	index = LSW(pkt->handle);
+@@ -1728,13 +1728,13 @@ qla2x00_get_sp_from_handle(scsi_qla_host_t *vha, const char *func,
+ 			set_bit(FCOE_CTX_RESET_NEEDED, &vha->dpc_flags);
+ 		else
+ 			set_bit(ISP_ABORT_NEEDED, &vha->dpc_flags);
+-		goto done;
++		return NULL;
+ 	}
+ 	sp = req->outstanding_cmds[index];
+ 	if (!sp) {
+ 		ql_log(ql_log_warn, vha, 0x5032,
+ 		    "Invalid completion handle (%x) -- timed-out.\n", index);
+-		return sp;
++		return NULL;
+ 	}
+ 	if (sp->handle != index) {
+ 		ql_log(ql_log_warn, vha, 0x5033,
+@@ -1743,8 +1743,6 @@ qla2x00_get_sp_from_handle(scsi_qla_host_t *vha, const char *func,
+ 	}
+ 
+ 	req->outstanding_cmds[index] = NULL;
+-
+-done:
+ 	return sp;
+ }
+ 
+-- 
+2.16.4
 
