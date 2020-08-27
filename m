@@ -2,126 +2,107 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F9DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41ABAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0C920786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19D5520786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:56:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TfbrukHR";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OGW95xQy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbgH0Hzr (ORCPT
+        id S1728538AbgH0Hzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:55:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55712 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728570AbgH0Hzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:55:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id BBBF2AD2E;
-        Thu, 27 Aug 2020 07:56:09 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 4F1A71E12C0; Thu, 27 Aug 2020 09:55:37 +0200 (CEST)
-Date:   Thu, 27 Aug 2020 09:55:37 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     =?utf-8?B?55Sw?= <xianting_tian@126.com>
-Cc:     Jan Kara <jack@suse.cz>, "bcrl@kvack.org" <bcrl@kvack.org>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] aio: use wait_for_completion_io() when waiting for
- completion of io
-Message-ID: <20200827075537.GA15885@quack2.suse.cz>
-References: <1596634551-27526-1-git-send-email-xianting_tian@126.com>
- <20200826132330.GD15126@quack2.suse.cz>
- <26ae9330.63f4.1742b70dd88.Coremail.xianting_tian@126.com>
+        Thu, 27 Aug 2020 03:55:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728369AbgH0Hyh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:54:37 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27D5C061236;
+        Thu, 27 Aug 2020 00:54:36 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 07:54:34 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598514875;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ECyvMDbs1VNX+l7QtCYIDcO9pJJ9+CjzvFCuz5jGHrw=;
+        b=TfbrukHR4Vyp8jaKjTvKpxiO4BwaQbFK6LyjFViDWnIu8KjWAeSwCx/DYhvpwMFPfG8jrp
+        OARoXeUJIiJ1DvMe1Nm0UFxpOlS59PwCzlLHoGiRST+EsTK8eJrhO3tAIuaN/GvlwhxMUJ
+        /6PKfsefMMjJ4PXP111j4QKiY/B8d71SkY6TqHQE1Viki/zN87iHaURJgeWWU0OQrvSF0k
+        QwZR29o1iA0t+oNNzQHKmtF3LU+8V1H4MbCpOZCFaspjirFGS1PMZa7hlS/a2yowN3SYk3
+        shAG1y2aoIUM2Iyrf3bpak/9vMiIiusx5WrQaLY1C42vkLn0cbnnjzSMz5wvMA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598514875;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ECyvMDbs1VNX+l7QtCYIDcO9pJJ9+CjzvFCuz5jGHrw=;
+        b=OGW95xQyiTZ/fFRQbv5B+vi6q9Do/BCzkp1IdIRqo1DZn4apXPSkWZG8Y4SS/ceGGakUgx
+        Jmf7OMLMFUIzrgDQ==
+From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/urgent] sched: Use __always_inline on is_idle_task()
+Cc:     Marco Elver <elver@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200820172046.GA177701@elver.google.com>
+References: <20200820172046.GA177701@elver.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <26ae9330.63f4.1742b70dd88.Coremail.xianting_tian@126.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <159851487420.20229.1106109799847028466.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+The following commit has been merged into the sched/urgent branch of tip:
 
-On Wed 26-08-20 23:44:11, 田 wrote:
-> thanks for your kindly reply,
-> the normal wait path read_events()->wait_event_interruptible_hrtimeout(),
-> which will call schedule(), it does not account IO wait time.
+Commit-ID:     c94a88f341c9b8f05d8639f62bb5d95936f881cd
+Gitweb:        https://git.kernel.org/tip/c94a88f341c9b8f05d8639f62bb5d95936f881cd
+Author:        Marco Elver <elver@google.com>
+AuthorDate:    Thu, 20 Aug 2020 19:20:46 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 26 Aug 2020 12:41:51 +02:00
 
-Not sure if there isn't some misunderstanding so I'll repeat what I've
-said: Yes, above path will not account as IO wait time and IMO that is much
-more common path which should be accounted as IO wait time. So I think that
-without fixing that path, fixing cornercases like you did in your patch is
-rather pointless.
+sched: Use __always_inline on is_idle_task()
 
-								Honza
+is_idle_task() may be used from noinstr functions such as
+irqentry_enter(). Since the compiler is free to not inline regular
+inline functions, switch to using __always_inline.
 
-> On 08/26/2020 21:23, Jan Kara wrote:
-> On Wed 05-08-20 09:35:51, Xianting Tian wrote:
-> > When waiting for the completion of io, we need account iowait time. As
-> > wait_for_completion() calls schedule_timeout(), which doesn't account
-> > iowait time. While wait_for_completion_io() calls io_schedule_timeout(),
-> > which will account iowait time.
-> >
-> > So using wait_for_completion_io() instead of wait_for_completion()
-> > when waiting for completion of io before exit_aio and io_destroy.
-> >
-> > Signed-off-by: Xianting Tian <xianting_tian@126.com>
-> 
-> Thanks for the patch! It looks good to me but IMO this is just scratching
-> the surface.  E.g. for AIO we are mostly going to wait in read_events() by
-> wait_event_interruptible_hrtimeout() and *that* doesn't account as IO wait
-> either? Which is IMO far bigger misaccounting... The two case you fix seem
-> to be just rare cornercases so what they do isn't a big deal either way.
-> 
-> So I agree it may be worth it to properly account waiting for AIO but if
-> you want to do that, then please handle mainly the common cases in AIO
-> code.
-> 
->                                         Honza
-> 
-> > ---
-> >  fs/aio.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/fs/aio.c b/fs/aio.c
-> > index 91e7cc4..498b8a0 100644
-> > --- a/fs/aio.c
-> > +++ b/fs/aio.c
-> > @@ -892,7 +892,7 @@ void exit_aio(struct mm_struct *mm)
-> >  
-> >       if (!atomic_sub_and_test(skipped, &wait.count)) {
-> >            /* Wait until all IO for the context are done. */
-> > -          wait_for_completion(&wait.comp);
-> > +          wait_for_completion_io(&wait.comp);
-> >       }
-> >  
-> >       RCU_INIT_POINTER(mm->ioctx_table, NULL);
-> > @@ -1400,7 +1400,7 @@ static long read_events(struct kioctx *ctx, long min_nr, long nr,
-> >             * is destroyed.
-> >             */
-> >            if (!ret)
-> > -               wait_for_completion(&wait.comp);
-> > +               wait_for_completion_io(&wait.comp);
-> >  
-> >            return ret;
-> >       }
-> > --
-> > 1.8.3.1
-> >
-> --
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Signed-off-by: Marco Elver <elver@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200820172046.GA177701@elver.google.com
+---
+ include/linux/sched.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 93ecd93..afe01e2 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1666,7 +1666,7 @@ extern struct task_struct *idle_task(int cpu);
+  *
+  * Return: 1 if @p is an idle task. 0 otherwise.
+  */
+-static inline bool is_idle_task(const struct task_struct *p)
++static __always_inline bool is_idle_task(const struct task_struct *p)
+ {
+ 	return !!(p->flags & PF_IDLE);
+ }
