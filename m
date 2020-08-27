@@ -2,93 +2,232 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42477C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AB4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8C22177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:27:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="sYG/O8pK"
+	by mail.kernel.org (Postfix) with ESMTP id 0B1F322B4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:28:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598509698;
+	bh=6Eaf0eH5+LulpBg3v/P820gMYLVyN/SZjt9josFSQN4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=lxZqcAMPJD4bvo+iJ8ffSXYxAo1E2H8FV9ku2pDlkeT7uixCz9/iV9cD58aVU/cJp
+	 GtqPa9BtuLnCQX9IeDmE3fi1d+FyK4anEh7IT4W8Buzlhsz1Z2kSEPyCPiR9jCLnnU
+	 5rmD3+fJS1ISdkcKYUA2qzlMRfpkD963PxaWLEuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgH0G1L (ORCPT
+        id S1727769AbgH0G2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:27:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgH0G1K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:27:10 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE0DDC061260;
-        Wed, 26 Aug 2020 23:27:09 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Thu, 27 Aug 2020 02:28:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726199AbgH0G2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 02:28:13 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BcXnj6RYlz9sRK;
-        Thu, 27 Aug 2020 16:27:05 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
-        t=1598509627; bh=0jnmw3HItILjj9al39tdUW1/oczaOCF9us3o3EFIRyE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=sYG/O8pKqds8ULQ32y2auj0Zciks1xfx3dVbQeRTF7cjRTkoSIt1zXXstER+ujk6a
-         TmlvFvJLcUp/AthOhwI63LKUOZ7Z4c9KjCqCAzx5EXXjYisZrCbCxLm7opDRwyydol
-         jz3awI+osTZzEzcDSO34es+ULJ3tNylQXHZBH9i6zGKh+BjVvUCrqZxezP1y7FlObA
-         6AZgRQXoGoRuiMRQefnnknFjYKV/KcPi41Y9DlyxBesT0YV6t8h+LCtnPVp+85eAP9
-         l5w1VZSJTKATH3C9+ZZxG5Rnkcd7aFHJpob7FekhwGO1F6uIFthS0arUnbhvWECEkU
-         p+vJp0SSpEf7w==
-Message-ID: <1e56af7945b93a22e31ba6d81da82cbdb1b237b6.camel@ozlabs.org>
-Subject: Re: [PATCH] ARM: aspeed: g5: Do not set sirq polarity
-From:   Jeremy Kerr <jk@ozlabs.org>
-To:     Joel Stanley <joel@jms.id.au>, Oskar Senft <osk@google.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Date:   Thu, 27 Aug 2020 14:27:02 +0800
-In-Reply-To: <20200812112400.2406734-1-joel@jms.id.au>
-References: <20200812112400.2406734-1-joel@jms.id.au>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.4-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mail.kernel.org (Postfix) with ESMTPSA id 984912177B;
+        Thu, 27 Aug 2020 06:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598509692;
+        bh=6Eaf0eH5+LulpBg3v/P820gMYLVyN/SZjt9josFSQN4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=v/KgMV1yyfnNbAVXpgulbCCKQ8bAsf5zMgCXiqMMjMMn/B1RDWR7rQMAGLB3KkOjQ
+         FjuMxCK+Jr3M2HbKgbjxJPF2VRHnhzs4OVULE9qgn2+g6oq42D3bFT0rF9S7LdKA/T
+         nf1RH9Gvo4KYPlfUQj8HAF8nG99/yEwpvAEgignY=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, clang-built-linux@googlegroups.com
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v3 1/2] gpio: Add devm_fwnode_gpiod_get_optional() helpers
+Date:   Thu, 27 Aug 2020 08:28:03 +0200
+Message-Id: <20200827062804.16730-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joel,
+Add devm_fwnode_gpiod_get_optional() and
+devm_fwnode_gpiod_get_index_optional() helpers, similar to regular
+devm_gpiod optional versions.  Drivers getting GPIOs from a firmware
+node might use it to remove some boilerplate code.
 
-> A feature was added to the aspeed vuart driver to configure the vuart
-> interrupt (sirq) polarity according to the LPC/eSPI strapping register.
-> 
-> Systems that depend on a active low behaviour (sirq_polarity set to 0)
-> such as OpenPower boxes also use LPC, so this relationship does not
-> hold.
-> 
-> The property was added for a Tyan S7106 system which is not supported
-> in the kernel tree. Should this or other systems wish to use this
-> feature of the driver they should add it to the machine specific device
-> tree.
-> 
-> Fixes: c791fc76bc72 ("arm: dts: aspeed: Add vuart aspeed,sirq-polarity-sense...")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-LGTM. I've tested this on the s2600st, which is strapped for eSPI. All
-good there too, as expected.
+---
 
-Tested-by: Jeremy Kerr <jk@ozlabs.org>
+Changes since v2:
+1. Return NULL
 
-and/or:
+Changes since v1:
+1. New patch
+---
+ drivers/gpio/gpiolib-devres.c | 71 +++++++++++++++++++++++++++++++++++
+ include/linux/gpio/consumer.h | 30 +++++++++++++++
+ 2 files changed, 101 insertions(+)
 
-Reviewed-by: Jeremy Kerr <jk@ozlabs.org>
-
-Cheers,
-
-
-Jeremy
+diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
+index 7dbce4c4ebdf..f8476f6a65cc 100644
+--- a/drivers/gpio/gpiolib-devres.c
++++ b/drivers/gpio/gpiolib-devres.c
+@@ -184,6 +184,37 @@ struct gpio_desc *devm_gpiod_get_from_of_node(struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(devm_gpiod_get_from_of_node);
+ 
++/**
++ * devm_fwnode_gpiod_get_optional - Resource-managed fwnode_gpiod_get_index()
++ *                                  for optional GPIO
++ * @dev:	GPIO consumer
++ * @fwnode:	firmware node containing GPIO reference
++ * @con_id:	function within the GPIO consumer
++ * @flags:	GPIO initialization flags
++ * @label:	label to attach to the requested GPIO
++ *
++ * GPIO descriptors returned from this function are automatically disposed on
++ * driver detach.
++ *
++ * This is equivalent to devm_fwnode_gpiod_get_index(), except that when no
++ * GPIO with the specified index was assigned to the requested function it will
++ * return NULL.  This is convenient for drivers that need to handle optional
++ * GPIOs.
++ *
++ * On successful request the GPIO pin is configured in accordance with
++ * provided @flags.
++ */
++struct gpio_desc *devm_fwnode_gpiod_get_optional(struct device *dev,
++						 struct fwnode_handle *fwnode,
++						 const char *con_id,
++						 enum gpiod_flags flags,
++						 const char *label)
++{
++	return devm_fwnode_gpiod_get_index_optional(dev, fwnode, con_id, 0,
++						    flags, label);
++}
++EXPORT_SYMBOL_GPL(devm_fwnode_gpiod_get_optional);
++
+ /**
+  * devm_fwnode_gpiod_get_index - get a GPIO descriptor from a given node
+  * @dev:	GPIO consumer
+@@ -226,6 +257,46 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
+ }
+ EXPORT_SYMBOL_GPL(devm_fwnode_gpiod_get_index);
+ 
++/**
++ * devm_fwnode_gpiod_get_index_optional - Resource-managed fwnode_gpiod_get_index()
++ *                                        for optional GPIO
++ * @dev:	GPIO consumer
++ * @fwnode:	firmware node containing GPIO reference
++ * @con_id:	function within the GPIO consumer
++ * @index:	index of the GPIO to obtain in the consumer
++ * @flags:	GPIO initialization flags
++ * @label:	label to attach to the requested GPIO
++ *
++ * GPIO descriptors returned from this function are automatically disposed on
++ * driver detach.
++ *
++ * This is equivalent to devm_fwnode_gpiod_get_index(), except that when no
++ * GPIO with the specified index was assigned to the requested function it will
++ * return NULL.  This is convenient for drivers that need to handle optional
++ * GPIOs.
++ *
++ * On successful request the GPIO pin is configured in accordance with
++ * provided @flags.
++ */
++struct gpio_desc *devm_fwnode_gpiod_get_index_optional(struct device *dev,
++						       struct fwnode_handle *fwnode,
++						       const char *con_id, int index,
++						       enum gpiod_flags flags,
++						       const char *label)
++{
++	struct gpio_desc *desc;
++
++	desc = devm_fwnode_gpiod_get_index(dev, fwnode, con_id, index, flags,
++					   label);
++	if (IS_ERR(desc)) {
++		if (PTR_ERR(desc) == -ENOENT)
++			return NULL;
++	}
++
++	return desc;
++}
++EXPORT_SYMBOL_GPL(devm_fwnode_gpiod_get_index_optional);
++
+ /**
+  * devm_gpiod_get_index_optional - Resource-managed gpiod_get_index_optional()
+  * @dev: GPIO consumer
+diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+index 901aab89d025..7854d80b1e9a 100644
+--- a/include/linux/gpio/consumer.h
++++ b/include/linux/gpio/consumer.h
+@@ -183,11 +183,21 @@ struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
+ 					 const char *con_id, int index,
+ 					 enum gpiod_flags flags,
+ 					 const char *label);
++struct gpio_desc *devm_fwnode_gpiod_get_optional(struct device *dev,
++						 struct fwnode_handle *fwnode,
++						 const char *con_id,
++						 enum gpiod_flags flags,
++						 const char *label);
+ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
+ 					      struct fwnode_handle *child,
+ 					      const char *con_id, int index,
+ 					      enum gpiod_flags flags,
+ 					      const char *label);
++struct gpio_desc *devm_fwnode_gpiod_get_index_optional(struct device *dev,
++						       struct fwnode_handle *fwnode,
++						       const char *con_id, int index,
++						       enum gpiod_flags flags,
++						       const char *label);
+ 
+ #else /* CONFIG_GPIOLIB */
+ 
+@@ -562,6 +572,16 @@ struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
+ 	return ERR_PTR(-ENOSYS);
+ }
+ 
++static inline
++struct gpio_desc *devm_fwnode_gpiod_get_optional(struct device *dev,
++						 struct fwnode_handle *fwnode,
++						 const char *con_id,
++						 enum gpiod_flags flags,
++						 const char *label)
++{
++	return NULL;
++}
++
+ static inline
+ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
+ 					      struct fwnode_handle *fwnode,
+@@ -572,6 +592,16 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
+ 	return ERR_PTR(-ENOSYS);
+ }
+ 
++static inline
++struct gpio_desc *devm_fwnode_gpiod_get_index_optional(struct device *dev,
++						       struct fwnode_handle *fwnode,
++						       const char *con_id, int index,
++						       enum gpiod_flags flags,
++						       const char *label)
++{
++	return NULL;
++}
++
+ #endif /* CONFIG_GPIOLIB */
+ 
+ static inline
+-- 
+2.17.1
 
