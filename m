@@ -2,105 +2,163 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8690C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B2FC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95E7120738
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:35:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+RtF9Wl"
+	by mail.kernel.org (Postfix) with ESMTP id 1A3BC22B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgH0Le4 (ORCPT
+        id S1728671AbgH0Lg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 07:34:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728550AbgH0L37 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 07:29:59 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C332C06123E;
-        Thu, 27 Aug 2020 04:08:34 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id q16so2729576ybk.6;
-        Thu, 27 Aug 2020 04:08:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4AC1iNQgWZrkBSCQYpKpySGolDqTh2HDf1hkAeZFNb4=;
-        b=T+RtF9WlK+QYlzaFRforZObowt16Z/icVvaSdm1jjwL0BDGUHQxVhiDeSCIDIn/cF4
-         +Jfk9BSyfhzclpoE+pdql83jioly+c2MdVx6NLOqCLqCWsfKn3Ao1cjYW7XGKcbi7b+U
-         lMPm9mwtitTgaESAs6c79YF6oXOk0GFbAjfy2CbREnXE5LP9HiOSzDqqm6SpSwKIwp78
-         jol6U5yB2v5SJpmbkCRsn9lIz1UpWha3gERsgWwwi0BiYzt2T8ctaMSbXxTOd937vCr6
-         +e/ereWKyJnAtDM99NFXloqA5EQ1i1oc8Q08QBJG2EdSdwUiYA2aTShsnaRZ5mV5pyJT
-         LM7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4AC1iNQgWZrkBSCQYpKpySGolDqTh2HDf1hkAeZFNb4=;
-        b=r04hRvZH6rcwvRX+/cRGvUFv/2GkV3XgabSorz8yILWPdCehOTI2OO+ohm+29kz8H2
-         /IJFFb9afn0OBe4o/xBJnn9EeN012EA2Yb31d5oPwYacFBRxGKfFnwA+COBEFRgZrRON
-         y47z4xOva9+tJNnKIhrxOjlqB4494nnY0iOYi/pIT02T9X+TlLciJlT8YWhyZWoPUL/U
-         1yqG3SPPMWegXE0/M0UKPIepbIQiOK/M3GW1nJKr/6djtdwuB1RHSQEh+CgKl/LfwwZr
-         PztxWNgFgyeQI1EtM2ouNM+X2cIVoahXLkdOtRjRR9K7CqfSsQzx/fNzhyFz8pkYYijW
-         Lbww==
-X-Gm-Message-State: AOAM5307fAgGfz9DoT3BBnMCsuWPXrf4iuHC+A55rVifiBN0DL2MD9q/
-        8ZYokM/uCiAn6XVYB64uIid7qAKWbddK5RCXWaY=
-X-Google-Smtp-Source: ABdhPJxqcVtXp1n3gyHbu5k3vj5n974w3z1wdNTj6pVg7CQ0rfbSLCDrB4IgRwp3FjMCjoGv8C0ToybrrjeIiLUlXDE=
-X-Received: by 2002:a25:8149:: with SMTP id j9mr28989594ybm.214.1598526513604;
- Thu, 27 Aug 2020 04:08:33 -0700 (PDT)
+        Thu, 27 Aug 2020 07:36:29 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40340 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728400AbgH0LaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 07:30:00 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D6D4D1EA6CFD8E40146B;
+        Thu, 27 Aug 2020 19:29:05 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Thu, 27 Aug 2020
+ 19:28:58 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <kuznet@ms2.inr.ac.ru>,
+        <yoshfuji@linux-ipv6.org>, <dsahern@kernel.org>,
+        <pabeni@redhat.com>, <fw@strlen.de>, <edumazet@google.com>,
+        <steffen.klassert@secunet.com>, <herbert@gondor.apana.org.au>,
+        <rdunlap@infradead.org>, <pablo@netfilter.org>,
+        <decui@microsoft.com>, <jakub@cloudflare.com>, <jeremy@azazel.net>,
+        <kafai@fb.com>, <ast@kernel.org>, <keescook@chromium.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH] net: Fix some comments
+Date:   Thu, 27 Aug 2020 07:27:49 -0400
+Message-ID: <20200827112749.47698-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588542414-14826-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1588542414-14826-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 27 Aug 2020 12:08:07 +0100
-Message-ID: <CA+V-a8v5CtxJQxjSWcvJrPtf9JyYKZeACdc3as_hjM710pk1AQ@mail.gmail.com>
-Subject: Re: [PATCH v2 05/10] dt-bindings: renesas,rcar-dmac: Document r8a7742 support
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+Fix some comments, including wrong function name, duplicated word and so
+on.
 
-On Sun, May 3, 2020 at 10:47 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> Renesas RZ/G SoC also have the R-Car gen2/3 compatible DMA controllers.
-> Document RZ/G1H (also known as R8A7742) SoC bindings.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  Documentation/devicetree/bindings/dma/renesas,rcar-dmac.yaml | 1 +
->  1 file changed, 1 insertion(+)
->
-This patch is not present in linux-next yet, could you please take care of it.
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ include/linux/skbuff.h  | 4 ++--
+ include/uapi/linux/in.h | 2 +-
+ net/core/sock.c         | 2 +-
+ net/ipv4/raw.c          | 2 +-
+ net/l3mdev/l3mdev.c     | 2 +-
+ net/socket.c            | 4 ++--
+ 6 files changed, 8 insertions(+), 8 deletions(-)
 
-Cheers,
-Prabhakar
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index e8bca74857a3..8d9ab50b08c9 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -71,7 +71,7 @@
+  *	NETIF_F_IPV6_CSUM - Driver (device) is only able to checksum plain
+  *			  TCP or UDP packets over IPv6. These are specifically
+  *			  unencapsulated packets of the form IPv6|TCP or
+- *			  IPv4|UDP where the Next Header field in the IPv6
++ *			  IPv6|UDP where the Next Header field in the IPv6
+  *			  header is either TCP or UDP. IPv6 extension headers
+  *			  are not supported with this feature. This feature
+  *			  cannot be set in features for a device with
+@@ -2667,7 +2667,7 @@ static inline int pskb_network_may_pull(struct sk_buff *skb, unsigned int len)
+  *
+  * Using max(32, L1_CACHE_BYTES) makes sense (especially with RPS)
+  * to reduce average number of cache lines per packet.
+- * get_rps_cpus() for example only access one 64 bytes aligned block :
++ * get_rps_cpu() for example only access one 64 bytes aligned block :
+  * NET_IP_ALIGN(2) + ethernet_header(14) + IP_header(20/40) + ports(8)
+  */
+ #ifndef NET_SKB_PAD
+diff --git a/include/uapi/linux/in.h b/include/uapi/linux/in.h
+index 3d0d8231dc19..7d6687618d80 100644
+--- a/include/uapi/linux/in.h
++++ b/include/uapi/linux/in.h
+@@ -135,7 +135,7 @@ struct in_addr {
+  * this socket to prevent accepting spoofed ones.
+  */
+ #define IP_PMTUDISC_INTERFACE		4
+-/* weaker version of IP_PMTUDISC_INTERFACE, which allos packets to get
++/* weaker version of IP_PMTUDISC_INTERFACE, which allows packets to get
+  * fragmented if they exeed the interface mtu
+  */
+ #define IP_PMTUDISC_OMIT		5
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 64d2aec5ed45..7ed32a8fc132 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -3240,7 +3240,7 @@ void sk_common_release(struct sock *sk)
+ 		sk->sk_prot->destroy(sk);
+ 
+ 	/*
+-	 * Observation: when sock_common_release is called, processes have
++	 * Observation: when sk_common_release is called, processes have
+ 	 * no access to socket. But net still has.
+ 	 * Step one, detach it from networking:
+ 	 *
+diff --git a/net/ipv4/raw.c b/net/ipv4/raw.c
+index ea4c36e93824..1170653a89cd 100644
+--- a/net/ipv4/raw.c
++++ b/net/ipv4/raw.c
+@@ -611,7 +611,7 @@ static int raw_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 	} else if (!ipc.oif) {
+ 		ipc.oif = inet->uc_index;
+ 	} else if (ipv4_is_lbcast(daddr) && inet->uc_index) {
+-		/* oif is set, packet is to local broadcast and
++		/* oif is set, packet is to local broadcast
+ 		 * and uc_index is set. oif is most likely set
+ 		 * by sk_bound_dev_if. If uc_index != oif check if the
+ 		 * oif is an L3 master and uc_index is an L3 slave.
+diff --git a/net/l3mdev/l3mdev.c b/net/l3mdev/l3mdev.c
+index e71ca5aec684..864326f150e2 100644
+--- a/net/l3mdev/l3mdev.c
++++ b/net/l3mdev/l3mdev.c
+@@ -154,7 +154,7 @@ int l3mdev_master_upper_ifindex_by_index_rcu(struct net *net, int ifindex)
+ EXPORT_SYMBOL_GPL(l3mdev_master_upper_ifindex_by_index_rcu);
+ 
+ /**
+- *	l3mdev_fib_table - get FIB table id associated with an L3
++ *	l3mdev_fib_table_rcu - get FIB table id associated with an L3
+  *                             master interface
+  *	@dev: targeted interface
+  */
+diff --git a/net/socket.c b/net/socket.c
+index dbbe8ea7d395..0c0144604f81 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -3610,7 +3610,7 @@ int kernel_getsockname(struct socket *sock, struct sockaddr *addr)
+ EXPORT_SYMBOL(kernel_getsockname);
+ 
+ /**
+- *	kernel_peername - get the address which the socket is connected (kernel space)
++ *	kernel_getpeername - get the address which the socket is connected (kernel space)
+  *	@sock: socket
+  *	@addr: address holder
+  *
+@@ -3671,7 +3671,7 @@ int kernel_sendpage_locked(struct sock *sk, struct page *page, int offset,
+ EXPORT_SYMBOL(kernel_sendpage_locked);
+ 
+ /**
+- *	kernel_shutdown - shut down part of a full-duplex connection (kernel space)
++ *	kernel_sock_shutdown - shut down part of a full-duplex connection (kernel space)
+  *	@sock: socket
+  *	@how: connection part
+  *
+-- 
+2.19.1
+
