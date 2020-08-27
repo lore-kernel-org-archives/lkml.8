@@ -2,253 +2,455 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73448C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A8BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40981207DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:35:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B3bi80kj"
+	by mail.kernel.org (Postfix) with ESMTP id 4891720825
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:35:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598513723;
+	bh=IP8OLbCvr7z4iHkOm7/fM2Kat3SeuBzjYRmMIZLAfKQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qB8M7Iz3bv18j7PtxdqGTatCsvrP9J8EaOabOSXYA4edRR2MhRDdTXbYju42bEl2D
+	 pL3fvP7rrH8UNaiowOlAbuBuOVuqCJ64Lt+Zqf3hQU7nuA6v/ovJmufkgUtkVdAvEp
+	 2cb3k7ZzkkO14GWaLQ/gL4NNuAHukXP2eGaYoU/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgH0HfO (ORCPT
+        id S1728273AbgH0HfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:35:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728246AbgH0HfL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:35:11 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02312C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:35:10 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id m22so5294188ljj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:35:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version;
-        bh=7APyHOujPL1VeK8Eil0L8aFHD4Q0gYtExWSlFGcjgmg=;
-        b=B3bi80kjtgfp+lEYjnG2F+19d/sX90y5UROZig2euZ+1ZBZkpgt3aH1dzEyv63kUjk
-         +IcdxUFm+Yly2y8SWe6/UHVwmpqeWu9m1J9hXbinVmBwBC/x8pdPVWw4kC7BVx5QTF4K
-         /6ACxh/dX3WOUJO1MvvwYycomLb7V41/1I5mDWzKjvDGdNX1qcmaa4m1xpoqcthKpKeW
-         gBjmLEE0n8K65BEydcs+y5HqxvKRJ2TRitAGB/J7vG+2B6k99toYX9IxWTtlIRkucux6
-         MeJDWdCbiW/z6pSA+GVQG56wOnEN3aAWCkSTryd/A0nxdlKXO1M0eNq15yFU/x4MObn9
-         hxrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version;
-        bh=7APyHOujPL1VeK8Eil0L8aFHD4Q0gYtExWSlFGcjgmg=;
-        b=Sd4phxn6F9ClpW8eM1KRsQ7AFVWIzq0B7hExlTQaLgpbX+OpTkTRO/eUd8/oIlGhIp
-         bemcmUQLFdQlzKfrkXq0QwlGrsEU2D93dFZg1cckNUbE7wy/4uzAPZnAmWJyfLLWQ5fd
-         MFidFItSeOmh49R+gI0zOGis2pqB5Ev/4cBCMS1IOYiIr0pPxweu8oQxsWN38TC77lXV
-         rtgqnmq1yyu1j3kjnVTP8ZE6dGuGhBEt3G8oKixDF0SmX9LC35j8PIeCmGLqH4tp2+Bu
-         J+dtkx6Sxeff6pvTPnHyyV0u3llK16yUfAwvNTKb0UKZSzQiWv7TvhBusd9i5J8+iD7l
-         eVww==
-X-Gm-Message-State: AOAM5325QofBgUhhXgLkbBhsnF9eVTuCzKSVpq4AtrZwU6fftuRS2oqS
-        DWwsp3YOmFAVBQdpWnkDn8I=
-X-Google-Smtp-Source: ABdhPJzVuZLGlIVYCxQHJ6jt0P6Csdk4Q8l7EO2A2x3ucFfSbPYImf6ufnSiupv9tFerYJ7vq1kseQ==
-X-Received: by 2002:a2e:3a10:: with SMTP id h16mr2320532lja.221.1598513708321;
-        Thu, 27 Aug 2020 00:35:08 -0700 (PDT)
-Received: from eldfell ([194.136.85.206])
-        by smtp.gmail.com with ESMTPSA id e25sm282458ljp.47.2020.08.27.00.35.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 00:35:08 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 10:34:56 +0300
-From:   Pekka Paalanen <ppaalanen@gmail.com>
-To:     Algea Cao <algea.cao@rock-chips.com>
-Cc:     mripard@kernel.org, tzimmermann@suse.de,
-        linux-kernel@vger.kernel.org, airlied@linux.ie,
-        dri-devel@lists.freedesktop.org, maarten.lankhorst@linux.intel.com,
-        daniel@ffwll.ch, linux-rockchip@lists.infradead.org
-Subject: Printing bitfields in the kernel (Re: [PATCH] drm: Parse
- Colorimetry data block from EDID)
-Message-ID: <20200827103456.57edaf59@eldfell>
-In-Reply-To: <20200826142328.131144-1-algea.cao@rock-chips.com>
-References: <20200826142328.131144-1-algea.cao@rock-chips.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 27 Aug 2020 03:35:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728148AbgH0HfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:35:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FF45207DF;
+        Thu, 27 Aug 2020 07:35:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598513717;
+        bh=IP8OLbCvr7z4iHkOm7/fM2Kat3SeuBzjYRmMIZLAfKQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=K8LBrsbUS8lPH/Ze92H4repmnbY32JpkJJ6sgvcOCWDLDIgJvjplnEvFyJk9U6t5E
+         9ShlyX6kmIUtuA8pFQqMAdVqttQ6trVf+2EIjGfqJ0ZLUpUmdbQJt9FqylJFvm4NtU
+         9oytuOH16cX1DJ9aSBrhReDLNWmBk3RdfRbMlkZM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, jslaby@suse.cz,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: Linux 5.8.5
+Date:   Thu, 27 Aug 2020 09:35:23 +0200
+Message-Id: <159851372156137@kroah.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <1598513721250116@kroah.com>
+References: <1598513721250116@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/PKLpTK3oOKREpLRBpjtEfJP"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/PKLpTK3oOKREpLRBpjtEfJP
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, 26 Aug 2020 22:23:28 +0800
-Algea Cao <algea.cao@rock-chips.com> wrote:
-
-> CEA 861.3 spec adds colorimetry data block for HDMI.
-> Parsing the block to get the colorimetry data from
-> panel.
->=20
-> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
-> ---
->=20
->  drivers/gpu/drm/drm_edid.c  | 45 +++++++++++++++++++++++++++++++++++++
->  include/drm/drm_connector.h |  3 +++
->  include/drm/drm_edid.h      | 14 ++++++++++++
->  3 files changed, 62 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-> index 31496b6cfc56..67e607c04492 100644
-> --- a/drivers/gpu/drm/drm_edid.c
-> +++ b/drivers/gpu/drm/drm_edid.c
-> @@ -3223,6 +3223,7 @@ add_detailed_modes(struct drm_connector *connector,=
- struct edid *edid,
->  #define VIDEO_BLOCK     0x02
->  #define VENDOR_BLOCK    0x03
->  #define SPEAKER_BLOCK	0x04
-> +#define COLORIMETRY_DATA_BLOCK		0x5
->  #define HDR_STATIC_METADATA_BLOCK	0x6
->  #define USE_EXTENDED_TAG 0x07
->  #define EXT_VIDEO_CAPABILITY_BLOCK 0x00
-> @@ -4309,6 +4310,48 @@ static void fixup_detailed_cea_mode_clock(struct d=
-rm_display_mode *mode)
->  	mode->clock =3D clock;
->  }
-> =20
-> +static bool cea_db_is_hdmi_colorimetry_data_block(const u8 *db)
-> +{
-> +	if (cea_db_tag(db) !=3D USE_EXTENDED_TAG)
-> +		return false;
-> +
-> +	if (db[1] !=3D COLORIMETRY_DATA_BLOCK)
-> +		return false;
-> +
-> +	if (cea_db_payload_len(db) < 2)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +static void
-> +drm_parse_colorimetry_data_block(struct drm_connector *connector, const =
-u8 *db)
-> +{
-> +	struct drm_hdmi_info *info =3D &connector->display_info.hdmi;
-> +
-> +	if (db[2] & DRM_EDID_CLRMETRY_xvYCC_601)
-> +		info->colorimetry |=3D DRM_EDID_CLRMETRY_xvYCC_601;
-> +	if (db[2] & DRM_EDID_CLRMETRY_xvYCC_709)
-> +		info->colorimetry |=3D DRM_EDID_CLRMETRY_xvYCC_709;
-> +	if (db[2] & DRM_EDID_CLRMETRY_sYCC_601)
-> +		info->colorimetry |=3D DRM_EDID_CLRMETRY_sYCC_601;
-> +	if (db[2] & DRM_EDID_CLRMETRY_ADBYCC_601)
-> +		info->colorimetry |=3D DRM_EDID_CLRMETRY_ADBYCC_601;
-> +	if (db[2] & DRM_EDID_CLRMETRY_ADB_RGB)
-> +		info->colorimetry |=3D DRM_EDID_CLRMETRY_ADB_RGB;
-> +	if (db[2] & DRM_EDID_CLRMETRY_BT2020_CYCC)
-> +		info->colorimetry |=3D DRM_EDID_CLRMETRY_BT2020_CYCC;
-> +	if (db[2] & DRM_EDID_CLRMETRY_BT2020_YCC)
-> +		info->colorimetry |=3D DRM_EDID_CLRMETRY_BT2020_YCC;
-> +	if (db[2] & DRM_EDID_CLRMETRY_BT2020_RGB)
-> +		info->colorimetry |=3D DRM_EDID_CLRMETRY_BT2020_RGB;
-> +	/* Byte 4 Bit 7: DCI-P3 */
-> +	if (db[3] & BIT(7))
-> +		info->colorimetry |=3D DRM_EDID_CLRMETRY_DCI_P3;
-> +
-> +	DRM_DEBUG_KMS("Supported Colorimetry 0x%x\n", info->colorimetry);
-
-Hi,
-
-taking a tangent here, printing bitfields as hex is hard to read. How
-about using something like nvkm_snprintbf()? Of course not literally
-that function since it's Nouveau internal, but as an end user I would be
-happy to see DRM core or the kernel generics have similar functionality
-that actually decodes the bits and prints their proper names.
-
-Does such facility not exist yet?
-
-
-Thanks,
-pq
-
-> +}
-> +
->  static bool cea_db_is_hdmi_hdr_metadata_block(const u8 *db)
->  {
->  	if (cea_db_tag(db) !=3D USE_EXTENDED_TAG)
-> @@ -4994,6 +5037,8 @@ static void drm_parse_cea_ext(struct drm_connector =
-*connector,
->  			drm_parse_vcdb(connector, db);
->  		if (cea_db_is_hdmi_hdr_metadata_block(db))
->  			drm_parse_hdr_metadata_block(connector, db);
-> +		if (cea_db_is_hdmi_colorimetry_data_block(db))
-> +			drm_parse_colorimetry_data_block(connector, db);
->  	}
->  }
-> =20
-> diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-> index af145608b5ed..d599c3b9e881 100644
-> --- a/include/drm/drm_connector.h
-> +++ b/include/drm/drm_connector.h
-> @@ -207,6 +207,9 @@ struct drm_hdmi_info {
-> =20
->  	/** @y420_dc_modes: bitmap of deep color support index */
->  	u8 y420_dc_modes;
-> +
-> +	/* @colorimetry: bitmap of supported colorimetry modes */
-> +	u16 colorimetry;
->  };
-> =20
->  /**
-> diff --git a/include/drm/drm_edid.h b/include/drm/drm_edid.h
-> index cfa4f5af49af..98fa78c2f82d 100644
-> --- a/include/drm/drm_edid.h
-> +++ b/include/drm/drm_edid.h
-> @@ -229,6 +229,20 @@ struct detailed_timing {
->  				    DRM_EDID_YCBCR420_DC_36 | \
->  				    DRM_EDID_YCBCR420_DC_30)
-> =20
-> +/*
-> + * Supported Colorimetry from colorimetry data block
-> + * as per CEA 861-G spec
-> + */
-> +#define DRM_EDID_CLRMETRY_xvYCC_601   (1 << 0)
-> +#define DRM_EDID_CLRMETRY_xvYCC_709   (1 << 1)
-> +#define DRM_EDID_CLRMETRY_sYCC_601    (1 << 2)
-> +#define DRM_EDID_CLRMETRY_ADBYCC_601  (1 << 3)
-> +#define DRM_EDID_CLRMETRY_ADB_RGB     (1 << 4)
-> +#define DRM_EDID_CLRMETRY_BT2020_CYCC (1 << 5)
-> +#define DRM_EDID_CLRMETRY_BT2020_YCC  (1 << 6)
-> +#define DRM_EDID_CLRMETRY_BT2020_RGB  (1 << 7)
-> +#define DRM_EDID_CLRMETRY_DCI_P3      (1 << 15)
-> +
->  /* ELD Header Block */
->  #define DRM_ELD_HEADER_BLOCK_SIZE	4
-> =20
-
-
---Sig_/PKLpTK3oOKREpLRBpjtEfJP
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAl9HYiAACgkQI1/ltBGq
-qqc9jg//YlHW3L6UDL4d1hg+YWdsy3l/QUbxRtSsw0j8vQhULjaTs1YUNDb+S/WE
-KYBuHY5enEJ2kUH4USsBaI1uhhdFHrq3SM41DnUQKIqWB3lLJmNbJj2YgXNh+vg0
-l20I1uQQuhGH64xDVKLuPdCS4BnxxlFHSueGaZ4txhmQ2ruPfKF45Hm+IhBSyrJN
-VyCiazoNsVhQbGlhwhtB2P7sQSM1YY+Ul0nXb1R6a80ziBjV4Kx9OTTewqLLqT6J
-Xg74c2ELcVnfqDLXPNUF/NLSv+BsA8xxSPe4lyHddL4kgWOzofMrjng4JN7C6tVC
-fZdG+AVLeYgic2TCNkgW8dX9I6/47YjgHEfjDmXKE2InbjhbaudG+6jstISUBepi
-F5MKoTtItDxVnDkl9TZv7c0UxJp9lcNQ44vcb/qyvYagvZCrmnYNFC+SuPvGQ+ia
-xg5+uo+m8qAAka6dbGOByGRbaDgMCGWZIGKGDOGkQT10IUpqcNkZ56pvTdC2yaUr
-8Qnd5cITOgLZVlWp/P+ZuDc09s5lbbWStpBqW5fLJrumH2natvK5NksATucN/vvm
-ylS/eIvSJLZDCSq8veMdy2gOzWgaI9AaJHI0q4sgwfPOedBEsJEHE9DNvU8gONnu
-oXz7CjEuq1qzSvqNCzIYWT9+aa5bBfLyFWbOtO9wakgt1hspAGQ=
-=xWEr
------END PGP SIGNATURE-----
-
---Sig_/PKLpTK3oOKREpLRBpjtEfJP--
+diff --git a/Makefile b/Makefile
+index 9a7a416f2d84..f47073a3b474 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ VERSION = 5
+ PATCHLEVEL = 8
+-SUBLEVEL = 4
++SUBLEVEL = 5
+ EXTRAVERSION =
+ NAME = Kleptomaniac Octopus
+ 
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+index 000f57198352..9f2c697ba0ac 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -3609,7 +3609,7 @@ static int check_missing_comp_in_tx_queue(struct ena_adapter *adapter,
+ 	}
+ 
+ 	u64_stats_update_begin(&tx_ring->syncp);
+-	tx_ring->tx_stats.missed_tx = missed_tx;
++	tx_ring->tx_stats.missed_tx += missed_tx;
+ 	u64_stats_update_end(&tx_ring->syncp);
+ 
+ 	return rc;
+@@ -4537,6 +4537,9 @@ static void ena_keep_alive_wd(void *adapter_data,
+ 	tx_drops = ((u64)desc->tx_drops_high << 32) | desc->tx_drops_low;
+ 
+ 	u64_stats_update_begin(&adapter->syncp);
++	/* These stats are accumulated by the device, so the counters indicate
++	 * all drops since last reset.
++	 */
+ 	adapter->dev_stats.rx_drops = rx_drops;
+ 	adapter->dev_stats.tx_drops = tx_drops;
+ 	u64_stats_update_end(&adapter->syncp);
+diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
+index f2f9086ebe98..b9c658e0548e 100644
+--- a/fs/binfmt_flat.c
++++ b/fs/binfmt_flat.c
+@@ -576,7 +576,7 @@ static int load_flat_file(struct linux_binprm *bprm,
+ 			goto err;
+ 		}
+ 
+-		len = data_len + extra;
++		len = data_len + extra + MAX_SHARED_LIBS * sizeof(unsigned long);
+ 		len = PAGE_ALIGN(len);
+ 		realdatastart = vm_mmap(NULL, 0, len,
+ 			PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE, 0);
+@@ -590,7 +590,9 @@ static int load_flat_file(struct linux_binprm *bprm,
+ 			vm_munmap(textpos, text_len);
+ 			goto err;
+ 		}
+-		datapos = ALIGN(realdatastart, FLAT_DATA_ALIGN);
++		datapos = ALIGN(realdatastart +
++				MAX_SHARED_LIBS * sizeof(unsigned long),
++				FLAT_DATA_ALIGN);
+ 
+ 		pr_debug("Allocated data+bss+stack (%u bytes): %lx\n",
+ 			 data_len + bss_len + stack_len, datapos);
+@@ -620,7 +622,7 @@ static int load_flat_file(struct linux_binprm *bprm,
+ 		memp_size = len;
+ 	} else {
+ 
+-		len = text_len + data_len + extra;
++		len = text_len + data_len + extra + MAX_SHARED_LIBS * sizeof(u32);
+ 		len = PAGE_ALIGN(len);
+ 		textpos = vm_mmap(NULL, 0, len,
+ 			PROT_READ | PROT_EXEC | PROT_WRITE, MAP_PRIVATE, 0);
+@@ -635,7 +637,9 @@ static int load_flat_file(struct linux_binprm *bprm,
+ 		}
+ 
+ 		realdatastart = textpos + ntohl(hdr->data_start);
+-		datapos = ALIGN(realdatastart, FLAT_DATA_ALIGN);
++		datapos = ALIGN(realdatastart +
++				MAX_SHARED_LIBS * sizeof(u32),
++				FLAT_DATA_ALIGN);
+ 
+ 		reloc = (__be32 __user *)
+ 			(datapos + (ntohl(hdr->reloc_start) - text_len));
+@@ -652,9 +656,8 @@ static int load_flat_file(struct linux_binprm *bprm,
+ 					 (text_len + full_data
+ 						  - sizeof(struct flat_hdr)),
+ 					 0);
+-			if (datapos != realdatastart)
+-				memmove((void *)datapos, (void *)realdatastart,
+-						full_data);
++			memmove((void *) datapos, (void *) realdatastart,
++					full_data);
+ #else
+ 			/*
+ 			 * This is used on MMU systems mainly for testing.
+@@ -710,7 +713,8 @@ static int load_flat_file(struct linux_binprm *bprm,
+ 		if (IS_ERR_VALUE(result)) {
+ 			ret = result;
+ 			pr_err("Unable to read code+data+bss, errno %d\n", ret);
+-			vm_munmap(textpos, text_len + data_len + extra);
++			vm_munmap(textpos, text_len + data_len + extra +
++				MAX_SHARED_LIBS * sizeof(u32));
+ 			goto err;
+ 		}
+ 	}
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index dd8ad87540ef..26978630378e 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4363,7 +4363,8 @@ static int io_sq_thread_acquire_mm(struct io_ring_ctx *ctx,
+ 				   struct io_kiocb *req)
+ {
+ 	if (io_op_defs[req->opcode].needs_mm && !current->mm) {
+-		if (unlikely(!mmget_not_zero(ctx->sqo_mm)))
++		if (unlikely(!(ctx->flags & IORING_SETUP_SQPOLL) ||
++			     !mmget_not_zero(ctx->sqo_mm)))
+ 			return -EFAULT;
+ 		kthread_use_mm(ctx->sqo_mm);
+ 	}
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index b8afefe6f6b6..7afe52bd038b 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -5419,8 +5419,8 @@ struct sk_buff *skb_vlan_untag(struct sk_buff *skb)
+ 	skb = skb_share_check(skb, GFP_ATOMIC);
+ 	if (unlikely(!skb))
+ 		goto err_free;
+-
+-	if (unlikely(!pskb_may_pull(skb, VLAN_HLEN)))
++	/* We may access the two bytes after vlan_hdr in vlan_set_encap_proto(). */
++	if (unlikely(!pskb_may_pull(skb, VLAN_HLEN + sizeof(unsigned short))))
+ 		goto err_free;
+ 
+ 	vhdr = (struct vlan_hdr *)skb->data;
+diff --git a/net/ethtool/features.c b/net/ethtool/features.c
+index 4e632dc987d8..495635f152ba 100644
+--- a/net/ethtool/features.c
++++ b/net/ethtool/features.c
+@@ -224,7 +224,9 @@ int ethnl_set_features(struct sk_buff *skb, struct genl_info *info)
+ 	DECLARE_BITMAP(wanted_diff_mask, NETDEV_FEATURE_COUNT);
+ 	DECLARE_BITMAP(active_diff_mask, NETDEV_FEATURE_COUNT);
+ 	DECLARE_BITMAP(old_active, NETDEV_FEATURE_COUNT);
++	DECLARE_BITMAP(old_wanted, NETDEV_FEATURE_COUNT);
+ 	DECLARE_BITMAP(new_active, NETDEV_FEATURE_COUNT);
++	DECLARE_BITMAP(new_wanted, NETDEV_FEATURE_COUNT);
+ 	DECLARE_BITMAP(req_wanted, NETDEV_FEATURE_COUNT);
+ 	DECLARE_BITMAP(req_mask, NETDEV_FEATURE_COUNT);
+ 	struct nlattr *tb[ETHTOOL_A_FEATURES_MAX + 1];
+@@ -250,6 +252,7 @@ int ethnl_set_features(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	rtnl_lock();
+ 	ethnl_features_to_bitmap(old_active, dev->features);
++	ethnl_features_to_bitmap(old_wanted, dev->wanted_features);
+ 	ret = ethnl_parse_bitset(req_wanted, req_mask, NETDEV_FEATURE_COUNT,
+ 				 tb[ETHTOOL_A_FEATURES_WANTED],
+ 				 netdev_features_strings, info->extack);
+@@ -261,17 +264,15 @@ int ethnl_set_features(struct sk_buff *skb, struct genl_info *info)
+ 		goto out_rtnl;
+ 	}
+ 
+-	/* set req_wanted bits not in req_mask from old_active */
++	/* set req_wanted bits not in req_mask from old_wanted */
+ 	bitmap_and(req_wanted, req_wanted, req_mask, NETDEV_FEATURE_COUNT);
+-	bitmap_andnot(new_active, old_active, req_mask, NETDEV_FEATURE_COUNT);
+-	bitmap_or(req_wanted, new_active, req_wanted, NETDEV_FEATURE_COUNT);
+-	if (bitmap_equal(req_wanted, old_active, NETDEV_FEATURE_COUNT)) {
+-		ret = 0;
+-		goto out_rtnl;
++	bitmap_andnot(new_wanted, old_wanted, req_mask, NETDEV_FEATURE_COUNT);
++	bitmap_or(req_wanted, new_wanted, req_wanted, NETDEV_FEATURE_COUNT);
++	if (!bitmap_equal(req_wanted, old_wanted, NETDEV_FEATURE_COUNT)) {
++		dev->wanted_features &= ~dev->hw_features;
++		dev->wanted_features |= ethnl_bitmap_to_features(req_wanted) & dev->hw_features;
++		__netdev_update_features(dev);
+ 	}
+-
+-	dev->wanted_features = ethnl_bitmap_to_features(req_wanted);
+-	__netdev_update_features(dev);
+ 	ethnl_features_to_bitmap(new_active, dev->features);
+ 	mod = !bitmap_equal(old_active, new_active, NETDEV_FEATURE_COUNT);
+ 
+diff --git a/net/ipv4/nexthop.c b/net/ipv4/nexthop.c
+index cc8049b100b2..134e92382275 100644
+--- a/net/ipv4/nexthop.c
++++ b/net/ipv4/nexthop.c
+@@ -446,7 +446,7 @@ static int nh_check_attr_group(struct net *net, struct nlattr *tb[],
+ 	unsigned int i, j;
+ 	u8 nhg_fdb = 0;
+ 
+-	if (len & (sizeof(struct nexthop_grp) - 1)) {
++	if (!len || len & (sizeof(struct nexthop_grp) - 1)) {
+ 		NL_SET_ERR_MSG(extack,
+ 			       "Invalid length for nexthop group attribute");
+ 		return -EINVAL;
+@@ -1187,6 +1187,9 @@ static struct nexthop *nexthop_create_group(struct net *net,
+ 	struct nexthop *nh;
+ 	int i;
+ 
++	if (WARN_ON(!num_nh))
++		return ERR_PTR(-EINVAL);
++
+ 	nh = nexthop_alloc();
+ 	if (!nh)
+ 		return ERR_PTR(-ENOMEM);
+diff --git a/net/ipv6/ip6_tunnel.c b/net/ipv6/ip6_tunnel.c
+index a18c378ca5f4..d8f0102cec94 100644
+--- a/net/ipv6/ip6_tunnel.c
++++ b/net/ipv6/ip6_tunnel.c
+@@ -913,7 +913,15 @@ int ip6_tnl_rcv(struct ip6_tnl *t, struct sk_buff *skb,
+ 		struct metadata_dst *tun_dst,
+ 		bool log_ecn_err)
+ {
+-	return __ip6_tnl_rcv(t, skb, tpi, tun_dst, ip6ip6_dscp_ecn_decapsulate,
++	int (*dscp_ecn_decapsulate)(const struct ip6_tnl *t,
++				    const struct ipv6hdr *ipv6h,
++				    struct sk_buff *skb);
++
++	dscp_ecn_decapsulate = ip6ip6_dscp_ecn_decapsulate;
++	if (tpi->proto == htons(ETH_P_IP))
++		dscp_ecn_decapsulate = ip4ip6_dscp_ecn_decapsulate;
++
++	return __ip6_tnl_rcv(t, skb, tpi, tun_dst, dscp_ecn_decapsulate,
+ 			     log_ecn_err);
+ }
+ EXPORT_SYMBOL(ip6_tnl_rcv);
+diff --git a/net/netlink/policy.c b/net/netlink/policy.c
+index f6491853c797..2b3e26f7496f 100644
+--- a/net/netlink/policy.c
++++ b/net/netlink/policy.c
+@@ -51,6 +51,9 @@ static int add_policy(struct nl_policy_dump **statep,
+ 	if (!state)
+ 		return -ENOMEM;
+ 
++	memset(&state->policies[state->n_alloc], 0,
++	       flex_array_size(state, policies, n_alloc - state->n_alloc));
++
+ 	state->policies[state->n_alloc].policy = policy;
+ 	state->policies[state->n_alloc].maxtype = maxtype;
+ 	state->n_alloc = n_alloc;
+diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
+index 300a104b9a0f..85ab4559f057 100644
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -692,23 +692,25 @@ static void qrtr_port_remove(struct qrtr_sock *ipc)
+  */
+ static int qrtr_port_assign(struct qrtr_sock *ipc, int *port)
+ {
++	u32 min_port;
+ 	int rc;
+ 
+ 	mutex_lock(&qrtr_port_lock);
+ 	if (!*port) {
+-		rc = idr_alloc(&qrtr_ports, ipc,
+-			       QRTR_MIN_EPH_SOCKET, QRTR_MAX_EPH_SOCKET + 1,
+-			       GFP_ATOMIC);
+-		if (rc >= 0)
+-			*port = rc;
++		min_port = QRTR_MIN_EPH_SOCKET;
++		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, QRTR_MAX_EPH_SOCKET, GFP_ATOMIC);
++		if (!rc)
++			*port = min_port;
+ 	} else if (*port < QRTR_MIN_EPH_SOCKET && !capable(CAP_NET_ADMIN)) {
+ 		rc = -EACCES;
+ 	} else if (*port == QRTR_PORT_CTRL) {
+-		rc = idr_alloc(&qrtr_ports, ipc, 0, 1, GFP_ATOMIC);
++		min_port = 0;
++		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, 0, GFP_ATOMIC);
+ 	} else {
+-		rc = idr_alloc(&qrtr_ports, ipc, *port, *port + 1, GFP_ATOMIC);
+-		if (rc >= 0)
+-			*port = rc;
++		min_port = *port;
++		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, *port, GFP_ATOMIC);
++		if (!rc)
++			*port = min_port;
+ 	}
+ 	mutex_unlock(&qrtr_port_lock);
+ 
+diff --git a/net/sched/act_ct.c b/net/sched/act_ct.c
+index 6ed1652d1e26..41d8440deaf1 100644
+--- a/net/sched/act_ct.c
++++ b/net/sched/act_ct.c
+@@ -704,7 +704,7 @@ static int tcf_ct_handle_fragments(struct net *net, struct sk_buff *skb,
+ 		err = ip_defrag(net, skb, user);
+ 		local_bh_enable();
+ 		if (err && err != -EINPROGRESS)
+-			goto out_free;
++			return err;
+ 
+ 		if (!err)
+ 			*defrag = true;
+diff --git a/net/sctp/stream.c b/net/sctp/stream.c
+index bda2536dd740..6dc95dcc0ff4 100644
+--- a/net/sctp/stream.c
++++ b/net/sctp/stream.c
+@@ -88,12 +88,13 @@ static int sctp_stream_alloc_out(struct sctp_stream *stream, __u16 outcnt,
+ 	int ret;
+ 
+ 	if (outcnt <= stream->outcnt)
+-		return 0;
++		goto out;
+ 
+ 	ret = genradix_prealloc(&stream->out, outcnt, gfp);
+ 	if (ret)
+ 		return ret;
+ 
++out:
+ 	stream->outcnt = outcnt;
+ 	return 0;
+ }
+@@ -104,12 +105,13 @@ static int sctp_stream_alloc_in(struct sctp_stream *stream, __u16 incnt,
+ 	int ret;
+ 
+ 	if (incnt <= stream->incnt)
+-		return 0;
++		goto out;
+ 
+ 	ret = genradix_prealloc(&stream->in, incnt, gfp);
+ 	if (ret)
+ 		return ret;
+ 
++out:
+ 	stream->incnt = incnt;
+ 	return 0;
+ }
+diff --git a/net/smc/smc_diag.c b/net/smc/smc_diag.c
+index e1f64f4ba236..da9ba6d1679b 100644
+--- a/net/smc/smc_diag.c
++++ b/net/smc/smc_diag.c
+@@ -170,13 +170,15 @@ static int __smc_diag_dump(struct sock *sk, struct sk_buff *skb,
+ 	    (req->diag_ext & (1 << (SMC_DIAG_DMBINFO - 1))) &&
+ 	    !list_empty(&smc->conn.lgr->list)) {
+ 		struct smc_connection *conn = &smc->conn;
+-		struct smcd_diag_dmbinfo dinfo = {
+-			.linkid = *((u32 *)conn->lgr->id),
+-			.peer_gid = conn->lgr->peer_gid,
+-			.my_gid = conn->lgr->smcd->local_gid,
+-			.token = conn->rmb_desc->token,
+-			.peer_token = conn->peer_token
+-		};
++		struct smcd_diag_dmbinfo dinfo;
++
++		memset(&dinfo, 0, sizeof(dinfo));
++
++		dinfo.linkid = *((u32 *)conn->lgr->id);
++		dinfo.peer_gid = conn->lgr->peer_gid;
++		dinfo.my_gid = conn->lgr->smcd->local_gid;
++		dinfo.token = conn->rmb_desc->token;
++		dinfo.peer_token = conn->peer_token;
+ 
+ 		if (nla_put(skb, SMC_DIAG_DMBINFO, sizeof(dinfo), &dinfo) < 0)
+ 			goto errout;
+diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
+index c8c47fc72653..d6426b6cc9c5 100644
+--- a/net/tipc/crypto.c
++++ b/net/tipc/crypto.c
+@@ -757,10 +757,12 @@ static void tipc_aead_encrypt_done(struct crypto_async_request *base, int err)
+ 	switch (err) {
+ 	case 0:
+ 		this_cpu_inc(tx->stats->stat[STAT_ASYNC_OK]);
++		rcu_read_lock();
+ 		if (likely(test_bit(0, &b->up)))
+ 			b->media->send_msg(net, skb, b, &tx_ctx->dst);
+ 		else
+ 			kfree_skb(skb);
++		rcu_read_unlock();
+ 		break;
+ 	case -EINPROGRESS:
+ 		return;
+diff --git a/net/tipc/netlink_compat.c b/net/tipc/netlink_compat.c
+index 217516357ef2..90e3c70a91ad 100644
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -275,8 +275,9 @@ static int __tipc_nl_compat_dumpit(struct tipc_nl_compat_cmd_dump *cmd,
+ static int tipc_nl_compat_dumpit(struct tipc_nl_compat_cmd_dump *cmd,
+ 				 struct tipc_nl_compat_msg *msg)
+ {
+-	int err;
++	struct nlmsghdr *nlh;
+ 	struct sk_buff *arg;
++	int err;
+ 
+ 	if (msg->req_type && (!msg->req_size ||
+ 			      !TLV_CHECK_TYPE(msg->req, msg->req_type)))
+@@ -305,6 +306,15 @@ static int tipc_nl_compat_dumpit(struct tipc_nl_compat_cmd_dump *cmd,
+ 		return -ENOMEM;
+ 	}
+ 
++	nlh = nlmsg_put(arg, 0, 0, tipc_genl_family.id, 0, NLM_F_MULTI);
++	if (!nlh) {
++		kfree_skb(arg);
++		kfree_skb(msg->rep);
++		msg->rep = NULL;
++		return -EMSGSIZE;
++	}
++	nlmsg_end(arg, nlh);
++
+ 	err = __tipc_nl_compat_dumpit(cmd, msg, arg);
+ 	if (err) {
+ 		kfree_skb(msg->rep);
