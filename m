@@ -2,109 +2,117 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA22C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A75CC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66C2822D2A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1893E22CF6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mx+FJh+q"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PfLeP1nV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgH0QtL (ORCPT
+        id S1727888AbgH0QtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:49:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51814 "EHLO
+        Thu, 27 Aug 2020 12:49:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726938AbgH0QtC (ORCPT
+        with ESMTP id S1727064AbgH0QtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:49:02 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F567C06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:49:02 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id g14so6556777iom.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:49:01 -0700 (PDT)
+        Thu, 27 Aug 2020 12:49:08 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C17EC06121B
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:49:07 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p37so3779784pgl.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:49:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=/xGpOY5v3rYoFqTd5QFQEPCm9lS0N53r2cL3cEdKtPw=;
-        b=mx+FJh+qUi0eylsu7L5BZKzqa0QvffqcQd1piV8hJ6N9eT9+EcGAtY/vTkjhlPEDuW
-         i4bJW+Hw5vkXE3QOjP00yzvGOx8NdmAa5xDpJxtAH1b5y/tb+6lcmCXNX04NRc+y3ZGO
-         Tz4AfmmZltBKDUOJrlkUu4MwuW1406+6ICT01nQWL7eOtK1K7beaV3+fgjuvh9xLhMGb
-         1rdiHTd4Wm9XHDp5nDwcQsgX1umcQciurhny3pj2qPHE/IeYwdyvZVs437s79yJd4Pd1
-         qQ4F0jgXjb7kjVvvsCi6v5HMTX/eP5Xw6c88+9OJjIQmO9nUDfZHpZ+yJF9iMaD1WVC5
-         Sovw==
+        bh=WiGBqbvIsFO7z3w2LMazIC2FdnllWalUyM7tW1jEsT8=;
+        b=PfLeP1nV8B3U6EqkOgNzN84iR7UUy8/qiTcl/n3tYajHLnYHYm389y0pz4BY9Of1PY
+         JgbSGcf1d7WEcDLjR1sQPrpu42wCr6/27pbNXF5vziV/LDpvB3m0qY5a0GAkUWJWVU8A
+         EVZ6HlhvzrsITdJad7o0fkqp6zaLStbRbS/0o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=/xGpOY5v3rYoFqTd5QFQEPCm9lS0N53r2cL3cEdKtPw=;
-        b=sFCHw6VKyPZWC4Dyr9b3ZaNU5o8Lg8AevcItSU6xTfRK4zvC7s6DugsvGlJVy2vr3E
-         rKPysfNEZSL0wLynGUSdfW9BB1o3qmp5bVaNUaNKYtH3/uLP3cZz5Vz/TZg11wKK8dKY
-         of6kPPZFs8RbPrDbEh8dMuUP82Mj38F593Dzh2q/OADB/1ey/fD/WV7PvtIa1/OgMZQz
-         UC51HxxBb0TqEnDHECIKqHBJ5rG5qFGi4JsWn/pGS7w9mVSiD+0EGXA79RR5OrEa4JG4
-         lFSXOjpswvWwIMBXG5oTSO2qfTrQZm9NGx6yUUhpqvI/h2wpf1l43/82vsVozcPzfdgc
-         wHwA==
-X-Gm-Message-State: AOAM5331MeSv3d8qk4o4+KTe1YoMQaOMCNr2qPQD45DBBu12rE9rj0xg
-        FmkmixUhv9pK3qWCAtniK0ZWog==
-X-Google-Smtp-Source: ABdhPJx+UxHqjKJ/wh4vVsrsKz1c7ecfzQJTGkjRy2EK647UYYIw8L0JJ2F4rqhbalqI+shH+xs5XQ==
-X-Received: by 2002:a5d:924c:: with SMTP id e12mr17853974iol.28.1598546940951;
-        Thu, 27 Aug 2020 09:49:00 -0700 (PDT)
-Received: from google.com ([2601:285:8380:9270::f2a2])
-        by smtp.gmail.com with ESMTPSA id 187sm1430125iow.34.2020.08.27.09.48.59
+        bh=WiGBqbvIsFO7z3w2LMazIC2FdnllWalUyM7tW1jEsT8=;
+        b=TfeyvzfHb7e38ZlPDhrIQZYaX48vWqBgRywxSm6LBe0VPpgyol3asSQTelgTKT8kEL
+         XyJCduOxCXb9EJOYD8uQ6NgU4Ws7nRJ6MhWA2v8XOcoMkNK5yCXk91anQXdLE9ibtGYK
+         V4We++Jc8gLZbNYuxgpvUcK88tjJGuSi/aPoYUKJ32I0vElc4ZHGMvOlNcTrikGin11+
+         sKSJ+bWKYp3BBzWi6tXG22hULAn8fGBWaMiQOkTG/IdCeitX9bdUmUcrIuyG/TliPzL/
+         3dAIotII5roOmgn7SQKQSoznD6FIIAd8jr36Sd99yukW/YkZt3AuFINH6r3Z6ec56fJn
+         EASw==
+X-Gm-Message-State: AOAM533LC1vYtTZtU20QxY16RvTza1xpQNMYPvpjj1/3bQ2TbwAppqup
+        KZPOXRwltAZsiaM+TNgLFMmfNg==
+X-Google-Smtp-Source: ABdhPJzcuCsRrPfIfLlHbR023NYEZxh/FkaJVSEHWhDNKlQXZmCOAVL9LXU4hpqCbh4th+9qlI/bQA==
+X-Received: by 2002:a62:1803:: with SMTP id 3mr17714286pfy.198.1598546946678;
+        Thu, 27 Aug 2020 09:49:06 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m3sm2665362pjn.28.2020.08.27.09.49.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 09:49:00 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 10:48:57 -0600
-From:   Ross Zwisler <zwisler@google.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
-        Mattias Nissler <mnissler@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Benjamin Gordon <bmgordon@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Micah Morton <mortonm@google.com>,
-        Raul Rangel <rrangel@google.com>, Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH v8 1/2] Add a "nosymfollow" mount option.
-Message-ID: <20200827164857.GA414369@google.com>
-References: <20200819164317.637421-1-zwisler@google.com>
- <20200826204819.GA4414@google.com>
- <20200827015940.GY1236603@ZenIV.linux.org.uk>
- <20200827154139.vwuflrlvj257krnw@yavin.dot.cyphar.com>
+        Thu, 27 Aug 2020 09:49:05 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 09:49:04 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     David Laight <David.Laight@aculab.com>,
+        'Alex Dewar' <alex.dewar90@gmail.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "accessrunner-general@lists.sourceforge.net" 
+        <accessrunner-general@lists.sourceforge.net>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+Message-ID: <202008270936.6FF344336@keescook>
+References: <20200824222322.22962-1-alex.dewar90@gmail.com>
+ <3e882693bb344424af37d4d35f3db605@AcuMS.aculab.com>
+ <20200825082406.GB1335351@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200827154139.vwuflrlvj257krnw@yavin.dot.cyphar.com>
+In-Reply-To: <20200825082406.GB1335351@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 01:41:39AM +1000, Aleksa Sarai wrote:
-> On 2020-08-27, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > On Wed, Aug 26, 2020 at 02:48:19PM -0600, Ross Zwisler wrote:
+On Tue, Aug 25, 2020 at 10:24:06AM +0200, Greg Kroah-Hartman wrote:
+> On Tue, Aug 25, 2020 at 08:12:05AM +0000, David Laight wrote:
+> > From: Alex Dewar
+> > > Sent: 24 August 2020 23:23
+> > > kernel/cpu.c: don't use snprintf() for sysfs attrs
+> > > 
+> > > As per the documentation (Documentation/filesystems/sysfs.rst),
+> > > snprintf() should not be used for formatting values returned by sysfs.
+> > > 
+> > > In all of these cases, sprintf() suffices as we know that the formatted
+> > > strings will be less than PAGE_SIZE in length.
 > > 
-> > > Al, now that the changes to fs/namei.c have landed and we're past the merge
-> > > window for v5.9, what are your thoughts on this patch and the associated test?
-> > 
-> > Humm...  should that be nd->path.mnt->mnt_flags or link->mnt->mnt_flags?
-> > Usually it's the same thing, but they might differ.  IOW, is that about the
-> > directory we'd found it in, or is it about the link itself?
+> > Hmmmm....
+> > I much prefer to see bounded string ops.
+> > sysfs really ought to be passing through the buffer length.
 > 
-> Now that you mention it, I think link->mnt->mnt_flags makes more sense.
-> The restriction should apply in the context of whatever filesystem
-> contains the symlink, and that would matches FreeBSD's semantics (at
-> least as far as I can tell from a quick look at sys/kern/vfs_lookup.c).
+> No.
 
-Yep, changing this to link->mnt->mnt_flags makes sense to me, as you're right
-that we care about the link itself and not the link's parent directory.  Thank
-you for the review, and I'll send out v9 momentarily.
+It really should, though. I _just_ got burned by this due to having
+a binattr sysfs reachable through splice[1]. Most sysfs things aren't
+binattr, but I've always considered this to be a weird fragility in the
+sysfs implementation.
+
+> So this is designed this way on purpose, you shouldn't have to worry
+> about any of this, and that way, you don't have to "program
+> defensively", it all just works in a simple manner.
+
+Later in this thread there's a suggestion to alter the API to avoid
+individual calls to sprintf(), which seems like a reasonable first step.
+
+-Kees
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=11990a5bd7e558e9203c1070fc52fb6f0488e75b
+
+-- 
+Kees Cook
