@@ -2,111 +2,248 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26945C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C61C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E733C2177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC70422B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:07:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cVkKFhzp"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XlQaLVnA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgH0PGH (ORCPT
+        id S1728303AbgH0PG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:06:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60634 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728157AbgH0PEh (ORCPT
+        Thu, 27 Aug 2020 11:06:59 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18922 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727850AbgH0PEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:04:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598540676;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0VtB92U4i32c4hyLQXA23+fVFBgzf/HjN24g5GHtvlw=;
-        b=cVkKFhzpMpB9uVWqnc9R+iCyrtVb31I2RyAuTNSVls59xRCBe8NWrtIBGcANOOIF4bc+wa
-        3A421DtLn7mjQSb+9qE1jTDuv0pWQQVYumZ6ETF9YV778oXvBwLGfBi928sAZk1PoHVJS5
-        eGa+7Ly0NWbUShYPBpQFs2gzUMnzEcw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-47-gb8lPW1HNZa5SkDJINWjOw-1; Thu, 27 Aug 2020 11:04:33 -0400
-X-MC-Unique: gb8lPW1HNZa5SkDJINWjOw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 084C01015DDF;
-        Thu, 27 Aug 2020 15:04:03 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3CC9F19936;
-        Thu, 27 Aug 2020 15:04:02 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH net 4/7] afs: Remove afs_vlserver->probe.have_result
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 27 Aug 2020 16:04:01 +0100
-Message-ID: <159854064142.1382667.3537073236297188885.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159854061331.1382667.9693163318506702951.stgit@warthog.procyon.org.uk>
-References: <159854061331.1382667.9693163318506702951.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+        Thu, 27 Aug 2020 11:04:30 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f47cb450001>; Thu, 27 Aug 2020 08:03:34 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 27 Aug 2020 08:04:17 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 27 Aug 2020 08:04:17 -0700
+Received: from [10.2.174.186] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
+ 2020 15:04:16 +0000
+Subject: Re: [PATCH v6 7/7] sdhci: tegra: Add missing TMCLK for data timeout
+To:     Jon Hunter <jonathanh@nvidia.com>, <adrian.hunter@intel.com>,
+        <ulf.hansson@linaro.org>, <thierry.reding@gmail.com>,
+        <robh+dt@kernel.org>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <1598500201-5987-1-git-send-email-skomatineni@nvidia.com>
+ <1598500201-5987-8-git-send-email-skomatineni@nvidia.com>
+ <93d0188b-c833-33b4-211e-b9293c4f3a1c@nvidia.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <3deac67c-bb1e-ef23-7dcc-8d4024203ab1@nvidia.com>
+Date:   Thu, 27 Aug 2020 08:03:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <93d0188b-c833-33b4-211e-b9293c4f3a1c@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598540614; bh=DoTOabdYopsUxy9pThG/x9MurfIlwI7HTUiu8cCQwwY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=XlQaLVnA320/cdF58QoaOOm3uyXjuQO8XG4qcBlae1/h4o66sfrpaoFVAataUX953
+         l91yA0tOtieTaZ6/6JFb6XYXuuNpgoyBAXXdVehSz4SF9BUVzyPkI2VZuqPwKNpErv
+         Zds4wZ03jx103ddD78yf/Y2w7V593avKzNqZY2j7aJE6jalT49CE07sESPbSoSum34
+         gQ5DxapOF4nrLKXwR1wPtVu1h0AzaKHGk1cc9F40VZObRqrmxM9sFLtSpHhO1g98OS
+         Cpp+xYMD9DKBph8EEvT+VTLcjDiZ3p+NvRaw74YlyrMO+fE6WF4zbUnovGv4fiE8+H
+         N4kDqpLheY/Gw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove afs_vlserver->probe.have_result as it's neither read nor waited
-upon.
 
-Fixes: 3bf0fb6f33dd ("afs: Probe multiple fileservers simultaneously")
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+On 8/27/20 1:40 AM, Jon Hunter wrote:
+> On 27/08/2020 04:50, Sowjanya Komatineni wrote:
+>> commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+>>
+>> Tegra210 and later has a separate sdmmc_legacy_tm (TMCLK) used by Tegra
+>> SDMMC hawdware for data timeout to achive better timeout than using
+>> SDCLK and using TMCLK is recommended.
+>>
+>> USE_TMCLK_FOR_DATA_TIMEOUT bit in Tegra SDMMC register
+>> SDHCI_TEGRA_VENDOR_SYS_SW_CTRL can be used to choose either TMCLK or
+>> SDCLK for data timeout.
+>>
+>> Default USE_TMCLK_FOR_DATA_TIMEOUT bit is set to 1 and TMCLK is used
+>> for data timeout by Tegra SDMMC hardware and having TMCLK not enabled
+>> is not recommended.
+>>
+>> So, this patch adds quirk NVQUIRK_HAS_TMCLK for SoC having separate
+>> timeout clock and keeps TMCLK enabled all the time.
+>>
+>> Fixes: b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+>> Cc: stable <stable@vger.kernel.org> # 5.4
+>> Tested-by: Jon Hunter <jonathanh@nvidia.com>
+>> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+>> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/mmc/host/sdhci-tegra.c | 90 ++++++++++++++++++++++++++++++++++++++----
+>>   1 file changed, 82 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+>> index 31ed321..f69ca8d 100644
+>> --- a/drivers/mmc/host/sdhci-tegra.c
+>> +++ b/drivers/mmc/host/sdhci-tegra.c
+>> @@ -13,6 +13,7 @@
+>>   #include <linux/clk.h>
+>>   #include <linux/io.h>
+>>   #include <linux/of.h>
+>> +#include <linux/of_clk.h>
+>>   #include <linux/of_device.h>
+>>   #include <linux/pinctrl/consumer.h>
+>>   #include <linux/regulator/consumer.h>
+>> @@ -110,6 +111,12 @@
+>>   #define NVQUIRK_DIS_CARD_CLK_CONFIG_TAP			BIT(8)
+>>   #define NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING		BIT(9)
+>>   
+>> +/*
+>> + * NVQUIRK_HAS_TMCLK is for SoC's having separate timeout clock for Tegra
+>> + * SDMMC hardware data timeout.
+>> + */
+>> +#define NVQUIRK_HAS_TMCLK				BIT(10)
+>> +
+>>   /* SDMMC CQE Base Address for Tegra Host Ver 4.1 and Higher */
+>>   #define SDHCI_TEGRA_CQE_BASE_ADDR			0xF000
+>>   
+>> @@ -140,6 +147,7 @@ struct sdhci_tegra_autocal_offsets {
+>>   struct sdhci_tegra {
+>>   	const struct sdhci_tegra_soc_data *soc_data;
+>>   	struct gpio_desc *power_gpio;
+>> +	struct clk *tmclk;
+>>   	bool ddr_signaling;
+>>   	bool pad_calib_required;
+>>   	bool pad_control_available;
+>> @@ -1433,7 +1441,8 @@ static const struct sdhci_tegra_soc_data soc_data_tegra210 = {
+>>   		    NVQUIRK_HAS_PADCALIB |
+>>   		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
+>>   		    NVQUIRK_ENABLE_SDR50 |
+>> -		    NVQUIRK_ENABLE_SDR104,
+>> +		    NVQUIRK_ENABLE_SDR104 |
+>> +		    NVQUIRK_HAS_TMCLK,
+>>   	.min_tap_delay = 106,
+>>   	.max_tap_delay = 185,
+>>   };
+>> @@ -1471,6 +1480,7 @@ static const struct sdhci_tegra_soc_data soc_data_tegra186 = {
+>>   		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
+>>   		    NVQUIRK_ENABLE_SDR50 |
+>>   		    NVQUIRK_ENABLE_SDR104 |
+>> +		    NVQUIRK_HAS_TMCLK |
+>>   		    NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING,
+>>   	.min_tap_delay = 84,
+>>   	.max_tap_delay = 136,
+>> @@ -1483,7 +1493,8 @@ static const struct sdhci_tegra_soc_data soc_data_tegra194 = {
+>>   		    NVQUIRK_HAS_PADCALIB |
+>>   		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
+>>   		    NVQUIRK_ENABLE_SDR50 |
+>> -		    NVQUIRK_ENABLE_SDR104,
+>> +		    NVQUIRK_ENABLE_SDR104 |
+>> +		    NVQUIRK_HAS_TMCLK,
+>>   	.min_tap_delay = 96,
+>>   	.max_tap_delay = 139,
+>>   };
+>> @@ -1611,15 +1622,76 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
+>>   		goto err_power_req;
+>>   	}
+>>   
+>> -	clk = devm_clk_get(mmc_dev(host->mmc), NULL);
+>> -	if (IS_ERR(clk)) {
+>> -		rc = PTR_ERR(clk);
+>> +	/*
+>> +	 * Tegra210 and later has separate SDMMC_LEGACY_TM clock used for
+>> +	 * hardware data timeout clock and SW can choose TMCLK or SDCLK for
+>> +	 * hardware data timeout through the bit USE_TMCLK_FOR_DATA_TIMEOUT
+>> +	 * of the register SDHCI_TEGRA_VENDOR_SYS_SW_CTRL.
+>> +	 *
+>> +	 * USE_TMCLK_FOR_DATA_TIMEOUT bit default is set to 1 and SDMMC uses
+>> +	 * 12Mhz TMCLK which is advertised in host capability register.
+>> +	 * With TMCLK of 12Mhz provides maximum data timeout period that can
+>> +	 * be achieved is 11s better than using SDCLK for data timeout.
+>> +	 *
+>> +	 * So, TMCLK is set to 12Mhz and kept enabled all the time on SoC's
+>> +	 * supporting separate TMCLK.
+>> +	 *
+>> +	 * Old device tree has single sdhci clock. So with addition of TMCLK,
+>> +	 * retrieving sdhci clock by "sdhci" clock name based on number of
+>> +	 * clocks in sdhci device node.
+>> +	 */
+>> +
+>> +	if (of_clk_get_parent_count(pdev->dev.of_node) == 1) {
+>> +		if (soc_data->nvquirks & NVQUIRK_HAS_TMCLK)
+>> +			dev_warn(&pdev->dev,
+>> +				 "missing tmclk in the device tree\n");
+>> +
+>> +		clk = devm_clk_get(&pdev->dev, NULL);
+>> +		if (IS_ERR(clk)) {
+>> +			rc = PTR_ERR(clk);
+>>   
+>> -		if (rc != -EPROBE_DEFER)
+>> -			dev_err(&pdev->dev, "failed to get clock: %d\n", rc);
+>> +			if (rc != -EPROBE_DEFER)
+>> +				dev_err(&pdev->dev,
+>> +					"failed to get sdhci clock: %d\n", rc);
+>>   
+>> -		goto err_clk_get;
+>> +			goto err_power_req;
+>> +		}
+>> +	} else {
+>> +		if (soc_data->nvquirks & NVQUIRK_HAS_TMCLK) {
+>
+> I think that I would do the inverse of this ...
+>
+>     } else {
+>          if (!(soc_data->nvquirks & NVQUIRK_HAS_TMCLK)) {
+>                  dev_err(&pdev->dev, "Device has unexpected clocks!\n");
+>                  rc = -EINVAL;
+>                  goto_power_req;
+>          }
+>
+>          clk = devm_clk_get(&pdev->dev, "tmclk");
+>          ...
+>
+> If the device does not have a single clock, then we expect it to support
+> the tmclk. If this is not the case, then this is a bug.
+>
+> Cheers
+> Jon
 
- fs/afs/internal.h |    1 -
- fs/afs/vl_probe.c |    5 +----
- 2 files changed, 1 insertion(+), 5 deletions(-)
+I don't see other drivers validating for unexpected device tree entries.
 
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index 792ac711985e..2e6ae6388c72 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -412,7 +412,6 @@ struct afs_vlserver {
- 		unsigned int	rtt;		/* RTT as ktime/64 */
- 		u32		abort_code;
- 		short		error;
--		bool		have_result;
- 		bool		responded:1;
- 		bool		is_yfs:1;
- 		bool		not_yfs:1;
-diff --git a/fs/afs/vl_probe.c b/fs/afs/vl_probe.c
-index 081b7e5b13f5..ee59188433b9 100644
---- a/fs/afs/vl_probe.c
-+++ b/fs/afs/vl_probe.c
-@@ -109,11 +109,8 @@ void afs_vlserver_probe_result(struct afs_call *call)
- 	       server_index, index, &alist->addrs[index].transport, rtt_us, ret);
- 
- 	have_result |= afs_vl_probe_done(server);
--	if (have_result) {
--		server->probe.have_result = true;
--		wake_up_var(&server->probe.have_result);
-+	if (have_result)
- 		wake_up_all(&server->probe_wq);
--	}
- }
- 
- /*
+Also only for SoC with quirk HAS_TMCLK, we are retrieving TMCLK with 
+clock name and enabling it.
+
+So for other SoC even if device tree has additional clock entry other 
+than sdhci driver don't use it and also dt-binding do not have any tmclk 
+entry for other SoC. So why would this be a bug?
+
+Can you please correct if I misunderstood you comment?
+
+Thanks
+
+Sowjanya
+
 
 
