@@ -2,72 +2,107 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1821C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC18FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8F6C22B4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8561B2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:52:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="K3wfB20c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbgH0OwR (ORCPT
+        id S1728156AbgH0Owc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:52:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727997AbgH0NZC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:25:02 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8192C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:24:47 -0700 (PDT)
-Received: from ramsan ([84.195.186.194])
-        by baptiste.telenet-ops.be with bizsmtp
-        id LdQc2300V4C55Sk01dQcsW; Thu, 27 Aug 2020 15:24:37 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1kBHtM-0000fB-LC; Thu, 27 Aug 2020 15:24:36 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1kBHtM-0006Ul-JF; Thu, 27 Aug 2020 15:24:36 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Nick Hu <nickhu@andestech.com>, Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] nds32: Fix bogus reference to <asm/procinfo.h>
-Date:   Thu, 27 Aug 2020 15:24:34 +0200
-Message-Id: <20200827132435.24925-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Thu, 27 Aug 2020 10:52:32 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:12422 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726299AbgH0NXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 09:23:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598534601; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=OEnpR1YGQbng0mx9A15xqaUuwikZzc9dBMrRdkV04tU=;
+ b=K3wfB20cIFXENQl46Bley2M7Gpypj73IAHlhREWC/TJNgJyyntBYu4RWOJA3kVcmVpLHGhzY
+ r9z9UZUqj+jQ33g1rnuKlY8n/GeHsa8QnG7C2Wb+MKL/N5C4v2wCzl0qzmrM+w1avjD1phMz
+ nVzscOLFfMV+r/E/GX7quSyIf9E=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f47b3c891574590bf6cd430 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 13:23:20
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B70A9C433AD; Thu, 27 Aug 2020 13:23:20 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2A790C433CA;
+        Thu, 27 Aug 2020 13:23:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2A790C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [05/16] atmel: convert tasklets to use new tasklet_setup() API
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200817090637.26887-6-allen.cryptic@gmail.com>
+References: <20200817090637.26887-6-allen.cryptic@gmail.com>
+To:     Allen Pais <allen.cryptic@gmail.com>
+Cc:     kuba@kernel.org, jirislaby@kernel.org, mickflemm@gmail.com,
+        mcgrof@kernel.org, chunkeey@googlemail.com,
+        Larry.Finger@lwfinger.net, stas.yakovlev@gmail.com,
+        helmut.schaa@googlemail.com, pkshih@realtek.com,
+        yhchuang@realtek.com, dsd@gentoo.org, kune@deine-taler.de,
+        keescook@chromium.org, ath11k@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, b43-dev@lists.infradead.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, Allen Pais <allen.lkml@gmail.com>,
+        Romain Perier <romain.perier@gmail.com>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200827132320.B70A9C433AD@smtp.codeaurora.org>
+Date:   Thu, 27 Aug 2020 13:23:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andestech(nds32) never had <asm/procinfo.h>.
+Allen Pais <allen.cryptic@gmail.com> wrote:
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/nds32/kernel/setup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> From: Allen Pais <allen.lkml@gmail.com>
+> 
+> In preparation for unconditionally passing the
+> struct tasklet_struct pointer to all tasklet
+> callbacks, switch to using the new tasklet_setup()
+> and from_tasklet() to pass the tasklet pointer explicitly
+> and remove .data field.
+> 
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 
-diff --git a/arch/nds32/kernel/setup.c b/arch/nds32/kernel/setup.c
-index a066efbe53c0c098..3671129e205852b7 100644
---- a/arch/nds32/kernel/setup.c
-+++ b/arch/nds32/kernel/setup.c
-@@ -52,7 +52,7 @@ EXPORT_SYMBOL(elf_hwcap);
- 
- /*
-  * The following string table, must sync with HWCAP_xx bitmask,
-- * which is defined in <asm/procinfo.h>
-+ * which is defined above
-  */
- static const char *hwcap_str[] = {
- 	"mfusr_pc",
+11 patches applied to wireless-drivers-next.git, thanks.
+
+a36f50e5b937 atmel: convert tasklets to use new tasklet_setup() API
+fc6722301428 b43legacy: convert tasklets to use new tasklet_setup() API
+427a06beb072 brcmsmac: convert tasklets to use new tasklet_setup() API
+ae6cf59f80f7 ipw2x00: convert tasklets to use new tasklet_setup() API
+b81b9d372ac8 iwlegacy: convert tasklets to use new tasklet_setup() API
+7433c9690318 intersil: convert tasklets to use new tasklet_setup() API
+51c41aa93ef5 mwl8k: convert tasklets to use new tasklet_setup() API
+aff8e8d02ec2 qtnfmac: convert tasklets to use new tasklet_setup() API
+a0d6ea9b6e1c rt2x00: convert tasklets to use new tasklet_setup() API
+d3ccc14dfe95 rtlwifi/rtw88: convert tasklets to use new tasklet_setup() API
+26721b02466e zd1211rw: convert tasklets to use new tasklet_setup() API
+
 -- 
-2.17.1
+https://patchwork.kernel.org/patch/11717451/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
