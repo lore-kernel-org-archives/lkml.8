@@ -2,129 +2,151 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C246AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3209BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4CAD20786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122A22087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:50:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCMAE4A6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="fT+dW9P/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgH0BoU (ORCPT
+        id S1726938AbgH0BuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 21:44:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50810 "EHLO
+        Wed, 26 Aug 2020 21:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbgH0BoT (ORCPT
+        with ESMTP id S1726794AbgH0BuG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 21:44:19 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 314F9C06138E;
-        Wed, 26 Aug 2020 18:44:19 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x143so2226487pfc.4;
-        Wed, 26 Aug 2020 18:44:19 -0700 (PDT)
+        Wed, 26 Aug 2020 21:50:06 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF2E8C06134C
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 18:50:05 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 83so5399615ybf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 18:50:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=28q+FTG5opePGVSIsaIYRmsu38zCqcpXVW1uX+shyDY=;
-        b=UCMAE4A6F8nWN3GQ+EJ7w7NwkF+QwWwrcJXypnO2izF/1cw2HlTGp/P5LuuZ39OMkY
-         DrzQrgtJY2/fTO3hZGQxByqnkGy7V64joUs3nRbsxzagjV31gkJDnETCIpVuncIZ/PGd
-         PiMkTGGkjj7Qiiu35syni2S0EX+A+C3UEQzv7enBR9q3Iz76B+LiH4WSepTapuYzPgnp
-         T4ej50f60XDN4sBQfYuHCFPLWrAl31GxDCTEy4zCS5a2n5Wk7sVYbgvAiaF+D//vy5kV
-         NrE0dF50Nyt6R896IPjX7VDLCrZQMngkHTV0rZphjlLsvXzbTb4IsVNqNxH9EwALHUF8
-         1D/g==
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=kI87pt4IL87WeMlhQ+cq6jv+hjTA9JuH40a82jlPo3k=;
+        b=fT+dW9P/B2jsQN6UzMCNYitt1FhkZ2EgLVRxO8SI73Y1MIl175TvZVJOkeJv9lKYS1
+         7j7v0LBE4pPOY3NjfW6igBChFc3bFulo5XuCcTVNGL6EGEj/jy1O3fS2KTtezXxdNy6d
+         4JgoLTvPWczkkgoEda/iQXFy8xIvKYGO2X9Tm/iu/qTwCPTOKjWrk0OoBWs/yAXNFvVW
+         luyC/lOKK26zqSoITqE2rn+7SfNFHjHOgAOaBWoX3wFdfZcADbdpqh/aFFZ0enNR/nMQ
+         QlXeMC7wmizyvNElsGqxvEopYaPtOY9pzv5nPsNasRj/3iVDas8cSQZBfiiFo/M2zSpO
+         1+iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=28q+FTG5opePGVSIsaIYRmsu38zCqcpXVW1uX+shyDY=;
-        b=RCxfvVuvN+OFyD3P/rhhxlQDufJ8PqU4pYRZFNGmR3sTykRotoCf8G2Wxg3lF5/5vg
-         7Xfe/Na7xP4J+mGPN8MfNF9YUDD+Erck+K/VdTw77HAvImOuoJ+9/PDwMLJ2oBuYBDPN
-         1QL+Q8tDcyOVgj7fNrYhyBTf37V4CEqqX6w6Qy7BMMiwyTZemhMUUdIdxt2K7qk3iiBQ
-         j46+DmvT5pIjtthwp7awubk/aNiAlgGMyhuqq1gkOwfVn7nLvYXXKaFeBYioVf8jEApC
-         ES92ixaJHIbRvzNs7ivCk8aOmv4tP0Y270TW7VFzI2Gvrq1NqotqqePf0ZGCPhHr/vXV
-         VD2g==
-X-Gm-Message-State: AOAM533zO/85nbC1lBj+l0VyAvxw788Ihu6qGto2WzS4oUYP7+Vuri/w
-        ruhCIMV8J2T57gLYysGkf629RrP71yoXHg==
-X-Google-Smtp-Source: ABdhPJzhA7Iw8NMu79kV0Gp7/hURXXIDMaCMf6jy4uUJyT8HHfVjURroX52uQY8zP0HGIjvboD3EnA==
-X-Received: by 2002:a62:1cca:: with SMTP id c193mr7752598pfc.3.1598492658721;
-        Wed, 26 Aug 2020 18:44:18 -0700 (PDT)
-Received: from localhost.localdomain ([2401:e180:8891:f88d:4578:9e9b:6ebc:aff1])
-        by smtp.gmail.com with ESMTPSA id q2sm281821pgs.90.2020.08.26.18.44.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Aug 2020 18:44:18 -0700 (PDT)
-From:   Johnny Chuang <johnny.chuang.emc@gmail.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Peter Hutterer <peter.hutterer@who-t.net>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        Harry Cutts <hcutts@chromium.org>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>
-Cc:     James Chen <james.chen@emc.com.tw>,
-        Jennifer Tsai <jennifer.tsai@emc.com.tw>,
-        Paul Liang <paul.liang@emc.com.tw>,
-        Jeff Chuang <jeff.chuang@emc.com.tw>
-Subject: [PATCH v2] Input: elants_i2c - Report resolution of ABS_MT_TOUCH_MAJOR by FW information.
-Date:   Thu, 27 Aug 2020 09:44:11 +0800
-Message-Id: <1598492651-9072-1-git-send-email-johnny.chuang.emc@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=kI87pt4IL87WeMlhQ+cq6jv+hjTA9JuH40a82jlPo3k=;
+        b=Fx7jl1U/sr368iYzj9+P8rUwfgrI178BtJr7a9zSiv4D1U1pXa7rNdmWazuWWtkvDt
+         h7Ab1OLipq4MxOG4rSvvMPrmcLRsu6eLCr55Xs+/gIojmcLBJCNfHtumFdTq3uuCUJ9X
+         W5CI7TvfmNXtwVrtC50RE4PHlg7mH2O1+kr34xI8Pbsoc15dYr/fu7rJIkrcTFK0bKHR
+         nGc5E1EFHArYk+M3m3pT4U8muRDwkSrR6ryu9k3lWsMCnCxpvtII4z8VTejA4Gday84N
+         NbfwOwtY2pGt7mMrGqueOnwvLCIJxqMle0hx6Qh7s6PcjF/sg2fX8Eytft9LYOgQm9PR
+         F9nw==
+X-Gm-Message-State: AOAM5320IC38iNnxi1qzVt/p2tqusDIku42JVco3ZRdrUkLhprKrbjkV
+        D9b+RTtzjc3ULUDC61jM4i+s3BeZUbm8
+X-Google-Smtp-Source: ABdhPJwa3pv3Hu/+UkZbQW3sc70xWqy/UBXE05JvwXvifOJWs+ZvIJGMacTjSpT/pEhrLHiVX/Z062RKwsuI
+X-Received: from nandos.syd.corp.google.com ([2401:fa00:9:14:725a:fff:fe46:72ab])
+ (user=amistry job=sendgmr) by 2002:a25:8b09:: with SMTP id
+ i9mr25344049ybl.149.1598493004751; Wed, 26 Aug 2020 18:50:04 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 11:49:52 +1000
+Message-Id: <20200827114934.v2.1.I6d12081e37d27ba7580a1af877727d882935787a@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+Subject: [PATCH v2] arm64: dts: mt8173-elm: Set GPU power regulator to always on
+From:   Anand K Mistry <amistry@google.com>
+To:     linux-mediatek@lists.infradead.org
+Cc:     djkurtz@chromium.org, Anand K Mistry <amistry@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a new behavior to report touch major resolution
-based on information provided by firmware.
+Keep the da9212 BUCKB always-on. This works around an issue on Elm/Hana
+devices where sometimes, the regulator is disabled before scpsys is
+suspended, causing the suspension of scpsys to fail.
 
-In initial process, driver acquires touch information from touch ic.
-This information contains of one flag about reporting resolution of
-ABS_MT_TOUCH_MAJOR is needed, or not.
-Touch driver will report touch major resolution after geting this flag.
+Usually, the GPU and scpsys are suspended by the runtime PM before the
+system is suspended, due to the GPU being idle. In this case, scpsys is
+suspended inline with the GPU suspend, which then disables the
+regulator. However, if the GPU is still active when system is suspended,
+GPU suspend occurs but defers suspending scpsys to the PM's noirq phase.
+Since GPU suspend disables the regulator, scpsys isn't powered and
+suspending it fails with the following error:
+[  523.773227] mtk-scpsys 10006000.scpsys: Failed to power off domain mfg_2d
 
-Signed-off-by: Johnny Chuang <johnny.chuang.emc@gmail.com>
+On resume, scpsys is resumed in the noirq phase. Since scpsys requires
+power from the regulator, which is still disabled at this point,
+attempting to turn it on will hang the CPU. A HW watchdog eventually
+reboots the system.
+
+The obvious solution would be to add a link to the regulator from scpsys
+in the devicetree. This would prevent the regulator from being disabled
+until scpsys is suspended. However, in the case where suspending scpsys
+is deferred to the noirq phase, disabling the regulator will fail since
+it is connected over I2C which requires IRQs to be enabled. Even in the
+usual case where scpsys is suspended inline with the GPU, PM will always
+attempt to resume scpsys in noirq. This will attempt to enable the
+regulator, which will also fail due to being unable to communicate over
+I2C.
+
+Since I2C can't be using with IRQs disabled, a workaround is to never
+turn off the regulator.
+
+Measuring power on the GPU rail on an Elm DVT device shows that the
+change in power usage is negligible. The two relavent cases are S0 with
+an idle GPU, and S3 (system suspended). Measurements taken using a debug
+board every 100ms for 1 minute.
+
+In S0 with an idle GPU, current behaviour with the regulator off:
+@@           NAME  COUNT  AVERAGE  STDDEV      MAX    MIN
+@@         gpu_mw    600     1.74    1.31     6.75   0.00
+... and with the regulator on, but no load:
+@@           NAME  COUNT  AVERAGE  STDDEV     MAX    MIN
+@@         gpu_mw    600     1.68    1.25    7.13   0.00
+The difference being well within the margin of error.
+
+In S3, current behaviour with the regulator off:
+@@           NAME  COUNT  AVERAGE  STDDEV     MAX    MIN
+@@         gpu_mw    600     0.94    0.74    3.25   0.00
+... and with the regulator on:
+@@           NAME  COUNT  AVERAGE  STDDEV     MAX     MIN
+@@         gpu_mw    600     0.83    0.66    3.25    0.00
+
+Signed-off-by: Anand K Mistry <amistry@google.com>
+
 ---
+
 Changes in v2:
-  - register real resolution instead of true/false.
----
- drivers/input/touchscreen/elants_i2c.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+- Remove CHROMIUM from subject line
+- Correct device in subject line (8183 -> 8173)
+- Grammar/clarity changes in description
 
-diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-index b0bd5bb..dc7f4a5 100644
---- a/drivers/input/touchscreen/elants_i2c.c
-+++ b/drivers/input/touchscreen/elants_i2c.c
-@@ -151,6 +151,7 @@ struct elants_data {
- 
- 	bool wake_irq_enabled;
- 	bool keep_power_in_suspend;
-+	u8 report_major_resolution;
- 
- 	/* Must be last to be used for DMA operations */
- 	u8 buf[MAX_PACKET_SIZE] ____cacheline_aligned;
-@@ -459,6 +460,9 @@ static int elants_i2c_query_ts_info(struct elants_data *ts)
- 	rows = resp[2] + resp[6] + resp[10];
- 	cols = resp[3] + resp[7] + resp[11];
- 
-+	/* Decide if report resolution of ABS_MT_TOUCH_MAJOR */
-+	ts->report_major_resolution = resp[16];
-+
- 	/* Process mm_to_pixel information */
- 	error = elants_i2c_execute_command(client,
- 					   get_osr_cmd, sizeof(get_osr_cmd),
-@@ -1325,6 +1329,8 @@ static int elants_i2c_probe(struct i2c_client *client,
- 			     0, MT_TOOL_PALM, 0, 0);
- 	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
- 	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
-+	if (ts->report_major_resolution > 0)
-+		input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, ts->report_major_resolution);
- 
- 	touchscreen_parse_properties(ts->input, true, &ts->prop);
- 
+ arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+index a5a12b2599a4..1294f27b21c1 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+@@ -304,6 +304,7 @@ da9211_vgpu_reg: BUCKB {
+ 				regulator-min-microamp  = <2000000>;
+ 				regulator-max-microamp  = <3000000>;
+ 				regulator-ramp-delay = <10000>;
++				regulator-always-on;
+ 			};
+ 		};
+ 	};
 -- 
-2.7.4
+2.28.0.297.g1956fa8f8d-goog
 
