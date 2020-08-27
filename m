@@ -2,118 +2,59 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB15C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A6DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00EC920825
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:17:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598559441;
-	bh=cS4GUYfA2mpjTZHcDswZTQuydTNPBBrsH0/C6vnhDiA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=srKKyCFrrcUAIKS4jCUE6rtGNdDMi9iBgEqsmQ3VFpYKBuG2T0N/nei2G9f9fJlK7
-	 9mFApqGCKS8jB9wMU72MmQyKo+oPHy1LJnbdERnFpezxl3W0o/t3vf53WulyqI41s+
-	 Ne71d0T1zUHqocAhiSmmgP62BpnNGdgHoh4hyVWc=
+	by mail.kernel.org (Postfix) with ESMTP id 946902084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:18:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbgH0URU (ORCPT
+        id S1727003AbgH0USB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 16:17:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38860 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 16:18:01 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:56894 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbgH0URT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:17:19 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BC4920786;
-        Thu, 27 Aug 2020 20:17:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598559438;
-        bh=cS4GUYfA2mpjTZHcDswZTQuydTNPBBrsH0/C6vnhDiA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=bvHdmXIDoLQzRF7VhCRHEwX12kAlsbwwYUsk+qtkeLjd4ADGeeZBBlDCm+gZnUwl9
-         WshnPewgQLn3EUQTVwOvl6Bbc6isRy3REDu4E+T5vkiXcSpJLUMhAX2txXOwJhQIa7
-         28kl0M04Plw+YaeWLCKf7e9S+LHW5pnQkngsERnc=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>
-Subject: [PATCH] MAINTAINERS: Remove bouncing email of Beniamin Bia
-Date:   Thu, 27 Aug 2020 22:17:07 +0200
-Message-Id: <20200827201707.27075-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        id S1726120AbgH0USB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 16:18:01 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kBOLD-00C9Xz-SK; Thu, 27 Aug 2020 22:17:47 +0200
+Date:   Thu, 27 Aug 2020 22:17:47 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
+        robh@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next v3 2/2] net: phy: DP83822: Add ability to
+ advertise Fiber connection
+Message-ID: <20200827201747.GX2403519@lunn.ch>
+References: <20200827134509.23854-1-dmurphy@ti.com>
+ <20200827134509.23854-3-dmurphy@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827134509.23854-3-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Emails to Beniamin Bia bounce with no such address so remove him from
-maintainers.
+On Thu, Aug 27, 2020 at 08:45:09AM -0500, Dan Murphy wrote:
+> The DP83822 can be configured to use a Fiber connection.  The strap
+> register is read to determine if the device has been configured to use
+> a fiber connection.  With the fiber connection the PHY can be configured
+> to detect whether the fiber connection is active by either a high signal
+> or a low signal.
+> 
+> Fiber mode is only applicable to the DP83822 so rework the PHY match
+> table so that non-fiber PHYs can still use the same driver but not call
+> or use any of the fiber features.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>
-Cc: linux-iio <linux-iio@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- MAINTAINERS | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8107b3d5d6df..523ac1602b62 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -967,9 +967,8 @@ F:	Documentation/devicetree/bindings/iio/dac/ad5758.txt
- F:	drivers/iio/dac/ad5758.c
- 
- ANALOG DEVICES INC AD7091R5 DRIVER
--M:	Beniamin Bia <beniamin.bia@analog.com>
- L:	linux-iio@vger.kernel.org
--S:	Supported
-+S:	Orphan
- W:	http://ez.analog.com/community/linux-device-drivers
- F:	Documentation/devicetree/bindings/iio/adc/adi,ad7091r5.yaml
- F:	drivers/iio/adc/ad7091r5.c
-@@ -1000,7 +999,6 @@ F:	drivers/iio/adc/ad7292.c
- 
- ANALOG DEVICES INC AD7606 DRIVER
- M:	Michael Hennerich <Michael.Hennerich@analog.com>
--M:	Beniamin Bia <beniamin.bia@analog.com>
- L:	linux-iio@vger.kernel.org
- S:	Supported
- W:	http://ez.analog.com/community/linux-device-drivers
-@@ -1068,7 +1066,6 @@ F:	drivers/iio/imu/adis16475.c
- F:	Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
- 
- ANALOG DEVICES INC ADM1177 DRIVER
--M:	Beniamin Bia <beniamin.bia@analog.com>
- M:	Michael Hennerich <Michael.Hennerich@analog.com>
- L:	linux-hwmon@vger.kernel.org
- S:	Supported
-@@ -1136,7 +1133,6 @@ W:	http://ez.analog.com/community/linux-device-drivers
- F:	drivers/dma/dma-axi-dmac.c
- 
- ANALOG DEVICES INC HMC425A DRIVER
--M:	Beniamin Bia <beniamin.bia@analog.com>
- M:	Michael Hennerich <michael.hennerich@analog.com>
- L:	linux-iio@vger.kernel.org
- S:	Supported
-@@ -16537,7 +16533,6 @@ F:	drivers/staging/rtl8712/
- 
- STAGING - SEPS525 LCD CONTROLLER DRIVERS
- M:	Michael Hennerich <michael.hennerich@analog.com>
--M:	Beniamin Bia <beniamin.bia@analog.com>
- L:	linux-fbdev@vger.kernel.org
- S:	Supported
- F:	Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
--- 
-2.17.1
-
+    Andrew
