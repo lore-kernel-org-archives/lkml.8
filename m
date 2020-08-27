@@ -2,146 +2,127 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC54C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 867DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB400207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6336C22B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:38:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bVAl9fYO"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CUujgUZR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgH0Ng4 (ORCPT
+        id S1726939AbgH0Nih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 09:36:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49084 "EHLO
+        Thu, 27 Aug 2020 09:38:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728358AbgH0NcR (ORCPT
+        with ESMTP id S1727937AbgH0Naj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:32:17 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F390C061233
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:32:17 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l7so1578314wrx.8
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:32:17 -0700 (PDT)
+        Thu, 27 Aug 2020 09:30:39 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70831C061237
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:30:13 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a5so5395464wrm.6
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:30:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CnBhoFWrprIDN00i9AYEpJ0QWAj8a6NyJSnQAwk3nKA=;
-        b=bVAl9fYOg0wza5dd/3tsnmIXV42c6nLllLNKNTFK8PjWan+hZljgOF+GzgjWbmw7GO
-         5wHgbTeo+R1TJnD4EdKyvTWm/6pWTDf6wuuIyllBCRwn85yFk6XJzpuZDvriihbyFd8b
-         6TO336OedwDKN+td71Uk0A/l7KGkJmNqK/eCB/DpYDMVcTk/INOPrZjCyb6psMpSaFXF
-         ycU3t8B+r2ryjj3NMZklGbquNyFKNn/byEEOcfiDNQDgM3+eLN0vdg5onuY0bGjDdS9V
-         fOqq2o29rJUykd+ke34BnoiKhMxK5x8O0G4cQ01iE8HUgmr0MVzyAP9Ds/jRtnQsX+7l
-         mQZA==
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p33Zl85F48xSFFwh9Fvb6fYwVy/Jt4DGVFmz86MHbko=;
+        b=CUujgUZRienGvENy9ZeNSE4OLq/gTozkw9vqhnndn3e+Pp27upZYxzcOy348qWT4x6
+         fZ9HzhrGd6ok0/lpV6XJMXIHbIrfSS3H2kc5d+JTd1lletPZjVOkUQ8WZMoDnSSylgRw
+         zOHH0JLxrQJsHR8v5+SGQOGgwwu7dIE6xp9Po=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CnBhoFWrprIDN00i9AYEpJ0QWAj8a6NyJSnQAwk3nKA=;
-        b=VIuROTpsTuj++u1wKNJMExXCEyNN7S6mWAcBKjFJep8qOygrxs1lc9Et4gZxpxIlXp
-         H9OQfd4Z49TgmQ/YrjuHneGfE/Rs95D6zp5cSDUmTtJg6qd8bZDlSZgyG4zEwgPJU5lD
-         GcoVtUlbnv9oJVcIcVhwgt+Jj+rsuXjy453Tj1uQ9RX7GiW0sWnJL0CpuCcCKzMXkJF3
-         gzFCGAENO+wkC0u+HVw7/HtbFY/SU/jE5BUIJR0oVNQrkIesULhmo6NwjBpQsiQQhrJt
-         RCzeNCaqhflJtceJzWOfVD2fhEcFcrOcGjgD1/HRrchVlgupSXJSe7YCkIOtrNARv/Yg
-         GAcg==
-X-Gm-Message-State: AOAM532X/ocg/+RAedHCLxVb+YCTlK6FQx2Q3uwC7BIbgq+WV9BG9fB6
-        PdH5J5dfBq+TDr++KCvG0KF+6Q==
-X-Google-Smtp-Source: ABdhPJzghwmF7BWi41naSgeIRR+oSU925DS1i8kyQhq5YclNstFArZhHJGZY3RCecBjbuL+khXKqXw==
-X-Received: by 2002:a5d:4701:: with SMTP id y1mr21181346wrq.416.1598535135779;
-        Thu, 27 Aug 2020 06:32:15 -0700 (PDT)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id g14sm4873096wmk.37.2020.08.27.06.32.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 06:32:14 -0700 (PDT)
-Subject: Re: [PATCH] interconnect: Show bandwidth for disabled paths as zero
- in debugfs
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Evan Green <evgreen@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>
-References: <20200729104933.1.If8e80e4c0c7ddf99056f6e726e59505ed4e127f3@changeid>
- <20200825000846.GC486007@google.com>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- xsFNBFjTuRcBEACyAOVzghvyN19Sa/Nit4LPBWkICi5W20p6bwiZvdjhtuh50H5q4ktyxJtp
- 1+s8dMSa/j58hAWhrc2SNL3fttOCo+MM1bQWwe8uMBQJP4swgXf5ZUYkSssQlXxGKqBSbWLB
- uFHOOBTzaQBaNgsdXo+mQ1h8UCgM0zQOmbs2ort8aHnH2i65oLs5/Xgv/Qivde/FcFtvEFaL
- 0TZ7odM67u+M32VetH5nBVPESmnEDjRBPw/DOPhFBPXtal53ZFiiRr6Bm1qKVu3dOEYXHHDt
- nF13gB+vBZ6x5pjl02NUEucSHQiuCc2Aaavo6xnuBc3lnd4z/xk6GLBqFP3P/eJ56eJv4d0B
- 0LLgQ7c1T3fU4/5NDRRCnyk6HJ5+HSxD4KVuluj0jnXW4CKzFkKaTxOp7jE6ZD/9Sh74DM8v
- etN8uwDjtYsM07I3Szlh/I+iThxe/4zVtUQsvgXjwuoOOBWWc4m4KKg+W4zm8bSCqrd1DUgL
- f67WiEZgvN7tPXEzi84zT1PiUOM98dOnmREIamSpKOKFereIrKX2IcnZn8jyycE12zMkk+Sc
- ASMfXhfywB0tXRNmzsywdxQFcJ6jblPNxscnGMh2VlY2rezmqJdcK4G4Lprkc0jOHotV/6oJ
- mj9h95Ouvbq5TDHx+ERn8uytPygDBR67kNHs18LkvrEex/Z1cQARAQABzShHZW9yZ2kgRGph
- a292IDxnZW9yZ2kuZGpha292QGxpbmFyby5vcmc+wsF+BBMBAgAoBQJY07kXAhsDBQkHhM4A
- BgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRCyi/eZcnWWUuvsD/4miikUeAO6fU2Xy3fT
- l7RUCeb2Uuh1/nxYoE1vtXcow6SyAvIVTD32kHXucJJfYy2zFzptWpvD6Sa0Sc58qe4iLY4j
- M54ugOYK7XeRKkQHFqqR2T3g/toVG1BOLS2atooXEU+8OFbpLkBXbIdItqJ1M1SEw8YgKmmr
- JlLAaKMq3hMb5bDQx9erq7PqEKOB/Va0nNu17IL58q+Q5Om7S1x54Oj6LiG/9kNOxQTklOQZ
- t61oW1Ewjbl325fW0/Lk0QzmfLCrmGXXiedFEMRLCJbVImXVKdIt/Ubk6SAAUrA5dFVNBzm2
- L8r+HxJcfDeEpdOZJzuwRyFnH96u1Xz+7X2V26zMU6Wl2+lhvr2Tj7spxjppR+nuFiybQq7k
- MIwyEF0mb75RLhW33sdGStCZ/nBsXIGAUS7OBj+a5fm47vQKv6ekg60oRTHWysFSJm1mlRyq
- exhI6GwUo5GM/vE36rIPSJFRRgkt6nynoba/1c4VXxfhok2rkP0x3CApJ5RimbvITTnINY0o
- CU6f1ng1I0A1UTi2YcLjFq/gmCdOHExT4huywfu1DDf0p1xDyPA1FJaii/gJ32bBP3zK53hM
- dj5S7miqN7F6ZpvGSGXgahQzkGyYpBR5pda0m0k8drV2IQn+0W8Qwh4XZ6/YdfI81+xyFlXc
- CJjljqsMCJW6PdgEH87BTQRY07kXARAAvupGd4Jdd8zRRiF+jMpv6ZGz8L55Di1fl1YRth6m
- lIxYTLwGf0/p0oDLIRldKswena3fbWh5bbTMkJmRiOQ/hffhPSNSyyh+WQeLY2kzl6geiHxD
- zbw37e2hd3rWAEfVFEXOLnmenaUeJFyhA3Wd8OLdRMuoV+RaLhNfeHctiEn1YGy2gLCq4VNb
- 4Wj5hEzABGO7+LZ14hdw3hJIEGKtQC65Jh/vTayGD+qdwedhINnIqslk9tCQ33a+jPrCjXLW
- X29rcgqigzsLHH7iVHWA9R5Aq7pCy5hSFsl4NBn1uV6UHlyOBUuiHBDVwTIAUnZ4S8EQiwgv
- WQxEkXEWLM850V+G6R593yZndTr3yydPgYv0xEDACd6GcNLR/x8mawmHKzNmnRJoOh6Rkfw2
- fSiVGesGo83+iYq0NZASrXHAjWgtZXO1YwjW9gCQ2jYu9RGuQM8zIPY1VDpQ6wJtjO/KaOLm
- NehSR2R6tgBJK7XD9it79LdbPKDKoFSqxaAvXwWgXBj0Oz+Y0BqfClnAbxx3kYlSwfPHDFYc
- R/ppSgnbR5j0Rjz/N6Lua3S42MDhQGoTlVkgAi1btbdV3qpFE6jglJsJUDlqnEnwf03EgjdJ
- 6KEh0z57lyVcy5F/EUKfTAMZweBnkPo+BF2LBYn3Qd+CS6haZAWaG7vzVJu4W/mPQzsAEQEA
- AcLBZQQYAQIADwUCWNO5FwIbDAUJB4TOAAAKCRCyi/eZcnWWUhlHD/0VE/2x6lKh2FGP+QHH
- UTKmiiwtMurYKJsSJlQx0T+j/1f+zYkY3MDX+gXa0d0xb4eFv8WNlEjkcpSPFr+pQ7CiAI33
- 99kAVMQEip/MwoTYvM9NXSMTpyRJ/asnLeqa0WU6l6Z9mQ41lLzPFBAJ21/ddT4xeBDv0dxM
- GqaH2C6bSnJkhSfSja9OxBe+F6LIAZgCFzlogbmSWmUdLBg+sh3K6aiBDAdZPUMvGHzHK3fj
- gHK4GqGCFK76bFrHQYgiBOrcR4GDklj4Gk9osIfdXIAkBvRGw8zg1zzUYwMYk+A6v40gBn00
- OOB13qJe9zyKpReWMAhg7BYPBKIm/qSr82aIQc4+FlDX2Ot6T/4tGUDr9MAHaBKFtVyIqXBO
- xOf0vQEokkUGRKWBE0uA3zFVRfLiT6NUjDQ0vdphTnsdA7h01MliZLQ2lLL2Mt5lsqU+6sup
- Tfql1omgEpjnFsPsyFebzcKGbdEr6vySGa3Cof+miX06hQXKe99a5+eHNhtZJcMAIO89wZmj
- 7ayYJIXFqjl/X0KBcCbiAl4vbdBw1bqFnO4zd1lMXKVoa29UHqby4MPbQhjWNVv9kqp8A39+
- E9xw890l1xdERkjVKX6IEJu2hf7X3MMl9tOjBK6MvdOUxvh1bNNmXh7OlBL1MpJYY/ydIm3B
- KEmKjLDvB0pePJkdTw==
-Message-ID: <ef2fa54c-7a20-8d3a-67d2-b26f70ac80c1@linaro.org>
-Date:   Thu, 27 Aug 2020 16:32:14 +0300
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p33Zl85F48xSFFwh9Fvb6fYwVy/Jt4DGVFmz86MHbko=;
+        b=ulZsgmRD+9d1uG8rpq8MhI2yrTPv55NTWqvjxN6HU1mKOpyereX1GZvLDffo50/wGe
+         kyt1FUwNT9hqRB+8JTWkhhDQQKF392m+7aKnthAJDA5VTj7+9NO56hh9uaXl7opi9dQV
+         5PgRdEUXm1R8B41682ypBnEhLZSIt/fnIOFMxOQYkUWC/z0gwuPtTxRmqTLkhXZqYruj
+         Z1A5fd/pJhHyqHV3EufmeVgCjGr9sTUwCw2jTq4tnwsz4MPqFSTkKdTfM5M/tcF3ej4r
+         9ciPfggyhcUv4NVMcavmbJIPSofioHa0h0mp/UWrrKHI0I1iTzOJuix2mkVldokeygfC
+         6gNg==
+X-Gm-Message-State: AOAM530JR57cK5n6lcDNNjpi1cNq+CNFue7t9p1DmpmL+wa4zseT67rE
+        KJvfbToOXuKp+eyG4xZnxuHMy8ZP5CmonSiujSr9wQ==
+X-Google-Smtp-Source: ABdhPJyMtaFishcwtzNCj7DHN/faPMoK+tSF7O0vKJaBGS+gpAIRdF6geUez9pCQeleah1w6P5SJ7nzMgTS0KKpMqRI=
+X-Received: by 2002:adf:bb54:: with SMTP id x20mr19609148wrg.413.1598535011238;
+ Thu, 27 Aug 2020 06:30:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200825000846.GC486007@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200824193036.6033-1-james.quinlan@broadcom.com>
+ <b19bc982-a0c4-c6ff-d8f5-650f2b3a83c8@gmail.com> <20200827063517.GA4637@lst.de>
+In-Reply-To: <20200827063517.GA4637@lst.de>
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+Date:   Thu, 27 Aug 2020 09:29:59 -0400
+Message-ID: <CA+-6iNy3U9pO0Bykzgvb9n9fcsBi6FiatLdpA1s0HgQNWZ49mg@mail.gmail.com>
+Subject: Re: [PATCH v11 00/11] PCI: brcmstb: enable PCIe for STB chips
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
+        <linux-pci@vger.kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
+        <devicetree@vger.kernel.org>,
+        "open list:DRM DRIVERS FOR ALLWINNER A10" 
+        <dri-devel@lists.freedesktop.org>, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        Julien Grall <julien.grall@arm.com>,
+        "open list:ACPI FOR ARM64 (ACPI/arm64)" <linux-acpi@vger.kernel.org>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:ALLWINNER A10 CSI DRIVER" <linux-media@vger.kernel.org>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "open list:SUPERH" <linux-sh@vger.kernel.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
-
-Thanks for the patch!
-
-On 8/25/20 03:08, Matthias Kaehlcke wrote:
-> On Wed, Jul 29, 2020 at 10:50:12AM -0700, Matthias Kaehlcke wrote:
->> For disabled paths the 'interconnect_summary' in debugfs currently shows
->> the orginally requested bandwidths. This is confusing, since the bandwidth
->> requests aren't active. Instead show the bandwidths for disabled
->> paths/requests as zero.
->>
->> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> 
-> ping, any comments on this?
-> 
-
-Looks good to me! Just in case, I'll also add:
-Fixes: 7d374b209083 ("interconnect: Add helpers for enabling/disabling a path")
-
-Thanks,
-Georgi
+On Thu, Aug 27, 2020 at 2:35 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Tue, Aug 25, 2020 at 10:40:27AM -0700, Florian Fainelli wrote:
+> > Hi,
+> >
+> > On 8/24/2020 12:30 PM, Jim Quinlan wrote:
+> >>
+> >> Patchset Summary:
+> >>    Enhance a PCIe host controller driver.  Because of its unusual design
+> >>    we are foced to change dev->dma_pfn_offset into a more general role
+> >>    allowing multiple offsets.  See the 'v1' notes below for more info.
+> >
+> > We are version 11 and counting, and it is not clear to me whether there is
+> > any chance of getting these patches reviewed and hopefully merged for the
+> > 5.10 merge window.
+> >
+> > There are a lot of different files being touched, so what would be the
+> > ideal way of routing those changes towards inclusion?
+>
+> FYI, I offered to take the dma-mapping bits through the dma-mapping tree.
+> I have a bit of a backlog, but plan to review and if Jim is ok with that
+> apply the current version.
+Sounds good to me.
+Thanks, Jim
