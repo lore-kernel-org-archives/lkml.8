@@ -2,97 +2,110 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FCEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E86DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECA22075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEAB22075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:18:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NjMLgyW4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gK8+W+U9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbgH0KSZ (ORCPT
+        id S1728807AbgH0KSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:18:25 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:35170 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbgH0KR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:17:58 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598523478; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=JZ7miBjeeIeD/blRB2aueu7P99GRKdFWzvTFVESuqK8=;
- b=NjMLgyW4ypeCXqBdewkfj3ZzBzfZ97tHA7QMdGozlCHKvRqyL4HGZVF17TZFtsJZV2NQrtN+
- qQLPqWuqBYxx4qhXtFLrROvejspq0CpptmlnLzb16Q7Zc9NeALswlY3p1tmch6MpvrUNI/5h
- Vx0kGFDHqS+B5rTBSF0+ATMkk9Y=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f4788558741f54bbd719cda (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 10:17:57
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 770A0C433CB; Thu, 27 Aug 2020 10:17:57 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7F03CC433C6;
-        Thu, 27 Aug 2020 10:17:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7F03CC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 17/30] wireless: ath: ath9k: ar9002_initvals: Remove
- unused
- array 'ar9280PciePhy_clkreq_off_L1_9280'
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200826093401.1458456-18-lee.jones@linaro.org>
-References: <20200826093401.1458456-18-lee.jones@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200827101757.770A0C433CB@smtp.codeaurora.org>
-Date:   Thu, 27 Aug 2020 10:17:57 +0000 (UTC)
+        Thu, 27 Aug 2020 06:18:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728630AbgH0KOl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 06:14:41 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A1E2C061232;
+        Thu, 27 Aug 2020 03:14:41 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id k15so3114377pfc.12;
+        Thu, 27 Aug 2020 03:14:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=AwSKx0TgO4C3I9JM+zj5BSKrknZ5jIrpWa5oeID6Yjk=;
+        b=gK8+W+U9CznVijqXypIbrCu7uDeKkuKGGkgVDvaoa9jfsOJ5bLCL0Tqecjik9W8wZ+
+         7/4aFNPqEalVhU0/1UPUsU8uV8W44IJC56z9IP3rzl1dutwrDB2bLCj/7oZlVRGZdT+3
+         HRj8zZjMweWtzXoEWukiCIn0hqzyiAMQuGumf7alKUHHgQKW3KeGMvbVYrboqGdEp0G+
+         DHJdsB6Fgc+2DeRnl7DjVl2eyqAyYHdPGBbPXtdfcNQfafTL5V3iRcceM6HxP0aQj3G/
+         n3/jbwSxsuE4CLBfy7j5PpgZ+u+8e/gatUbs2Gt1z3+JUzSBOOFeLb4QXo5WLz7iwchE
+         U+kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=AwSKx0TgO4C3I9JM+zj5BSKrknZ5jIrpWa5oeID6Yjk=;
+        b=WQ+PPQySxK92+TvwUILk/opLq3QDvZfSTrgRD2NktwteGrJ8o4Yq49a6bsClfE9eF9
+         aTxisOtI57QDyfLxzEeZ/Ve2Y8yoKqafYd9RL5fRjn0RJzVVe2+KQ87gkSprvGw1tFAn
+         vp7Zdk7jyQUWmDu1uIIIkiQ5t6Z7wUxBSIeJVEdcyRy4LBoAtreF6tvS+GQDZfIGlNCc
+         ivMt+n9mV7ieCht2uj1hGrcFWfD1PIY1/kOaJtmd+kc9SwpsW2J111kD9gqUNYX6Zcl2
+         IjuQHkeWownI9PAQXvLCVCvER8huJiml8QeyLJJEJ9eincwy/7GKD6BQ5aeYAhLGLw9X
+         uBeQ==
+X-Gm-Message-State: AOAM5321DWWye2A8UFr/sBQGXnWLVhG+Y+4rv7wjF+02QpK5k8zZLA8i
+        WqOwV7Q4Av3GmGVYz9NVr5E=
+X-Google-Smtp-Source: ABdhPJyCs0iIRfSQGXJLXOwERH3i0/nXrJHftvsVrWWgbIIv93O7bNk24e3wUqJufo3T/OdwYVFJ2A==
+X-Received: by 2002:a63:2485:: with SMTP id k127mr3712200pgk.232.1598523280984;
+        Thu, 27 Aug 2020 03:14:40 -0700 (PDT)
+Received: from VM-0-6-centos.localdomain ([119.28.90.140])
+        by smtp.gmail.com with ESMTPSA id t10sm2333434pfq.52.2020.08.27.03.14.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Aug 2020 03:14:40 -0700 (PDT)
+From:   Chunguang Xu <brookxu.cn@gmail.com>
+X-Google-Original-From: Chunguang Xu <brookxu@tencent.com>
+To:     arnd@arndb.de
+Cc:     rppt@kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 07/23] lib/mpi: use ASSERT_FAIL()/ASSERT_WARN() to cleanup some code
+Date:   Thu, 27 Aug 2020 18:14:12 +0800
+Message-Id: <797de95a1830b3b1775dad4ae47b9522ded99ebb.1598518912.git.brookxu@tencent.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <cover.1598518912.git.brookxu@tencent.com>
+References: <cover.1598518912.git.brookxu@tencent.com>
+In-Reply-To: <cover.1598518912.git.brookxu@tencent.com>
+References: <cover.1598518912.git.brookxu@tencent.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> wrote:
+Since ASSERT_FAIL() and ASSERT_WARN() have been provided, ASSERT()
+may be realized through them, thus reducing code redundancy and
+facilitating problem analysis.
 
-> Fixes the following W=1 kernel build warning(s):
-> 
->  drivers/net/wireless/ath/ath9k/ar9002_initvals.h:900:18: warning: ‘ar9280PciePhy_clkreq_off_L1_9280’ defined but not used [-Wunused-const-variable=]
-> 
-> Cc: QCA ath9k Development <ath9k-devel@qca.qualcomm.com>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Chunguang Xu <brookxu@tencent.com>
+---
+ lib/mpi/mpi-internal.h | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-4 patches applied to ath-next branch of ath.git, thanks.
-
-660f101eaac2 ath9k: ar9002_initvals: Remove unused array 'ar9280PciePhy_clkreq_off_L1_9280'
-2a0b6a97d01e ath9k: ar9001_initvals: Remove unused array 'ar5416Bank6_9100'
-694815e74ba3 ath9k: ar5008_initvals: Remove unused table entirely
-b016d0a5b817 ath9k: ar5008_initvals: Move ar5416Bank{0,1,2,3,7} to where they are used
-
+diff --git a/lib/mpi/mpi-internal.h b/lib/mpi/mpi-internal.h
+index 91df5f0..ee35a69 100644
+--- a/lib/mpi/mpi-internal.h
++++ b/lib/mpi/mpi-internal.h
+@@ -25,13 +25,8 @@
+ #include <linux/errno.h>
+ 
+ #define log_debug printk
+-#define log_bug printk
+ 
+-#define assert(x) \
+-	do { \
+-		if (!x) \
+-			log_bug("failed assertion\n"); \
+-	} while (0);
++#define assert(x) ASSERT_WARN(x)
+ 
+ /* If KARATSUBA_THRESHOLD is not already defined, define it to a
+  * value which is good on most machines.  */
 -- 
-https://patchwork.kernel.org/patch/11737695/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+1.8.3.1
 
