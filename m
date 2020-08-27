@@ -2,170 +2,122 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9B0C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECA3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A91BD2177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C036206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:02:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ofPoQ+wh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tweHP4xk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgH0I7m (ORCPT
+        id S1728172AbgH0JCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:59:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34486 "EHLO
+        Thu, 27 Aug 2020 05:02:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbgH0I7l (ORCPT
+        with ESMTP id S1726851AbgH0JCH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:59:41 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0CDAC061264;
-        Thu, 27 Aug 2020 01:59:40 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id kx11so2254402pjb.5;
-        Thu, 27 Aug 2020 01:59:40 -0700 (PDT)
+        Thu, 27 Aug 2020 05:02:07 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E243C061264;
+        Thu, 27 Aug 2020 02:02:06 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m71so3003911pfd.1;
+        Thu, 27 Aug 2020 02:02:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=knuyGrcnDNfBLfuI860cvzWQlaN7tR5tqLC2/Iy3p5w=;
-        b=ofPoQ+whIY+/DjQfkemlCBdXvPWQTU8raav3CrNeAYExt1VYUk8aJd7ejP4zzCnby6
-         WPGWGLCLXDHdgRtNIeX2XQyzu2ocY3HPjwKeWiIKZPAEsMpb3hRNbkTcKUPnUQTejHCV
-         8yXMt2AyxvGM68hd9YLpKpp784mQKMsZmOeovBLluEuFc3tgk3jmNvB4GYZZfvBdQ6NM
-         WTJ0PI2d+CGvc9ZHTbWsmnMJkEzRhSpOsSBpGbsaism1CIH10jOwTjGsHFjgaEwXHSeT
-         dSbyjFfSK+Hh1j5QqgjcOSKOVX0MXsdNul+VEHCSHejecYs9bKwQsouQvpGg0yDp047G
-         hSxA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=a7wfBcfmARfWTPt6sYN3Ma+Bz+TNjG1M1YjNUkmwtTY=;
+        b=tweHP4xkQ5A+IRWIaYd3OyPfWO028bef7eOYx5dP4pFXkzzoDb/gd60G431mDS1gNk
+         kvLDpW5C708Irzqyq+onWJwCh0un9cVutFI9qAh2I1Z0N46xa7Jxz3f51F5PQaIn0jfx
+         /zCRYKVwVXSFimGudm3KO9s57IA0u2QWcIys8y+Izm0gtp9yVixeOeRHAgFo04QzujXC
+         jzkzeNSC9bvkiLX6HpIi6kzJM9WLhnB4PHexdKbKHz4vHzBxxhVg1cncSHYALPh56FPT
+         L5AEc9MERlxoM8+Gedo6vuoNV51bdkHjOYyYeSS1Tgg7SI4ESvkYf94WP8b60VJoAog4
+         bhOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=knuyGrcnDNfBLfuI860cvzWQlaN7tR5tqLC2/Iy3p5w=;
-        b=ZMdKw6rGLdR/oogvgPdl0tf1Ki433QPEX0NOOz7fMIS/HjOt1ye66LeVFBLGuvaNND
-         MfW1jtm0pDocEzI9azC/inXMTzEAmSz79Y6mw8eKot/LOUVbsiQqDfy6wDXnoKrwku0N
-         +y4uePck2jHcr5iqSSlLiXzTDQgDs4BASkZEdsophU65EZsRN9362sPLZq5cO8m4khMM
-         TH3tXzcV7jL2lieDT5EDC9llcRqz7iO6cb6+BxI0Wf45tlxzx7W/MbRuBEWXCJxi7kP3
-         F0uLDFR0Gaaw6jSkOZWk3Tl5AbiWJdzPHD4cGHNgNMsIwzxYYNyLJZD7euVsKi84LLln
-         q8eA==
-X-Gm-Message-State: AOAM531cZKXujFOtLz3/jycXvhR3AHih5gs4MdmobpLfaPKBRm8t10/E
-        daNkGdPBhxtKQCCB4kekW2OgtmvMN6C+99xCEPY=
-X-Google-Smtp-Source: ABdhPJy7h7WBhdI26SwG260T0djY4/8Ef5iftULOB0OMZ64TrwMD0uf7c3K2CJDKKTZF6Bc2Ow1XW8d5cUdgagiDZh8=
-X-Received: by 2002:a17:90b:509:: with SMTP id r9mr10116299pjz.228.1598518780491;
- Thu, 27 Aug 2020 01:59:40 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=a7wfBcfmARfWTPt6sYN3Ma+Bz+TNjG1M1YjNUkmwtTY=;
+        b=jnvI5VtdqeWSAOxk4Jcys05Uw8mN46c0lWSN+XJiEU44DGE+rV1KStyV6kq11Z5aXY
+         a2eIojRlRNqf0kzcNEzxnWZLsK8mMpAkMmmnOaGPzVJHhnxOJmVLRmiv9xiLoo1O7gkk
+         wbucCXKvdrEn7Tk5k6zqeFvWHu2LL//qNleZArq+zFQzn072+ayg8mQLEdeAczkcB2Vl
+         6XF8Mi0UpyKFMoczoqE2Y+SjB2LbfLolVu8q7gF8Mam1ppVivpTG+NAMu3UgfTXfR2fA
+         Kqp4wUJWumL/witjsx827Lp/g14NzkgCZNEVj1BXtsuz723b5ko+jR+24TXuEQ90M6B5
+         b7Lw==
+X-Gm-Message-State: AOAM533RW0NiUa5Sx9IRrhzJsivF3YgKmPjYu3H5dM0g4mFm/2SDbUXb
+        YeqeGKvBPXHDm0F5DsQyhL8=
+X-Google-Smtp-Source: ABdhPJwG0dNDOh6QNx9RWwe1Ww05CiB8Ca2FB7gVHtFAqT/9IGtCo9FOiVHJ9izZtgN4oA0/eWCE5Q==
+X-Received: by 2002:a65:468f:: with SMTP id h15mr13809707pgr.189.1598518925870;
+        Thu, 27 Aug 2020 02:02:05 -0700 (PDT)
+Received: from billa.force10networks.com (c-73-231-197-145.hsd1.ca.comcast.net. [73.231.197.145])
+        by smtp.gmail.com with ESMTPSA id s67sm2002235pfs.117.2020.08.27.02.02.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 02:02:04 -0700 (PDT)
+From:   nirenjan <nirenjan@gmail.com>
+To:     jikos@kernel.org, benjamin.tissoires@redhat.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nirenjan Krishnan <nirenjan@gmail.com>
+Subject: [PATCH] HID: quirks: Set INCREMENT_USAGE_ON_DUPLICATE for all Saitek X52 devices
+Date:   Thu, 27 Aug 2020 02:02:02 -0700
+Message-Id: <20200827090202.336765-1-nirenjan@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200816102445.4928-1-nirenjan@gmail.com>
+References: <20200816102445.4928-1-nirenjan@gmail.com>
 MIME-Version: 1.0
-References: <20200825135838.2938771-1-ndesaulniers@google.com>
- <CAK7LNAQXo5-5W6hvNMEVPBPf3tRWaf-pQdSR-0OHyi4RCGhjsQ@mail.gmail.com>
- <d56bf7b93f7a28c4a90e4e16fd412e6934704346.camel@perches.com>
- <CAKwvOd=YrVtPsB7HYPO0N=K7QJm9KstayqqeYQERSaGtGy2Bjg@mail.gmail.com>
- <CAK7LNAQKwOo=Oas+7Du9+neSm=Ev6pxdPV7ges7eEEpW+jh8Ug@mail.gmail.com> <202008261627.7B2B02A@keescook>
-In-Reply-To: <202008261627.7B2B02A@keescook>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Aug 2020 11:59:24 +0300
-Message-ID: <CAHp75VfniSw3AFTyyDk2OoAChGx7S6wF7sZKpJXNHmk97BoRXA@mail.gmail.com>
-Subject: Re: [PATCH v3] lib/string.c: implement stpcpy
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joe Perches <joe@perches.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        stable <stable@vger.kernel.org>, Andy Lavr <andy.lavr@gmail.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 2:40 AM Kees Cook <keescook@chromium.org> wrote:
-> On Thu, Aug 27, 2020 at 07:59:45AM +0900, Masahiro Yamada wrote:
-> > On Thu, Aug 27, 2020 at 1:58 AM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> > > On Wed, Aug 26, 2020 at 9:57 AM Joe Perches <joe@perches.com> wrote:
-> > > > On Thu, 2020-08-27 at 01:49 +0900, Masahiro Yamada wrote:
-> > > > > I do not have time to keep track of the discussion fully,
-> > > > > but could you give me a little more context why
-> > > > > the usage of stpcpy() is not recommended ?
-> > > > >
-> > > > > The implementation of strcpy() is almost the same.
-> > > > > It is unclear to me what makes stpcpy() unsafe..
-> > >
-> > > https://lore.kernel.org/lkml/202008150921.B70721A359@keescook/
-> > >
-> > > >
-> > > > It's the same thing that makes strcpy unsafe:
-> > > >
-> > > > Unchecked buffer lengths with no guarantee src is terminated.
-> > >
-> >
-> >
-> > OK, then stpcpy(), strcpy() and sprintf()
-> > have the same level of unsafety.
->
-> Yes. And even snprintf() is dangerous because its return value is how
-> much it WOULD have written, which when (commonly) used as an offset for
-> further pointer writes, causes OOB writes too. :(
-> https://github.com/KSPP/linux/issues/105
->
-> > strcpy() is used everywhere.
->
-> Yes. It's very frustrating, but it's not an excuse to continue
-> using it nor introducing more bad APIs.
+From: Nirenjan Krishnan <nirenjan@gmail.com>
 
-strcpy() is not a bad API for the cases when you know what you are
-doing. A problem that most of the developers do not know what they are
-doing.
-No need to split everything to bad and good by its name or semantics,
-each API has its own pros and cons and programmers must use their
-brains.
+The Saitek X52 family of joysticks has a pair of axes that were
+originally (by the Windows driver) used as mouse pointer controls. The
+corresponding usage page is the Game Controls page, which is not
+recognized by the generic HID driver, and therefore, both axes get
+mapped to ABS_MISC. The quirk makes the second axis get mapped to
+ABS_MISC+1, and therefore made available separately.
 
->
-> $ git grep '\bstrcpy\b' | wc -l
-> 2212
-> $ git grep '\bstrncpy\b' | wc -l
-> 751
-> $ git grep '\bstrlcpy\b' | wc -l
-> 1712
->
-> $ git grep '\bstrscpy\b' | wc -l
-> 1066
->
-> https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy
-> https://github.com/KSPP/linux/issues/88
->
-> https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
-> https://github.com/KSPP/linux/issues/89
->
-> https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> https://github.com/KSPP/linux/issues/90
->
-> We have no way right now to block the addition of deprecated API usage,
-> which makes ever catching up on this replacement very challenging. The
-> only way we caught up with VLA removal was because of -Wvla on sfr's
-> -next builds.
->
-> I guess we could set up a robot to just watch -next commits and yell
-> about new instances, but patches come and go -- I worry it'd be noisy...
->
-> > I am not convinced why only stpcpy() should be hidden.
->
-> Because nothing uses it right now. It's only the compiler suddenly now
-> trying to use it directly...
->
-> --
-> Kees Cook
+Signed-off-by: Nirenjan Krishnan <nirenjan@gmail.com>
+---
+ drivers/hid/hid-ids.h    | 2 ++
+ drivers/hid/hid-quirks.c | 2 ++
+ 2 files changed, 4 insertions(+)
 
-
-
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 6f370e020..bc62537c4 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -1010,6 +1010,8 @@
+ #define USB_DEVICE_ID_SAITEK_RAT9	0x0cfa
+ #define USB_DEVICE_ID_SAITEK_MMO7	0x0cd0
+ #define USB_DEVICE_ID_SAITEK_X52	0x075c
++#define USB_DEVICE_ID_SAITEK_X52_2	0x0255
++#define USB_DEVICE_ID_SAITEK_X52_PRO	0x0762
+ 
+ #define USB_VENDOR_ID_SAMSUNG		0x0419
+ #define USB_DEVICE_ID_SAMSUNG_IR_REMOTE	0x0001
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 934fc0a79..6b82eda26 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -147,6 +147,8 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_RETROUSB, USB_DEVICE_ID_RETROUSB_SNES_RETROPORT), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_RUMBLEPAD), HID_QUIRK_BADPAD },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_X52), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_X52_2), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_X52_PRO), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SEMICO, USB_DEVICE_ID_SEMICO_USB_KEYKOARD2), HID_QUIRK_NO_INIT_REPORTS },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SEMICO, USB_DEVICE_ID_SEMICO_USB_KEYKOARD), HID_QUIRK_NO_INIT_REPORTS },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SENNHEISER, USB_DEVICE_ID_SENNHEISER_BTD500USB), HID_QUIRK_NOGET },
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
+
