@@ -2,201 +2,242 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFF4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 05:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BB4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 05:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C57B42177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 05:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99C4E2078A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 05:42:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="RbB1Tq3y"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="veC7DOz5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgH0FkS (ORCPT
+        id S1726967AbgH0Fmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 01:40:18 -0400
-Received: from mga12.intel.com ([192.55.52.136]:10868 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725847AbgH0FkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 01:40:16 -0400
-IronPort-SDR: P9LauCFeKOSVRPm1vSmzW3PicqsrHhq4ZMPGWLAPeiJ2JQANGpmkODi2xIAsNTnBluumcPNwXf
- GUIb+PkNU5TA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="135974290"
-X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
-   d="scan'208";a="135974290"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 22:40:13 -0700
-IronPort-SDR: R66F3npc1rBXelv0H6danDO8d540DKTNjn9fo8patqsWsFF5rS1RriekNbK0aaUXIsqGN+AnJF
- Hm/9N4uqrOOw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
-   d="scan'208";a="295608552"
-Received: from orsmsx601-2.jf.intel.com (HELO ORSMSX601.amr.corp.intel.com) ([10.22.229.81])
-  by orsmga003.jf.intel.com with ESMTP; 26 Aug 2020 22:40:13 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 26 Aug 2020 22:39:52 -0700
-Received: from orsmsx113.amr.corp.intel.com (10.22.240.9) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 26 Aug 2020 22:39:52 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX113.amr.corp.intel.com (10.22.240.9) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 26 Aug 2020 22:39:52 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.171)
- by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 26 Aug 2020 22:39:52 -0700
+        Thu, 27 Aug 2020 01:42:55 -0400
+Received: from mail-eopbgr680079.outbound.protection.outlook.com ([40.107.68.79]:30854
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726070AbgH0Fmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 01:42:54 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dcs+U4RMyofRqcP0wr5sNAdRJNhR3vaE840Lt5ZuaFExOSWoqW5mjw5lpMAQta2gmjU5+9NnUu70Wx3i8CVEXuLlQXxQXDQ0WcEZpORR28tQ6DyC9a9g1SufnYaG8OTQEEGd22817UJSugGw/1J1AUR3X+IRpLA2lMY3Z4IoJu2zHQ4i9PFOF6b2dIY6DIr/1qPuUbNOxwX0DF7U8jmQ+icPQ3pvDQpnqkgK0H1wErf/3mudQQozKg85AScn9IG5hlmSE5FfTf/VA4dif2BbjkBEjzIY605fKfHhb1yKjFM24eupfzYPIcz4cTkrv8tDAl7QNCXyJMm9nq8Mt/XRUg==
+ b=afHQMzliNRiLbw5e2IeqYBX6HR0d/cUe6+iDwDnk/YOzS81e51gyOEHKfbz2DCfiIxPx8kx1UjvwkglCdkL1pVVwptJ0losuLY+bDJo8pW41pJGX1ZjOSipqLf3a0xnHOwhMbOOBak4jRozd9ObdpG8X9IxOeXfz1oLbsUvExZu3r28AOKZwPux5TO2yudLXFVh6LONDQAz4lxo5namZfIZCujJvEmixpVIlx9dCn9OnhCsGNbMqd75SpIJ69kwZSrs0ujdqLK1VfSJfjqhrslR5mIjoLqIMHncmyryyui13aBTqRjqwo9yYozK4sfJlf/Cu/o5URMzv3ciDibkMjA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZUd031hx8HI2Ybi4//2wimZFd1BUfWaWaHWfc80lzsg=;
- b=a6aqStOuVMWoKjoxUEsCqilTC9KaFl7G/UPe32g3m31edJGzFb8pQV/CQ2BqspakjTSQtVHHtbGJgBAlI6gvhKY65SVhqdlaRJZ5wAt7f35SIN6w/0vw2v+jSU0imctFJsQVRwGSs1YS1XNhYqPfq7aQV1ktd02V7l1SsTsqXO55OdBomh1SdexEwOORln9iXDbZdB7jNGVRbBkLF+1EDMAEokkNUSP/BTgtgF+rCKM6pLAxJ6TQjmE/ZZWOZZC4OZCY9XR2lWMvKt14fyH2QMGfS9p/0LY+6hGWYydhyyTRnM9ncbSFvdV5d9H3F5MKsb6oKyCRIzcacbw9uo4/Ig==
+ bh=+AAqdnjDmr4DmQ/J00++mzDgR3p/fc41wMePGuFDggU=;
+ b=L7XzVWPkN+2g5ylWU7ySAfAjpQtIL8JD8IHRzqq08EJX6cI6oWIWyuvYSGS/QYs8gc3DP9NbIvxNqaoEAXhWY8VSvxRbTSa6gYymvOvlO6PGvVyDSTiMSNGcngHu9mqtHkn6s4rJ6+VREQdZF/sL8LQfh4/vMxXTzAaBPlEG2q33YbzHvoJS2Mqrof5v2xDkeihhNdWuQctcmM1vuPzKS5EJbWdn5d1KA1/6Hz5qiQaBVAcBHszZpYFVfcO9yDoldgU31ejv+e3EPuiifZp3yJHpN/Q3JwE1J3aBrBquS5jWVb9/lmOOdAtSWY2UG0Fyrq+3D9Er0xJ9viB6urqtoA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZUd031hx8HI2Ybi4//2wimZFd1BUfWaWaHWfc80lzsg=;
- b=RbB1Tq3yMTXVxwv4XpXEDui9KCAKE9p9eTjGzdtM3sxBQ8QhAqcuYbYpL9eT9q4ba+YHqlYMM1G888NvhBCiSDoR3Y3q6yZ2xN3DCdkvkDzw+kAAb5Tf5yV1+pITtzGpKvbX0vGQzU0iYUcbPk1zMdXGgPYRY90EFTQS2Bv4ADY=
-Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
- by MWHPR1101MB2160.namprd11.prod.outlook.com (2603:10b6:301:5b::12) with
+ bh=+AAqdnjDmr4DmQ/J00++mzDgR3p/fc41wMePGuFDggU=;
+ b=veC7DOz5Ft8T4oi7+xgAzR9FuGCYFG7LYOZkQCi94NyQY05IJ8CfsGXpMxVAVJU1+xhDOLPaL1LGu1XXt26sbbu5z9kdkmrUOJVxc+Np1/ycFfZ3TOoQoHaJL/hJt5p7940L7Y6/1/zJhEMsV2IiHDnmAkCSQ7jraiWUIFOZpg4=
+Authentication-Results: ladisch.de; dkim=none (message not signed)
+ header.d=none;ladisch.de; dmarc=none action=none header.from=amd.com;
+Received: from CY4PR12MB1494.namprd12.prod.outlook.com (2603:10b6:910:f::22)
+ by CY4PR12MB1224.namprd12.prod.outlook.com (2603:10b6:903:39::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Thu, 27 Aug
- 2020 05:39:50 +0000
-Received: from MWHPR11MB1645.namprd11.prod.outlook.com
- ([fe80::6dfe:feb8:25f1:ac9c]) by MWHPR11MB1645.namprd11.prod.outlook.com
- ([fe80::6dfe:feb8:25f1:ac9c%7]) with mapi id 15.20.3305.032; Thu, 27 Aug 2020
- 05:39:50 +0000
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>
-CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Andy Lutomirski" <luto@amacapital.net>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>
-Subject: RE: [PATCH v2 1/1] iommu/vt-d: Serialize IOMMU GCMD register
- modifications
-Thread-Topic: [PATCH v2 1/1] iommu/vt-d: Serialize IOMMU GCMD register
- modifications
-Thread-Index: AQHWfCsR7xD31gRG1EuP3vMsSfIavKlLcGkQ
-Date:   Thu, 27 Aug 2020 05:39:50 +0000
-Message-ID: <MWHPR11MB164521E12E86B1681C132C0E8C550@MWHPR11MB1645.namprd11.prod.outlook.com>
-References: <20200827042513.30292-1-baolu.lu@linux.intel.com>
-In-Reply-To: <20200827042513.30292-1-baolu.lu@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.216]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bbc4b7b7-0307-46e5-e621-08d84a4b9dd6
-x-ms-traffictypediagnostic: MWHPR1101MB2160:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR1101MB2160580A7AC0DF58F9935B8B8C550@MWHPR1101MB2160.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4hN7VLzpunM4tv4vAWjIYyu/fvhg62ZXbkIOLY9agOkgXQzsPtMhSHr7jpVZGeihzcE2kaNVBDnkQeJ9QAbEOQczOXxI8DQlTeVL7IdjxEuKF8MIZV+pxlSOMOPwRTQC0zJdH8u8MGL7VppjRmGudgnzO2XPZyVdEvlloOTnRKFP9xwtyRjexcU6bC3T2OE8R5DPykZUXDyrPFv5EJSp07r1kzN6kh3GCGLeD9khbs26+zJSFyY/SCI+lUMepkqo4SgKHubg5EvmrAJYrYQiMP9gcBXzpe2nXWWlfdRqPuTF1DsvxMy+FRUmNUD4Dw+QiLDqGGhRUKWu0wNFc1p/oAgfvLwu3d/fpS0dpCHxO06Ih/e6hyskOFbk9emE0nxKlRJ3CAeklKlBSAozcLd1/w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(366004)(376002)(136003)(39860400002)(346002)(186003)(7696005)(86362001)(33656002)(2906002)(4326008)(6506007)(54906003)(478600001)(52536014)(9686003)(8936002)(110136005)(26005)(316002)(55016002)(76116006)(66476007)(966005)(66946007)(66556008)(64756008)(66446008)(83380400001)(71200400001)(8676002)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: bzFiU+jdekIm841nRDbxV2xB9LBuqIzElsS7/tFrrrnXm3PDQ00h7qL1Fvku7h/YNeQsolf0phMGq3UuRc7XHjz0yL64yPDSUJZldYvUP4Q3+pJuRHBiea1hkrd3/GV8M5pfbl2nl7VT56bgpR5M/gcBGH789NCq5RipdOw7aPjOSW9FmECfW1NVJ6t7eOXC546PI+y2aI7mqtXDrI0v+yfxLu3x49PfBin2H4r6oiQMR7OGp6hJP/vh1xXMhhuDN4O0f1wvBSaaC1coTE2zqwFklBdkkuH3wzzg9YHJIHSyQFu39j5mnmsXi6lWyGCs0c7N2c2ffSWAP6WMe1L7wPQECvNPG7hnDChbKvmbpCRxRuWcCmcVX93OoPFS9WJEciKow+j2yptuU0D2RFZAChkObJC4VbvMskQWtUa1AcPrTgvAOzJvjBthjVRBE608We4BS457sLUuO7F81kWS9ee/UgiUlHSohiRDmp0D1H5oksxq0J+PZS29+Sqgem/OtUjQ+IZe6I2yf3tuTtoJkeUIl/jS/oXqLYq01+pp/ylbocP/HnsvL1T9vVf6gJksplDtrg8ocKb5+96WYdOB21zBDhBEpauNoZlCzubjZPaJTcabiQY6IT/d/2IIEmAXFBabeS9GW8X95bGDO2SmCg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Thu, 27 Aug
+ 2020 05:42:49 +0000
+Received: from CY4PR12MB1494.namprd12.prod.outlook.com
+ ([fe80::f873:6fc3:45c4:2106]) by CY4PR12MB1494.namprd12.prod.outlook.com
+ ([fe80::f873:6fc3:45c4:2106%12]) with mapi id 15.20.3305.032; Thu, 27 Aug
+ 2020 05:42:49 +0000
+From:   Wei Huang <wei.huang2@amd.com>
+To:     lemens@ladisch.de
+Cc:     jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, wei.huang2@amd.com
+Subject: [PATCH 1/2] hwmon: (k10temp) Create common functions and macros for Zen CPU families
+Date:   Thu, 27 Aug 2020 00:42:41 -0500
+Message-Id: <20200827054242.2347-1-wei.huang2@amd.com>
+X-Mailer: git-send-email 2.25.2
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: SN4PR0601CA0013.namprd06.prod.outlook.com
+ (2603:10b6:803:2f::23) To CY4PR12MB1494.namprd12.prod.outlook.com
+ (2603:10b6:910:f::22)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by SN4PR0601CA0013.namprd06.prod.outlook.com (2603:10b6:803:2f::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Thu, 27 Aug 2020 05:42:48 +0000
+X-Mailer: git-send-email 2.25.2
+X-Originating-IP: [165.204.78.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d2524eea-afe1-4b84-3e79-08d84a4c084b
+X-MS-TrafficTypeDiagnostic: CY4PR12MB1224:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CY4PR12MB12246AA5A84C82BD98227185CF550@CY4PR12MB1224.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:202;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XVSmJ7wExyjZV4xbLjHfZ3x4lp0ES5/M+GLdidz84rmy8OMJokgOy9OyLJIabgPKB2aqwP+nNYwR+gm6XQ80R9PMPtXj2/lze6k8Ox/5uP2tJlK6isn080rditHfQDcUxasC2AOD3g8/hxCGgNdfand0vYJQuMsaQcQHhMHanD8HnpLN0rjdPrdcbrcgOyiME7KRf6osGx2f5W7KbwTfacBKEPz4orSLQZ6ZLOjUURGhThJhdubF7UDrTSLzxEMtOoJwnBKTd8LnAbx6JZWmuPQHMR8f1vPLEJ4AEg1NFknuhhhnGDRSfiQ76uri3PrkIib+UlcuNKORV/oOIzFuVA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR12MB1494.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(39860400002)(396003)(376002)(136003)(346002)(66476007)(6916009)(66946007)(66556008)(1076003)(2906002)(478600001)(8936002)(4326008)(8676002)(5660300002)(16576012)(186003)(6486002)(36756003)(52116002)(316002)(26005)(2616005)(83380400001)(6666004)(86362001)(956004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: HH3uoj6uYFQOYAk8g37h6LbQONpbchjf21DF+fMvcTtYK8krDYiiXWgTJ/YukdWgg42ElquuXgBonA5KjL4ePqx4gXJIS2zBsWpvFyVkL7OEFP7Zf2o6BI7kp6bSQgElNBeEWDZPwt/lkG8qOI3TY94Be77+uMFzkga6WYbzcpILp05wE5AZsmYjlEmSkxTLAn4lnyNEM79mh9ksa+u2yKSNgfl34i2dKC4zbibGjrrs0gQ3UFDoLmvoydozzzcsBarhwL9Iz0uluLgk3GlRC1BqahmJKJAB+//9+TQRwWnJ9LiWT7+i+3tbgQER2EY36ZDRHg4hppAWYkjP02S8k6MLe9DK5SUEEZ16m2NFmRip1b6KbwDpLy+ljONbY9nsHPmefK0QXvNIrS21BABWmwjKOtB4CEW91yv8te3bOGuWIK0aflYUunHBF7M616GmQuPsfpQoCtKq2YfJStIIrL3g6Sl/acQ7D1gIyMxCy45zQVjCPpU24C/M/5Y8Rcx38T45pahBG0PsGEJAe5gHFtvujUwvMGo5xj29ovbILQuvucVRbJiThYlGF3N63b4F51YNNWNjgN+Oyvg03ykXMg0KevHUYr1nOeEQ3eKGAANOae/SYdar/3G9SfZkmF+hdVJUafte652faaemwNv8LQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d2524eea-afe1-4b84-3e79-08d84a4c084b
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR12MB1494.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1645.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbc4b7b7-0307-46e5-e621-08d84a4b9dd6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2020 05:39:50.2415
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2020 05:42:49.3212
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rNDfWva/9SxPh3szB+nnvRaWdC3AN2DTEN85c6X/eAmo5SmlRTvvPdOwFWxVYBCZ79bCAnoUA44vSbAeU6Bshw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1101MB2160
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: z4DIpv0v8gMKXBGgM/DLm8z2Lyh6tsJ4+ZscmApn0M0LkoxQzDwmUVLp25S5WUN4
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1224
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Lu Baolu <baolu.lu@linux.intel.com>
-> Sent: Thursday, August 27, 2020 12:25 PM
->=20
-> The VT-d spec requires (10.4.4 Global Command Register, GCMD_REG
-> General
-> Description) that:
->=20
-> If multiple control fields in this register need to be modified, software
-> must serialize the modifications through multiple writes to this register=
-.
->=20
-> However, in irq_remapping.c, modifications of IRE and CFI are done in one
-> write. We need to do two separate writes with STS checking after each.
->=20
-> Fixes: af8d102f999a4 ("x86/intel/irq_remapping: Clean up x2apic opt-out
-> security warning mess")
-> Cc: Andy Lutomirski <luto@amacapital.net>
-> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Cc: Kevin Tian <kevin.tian@intel.com>
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->  drivers/iommu/intel/irq_remapping.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->=20
-> Change log:
-> v1->v2:
->   - v1 posted here
->     https://lore.kernel.org/linux-iommu/20200826025825.2322-1-
-> baolu.lu@linux.intel.com/;
->   - Add status check before disabling CFI. (Kevin)
->=20
-> diff --git a/drivers/iommu/intel/irq_remapping.c
-> b/drivers/iommu/intel/irq_remapping.c
-> index 9564d23d094f..7552bb7e92c8 100644
-> --- a/drivers/iommu/intel/irq_remapping.c
-> +++ b/drivers/iommu/intel/irq_remapping.c
-> @@ -507,12 +507,19 @@ static void iommu_enable_irq_remapping(struct
-> intel_iommu *iommu)
->=20
->  	/* Enable interrupt-remapping */
->  	iommu->gcmd |=3D DMA_GCMD_IRE;
-> -	iommu->gcmd &=3D ~DMA_GCMD_CFI;  /* Block compatibility-format
-> MSIs */
->  	writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
-> -
->  	IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
->  		      readl, (sts & DMA_GSTS_IRES), sts);
->=20
-> +	/* Block compatibility-format MSIs */
-> +	sts =3D readl(iommu->reg + DMAR_GSTS_REG);
+Many SMN thermal registers in Zen CPU families are common across different
+generations. For long-term code maintenance, it is better to rename these
+macro and function names to Zen.
 
-no need of this readl as the status is already three in IOMMU_WAIT_OP.
+Signed-off-by: Wei Huang <wei.huang2@amd.com>
+---
+ drivers/hwmon/k10temp.c | 56 +++++++++++++++++++++--------------------
+ 1 file changed, 29 insertions(+), 27 deletions(-)
 
-> +	if (sts & DMA_GSTS_CFIS) {
-> +		iommu->gcmd &=3D ~DMA_GCMD_CFI;
-> +		writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
-> +		IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
-> +			      readl, !(sts & DMA_GSTS_CFIS), sts);
-> +	}
-> +
->  	/*
->  	 * With CFI clear in the Global Command register, we should be
->  	 * protected from dangerous (i.e. compatibility) interrupts
-> --
-> 2.17.1
+diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
+index 8f12995ec133..f3addb97b021 100644
+--- a/drivers/hwmon/k10temp.c
++++ b/drivers/hwmon/k10temp.c
+@@ -73,22 +73,24 @@ static DEFINE_MUTEX(nb_smu_ind_mutex);
+ #define F15H_M60H_HARDWARE_TEMP_CTRL_OFFSET	0xd8200c64
+ #define F15H_M60H_REPORTED_TEMP_CTRL_OFFSET	0xd8200ca4
+ 
+-/* F17h M01h Access througn SMN */
+-#define F17H_M01H_REPORTED_TEMP_CTRL_OFFSET	0x00059800
++/* Common for Zen CPU families (Family 17h and 18h) */
++#define ZEN_REPORTED_TEMP_CTRL_OFFSET		0x00059800
+ 
+-#define F17H_M70H_CCD_TEMP(x)			(0x00059954 + ((x) * 4))
+-#define F17H_M70H_CCD_TEMP_VALID		BIT(11)
+-#define F17H_M70H_CCD_TEMP_MASK			GENMASK(10, 0)
++#define ZEN_CCD_TEMP(x)				(0x00059954 + ((x) * 4))
++#define ZEN_CCD_TEMP_VALID			BIT(11)
++#define ZEN_CCD_TEMP_MASK			GENMASK(10, 0)
+ 
+-#define F17H_M01H_SVI				0x0005A000
+-#define F17H_M01H_SVI_TEL_PLANE0		(F17H_M01H_SVI + 0xc)
+-#define F17H_M01H_SVI_TEL_PLANE1		(F17H_M01H_SVI + 0x10)
++#define ZEN_CUR_TEMP_SHIFT			21
++#define ZEN_CUR_TEMP_RANGE_SEL_MASK		BIT(19)
+ 
+-#define CUR_TEMP_SHIFT				21
+-#define CUR_TEMP_RANGE_SEL_MASK			BIT(19)
++#define ZEN_SVI_BASE				0x0005A000
+ 
+-#define CFACTOR_ICORE				1000000	/* 1A / LSB	*/
+-#define CFACTOR_ISOC				250000	/* 0.25A / LSB	*/
++/* F17h thermal registers through SMN */
++#define F17H_M01H_SVI_TEL_PLANE0		(ZEN_SVI_BASE + 0xc)
++#define F17H_M01H_SVI_TEL_PLANE1		(ZEN_SVI_BASE + 0x10)
++
++#define F17H_CFACTOR_ICORE			1000000	/* 1A / LSB	*/
++#define F17H_CFACTOR_ISOC			250000	/* 0.25A / LSB	*/
+ 
+ struct k10temp_data {
+ 	struct pci_dev *pdev;
+@@ -168,10 +170,10 @@ static void read_tempreg_nb_f15(struct pci_dev *pdev, u32 *regval)
+ 			  F15H_M60H_REPORTED_TEMP_CTRL_OFFSET, regval);
+ }
+ 
+-static void read_tempreg_nb_f17(struct pci_dev *pdev, u32 *regval)
++static void read_tempreg_nb_zen(struct pci_dev *pdev, u32 *regval)
+ {
+ 	amd_smn_read(amd_pci_dev_to_node_id(pdev),
+-		     F17H_M01H_REPORTED_TEMP_CTRL_OFFSET, regval);
++		     ZEN_REPORTED_TEMP_CTRL_OFFSET, regval);
+ }
+ 
+ static long get_raw_temp(struct k10temp_data *data)
+@@ -180,7 +182,7 @@ static long get_raw_temp(struct k10temp_data *data)
+ 	long temp;
+ 
+ 	data->read_tempreg(data->pdev, &regval);
+-	temp = (regval >> CUR_TEMP_SHIFT) * 125;
++	temp = (regval >> ZEN_CUR_TEMP_SHIFT) * 125;
+ 	if (regval & data->temp_adjust_mask)
+ 		temp -= 49000;
+ 	return temp;
+@@ -288,8 +290,8 @@ static int k10temp_read_temp(struct device *dev, u32 attr, int channel,
+ 			break;
+ 		case 2 ... 9:		/* Tccd{1-8} */
+ 			amd_smn_read(amd_pci_dev_to_node_id(data->pdev),
+-				     F17H_M70H_CCD_TEMP(channel - 2), &regval);
+-			*val = (regval & F17H_M70H_CCD_TEMP_MASK) * 125 - 49000;
++				     ZEN_CCD_TEMP(channel - 2), &regval);
++			*val = (regval & ZEN_CCD_TEMP_MASK) * 125 - 49000;
+ 			break;
+ 		default:
+ 			return -EOPNOTSUPP;
+@@ -438,7 +440,7 @@ static int svi_show(struct seq_file *s, void *unused)
+ {
+ 	struct k10temp_data *data = s->private;
+ 
+-	k10temp_smn_regs_show(s, data->pdev, F17H_M01H_SVI, 32);
++	k10temp_smn_regs_show(s, data->pdev, ZEN_SVI_BASE, 32);
+ 	return 0;
+ }
+ DEFINE_SHOW_ATTRIBUTE(svi);
+@@ -448,7 +450,7 @@ static int thm_show(struct seq_file *s, void *unused)
+ 	struct k10temp_data *data = s->private;
+ 
+ 	k10temp_smn_regs_show(s, data->pdev,
+-			      F17H_M01H_REPORTED_TEMP_CTRL_OFFSET, 256);
++			      ZEN_REPORTED_TEMP_CTRL_OFFSET, 256);
+ 	return 0;
+ }
+ DEFINE_SHOW_ATTRIBUTE(thm);
+@@ -528,8 +530,8 @@ static void k10temp_get_ccd_support(struct pci_dev *pdev,
+ 
+ 	for (i = 0; i < limit; i++) {
+ 		amd_smn_read(amd_pci_dev_to_node_id(pdev),
+-			     F17H_M70H_CCD_TEMP(i), &regval);
+-		if (regval & F17H_M70H_CCD_TEMP_VALID)
++			     ZEN_CCD_TEMP(i), &regval);
++		if (regval & ZEN_CCD_TEMP_VALID)
+ 			data->show_temp |= BIT(TCCD_BIT(i));
+ 	}
+ }
+@@ -565,8 +567,8 @@ static int k10temp_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		data->read_htcreg = read_htcreg_nb_f15;
+ 		data->read_tempreg = read_tempreg_nb_f15;
+ 	} else if (boot_cpu_data.x86 == 0x17 || boot_cpu_data.x86 == 0x18) {
+-		data->temp_adjust_mask = CUR_TEMP_RANGE_SEL_MASK;
+-		data->read_tempreg = read_tempreg_nb_f17;
++		data->temp_adjust_mask = ZEN_CUR_TEMP_RANGE_SEL_MASK;
++		data->read_tempreg = read_tempreg_nb_zen;
+ 		data->show_temp |= BIT(TDIE_BIT);	/* show Tdie */
+ 		data->is_zen = true;
+ 
+@@ -578,15 +580,15 @@ static int k10temp_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 			data->show_current = !is_threadripper() && !is_epyc();
+ 			data->svi_addr[0] = F17H_M01H_SVI_TEL_PLANE0;
+ 			data->svi_addr[1] = F17H_M01H_SVI_TEL_PLANE1;
+-			data->cfactor[0] = CFACTOR_ICORE;
+-			data->cfactor[1] = CFACTOR_ISOC;
++			data->cfactor[0] = F17H_CFACTOR_ICORE;
++			data->cfactor[1] = F17H_CFACTOR_ISOC;
+ 			k10temp_get_ccd_support(pdev, data, 4);
+ 			break;
+ 		case 0x31:	/* Zen2 Threadripper */
+ 		case 0x71:	/* Zen2 */
+ 			data->show_current = !is_threadripper() && !is_epyc();
+-			data->cfactor[0] = CFACTOR_ICORE;
+-			data->cfactor[1] = CFACTOR_ISOC;
++			data->cfactor[0] = F17H_CFACTOR_ICORE;
++			data->cfactor[1] = F17H_CFACTOR_ISOC;
+ 			data->svi_addr[0] = F17H_M01H_SVI_TEL_PLANE1;
+ 			data->svi_addr[1] = F17H_M01H_SVI_TEL_PLANE0;
+ 			k10temp_get_ccd_support(pdev, data, 8);
+-- 
+2.25.2
 
