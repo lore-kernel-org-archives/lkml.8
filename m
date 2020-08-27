@@ -2,90 +2,113 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A62C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23555C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87EA720737
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E97B122BEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:11:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wc+72D4S"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XendloUh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgH0RLw (ORCPT
+        id S1727116AbgH0RL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:11:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgH0RLs (ORCPT
+        Thu, 27 Aug 2020 13:11:57 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41036 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727013AbgH0RLz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:11:48 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D031C06121B;
-        Thu, 27 Aug 2020 10:11:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description;
-        bh=va1W/wu0D2iKj3V3xi8LWa26LKykVBSskhKiiZRnxsM=; b=Wc+72D4Setyn4hb763n+bQ0Ll0
-        rWVVCK4Cwpy33AK+exuym+jzlUoVQij9cNl7t3cVf2cyjktpJenJc/oSEmSKq34rxofCc8Z3Dk9ZE
-        GC1/Sd6Ta1McDcJfEF3HIMMFpWJhDWnqwauhdq9RGSc5u9HC/ZUKfreAM7rLSZhgjUMGuYOH6Y9DB
-        WceTwioIp00zsvMNx5ztgvn0k5TZMYcg/6gMVPsYoyArICjCTy5MsfrRPsiEBeK8FqhKiu5/Qgbj3
-        v2ve7Udg1uHQCvt4KS1Rflp6qYhdtao2EHnC3hTberxOb3+HPaKtDNkB3WoLsLac/CTJKsr4XtPb6
-        /p3O2jvA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBLR4-0000T0-UW; Thu, 27 Aug 2020 17:11:39 +0000
-Subject: Re: [PATCH v2] power: supply: Add support for RN5T618/RC5T619 charger
- and fuel gauge
-To:     Andreas Kemnade <andreas@kemnade.info>, lee.jones@linaro.org,
-        sre@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, b.galvani@gmail.com, phh@phh.me,
-        letux-kernel@openphoenux.org
-References: <20200827170713.12142-1-andreas@kemnade.info>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <68444fa7-895d-3d64-2afd-43fc6d73a8d0@infradead.org>
-Date:   Thu, 27 Aug 2020 10:11:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 27 Aug 2020 13:11:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598548314;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6skhDZK1eBFqInLIv6DlYJCfL20AefptLm3lM0sktaQ=;
+        b=XendloUhFiswFH7LvIYEY6LJUg5M8Fd5YMJtowPxYwGVuSWqYtBzQqKCpyufHdZXnx8JwD
+        T12LdHH8doWvVhlMYG+Lz8ab43uEyS/mjvynEgsk/7DIFLdXJFlHthrxzqIodCHirEOpnR
+        dT7nZAoXe2JHG7E1XP2lAFAVlrpEpK0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-542-4-_sblBzO3mMfn4CsuUU5Q-1; Thu, 27 Aug 2020 13:11:52 -0400
+X-MC-Unique: 4-_sblBzO3mMfn4CsuUU5Q-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0FAAE425DA;
+        Thu, 27 Aug 2020 17:11:50 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.35.206.185])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C73C5D9E8;
+        Thu, 27 Aug 2020 17:11:46 +0000 (UTC)
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND
+        64-BIT)), Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <joro@8bytes.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>
+Subject: [PATCH v3 0/8] KVM: nSVM: ondemand nested state allocation + smm fixes
+Date:   Thu, 27 Aug 2020 20:11:37 +0300
+Message-Id: <20200827171145.374620-1-mlevitsk@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200827170713.12142-1-andreas@kemnade.info>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi--
-
-On 8/27/20 10:07 AM, Andreas Kemnade wrote:
-> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> index 44d3c8512fb8..28cea178f6f1 100644
-> --- a/drivers/power/supply/Kconfig
-> +++ b/drivers/power/supply/Kconfig
-> @@ -739,4 +739,12 @@ config CHARGER_WILCO
->  	  information can be found in
->  	  Documentation/ABI/testing/sysfs-class-power-wilco
->  
-> +config RN5T618_POWER
-> +	tristate "RN5T618 charger/fuel gauge support"
-> +	depends on MFD_RN5T618
-> +	help
-> +	  Say Y here to have support for RN5T618 PMIC family fuel gauge and charger
-
-Missing period at the end of the sentence above.
-
-> +	  This driver can also be built as a module. If so, the module will be
-> +	  called rn5t618_power.
-> +
->  endif # POWER_SUPPLY
-
-
--- 
-~Randy
+This patch series does some refactoring and implements on demand nested sta=
+te area=0D
+This way at least guests that don't use nesting won't waste memory=0D
+on nested state.=0D
+=0D
+This patch series is based on patch series '[PATCH 0/3] Few nSVM bugfixes'=
+=0D
+(patch #7 here should have beeing moved there as well to be honest)=0D
+=0D
+The series was tested with various nested guests, and it seems to work=0D
+as long as I disable the TSC deadline timer (this is unrelated to this=0D
+patch series)=0D
+=0D
+I addressed the review feedback from V2, and added few refactoring=0D
+patches to this series as suggested.=0D
+=0D
+Best regards,=0D
+        Maxim Levitsky=0D
+=0D
+Maxim Levitsky (8):=0D
+  KVM: SVM: rename a variable in the svm_create_vcpu=0D
+  KVM: nSVM: rename nested vmcb to vmcb12=0D
+  KVM: SVM: refactor msr permission bitmap allocation=0D
+  KVM: SVM: use __GFP_ZERO instead of clear_page=0D
+  KVM: SVM: refactor exit labels in svm_create_vcpu=0D
+  KVM: x86: allow kvm_x86_ops.set_efer to return a value=0D
+  KVM: emulator: more strict rsm checks.=0D
+  KVM: nSVM: implement ondemand allocation of the nested state=0D
+=0D
+ arch/x86/include/asm/kvm_host.h |   2 +-=0D
+ arch/x86/kvm/emulate.c          |  22 ++-=0D
+ arch/x86/kvm/svm/nested.c       | 267 ++++++++++++++++++--------------=0D
+ arch/x86/kvm/svm/svm.c          | 106 +++++++------=0D
+ arch/x86/kvm/svm/svm.h          |  10 +-=0D
+ arch/x86/kvm/vmx/vmx.c          |   9 +-=0D
+ arch/x86/kvm/x86.c              |   3 +-=0D
+ 7 files changed, 243 insertions(+), 176 deletions(-)=0D
+=0D
+-- =0D
+2.26.2=0D
+=0D
 
