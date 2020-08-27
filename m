@@ -2,111 +2,148 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CE0C433E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FCAC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3A53207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:46:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598571983;
-	bh=WuN9B34LzV+WTdN5AAx7tMjnWGBPJVTM+zsy0W61vqI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bu6PdozTVQW1+Y/OFLKykyhG+j6L/NsQu6Z4F6CtGcg0kyWo11+d4dFJxFn4Kli0/
-	 AE1CBufnoGFm3h5L2jGBYRmS57nC6pR0Ib5MoHRrwYwQFt8GSKd6zyIoO64vkm/hXS
-	 XU5SNL3cHjjSWwGOcJ2bztP6fSfUnAyUZwE+uX/4=
+	by mail.kernel.org (Postfix) with ESMTP id 8220B206EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:50:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I5UV8cFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgH0XqW (ORCPT
+        id S1728035AbgH0Xuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 19:46:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbgH0XqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 19:46:22 -0400
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B0C720C09
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 23:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598571981;
-        bh=WuN9B34LzV+WTdN5AAx7tMjnWGBPJVTM+zsy0W61vqI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tBi+YX5JtPQczBiO05W9F5ZP739Ts1GRyM8mvOvl/GR8Cm7ZQmsuGKUPaSTzAdU05
-         wSGs1hpiFVtz1EpSoDjhL5S6gs1D3esyPeMTuMdkbpn1Dmjg60I3T79rJmgGVRtAJz
-         un3M6jy9tqRSbFPbQJasWRxguUndBWATe52iDdts=
-Received: by mail-ej1-f43.google.com with SMTP id o18so9961656eje.7
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 16:46:21 -0700 (PDT)
-X-Gm-Message-State: AOAM530YPg5EVf4e9S8QqaaBwk5ErQqnh6htnTEkzHsDjrt1RIcplNer
-        en3eguqAqtYLS01iQeTQM0kDGV06whN+1imbSw==
-X-Google-Smtp-Source: ABdhPJwOl/tRuPJoLPgbirz4Djn6rAAeOTWUMMwHZS2nr/HOlGX4LL/IA2S6rKrQkxqp557HPNIsWsEIZg6W73JHyf8=
-X-Received: by 2002:a17:906:15cc:: with SMTP id l12mr24340249ejd.7.1598571979711;
- Thu, 27 Aug 2020 16:46:19 -0700 (PDT)
+        Thu, 27 Aug 2020 19:50:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgH0Xuc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 19:50:32 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED61C061264;
+        Thu, 27 Aug 2020 16:50:32 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id b17so9984493ejq.8;
+        Thu, 27 Aug 2020 16:50:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=/iHX8oGR/qHNguoGaFGrBXIYpiYEp0r+O9Pxal1CvIs=;
+        b=I5UV8cFx9ujIWThpozl3aeYobfe7itCA8dgDcxCXcFA8+sa5SXT6A+BvxLsOBpCWfG
+         JFTXBd5xixrKQDpEwc91se/fOtQPIPfLrgzNy8KgjmaoiYmgsaPnK43NqHuQhQqLDKDJ
+         mYV6QJUPJTIY1lyIDJBUKJUUR8SgaTtYrcv3vkjRf0PoJX0SElRESKpqU6XXRKTh83um
+         Ue8EfJHo1jYzB9m3sLA+ylMUlq/6cvmVVZW+ShqFD02NBsOeND2YyKWBcMwOZFCMnRGZ
+         3U8rI03xSaa9V5hmw9GmN2DhrcFNpH4ki4wr/uz7HAWEa4MvgvmCF+5zjhbqfXysPkIu
+         wewA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/iHX8oGR/qHNguoGaFGrBXIYpiYEp0r+O9Pxal1CvIs=;
+        b=BtSi8C3uITnYcX4p4VCzlvlXuJ35bLH64U9D512c8my8fviGSV43zKtbf9Bgz4sq3j
+         df8EweZ+VuoPG6J0Vty2+u72NaU9L4dDR1XHgYZ8nzRf0xkHydlI0TFXjXbIHe+fJRGl
+         oRmVP5xKh+MWYz/AJPijNGH8mdFFELy4bq5uV17kvH0Jf4Nf2y3LczOmL9GnbIKhq7Jj
+         R/inSc3ZqTK0Q2yq84wiYYFRBHQIROfDfepxdadiO+uq0LiPlHCJW5yNNsAw+T4HVk1Z
+         tSybZ67XTDgkIieULRTMbecAA7BilRrdPu1B1XsZRMHj5D6qlFyDL9zaKFEFGe2Lwi55
+         Vaag==
+X-Gm-Message-State: AOAM531TvFwkpwWAH8/B117fBxTdgFY0M8zm+W7zku3L44pLEWM0hR/j
+        Co01L2wFEk3nGSe3JPo228u/J7CLgx0=
+X-Google-Smtp-Source: ABdhPJxe41pDqlt8z7rWnm7iA4xL2l2aNVBiKnpjNyw1hFkOggMWiFc+ld1lXwXyqqfiL1qsMYrc/Q==
+X-Received: by 2002:a17:906:7715:: with SMTP id q21mr22968687ejm.251.1598572230480;
+        Thu, 27 Aug 2020 16:50:30 -0700 (PDT)
+Received: from [192.168.0.48] (HSI-KBW-046-005-005-126.hsi8.kabel-badenwuerttemberg.de. [46.5.5.126])
+        by smtp.gmail.com with ESMTPSA id e4sm3127559ejk.76.2020.08.27.16.50.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Aug 2020 16:50:29 -0700 (PDT)
+Subject: Re: [ANNOUNCE] Reiser5: Selective File Migration - User Interface
+To:     Metztli Information Technology <jose.r.r@metztli.com>,
+        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200827215351.620A468F3402@huitzilopochtli.metztli-it.com>
+From:   Edward Shishkin <edward.shishkin@gmail.com>
+Message-ID: <62dc962d-1dfd-641d-08ca-4abf62b50917@gmail.com>
+Date:   Fri, 28 Aug 2020 01:50:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-References: <20200819081752.4805-1-linux@fw-web.de> <20200819081752.4805-4-linux@fw-web.de>
- <trinity-14a1b182-38ab-4f84-bb72-94d448b05fd5-1597994235320@3c-app-gmx-bs37>
- <81276d4c-8883-8bfd-d7d0-9b9ac025ed97@gmail.com> <trinity-ddd51146-41eb-49ae-9456-4588450d31aa-1598535710011@3c-app-gmx-bap26>
- <e0edfd9f-5916-80ee-3bef-92d7050f97db@gmail.com>
-In-Reply-To: <e0edfd9f-5916-80ee-3bef-92d7050f97db@gmail.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Fri, 28 Aug 2020 07:46:07 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9R24-tcAMSfDhxLEXDFPAbMd5fYm8EwGODDMpULq-UZA@mail.gmail.com>
-Message-ID: <CAAOTY_9R24-tcAMSfDhxLEXDFPAbMd5fYm8EwGODDMpULq-UZA@mail.gmail.com>
-Subject: Re: Aw: Re: [PATCH v5 3/7] drm/mediatek: disable tmds on mt2701
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Frank Wunderlich <linux@fw-web.de>,
-        chunkuang Hu <chunkuang.hu@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200827215351.620A468F3402@huitzilopochtli.metztli-it.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Frank:
 
-Matthias Brugger <matthias.bgg@gmail.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=88=
-27=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8810:28=E5=AF=AB=E9=81=93=EF=
-=BC=9A
->
->
->
-> On 27/08/2020 15:41, Frank Wunderlich wrote:
-> > Hi Matthias,
-> >
-> > any opinions about the dts-changes?
-> >
->
-> they look good to me.
->
-> > maybe series except the tmds-Patch get merged...so i add it only to my =
-own repo till we find a better way?
-> > currently mainline does not support hdmi at all for the board. the tmds=
--patch is only a fix for specific resolutions which have a "flickering" wit=
-hout this Patch.
-> >
->
-> Well let's see what CK's opinion.
->
 
-Because no one has comment on this patch, I could apply this patch but
-I need you to add more experiment information so if someone meets
-another bug, he could fix his bug and consider your problem.
+On 08/27/2020 11:53 PM, Metztli Information Technology wrote:
+> On Wed, Aug 26, 2020 at 2:13 PM Edward Shishkin <edward.shishkin@gmail.com> wrote:
+>>
+>> [...]
+>>
+>>>
+>>> FYI Although not officially, the Debian metaframework Buster AMD64 distribution might be the first to support native installation of Reiser4 SFRN 5.1.3, kernel and reiser4progs 2.0.3, file system utilities.
+>>>
+>>> I have already made a couple of successful Metztli Reiser4 SFRN 5 native installations onto ~100 GB slices, which root file system is formatted in 'Reiser5' and 1 GB /boot in JFS.
+>>> https://metztli.it/reiser5 (Screenshot 600x338 size)
+>>>
+>>> The upgraded netboot installation media metztli-reiser4-sfrn5.iso is available at:
+>>> https://sourceforge.net/projects/debian-reiser4/
+>>> as well as
+>>> https://metztli.it/buster-reiser5/metztli-reiser4-sfrn5.iso
+>>> https://metztli.it/buster-reiser5/metztli-reiser4-sfrn5.iso.SHA256SUM
+>>>
+>>> Likely the brick/volume feature(s) will be useful in Cloud fabric infrastructures, like Google's, where reiser4 excels.
+>>>
+>>> The current SFRN 5.1.3 -patched Zstd -compressed kernel in the installation media is Debian's 5.7.10.
+>>
+>>
+>> wow, reiser5 from the box? I might want to try..
+> Well, it is more of a 'reference implementation' as there are persons who reached out to me because their builds succeeded, they were able to format in reiser4 SFRN x.y.z, but they were not able to mount their partition(s).
+> Turns out, they were inadvertently mixing SFRN 4.0.2 with 5.1.3, either in the reiser4 kernel patch -- released with the same in both instances -- or in the reiser4progs.
 
-Regards,
-Chun-Kuang.
 
-> Regards,
-> Matthias
+Yeah, some confusion can take place. Plus unsupported old 4.0.2
+volumes (a special build with CONFIG_REISER4_OLD=y is required to
+mount them), which is a payment for performance.
+
+
+> 
+>>
+>>>
+>>> The installer defaults to create the root system reiser5 -formatted partition as:
+>>> mkfs.reiser4 -yo "create=reg42"
+>>
+>>
+>> "reg42" is default profile in reiser4progs-2.0.3 (check by
+>> "mkfs.reiser4 -p") - there is no need to specify it via option.
+> Acknowledged. Thanks.
+> 
+>>
+>> Have you had a chance to play with logical volumes (add/remove
+>> bricks, etc)?
+> That is coming up. I still have to create/customize an image of Metztli Reiser4 SFRN5 for a Google Compute Engine (GCE) minimal ~200GB instance for evaluation.
+> Fact is 'not all clouds are created equal' -- even if KVM -based. For instance, reiser4 SFRN 4.0.2 on a trial Linode small ~80GB SSD slice(s) with 2 virtual cpus frequently hung under short sustained disk/network I/O usage.
+> I have not experienced that with reiser4 SFRN 4.0.2 on GCE -- where sometimes I allocate eight to sixteen virtual cpus with 16, 32, or even 64, GBs of RAM, on a region hosting AMD Epyc, for fast kernel building ops.
+> 
+> But testing a relatively small bootable image first will usually provide insight if adding one, two... eight, TB slices will make sense later on.
+
+
+I played with your media on a virtual machine. The basic volume
+operations work, however, I guess, adding brick(s) to "/" will cause
+problems at next boot: someone has to register all the bricks before
+mounting "/"...
+
+It seems that we need to maintain a kind of volume configuration (at
+/etc/reiser4, or so) to automate that process. Unfortunately, I am
+currently busy with making things stable. If anyone could take a look
+at this, I would be appreciated.
+
+Thanks,
+Edward.
