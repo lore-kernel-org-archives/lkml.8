@@ -2,202 +2,277 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE25C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99913C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D467207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C1A1206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:45:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JF+al2Zv"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="oCQzKRPO";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="VK4hMYwt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgH0NoT (ORCPT
+        id S1727104AbgH0Npm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 09:44:19 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49350 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726878AbgH0NiL (ORCPT
+        Thu, 27 Aug 2020 09:45:42 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:52738 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727849AbgH0N3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:38:11 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07RCXfeg084305;
-        Thu, 27 Aug 2020 09:02:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=CAFv2blrdNVkba2GOU5DWldysApaKSbTk/ljao+durg=;
- b=JF+al2ZvL3YkBcPuoxv+nADJ2fqTrMsGBQAjK/9dNocfEyyUTISFGggha3CYPYSVVb4d
- 6SsdAu5oIYml1C9hSQICq1PHXeAI6Q000rW+1wT4/512mKV9Cw/B3govQ568XkwTBohQ
- +81kA6fHCniAcbMp0xCd+JS8ispbT2Iqvx7pn2v/K+Z5APf70CqBltOTh9FgKY6UGXtm
- yHDedugRMwbYisBa0pbbu8fIGXVcK0ms0bWpjNZNcyfosHg/mpsRHt97R3XMTALxy+YO
- /YBAXlGOg98wMn/e1tIF7Rxv5IUd7mV4haOnRigWIhKsIEPx7zzVpREEihiUb4EgbfE+ 1g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 336cddj1d6-1
+        Thu, 27 Aug 2020 09:29:16 -0400
+Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
+        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07RDS7t9004807;
+        Thu, 27 Aug 2020 06:29:10 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=miwka1d2j2ZjmazIKD563V3VQqO6F8hQyfmmLTH4uqM=;
+ b=oCQzKRPOUq5b7iHRgOyoU0oLLPHzZ67tmJh5uQV3k6Q24WfgbhtjVzKrRo9JDk2WI2fO
+ Dhx4BeQOhPdbDrJsusGJpQ6yJyby2DI0N3J9bAdRKLpWhqbsgK+c/Q1AMcNr6GTxaDCa
+ g4hcdGIJynqA3UORoC7lz8lsIzUDCzwi18RpC6P9U3un4BLp+rj9RyTQJpBcB66H/iFd
+ Htfh1X9RbZm3nDBdXDVsRjz2jxJwMF0bdYrS3ePx4uR39RBorsCAAXLW6Az3T7p0lpZ3
+ zmFjOEd9dID1s14qO+iAMxw2E+CHsEcfvFPa+yeRZJPKWGgCMxISeIonwqwYS7Tmb+eK CQ== 
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2169.outbound.protection.outlook.com [104.47.59.169])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 332yww45e2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 09:02:54 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07RCacri094991;
-        Thu, 27 Aug 2020 09:02:53 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 336cddj1ce-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 09:02:53 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07RD1kTL007144;
-        Thu, 27 Aug 2020 13:02:52 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma03dal.us.ibm.com with ESMTP id 332utu4jav-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 13:02:52 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07RD2pdc52494676
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Aug 2020 13:02:52 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D88CCAE05F;
-        Thu, 27 Aug 2020 13:02:51 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6897AAE060;
-        Thu, 27 Aug 2020 13:02:46 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.79.210.202])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Aug 2020 13:02:46 +0000 (GMT)
-Subject: Re: [perf/core] 16fb162e78:
- WARNING:at_kernel/events/core.c:#list_add_event
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     acme@kernel.org, jolsa@redhat.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        daniel@iogearbox.net, brho@google.com, srikar@linux.vnet.ibm.com,
-        0day robot <lkp@intel.com>, lkp@lists.01.org
-References: <20200827083757.GQ4299@shao2-debian>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <bd699fba-7227-c18f-3d05-919b7876ae6f@linux.ibm.com>
-Date:   Thu, 27 Aug 2020 18:32:44 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 27 Aug 2020 06:29:10 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J8Yxg9/IyXfhoj2ALv/rFx0ajuGgMPeyDZ0hVNya5sz1xTYNAaEJsZWBfKQByHhU7xy5b6IO8wwQhBnwWTJT865TsfhuQ8OyixY/XT4WtSDuNWtplbyk+Yqp4u8SpkbMvolD/DUqtvW0J5R4K5wXsKt3K3o/UdU9NekycUgFs5IdZ1Jd1PUawj/p8Mjo79EEuUuYH4vMcO+vySzUHL5WNgoTbPXwExzW6GIzaXXBZNAmEXR01zpOb9TtLdFrTih6e7ii35CWgqLR6FRgpXXKnFJKDX/lOu1TvXvM02wpFa7kmgZPZjbZ+lRnJRGpKLQ5TKKjzZvPjb1eiZsx+5MSOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=miwka1d2j2ZjmazIKD563V3VQqO6F8hQyfmmLTH4uqM=;
+ b=UnNKflFB/wjJgdJdNXfRM/QfLZkZHrLUTgjNw3nPIhpPTkpHP1BNQw3jaSOLG1aS2hvih2/exnTSJKZI4+HwR0OulNPjbvDzg1lHkB2l/4loxxIyQ0JDhE53T3ApEM/sZ9KThwhNJyoiSu2WL+AJRjgeoO4h5AH3FU9YoGSyDWr4WDMHuQbFQsV3E32nhmu8kJQKt6MoUn82R2JECFYAAwma++CO5Qmcp/S70NQTcr634xvOv6ZUx1xrVGB/yExQD5ww8hOfkcj5NZSCbmLLTwe9K8G8KlUkgaJ0SuzFgAOuzq0X2zjTKlE5VnO2NUoBmuItMy/4I5j2YJLY79jjUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 199.43.4.23) smtp.rcpttodomain=kernel.org smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=miwka1d2j2ZjmazIKD563V3VQqO6F8hQyfmmLTH4uqM=;
+ b=VK4hMYwtKRYIj5mbAzlaNznSaHT3WMg7LXIPbOCInd3df1xR1ahnNWY1ZbSIBRdbGOqSOT1cfA4cMVg00mQGE8eBL8kPAMlq5ypPJxTs5rTYDfvWDCshR1s1Yt64crkx8R/XwkM+HWMTfezfij0FHTEbrz4jm/Fu/XjKDd7cSWo=
+Received: from DM5PR18CA0064.namprd18.prod.outlook.com (2603:10b6:3:22::26) by
+ BL0PR07MB5043.namprd07.prod.outlook.com (2603:10b6:208:4c::32) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3305.26; Thu, 27 Aug 2020 13:29:07 +0000
+Received: from DM6NAM12FT053.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:3:22:cafe::96) by DM5PR18CA0064.outlook.office365.com
+ (2603:10b6:3:22::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.20 via Frontend
+ Transport; Thu, 27 Aug 2020 13:29:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 199.43.4.23)
+ smtp.mailfrom=cadence.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=pass action=none header.from=cadence.com;
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 199.43.4.23 as permitted sender) receiver=protection.outlook.com;
+ client-ip=199.43.4.23; helo=rmmaillnx1.cadence.com;
+Received: from rmmaillnx1.cadence.com (199.43.4.23) by
+ DM6NAM12FT053.mail.protection.outlook.com (10.13.179.125) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3326.19 via Frontend Transport; Thu, 27 Aug 2020 13:29:05 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 07RDSrRn001550
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Thu, 27 Aug 2020 09:29:03 -0400
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Thu, 27 Aug 2020 15:28:54 +0200
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 27 Aug 2020 15:28:54 +0200
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 07RDSsHn018766;
+        Thu, 27 Aug 2020 15:28:54 +0200
+Received: (from sjakhade@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 07RDSsND018765;
+        Thu, 27 Aug 2020 15:28:54 +0200
+From:   Swapnil Jakhade <sjakhade@cadence.com>
+To:     <vkoul@kernel.org>, <kishon@ti.com>, <robh+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC:     <mparab@cadence.com>, <sjakhade@cadence.com>,
+        <yamonkar@cadence.com>, <tomi.valkeinen@ti.com>, <jsarha@ti.com>,
+        <nsekhar@ti.com>
+Subject: [PATCH v2 7/7] dt-bindings: phy: cadence-torrent: Update Torrent PHY bindings for generic use
+Date:   Thu, 27 Aug 2020 15:28:52 +0200
+Message-ID: <1598534932-18693-8-git-send-email-sjakhade@cadence.com>
+X-Mailer: git-send-email 2.4.5
+In-Reply-To: <1598534932-18693-1-git-send-email-sjakhade@cadence.com>
+References: <1598534932-18693-1-git-send-email-sjakhade@cadence.com>
 MIME-Version: 1.0
-In-Reply-To: <20200827083757.GQ4299@shao2-debian>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ce2f86e9-4431-4696-5bd9-08d84a8d2b88
+X-MS-TrafficTypeDiagnostic: BL0PR07MB5043:
+X-Microsoft-Antispam-PRVS: <BL0PR07MB5043D3D2541BA006D6D94A31C5550@BL0PR07MB5043.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NeFb/JCM87A0zGMnW4amVR0j8/jfm1UtiFO9t7Oc61GqUUCzmJEGXh1AU80lSugRCI+kmBfr313XIP+P/PWirFXHKvSoNk51PGrE5yJvOtYt43U2bjzN9VvRvz6pUqKdq1moCEe4wprUQoTSlXj42ru1nDXhGlns1OG+XClZxwiCWFKra84rP8+/6MK5o0Z/MYMja6zkrH6x134WtAfSUidNuufG2sFDGrXYHfaqs+fUeDoPTo7WeS/PPrCIWdJIK1bsuzSk6Cz99ncYmObZqCVtAd87SZXz4XejKD97J4K6ZUYnMxam5iukh8AqL0LkCBmP6f5LPv5Lr2UeyFzDiR4KzbUmccvICeHFwZUT4rJi8tU6q1aBf4si5AdmgqnkJmvp6ADM0yrcDgj8pYndqdRZFFu9XqWgL5MgCMmixWpuKh/vw53AnUVtS/Z6VRlaXAxa2wvoaMbAho5tn1t4JAEy0pExPiQd7KPngCXdwzayxJhuSbpSHz0bdqE6liEOqUL+9CSIuTAr6MYfv6z0Ag==
+X-Forefront-Antispam-Report: CIP:199.43.4.23;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:rmmaillnx1.cadence.com;PTR:ErrorRetry;CAT:NONE;SFS:(4636009)(346002)(39860400002)(376002)(136003)(396003)(36092001)(46966005)(70206006)(4326008)(316002)(356005)(42186006)(70586007)(82310400002)(8676002)(54906003)(110136005)(83380400001)(2906002)(8936002)(26005)(426003)(82740400003)(86362001)(186003)(15650500001)(2616005)(36756003)(336012)(5660300002)(478600001)(81166007)(47076004)(41533002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2020 13:29:05.3456
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce2f86e9-4431-4696-5bd9-08d84a8d2b88
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.23];Helo=[rmmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM12FT053.eop-nam12.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR07MB5043
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-27_07:2020-08-27,2020-08-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
- malwarescore=0 adultscore=0 lowpriorityscore=0 mlxscore=0 spamscore=0
- bulkscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008270094
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
+ bulkscore=0 mlxlogscore=989 spamscore=0 priorityscore=1501 impostorscore=0
+ malwarescore=0 lowpriorityscore=0 clxscore=1015 adultscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008270102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Torrent PHY can be used in different multi-link multi-protocol
+configurations including protocols other than DisplayPort also,
+such as PCIe, USB, SGMII, QSGMII etc. Update the bindings to have
+support for these configurations.
 
+Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+---
+ .../bindings/phy/phy-cadence-torrent.yaml     | 76 ++++++++++++++-----
+ 1 file changed, 58 insertions(+), 18 deletions(-)
 
-On 8/27/20 2:07 PM, kernel test robot wrote:
-> Greeting,
-> 
-> FYI, we noticed the following commit (built with gcc-9):
-> 
-> commit: 16fb162e7868b8f3c1fc09ef0d683c9554cb6404 ("[RFC] perf/core: Fixes hung issue on perf stat command during cpu hotplug")
-> url: https://github.com/0day-ci/linux/commits/Kajol-Jain/perf-core-Fixes-hung-issue-on-perf-stat-command-during-cpu-hotplug/20200826-173643
-> base: https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git 2cb5383b30d47c446ec7d884cd80f93ffcc31817
-> 
+diff --git a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+index a7ee19d27c19..1b9e1231f8d8 100644
+--- a/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
++++ b/Documentation/devicetree/bindings/phy/phy-cadence-torrent.yaml
+@@ -4,11 +4,13 @@
+ $id: "http://devicetree.org/schemas/phy/phy-cadence-torrent.yaml#"
+ $schema: "http://devicetree.org/meta-schemas/core.yaml#"
+ 
+-title: Cadence Torrent SD0801 PHY binding for DisplayPort
++title: Cadence Torrent SD0801 PHY binding
+ 
+ description:
+   This binding describes the Cadence SD0801 PHY (also known as Torrent PHY)
+-  hardware included with the Cadence MHDP DisplayPort controller.
++  hardware included with the Cadence MHDP DisplayPort controller. Torrent
++  PHY also supports multilink multiprotocol combinations including protocols
++  such as PCIe, USB, SGMII, QSGMII etc.
+ 
+ maintainers:
+   - Swapnil Jakhade <sjakhade@cadence.com>
+@@ -49,13 +51,14 @@ properties:
+       - const: dptx_phy
+ 
+   resets:
+-    maxItems: 1
+-    description:
+-      Torrent PHY reset.
+-      See Documentation/devicetree/bindings/reset/reset.txt
++    minItems: 1
++    maxItems: 2
++    items:
++      - description: Torrent PHY reset.
++      - description: Torrent APB reset. This is optional.
+ 
+ patternProperties:
+-  '^phy@[0-7]+$':
++  '^link@[0-7]+$':
+     type: object
+     description:
+       Each group of PHY lanes with a single master lane should be represented as a sub-node.
+@@ -78,13 +81,13 @@ patternProperties:
+           Specifies the type of PHY for which the group of PHY lanes is used.
+           Refer include/dt-bindings/phy/phy.h. Constants from the header should be used.
+         $ref: /schemas/types.yaml#/definitions/uint32
+-        enum: [1, 2, 3, 4, 5, 6]
++        enum: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+ 
+       cdns,num-lanes:
+         description:
+-          Number of DisplayPort lanes.
++          Number of lanes.
+         $ref: /schemas/types.yaml#/definitions/uint32
+-        enum: [1, 2, 4]
++        enum: [1, 2, 3, 4]
+         default: 4
+ 
+       cdns,ssc-mode:
+@@ -108,6 +111,7 @@ patternProperties:
+       - resets
+       - "#phy-cells"
+       - cdns,phy-type
++      - cdns,num-lanes
+ 
+     additionalProperties: false
+ 
+@@ -141,14 +145,50 @@ examples:
+             clock-names = "refclk";
+             #address-cells = <1>;
+             #size-cells = <0>;
+-            phy@0 {
+-                      reg = <0>;
+-                      resets = <&phyrst 1>, <&phyrst 2>,
+-                               <&phyrst 3>, <&phyrst 4>;
+-                      #phy-cells = <0>;
+-                      cdns,phy-type = <PHY_TYPE_DP>;
+-                      cdns,num-lanes = <4>;
+-                      cdns,max-bit-rate = <8100>;
++            link@0 {
++                reg = <0>;
++                resets = <&phyrst 1>, <&phyrst 2>,
++                         <&phyrst 3>, <&phyrst 4>;
++                #phy-cells = <0>;
++                cdns,phy-type = <PHY_TYPE_DP>;
++                cdns,num-lanes = <4>;
++                cdns,max-bit-rate = <8100>;
++            };
++        };
++    };
++  - |
++    #include <dt-bindings/phy/phy.h>
++    #include <dt-bindings/phy/phy-cadence-torrent.h>
++
++    bus {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        torrent-phy@f0fb500000 {
++            compatible = "cdns,torrent-phy";
++            reg = <0xf0 0xfb500000 0x0 0x00100000>;
++            reg-names = "torrent_phy";
++            resets = <&phyrst 0>, <&phyrst 1>;
++            clocks = <&ref_clk>;
++            clock-names = "refclk";
++            #address-cells = <1>;
++            #size-cells = <0>;
++            link@0 {
++                reg = <0>;
++                resets = <&phyrst 2>, <&phyrst 3>;
++                #phy-cells = <0>;
++                cdns,phy-type = <PHY_TYPE_PCIE>;
++                cdns,num-lanes = <2>;
++                cdns,ssc-mode = <TORRENT_SERDES_NO_SSC>;
++            };
++
++            link@2 {
++                reg = <2>;
++                resets = <&phyrst 4>;
++                #phy-cells = <0>;
++                cdns,phy-type = <PHY_TYPE_SGMII>;
++                cdns,num-lanes = <1>;
++                cdns,ssc-mode = <TORRENT_SERDES_NO_SSC>;
+             };
+         };
+     };
+-- 
+2.26.1
 
-Hi Rong Chen,
-	Thanks for checking. Actually this is old patch, I recently send new updated patch.
-Please let me know if in this patch also you are seeing same issue.
-
-Link to the patch: https://lkml.org/lkml/2020/8/27/101
-
-Thanks,
-Kajol Jain
-
-> in testcase: trinity
-> with following parameters:
-> 
-> 	runtime: 300s
-> 
-> test-description: Trinity is a linux system call fuzz tester.
-> test-url: http://codemonkey.org.uk/projects/trinity/
-> 
-> 
-> on test machine: qemu-system-i386 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
-> 
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> 
-> 
-> +-------------------------------------------------+------------+------------+
-> |                                                 | 2cb5383b30 | 16fb162e78 |
-> +-------------------------------------------------+------------+------------+
-> | boot_successes                                  | 4          | 0          |
-> | boot_failures                                   | 0          | 8          |
-> | WARNING:at_kernel/events/core.c:#list_add_event | 0          | 8          |
-> | EIP:list_add_event                              | 0          | 8          |
-> | kernel_BUG_at_lib/list_debug.c                  | 0          | 8          |
-> | invalid_opcode:#[##]                            | 0          | 8          |
-> | EIP:__list_add_valid                            | 0          | 8          |
-> | Kernel_panic-not_syncing:Fatal_exception        | 0          | 8          |
-> +-------------------------------------------------+------------+------------+
-> 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> 
-> 
-> [   97.084211] WARNING: CPU: 0 PID: 593 at kernel/events/core.c:1807 list_add_event+0x29e/0x4b0
-> [   97.086779] Modules linked in:
-> [   97.087756] CPU: 0 PID: 593 Comm: trinity-main Not tainted 5.9.0-rc1-00012-g16fb162e7868b #1
-> [   97.089783] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> [   97.091980] EIP: list_add_event+0x29e/0x4b0
-> [   97.093322] Code: ef c2 c4 01 83 15 44 ef c2 c4 00 8b 43 60 a8 01 0f 84 9a fd ff ff 8d b6 00 00 00 00 83 05 48 ef c2 c4 01 83 15 4c ef c2 c4 00 <0f> 0b 83 05 50 ef c2 c4 01 83 15 54 ef c2 c4 00 e9 71 fd ff ff 8d
-> [   97.097789] EAX: 00000007 EBX: eee48000 ECX: 00000001 EDX: ee125280
-> [   97.099297] ESI: eeebe200 EDI: 00000001 EBP: eee67dfc ESP: eee67dec
-> [   97.101008] DS: 007b ES: 007b FS: 00d8 GS: 0033 SS: 0068 EFLAGS: 00010046
-> [   97.106936] CR0: 80050033 CR2: 08dfc000 CR3: 2e0bb000 CR4: 00040690
-> [   97.108599] Call Trace:
-> [   97.109457]  __perf_install_in_context+0x286/0x3e0
-> [   97.110759]  remote_function+0x79/0x90
-> [   97.111897]  generic_exec_single+0xc3/0x190
-> [   97.113101]  smp_call_function_single+0x1a3/0x2d0
-> [   97.114364]  ? bpf_fd_reuseport_array_update_elem+0x300/0x300
-> [   97.115866]  task_function_call+0x87/0xc0
-> [   97.117025]  ? __perf_event_enable+0x740/0x740
-> [   97.118248]  perf_install_in_context+0x110/0x450
-> [   97.119540]  __do_sys_perf_event_open+0x13cb/0x1ed0
-> [   97.120833]  __ia32_sys_perf_event_open+0x24/0x40
-> [   97.122097]  __do_fast_syscall_32+0x99/0x110
-> [   97.123213]  do_fast_syscall_32+0x37/0x130
-> [   97.124409]  do_SYSENTER_32+0x23/0x40
-> [   97.125470]  entry_SYSENTER_32+0xb0/0x10d
-> [   97.126592] EIP: 0xb7f11549
-> [   97.127449] Code: 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
-> [   97.131832] EAX: ffffffda EBX: 08e38318 ECX: 00000000 EDX: ffffffff
-> [   97.137556] ESI: ffffffff EDI: 00000002 EBP: 6d656d83 ESP: bfa804ec
-> [   97.139119] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000286
-> [   97.140732] ---[ end trace 57d55e687e8b0e41 ]---
-> 
-> 
-> To reproduce:
-> 
->         # build kernel
-> 	cd linux
-> 	cp config-5.9.0-rc1-00012-g16fb162e7868b .config
-> 	make HOSTCC=gcc-9 CC=gcc-9 ARCH=i386 olddefconfig prepare modules_prepare bzImage
-> 
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
-> 
-> 
-> 
-> Thanks,
-> Rong Chen
-> 
