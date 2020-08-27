@@ -2,83 +2,108 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E93C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AAEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55E872177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E2A42087D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:50:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SbfRWaTY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgH0Ptx (ORCPT
+        id S1727877AbgH0Puj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:49:53 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:30682 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727124AbgH0Ptd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:49:33 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BcnGd6nZSz9v4bY;
-        Thu, 27 Aug 2020 17:49:29 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 5hMLyBVtIKvy; Thu, 27 Aug 2020 17:49:29 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BcnGd60X9z9v4bK;
-        Thu, 27 Aug 2020 17:49:29 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2FE718B884;
-        Thu, 27 Aug 2020 17:49:31 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id W3AYx5BInYwj; Thu, 27 Aug 2020 17:49:31 +0200 (CEST)
-Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3F8A48B888;
-        Thu, 27 Aug 2020 17:49:29 +0200 (CEST)
-Received: by localhost.localdomain (Postfix, from userid 0)
-        id AEFB565D46; Thu, 27 Aug 2020 15:49:29 +0000 (UTC)
-Message-Id: <0a0e09eb3fe183ab1f4f1a1d3f4e58ae5d9cd275.1598543237.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <e8d735102627299303acd8fbec8c7a706b1e7882.1598543237.git.christophe.leroy@csgroup.eu>
-References: <e8d735102627299303acd8fbec8c7a706b1e7882.1598543237.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v1 6/6] powerpc/vdso: Declare vdso_patches[] as __initdata
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 27 Aug 2020 15:49:29 +0000 (UTC)
+        Thu, 27 Aug 2020 11:50:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbgH0Puh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 11:50:37 -0400
+Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00537C061264;
+        Thu, 27 Aug 2020 08:50:36 -0700 (PDT)
+Received: by mail-ua1-x92a.google.com with SMTP id g20so1804578uap.8;
+        Thu, 27 Aug 2020 08:50:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rqgQFayVgaKlkaBGtNrK6F+MRvnVjmjaxJyHhjZ7vS8=;
+        b=SbfRWaTYDdGMHKXhX7od1Wavmkpg1jfntwNI335+Cg5KMF1c5QjtACDPJP2t7sg3/N
+         ZswDOZEqbBrGYKycI0accmJTGZ0cTWczccdaueti0evPm0PCQBkd5q7cYxCPwvs5M+GX
+         +5z7Zc12lbuevG/7MSH6/eQXSUNAhssaiVBCmvq2qER2qzSvzUOoGfN58LW24SHSD8W+
+         TO3Vy+w47diP733htgFi0RP88xab4Th6b6SnGQ0JATeUk5NNVYYw+PHZJ9zj0LESoAhO
+         9OcubkOL/2dN6HpCZSnmvOlIWoSnARhAbQ2z2jiUEfoz5VgEr6dbiaEDnWUcyjYFYL7C
+         nrAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rqgQFayVgaKlkaBGtNrK6F+MRvnVjmjaxJyHhjZ7vS8=;
+        b=HgBqQmSuyjdBXSZGdOUitLyzOwEMuGWU4ctwVlJmJ/Nf4dDRh6Sg4m1iXJG2SlXjqR
+         eGwdFVIHevIY7Aw4HT55btO/f+0KN7ox8vO3+KS2h0AEkZyzYnjhFINEZyfGMZIG674n
+         Pc6xO7+XfcWWKbr5oFffkoBsuWcipnrRS/TvcLF9YAL6FM7fUxsqVBMA0VF1OT5CBjQ+
+         hckdCvYebs1xDwnRCMeM23FEkwgzyrlxDQlpe/BsDM4U43/cUonbGPEtZWFBJmM9Ck7R
+         DJ0sj4H4SnCm4BrZrnqwXxX6BuGVOptlU6qXWat9o3gainGY8qgYBSai590si58aBNWa
+         yinw==
+X-Gm-Message-State: AOAM533C/YzANiLrnzD+svojXLL3PrHczT7sYbyC4Oq8I0qXNeal/Xfj
+        mcuNz2YRN2T19wcw+HL0fO97zQdt0ecWlT6qnrC6xCSuGGI=
+X-Google-Smtp-Source: ABdhPJxy/uWzerN1lgAoWXWpUsfEkSeXxsPdLqIuN4nEMR8qJ6R/Qt5/Z3rmzAh1YwKglRqTOW0vbD9xVoYIGlv4pQ8=
+X-Received: by 2002:ab0:3443:: with SMTP id a3mr11593386uaq.6.1598543435957;
+ Thu, 27 Aug 2020 08:50:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200824154605.v66t2rsxobt3r5jg@linutronix.de>
+ <20200826080802.5lnnf5wh3kcwfykz@beryllium.lan> <20200826081211.bvk5kfuzh4vlbh5k@linutronix.de>
+ <20200826090518.m6vblobggnfdjau5@beryllium.lan> <20200826104326.xfexkwovwbi2q4el@beryllium.lan>
+ <20200827091910.ibuyr53qprb7qmju@beryllium.lan> <20200827092743.kjl6hkaephx3a64a@linutronix.de>
+ <20200827101622.xx4jzecouxrlwbii@beryllium.lan> <20200827102840.msv556nrah4h4vmq@linutronix.de>
+ <20200827112705.uleixtdmx3pacr5u@beryllium.lan> <20200827124611.tsivo4xopvoenfmy@beryllium.lan>
+In-Reply-To: <20200827124611.tsivo4xopvoenfmy@beryllium.lan>
+From:   Daniel Vacek <neelx.g@gmail.com>
+Date:   Thu, 27 Aug 2020 17:50:24 +0200
+Message-ID: <CAA7rmPG1j0vD4rtv2piLF1UV9qD4mfcXVAHfA3vqGniPUAerrw@mail.gmail.com>
+Subject: Re: [ANNOUNCE] v5.9-rc2-rt1
+To:     Daniel Wagner <wagi@monom.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vdso_patches[] table is used only at init time.
+On Thu, Aug 27, 2020 at 2:49 PM Daniel Wagner <wagi@monom.org> wrote:
+>
+> > Would be interesting to see the size numbers for v5.6-rt? Hmm, I'll
+> > just start the compiler. It's all scripted anyway :)
+>
+> v5.6-rt:
+>
+> -rw-r--r-- 1 wagi users 28688896 Aug 27 13:38 rpi3-image-ll-v5.6.19-rt12
+> -rw-r--r-- 1 wagi users 28688896 Aug 27 13:34 rpi3-image-nohz-v5.6.19-rt12
+> -rw-r--r-- 1 wagi users 29669888 Aug 27 13:32 rpi3-image-none-v5.6.19-rt12
+> -rw-r--r-- 1 wagi users 33438208 Aug 27 13:30 rpi3-image-rt-v5.6.19-rt12
+> -rw-r--r-- 1 wagi users 28688896 Aug 27 13:38 rpi3-image-up-v5.6.19-rt12
+> -rw-r--r-- 1 wagi users 29669888 Aug 27 13:36 rpi3-image-vp-v5.6.19-rt12
+>
+> v5.4-rt:
+>
+> -rw-r--r-- 1 wagi users 27525632 Aug 27 14:40 rpi3-image-ll-v5.4.59-rt36
+> -rw-r--r-- 1 wagi users 27525632 Aug 27 14:36 rpi3-image-nohz-v5.4.59-rt36
+> -rw-r--r-- 1 wagi users 28506624 Aug 27 14:34 rpi3-image-none-v5.4.59-rt36
+> -rw-r--r-- 1 wagi users 32360960 Aug 27 14:32 rpi3-image-rt-v5.4.59-rt36
+> -rw-r--r-- 1 wagi users 27525632 Aug 27 14:40 rpi3-image-up-v5.4.59-rt36
+> -rw-r--r-- 1 wagi users 28506624 Aug 27 14:38 rpi3-image-vp-v5.4.59-rt36
+>
+> So in previous releases the size offset was roughly around 4MB.
 
-Mark it __initdata.
+Maybe the threshold is 33554432, eg. 32 megs...
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/kernel/vdso.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
-index 600df1164a0b..efaaee94f273 100644
---- a/arch/powerpc/kernel/vdso.c
-+++ b/arch/powerpc/kernel/vdso.c
-@@ -76,7 +76,7 @@ struct vdso_patch_def
-  * Currently, we only change sync_dicache to do nothing on processors
-  * with a coherent icache
-  */
--static struct vdso_patch_def vdso_patches[] = {
-+static struct vdso_patch_def vdso_patches[] __initdata = {
- 	{
- 		CPU_FTR_COHERENT_ICACHE, CPU_FTR_COHERENT_ICACHE,
- 		"__kernel_sync_dicache", "__kernel_sync_dicache_p5"
--- 
-2.25.0
-
+--nX
