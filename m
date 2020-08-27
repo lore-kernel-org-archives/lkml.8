@@ -2,116 +2,159 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAEDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E99C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC7420825
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2CA120825
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:28:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oDdz9YfG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SauBhEq5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgH0V1W (ORCPT
+        id S1727041AbgH0V2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 17:27:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38730 "EHLO
+        Thu, 27 Aug 2020 17:28:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbgH0V1V (ORCPT
+        with ESMTP id S1726120AbgH0V2u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 17:27:21 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B32CBC061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 14:27:20 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id r13so4667076ljm.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 14:27:20 -0700 (PDT)
+        Thu, 27 Aug 2020 17:28:50 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43F5EC061264;
+        Thu, 27 Aug 2020 14:28:50 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id j25so9601910ejk.9;
+        Thu, 27 Aug 2020 14:28:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g55UEudSuLNJpqF8hvPsJ8DCaM3U4I3BGVg+2jid6Y0=;
-        b=oDdz9YfG2uDIrPcLq/HUuTXO91wu+DwxIVs2k6sE+uCAgzQkUbkmj59Y/kBTbSCZ9l
-         CMulUQXb0mO3pmUwDLmjq7Vl8iWp5zuDwAhljEEZBUGEcBfzCU7Q+wVT3tXoik9UVIJQ
-         bAXxrxEh5UPGVj8poNUiPAK/EG06ZCqzBmiS3IcU4QepL/27n2Qt4CHV6S1gfoBURUfM
-         U9DYPDkFMDiwBSXsfkpGa07UpVGOB8u32GutdtTnv+V6UHGDSHT9TWMvLryUpJisa6eT
-         k041GfVhIviI/Vn15qzFbfbJvWW13hrv0KmwqZZomKmxyp6Gvfl1BHLqUumxIP/pOA/n
-         eBHg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MudIXoKUDqSknmPj/caKgZlvDH12bbOJiw81zZd1bYI=;
+        b=SauBhEq5qA71mmA7JQu8/eckKealUKb30ggwypDgyDeVOgFDJLM/FdzAKYe6H9yhTI
+         fWHNLJ/GUUt/KA7bMd9yNLil1xo85K2E4AOtLX9CEgUSW3gPhQLl4JgmSZOb3scnVusd
+         WZsqlgkaAto7kpwWLiIlBlBvgVhwlkjxzKmesDBJ5r6R9ZUVjJFD4/ugo61Mh+/YPy8x
+         pE9HySyyuwrdJHY+oNrF5TUcR4mhDJ2co8wh1CgFSg2PgPQm0S4ung9cxlE313GG6H25
+         9rC9Xi3p6burgSHmj1tAaP1Rsh8NsdkmKvVV3SQboGoudkj4bpAa9Nck1r6xozOiSR77
+         or0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g55UEudSuLNJpqF8hvPsJ8DCaM3U4I3BGVg+2jid6Y0=;
-        b=g0zBILzR5cLLqxEEkAnHMUoYICF01j/u9xqAIRkVUFArSZzCJVDjUlz4xjpnwJ/T4f
-         H5HfulR2ajNg2UPLy+ozujLIeyR3MI3fwG6F9MHkRjYmpOpdaSHRHmkuhwq6FGFTUPKA
-         TQIFWgaeM8dQMU7yTy6/WQ2Xbvf7a7iOGnbmuK0xE8Z0GiL/6fB2E+k+D2uQKSFmN9Lq
-         qF6orZU7zUWvoZX5YZ6Qno3L5S63pWuJ14pVFHSusYXhGupAdaDUzUpwOwNqoZnRYfG5
-         /NKZ8eWtz0QSzBD2keMmMONtlQCVlOI9nB/e2B0/9JdEkjujMzxkWBBESPk/GEiLNV9T
-         4gyQ==
-X-Gm-Message-State: AOAM533EN2dZ+rfm2POSHr2Pvi9DK3RSq5lyNNZEmRucZBBrZCLk+3m4
-        0c9XAAFj9QsdW87QEl+6ieYiDRctNAoNhOi1Izo=
-X-Google-Smtp-Source: ABdhPJy4PIBMWtpNTFM4hINb+kNb3GXgxKaBR5DUSvMt/FEvF6eFhtHu7epyzpRyWMC1ExEoleXIZJT4hNfDEcjaHk4=
-X-Received: by 2002:a2e:5cc9:: with SMTP id q192mr10806357ljb.452.1598563639096;
- Thu, 27 Aug 2020 14:27:19 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MudIXoKUDqSknmPj/caKgZlvDH12bbOJiw81zZd1bYI=;
+        b=tgdG4f8XIRga3EoxVeySWo/sd7m71EAvsyrRhD+gLy1oK+tXqqBCV3lAFiARc0MXtl
+         dqoI9gZoliD663fxMLoYwORhUJ2DR+ci5oEmXWSaMHV5bnGn3TkSM2r3yZ4bLEyjPxS4
+         fsi+rlZDSo6GhOup2GD4uDY8mWM+HB5f7u8E4hvYPCmdLNtPr2EfkHVWLD8BURWLILeu
+         V6+X5Q8Z4sapokgodIeOdwHbohf9Na2BCC3oHXyjxp+kTRUTIySd5ccwdiADkfT1HSkv
+         Wagbow+o37sE3tCHnVe1sSGciI7b0BNrmOE23eTMCy+FuffPTQ1xnWXtuQiDrs9AZ8Nd
+         uWFg==
+X-Gm-Message-State: AOAM531hRsI9l2KMia+Fs/BXbvlUnz8BhmhgOGxJlvqK2ZsYZcz6rsXi
+        iplZPh9mET/F6iMERLl9Hlo=
+X-Google-Smtp-Source: ABdhPJz9ug63cUy1fjH28bqnvS728TAER2TxeKFJgBiUWcyCyO6a5pdFwGsSikdmvt1Z3z8yBS9xAA==
+X-Received: by 2002:a17:906:656:: with SMTP id t22mr13692846ejb.392.1598563728933;
+        Thu, 27 Aug 2020 14:28:48 -0700 (PDT)
+Received: from ?IPv6:2a01:110f:b59:fd00:a137:4925:7b50:2e1c? ([2a01:110f:b59:fd00:a137:4925:7b50:2e1c])
+        by smtp.gmail.com with ESMTPSA id t21sm2510721ejr.62.2020.08.27.14.28.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 14:28:48 -0700 (PDT)
+Subject: Re: [PATCH] leds: pwm: Allow automatic labels for DT based devices
+To:     Alexander Dahl <ada@thorsis.com>, linux-leds@vger.kernel.org
+Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        linux-kernel@vger.kernel.org, Alexander Dahl <post@lespocky.de>
+References: <20200826093737.29008-1-ada@thorsis.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <d6f69d4a-3e46-cad4-5756-4d15e5ef95ba@gmail.com>
+Date:   Thu, 27 Aug 2020 23:28:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200824091013.20640-1-matthias.schiffer@ew.tq-group.com>
- <20200824091013.20640-2-matthias.schiffer@ew.tq-group.com>
- <CAOMZO5DSX1pf3xxo=CGvgPmHcjMJoWFx74grVJBckSmjtF-RGg@mail.gmail.com>
- <4b7d57738ce8e2130c4740a0f3f973fbaf60a7cf.camel@ew.tq-group.com>
- <CAOMZO5DYrkEb_G+EYAGrc+qjSsbjRdeBUU3tJUfkU6tjgNm_7g@mail.gmail.com>
- <7a59492e46f34d213b83f7182c7db73954c5a9c7.camel@ew.tq-group.com>
- <CAOMZO5CP=wtJ5ZScyb0NrRMW0FR0FAGVKRFq9JpFcAoZppn_bA@mail.gmail.com>
- <53f5f17735fc2f0ca061a321969bbb131e55efff.camel@ew.tq-group.com>
- <CAOMZO5ADeXEHWiG7Xja1W1GnahV08ZEYSkNsrOzautn2mROCNA@mail.gmail.com>
- <aa0b7ad149a7bd4e681e4ebee12ffaaab2803832.camel@ew.tq-group.com>
- <CAOMZO5B_Jm8SX9N9V5oq+LAa0Yc4CmrEp2n=2t3XUyBCtnGVTA@mail.gmail.com>
- <d433e8a47d721a65903db68c38eb1c337c81e395.camel@ew.tq-group.com>
- <CAOMZO5AfuPXfOmRSXAmyG-bdqGSzvTRm51NuTJ-B2PzKbLy9mw@mail.gmail.com> <9978aff9c90f5e4aa2049a5c65768b9695a910c5.camel@ew.tq-group.com>
-In-Reply-To: <9978aff9c90f5e4aa2049a5c65768b9695a910c5.camel@ew.tq-group.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 27 Aug 2020 18:27:07 -0300
-Message-ID: <CAOMZO5Dp28MSjQugWCwqfor=eEPvy+EfuoVL0y_oirw=G600aA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: imx6qdl: tqma6: minor fixes
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200826093737.29008-1-ada@thorsis.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+Hi Alexander,
 
-(Your mailer is messing the threading.)
+On 8/26/20 11:37 AM, Alexander Dahl wrote:
+> From: Alexander Dahl <post@lespocky.de>
+> 
+> If LEDs are configured through device tree and the property 'label' is
+> omitted, the label is supposed to be generated from the properties
+> 'function' and 'color' if present.  While this works fine for e.g. the
+> 'leds-gpio' driver, it did not for 'leds-pwm'.
+> 
+> The reason is, you get this label naming magic only if you add a LED
+> device through 'devm_led_classdev_register_ext()' and pass a pointer to
+> the current device tree node.  The approach to fix this was adopted from
+> the 'leds-gpio' driver.
+> 
+> For the following node from dts the LED appeared as 'led5' in sysfs
+> before and as 'red:debug' after this change.
+> 
+>          pwm_leds {
+>                  compatible = "pwm-leds";
+> 
+>                  led5 {
+>                          function = LED_FUNCTION_DEBUG;
+>                          color = <LED_COLOR_ID_RED>;
+>                          pwms = <&pwm0 2 10000000 0>;
+>                          max-brightness = <127>;
+> 
+>                          linux,default-trigger = "heartbeat";
+>                          panic-indicator;
+>                  };
+>          };
+> 
+> Signed-off-by: Alexander Dahl <post@lespocky.de>
+> ---
+> 
+> Notes:
+>      v1: based on v5.9-rc2, backport on v5.4.59 also works
+> 
+>   drivers/leds/leds-pwm.c | 9 ++++++++-
+>   1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+> index ef7b91bd2064..a27a1d75a3e9 100644
+> --- a/drivers/leds/leds-pwm.c
+> +++ b/drivers/leds/leds-pwm.c
+> @@ -65,6 +65,7 @@ static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
+>   		       struct led_pwm *led, struct fwnode_handle *fwnode)
+>   {
+>   	struct led_pwm_data *led_data = &priv->leds[priv->num_leds];
+> +	struct led_init_data init_data = {};
+>   	int ret;
+>   
+>   	led_data->active_low = led->active_low;
+> @@ -90,7 +91,13 @@ static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
+>   
+>   	pwm_init_state(led_data->pwm, &led_data->pwmstate);
+>   
+> -	ret = devm_led_classdev_register(dev, &led_data->cdev);
+> +	if (fwnode) {
+> +		init_data.fwnode = fwnode;
+> +		ret = devm_led_classdev_register_ext(dev, &led_data->cdev,
+> +						     &init_data);
+> +	} else {
+> +		ret = devm_led_classdev_register(dev, &led_data->cdev);
+> +	}
+>   	if (ret) {
+>   		dev_err(dev, "failed to register PWM led for %s: %d\n",
+>   			led->name, ret);
+> 
 
-On Thu, Aug 27, 2020 at 4:31 AM Matthias Schiffer
-<matthias.schiffer@ew.tq-group.com> wrote:
+This part looks good, but corresponding update of
+Documentation/devicetree/bindings/leds/leds-pwm.txt is needed as well.
+It would be good to switch to yaml by this occassion.
 
-> Ah, I see.
->
-> Nevertheless, hardware that uses the native chipselects of newer chips
-> exists (for example our TQ-Systems starterkit mainboards, the DTS of
-> which we're currently preparing for mainline submission). Shouldn't
-> num-cs be set for boards (or SoM DTSI) where not all CS pins of the SoC
-> are usable?
->
-> In any case, my original question was about the intended logic for
-> num_chipselects for SPI drivers. My proposal was:
->
-> - If num-cs is set, use that
-> - If num-cs is unset, use the number of cs-gpios
-> - If num-cs is unset and no cs-gpios are defined, use a driver-provided
-> default
->
-> How do other SPI controller drivers deal with this?
-
-I think it would be better to discuss this in the spi mailing list
-with Mark Brown and the dt maintainer, Rob Herring.
+-- 
+Best regards,
+Jacek Anaszewski
