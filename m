@@ -2,259 +2,107 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD024C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18FEC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA6522B4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE92207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:09:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajwrQItS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UIfBQrxM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbgH0TIM (ORCPT
+        id S1727952AbgH0TJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:08:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbgH0TIL (ORCPT
+        Thu, 27 Aug 2020 15:09:09 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48636 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726858AbgH0TJJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:08:11 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D44AC061264;
-        Thu, 27 Aug 2020 12:08:10 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id z3so7026508qkz.7;
-        Thu, 27 Aug 2020 12:08:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jIU7OM2BcXNMnaD5vUeqWWGQL1ghDrdUrZFcP2UE+vE=;
-        b=ajwrQItSJSicaIy2VcdbUObEh6K8UYKqPTrzmbxNy/upUTCF4vUbY2u+jDjyF/y/rc
-         4zjqoQCgtBofLHjdr2qTdWvl9yL4F5A/H+9JpLiexkvSg6rikEbRADST1uHe4ZWo5qaD
-         t4Mdu8jW4yR2Bl52NN0Awv2JfFdBll/TuaTOtbk9lyxee4OArTJZjN5TtsNLlm2j+Bf1
-         mpd+i7j63pztYO6F//fJhh8DYbH6H0TUDXOS8e/t+j0z8jDBcPai9No+7POOa1BXT4Lt
-         ketM8+iGaFmeZOZKXHa8drCDnxDKBVKvqR5/entBAbF+RS132/jksiZw1cCdnnhje4tX
-         zXTw==
+        Thu, 27 Aug 2020 15:09:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598555348;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KAEZo/YE9GEddiVed/r0hHvLBr62Nk6jQkAItPMa1zw=;
+        b=UIfBQrxMXqA4B85wcBiH/4ozRF4L7hC2+Q8HKKy7R7r9IepLH8Qzll0WERa7ldMwXl1TTP
+        9jQ42xJSho2QbF0OpqfqFlT9WKgWF7nw9ORkhZh2mIIRwdrfoF/HJEH4atNYTQCLOHZGA6
+        Wlbh6IEmiRmNwv3ISrC497/kJ5yNsh8=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-207-LJo2yTJ8NXmVnFLIxPaUAg-1; Thu, 27 Aug 2020 15:09:06 -0400
+X-MC-Unique: LJo2yTJ8NXmVnFLIxPaUAg-1
+Received: by mail-qv1-f69.google.com with SMTP id k17so5362647qvj.12
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 12:09:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jIU7OM2BcXNMnaD5vUeqWWGQL1ghDrdUrZFcP2UE+vE=;
-        b=jFH8LNzSo5DXXOQlu+A3cU9lytCQQRilTsy0ogp1WxOMPcD05DnEaLIQWt2Z34tC/K
-         79h0dCKjKRE3bTVQx+YuetweASzO6HsRt5OsHAIjcMimnQK7FUxeT1MsOvNiNbsbwMnS
-         UbpEQBy+Nv3UrkejLWVCOk5+yOHqHw8cAFyDc63CWV70F6yO/Ju+bICjL0zwyCcYzqHE
-         j6vo66mXCXpIbZuYUdBIOkpgi81fPQV0hcsMS+oTRmfvDrUoiEctKun3XfN9e5R1gBUo
-         LNDrYeVr4cW1MZS1pJRzfhZK4DOvMLBnJMFEnEWRIIM/X7ELz6VBUgce9S6OC05eXHwg
-         baHg==
-X-Gm-Message-State: AOAM530SBPNZufCZguIRglWHxUCtzncqBB+nDvKucGyV9wEKgtw1Co9W
-        Z9DBJh5IvYhKF8drGugY3EooFCRee54=
-X-Google-Smtp-Source: ABdhPJwHs2sSdB2X3yeD6W286PihtFGchMft9n3QjgiOnCbqH6IoN0hX09BcQ1CS3HkuTTD30Vq7fA==
-X-Received: by 2002:a37:b204:: with SMTP id b4mr20200766qkf.50.1598555289679;
-        Thu, 27 Aug 2020 12:08:09 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id k3sm2464720qkb.95.2020.08.27.12.08.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Aug 2020 12:08:09 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 3F92E27C0054;
-        Thu, 27 Aug 2020 15:08:08 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 27 Aug 2020 15:08:08 -0400
-X-ME-Sender: <xms:lgRIX6WCnBLl-JEHYhSC3J5RofasYQ_wRugTrjo9HcYenlb1M40gcQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvhedgtdehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhepgfehgeejueeffeelheelgeeivdeihfdtledtieduleeufffhlefhjeffgfdv
-    heffnecuffhomhgrihhnpehmohhougihtggrmhgvlhdrtghomhenucfkphephedvrdduhe
-    ehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeile
-    dvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgt
-    ohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:lgRIX2n6FVj-KFvoV8oFTG5PxfHCN1OxWMv5uVaLj1XYNgEWVOn_Hg>
-    <xmx:lgRIX-ZMgh5mhAM0oWw9imdp2lcA6x3GgDpADukx5GdFyKkO-iYW_w>
-    <xmx:lgRIXxXOfKsucBA3CsHsHimF-RKm5oyuGvntE6DBYMG1rAA8gIkegA>
-    <xmx:mARIX-cYTOk8EU2VYqnH1HLKcJ7edUBaaev0CpNqJpE4rmycLqHZ-tqqysU>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 842BF30600B2;
-        Thu, 27 Aug 2020 15:08:06 -0400 (EDT)
-Date:   Fri, 28 Aug 2020 03:08:04 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
-        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
-        cameron@moodycamel.com, oleg@redhat.com, will@kernel.org,
-        paulmck@kernel.org
-Subject: Re: [RFC][PATCH 6/7] freelist: Lock less freelist
-Message-ID: <20200827190804.GA128237@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200827161237.889877377@infradead.org>
- <20200827161754.535381269@infradead.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=KAEZo/YE9GEddiVed/r0hHvLBr62Nk6jQkAItPMa1zw=;
+        b=bYTGcYwN1SVFR9Dqc896sjpRblw39JTiU/SIeib9Qi8tcvWKJ6IykvxIjs/XP4uXjk
+         EWhFbstbED2gVsir1oS6rF+XX9lgeUSNqg2+EEKbCb9fpPqWGdjaC26Rf22Qs1SYizj8
+         I6tBW8Hu71nQfHMX65je7Ks+Xh3MxwTe//GOyTPla3KaNLyicpaKW+QZOYex7TNR5KqS
+         O3KQZIDWN1aijT3k6AlKKIaxjKuyQIUiGXneAHaCjIjh8Cn1r3NoQFwxS4BrSU4qo8dA
+         rDDLNwKxQholnTBkcUZCzWX9cAuux+XEtj37YwQc7Zy8TwrV9X52IRBL7HSN+d+kZK5H
+         N8+Q==
+X-Gm-Message-State: AOAM530SKOA2fKopu5+uzi/PDA2BMc41cEjJ+tjiErpbbykArPwVmGk4
+        YkU3VTjZ36D5r8F6hKaU8EP3JEjvZ8EK/3oxYaCuij9nMEL+b7ynA8fmyxEB1KR3lpXYRhWksGA
+        4/oeSmI76u2EcpjZQZ58FQg0a
+X-Received: by 2002:ac8:6a07:: with SMTP id t7mr20257279qtr.1.1598555345821;
+        Thu, 27 Aug 2020 12:09:05 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwuHQT71lwx6nYLk2qBAQLkclZ4rkI4WcjiaeOHy8y0S6Fv5A6mtp3yabGqDWLQs3wAdEI9YA==
+X-Received: by 2002:ac8:6a07:: with SMTP id t7mr20257253qtr.1.1598555345605;
+        Thu, 27 Aug 2020 12:09:05 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id 7sm2553032qkp.57.2020.08.27.12.09.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 12:09:05 -0700 (PDT)
+Subject: Re: [PATCH v2 5/5] fpga manager: xilinx-spi: provide better
+ diagnostics on programming failure
+To:     Luca Ceresoli <luca@lucaceresoli.net>, linux-fpga@vger.kernel.org
+Cc:     Moritz Fischer <mdf@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anatolij Gustschin <agust@denx.de>
+References: <20200827143249.10973-1-luca@lucaceresoli.net>
+ <20200827143249.10973-5-luca@lucaceresoli.net>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <aa201535-a5f6-04b1-1444-35b68ed47281@redhat.com>
+Date:   Thu, 27 Aug 2020 12:09:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827161754.535381269@infradead.org>
+In-Reply-To: <20200827143249.10973-5-luca@lucaceresoli.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 06:12:43PM +0200, Peter Zijlstra wrote:
-> 
-> 
-> Cc: cameron@moodycamel.com
-> Cc: oleg@redhat.com
-> Cc: will@kernel.org
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+On 8/27/20 7:32 AM, Luca Ceresoli wrote:
+> When the DONE pin does not go high after programming to confirm programming
+> success, the INIT_B pin provides some info on the reason. Use it if
+> available to provide a more explanatory error message.
+>
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>
 > ---
->  include/linux/freelist.h |  129 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 129 insertions(+)
-> 
-> --- /dev/null
-> +++ b/include/linux/freelist.h
-> @@ -0,0 +1,129 @@
-> +// SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +#ifndef FREELIST_H
-> +#define FREELIST_H
-> +
-> +#include <linux/atomic.h>
-> +
-> +/*
-> + * Copyright: cameron@moodycamel.com
-> + *
-> + * A simple CAS-based lock-free free list. Not the fastest thing in the world
-> + * under heavy contention, but simple and correct (assuming nodes are never
-> + * freed until after the free list is destroyed), and fairly speedy under low
-> + * contention.
-> + *
-> + * Adapted from: https://moodycamel.com/blog/2014/solving-the-aba-problem-for-lock-free-free-lists
-> + */
-> +
-> +struct freelist_node {
-> +	atomic_t		refs;
-> +	struct freelist_node	*next;
-> +};
-> +
-> +struct freelist_head {
-> +	struct freelist_node	*head;
-> +};
-> +
-> +#define REFS_ON_FREELIST 0x80000000
-> +#define REFS_MASK	 0x7FFFFFFF
-> +
-> +static inline void __freelist_add(struct freelist_node *node, struct freelist_head *list)
-> +{
-> +	/*
-> +	 * Since the refcount is zero, and nobody can increase it once it's
-> +	 * zero (except us, and we run only one copy of this method per node at
-> +	 * a time, i.e. the single thread case), then we know we can safely
-> +	 * change the next pointer of the node; however, once the refcount is
-> +	 * back above zero, then other threads could increase it (happens under
-> +	 * heavy contention, when the refcount goes to zero in between a load
-> +	 * and a refcount increment of a node in try_get, then back up to
-> +	 * something non-zero, then the refcount increment is done by the other
-> +	 * thread) -- so if the CAS to add the node to the actual list fails,
-> +	 * decrese the refcount and leave the add operation to the next thread
-> +	 * who puts the refcount back to zero (which could be us, hence the
-> +	 * loop).
-> +	 */
-> +	struct freelist_node *head = READ_ONCE(list->head);
-> +
-> +	for (;;) {
-> +		WRITE_ONCE(node->next, head);
-> +		atomic_set_release(&node->refs, 1);
-> +
-> +		if (!try_cmpxchg_release(&list->head, &head, node)) {
-> +			/*
-> +			 * Hmm, the add failed, but we can only try again when
-> +			 * the refcount goes back to zero.
-> +			 */
-> +			if (atomic_fetch_add_release(REFS_ON_FREELIST - 1, &node->refs) == 1)
-> +				continue;
-> +		}
-> +		return;
-> +	}
-> +}
-> +
-> +static inline void freelist_add(struct freelist_node *node, struct freelist_head *list)
-> +{
-> +	/*
-> +	 * We know that the should-be-on-freelist bit is 0 at this point, so
-> +	 * it's safe to set it using a fetch_add.
-> +	 */
-> +	if (!atomic_fetch_add_release(REFS_ON_FREELIST, &node->refs)) {
-> +		/*
-> +		 * Oh look! We were the last ones referencing this node, and we
-> +		 * know we want to add it to the free list, so let's do it!
-> +		 */
-> +		__freelist_add(node, list);
-> +	}
-> +}
-> +
-> +static inline struct freelist_node *freelist_try_get(struct freelist_head *list)
-> +{
-> +	struct freelist_node *prev, *next, *head = smp_load_acquire(&list->head);
-> +	unsigned int refs;
-> +
-> +	while (head) {
-> +		prev = head;
-> +		refs = atomic_read(&head->refs);
-> +		if ((refs & REFS_MASK) == 0 ||
-> +		    !atomic_try_cmpxchg_acquire(&head->refs, &refs, refs+1)) {
-> +			head = smp_load_acquire(&list->head);
-> +			continue;
-> +		}
-> +
-> +		/*
-> +		 * Good, reference count has been incremented (it wasn't at
-> +		 * zero), which means we can read the next and not worry about
-> +		 * it changing between now and the time we do the CAS.
-> +		 */
-> +		next = READ_ONCE(head->next);
-> +		if (try_cmpxchg_acquire(&list->head, &head, next)) {
+>
+> Changes in v2:
+>  - also check for gpiod_get_value() errors (Tom Rix)
 
-So if try_cmpxchg_acquire() fails, we don't have ACQUIRE semantics on
-read of the new list->head, right? Then probably a
-smp_mb__after_atomic() is needed in that case?
+This looks fine.
 
-Regards,
-Boqun
+Reviewed-by: Tom Rix <trix@redhat.com>
 
-> +			/*
-> +			 * Yay, got the node. This means it was on the list,
-> +			 * which means should-be-on-freelist must be false no
-> +			 * matter the refcount (because nobody else knows it's
-> +			 * been taken off yet, it can't have been put back on).
-> +			 */
-> +			WARN_ON_ONCE(atomic_read(&head->refs) & REFS_ON_FREELIST);
-> +
-> +			/*
-> +			 * Decrease refcount twice, once for our ref, and once
-> +			 * for the list's ref.
-> +			 */
-> +			atomic_fetch_add(-2, &head->refs);
-> +
-> +			return head;
-> +		}
-> +
-> +		/*
-> +		 * OK, the head must have changed on us, but we still need to decrement
-> +		 * the refcount we increased.
-> +		 */
-> +		refs = atomic_fetch_add(-1, &prev->refs);
-> +		if (refs == REFS_ON_FREELIST + 1)
-> +			__freelist_add(prev, list);
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +#endif /* FREELIST_H */
-> 
-> 
+
