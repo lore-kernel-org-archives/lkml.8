@@ -2,162 +2,104 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CDCC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77267C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7179E2068E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E4F22B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598550156;
-	bh=zyfUowNsWV1AH9t2Y/OhVrtMRfKaUwAivYAzLDicwBM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rkEYnmVEeIcFStfCUot0u1WB/yYcptaaRtkmb8Rcp3apO3BZUxX6WFuJzpqMiUwjl
-	 91Uyke872/JpDUsdyJYeQni+SB3CMnaXwmijRiZgFRBO6l5kSb7yUr2LKjSn9kZiwx
-	 ElvQRfIiKYsJPCyApNBGHTvxj6llGGm8GXqRM+1c=
+	s=default; t=1598550296;
+	bh=hpmMkq3GeyF+UpchiZzraWqNMWLExGpqIZ25LroJiyU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ha9m7UALwCnLR+PPqvxF0oZ0uWKOGcMonzQvaJjxkOTDPj32krRwazJ3EsYrEyHok
+	 85Flztp7I7wFQumdut9e2L3CkfTymNiqvURUtGzbTspm1DUgtpNbCE/d4qj1gtWLGe
+	 byE8at0NRVlU9GT0CswCK8TStnubRKrpiwCK/ShA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgH0Rmf (ORCPT
+        id S1726876AbgH0Roz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:42:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37152 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 13:44:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726307AbgH0Rmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:42:33 -0400
-Received: from coco.lan (ip5f5ad5a8.dynamic.kabel-deutschland.de [95.90.213.168])
+        id S1726153AbgH0Roy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 13:44:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A2762087E;
-        Thu, 27 Aug 2020 17:42:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 362BB2087E;
+        Thu, 27 Aug 2020 17:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598550152;
-        bh=zyfUowNsWV1AH9t2Y/OhVrtMRfKaUwAivYAzLDicwBM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=07ZU3viQ9K4W/2j7rtUmnY13uTbszZo4JxebwRXpVTU0rbPDvX8crv4sulA5txXDE
-         kYmlUOuNr9MdYmatsOfu9hXzg5jshHEN71HClrwf41F7Sbk0qcHLXN5PzjHJnVgRLn
-         r0uWVOa7IlmgAj8HdF77sDzEoeitLX/MPi0J6RwU=
-Date:   Thu, 27 Aug 2020 19:42:25 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Steve deRosier <derosier@gmail.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>, linuxarm@huawei.com,
-        mauro.chehab@huawei.com, John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Maital Hahn <maitalm@ti.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Raz Bouganim <r-bouganim@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Fuqian Huang <huangfq.daxian@gmail.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Revert "wlcore: Adding suppoprt for IGTK key in wlcore
- driver"
-Message-ID: <20200827194225.281eb7dc@coco.lan>
-In-Reply-To: <CALLGbRL+duiHFd3w7hcD=u47k+JM5rLpOkMrRpW0aQm=oTfUnA@mail.gmail.com>
-References: <f0a2cb7ea606f1a284d4c23cbf983da2954ce9b6.1598420968.git.mchehab+huawei@kernel.org>
-        <CALLGbRL+duiHFd3w7hcD=u47k+JM5rLpOkMrRpW0aQm=oTfUnA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        s=default; t=1598550293;
+        bh=hpmMkq3GeyF+UpchiZzraWqNMWLExGpqIZ25LroJiyU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M7CAwUNKs6TIYurhYZqJ1Jwrl1o+PIGfpyinvrl8/ij0BPtWw4uMmiWGhuM3og/Qc
+         KgLQkJZm8pFtAwJ+2xllelQk3t2RVW7KO4IOJtT31nSt/QE/UggXAPpVMBvnzziMNQ
+         TKH84t7MY+6sXF/dMEhXfRxFK91/URzVN8/nykTo=
+Date:   Thu, 27 Aug 2020 19:45:06 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     David Laight <David.Laight@aculab.com>,
+        'Alex Dewar' <alex.dewar90@gmail.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "accessrunner-general@lists.sourceforge.net" 
+        <accessrunner-general@lists.sourceforge.net>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+Message-ID: <20200827174506.GA705950@kroah.com>
+References: <20200824222322.22962-1-alex.dewar90@gmail.com>
+ <3e882693bb344424af37d4d35f3db605@AcuMS.aculab.com>
+ <20200825082406.GB1335351@kroah.com>
+ <202008270936.6FF344336@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202008270936.6FF344336@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 27 Aug 2020 08:48:30 -0700
-Steve deRosier <derosier@gmail.com> escreveu:
-
-> On Tue, Aug 25, 2020 at 10:49 PM Mauro Carvalho Chehab
-> <mchehab+huawei@kernel.org> wrote:
-> >
-> > This patch causes a regression betwen Kernel 5.7 and 5.8 at wlcore:
-> > with it applied, WiFi stops working, and the Kernel starts printing
-> > this message every second:
-> >
-> >    wlcore: PHY firmware version: Rev 8.2.0.0.242
-> >    wlcore: firmware booted (Rev 8.9.0.0.79)
-> >    wlcore: ERROR command execute failure 14  
+On Thu, Aug 27, 2020 at 09:49:04AM -0700, Kees Cook wrote:
+> On Tue, Aug 25, 2020 at 10:24:06AM +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Aug 25, 2020 at 08:12:05AM +0000, David Laight wrote:
+> > > From: Alex Dewar
+> > > > Sent: 24 August 2020 23:23
+> > > > kernel/cpu.c: don't use snprintf() for sysfs attrs
+> > > > 
+> > > > As per the documentation (Documentation/filesystems/sysfs.rst),
+> > > > snprintf() should not be used for formatting values returned by sysfs.
+> > > > 
+> > > > In all of these cases, sprintf() suffices as we know that the formatted
+> > > > strings will be less than PAGE_SIZE in length.
+> > > 
+> > > Hmmmm....
+> > > I much prefer to see bounded string ops.
+> > > sysfs really ought to be passing through the buffer length.
+> > 
+> > No.
 > 
-> Only if NO firmware for the device in question supports the `KEY_IGTK`
-> value, then this revert is appropriate. Otherwise, it likely isn't.
+> It really should, though. I _just_ got burned by this due to having
+> a binattr sysfs reachable through splice[1]. Most sysfs things aren't
+> binattr, but I've always considered this to be a weird fragility in the
+> sysfs implementation.
 
-Yeah, that's what I suspect too: some specific firmware is required
-for KEY_IGTK to work.
+binattr attributes do have the buffer size passed to it, for that very
+reason :)
 
->  My suspicion is that the feature that `KEY_IGTK` is enabling is
-> specific to a newer firmware that Mauro hasn't upgraded to. What the
-> OP should do is find the updated firmware and give it a try.
-
-I didn't try checking if linux-firmware tree has a newer version on
-it. I'm using Debian Bullseye on this device. So, I suspect that
-it may have a relatively new firmware.
-
-Btw, that's also the version that came together with Fedora 32:
-
-	$ strings /lib/firmware/ti-connectivity/wl18xx-fw-4.bin |grep FRev
-	FRev 8.9.0.0.79
-	FRev 8.2.0.0.242
-
-Looking at:
-	https://git.ti.com/cgit/wilink8-wlan/wl18xx_fw/
-
-It sounds that there's a newer version released this year:
-
-	2020-05-28	Updated to FW 8.9.0.0.81
-	2018-07-29	Updated to FW 8.9.0.0.79
-
-However, it doesn't reached linux-firmware upstream yet:
-
-	$ git log --pretty=oneline ti-connectivity/wl18xx-fw-4.bin
-	3a5103fc3c29 wl18xx: update firmware file 8.9.0.0.79
-	65b1c68c63f9 wl18xx: update firmware file 8.9.0.0.76
-	dbb85a5154a5 wl18xx: update firmware file
-	69a250dd556b wl18xx: update firmware file
-	dbe3f134bb69 wl18xx: update firmware file, remove conf file
-	dab4b79b3fbc wl18xx: add version 4 of the wl18xx firmware
-
-> AND - since there's some firmware the feature doesn't work with, the
-> driver should be fixed to detect the running firmware version and not
-> do things that the firmware doesn't support.  AND the firmware writer
-> should also make it so the firmware doesn't barf on bad input and
-> instead rejects it politely.
-
-Agreed. The main issue here seems to be that the current patch
-assumes that this feature is available. A proper approach would 
-be to check if this feature is available before trying to use it.
-
-Now, I dunno if version 8.9.0.0.81 has what's required for it to
-work - or if KEY_IGTK require some custom firmware version.
-
-If it works with such version, one way would be to add a check
-for this specific version, disabling KEY_IGTK otherwise.
-
-Also, someone from TI should be sending the newer version to
-be added at linux-firmware.
-
-I'll try to do a test maybe tomorrow.
-
-> But I will say I'm making an educated guess; while I have played with
-> the TI devices in the past, it was years ago and I won't claim to be
-> an expert. I also am unable to fix it myself at this time.
+> > So this is designed this way on purpose, you shouldn't have to worry
+> > about any of this, and that way, you don't have to "program
+> > defensively", it all just works in a simple manner.
 > 
-> I'd just rather see it fixed properly instead of a knee-jerk reaction
-> of reverting it simply because the OP doesn't have current firmware.
+> Later in this thread there's a suggestion to alter the API to avoid
+> individual calls to sprintf(), which seems like a reasonable first step.
 
-> And let's revisit the discussion of having a kernel splat because an
-> unrelated piece of code fails yet the driver does exactly what it is
-> supposed to do. We shouldn't be dumping registers and stack-trace when
-> the code that crashed has nothing to do with the registers and
-> stack-trace outputted. It is a false positive.  A simple printk WARN
-> or ERROR should output notifying us that the chip firmware has crashed
-> and why.  IMHO.
+I always review any patches submitted, so if someone feels like tackling
+this, wonderful!
 
-Thanks,
-Mauro
+thanks,
+
+greg k-h
