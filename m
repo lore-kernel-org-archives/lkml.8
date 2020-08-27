@@ -2,137 +2,249 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B36C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FABC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7693207DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:47:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TV1dA5Xo"
+	by mail.kernel.org (Postfix) with ESMTP id 42718207DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:48:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598557691;
+	bh=S7+ytNvy4Ms5HI/eVO4FDsU8aXgDwpeOVIrlQEqYQZI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=G5B9Wm6q+Bw9pHi5qLgKnXgsC7MVz7/uJjDkeQdU/Ne93hDFhv/3Jzx3Ygu3eLm+2
+	 IdBo4BdGDUYrw709ab8lucLpPkbIEvYDHGMd5ZKncMz9gAKV6ZjBKqCq+dWa/6aYQP
+	 QqqEFKsVi5VJ4fTQBx/43WeOHndB9ckFnlFlbiPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgH0TrM (ORCPT
+        id S1727122AbgH0TsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:47:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgH0TrK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:47:10 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CACDC061264;
-        Thu, 27 Aug 2020 12:46:54 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id kx11so3139590pjb.5;
-        Thu, 27 Aug 2020 12:46:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rF/IVgk4h5+MJuABqXa02sDX7QSYWX1qauCg5n/+jTM=;
-        b=TV1dA5Xov0ck9OozRII/ftao8/R/YHMTCO/1WHAIME1O4niFg+OgXtzAY2zjfXEpz3
-         e0y6JKc4ubTRQp2/5w0foJUYIoIiuNW4CZ8lovjPOZqrdFroT5QwHYWrBp5yjg1/iO4K
-         SVI5qRKlgZYwcEEDVM5YA0sI7csZKPJ2go+y1RjxW6Y47BgMpwAgSmA1F/niu3rX4LJI
-         Luhg6tmGDAO8T0kxLUogjDa7/r9vrR6E9YDb+FNA7Bgv3VY5XQqe3DghJZnJPELSU4YQ
-         Y2d132gTzXLclulfMER6/ZCCJ+q1KmVWZnuoZuPJmXNmjdAxfrHlY0Y88zQ4nI6ZZMT9
-         9/Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rF/IVgk4h5+MJuABqXa02sDX7QSYWX1qauCg5n/+jTM=;
-        b=EKHn0QuDgQprWoeSAgJQfEjPdf5GDy8/FgeDgbk4SVlYY6Oq9Jlfp6ryQ8GFDytCrm
-         Yyo6G96zrurPgoWgXoys1YdErLmeYGDZhrRqYfOV0SyTDsmuMV4L/TzK0Iz+3YoCndJZ
-         fZzkt6jvYcZcotgvQXShu6zzwAaYCmT4zyscEK8QQostEj57CtSoQygIyY8Vfy1T2tXo
-         BAWEV/yWR6j63yGMiQuUiRUR6z6nVTSAKCh4Rxz4m82ad5d1DDVyfRvxLV7o69NBzGFh
-         1iqvO4NBweL0y/OAvBrqplq4YjZ/DQTcLrhMpN5B1Kfg6BZGW7xhwAiL7YnGfBL65D5Q
-         Re5A==
-X-Gm-Message-State: AOAM532jIs5hrINpxiOJQAyj4FLzGGoOvj++Hqp4LL3iv2TwCkDITYXw
-        UmNEaJOBbTv4CglDqmzf9gz+Cba8L1Rjaj/Tuh8=
-X-Google-Smtp-Source: ABdhPJz+mPBt1w0ZVF5ot5qjiuaeOhaA9v5A1SLVkElmmTlR8IGArmMT4pz9gEJ+J7LbWY73M9EE9DJ74oGTNNcog7A=
-X-Received: by 2002:a17:90b:509:: with SMTP id r9mr410422pjz.228.1598557614008;
- Thu, 27 Aug 2020 12:46:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200827192642.1725-1-krzk@kernel.org> <20200827192642.1725-4-krzk@kernel.org>
-In-Reply-To: <20200827192642.1725-4-krzk@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Aug 2020 22:46:37 +0300
-Message-ID: <CAHp75VcKctq6pAw+D5fYMtASGP_NuYOf4GJ+8t=Otxf_RVjKyA@mail.gmail.com>
-Subject: Re: [PATCH v2 04/18] iio: adc: exynos_adc: Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Beniamin Bia <beniamin.bia@analog.com>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 27 Aug 2020 15:48:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726147AbgH0TsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 15:48:09 -0400
+Received: from localhost.localdomain (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FD1A207DF;
+        Thu, 27 Aug 2020 19:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598557688;
+        bh=S7+ytNvy4Ms5HI/eVO4FDsU8aXgDwpeOVIrlQEqYQZI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hxfcnR1bLSaTFTPs0qXEnwKXtAxe0Som9YeDELU9IFUddMrykmithPUghN7+mCpgm
+         EWy8/WYWGiYxCB0bNS1UIP2Pp/xi3DMhXawyn+74GswLeSyCPBKEDZm9+7whwUpbJ2
+         N9mfe01B6lf5jKtp7DPgah+V787G3cIyxoDhED5A=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3.1] Input: bu21013_ts - Use local 'client->dev' variable in probe()
+Date:   Thu, 27 Aug 2020 21:47:45 +0200
+Message-Id: <20200827194745.10721-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200827185829.30096-27-krzk@kernel.org>
+References: <20200827185829.30096-27-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 10:27 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and also it prints the error value.
+'dev' is shorter and simpler than '&client->dev' and in few cases it
+allows to skip line wrapping. Probe function uses '&client->dev' a lot,
+so this improves readability slightly.
 
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> ---
->
-> Changes since v1:
-> 1. Wrap dev_err_probe() lines at 100 character
-> ---
->  drivers/iio/adc/exynos_adc.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
-> index 7d23b6c33284..40585a96c848 100644
-> --- a/drivers/iio/adc/exynos_adc.c
-> +++ b/drivers/iio/adc/exynos_adc.c
-> @@ -844,13 +844,8 @@ static int exynos_adc_probe(struct platform_device *pdev)
->         }
->
->         info->vdd = devm_regulator_get(&pdev->dev, "vdd");
-> -       if (IS_ERR(info->vdd)) {
-> -               if (PTR_ERR(info->vdd) != -EPROBE_DEFER)
-> -                       dev_err(&pdev->dev,
-> -                               "failed getting regulator, err = %ld\n",
-> -                               PTR_ERR(info->vdd));
-> -               return PTR_ERR(info->vdd);
-> -       }
-> +       if (IS_ERR(info->vdd))
-> +               return dev_err_probe(&pdev->dev, PTR_ERR(info->vdd), "failed getting regulator");
->
->         ret = regulator_enable(info->vdd);
->         if (ret)
-> --
-> 2.17.1
->
+---
 
+Changes since v3:
+1. Correct suggested-by tag,
+2. Add Reviewed-by tag.
 
+Changes since v2:
+1. New patch
+---
+ drivers/input/touchscreen/bu21013_ts.c | 61 ++++++++++++--------------
+ 1 file changed, 28 insertions(+), 33 deletions(-)
+
+diff --git a/drivers/input/touchscreen/bu21013_ts.c b/drivers/input/touchscreen/bu21013_ts.c
+index 86bd38243d6c..f09204091ba5 100644
+--- a/drivers/input/touchscreen/bu21013_ts.c
++++ b/drivers/input/touchscreen/bu21013_ts.c
+@@ -411,31 +411,32 @@ static int bu21013_probe(struct i2c_client *client,
+ 	struct input_dev *in_dev;
+ 	struct input_absinfo *info;
+ 	u32 max_x = 0, max_y = 0;
++	struct device *dev = &client->dev;
+ 	int error;
+ 
+ 	if (!i2c_check_functionality(client->adapter,
+ 				     I2C_FUNC_SMBUS_BYTE_DATA)) {
+-		dev_err(&client->dev, "i2c smbus byte data not supported\n");
++		dev_err(dev, "i2c smbus byte data not supported\n");
+ 		return -EIO;
+ 	}
+ 
+ 	if (!client->irq) {
+-		dev_err(&client->dev, "No IRQ set up\n");
++		dev_err(dev, "No IRQ set up\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	ts = devm_kzalloc(&client->dev, sizeof(*ts), GFP_KERNEL);
++	ts = devm_kzalloc(dev, sizeof(*ts), GFP_KERNEL);
+ 	if (!ts)
+ 		return -ENOMEM;
+ 
+ 	ts->client = client;
+ 
+-	ts->x_flip = device_property_read_bool(&client->dev, "rohm,flip-x");
+-	ts->y_flip = device_property_read_bool(&client->dev, "rohm,flip-y");
++	ts->x_flip = device_property_read_bool(dev, "rohm,flip-x");
++	ts->y_flip = device_property_read_bool(dev, "rohm,flip-y");
+ 
+-	in_dev = devm_input_allocate_device(&client->dev);
++	in_dev = devm_input_allocate_device(dev);
+ 	if (!in_dev) {
+-		dev_err(&client->dev, "device memory alloc failed\n");
++		dev_err(dev, "device memory alloc failed\n");
+ 		return -ENOMEM;
+ 	}
+ 	ts->in_dev = in_dev;
+@@ -445,8 +446,8 @@ static int bu21013_probe(struct i2c_client *client,
+ 	in_dev->name = DRIVER_TP;
+ 	in_dev->id.bustype = BUS_I2C;
+ 
+-	device_property_read_u32(&client->dev, "rohm,touch-max-x", &max_x);
+-	device_property_read_u32(&client->dev, "rohm,touch-max-y", &max_y);
++	device_property_read_u32(dev, "rohm,touch-max-x", &max_x);
++	device_property_read_u32(dev, "rohm,touch-max-y", &max_y);
+ 
+ 	input_set_abs_params(in_dev, ABS_MT_POSITION_X, 0, max_x, 0, 0);
+ 	input_set_abs_params(in_dev, ABS_MT_POSITION_Y, 0, max_y, 0, 0);
+@@ -455,14 +456,14 @@ static int bu21013_probe(struct i2c_client *client,
+ 
+ 	/* Adjust for the legacy "flip" properties, if present */
+ 	if (!ts->props.invert_x &&
+-	    device_property_read_bool(&client->dev, "rohm,flip-x")) {
++	    device_property_read_bool(dev, "rohm,flip-x")) {
+ 		info = &in_dev->absinfo[ABS_MT_POSITION_X];
+ 		info->maximum -= info->minimum;
+ 		info->minimum = 0;
+ 	}
+ 
+ 	if (!ts->props.invert_y &&
+-	    device_property_read_bool(&client->dev, "rohm,flip-y")) {
++	    device_property_read_bool(dev, "rohm,flip-y")) {
+ 		info = &in_dev->absinfo[ABS_MT_POSITION_Y];
+ 		info->maximum -= info->minimum;
+ 		info->minimum = 0;
+@@ -472,50 +473,46 @@ static int bu21013_probe(struct i2c_client *client,
+ 				    INPUT_MT_DIRECT | INPUT_MT_TRACK |
+ 					INPUT_MT_DROP_UNUSED);
+ 	if (error) {
+-		dev_err(&client->dev, "failed to initialize MT slots");
++		dev_err(dev, "failed to initialize MT slots");
+ 		return error;
+ 	}
+ 
+-	ts->regulator = devm_regulator_get(&client->dev, "avdd");
++	ts->regulator = devm_regulator_get(dev, "avdd");
+ 	if (IS_ERR(ts->regulator)) {
+-		dev_err(&client->dev, "regulator_get failed\n");
++		dev_err(dev, "regulator_get failed\n");
+ 		return PTR_ERR(ts->regulator);
+ 	}
+ 
+ 	error = regulator_enable(ts->regulator);
+ 	if (error) {
+-		dev_err(&client->dev, "regulator enable failed\n");
++		dev_err(dev, "regulator enable failed\n");
+ 		return error;
+ 	}
+ 
+-	error = devm_add_action_or_reset(&client->dev, bu21013_power_off, ts);
++	error = devm_add_action_or_reset(dev, bu21013_power_off, ts);
+ 	if (error) {
+-		dev_err(&client->dev, "failed to install power off handler\n");
++		dev_err(dev, "failed to install power off handler\n");
+ 		return error;
+ 	}
+ 
+ 	/* Named "CS" on the chip, DT binding is "reset" */
+-	ts->cs_gpiod = devm_gpiod_get(&client->dev, "reset", GPIOD_OUT_HIGH);
++	ts->cs_gpiod = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+ 	if (IS_ERR(ts->cs_gpiod))
+-		return dev_err_probe(&client->dev, PTR_ERR(ts->cs_gpiod),
+-				     "failed to get CS GPIO\n");
++		return dev_err_probe(dev, PTR_ERR(ts->cs_gpiod), "failed to get CS GPIO\n");
+ 
+ 	gpiod_set_consumer_name(ts->cs_gpiod, "BU21013 CS");
+ 
+-	error = devm_add_action_or_reset(&client->dev,
+-					 bu21013_disable_chip, ts);
++	error = devm_add_action_or_reset(dev, bu21013_disable_chip, ts);
+ 	if (error) {
+-		dev_err(&client->dev,
+-			"failed to install chip disable handler\n");
++		dev_err(dev, "failed to install chip disable handler\n");
+ 		return error;
+ 	}
+ 
+ 	/* Named "INT" on the chip, DT binding is "touch" */
+-	ts->int_gpiod = devm_gpiod_get_optional(&client->dev,
+-						"touch", GPIOD_IN);
++	ts->int_gpiod = devm_gpiod_get_optional(dev, "touch", GPIOD_IN);
+ 	error = PTR_ERR_OR_ZERO(ts->int_gpiod);
+ 	if (error)
+-		return dev_err_probe(&client->dev, error, "failed to get INT GPIO\n");
++		return dev_err_probe(dev, error, "failed to get INT GPIO\n");
+ 
+ 	if (ts->int_gpiod)
+ 		gpiod_set_consumer_name(ts->int_gpiod, "BU21013 INT");
+@@ -523,22 +520,20 @@ static int bu21013_probe(struct i2c_client *client,
+ 	/* configure the touch panel controller */
+ 	error = bu21013_init_chip(ts);
+ 	if (error) {
+-		dev_err(&client->dev, "error in bu21013 config\n");
++		dev_err(dev, "error in bu21013 config\n");
+ 		return error;
+ 	}
+ 
+-	error = devm_request_threaded_irq(&client->dev, client->irq,
+-					  NULL, bu21013_gpio_irq,
++	error = devm_request_threaded_irq(dev, client->irq, NULL, bu21013_gpio_irq,
+ 					  IRQF_ONESHOT, DRIVER_TP, ts);
+ 	if (error) {
+-		dev_err(&client->dev, "request irq %d failed\n",
+-			client->irq);
++		dev_err(dev, "request irq %d failed\n", client->irq);
+ 		return error;
+ 	}
+ 
+ 	error = input_register_device(in_dev);
+ 	if (error) {
+-		dev_err(&client->dev, "failed to register input device\n");
++		dev_err(dev, "failed to register input device\n");
+ 		return error;
+ 	}
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
