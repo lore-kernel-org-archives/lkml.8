@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B506FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F77C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ADAB22BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075E42087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598554814;
-	bh=/jWrUvkyehWmpjjCPlltLr1JAG0sr6Qc32pKieuISoo=;
+	s=default; t=1598554816;
+	bh=dE13Onak/Gc/uQ/d4IanKlkvwyIbI6kr1ICwDOnvWk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CX4QGvYvUeofeETF8VQxeR+2Cu3+6b3+rruAPH42N8rT+6hDD0ax3Fg4v9gNIVujy
-	 Z1OnwV9U95mn70bWpxfh+l+kgm6iTkrlNPKTFRJPv/YQ1k4QXs6VolrB3Wvk38eiev
-	 suKqdRKajdwxYqOrlrh4O02XT2v75QNK2yFrwloE=
+	b=BsfuqgpV0sDfjYHBVBARm+R3Y2iH2Wbo8FKLoqeRLXXJZeAAj7x16BiHCyNaK2bxx
+	 ptFvWdDYyXdYH06alyZU+Y+WyuHCuvUu11GpPgg72CD/1B4fCIETJcQqroFPGC4sPy
+	 ILg7vlJvImjvX2BGNr4Hf7nZUuqjmuTQi+eah/5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbgH0TAN (ORCPT
+        id S1728365AbgH0TAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:00:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50796 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 15:00:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728289AbgH0TAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:00:03 -0400
+        id S1728327AbgH0TAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 15:00:10 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C79802087E;
-        Thu, 27 Aug 2020 18:59:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7497222BEB;
+        Thu, 27 Aug 2020 19:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598554802;
-        bh=/jWrUvkyehWmpjjCPlltLr1JAG0sr6Qc32pKieuISoo=;
+        s=default; t=1598554809;
+        bh=dE13Onak/Gc/uQ/d4IanKlkvwyIbI6kr1ICwDOnvWk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uU1UvUH1cXvsczwBGXa7c2b7fVAWGWudB4/QyJq0LUX8Fo/UbfvO8lXfYnwyXYrCw
-         LXbnh5ijhwFtmrU2B5UYMoV/aqaY42dvVzRNrqPzS8/DC9Y0LMqt75pu2mSGTPt8Q1
-         zhTS10dLDV3St6zkGpdDCqmqQpX9a7eHscujSwNk=
+        b=taTq6e50W1h8zl1+4Wxnw9s6UcVHzZEHdlADQe/14qMsD1ymbSI6riRj7Az61yoPi
+         iaI0+RWYCCSNqrZGLjnSbkHpXP7GM087R5y3c2BvmFJv2V2MWg8Wk8ex2fmKFTgbN2
+         v8NPEBKOnK1H+sWJF88Y8ER2Z+cMopMkomXDpse4=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -52,9 +52,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         clang-built-linux@googlegroups.com
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 24/27] gpio: Add devm_fwnode_gpiod_get_optional() helpers
-Date:   Thu, 27 Aug 2020 20:58:26 +0200
-Message-Id: <20200827185829.30096-25-krzk@kernel.org>
+Subject: [PATCH v3 26/27] Input: bu21013_ts - Use local 'client->dev' variable in probe()
+Date:   Thu, 27 Aug 2020 20:58:28 +0200
+Message-Id: <20200827185829.30096-27-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
 References: <20200827185829.30096-1-krzk@kernel.org>
@@ -63,175 +63,183 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add devm_fwnode_gpiod_get_optional() and
-devm_fwnode_gpiod_get_index_optional() helpers, similar to regular
-devm_gpiod optional versions.  Drivers getting GPIOs from a firmware
-node might use it to remove some boilerplate code.
+'dev' is shorter and simpler than '&client->dev' and in few cases it
+allows to skip line wrapping. Probe function uses '&client->dev' a lot,
+so this improves readability slightly.
 
+Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 ---
 
 Changes since v2:
-1. Return NULL
-
-Changes since v1:
 1. New patch
 ---
- drivers/gpio/gpiolib-devres.c | 71 +++++++++++++++++++++++++++++++++++
- include/linux/gpio/consumer.h | 30 +++++++++++++++
- 2 files changed, 101 insertions(+)
+ drivers/input/touchscreen/bu21013_ts.c | 61 ++++++++++++--------------
+ 1 file changed, 28 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
-index 7dbce4c4ebdf..f8476f6a65cc 100644
---- a/drivers/gpio/gpiolib-devres.c
-+++ b/drivers/gpio/gpiolib-devres.c
-@@ -184,6 +184,37 @@ struct gpio_desc *devm_gpiod_get_from_of_node(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(devm_gpiod_get_from_of_node);
+diff --git a/drivers/input/touchscreen/bu21013_ts.c b/drivers/input/touchscreen/bu21013_ts.c
+index 86bd38243d6c..f09204091ba5 100644
+--- a/drivers/input/touchscreen/bu21013_ts.c
++++ b/drivers/input/touchscreen/bu21013_ts.c
+@@ -411,31 +411,32 @@ static int bu21013_probe(struct i2c_client *client,
+ 	struct input_dev *in_dev;
+ 	struct input_absinfo *info;
+ 	u32 max_x = 0, max_y = 0;
++	struct device *dev = &client->dev;
+ 	int error;
  
-+/**
-+ * devm_fwnode_gpiod_get_optional - Resource-managed fwnode_gpiod_get_index()
-+ *                                  for optional GPIO
-+ * @dev:	GPIO consumer
-+ * @fwnode:	firmware node containing GPIO reference
-+ * @con_id:	function within the GPIO consumer
-+ * @flags:	GPIO initialization flags
-+ * @label:	label to attach to the requested GPIO
-+ *
-+ * GPIO descriptors returned from this function are automatically disposed on
-+ * driver detach.
-+ *
-+ * This is equivalent to devm_fwnode_gpiod_get_index(), except that when no
-+ * GPIO with the specified index was assigned to the requested function it will
-+ * return NULL.  This is convenient for drivers that need to handle optional
-+ * GPIOs.
-+ *
-+ * On successful request the GPIO pin is configured in accordance with
-+ * provided @flags.
-+ */
-+struct gpio_desc *devm_fwnode_gpiod_get_optional(struct device *dev,
-+						 struct fwnode_handle *fwnode,
-+						 const char *con_id,
-+						 enum gpiod_flags flags,
-+						 const char *label)
-+{
-+	return devm_fwnode_gpiod_get_index_optional(dev, fwnode, con_id, 0,
-+						    flags, label);
-+}
-+EXPORT_SYMBOL_GPL(devm_fwnode_gpiod_get_optional);
-+
- /**
-  * devm_fwnode_gpiod_get_index - get a GPIO descriptor from a given node
-  * @dev:	GPIO consumer
-@@ -226,6 +257,46 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(devm_fwnode_gpiod_get_index);
+ 	if (!i2c_check_functionality(client->adapter,
+ 				     I2C_FUNC_SMBUS_BYTE_DATA)) {
+-		dev_err(&client->dev, "i2c smbus byte data not supported\n");
++		dev_err(dev, "i2c smbus byte data not supported\n");
+ 		return -EIO;
+ 	}
  
-+/**
-+ * devm_fwnode_gpiod_get_index_optional - Resource-managed fwnode_gpiod_get_index()
-+ *                                        for optional GPIO
-+ * @dev:	GPIO consumer
-+ * @fwnode:	firmware node containing GPIO reference
-+ * @con_id:	function within the GPIO consumer
-+ * @index:	index of the GPIO to obtain in the consumer
-+ * @flags:	GPIO initialization flags
-+ * @label:	label to attach to the requested GPIO
-+ *
-+ * GPIO descriptors returned from this function are automatically disposed on
-+ * driver detach.
-+ *
-+ * This is equivalent to devm_fwnode_gpiod_get_index(), except that when no
-+ * GPIO with the specified index was assigned to the requested function it will
-+ * return NULL.  This is convenient for drivers that need to handle optional
-+ * GPIOs.
-+ *
-+ * On successful request the GPIO pin is configured in accordance with
-+ * provided @flags.
-+ */
-+struct gpio_desc *devm_fwnode_gpiod_get_index_optional(struct device *dev,
-+						       struct fwnode_handle *fwnode,
-+						       const char *con_id, int index,
-+						       enum gpiod_flags flags,
-+						       const char *label)
-+{
-+	struct gpio_desc *desc;
-+
-+	desc = devm_fwnode_gpiod_get_index(dev, fwnode, con_id, index, flags,
-+					   label);
-+	if (IS_ERR(desc)) {
-+		if (PTR_ERR(desc) == -ENOENT)
-+			return NULL;
-+	}
-+
-+	return desc;
-+}
-+EXPORT_SYMBOL_GPL(devm_fwnode_gpiod_get_index_optional);
-+
- /**
-  * devm_gpiod_get_index_optional - Resource-managed gpiod_get_index_optional()
-  * @dev: GPIO consumer
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index 901aab89d025..7854d80b1e9a 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -183,11 +183,21 @@ struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
- 					 const char *con_id, int index,
- 					 enum gpiod_flags flags,
- 					 const char *label);
-+struct gpio_desc *devm_fwnode_gpiod_get_optional(struct device *dev,
-+						 struct fwnode_handle *fwnode,
-+						 const char *con_id,
-+						 enum gpiod_flags flags,
-+						 const char *label);
- struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 					      struct fwnode_handle *child,
- 					      const char *con_id, int index,
- 					      enum gpiod_flags flags,
- 					      const char *label);
-+struct gpio_desc *devm_fwnode_gpiod_get_index_optional(struct device *dev,
-+						       struct fwnode_handle *fwnode,
-+						       const char *con_id, int index,
-+						       enum gpiod_flags flags,
-+						       const char *label);
+ 	if (!client->irq) {
+-		dev_err(&client->dev, "No IRQ set up\n");
++		dev_err(dev, "No IRQ set up\n");
+ 		return -EINVAL;
+ 	}
  
- #else /* CONFIG_GPIOLIB */
+-	ts = devm_kzalloc(&client->dev, sizeof(*ts), GFP_KERNEL);
++	ts = devm_kzalloc(dev, sizeof(*ts), GFP_KERNEL);
+ 	if (!ts)
+ 		return -ENOMEM;
  
-@@ -562,6 +572,16 @@ struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
- 	return ERR_PTR(-ENOSYS);
- }
+ 	ts->client = client;
  
-+static inline
-+struct gpio_desc *devm_fwnode_gpiod_get_optional(struct device *dev,
-+						 struct fwnode_handle *fwnode,
-+						 const char *con_id,
-+						 enum gpiod_flags flags,
-+						 const char *label)
-+{
-+	return NULL;
-+}
-+
- static inline
- struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 					      struct fwnode_handle *fwnode,
-@@ -572,6 +592,16 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 	return ERR_PTR(-ENOSYS);
- }
+-	ts->x_flip = device_property_read_bool(&client->dev, "rohm,flip-x");
+-	ts->y_flip = device_property_read_bool(&client->dev, "rohm,flip-y");
++	ts->x_flip = device_property_read_bool(dev, "rohm,flip-x");
++	ts->y_flip = device_property_read_bool(dev, "rohm,flip-y");
  
-+static inline
-+struct gpio_desc *devm_fwnode_gpiod_get_index_optional(struct device *dev,
-+						       struct fwnode_handle *fwnode,
-+						       const char *con_id, int index,
-+						       enum gpiod_flags flags,
-+						       const char *label)
-+{
-+	return NULL;
-+}
-+
- #endif /* CONFIG_GPIOLIB */
+-	in_dev = devm_input_allocate_device(&client->dev);
++	in_dev = devm_input_allocate_device(dev);
+ 	if (!in_dev) {
+-		dev_err(&client->dev, "device memory alloc failed\n");
++		dev_err(dev, "device memory alloc failed\n");
+ 		return -ENOMEM;
+ 	}
+ 	ts->in_dev = in_dev;
+@@ -445,8 +446,8 @@ static int bu21013_probe(struct i2c_client *client,
+ 	in_dev->name = DRIVER_TP;
+ 	in_dev->id.bustype = BUS_I2C;
  
- static inline
+-	device_property_read_u32(&client->dev, "rohm,touch-max-x", &max_x);
+-	device_property_read_u32(&client->dev, "rohm,touch-max-y", &max_y);
++	device_property_read_u32(dev, "rohm,touch-max-x", &max_x);
++	device_property_read_u32(dev, "rohm,touch-max-y", &max_y);
+ 
+ 	input_set_abs_params(in_dev, ABS_MT_POSITION_X, 0, max_x, 0, 0);
+ 	input_set_abs_params(in_dev, ABS_MT_POSITION_Y, 0, max_y, 0, 0);
+@@ -455,14 +456,14 @@ static int bu21013_probe(struct i2c_client *client,
+ 
+ 	/* Adjust for the legacy "flip" properties, if present */
+ 	if (!ts->props.invert_x &&
+-	    device_property_read_bool(&client->dev, "rohm,flip-x")) {
++	    device_property_read_bool(dev, "rohm,flip-x")) {
+ 		info = &in_dev->absinfo[ABS_MT_POSITION_X];
+ 		info->maximum -= info->minimum;
+ 		info->minimum = 0;
+ 	}
+ 
+ 	if (!ts->props.invert_y &&
+-	    device_property_read_bool(&client->dev, "rohm,flip-y")) {
++	    device_property_read_bool(dev, "rohm,flip-y")) {
+ 		info = &in_dev->absinfo[ABS_MT_POSITION_Y];
+ 		info->maximum -= info->minimum;
+ 		info->minimum = 0;
+@@ -472,50 +473,46 @@ static int bu21013_probe(struct i2c_client *client,
+ 				    INPUT_MT_DIRECT | INPUT_MT_TRACK |
+ 					INPUT_MT_DROP_UNUSED);
+ 	if (error) {
+-		dev_err(&client->dev, "failed to initialize MT slots");
++		dev_err(dev, "failed to initialize MT slots");
+ 		return error;
+ 	}
+ 
+-	ts->regulator = devm_regulator_get(&client->dev, "avdd");
++	ts->regulator = devm_regulator_get(dev, "avdd");
+ 	if (IS_ERR(ts->regulator)) {
+-		dev_err(&client->dev, "regulator_get failed\n");
++		dev_err(dev, "regulator_get failed\n");
+ 		return PTR_ERR(ts->regulator);
+ 	}
+ 
+ 	error = regulator_enable(ts->regulator);
+ 	if (error) {
+-		dev_err(&client->dev, "regulator enable failed\n");
++		dev_err(dev, "regulator enable failed\n");
+ 		return error;
+ 	}
+ 
+-	error = devm_add_action_or_reset(&client->dev, bu21013_power_off, ts);
++	error = devm_add_action_or_reset(dev, bu21013_power_off, ts);
+ 	if (error) {
+-		dev_err(&client->dev, "failed to install power off handler\n");
++		dev_err(dev, "failed to install power off handler\n");
+ 		return error;
+ 	}
+ 
+ 	/* Named "CS" on the chip, DT binding is "reset" */
+-	ts->cs_gpiod = devm_gpiod_get(&client->dev, "reset", GPIOD_OUT_HIGH);
++	ts->cs_gpiod = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
+ 	if (IS_ERR(ts->cs_gpiod))
+-		return dev_err_probe(&client->dev, PTR_ERR(ts->cs_gpiod),
+-				     "failed to get CS GPIO\n");
++		return dev_err_probe(dev, PTR_ERR(ts->cs_gpiod), "failed to get CS GPIO\n");
+ 
+ 	gpiod_set_consumer_name(ts->cs_gpiod, "BU21013 CS");
+ 
+-	error = devm_add_action_or_reset(&client->dev,
+-					 bu21013_disable_chip, ts);
++	error = devm_add_action_or_reset(dev, bu21013_disable_chip, ts);
+ 	if (error) {
+-		dev_err(&client->dev,
+-			"failed to install chip disable handler\n");
++		dev_err(dev, "failed to install chip disable handler\n");
+ 		return error;
+ 	}
+ 
+ 	/* Named "INT" on the chip, DT binding is "touch" */
+-	ts->int_gpiod = devm_gpiod_get_optional(&client->dev,
+-						"touch", GPIOD_IN);
++	ts->int_gpiod = devm_gpiod_get_optional(dev, "touch", GPIOD_IN);
+ 	error = PTR_ERR_OR_ZERO(ts->int_gpiod);
+ 	if (error)
+-		return dev_err_probe(&client->dev, error, "failed to get INT GPIO\n");
++		return dev_err_probe(dev, error, "failed to get INT GPIO\n");
+ 
+ 	if (ts->int_gpiod)
+ 		gpiod_set_consumer_name(ts->int_gpiod, "BU21013 INT");
+@@ -523,22 +520,20 @@ static int bu21013_probe(struct i2c_client *client,
+ 	/* configure the touch panel controller */
+ 	error = bu21013_init_chip(ts);
+ 	if (error) {
+-		dev_err(&client->dev, "error in bu21013 config\n");
++		dev_err(dev, "error in bu21013 config\n");
+ 		return error;
+ 	}
+ 
+-	error = devm_request_threaded_irq(&client->dev, client->irq,
+-					  NULL, bu21013_gpio_irq,
++	error = devm_request_threaded_irq(dev, client->irq, NULL, bu21013_gpio_irq,
+ 					  IRQF_ONESHOT, DRIVER_TP, ts);
+ 	if (error) {
+-		dev_err(&client->dev, "request irq %d failed\n",
+-			client->irq);
++		dev_err(dev, "request irq %d failed\n", client->irq);
+ 		return error;
+ 	}
+ 
+ 	error = input_register_device(in_dev);
+ 	if (error) {
+-		dev_err(&client->dev, "failed to register input device\n");
++		dev_err(dev, "failed to register input device\n");
+ 		return error;
+ 	}
+ 
 -- 
 2.17.1
 
