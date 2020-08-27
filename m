@@ -2,98 +2,120 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5D9C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D0FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7944D207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:59:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YKc23FJK"
+	by mail.kernel.org (Postfix) with ESMTP id B422C20825
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598522402;
+	bh=kLOwClv6cLLdqgQ6u8r+eTVLWMVWAPwOxRLFW4eZjbA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tAbV6qO/aRSLszE9vgpfHM8fVQ/36kbOUVUsIqK8GO2j1siWZnC0bg1HuZMZD4y9u
+	 a9+kExyARNz3XK8xebn/y6aM/mVwN3twdO99ZEhRMwQPTrpLVXgIyvWVxz4nCKAbKP
+	 ybe7TomdChfte5qEi4scp5g46ejdEm4jaK4hR7YY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728696AbgH0J76 (ORCPT
+        id S1728713AbgH0KAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:59:58 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:24127 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728663AbgH0J74 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:59:56 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598522396; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=+B5wb6/5W73FKeRbPz+9O5/FmXiWurQF800ttHrQ3mQ=; b=YKc23FJKRlds+At4T6qsyTpPofkGERpnnUpQWimWbgHPuUwGQsiAvwdM3m2Phs219xcyYxRi
- 9knV2Jk4oEN79XEn8a4BF/1AYrx9WULcQUeML5Tp+VmmjWe9WFgFsGZMwGMA/G+FsfT5ejDU
- e9BhXvebhejLoUpSBhf5I2zzlN4=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5f47841b7ea9bd29093d5132 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 09:59:55
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 30CA3C4339C; Thu, 27 Aug 2020 09:59:55 +0000 (UTC)
-Received: from hyd-lnxbld210.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 27 Aug 2020 06:00:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728303AbgH0J7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:59:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: srivasam)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3AF61C433C6;
-        Thu, 27 Aug 2020 09:59:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3AF61C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=srivasam@codeaurora.org
-From:   Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        srinivas.kandagatla@linaro.org, rohitkr@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
-Subject: [PATCH 0/5] Qualcomm's lpass-hdmi ASoC driver to support audio over dp port
-Date:   Thu, 27 Aug 2020 15:29:38 +0530
-Message-Id: <1598522378-28963-1-git-send-email-srivasam@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        by mail.kernel.org (Postfix) with ESMTPSA id BEB4D207CD;
+        Thu, 27 Aug 2020 09:59:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598522394;
+        bh=kLOwClv6cLLdqgQ6u8r+eTVLWMVWAPwOxRLFW4eZjbA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aKv0rDmKS+We0eGWLP28VHPdK3FuCBdHYDM1jJqcogL4tZoqFhx5/DrygPOvX1aSL
+         RUaVxu8O1D7L1O/vPnI0wmlQhjPxwvbhm9QtvwDcPw4iw0Q4GdP7O/uc6A61Ri3KqA
+         LyhjigTVaO6BkxQ/c688Xk4Y6av0OmXCPoDtH50Y=
+Date:   Thu, 27 Aug 2020 12:00:08 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Mrinal Pandey <mrinalmni@gmail.com>, skhan@linuxfoundation.org,
+        Linux-kernel-mentees@lists.linuxfoundation.org,
+        keescook@chromium.org, re.emese@gmail.com, maennich@google.com,
+        tglx@linutronix.de, akpm@linux-foundation.org,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        linux-spdx@vger.kernel.org
+Subject: Re: [PATCH] scripts: Add intended executable mode and SPDX license
+Message-ID: <20200827100008.GA403378@kroah.com>
+References: <20200827092405.b6hymjxufn2nvgml@mrinalpandey>
+ <20200827094344.GA400189@kroah.com>
+ <alpine.DEB.2.21.2008271145370.25858@felia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2008271145370.25858@felia>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These patches are to support audio over DP port on Qualcomm's SC7180 LPASS Asoc.
-It includes machine driver, cpu driver, platform driver updates for HDMI path support, 
-device tree documention, lpass variant structure optimization and configuration changes.
-These patches depends on the DP patch series 
-https://patchwork.kernel.org/project/dri-devel/list/?series=332029
+On Thu, Aug 27, 2020 at 11:49:31AM +0200, Lukas Bulwahn wrote:
+> 
+> 
+> On Thu, 27 Aug 2020, Greg KH wrote:
+> 
+> > On Thu, Aug 27, 2020 at 02:54:05PM +0530, Mrinal Pandey wrote:
+> > > commit b72231eb7084 ("scripts: add spdxcheck.py self test") added the file
+> > > spdxcheck-test.sh to the repository without the executable flag and license
+> > > information.
+> > > 
+> > > commit eb8305aecb95 ("scripts: Coccinelle script for namespace
+> > > dependencies.") added the file nsdeps, commit 313dd1b62921 ("gcc-plugins:
+> > > Add the randstruct plugin") added the file gcc-plugins/gen-random-seed.sh
+> > > and commit 9b4ade226f74 ("xen: build infrastructure for generating
+> > > hypercall depending symbols") added the file xen-hypercalls.sh without the
+> > > executable bit.
+> > > 
+> > > Set to usual modes for these files and provide the SPDX license for
+> > > spdxcheck-test.sh. No functional changes.
+> > > 
+> > > Signed-off-by: Mrinal Pandey <mrinalmni@gmail.com>
+> > > ---
+> > > applies cleanly on next-20200827
+> > > 
+> > > Kees, Matthias, Thomas, please ack this patch.
+> > > 
+> > > Andrew, please pick this minor non-urgent cleanup patch once the
+> > > mainainers ack.
+> > > 
+> > >  scripts/gcc-plugins/gen-random-seed.sh | 0
+> > >  scripts/nsdeps                         | 0
+> > >  scripts/spdxcheck-test.sh              | 1 +
+> > >  scripts/xen-hypercalls.sh              | 0
+> > >  4 files changed, 1 insertion(+)
+> > >  mode change 100644 => 100755 scripts/gcc-plugins/gen-random-seed.sh
+> > >  mode change 100644 => 100755 scripts/nsdeps
+> > >  mode change 100644 => 100755 scripts/spdxcheck-test.sh
+> > >  mode change 100644 => 100755 scripts/xen-hypercalls.sh
+> > 
+> > This does 2 different things in one patch, shouldn't this be 2 different
+> > patches?  One to change the permissions and one to add the SPDX line?
+> >
+> 
+> For me, this was one thing: minor cleanup; and taking one 
+> minor patch is easier than taking two, but you make the call. Then, the 
+> two or even three patches would also just travel through different trees, 
+> the spdx tree and Andrew's.
 
-V Sujith Kumar Reddy (5):
-  ASoC: Add sc7180-lpass binding header hdmi define
-  ASoC: dt-bindings: Add dt binding for lpass hdmi
-  ASoC: qcom: Add support for lpass hdmi driver
-  ASoC: qcom: Add support for audio over DP
-  ASoC: qcom: Optimise lpass variant structure
+License "additions" are good to separate from other changes, in case
+people have questions/comments/objections about them, they can be easier
+to discuss and possibly reverted.
 
- .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  |  51 +-
- include/dt-bindings/sound/sc7180-lpass.h           |   1 +
- sound/soc/qcom/Kconfig                             |   5 +
- sound/soc/qcom/Makefile                            |   2 +
- sound/soc/qcom/lpass-apq8016.c                     |  25 +-
- sound/soc/qcom/lpass-cpu.c                         |  92 ++-
- sound/soc/qcom/lpass-hdmi.c                        | 685 +++++++++++++++++++++
- sound/soc/qcom/lpass-hdmi.h                        | 129 ++++
- sound/soc/qcom/lpass-ipq806x.c                     |  25 +-
- sound/soc/qcom/lpass-lpaif-reg.h                   |  51 +-
- sound/soc/qcom/lpass-platform.c                    | 287 +++++++--
- sound/soc/qcom/lpass-sc7180.c                      | 147 ++++-
- sound/soc/qcom/lpass.h                             | 123 +++-
- 13 files changed, 1472 insertions(+), 151 deletions(-)
- create mode 100644 sound/soc/qcom/lpass-hdmi.c
- create mode 100644 sound/soc/qcom/lpass-hdmi.h
+More patches is not a problem :)
 
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+thanks,
 
+greg k-h
