@@ -2,301 +2,339 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 373E5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 448D6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0740C21741
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B8A32078A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:26:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nG/X6uzj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e8alhXMF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgH0DTn (ORCPT
+        id S1726882AbgH0DZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 23:19:43 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:28094 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbgH0DTl (ORCPT
+        Wed, 26 Aug 2020 23:25:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbgH0DZy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 23:19:41 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200827031937epoutp037d4d90ccb55d335a11a5c7c4a0a89945~vAc4vzWaF1757117571epoutp03J
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:19:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200827031937epoutp037d4d90ccb55d335a11a5c7c4a0a89945~vAc4vzWaF1757117571epoutp03J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598498377;
-        bh=8XxM/zDxpeAap4gpZJRtmL5C1mmneA17PMn5eASABiQ=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=nG/X6uzjStWdi8XsCvLyxXBP7yNwcvrn9/585OxBy9eQYBbKQHyXNAIvEGd+mtGqJ
-         bnuYxeB4UtyaF2YnvIMwWBWulppmhhZRhaz+xtQWNTyXnN8r8FiZfRAAQ1zKEdJ2l7
-         xPXNAENGVrl1bFaN5gc2V/GvcXARqEPy3t+zRp9U=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200827031937epcas1p453ee2eb17c36d8f22bbf3d812914aef7~vAc4UYhZ72470024700epcas1p4J;
-        Thu, 27 Aug 2020 03:19:37 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.165]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4BcSdN2VcpzMqYkZ; Thu, 27 Aug
-        2020 03:19:36 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DF.88.28581.846274F5; Thu, 27 Aug 2020 12:19:36 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200827031935epcas1p38d23c935c9b4bdb260f16ecbd233b8ee~vAc2wEAfe1147811478epcas1p36;
-        Thu, 27 Aug 2020 03:19:35 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200827031935epsmtrp11747c1a7c5d13c57efc83b1046ad39d2~vAc2sar7B2034920349epsmtrp1K;
-        Thu, 27 Aug 2020 03:19:35 +0000 (GMT)
-X-AuditID: b6c32a38-2cdff70000006fa5-2e-5f472648cc2a
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        8F.F5.08303.746274F5; Thu, 27 Aug 2020 12:19:35 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200827031935epsmtip18caf2079897509ba8d769cfb19ba8212~vAc2j76ij0609106091epsmtip1v;
-        Thu, 27 Aug 2020 03:19:35 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
-Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
-        <mori.takahiro@ab.mitsubishielectric.co.jp>,
-        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200826115742.21207-1-kohada.t2@gmail.com>
-Subject: RE: [PATCH v4 1/5] exfat: integrates dir-entry getting and
- validation
-Date:   Thu, 27 Aug 2020 12:19:35 +0900
-Message-ID: <011101d67c20$e3d604e0$ab820ea0$@samsung.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQGQvXwC1x7VdWWIHEXRa8VfNNWTPQHPSuiOqcgQDTA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDJsWRmVeSWpSXmKPExsWy7bCmrq6Hmnu8wckpQhY/5t5msXhzciqL
-        xZ69J1ksLu+aw2Zx+f8nFotlXyazWGz5d4TVgd3jy5zj7B5tk/+xezQfW8nmsXPWXXaPvi2r
-        GD0+b5ILYIvKsclITUxJLVJIzUvOT8nMS7dV8g6Od443NTMw1DW0tDBXUshLzE21VXLxCdB1
-        y8wBukVJoSwxpxQoFJBYXKykb2dTlF9akqqQkV9cYquUWpCSU2BoUKBXnJhbXJqXrpecn2tl
-        aGBgZApUmZCT8an9JXPBXeOK/49OszYwLtDsYuTkkBAwkbj4qJWli5GLQ0hgB6PEwo5zjBDO
-        J0aJ1Z8mMUM4nxklVs3bzwzTsu7OBzaIxC5GidvvzzKCJIQEXjJK9O2oArHZBHQl/v3ZzwZi
-        iwjoSZw8eR2sgVmgkUli+YkvYJM4BSwlejYvZwWxhQUCJNYfvskCYrMIqEqcnj8HqIGDgxeo
-        ZsOSdJAwr4CgxMmZT8BKmAXkJba/nQN1kILEz6fLWCF2WUncPX6WHaJGRGJ2ZxvYBxICCzkk
-        7v9/xQjR4CIx+eQrdghbWOLV8S1QtpTEy/42dpC9EgLVEh9hHu5glHjx3RbCNpa4uX4DK0gJ
-        s4CmxPpd+hBhRYmdv+cyQqzlk3j3tYcVYgqvREebEESJqkTfpcNMELa0RFf7B/YJjEqzkDw2
-        C8ljs5A8MAth2QJGllWMYqkFxbnpqcWGBSbIcb2JEZxMtSx2MM59+0HvECMTB+MhRgkOZiUR
-        XsGLzvFCvCmJlVWpRfnxRaU5qcWHGE2BIT2RWUo0OR+YzvNK4g1NjYyNjS1MzMzNTI2VxHkf
-        3lKIFxJITyxJzU5NLUgtgulj4uCUamDSNlkW6/+lUObEPn+hBnGfxS2Pnl/tSjljZ5lVEHkv
-        cRNv0uIAheK/xZ/4wnQ/ek7gOJC+/O/UWS1h89k806O+ZfozrJ/4vPiJxsKNvvc8Qr/Pj5cz
-        VAvzl1F3jXRvb+7f5rLsyrsXB1d/NvFONuiYssRsw8bVeaw1L5/NsHC9F7eztiine6Nw3Afl
-        I70BE45+kDA1n/1i5/OJujaTHXLDWIOnrX3l39W/dkGwb9lf8anupqKf257Vc3UyZX2w7Fkb
-        fyL6ltcsdqmFmjuSat69vX+1RN6jq/TJ+Qv9S4Mjd/fMUtrn9eVSnJKbahSXxyxH45Tr4r3Z
-        Ydec+ep8QprkEnz3SNwq3mD+8BOfsxJLcUaioRZzUXEiAH1+5KovBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42LZdlhJTtddzT3e4OBDJYsfc2+zWLw5OZXF
-        Ys/ekywWl3fNYbO4/P8Ti8WyL5NZLLb8O8LqwO7xZc5xdo+2yf/YPZqPrWTz2DnrLrtH35ZV
-        jB6fN8kFsEVx2aSk5mSWpRbp2yVwZXxqf8lccNe44v+j06wNjAs0uxg5OSQETCTW3fnA1sXI
-        xSEksINRYsXXn8wQCWmJYyfOANkcQLawxOHDxRA1zxklvmx+ygZSwyagK/Hvz34wW0RAT+Lk
-        yetgg5gFmpkkvj1bwgzR0cUo0XN+KQtIFaeApUTP5uWsILawgJ/EuonbwGwWAVWJ0/PnsIFs
-        4wWq2bAkHSTMKyAocXLmExaQMDPQgraNjCBhZgF5ie1v50DdqSDx8+kyVogbrCTuHj/LDlEj
-        IjG7s415AqPwLCSTZiFMmoVk0iwkHQsYWVYxSqYWFOem5xYbFhjlpZbrFSfmFpfmpesl5+du
-        YgRHlZbWDsY9qz7oHWJk4mA8xCjBwawkwit40TleiDclsbIqtSg/vqg0J7X4EKM0B4uSOO/X
-        WQvjhATSE0tSs1NTC1KLYLJMHJxSDUwLW9uUZW2vlMSu3nFXMf//7DtVLmtzNHnWcjXPXZrj
-        sLswMVI4zEuFacpP0cOL3MTucGcahc2sXH+h8g3jx2d5QtcXdzxfkiCgUR82TWFf2fFWvQ/M
-        l/uiP7ufUV7m9Oet5LXL7X4qU648a0n7ejqjXrvynrb2+gqnQ9Oee07jO+3sqB+y/MKm9S5z
-        trWu8tik3Xey6H6tVod6O5t8X+LlijivvSnLpJjlTSPjGUPLFsjVem9qncQYaG8gem09z8xZ
-        fy+Ipnuk6gfvS89xzfs4Nc3uK6vY73qGj3eXvt1m8nPVVUH+h8t/7j7/l5fv/rVT17T/LvN8
-        /+/f5IDr1/ZpGJRufqhVUT1zYxv3uZ9KLMUZiYZazEXFiQDhZKKkGQMAAA==
-X-CMS-MailID: 20200827031935epcas1p38d23c935c9b4bdb260f16ecbd233b8ee
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200826115753epcas1p3321f1021e92cfba8279d8976e835d436
-References: <CGME20200826115753epcas1p3321f1021e92cfba8279d8976e835d436@epcas1p3.samsung.com>
-        <20200826115742.21207-1-kohada.t2@gmail.com>
+        Wed, 26 Aug 2020 23:25:54 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF1D4C0612A3;
+        Wed, 26 Aug 2020 20:25:53 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id m71so2402690pfd.1;
+        Wed, 26 Aug 2020 20:25:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ulmIBrkE/+2FmnrwC+qCk+BjYqdq5xXkk5I/QcMd7Ug=;
+        b=e8alhXMFs1AKhmDiWkK+eKHfOhDDLRtujV3DqfPsA/S6bAlvAZWjTwulZJI6PopORn
+         58yNCsFl7rAFiXwJCrAemFSsJK2uYkC++4e/XlLSJCOwrENsOdKjSTUHot51I/h78Uyn
+         rQ0mi9veyBPrSbunDzhzykBS7jZsIzdiYbc84PXcQ8fAsTx4B1aJA6u1XiH8sOMDdYx4
+         7vIO6xb/AJKWw5dhy+53uB0Jc6Bl85ldMYLKQBPgMIKr+CvlSb5BrFALRg1+5nJS7krd
+         NJKbPbPzfVvl1oV2i9q1URxTXE3xDiY6tbWsSq63M8IKOm6OjzXkgLlk3srEcYLqIQ6A
+         DP6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ulmIBrkE/+2FmnrwC+qCk+BjYqdq5xXkk5I/QcMd7Ug=;
+        b=bbIMXFs1sV+L6TIIAMoEfarrH7oo1TVM/wteNYeRaqK6DqgICxdT6HY9BlbrH0KBiJ
+         JfqUZ4/m4LnDhxuIGHk0KPEuHKuf5gQuLE/fVJqkhHPzJqfeAZMPI7vGp2oGf+l3Xkym
+         ZuiRpS8i/BWUxiSBvxtiZF6fE8vTrQ61dPDaKNu5XaQQFMMyysSZeIzKhjyhNxVa1tPE
+         /Ul8dH8ucbMTVw7XrW+ze+3pn0Vlmz8ZdkLpRSwsivWicTU8PSf5WeIFgp0pNjM+ao5q
+         EmMq7v1UZj8IyypgaPBJAUIoXgEhDP6MXBFV8hxM1l529zr0S0bbulEnKF0Uy4wxHbwW
+         88TA==
+X-Gm-Message-State: AOAM531pAR0QlyQ2Jfr/HWIAhszoFSxeAa4BOlLoq/HTe0BcR9Pp+18R
+        5UHRgaMgFnsbKMY+L375iU25km2fCbrp9w==
+X-Google-Smtp-Source: ABdhPJxrx48ZYbxgaQFe2cr1IrRk8/2K7FCmaKdo+CVROoZK0e9qUPl0JHx4HK4b+6uz/tBnsPYYaw==
+X-Received: by 2002:a17:902:be0f:: with SMTP id r15mr14693788pls.84.1598498752906;
+        Wed, 26 Aug 2020 20:25:52 -0700 (PDT)
+Received: from localhost.localdomain ([2402:7500:57b:156e:1129:dc1b:b8d8:6430])
+        by smtp.gmail.com with ESMTPSA id 70sm676982pfu.107.2020.08.26.20.25.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Aug 2020 20:25:52 -0700 (PDT)
+From:   cy_huang <u0084500@gmail.com>
+To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        matthias.bgg@gmail.com, linux@roeck-us.net,
+        heikki.krogerus@linux.intel.com
+Cc:     cy_huang@richtek.com, gene_chen@richtek.com,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] usb typec: mt6360: Add support for mt6360 Type-C driver
+Date:   Thu, 27 Aug 2020 11:25:30 +0800
+Message-Id: <1598498732-25194-1-git-send-email-u0084500@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +	i = ES_INDEX_NAME;
-> +	while ((ep = exfat_get_validated_dentry(es, i++, TYPE_NAME))) {
-Please find the way to access name entries like ep_file, ep_stream
-without calling exfat_get_validated_dentry().
->  		exfat_extract_uni_name(ep, uniname);
->  		uniname += EXFAT_FILE_NAME_LEN;
->  	}
-> @@ -372,7 +369,7 @@ unsigned int exfat_get_entry_type(struct exfat_dentry *ep)
->  		if (ep->type == EXFAT_STREAM)
->  			return TYPE_STREAM;
->  		if (ep->type == EXFAT_NAME)
-> -			return TYPE_EXTEND;
-> +			return TYPE_NAME;
->  		if (ep->type == EXFAT_ACL)
->  			return TYPE_ACL;
->  		return TYPE_CRITICAL_SEC;
-> @@ -388,7 +385,7 @@ static void exfat_set_entry_type(struct exfat_dentry *ep, unsigned int type)
->  		ep->type &= EXFAT_DELETE;
->  	} else if (type == TYPE_STREAM) {
->  		ep->type = EXFAT_STREAM;
-> -	} else if (type == TYPE_EXTEND) {
-> +	} else if (type == TYPE_NAME) {
->  		ep->type = EXFAT_NAME;
->  	} else if (type == TYPE_BITMAP) {
->  		ep->type = EXFAT_BITMAP;
-> @@ -421,7 +418,7 @@ static void exfat_init_name_entry(struct exfat_dentry *ep,  {
->  	int i;
-> 
-> -	exfat_set_entry_type(ep, TYPE_EXTEND);
-> +	exfat_set_entry_type(ep, TYPE_NAME);
->  	ep->dentry.name.flags = 0x0;
-> 
->  	for (i = 0; i < EXFAT_FILE_NAME_LEN; i++) { @@ -550,7 +547,7 @@ int exfat_init_ext_entry(struct
-> inode *inode, struct exfat_chain *p_dir,
->  	exfat_update_bh(bh, sync);
->  	brelse(bh);
-> 
-> -	for (i = EXFAT_FIRST_CLUSTER; i < num_entries; i++) {
-> +	for (i = ES_INDEX_NAME; i < num_entries; i++) {
->  		ep = exfat_get_dentry(sb, p_dir, entry + i, &bh, &sector);
->  		if (!ep)
->  			return -EIO;
-> @@ -590,17 +587,16 @@ int exfat_remove_entries(struct inode *inode, struct exfat_chain *p_dir,  void
-> exfat_update_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es)  {
->  	int chksum_type = CS_DIR_ENTRY, i;
-> -	unsigned short chksum = 0;
-> +	u16 chksum = 0;
->  	struct exfat_dentry *ep;
-> 
->  	for (i = 0; i < es->num_entries; i++) {
-> -		ep = exfat_get_dentry_cached(es, i);
-> +		ep = exfat_get_validated_dentry(es, i, TYPE_ALL);
-Ditto, You do not need to repeatedly call exfat_get_validated_dentry() for the entries
-which got from exfat_get_dentry_set().
->  		chksum = exfat_calc_chksum16(ep, DENTRY_SIZE, chksum,
->  					     chksum_type);
->  		chksum_type = CS_DEFAULT;
->  	}
-> -	ep = exfat_get_dentry_cached(es, 0);
-> -	ep->dentry.file.checksum = cpu_to_le16(chksum);
-> +	ES_FILE(es).checksum = cpu_to_le16(chksum);
->  	es->modified = true;
->  }
-> 
->  struct exfat_entry_set_cache *exfat_get_dentry_set(struct super_block *sb,
-> -		struct exfat_chain *p_dir, int entry, unsigned int type)
-> +		struct exfat_chain *p_dir, int entry, int max_entries)
->  {
->  	int ret, i, num_bh;
-> -	unsigned int off, byte_offset, clu = 0;
-> +	unsigned int byte_offset, clu = 0;
->  	sector_t sec;
->  	struct exfat_sb_info *sbi = EXFAT_SB(sb);
->  	struct exfat_entry_set_cache *es;
-> -	struct exfat_dentry *ep;
-> -	int num_entries;
-> -	enum exfat_validate_dentry_mode mode = ES_MODE_STARTED;
->  	struct buffer_head *bh;
-> 
->  	if (p_dir->dir == DIR_DELETED) {
-> @@ -844,13 +811,13 @@ struct exfat_entry_set_cache *exfat_get_dentry_set(struct super_block *sb,
->  		return NULL;
->  	es->sb = sb;
->  	es->modified = false;
-> +	es->num_entries = 1;
-> 
->  	/* byte offset in cluster */
->  	byte_offset = EXFAT_CLU_OFFSET(byte_offset, sbi);
-> 
->  	/* byte offset in sector */
-> -	off = EXFAT_BLK_OFFSET(byte_offset, sb);
-> -	es->start_off = off;
-> +	es->start_off = EXFAT_BLK_OFFSET(byte_offset, sb);
-> 
->  	/* sector offset in cluster */
->  	sec = EXFAT_B_TO_BLK(byte_offset, sb); @@ -861,15 +828,12 @@ struct exfat_entry_set_cache
-> *exfat_get_dentry_set(struct super_block *sb,
->  		goto free_es;
->  	es->bh[es->num_bh++] = bh;
-> 
-> -	ep = exfat_get_dentry_cached(es, 0);
-> -	if (!exfat_validate_entry(exfat_get_entry_type(ep), &mode))
-> +	es->ep_file = exfat_get_validated_dentry(es, ES_INDEX_FILE, TYPE_FILE);
-> +	if (!es->ep_file)
->  		goto free_es;
-> +	es->num_entries = min(ES_FILE(es).num_ext + 1, max_entries);
-> 
-> -	num_entries = type == ES_ALL_ENTRIES ?
-> -		ep->dentry.file.num_ext + 1 : type;
-> -	es->num_entries = num_entries;
-> -
-> -	num_bh = EXFAT_B_TO_BLK_ROUND_UP(off + num_entries * DENTRY_SIZE, sb);
-> +	num_bh = EXFAT_B_TO_BLK_ROUND_UP(es->start_off  + es->num_entries *
-> +DENTRY_SIZE, sb);
->  	for (i = 1; i < num_bh; i++) {
->  		/* get the next sector */
->  		if (exfat_is_last_sector_in_cluster(sbi, sec)) { @@ -889,10 +853,17 @@ struct
-> exfat_entry_set_cache *exfat_get_dentry_set(struct super_block *sb,
->  	}
-> 
->  	/* validiate cached dentries */
-> -	for (i = 1; i < num_entries; i++) {
-> -		ep = exfat_get_dentry_cached(es, i);
-> -		if (!exfat_validate_entry(exfat_get_entry_type(ep), &mode))
-> -			goto free_es;
-> +	es->ep_stream = exfat_get_validated_dentry(es, ES_INDEX_STREAM, TYPE_STREAM);
-> +	if (!es->ep_stream)
-> +		goto free_es;
-> +
-> +	if (max_entries == ES_ALL_ENTRIES) {
-> +		for (i = 0; i < ES_FILE(es).num_ext; i++)
-> +			if (!exfat_get_validated_dentry(es, ES_INDEX_STREAM + i, TYPE_SECONDARY))
-> +				goto free_es;
-> +		for (i = 0; i * EXFAT_FILE_NAME_LEN < ES_STREAM(es).name_len; i++)
-> +			if (!exfat_get_validated_dentry(es, ES_INDEX_NAME + i, TYPE_NAME))
-> +				goto free_es;
-Why do you unnecessarily check entries with two loops?
-Please refer to the patch I sent.
+From: ChiYuan Huang <cy_huang@richtek.com>
 
->  	}
->  	return es;
+Mediatek MT6360 is a multi-functional IC that includes USB Type-C.
+It works with Type-C Port Controller Manager to provide USB PD
+and USB Type-C functionalities.
 
-> 
-> diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h index 44dc04520175..e46f3e0c16b7 100644
-> --- a/fs/exfat/exfat_fs.h
-> +++ b/fs/exfat/exfat_fs.h
-> @@ -40,7 +40,7 @@ enum {
->   * Type Definitions
->   */
->  #define ES_2_ENTRIES		2
-> -#define ES_ALL_ENTRIES		0
-> +#define ES_ALL_ENTRIES		256
-> 
->  #define DIR_DELETED		0xFFFF0321
-> 
-> @@ -56,7 +56,7 @@ enum {
->  #define TYPE_FILE		0x011F
->  #define TYPE_CRITICAL_SEC	0x0200
->  #define TYPE_STREAM		0x0201
-> -#define TYPE_EXTEND		0x0202
-> +#define TYPE_NAME		0x0202
->  #define TYPE_ACL		0x0203
->  #define TYPE_BENIGN_PRI		0x0400
->  #define TYPE_GUID		0x0401
-> @@ -65,6 +65,9 @@ enum {
->  #define TYPE_BENIGN_SEC		0x0800
->  #define TYPE_ALL		0x0FFF
-> 
-> +#define TYPE_PRIMARY		(TYPE_CRITICAL_PRI | TYPE_BENIGN_PRI)
-Where is this in use? If it is not used, Do not need to add it.
-> +#define TYPE_SECONDARY		(TYPE_CRITICAL_SEC | TYPE_BENIGN_SEC)
-> +
->  #define MAX_CHARSET_SIZE	6 /* max size of multi-byte character */
->  #define MAX_NAME_LENGTH		255 /* max len of file name excluding NULL */
->  #define MAX_VFSNAME_BUF_SIZE	((MAX_NAME_LENGTH + 1) * MAX_CHARSET_SIZE)
+Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+---
+ drivers/usb/typec/tcpm/Kconfig        |   8 ++
+ drivers/usb/typec/tcpm/Makefile       |   1 +
+ drivers/usb/typec/tcpm/tcpci_mt6360.c | 212 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 221 insertions(+)
+ create mode 100644 drivers/usb/typec/tcpm/tcpci_mt6360.c
+
+diff --git a/drivers/usb/typec/tcpm/Kconfig b/drivers/usb/typec/tcpm/Kconfig
+index fa3f393..58a64e1 100644
+--- a/drivers/usb/typec/tcpm/Kconfig
++++ b/drivers/usb/typec/tcpm/Kconfig
+@@ -27,6 +27,14 @@ config TYPEC_RT1711H
+ 	  Type-C Port Controller Manager to provide USB PD and USB
+ 	  Type-C functionalities.
+ 
++config TYPEC_MT6360
++	tristate "Mediatek MT6360 Type-C driver"
++	depends on MFD_MT6360
++	help
++	  Mediatek MT6360 is a multi-functional IC that includes
++	  USB Type-C. It works with Type-C Port Controller Manager
++	  to provide USB PD and USB Type-C functionalities.
++
+ endif # TYPEC_TCPCI
+ 
+ config TYPEC_FUSB302
+diff --git a/drivers/usb/typec/tcpm/Makefile b/drivers/usb/typec/tcpm/Makefile
+index a5ff6c8..7592ccb 100644
+--- a/drivers/usb/typec/tcpm/Makefile
++++ b/drivers/usb/typec/tcpm/Makefile
+@@ -5,3 +5,4 @@ obj-$(CONFIG_TYPEC_WCOVE)	+= typec_wcove.o
+ typec_wcove-y			:= wcove.o
+ obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
+ obj-$(CONFIG_TYPEC_RT1711H)	+= tcpci_rt1711h.o
++obj-$(CONFIG_TYPEC_MT6360)	+= tcpci_mt6360.o
+diff --git a/drivers/usb/typec/tcpm/tcpci_mt6360.c b/drivers/usb/typec/tcpm/tcpci_mt6360.c
+new file mode 100644
+index 00000000..6a28193
+--- /dev/null
++++ b/drivers/usb/typec/tcpm/tcpci_mt6360.c
+@@ -0,0 +1,212 @@
++// SPDX-License-Identifier: GPL-2.0-only
++//
++// Copyright (C) 2020 MediaTek Inc.
++//
++// Author: ChiYuan Huang <cy_huang@richtek.com>
++
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/usb/tcpm.h>
++
++#include "tcpci.h"
++
++#define MT6360_REG_VCONNCTRL1	0x8C
++#define MT6360_REG_MODECTRL2	0x8F
++#define MT6360_REG_SWRESET	0xA0
++#define MT6360_REG_DEBCTRL1	0xA1
++#define MT6360_REG_DRPCTRL1	0xA2
++#define MT6360_REG_DRPCTRL2	0xA3
++#define MT6360_REG_I2CTORST	0xBF
++#define MT6360_REG_RXCTRL2	0xCF
++#define MT6360_REG_CTDCTRL2	0xEC
++
++/* MT6360_REG_VCONNCTRL1 */
++#define MT6360_VCONNCL_ENABLE	BIT(0)
++/* MT6360_REG_RXCTRL2 */
++#define MT6360_OPEN40M_ENABLE	BIT(7)
++/* MT6360_REG_CTDCTRL2 */
++#define MT6360_RPONESHOT_ENABLE	BIT(6)
++
++struct mt6360_tcpc_info {
++	struct tcpci_data tdata;
++	struct tcpci *tcpci;
++	struct device *dev;
++	int irq;
++};
++
++static inline int mt6360_tcpc_read16(struct regmap *regmap,
++				     unsigned int reg, u16 *val)
++{
++	return regmap_raw_read(regmap, reg, val, sizeof(u16));
++}
++
++static inline int mt6360_tcpc_write16(struct regmap *regmap,
++				      unsigned int reg, u16 val)
++{
++	return regmap_raw_write(regmap, reg, &val, sizeof(u16));
++}
++
++static int mt6360_tcpc_init(struct tcpci *tcpci, struct tcpci_data *tdata)
++{
++	struct regmap *regmap = tdata->regmap;
++	int ret;
++
++	ret = regmap_write(regmap, MT6360_REG_SWRESET, 0x01);
++	if (ret)
++		return ret;
++
++	/* after reset command, wait 1~2ms to wait IC action */
++	usleep_range(1000, 2000);
++
++	/* write all alert to masked */
++	ret = mt6360_tcpc_write16(regmap, TCPC_ALERT_MASK, 0);
++	if (ret)
++		return ret;
++
++	/* config I2C timeout reset enable , and timeout to 200ms */
++	ret = regmap_write(regmap, MT6360_REG_I2CTORST, 0x8F);
++	if (ret)
++		return ret;
++
++	/* config CC Detect Debounce : 26.7*val us */
++	ret = regmap_write(regmap, MT6360_REG_DEBCTRL1, 0x10);
++	if (ret)
++		return ret;
++
++	/* DRP Toggle Cycle : 51.2 + 6.4*val ms */
++	ret = regmap_write(regmap, MT6360_REG_DRPCTRL1, 4);
++	if (ret)
++		return ret;
++
++	/* DRP Duyt Ctrl : dcSRC: /1024 */
++	ret = mt6360_tcpc_write16(regmap, MT6360_REG_DRPCTRL2, 330);
++	if (ret)
++		return ret;
++
++	/* Enable VCONN Current Limit function */
++	ret = regmap_update_bits(regmap, MT6360_REG_VCONNCTRL1, MT6360_VCONNCL_ENABLE,
++				 MT6360_VCONNCL_ENABLE);
++	if (ret)
++		return ret;
++
++	/* Enable cc open 40ms when pmic send vsysuv signal */
++	ret = regmap_update_bits(regmap, MT6360_REG_RXCTRL2, MT6360_OPEN40M_ENABLE,
++				 MT6360_OPEN40M_ENABLE);
++	if (ret)
++		return ret;
++
++	/* Enable Rpdet oneshot detection */
++	ret = regmap_update_bits(regmap, MT6360_REG_CTDCTRL2, MT6360_RPONESHOT_ENABLE,
++				 MT6360_RPONESHOT_ENABLE);
++	if (ret)
++		return ret;
++
++	/* Set shipping mode off, AUTOIDLE on */
++	return regmap_write(regmap, MT6360_REG_MODECTRL2, 0x7A);
++}
++
++static irqreturn_t mt6360_irq(int irq, void *dev_id)
++{
++	struct mt6360_tcpc_info *mti = dev_id;
++
++	return tcpci_irq(mti->tcpci);
++}
++
++static int mt6360_tcpc_probe(struct platform_device *pdev)
++{
++	struct mt6360_tcpc_info *mti;
++	int ret;
++
++	mti = devm_kzalloc(&pdev->dev, sizeof(*mti), GFP_KERNEL);
++	if (!mti)
++		return -ENOMEM;
++
++	mti->dev = &pdev->dev;
++
++	mti->tdata.regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!mti->tdata.regmap) {
++		dev_err(&pdev->dev, "Failed to get parent regmap\n");
++		return -ENODEV;
++	}
++
++	mti->irq = platform_get_irq_byname(pdev, "PD_IRQB");
++	if (mti->irq < 0) {
++		dev_err(&pdev->dev, "Failed to get PD_IRQB irq\n");
++		return mti->irq;
++	}
++
++	mti->tdata.init = mt6360_tcpc_init;
++	mti->tcpci = tcpci_register_port(&pdev->dev, &mti->tdata);
++	if (IS_ERR_OR_NULL(mti->tcpci)) {
++		dev_err(&pdev->dev, "Failed to register tcpci port\n");
++		return PTR_ERR(mti->tcpci);
++	}
++
++	ret = devm_request_threaded_irq(mti->dev, mti->irq, NULL, mt6360_irq, IRQF_ONESHOT,
++					dev_name(&pdev->dev), mti);
++	if (ret) {
++		dev_err(mti->dev, "Failed to register irq\n");
++		tcpci_unregister_port(mti->tcpci);
++		return ret;
++	}
++
++	device_init_wakeup(&pdev->dev, true);
++	platform_set_drvdata(pdev, mti);
++
++	return 0;
++}
++
++static int mt6360_tcpc_remove(struct platform_device *pdev)
++{
++	struct mt6360_tcpc_info *mti = platform_get_drvdata(pdev);
++
++	tcpci_unregister_port(mti->tcpci);
++	return 0;
++}
++
++static int __maybe_unused mt6360_tcpc_suspend(struct device *dev)
++{
++	struct mt6360_tcpc_info *mti = dev_get_drvdata(dev);
++
++	if (device_may_wakeup(dev))
++		enable_irq_wake(mti->irq);
++
++	return 0;
++}
++
++static int __maybe_unused mt6360_tcpc_resume(struct device *dev)
++{
++	struct mt6360_tcpc_info *mti = dev_get_drvdata(dev);
++
++	if (device_may_wakeup(dev))
++		disable_irq_wake(mti->irq);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(mt6360_tcpc_pm_ops, mt6360_tcpc_suspend, mt6360_tcpc_resume);
++
++static const struct of_device_id __maybe_unused mt6360_tcpc_of_id[] = {
++	{ .compatible = "mediatek,mt6360-tcpc", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, mt6360_tcpc_of_id);
++
++static struct platform_driver mt6360_tcpc_driver = {
++	.driver = {
++		.name = "mt6360-tcpc",
++		.pm = &mt6360_tcpc_pm_ops,
++		.of_match_table = mt6360_tcpc_of_id,
++	},
++	.probe = mt6360_tcpc_probe,
++	.remove = mt6360_tcpc_remove,
++};
++module_platform_driver(mt6360_tcpc_driver);
++
++MODULE_AUTHOR("ChiYuan Huang <cy_huang@richtek.com>");
++MODULE_DESCRIPTION("MT6360 USB Type-C Port Controller Interface Driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
 
