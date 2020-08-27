@@ -2,234 +2,125 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FAEC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 05:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D1FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 05:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DBEE2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 05:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61ECE2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 05:48:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mGpQuaLH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgH0FpS (ORCPT
+        id S1726968AbgH0FsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 01:45:18 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:40090 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726199AbgH0FpR (ORCPT
+        Thu, 27 Aug 2020 01:48:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4620 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726093AbgH0FsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 01:45:17 -0400
-Received: by mail-il1-f199.google.com with SMTP id z5so3390961ilp.7
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 22:45:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=AOnJK58KWAgjckYsBB0yMrRGuMXnsjy16cofVkiVrV0=;
-        b=Z2zJa6SHY7zkFtB1f5uoKMFIKyJdV37Q8hNuEtyLxWutHNsyODEVce4bca8FX2ClNB
-         QUwthD9VB1F7GmfEvwjp8nGAtZCo9JXFg5eIzJuvm9JAiK6ikSigTDqUuz3gvcNEeF/W
-         +AVTi+vAt0AwBTkiaMBMDmyEJah/W5vnz6EAPk0HHGzTv5Amdcb9VYUIQzwpwnJi5obS
-         XCtnSn+OKnmZcXNkKSfD0YA8YyobQA4BuMlPlq5zndx2KXnF03cSkqxDw/VypcyUbEKR
-         E6vEVWEi0KBz3K/K2f01sRIJUYaDLEksWob/Md3ZasWsdD9fMC3JyQlD4JEDjcD9/aAC
-         pb7A==
-X-Gm-Message-State: AOAM532Gx5DD2qCHwn60TwAW4YRZkAbsdX1RogIkDCcwV3dpifLOYdBV
-        9+DAhbtKs7rMRD+vYZ3U6ZuvGUtV9yN4F3woImhEQnIWMgsG
-X-Google-Smtp-Source: ABdhPJxVMcCYi0n2+hu7wGOwaonrfV3/g00xVzHNfTVQoH598Vl+9+Fsj+Bky7V9IUFN4v3+QRE+q7R2RWPfZiXwmddgVt6jiWhW
+        Thu, 27 Aug 2020 01:48:16 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07R5Wi3g048787;
+        Thu, 27 Aug 2020 01:47:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : reply-to : references : mime-version : content-type
+ : in-reply-to; s=pp1; bh=zSIWCgv1AFSTEWsdYYA2McSDyTkrvCd17IJDAQrUJbw=;
+ b=mGpQuaLHPjFChdnevl1ny1zznoXkwqTQSUc16gqFAZIkB4cjQnbgETgIvhNhO3lEMhX6
+ 2tefzQ3d1kLHWJ1xNE18cOcVY8qxmGJCSNbp83oVdbjGCcbQ0LhZuGVHJphpi8dbmloT
+ V3ohDTLc3c+Rimr78EZWVVGiJcNbi8mWI6mqo0WZ+L/ACeA1DBodOnZ3o0Zdg5cL2lVl
+ wbvIaVrVDzn6chuk8e/DPL9DVwChPLShrnJAz/X/qKMORg42V92jGnpvgkYqcYcfTB8S
+ jDe5PP+/b5zsZQzBV4j0w4rGbvY16qlST6qCmkMRQlQQJ0VpUfGxR3tfUrqNHrfbR7cT JQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3366ax0ws0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 01:47:50 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07R5X7MR050140;
+        Thu, 27 Aug 2020 01:47:50 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3366ax0wr8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 01:47:49 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07R5kpMG027213;
+        Thu, 27 Aug 2020 05:47:48 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 332uk6daq9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 05:47:48 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07R5ljgY61735298
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Aug 2020 05:47:45 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 438215204F;
+        Thu, 27 Aug 2020 05:47:45 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id 0EF8152050;
+        Thu, 27 Aug 2020 05:47:42 +0000 (GMT)
+Date:   Thu, 27 Aug 2020 11:17:42 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Kajol Jain <kjain@linux.ibm.com>
+Cc:     acme@kernel.org, peterz@infradead.org, jolsa@redhat.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        maddy@linux.ibm.com, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        daniel@iogearbox.net, brho@google.com
+Subject: Re: [RFC v2] perf/core: Fixes hung issue on perf stat command during
+ cpu hotplug
+Message-ID: <20200827054742.GA5431@linux.vnet.ibm.com>
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20200826145411.489169-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:c71:: with SMTP id f17mr15347923ilj.98.1598507115751;
- Wed, 26 Aug 2020 22:45:15 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 22:45:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ce2f6d05add5705a@google.com>
-Subject: BUG: stack guard page was hit in __zone_watermark_ok
-From:   syzbot <syzbot+144d1f35995353c5779c@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com,
-        hawk@kernel.org, jiri@mellanox.com, john.fastabend@gmail.com,
-        kafai@fb.com, kpsingh@chromium.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        roopa@cumulusnetworks.com, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20200826145411.489169-1-kjain@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-27_01:2020-08-26,2020-08-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ phishscore=0 clxscore=1011 malwarescore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 adultscore=0 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008270041
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+* Kajol Jain <kjain@linux.ibm.com> [2020-08-26 20:24:11]:
 
-syzbot found the following issue on:
+> Commit 2ed6edd33a21 ("perf: Add cond_resched() to task_function_call()")
+> added assignment of ret value as -EAGAIN in case function
+> call to 'smp_call_function_single' fails.
+> For non-zero ret value, it did
+> 'ret = !ret ? data.ret : -EAGAIN;', which always
+> assign -EAGAIN to ret and make second if condition useless.
+> 
+> In scenarios like when executing a perf stat with --per-thread option, and
+> if any of the monitoring cpu goes offline, the 'smp_call_function_single'
+> function could return -ENXIO, and with the above check,
+> task_function_call hung and increases CPU
+> usage (because of repeated 'smp_call_function_single()')
+> 
+> Recration scenario:
+> 	# perf stat -a --per-thread && (offline a CPU )
+> 
+> Patch here removes the tertiary condition added as part of that
+> commit and added a check for NULL and -EAGAIN.
+> 
+> Fixes: 2ed6edd33a21("perf: Add cond_resched() to task_function_call()")
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> Reported-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 
-HEAD commit:    85eb5bc3 net: atheros: switch from 'pci_' to 'dma_' API
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14e32139900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a0437fdd630bee11
-dashboard link: https://syzkaller.appspot.com/bug?extid=144d1f35995353c5779c
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+144d1f35995353c5779c@syzkaller.appspotmail.com
-
-BUG: stack guard page was hit at 00000000b2f481cf (stack is 000000009cbf9546..0000000099742d14)
-kernel stack overflow (double-fault): 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 29993 Comm: syz-executor.4 Not tainted 5.9.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:instrument_atomic_read include/linux/instrumented.h:56 [inline]
-RIP: 0010:atomic64_read include/asm-generic/atomic-instrumented.h:837 [inline]
-RIP: 0010:atomic_long_read include/asm-generic/atomic-long.h:29 [inline]
-RIP: 0010:zone_page_state include/linux/vmstat.h:217 [inline]
-RIP: 0010:__zone_watermark_unusable_free mm/page_alloc.c:3508 [inline]
-RIP: 0010:__zone_watermark_ok+0x23f/0x3f0 mm/page_alloc.c:3529
-Code: c4 28 31 c0 5b 5d 41 5c 41 5d 41 5e 41 5f c3 49 8d bc 24 98 06 00 00 be 08 00 00 00 4c 89 4c 24 20 4c 89 54 24 18 89 54 24 10 <4c> 89 44 24 08 48 89 3c 24 e8 33 78 08 00 48 8b 3c 24 48 b8 00 00
-RSP: 0018:ffffc900169f7ff0 EFLAGS: 00010046
-RAX: dffffc0000000000 RBX: 0000000000000001 RCX: 0000000000000001
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff88812fffc498
-RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000001 R12: ffff88812fffbe00
-R13: 0000000000000040 R14: 0000000000000002 R15: 0000000000000000
-FS:  00007f98bc4db700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc900169f7fe8 CR3: 00000002063a9000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- zone_watermark_fast mm/page_alloc.c:3612 [inline]
- get_page_from_freelist+0x102f/0x37f0 mm/page_alloc.c:3785
- __alloc_pages_slowpath.constprop.0+0x322/0x2860 mm/page_alloc.c:4592
- __alloc_pages_nodemask+0x62c/0x790 mm/page_alloc.c:4901
- __alloc_pages include/linux/gfp.h:509 [inline]
- __alloc_pages_node include/linux/gfp.h:522 [inline]
- kmem_getpages mm/slab.c:1376 [inline]
- cache_grow_begin+0x71/0x430 mm/slab.c:2590
- cache_alloc_refill+0x27b/0x340 mm/slab.c:2962
- ____cache_alloc mm/slab.c:3045 [inline]
- ____cache_alloc mm/slab.c:3028 [inline]
- slab_alloc_node mm/slab.c:3241 [inline]
- kmem_cache_alloc_node_trace+0x3de/0x400 mm/slab.c:3592
- __do_kmalloc_node mm/slab.c:3614 [inline]
- __kmalloc_node_track_caller+0x38/0x60 mm/slab.c:3629
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0xae/0x550 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1085 [inline]
- nlmsg_new include/net/netlink.h:944 [inline]
- rtmsg_ifinfo_build_skb+0x72/0x1a0 net/core/rtnetlink.c:3804
- rtmsg_ifinfo_event net/core/rtnetlink.c:3840 [inline]
- rtmsg_ifinfo_event net/core/rtnetlink.c:3831 [inline]
- rtnetlink_event+0x123/0x1d0 net/core/rtnetlink.c:5614
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2033
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9371 [inline]
- __netdev_update_features+0x88d/0x1360 net/core/dev.c:9502
- netdev_change_features+0x61/0xb0 net/core/dev.c:9574
- bond_compute_features+0x562/0xa80 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x871/0xb80 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2033
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9371 [inline]
- __netdev_update_features+0x88d/0x1360 net/core/dev.c:9502
- netdev_change_features+0x61/0xb0 net/core/dev.c:9574
- bond_compute_features+0x562/0xa80 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x871/0xb80 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2033
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9371 [inline]
- __netdev_update_features+0x88d/0x1360 net/core/dev.c:9502
- netdev_change_features+0x61/0xb0 net/core/dev.c:9574
- bond_compute_features+0x562/0xa80 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x871/0xb80 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2033
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9371 [inline]
- __netdev_update_features+0x88d/0x1360 net/core/dev.c:9502
- netdev_change_features+0x61/0xb0 net/core/dev.c:9574
- bond_compute_features+0x562/0xa80 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x871/0xb80 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2033
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9371 [inline]
- __netdev_update_features+0x88d/0x1360 net/core/dev.c:9502
- netdev_change_features+0x61/0xb0 net/core/dev.c:9574
- bond_compute_features+0x562/0xa80 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x871/0xb80 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2033
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9371 [inline]
- __netdev_update_features+0x88d/0x1360 net/core/dev.c:9502
- netdev_change_features+0x61/0xb0 net/core/dev.c:9574
- bond_compute_features+0x562/0xa80 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x871/0xb80 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2033
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9371 [inline]
- __netdev_update_features+0x88d/0x1360 net/core/dev.c:9502
- netdev_change_features+0x61/0xb0 net/core/dev.c:9574
- bond_compute_features+0x562/0xa80 drivers/net/bonding/bond_main.c:1308
- bond_slave_netdev_event drivers/net/bonding/bond_main.c:3375 [inline]
- bond_netdev_event+0x871/0xb80 drivers/net/bonding/bond_main.c:3415
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2033
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- netdev_features_change net/core/dev.c:1444 [inline]
- netdev_sync_lower_features net/core/dev.c:9371 [inline]
- __netdev_update_features+0x88d/0x1360 net/core/dev.c:9502
- netdev_change_features+0x61/0xb0 net/core/dev.c:9574
-Lost 504 message(s)!
----[ end trace 99fc362a1b5e94a8 ]---
-RIP: 0010:instrument_atomic_read include/linux/instrumented.h:56 [inline]
-RIP: 0010:atomic64_read include/asm-generic/atomic-instrumented.h:837 [inline]
-RIP: 0010:atomic_long_read include/asm-generic/atomic-long.h:29 [inline]
-RIP: 0010:zone_page_state include/linux/vmstat.h:217 [inline]
-RIP: 0010:__zone_watermark_unusable_free mm/page_alloc.c:3508 [inline]
-RIP: 0010:__zone_watermark_ok+0x23f/0x3f0 mm/page_alloc.c:3529
-Code: c4 28 31 c0 5b 5d 41 5c 41 5d 41 5e 41 5f c3 49 8d bc 24 98 06 00 00 be 08 00 00 00 4c 89 4c 24 20 4c 89 54 24 18 89 54 24 10 <4c> 89 44 24 08 48 89 3c 24 e8 33 78 08 00 48 8b 3c 24 48 b8 00 00
-RSP: 0018:ffffc900169f7ff0 EFLAGS: 00010046
-RAX: dffffc0000000000 RBX: 0000000000000001 RCX: 0000000000000001
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff88812fffc498
-RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000001 R12: ffff88812fffbe00
-R13: 0000000000000040 R14: 0000000000000002 R15: 0000000000000000
-FS:  00007f98bc4db700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffc900169f7fe8 CR3: 00000002063a9000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Tested-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+Thanks and Regards
+Srikar Dronamraju
