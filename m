@@ -2,142 +2,82 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78654C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B729C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58A1720714
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:41:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8n5VPrp"
+	by mail.kernel.org (Postfix) with ESMTP id 2D63620714
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgH0Tlf (ORCPT
+        id S1727095AbgH0Tlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:41:35 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35385 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgH0Tle (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:41:34 -0400
-Received: by mail-pg1-f196.google.com with SMTP id g29so3074047pgl.2;
-        Thu, 27 Aug 2020 12:40:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MZm/oywi3r1tbCCgZePyobFM2PGZReJQn7CQ3uKc+Ao=;
-        b=f8n5VPrpuTtwANe91fL3ceCKerjs9R1uZiyAXmwVy/cZqu3I8o92h7iWKeUrZbvTHI
-         xv3f2KNykWxz9M4p+YEx/8qCMXuZ9zkFFj9z+dffQXJOEZsPQBZzrKqn6Xfw2iQuP5Af
-         eIOEmUek3WrgS3fxMZwWJXrEDNbdzLAOraAWLfkDXyFr6h00Z7O9KvIpFIS9xEGr+3aX
-         9zXFJ0A9XeZY0Ce0KWz63fWV7wQ7VVhbTgUiEEsxac+lfKyxCqS913SAPiQ6itoN4Kdu
-         Hp/smrljQR+JJGKvlfG5Wqu+EBGIUVqGeslwuBUsIrpvL2dILvRlZuex9jG0lt4PEcd9
-         UTOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MZm/oywi3r1tbCCgZePyobFM2PGZReJQn7CQ3uKc+Ao=;
-        b=N+m23nxEuiXnMWvsECXxcBqXwrrt0Yez7OVPBlhddlFvrPBuTNr/ktkBKKer2NS0gd
-         FWWC/gJQig/5p9eVIE844mWTgiRq0+dg6bey9bPzDDN6SdCMh+WpwFpwtGYzCvIkVI/6
-         GfW8U9KLmAPEL3WdFAqLjEh8023K02++4VO3N4umWQcYQijC0c1LB0qejkjwBYGdVy2V
-         3uX9EDP0phaILBjT9zQdo2GfdmQ7a0rerxIEd5uZO13kE1mzzd0bo83wNZrrS1mOx37X
-         IvS4ab+G/9zHlSqBjw2pxDl8IUu9ML/1sU+T3vpp+3t0dqDtfN0KzwKx4DQU6kwTme7h
-         z0DQ==
-X-Gm-Message-State: AOAM533Lav3OTTU/FAzSpj4Cb58uLGD3MJcu4f2gU7/nSwzNJ/CKMK/Z
-        izAjwILIaR+H/CJNu0daSVplkl0ku1R9MWW7+B8=
-X-Google-Smtp-Source: ABdhPJzf24/mTVbylFzj0huXtaxnG7j22bCzla2pU3gLISj7msJajR9gj4ZkRMNtbU33SxLbtqsrpdn12ipaw+rhX4g=
-X-Received: by 2002:a63:ec18:: with SMTP id j24mr15210554pgh.74.1598557143681;
- Thu, 27 Aug 2020 12:39:03 -0700 (PDT)
+        Thu, 27 Aug 2020 15:41:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:34000 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726120AbgH0Tlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 15:41:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82D0931B;
+        Thu, 27 Aug 2020 12:41:38 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD8DC3F68F;
+        Thu, 27 Aug 2020 12:41:37 -0700 (PDT)
+Subject: Re: [PATCH] iommu/iova: Replace cmpxchg with xchg in queue_iova
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Cc:     Yuqi Jin <jinyuqi@huawei.com>
+References: <1598517834-30275-1-git-send-email-zhangshaokun@hisilicon.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <3afcc7b2-0bfb-b79c-513f-1beb66c5f164@arm.com>
+Date:   Thu, 27 Aug 2020 20:41:36 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200827192642.1725-1-krzk@kernel.org>
-In-Reply-To: <20200827192642.1725-1-krzk@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Aug 2020 22:38:46 +0300
-Message-ID: <CAHp75VeOWTuB1SqsajLZE9WB+VzgMuL9gnA-ohf58_hfJ=gn5w@mail.gmail.com>
-Subject: Re: [PATCH v2 01/18] iio: accel: bma180: Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Beniamin Bia <beniamin.bia@analog.com>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1598517834-30275-1-git-send-email-zhangshaokun@hisilicon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 10:27 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and also it prints the error value.
->
+On 2020-08-27 09:43, Shaokun Zhang wrote:
+> From: Yuqi Jin <jinyuqi@huawei.com>
+> 
+> The performance of the atomic_xchg is better than atomic_cmpxchg because
+> no comparison is required. While the value of @fq_timer_on can only be 0
+> or 1. Let's use atomic_xchg instead of atomic_cmpxchg here because we
+> only need to check that the value changes from 0 to 1 or from 1 to 1.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Looks reasonable to me - the "compare" part is already covered by the 
+separate atomic_read(), and as you say there's no harm if the "exchange" 
+part races as long as it's still atomic.
 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Signed-off-by: Yuqi Jin <jinyuqi@huawei.com>
+> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
 > ---
->  drivers/iio/accel/bma180.c | 20 ++++++++------------
->  1 file changed, 8 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/iio/accel/bma180.c b/drivers/iio/accel/bma180.c
-> index 5b7a467c7b27..448faed001fd 100644
-> --- a/drivers/iio/accel/bma180.c
-> +++ b/drivers/iio/accel/bma180.c
-> @@ -1000,19 +1000,15 @@ static int bma180_probe(struct i2c_client *client,
->                 return ret;
->
->         data->vdd_supply = devm_regulator_get(dev, "vdd");
-> -       if (IS_ERR(data->vdd_supply)) {
-> -               if (PTR_ERR(data->vdd_supply) != -EPROBE_DEFER)
-> -                       dev_err(dev, "Failed to get vdd regulator %d\n",
-> -                               (int)PTR_ERR(data->vdd_supply));
-> -               return PTR_ERR(data->vdd_supply);
-> -       }
-> +       if (IS_ERR(data->vdd_supply))
-> +               return dev_err_probe(dev, PTR_ERR(data->vdd_supply),
-> +                                    "Failed to get vdd regulator\n");
-> +
->         data->vddio_supply = devm_regulator_get(dev, "vddio");
-> -       if (IS_ERR(data->vddio_supply)) {
-> -               if (PTR_ERR(data->vddio_supply) != -EPROBE_DEFER)
-> -                       dev_err(dev, "Failed to get vddio regulator %d\n",
-> -                               (int)PTR_ERR(data->vddio_supply));
-> -               return PTR_ERR(data->vddio_supply);
-> -       }
-> +       if (IS_ERR(data->vddio_supply))
-> +               return dev_err_probe(dev, PTR_ERR(data->vddio_supply),
-> +                                    "Failed to get vddio regulator\n");
-> +
->         /* Typical voltage 2.4V these are min and max */
->         ret = regulator_set_voltage(data->vdd_supply, 1620000, 3600000);
->         if (ret)
-> --
-> 2.17.1
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+>   drivers/iommu/iova.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+> index 45a251da5453..30d969a4c5fd 100644
+> --- a/drivers/iommu/iova.c
+> +++ b/drivers/iommu/iova.c
+> @@ -579,7 +579,7 @@ void queue_iova(struct iova_domain *iovad,
+>   
+>   	/* Avoid false sharing as much as possible. */
+>   	if (!atomic_read(&iovad->fq_timer_on) &&
+> -	    !atomic_cmpxchg(&iovad->fq_timer_on, 0, 1))
+> +	    !atomic_xchg(&iovad->fq_timer_on, 1))
+>   		mod_timer(&iovad->fq_timer,
+>   			  jiffies + msecs_to_jiffies(IOVA_FQ_TIMEOUT));
+>   }
+> 
