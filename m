@@ -4,114 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8246AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D31D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60F1620737
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:14:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598548453;
-	bh=ShZS58tdF66Xh9vTndGLo4aEfl1xq/VIGApEobqKDXU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=y+Yl9+F1dQeH6PJ8+8fDgve5GJrWSDMkFlcJQkbzLDNm1CZh5N95vBouqAEHTFGFj
-	 MAmbthsFCd/F36c4MuHxqd2kklaNmZmWKtmzKkKiBurXeFuLa514NvwQkYIrgXwfMT
-	 zOc1Dq6C2jkDUgkLSv6uc76OFugRO/OqKWI3AG44=
+	by mail.kernel.org (Postfix) with ESMTP id AEB1420737
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:15:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ri4LrgrU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgH0ROL (ORCPT
+        id S1727107AbgH0RPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:14:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbgH0ROJ (ORCPT
+        Thu, 27 Aug 2020 13:15:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:57070 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726093AbgH0RPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:14:09 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 595ECC061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:14:09 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id g6so7262741ljn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:14:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M4prkjP1Ku3b1Mujmm7MQBoZsalaGZICkCWqtSa9I0Q=;
-        b=PSw0ZaM0WvUn6MpwD6It0gaG27/wObSq1kVFCBecFjxl05M3hm/lJJJSvazPfJVOQT
-         cjVnniEJR+1KQCr4oYfPbro+6zzdFrXrfxKFeKe1p1C/CgSLgLHArfWn+EP8lW7qYQ49
-         w0N1GHWVrfxOkaIDPpbVBPi4jLmvTyf7sMt34=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M4prkjP1Ku3b1Mujmm7MQBoZsalaGZICkCWqtSa9I0Q=;
-        b=fp8XE6ZIAWl6oMpsgpm2PyLuHaG8bhgFZJTItdQc4IGVKqnTAEp+6R+tBN/3DXF+W2
-         bQ9Fs29M4Yz2Ip910tsMng4oaeQvlCbgJAClGfVpp7U6O9WXOQUbm9VKO7mezWW62hJK
-         i1zx6OWiZCSK4Em9f76hU1iVa5GTTeRfVjYiQzPZvPg9PUB52rBEluTw14hGO1kZ50LS
-         Ur6FtDyZy47qQVcWjDfXADD6aM9ZX8A7RuW07UQ51qd/RKjNfua/RbXblVNrlqCQqLa7
-         /eaU6dsFe8MqEyO9YbSBjMN3JV7zm8gJI2yN9yLprjOLnnATl56ULoyVz5FBKmmn1CX6
-         EmBg==
-X-Gm-Message-State: AOAM531yaBsLtAo3Fi7MV2sDjVAaElCLgm7LP0BwldA4Vg3Bl8TSIFlO
-        Hi60CvH3s6hTCwpxEkwl+jJnpgmiAImZog==
-X-Google-Smtp-Source: ABdhPJyoAoJLbtRhhFBHIRtoMEuH1r2E/aCCwQzLeEMRnp8rrenfMsMzNId3VvXkpdvTOP3r5iVNFg==
-X-Received: by 2002:a2e:9e4e:: with SMTP id g14mr2704601ljk.450.1598548447514;
-        Thu, 27 Aug 2020 10:14:07 -0700 (PDT)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id 29sm596944ljv.72.2020.08.27.10.14.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 10:14:07 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id i10so7318348ljn.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:14:06 -0700 (PDT)
-X-Received: by 2002:a05:651c:503:: with SMTP id o3mr10986895ljp.312.1598548445374;
- Thu, 27 Aug 2020 10:14:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200827114932.3572699-1-jannh@google.com> <20200827114932.3572699-7-jannh@google.com>
-In-Reply-To: <20200827114932.3572699-7-jannh@google.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 27 Aug 2020 10:13:49 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj=QXUkKXLzyWxJ49L80Heu2Z_RoHSahRt+zPq8W4du=g@mail.gmail.com>
-Message-ID: <CAHk-=wj=QXUkKXLzyWxJ49L80Heu2Z_RoHSahRt+zPq8W4du=g@mail.gmail.com>
-Subject: Re: [PATCH v5 6/7] mm/gup: Take mmap_lock in get_dump_page()
-To:     Jann Horn <jannh@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Thu, 27 Aug 2020 13:15:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598548500;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GrVYnBCf9kRNkO91LHLOEFgKkaeauQRklIlZEj330sM=;
+        b=Ri4LrgrUiWUy7pWn5QkBEFJGmQXaOIE16nj+4brQ4RNiyJIJR8t7+GTmKYS70VgL4sFo7w
+        3T8NJNusXRS3fYMH4IG+dR2OXLO0eSyYkq1ixGfw+/x0AqN0U3HlSd0JlMimCAsoqA2nOO
+        gyxuI5I8hN0KbQGe6b94QtuNI2MmDi0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-128-TWlJB8AvNcWZABSKUagUMQ-1; Thu, 27 Aug 2020 13:14:59 -0400
+X-MC-Unique: TWlJB8AvNcWZABSKUagUMQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8FA2D425D6;
+        Thu, 27 Aug 2020 17:14:56 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 826CC610AF;
+        Thu, 27 Aug 2020 17:14:47 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200827161824.GC31016@nautica>
+References: <20200827161824.GC31016@nautica> <20200810164044.GA31753@lst.de> <1851200.1596472222@warthog.procyon.org.uk> <447452.1596109876@warthog.procyon.org.uk> <667820.1597072619@warthog.procyon.org.uk> <1428311.1598542135@warthog.procyon.org.uk>
+To:     Dominique Martinet <asmadeus@codewreck.org>
+Cc:     dhowells@redhat.com, Christoph Hellwig <hch@lst.de>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] fscache rewrite -- please drop for now
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1442568.1598548486.1@warthog.procyon.org.uk>
+Date:   Thu, 27 Aug 2020 18:14:46 +0100
+Message-ID: <1442569.1598548486@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 4:50 AM Jann Horn <jannh@google.com> wrote:
->
-> Properly take the mmap_lock before calling into the GUP code from
-> get_dump_page(); and play nice, allowing the GUP code to drop the mmap_lock
-> if it has to sleep.
+Dominique Martinet <asmadeus@codewreck.org> wrote:
 
-Hmm. Of all the patches in the series, this simple one is now the only
-one I feel makes for ugly code. Certainly not uglier than it used to
-be,  but also not as pretty as it could be..
+> Should I submit patches to you or wait until Linus merges it next cycle
+> and send them directly?
+> 
+> I see Jeff's ceph patches are still in his tree's ceph-fscache-iter
+> branch and I don't see them anywhere in your tree.
 
-I think you're pretty much just re-implementing
-get_user_pages_unlocked(), aren't you?
+I really want them to all go in the same window, but there may be a
+requirement for some filesystem-specific sets (eg. NFS) to go via the
+maintainer tree.
 
-There are differences - you use mmap_read_lock_killable(), for
-example. But I think get_user_pages_unlocked() should too.
+Btw, at the moment, I'm looking at making the fscache read helper support the
+new ->readahead() op.
 
-The other difference is that you don't set FOLL_TOUCH. So it's not
-*exactly* the same thing, but it's close enough that I get the feeling
-that this should be cleaned up to use a common helper between the two.
+David
 
-That said, I suspect that falls under the heading of "future cleanup".
-I don't think there's any need to re-spin this series for this, it's
-just the only slightly negative reaction I had for the whole series
-now.
-
-                 Linus
