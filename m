@@ -2,148 +2,149 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E66C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABFFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70FED22B4E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3362822B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:57:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFWkpvTX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yMZhFN+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgH0O5Z (ORCPT
+        id S1727794AbgH0O5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38732 "EHLO
+        Thu, 27 Aug 2020 10:57:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729017AbgH0M0v (ORCPT
+        with ESMTP id S1729041AbgH0M0v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 08:26:51 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54BFEC061237;
-        Thu, 27 Aug 2020 05:26:25 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d22so3364237pfn.5;
-        Thu, 27 Aug 2020 05:26:25 -0700 (PDT)
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8208FC061232
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 05:16:11 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id k15so1381801wrn.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 05:16:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yshf0t+B3H2Fa7nb62l3WyLSVIwsly5Q7xCX3DmLffE=;
-        b=NFWkpvTXXDzp1w5mZset2RiJ5g05ZT+xyjl78iInz5/zvgMHtsTH8g4bms1yHsbtB7
-         6Dlflzfn1sV7eBOSr6wu9WspwIkgX5f+l0OHPDZ9TGAoixwJt8xA+gERMayIsAJiZMpW
-         qIpDenLAYsUBGrP/Evx1QdLQqJbA9PcPmB9M8PApLK+71Tgr/i6C6o2BPfcIaQPfLmxB
-         rxwNf5l2pihVbyAsEmRC2jozCQT/tSKT/ZgFs/fEk4zkDoA7y/AJ1ZUd7qsy3o2mI7gr
-         AhYuDyfCrBasXAsuRu7qRFCygAIlK2bpUXLpShsjyCZ2HYLYdrDad2mHiITB2D3ybroJ
-         Oj0w==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=vG3GFaecRjYGM2orq3QNH3b5bYkLOVwGTg6XiPpRXIc=;
+        b=yMZhFN+veq01+ehZQeqqK0HhK+dnG66FHF62HBnjdjO+Hxk1KWY1W2dTxqnSlNWsZb
+         7NrCYLjtmqs8ZZRBa1rC7WJ+Fjl6xAalt7mPJS+1ciGUOenIil2PbkxIpAV8m+xON24p
+         HlWXtWju0lBA7bVapsr3Q4oD5pC6WldpEU2YOmxfKxAcyd8K2oUU9qweG4mXKEsTB//l
+         vsz1L7puUsSszPyf/ABcYrck5b6BVOl27XPFXKmjgwOEjrDx60iguNCzKJY7rn6dfh/l
+         RTN/txEfeuFNtKyzHnl9bkOrB6H71cOMb8l4Kh0J7GQC2JCosNHe8GyzjufyIM5WRK2o
+         eZ8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yshf0t+B3H2Fa7nb62l3WyLSVIwsly5Q7xCX3DmLffE=;
-        b=nIbhrXjSYuc5B3jfREJdkdhQLjMFQC76dZ32+qTBNehncxDrcjWo4FMBruwjLRhSEK
-         4DzGPH83CXAyzWsIzvTuszpEdU8mWNWm1SHvpji5QHJuYx7eLtUTb1bYz1Ru+UEFXNAg
-         Y7UaftZEs1gnn4iUHPuPTQsLuv0OqaGg7MpUuEHqo5flJPKZ1Qz8/D/aMQOE86/3ekGu
-         9agTsZDtCH1AKD42WfPJBQqAj5yMRlhgIrqoTtAKI/e4SYvRdA7hjFRW7wvjRgJZ/K0l
-         Fo7ASIdsVngebX4feo0bqwe/jEytqts6LnKNqDR8nUyB3sQXBFXo/SPodwamgoCwnUKl
-         klQg==
-X-Gm-Message-State: AOAM532nzFs+KgBbvkY6fcHZxRxySUOJ87WrKUqXcRdniW/QZFhpiO7J
-        QGhjAWrv5ABF03prsISER+IZNFfcH/U=
-X-Google-Smtp-Source: ABdhPJy4xSnQ/89HQNJOqn91G2wB0K2dcUDhB/FX3pR5jOgT4cde3TG+1FIj83w226bL/LxOaOYg0A==
-X-Received: by 2002:a17:902:9888:: with SMTP id s8mr15941903plp.111.1598531184442;
-        Thu, 27 Aug 2020 05:26:24 -0700 (PDT)
-Received: from [192.168.1.200] (FL1-111-169-205-196.hyg.mesh.ad.jp. [111.169.205.196])
-        by smtp.gmail.com with ESMTPSA id f24sm2062255pjt.53.2020.08.27.05.26.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 05:26:24 -0700 (PDT)
-Subject: Re: [PATCH v4 1/5] exfat: integrates dir-entry getting and validation
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        'Sungjong Seo' <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20200826115753epcas1p3321f1021e92cfba8279d8976e835d436@epcas1p3.samsung.com>
- <20200826115742.21207-1-kohada.t2@gmail.com>
- <011101d67c20$e3d604e0$ab820ea0$@samsung.com>
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Message-ID: <2d26da8b-eb50-1374-5cfc-c8ee1daabc0c@gmail.com>
-Date:   Thu, 27 Aug 2020 21:26:21 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=vG3GFaecRjYGM2orq3QNH3b5bYkLOVwGTg6XiPpRXIc=;
+        b=d92NvJtVbcJHjfjjBj6zN6OMzboGBr+q04j55I8vCZgwUvBhJCVt2yRSr4IVXiznG0
+         oNiZiw5SjXRRydR2AOH4TelJIDMUZdDPMiSRjtEZoFMNHp6V1MzbtF1UPH7UDX4pgTBp
+         T9FTffRbehHRI/4JB+iWWYHUpqW0bbQO+eeEvWxty/haMW2V9dpl9UiZji3V1wrmI+39
+         g7lopXRXhnXJlumD22UfoHooNMPbnmfNWWBjNj9IBUzhmSRrEnnj79zwmyHXNEJPTdGk
+         8nQHNC3S1oQgop0DBvDKot/l1h8OWRQj/Kv4Nr21KKBHa6GQVjt1sdtaPCbM+3Ww4QiT
+         8OiA==
+X-Gm-Message-State: AOAM530MQJMrfkM36YFtvewIAAiw2FeXoKkcqv4aDOJHYv5U4cZjk/HF
+        1BFWtqVjfxZo7/CeFoAsXC1XuA==
+X-Google-Smtp-Source: ABdhPJxbyF8d5EcngGv3DhfuYhCjndliOt2vwoniXJmdB+7PavRwuar4fgzUKdUkIYi3702fUNwjyw==
+X-Received: by 2002:a5d:6987:: with SMTP id g7mr1722186wru.173.1598530570226;
+        Thu, 27 Aug 2020 05:16:10 -0700 (PDT)
+Received: from dell ([91.110.221.141])
+        by smtp.gmail.com with ESMTPSA id m10sm4756714wmi.9.2020.08.27.05.16.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 05:16:09 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 13:16:07 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Maya Erez <merez@codeaurora.org>, wil6210@qti.qualcomm.com
+Subject: Re: [PATCH 12/30] wireless: ath: wil6210: wmi: Correct misnamed
+ function parameter 'ptr_'
+Message-ID: <20200827121607.GF1627017@dell>
+References: <20200826093401.1458456-13-lee.jones@linaro.org>
+ <20200826155625.A5A88C433A1@smtp.codeaurora.org>
+ <20200827063559.GP3248864@dell>
+ <20200827074100.GX3248864@dell>
+ <877dtkb9lm.fsf@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <011101d67c20$e3d604e0$ab820ea0$@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <877dtkb9lm.fsf@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you for your quick review.
+On Thu, 27 Aug 2020, Kalle Valo wrote:
 
-On 2020/08/27 12:19, Namjae Jeon wrote:
->> +	i = ES_INDEX_NAME;
->> +	while ((ep = exfat_get_validated_dentry(es, i++, TYPE_NAME))) {
-> Please find the way to access name entries like ep_file, ep_stream
-> without calling exfat_get_validated_dentry().
+> Lee Jones <lee.jones@linaro.org> writes:
+> 
+> > On Thu, 27 Aug 2020, Lee Jones wrote:
+> >
+> >> On Wed, 26 Aug 2020, Kalle Valo wrote:
+> >> 
+> >> > Lee Jones <lee.jones@linaro.org> wrote:
+> >> > 
+> >> > > Fixes the following W=1 kernel build warning(s):
+> >> > > 
+> >> > >  drivers/net/wireless/ath/wil6210/wmi.c:279: warning: Function
+> >> > > parameter or member 'ptr_' not described in 'wmi_buffer_block'
+> >> > >  drivers/net/wireless/ath/wil6210/wmi.c:279: warning: Excess
+> >> > > function parameter 'ptr' description in 'wmi_buffer_block'
+> >> > > 
+> >> > > Cc: Maya Erez <merez@codeaurora.org>
+> >> > > Cc: Kalle Valo <kvalo@codeaurora.org>
+> >> > > Cc: "David S. Miller" <davem@davemloft.net>
+> >> > > Cc: Jakub Kicinski <kuba@kernel.org>
+> >> > > Cc: linux-wireless@vger.kernel.org
+> >> > > Cc: wil6210@qti.qualcomm.com
+> >> > > Cc: netdev@vger.kernel.org
+> >> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> >> > 
+> >> > Failed to apply:
+> >> > 
+> >> > error: patch failed: drivers/net/wireless/ath/wil6210/wmi.c:266
+> >> > error: drivers/net/wireless/ath/wil6210/wmi.c: patch does not apply
+> >> > stg import: Diff does not apply cleanly
+> >> > 
+> >> > Patch set to Changes Requested.
+> >> 
+> >> Are you applying them in order?
+> >> 
+> >> It may be affected by:
+> >> 
+> >>  wireless: ath: wil6210: wmi: Fix formatting and demote
+> >> non-conforming function headers
+> >> 
+> >> I'll also rebase onto the latest -next and resubmit.
+> >
+> > I just rebased all 3 sets onto the latest -next (next-20200827)
+> > without issue.  Not sure what problem you're seeing.  Did you apply
+> > the first set before attempting the second?
+> 
+> I can't remember the order, patchwork sorts them based on the order they
+> have been submitted and that's what I usually use.
+> 
+> Do note that there's a separate tree for drivers in
+> drivers/net/wireless/ath:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/
+> 
+> And it takes a week or two before patches go to linux-next.
 
-Hmm, it's a hard order.
-I can't separate length/type validation and extraction.
-Sorry, I have no good idea.
+Understood.  Thank you.
 
-
->> @@ -590,17 +587,16 @@ int exfat_remove_entries(struct inode *inode, struct exfat_chain *p_dir,  void
->> exfat_update_dir_chksum_with_entry_set(struct exfat_entry_set_cache *es)  {
->>   	int chksum_type = CS_DIR_ENTRY, i;
->> -	unsigned short chksum = 0;
->> +	u16 chksum = 0;
->>   	struct exfat_dentry *ep;
->>
->>   	for (i = 0; i < es->num_entries; i++) {
->> -		ep = exfat_get_dentry_cached(es, i);
->> +		ep = exfat_get_validated_dentry(es, i, TYPE_ALL);
-> Ditto, You do not need to repeatedly call exfat_get_validated_dentry() for the entries
-> which got from exfat_get_dentry_set().
-
-Even if I could do that, it would be very difficult to implement a checksum patch.
-It is also difficult to use for rename, move, delete.
-(these also have no verification of neme-length and set-checksum)
-
-
->>   	/* validiate cached dentries */
->> -	for (i = 1; i < num_entries; i++) {
->> -		ep = exfat_get_dentry_cached(es, i);
->> -		if (!exfat_validate_entry(exfat_get_entry_type(ep), &mode))
->> -			goto free_es;
->> +	es->ep_stream = exfat_get_validated_dentry(es, ES_INDEX_STREAM, TYPE_STREAM);
->> +	if (!es->ep_stream)
->> +		goto free_es;
->> +
->> +	if (max_entries == ES_ALL_ENTRIES) {
->> +		for (i = 0; i < ES_FILE(es).num_ext; i++)
->> +			if (!exfat_get_validated_dentry(es, ES_INDEX_STREAM + i, TYPE_SECONDARY))
->> +				goto free_es;
->> +		for (i = 0; i * EXFAT_FILE_NAME_LEN < ES_STREAM(es).name_len; i++)
->> +			if (!exfat_get_validated_dentry(es, ES_INDEX_NAME + i, TYPE_NAME))
->> +				goto free_es;
-> Why do you unnecessarily check entries with two loops?
-> Please refer to the patch I sent.
-
-This order is possible.
-However, TYPE_SECONDARY loop will be back as checksum loop.
-
-In the next patch, I can fix the 'TYPE_SECONDARY loop' order.
-do you need it?
-
-
-BR
----
-Tetsuhiro Kohada <kohada.t2@gmail.com>
-
-
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
