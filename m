@@ -2,146 +2,337 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB50C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732BBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58BD022B4E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CDC122B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:50:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="CpXkU+hX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NHI0afnZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgH0Ouf (ORCPT
+        id S1728259AbgH0Ouj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:50:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728138AbgH0NlT (ORCPT
+        Thu, 27 Aug 2020 10:50:39 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47384 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728052AbgH0NlQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:41:19 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DDBDC06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:41:10 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id i10so6499285ljn.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:41:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SQRD+t3B3BhDgCZyy/X8yI1I6ZdI7vaahMfVCu8hVtc=;
-        b=CpXkU+hXp1QnM7ojLivh4d5Bmqi4h8btqinup18fFNC7GXCdtN0smcpO17RkifyAIx
-         Y0amYg/fPzSsfG8gt9M90i3OSb/BtPcX2JDgFtmSAXjkVNEkrvyylvDZYP76e+5BDB8U
-         lNx/uq7bb+38w5YPBEm02y20Fnv2ie3aoJoxs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SQRD+t3B3BhDgCZyy/X8yI1I6ZdI7vaahMfVCu8hVtc=;
-        b=N2h2Fsc1yTdsRGm8ZEzmCpuhgWtCeOeNRgdhJ8UXnbXM+2/h1ZBvuaJTSYN1FjTDIQ
-         TEdMcbH/tGRpdV3WWuhDUry5FClpPKbfidKIl+SYS6yZSLYpLPHeJuFFF8KppJwPOKs+
-         xeKI/hOb73NF2k9hVK7cz1MbPOy9r+a4FjcXRkNqUFadEKsi5rSeH8raoctDH8LlxTuU
-         i1XAX3qQ3vevtDP/zI7EJ4Y9j+xihx8PHbgVRQVntXDUnphYC8HmAfkHHRQHnGLio2ep
-         wkTAQsTn8siF9vfRPpOyyo2mfkUtEG+A/PsrOlA/T9Wd28fAl02X/fVLzahBXViVxr03
-         1xbw==
-X-Gm-Message-State: AOAM533f+g/O1tnvfdNhveykTtcD2sswBBVVbdj07SQnJzA0QlkUdpxL
-        2CCfTOzd+pauxR4XKVYyUIthmBpfg1E0+mMkdoU=
-X-Google-Smtp-Source: ABdhPJwkDjSUj8IlsGiwNf7IhV9DFi8APBm4o7xWJMxTxBgBybmgAqSoWU2asXcoivMC0ejHhlf40w==
-X-Received: by 2002:a2e:a314:: with SMTP id l20mr10255281lje.213.1598535668264;
-        Thu, 27 Aug 2020 06:41:08 -0700 (PDT)
-Received: from [172.16.11.132] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id n24sm483425lji.83.2020.08.27.06.41.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 06:41:07 -0700 (PDT)
-Subject: Re: [PATCH] usb: atm: don't use snprintf() for sysfs attrs
-To:     Alex Dewar <alex.dewar90@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        accessrunner-general@lists.sourceforge.net,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200824222322.22962-1-alex.dewar90@gmail.com>
- <48f2dc90-7852-eaf1-55d7-2c85cf954688@rasmusvillemoes.dk>
- <20200827071537.GA168593@kroah.com>
- <20200827131819.7rcl2f5js3hkoqj2@lenovo-laptop>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <def24e9e-018c-9712-0d07-d4cbc84f07d9@rasmusvillemoes.dk>
-Date:   Thu, 27 Aug 2020 15:41:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 27 Aug 2020 09:41:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598535668;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uTXnsdemHz3ZA+LfBhP216oi6zi4kNbTgvLzZMmEtOU=;
+        b=NHI0afnZoQB0HXnpgd/Cy8R5H53NKFdFYO1EyvqApBnYFstsXEX/r1TxZr9bcdGM6cTWaa
+        iJN12q9vV8y5m9+fteOkefdEVrSeYyOdIgh6Ug4BxCpt+dtB5Hgpr4jqSEW40Htx1Owrv1
+        YiPLSzpPuls1kRRxvv4sjkyg9RV279s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-127-L-ARk0AYM9O88EcUTUu40Q-1; Thu, 27 Aug 2020 09:41:06 -0400
+X-MC-Unique: L-ARk0AYM9O88EcUTUu40Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 430B610ABDA1;
+        Thu, 27 Aug 2020 13:41:03 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-113-96.ams2.redhat.com [10.36.113.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5EAEB7C55A;
+        Thu, 27 Aug 2020 13:40:59 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Aleksa Sarai <asarai@suse.de>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
+        Kees Cook <keescook@chromium.org>,
+        Jeff Moyer <jmoyer@redhat.com>
+Subject: [PATCH v5 2/3] io_uring: add IOURING_REGISTER_RESTRICTIONS opcode
+Date:   Thu, 27 Aug 2020 15:40:43 +0200
+Message-Id: <20200827134044.82821-3-sgarzare@redhat.com>
+In-Reply-To: <20200827134044.82821-1-sgarzare@redhat.com>
+References: <20200827134044.82821-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200827131819.7rcl2f5js3hkoqj2@lenovo-laptop>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/08/2020 15.18, Alex Dewar wrote:
-> On Thu, Aug 27, 2020 at 09:15:37AM +0200, Greg Kroah-Hartman wrote:
->> On Thu, Aug 27, 2020 at 08:42:06AM +0200, Rasmus Villemoes wrote:
->>> On 25/08/2020 00.23, Alex Dewar wrote:
->>>> kernel/cpu.c: don't use snprintf() for sysfs attrs
->>>>
->>>> As per the documentation (Documentation/filesystems/sysfs.rst),
->>>> snprintf() should not be used for formatting values returned by sysfs.
->>>>
->>>
->>> Can we have a sysfs_sprintf() (could just be a macro that does sprintf)
->>> to make it clear to the next reader that we know we're in a sysfs show
->>> method? It would make auditing uses of sprintf() much easier.
->>
->> Code churn to keep code checkers quiet for pointless reasons?  What
->> could go wrong with that...
+The new io_uring_register(2) IOURING_REGISTER_RESTRICTIONS opcode
+permanently installs a feature allowlist on an io_ring_ctx.
+The io_ring_ctx can then be passed to untrusted code with the
+knowledge that only operations present in the allowlist can be
+executed.
 
-I did not (mean to) suggest replacing existing sprintf() calls in sysfs
-show methods. But when changes _are_ being made, such as when replacing
-snprintf() calls for whatever reasons, can we please not make it harder
-for people doing manual audits (those are "code checkers" as well, I
-suppose, but they do tend to only make noise when finding something).
+The allowlist approach ensures that new features added to io_uring
+do not accidentally become available when an existing application
+is launched on a newer kernel version.
 
->> It should be pretty obvious to any reader that you are in a sysfs show
->> method, as almost all of them are trivially tiny and obvious.
+Currently is it possible to restrict sqe opcodes, sqe flags, and
+register opcodes.
 
-git grep doesn't immediately show that, not even with a suitable -C
-argument, as you can't really know the potential callers unless you open
-the file and see that the function is only assigned as a .show method.
-And even that can be a pain because it's all hidden behind five levels
-of magic macros that build identifiers with ##.
+IOURING_REGISTER_RESTRICTIONS can only be made once. Afterwards
+it is not possible to change restrictions anymore.
+This prevents untrusted code from removing restrictions.
 
-> Perhaps I should have mentioned this in the commit message, but the problem
-> is that snprintf() doesn't return the number of bytes written to the
-> destination buffer,
+Suggested-by: Stefan Hajnoczi <stefanha@redhat.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+---
+v5:
+ - explicitly assign enum values [Kees]
+ - replace kmalloc/copy_from_user with memdup_user [kernel test robot]
 
-I'm perfectly well aware of that, TYVM (you may want to 'git log
---author Villemoes lib/vsprintf.c').
+v3:
+ - added IORING_RESTRICTION_SQE_FLAGS_ALLOWED and
+   IORING_RESTRICTION_SQE_FLAGS_REQUIRED
+ - removed IORING_RESTRICTION_FIXED_FILES_ONLY
 
- but the number of bytes that *would have been written if
-> they fitted*, which may be more than the bounds specified [1]. So "return
-> snprintf(...)" for sysfs attributes is an antipattern. If you need bounded
-> string ops, scnprintf() is the way to go. Using snprintf() can give a
-> false sense of security, because it isn't necessarily safe.
+RFC v2:
+ - added 'restricted' flag in the ctx [Jens]
+ - added IORING_MAX_RESTRICTIONS define
+ - returned EBUSY instead of EINVAL when restrictions are already
+   registered
+ - reset restrictions if an error happened during the registration
+---
+ fs/io_uring.c                 | 107 +++++++++++++++++++++++++++++++++-
+ include/uapi/linux/io_uring.h |  31 ++++++++++
+ 2 files changed, 137 insertions(+), 1 deletion(-)
 
-Huh? This all seems utterly irrelevant WRT a change that replaces
-PAGE_SIZE by INT_MAX (because that's what sprintf() is going to pretend
-you passed). You get the same return value.
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 6df08287c59e..93b023930b0b 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -98,6 +98,8 @@
+ #define IORING_MAX_FILES_TABLE	(1U << IORING_FILE_TABLE_SHIFT)
+ #define IORING_FILE_TABLE_MASK	(IORING_MAX_FILES_TABLE - 1)
+ #define IORING_MAX_FIXED_FILES	(64 * IORING_MAX_FILES_TABLE)
++#define IORING_MAX_RESTRICTIONS	(IORING_RESTRICTION_LAST + \
++				 IORING_REGISTER_LAST + IORING_OP_LAST)
+ 
+ struct io_uring {
+ 	u32 head ____cacheline_aligned_in_smp;
+@@ -219,6 +221,13 @@ struct io_buffer {
+ 	__u16 bid;
+ };
+ 
++struct io_restriction {
++	DECLARE_BITMAP(register_op, IORING_REGISTER_LAST);
++	DECLARE_BITMAP(sqe_op, IORING_OP_LAST);
++	u8 sqe_flags_allowed;
++	u8 sqe_flags_required;
++};
++
+ struct io_ring_ctx {
+ 	struct {
+ 		struct percpu_ref	refs;
+@@ -231,6 +240,7 @@ struct io_ring_ctx {
+ 		unsigned int		cq_overflow_flushed: 1;
+ 		unsigned int		drain_next: 1;
+ 		unsigned int		eventfd_async: 1;
++		unsigned int		restricted: 1;
+ 
+ 		/*
+ 		 * Ring buffer of indices into array of io_uring_sqe, which is
+@@ -338,6 +348,7 @@ struct io_ring_ctx {
+ 	struct llist_head		file_put_llist;
+ 
+ 	struct work_struct		exit_work;
++	struct io_restriction		restrictions;
+ };
+ 
+ /*
+@@ -6414,6 +6425,19 @@ static int io_init_req(struct io_ring_ctx *ctx, struct io_kiocb *req,
+ 	if (unlikely(sqe_flags & ~SQE_VALID_FLAGS))
+ 		return -EINVAL;
+ 
++	if (unlikely(ctx->restricted)) {
++		if (!test_bit(req->opcode, ctx->restrictions.sqe_op))
++			return -EACCES;
++
++		if ((sqe_flags & ctx->restrictions.sqe_flags_required) !=
++		    ctx->restrictions.sqe_flags_required)
++			return -EACCES;
++
++		if (sqe_flags & ~(ctx->restrictions.sqe_flags_allowed |
++				  ctx->restrictions.sqe_flags_required))
++			return -EACCES;
++	}
++
+ 	if ((sqe_flags & IOSQE_BUFFER_SELECT) &&
+ 	    !io_op_defs[req->opcode].buffer_select)
+ 		return -EOPNOTSUPP;
+@@ -8714,6 +8738,71 @@ static int io_unregister_personality(struct io_ring_ctx *ctx, unsigned id)
+ 	return -EINVAL;
+ }
+ 
++static int io_register_restrictions(struct io_ring_ctx *ctx, void __user *arg,
++				    unsigned int nr_args)
++{
++	struct io_uring_restriction *res;
++	size_t size;
++	int i, ret;
++
++	/* We allow only a single restrictions registration */
++	if (ctx->restricted)
++		return -EBUSY;
++
++	if (!arg || nr_args > IORING_MAX_RESTRICTIONS)
++		return -EINVAL;
++
++	size = array_size(nr_args, sizeof(*res));
++	if (size == SIZE_MAX)
++		return -EOVERFLOW;
++
++	res = memdup_user(arg, size);
++	if (IS_ERR(res))
++		return PTR_ERR(res);
++
++	for (i = 0; i < nr_args; i++) {
++		switch (res[i].opcode) {
++		case IORING_RESTRICTION_REGISTER_OP:
++			if (res[i].register_op >= IORING_REGISTER_LAST) {
++				ret = -EINVAL;
++				goto out;
++			}
++
++			__set_bit(res[i].register_op,
++				  ctx->restrictions.register_op);
++			break;
++		case IORING_RESTRICTION_SQE_OP:
++			if (res[i].sqe_op >= IORING_OP_LAST) {
++				ret = -EINVAL;
++				goto out;
++			}
++
++			__set_bit(res[i].sqe_op, ctx->restrictions.sqe_op);
++			break;
++		case IORING_RESTRICTION_SQE_FLAGS_ALLOWED:
++			ctx->restrictions.sqe_flags_allowed = res[i].sqe_flags;
++			break;
++		case IORING_RESTRICTION_SQE_FLAGS_REQUIRED:
++			ctx->restrictions.sqe_flags_required = res[i].sqe_flags;
++			break;
++		default:
++			ret = -EINVAL;
++			goto out;
++		}
++	}
++
++	ctx->restricted = 1;
++
++	ret = 0;
++out:
++	/* Reset all restrictions if an error happened */
++	if (ret != 0)
++		memset(&ctx->restrictions, 0, sizeof(ctx->restrictions));
++
++	kfree(res);
++	return ret;
++}
++
+ static bool io_register_op_must_quiesce(int op)
+ {
+ 	switch (op) {
+@@ -8760,6 +8849,18 @@ static int __io_uring_register(struct io_ring_ctx *ctx, unsigned opcode,
+ 		if (ret) {
+ 			percpu_ref_resurrect(&ctx->refs);
+ 			ret = -EINTR;
++			goto out_quiesce;
++		}
++	}
++
++	if (ctx->restricted) {
++		if (opcode >= IORING_REGISTER_LAST) {
++			ret = -EINVAL;
++			goto out;
++		}
++
++		if (!test_bit(opcode, ctx->restrictions.register_op)) {
++			ret = -EACCES;
+ 			goto out;
+ 		}
+ 	}
+@@ -8823,15 +8924,19 @@ static int __io_uring_register(struct io_ring_ctx *ctx, unsigned opcode,
+ 			break;
+ 		ret = io_unregister_personality(ctx, nr_args);
+ 		break;
++	case IORING_REGISTER_RESTRICTIONS:
++		ret = io_register_restrictions(ctx, arg, nr_args);
++		break;
+ 	default:
+ 		ret = -EINVAL;
+ 		break;
+ 	}
+ 
++out:
+ 	if (io_register_op_must_quiesce(opcode)) {
+ 		/* bring the ctx back to life */
+ 		percpu_ref_reinit(&ctx->refs);
+-out:
++out_quiesce:
+ 		reinit_completion(&ctx->ref_comp);
+ 	}
+ 	return ret;
+diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+index 5f12ae6a415c..6e7f2e5e917b 100644
+--- a/include/uapi/linux/io_uring.h
++++ b/include/uapi/linux/io_uring.h
+@@ -267,6 +267,7 @@ enum {
+ 	IORING_REGISTER_PROBE			= 8,
+ 	IORING_REGISTER_PERSONALITY		= 9,
+ 	IORING_UNREGISTER_PERSONALITY		= 10,
++	IORING_REGISTER_RESTRICTIONS		= 11,
+ 
+ 	/* this goes last */
+ 	IORING_REGISTER_LAST
+@@ -295,4 +296,34 @@ struct io_uring_probe {
+ 	struct io_uring_probe_op ops[0];
+ };
+ 
++struct io_uring_restriction {
++	__u16 opcode;
++	union {
++		__u8 register_op; /* IORING_RESTRICTION_REGISTER_OP */
++		__u8 sqe_op;      /* IORING_RESTRICTION_SQE_OP */
++		__u8 sqe_flags;   /* IORING_RESTRICTION_SQE_FLAGS_* */
++	};
++	__u8 resv;
++	__u32 resv2[3];
++};
++
++/*
++ * io_uring_restriction->opcode values
++ */
++enum {
++	/* Allow an io_uring_register(2) opcode */
++	IORING_RESTRICTION_REGISTER_OP		= 0,
++
++	/* Allow an sqe opcode */
++	IORING_RESTRICTION_SQE_OP		= 1,
++
++	/* Allow sqe flags */
++	IORING_RESTRICTION_SQE_FLAGS_ALLOWED	= 2,
++
++	/* Require sqe flags (these flags must be set on each submission) */
++	IORING_RESTRICTION_SQE_FLAGS_REQUIRED	= 3,
++
++	IORING_RESTRICTION_LAST
++};
++
+ #endif
+-- 
+2.26.2
 
-But I'm not at all concerned about whether one passes the proper buffer
-size or not in sysfs show methods; with my embedded hat on, I'm all for
-saving a few bytes of .text here and there. The problem, as far as I'm
-concerned, is merely that adding sprintf() callers makes it harder to
-find the problematic sprintf() instances.
-
-
->> Anyway, we've had this for 20 years,
-
-My bad, for a moment I forgot that code and patterns of that vintage
-cannot have bugs.
-
-Rasmus
