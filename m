@@ -2,145 +2,148 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A0CC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E30C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0F2920737
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1549920737
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:12:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Md/xHyaG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YBkij/Ig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgH0UKs (ORCPT
+        id S1726880AbgH0UMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 16:10:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55112 "EHLO
+        Thu, 27 Aug 2020 16:12:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbgH0UKp (ORCPT
+        with ESMTP id S1726147AbgH0UMu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:10:45 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 789D4C06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 13:10:45 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id l23so6006469edv.11
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 13:10:45 -0700 (PDT)
+        Thu, 27 Aug 2020 16:12:50 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B89BC061264;
+        Thu, 27 Aug 2020 13:12:50 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id w186so4140890pgb.8;
+        Thu, 27 Aug 2020 13:12:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=p+NhuGqZ1s2YOIDcL/NLneD1sSa9p1wUOJUKqaMqRkw=;
-        b=Md/xHyaGoYRdh+UNIrfduX3a2nUDPbw1zFgSowMyJTCFVTN1fTpyRBimXcJichIHef
-         Jo0srQdtzmRNP+gsin5OTAz8TQtg3zpd1S50BCMb7vaCV+vm3L7n39g1+UF4hkspZhM6
-         DmT+eDm2ALzIDH9aA6TtStWercvL3mLFc9ebukS+Gv+ohl+3/12AAD8neUeekyHQQ+0S
-         k/0Z8wxUyqtAuGCo0zVxoY3bqYvIy8RdYG36Oe/CxDqQHjsjCk52SpCtHlPpX8gF+XoN
-         aF3pI9+MypDBQ5ubIuGAP9jpr4vTAgne9KefuEJ/CP8PmL8AgXvH+hsYnL105GPvFEqD
-         hUOA==
+        bh=A5PiLj4dztwx4VDsM2EuGg6/hf1WiH3MIKIfKMjQjl8=;
+        b=YBkij/IgGaz3F5J9Y7R/e47ULPqvCRDM6+srzsBtDTDR+WTrKLjHlmrjrqLZw5ckav
+         F1DRjwDKKFxfe3qQgfDfYYz7eSHgkBDBbDLp/MpVff1ANsqgZjjaT1RIojPQ0U9IyVdQ
+         +fKM+6XYEQs364gFd50hEE5i6ZOKG3zXRx054/sVqrH5alo05QbBMjQzgYoTqOj5J3sy
+         ivpyWTZAgYcbQ/cCoxkg9bN5cCANK5ohZsMwTLgOgrXtCew6TA7Mh1q5Wv189DxJxMz5
+         URk4g0kqwQfpx0qb82waARffLjcVzXRC6sWRyEMDy6sosZEZBPdtp7wKGWK0dTbq2UWy
+         AIIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=p+NhuGqZ1s2YOIDcL/NLneD1sSa9p1wUOJUKqaMqRkw=;
-        b=B1cC70+6pD/mQp493ZkFvTrhLXRMjnXl2feQPzfEgsz1x+2QGhKNbmSxA2vsqFGlBf
-         JSwK+l0By0SMpnN3YXtUM1+gM5QchjGTZ29ZOuhERlCv/AwmjO1VoCDfLWGELo4U2kQM
-         YRz+IBWkkAXzj84aJVpyEw7nlFyFhu5KGy/FQb3qvEO6uEbrSpFMQn+uH+19D/kgLYkD
-         cL37wvANez0sYCp/xno4xFBmCT0MxQhZ4pn9hZzkIK98Rmmd82aV8ir/Jt1rQYRQKf4M
-         qdMA4OzUUcyk/j/BYkPD/I0DWzJPLMbv005Y86PK+ALE6JG0h7exxP8twBv+/5eUWElZ
-         CwEw==
-X-Gm-Message-State: AOAM533cqK52jikpT1QoPsv7gljjZVk6dKAd2zZBd9O5RnIV6Lyes3IT
-        agn8K9ZTUf6UIIRjEc4/2TohOaYRrIyR1O8EVUW5
-X-Google-Smtp-Source: ABdhPJxJvE6mA822Q9ll6TLmIZgcHK/6bfOb1ebbRtjm3udhvJdA1rH7i+/IZ4kQ1knmS+cF4kf7wKpLGnK+Z3jqYvU=
-X-Received: by 2002:aa7:c6ca:: with SMTP id b10mr13274121eds.269.1598559044015;
- Thu, 27 Aug 2020 13:10:44 -0700 (PDT)
+        bh=A5PiLj4dztwx4VDsM2EuGg6/hf1WiH3MIKIfKMjQjl8=;
+        b=Wojhm70NC96JZ3elO9OWNYt/Xg/Mk48xBVlyO1g2se85hhN5/tWZg3aulCBoR6zgjO
+         KBSzNQhtslnQjoa/GbTzEoP4lj2Qr8No778vodw9bEioPDsXVJ40tBdM7Sg1NuL/4leL
+         +r4Pk06lv0vsniXOrDxu7b75SAUznNJIoqdWFnaDOaebTz0L2GlcYVW/jKX2S26MpkCj
+         kefI2uc3KDaVYN/Yp/X20VXXzq4qa4NiFAXSLpywNWWOTUN5PMtfH6J9O6ZBllO6z0lk
+         0CTtW0zdigVY4YN87PAXj5zBaBxSOMO3+lJt7UL7TlbSsvE22BYCtCerNGDihUL5Elfw
+         Bg2Q==
+X-Gm-Message-State: AOAM531Jw3tj5b0PMLKW0OYYfpmogPkRAKkN/eNkdaYBQsQn86F1mno4
+        s64aTLm8QfUcDbP9EA95/HA8Gx4EtrZS8A8DpNE=
+X-Google-Smtp-Source: ABdhPJzj5zoo92PansDUsNH086E2KFycsOBXmt7Kd/PuPYPU9WKx359RWnfh5xSRNiD1bbQjNLz0TXDZ/xChIgqzHao=
+X-Received: by 2002:a17:902:b194:: with SMTP id s20mr17842045plr.321.1598559170111;
+ Thu, 27 Aug 2020 13:12:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200827163712.106303-1-alex.dewar90@gmail.com>
- <CAHC9VhRgi54TXae1Wi+SSzkuy9BL7HH=pZCHL1p215M9ZXKEOA@mail.gmail.com>
- <20200827170634.wogybzcxux7sgefb@medion> <20200827172006.gudui4alfbbf2a2p@medion>
-In-Reply-To: <20200827172006.gudui4alfbbf2a2p@medion>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 27 Aug 2020 16:10:32 -0400
-Message-ID: <CAHC9VhRtTykJVze_93ed+n+v14Ai9J5Mbre9nGEc2rkqbqKc_g@mail.gmail.com>
-Subject: Re: [PATCH RFC] netlabel: remove unused param from audit_log_format()
-To:     Alex Dewar <alex.dewar90@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200827135205.1.I6981f9a9f0c12e60f8038f3b574184f8ffc1b9b5@changeid>
+In-Reply-To: <20200827135205.1.I6981f9a9f0c12e60f8038f3b574184f8ffc1b9b5@changeid>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 27 Aug 2020 23:12:33 +0300
+Message-ID: <CAHp75VfM-61vN_Ptz1YWz3JmRJ7eqssVykXuCircuiz9HL3TVA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] Input: i8042 - Prevent intermixing i8042 commands
+To:     Raul E Rangel <rrangel@chromium.org>
+Cc:     linux-input <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "S, Shirish" <Shirish.S@amd.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Dan Murphy <dmurphy@ti.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        "Lee, Chun-Yi" <jlee@suse.com>, Pavel Machek <pavel@ucw.cz>,
+        Rajat Jain <rajatja@google.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 1:20 PM Alex Dewar <alex.dewar90@gmail.com> wrote:
-> On Thu, Aug 27, 2020 at 06:06:34PM +0100, Alex Dewar wrote:
-> > On Thu, Aug 27, 2020 at 01:00:58PM -0400, Paul Moore wrote:
-> > > On Thu, Aug 27, 2020 at 12:39 PM Alex Dewar <alex.dewar90@gmail.com> wrote:
-> > > >
-> > > > Commit d3b990b7f327 ("netlabel: fix problems with mapping removal")
-> > > > added a check to return an error if ret_val != 0, before ret_val is
-> > > > later used in a log message. Now it will unconditionally print "...
-> > > > res=0". So don't print res anymore.
-> > > >
-> > > > Addresses-Coverity: ("Dead code")
-> > > > Fixes: d3b990b7f327 ("netlabel: fix problems with mapping removal")
-> > > > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
-> > > > ---
-> > > >
-> > > > I wasn't sure whether it was intended that something other than ret_val
-> > > > be printed in the log, so that's why I'm sending this as an RFC.
-> > >
-> > > It's intentional for a couple of reasons:
-> > >
-> > > * The people who care about audit logs like to see success/fail (e.g.
-> > > "res=X") for audit events/records, so printing this out gives them the
-> > > warm fuzzies.
-> > >
-> > > * For a lot of awful reasons that I won't bore you with, we really
-> > > don't want to add/remove fields in the middle of an audit record so we
-> > > pretty much need to keep the "res=0" there even if it seems a bit
-> > > redundant.
-> > >
-> > > So NACK from me, but thanks for paying attention just the same :)
-> >
-> > Would you rather just have an explicit "res=0" in there, without looking
-> > at ret_val? The thing is that ret_val will *always* be zero at this point in
-> > the code, because, if not, the function will already have returned.
-> > That's why Coverity flagged it up as a redundant check.
+On Thu, Aug 27, 2020 at 10:52 PM Raul E Rangel <rrangel@chromium.org> wrote:
 >
-> Sorry, I meant "res=1". The code will always print res=1, because
-> ret_val is always 0.
+> The i8042_mutex must be held by writers of the AUX and KBD ports, as
+> well as users of i8042_command. There were a lot of users of
+> i8042_command that were not calling i8042_lock_chip/i8042_unlock_chip.
+> This resulted in i8042_commands being issues in between PS/2
+> transactions.
+>
+> This change moves the mutex lock into i8042_command and removes the
+> burden of locking the mutex from the callers.
 
-That's okay, I can't tell you how many times I've made that mistake
-with "res=" :)
+Which is wrong according to your very patch. See below.
 
-Anyway, yes at that point ret_val should always be 0, and "res=X"
-should always be "res=1", so if you wanted to change it to a fixed
-value so you could get rid of the ternary statement that would be
-okay.
+> It is expected that the i8042_mutex is locked before calling
+> i8042_aux_write or i8042_kbd_write. This is currently done by the PS/2
+> layer via ps2_begin_command and ps2_end_command. Other modules
+> (serio_raw) do not currently lock the mutex, so there is still a
+> possibility for intermixed commands.
 
-> > > >  net/netlabel/netlabel_domainhash.c | 5 ++---
-> > > >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/net/netlabel/netlabel_domainhash.c b/net/netlabel/netlabel_domainhash.c
-> > > > index f73a8382c275..526762b2f3a9 100644
-> > > > --- a/net/netlabel/netlabel_domainhash.c
-> > > > +++ b/net/netlabel/netlabel_domainhash.c
-> > > > @@ -612,9 +612,8 @@ int netlbl_domhsh_remove_entry(struct netlbl_dom_map *entry,
-> > > >         audit_buf = netlbl_audit_start_common(AUDIT_MAC_MAP_DEL, audit_info);
-> > > >         if (audit_buf != NULL) {
-> > > >                 audit_log_format(audit_buf,
-> > > > -                                " nlbl_domain=%s res=%u",
-> > > > -                                entry->domain ? entry->domain : "(default)",
-> > > > -                                ret_val == 0 ? 1 : 0);
-> > > > +                                " nlbl_domain=%s",
-> > > > +                                entry->domain ? entry->domain : "(default)");
-> > > >                 audit_log_end(audit_buf);
-> > > >         }
-> > > >
+...
+
+> +       mutex_lock(&i8042_mutex);
+> +
+>         spin_lock_irqsave(&i8042_lock, flags);
+>         retval = __i8042_command(param, command);
+>         spin_unlock_irqrestore(&i8042_lock, flags);
+>
+> +        mutex_unlock(&i8042_mutex);
+
+Question 1. Why do you need mutex at all in the above situation? Spin
+lock isn't enough?
+
+...
+
+> -       i8042_lock_chip();
+> -
+>         if (value == LED_OFF)
+>                 i8042_command(NULL, CLEVO_MAIL_LED_OFF);
+>         else if (value <= LED_HALF)
+>                 i8042_command(NULL, CLEVO_MAIL_LED_BLINK_0_5HZ);
+>         else
+>                 i8042_command(NULL, CLEVO_MAIL_LED_BLINK_1HZ);
+> -
+> -       i8042_unlock_chip();
+> -
+
+Now, these three commands are not considered as a transaction (no
+atomicity). That's why your patch is wrong.
+
+>  }
+
+...
+
+>         int rc;
+>
+> -       i8042_lock_chip();
+>         rc = i8042_command(&param, A1655_WIFI_COMMAND);
+> -       i8042_unlock_chip();
+>         return rc;
+
+rc become redundant.
 
 -- 
-paul moore
-www.paul-moore.com
+With Best Regards,
+Andy Shevchenko
