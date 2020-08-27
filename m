@@ -2,142 +2,129 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62116C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E50C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43A912075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62FC207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:58:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="O5cTArAV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgH0CsR (ORCPT
+        id S1726871AbgH0C6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 22:48:17 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:33672 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726790AbgH0CsR (ORCPT
+        Wed, 26 Aug 2020 22:58:42 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19985 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbgH0C6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 22:48:17 -0400
-Received: by mail-io1-f69.google.com with SMTP id k4so2722614iop.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 19:48:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=2UFQjLFbMkws7Mzxk49K5HdYI7gIOD5cuAkyrXQPUF0=;
-        b=F7JYE3/xE4jb4yUSRCipBA80sU0wu2tT3bfBAZ68wfMcFLyCQnUzfLO/H3Znaytp+8
-         d+IJSzU/VdhJJvjmt+5xK0gRyNJ6MipJF1tL5yWn/Lq1cWAnzAes771bIMTXCe7HOmnj
-         VMrGk/NztAsvPfs7HKxzBA+1QxP0+Tw3vlczhgRpHZpWdWEA37DDYRI4jOkrYs698HNf
-         J/CrK1lvFAbWzADQYXYr9Dk42q9Ca3hzYVnxSXUnUadWl3sTnVD0IvpDSFwLP+YJql31
-         Mnx8GYGRITfWc0z937QOh2ZILkODLMoV3F8ilgZAx4de3R4bdS55gNPBpgybww7wa4JJ
-         sPAw==
-X-Gm-Message-State: AOAM531grz5X1hLk5xTFJ4K1Pu/caOXHI8k995qZ9ed0H3gIYzBc9Ah8
-        9zQDbMSbT5jOziVwyOMSq4OvfLDzC5BmXjcUfrYZgaTAQ9P3
-X-Google-Smtp-Source: ABdhPJw9zYRpb1Fe2uEASqEaOoYoZWdCeQkFeJ79llzNTG1g9VQDsQbKXLHbKqhO1aQgUxJsG9yW50qogBXETPGaHvMKEke91pLn
+        Wed, 26 Aug 2020 22:58:41 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4720e70001>; Wed, 26 Aug 2020 19:56:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 26 Aug 2020 19:58:40 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 26 Aug 2020 19:58:40 -0700
+Received: from [10.2.174.186] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
+ 2020 02:58:39 +0000
+Subject: Re: [PATCH v5 0/7] Fix timeout clock used by hardware data timeout
+To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <robh+dt@kernel.org>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <1598472314-30235-1-git-send-email-skomatineni@nvidia.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <2cdf3627-19cc-eca0-7872-d1a2d4f070f5@nvidia.com>
+Date:   Wed, 26 Aug 2020 19:58:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:9149:: with SMTP id b9mr17429709jag.50.1598496496131;
- Wed, 26 Aug 2020 19:48:16 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 19:48:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d3a33205add2f7b2@google.com>
-Subject: kernel BUG at fs/ext4/inode.c:LINE!
-From:   syzbot <syzbot+3622cea378100f45d59f@syzkaller.appspotmail.com>
-To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1598472314-30235-1-git-send-email-skomatineni@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598496999; bh=evzB4FoRprFPYV5hVd/oisQBSOdob+Bb6961eYXLFo4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=O5cTArAVrnw8dzzc1QbD7sLMasLA9j4u/Zu3kT12wNZxMiSfAsOwuRNEtq0jTf/JU
+         46zX8GCF+8E9ePFv8/cPKz5vS4JHL/JurOVg0LZK/Jc+NtTMCI8PaQBOluB/qbFN4O
+         kFxcHeA2Fh55r35Ih66NvL/iWGV6GfZ9L7+0+xnnCO/FBaDUoqyJHhLKN2xzeklvx6
+         F9WqBGXzNws1A1ZQjBOTcRNoQb7FARJZM8tRq544hAoeQitXB/XzTcuo/50+oukxUw
+         h9IRyPR2AsIrM85I3vL1OtjmCFyItGkjbHhRH13z+5DGf+JnW6JdcQuG/thtH1RNTi
+         TTsEHHFc7VF5A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Sorry please ignore this series.
 
-syzbot found the following issue on:
+Wrong patches from my system went out.
 
-HEAD commit:    c3d8f220 Merge tag 'kbuild-fixes-v5.9' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15f83cb6900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bb68b9e8a8cc842f
-dashboard link: https://syzkaller.appspot.com/bug?extid=3622cea378100f45d59f
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1287ac96900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11c7ac46900000
+Will send as v6.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3622cea378100f45d59f@syzkaller.appspotmail.com
+Thanks
 
-------------[ cut here ]------------
-kernel BUG at fs/ext4/inode.c:2598!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 27612 Comm: syz-executor879 Not tainted 5.9.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:mpage_prepare_extent_to_map+0xd34/0xd40 fs/ext4/inode.c:2598
-Code: 89 e8 a0 74 9f ff 0f 0b e8 59 81 70 ff 4c 89 e7 48 c7 c6 da a3 07 89 e8 8a 74 9f ff 0f 0b e8 43 81 70 ff 0f 0b e8 3c 81 70 ff <0f> 0b e8 c5 b3 25 06 0f 1f 44 00 00 55 41 57 41 56 41 55 41 54 53
-RSP: 0018:ffffc9000a0974d8 EFLAGS: 00010293
-RAX: ffffffff820476e4 RBX: 00fffe000000a01f RCX: ffff88808ea5c340
-RDX: 0000000000000000 RSI: 000000000000a01f RDI: 000000000000ffff
-RBP: ffffea00020d4f80 R08: ffffffff820471e4 R09: fffff9400041a9f1
-R10: fffff9400041a9f1 R11: 0000000000000000 R12: ffffea00020d4f80
-R13: ffffc9000a0977b0 R14: 1ffffd400041a9f1 R15: dffffc0000000000
-FS:  00007f5055f25700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004ae4b0 CR3: 00000000a2d7f000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- ext4_writepages+0xa98/0x3750 fs/ext4/inode.c:2735
- do_writepages+0xda/0x1f0 mm/page-writeback.c:2352
- __filemap_fdatawrite_range+0x2a5/0x350 mm/filemap.c:422
- filemap_write_and_wait_range+0xca/0x160 mm/filemap.c:655
- iomap_dio_rw+0x5a7/0xeb0 fs/iomap/direct-io.c:478
- ext4_dio_read_iter fs/ext4/file.c:77 [inline]
- ext4_file_read_iter+0x544/0x6d0 fs/ext4/file.c:129
- call_read_iter include/linux/fs.h:1876 [inline]
- generic_file_splice_read+0x3c5/0x640 fs/splice.c:312
- do_splice_to fs/splice.c:870 [inline]
- splice_direct_to_actor+0x3bd/0xb60 fs/splice.c:950
- do_splice_direct+0x201/0x340 fs/splice.c:1059
- do_sendfile+0x86d/0x1210 fs/read_write.c:1540
- __do_sys_sendfile64 fs/read_write.c:1601 [inline]
- __se_sys_sendfile64 fs/read_write.c:1587 [inline]
- __x64_sys_sendfile64+0x164/0x1a0 fs/read_write.c:1587
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x448bc9
-Code: e8 1c e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 0b 06 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f5055f24ce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 00000000006e4a28 RCX: 0000000000448bc9
-RDX: 0000000000000000 RSI: 0000000000000006 RDI: 0000000000000004
-RBP: 00000000006e4a20 R08: 0000000000000000 R09: 0000000000000000
-R10: 00008400fffffffb R11: 0000000000000246 R12: 00000000006e4a2c
-R13: 00007ffdc73a76df R14: 00007f5055f259c0 R15: 20c49ba5e353f7cf
-Modules linked in:
----[ end trace aba5fca59eda2183 ]---
-RIP: 0010:mpage_prepare_extent_to_map+0xd34/0xd40 fs/ext4/inode.c:2598
-Code: 89 e8 a0 74 9f ff 0f 0b e8 59 81 70 ff 4c 89 e7 48 c7 c6 da a3 07 89 e8 8a 74 9f ff 0f 0b e8 43 81 70 ff 0f 0b e8 3c 81 70 ff <0f> 0b e8 c5 b3 25 06 0f 1f 44 00 00 55 41 57 41 56 41 55 41 54 53
-RSP: 0018:ffffc9000a0974d8 EFLAGS: 00010293
-RAX: ffffffff820476e4 RBX: 00fffe000000a01f RCX: ffff88808ea5c340
-RDX: 0000000000000000 RSI: 000000000000a01f RDI: 000000000000ffff
-RBP: ffffea00020d4f80 R08: ffffffff820471e4 R09: fffff9400041a9f1
-R10: fffff9400041a9f1 R11: 0000000000000000 R12: ffffea00020d4f80
-R13: ffffc9000a0977b0 R14: 1ffffd400041a9f1 R15: dffffc0000000000
-FS:  00007f5055f25700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004ae4b0 CR3: 00000000a2d7f000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Sowjanya
 
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+On 8/26/20 1:05 PM, Sowjanya Komatineni wrote:
+> Tegra210/Tegra186/Tegra194 has incorrectly enabled
+> SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK from the beginning of their support.
+>
+> Tegra210 and later SDMMC hardware default uses sdmmc_legacy_tm (TMCLK)
+> all the time for hardware data timeout instead of SDCLK and this TMCLK
+> need to be kept enabled by Tegra sdmmc driver.
+>
+> This series includes patches to fix this for Tegra210/Tegra186/Tegra194.
+>
+> These patches need to be manually backported for 4.9, 4.14 and 4.19.
+>
+> Will send patches to backport separately once these patches are ack'd.
+>
+> Delta between patch versions:
+> [v5]:	Include below changes based on v4 feedback
+> 	- updated dt-binding doc to be more clear
+> 	- updated Tegra sdhci driver to retrieve sdhci and tmclk clocks
+> 	  based on no. of clocks in sdhci device node as old device trees
+> 	  do not use sdhci clock name and this allows proper clock retrival
+> 	  irrespective of sdhci and tmclk clocks order in device tree.	
+> 	- Added separate quirk for identifying SoC's supporting separate
+> 	  timeout clock to be more clear.
+>
+> [v4]:	Include additional dt-binding patch
+>
+> [v3]:	Same as v2 with fixes tag
+>
+> [v2]:	Includes minor fix
+> 	- Patch-0006: parentheses around operand of '!'
+>
+> Sowjanya Komatineni (7):
+>    sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra210
+>    sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra186
+>    dt-bindings: mmc: tegra: Add tmclk for Tegra210 and later
+>    arm64: tegra: Add missing timeout clock to Tegra210 SDMMC
+>    arm64: tegra: Add missing timeout clock to Tegra186 SDMMC nodes
+>    arm64: tegra: Add missing timeout clock to Tegra194 SDMMC nodes
+>    sdhci: tegra: Add missing TMCLK for data timeout
+>
+>   .../bindings/mmc/nvidia,tegra20-sdhci.txt          | 32 +++++++-
+>   arch/arm64/boot/dts/nvidia/tegra186.dtsi           | 20 +++--
+>   arch/arm64/boot/dts/nvidia/tegra194.dtsi           | 15 ++--
+>   arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 20 +++--
+>   drivers/mmc/host/sdhci-tegra.c                     | 91 +++++++++++++++++++---
+>   5 files changed, 143 insertions(+), 35 deletions(-)
+>
