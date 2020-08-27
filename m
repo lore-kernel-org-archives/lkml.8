@@ -2,116 +2,106 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E9FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A01C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96D1A22CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D514E206EB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:50:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EakLQnPF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WJIIbkQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgH0QtY (ORCPT
+        id S1727912AbgH0Qub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:49:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51858 "EHLO
+        Thu, 27 Aug 2020 12:50:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727882AbgH0QtQ (ORCPT
+        with ESMTP id S1726924AbgH0Qu3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:49:16 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CCB2C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:49:15 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id d11so8519296ejt.13
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:49:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=b5mt7pQURye9ecR53f+JvCJ0uiGgMxCegvnwnLRHzLo=;
-        b=EakLQnPFKi98TUfE+RqWCoPr3r9CgBHj/DV4tdU3T4twCuQndAB4O6iUrgVlxPMdG7
-         Gq+nZwxk2bEnY3RiAyb/670KKTFQ0Af+huh57E6sdJBMdVTpwYembXC1o5Qgva629mQD
-         4tlkzj2lXMfrkUNxIVfc7JZ+viH55An4qkeoveT7/DFtgwZTWY7gox8VZKgFqoYB7uT2
-         BHUAM0GHQGixfKeI3oxt5HuQNAKWsXIjL2gEI3mvJP8SEqt1FDhkT11PgEP5a4MoTUNv
-         PzEL2SMLy5LsZOIN27+GoJY6okVQmW1Yo8uudbRtDxQ3O7CYHSHd4bga6oys58LM0wuC
-         RTdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=b5mt7pQURye9ecR53f+JvCJ0uiGgMxCegvnwnLRHzLo=;
-        b=swXSVkkCvWVT6l58KBbYm+h733mL17rIZ0vVNMz/pxXHcFfarrgh+JQHM5V3Ew90JL
-         5CdhGN/E/6mscN1n/kQPyoABcOsfsddEEVaZBkgSIt2T+DOtn3z4YCMZLs8g28oKxnp/
-         lBrVFomr8dY83enDthpKsXKRJ/ruVY4P68JLLRdYpB4+VVJMyvxSGd8TEb62BxpvJNQW
-         GuDAy4in74iuJVkrn6n2WTKSkvorpr0Sk4RGK4R7uRp9bhIcV6syWhfKQhZ9eoE9iNSI
-         q5ClUSk+cjGzfTKah3zeidfJ2CvuXqm+U5AAj33dYYUa6PcMZBqva0Ytgj7FDs7ir0sa
-         pusQ==
-X-Gm-Message-State: AOAM533ha1XaoPlEl6JXBppdDExq0+gzjb2MBbTdqEOPCfAajGCpKMrj
-        PuCqyd9u+5F7EdQ2PelhNnU=
-X-Google-Smtp-Source: ABdhPJw0ClNIO9jd/shZgALigC7aDMkBNZ2ND8Oqiy6UAgf7eU77ImYjD2vtFD8Xqrm4zCfIUaKk7g==
-X-Received: by 2002:a17:907:271a:: with SMTP id w26mr18415996ejk.402.1598546953816;
-        Thu, 27 Aug 2020 09:49:13 -0700 (PDT)
-Received: from localhost.localdomain (93-103-18-160.static.t-2.net. [93.103.18.160])
-        by smtp.gmail.com with ESMTPSA id lx15sm2285182ejb.66.2020.08.27.09.49.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 09:49:13 -0700 (PDT)
-From:   Uros Bizjak <ubizjak@gmail.com>
-To:     x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Uros Bizjak <ubizjak@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] x86: Use XORL r32,r32 in __get_user_asm
-Date:   Thu, 27 Aug 2020 18:49:05 +0200
-Message-Id: <20200827164905.88235-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 27 Aug 2020 12:50:29 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D07FC061264;
+        Thu, 27 Aug 2020 09:50:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Suq6RmjK6UVv4ul6GVoPMckCVMrlCWnO71fryQ+CL5U=; b=WJIIbkQPdfo+0fSSyFE/rSQ1PA
+        OueuGza6VrwoIxjP2FjBHxX3+IW0zd6cb/uBG3QsQc1ONLpSV/d1aJR2IIysD8SGNQglrHXvxyKm8
+        CWheUSTkKiIVQBmrZXQAUAkDd8NjYEYrIUv8Qi70dEZmIrG786nQ4FkUfFitvW/f87OgtGMZ4tHuP
+        t7D+bLauDjSHv/ammitLvqjNO48U7YkTe4PKbNG7gLkduUR8sJK5xBNE25/zvuHuXKOi1TEMJb3uR
+        lUf0IyrHRzWmMkS7Rs4DumwxyLhw1H1miz1Ubu2/0rcMrsaHD2LTqqj8WfbGqiNI9JrfJXktrab3W
+        Kq53tmbQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBL6R-0003jz-4m; Thu, 27 Aug 2020 16:50:19 +0000
+Date:   Thu, 27 Aug 2020 17:50:19 +0100
+From:   "hch@infradead.org" <hch@infradead.org>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "hch@infradead.org" <hch@infradead.org>,
+        "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
+        "kw@linux.com" <kw@linux.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Huffman, Amber" <amber.huffman@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
+Message-ID: <20200827165019.GA13414@infradead.org>
+References: <20200821123222.32093-1-kai.heng.feng@canonical.com>
+ <20200825062320.GA27116@infradead.org>
+ <cd5aa2fef13f14b30c139d03d5256cf93c7195dc.camel@intel.com>
+ <20200827063406.GA13738@infradead.org>
+ <660c8671a51eec447dc7fab22bacbc9c600508d9.camel@intel.com>
+ <20200827162333.GA6822@infradead.org>
+ <eb45485d9107440a667e598da99ad949320b77b1.camel@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb45485d9107440a667e598da99ad949320b77b1.camel@intel.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use XORL r32,r32 for all operand sizes. x86_64 zero extends 32bit
-operations, so for 64bit operands, XORL r32,r32 is functionally
-equal to XORL r64,r64, but avoids a REX prefix byte when legacy
-registers are used.
+On Thu, Aug 27, 2020 at 04:45:53PM +0000, Derrick, Jonathan wrote:
+> Just a few benefits and there are other users with unique use cases:
+> 1. Passthrough of the endpoint to OSes which don't natively support
+> hotplug can enable hotplug for that OS using the guest VMD driver
 
-32bit operation also avoids 0x66 size prefix for 16bit operands
-and REX prefix when %sil, %dil and %bpl 8bit registers are used.
+Or they could just write a hotplug driver, which would be more useful
+than writing a hotplug driver.
 
-As a bonus, 32bit XORL breaks register dependency chains, avoiding
-potential partial register stalls with 8 and 16bit operands.
+> 2. Some hypervisors have a limit on the number of devices that can be
+> passed through. VMD endpoint is a single device that expands to many.
 
-The patch lowers the size of .fixup section by 20 bytes.
+Or you just fix the hypervisor.  Never mind that this is so much
+less likely than wanting to pass an individual device or VF to a guest,
+which VMD makes impossible (at least without tons of hacks specifically
+for it).
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
- arch/x86/include/asm/uaccess.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 3. Expansion of possible bus numbers beyond 256 by using other
+> segments.
 
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index ecefaffd15d4..2bffba2a1b23 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -343,7 +343,7 @@ do {									\
- 		     "2:\n"						\
- 		     ".section .fixup,\"ax\"\n"				\
- 		     "3:	mov %[efault],%[errout]\n"		\
--		     "	xor"itype" %[output],%[output]\n"		\
-+		     "	xorl %k[output],%k[output]\n"			\
- 		     "	jmp 2b\n"					\
- 		     ".previous\n"					\
- 		     _ASM_EXTABLE_UA(1b, 3b)				\
--- 
-2.26.2
+Which we can trivially to with PCI domains.
 
+> 4. Custom RAID LED patterns driven by ledctl
+
+Which you can also do by any other vendor specific way.
+
+> 
+> I'm not trying to market this. Just pointing out that this isn't
+> "bringing zero actual benefits" to many users.
+
+Which of those are a benefit to a Linux user?  Serious, I really don't
+care if Intel wants to sell VMD as a value add to those that have
+a perceived or in rare cases even real need.  Just let Linux opt out
+of it instead of needing special quirks all over.
