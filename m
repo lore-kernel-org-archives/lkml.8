@@ -2,124 +2,59 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7699C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FB5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A374922BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:56:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O1jV6yS7"
+	by mail.kernel.org (Postfix) with ESMTP id BD52422CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgH0N4S (ORCPT
+        id S1728094AbgH0N5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 09:56:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727945AbgH0NkR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:40:17 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26DC9C061264;
-        Thu, 27 Aug 2020 06:40:17 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 17so3525369pfw.9;
-        Thu, 27 Aug 2020 06:40:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tLpdbfj/D8amTpZadRj9/ibQPTgmMGzwD3ljLxKfs8U=;
-        b=O1jV6yS7C1b++jbk1MGLo+upM5bsHCL4kmH3wuM2j/GLI5+r0Cw1wzfHbbMoFd1kX5
-         H/HoMwQOcFdwhbWnfIZFhkpPuj6OXLIM27eU56ttCxcoU78mGC6qiCL5WDkqIx1+JY9U
-         oLUhPlT2phKxqfsoKfrE4K4aRbehSukeZsW4pn5U5iqsBTJhqjrTTlCqwLy7dOyfLsOM
-         sxkIxbXwYZ+5jmmAmjSm/bQYlJHNSW7h1qBavuksRLSmGGXXIN9GtD7zhBRvGGgZvq2c
-         yCFWtiXAK3XUWGYjhC9jeb/qoAbByAGTqNO8euSTuYkhvlBBpxwj+xxvC+7/vrTFOwdg
-         bVxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=tLpdbfj/D8amTpZadRj9/ibQPTgmMGzwD3ljLxKfs8U=;
-        b=lmzbnxL/uFoMU5ctCe800FOASoPVmEcLKi0HGHmMo7Sr9B7nHXtw+shTBx4G/OnQ5Z
-         KBq06d/A8Mz1xDYfUBHfz0UQYhS99gUI8TNVCeM3KNeh0PBGQvrldn8dLXavWhdaJjaW
-         PmDqfXj3x1l54GADCU4H8PHjD6b9Crrxemvp/QyUjWFyQsRm0VhTL4w0PscDKmPV1+xs
-         rejJFGADkSTGCX+ABwz9UKugP/jee9msg2sHhDXwr9HtolcCaP22QsTEwEKwyDuB8/CY
-         doYDJKKiN7IunAy1lp9Pa0oZvrhmHe9MHbdHKcYFI0nKOOy8GvklYcfFQviVHM2jEwGr
-         F0EQ==
-X-Gm-Message-State: AOAM532U6SLEswGkNHvkbdlVL1s+EIDx9L+GrKHY/EG2o5R0aHvmCd/U
-        4OBfmZ35yFZmdY6NA1ZlawWKs55PXJg=
-X-Google-Smtp-Source: ABdhPJzRsJ8waflL1U47V3fIdZjAlb0Xh05jt/eTEjTD0QidjSCjVYc9Jlv84XYT7aB68HeqmbQy8A==
-X-Received: by 2002:aa7:981a:: with SMTP id e26mr16520275pfl.25.1598535616520;
-        Thu, 27 Aug 2020 06:40:16 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a5sm2732051pfi.79.2020.08.27.06.40.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 06:40:16 -0700 (PDT)
-Subject: Re: [PATCH 1/1] watchdog: remove unneeded inclusion of
- <uapi/linux/sched/types.h>
-To:     Zhen Lei <thunder.leizhen@huawei.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-watchdog <linux-watchdog@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200827062154.1847-1-thunder.leizhen@huawei.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <55ad40ff-dcc1-5051-65d2-24201c471a8f@roeck-us.net>
-Date:   Thu, 27 Aug 2020 06:40:14 -0700
+        Thu, 27 Aug 2020 09:57:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:58330 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727781AbgH0Nnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 09:43:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A38C31B;
+        Thu, 27 Aug 2020 06:42:58 -0700 (PDT)
+Received: from [192.168.1.190] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9E2B3F68F;
+        Thu, 27 Aug 2020 06:42:55 -0700 (PDT)
+Subject: Re: [PATCH 26/35] kasan, arm64: Enable TBI EL1
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Branislav Rankov <Branislav.Rankov@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <cover.1597425745.git.andreyknvl@google.com>
+ <518da1e5169a4e343caa3c37feed5ad551b77a34.1597425745.git.andreyknvl@google.com>
+ <20200827104033.GF29264@gaia> <9c53dfaa-119e-b12e-1a91-1f67f4aef503@arm.com>
+ <20200827111344.GK29264@gaia> <d6695105-0484-2013-1012-fa977644e8ad@arm.com>
+ <CAAeHK+wGKjYX6eLztiwQA2iObjibHPKt3A4oU0zpXPKk-4qdOw@mail.gmail.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <30b90e66-2ac0-82b3-b590-5a2b35fad446@arm.com>
+Date:   Thu, 27 Aug 2020 14:45:09 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200827062154.1847-1-thunder.leizhen@huawei.com>
+In-Reply-To: <CAAeHK+wGKjYX6eLztiwQA2iObjibHPKt3A4oU0zpXPKk-4qdOw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -128,32 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/20 11:21 PM, Zhen Lei wrote:
-> There has been no reference to "struct sched_param" since
-> commit 94beddacb53c ("sched,watchdog: Convert to sched_set_fifo()"), so
-> there's no need to include <uapi/linux/sched/types.h> any more, delete
-> it.
-> 
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Hi Andrey,
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
->  drivers/watchdog/watchdog_dev.c | 2 --
->  1 file changed, 2 deletions(-)
+On 8/27/20 1:43 PM, Andrey Konovalov wrote:
+> On Thu, Aug 27, 2020 at 1:15 PM Vincenzo Frascino
+> <vincenzo.frascino@arm.com> wrote:
+>>
+>>
+>>
+>> On 8/27/20 12:13 PM, Catalin Marinas wrote:
+>>> On Thu, Aug 27, 2020 at 12:05:55PM +0100, Vincenzo Frascino wrote:
+>>>> On 8/27/20 11:40 AM, Catalin Marinas wrote:
+>>>>> On Fri, Aug 14, 2020 at 07:27:08PM +0200, Andrey Konovalov wrote:
+>>>>>> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+>>>>>> index 152d74f2cc9c..6880ddaa5144 100644
+>>>>>> --- a/arch/arm64/mm/proc.S
+>>>>>> +++ b/arch/arm64/mm/proc.S
+>>>>>> @@ -38,7 +38,7 @@
+>>>>>>  /* PTWs cacheable, inner/outer WBWA */
+>>>>>>  #define TCR_CACHE_FLAGS   TCR_IRGN_WBWA | TCR_ORGN_WBWA
+>>>>>>
+>>>>>> -#ifdef CONFIG_KASAN_SW_TAGS
+>>>>>> +#if defined(CONFIG_KASAN_SW_TAGS) || defined(CONFIG_KASAN_HW_TAGS)
+>>>>>>  #define TCR_KASAN_FLAGS TCR_TBI1
+>>>>>>  #else
+>>>>>>  #define TCR_KASAN_FLAGS 0
+>>>>>
+>>>>> I prefer to turn TBI1 on only if MTE is present. So on top of the v8
+>>>>> user series, just do this in __cpu_setup.
+>>>>
+>>>> Not sure I understand... Enabling TBI1 only if MTE is present would break
+>>>> KASAN_SW_TAGS which is based on TBI1 but not on MTE.
+>>>
+>>> You keep the KASAN_SW_TAGS as above but for HW_TAGS, only set TBI1 later
+>>> in __cpu_setup().
+>>>
+>>
+>> Ok, sounds good.
 > 
-> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-> index 6798addabd5a067..0f18fa2433310b0 100644
-> --- a/drivers/watchdog/watchdog_dev.c
-> +++ b/drivers/watchdog/watchdog_dev.c
-> @@ -43,8 +43,6 @@
->  #include <linux/watchdog.h>	/* For watchdog specific items */
->  #include <linux/uaccess.h>	/* For copy_to_user/put_user/... */
->  
-> -#include <uapi/linux/sched/types.h>	/* For struct sched_param */
-> -
->  #include "watchdog_core.h"
->  #include "watchdog_pretimeout.h"
->  
+> Sounds good to me too.
+> 
+> Vincenzo, could you take care of Catalin's comments on your (arm64)
+> patches, do the rebase onto user mte v8, and share it with me? I'll
+> work on KASAN changes in the meantime, and then integrate everything
+> together for v2.
 > 
 
+I am happy to do that. I will be on holiday though from this Saturday till the
+September, 9. After that I will start the rebasing.
+
+> Perhaps the best way to test only the arm64 part is writing a simple
+> module that causes an MTE fault. (At least that's what I did when I
+> was testing core in-kernel MTE patches separately.) Or reuse this
+> series, all KASAN patches should rebase cleanly on top of the latest
+> mainline.
+> 
+
+I can reuse the patches as they are, unless they require changes when I start
+rebasing. In such a case to not duplicate the work I will scale back to use a
+simple module.
+
+-- 
+Regards,
+Vincenzo
