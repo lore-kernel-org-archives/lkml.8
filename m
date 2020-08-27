@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF415C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0111CC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76FAB207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C5322B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:10:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="g0HxF1iq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="EKUYAShS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbgH0MKI (ORCPT
+        id S1729011AbgH0MJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 08:10:08 -0400
+        Thu, 27 Aug 2020 08:09:26 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728945AbgH0LvW (ORCPT
+        with ESMTP id S1728894AbgH0LuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 07:51:22 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9429C0619C3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 04:50:06 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id w17so6952583ybl.9
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 04:50:06 -0700 (PDT)
+        Thu, 27 Aug 2020 07:50:11 -0400
+Received: from mail-ej1-x64a.google.com (mail-ej1-x64a.google.com [IPv6:2a00:1450:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE1B7C06123B
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 04:49:48 -0700 (PDT)
+Received: by mail-ej1-x64a.google.com with SMTP id kt27so2464707ejb.22
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 04:49:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=cVuWDkLHwa5/2KrhblG6pdzJasoQug9C22emcf5s8N8=;
-        b=g0HxF1iqNkTG/iZ1NuqSDpSdtIFu/5LVjPFCvlEvPLfFc8Nt0Y9LUm/EDoP7OChPOn
-         C5ScdaXQLX26RsmBnPBcgDGY1m9qNmtIkNvlA5DrglwYMX82L3zyjd8Fdzh29+iUvB27
-         BtGIl7ot7ZYiNlDygiqTmUalK/KQEBFOQLJ9cSG87Qeqm2Ixo/7XNv8xW300Din64vmz
-         ZTtYOU5XGTP45neB/5x11Ia7kADtKZzy5kFigDbuwSL/n+cFWzuwtPPCh7/zHSMUoUg+
-         cEHxVAl3z9dhn5D6PTGY465up4NSdYwPDPX7B75uGRxdpC8rE6ySBOlHfjDmokL6hDcs
-         azWA==
+        bh=nVHuYaY9UtfQ5ceDG+IOgNARKDklUVVN28+71pW1fmk=;
+        b=EKUYAShSuw6vIw45vevo+Sy7e72QAp73T544NA5kbUcsd1iV/LN/8R2GxzPOpqGvdX
+         pdndWsVd6Lr3QZFGe4mTnAYNnlEb32APpoNqKM8a2Y00vZHJs04X7m3Rg2VxyGHiu8WB
+         8/ObYeSz7+0b4daA5rCvUagkfihi0oU2h2O/4pWpaAnFNKDROaYdPONQnUqQY9kfrvGP
+         uKFQPWrcbMbQHbVYb3WZx3sPPDGERlRi8cAKR52YtrWMhsNQhVHjm12Y5jeYEQeQQlti
+         ugA2ZkmaIpOOKUnnVGqvAI0YlxcaE3BBSdIcXjisRZIOt2eBY+4cKnwSl5+8CX5Ld5vK
+         EnZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=cVuWDkLHwa5/2KrhblG6pdzJasoQug9C22emcf5s8N8=;
-        b=EslFhumkSugsmBpd6KOr/LsrAUJEzlgkAfytfXwesHjKjeXthRs7P+of8V1rsZbCzb
-         8RIptF+RodVWaLabm3Z+sFe3A3Tss+D5soEdFqj2DjPnrXMcXvPOqUjrcQQI/pBgbnQ0
-         Xn8hYBlwzBlhKhlVaFEJ+tAyfCjuFWxp0DRxlB4KwDTdilRpgF8QjA+8x+iTHiPeoAv2
-         hrQ8ErEbevB21gKtXSwX5huQiJ0Y1GqBWxRvEp1dtGnpm+Kligo1Z2qe1TQcCA/g0RpC
-         +ZQHlmWkbeSNKpA65wtSI9ut2lB7PngVBV2vIOUmEhOoNkePpWZET/MvNzonqR1WczwT
-         Ss4A==
-X-Gm-Message-State: AOAM532j5tf0rtyLhAg8qCRPwleRmDuQj3xNczl2BXRb9NLZUZjUKzan
-        yTuJ+77NJH2NK9zBAr7rRfw8Mq18RQ==
-X-Google-Smtp-Source: ABdhPJyMvXDO/j8HxgHB0/l9iea2k6+d1+5jncQNCmzp/jZuuFGmOCLYN1CMoCdszB/WupNt0Y317Ks0yQ==
+        bh=nVHuYaY9UtfQ5ceDG+IOgNARKDklUVVN28+71pW1fmk=;
+        b=UUI66PgjoFrqLC1kgPtgA7bHlncr826nDdmQEG6CWZaIfPZwIOaDP3St2SRYCJ9+A7
+         PcHjv2nsbcmrqlnHhsC9ILXN8RCVbCv+ltoA3MGWM+e1IsLsi9Xkxf/rt28yp9beRgZU
+         PUNgKuPYIVlM+uyC+DwMvhZIJ5p3GVac7TBF6VObv4DJZj5tHr73GXO2ckCxlxaAHIGm
+         2IL6c0Kt7kgoTPXl7yNyfBpWLd+/f/xTJFNLk5oC24mZXyWcd45B3IUI11dTjihhkab0
+         qyYGgZfRpSpIf20s/t8AK5uLYQLSKFpzQtRAxWhNcBA4+ZqiWOYTnjgs/ZKsvqi46iga
+         lxYw==
+X-Gm-Message-State: AOAM530QUS/0SmqS9lM8YVeyy620zxs96wAFQQRfIjplydMcPPeDwLow
+        56QEi+qEopVGQQv/TEbtLQtx6LoRcw==
+X-Google-Smtp-Source: ABdhPJy2EioBHl5DQHnC+VEIiLoSJ394iMXy3ZaLk8kxlGOGKXykgo5D+wC/Tp3lDGd7qD4rKXOJxasNpA==
 X-Received: from jannh2.zrh.corp.google.com ([2a00:79e0:1b:201:1a60:24ff:fea6:bf44])
- (user=jannh job=sendgmr) by 2002:a25:5807:: with SMTP id m7mr8209201ybb.456.1598529006101;
- Thu, 27 Aug 2020 04:50:06 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 13:49:32 +0200
+ (user=jannh job=sendgmr) by 2002:a17:906:dc03:: with SMTP id
+ yy3mr21385084ejb.380.1598528987410; Thu, 27 Aug 2020 04:49:47 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 13:49:27 +0200
 In-Reply-To: <20200827114932.3572699-1-jannh@google.com>
-Message-Id: <20200827114932.3572699-8-jannh@google.com>
+Message-Id: <20200827114932.3572699-3-jannh@google.com>
 Mime-Version: 1.0
 References: <20200827114932.3572699-1-jannh@google.com>
 X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH v5 7/7] mm: Remove the now-unnecessary mmget_still_valid() hack
+Subject: [PATCH v5 2/7] coredump: Let dump_emit() bail out on short writes
 From:   Jann Horn <jannh@google.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
@@ -77,300 +77,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The preceding patches have ensured that core dumping properly takes the
-mmap_lock. Thanks to that, we can now remove mmget_still_valid() and all
-its users.
+dump_emit() has a retry loop, but there seems to be no way for that retry
+logic to actually be used; and it was also buggy, writing the same data
+repeatedly after a short write.
 
+Let's just bail out on a short write.
+
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Jann Horn <jannh@google.com>
 ---
- drivers/infiniband/core/uverbs_main.c |  3 ---
- drivers/vfio/pci/vfio_pci.c           | 38 +++++++++++++--------------
- fs/proc/task_mmu.c                    | 18 -------------
- fs/userfaultfd.c                      | 28 +++++++-------------
- include/linux/sched/mm.h              | 25 ------------------
- mm/khugepaged.c                       |  2 +-
- mm/madvise.c                          | 17 ------------
- mm/mmap.c                             |  5 +---
- 8 files changed, 29 insertions(+), 107 deletions(-)
+ fs/coredump.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
-index 37794d88b1f3..a4ba0b87d6de 100644
---- a/drivers/infiniband/core/uverbs_main.c
-+++ b/drivers/infiniband/core/uverbs_main.c
-@@ -845,8 +845,6 @@ void uverbs_user_mmap_disassociate(struct ib_uverbs_file *ufile)
- 		 * will only be one mm, so no big deal.
- 		 */
- 		mmap_read_lock(mm);
--		if (!mmget_still_valid(mm))
--			goto skip_mm;
- 		mutex_lock(&ufile->umap_lock);
- 		list_for_each_entry_safe (priv, next_priv, &ufile->umaps,
- 					  list) {
-@@ -865,7 +863,6 @@ void uverbs_user_mmap_disassociate(struct ib_uverbs_file *ufile)
- 			}
- 		}
- 		mutex_unlock(&ufile->umap_lock);
--	skip_mm:
- 		mmap_read_unlock(mm);
- 		mmput(mm);
- 	}
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 620465c2a1da..27f11cc7ba6c 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -1480,31 +1480,29 @@ static int vfio_pci_zap_and_vma_lock(struct vfio_pci_device *vdev, bool try)
- 		} else {
- 			mmap_read_lock(mm);
- 		}
--		if (mmget_still_valid(mm)) {
--			if (try) {
--				if (!mutex_trylock(&vdev->vma_lock)) {
--					mmap_read_unlock(mm);
--					mmput(mm);
--					return 0;
--				}
--			} else {
--				mutex_lock(&vdev->vma_lock);
-+		if (try) {
-+			if (!mutex_trylock(&vdev->vma_lock)) {
-+				mmap_read_unlock(mm);
-+				mmput(mm);
-+				return 0;
- 			}
--			list_for_each_entry_safe(mmap_vma, tmp,
--						 &vdev->vma_list, vma_next) {
--				struct vm_area_struct *vma = mmap_vma->vma;
-+		} else {
-+			mutex_lock(&vdev->vma_lock);
-+		}
-+		list_for_each_entry_safe(mmap_vma, tmp,
-+					 &vdev->vma_list, vma_next) {
-+			struct vm_area_struct *vma = mmap_vma->vma;
- 
--				if (vma->vm_mm != mm)
--					continue;
-+			if (vma->vm_mm != mm)
-+				continue;
- 
--				list_del(&mmap_vma->vma_next);
--				kfree(mmap_vma);
-+			list_del(&mmap_vma->vma_next);
-+			kfree(mmap_vma);
- 
--				zap_vma_ptes(vma, vma->vm_start,
--					     vma->vm_end - vma->vm_start);
--			}
--			mutex_unlock(&vdev->vma_lock);
-+			zap_vma_ptes(vma, vma->vm_start,
-+				     vma->vm_end - vma->vm_start);
- 		}
-+		mutex_unlock(&vdev->vma_lock);
- 		mmap_read_unlock(mm);
- 		mmput(mm);
- 	}
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 5066b0251ed8..c43490aec95d 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -1168,24 +1168,6 @@ static ssize_t clear_refs_write(struct file *file, const char __user *buf,
- 					count = -EINTR;
- 					goto out_mm;
- 				}
--				/*
--				 * Avoid to modify vma->vm_flags
--				 * without locked ops while the
--				 * coredump reads the vm_flags.
--				 */
--				if (!mmget_still_valid(mm)) {
--					/*
--					 * Silently return "count"
--					 * like if get_task_mm()
--					 * failed. FIXME: should this
--					 * function have returned
--					 * -ESRCH if get_task_mm()
--					 * failed like if
--					 * get_proc_task() fails?
--					 */
--					mmap_write_unlock(mm);
--					goto out_mm;
--				}
- 				for (vma = mm->mmap; vma; vma = vma->vm_next) {
- 					vma->vm_flags &= ~VM_SOFTDIRTY;
- 					vma_set_page_prot(vma);
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 0e4a3837da52..000b457ad087 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -601,8 +601,6 @@ static void userfaultfd_event_wait_completion(struct userfaultfd_ctx *ctx,
- 
- 		/* the various vma->vm_userfaultfd_ctx still points to it */
- 		mmap_write_lock(mm);
--		/* no task can run (and in turn coredump) yet */
--		VM_WARN_ON(!mmget_still_valid(mm));
- 		for (vma = mm->mmap; vma; vma = vma->vm_next)
- 			if (vma->vm_userfaultfd_ctx.ctx == release_new_ctx) {
- 				vma->vm_userfaultfd_ctx = NULL_VM_UFFD_CTX;
-@@ -842,7 +840,6 @@ static int userfaultfd_release(struct inode *inode, struct file *file)
- 	/* len == 0 means wake all */
- 	struct userfaultfd_wake_range range = { .len = 0, };
- 	unsigned long new_flags;
--	bool still_valid;
- 
- 	WRITE_ONCE(ctx->released, true);
- 
-@@ -858,7 +855,6 @@ static int userfaultfd_release(struct inode *inode, struct file *file)
- 	 * taking the mmap_lock for writing.
- 	 */
- 	mmap_write_lock(mm);
--	still_valid = mmget_still_valid(mm);
- 	prev = NULL;
- 	for (vma = mm->mmap; vma; vma = vma->vm_next) {
- 		cond_resched();
-@@ -869,17 +865,15 @@ static int userfaultfd_release(struct inode *inode, struct file *file)
- 			continue;
- 		}
- 		new_flags = vma->vm_flags & ~(VM_UFFD_MISSING | VM_UFFD_WP);
--		if (still_valid) {
--			prev = vma_merge(mm, prev, vma->vm_start, vma->vm_end,
--					 new_flags, vma->anon_vma,
--					 vma->vm_file, vma->vm_pgoff,
--					 vma_policy(vma),
--					 NULL_VM_UFFD_CTX);
--			if (prev)
--				vma = prev;
--			else
--				prev = vma;
--		}
-+		prev = vma_merge(mm, prev, vma->vm_start, vma->vm_end,
-+				 new_flags, vma->anon_vma,
-+				 vma->vm_file, vma->vm_pgoff,
-+				 vma_policy(vma),
-+				 NULL_VM_UFFD_CTX);
-+		if (prev)
-+			vma = prev;
-+		else
-+			prev = vma;
- 		vma->vm_flags = new_flags;
- 		vma->vm_userfaultfd_ctx = NULL_VM_UFFD_CTX;
- 	}
-@@ -1309,8 +1303,6 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
- 		goto out;
- 
- 	mmap_write_lock(mm);
--	if (!mmget_still_valid(mm))
--		goto out_unlock;
- 	vma = find_vma_prev(mm, start, &prev);
- 	if (!vma)
- 		goto out_unlock;
-@@ -1511,8 +1503,6 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
- 		goto out;
- 
- 	mmap_write_lock(mm);
--	if (!mmget_still_valid(mm))
--		goto out_unlock;
- 	vma = find_vma_prev(mm, start, &prev);
- 	if (!vma)
- 		goto out_unlock;
-diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-index f889e332912f..e9cd1e637d76 100644
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -49,31 +49,6 @@ static inline void mmdrop(struct mm_struct *mm)
- 		__mmdrop(mm);
+diff --git a/fs/coredump.c b/fs/coredump.c
+index 76e7c10edfc0..5e24c06092c9 100644
+--- a/fs/coredump.c
++++ b/fs/coredump.c
+@@ -840,17 +840,17 @@ int dump_emit(struct coredump_params *cprm, const void *addr, int nr)
+ 	ssize_t n;
+ 	if (cprm->written + nr > cprm->limit)
+ 		return 0;
+-	while (nr) {
+-		if (dump_interrupted())
+-			return 0;
+-		n = __kernel_write(file, addr, nr, &pos);
+-		if (n <= 0)
+-			return 0;
+-		file->f_pos = pos;
+-		cprm->written += n;
+-		cprm->pos += n;
+-		nr -= n;
+-	}
++
++
++	if (dump_interrupted())
++		return 0;
++	n = __kernel_write(file, addr, nr, &pos);
++	if (n != nr)
++		return 0;
++	file->f_pos = pos;
++	cprm->written += n;
++	cprm->pos += n;
++
+ 	return 1;
  }
- 
--/*
-- * This has to be called after a get_task_mm()/mmget_not_zero()
-- * followed by taking the mmap_lock for writing before modifying the
-- * vmas or anything the coredump pretends not to change from under it.
-- *
-- * It also has to be called when mmgrab() is used in the context of
-- * the process, but then the mm_count refcount is transferred outside
-- * the context of the process to run down_write() on that pinned mm.
-- *
-- * NOTE: find_extend_vma() called from GUP context is the only place
-- * that can modify the "mm" (notably the vm_start/end) under mmap_lock
-- * for reading and outside the context of the process, so it is also
-- * the only case that holds the mmap_lock for reading that must call
-- * this function. Generally if the mmap_lock is hold for reading
-- * there's no need of this check after get_task_mm()/mmget_not_zero().
-- *
-- * This function can be obsoleted and the check can be removed, after
-- * the coredump code will hold the mmap_lock for writing before
-- * invoking the ->core_dump methods.
-- */
--static inline bool mmget_still_valid(struct mm_struct *mm)
--{
--	return likely(!mm->core_state);
--}
--
- /**
-  * mmget() - Pin the address space associated with a &struct mm_struct.
-  * @mm: The address space to pin.
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 15a9af791014..101b636c72b5 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -431,7 +431,7 @@ static void insert_to_mm_slots_hash(struct mm_struct *mm,
- 
- static inline int khugepaged_test_exit(struct mm_struct *mm)
- {
--	return atomic_read(&mm->mm_users) == 0 || !mmget_still_valid(mm);
-+	return atomic_read(&mm->mm_users) == 0;
- }
- 
- static bool hugepage_vma_check(struct vm_area_struct *vma,
-diff --git a/mm/madvise.c b/mm/madvise.c
-index dd1d43cf026d..d5b33d9011f0 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -1091,23 +1091,6 @@ int do_madvise(unsigned long start, size_t len_in, int behavior)
- 	if (write) {
- 		if (mmap_write_lock_killable(current->mm))
- 			return -EINTR;
--
--		/*
--		 * We may have stolen the mm from another process
--		 * that is undergoing core dumping.
--		 *
--		 * Right now that's io_ring, in the future it may
--		 * be remote process management and not "current"
--		 * at all.
--		 *
--		 * We need to fix core dumping to not do this,
--		 * but for now we have the mmget_still_valid()
--		 * model.
--		 */
--		if (!mmget_still_valid(current->mm)) {
--			mmap_write_unlock(current->mm);
--			return -EINTR;
--		}
- 	} else {
- 		mmap_read_lock(current->mm);
- 	}
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 40248d84ad5f..c47abe460439 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -2552,7 +2552,7 @@ find_extend_vma(struct mm_struct *mm, unsigned long addr)
- 	if (vma && (vma->vm_start <= addr))
- 		return vma;
- 	/* don't alter vm_end if the coredump is running */
--	if (!prev || !mmget_still_valid(mm) || expand_stack(prev, addr))
-+	if (!prev || expand_stack(prev, addr))
- 		return NULL;
- 	if (prev->vm_flags & VM_LOCKED)
- 		populate_vma_page_range(prev, addr, prev->vm_end, NULL);
-@@ -2578,9 +2578,6 @@ find_extend_vma(struct mm_struct *mm, unsigned long addr)
- 		return vma;
- 	if (!(vma->vm_flags & VM_GROWSDOWN))
- 		return NULL;
--	/* don't alter vm_start if the coredump is running */
--	if (!mmget_still_valid(mm))
--		return NULL;
- 	start = vma->vm_start;
- 	if (expand_stack(vma, addr))
- 		return NULL;
+ EXPORT_SYMBOL(dump_emit);
 -- 
 2.28.0.297.g1956fa8f8d-goog
 
