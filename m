@@ -2,124 +2,132 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8A2C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F53FC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F154D207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C0D207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:49:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwGLd+Wj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oYzlD63H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgH0Jt0 (ORCPT
+        id S1728122AbgH0Jtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:49:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42358 "EHLO
+        Thu, 27 Aug 2020 05:49:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgH0JtY (ORCPT
+        with ESMTP id S1726266AbgH0Jtf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:49:24 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF08C061264;
-        Thu, 27 Aug 2020 02:49:24 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id w10so3915221oti.2;
-        Thu, 27 Aug 2020 02:49:24 -0700 (PDT)
+        Thu, 27 Aug 2020 05:49:35 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE280C061264;
+        Thu, 27 Aug 2020 02:49:34 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id d26so6841606ejr.1;
+        Thu, 27 Aug 2020 02:49:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RuGAUjmXUBGiB092kZEexqQx1sR3+FlOyRMdRS1FNSo=;
-        b=XwGLd+WjrhAl+9Svu7UFMHGyS1zmiL97JSPPCgXMOjttWQ5iefrU8fyu5Sxn39R9ql
-         hbgdlmCqndUKDKCZfzsQKg1xzTQFENsNmzYhNmHfqti+l8joJ9FEK0ckeFyKqKLMaMTp
-         jDJDVn/eM3UPUcCN1hN+sb9VrhAsVTVC8q5SDjotuvsIMEXSgga33jph+PDUjkGPgxih
-         f/RsVDHKI7aS8EtaEs6iZtlpjPDYSYgwLXHrCqwCkgDwfyBmioCqkmiOVufVOS6MVRGl
-         Piz9dIs9bjs1YOe+5aYVIafY7CEC8uToBgtmXd0qG+FgKflsbCGd6wRIjbOfEEUOW+Fk
-         i+Hw==
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=iNFyrfAX8/Dn97tnpLT6eU3mzRCVxFI29SHF2tFkwxs=;
+        b=oYzlD63HjA4+DgXzN/1Ec87ehOgzdrOBe9xX47ITGPxUYdy+i0ojrGPm4cGks3PSNN
+         HvGhEtGGNd6KePcpw1D2UWrBHxc0z/LuEJrhXT/lETucxjtAkxJ6YgNTpZTEOIMHnrOt
+         v8NFwYQmtIAyVMt16KmBGv7XsAFMclfxvGb5Uo3IE5bT7bsiWPCBnQ+R+wY8478XLio3
+         +2E2HrNgT/0kBwkNaNxUFJAOBL8oawX3FTVnvEPusCpqGXP+6/oh52SRyzJ5ngbpG0Il
+         AtSxn7vV+6RjPbEZo0EmBcTJcFZuizUFOfda9FAVTPK8DlR/BDZsEmL9rm+TKjHEgspz
+         ZRlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RuGAUjmXUBGiB092kZEexqQx1sR3+FlOyRMdRS1FNSo=;
-        b=fycuV4SxIoz2Bo8NJInpd5r5XBNE9R5eHePe7Vx5fFUEuFMPs0Zw3Kh2WJPQSVewXY
-         REKEBrn53D2mj+aXPfIQE3JCP1x1qk0c+SIS8eAlwWSWMpap5LlY1fH2NAug/lkTOLH0
-         doetL5GWbdImCIPszkyPail+rEi1j5wYZkMXhT5aZUttCv19O2ydKXiRHRJbh+VGn5vr
-         8xMNns1JpKK8tvTPGnkvev8mJboikbcUDRGuwwxplB+VQOt5kIoNdfYUp6goh6dxhOn+
-         ct01BWhASv9h5FSrbuuJNndbZGnBDay+CTtxlS7C3H1lzU7vbo8KLQPUwvFLhWtLB3uO
-         pbMA==
-X-Gm-Message-State: AOAM530Cnv0lqhKvdThyQGB/YVlAoHlLxUNC8btAXA82FXzdDJrumpFy
-        OGcCciPWWonHQ7U9VaMxfUCyiLm+yGLnToT6RR2jhiIcblM=
-X-Google-Smtp-Source: ABdhPJzBXpF2iMhfDU7FNuj/HS+EcADfmCCx4lF6DzLNmG5sT1kXcFTbnZJhJXqcWeM4ClYU21InYlAhbhB+pYbLk0U=
-X-Received: by 2002:a9d:7e85:: with SMTP id m5mr795514otp.330.1598521763351;
- Thu, 27 Aug 2020 02:49:23 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=iNFyrfAX8/Dn97tnpLT6eU3mzRCVxFI29SHF2tFkwxs=;
+        b=HFB91YbBn+5QX+3QjJWD2Z0bklyJrFB/bXTsTDnLrozfwjquFn8E9uMH0cKEQnsi/R
+         WDQ7VYQTKEqabJkIY7mDJ6385636Vq0dMizPXWuvFyghGEdQEE5l2ir5h1Y3rlsQnLXD
+         t3GtPbqFwWIwFUDbu3KiMrvObVGkpYI+/mFHFSJxNfvXQeCxrgOn1mhYym26m8Nq/uey
+         XA+X1NXGy0nQ1skIwc+5ivTo9S2BcXE/fzkqDNLOGY+xv1+D3NImfG4NXjvNAdysCvcN
+         cSl7EMoPxbXhc4mLv/2PAvC9yUL6Erd8LEKwlOp86Ihgk66nD/8GyfsHuMO69dcovfT3
+         sc7g==
+X-Gm-Message-State: AOAM53020OalnFkre8Uzlb6yshjLMVSwpV31Ig23npOFS7Jjjicosgmo
+        +4IfmQ6Oh5O80ryRQKpdOHg=
+X-Google-Smtp-Source: ABdhPJws8TUBrPbN9lQbtTHLNVjZCVt2cECt/XVnEfPGgUck2J+q/BX4fGva8KrSrGEPM6fODacOqw==
+X-Received: by 2002:a17:906:3091:: with SMTP id 17mr3818701ejv.515.1598521773405;
+        Thu, 27 Aug 2020 02:49:33 -0700 (PDT)
+Received: from felia ([2001:16b8:2d0c:fc00:340b:71b8:4541:aa75])
+        by smtp.gmail.com with ESMTPSA id d18sm1486506ejo.70.2020.08.27.02.49.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 02:49:32 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Thu, 27 Aug 2020 11:49:31 +0200 (CEST)
+X-X-Sender: lukas@felia
+To:     Greg KH <gregkh@linuxfoundation.org>
+cc:     Mrinal Pandey <mrinalmni@gmail.com>, skhan@linuxfoundation.org,
+        Linux-kernel-mentees@lists.linuxfoundation.org,
+        lukas.bulwahn@gmail.com, keescook@chromium.org, re.emese@gmail.com,
+        maennich@google.com, tglx@linutronix.de, akpm@linux-foundation.org,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        linux-spdx@vger.kernel.org
+Subject: Re: [PATCH] scripts: Add intended executable mode and SPDX license
+In-Reply-To: <20200827094344.GA400189@kroah.com>
+Message-ID: <alpine.DEB.2.21.2008271145370.25858@felia>
+References: <20200827092405.b6hymjxufn2nvgml@mrinalpandey> <20200827094344.GA400189@kroah.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200824052025.48362-1-benbjiang@tencent.com>
-In-Reply-To: <20200824052025.48362-1-benbjiang@tencent.com>
-From:   Jiang Biao <benbjiang@gmail.com>
-Date:   Thu, 27 Aug 2020 17:49:12 +0800
-Message-ID: <CAPJCdBmLeD84kRXWmuPj+-_2kBLmZ8wR-uJ641xShza6E52D0w@mail.gmail.com>
-Subject: Re: [PATCH] driver/pci: reduce the single block time in pci_read_config
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jiang Biao <benbjiang@tencent.com>,
-        Bin Lai <robinlai@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kindly ping :)
 
-On Mon, 24 Aug 2020 at 13:20, Jiang Biao <benbjiang@gmail.com> wrote:
+
+On Thu, 27 Aug 2020, Greg KH wrote:
+
+> On Thu, Aug 27, 2020 at 02:54:05PM +0530, Mrinal Pandey wrote:
+> > commit b72231eb7084 ("scripts: add spdxcheck.py self test") added the file
+> > spdxcheck-test.sh to the repository without the executable flag and license
+> > information.
+> > 
+> > commit eb8305aecb95 ("scripts: Coccinelle script for namespace
+> > dependencies.") added the file nsdeps, commit 313dd1b62921 ("gcc-plugins:
+> > Add the randstruct plugin") added the file gcc-plugins/gen-random-seed.sh
+> > and commit 9b4ade226f74 ("xen: build infrastructure for generating
+> > hypercall depending symbols") added the file xen-hypercalls.sh without the
+> > executable bit.
+> > 
+> > Set to usual modes for these files and provide the SPDX license for
+> > spdxcheck-test.sh. No functional changes.
+> > 
+> > Signed-off-by: Mrinal Pandey <mrinalmni@gmail.com>
+> > ---
+> > applies cleanly on next-20200827
+> > 
+> > Kees, Matthias, Thomas, please ack this patch.
+> > 
+> > Andrew, please pick this minor non-urgent cleanup patch once the
+> > mainainers ack.
+> > 
+> >  scripts/gcc-plugins/gen-random-seed.sh | 0
+> >  scripts/nsdeps                         | 0
+> >  scripts/spdxcheck-test.sh              | 1 +
+> >  scripts/xen-hypercalls.sh              | 0
+> >  4 files changed, 1 insertion(+)
+> >  mode change 100644 => 100755 scripts/gcc-plugins/gen-random-seed.sh
+> >  mode change 100644 => 100755 scripts/nsdeps
+> >  mode change 100644 => 100755 scripts/spdxcheck-test.sh
+> >  mode change 100644 => 100755 scripts/xen-hypercalls.sh
+> 
+> This does 2 different things in one patch, shouldn't this be 2 different
+> patches?  One to change the permissions and one to add the SPDX line?
 >
-> From: Jiang Biao <benbjiang@tencent.com>
->
-> pci_read_config() could block several ms in kernel space, mainly
-> caused by the while loop to call pci_user_read_config_dword().
-> Singel pci_user_read_config_dword() loop could consume 130us+,
->               |    pci_user_read_config_dword() {
->               |      _raw_spin_lock_irq() {
-> ! 136.698 us  |        native_queued_spin_lock_slowpath();
-> ! 137.582 us  |      }
->               |      pci_read() {
->               |        raw_pci_read() {
->               |          pci_conf1_read() {
->   0.230 us    |            _raw_spin_lock_irqsave();
->   0.035 us    |            _raw_spin_unlock_irqrestore();
->   8.476 us    |          }
->   8.790 us    |        }
->   9.091 us    |      }
-> ! 147.263 us  |    }
-> and dozens of the loop could consume ms+.
->
-> If we execute some lspci commands concurrently, ms+ scheduling
-> latency could be detected.
->
-> Add scheduling chance in the loop to improve the latency.
->
-> Reported-by: Bin Lai <robinlai@tencent.com>
-> Signed-off-by: Jiang Biao <benbjiang@tencent.com>
-> ---
->  drivers/pci/pci-sysfs.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 6d78df9..3b9f63d 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -708,6 +708,7 @@ static ssize_t pci_read_config(struct file *filp, struct kobject *kobj,
->                 data[off - init_off + 3] = (val >> 24) & 0xff;
->                 off += 4;
->                 size -= 4;
-> +               cond_resched();
->         }
->
->         if (size >= 2) {
-> --
-> 1.8.3.1
->
+
+For me, this was one thing: minor cleanup; and taking one 
+minor patch is easier than taking two, but you make the call. Then, the 
+two or even three patches would also just travel through different trees, 
+the spdx tree and Andrew's.
+
+Lukas
