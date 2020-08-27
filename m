@@ -2,130 +2,123 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE157C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09352C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6729B2177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:53:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598529202;
-	bh=OxjpBA84KDi5ZWWyg3y0i/wou8N/yNawXlcHxpgAmK0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oMbeNvnd/Ubo+NfFFKKEgUVN2/HF/CAiHiuC4LV9j9xRQE1kRXV2mBebeJkyw4Zel
-	 r1Yk/w8aoUf2vtix6CXllSDi9hRaqhCS9B2ndDrs/TMt62/3hZQF7jkkHIH5tqK2l2
-	 VP5f7KcFlfnc6OvzfwlF6c5nr4wFpzioxR7uPlgk=
+	by mail.kernel.org (Postfix) with ESMTP id CAFD62177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 11:53:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G8jjpap+";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EGu7Yilw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbgH0LxK (ORCPT
+        id S1728334AbgH0Lxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 07:53:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728586AbgH0Lib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 07:38:31 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEA5222CB1;
-        Thu, 27 Aug 2020 11:37:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598528264;
-        bh=OxjpBA84KDi5ZWWyg3y0i/wou8N/yNawXlcHxpgAmK0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XyaNvZ+ZBRKlwzei3uUjiA1wRVxBbBADTab/rAYQVbxyvtQ87IcTxr8UKJjjhOqgI
-         GRl/0l2KQXScHbEdqTjwL91JBnaoCdlv6pll6d7qPHVn9M8xpNlwHVP5qr/1a2V6Vw
-         ynDcWUjkgMGxyW9TKQek5DDzZeB4Unnlm9FttT1Q=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, x86@kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        linux-arch@vger.kernel.org
-Subject: [PATCH v2 14/15] kprobes: Remove NMI context check
-Date:   Thu, 27 Aug 2020 20:37:38 +0900
-Message-Id: <159852825822.707944.12873921829000019667.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <159852811819.707944.12798182250041968537.stgit@devnote2>
-References: <159852811819.707944.12798182250041968537.stgit@devnote2>
-User-Agent: StGit/0.19
+        Thu, 27 Aug 2020 07:53:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59754 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728785AbgH0Lk0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 07:40:26 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 405EFC06121B
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 04:40:26 -0700 (PDT)
+From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598528424;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VrRM45vL6L0gNPdfds/GsuaBAjPLpyd+E3qz8ezBnpQ=;
+        b=G8jjpap+o80AIiLZN5+/94QkGZCqPg6Ug0Mh3EgjITFTgbe0DNcSmLxFlmtmicosbFbAPd
+        mVDlYUn8MW/7I3HdTn3gzKioN35HOt0QA5ItQofzbTHnVBuROjPvzUlkKxBmlf1nAaSnc9
+        ZDbgk8PqR9dUmr5mgOrmjB0ty8KBkpnhUA6VbBvJZ9cDP0p12C1VrfBbk33f/nwaLStyrf
+        4FDkj/23K7LVgqXkvBN+9miin5ZNnStFd165PSDu14QLPVEWWEj15bvDRg5mw38f6Elklr
+        LhRcvTYI95p+uxLSB+AGyk2VdY8ksFexCeL9yxzVyumY5JwZqEVBWMCtqVaU1A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598528424;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VrRM45vL6L0gNPdfds/GsuaBAjPLpyd+E3qz8ezBnpQ=;
+        b=EGu7Yilw784/dRq6Y+vuP9+tv6uvOyMqetIBeGAR10BcKGwYNPr0z3OxL2Ecbr8rZTd4/r
+        /ukwrjBSh0UHNLBw==
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Ahmed S. Darwish" <a.darwish@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH v1 0/8] seqlock: Introduce seqcount_latch_t
+Date:   Thu, 27 Aug 2020 13:40:36 +0200
+Message-Id: <20200827114044.11173-1-a.darwish@linutronix.de>
+In-Reply-To: <20200519214547.352050-1-a.darwish@linutronix.de>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the commit 9b38cc704e84 ("kretprobe: Prevent triggering
-kretprobe from within kprobe_flush_task") sets a dummy current
-kprobe in the trampoline handler by kprobe_busy_begin/end(),
-it is not possible to run a kretprobe pre handler in kretprobe
-trampoline handler context even with the NMI. If the NMI interrupts
-a kretprobe_trampoline_handler() and it hits a kretprobe, the
-2nd kretprobe will detect recursion correctly and it will be
-skipped.
-This means we have almost no double-lock issue on kretprobes by NMI.
+Latch sequence counters are a multiversion concurrency control mechanism
+where the embedded seqcount_t counter even/odd value is used to switch
+between two copies of protected data. This allows the sequence counter
+read side to be invoked from NMIs and safely interrupt its own write
+side critical section.
 
-The last one point is in cleanup_rp_inst() which also takes
-kretprobe_table_lock without setting up current kprobes.
-So adding kprobe_busy_begin/end() there allows us to remove
-in_nmi() check.
+Initially, latch sequence counters were implemented as a single write
+function above plain seqcount_t, raw_write_seqcount_latch(). The read
+path was expected to use plain seqcount_t raw_read_seqcount().
 
-The above commit applies kprobe_busy_begin/end() on x86, but
-now all arch implementation are unified to generic one, we can
-safely remove the in_nmi() check from arch independent code.
+A specialized latch read function, raw_read_seqcount_latch(), was later
+added. It became the standardized way for latch read paths.  Due to the
+dependent load, it has one read memory barrier less than the more
+generic raw_read_seqcount() API.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- kernel/kprobes.c |   16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+Only raw_write_seqcount_latch() and raw_read_seqcount_latch() should be
+used with latch sequence counters. Having unique read and write path
+APIs means that latch sequence counters are actually a data type of
+their own -- just inappropriately overloading plain seqcount_t.
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index cbd2ad1af7b7..311033e4b8e4 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1359,7 +1359,8 @@ static void cleanup_rp_inst(struct kretprobe *rp)
- 	struct hlist_node *next;
- 	struct hlist_head *head;
- 
--	/* No race here */
-+	/* To avoid recursive kretprobe by NMI, set kprobe busy here */
-+	kprobe_busy_begin();
- 	for (hash = 0; hash < KPROBE_TABLE_SIZE; hash++) {
- 		kretprobe_table_lock(hash, &flags);
- 		head = &kretprobe_inst_table[hash];
-@@ -1369,6 +1370,8 @@ static void cleanup_rp_inst(struct kretprobe *rp)
- 		}
- 		kretprobe_table_unlock(hash, &flags);
- 	}
-+	kprobe_busy_end();
-+
- 	free_rp_inst(rp);
- }
- NOKPROBE_SYMBOL(cleanup_rp_inst);
-@@ -2038,17 +2041,6 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
- 	unsigned long hash, flags = 0;
- 	struct kretprobe_instance *ri;
- 
--	/*
--	 * To avoid deadlocks, prohibit return probing in NMI contexts,
--	 * just skip the probe and increase the (inexact) 'nmissed'
--	 * statistical counter, so that the user is informed that
--	 * something happened:
--	 */
--	if (unlikely(in_nmi())) {
--		rp->nmissed++;
--		return 0;
--	}
--
- 	/* TODO: consider to only swap the RA after the last pre_handler fired */
- 	hash = hash_ptr(current, KPROBE_HASH_BITS);
- 	raw_spin_lock_irqsave(&rp->lock, flags);
+Introduce seqcount_latch_t. This adds type-safety and ensures that only
+the correct latch-safe APIs are to be used.
 
+Not to break bisection, let the latch APIs also accept plain seqcount_t
+or seqcount_raw_spinlock_t. After converting all call sites to
+seqcount_latch_t, (patches #4 => #7), only allow seqcount_latch_t.
+
+Thanks,
+
+8<--------------
+
+Ahmed S. Darwish (8):
+  time/sched_clock: Use raw_read_seqcount_latch() during suspend
+  mm/swap: Do not abuse the seqcount_t latching API
+  seqlock: Introduce seqcount_latch_t
+  time/sched_clock: Use seqcount_latch_t
+  timekeeping: Use seqcount_latch_t
+  x86/tsc: Use seqcount_latch_t
+  rbtree_latch: Use seqcount_latch_t
+  seqlock: seqcount latch APIs: Only allow seqcount_latch_t
+
+ Documentation/locking/seqlock.rst | 18 ++++++
+ arch/x86/kernel/tsc.c             | 12 ++--
+ include/linux/rbtree_latch.h      |  6 +-
+ include/linux/seqlock.h           | 96 +++++++++++++++++++++----------
+ kernel/time/sched_clock.c         |  6 +-
+ kernel/time/timekeeping.c         | 10 ++--
+ mm/swap.c                         | 65 +++++++++++++++++----
+ 7 files changed, 156 insertions(+), 57 deletions(-)
+
+base-commit: d012a7190fc1fd72ed48911e77ca97ba4521bccd
+--
+2.28.0
