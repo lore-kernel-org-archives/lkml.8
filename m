@@ -2,133 +2,77 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4330AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D864AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1601C22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:40:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QeAUQvUI"
+	by mail.kernel.org (Postfix) with ESMTP id A76B322BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgH0Kki (ORCPT
+        id S1728586AbgH0Kkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:40:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50348 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728172AbgH0Kk0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:40:26 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D23C061264;
-        Thu, 27 Aug 2020 03:40:25 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id t14so4662203wmi.3;
-        Thu, 27 Aug 2020 03:40:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9h50JngkVr+gkrhnIsNROuiviGOt2MFti/otieY/AXU=;
-        b=QeAUQvUIg8cyqHSvEiCXoONpwTzlEnl88xGfT/MXZUVrM/b9w9CeXPc6QOlUlWX5UJ
-         n2Ct5gPGnBbHgD39GW80UXokZEU0zbi+OMQiJM/RWDJHHMUf0P9XSMjJZPZy5CpZXAYw
-         4Tmo164abRMFFwsCy5dOey+1UwrrPqIjPn945sOEW7R/EFp/s/hCtjlJqZonCTpBG4tY
-         ROx+fQD59ps3nqxC1Sf5PLHOVoBKOj8aQ93anM4yBxDeG27a7l1dR8ibtDDieKpT3pke
-         72eaVzrFwyohSiMD2a0D6BRY1uO2jYPRaYv2RaUdk1Qml2muglfY2/S2mg9tis9PMYka
-         /yCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9h50JngkVr+gkrhnIsNROuiviGOt2MFti/otieY/AXU=;
-        b=CjcpwFCgXB2+wGl6SrsLaBUclh6RHQtp1RL086QMAKtZomlFnHBNE8mgtGbZ3Oeavi
-         sbGGmTpqEtGH1xzuGLBvEQjBQbTk6WbA1Qic7Z6itszRtVgCkuv/tfaCK9Bg4BKFnmst
-         b7iuUlufS21oh2rvviCu4GQ7hrF2ObLtGvlQxuE3mVoX9BnMwqUMg7S9UcG2TjvycMOY
-         CXJ+MYLnp47kNJInijGSdJJTD74OkEmB3yUgbxgi1lD79wz03YQaNrasg0PjEVDsm478
-         Mz9YQUeM0pxXRkBc1jW0Jg3hbow5SC9JeVUT/8T1GOQ90CKJl6bGUr6m4oCBDSVp85L/
-         /d+Q==
-X-Gm-Message-State: AOAM531vdN7Mt9SkzryBkQs3JN+Nvms1EsZsXb+jf6BQjIccriiCF5/k
-        G6zL2ai+kaJemhwFtMBfaGc=
-X-Google-Smtp-Source: ABdhPJwz1uMTy7qUCE4Sfg7brDSdhildnSnl6zUAM6bAmxEAJEgmnowsTywQUlbVghov6jVeGRADJQ==
-X-Received: by 2002:a1c:7708:: with SMTP id t8mr6838717wmi.67.1598524823760;
-        Thu, 27 Aug 2020 03:40:23 -0700 (PDT)
-Received: from lenovo-laptop (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id u17sm5812569wrp.81.2020.08.27.03.40.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 03:40:22 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-X-Google-Original-From: Alex Dewar <alex.dewar@gmx.co.uk>
-Date:   Thu, 27 Aug 2020 11:40:20 +0100
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Alex Dewar <alex.dewar90@gmail.com>,
-        dennis.dalessandro@intel.com, dledford@redhat.com,
-        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, mike.marciniszyn@intel.com,
-        roland@purestorage.com
-Subject: Re: [PATCH v2 1/2] IB/qib: remove superfluous fallthrough statements
-Message-ID: <20200827104020.jfp5kju56duu4sh4@lenovo-laptop>
-References: <64d7e1c9-9c6a-93f3-ce0a-c24b1c236071@gmail.com>
- <20200825171242.448447-1-alex.dewar90@gmail.com>
- <20200825193327.GA5504@embeddedor>
- <20200826191859.GB2671@embeddedor>
- <20200827001149.GK24045@ziepe.ca>
- <20200827014120.GD2671@embeddedor>
+        Thu, 27 Aug 2020 06:40:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728550AbgH0Kkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 06:40:39 -0400
+Received: from gaia (unknown [46.69.195.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6A2122B40;
+        Thu, 27 Aug 2020 10:40:36 +0000 (UTC)
+Date:   Thu, 27 Aug 2020 11:40:34 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        kasan-dev@googlegroups.com,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Branislav Rankov <Branislav.Rankov@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 26/35] kasan, arm64: Enable TBI EL1
+Message-ID: <20200827104033.GF29264@gaia>
+References: <cover.1597425745.git.andreyknvl@google.com>
+ <518da1e5169a4e343caa3c37feed5ad551b77a34.1597425745.git.andreyknvl@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200827014120.GD2671@embeddedor>
+In-Reply-To: <518da1e5169a4e343caa3c37feed5ad551b77a34.1597425745.git.andreyknvl@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 08:41:20PM -0500, Gustavo A. R. Silva wrote:
-> On Wed, Aug 26, 2020 at 09:11:49PM -0300, Jason Gunthorpe wrote:
-> > On Wed, Aug 26, 2020 at 02:18:59PM -0500, Gustavo A. R. Silva wrote:
-> > > Hi,
-> > > 
-> > > On Tue, Aug 25, 2020 at 02:33:27PM -0500, Gustavo A. R. Silva wrote:
-> > > > On Tue, Aug 25, 2020 at 06:12:42PM +0100, Alex Dewar wrote:
-> > > > > Commit 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
-> > > > > erroneously marked a couple of switch cases as /* FALLTHROUGH */, which
-> > > > > were later converted to fallthrough statements by commit df561f6688fe
-> > > > > ("treewide: Use fallthrough pseudo-keyword"). This triggered a Coverity
-> > > > > warning about unreachable code.
-> > > > >
-> > > > 
-> > > > It's worth mentioning that this warning is triggered only by compilers
-> > > > that don't support __attribute__((__fallthrough__)), which has been
-> > > > supported since GCC 7.1.
-> > > > 
-> > > > > Remove the fallthrough statements.
-> > > > > 
-> > > > > Addresses-Coverity: ("Unreachable code")
-> > > > > Fixes: 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
-> > > > > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
-> > > > 
-> > > > Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > > > 
-> > > 
-> > > I can take this in my tree for 5.9-rc3.
-> > 
-> > That would make conflicts for the 2nd patch, lets just send them all
-> > through the rdma tree please.
-> 
-> OK.
-> 
-> > Is there a reason this is -rc material?
-> 
-> It's just that this warning is currently in mainline.
+On Fri, Aug 14, 2020 at 07:27:08PM +0200, Andrey Konovalov wrote:
+> diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+> index 152d74f2cc9c..6880ddaa5144 100644
+> --- a/arch/arm64/mm/proc.S
+> +++ b/arch/arm64/mm/proc.S
+> @@ -38,7 +38,7 @@
+>  /* PTWs cacheable, inner/outer WBWA */
+>  #define TCR_CACHE_FLAGS	TCR_IRGN_WBWA | TCR_ORGN_WBWA
+>  
+> -#ifdef CONFIG_KASAN_SW_TAGS
+> +#if defined(CONFIG_KASAN_SW_TAGS) || defined(CONFIG_KASAN_HW_TAGS)
+>  #define TCR_KASAN_FLAGS TCR_TBI1
+>  #else
+>  #define TCR_KASAN_FLAGS 0
 
-FYI this issue was found with Coverity, not a compiler. I just built the
-unfixed version from mainline (with gcc 10.2.0) and didn't get any
-warnings.
+I prefer to turn TBI1 on only if MTE is present. So on top of the v8
+user series, just do this in __cpu_setup.
 
-> 
-> Thanks
-> --
-> Gustavo
+-- 
+Catalin
