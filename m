@@ -2,91 +2,105 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1072AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91520C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1436207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:52:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598550756;
-	bh=iOxLgmIGQYHrxMElFT3exVNdV/6tWHPjbcYrBonVTVM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s0MczyEHKmva25+uS90TPxBvNM/ulEXeeIkrC64IiV81K2N286sWTlntOLncnktEN
-	 +s+xeQIVKBksJuOXaoMOdsz8XbkoJER1KNFKD+7RmXpI2nH8CDN6JZdqsWbnCmxx8T
-	 rTo33C1W6J268zh/8OqRr8WkS7x5MsRHwAexEdL0=
+	by mail.kernel.org (Postfix) with ESMTP id 58175207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:52:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="EAAmWl8C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgH0Rwf (ORCPT
+        id S1726826AbgH0RwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:52:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40300 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726977AbgH0Rwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:52:31 -0400
-Received: from gmail.com (unknown [104.132.1.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DEE5207CD;
-        Thu, 27 Aug 2020 17:52:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598550751;
-        bh=iOxLgmIGQYHrxMElFT3exVNdV/6tWHPjbcYrBonVTVM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cun4+ImZ+yvvc46aY/WjwXu3szA3hLizs32IMEtX3BJt56GbT65LdsxBhLNLAkLFU
-         KnbyJDTc/U9ezZ42ZjSfd+DoZfKSr2zm/NwzjQ1LayblEKQMMP9XWsPmqhka6hKFsm
-         m2B9VvCgk7N+tocFDJ6KqxB3ZUGXc9g+zNcuYvww=
-Date:   Thu, 27 Aug 2020 10:52:15 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Himadri Pandya <himadrispandya@gmail.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH] net: usb: Fix uninit-was-stored issue in
- asix_read_phy_addr()
-Message-ID: <20200827175215.GA2582911@gmail.com>
-References: <20200827065355.15177-1-himadrispandya@gmail.com>
+        Thu, 27 Aug 2020 13:52:21 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:49822 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726236AbgH0RwU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 13:52:20 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07RHos2s021672
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:52:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=t0u1GdS/GsDLLXOwIOkkJ5krxovYtPBEXfJM9OWBdus=;
+ b=EAAmWl8CFRNeBxb/vm8dscjZ6A+3HX3FxAB08KXrXDccC2vlxMAP7tc31Ww0D7D7przJ
+ 0r7mpgscIpIeuCTVdJyTsGJ/zvL1HaFCSPPHPRUHdBiylUBuTc2ca2CctScdmrJWDpfb
+ oyYMd26MmC2/S3xXrtgQEEZDo59HHauCK0s= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 335up66kmh-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:52:19 -0700
+Received: from intmgw002.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 27 Aug 2020 10:52:18 -0700
+Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
+        id 32FE23922485; Thu, 27 Aug 2020 10:52:16 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
+To:     <linux-mm@kvack.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        =Shakeel Butt <shakeelb@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn0c01
+Subject: [PATCH RFC 2/4] mm: kmem: remove redundant checks from get_obj_cgroup_from_current()
+Date:   Thu, 27 Aug 2020 10:52:13 -0700
+Message-ID: <20200827175215.319780-3-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200827175215.319780-1-guro@fb.com>
+References: <20200827175215.319780-1-guro@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827065355.15177-1-himadrispandya@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-27_10:2020-08-27,2020-08-27 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
+ priorityscore=1501 mlxlogscore=621 malwarescore=0 spamscore=0
+ clxscore=1015 impostorscore=0 suspectscore=1 phishscore=0 bulkscore=0
+ adultscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008270134
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 12:23:55PM +0530, Himadri Pandya wrote:
-> The buffer size is 2 Bytes and we expect to receive the same amount of
-> data. But sometimes we receive less data and run into uninit-was-stored
-> issue upon read. Hence modify the error check on the return value to match
-> with the buffer size as a prevention.
-> 
-> Reported-and-tested by: syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com
-> Signed-off-by: Himadri Pandya <himadrispandya@gmail.com>
-> ---
->  drivers/net/usb/asix_common.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/usb/asix_common.c b/drivers/net/usb/asix_common.c
-> index e39f41efda3e..7bc6e8f856fe 100644
-> --- a/drivers/net/usb/asix_common.c
-> +++ b/drivers/net/usb/asix_common.c
-> @@ -296,7 +296,7 @@ int asix_read_phy_addr(struct usbnet *dev, int internal)
->  
->  	netdev_dbg(dev->net, "asix_get_phy_addr()\n");
->  
-> -	if (ret < 0) {
-> +	if (ret < 2) {
->  		netdev_err(dev->net, "Error reading PHYID register: %02x\n", ret);
->  		goto out;
->  	}
+There are checks for current->mm and current->active_memcg
+in get_obj_cgroup_from_current(), but these checks are redundant:
+memcg_kmem_bypass() called just above performs same checks.
 
-If ret is 0 or 1 here, shouldn't asix_read_phy_addr() return an error code
-instead of 0 or 1?
+Signed-off-by: Roman Gushchin <guro@fb.com>
+---
+ mm/memcontrol.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-- Eric
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 9c08d8d14bc0..5d847257a639 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2919,9 +2919,6 @@ __always_inline struct obj_cgroup *get_obj_cgroup_f=
+rom_current(void)
+ 	if (memcg_kmem_bypass())
+ 		return NULL;
+=20
+-	if (unlikely(!current->mm && !current->active_memcg))
+-		return NULL;
+-
+ 	rcu_read_lock();
+ 	if (unlikely(current->active_memcg))
+ 		memcg =3D rcu_dereference(current->active_memcg);
+--=20
+2.26.2
+
