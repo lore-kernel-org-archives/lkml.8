@@ -2,109 +2,117 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B93C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 015F8C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA17020786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:04:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BXsu5XUn"
+	by mail.kernel.org (Postfix) with ESMTP id C0E8D22B4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:05:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598555121;
+	bh=6wi7BZ7sjbl1BjeinCwOI2PqM7WQLe/7Md+KmWzCljw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=WJwzh5cL5LgkVJlq5qcWmK7k00YbHkJ4xlquNtUQh0fm2rffRa2KnZl5PML8+YqJO
+	 1RfSQf9+m/8qjhfedx+OaIVsP4jlpvTmQoZvOPpmE0PSr/GhcY7HZFX8ZJ1VSETw3z
+	 rTxaHYlKrtARhbBr4aR+AjYwGoENBu9EERMOEHUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbgH0TEj (ORCPT
+        id S1727915AbgH0TFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:04:39 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8648 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727845AbgH0TEi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:04:38 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4803b80000>; Thu, 27 Aug 2020 12:04:24 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 27 Aug 2020 12:04:38 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 27 Aug 2020 12:04:38 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
- 2020 19:04:38 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 27 Aug 2020 19:04:38 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f4803c50002>; Thu, 27 Aug 2020 12:04:37 -0700
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH] mm/test: use the new SKIP() macro
-Date:   Thu, 27 Aug 2020 12:04:00 -0700
-Message-ID: <20200827190400.12608-1-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 27 Aug 2020 15:05:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726009AbgH0TFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 15:05:19 -0400
+Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6524E20786;
+        Thu, 27 Aug 2020 19:05:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598555118;
+        bh=6wi7BZ7sjbl1BjeinCwOI2PqM7WQLe/7Md+KmWzCljw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=l1e8/Pmn8ngF+p3T9et0To6f49k4Ql3c2Z74uxj3xtH00LxLMAu5rqZK5lwfRW+63
+         a2oxGdG2gcwUcCa7OKsDv0Sr9kCeSbyeEIuhTR+zmHFvr3YFh8HlUlxsJB+STprPT0
+         uMjl4QF+58ofygnmmXDpFUoANW4vhWh+RNq8ZbG8=
+Date:   Thu, 27 Aug 2020 14:05:17 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        stable <stable@vger.kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Adam Borowski <kilobyte@angband.pl>
+Subject: Re: [PATCH v2] x86/pci: fix intel_mid_pci.c build error when ACPI is
+ not enabled
+Message-ID: <20200827190517.GA2097725@bjorn-Precision-5520>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598555064; bh=tyYJnOGUbn8M6OcI0QlHbRb0snJ2xTK+ApnxWnOBsic=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=BXsu5XUnDKKwSIWiV7a1TSfU1RJg9JD8O3EDL454TgZagF6P372wGk3sSs9DulWlL
-         O4/IUdhdWc4NJKjPLSOuMuxSEL7cDL512EPlJ9xPcXj+GVEd6EuPikPmcTETd+FC8l
-         tFih1RKjUJ1INpzhIypW+kgrxEGCDJCs3tIdhTzJwjGgM1sGwqnR9nh9AQelkpASo8
-         87oit53X5sRDp2cTnMEnNIrpq+km4wN3Bdx8cTKGOisu4IIzhZDhuSN4tCb+hKZFXu
-         OoiPh6N5+HY2qv0G4MiTQW2r97Zj7jGUoy7CBbYGgdsfA17wE3iB767RVNqtNBNANf
-         A24pWUqGLnUmA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ea903917-e51b-4cc9-2680-bc1e36efa026@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some tests might not be able to be run if resources like huge pages are
-not available. Mark these tests as skipped instead of simply passing.
+On Fri, Aug 21, 2020 at 05:10:27PM -0700, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Fix build error when CONFIG_ACPI is not set/enabled by adding
+> the header file <asm/acpi.h> which contains a stub for the function
+> in the build error.
+> 
+> ../arch/x86/pci/intel_mid_pci.c: In function ‘intel_mid_pci_init’:
+> ../arch/x86/pci/intel_mid_pci.c:303:2: error: implicit declaration of function ‘acpi_noirq_set’; did you mean ‘acpi_irq_get’? [-Werror=implicit-function-declaration]
+>   acpi_noirq_set();
+> 
+> Fixes: a912a7584ec3 ("x86/platform/intel-mid: Move PCI initialization to arch_init()")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: stable@vger.kernel.org	# v4.16+
+> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Len Brown <lenb@kernel.org>
+> To: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Jesse Barnes <jsbarnes@google.com>
+> Cc: Arjan van de Ven <arjan@linux.intel.com>
+> Cc: linux-pci@vger.kernel.org
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Jesse Barnes <jsbarnes@google.com>
+> Acked-by: Thomas Gleixner <tglx@linutronix.de>
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
----
+Applied to pci/misc for v5.10, thanks!
 
-This applies to linux-mm and is for Andrew Morton's tree.
+We could put it in v5.9, but a912a7584ec3 was merged for v4.16, so
+apparently this has been broken for a long time.
 
- tools/testing/selftests/vm/hmm-tests.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/vm/hmm-tests.c b/tools/testing/selftes=
-ts/vm/hmm-tests.c
-index 93fc5cadce61..0a28a6a29581 100644
---- a/tools/testing/selftests/vm/hmm-tests.c
-+++ b/tools/testing/selftests/vm/hmm-tests.c
-@@ -680,7 +680,7 @@ TEST_F(hmm, anon_write_hugetlbfs)
-=20
- 	n =3D gethugepagesizes(pagesizes, 4);
- 	if (n <=3D 0)
--		return;
-+		SKIP(return, "Huge page size could not be determined");
- 	for (idx =3D 0; --n > 0; ) {
- 		if (pagesizes[n] < pagesizes[idx])
- 			idx =3D n;
-@@ -694,7 +694,7 @@ TEST_F(hmm, anon_write_hugetlbfs)
- 	buffer->ptr =3D get_hugepage_region(size, GHR_STRICT);
- 	if (buffer->ptr =3D=3D NULL) {
- 		free(buffer);
--		return;
-+		SKIP(return, "Huge page could not be allocated");
- 	}
-=20
- 	buffer->fd =3D -1;
---=20
-2.20.1
-
+> ---
+> Found in linux-next, but applies to/exists in mainline also.
+> 
+> v2:
+> - add Reviewed-by: and Acked-by: tags
+> - drop alternatives
+> 
+>  arch/x86/pci/intel_mid_pci.c |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> --- linux-next-20200813.orig/arch/x86/pci/intel_mid_pci.c
+> +++ linux-next-20200813/arch/x86/pci/intel_mid_pci.c
+> @@ -33,6 +33,7 @@
+>  #include <asm/hw_irq.h>
+>  #include <asm/io_apic.h>
+>  #include <asm/intel-mid.h>
+> +#include <asm/acpi.h>
+>  
+>  #define PCIE_CAP_OFFSET	0x100
+>  
+> 
