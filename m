@@ -2,257 +2,143 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B06C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEDBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4332177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9905C22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:51:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gdEkfTqR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nWq2Q3kO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbgH0MuA (ORCPT
+        id S1729249AbgH0MvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 08:50:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41848 "EHLO
+        Thu, 27 Aug 2020 08:51:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729129AbgH0Mqa (ORCPT
+        with ESMTP id S1729131AbgH0MuI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 08:46:30 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57676C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 05:46:30 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id kx11so2530723pjb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 05:46:30 -0700 (PDT)
+        Thu, 27 Aug 2020 08:50:08 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43433C06121B;
+        Thu, 27 Aug 2020 05:50:08 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 67so3268813pgd.12;
+        Thu, 27 Aug 2020 05:50:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BHmZEvhLEtaO7aqOAe1Kz0vxpzzyDph3TU1ME4obtnc=;
-        b=gdEkfTqRbB/Kce9J4U43NYTJ0FSw5bKcLylX1r5TuuVtKYudxTe4eisWe7++garpR3
-         AIMwQObELacZK6InF/KInf7LuBEgBr6AaRHQStv9BaZVNp6lw7JL0/vXQnlmoNs1v9jh
-         UvrUCzc9kXrr+f1K62TpVeUwHjaTrQM0Q8ckQazsHehf9HIC23NGw5PmXOgku21EWYw2
-         ju1tontr5nq6w6KtK+/MwdSriWs0LnK1SptCBWazsG9VU3nERavUd14/lRcn/w1Q0396
-         A1OBPTCV1T9KDVtn6B6aMYmFHLFQKXRCnkc264DNEfKyXuPKbpWhGoPvpgJoroJWzE5h
-         8vWA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=tJoGp29OgjxfQZ/rs065wQ2H4gpJMwEOpG42+00lmMo=;
+        b=nWq2Q3kOSBA4eUQNC/PkeUzMlnm0FTH+mQa/wOrydL6eCiXoEYZuL07MuE2sZdJrng
+         fnvKM5+WRf4ooDY4cTXdpmrdG0l7N2Mjjz5j+FaJGKR/coiJWI/t7Xft73lY5YMfZayo
+         0yJBEiahSwxqcWywPnOmm2y8uXi41rC4pEKnfRCCz9IVgMx8H4ZtdXZTw7hRpbwIIPLt
+         PmPYCouvI5gGj9kYH37C5Hl9UAvGqaF2mavsAUp0oGNnl6YULnviFSyjt5nwJjdBpVsH
+         epBJqoPVZt5hoQJqWWjo72YdETQbogDi2YiQfDI0WyvWh9fgvUs4Lu9uU1XWnhQ+ksKz
+         d12A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BHmZEvhLEtaO7aqOAe1Kz0vxpzzyDph3TU1ME4obtnc=;
-        b=tgU52QZHyWBqbQ7DOVNQ2vViAy7tuJA8bQbmPXKHKaD7kdq5yiC2AM9e12ctWtUl4n
-         PNHXz3ZaXQaGggcSKPyU2Ql57X4o3zbaRT/Jbii1ju9wu14IxCXTGQcztD3HdT+GcuUW
-         5BwL5TCzv23vKtBJBgQ9l2O3XE/IQ/Zp8bSctL/iwjsD6Mh3e5NkSPz9DaNBcUHDPh+N
-         8SkgQfqCVIwmsoemadpJNAP0S2MsElabZLKFEvpsj3+v/f/SCU1KTe6wrBWsvGpmDR8f
-         Hajj/ch78Eo38l9gG3QCuZkxjdTgQ9c4f2y8u+mBaOm64gJLk6uPgWU0tJJre1cc9Nu3
-         WsJQ==
-X-Gm-Message-State: AOAM530MX8BXc96QDpxgdOYfHXFHuNG5pDuAcg63r2RhL5O96M5VcsNH
-        xOOmDqb8cgQjVUD/UsGpuuVOvjtmIVBxoxz4x/tzDg==
-X-Google-Smtp-Source: ABdhPJwDOypO69lt7F9hkmMpo7AI0YZxyVjlAoqUwRCQcwPpqL5dsDTNUlMHW7hsHiiESPEGq3wlEDJDnZQgKzAqWNs=
-X-Received: by 2002:a17:90a:2d82:: with SMTP id p2mr9503738pjd.166.1598532389629;
- Thu, 27 Aug 2020 05:46:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=tJoGp29OgjxfQZ/rs065wQ2H4gpJMwEOpG42+00lmMo=;
+        b=jCP3M/412ermcgLnkIrE+gvgdkCHfSLlvzIhOxJi68oDqgBInbX6m5J8Dw+9Pjb+d7
+         A42NX8NhFytPgVUKdbzJYxg7G8bFd/ep/eiFzbgBOkz4Vt/s9THxCMh1Vkdc/U5gY7+f
+         rykWPd3Q2GZGdFFeSPFiQv/A8Jq4GaAxyjRhLVCBT1jheMnV1BPIKxpuK0g5edJ9cJNn
+         sRhPVL3+Kpbe3L1Su4kbD/p/CjEiIOprPX8i59jCiEfDNXmCX+IKobA3TNZA6aJq5m/I
+         hunPWT3U9/sdyhWZ5JsX1fxeRUo2B98jYEaZM8daN0oE1UcxC8EHOUZ/FlB7HtZzsFAn
+         6baQ==
+X-Gm-Message-State: AOAM530B4OW8a7ns61St5b4OhvnOGBMptwVmSP0sv9bF48AZDqGNbssd
+        PgrrRcsXcn7YWb8Hgxo4abM=
+X-Google-Smtp-Source: ABdhPJyGoxnkKj9G59MOf7GJPe+vX7/wpqFRcAeweD6nHHvKFLtUajPKb+m4tJs3YB5Uvjk5p+I1Cg==
+X-Received: by 2002:a63:1341:: with SMTP id 1mr7078186pgt.144.1598532607763;
+        Thu, 27 Aug 2020 05:50:07 -0700 (PDT)
+Received: from localhost.localdomain ([240d:1a:8f0:6c00:89cb:88d1:b6b2:3345])
+        by smtp.gmail.com with ESMTPSA id v18sm2947044pfu.15.2020.08.27.05.50.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 05:50:06 -0700 (PDT)
+From:   Alexandre Courbot <gnurou@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexandre Courbot <gnurou@gmail.com>
+Subject: [PATCH v2 2/2] media: v4l2-mem2mem: simplify poll logic
+Date:   Thu, 27 Aug 2020 21:49:46 +0900
+Message-Id: <20200827124946.328700-3-gnurou@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200827124946.328700-1-gnurou@gmail.com>
+References: <20200827124946.328700-1-gnurou@gmail.com>
 MIME-Version: 1.0
-References: <cover.1597425745.git.andreyknvl@google.com> <2cf260bdc20793419e32240d2a3e692b0adf1f80.1597425745.git.andreyknvl@google.com>
- <20200827093808.GB29264@gaia>
-In-Reply-To: <20200827093808.GB29264@gaia>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 27 Aug 2020 14:46:18 +0200
-Message-ID: <CAAeHK+xFzMRLuYtPV4gsb5FByFLp0Czt2+kokYKnp+L3kQwKvg@mail.gmail.com>
-Subject: Re: [PATCH 20/35] arm64: mte: Add in-kernel MTE helpers
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 11:38 AM Catalin Marinas
-<catalin.marinas@arm.com> wrote:
->
-> On Fri, Aug 14, 2020 at 07:27:02PM +0200, Andrey Konovalov wrote:
-> > diff --git a/arch/arm64/include/asm/mte.h b/arch/arm64/include/asm/mte.h
-> > index 1c99fcadb58c..733be1cb5c95 100644
-> > --- a/arch/arm64/include/asm/mte.h
-> > +++ b/arch/arm64/include/asm/mte.h
-> > @@ -5,14 +5,19 @@
-> >  #ifndef __ASM_MTE_H
-> >  #define __ASM_MTE_H
-> >
-> > -#define MTE_GRANULE_SIZE     UL(16)
-> > +#include <asm/mte_asm.h>
->
-> So the reason for this move is to include it in asm/cache.h. Fine by
-> me but...
->
-> >  #define MTE_GRANULE_MASK     (~(MTE_GRANULE_SIZE - 1))
-> >  #define MTE_TAG_SHIFT                56
-> >  #define MTE_TAG_SIZE         4
-> > +#define MTE_TAG_MASK         GENMASK((MTE_TAG_SHIFT + (MTE_TAG_SIZE - 1)), MTE_TAG_SHIFT)
-> > +#define MTE_TAG_MAX          (MTE_TAG_MASK >> MTE_TAG_SHIFT)
->
-> ... I'd rather move all these definitions in a file with a more
-> meaningful name like mte-def.h. The _asm implies being meant for .S
-> files inclusion which isn't the case.
+Factorize redundant checks into a single code block, remove unneeded
+checks (a buffer in done_list is necessarily in the DONE or ERROR
+state), and we end up with a much simpler version of this function.
 
-Sounds good, I'll leave fixing this and other arm64-specific comments
-to Vincenzo. I'll change KASAN code to use mte-def.h once I have
-patches where this file is renamed.
+Signed-off-by: Alexandre Courbot <gnurou@gmail.com>
+---
+ drivers/media/v4l2-core/v4l2-mem2mem.c | 26 +++++---------------------
+ 1 file changed, 5 insertions(+), 21 deletions(-)
 
->
-> > diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
-> > index eb39504e390a..e2d708b4583d 100644
-> > --- a/arch/arm64/kernel/mte.c
-> > +++ b/arch/arm64/kernel/mte.c
-> > @@ -72,6 +74,47 @@ int memcmp_pages(struct page *page1, struct page *page2)
-> >       return ret;
-> >  }
-> >
-> > +u8 mte_get_mem_tag(void *addr)
-> > +{
-> > +     if (system_supports_mte())
-> > +             addr = mte_assign_valid_ptr_tag(addr);
->
-> The mte_assign_valid_ptr_tag() is slightly misleading. All it does is
-> read the allocation tag from memory.
->
-> I also think this should be inline asm, possibly using alternatives.
-> It's just an LDG instruction (and it saves us from having to invent a
-> better function name).
->
-> > +
-> > +     return 0xF0 | mte_get_ptr_tag(addr);
-> > +}
-> > +
-> > +u8 mte_get_random_tag(void)
-> > +{
-> > +     u8 tag = 0xF;
-> > +
-> > +     if (system_supports_mte())
-> > +             tag = mte_get_ptr_tag(mte_assign_random_ptr_tag(NULL));
->
-> Another alternative inline asm with an IRG instruction.
->
-> > +
-> > +     return 0xF0 | tag;
-> > +}
-> > +
-> > +void * __must_check mte_set_mem_tag_range(void *addr, size_t size, u8 tag)
-> > +{
-> > +     void *ptr = addr;
-> > +
-> > +     if ((!system_supports_mte()) || (size == 0))
-> > +             return addr;
-> > +
-> > +     tag = 0xF0 | (tag & 0xF);
-> > +     ptr = (void *)__tag_set(ptr, tag);
-> > +     size = ALIGN(size, MTE_GRANULE_SIZE);
->
-> I think aligning the size is dangerous. Can we instead turn it into a
-> WARN_ON if not already aligned? At a quick look, the callers of
-> kasan_{un,}poison_memory() already align the size.
->
-> > +
-> > +     mte_assign_mem_tag_range(ptr, size);
-> > +
-> > +     /*
-> > +      * mte_assign_mem_tag_range() can be invoked in a multi-threaded
-> > +      * context, ensure that tags are written in memory before the
-> > +      * reference is used.
-> > +      */
-> > +     smp_wmb();
-> > +
-> > +     return ptr;
->
-> I'm not sure I understand the barrier here. It ensures the relative
-> ordering of memory (or tag) accesses on a CPU as observed by other CPUs.
-> While the first access here is setting the tag, I can't see what other
-> access on _this_ CPU it is ordered with.
->
-> > +}
-> > +
-> >  static void update_sctlr_el1_tcf0(u64 tcf0)
-> >  {
-> >       /* ISB required for the kernel uaccess routines */
-> > diff --git a/arch/arm64/lib/mte.S b/arch/arm64/lib/mte.S
-> > index 03ca6d8b8670..8c743540e32c 100644
-> > --- a/arch/arm64/lib/mte.S
-> > +++ b/arch/arm64/lib/mte.S
-> > @@ -149,3 +149,44 @@ SYM_FUNC_START(mte_restore_page_tags)
-> >
-> >       ret
-> >  SYM_FUNC_END(mte_restore_page_tags)
-> > +
-> > +/*
-> > + * Assign pointer tag based on the allocation tag
-> > + *   x0 - source pointer
-> > + * Returns:
-> > + *   x0 - pointer with the correct tag to access memory
-> > + */
-> > +SYM_FUNC_START(mte_assign_valid_ptr_tag)
-> > +     ldg     x0, [x0]
-> > +     ret
-> > +SYM_FUNC_END(mte_assign_valid_ptr_tag)
-> > +
-> > +/*
-> > + * Assign random pointer tag
-> > + *   x0 - source pointer
-> > + * Returns:
-> > + *   x0 - pointer with a random tag
-> > + */
-> > +SYM_FUNC_START(mte_assign_random_ptr_tag)
-> > +     irg     x0, x0
-> > +     ret
-> > +SYM_FUNC_END(mte_assign_random_ptr_tag)
->
-> As I said above, these two can be inline asm.
->
-> > +
-> > +/*
-> > + * Assign allocation tags for a region of memory based on the pointer tag
-> > + *   x0 - source pointer
-> > + *   x1 - size
-> > + *
-> > + * Note: size is expected to be MTE_GRANULE_SIZE aligned
-> > + */
-> > +SYM_FUNC_START(mte_assign_mem_tag_range)
-> > +     /* if (src == NULL) return; */
-> > +     cbz     x0, 2f
-> > +     /* if (size == 0) return; */
->
-> You could skip the cbz here and just document that the size should be
-> non-zero and aligned. The caller already takes care of this check.
->
-> > +     cbz     x1, 2f
-> > +1:   stg     x0, [x0]
-> > +     add     x0, x0, #MTE_GRANULE_SIZE
-> > +     sub     x1, x1, #MTE_GRANULE_SIZE
-> > +     cbnz    x1, 1b
-> > +2:   ret
-> > +SYM_FUNC_END(mte_assign_mem_tag_range)
->
-> --
-> Catalin
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20200827093808.GB29264%40gaia.
+diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
+index fe90c3c0e4128..af8138c5d7ced 100644
+--- a/drivers/media/v4l2-core/v4l2-mem2mem.c
++++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
+@@ -841,7 +841,6 @@ static __poll_t v4l2_m2m_poll_for_data(struct file *file,
+ 				       struct poll_table_struct *wait)
+ {
+ 	struct vb2_queue *src_q, *dst_q;
+-	struct vb2_buffer *src_vb = NULL, *dst_vb = NULL;
+ 	__poll_t rc = 0;
+ 	unsigned long flags;
+ 
+@@ -862,32 +861,17 @@ static __poll_t v4l2_m2m_poll_for_data(struct file *file,
+ 	     list_empty(&dst_q->queued_list)))
+ 		return EPOLLERR;
+ 
+-	spin_lock_irqsave(&dst_q->done_lock, flags);
+-	if (list_empty(&dst_q->done_list)) {
+-		/*
+-		 * If the last buffer was dequeued from the capture queue,
+-		 * return immediately. DQBUF will return -EPIPE.
+-		 */
+-		if (dst_q->last_buffer_dequeued)
+-			rc |= EPOLLIN | EPOLLRDNORM;
+-	}
+-	spin_unlock_irqrestore(&dst_q->done_lock, flags);
+-
+ 	spin_lock_irqsave(&src_q->done_lock, flags);
+ 	if (!list_empty(&src_q->done_list))
+-		src_vb = list_first_entry(&src_q->done_list, struct vb2_buffer,
+-						done_entry);
+-	if (src_vb && (src_vb->state == VB2_BUF_STATE_DONE
+-			|| src_vb->state == VB2_BUF_STATE_ERROR))
+ 		rc |= EPOLLOUT | EPOLLWRNORM;
+ 	spin_unlock_irqrestore(&src_q->done_lock, flags);
+ 
+ 	spin_lock_irqsave(&dst_q->done_lock, flags);
+-	if (!list_empty(&dst_q->done_list))
+-		dst_vb = list_first_entry(&dst_q->done_list, struct vb2_buffer,
+-						done_entry);
+-	if (dst_vb && (dst_vb->state == VB2_BUF_STATE_DONE
+-			|| dst_vb->state == VB2_BUF_STATE_ERROR))
++	/*
++	 * If the last buffer was dequeued from the capture queue, signal
++	 * userspace. DQBUF(CAPTURE) will return -EPIPE.
++	 */
++	if (!list_empty(&dst_q->done_list) || dst_q->last_buffer_dequeued)
+ 		rc |= EPOLLIN | EPOLLRDNORM;
+ 	spin_unlock_irqrestore(&dst_q->done_lock, flags);
+ 
+-- 
+2.28.0
+
