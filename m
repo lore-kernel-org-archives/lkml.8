@@ -7,102 +7,64 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C82C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B176C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61351207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ED8B2177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgH0OP0 (ORCPT
+        id S1727935AbgH0OQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:15:26 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2701 "EHLO huawei.com"
+        Thu, 27 Aug 2020 10:16:39 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10339 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728021AbgH0OJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:09:02 -0400
-Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id D1E6A212A5BB64F42505;
-        Thu, 27 Aug 2020 15:08:36 +0100 (IST)
-Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.87.119) by
- lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1913.5; Thu, 27 Aug 2020 15:08:36 +0100
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>,
-        <james.morse@arm.com>, <rrichter@marvell.com>
-CC:     <linuxarm@huawei.com>, Borislav Petkov <bp@suse.de>
-Subject: [PATCH v2 1/1] EDAC/ghes: Fix for NULL pointer dereference in ghes_edac_register()
-Date:   Thu, 27 Aug 2020 15:04:50 +0100
-Message-ID: <20200827140450.1620-1-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
+        id S1727781AbgH0OKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 10:10:14 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A14B365A25F8A4801769;
+        Thu, 27 Aug 2020 22:09:55 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Thu, 27 Aug 2020
+ 22:09:48 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <pablo@netfilter.org>, <kadlec@netfilter.org>, <fw@strlen.de>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <mcroce@redhat.com>
+CC:     <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] netfilter: xt_HMARK: Use ip_is_fragment() helper
+Date:   Thu, 27 Aug 2020 22:08:13 +0800
+Message-ID: <20200827140813.28624-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.47.87.119]
-X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
- lhreml715-chm.china.huawei.com (10.201.108.66)
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After the 'commit b9cae27728d1 ("EDAC/ghes: Scan the system once on driver init")'
-applied, following error has occurred in the ghes_edac_register() when
-CONFIG_DEBUG_TEST_DRIVER_REMOVE is enabled. The null ghes_hw.dimms pointer
-in the mci_for_each_dimm() of ghes_edac_register() caused the error.
+Use ip_is_fragment() to simpify code.
 
-The error occurs when all the previously initialized ghes instances are
-removed and then probe a new ghes instance. In this case, the ghes_refcount
-would be 0, ghes_hw.dimms and mci already freed. The ghes_hw.dimms would
-be null because ghes_scan_system() would not call enumerate_dimms() again.
-
-Suggested-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/edac/ghes_edac.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ net/netfilter/xt_HMARK.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-index da60c29468a7..54ebc8afc6b1 100644
---- a/drivers/edac/ghes_edac.c
-+++ b/drivers/edac/ghes_edac.c
-@@ -55,6 +55,8 @@ static DEFINE_SPINLOCK(ghes_lock);
- static bool __read_mostly force_load;
- module_param(force_load, bool, 0);
+diff --git a/net/netfilter/xt_HMARK.c b/net/netfilter/xt_HMARK.c
+index 713fb38541df..8928ec56c388 100644
+--- a/net/netfilter/xt_HMARK.c
++++ b/net/netfilter/xt_HMARK.c
+@@ -276,7 +276,7 @@ hmark_pkt_set_htuple_ipv4(const struct sk_buff *skb, struct hmark_tuple *t,
+ 		return 0;
  
-+static bool system_scanned;
-+
- /* Memory Device - Type 17 of SMBIOS spec */
- struct memdev_dmi_entry {
- 	u8 type;
-@@ -225,14 +227,12 @@ static void enumerate_dimms(const struct dmi_header *dh, void *arg)
+ 	/* follow-up fragments don't contain ports, skip all fragments */
+-	if (ip->frag_off & htons(IP_MF | IP_OFFSET))
++	if (ip_is_fragment(ip))
+ 		return 0;
  
- static void ghes_scan_system(void)
- {
--	static bool scanned;
--
--	if (scanned)
-+	if (system_scanned)
- 		return;
- 
- 	dmi_walk(enumerate_dimms, &ghes_hw);
- 
--	scanned = true;
-+	system_scanned = true;
- }
- 
- void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
-@@ -631,6 +631,8 @@ void ghes_edac_unregister(struct ghes *ghes)
- 
- 	mutex_lock(&ghes_reg_mutex);
- 
-+	system_scanned = false;
-+
- 	if (!refcount_dec_and_test(&ghes_refcount))
- 		goto unlock;
- 
+ 	hmark_set_tuple_ports(skb, (ip->ihl * 4) + nhoff, t, info);
 -- 
 2.17.1
 
