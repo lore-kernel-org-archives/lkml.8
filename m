@@ -2,126 +2,146 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAF6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 317042075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03B982075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:06:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l0iHo369"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Env49Aaq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgH0CCY (ORCPT
+        id S1726858AbgH0CGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 22:02:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbgH0CCX (ORCPT
+        Wed, 26 Aug 2020 22:06:51 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11078 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726784AbgH0CGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 22:02:23 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DC87C06136C;
-        Wed, 26 Aug 2020 19:02:23 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k15so18774wrn.10;
-        Wed, 26 Aug 2020 19:02:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ltbgfeR4CcIa3n8+PRW2ashWBVJ/hYJD2qsUPYMSYSk=;
-        b=l0iHo369LJRLdiMbIxzuCKs1kXfmBcdJYM08mnt9PKDUhNrg93qRTlFyvqgKxdsSFZ
-         jtv7UqacpWXA8FhxsmBLeyvtaSzuYS+lhYOHTdD6w94afEMVbyt29ZOeS4yX0LRo9xvQ
-         QW0OI1O59s4HoLkr0sPlSzORcdZeiyavfW6DyJac0JObqhKb6vzFzdUTlG76911hUKgn
-         yqx6xCImCNppAmtSFdNc2h+EnxOzsArUICAlO5nOLWX5Z5hjVXFHUvCHi+BWFvrGAWRl
-         vjtwCqc0tQdBDevst+xzeiRYoE4+nRzEXaMaOdUhtoNL3FtAO2nbcpaHcfPtXUkgSp0K
-         8uVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ltbgfeR4CcIa3n8+PRW2ashWBVJ/hYJD2qsUPYMSYSk=;
-        b=rn9+ImlqwNpbpu0e8JHB98D91oaX6M7XCUH7S8S5Lw4bKzrufhnV0aa5XGkV4fSBvo
-         ULDxVo4+MgsTKjLfUQUo/Pw4GSbcDdp8M5S8PZgJx/hp2xYOz9rs1IcWuQGdC2YFOXFc
-         05wknpzYm+gzsktCMSwLpbQh/fC7T+O3FNO1phpuwAH+yynMQawWsc8GB43aFv9/RSZ3
-         BA8rpap0fcvcgh4MXsj8m/nnhCIy0eeMQVlZcipZxwCUmKhR8qKFjXq8Vh6iqn0c3xLt
-         ReWAnO//M1ZCG4rly5q6vTaPTtWxOS2rqLKy+fUDucA6c7pj2/qZhWRMLgJqNhphhwmC
-         eZ+g==
-X-Gm-Message-State: AOAM531FO2tWYCkHLWdrJoDUVS/TmZxaNN+O18ghdNm18bxyP643BgF1
-        jmbSjwEOenWd2qss67PGV3vDmU6Uhw23YK8r774=
-X-Google-Smtp-Source: ABdhPJwEutQykNcVSnhy4lnuPbD9pz6OtKZyUZ1BHPD1zRFH1EZS/HbQoP6uTZaeBG/gB5POYEfTfQjfsOkv0EoRtuU=
-X-Received: by 2002:adf:e68f:: with SMTP id r15mr17575849wrm.196.1598493740036;
- Wed, 26 Aug 2020 19:02:20 -0700 (PDT)
+        Wed, 26 Aug 2020 22:06:49 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07R22Mik108985;
+        Wed, 26 Aug 2020 22:06:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=BOPCPy33GxY8VeRsFHwbZ447KUNVbNwOFiiOis+yQ1w=;
+ b=Env49AaqoaOHJRIEqm73ec6n4iU59pTPFkoxu//v1JWrWAUGthIvTS2joFDOn53LdfzV
+ 49MzlTqywtupsV5jr6Ve+jSZnyUfQIJv5BRKVERxBFWTl9ADaBA3vA54L5WsT7VQZ6Y2
+ Q4AvJp0qAk5Zp5OzwUNN2dWDIYPl9CIg6Q1XpAQ+hFdN+mEINjQsXHtqJc6HC6dvNLWK
+ lI3MnQPGhEHkivBmapwkGuz5LVPLrQWeQkkhqd1dAV6Hr1MGnClN+PQl6d9kneI+sicd
+ lFolnOWCmExFZFSkdBYkW40dWiad4kSGKbizMDQkBOfp1PnXPk5AJzbC37zKSx8mBRw8 Uw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3361fqbcra-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 22:06:47 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07R22NHW109139;
+        Wed, 26 Aug 2020 22:06:47 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3361fqbcr5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 22:06:47 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07R21dcl008319;
+        Thu, 27 Aug 2020 02:06:46 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma04dal.us.ibm.com with ESMTP id 332ujrg0f9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 02:06:46 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07R26gFl64028990
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Aug 2020 02:06:42 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DC6F8136053;
+        Thu, 27 Aug 2020 02:06:44 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6EDCC136051;
+        Thu, 27 Aug 2020 02:06:43 +0000 (GMT)
+Received: from li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com (unknown [9.160.126.224])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Thu, 27 Aug 2020 02:06:43 +0000 (GMT)
+Date:   Wed, 26 Aug 2020 21:06:40 -0500
+From:   "Paul A. Clarke" <pc@us.ibm.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     kajoljain <kjain@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, maddy@linux.ibm.com,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] perf stat: update POWER9 metrics to utilize other metrics
+Message-ID: <20200827020640.GA48404@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
+References: <20200813222155.268183-1-pc@us.ibm.com>
+ <CAP-5=fU4P7o1TwVz+PzcrJsBKnrHW4yrNx3R165i9d3BwgP2RQ@mail.gmail.com>
+ <cfa27e83-ac2c-7495-b453-ceeaf2412311@linux.ibm.com>
+ <20200814124307.GF13995@kernel.org>
+ <CAP-5=fWw-W3wfy_WeirM_jbEmsbQCC8L_AGo2zsMvv2MW1x04A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200826144747.9436-1-krzk@kernel.org> <20200826144747.9436-5-krzk@kernel.org>
-In-Reply-To: <20200826144747.9436-5-krzk@kernel.org>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Thu, 27 Aug 2020 10:01:43 +0800
-Message-ID: <CAAfSe-vaCg7KVQfuNshs8g-dyXxVGEChvGdaxNOyK6qay65qYA@mail.gmail.com>
-Subject: Re: [PATCH 5/6] pwm: sprd: Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Paul Cercueil <paul@crapouillou.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-rockchip@lists.infradead.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fWw-W3wfy_WeirM_jbEmsbQCC8L_AGo2zsMvv2MW1x04A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-26_14:2020-08-26,2020-08-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
+ mlxlogscore=999 malwarescore=0 spamscore=0 impostorscore=0 bulkscore=0
+ phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008270011
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 at 22:48, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and also it prints the error value.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+On Wed, Aug 26, 2020 at 09:26:40AM -0700, Ian Rogers wrote:
+> On Fri, Aug 14, 2020 at 5:43 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> > Em Fri, Aug 14, 2020 at 11:20:42AM +0530, kajoljain escreveu:
+> > > On 8/14/20 9:13 AM, Ian Rogers wrote:
+> > > > On Thu, Aug 13, 2020 at 3:21 PM Paul A. Clarke <pc@us.ibm.com> wrote:
+> > > >> These changes take advantage of the new capability added in
+> > > >> merge commit 00e4db51259a5f936fec1424b884f029479d3981
+> > > >> "Allow using computed metrics in calculating other metrics".
+> > > >>
+> > > >> The net is a simplification of the expressions for a handful
+> > > >> of metrics, but no functional change.
+> > > >>
+> > > >> Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
+> > >
+> > >   The patch looks good to me.
+> > >
+> > > Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
+> >
+> > Thanks, applied. Added Ian's Acked-by as well.
+> 
+> I've synced perf and testing on a remote machine (not easy for me to
+> log into) I see failures in perf test "10.3: Parsing of PMU event
+> table metrics" like:
+> ...
+> parsing metric: dfu_stall_cpi - dflong_stall_cpi
+> Parse event failed metric 'dfu_other_stall_cpi' id 'dflong_stall_cpi'
+> expr 'dfu_stall_cpi - dflong_stall_cpi'
+> Error string 'parser error' help '(null)'
+> Parse event failed metric 'dfu_other_stall_cpi' id 'dfu_stall_cpi'
+> expr 'dfu_stall_cpi - dflong_stall_cpi'
+> Error string 'parser error' help '(null)'
+> ...
+> 
+> This may be that the test doesn't handle the metric in terms of metric
+> addition and so I'll look for a fix. I thought I'd send a heads up in
+> case you had already seen/addressed this. Is perf test on PowerPC
+> clean for you at the moment?
 
-Acked-by: Chunyan Zhang <zhang.lyra@gmail.com>
+I see these errors as well (on 5.9-rc2).  Each error seems to be for the
+newer metrics that take advantage of the newer functionality, including
+the metrics I changed recently, and Kajol's 24x7 and nest metrics.
 
-Thanks!
+Thanks for the heads up!  I confess I had not seen the errors only because
+I wasn't looking.  :-/
 
-> ---
->  drivers/pwm/pwm-sprd.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
-> index be2394227423..5123d948efd6 100644
-> --- a/drivers/pwm/pwm-sprd.c
-> +++ b/drivers/pwm/pwm-sprd.c
-> @@ -228,11 +228,8 @@ static int sprd_pwm_clk_init(struct sprd_pwm_chip *spc)
->                         if (ret == -ENOENT)
->                                 break;
->
-> -                       if (ret != -EPROBE_DEFER)
-> -                               dev_err(spc->dev,
-> -                                       "failed to get channel clocks\n");
-> -
-> -                       return ret;
-> +                       return dev_err_probe(spc->dev, ret,
-> +                                            "failed to get channel clocks\n");
->                 }
->
->                 clk_pwm = chn->clks[SPRD_PWM_CHN_OUTPUT_CLK].clk;
-> --
-> 2.17.1
->
+PC
