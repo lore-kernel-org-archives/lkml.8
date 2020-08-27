@@ -2,229 +2,273 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD58C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0379C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60EF92080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B49BF2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:52:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QzvYTWj9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h6KWwkxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgH0Twl (ORCPT
+        id S1727866AbgH0Tws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:52:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52256 "EHLO
+        Thu, 27 Aug 2020 15:52:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgH0Twk (ORCPT
+        with ESMTP id S1726147AbgH0Twr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:52:40 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46C62C061264;
-        Thu, 27 Aug 2020 12:52:40 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id i13so3201453pjv.0;
-        Thu, 27 Aug 2020 12:52:40 -0700 (PDT)
+        Thu, 27 Aug 2020 15:52:47 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22794C061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 12:52:47 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id s1so7107412iot.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 12:52:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=K5jvVD4VIIV8wGZrtcs6gpFqN1LA4X86PyXeJdT5ovU=;
-        b=QzvYTWj9d4lEogerahxM0ZR+vIxQTSzo/Y838zEuYdmgIVy9eTYpCqI40gbfr9VnX7
-         GlnRCgy8B7q43Le64oQSMqm/eBAsDEf3loKMX8sqz+a7kHVGoo7augbihKj3FTl3ryI9
-         xUR5g2lIhcjLRBfxnuHLOdu0pwi8SfKXN60YVmhWiDEsf0B66BjUDP93KWqY0+HSaU8L
-         MPy+UIq+X2gl5gmK4g1+JsBDEUWXQXXGpmouWJpPR9m5GqeEthIblcCgqAdOEbSsXuEi
-         2wchWTvGScayYk5djgFb4tidiJ05/Q+7W+pqBHrZbykZ9HXy9MTsdQ/+bJrsba/yo7tH
-         gutg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q0WhZouPxdjBeMn9cOMGc/oviRw39ohzYxmzF+C0NwU=;
+        b=h6KWwkxPlwBK4h7b7HqbG3b5fEkTxuKNqI0GpTCxCozsrKoF4/t0e/K3To4U9HVUBU
+         2IN3B07JvfH5poIPywwuXVexJeJma9l0Oby5c1Yhwg6m/Z7FzseKd+rkiQk3VmWIJ0GR
+         uvz5HGhAYP1RdqrW1/22HIyzxtVTyn6zsF+sw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=K5jvVD4VIIV8wGZrtcs6gpFqN1LA4X86PyXeJdT5ovU=;
-        b=eifeR3plG266INlUCHtYjkwbZdQDkC8iH0CMoHVh9heniN/Rkj5YZmjT2J6ILFUBrE
-         SgS0OAEXRvm0eagZ7HZX+RGIX8OiJotFT2ZT0EUjQBCY5SsZqiCJFWLl2g9MYAykbg56
-         QUrICx9pAMZAfVUAi5KvISXiWIvMXs6bXo7wKO2DOy/9dUkUquoR0DNpGFVPAf26D6jR
-         FM4d0lGHledllQYAukuQmO0UY4cXKbgkvFgDJ2lGf9IxlrNZqQPvHVRlXoqVNcDRNY3d
-         DbNOZUVxRtnlbHXlhJMceaa7nQ7OO8K7TrtyEyxuJNqJdlcJavxMOlsXXRfbj3+2wa3I
-         LH2g==
-X-Gm-Message-State: AOAM531wwg0fe5yQ5WnqhdwGFxV9VqPwbh5vm0gRWhL0XiFeFYoA6eDY
-        pbLfEa2ok4qYCSepbxMP+I7iFzSs560=
-X-Google-Smtp-Source: ABdhPJwzsW013QhY4Rc3g/9/WBIEMyvJj0rYHJRY3+3oNim+C0DctJzYy/ABbFGpXjDNvPXcv8NWFw==
-X-Received: by 2002:a17:90a:aa8a:: with SMTP id l10mr428350pjq.110.1598557959593;
-        Thu, 27 Aug 2020 12:52:39 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a200sm3661988pfd.182.2020.08.27.12.52.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Aug 2020 12:52:39 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 12:52:38 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Wei Huang <wei.huang2@amd.com>
-Cc:     lemens@ladisch.de, jdelvare@suse.com, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] hwmon: (k10temp) Create common functions and macros
- for Zen CPU families
-Message-ID: <20200827195238.GA233879@roeck-us.net>
-References: <20200827054242.2347-1-wei.huang2@amd.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q0WhZouPxdjBeMn9cOMGc/oviRw39ohzYxmzF+C0NwU=;
+        b=RaYceYrtAHw/sLox9ZBLMbNNYV7+c8uwBBzkEoXAhGJ2xcNETdHaaN9pfMiEMsvbjE
+         I/PRLNt6qM3xQ465ffAJtIh4bnF5ebSO6b9/DeA5T+3yEyP8ITbQzFNdRZ8ANQUuQHQV
+         nnNRrtydgeB10oHoKIXlw50baKFPWpJwQyiSmEfAmmWuWRGhY8jywCAELrJh64pWDGEi
+         9PrzCSaWPPLSsBHs27CsBB/4uBJJM/cV40oiQJ8TQ2nxrv1mEIPKdXYBSynZ01cymB1g
+         doT4T29ALrDktgCAUMM4QlrEuUoYZPoI6Ay6QV2HJgPMdmTauw2/Xk+atVQ44LmSQUFs
+         4Y9A==
+X-Gm-Message-State: AOAM533Jxh7np1+7JP09W/kkddtAqWGTsC93XUiw4jz46t5hsPrCA3Uy
+        zppWCkIC8hyy7grhxUIANrI8NA==
+X-Google-Smtp-Source: ABdhPJwHitgH1o5QcDfe5KVSSK78tz1srdPlHOWaobSgLbMA3g5GVCvAS1wn2r0+wGMAZm8oxUEHkw==
+X-Received: by 2002:a02:840f:: with SMTP id k15mr21153082jah.100.1598557966378;
+        Thu, 27 Aug 2020 12:52:46 -0700 (PDT)
+Received: from rrangel920.bld.corp.google.com (h184-60-195-141.arvdco.broadband.dynamic.tds.net. [184.60.195.141])
+        by smtp.gmail.com with ESMTPSA id t90sm1664808ill.50.2020.08.27.12.52.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 12:52:45 -0700 (PDT)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     linux-input@vger.kernel.org
+Cc:     dmitry.torokhov@gmail.com, Shirish.S@amd.com,
+        Raul E Rangel <rrangel@chromium.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Dan Murphy <dmurphy@ti.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        "Lee, Chun-Yi" <jlee@suse.com>, Pavel Machek <pavel@ucw.cz>,
+        Rajat Jain <rajatja@google.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH 1/2] Input: i8042 - Prevent intermixing i8042 commands
+Date:   Thu, 27 Aug 2020 13:52:22 -0600
+Message-Id: <20200827135205.1.I6981f9a9f0c12e60f8038f3b574184f8ffc1b9b5@changeid>
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827054242.2347-1-wei.huang2@amd.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 12:42:41AM -0500, Wei Huang wrote:
-> Many SMN thermal registers in Zen CPU families are common across different
-> generations. For long-term code maintenance, it is better to rename these
-> macro and function names to Zen.
-> 
-> Signed-off-by: Wei Huang <wei.huang2@amd.com>
+The i8042_mutex must be held by writers of the AUX and KBD ports, as
+well as users of i8042_command. There were a lot of users of
+i8042_command that were not calling i8042_lock_chip/i8042_unlock_chip.
+This resulted in i8042_commands being issues in between PS/2
+transactions.
 
-Applied.
+This change moves the mutex lock into i8042_command and removes the
+burden of locking the mutex from the callers.
 
-Thanks,
-Guenter
+It is expected that the i8042_mutex is locked before calling
+i8042_aux_write or i8042_kbd_write. This is currently done by the PS/2
+layer via ps2_begin_command and ps2_end_command. Other modules
+(serio_raw) do not currently lock the mutex, so there is still a
+possibility for intermixed commands.
 
-> ---
->  drivers/hwmon/k10temp.c | 56 +++++++++++++++++++++--------------------
->  1 file changed, 29 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/hwmon/k10temp.c b/drivers/hwmon/k10temp.c
-> index 8f12995ec133..f3addb97b021 100644
-> --- a/drivers/hwmon/k10temp.c
-> +++ b/drivers/hwmon/k10temp.c
-> @@ -73,22 +73,24 @@ static DEFINE_MUTEX(nb_smu_ind_mutex);
->  #define F15H_M60H_HARDWARE_TEMP_CTRL_OFFSET	0xd8200c64
->  #define F15H_M60H_REPORTED_TEMP_CTRL_OFFSET	0xd8200ca4
->  
-> -/* F17h M01h Access througn SMN */
-> -#define F17H_M01H_REPORTED_TEMP_CTRL_OFFSET	0x00059800
-> +/* Common for Zen CPU families (Family 17h and 18h) */
-> +#define ZEN_REPORTED_TEMP_CTRL_OFFSET		0x00059800
->  
-> -#define F17H_M70H_CCD_TEMP(x)			(0x00059954 + ((x) * 4))
-> -#define F17H_M70H_CCD_TEMP_VALID		BIT(11)
-> -#define F17H_M70H_CCD_TEMP_MASK			GENMASK(10, 0)
-> +#define ZEN_CCD_TEMP(x)				(0x00059954 + ((x) * 4))
-> +#define ZEN_CCD_TEMP_VALID			BIT(11)
-> +#define ZEN_CCD_TEMP_MASK			GENMASK(10, 0)
->  
-> -#define F17H_M01H_SVI				0x0005A000
-> -#define F17H_M01H_SVI_TEL_PLANE0		(F17H_M01H_SVI + 0xc)
-> -#define F17H_M01H_SVI_TEL_PLANE1		(F17H_M01H_SVI + 0x10)
-> +#define ZEN_CUR_TEMP_SHIFT			21
-> +#define ZEN_CUR_TEMP_RANGE_SEL_MASK		BIT(19)
->  
-> -#define CUR_TEMP_SHIFT				21
-> -#define CUR_TEMP_RANGE_SEL_MASK			BIT(19)
-> +#define ZEN_SVI_BASE				0x0005A000
->  
-> -#define CFACTOR_ICORE				1000000	/* 1A / LSB	*/
-> -#define CFACTOR_ISOC				250000	/* 0.25A / LSB	*/
-> +/* F17h thermal registers through SMN */
-> +#define F17H_M01H_SVI_TEL_PLANE0		(ZEN_SVI_BASE + 0xc)
-> +#define F17H_M01H_SVI_TEL_PLANE1		(ZEN_SVI_BASE + 0x10)
-> +
-> +#define F17H_CFACTOR_ICORE			1000000	/* 1A / LSB	*/
-> +#define F17H_CFACTOR_ISOC			250000	/* 0.25A / LSB	*/
->  
->  struct k10temp_data {
->  	struct pci_dev *pdev;
-> @@ -168,10 +170,10 @@ static void read_tempreg_nb_f15(struct pci_dev *pdev, u32 *regval)
->  			  F15H_M60H_REPORTED_TEMP_CTRL_OFFSET, regval);
->  }
->  
-> -static void read_tempreg_nb_f17(struct pci_dev *pdev, u32 *regval)
-> +static void read_tempreg_nb_zen(struct pci_dev *pdev, u32 *regval)
->  {
->  	amd_smn_read(amd_pci_dev_to_node_id(pdev),
-> -		     F17H_M01H_REPORTED_TEMP_CTRL_OFFSET, regval);
-> +		     ZEN_REPORTED_TEMP_CTRL_OFFSET, regval);
->  }
->  
->  static long get_raw_temp(struct k10temp_data *data)
-> @@ -180,7 +182,7 @@ static long get_raw_temp(struct k10temp_data *data)
->  	long temp;
->  
->  	data->read_tempreg(data->pdev, &regval);
-> -	temp = (regval >> CUR_TEMP_SHIFT) * 125;
-> +	temp = (regval >> ZEN_CUR_TEMP_SHIFT) * 125;
->  	if (regval & data->temp_adjust_mask)
->  		temp -= 49000;
->  	return temp;
-> @@ -288,8 +290,8 @@ static int k10temp_read_temp(struct device *dev, u32 attr, int channel,
->  			break;
->  		case 2 ... 9:		/* Tccd{1-8} */
->  			amd_smn_read(amd_pci_dev_to_node_id(data->pdev),
-> -				     F17H_M70H_CCD_TEMP(channel - 2), &regval);
-> -			*val = (regval & F17H_M70H_CCD_TEMP_MASK) * 125 - 49000;
-> +				     ZEN_CCD_TEMP(channel - 2), &regval);
-> +			*val = (regval & ZEN_CCD_TEMP_MASK) * 125 - 49000;
->  			break;
->  		default:
->  			return -EOPNOTSUPP;
-> @@ -438,7 +440,7 @@ static int svi_show(struct seq_file *s, void *unused)
->  {
->  	struct k10temp_data *data = s->private;
->  
-> -	k10temp_smn_regs_show(s, data->pdev, F17H_M01H_SVI, 32);
-> +	k10temp_smn_regs_show(s, data->pdev, ZEN_SVI_BASE, 32);
->  	return 0;
->  }
->  DEFINE_SHOW_ATTRIBUTE(svi);
-> @@ -448,7 +450,7 @@ static int thm_show(struct seq_file *s, void *unused)
->  	struct k10temp_data *data = s->private;
->  
->  	k10temp_smn_regs_show(s, data->pdev,
-> -			      F17H_M01H_REPORTED_TEMP_CTRL_OFFSET, 256);
-> +			      ZEN_REPORTED_TEMP_CTRL_OFFSET, 256);
->  	return 0;
->  }
->  DEFINE_SHOW_ATTRIBUTE(thm);
-> @@ -528,8 +530,8 @@ static void k10temp_get_ccd_support(struct pci_dev *pdev,
->  
->  	for (i = 0; i < limit; i++) {
->  		amd_smn_read(amd_pci_dev_to_node_id(pdev),
-> -			     F17H_M70H_CCD_TEMP(i), &regval);
-> -		if (regval & F17H_M70H_CCD_TEMP_VALID)
-> +			     ZEN_CCD_TEMP(i), &regval);
-> +		if (regval & ZEN_CCD_TEMP_VALID)
->  			data->show_temp |= BIT(TCCD_BIT(i));
->  	}
->  }
-> @@ -565,8 +567,8 @@ static int k10temp_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  		data->read_htcreg = read_htcreg_nb_f15;
->  		data->read_tempreg = read_tempreg_nb_f15;
->  	} else if (boot_cpu_data.x86 == 0x17 || boot_cpu_data.x86 == 0x18) {
-> -		data->temp_adjust_mask = CUR_TEMP_RANGE_SEL_MASK;
-> -		data->read_tempreg = read_tempreg_nb_f17;
-> +		data->temp_adjust_mask = ZEN_CUR_TEMP_RANGE_SEL_MASK;
-> +		data->read_tempreg = read_tempreg_nb_zen;
->  		data->show_temp |= BIT(TDIE_BIT);	/* show Tdie */
->  		data->is_zen = true;
->  
-> @@ -578,15 +580,15 @@ static int k10temp_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  			data->show_current = !is_threadripper() && !is_epyc();
->  			data->svi_addr[0] = F17H_M01H_SVI_TEL_PLANE0;
->  			data->svi_addr[1] = F17H_M01H_SVI_TEL_PLANE1;
-> -			data->cfactor[0] = CFACTOR_ICORE;
-> -			data->cfactor[1] = CFACTOR_ISOC;
-> +			data->cfactor[0] = F17H_CFACTOR_ICORE;
-> +			data->cfactor[1] = F17H_CFACTOR_ISOC;
->  			k10temp_get_ccd_support(pdev, data, 4);
->  			break;
->  		case 0x31:	/* Zen2 Threadripper */
->  		case 0x71:	/* Zen2 */
->  			data->show_current = !is_threadripper() && !is_epyc();
-> -			data->cfactor[0] = CFACTOR_ICORE;
-> -			data->cfactor[1] = CFACTOR_ISOC;
-> +			data->cfactor[0] = F17H_CFACTOR_ICORE;
-> +			data->cfactor[1] = F17H_CFACTOR_ISOC;
->  			data->svi_addr[0] = F17H_M01H_SVI_TEL_PLANE1;
->  			data->svi_addr[1] = F17H_M01H_SVI_TEL_PLANE0;
->  			k10temp_get_ccd_support(pdev, data, 8);
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+---
+
+ drivers/input/serio/i8042.c         | 29 ++++++++++++++---------------
+ drivers/leds/leds-clevo-mail.c      |  9 ---------
+ drivers/platform/x86/acer-wmi.c     |  2 --
+ drivers/platform/x86/amilo-rfkill.c |  2 --
+ include/linux/i8042.h               | 10 ----------
+ 5 files changed, 14 insertions(+), 38 deletions(-)
+
+diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
+index 0dddf273afd94..8590e51bcc087 100644
+--- a/drivers/input/serio/i8042.c
++++ b/drivers/input/serio/i8042.c
+@@ -137,8 +137,7 @@ static DEFINE_SPINLOCK(i8042_lock);
+ 
+ /*
+  * Writers to AUX and KBD ports as well as users issuing i8042_command
+- * directly should acquire i8042_mutex (by means of calling
+- * i8042_lock_chip() and i8042_unlock_ship() helpers) to ensure that
++ * directly should acquire i8042_mutex to ensure that
+  * they do not disturb each other (unfortunately in many i8042
+  * implementations write to one of the ports will immediately abort
+  * command that is being processed by another port).
+@@ -173,18 +172,6 @@ static irqreturn_t i8042_interrupt(int irq, void *dev_id);
+ static bool (*i8042_platform_filter)(unsigned char data, unsigned char str,
+ 				     struct serio *serio);
+ 
+-void i8042_lock_chip(void)
+-{
+-	mutex_lock(&i8042_mutex);
+-}
+-EXPORT_SYMBOL(i8042_lock_chip);
+-
+-void i8042_unlock_chip(void)
+-{
+-	mutex_unlock(&i8042_mutex);
+-}
+-EXPORT_SYMBOL(i8042_unlock_chip);
+-
+ int i8042_install_filter(bool (*filter)(unsigned char data, unsigned char str,
+ 					struct serio *serio))
+ {
+@@ -343,10 +330,14 @@ int i8042_command(unsigned char *param, int command)
+ 	unsigned long flags;
+ 	int retval;
+ 
++	mutex_lock(&i8042_mutex);
++
+ 	spin_lock_irqsave(&i8042_lock, flags);
+ 	retval = __i8042_command(param, command);
+ 	spin_unlock_irqrestore(&i8042_lock, flags);
+ 
++	 mutex_unlock(&i8042_mutex);
++
+ 	return retval;
+ }
+ EXPORT_SYMBOL(i8042_command);
+@@ -379,10 +370,18 @@ static int i8042_kbd_write(struct serio *port, unsigned char c)
+ static int i8042_aux_write(struct serio *serio, unsigned char c)
+ {
+ 	struct i8042_port *port = serio->port_data;
++	unsigned long flags;
++	int retval = 0;
++
++	spin_lock_irqsave(&i8042_lock, flags);
+ 
+-	return i8042_command(&c, port->mux == -1 ?
++	retval = __i8042_command(&c, port->mux == -1 ?
+ 					I8042_CMD_AUX_SEND :
+ 					I8042_CMD_MUX_SEND + port->mux);
++
++	spin_unlock_irqrestore(&i8042_lock, flags);
++
++	return retval;
+ }
+ 
+ 
+diff --git a/drivers/leds/leds-clevo-mail.c b/drivers/leds/leds-clevo-mail.c
+index f512e99b976b1..6c3d7e54f95cf 100644
+--- a/drivers/leds/leds-clevo-mail.c
++++ b/drivers/leds/leds-clevo-mail.c
+@@ -95,17 +95,12 @@ MODULE_DEVICE_TABLE(dmi, clevo_mail_led_dmi_table);
+ static void clevo_mail_led_set(struct led_classdev *led_cdev,
+ 				enum led_brightness value)
+ {
+-	i8042_lock_chip();
+-
+ 	if (value == LED_OFF)
+ 		i8042_command(NULL, CLEVO_MAIL_LED_OFF);
+ 	else if (value <= LED_HALF)
+ 		i8042_command(NULL, CLEVO_MAIL_LED_BLINK_0_5HZ);
+ 	else
+ 		i8042_command(NULL, CLEVO_MAIL_LED_BLINK_1HZ);
+-
+-	i8042_unlock_chip();
+-
+ }
+ 
+ static int clevo_mail_led_blink(struct led_classdev *led_cdev,
+@@ -114,8 +109,6 @@ static int clevo_mail_led_blink(struct led_classdev *led_cdev,
+ {
+ 	int status = -EINVAL;
+ 
+-	i8042_lock_chip();
+-
+ 	if (*delay_on == 0 /* ms */ && *delay_off == 0 /* ms */) {
+ 		/* Special case: the leds subsystem requested us to
+ 		 * chose one user friendly blinking of the LED, and
+@@ -142,8 +135,6 @@ static int clevo_mail_led_blink(struct led_classdev *led_cdev,
+ 		       *delay_on, *delay_off);
+ 	}
+ 
+-	i8042_unlock_chip();
+-
+ 	return status;
+ }
+ 
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index 60c18f21588dd..6cb6f800503b2 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -1044,9 +1044,7 @@ static acpi_status WMID_set_u32(u32 value, u32 cap)
+ 			return AE_BAD_PARAMETER;
+ 		if (quirks->mailled == 1) {
+ 			param = value ? 0x92 : 0x93;
+-			i8042_lock_chip();
+ 			i8042_command(&param, 0x1059);
+-			i8042_unlock_chip();
+ 			return 0;
+ 		}
+ 		break;
+diff --git a/drivers/platform/x86/amilo-rfkill.c b/drivers/platform/x86/amilo-rfkill.c
+index 493e169c8f615..ce68d0c9ac29f 100644
+--- a/drivers/platform/x86/amilo-rfkill.c
++++ b/drivers/platform/x86/amilo-rfkill.c
+@@ -30,9 +30,7 @@ static int amilo_a1655_rfkill_set_block(void *data, bool blocked)
+ 	u8 param = blocked ? A1655_WIFI_OFF : A1655_WIFI_ON;
+ 	int rc;
+ 
+-	i8042_lock_chip();
+ 	rc = i8042_command(&param, A1655_WIFI_COMMAND);
+-	i8042_unlock_chip();
+ 	return rc;
+ }
+ 
+diff --git a/include/linux/i8042.h b/include/linux/i8042.h
+index 0261e2fb36364..1c081081c161d 100644
+--- a/include/linux/i8042.h
++++ b/include/linux/i8042.h
+@@ -55,8 +55,6 @@ struct serio;
+ 
+ #if defined(CONFIG_SERIO_I8042) || defined(CONFIG_SERIO_I8042_MODULE)
+ 
+-void i8042_lock_chip(void);
+-void i8042_unlock_chip(void);
+ int i8042_command(unsigned char *param, int command);
+ int i8042_install_filter(bool (*filter)(unsigned char data, unsigned char str,
+ 					struct serio *serio));
+@@ -65,14 +63,6 @@ int i8042_remove_filter(bool (*filter)(unsigned char data, unsigned char str,
+ 
+ #else
+ 
+-static inline void i8042_lock_chip(void)
+-{
+-}
+-
+-static inline void i8042_unlock_chip(void)
+-{
+-}
+-
+ static inline int i8042_command(unsigned char *param, int command)
+ {
+ 	return -ENODEV;
+-- 
+2.28.0.297.g1956fa8f8d-goog
+
