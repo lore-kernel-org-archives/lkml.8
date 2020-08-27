@@ -2,117 +2,147 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCEBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5799FC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A45F2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:55:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598550954;
-	bh=6fu/00yovsv+WyNJlrR+vlvmUMNWyprHqNtSN/fD2h4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=t+VUUx+VmsGRv/JhydlUsvBJ5HK2HoKDllgS/A4lXrMOTqDN92nvarOTF3ErrtvBo
-	 QeoDIzIqOO5u4PinuC1vuMvWussddbAXzQnte1bAa8ksXA4XyKAYuQFLg4Eue1CvXH
-	 TkA6WwqZoOhCopPmIodhF4z3xe74F/0WfMsiq9pA=
+	by mail.kernel.org (Postfix) with ESMTP id 2DAC12080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:56:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gtp1cONN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgH0Rzx (ORCPT
+        id S1726939AbgH0R4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:55:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34026 "EHLO
+        Thu, 27 Aug 2020 13:56:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbgH0Rzx (ORCPT
+        with ESMTP id S1726322AbgH0R4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:55:53 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4C55C06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:55:52 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id g6so7401831ljn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:55:52 -0700 (PDT)
+        Thu, 27 Aug 2020 13:56:35 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5E4C061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:56:35 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id i20so1455747vkk.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:56:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aBxw2hdQPG9HwPnbg4ROvvprorSoqDpTe8GqtXP5pJ0=;
-        b=gEx+R3IPWaIJ1rgeNNwr+K1FkcP5eJOLC7ZA9dQ9Cv0uo0pZjd3WeqmWckEgGWoYrU
-         ZAG7LNkdYBfRW3VrlUxFVNYbKu1wyi/QwU3U8A/KnnoM89gRInpWvJhvjjqCkfZnBCSn
-         5eQEyXLyrqPdWNsvej8MpXfKFNrgFKsRiKyn4=
+        bh=f3B/Q02yvB9Yb/6f99Yh5bgWBIK4FmspfwcBGWYIhaQ=;
+        b=gtp1cONNLRdqCbirQgaQZFoJMnU2+Pp93TVFD9+9a7EbozuUQabLEhaFWeodWKi/6A
+         5yFTsxABrmxVdN5KKreOg0m5oB7Ffh7B4tvpdaZLlNPDvCQ2GiUUl3ne4fQ1a5jzMeZq
+         gnsk8wIUwedu254Lobh9MlJxfV9jnafA5uwds=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aBxw2hdQPG9HwPnbg4ROvvprorSoqDpTe8GqtXP5pJ0=;
-        b=ODdXlcLmKiC5t3H74Y3KurhaRlygojfoO4fl0ZtB6sMKxDNpJMjVFxAGmCxZLKSxVT
-         bQWk9/AI9oh6KgEdcEzkHq8gGaTRzGdgjzw0tpAwram3Odw72KjHtu6pQR4mKBfocrGr
-         0goTBjy1+GK4B++A/cxgP0WCnoZUZO7euyMxX1L38TDZwrbnbVSi8HbEgebMcFDNL9CX
-         e88s7TanW+oTUyByMiEUL8KE753dJOUo/7HsiKxPiZmWVGXFUmIR79+4z6BVN0c1R2qr
-         HDdGgszDrqI4sJP11LteTCF5390sKDq7J6d/qRpAx2OL0dHjPm5N7HuyLnpDbqJcTQ2n
-         9hsA==
-X-Gm-Message-State: AOAM530TIk4k/2h3IS2N0md1Yg0citePcJj8J549Cvk9R8v1kXgR1YRj
-        +Y5JKEwZlaVHMFDUqW5i3lOx2rZBvLWlVA==
-X-Google-Smtp-Source: ABdhPJyFfJv2oqdYFRyslx9a2eJVBscq5o5LKSSZnQPTnwzt2HJWcIQBP9sXpRaOTJsCkdsrCzigHA==
-X-Received: by 2002:a2e:b81a:: with SMTP id u26mr11056334ljo.241.1598550950646;
-        Thu, 27 Aug 2020 10:55:50 -0700 (PDT)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id j7sm622516ljg.5.2020.08.27.10.55.48
+        bh=f3B/Q02yvB9Yb/6f99Yh5bgWBIK4FmspfwcBGWYIhaQ=;
+        b=YQsoosZg7HWq8wlAv+z59tnaeLVRulpQdA1rwfJfx/Tzp0MWvE61i4onaGKj5mz7lC
+         jbx9UIuRBP6CynTGT3WLTuSsni2Q7dbYgEi1Sp0rl98p2lOCH5wnKqPEGxfc/fSs9S1q
+         RJWMD+jzIWLU/YVErNFNT6sEo5G1TFexP9fouTEoHVr4yTVzlCuC/sTJgiO5PmCWlIX0
+         PCiOvtv/osN6yUbrR42oNgdZ7TIEdpfYX/m1ErtVf0Pnlqlst/DMxXxEr6Yd7PNZMmC0
+         Jud8/hdZ5FaxdMxEluOFTHA4hDubIpE3FEbTTgDYKEujSsf8KDdn4nombfk669o3BN7v
+         qkig==
+X-Gm-Message-State: AOAM531rD6HsXrJmocftWCnOvkLwufXN9Ot1Q3WxJ29qoyGkjGZjbdBE
+        J4ExIM02U1ay+Pm3ozkRzNwSrTTa7Zb6YmMi
+X-Google-Smtp-Source: ABdhPJyduakk4ayMp13Mr5lsFxcJGIcsi3ORY6tcITKgWKQWO66bd11uRpWoiyGeDdqowEr3XGDfBg==
+X-Received: by 2002:a1f:734a:: with SMTP id o71mr13965821vkc.89.1598550993527;
+        Thu, 27 Aug 2020 10:56:33 -0700 (PDT)
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
+        by smtp.gmail.com with ESMTPSA id j20sm487984vsg.18.2020.08.27.10.56.32
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 10:55:49 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id 185so7414638ljj.7
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:55:48 -0700 (PDT)
-X-Received: by 2002:a2e:b008:: with SMTP id y8mr9098156ljk.421.1598550948550;
- Thu, 27 Aug 2020 10:55:48 -0700 (PDT)
+        Thu, 27 Aug 2020 10:56:32 -0700 (PDT)
+Received: by mail-vs1-f48.google.com with SMTP id a1so3286496vsp.4
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:56:32 -0700 (PDT)
+X-Received: by 2002:a67:facb:: with SMTP id g11mr2701403vsq.56.1598550991774;
+ Thu, 27 Aug 2020 10:56:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <202008271145.xE8qIAjp%lkp@intel.com> <20200827080558.GA3024@gondor.apana.org.au>
- <CAMj1kXHJrLtnJWYBKBYRtNHVS6rv51+crMsjLEnSqkud0BBaWw@mail.gmail.com>
- <20200827082447.GA3185@gondor.apana.org.au> <CAHk-=wg2RCgmW_KM8Gf9-3VJW1K2-FTXQsGeGHirBFsG5zPbsg@mail.gmail.com>
-In-Reply-To: <CAHk-=wg2RCgmW_KM8Gf9-3VJW1K2-FTXQsGeGHirBFsG5zPbsg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 27 Aug 2020 10:55:32 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgXW=YLxGN0QVpp-1w5GDd2pf1W-FqY15poKzoVfik2qA@mail.gmail.com>
-Message-ID: <CAHk-=wgXW=YLxGN0QVpp-1w5GDd2pf1W-FqY15poKzoVfik2qA@mail.gmail.com>
-Subject: Re: lib/crypto/chacha.c:65:1: warning: the frame size of 1604 bytes
- is larger than 1024 bytes
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        kernel test robot <lkp@intel.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kbuild-all@lists.01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+References: <1598492651-9072-1-git-send-email-johnny.chuang.emc@gmail.com>
+In-Reply-To: <1598492651-9072-1-git-send-email-johnny.chuang.emc@gmail.com>
+From:   Harry Cutts <hcutts@chromium.org>
+Date:   Thu, 27 Aug 2020 10:56:20 -0700
+X-Gmail-Original-Message-ID: <CA+jURctrQcKsGwxZriX8bD3AQr-yh_J_Z7kkP+6HtD72Gt5DUw@mail.gmail.com>
+Message-ID: <CA+jURctrQcKsGwxZriX8bD3AQr-yh_J_Z7kkP+6HtD72Gt5DUw@mail.gmail.com>
+Subject: Re: [PATCH v2] Input: elants_i2c - Report resolution of
+ ABS_MT_TOUCH_MAJOR by FW information.
+To:     Johnny Chuang <johnny.chuang.emc@gmail.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Peter Hutterer <peter.hutterer@who-t.net>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        James Chen <james.chen@emc.com.tw>,
+        Jennifer Tsai <jennifer.tsai@emc.com.tw>,
+        Paul Liang <paul.liang@emc.com.tw>,
+        Jeff Chuang <jeff.chuang@emc.com.tw>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 10:34 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Wed, 26 Aug 2020 at 18:44, Johnny Chuang <johnny.chuang.emc@gmail.com> wrote:
 >
-> How are you guys testing? I have UBSAN and GCOV on, and don't see
-> crazy frames on either i386 or x86-64.
+> This patch adds a new behavior to report touch major resolution
+> based on information provided by firmware.
+>
+> In initial process, driver acquires touch information from touch ic.
+> This information contains of one flag about reporting resolution of
+> ABS_MT_TOUCH_MAJOR is needed, or not.
+> Touch driver will report touch major resolution after geting this flag.
 
-Oh, never mind. I also have COMPILE_TEST on, so it ends up disabling
-GCOV_PROFILE_ALL and UBSAN_SANITIZE_ALL.
+I think this paragraph needs updating now that the firmware's
+reporting the actual resolution instead of a flag.
 
-And yeah, this seems to be a gcc bug. It generates a ton of stack
-slots for temporaries. It's -fsanitize=object-size that seems to do
-it.
+>
+> Signed-off-by: Johnny Chuang <johnny.chuang.emc@gmail.com>
+> ---
+> Changes in v2:
+>   - register real resolution instead of true/false.
+> ---
+>  drivers/input/touchscreen/elants_i2c.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+> index b0bd5bb..dc7f4a5 100644
+> --- a/drivers/input/touchscreen/elants_i2c.c
+> +++ b/drivers/input/touchscreen/elants_i2c.c
+> @@ -151,6 +151,7 @@ struct elants_data {
+>
+>         bool wake_irq_enabled;
+>         bool keep_power_in_suspend;
+> +       u8 report_major_resolution;
+>
+>         /* Must be last to be used for DMA operations */
+>         u8 buf[MAX_PACKET_SIZE] ____cacheline_aligned;
+> @@ -459,6 +460,9 @@ static int elants_i2c_query_ts_info(struct elants_data *ts)
+>         rows = resp[2] + resp[6] + resp[10];
+>         cols = resp[3] + resp[7] + resp[11];
+>
+> +       /* Decide if report resolution of ABS_MT_TOUCH_MAJOR */
+> +       ts->report_major_resolution = resp[16];
+> +
+>         /* Process mm_to_pixel information */
+>         error = elants_i2c_execute_command(client,
+>                                            get_osr_cmd, sizeof(get_osr_cmd),
+> @@ -1325,6 +1329,8 @@ static int elants_i2c_probe(struct i2c_client *client,
+>                              0, MT_TOOL_PALM, 0, 0);
+>         input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
+>         input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
+> +       if (ts->report_major_resolution > 0)
+> +               input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, ts->report_major_resolution);
+>
+>         touchscreen_parse_properties(ts->input, true, &ts->prop);
+>
+> --
+> 2.7.4
+>
 
-And "-fstack-reuse=all" doesn't seem to make any difference.
-
-So I think
-
- (a) our stack size check is good to catch this
-
- (b) gcc and -fsanitize=object-size is basically an unusable combination
-
-and it's not a bug in the kernel.
-
-                Linus
+Harry Cutts
+Chrome OS Touch/Input team
