@@ -2,136 +2,97 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D685EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5764C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9BD2075B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 804832075B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:22:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZZ/ZDc1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbgH0KW3 (ORCPT
+        id S1728746AbgH0KWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:22:29 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:40438 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728466AbgH0KWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:22:23 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9002C4E592AF5C867A64;
-        Thu, 27 Aug 2020 18:22:19 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 27 Aug 2020 18:22:13 +0800
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-To:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Yuqi Jin <jinyuqi@huawei.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>
-Subject: [PATCH] fs: Optimized fget to improve performance
-Date:   Thu, 27 Aug 2020 18:19:44 +0800
-Message-ID: <1598523584-25601-1-git-send-email-zhangshaokun@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 27 Aug 2020 06:22:30 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:38441 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728373AbgH0KWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 06:22:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598523744; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=hTOLOQwix50qeKLN6qzBgIpo8G7OJqxehu6/pkQXkIc=;
+ b=ZZ/ZDc1Ni3u4CwcUlDc9mvuLOt4rs++gOWuq1NgvK41I1dcODdST3ppulezUu/g6PInrYx6u
+ 2EK/1KoCPjVQvpkzZWxvO+RqH11WW+wesL+pj25NmRd/FiQMT3RfhIQpNOTT/SmTWlmtGpb3
+ QF7VilEQ5q2txWqryb3GNOdyxRk=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5f478940db22b129dfe56ed1 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 10:21:52
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 35723C433AD; Thu, 27 Aug 2020 10:21:51 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id ACD8BC433C6;
+        Thu, 27 Aug 2020 10:21:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ACD8BC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 03/16] wireless: ath: convert tasklets to use new
+ tasklet_setup() API
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200817090637.26887-4-allen.cryptic@gmail.com>
+References: <20200817090637.26887-4-allen.cryptic@gmail.com>
+To:     Allen Pais <allen.cryptic@gmail.com>
+Cc:     kuba@kernel.org, jirislaby@kernel.org, mickflemm@gmail.com,
+        mcgrof@kernel.org, chunkeey@googlemail.com,
+        Larry.Finger@lwfinger.net, stas.yakovlev@gmail.com,
+        helmut.schaa@googlemail.com, pkshih@realtek.com,
+        yhchuang@realtek.com, dsd@gentoo.org, kune@deine-taler.de,
+        keescook@chromium.org, ath11k@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, b43-dev@lists.infradead.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, Allen Pais <allen.lkml@gmail.com>,
+        Romain Perier <romain.perier@gmail.com>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200827102151.35723C433AD@smtp.codeaurora.org>
+Date:   Thu, 27 Aug 2020 10:21:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuqi Jin <jinyuqi@huawei.com>
+Allen Pais <allen.cryptic@gmail.com> wrote:
 
-It is well known that the performance of atomic_add is better than that of
-atomic_cmpxchg.
-The initial value of @f_count is 1. While @f_count is increased by 1 in
-__fget_files, it will go through three phases: > 0, < 0, and = 0. When the
-fixed value 0 is used as the condition for terminating the increase of 1,
-only atomic_cmpxchg can be used. When we use < 0 as the condition for
-stopping plus 1, we can use atomic_add to obtain better performance.
+> In preparation for unconditionally passing the
+> struct tasklet_struct pointer to all tasklet
+> callbacks, switch to using the new tasklet_setup()
+> and from_tasklet() to pass the tasklet pointer explicitly.
+> 
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+> Acked-by: Christian Lamparter <chunkeey@gmail.com>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-we test syscall in unixbench on Huawei Kunpeng920(arm64). We've got a 132%
-performance boost. 
+Patch applied to ath-next branch of ath.git, thanks.
 
-with this patch and the patch [1]
-System Call Overhead                        9516926.2 lps   (10.0 s, 1 samples)
+de7dbc2dbef7 carl9170: convert tasklets to use new tasklet_setup() API
 
-System Benchmarks Partial Index              BASELINE       RESULT    INDEX
-System Call Overhead                          15000.0    9516926.2   6344.6
-                                                                   ========
-System Benchmarks Index Score (Partial Only)                         6344.6
-
-with this patch and without the patch [1]
-System Call Overhead                        5290449.3 lps   (10.0 s, 1 samples)
-
-System Benchmarks Partial Index              BASELINE       RESULT    INDEX
-System Call Overhead                          15000.0    5290449.3   3527.0
-                                                                   ========
-System Benchmarks Index Score (Partial Only)                         3527.0
-
-without any patch
-System Call Overhead                        4102310.5 lps   (10.0 s, 1 samples)
-
-System Benchmarks Partial Index              BASELINE       RESULT    INDEX
-System Call Overhead                          15000.0    4102310.5   2734.9
-                                                                   ========
-System Benchmarks Index Score (Partial Only)                         2734.9
-
-[1] https://lkml.org/lkml/2020/6/24/283
-
-Cc: kernel test robot <rong.a.chen@intel.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Yuqi Jin <jinyuqi@huawei.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
----
-Hi Rong,
-
-Can you help to test this patch individually and with [1] together on
-your platform please? [1] has been tested on your platform[2].
-
-[2] https://lkml.org/lkml/2020/7/8/227
-
- include/linux/fs.h | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index e019ea2f1347..2a9c2a30dc58 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -972,8 +972,19 @@ static inline struct file *get_file(struct file *f)
- 	atomic_long_inc(&f->f_count);
- 	return f;
- }
-+
-+static inline bool get_file_unless_negative(atomic_long_t *v, long a)
-+{
-+	long c = atomic_long_read(v);
-+
-+	if (c <= 0)
-+		return 0;
-+
-+	return atomic_long_add_return(a, v) - 1;
-+}
-+
- #define get_file_rcu_many(x, cnt)	\
--	atomic_long_add_unless(&(x)->f_count, (cnt), 0)
-+	get_file_unless_negative(&(x)->f_count, (cnt))
- #define get_file_rcu(x) get_file_rcu_many((x), 1)
- #define file_count(x)	atomic_long_read(&(x)->f_count)
- 
 -- 
-2.7.4
+https://patchwork.kernel.org/patch/11717455/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
