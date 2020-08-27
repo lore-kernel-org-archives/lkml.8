@@ -2,159 +2,143 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E153C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B99C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:40:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE1D20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A47920714
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:40:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OdHs4L9U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jD6rxi6R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgH0TjQ (ORCPT
+        id S1726967AbgH0TkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:39:16 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:44211 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgH0TjP (ORCPT
+        Thu, 27 Aug 2020 15:40:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbgH0TkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:39:15 -0400
-Received: by mail-il1-f193.google.com with SMTP id j9so5878685ilc.11;
-        Thu, 27 Aug 2020 12:39:14 -0700 (PDT)
+        Thu, 27 Aug 2020 15:40:11 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9319C061264;
+        Thu, 27 Aug 2020 12:40:11 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id v15so4090982pgh.6;
+        Thu, 27 Aug 2020 12:40:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NOB1L9Z2LmUKGGeFyj84nON/LDrM3AY4psgNY87vymw=;
-        b=OdHs4L9Ujfp3PQmb2CnawHfr6pib3Mou2W4IqK9gK/q74g/vSmAY5IibNlwwPXjL0b
-         5NGlUNmZ6k0DF03WOSrOLhFPmdu4PzcoquTboVrApL8RmYXVgXNZKgzeq+f4YEDLMDof
-         Su+ub46724WODtxB8KZL/mIuhurVshHcwRUK9T2XIgcbvO4O/tfNIgdbT1vkbDS4fdgw
-         ekxI471ss7zqC1dsg9I9qcROP5g5MM+Zd9qCmotFs4sceCnUzxkMZnQbkZ8sM8X1hUmH
-         oiHWjpk4l9W6NoyVS8q3C5saAs2d36saw/zDSuhCQVB8b95clOQwGeHMRd2NyEVAtBp/
-         4BPg==
+         :cc;
+        bh=Z5MuJjj2BRfbffbktmUArXq0jWI8OrbgvmEfcOOymls=;
+        b=jD6rxi6RNgMg4A02GWwlrSmHVsI6daGM+MmqCIfnw+vIJT9IGKVs7tbi3VQAQAbCE3
+         CjrQHAJbjT2+9zVMdW0qpamSo7TWDvJg3/cFjdKU6DsI0Ycld94iMACgBtWDSvzEivXr
+         w955vfZwxMUuvtc0StzNJ1jVrXsZVXWzpzyJT7Mm0PqUhEOJ6CDb/2NEUN30WwhgVY8e
+         zOxUvFYX3zCNDEdw2wF5xJJSdYQkqUXtyQ4TI9P9+A+MqI54GrJChGoqHsA8lPIKeE2r
+         kdb7eqLbYLSDUKZquR0uwI6D58REZf9bwpjXV6RzQ481l8xmLPeBM/DGSHj8NYk2n1jb
+         5CyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NOB1L9Z2LmUKGGeFyj84nON/LDrM3AY4psgNY87vymw=;
-        b=QOoPcCABVccNguFA4Eo5W9IrN/Ej3/nhNQJcj48hd8yfO/hEAe282RkrdFRQJYDnBu
-         Y5vyuRbCYwJRit1Z+IglW4NiWzcDd9j3LRXYUA65tRIXn58JIhUahAloGy+R2nFMi8Wz
-         wa7P5WH6+5Uf4f1VlEOBtiAoruHSJjUuhJ4/hDbV34jpmcH/L46N1Xan5fhWMa9eKhJT
-         qNkGbUP8BDtjOu4zxjcQZMc+yxUfuNRtdeN4ambChcMZiq3sw38fc9A/NDTfLvp2bmQF
-         wBlKDpzqL0grFjJxTT9zzw/50UdbM9ezXf7Sd7dz03u5Bhyc4yEkp3GO4XX6pzouzbZf
-         VkNQ==
-X-Gm-Message-State: AOAM532U/shoH0cTGRHR6lzIXGmyigPmVIRFfYOmjS1uljA1/9/OPdqN
-        qe5yefnRXKV+Lh3p6ZNzlF2bC70iSq/dvIlaFOk=
-X-Google-Smtp-Source: ABdhPJz3AFlP3Kd2dCES2TE657Fj/aB8MwwtB77fXJN6/mzwzKCWE10R5tOLPhiUJGyp0tLFgg6gBnnGIoHe5BhRZaY=
-X-Received: by 2002:a92:5e4c:: with SMTP id s73mr18025364ilb.151.1598557093725;
- Thu, 27 Aug 2020 12:38:13 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=Z5MuJjj2BRfbffbktmUArXq0jWI8OrbgvmEfcOOymls=;
+        b=ti/ZCIfqZ48VlHFxm54I4xu3ccheYqJDXUrx2KjhJCJmZzGGNUAhA35AQioffS3Azg
+         nsidnCsSta/mlJP/gHabr3s04y/flRvy5Nk8hmbUdOm4ZSLF6PAv+Kvd/pwFWlDUxxTr
+         Er61kTiTir2wgDkOEJrf1lqVOUjjJeFlSJGtWRfX6mIqhAFaNEwJMAiPDzYnqVHM1f42
+         RsjkYMPWQ6yuMEsebHP5tfb1wmWiPfZ1rUTmMRQZU7JdN42i58T3kbnHZg7kFMw0Ckrv
+         Kweck6BUuiJ59duj6sVf5O1xUuF2dW7fjjjx9T9/m9O5DMmm+tbkowf/mB1QgHOOAQn2
+         THxg==
+X-Gm-Message-State: AOAM532HIZNyLf8IhJwSz8Rf4Mxov/xDNklIhTUSwQdirsg4M5r41Brb
+        hLL8z22Veg9MlzEi0YnCclPtqt3Me5zoj5Wveo4=
+X-Google-Smtp-Source: ABdhPJyPfAs6F4scl/LPTaagO1N/0A6aEX5LL2g/s14gO2zqJshHDT5Mu870D8LHna1d3azm8Pri1UOohGi10Tv++TE=
+X-Received: by 2002:a63:ec18:: with SMTP id j24mr15213316pgh.74.1598557211293;
+ Thu, 27 Aug 2020 12:40:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <a770d45d-b147-a8c5-b7f8-30d668cbed84@intel.com> <4BDFD364-798C-4537-A88E-F94F101F524B@amacapital.net>
-In-Reply-To: <4BDFD364-798C-4537-A88E-F94F101F524B@amacapital.net>
-From:   "H.J. Lu" <hjl.tools@gmail.com>
-Date:   Thu, 27 Aug 2020 12:37:37 -0700
-Message-ID: <CAMe9rOoTjSwRSPuqP6RKkDzPA_VPh5gVYRVFJ-ezAD4Et-FUng@mail.gmail.com>
-Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
- shadow stack
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     "Yu, Yu-cheng" <yu-cheng.yu@intel.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
+References: <20200827185829.30096-1-krzk@kernel.org> <20200827185829.30096-8-krzk@kernel.org>
+In-Reply-To: <20200827185829.30096-8-krzk@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 27 Aug 2020 22:39:54 +0300
+Message-ID: <CAHp75VcHpPTAJxd9bTbEkEW=4F1FCzTzHS=DCDWnvsjjXvMV=A@mail.gmail.com>
+Subject: Re: [PATCH v3 07/27] Input: bu21013_ts - Simplify with dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 11:56 AM Andy Lutomirski <luto@amacapital.net> wrot=
-e:
+On Thu, Aug 27, 2020 at 9:59 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 >
+> ---
 >
-> > On Aug 27, 2020, at 11:13 AM, Yu, Yu-cheng <yu-cheng.yu@intel.com> wrot=
-e:
-> >
-> > =EF=BB=BFOn 8/27/2020 6:36 AM, Florian Weimer wrote:
-> >> * H. J. Lu:
-> >>>> On Thu, Aug 27, 2020 at 6:19 AM Florian Weimer <fweimer@redhat.com> =
-wrote:
-> >>>>>
-> >>>>> * Dave Martin:
-> >>>>>
-> >>>>>> You're right that this has implications: for i386, libc probably p=
-ulls
-> >>>>>> more arguments off the stack than are really there in some situati=
-ons.
-> >>>>>> This isn't a new problem though.  There are already generic prctls=
- with
-> >>>>>> fewer than 4 args that are used on x86.
-> >>>>>
-> >>>>> As originally posted, glibc prctl would have to know that it has to=
- pull
-> >>>>> an u64 argument off the argument list for ARCH_X86_CET_DISABLE.  Bu=
-t
-> >>>>> then the u64 argument is a problem for arch_prctl as well.
-> >>>>>
-> >>>
-> >>> Argument of ARCH_X86_CET_DISABLE is int and passed in register.
-> >> The commit message and the C source say otherwise, I think (not sure
-> >> about the C source, not a kernel hacker).
-> >
-> > H.J. Lu suggested that we fix x86 arch_prctl() to take four arguments, =
-and then keep MMAP_SHSTK as an arch_prctl().  Because now the map flags and=
- size are all in registers, this also solves problems being pointed out ear=
-lier.  Without a wrapper, the shadow stack mmap call (from user space) will=
- be:
-> >
-> > syscall(_NR_arch_prctl, ARCH_X86_CET_MMAP_SHSTK, size, MAP_32BIT).
+> Changes since v1:
+> 1. Remove unneeded PTR_ERR_OR_ZERO, as pointed by Andy.
+> ---
+>  drivers/input/touchscreen/bu21013_ts.c | 17 ++++++-----------
+>  1 file changed, 6 insertions(+), 11 deletions(-)
 >
-> I admit I don=E2=80=99t see a show stopping technical reason we can=E2=80=
-=99t add arguments to an existing syscall, but I=E2=80=99m pretty sure it=
-=E2=80=99s unprecedented, and it doesn=E2=80=99t seem like a good idea.
+> diff --git a/drivers/input/touchscreen/bu21013_ts.c b/drivers/input/touchscreen/bu21013_ts.c
+> index 2f1f0d7607f8..86bd38243d6c 100644
+> --- a/drivers/input/touchscreen/bu21013_ts.c
+> +++ b/drivers/input/touchscreen/bu21013_ts.c
+> @@ -496,12 +496,10 @@ static int bu21013_probe(struct i2c_client *client,
+>
+>         /* Named "CS" on the chip, DT binding is "reset" */
+>         ts->cs_gpiod = devm_gpiod_get(&client->dev, "reset", GPIOD_OUT_HIGH);
+> -       error = PTR_ERR_OR_ZERO(ts->cs_gpiod);
+> -       if (error) {
+> -               if (error != -EPROBE_DEFER)
+> -                       dev_err(&client->dev, "failed to get CS GPIO\n");
+> -               return error;
+> -       }
+> +       if (IS_ERR(ts->cs_gpiod))
+> +               return dev_err_probe(&client->dev, PTR_ERR(ts->cs_gpiod),
+> +                                    "failed to get CS GPIO\n");
+> +
+>         gpiod_set_consumer_name(ts->cs_gpiod, "BU21013 CS");
+>
+>         error = devm_add_action_or_reset(&client->dev,
+> @@ -516,11 +514,8 @@ static int bu21013_probe(struct i2c_client *client,
+>         ts->int_gpiod = devm_gpiod_get_optional(&client->dev,
+>                                                 "touch", GPIOD_IN);
+>         error = PTR_ERR_OR_ZERO(ts->int_gpiod);
+> -       if (error) {
+> -               if (error != -EPROBE_DEFER)
+> -                       dev_err(&client->dev, "failed to get INT GPIO\n");
+> -               return error;
+> -       }
+> +       if (error)
+> +               return dev_err_probe(&client->dev, error, "failed to get INT GPIO\n");
+>
+>         if (ts->int_gpiod)
+>                 gpiod_set_consumer_name(ts->int_gpiod, "BU21013 INT");
+> --
+> 2.17.1
+>
 
-prctl prototype is:
 
-extern int prctl (int __option, ...)
-
-and implemented in kernel as:
-
-      int prctl(int option, unsigned long arg2, unsigned long arg3,
-                 unsigned long arg4, unsigned long arg5);
-
-Not all prctl operations take all 5 arguments.   It also applies
-to arch_prctl.  It is quite normal for different operations of
-arch_prctl to take different numbers of arguments.
-
---=20
-H.J.
+-- 
+With Best Regards,
+Andy Shevchenko
