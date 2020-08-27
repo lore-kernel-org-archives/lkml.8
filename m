@@ -2,151 +2,116 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A840C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A01C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4725E2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBEC02080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:19:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="F8l8Ojj/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TMmC2Mti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbgH0PTd convert rfc822-to-8bit (ORCPT
+        id S1728196AbgH0PTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:19:33 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:40950 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727814AbgH0PTQ (ORCPT
+        Thu, 27 Aug 2020 11:19:41 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:33093 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726087AbgH0PTW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:19:16 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1kBJfz-007FA8-US; Thu, 27 Aug 2020 09:18:55 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1kBJfy-0007id-QG; Thu, 27 Aug 2020 09:18:55 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Wang Long <w@laoqinren.net>
-Cc:     netdev@vger.kernel.org, davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        yoshfuji@linux-ipv6.org, kuba@kernel.org, edumazet@google.com,
-        eric.dumazet@gmail.com, opurdila@ixiacom.com,
-        vegard.nossum@gmail.com, LKML <linux-kernel@vger.kernel.org>
-References: <40f6ec87-0c27-ca6f-383b-0602e78b0802@laoqinren.net>
-Date:   Thu, 27 Aug 2020 10:15:11 -0500
-In-Reply-To: <40f6ec87-0c27-ca6f-383b-0602e78b0802@laoqinren.net>+B0013AC41EFFDC1F
-        (Wang Long's message of "Thu, 27 Aug 2020 19:03:25 +0800")
-Message-ID: <878se0ktmo.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 27 Aug 2020 11:19:22 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id ED74F13F4;
+        Thu, 27 Aug 2020 11:19:17 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 27 Aug 2020 11:19:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=RSXeFCAVyCX3aYLKYMbZeZXSxmS
+        Xwn7LT8+Wx3RjWNM=; b=F8l8Ojj/TBni6VehwfbAMamic7/vSaOKl9W9TvxXbrW
+        e4ejSCQ9KLMcnK/I0mLTuObu0fREP+CxjmF1mYNl7yS06CMy1KpPjZ2TlnR/JuRX
+        2t8W50rpAzn7rUN97jVHjoIG2UQii2X0aRSs6iS/2XzQXTHbqbH6U+uS7Jbx1k77
+        yWZEvEPYyCwfTTa8dOIsal4jv5qwyRN01D6QXLmqGUfcoa41IRxVI9g0ZnAcld8Z
+        WkC1QaGEQJSq6euvS+HTfHZMKzCgMoas15qg1G4UNPy0DF48zQx4yYybxG6VqIrR
+        qGgIbD102niACW1O9JMkbxvYRhHMEwGbOfldHKBxhDw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=RSXeFC
+        AVyCX3aYLKYMbZeZXSxmSXwn7LT8+Wx3RjWNM=; b=TMmC2MtisUEs2n3TsVlool
+        qSh5Hb7qu6Cqn+vZ0sRyS7lRMj9IDL2eyeK3BgWuiBLb5p+L94ji9sCItqMFte49
+        UHqB/G0g9Qo2HLhJhTF4FxrO/AccnQF4Sq6y9dj/Br3+aKzeBaxn4RlHeMkHaLb/
+        QNwujHuojLpdLXHzmdFdJvLYdOkwfaqAwXyo2N0Niy1cCHZIn+8rb67PCMF64agt
+        rmVckLie86XWn6bbYB8Mfb32yNvQFGyVxzSjkXb+/sqfuWNod+42+Em/tKlZ+HlB
+        1xoUQTS9SfhwrGpKN2CXkQxxzBTggOm3o3F7AnWVa9PMEppaAHyQd0j164DJE+7Q
+        ==
+X-ME-Sender: <xms:9M5HX7WZa9MJa905TVKH1aLcR44o_72vl5e7CE7zBTQpSAGN4jcCUQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvgedgkeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:9M5HXzksu6H9NLU-JHpE44gvTZN1HLK8hg0nSDsMv-p_LtYsnOSlaQ>
+    <xmx:9M5HX3ZiWTAtHlbHOd0W_wztoEK37pGB9Ftz1nRWolT11nn7eEwKkw>
+    <xmx:9M5HX2VcMEImMZCM96eQHANOo-yedsRERAeDh6FQys9rrYlffrjZJg>
+    <xmx:9c5HX37UnQ4oOxPRjuIjQ-AQSVCndrkQ6_M4hxZwjhjNE5tstWiCgyxys8s>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id DD7673280068;
+        Thu, 27 Aug 2020 11:19:15 -0400 (EDT)
+Date:   Thu, 27 Aug 2020 17:19:14 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, paul.kocialkowski@bootlin.com, mchehab@kernel.org,
+        robh+dt@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 0/5] ARM: dts: sun8i: r40: Enable video decoder
+Message-ID: <20200827151914.copcle3xjn3ek6p4@gilmour.lan>
+References: <20200825173523.1289379-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-XM-SPF: eid=1kBJfy-0007id-QG;;;mid=<878se0ktmo.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/Nt7wifU2j/ZN8Vtlw5gW64Ra5vWe7El4=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: RFC: inet_timewait_sock->tw_timer list corruption
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="iuvgwm6rpxeewgp5"
+Content-Disposition: inline
+In-Reply-To: <20200825173523.1289379-1-jernej.skrabec@siol.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wang Long <w@laoqinren.net> writes:
 
-> Hi，
->
-> we encountered a kernel panic as following:
->
-> [4394470.273792] general protection fault: 0000 [#1] SMP NOPTI
-> [4394470.274038] CPU: 0 PID: 0 Comm: swapper/0 Kdump: loaded Tainted: G    W
-> --------- -  - 4.18.0-80.el8.x86_64 #1
-> [4394470.274477] Hardware name: Sugon I620-G30/60P24-US, BIOS MJGS1223
-> 04/07/2020
-> [4394470.274727] RIP: 0010:run_timer_softirq+0x34e/0x440
-> [4394470.274957] Code: 84 3f ff ff ff 49 8b 04 24 48 85 c0 74 58 49 8b 1c 24 48
-> 89 5d 08 0f 1f 44 00 00 48 8b 03 48 8b 53 08 48 85 c0 48 89 02 74 04 <48> 89 50
-> 08 f6 43 22 20 48 c7 43 08 00 00 00 00 48 89 ef 4c 89 2b
-> [4394470.275505] RSP: 0018:ffff88f000803ee0 EFLAGS: 00010086
-> [4394470.275783] RAX: dead000000000200 RBX: ffff88e5e33ea078 RCX:
-> 0000000000000100
-> [4394470.276087] RDX: ffff88f000803ee8 RSI: 0000000000000000 RDI:
-> ffff88f00081aa00
-> [4394470.276391] RBP: ffff88f00081aa00 R08: 0000000000000001 R09:
-> 0000000000000000
-> [4394470.276697] R10: ffff88e5e33eb1f0 R11: 0000000000000000 R12:
-> ffff88f000803ee8
-> [4394470.277030] R13: dead000000000200 R14: ffff88f000803ee0 R15:
-> 0000000000000000
-> [4394470.277350] FS:  0000000000000000(0000) GS:ffff88f000800000(0000)
-> knlGS:0000000000000000
-> [4394470.277684] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [4394470.278020] CR2: 00007f200eddd160 CR3: 0000000e0b20a002 CR4:
-> 00000000007606f0
-> [4394470.278412] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> [4394470.278799] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> 0000000000000400
-> [4394470.279194] PKRU: 55555554
-> [4394470.279543] Call Trace:
-> [4394470.279889]  <IRQ>
-> [4394470.280237]  ? __hrtimer_init+0xb0/0xb0
-> [4394470.280618]  ? sched_clock+0x5/0x10
-> [4394470.281000]  __do_softirq+0xe8/0x2ef
-> [4394470.281397]  irq_exit+0xf1/0x100
-> [4394470.281761]  smp_apic_timer_interrupt+0x74/0x130
-> [4394470.282132]  apic_timer_interrupt+0xf/0x20
-> [4394470.282548]  </IRQ>
-> [4394470.282954] RIP: 0010:cpuidle_enter_state+0xa0/0x2b0
-> [4394470.283341] Code: 8b 3d 6c fb 59 4c e8 0f ed a6 ff 48 89 c3 0f 1f 44 00 00
-> 31 ff e8 80 00 a7 ff 45 84 f6 0f 85 c3 01 00 00 fb 66 0f 1f 44 00 00 <4c> 29 fb
-> 48 ba cf f7 53 e3 a5 9b c4 20 48 89 d8 48 c1 fb 3f 48 f7
-> [4394470.284219] RSP: 0018:ffffffffb4603e78 EFLAGS: 00000246 ORIG_RAX:
-> ffffffffffffff13
-> [4394470.284671] RAX: ffff88f000823080 RBX: 000f9cbf579e86c6 RCX:
-> 000000000000001f
-> [4394470.285129] RDX: 000f9cbf579e86c6 RSI: 0000000037a6f674 RDI:
-> 0000000000000000
-> [4394470.285623] RBP: 0000000000000002 R08: 00000000000000c4 R09:
-> 0000000000000027
-> [4394470.286088] R10: ffffffffb4603e58 R11: 000000000000004c R12:
-> ffff88f00082df00
-> [4394470.286566] R13: ffffffffb4724118 R14: 0000000000000000 R15:
-> 000f9cbf579d44e0
-> [4394470.287045]  ? cpuidle_enter_state+0x90/0x2b0
-> [4394470.287527]  do_idle+0x200/0x280
-> [4394470.288010]  cpu_startup_entry+0x6f/0x80
-> [4394470.288501]  start_kernel+0x533/0x553
-> [4394470.288994]  secondary_startup_64+0xb7/0xc0
->
->
-> After analysis, we found that the timer which expires has timer->entry.next ==
-> POISON2 !(the list corruption )
->
-> the crash scenario is the same as https://lkml.org/lkml/2017/3/21/732,
->
-> I cannot reproduce this issue, but I found that the timer cause crash is the
-> inet_timewait_sock->tw_timer(its callback function is tw_timer_handler), and the
-> value of tcp_tw_reuse is 1.
->
-> # cat /proc/sys/net/ipv4/tcp_tw_reuse
-> 1
->
-> In the production environment, we encountered this problem many times, and every
-> time it was a problem with the inet_timewait_sock->tw_timer.
->
-> Do anyone have any ideas for this issue? Thanks.
+--iuvgwm6rpxeewgp5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You might enble list debugging if it isn't already.  That might give you
-enough information to track this down.
+On Tue, Aug 25, 2020 at 07:35:18PM +0200, Jernej Skrabec wrote:
+> Allwinner R40 SoC contains video engine very similar to that in A33.
+>=20
+> First two patches add system controller nodes and the rest of them
+> add support for Cedrus VPU.
+>=20
+> Please take a look.
 
-You might also contact redhat support as it appears you are running a
-redhat kernel.
+Applied all 5 patches, thanks
 
-Eric
+Maxime
 
+--iuvgwm6rpxeewgp5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0fO8gAKCRDj7w1vZxhR
+xV5NAQDF9g6AIv8B7pmqugf0GI/8cUs9e7lyAcm+Rz+TGwFkWgD/VEcDH7+c5LKz
+fF+auOAaw4kec1ruj6+uGhxwKyBSYAU=
+=FNIg
+-----END PGP SIGNATURE-----
+
+--iuvgwm6rpxeewgp5--
