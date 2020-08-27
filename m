@@ -2,215 +2,141 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28684C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A59C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 072EB2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61EC9206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 04:18:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vR83mH1w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbgH0EOl (ORCPT
+        id S1726123AbgH0ES0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 00:14:41 -0400
-Received: from mga17.intel.com ([192.55.52.151]:27113 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726262AbgH0EOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 00:14:40 -0400
-IronPort-SDR: p6oOF9nbcAT1jQGTAJL7/7xtbo3g7GE/UEoAtz5rSirFZ0BeYAmtyf9r9g8LJtdAQr13qcTjnD
- GHVHPZdt6MvA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="136485840"
-X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
-   d="scan'208";a="136485840"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 21:14:40 -0700
-IronPort-SDR: pQxuy0jyEuDoQi8SFaRjyt7sExhO5+JQB53FjM2q0TooTaDLHlwcpMH8oMIIuG5kgyO0//rlQ9
- iJmAPC7xVr+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
-   d="scan'208";a="281992252"
-Received: from lkp-server01.sh.intel.com (HELO 4f455964fc6c) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 26 Aug 2020 21:14:38 -0700
-Received: from kbuild by 4f455964fc6c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kB9J8-0001rk-04; Thu, 27 Aug 2020 04:14:38 +0000
-Date:   Thu, 27 Aug 2020 12:14:11 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/cache] BUILD SUCCESS
- 29b6bd41ee24f69a85666b9f68d500b382d408fd
-Message-ID: <5f473313.SFG+3cHkfWTrVkIg%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Thu, 27 Aug 2020 00:18:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47150 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgH0ESY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 00:18:24 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 460D5C0612A9
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 21:18:22 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id k1so2487816pfu.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 21:18:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=+iBH8fkMhRsMfB6f+WMq2adtAVLulFdYcEcXSAwlW/s=;
+        b=vR83mH1w9C84iID7BIoTAEfRswCCNSuxpRQCHYO7yBlMZXdf0H5b9E4DcEfsM6FueW
+         iBF/tLQuYnNdcCE0jx9ucexvCNthlAeoCw2Iimm63XXblNWBVQp05UNDkx6BdtNnsh8q
+         ckAD5W7kxXJM2bGq8Pxq37MNcoqhC+pvfYvirKe7tNqGuNY5AbxTs0TX66r1+LUP/pzr
+         ANEcrDpDsrelcyReE5A0PYbzsrunMLMq3HUdMX1EJ/pOI/RbhD0Z4zHmQZ2DKdEIZa+E
+         idlqzxC3VINwKe6FeMHebIHre3MCCZkBboTx/10HPgK35tuhGeWnysPrZKCpvwdkaMqG
+         LuuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+iBH8fkMhRsMfB6f+WMq2adtAVLulFdYcEcXSAwlW/s=;
+        b=oJykNZqxwPiXLpp6kmcNJQ786++P9pzau31Iv5NgMnmTgLuitHfGNZzejDkixtHJAz
+         8a03C2wsD5Jqn4+cwbgPXKe7wWaC6IefJHTjnCF58pQolQ7+hKeP1rYE/9HmGWVKmfG4
+         atLiN8S47/0Cdes3yCMwSsxrlP6UYXloLzfOFJZCh+d4Y+OOUlJeyoHtwTafvH5xpcaD
+         gn8Z1pQt7t1QsOrCwDXfZB3selJs+A6bv2kn67VPpkaWZOQxl7ovTuf8+Mno2jBebfLj
+         xBNnSSMCnnLeyZRDEu8uITGTwbwYVbI42Mlf9WdB8wPvbayPhvuWdVyE2jBbReXj1QOw
+         F9rQ==
+X-Gm-Message-State: AOAM533Ldf7gz/qY1VsWmz+ErOlihjZfailhRE9sHtbg3XtsS8UMzC1W
+        KL0lR8ARQzQHSB19Pxm6Fgs=
+X-Google-Smtp-Source: ABdhPJwNMlLuNfl5KTwciY4p3OPdmEyHNcsuZBPUxvLvZzQNxKxk9VwNTcgFqZHYApx8dx3M4cA8aw==
+X-Received: by 2002:aa7:838d:: with SMTP id u13mr14785423pfm.158.1598501901656;
+        Wed, 26 Aug 2020 21:18:21 -0700 (PDT)
+Received: from realwakka.navercorp.com ([61.83.141.80])
+        by smtp.gmail.com with ESMTPSA id y126sm812010pfy.138.2020.08.26.21.18.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 21:18:21 -0700 (PDT)
+From:   Sidong Yang <realwakka@gmail.com>
+To:     daniel@ffwll.ch, Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Melissa Wen <melissa.srw@gmail.com>
+Cc:     Sidong Yang <realwakka@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH v2] drm/vkms: avoid warning in vkms_get_vblank_timestamp
+Date:   Thu, 27 Aug 2020 04:18:00 +0000
+Message-Id: <20200827041800.10229-1-realwakka@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cache
-branch HEAD: 29b6bd41ee24f69a85666b9f68d500b382d408fd  x86/resctrl: Enable user to view thread or core throttling mode
+This patch avoid the warning in vkms_get_vblank_timestamp when vblanks aren't
+enabled. When running igt test kms_cursor_crc just after vkms module, the
+warning raised like below. Initial value of vblank time is zero and
+hrtimer.node.expires is also zero if vblank aren't enabled before. vkms module
+isn't real hardware but just virtual hardware module. so vkms can't generate a
+resonable timestamp when hrtimer is off. it's best to grab the current time.
 
-elapsed time: 724m
+[106444.464503] [IGT] kms_cursor_crc: starting subtest pipe-A-cursor-size-change
+[106444.471475] WARNING: CPU: 0 PID: 10109 at
+/home/realwakka/git/linux/drivers/gpu/drm/vkms//vkms_crtc.c:91
+vkms_get_vblank_timestamp+0x42/0x50 [vkms]
+[106444.471511] CPU: 0 PID: 10109 Comm: kms_cursor_crc Tainted: G        W  OE
+5.9.0-rc1+ #6
+[106444.471514] RIP: 0010:vkms_get_vblank_timestamp+0x42/0x50 [vkms]
+[106444.471528] Call Trace:
+[106444.471551]  drm_get_last_vbltimestamp+0xb9/0xd0 [drm]
+[106444.471566]  drm_reset_vblank_timestamp+0x63/0xe0 [drm]
+[106444.471579]  drm_crtc_vblank_on+0x85/0x150 [drm]
+[106444.471582]  vkms_crtc_atomic_enable+0xe/0x10 [vkms]
+[106444.471592]  drm_atomic_helper_commit_modeset_enables+0x1db/0x230
+[drm_kms_helper]
+[106444.471594]  vkms_atomic_commit_tail+0x38/0xc0 [vkms]
+[106444.471601]  commit_tail+0x97/0x130 [drm_kms_helper]
+[106444.471608]  drm_atomic_helper_commit+0x117/0x140 [drm_kms_helper]
+[106444.471622]  drm_atomic_commit+0x4a/0x50 [drm]
+[106444.471629]  drm_atomic_helper_set_config+0x63/0xb0 [drm_kms_helper]
+[106444.471642]  drm_mode_setcrtc+0x1d9/0x7b0 [drm]
+[106444.471654]  ? drm_mode_getcrtc+0x1a0/0x1a0 [drm]
+[106444.471666]  drm_ioctl_kernel+0xb6/0x100 [drm]
+[106444.471677]  drm_ioctl+0x3ad/0x470 [drm]
+[106444.471688]  ? drm_mode_getcrtc+0x1a0/0x1a0 [drm]
+[106444.471692]  ? tomoyo_file_ioctl+0x19/0x20
+[106444.471694]  __x64_sys_ioctl+0x96/0xd0
+[106444.471697]  do_syscall_64+0x37/0x80
+[106444.471699]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-configs tested: 145
-configs skipped: 8
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-mips                        workpad_defconfig
-mips                        maltaup_defconfig
-sh                   rts7751r2dplus_defconfig
-arm                        oxnas_v6_defconfig
-sh                        edosk7705_defconfig
-powerpc                     pseries_defconfig
-arm                        mvebu_v7_defconfig
-c6x                        evmc6472_defconfig
-arm                       multi_v4t_defconfig
-arm                          simpad_defconfig
-sh                          lboxre2_defconfig
-m68k                            q40_defconfig
-arm                              zx_defconfig
-mips                        jmr3927_defconfig
-sh                        sh7757lcr_defconfig
-arc                      axs103_smp_defconfig
-sh                        edosk7760_defconfig
-m68k                          atari_defconfig
-sh                        sh7763rdp_defconfig
-c6x                        evmc6474_defconfig
-mips                      malta_kvm_defconfig
-mips                           jazz_defconfig
-arm                        multi_v5_defconfig
-riscv                            allmodconfig
-m68k                         apollo_defconfig
-sh                ecovec24-romimage_defconfig
-sh                        apsh4ad0a_defconfig
-arm                       spear13xx_defconfig
-arm                        trizeps4_defconfig
-arc                                 defconfig
-m68k                       m5249evb_defconfig
-arm                         palmz72_defconfig
-m68k                          multi_defconfig
-ia64                          tiger_defconfig
-mips                         cobalt_defconfig
-sh                           se7722_defconfig
-sh                   sh7770_generic_defconfig
-mips                         tb0226_defconfig
-powerpc                     skiroot_defconfig
-arm                         lpc18xx_defconfig
-sh                          urquell_defconfig
-mips                         bigsur_defconfig
-ia64                            zx1_defconfig
-arm                      integrator_defconfig
-arm                            zeus_defconfig
-powerpc                 mpc8272_ads_defconfig
-m68k                             allmodconfig
-arm                          ixp4xx_defconfig
-openrisc                    or1ksim_defconfig
-arc                          axs103_defconfig
-arm                            qcom_defconfig
-sh                          kfr2r09_defconfig
-mips                          rb532_defconfig
-arm                            dove_defconfig
-mips                          ath25_defconfig
-powerpc                         wii_defconfig
-m68k                        stmark2_defconfig
-sh                                  defconfig
-arc                    vdk_hs38_smp_defconfig
-arc                             nps_defconfig
-arm                  colibri_pxa270_defconfig
-mips                         rt305x_defconfig
-xtensa                generic_kc705_defconfig
-ia64                        generic_defconfig
-x86_64                           alldefconfig
-arm                         lubbock_defconfig
-powerpc                  storcenter_defconfig
-ia64                      gensparse_defconfig
-arm                           viper_defconfig
-mips                malta_kvm_guest_defconfig
-mips                        bcm47xx_defconfig
-sh                            shmin_defconfig
-sh                     sh7710voipgw_defconfig
-mips                  cavium_octeon_defconfig
-nios2                         10m50_defconfig
-arm                            mmp2_defconfig
-m68k                       m5275evb_defconfig
-m68k                           sun3_defconfig
-sh                          sdk7786_defconfig
-mips                       rbtx49xx_defconfig
-sh                  sh7785lcr_32bit_defconfig
-arm                         orion5x_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a002-20200826
-i386                 randconfig-a004-20200826
-i386                 randconfig-a003-20200826
-i386                 randconfig-a005-20200826
-i386                 randconfig-a006-20200826
-i386                 randconfig-a001-20200826
-x86_64               randconfig-a015-20200826
-x86_64               randconfig-a016-20200826
-x86_64               randconfig-a012-20200826
-x86_64               randconfig-a014-20200826
-x86_64               randconfig-a011-20200826
-x86_64               randconfig-a013-20200826
-i386                 randconfig-a013-20200826
-i386                 randconfig-a012-20200826
-i386                 randconfig-a011-20200826
-i386                 randconfig-a016-20200826
-i386                 randconfig-a015-20200826
-i386                 randconfig-a014-20200826
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+Signed-off-by: Sidong Yang <realwakka@gmail.com>
 
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+v2:
+ - modify commit message to make it a bit easier to understand. 
+
+---
+ drivers/gpu/drm/vkms/vkms_crtc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+index ac85e17428f8..09c012d54d58 100644
+--- a/drivers/gpu/drm/vkms/vkms_crtc.c
++++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+@@ -86,6 +86,11 @@ static bool vkms_get_vblank_timestamp(struct drm_crtc *crtc,
+ 	struct vkms_output *output = &vkmsdev->output;
+ 	struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
+ 
++	if (!READ_ONCE(vblank->enabled)) {
++		*vblank_time = ktime_get();
++		return true;
++	}
++
+ 	*vblank_time = READ_ONCE(output->vblank_hrtimer.node.expires);
+ 
+ 	if (WARN_ON(*vblank_time == vblank->time))
+-- 
+2.17.1
+
