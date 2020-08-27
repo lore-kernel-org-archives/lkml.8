@@ -2,91 +2,90 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D987BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 730C0C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FAE22054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45E072054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:58:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PlPLu7/l"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="f3o5WdOE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgH0O6d (ORCPT
+        id S1727888AbgH0O6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:58:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbgH0O6V (ORCPT
+        Thu, 27 Aug 2020 10:58:45 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:32637 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729026AbgH0MOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:58:21 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEAE2C06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 07:58:20 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id k1so3714642pfu.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 07:58:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SiJ+1XSkn95Z3h2igWcx0+w/QsGPUMBGo7zqp/bTv2w=;
-        b=PlPLu7/lcUvQI9cN0uGnTKiyxN+c+Z5fPkRlrbf6sgJdVzbGBftd/B9XCzERWP286Y
-         4q0aAVvERyCnDcIaSdMiBN9WrYoiHcxk1dHkGyzBEZkvC3ceSZvActjRcjUI94PJihk9
-         spRcxOcEPu8OA5OJJ0OxuqQ3+cj+kUKdlVLr8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SiJ+1XSkn95Z3h2igWcx0+w/QsGPUMBGo7zqp/bTv2w=;
-        b=lybYw+LDP3xn+XFJjF2CZkAdR+1oCcIp0rsd+23OfvktUA5ZHEuUGx6vJfLVQIIs86
-         Io83SWwOkHnA4dtViYUWI1GnNMMGSCv0AyNfPrXEN+0GmBd1cHspCKf/UgryeLfSqNPd
-         4eFqu3rrcKUYw3xafByi8B23L4KvTe07a5bFI9rvpU0+SCUZnezu2UOlUrueIAfSqVm/
-         B84ADTZx+8JwWyeALfjoHpUSx+YNeCafMfE+DOV7rPpBFarKLOL0UhVmqE++20N1/In3
-         roDCqwR6YPCfRJmCwqj/zAARckMB0TfxJfpPH53bjL5eUQ69dKKEhpOf3Q7M84gZtX5W
-         rd5w==
-X-Gm-Message-State: AOAM533qTQOwMTXwbiMDcfN/EsP3FbgnCd2oZUUmEVp7CInnOttgJlIo
-        Uh9jN6mmhK1uFRGrSOFbDtzZ6A==
-X-Google-Smtp-Source: ABdhPJzgptkkPSU6YX1J+orIwCKtScJOjd1LN/Tqz8ICkjngQ+Kj6C3XLm2jrBRVfpsWlr/IjkXYrA==
-X-Received: by 2002:a63:5624:: with SMTP id k36mr14676688pgb.444.1598540300247;
-        Thu, 27 Aug 2020 07:58:20 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n1sm3067247pfu.154.2020.08.27.07.58.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 07:58:19 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 07:58:18 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH] deprecated.rst: Remove now removed uninitialized_var
-Message-ID: <202008270755.5B91A3D@keescook>
-References: <5e10c1645dd8f735215cf54a74db0f8dd3f6cbd5.camel@perches.com>
+        Thu, 27 Aug 2020 08:14:52 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598530492; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=xKkJldCpFuFFwvk5Ekpm5a9GeD8MRoy70tGm5lWY6Xk=; b=f3o5WdOEfYGvDREvSuMQBuWgQQWuPWyY3EFEeFHGo9LU7mzYRylVB/CQnFqemUXhaINYgwYz
+ E4jc0/yMOvLCx9JRMXWFQJY7xEJLmTrlIaF3aMlIegGWpOgndDAICzz7Q1mSyfCJjaVi15YE
+ Uu0UxBFtzliG9S3t06ya+VPkr9w=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5f47a11dc9ede11f5eb55929 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 12:03:41
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2039EC43391; Thu, 27 Aug 2020 12:03:41 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1E98DC433C6;
+        Thu, 27 Aug 2020 12:03:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1E98DC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 00/30] Set 3: Rid W=1 warnings in Wireless
+References: <20200826093401.1458456-1-lee.jones@linaro.org>
+Date:   Thu, 27 Aug 2020 15:03:37 +0300
+In-Reply-To: <20200826093401.1458456-1-lee.jones@linaro.org> (Lee Jones's
+        message of "Wed, 26 Aug 2020 10:33:31 +0100")
+Message-ID: <87y2m09tye.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5e10c1645dd8f735215cf54a74db0f8dd3f6cbd5.camel@perches.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 08:12:01PM -0700, Joe Perches wrote:
-> It's now gone from the kernel so remove it from the deprecated API text.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
+Lee Jones <lee.jones@linaro.org> writes:
 
-Oh! Right, thank you. I forgot to rewrite this. I'd like to keep the
-details about why "tricking the compiler to be quiet" should not be
-done. One of my fears about removing uninitialized_var() is that folks
-may start adding open-coded versions to silence warnings. I'd like to
-keep a section in deprecated.rst that describes the problem and why
-those kinds of work-arounds should not be used.
+> This set is part of a larger effort attempting to clean-up W=1
+> kernel builds, which are currently overwhelmingly riddled with
+> niggly little warnings.
+>
+> There are quite a few W=1 warnings in the Wireless.  My plan
+> is to work through all of them over the next few weeks.
+> Hopefully it won't be too long before drivers/net/wireless
+> builds clean with W=1 enabled.
+
+How much patches are there going to be? I was first positive about the
+idea but now I am really starting to wonder if this is worth the effort,
+these patches are spamming my patchwork significantly and taking too
+much time. At least please hold of on any new patches for at least a
+week so I can catch up with all patches I have.
+
+And like I said already before, follow the title style we use so that I
+don't need to edit every patch myself:
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#commit_title_is_wrong
 
 -- 
-Kees Cook
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
