@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1C1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 263052087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E04A22BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598554750;
-	bh=JUb3zuXLRCIJMwL7fDm3Li7eKTZnqM4btxV54IXuXgQ=;
+	s=default; t=1598554753;
+	bh=XU3wsdKRcEmN6C4Xh+CGzTTUh29BQR9tNEBC5r7uu9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZLwA0ho2OkYAtLr+hCdnqSyA0er4arZpz9XdWIOvQn0k5cJjCS0Y3QwTI6fwSVRyu
-	 +3tkfYQrjL/YBWQy8AvvjUbUUfugPXSrX5GgkkZnBJSMt/ea/fpCMrAAF1wyPJaJs1
-	 KvXVxmhAMSvI6VZGWZYt/4CG41luJ2j1j8Doiqp4=
+	b=VMl70v+RshOWtPmYBtUOzNNgRxyyhfFYIkN5oYcgB5E+QzghGDgRLcIPFGatQgjar
+	 LG8gmaGgAXaL7TbD08RAPWELxrEOZTUs36xhI1hvfupkBAfUNCHulVSDu0STuQXkzG
+	 sM0z8UTDRyAOzhd7c63a1eg4urPAxJGgnMk2mbOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgH0S7J (ORCPT
+        id S1728019AbgH0S7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:59:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49178 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 14:59:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727970AbgH0S7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:59:06 -0400
+        id S1727997AbgH0S7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 14:59:09 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8E0A22BEA;
-        Thu, 27 Aug 2020 18:59:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CAA622BEB;
+        Thu, 27 Aug 2020 18:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598554745;
-        bh=JUb3zuXLRCIJMwL7fDm3Li7eKTZnqM4btxV54IXuXgQ=;
+        s=default; t=1598554749;
+        bh=XU3wsdKRcEmN6C4Xh+CGzTTUh29BQR9tNEBC5r7uu9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VKiQ07/7odXGNddU3tMkEZjgzz3zZk0SIYWXCjLtwrS6YeTHdDyJQIB8G1axnL92i
-         eC9HxdKPr8mK7bipqX6bAGcq0zAHjt0otYH/Dsr5AqIiqZAFBiKbtzex+gfiblz3Af
-         5fW5ZhUsPqQJLA45dsHMPOHptoSHwQno8LHHLrjc=
+        b=v38Y1XLeq8lhwiBRivr+rekc24A5cyWtWLIZMdKNuHCUX6FV3QThu+KAiZDwXwOPz
+         EfW2axpQYoEqSbo1vEE/jqc55WY80DI8VKhogl3tln0gRiZPw34TOYy177UqQ5VD+r
+         5mmOMcYzz6oknzIazW3zSexgD4IJl89Z+rcNFMj0=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -52,9 +52,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         clang-built-linux@googlegroups.com
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 07/27] Input: bu21013_ts - Simplify with dev_err_probe()
-Date:   Thu, 27 Aug 2020 20:58:09 +0200
-Message-Id: <20200827185829.30096-8-krzk@kernel.org>
+Subject: [PATCH v3 08/27] Input: bu21029_ts - Simplify with dev_err_probe()
+Date:   Thu, 27 Aug 2020 20:58:10 +0200
+Message-Id: <20200827185829.30096-9-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
 References: <20200827185829.30096-1-krzk@kernel.org>
@@ -68,50 +68,45 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
+ drivers/input/touchscreen/bu21029_ts.c | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
 
-Changes since v1:
-1. Remove unneeded PTR_ERR_OR_ZERO, as pointed by Andy.
----
- drivers/input/touchscreen/bu21013_ts.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/input/touchscreen/bu21013_ts.c b/drivers/input/touchscreen/bu21013_ts.c
-index 2f1f0d7607f8..86bd38243d6c 100644
---- a/drivers/input/touchscreen/bu21013_ts.c
-+++ b/drivers/input/touchscreen/bu21013_ts.c
-@@ -496,12 +496,10 @@ static int bu21013_probe(struct i2c_client *client,
+diff --git a/drivers/input/touchscreen/bu21029_ts.c b/drivers/input/touchscreen/bu21029_ts.c
+index 49a8d4bbca3a..96c178b606dc 100644
+--- a/drivers/input/touchscreen/bu21029_ts.c
++++ b/drivers/input/touchscreen/bu21029_ts.c
+@@ -360,23 +360,15 @@ static int bu21029_probe(struct i2c_client *client,
+ 	}
  
- 	/* Named "CS" on the chip, DT binding is "reset" */
- 	ts->cs_gpiod = devm_gpiod_get(&client->dev, "reset", GPIOD_OUT_HIGH);
--	error = PTR_ERR_OR_ZERO(ts->cs_gpiod);
--	if (error) {
+ 	bu21029->vdd = devm_regulator_get(&client->dev, "vdd");
+-	if (IS_ERR(bu21029->vdd)) {
+-		error = PTR_ERR(bu21029->vdd);
 -		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev, "failed to get CS GPIO\n");
+-			dev_err(&client->dev,
+-				"failed to acquire 'vdd' supply: %d\n", error);
 -		return error;
 -	}
-+	if (IS_ERR(ts->cs_gpiod))
-+		return dev_err_probe(&client->dev, PTR_ERR(ts->cs_gpiod),
-+				     "failed to get CS GPIO\n");
-+
- 	gpiod_set_consumer_name(ts->cs_gpiod, "BU21013 CS");
++	if (IS_ERR(bu21029->vdd))
++		return dev_err_probe(&client->dev, PTR_ERR(bu21029->vdd),
++				     "failed to acquire 'vdd' supply\n");
  
- 	error = devm_add_action_or_reset(&client->dev,
-@@ -516,11 +514,8 @@ static int bu21013_probe(struct i2c_client *client,
- 	ts->int_gpiod = devm_gpiod_get_optional(&client->dev,
- 						"touch", GPIOD_IN);
- 	error = PTR_ERR_OR_ZERO(ts->int_gpiod);
--	if (error) {
+ 	bu21029->reset_gpios = devm_gpiod_get_optional(&client->dev,
+ 						       "reset", GPIOD_OUT_HIGH);
+-	if (IS_ERR(bu21029->reset_gpios)) {
+-		error = PTR_ERR(bu21029->reset_gpios);
 -		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev, "failed to get INT GPIO\n");
+-			dev_err(&client->dev,
+-				"failed to acquire 'reset' gpio: %d\n", error);
 -		return error;
 -	}
-+	if (error)
-+		return dev_err_probe(&client->dev, error, "failed to get INT GPIO\n");
++	if (IS_ERR(bu21029->reset_gpios))
++		return dev_err_probe(&client->dev, PTR_ERR(bu21029->reset_gpios),
++				     "failed to acquire 'reset' gpio\n");
  
- 	if (ts->int_gpiod)
- 		gpiod_set_consumer_name(ts->int_gpiod, "BU21013 INT");
+ 	in_dev = devm_input_allocate_device(&client->dev);
+ 	if (!in_dev) {
 -- 
 2.17.1
 
