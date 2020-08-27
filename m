@@ -2,142 +2,180 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8017C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C0EC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6D2C22B47
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0DAF22B47
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:32:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aZGBoTuO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgH0Ibe (ORCPT
+        id S1728150AbgH0Icz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:31:34 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:23628 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726938AbgH0Ibd (ORCPT
+        Thu, 27 Aug 2020 04:32:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58518 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727935AbgH0Icw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:31:33 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-64-r33Q5FlvO0ymSv-cNb_SXQ-1; Thu, 27 Aug 2020 09:31:29 +0100
-X-MC-Unique: r33Q5FlvO0ymSv-cNb_SXQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 27 Aug 2020 09:31:28 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 27 Aug 2020 09:31:28 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Alexander Graf' <graf@amazon.com>,
-        'Thomas Gleixner' <tglx@linutronix.de>,
-        'X86 ML' <x86@kernel.org>
-CC:     'Andy Lutomirski' <luto@kernel.org>,
-        'LKML' <linux-kernel@vger.kernel.org>,
-        'Andrew Cooper' <andrew.cooper3@citrix.com>,
-        "'Paul E. McKenney'" <paulmck@kernel.org>,
-        'Alexandre Chartre' <alexandre.chartre@oracle.com>,
-        'Frederic Weisbecker' <frederic@kernel.org>,
-        'Paolo Bonzini' <pbonzini@redhat.com>,
-        'Sean Christopherson' <sean.j.christopherson@intel.com>,
-        'Masami Hiramatsu' <mhiramat@kernel.org>,
-        'Petr Mladek' <pmladek@suse.com>,
-        'Steven Rostedt' <rostedt@goodmis.org>,
-        'Joel Fernandes' <joel@joelfernandes.org>,
-        'Boris Ostrovsky' <boris.ostrovsky@oracle.com>,
-        'Juergen Gross' <jgross@suse.com>,
-        "'Mathieu Desnoyers'" <mathieu.desnoyers@efficios.com>,
-        'Josh Poimboeuf' <jpoimboe@redhat.com>,
-        'Will Deacon' <will@kernel.org>,
-        'Tom Lendacky' <thomas.lendacky@amd.com>,
-        'Wei Liu' <wei.liu@kernel.org>,
-        'Michael Kelley' <mikelley@microsoft.com>,
-        'Jason Chen CJ' <jason.cj.chen@intel.com>,
-        "'Zhao Yakui'" <yakui.zhao@intel.com>,
-        "'Peter Zijlstra (Intel)'" <peterz@infradead.org>,
-        'Avi Kivity' <avi@scylladb.com>,
-        "'Herrenschmidt, Benjamin'" <benh@amazon.com>,
-        "'robketr@amazon.de'" <robketr@amazon.de>,
-        "'amos@scylladb.com'" <amos@scylladb.com>,
-        'Brian Gerst' <brgerst@gmail.com>,
-        "'stable@vger.kernel.org'" <stable@vger.kernel.org>,
-        'Alex bykov' <alex.bykov@scylladb.com>
-Subject: RE: x86/irq: Unbreak interrupt affinity setting
-Thread-Topic: x86/irq: Unbreak interrupt affinity setting
-Thread-Index: AQHWe+aKb+AhwM2rPkq6/MK3Hcp5nKlK5iEAgAAGXqCAAAItAIAAsfPQ
-Date:   Thu, 27 Aug 2020 08:31:28 +0000
-Message-ID: <5943d64220ee457b82f9a61fe17318e9@AcuMS.aculab.com>
-References: <20200826115357.3049-1-graf@amazon.com>
- <87k0xlv5w5.fsf@nanos.tec.linutronix.de>
- <fd87a87d-7d8a-9959-6c81-f49003a43c21@amazon.com>
- <87blixuuny.fsf@nanos.tec.linutronix.de>
- <873649utm4.fsf@nanos.tec.linutronix.de>
- <87wo1ltaxz.fsf@nanos.tec.linutronix.de>
- <db3e28b59d404f55aff83120c077d6f6@AcuMS.aculab.com>
- <42ae8716e425495c964ae7372bd7ff52@AcuMS.aculab.com>
- <014fd671-73c1-97f3-cc92-73c2cf9576af@amazon.com>
-In-Reply-To: <014fd671-73c1-97f3-cc92-73c2cf9576af@amazon.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 27 Aug 2020 04:32:52 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14969C061232
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 01:32:52 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id s29so1420795uae.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 01:32:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=rhR9VT3qebWft3rYGOJFMfWNZvBnzCun5bg3Dhn/9i0=;
+        b=aZGBoTuOF8rVF32THhxOpsi9PYhXbUvkb7iA9BiVqWrK8A9fNOuzqoabQppcZSffWj
+         lc1HEiWuoGdzD6xADgq6iHj7Fl3VuPh/n/fFXFQ88/6ljd7tIoV7MRPg+on6RG0TDF3E
+         WZVnI9QP0LWXlrWq+gSpRdsQcwC/wmONP0YEk5M43P6cDAFKaN0MD5m41Mnbnp6tYec8
+         NhdAF7hFFTIvK94EmZ9H6ockxQRNv3NPxgwHS8tesQCzKWP8hHh1hW39cZOXeSsMvgnO
+         uJVmcQv3X91JXfI1eEi49uao06EanOa1XLRbh7RdNsgusTUSoY4C9sVztXE4Ay8XzGyV
+         sHFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=rhR9VT3qebWft3rYGOJFMfWNZvBnzCun5bg3Dhn/9i0=;
+        b=qXPhkOJp9/7ravwli2cNm53ZN5i/9FWQ0UCyFNghAbMFCT0LBd/WJgWXUOlCccvlHS
+         qQ/lPTIK3nFv2imglyplE+yPOLlxggBP1EKKYY3lHu9ooR8W93i8XBrJ5vTk94DrigA7
+         GfdngcVd5SsgYWCq2/GtQKx/ST3h49G2acxXbRVp+g03cypEnmPeN5iMKNKNx1KX+3d6
+         Dxm9TfpZcu1k2EfPk4/CEcF8JVSTsc9w7wZm/AbRNe4FmJS4V6Ing0py3vGiukKS0GC9
+         jeUeEvuXPKhCHRmoNJqP70D4fiDdy1biUTfDcMZByVSHrUfkxTLHZrBSOao8LJ2XRhU2
+         dmeQ==
+X-Gm-Message-State: AOAM531yg5ThQeuqYgrbyIpNFe6yal4FDBrYRupDPb8yK5/TWCd9JhCk
+        6WTFtqXZE/NjoJwDMJegjYvkfbAUotYXP2BNB+7rP3aqy4izgVTY
+X-Google-Smtp-Source: ABdhPJyoDOX/UthsLuZecX/ETu8CpM1kRCQDNaNdec9QOaHPHOZ2e7G31MPopmbp4IpYYMkzGeVnrnBFXG52IvlRFt8=
+X-Received: by 2002:ab0:679a:: with SMTP id v26mr11228375uar.27.1598517170448;
+ Thu, 27 Aug 2020 01:32:50 -0700 (PDT)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-Content-Language: en-US
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 27 Aug 2020 14:02:39 +0530
+Message-ID: <CA+G9fYvUwH2FA9GOeA_7GYpLA31uOmEpg32VKnJ8-d5QSK4PdQ@mail.gmail.com>
+Subject: Kernel panic : Unable to handle kernel paging request at virtual
+ address - dead address between user and kernel address ranges
+To:     open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-clk <linux-clk@vger.kernel.org>, linux-mmc@vger.kernel.org,
+        lkft-triage@lists.linaro.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, lars.povlsen@microchip.com,
+        madhuparnabhowmik10@gmail.com,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQWxleGFuZGVyIEdyYWYNCj4gU2VudDogMjYgQXVndXN0IDIwMjAgMjM6NTMNCj4gDQo+
-IE9uIDI2LjA4LjIwIDIzOjQ3LCBEYXZpZCBMYWlnaHQgd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBE
-YXZpZCBMYWlnaHQNCj4gPj4gU2VudDogMjYgQXVndXN0IDIwMjAgMjI6MzcNCj4gPj4NCj4gPj4g
-RnJvbTogVGhvbWFzIEdsZWl4bmVyDQo+ID4+PiBTZW50OiAyNiBBdWd1c3QgMjAyMCAyMToyMg0K
-PiA+PiAuLi4NCj4gPj4+IE1vdmluZyBpbnRlcnJ1cHRzIG9uIHg4NiBoYXBwZW5zIGluIHNldmVy
-YWwgc3RlcHMuIEEgbmV3IHZlY3RvciBvbiBhDQo+ID4+PiBkaWZmZXJlbnQgQ1BVIGlzIGFsbG9j
-YXRlZCBhbmQgdGhlIHJlbGV2YW50IGludGVycnVwdCBzb3VyY2UgaXMNCj4gPj4+IHJlcHJvZ3Jh
-bW1lZCB0byB0aGF0LiBCdXQgdGhhdCdzIHJhY3kgYW5kIHRoZXJlIG1pZ2h0IGJlIGFuIGludGVy
-cnVwdA0KPiA+Pj4gYWxyZWFkeSBpbiBmbGlnaHQgdG8gdGhlIG9sZCB2ZWN0b3IuIFNvIHRoZSBv
-bGQgdmVjdG9yIGlzIHByZXNlcnZlZCB1bnRpbA0KPiA+Pj4gdGhlIGZpcnN0IGludGVycnVwdCBh
-cnJpdmVzIG9uIHRoZSBuZXcgdmVjdG9yIGFuZCB0aGUgbmV3IHRhcmdldCBDUFUuIE9uY2UNCj4g
-Pj4+IHRoYXQgaGFwcGVucyB0aGUgb2xkIHZlY3RvciBpcyBjbGVhbmVkIHVwLCBidXQgdGhpcyBj
-bGVhbnVwIHN0aWxsIGRlcGVuZHMNCj4gPj4+IG9uIHRoZSB2ZWN0b3IgbnVtYmVyIGJlaW5nIHN0
-b3JlZCBpbiBwdF9yZWdzOjpvcmlnX2F4LCB3aGljaCBpcyBub3cgLTEuDQo+ID4+DQo+ID4+IEkg
-c3VzcGVjdCB0aGF0IGl0IGlzIG11Y2ggbW9yZSAncmFjeScgdGhhbiB0aGF0IGZvciBQQ0ktWCBp
-bnRlcnJ1cHRzLg0KPiA+PiBPbiB0aGUgaGFyZHdhcmUgc2lkZSB0aGVyZSBpcyBhbiBpbnRlcnJ1
-cHQgZGlzYWJsZSBiaXQsIGFuZCBhZGRyZXNzDQo+ID4+IGFuZCBhIHZhbHVlLg0KPiA+PiBUbyBy
-YWlzZSBhbiBpbnRlcnJ1cHQgdGhlIGhhcmR3YXJlIG11c3Qgd3JpdGUgdGhlIHZhbHVlIHRvIHRo
-ZSBhZGRyZXNzLg0KPiA+Pg0KPiA+PiBJZiB0aGUgY3B1IG5lZWRzIHRvIG1vdmUgYW4gaW50ZXJy
-dXB0IGJvdGggdGhlIGFkZHJlc3MgYW5kIHZhbHVlDQo+ID4+IG5lZWQgY2hhbmdpbmcsIGJ1dCB0
-aGUgY3B1IHdvbnQgd3JpdGUgdGhlIGFkZHJlc3MgYW5kIHZhbHVlIHVzaW5nDQo+ID4+IHRoZSBz
-YW1lIFRMUCwgc28gdGhlIGhhcmR3YXJlIGNvdWxkIHBvdGVudGlhbGx5IHdyaXRlIGEgdmFsdWUg
-dG8NCj4gPj4gdGhlIHdyb25nIGFkZHJlc3MuDQo+ID4+IFdvcnNlIHRoYW4gdGhhdCwgdGhlIGhh
-cmR3YXJlIGNvdWxkIGVhc2lseSBvbmx5IGxvb2sgYXQgdGhlIGFkZHJlc3MNCj4gPj4gYW5kIHZh
-bHVlIGluIHRoZSBjbG9ja3MgYWZ0ZXIgY2hlY2tpbmcgdGhlIGludGVycnVwdCBpcyBlbmFibGVk
-Lg0KPiA+PiBTbyBtYXNraW5nIHRoZSBpbnRlcnJ1cHQgaW1tZWRpYXRlbHkgcHJpb3IgdG8gY2hh
-bmdpbmcgdGhlIHZlY3Rvcg0KPiA+PiBpbmZvIG1heSBub3QgYmUgZW5vdWdoLg0KPiA+Pg0KPiA+
-PiBJdCBpcyBsaWtlbHkgdGhhdCBhIHJlYWQtYmFjayBvZiB0aGUgbWFzayBiZWZvcmUgdXBkYXRp
-bmcgdGhlIHZlY3Rvcg0KPiA+PiBpcyBlbm91Z2guDQo+ID4NCj4gPiBCdXQgbm90IGVub3VnaCB0
-byBhc3N1bWUgeW91IHdvbid0IHJlY2VpdmUgYW4gaW50ZXJydXB0IGFmdGVyIHJlYWRpbmcNCj4g
-PiBiYWNrIHRoYXQgaW50ZXJydXB0cyBhcmUgbWFza2VkLg0KPiA+DQo+ID4gKEkndmUgaW1wbGVt
-ZW50ZWQgdGhlIGhhcmR3YXJlIHNpZGUgZm9yIGFuIGZwZ2EgLi4uKQ0KPiANCj4gRG8gd2UgYWN0
-dWFsbHkgY2FyZSBpbiB0aGlzIGNvbnRleHQ/IEFsbCB3ZSB3YW50IHRvIGtub3cgaGVyZSBpcyB3
-aGV0aGVyDQo+IGEgZGV2aWNlIChvciBpcnFjaGlwIGluIGJldHdlZW4pIGhhcyBhY3R1YWxseSBu
-b3RpY2VkIHRoYXQgaXQgc2hvdWxkDQo+IHBvc3QgdG8gYSBuZXcgdmVjdG9yLiBJZiB3ZSBnZXQg
-aW50ZXJydXB0cyBvbiByYW5kb20gb3RoZXIgdmVjdG9ycyBpbg0KPiBiZXR3ZWVuLCB0aGV5IHdv
-dWxkIHNpbXBseSBzaG93IHVwIGFzIHNwdXJpb3VzLCBubz8NCj4gDQo+IFNvIEkgZG9uJ3QgcXVp
-dGUgc2VlIHdoZXJlIHRoaXMgcGF0Y2ggbWFrZXMgdGhlIHNpdHVhdGlvbiBhbnkgd29yc2UgdGhh
-bg0KPiBiZWZvcmUuDQoNCk9oLCBpdCB3b24ndCBtYWtlIGl0IGFueSB3b3JzZS4NCkl0IGp1c3Qg
-bWlnaHQgYmUgcmF0aGVyIHdvcnNlIHRoYW4gYW55b25lIGltYWdpbmVkLg0KDQoJRGF2aWQNCg0K
-LQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0s
-IE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdh
-bGVzKQ0K
+arm64 dragonboard db410c boot failed while running linux next 20200827 kernel.
 
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  git commit: 88abac0b753dfdd85362a26d2da8277cb1e0842b
+  git describe: next-20200827
+  make_kernelversion: 5.9.0-rc2
+  kernel-config:
+https://builds.tuxbuild.com/vThV35pOF_GMlWdiTs3Bdw/kernel.config
+
+Boot log,
+
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd030]
+[    0.000000] Linux version 5.9.0-rc2-next-20200827
+(TuxBuild@12963d21faa5) (aarch64-linux-gnu-gcc (Debian 9.3.0-8) 9.3.0,
+GNU ld (GNU Binutils for Debian) 2.34) #1 SMP PREEMPT Thu Aug 27
+05:19:00 UTC 2020
+[    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
+[    0.000000] efi: UEFI not found.
+[    0.000000] [Firmware Bug]: Kernel image misaligned at boot, please
+fix your bootloader!
+<trmi>
+[    3.451425] i2c_qup 78ba000.i2c: using default clock-frequency 100000
+[    3.451491] i2c_qup 78ba000.i2c:
+[    3.451491]  tx channel not available
+[    3.493455] sdhci: Secure Digital Host Controller Interface driver
+[    3.493508] sdhci: Copyright(c) Pierre Ossman
+[    3.500902] Synopsys Designware Multimedia Card Interface Driver
+[    3.507441] sdhci-pltfm: SDHCI platform and OF driver helper
+[    3.514308] Unable to handle kernel paging request at virtual
+address dead000000000108
+[    3.514695] Mem abort info:
+[    3.522421]   ESR = 0x96000044
+[    3.525096]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    3.528236]   SET = 0, FnV = 0
+[    3.533703]   EA = 0, S1PTW = 0
+[    3.536561] Data abort info:
+[    3.539601]   ISV = 0, ISS = 0x00000044
+[    3.542727]   CM = 0, WnR = 1
+[    3.546287] [dead000000000108] address between user and kernel address ranges
+[    3.549414] Internal error: Oops: 96000044 [#1] PREEMPT SMP
+[    3.556520] Modules linked in:
+[    3.561901] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+5.9.0-rc2-next-20200827 #1
+[    3.565034] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[    3.572584] pstate: 60000005 (nZCv daif -PAN -UAO BTYPE=--)
+[    3.579271] pc : __clk_put+0x40/0x140
+[    3.584556] lr : __clk_put+0x2c/0x140
+[    3.588373] sp : ffff80001002bb00
+[    3.592016] x29: ffff80001002bb00 x28: 000000000000002e
+[    3.595320] x27: ffff000009f7ba68 x26: ffff80001146d878
+[    3.600703] x25: ffff00003fcfd8f8 x24: ffff00003d0bc410
+[    3.605999] x23: ffff80001146d0e0 x22: ffff000009f7ba40
+[    3.611293] x21: ffff00003d0bc400 x20: ffff000009f7b580
+[    3.616588] x19: ffff00003bccc780 x18: 0000000007824000
+[    3.621883] x17: ffff000009f7ba00 x16: ffff000009f7b5d0
+[    3.627177] x15: ffff800011966cf8 x14: ffffffffffffffff
+[    3.632472] x13: ffff800012917000 x12: ffff800012917000
+[    3.637769] x11: 0000000000000020 x10: 0101010101010101
+[    3.643063] x9 : ffff8000107a984c x8 : 7f7f7f7f7f7f7f7f
+[    3.648358] x7 : ffff000009fd8000 x6 : ffff80001237a000
+[    3.653653] x5 : 0000000000000000 x4 : ffff000009fd8000
+[    3.658949] x3 : ffff8000124e6768 x2 : ffff000009fd8000
+[    3.664243] x1 : ffff00003bccca80 x0 : dead000000000100
+[    3.669539] Call trace:
+[    3.674830]  __clk_put+0x40/0x140
+[    3.677003]  clk_put+0x18/0x28
+[    3.680477]  dev_pm_opp_put_clkname+0x30/0x58
+[    3.683431]  sdhci_msm_probe+0x284/0x9a0
+[    3.687857]  platform_drv_probe+0x5c/0xb0
+[    3.691847]  really_probe+0xf0/0x4d8
+[    3.695753]  driver_probe_device+0xfc/0x168
+[    3.699399]  device_driver_attach+0x7c/0x88
+[    3.703306]  __driver_attach+0xac/0x178
+[    3.707472]  bus_for_each_dev+0x78/0xc8
+[    3.711291]  driver_attach+0x2c/0x38
+[    3.715110]  bus_add_driver+0x14c/0x230
+[    3.718929]  driver_register+0x6c/0x128
+[    3.722489]  __platform_driver_register+0x50/0x60
+[    3.726312]  sdhci_msm_driver_init+0x24/0x30
+[    3.731173]  do_one_initcall+0x4c/0x2c0
+[    3.735511]  kernel_init_freeable+0x21c/0x284
+[    3.739072]  kernel_init+0x1c/0x120
+[    3.743582]  ret_from_fork+0x10/0x30
+[    3.746885] Code: 35000720 a9438660 f9000020 b4000040 (f9000401)
+[    3.750720] ---[ end trace a8d4100497387a2e ]---
+[    3.756736] Kernel panic - not syncing: Attempted to kill init!
+exitcode=0x0000000b
+[    3.761392] SMP: stopping secondary CPUs
+[    3.768877] Kernel Offset: 0x80000 from 0xffff800010000000
+[    3.772924] PHYS_OFFSET: 0x80000000
+[    3.778216] CPU features: 0x0240002,24802005
+[    3.781602] Memory Limit: none
+
+full test log,
+https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20200827/testrun/3123101/suite/linux-log-parser/test/check-kernel-oops-1714695/log
+
+-- 
+Linaro LKFT
+https://lkft.linaro.org
