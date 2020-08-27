@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63282C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3736120737
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADBC820848
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598558925;
-	bh=7Xgw8IUGP7VLzG8Sb+5jL0H9jR3vAdKv/vfEHwLk754=;
+	s=default; t=1598558930;
+	bh=yKbOOPdL7+pZyGE3E1+yfNF4h5jwEHoSCybPJ3uzi8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0pnZPlkLEVWX4RNFtx0pAGu8Goftr3fbh5UIFAAsxpTprufeczHb3nKVjnvXfra7O
-	 I19IiHCHDTRXRIF1ekZwLKYes+5jYQ/a4Ly1BVMxo2i6mYyNSy/rpQEdRJ9ol+nV/7
-	 NjVFn5m61G49SlvcCHEnk+cxD10CDDPL0jSPF6r4=
+	b=Ey0SR/qC6ltjjrgdgP5X8WnTsEfr6ixklN+w/5ML/lDK/xhjsgm18P9HUfaRC69aV
+	 rK7fwjDxhZlIOvfDksI7jLFyBzFmNn/QEOmhhyOVnEFPw5nLe7TEHofBvkhIOULheY
+	 bE2/7uOThUWpi8fmFaqyZYBLdoLhMiXGEIM01s78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgH0UIo (ORCPT
+        id S1727822AbgH0UIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 16:08:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55130 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 16:08:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbgH0UIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:08:40 -0400
+        id S1727116AbgH0UIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 16:08:48 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 395FE208C9;
-        Thu, 27 Aug 2020 20:08:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48205208C9;
+        Thu, 27 Aug 2020 20:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598558919;
-        bh=7Xgw8IUGP7VLzG8Sb+5jL0H9jR3vAdKv/vfEHwLk754=;
+        s=default; t=1598558927;
+        bh=yKbOOPdL7+pZyGE3E1+yfNF4h5jwEHoSCybPJ3uzi8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eQxNNqeGrTZ87zvEO01q+I627AIhrSDzy8XyPOHUpTNWuvcDNzqfP0Kwkba8wPkDd
-         8j/Fie4cyZulrsCahbCBiqXdKHf61gmLwM9KYNur0QsqTFHAifFr/eN0YUIQSWUQTe
-         umKg9mWDD/+Xti662qDARD2JVUCJmHyKGUblDEP8=
+        b=V6bLk4HnAq9bJHAHUxEWuDmV6GHGctBbrcdHLb+vrQWQGBE03Vl66RbLLdknLICHQ
+         +UMLr5pmALhNjszvyPq5Ch+KLiEGYqrnKzycspwl7K06ZFaairZDo4Z2PnysttwnG0
+         1Tt5S/Xzw9GLXfesNCRjntPxgNca4AfPReMwD7Eo=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Ray Jui <rjui@broadcom.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -53,9 +53,9 @@ To:     Ray Jui <rjui@broadcom.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/6] gpio: davinci: Simplify with dev_err_probe()
-Date:   Thu, 27 Aug 2020 22:08:23 +0200
-Message-Id: <20200827200827.26462-2-krzk@kernel.org>
+Subject: [PATCH 4/6] gpio: pca953x: Simplify with dev_err_probe()
+Date:   Thu, 27 Aug 2020 22:08:25 +0200
+Message-Id: <20200827200827.26462-4-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200827200827.26462-1-krzk@kernel.org>
 References: <20200827200827.26462-1-krzk@kernel.org>
@@ -69,28 +69,29 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/gpio/gpio-davinci.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/gpio/gpio-pca953x.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index 085b874db2a9..6f2138503726 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -237,12 +237,8 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index bd2e96c34f82..b5c3e56613a7 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -1000,12 +1000,9 @@ static int pca953x_probe(struct i2c_client *client,
+ 	chip->client = client;
  
- 	for (i = 0; i < nirq; i++) {
- 		chips->irqs[i] = platform_get_irq(pdev, i);
--		if (chips->irqs[i] < 0) {
--			if (chips->irqs[i] != -EPROBE_DEFER)
--				dev_info(dev, "IRQ not populated, err = %d\n",
--					 chips->irqs[i]);
--			return chips->irqs[i];
--		}
-+		if (chips->irqs[i] < 0)
-+			return dev_err_probe(dev, chips->irqs[i], "IRQ not populated\n");
- 	}
- 
- 	chips->chip.label = dev_name(dev);
+ 	reg = devm_regulator_get(&client->dev, "vcc");
+-	if (IS_ERR(reg)) {
+-		ret = PTR_ERR(reg);
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(&client->dev, "reg get err: %d\n", ret);
+-		return ret;
+-	}
++	if (IS_ERR(reg))
++		return dev_err_probe(&client->dev, PTR_ERR(reg), "reg get err\n");
++
+ 	ret = regulator_enable(reg);
+ 	if (ret) {
+ 		dev_err(&client->dev, "reg en err: %d\n", ret);
 -- 
 2.17.1
 
