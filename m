@@ -2,85 +2,132 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D35C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35236C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 188E920786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C6020786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 03:59:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="m7IuApWA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgH0D4r (ORCPT
+        id S1727015AbgH0D7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 23:56:47 -0400
-Received: from mga17.intel.com ([192.55.52.151]:26018 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbgH0D4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 23:56:45 -0400
-IronPort-SDR: sK8aqrfnso6vih/uTUJI5+zJXt6S+cyuI36RWPuzjH/3ps5wg6zG0qEK1OM2STAm8EKxcMHWY0
- 2HtP16CDYeLw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="136484482"
-X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
-   d="scan'208";a="136484482"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 20:56:45 -0700
-IronPort-SDR: 1pF0W3/zv1KsciQJ3CX4yuQZcoYqiCXl8sho5I5KXylTlS6MSyrJp0mslecwv1k2jk0xvUaC6+
- W41y7Zkp5p4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
-   d="scan'208";a="280513839"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by fmsmga007.fm.intel.com with ESMTP; 26 Aug 2020 20:56:42 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     cw00.choi@samsung.com, linux-kernel@vger.kernel.org
-Cc:     vijaikumar.kanagarajan@gmail.com, krzk@kernel.org,
-        myungjoo.ham@samsung.com, heikki.krogerus@linux.intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v2 2/2] extcon: ptn5150: Set the VBUS and POLARITY property state
-Date:   Thu, 27 Aug 2020 11:56:33 +0800
-Message-Id: <20200827035633.37348-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200827035633.37348-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200827035633.37348-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Wed, 26 Aug 2020 23:59:48 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4830 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbgH0D7r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 23:59:47 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f472f390001>; Wed, 26 Aug 2020 20:57:45 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 26 Aug 2020 20:59:47 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 26 Aug 2020 20:59:47 -0700
+Received: from [10.2.53.36] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
+ 2020 03:59:42 +0000
+Subject: Re: [bio] 37abbdc72e: WARNING:at_block/bio.c:#bio_release_pages
+To:     kernel test robot <lkp@intel.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Ilya Dryomov" <idryomov@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+        Jeff Layton <jlayton@kernel.org>, <linux-xfs@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <ceph-devel@vger.kernel.org>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, <lkp@lists.01.org>,
+        <ltp@lists.linux.it>
+References: <20200827032518.GO4299@shao2-debian>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <2d7d45b8-e271-87b2-f772-d1b2232fe351@nvidia.com>
+Date:   Wed, 26 Aug 2020 20:59:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200827032518.GO4299@shao2-debian>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598500665; bh=+FWH5O9plAx2YA/7/CTPyaQvsDP1bN7Fd3QNB/vKkOA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=m7IuApWAH6QorQ1B/A53t+ZQioXeC51OPleIyKiBBSIQeqx6r6btSGqLe5OYT/xRa
+         q0aiVhKco2L+zUHOuik21sCCi9lpLaD7th0UqbvYqV7Yxk5CuHxHdrZyYDPGmY2w99
+         QcAVSChYiytbHpKYLlwH41eNLU7pnnR77Zf/fNs5Mhb6KekZZr9/h0A69FMAkiLwxm
+         i8rM0eYVXte4X48P8iMmVlv5EhLeJvFYA5xAujWqeqAEbQBjrzFRIgXGZ0DU5sQHZU
+         KSa8FD6EEqbctof9fPVIgJsFoTkWU0C6lBEFHf1WLRwqRkHphxDoiUOniVb8LAE6/B
+         QO/WHC+GNJAZQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On 8/26/20 8:25 PM, kernel test robot wrote:
+...
+> kern  :warn  : [   59.757746] ------------[ cut here ]------------
+> kern  :warn  : [   59.758325] WARNING: CPU: 3 PID: 2581 at block/bio.c:955 bio_release_pages+0xd7/0xe0
+> kern  :warn  : [   59.758952] Modules linked in: dm_mod netconsole btrfs blake2b_generic xor zstd_compress raid6_pq libcrc32c intel_rapl_msr sd_mod intel_rapl_common t10_pi x86_pkg_temp_thermal sg intel_powerclamp coretemp i915 intel_gtt drm_kms_helper kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel syscopyarea rapl intel_cstate sysfillrect intel_uncore sysimgblt fb_sys_fops drm mei_me ipmi_devintf ahci libahci ipmi_msghandler libata mei joydev ie31200_edac video ip_tables
+> kern  :warn  : [   59.761834] CPU: 3 PID: 2581 Comm: aiodio_sparse Not tainted 5.8.0-10182-g37abbdc72ec00 #1
+> kern  :warn  : [   59.762559] Hardware name: Hewlett-Packard p6-1451cx/2ADA, BIOS 8.15 02/05/2013
+> kern  :warn  : [   59.763295] RIP: 0010:bio_release_pages+0xd7/0xe0
+> kern  :warn  : [   59.763983] Code: e1 89 d5 81 e2 ff 0f 00 00 c1 ed 0c 29 d1 48 c1 e5 06 48 03 28 eb 9c 48 8b 45 08 a8 01 75 c0 48 89 ef e8 8c f0 d2 ff eb b6 c3 <0f> 0b c3 66 0f 1f 44 00 00 0f 1f 44 00 00 41 54 31 c0 55 bd 00 10
+> kern  :warn  : [   59.765596] RSP: 0000:ffffc90000124e68 EFLAGS: 00010246
+> kern  :warn  : [   59.766339] RAX: 0000000000000a00 RBX: ffff888212c3f2a0 RCX: 0000000000000000
+> kern  :warn  : [   59.767124] RDX: fffffffffff41387 RSI: 0000000000000000 RDI: ffff88821fae3000
+> kern  :warn  : [   59.767950] RBP: ffff88821fae3000 R08: ffff88821f1d1c00 R09: 0000000000000000
+> kern  :warn  : [   59.768726] R10: ffff88821f1d1a10 R11: ffff88821faab3b0 R12: 0000000040000001
+> kern  :warn  : [   59.769513] R13: 0000000000000400 R14: 0000000000002c00 R15: 0000000000000000
+> kern  :warn  : [   59.770294] FS:  00007fb0401ef740(0000) GS:ffff88821fb80000(0000) knlGS:0000000000000000
+> kern  :warn  : [   59.771112] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> kern  :warn  : [   59.771908] CR2: 00007ffc3fc11000 CR3: 000000012477e006 CR4: 00000000001706e0
+> kern  :warn  : [   59.772720] Call Trace:
+> kern  :warn  : [   59.773466]  <IRQ>
+> kern  :warn  : [   59.774200]  iomap_dio_bio_end_io+0x5f/0x100
 
-Set the VBUS and POLARITY property state.
+ah, this is self-inflicted, because my new pin_user_page() (which is called
+from iomap_dio_bio_end_io) doesn't set BIO_FOLL_PIN.
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
----
- drivers/extcon/extcon-ptn5150.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Obsolete, now that BIO_FOLL_PIN is not going to happen, but it's good to see
+that the system isn't doing anything unexpected here.
 
-diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
-index 8b930050a3f1..b5217a61615c 100644
---- a/drivers/extcon/extcon-ptn5150.c
-+++ b/drivers/extcon/extcon-ptn5150.c
-@@ -279,6 +279,12 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
- 		return ret;
- 	}
- 
-+	extcon_set_property_capability(info->edev, EXTCON_USB,
-+				       EXTCON_PROP_USB_VBUS);
-+	extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
-+				       EXTCON_PROP_USB_VBUS);
-+	extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
-+				       EXTCON_PROP_USB_TYPEC_POLARITY);
- 	/* Initialize PTN5150 device and print vendor id and version id */
- 	ret = ptn5150_init_dev_type(info);
- 	if (ret)
+thanks,
 -- 
-2.11.0
+John Hubbard
+NVIDIA
 
+> kern  :warn  : [   59.774973]  blk_update_request+0x219/0x3c0
+> kern  :warn  : [   59.775767]  scsi_end_request+0x29/0x140
+> kern  :warn  : [   59.776538]  scsi_io_completion+0x7a/0x520
+> kern  :warn  : [   59.777324]  blk_done_softirq+0x95/0xc0
+> kern  :warn  : [   59.778098]  __do_softirq+0xe8/0x313
+> kern  :warn  : [   59.778887]  asm_call_on_stack+0x12/0x20
+> kern  :warn  : [   59.779662]  </IRQ>
+> kern  :warn  : [   59.780435]  do_softirq_own_stack+0x39/0x60
+> kern  :warn  : [   59.781217]  irq_exit_rcu+0xd2/0xe0
+> kern  :warn  : [   59.782020]  common_interrupt+0x74/0x140
+> kern  :warn  : [   59.782797]  ? asm_common_interrupt+0x8/0x40
+> kern  :warn  : [   59.783594]  asm_common_interrupt+0x1e/0x40
+> kern  :warn  : [   59.784359] RIP: 0033:0x5572c6b47f20
+> kern  :warn  : [   59.785119] Code: 10 00 00 49 01 c4 44 39 fd 0f 8c a2 00 00 00 ba 00 10 00 00 4c 89 ee 44 89 f7 e8 ab f5 ff ff 85 c0 7e d7 89 c2 4c 89 eb eb 09 <48> 83 c3 01 83 ea 01 74 c7 44 0f be 03 45 84 c0 74 ee 83 fa 03 7e
+> kern  :warn  : [   59.786952] RSP: 002b:00007ffc3fc0fed0 EFLAGS: 00000246
+> kern  :warn  : [   59.787836] RAX: 0000000000001000 RBX: 00007ffc3fc11de1 RCX: 00007fb0403c950e
+> kern  :warn  : [   59.788750] RDX: 00000000000000bf RSI: 00007ffc3fc10ea0 RDI: 0000000000000007
+> kern  :warn  : [   59.789647] RBP: 00000000001b5c00 R08: 0000000000000000 R09: 00007ffc3fc0d6b7
+> kern  :warn  : [   59.790550] R10: 0000000000000000 R11: 0000000000000246 R12: 000000000003e000
+> kern  :warn  : [   59.791447] R13: 00007ffc3fc10ea0 R14: 0000000000000007 R15: 000000000003e000
+> kern  :warn  : [   59.792356] ---[ end trace 1c52c540ed6c08e4 ]---
+> 
+> ...
