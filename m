@@ -2,159 +2,83 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2F7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30A492074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC7FA2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:16:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="omiRhYCp"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="olO2E455"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgH0JPi (ORCPT
+        id S1728394AbgH0JQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:15:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgH0JPh (ORCPT
+        Thu, 27 Aug 2020 05:16:00 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:51362 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726157AbgH0JQA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:15:37 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16ECDC061264;
-        Thu, 27 Aug 2020 02:15:37 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id k15so3006392pfc.12;
-        Thu, 27 Aug 2020 02:15:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R+iYIc5/zQZBPP8dobzLM6QGug75pE9JGQJ4xhn3Y5Y=;
-        b=omiRhYCpnbclXn6z6CGZ04V/DYGCGeG/A73Z9YqlW3TmssLvfiUWrE5qkHCp2NKGBE
-         2UDqzgVawH9/sykNxfJRe7Sqdn/lvGpn4JAJcIEE5Y8shd8D9sSelmUgbH19MmXQn1bH
-         cw+6l6lmhNmVfJ/yYzXv4jTdeM5U+MrN6KjwGBAM2NK+80gT9Sxh4LBKhtQy0Ho8Q0mx
-         1CtbWcKMT6KBEnDrqaUy1eUAgbsmLeEPHKH617ePHZ4bChkDPsFbu+jR0KS3OsFSMmgl
-         AFHUkcwYBY1tEP2hD15jjVsl8CPZsCXAclxvFUESvZ9vCn2hzDlCnOLQD7cVTc9EDIOg
-         CHyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R+iYIc5/zQZBPP8dobzLM6QGug75pE9JGQJ4xhn3Y5Y=;
-        b=HnVvPqVUjI8Xner3yfD43cumHtPxtjHl8iPQs7yEMF5/wH3dnjPVI8IRPHOi0Xqxqv
-         XMJ6eiESGuNb4LFiHPrcC0kRpQcGzfsyrUOCAkiP/NwdS8rk4TrhTGX12QQG5zDRo/PD
-         08rtBPjUZJpGukpMd/M/T7MdyroBwQeE9otL0djfjBE1zLH7GnAGhMjKtfyvDN39c4u2
-         di6z43AYCJyuFsjp5h2S0LnXwHusnATQhCJN99FJhjf6kYqepSuQop6YwXaO6r8RdVjA
-         m8zsJO99zUsoMb63fj8BiZrvq+3Ba+BTJd6W3zN+E2/LivSQrOxmiTXiogN0XDgtEtrc
-         sR8w==
-X-Gm-Message-State: AOAM5334msX8lhGkW4KN5cHRah9jBUQvhlb5NB80siqoX3Vj/4QBCEz3
-        TIJ28WoYpeuj2kDpEcrBTh1Hd5G7G7q+Mx18A+N434DBi/zlY++a
-X-Google-Smtp-Source: ABdhPJzladeM7wfq+6Tlw8dF0BoeJp2S9AVgBlK6D8SyppoSNf+VyMJG60Z8ZmsDdRyDJb6yja3qvEw/J9p+R5ot2D8=
-X-Received: by 2002:a17:902:8208:: with SMTP id x8mr4118284pln.65.1598519736638;
- Thu, 27 Aug 2020 02:15:36 -0700 (PDT)
+        Thu, 27 Aug 2020 05:16:00 -0400
+X-UUID: 520acdf6c46f4604939d6a7a13e5b330-20200827
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=V1FwTzdYmRJ/zoRfCUGYgxD7wn+pwTusye8m5DDKIDU=;
+        b=olO2E455TEdjE8bfsj8k6SFXAGjtRFTGPnZfyBTjm+M3xaFcl5Cz84UEzN7bngu7dcTsCCJVmWDux0xnYoOpkFhTS2QIsdYf1Lhs7mEVBW6entY08IyHxwvDdtXEyTu6/cJOzcT7s8S21gUMEbIno6pBsSrC3xHHUl9RWtpYufk=;
+X-UUID: 520acdf6c46f4604939d6a7a13e5b330-20200827
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <landen.chao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 258634638; Thu, 27 Aug 2020 17:15:51 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 27 Aug 2020 17:15:48 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 27 Aug 2020 17:15:49 +0800
+From:   Landen Chao <landen.chao@mediatek.com>
+To:     Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Russell King <linux@armlinux.org.uk>
+CC:     <opensource@vdorst.com>, <netdev@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <frank-w@public-files.de>,
+        <dqfext@gmail.com>, Landen Chao <landen.chao@mediatek.com>
+Subject: [PATCH] net: dsa: mt7530: fix advertising unsupported
+Date:   Thu, 27 Aug 2020 17:15:47 +0800
+Message-ID: <20200827091547.21870-1-landen.chao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <20200826181706.11098-1-krzk@kernel.org> <20200826181706.11098-18-krzk@kernel.org>
-In-Reply-To: <20200826181706.11098-18-krzk@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Aug 2020 12:15:20 +0300
-Message-ID: <CAHp75Ve84KQ3Rysq9oHzuCKSaX-Xu4LbAvwih=10qEBXBk7bbw@mail.gmail.com>
-Subject: Re: [PATCH 18/24] Input: pixcir_i2c_ts - Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bastien Nocera <hadess@hadess.net>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-input <linux-input@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 9:21 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and also it prints the error value.
+MTAwMGJhc2VUX0hhbGYNCg0KUmVtb3ZlIDEwMDBiYXNlVF9IYWxmIHRvIGFkdmVydGlzZSBjb3Jy
+ZWN0IGhhcmR3YXJlIGNhcGFiaWxpdHkgaW4NCnBoeWxpbmtfdmFsaWRhdGUoKSBjYWxsYmFjayBm
+dW5jdGlvbi4NCg0KRml4ZXM6IDM4Zjc5MGE4MDU2MCAoIm5ldDogZHNhOiBtdDc1MzA6IEFkZCBz
+dXBwb3J0IGZvciBwb3J0IDUiKQ0KU2lnbmVkLW9mZi1ieTogTGFuZGVuIENoYW8gPGxhbmRlbi5j
+aGFvQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvbmV0L2RzYS9tdDc1MzAuYyB8IDIgKy0N
+CiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCg0KZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAuYyBiL2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAu
+Yw0KaW5kZXggOGRjYjhhNDlhYjY3Li4yMzg0MTdkYjI2ZjkgMTAwNjQ0DQotLS0gYS9kcml2ZXJz
+L25ldC9kc2EvbXQ3NTMwLmMNCisrKyBiL2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAuYw0KQEAgLTE1
+MDEsNyArMTUwMSw3IEBAIHN0YXRpYyB2b2lkIG10NzUzMF9waHlsaW5rX3ZhbGlkYXRlKHN0cnVj
+dCBkc2Ffc3dpdGNoICpkcywgaW50IHBvcnQsDQogCQlwaHlsaW5rX3NldChtYXNrLCAxMDBiYXNl
+VF9GdWxsKTsNCiANCiAJCWlmIChzdGF0ZS0+aW50ZXJmYWNlICE9IFBIWV9JTlRFUkZBQ0VfTU9E
+RV9NSUkpIHsNCi0JCQlwaHlsaW5rX3NldChtYXNrLCAxMDAwYmFzZVRfSGFsZik7DQorCQkJLyog
+VGhpcyBzd2l0Y2ggb25seSBzdXBwb3J0cyAxRyBmdWxsLWR1cGxleC4gKi8NCiAJCQlwaHlsaW5r
+X3NldChtYXNrLCAxMDAwYmFzZVRfRnVsbCk7DQogCQkJaWYgKHBvcnQgPT0gNSkNCiAJCQkJcGh5
+bGlua19zZXQobWFzaywgMTAwMGJhc2VYX0Z1bGwpOw0KLS0gDQoyLjE3LjENCg==
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/input/touchscreen/pixcir_i2c_ts.c | 38 +++++++----------------
->  1 file changed, 12 insertions(+), 26 deletions(-)
->
-> diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
-> index 9aa098577350..fb37567e2d7e 100644
-> --- a/drivers/input/touchscreen/pixcir_i2c_ts.c
-> +++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
-> @@ -515,41 +515,27 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
->         input_set_drvdata(input, tsdata);
->
->         tsdata->gpio_attb = devm_gpiod_get(dev, "attb", GPIOD_IN);
-> -       if (IS_ERR(tsdata->gpio_attb)) {
-> -               error = PTR_ERR(tsdata->gpio_attb);
-> -               if (error != -EPROBE_DEFER)
-> -                       dev_err(dev, "Failed to request ATTB gpio: %d\n",
-> -                               error);
-> -               return error;
-> -       }
-> +       if (IS_ERR(tsdata->gpio_attb))
-> +               return dev_err_probe(dev, PTR_ERR(tsdata->gpio_attb),
-> +                                    "Failed to request ATTB gpio\n");
->
->         tsdata->gpio_reset = devm_gpiod_get_optional(dev, "reset",
->                                                      GPIOD_OUT_LOW);
-> -       if (IS_ERR(tsdata->gpio_reset)) {
-> -               error = PTR_ERR(tsdata->gpio_reset);
-> -               if (error != -EPROBE_DEFER)
-> -                       dev_err(dev, "Failed to request RESET gpio: %d\n",
-> -                               error);
-> -               return error;
-> -       }
-> +       if (IS_ERR(tsdata->gpio_reset))
-> +               return dev_err_probe(dev, PTR_ERR(tsdata->gpio_reset),
-> +                                    "Failed to request RESET gpio\n");
->
->         tsdata->gpio_wake = devm_gpiod_get_optional(dev, "wake",
->                                                     GPIOD_OUT_HIGH);
-> -       if (IS_ERR(tsdata->gpio_wake)) {
-> -               error = PTR_ERR(tsdata->gpio_wake);
-> -               if (error != -EPROBE_DEFER)
-> -                       dev_err(dev, "Failed to get wake gpio: %d\n", error);
-> -               return error;
-> -       }
-> +       if (IS_ERR(tsdata->gpio_wake))
-> +               return dev_err_probe(dev, PTR_ERR(tsdata->gpio_wake),
-> +                                    "Failed to get wake gpio\n");
->
->         tsdata->gpio_enable = devm_gpiod_get_optional(dev, "enable",
->                                                       GPIOD_OUT_HIGH);
-> -       if (IS_ERR(tsdata->gpio_enable)) {
-> -               error = PTR_ERR(tsdata->gpio_enable);
-> -               if (error != -EPROBE_DEFER)
-> -                       dev_err(dev, "Failed to get enable gpio: %d\n", error);
-> -               return error;
-> -       }
-> +       if (IS_ERR(tsdata->gpio_enable))
-> +               return dev_err_probe(dev, PTR_ERR(tsdata->gpio_enable),
-> +                                    "Failed to get enable gpio\n");
->
->         if (tsdata->gpio_enable)
->                 msleep(100);
-> --
-> 2.17.1
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
