@@ -2,88 +2,94 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	TVD_SUBJ_WIPE_DEBT,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7819C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB672177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F47222B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:32:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgH0Pa5 (ORCPT
+        id S1727998AbgH0PcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:30:57 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:48312 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727998AbgH0Paw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:30:52 -0400
-X-IronPort-AV: E=Sophos;i="5.76,359,1592838000"; 
-   d="scan'208";a="55700862"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 28 Aug 2020 00:30:50 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 229C9400759E;
-        Fri, 28 Aug 2020 00:30:47 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-can@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH v2 2/2] dt-bindings: can: rcar_can: Document r8a774e1 support
-Date:   Thu, 27 Aug 2020 16:30:41 +0100
-Message-Id: <20200827153041.27806-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200827153041.27806-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200827153041.27806-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Thu, 27 Aug 2020 11:32:01 -0400
+Received: from verein.lst.de ([213.95.11.211]:38724 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726157AbgH0Pb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 11:31:59 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 9011468BEB; Thu, 27 Aug 2020 17:31:55 +0200 (CEST)
+Date:   Thu, 27 Aug 2020 17:31:55 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: remove the last set_fs() in common code, and remove it for x86
+ and powerpc v2
+Message-ID: <20200827153155.GA8661@lst.de>
+References: <20200827150030.282762-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827150030.282762-1-hch@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document SoC specific bindings for RZ/G2H (R8A774E1) SoC.
+> Diffstat:
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/net/can/rcar_can.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Actually no diffstat here as David Howells pointed out.  Here we go:
 
-diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-index 85c6551b602a..21d6780874cc 100644
---- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
-+++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-@@ -9,6 +9,7 @@ Required properties:
- 	      "renesas,can-r8a774a1" if CAN controller is a part of R8A774A1 SoC.
- 	      "renesas,can-r8a774b1" if CAN controller is a part of R8A774B1 SoC.
- 	      "renesas,can-r8a774c0" if CAN controller is a part of R8A774C0 SoC.
-+	      "renesas,can-r8a774e1" if CAN controller is a part of R8A774E1 SoC.
- 	      "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
- 	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
- 	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
-@@ -37,8 +38,8 @@ Required properties:
- - pinctrl-0: pin control group to be used for this controller.
- - pinctrl-names: must be "default".
- 
--Required properties for R8A774A1, R8A774B1, R8A774C0, R8A7795, R8A7796,
--R8A77965, R8A77990, and R8A77995:
-+Required properties for R8A774A1, R8A774B1, R8A774C0, R8A774E1, R8A7795,
-+R8A7796, R8A77965, R8A77990, and R8A77995:
- For the denoted SoCs, "clkp2" can be CANFD clock. This is a div6 clock and can
- be used by both CAN and CAN FD controller at the same time. It needs to be
- scaled to maximum frequency if any of these controllers use it. This is done
--- 
-2.17.1
-
+ arch/Kconfig                           |    3 
+ arch/alpha/Kconfig                     |    1 
+ arch/arc/Kconfig                       |    1 
+ arch/arm/Kconfig                       |    1 
+ arch/arm64/Kconfig                     |    1 
+ arch/c6x/Kconfig                       |    1 
+ arch/csky/Kconfig                      |    1 
+ arch/h8300/Kconfig                     |    1 
+ arch/hexagon/Kconfig                   |    1 
+ arch/ia64/Kconfig                      |    1 
+ arch/m68k/Kconfig                      |    1 
+ arch/microblaze/Kconfig                |    1 
+ arch/mips/Kconfig                      |    1 
+ arch/nds32/Kconfig                     |    1 
+ arch/nios2/Kconfig                     |    1 
+ arch/openrisc/Kconfig                  |    1 
+ arch/parisc/Kconfig                    |    1 
+ arch/powerpc/include/asm/processor.h   |    7 -
+ arch/powerpc/include/asm/thread_info.h |    5 -
+ arch/powerpc/include/asm/uaccess.h     |   78 ++++++++-----------
+ arch/powerpc/kernel/signal.c           |    3 
+ arch/powerpc/lib/sstep.c               |    6 -
+ arch/riscv/Kconfig                     |    1 
+ arch/s390/Kconfig                      |    1 
+ arch/sh/Kconfig                        |    1 
+ arch/sparc/Kconfig                     |    1 
+ arch/um/Kconfig                        |    1 
+ arch/x86/ia32/ia32_aout.c              |    1 
+ arch/x86/include/asm/page_32_types.h   |   11 ++
+ arch/x86/include/asm/page_64_types.h   |   38 +++++++++
+ arch/x86/include/asm/processor.h       |   60 ---------------
+ arch/x86/include/asm/thread_info.h     |    2 
+ arch/x86/include/asm/uaccess.h         |   26 ------
+ arch/x86/kernel/asm-offsets.c          |    3 
+ arch/x86/lib/getuser.S                 |   28 ++++---
+ arch/x86/lib/putuser.S                 |   21 +++--
+ arch/xtensa/Kconfig                    |    1 
+ drivers/misc/lkdtm/bugs.c              |    4 +
+ drivers/misc/lkdtm/usercopy.c          |    4 +
+ fs/read_write.c                        |   69 ++++++++++-------
+ fs/splice.c                            |  130 +++------------------------------
+ include/linux/fs.h                     |    2 
+ include/linux/uaccess.h                |   18 ++++
+ lib/test_bitmap.c                      |   10 ++
+ 44 files changed, 235 insertions(+), 316 deletions(-)
