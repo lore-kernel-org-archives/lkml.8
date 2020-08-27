@@ -2,126 +2,223 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C713C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D92620786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 921F120786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:59:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="WufcuUyw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zl/g4SIo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sk6OXjgY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgH0H7N (ORCPT
+        id S1728560AbgH0H7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:59:13 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:8942 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728587AbgH0H7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:59:06 -0400
-IronPort-SDR: pcQTABDNzCOEZzVXUHdHR+VQg279JaBcMZMVpmFp4+RY4P0r8TpEUcqSdNCdiuaTz3lvgfF1i4
- VQGOE+SdLDOXfrYRNsEiW6Tj/20R0aSR5ayzhL411S0jeVhK2GMjl109fPURBGKpp2/iz2hi7F
- MHfRoSRZuQV/DzQs9bdPtrUe2SnnCcCU34ppC76d5FifhrDGvKKWHoNMJSB3QJCb5h8m8o9eLd
- /pO7JzSsESETJweFOwkAxRHlf9/nTc9WURJcGlq55bXQYxP6I/0isYsL+T3qKm6HKBFjMBAfYg
- 1HM=
-X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
-   d="scan'208";a="13619585"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 27 Aug 2020 09:59:04 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Thu, 27 Aug 2020 09:59:04 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Thu, 27 Aug 2020 09:59:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1598515144; x=1630051144;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=Oe/LRi3jeDUnyT2lJ6K1yeZAK9stHhVflXPfWhtYVhk=;
-  b=WufcuUywO6Xag/qsdyaGEbHwJ2O1eqkNNC6SmY0gdYk6N//6LTx88QGN
-   SwGDgxRFWn4FsR2mZ1xW2qhXZG4NR0fmEj6lq+kaWt4GkhJVpiS7YvTcf
-   D3O8o9tbyXlx0MFoxRHpkKTE2uZ93GMrCaHn/gE6wd7820MevshqGKz6r
-   IqvLuEg94FwwKaeXqVIIufVVfbP4i6WX6b8/silxEZDCJhWj6qQMYTgMy
-   2D8hCCR3bd71ZxcR1x0CzMzHCnQtx5FPkN/+VuuxMqH2VLAanuVb+OTIn
-   TFDIxc0rR46qBt9wa+p0EcNa4pmEvcRALnobIdPjsf/zrXVMpFf2e9J3G
-   w==;
-IronPort-SDR: 9Fyq4A42C5ZokLxgWBJ4iX6M5+kl8NRn9XLfdUEB/cYGt91pe7DrmnL1p8AsSXFops5VDWXROK
- qsi6nj4l7CNS7dpGwm3jwuBAUBOKPqduAl3H8hsdN4IufG7qqxmQDlSDs2ynggyGaLe9BjboGQ
- 51xVYgttTNCkrqObbU5aLLQU2SGYIkixVp2ynyLzUPEPCwb02pyuSYSq/B9Uj1ETxSRMhxk+lC
- 1tlUQTRfg1kjnhpb4FMM0jCxvKm1JO1ug3ZtGnuSExTdpxsHfYNynBcTQFwxmEWjV7JRPG/+lD
- cSU=
-X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
-   d="scan'208";a="13619584"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 27 Aug 2020 09:59:04 +0200
-Received: from herburgerg-w.tq-net.de (herburgerg-w.tq-net.de [10.122.52.145])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id C7C1C280065;
-        Thu, 27 Aug 2020 09:59:04 +0200 (CEST)
-From:   Gregor Herburger <gregor.herburger@ew.tq-group.com>
-To:     york.sun@nxp.com, bp@alien8.de, mchehab@kernel.org,
-        tony.luck@intel.com, james.morse@arm.com, rrichter@marvell.com
-Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gregor Herburger <gregor.herburger@ew.tq-group.com>
-Subject: [PATCH v2 1/1] edac: fsl_ddr_edac: fix expected data message
-Date:   Thu, 27 Aug 2020 09:56:00 +0200
-Message-Id: <20200827075600.22335-1-gregor.herburger@ew.tq-group.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200817095302.GD549@zn.tnic>
-References: <20200817095302.GD549@zn.tnic>
+        Thu, 27 Aug 2020 03:59:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728388AbgH0HyX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:54:23 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38D2DC06121B;
+        Thu, 27 Aug 2020 00:54:23 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 07:54:21 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598514861;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gZg0MEDtwZcjzdPVjMy4lYSX+RK6YsLfItMCHIuSXWU=;
+        b=zl/g4SIovYCxBujJwtYy3QC30JC82777a31WQCbeaLpQLxVbwQoB7xCtUMYOMPzDfMFJZl
+        wg3t2EJDBJLBcPIrdZvZYQuMrfMWHivhPTfGCgvTsqUPSvxNhHDx8r4x+kcbYiLfyAmmZq
+        Df969psCwdBLMgeeX+bxzzB5kKngx8lmxYCGkzqI3iF7JQ+YmBk0qOyOw/pFduN5RMtUYS
+        9mqDELiCKZ/9hu7sBASMjAWrrE/OGXvX+1GRXaqSiVMiUzGmb37CquExCb2Cx+M2LMuhGA
+        BAv/I/FEm4cS94X0pDWHxko/Ufl+3OCw1M7OsMFwVIsrEtP20kr34Nl5MCNEdg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598514861;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gZg0MEDtwZcjzdPVjMy4lYSX+RK6YsLfItMCHIuSXWU=;
+        b=sk6OXjgYlsLJ4HImW6M8JM7Jpov0e7Ky5x5p8IuVVuQDLUJjSWZa2Ym3GmdE+3buCLIvvV
+        Lbr2vuTBVJfkSUCw==
+From:   "tip-bot2 for Boqun Feng" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/core] lockdep: Make __bfs() visit every dependency
+ until a match
+Cc:     Boqun Feng <boqun.feng@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200807074238.1632519-5-boqun.feng@gmail.com>
+References: <20200807074238.1632519-5-boqun.feng@gmail.com>
+MIME-Version: 1.0
+Message-ID: <159851486108.20229.15945468647290456258.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a correctable single bit error occurs, the driver calculates the
-bad_data_bit respectively the bad_ecc_bit. If there is no error in the
-corresponding data, the value becomes -1. With this the expected data
-message is calculated.
+The following commit has been merged into the locking/core branch of tip:
 
-In the case of an error in the lower 32 bits or no error (-1) the right
-side operand of the bit-shift becomes negative which is undefined
-behavior.
+Commit-ID:     d563bc6ead9e79be37067d58509a605b67378184
+Gitweb:        https://git.kernel.org/tip/d563bc6ead9e79be37067d58509a605b67378184
+Author:        Boqun Feng <boqun.feng@gmail.com>
+AuthorDate:    Fri, 07 Aug 2020 15:42:23 +08:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 26 Aug 2020 12:42:03 +02:00
 
-This can result in wrong and misleading messages like this:
-[  311.103794] EDAC FSL_DDR MC0: Faulty Data bit: 36
-[  311.108490] EDAC FSL_DDR MC0: Expected Data / ECC:   0xffffffef_ffffffff / 0x80000059
-[  311.116135] EDAC FSL_DDR MC0: Captured Data / ECC:   0xffffffff_ffffffef / 0x59
+lockdep: Make __bfs() visit every dependency until a match
 
-Fix this by only calculating the expected data where the error occurred.
+Currently, __bfs() will do a breadth-first search in the dependency
+graph and visit each lock class in the graph exactly once, so for
+example, in the following graph:
 
-With the fix the dmesg output looks like this:
-[  311.103794] EDAC FSL_DDR MC0: Faulty Data bit: 36
-[  311.108490] EDAC FSL_DDR MC0: Expected Data / ECC:   0xffffffef_ffffffef / 0x59
-[  311.116135] EDAC FSL_DDR MC0: Captured Data / ECC:   0xffffffff_ffffffef / 0x59
+	A ---------> B
+	|            ^
+	|            |
+	+----------> C
 
-Signed-off-by: Gregor Herburger <gregor.herburger@ew.tq-group.com>
+a __bfs() call starts at A, will visit B through dependency A -> B and
+visit C through dependency A -> C and that's it, IOW, __bfs() will not
+visit dependency C -> B.
+
+This is OK for now, as we only have strong dependencies in the
+dependency graph, so whenever there is a traverse path from A to B in
+__bfs(), it means A has strong dependencies to B (IOW, B depends on A
+strongly). So no need to visit all dependencies in the graph.
+
+However, as we are going to add recursive-read lock into the dependency
+graph, as a result, not all the paths mean strong dependencies, in the
+same example above, dependency A -> B may be a weak dependency and
+traverse A -> C -> B may be a strong dependency path. And with the old
+way of __bfs() (i.e. visiting every lock class exactly once), we will
+miss the strong dependency path, which will result into failing to find
+a deadlock. To cure this for the future, we need to find a way for
+__bfs() to visit each dependency, rather than each class, exactly once
+in the search until we find a match.
+
+The solution is simple:
+
+We used to mark lock_class::lockdep_dependency_gen_id to indicate a
+class has been visited in __bfs(), now we change the semantics a little
+bit: we now mark lock_class::lockdep_dependency_gen_id to indicate _all
+the dependencies_ in its lock_{after,before} have been visited in the
+__bfs() (note we only take one direction in a __bfs() search). In this
+way, every dependency is guaranteed to be visited until we find a match.
+
+Note: the checks in mark_lock_accessed() and lock_accessed() are
+removed, because after this modification, we may call these two
+functions on @source_entry of __bfs(), which may not be the entry in
+"list_entries"
+
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200807074238.1632519-5-boqun.feng@gmail.com
 ---
- drivers/edac/fsl_ddr_edac.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/locking/lockdep.c | 61 ++++++++++++++++++++++-----------------
+ 1 file changed, 35 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/edac/fsl_ddr_edac.c b/drivers/edac/fsl_ddr_edac.c
-index 6d8ea226010d..4b6989cf1947 100644
---- a/drivers/edac/fsl_ddr_edac.c
-+++ b/drivers/edac/fsl_ddr_edac.c
-@@ -343,9 +343,9 @@ static void fsl_mc_check(struct mem_ctl_info *mci)
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 462c68c..150686a 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -1421,23 +1421,19 @@ static inline unsigned int  __cq_get_elem_count(struct circular_queue *cq)
+ 	return (cq->rear - cq->front) & CQ_MASK;
+ }
  
- 		fsl_mc_printk(mci, KERN_ERR,
- 			"Expected Data / ECC:\t%#8.8x_%08x / %#2.2x\n",
--			cap_high ^ (1 << (bad_data_bit - 32)),
--			cap_low ^ (1 << bad_data_bit),
--			syndrome ^ (1 << bad_ecc_bit));
-+			(bad_data_bit > 31) ? cap_high ^ (1 << (bad_data_bit - 32)) : cap_high,
-+			(bad_data_bit <= 31) ? cap_low ^ (1 << (bad_data_bit)) : cap_low,
-+			(bad_ecc_bit != -1) ? syndrome ^ (1 << (bad_ecc_bit)) : syndrome);
+-static inline void mark_lock_accessed(struct lock_list *lock,
+-					struct lock_list *parent)
++static inline void mark_lock_accessed(struct lock_list *lock)
+ {
+-	unsigned long nr;
++	lock->class->dep_gen_id = lockdep_dependency_gen_id;
++}
+ 
+-	nr = lock - list_entries;
+-	WARN_ON(nr >= ARRAY_SIZE(list_entries)); /* Out-of-bounds, input fail */
++static inline void visit_lock_entry(struct lock_list *lock,
++				    struct lock_list *parent)
++{
+ 	lock->parent = parent;
+-	lock->class->dep_gen_id = lockdep_dependency_gen_id;
+ }
+ 
+ static inline unsigned long lock_accessed(struct lock_list *lock)
+ {
+-	unsigned long nr;
+-
+-	nr = lock - list_entries;
+-	WARN_ON(nr >= ARRAY_SIZE(list_entries)); /* Out-of-bounds, input fail */
+ 	return lock->class->dep_gen_id == lockdep_dependency_gen_id;
+ }
+ 
+@@ -1540,26 +1536,39 @@ static enum bfs_result __bfs(struct lock_list *source_entry,
+ 			goto exit;
+ 		}
+ 
++		/*
++		 * If we have visited all the dependencies from this @lock to
++		 * others (iow, if we have visited all lock_list entries in
++		 * @lock->class->locks_{after,before}) we skip, otherwise go
++		 * and visit all the dependencies in the list and mark this
++		 * list accessed.
++		 */
++		if (lock_accessed(lock))
++			continue;
++		else
++			mark_lock_accessed(lock);
++
+ 		head = get_dep_list(lock, offset);
+ 
++		DEBUG_LOCKS_WARN_ON(!irqs_disabled());
++
+ 		list_for_each_entry_rcu(entry, head, entry) {
+-			if (!lock_accessed(entry)) {
+-				unsigned int cq_depth;
+-				mark_lock_accessed(entry, lock);
+-				if (match(entry, data)) {
+-					*target_entry = entry;
+-					ret = BFS_RMATCH;
+-					goto exit;
+-				}
+-
+-				if (__cq_enqueue(cq, entry)) {
+-					ret = BFS_EQUEUEFULL;
+-					goto exit;
+-				}
+-				cq_depth = __cq_get_elem_count(cq);
+-				if (max_bfs_queue_depth < cq_depth)
+-					max_bfs_queue_depth = cq_depth;
++			unsigned int cq_depth;
++
++			visit_lock_entry(entry, lock);
++			if (match(entry, data)) {
++				*target_entry = entry;
++				ret = BFS_RMATCH;
++				goto exit;
++			}
++
++			if (__cq_enqueue(cq, entry)) {
++				ret = BFS_EQUEUEFULL;
++				goto exit;
+ 			}
++			cq_depth = __cq_get_elem_count(cq);
++			if (max_bfs_queue_depth < cq_depth)
++				max_bfs_queue_depth = cq_depth;
+ 		}
  	}
- 
- 	fsl_mc_printk(mci, KERN_ERR,
--- 
-2.17.1
-
+ exit:
