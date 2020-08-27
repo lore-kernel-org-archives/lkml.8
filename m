@@ -2,97 +2,87 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C552C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA2BC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2362220791
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F562087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:56:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="inMF9EfP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vEHF2QGs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgH0Qzb (ORCPT
+        id S1726876AbgH0Q42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:55:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52828 "EHLO
+        Thu, 27 Aug 2020 12:56:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgH0Qza (ORCPT
+        with ESMTP id S1726197AbgH0Q42 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:55:30 -0400
-Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E36FC061264;
-        Thu, 27 Aug 2020 09:55:30 -0700 (PDT)
-Received: by mail-oi1-x22c.google.com with SMTP id z195so5191160oia.6;
-        Thu, 27 Aug 2020 09:55:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=v483s8xrYSzjz1MKg/llYnen68ml62j7JXePfBOF9rc=;
-        b=inMF9EfPRyYR2v4n6gY75VgLNyLRETpRc3y8AyJgW5+38mlskrltryQHFET/r/RfM0
-         cIeD24Seaz0xI8pgPVUEsfPJ9RPDrfGcySpko5K4T6BjuUXpmawoMcRc33/kgwHY0oq1
-         4kZ0FvNRPebKH528um81q98eDrnGBvD8Q7c7UMByKn79jYh+ZJpnmNFItSzsHFRhJ6Tb
-         fkdcjhSOVSr9a2AGRlQvs0qXQiOYxZyWWrW+pMuJXKxf0cLc1nPWvPHl1mtmCsNxlNmq
-         87db7/xfxEe6MSFAStZMd1nIdwX21pkwOVU1e7XiDlGzW84h7tq7dmQRuXnkExuKhUyo
-         /g/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=v483s8xrYSzjz1MKg/llYnen68ml62j7JXePfBOF9rc=;
-        b=tqTOln8LjaesL7zsybr9PkN/0CEK/3Ut8Vk6Hz/ynFRvR4WSEBf0TrpOZOeZZw6T2c
-         a87dWh/HWjbJd4+xI33t3D9TNIHm3o5rugFUwFGRvqbQxMEQFgg7lyNtbBSU5g6j0bWy
-         25yNeazvkGClDPm3PnLf3oEBEK29YkVTBDQPpSQp9Jn1TX2DI1YAwRo0BgHsC4LU6X0i
-         +ZXRT6e0UGdvnBkZfGHKFZ7BUiaU9yXLhKRfud+TYwqbXtywPyCYEkM8paKQPjhylRqG
-         zBxwbYNqRUqqwhsdTxGO8vezVbdp8GI6HhCcnlRsZHdJz6cIBysfoXJQjSZVBhWrewLG
-         NOrA==
-X-Gm-Message-State: AOAM530kVjX1D7LjAG5bh8UrLau1TsTZFcO2eMJiUPb0WMZq1PqTh5sU
-        /z7e0iA7x1e0qK4HzQaF2K4U+STSOg8FH4WrbutIBSKkc5XuWw==
-X-Google-Smtp-Source: ABdhPJzBb4znbCq+tSfuo+l/bexoPkojJHO8z/p18PIp9VlwwPQliWukGo/wol5DzaPS0vkOe7ULIOaGrRB44dSrX+c=
-X-Received: by 2002:aca:3a84:: with SMTP id h126mr7565692oia.125.1598547327976;
- Thu, 27 Aug 2020 09:55:27 -0700 (PDT)
+        Thu, 27 Aug 2020 12:56:28 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BF85C061264;
+        Thu, 27 Aug 2020 09:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=SSi0PB6QbtM1yaYhFUwqIMkjIT1n3Q2GuDY4HbN7Kf0=; b=vEHF2QGsi2DpyHej0MA5sep7Ur
+        C1S7/f467o3G2ZmbX8x+/9E5sZAebKOacqzgM8MmipjMRGOOqDFepAB/D0jC5C5MdQqI0GAO41OCI
+        /19RpLSJmY1OZig5zNLCmElzmIPx0bQd/p9QESlVb+JMBBl5BmfuGJ1s0A6ul9tIwaNTwhBR3rtjR
+        nl/eKTc3ih3ot2uYnODMT2fiD1IZw0OOVBqUte38vQwJt451IYELo8Ei6XxJUe0aOWDvFlsiA6OLv
+        VfKkym3Iz3XRrAfHMFaiWjNn+pJMiGjTCIrOYXD7TBoRINzWXRXyxmKZcWJnxXgx4DJRoGQA8CUki
+        xkXwWD2g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBLC3-00075E-NI; Thu, 27 Aug 2020 16:56:07 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 15792301A66;
+        Thu, 27 Aug 2020 18:56:05 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C21B52C42F07A; Thu, 27 Aug 2020 18:56:05 +0200 (CEST)
+Date:   Thu, 27 Aug 2020 18:56:05 +0200
+From:   peterz@infradead.org
+To:     Cameron <cameron@moodycamel.com>
+Cc:     linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
+        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
+        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
+        oleg@redhat.com, will@kernel.org, paulmck@kernel.org
+Subject: Re: [RFC][PATCH 6/7] freelist: Lock less freelist
+Message-ID: <20200827165605.GL1362448@hirez.programming.kicks-ass.net>
+References: <20200827161237.889877377@infradead.org>
+ <20200827161754.535381269@infradead.org>
+ <20200827163755.GK1362448@hirez.programming.kicks-ass.net>
+ <CAFCw3doX6KK5DwpG_OB331Mdw8uYeVqn8YPTjKh_a-m7ZB9+3A@mail.gmail.com>
 MIME-Version: 1.0
-From:   Subhashini Rao Beerisetty <subhashbeerisetty@gmail.com>
-Date:   Thu, 27 Aug 2020 22:25:16 +0530
-Message-ID: <CAPY=qRRekJonX_iX3s4bfietm9D_GM+S4cDGXbj9nMOefJBdTw@mail.gmail.com>
-Subject: cpu-freq: running the perf increases the data rate?
-To:     linux-pm@vger.kernel.org,
-        kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFCw3doX6KK5DwpG_OB331Mdw8uYeVqn8YPTjKh_a-m7ZB9+3A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- [ Please keep me in CC as I'm not subscribed to the list]
+On Thu, Aug 27, 2020 at 12:49:20PM -0400, Cameron wrote:
+> For what it's worth, the freelist.h code seems to be a faithful adaptation
+> of my original blog post code. Didn't think it would end up in the Linux
+> kernel one day :-)
 
-Hi all,
+Hehe, I ran into the traditional ABA problem for the lockless stack and
+asked google, your blog came up.
 
-I have an application which finds the data rate over the PCIe
-interface. I=E2=80=99m getting the lesser data rate in one of my Linux X86
-systems.
-When I change the scaling_governor from "powersave" to "performance"
-mode for each CPU, then there is slight improvement in the PCIe data
-rate.
-Parallely I started profiling the workload with perf. Whenever I start
-running the profile command =E2=80=9Cperf stat -a -d -p <PID>=E2=80=9D surp=
-risingly
-the application resulted in excellent data rate over PCIe, but when I
-kill the perf command again PCIe data rate drops. I am really confused
-about this behavior.Any clues from this behaviour?
+I'll try and actually think about it a little when the current (virtual)
+conference is over.
 
+Are you Ok with the License I put on it, GPLv2 or BDS-2 ?
 
-Also I noticed my system not having the 'cpuinfo_cur_freq' sys file.
-Is that okay?
-cat: /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq: No such
-file or directory
+> I'm just wondering if the assumption that "nodes are never freed until
+> after the free list is destroyed" will hold true in the intended use case?
 
-
---=20
-Thanks,
+It does, the nodes are only deleted once the whole freelist object is
+discarded.
