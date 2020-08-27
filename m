@@ -2,86 +2,121 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C50C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 307C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A04CE20707
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6B4D20707
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fWM9e5bR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PBp6loKQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728213AbgH0Ihb (ORCPT
+        id S1728228AbgH0Ihp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:37:31 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:52252 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726826AbgH0Iha (ORCPT
+        Thu, 27 Aug 2020 04:37:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59294 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbgH0Ihp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:37:30 -0400
-X-UUID: f7e0a3056edc492798a48a80e713f95b-20200827
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=dwCbybGoQ+wOCZtMMJHOlOJ0VrEP7cWnHHh7pZK3b74=;
-        b=fWM9e5bRGuDYFk+PBKHes5OorguScclILKXa68lISKzt2+ESVBy9nxp1Ppxy4yoF7Iub4+fDf7luglA1M5vcO8155+ANLlqnpyYBv2uNC9yligwLO014H50kBk9w6XqDP0+f2uTUGj8CNgMYNDLGVznQEZV5k/ZfhMcnX7/8D8U=;
-X-UUID: f7e0a3056edc492798a48a80e713f95b-20200827
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 705747239; Thu, 27 Aug 2020 16:37:26 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 27 Aug 2020 16:37:24 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 27 Aug 2020 16:37:25 +0800
-Message-ID: <1598517445.10649.20.camel@mtkswgap22>
-Subject: Re: [PATCH v1 1/2] scsi: ufs: Abort tasks before clear them from
- doorbell
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Can Guo <cang@codeaurora.org>
-CC:     <asutoshd@codeaurora.org>, <nguyenb@codeaurora.org>,
-        <hongwus@codeaurora.org>, <rnayak@codeaurora.org>,
-        <linux-scsi@vger.kernel.org>, <kernel-team@android.com>,
-        <saravanak@google.com>, <salyzyn@google.com>,
-        "Alim Akhtar" <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Bart Van Assche" <bvanassche@acm.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Thu, 27 Aug 2020 16:37:25 +0800
-In-Reply-To: <1598321228-21093-2-git-send-email-cang@codeaurora.org>
-References: <1598321228-21093-1-git-send-email-cang@codeaurora.org>
-         <1598321228-21093-2-git-send-email-cang@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 27 Aug 2020 04:37:45 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B01CCC061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 01:37:44 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id i10so5507048ljn.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 01:37:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tS9KV0OuL9H7jrZSJX0btlTIW7y0Qv2YervGw+OH1sw=;
+        b=PBp6loKQM+EAP/ynTVNWiDbA+vMdlIkKJLjlkuZt12auZvNQR6iTDpvlLWt25w1Kwi
+         CjBQZmwGsSDlbkJC8BDsYJylVvS+hSe8G4nCyOy0cjfSEVD4pwxjoMctbsjc5PQRCfMh
+         WPC/i7nxQJdrYKeiZHr4PSwafvg8gLVX3RXTc8FkeEwEMzQQg4TDD+oa3ZmPJ21D/kCF
+         gpLXlRSW71AJ1WDnBV/hZYTbgvYEnH9lJ7QzJlIEKavnCQ7P6uZxK85ni3SfAZ0AgKoo
+         XC7VuGxeXxWYedXWq5uBU7rTuvm2NPft4tcLfOpt0HMcRbmZdHvu/s8cMHYQ70ORS35A
+         VQ5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tS9KV0OuL9H7jrZSJX0btlTIW7y0Qv2YervGw+OH1sw=;
+        b=hTo6gdVbbIqm/xszldsE9qP5P1PFAixHF3ZWWJgvIvtJz8joU0MI6j7+osr9lp8scK
+         HC/aoRNImciYkhvVFHHb3n53HZayfIugqyGOCL/i52dcymfMKja+R6R0ElDlbEjPisVm
+         GDSrG21yk0Age3CH1n83LDaOUxNAFUotaNsvtqLwyrzkamDKMGD4Gw1ZY3z8jipeEJ5I
+         rgkZ8y9Z0NjOyxbMXP6xlB9LeZ69gp+sTpWaFv+gh6Fm/S+4dZJTlYx/yErDyndq5IZR
+         5G/gHYTvfi8B2EWFlF9HsyL4ouY1Ee5u1446Lhe3lVpzBbmpBDVA/pHlDoG8HxbiZOEr
+         NKfw==
+X-Gm-Message-State: AOAM533QBNlxcSIVC6FTik6pV1+plHVxji6dn/uj2oyP/l3hFufrVyog
+        pHLFhEXHBcaQI7XDVAP4/5lfhQun8GPebyOOHejbjw==
+X-Google-Smtp-Source: ABdhPJynHFjeGEynN1vApsTcEGtpq8ohQGl7nDnXnVVPdhzYEtVtmDx4b4z7XkfNqC7a8qhSy3l1t3M3JJ7O8vPj6PA=
+X-Received: by 2002:a2e:8e95:: with SMTP id z21mr9579073ljk.143.1598517463040;
+ Thu, 27 Aug 2020 01:37:43 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200827151105.73c75040@canb.auug.org.au>
+In-Reply-To: <20200827151105.73c75040@canb.auug.org.au>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Thu, 27 Aug 2020 10:37:32 +0200
+Message-ID: <CADYN=9L8znDFuPOiXzoR_vm+FXYkVR-D5yOf9hwPuG1FyAqDSw@mail.gmail.com>
+Subject: Re: linux-next: Tree for Aug 27
+To:     Stephen Rothwell <sfr@canb.auug.org.au>, atish.patra@wdc.com,
+        anup@brainfault.org, palmerdabbelt@google.com
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA4LTI0IGF0IDE5OjA3IC0wNzAwLCBDYW4gR3VvIHdyb3RlOg0KPiBUbyBy
-ZWNvdmVyeSBub24tZmF0YWwgZXJyb3JzLCBubyBmdWxsIHJlc2V0IGlzIHJlcXVpcmVkLCBlcnJf
-aGFuZGxlciBvbmx5DQo+IGNsZWFycyB0aG9zZSBwZW5kaW5nIFRScy9UTVJzIHNvIHRoYXQgc2Nz
-aSBsYXllciBjYW4gcmUtaXNzdWUgdGhlbS4gSW4NCj4gY3VycmVudCBlcnJfaGFuZGxlciwgVFJz
-IGFyZSBkaXJlY3RseSBjbGVhcmVkIGZyb20gVUZTIGhvc3QncyBkb29yYmVsbCBidXQNCj4gbm90
-IGFib3J0ZWQgZnJvbSBkZXZpY2Ugc2lkZS4gSG93ZXZlciwgYWNjb3JkaW5nIHRvIHRoZSBVRlNI
-Q0kgSkVERUMgc3BlYywNCj4gdGhlIGhvc3Qgc29mdHdhcmUgc2hhbGwgdXNlIFVUUCBUcmFuc2Zl
-ciBSZXF1ZXN0IExpc3QgQ0xlYXIgUmVnaXN0ZXIgdG8NCj4gY2xlYXIgYSB0YXNrIGZyb20gVUZT
-IGhvc3QncyBkb29yYmVsbCBvbmx5IHdoZW4gYSBVVFAgVHJhbnNmZXIgUmVxdWVzdCBpcw0KPiBl
-eHBlY3RlZCB0byBub3QgYmUgY29tcGxldGVkLCBlLmcuIHdoZW4gdGhlIGhvc3Qgc29mdHdhcmUg
-cmVjZWl2ZXMgYQ0KPiDigJxGVU5DVElPTiBDT01QTEVUReKAnSBUYXNrIE1hbmFnZW1lbnQgcmVz
-cG9uc2Ugd2hpY2ggbWVhbnMgYSBUcmFuc2ZlciBSZXF1ZXN0DQo+IHdhcyBhYm9ydGVkLiBUbyBm
-b2xsb3cgdGhlIFVGU0hDSSBKRURFQyBzcGVjLCBpbiBlcnJfaGFuZGxlciwgYWJvcnRzIG9uZSBU
-Ug0KPiBiZWZvcmUgY2xlYXJpbmcgaXQgZnJvbSBkb29yYmVsbC4NCj4gDQo+IFNpZ25lZC1vZmYt
-Ynk6IENhbiBHdW8gPGNhbmdAY29kZWF1cm9yYS5vcmc+DQoNCkFja2VkLWJ5OiBTdGFubGV5IENo
-dSA8c3RhbmxleS5jaHVAbWVkaWF0ZWsuY29tPg0KDQoNCg0K
+On Thu, 27 Aug 2020 at 07:11, Stephen Rothwell <sfr@canb.auug.org.au> wrote=
+:
+>
+> Hi all,
+>
+> News:  There will be no linux-next releases next Monday or Tuesday.
+>
+> Changes since 20200826:
+>
+> The net-next tree gained a conflict against the net tree.
+>
+> Non-merge commits (relative to Linus' tree): 2901
+>  3429 files changed, 100496 insertions(+), 37081 deletions(-)
+>
 
+I built riscv on todays tag and I see this error:
+../arch/riscv/kernel/setup.c: In function =E2=80=98setup_arch=E2=80=99:
+../arch/riscv/kernel/setup.c:74:2: error: implicit declaration of
+function =E2=80=98early_ioremap_setup=E2=80=99; did you mean =E2=80=98early=
+_memtest=E2=80=99?
+[-Werror=3Dimplicit-function-declaration]
+  early_ioremap_setup();
+  ^~~~~~~~~~~~~~~~~~~
+  early_memtest
+cc1: some warnings being treated as errors
+
+I think its due to commit 3d109b0e0949 ("RISC-V: Add early ioremap support"=
+)
+
+It builds with this fix:
+
+diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+index 5ab185130cae..41ef96d0d97a 100644
+--- a/arch/riscv/kernel/setup.c
++++ b/arch/riscv/kernel/setup.c
+@@ -19,6 +19,7 @@
+ #include <linux/smp.h>
+
+ #include <asm/cpu_ops.h>
++#include <asm/early_ioremap.h>
+ #include <asm/setup.h>
+ #include <asm/sections.h>
+ #include <asm/sbi.h>
+
+
+Cheers,
+Anders
