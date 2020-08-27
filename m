@@ -2,437 +2,167 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5828C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F92C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73C132177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9479A2177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mo7bwIXO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DHNNLW7O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgH0LlS (ORCPT
+        id S1728141AbgH0PLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 07:41:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58346 "EHLO
+        Thu, 27 Aug 2020 11:11:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728700AbgH0LcR (ORCPT
+        with ESMTP id S1728818AbgH0Llb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 07:32:17 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2729AC061232;
-        Thu, 27 Aug 2020 04:01:18 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id m22so7018697eje.10;
-        Thu, 27 Aug 2020 04:01:18 -0700 (PDT)
+        Thu, 27 Aug 2020 07:41:31 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C683C06121B
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 04:41:30 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id e17so170813ils.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 04:41:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=edStvBe16F0DYe/Tb0S52V60X6Qfj/1Yjsd3cDbffB0=;
-        b=Mo7bwIXOuWz4IVnwnNBFImsBmAtzEfPNf9csfDXHRs3BannEZyzHNkl40GYOcpjZuN
-         kWougdSqVmjN0MMoVvwGXxoGZ2zpFAkjMq7qyGjyBDvVwjF6f/Rp3JNdr1Hm2l0Fecs/
-         Hu8GnrIsG16Z5YQbSGOJSxnMNGO7RX0teGbiQtV7SxXhEZU8PidP8+6YfEgeRQaBx0SX
-         DXRkeTllDgvBP5tBNpoH/AAqueJ/KDSMz2rHIxSrOKnDrztt3mPYADkcm5Ji2D7f4FfU
-         45wRQewIk5tb9Ply6xfBWnqFh17xs23VU/Rj2Qmg9RQOSQ6FTJfH3d7iO/HM6AC6n/zL
-         98pw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2XR1Mc8dJ5lZuCbZST8KrY7/ZxwDrNjZ39kdQPvS71M=;
+        b=DHNNLW7O8TNMDsLvBYn79ffz6n300qKSqKrTPoO68hDSCjkEQh+oHhJKQzkEk3xLYz
+         VP4Yd5najj1hoFMVvcFOJevMTJM+wFEBjB8vwACxOyxf6m0+I6PhLfDl6gp7IWWXjWYV
+         X92HIQOARMLiln2esTB1pkLQXcwQQjYmNahfa+9M5U+9q6uXw6IPtyK6KURD5Hwk++F3
+         QBcmqv6wuNRjuX4yexJ4vxRYbxfJK81Cs1NGOVv3f7AekiFx+Y6YwGMRiNqW8oLesFDh
+         +iqfBwmGqsYND/a2wog+Hp7WMVDnbageMYBTztSeyjy0t8ApG+NHVcgUHuOWG6OOoNbV
+         gnWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=edStvBe16F0DYe/Tb0S52V60X6Qfj/1Yjsd3cDbffB0=;
-        b=Z2Mzw46ctyCwYvUTI9IifXIKzacAZQzYAAcvh0tuniLQVWM7C9SKyBaf4AmssfruEe
-         ykJZfSrhLdLXJ08SqU7IaAn8/QVqMzSZUMwsEZo73vmjw1v36lbP5yarXSdu8ONNCKJb
-         yeb/JWFjEO76eHuNRWfR4jc53L82+5G96pTgorGTam6ChXwdlFnTdH6bwA86MNf6Madv
-         SgzryH9y4zAWhPeOEjC4vyihqATcGrpWITVhgCm5wwdj5URm1h2upjw28jPJrhN8seZs
-         AVWzrK270fjjJLhklpK8iSgMgcQtkKrgwAW6GEN7iWd40WEJj8Ha5fhAOWI/4DTt+qo6
-         SciQ==
-X-Gm-Message-State: AOAM531AaG+upNfRfvv3XtkItmQAQkGnKni+Kob4fEKrWa2fjBEe7R/p
-        1jBKvRwrygtrcAH2g2VjVIWTSF0tGdg=
-X-Google-Smtp-Source: ABdhPJzvLj8h3de0+iIa7UgFE76P78v3iCDf3ADkSIcXBdpvWS6EsYsqBs2M9GhNlo8KQ+NeWy5xKw==
-X-Received: by 2002:a17:906:d050:: with SMTP id bo16mr21613988ejb.367.1598526076845;
-        Thu, 27 Aug 2020 04:01:16 -0700 (PDT)
-Received: from ?IPv6:2001:a61:253c:4c01:2cf1:7133:9da2:66a9? ([2001:a61:253c:4c01:2cf1:7133:9da2:66a9])
-        by smtp.gmail.com with ESMTPSA id j92sm1250562edc.82.2020.08.27.04.01.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 04:01:15 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com, linux-fsdevel@vger.kernel.org,
-        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] Add manpage for open_tree(2)
-To:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk
-References: <159827188271.306468.16962617119460123110.stgit@warthog.procyon.org.uk>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <402ceb27-0f63-e7f0-c58d-de0fe4c86f56@gmail.com>
-Date:   Thu, 27 Aug 2020 13:01:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2XR1Mc8dJ5lZuCbZST8KrY7/ZxwDrNjZ39kdQPvS71M=;
+        b=Ehq8nbtNAAk0GowS+EWaPGVQ4rQ4FQp0i9fs/9Cc5ksIOLC+2K/poeQqrvdn05XTNd
+         SfJJsp7vWB9/4G6VzXMKV+N4HgoZi9r9nBx6U2pkhGI7P5GxLg6rN2OeEniDoUUncMrg
+         ULfHf4Vo+i/g51PjjWdR0Gdn1v/7aajNm43KUuZrLmFkcZnUbSw3rRzC3d6YxGc08WJh
+         EimbrQI7VmS6TYXCdwzQVFGg5tQ4CnueccWlM6GgO8HQ6YG5DkM7eP6aVmZ0LX/KB3mB
+         Kogw891J3iNO1PF+hN8apQEWO3xy5I/J1LDxVykWioBbrdkc09Z9CQXxJ6HDgglyw/uw
+         lehQ==
+X-Gm-Message-State: AOAM532/XFo/f9ScKnu0KyJYeKgmnlswJu71G1FspQ3gRCuDwlQdvcCF
+        d21c3CvArPoBj1wtoHKPb9W1fLjWbs8jRD/TDxcS7w==
+X-Google-Smtp-Source: ABdhPJxirTveMuJltE1A7KEaVSzcch70Qm4b9j8tuYr7BwIRss/J49Qeg0VNz7EM/z+tZJw3hkJ7KbjnBYT4QVul3T0=
+X-Received: by 2002:a92:d086:: with SMTP id h6mr17190790ilh.205.1598528489329;
+ Thu, 27 Aug 2020 04:41:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <159827188271.306468.16962617119460123110.stgit@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <5f479309.1c69fb81.9106e.e12bSMTPIN_ADDED_BROKEN@mx.google.com>
+In-Reply-To: <5f479309.1c69fb81.9106e.e12bSMTPIN_ADDED_BROKEN@mx.google.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Thu, 27 Aug 2020 04:41:18 -0700
+Message-ID: <CANn89i+4Z-OCsaXUgZ9F-USGu+JyuHUL0aEctdif5mFJf_6HKA@mail.gmail.com>
+Subject: Re: RFC: inet_timewait_sock->tw_timer list corruption
+To:     Wang Long <w@laoqinren.net>
+Cc:     netdev <netdev@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>, opurdila@ixiacom.com,
+        vegard.nossum@gmail.com, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello David,
+On Thu, Aug 27, 2020 at 4:03 AM Wang Long <w@laoqinren.net> wrote:
+>
+> Hi=EF=BC=8C
+>
+> we encountered a kernel panic as following:
+>
+> [4394470.273792] general protection fault: 0000 [#1] SMP NOPTI
+> [4394470.274038] CPU: 0 PID: 0 Comm: swapper/0 Kdump: loaded Tainted: G
+>       W     --------- -  - 4.18.0-80.el8.x86_64 #1
+> [4394470.274477] Hardware name: Sugon I620-G30/60P24-US, BIOS MJGS1223
+> 04/07/2020
+> [4394470.274727] RIP: 0010:run_timer_softirq+0x34e/0x440
+> [4394470.274957] Code: 84 3f ff ff ff 49 8b 04 24 48 85 c0 74 58 49 8b
+> 1c 24 48 89 5d 08 0f 1f 44 00 00 48 8b 03 48 8b 53 08 48 85 c0 48 89 02
+> 74 04 <48> 89 50 08 f6 43 22 20 48 c7 43 08 00 00 00 00 48 89 ef 4c 89 2b
+> [4394470.275505] RSP: 0018:ffff88f000803ee0 EFLAGS: 00010086
+> [4394470.275783] RAX: dead000000000200 RBX: ffff88e5e33ea078 RCX:
+> 0000000000000100
+> [4394470.276087] RDX: ffff88f000803ee8 RSI: 0000000000000000 RDI:
+> ffff88f00081aa00
+> [4394470.276391] RBP: ffff88f00081aa00 R08: 0000000000000001 R09:
+> 0000000000000000
+> [4394470.276697] R10: ffff88e5e33eb1f0 R11: 0000000000000000 R12:
+> ffff88f000803ee8
+> [4394470.277030] R13: dead000000000200 R14: ffff88f000803ee0 R15:
+> 0000000000000000
+> [4394470.277350] FS:  0000000000000000(0000) GS:ffff88f000800000(0000)
+> knlGS:0000000000000000
+> [4394470.277684] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [4394470.278020] CR2: 00007f200eddd160 CR3: 0000000e0b20a002 CR4:
+> 00000000007606f0
+> [4394470.278412] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+> 0000000000000000
+> [4394470.278799] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+> 0000000000000400
+> [4394470.279194] PKRU: 55555554
+> [4394470.279543] Call Trace:
+> [4394470.279889]  <IRQ>
+> [4394470.280237]  ? __hrtimer_init+0xb0/0xb0
+> [4394470.280618]  ? sched_clock+0x5/0x10
+> [4394470.281000]  __do_softirq+0xe8/0x2ef
+> [4394470.281397]  irq_exit+0xf1/0x100
+> [4394470.281761]  smp_apic_timer_interrupt+0x74/0x130
+> [4394470.282132]  apic_timer_interrupt+0xf/0x20
+> [4394470.282548]  </IRQ>
+> [4394470.282954] RIP: 0010:cpuidle_enter_state+0xa0/0x2b0
+> [4394470.283341] Code: 8b 3d 6c fb 59 4c e8 0f ed a6 ff 48 89 c3 0f 1f
+> 44 00 00 31 ff e8 80 00 a7 ff 45 84 f6 0f 85 c3 01 00 00 fb 66 0f 1f 44
+> 00 00 <4c> 29 fb 48 ba cf f7 53 e3 a5 9b c4 20 48 89 d8 48 c1 fb 3f 48 f7
+> [4394470.284219] RSP: 0018:ffffffffb4603e78 EFLAGS: 00000246 ORIG_RAX:
+> ffffffffffffff13
+> [4394470.284671] RAX: ffff88f000823080 RBX: 000f9cbf579e86c6 RCX:
+> 000000000000001f
+> [4394470.285129] RDX: 000f9cbf579e86c6 RSI: 0000000037a6f674 RDI:
+> 0000000000000000
+> [4394470.285623] RBP: 0000000000000002 R08: 00000000000000c4 R09:
+> 0000000000000027
+> [4394470.286088] R10: ffffffffb4603e58 R11: 000000000000004c R12:
+> ffff88f00082df00
+> [4394470.286566] R13: ffffffffb4724118 R14: 0000000000000000 R15:
+> 000f9cbf579d44e0
+> [4394470.287045]  ? cpuidle_enter_state+0x90/0x2b0
+> [4394470.287527]  do_idle+0x200/0x280
+> [4394470.288010]  cpu_startup_entry+0x6f/0x80
+> [4394470.288501]  start_kernel+0x533/0x553
+> [4394470.288994]  secondary_startup_64+0xb7/0xc0
+>
+>
+> After analysis, we found that the timer which expires has
+> timer->entry.next =3D=3D POISON2 !(the list corruption )
+>
+> the crash scenario is the same as https://lkml.org/lkml/2017/3/21/732,
+>
+> I cannot reproduce this issue, but I found that the timer cause crash is
+> the inet_timewait_sock->tw_timer(its callback function is
+> tw_timer_handler), and the value of tcp_tw_reuse is 1.
+>
+> # cat /proc/sys/net/ipv4/tcp_tw_reuse
+> 1
+>
+> In the production environment, we encountered this problem many times,
+> and every time it was a problem with the inet_timewait_sock->tw_timer.
+>
+> Do anyone have any ideas for this issue? Thanks.
+>
 
-Can I ask that you please reply to each of my mails, rather than 
-just sending out a new patch series (which of course I would also
-like  you to do). Some things that I mentioned in the last mails
-got lost, and I end up having to repeat them.
-
-So, even where I say "please change this", could you please reply with
-"done", or a reason why you declined the suggested change, is useful.
-But in any case, a few words in reply to explain the other changes
-that you make would be helpful.
-
-Also, some of my questions now will get a little more complex, and as
-well as you updating the pages, I think a little discussion may be
-required in some cases.
-
-On 8/24/20 2:24 PM, David Howells wrote:
-> Add a manual page to document the open_tree() system call.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> ---
-> 
->  man2/open_tree.2 |  249 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 249 insertions(+)
->  create mode 100644 man2/open_tree.2
-> 
-> diff --git a/man2/open_tree.2 b/man2/open_tree.2
-> new file mode 100644
-> index 000000000..d480bd82f
-> --- /dev/null
-> +++ b/man2/open_tree.2
-> @@ -0,0 +1,249 @@
-> +'\" t
-> +.\" Copyright (c) 2020 David Howells <dhowells@redhat.com>
-> +.\"
-> +.\" %%%LICENSE_START(VERBATIM)
-> +.\" Permission is granted to make and distribute verbatim copies of this
-> +.\" manual provided the copyright notice and this permission notice are
-> +.\" preserved on all copies.
-> +.\"
-> +.\" Permission is granted to copy and distribute modified versions of this
-> +.\" manual under the conditions for verbatim copying, provided that the
-> +.\" entire resulting derived work is distributed under the terms of a
-> +.\" permission notice identical to this one.
-> +.\"
-> +.\" Since the Linux kernel and libraries are constantly changing, this
-> +.\" manual page may be incorrect or out-of-date.  The author(s) assume no
-> +.\" responsibility for errors or omissions, or for damages resulting from
-> +.\" the use of the information contained herein.  The author(s) may not
-> +.\" have taken the same level of care in the production of this manual,
-> +.\" which is licensed free of charge, as they might when working
-> +.\" professionally.
-> +.\"
-> +.\" Formatted or processed versions of this manual, if unaccompanied by
-> +.\" the source, must acknowledge the copyright and authors of this work.
-> +.\" %%%LICENSE_END
-> +.\"
-> +.TH OPEN_TREE 2 2020-08-24 "Linux" "Linux Programmer's Manual"
-> +.SH NAME
-> +open_tree \- Pick or clone mount object and attach to fd
-> +.SH SYNOPSIS
-> +.nf
-> +.B #include <sys/types.h>
-> +.B #include <sys/mount.h>
-> +.B #include <unistd.h>
-> +.BR "#include <fcntl.h>           " "/* Definition of AT_* constants */"
-> +.PP
-> +.BI "int open_tree(int " dirfd ", const char *" pathname ", unsigned int " flags );
-> +.fi
-> +.PP
-> +.IR Note :
-> +There are no glibc wrappers for these system calls.
-> +.SH DESCRIPTION
-> +.BR open_tree ()
-> +picks the mount object specified by the pathname and attaches it to a new file
-
-The terminology "pick" is unusual, and you never really explain what
-it means.  Is there better terminology? In any case, can you add a few
-words to explain what the term (('pick" or whatever alternative you
-come up with) means.
-
-> +descriptor or clones it and attaches the clone to the file descriptor.  The
-
-Please replace "it" by a noun (phrase) -- maybe: "the mount object"?
-
-> +resultant file descriptor is indistinguishable from one produced by
-> +.BR open "(2) with " O_PATH .
-
-What is the significance of that last piece? Can you add some words
-about why the fact that the resulting FD is indistinguishable from one
-produced by open() O_PATH matters or is useful?
-
-> +.PP
-> +In the case that the mount object is cloned, the clone will be "unmounted" and
-
-You place "unmounted" in quotes. Why? Is this to signify that the the 
-unmount is somehow different from other unmounts? If so, please
-explain how it is different.  If not, then I think we can lose the double
-quotes.
-
-> +destroyed when the file descriptor is closed if it is not otherwise mounted
-> +somewhere by calling
-> +.BR move_mount (2).
-> +.PP
-> +To select a mount object, no permissions are required on the object referred
-
-Here you use the word "select". Is this the same as "pick"? If yes, please
-use the same term.
-
-> +to by the path, but execute (search) permission is required on all of the
-
-s/the path/.I pathname/ ?
-
-(Where pathname == "the pathname argument)
-
-> +directories in
-> +.I pathname
-> +that lead to the object.
-> +.PP
-> +Appropriate privilege (Linux: the
-
-s/Linux: //
-(This is a Linux specific system call...)
-
-> +.B CAP_SYS_ADMIN
-> +capability) is required to clone mount objects.
-> +.PP
-> +.BR open_tree ()
-> +uses
-> +.IR pathname ", " dirfd " and " flags
-> +to locate the target object in one of a variety of ways:
-> +.TP
-> +[*] By absolute path.
-> +.I pathname
-> +points to an absolute path and
-> +.I dirfd
-> +is ignored.  The object is looked up by name, starting from the root of the
-> +filesystem as seen by the calling process.
-> +.TP
-> +[*] By cwd-relative path.
-> +.I pathname
-> +points to a relative path and
-> +.IR dirfd " is " AT_FDCWD .
-> +The object is looked up by name, starting from the current working directory.
-> +.TP
-> +[*] By dir-relative path.
-> +.I pathname
-> +points to relative path and
-> +.I dirfd
-> +indicates a file descriptor pointing to a directory.  The object is looked up
-> +by name, starting from the directory specified by
-> +.IR dirfd .
-> +.TP
-> +[*] By file descriptor.
-> +.I pathname
-> +is "",
-> +.I dirfd
-> +indicates a file descriptor and
-> +.B AT_EMPTY_PATH
-> +is set in
-> +.IR flags .
-> +The mount attached to the file descriptor is queried directly.  The file
-> +descriptor may point to any type of file, not just a directory.
-
-I want to check here. Is it really *any* type of file? Can it be a UNIX 
-domain socket or a char/block device or a FIFO?
-
-> +.PP
-> +.I flags
-> +can be used to control the operation of the function and to influence a
-> +path-based lookup.  A value for
-> +.I flags
-> +is constructed by OR'ing together zero or more of the following constants:
-> +.TP
-> +.BR AT_EMPTY_PATH
-> +.\" commit 65cfc6722361570bfe255698d9cd4dccaf47570d
-> +If
-> +.I pathname
-> +is an empty string, operate on the file referred to by
-> +.IR dirfd
-> +(which may have been obtained from
-> +.BR open "(2) with"
-> +.BR O_PATH ", from " fsmount (2)
-> +or from another
-
-s/another/a previous call to/
-
-> +.BR open_tree ()).
-> +If
-> +.I dirfd
-> +is
-> +.BR AT_FDCWD ,
-> +the call operates on the current working directory.
-> +In this case,
-> +.I dirfd
-> +can refer to any type of file, not just a directory.
-> +This flag is Linux-specific; define
-> +.B _GNU_SOURCE
-> +.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
-> +to obtain its definition.
-> +.TP
-> +.BR AT_NO_AUTOMOUNT
-> +Don't automount the final ("basename") component of
-> +.I pathname
-> +if it is a directory that is an automount point.  This flag allows the
-> +automount point itself to be picked up or a mount cloned that is rooted on the
-> +automount point.  The
-> +.B AT_NO_AUTOMOUNT
-> +flag has no effect if the mount point has already been mounted over.
-> +This flag is Linux-specific; define
-> +.B _GNU_SOURCE
-> +.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
-> +to obtain its definition.
-> +.TP
-> +.B AT_SYMLINK_NOFOLLOW
-> +If
-> +.I pathname
-> +is a symbolic link, do not dereference it: instead pick up or clone a mount
-> +rooted on the link itself.
-> +.TP
-> +.B OPEN_TREE_CLOEXEC
-> +Set the close-on-exec flag for the new file descriptor.  This will cause the
-> +file descriptor to be closed automatically when a process exec's.
-> +.TP
-> +.B OPEN_TREE_CLONE
-> +Rather than directly attaching the selected object to the file descriptor,
-> +clone the object, set the root of the new mount object to that point and
-
-Could you expand on "that point" a little. It's not quite clear to me what
-you mean there.
-
-> +attach the clone to the file descriptor.
-> +.TP
-> +.B AT_RECURSIVE
-> +This is only permitted in conjunction with OPEN_TREE_CLONE.  It causes the
-> +entire mount subtree rooted at the selected spot to be cloned rather than just
-
-Is there a better word than "spot"?
-
-> +that one mount object.
-> +.SH RETURN VALUE
-> +On success, the new file descriptor is returned.  On error, \-1 is returned,
-> +and
-> +.I errno
-> +is set appropriately.
-> +.SH ERRORS
-> +.TP
-> +.B EACCES
-> +Search permission is denied for one of the directories
-> +in the path prefix of
-> +.IR pathname .
-> +(See also
-> +.BR path_resolution (7).)
-> +.TP
-> +.B EBADF
-> +.I dirfd
-> +is not a valid open file descriptor.
-> +.TP
-> +.B EFAULT
-> +.I pathname
-> +is NULL or
-> +.IR pathname
-> +point to a location outside the process's accessible address space.
-> +.TP
-> +.B EINVAL
-> +Reserved flag specified in
-> +.IR flags .
-> +.TP
-> +.B ELOOP
-> +Too many symbolic links encountered while traversing the pathname.
-> +.TP
-> +.B ENAMETOOLONG
-> +.I pathname
-> +is too long.
-> +.TP
-> +.B ENOENT
-> +A component of
-> +.I pathname
-> +does not exist, or
-> +.I pathname
-> +is an empty string and
-> +.B AT_EMPTY_PATH
-> +was not specified in
-> +.IR flags .
-> +.TP
-> +.B ENOMEM
-> +Out of memory (i.e., kernel memory).
-> +.TP
-> +.B ENOTDIR
-> +A component of the path prefix of
-> +.I pathname
-> +is not a directory or
-> +.I pathname
-> +is relative and
-> +.I dirfd
-> +is a file descriptor referring to a file other than a directory.
-> +.SH VERSIONS
-> +.BR open_tree ()
-> +was added to Linux in kernel 5.2.
-> +.SH CONFORMING TO
-> +.BR open_tree ()
-> +is Linux-specific.
-> +.SH NOTES
-> +Glibc does not (yet) provide a wrapper for the
-> +.BR open_tree ()
-> +system call; call it using
-> +.BR syscall (2).
-
-What's the current status with respect to glibc support? Is it coming/is
-someone working on this?
-
-> +.SH EXAMPLE
-
-s/EXAMPLE/EXAMPLES/
-(That's the standard section header name these days.)
-
-> +The
-> +.BR open_tree ()
-> +function can be used like the following:
-
-The following example does a recursive bind mount, right?
-Can you please add some words to say that explicitly.
-
-> +.PP
-> +.RS
-> +.nf
-> +fd1 = open_tree(AT_FDCWD, "/mnt", 0);
-> +fd2 = open_tree(fd1, "",
-> +                AT_EMPTY_PATH | OPEN_TREE_CLONE | AT_RECURSIVE);
-> +move_mount(fd2, "", AT_FDCWD, "/mnt2", MOVE_MOUNT_F_EMPTY_PATH);
-> +.fi
-> +.RE
-> +.PP
-> +This would attach the path point for "/mnt" to fd1, then it would copy the
-
-What is a "path point"? This is not standard terminology. Can you
-replace this with something better?
-
-> +entire subtree at the point referred to by fd1 and attach that to fd2; lastly,
-> +it would attach the clone to "/mnt2".
-> +.SH SEE ALSO
-> +.BR fsmount (2),
-> +.BR move_mount (2),
-> +.BR open (2)
-
-Thanks,
-
-Michael
-
-
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Nothing comes to mind, I am not aware of such crashes in stable linux kerne=
+ls.
