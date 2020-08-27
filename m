@@ -2,121 +2,166 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D76CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE26EC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32C20206EB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC8CE207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:52:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="VMBJqAq3"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pSGykFPc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgH0Xvp (ORCPT
+        id S1728117AbgH0XwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 19:51:45 -0400
-Received: from mout.gmx.net ([212.227.15.19]:55723 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbgH0Xvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 19:51:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1598572269;
-        bh=1hiWDO5qubwA61FDSyJLXx84okVXi/UAVFmPbOBlmOg=;
-        h=X-UI-Sender-Class:From:To:cc:In-reply-to:Subject:Reply-to:
-         References:Date;
-        b=VMBJqAq3VviAAC0yx1CH/97N8NsothXRmDv7liTEpb1AIbffSKToNhPGIzrYBD+Yq
-         b/LsfQpg3Zw0srQA5/ltxe7AQuexzAOm/ZTmIdA0MXuXi40AZFEgQl+79VQyAKAXW1
-         9vQ9MWDRmhKQRqihF/Pz1Ox3TTjrbrM1L9TxdBtU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from corona.crabdance.com ([173.228.106.43]) by mail.gmx.com
- (mrgmx005 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MIMfW-1kPn8i3Lb2-00EPgL; Fri, 28 Aug 2020 01:51:09 +0200
-Received: by corona.crabdance.com (Postfix, from userid 1000)
-        id BC4D489976B; Thu, 27 Aug 2020 16:49:36 -0700 (PDT)
-From:   Stefan Schaeckeler <schaecsn@gmx.net>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Tero Kristo <t-kristo@ti.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-cc:     Stefan Schaeckeler <sschaeck@cisco.com>
-In-reply-to: <20200827070743.26628-1-krzk@kernel.org>
-Subject: Re: [PATCH 1/2] EDAC/aspeed: Fix handling of platform_get_irq() error
+        Thu, 27 Aug 2020 19:52:02 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18844 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726147AbgH0XwB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 19:52:01 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07RNWVDo178263;
+        Thu, 27 Aug 2020 19:51:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=references : from : to :
+ cc : subject : in-reply-to : date : message-id : mime-version :
+ content-type; s=pp1; bh=gsfH5cdUIsr8xA74mrGAD9ZYsv+fpUZMZdw3j3Pvhx8=;
+ b=pSGykFPcU+B/ZIxHUo70hu/a+OkOt+mfFVoQzXapACuGVYMmPqCDc+Ufz+9IAOx6OFk0
+ 9GvomlgTXELbH5kyuIQmn40sT8SDxCt57z2VZTKfXpBqe0wlXxoRWOAzahZTEjaIYrQE
+ bylXXHiyJ2pUivCeBRTmQ+6gBx6FnWY0OGK8PjWEsJo85ExBCltYXA9ZrQJvP8I+d52b
+ MG0jg3yBk0MOGS5q2D7p62UmuTmRpZ7Gyb7jhdEnilSkD7Pp5j3NMfPRAEUBR5tT0POf
+ /UHMl70HOUIu5YXUlSDLbwuvF4QNAZ9PpfANezJNLr/5ZSZwOD5GhlnAemvWIn7YJS25 mw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 336m7bkq9r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 19:51:07 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07RNXYTF180444;
+        Thu, 27 Aug 2020 19:51:06 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 336m7bkq91-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 19:51:06 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07RNl2R2026415;
+        Thu, 27 Aug 2020 23:51:05 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma04wdc.us.ibm.com with ESMTP id 332ujf5v8r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 23:51:05 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07RNp1K020906332
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Aug 2020 23:51:01 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 51787BE051;
+        Thu, 27 Aug 2020 23:51:04 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CF2AABE04F;
+        Thu, 27 Aug 2020 23:50:56 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.211.80.51])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Thu, 27 Aug 2020 23:50:56 +0000 (GMT)
+References: <20200819172134.11243-1-nramas@linux.microsoft.com>
+ <20200819172134.11243-3-nramas@linux.microsoft.com>
+User-agent: mu4e 1.4.10; emacs 27.1
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
+        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
+        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
+        vincenzo.frascino@arm.com, mark.rutland@arm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
+        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
+        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
+Subject: Re: [PATCH v4 2/5] powerpc: Use libfdt functions to fetch IMA
+ buffer properties
+In-reply-to: <20200819172134.11243-3-nramas@linux.microsoft.com>
+Date:   Thu, 27 Aug 2020 20:50:54 -0300
+Message-ID: <8736478x7l.fsf@morokweng.localdomain>
+MIME-Version: 1.0
 Content-Type: text/plain
-Reply-to: schaecsn@gmx.net
-References: <20200827070743.26628-1-krzk@kernel.org> <0D9EC2D2-C4A0-42E9-94A5-DCFBE7BFEC43@cisco.com>
-Message-Id: <20200827234936.BC4D489976B@corona.crabdance.com>
-Date:   Thu, 27 Aug 2020 16:49:36 -0700 (PDT)
-X-Provags-ID: V03:K1:azkzLvPntcmTm1iQW+tTZY0j0Bw8xT/ONekQtE1unQJo5A5nksM
- 0GJNUHDntBKfW9JMgtHXOgakjgRZ9d8RwKK3LuJjW2SrBGuCcwnSAijTG0S5i8xcdnLb5zj
- 7F5iRtWFoR1v5GeCwmcM5Xh0GLc1mrCjBLQ6OeRXvWaOIQY+5FyMcDI9fcDSpCObJWsjAO7
- obEjJZR8JDf3it+0pJQ6A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9/OvK2bbtTU=:A09178/DvDkjQ5H05FibnD
- w89W/+z13Q99JCy4Ml5fyIGmz6t/4vxovxGjIOiqURouD4X904XZFzBuuVF0CV4OWQ4uJSgfr
- Js+n1fj7mVcuLue4jQSAMLb6N69qQZqxdmSWkx/hV8o0iQxXUio5Z6cegwcjFeWinE2OY+6rI
- B+qUlw05W8TMComuqhTCxqZEJL8HrSD8vfpUVJHnCabVutzE3jFdU200pqISU4L2ORyccOabu
- RxZfbAjBCvcDDVTy/g2JslmNk3gtB53yvd3hDMWAk1iSJ3KG9trmBl1jFyii4mbWTf5F+TDty
- njlUn/VNgvwj7ppm3F4Vw/t4jdJ1/E9eXdONXlU5fNs7nzqEvrn1GFO5Rkuqi0+mHVGoYXtct
- aI8iyVe8Dn1Qmou+mrFOAkM0XDF6ABgBaeCFjLEXD2N6yMSpa7ePXniaBqeWy5AUccEI7JKcH
- GZY3opRgRTY3jO9+0sNnYuqa+9tuHOtvIQ53lYlnyMK0jw7zEiofOlb9+pVPXpsYBTiLfrGEy
- NTNe/lHISwWf4OfgUGjtAuEEsiiSnePK0KmvQUcR8i9+oExuPhV15FkWBwi5zeZa2sBEZNvjt
- 63bh/4ZG+Z12iwYMVso2kTjZnVjQdPOoHS6d1LXJIaTKsQoWIyuxBXvrpJn2tNOWHblzMAMDZ
- 08l5eSRnp/R8CNslezuov1V0FZunXPchhwm2uKcXckI06JhR35UBh1WLm5UMk3qnoSnpqFYTo
- Ji7GiaKfqWi9XwR0P/LaamAKarTwmMfh77FPCWOJNXqF/rJ08Ajv+JXjSh+P4oGEfk40omAhN
- 27ql56g92KkrNLP931ubVKTBycYcqTt/5HB03FzHmhe0LYAhwt502BC1okkh43P1Kl+O28iov
- IM9TOr/vghrLit69KdYymJ3AwhDFSmjhnPKgQpOZygZV0bgqX/pOUzqhs+Rf/MpSFxdO2fbFs
- qLaMGJpuMHFAmdiPP6w+vfsCgWLMpoK+IVP9GoGmMrUjm0xhNFsNcSKkbQY8KUsG/vn6DaZWd
- VDRf/aemmpa//UZDsz2DsA9CCoC/cPGlmpDRXzWPsp6IfxbHtaTjBr/V3BPn22WTTib//KFSU
- qY2ob2LBo17tNL/KV92Ik3P+ij8EI1d0SsgLk0nedifs6pzgvkxAWE9eoQrcYvD7mSSQGnqyx
- v7M2CaPngEQM4YgJ2FDmxC5NsUYyG9G4HO8lai/fgAY0VBbhbrz3eb4xvFg/e12PoLKI+mlxv
- 4GADs/DrbXDGv+UgFJYASi5eaarLEJNIGhbplkA==
-Content-Transfer-Encoding: quoted-printable
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-27_14:2020-08-27,2020-08-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=974
+ impostorscore=0 clxscore=1015 priorityscore=1501 suspectscore=0
+ phishscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008270174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  platform_get_irq() returns -ERRNO on error.  In such case comparison
->  to 0 would pass the check.
->
->  Fixes: 9b7e6242ee4e ("EDAC, aspeed: Add an Aspeed AST2500 EDAC driver")
->  Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Reviewed-by: Stefan Schaeckeler <schaecsn@gmx.net>
+Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
 
->  ---
->  drivers/edac/aspeed_edac.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
->  diff --git a/drivers/edac/aspeed_edac.c b/drivers/edac/aspeed_edac.c
->  index b194658b8b5c..fbec28dc661d 100644
->  --- a/drivers/edac/aspeed_edac.c
->  +++ b/drivers/edac/aspeed_edac.c
->  @@ -209,8 +209,8 @@ static int config_irq(void *ctx, struct platform_de=
-vice *pdev)
->   	/* register interrupt handler */
->   	irq =3D platform_get_irq(pdev, 0);
->   	dev_dbg(&pdev->dev, "got irq %d\n", irq);
->  -	if (!irq)
->  -		return -ENODEV;
->  +	if (irq < 0)
->  +		return irq;
->
->   	rc =3D devm_request_irq(&pdev->dev, irq, mcr_isr, IRQF_TRIGGER_HIGH,
->   			      DRV_NAME, ctx);
->  --
->  2.17.1
->
->
+> @@ -63,7 +29,22 @@ void remove_ima_buffer(void *fdt, int chosen_node)
+>  	if (!prop)
+>  		return;
+>  
+> -	ret = do_get_kexec_buffer(prop, len, &addr, &size);
+> +	ret = fdt_address_cells(fdt, chosen_node);
+
+This change was already present in the previous version of the patch but
+it was just today that I noticed a problem: there's no #address-cells
+property in /chosen. This code will still work though because if there's
+no property this function returns 2 which is the correct value for
+ppc64. But it's conceptually wrong. You need to pass the node offset for
+/ so that it gets the #address-cells property from there.
+
+> +	if (ret < 0)
+> +		return;
+> +	addr_cells = ret;
+> +
+> +	ret = fdt_size_cells(fdt, chosen_node);
+
+Here we're not so lucky. The default value returned when no #size-cells
+property is present is 1, which is wrong for ppc64 so this change
+introduces a bug. You also need to pass the node offset for / here.
+
+> +	if (ret < 0)
+> +		return;
+> +	size_cells = ret;
+> +
+> +	if (len < 4 * (addr_cells + size_cells))
+> +		return;
+> +
+> +	addr = of_read_number(prop, addr_cells);
+> +	size = of_read_number(prop + 4 * addr_cells, size_cells);
+> +
+>  	fdt_delprop(fdt, chosen_node, FDT_PROP_IMA_KEXEC_BUFFER);
+>  	if (ret)
+>  		return;
+> @@ -129,9 +110,15 @@ int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node)
+>  	if (!image->arch.ima_buffer_size)
+>  		return 0;
+>  
+> -	ret = get_addr_size_cells(&addr_cells, &size_cells);
+> -	if (ret)
+> +	ret = fdt_address_cells(fdt, chosen_node);
+> +	if (ret < 0)
+> +		return ret;
+> +	addr_cells = ret;
+> +
+> +	ret = fdt_size_cells(fdt, chosen_node);
+> +	if (ret < 0)
+>  		return ret;
+> +	size_cells = ret;
+>  
+>  	entry_size = 4 * (addr_cells + size_cells);
+
+Ditto here.
+
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
