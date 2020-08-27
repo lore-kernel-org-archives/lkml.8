@@ -2,219 +2,119 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B88C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D08C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD4C207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9246D207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:22:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="E31E2Y5i"
+	dkim=pass (1024-bit key) header.d=veeam.com header.i=@veeam.com header.b="WoqX3id4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgH0TVh (ORCPT
+        id S1727943AbgH0TW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:21:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:5492 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726246AbgH0TVh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:21:37 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07RJKfpm127449;
-        Thu, 27 Aug 2020 15:21:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=Tcv5sEbkN2LXYKr544lkY45x9dSz+ueJ2YJOKerxwnk=;
- b=E31E2Y5i5C0V4Ahiii2I89+WNthivJNvFRbhnUUlhw9f/cZ6i0MgAYPoZtWEAUfdPBzF
- K6DbscpVJq+I232iUMbhm4RlDuab/8uI3O+yi58BCZN1qEr1XzxCfZktHtxcDPaPAZsS
- H7DMcetr/4kVu81dniDmYzKyifO+x8U5QUdWpFjbLR2NPGwRTgDpVlGV39K764xk4hl+
- CenVY3RRUuR8rvWYY0ov5d2UK/ZUX0qWVUG9AuCN/biQepWS5ZHgUdL4YM/7aIAk0GGO
- ZXMk3dWW3z84qVKz2bG2K4fK1oj4zi63T47Eq5uA6Belb8EALA2dGO9A3LYlmeFrrQBU 6Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 336j5bh3s2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 15:21:29 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07RJKuoj127919;
-        Thu, 27 Aug 2020 15:21:29 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 336j5bh3ra-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 15:21:28 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07RJH8Rm007181;
-        Thu, 27 Aug 2020 19:21:27 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma01dal.us.ibm.com with ESMTP id 332uttyh82-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 19:21:27 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07RJLMD366388438
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Aug 2020 19:21:22 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A70B0BE054;
-        Thu, 27 Aug 2020 19:21:25 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 98123BE051;
-        Thu, 27 Aug 2020 19:21:24 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.211.118.21])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Aug 2020 19:21:24 +0000 (GMT)
-Subject: Re: [PATCH v3] PCI: Introduce flag for detached virtual functions
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     alex.williamson@redhat.com, bhelgaas@google.com,
-        schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
-        oohall@gmail.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <20200827183138.GA1929779@bjorn-Precision-5520>
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-Message-ID: <69a78288-9d19-7ffd-4690-28140688fa3f@linux.ibm.com>
-Date:   Thu, 27 Aug 2020 15:21:23 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 27 Aug 2020 15:22:56 -0400
+Received: from mx2.veeam.com ([12.182.39.6]:47846 "EHLO mx2.veeam.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726246AbgH0TWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 15:22:55 -0400
+Received: from mail.veeam.com (prgmbx01.amust.local [172.24.0.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx2.veeam.com (Postfix) with ESMTPS id 2BB0B4124C;
+        Thu, 27 Aug 2020 15:13:55 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=veeam.com; s=mx2;
+        t=1598555635; bh=uuVVtNTXos6TrxWLD31pE4Nljl8CRMkhd1Fps+/HTCY=;
+        h=From:To:CC:Subject:Date:From;
+        b=WoqX3id4kRGUEErEeD5r1bIBreUPa4QMcUMGSkJPpFqaI2pbKJkA1X/djpPZ4fcF8
+         8cSHgeQ2cn6MQAv+dieyCScDk8vdTyLh5Rz98qLWLZi4WcGt7otu/lQMm+3+Rf2qFe
+         KphQBbXv/Z10ldsVluHkJoPwnRZBRmreWo/HDkGc=
+Received: from prgdevlinuxpatch01.amust.local (172.24.14.5) by
+ prgmbx01.amust.local (172.24.0.171) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.595.3;
+ Thu, 27 Aug 2020 21:13:53 +0200
+From:   Sergei Shtepa <sergei.shtepa@veeam.com>
+To:     <masahiroy@kernel.org>, <michal.lkml@markovi.net>,
+        <axboe@kernel.dk>, <koct9i@gmail.com>, <jack@suse.cz>,
+        <damien.lemoal@wdc.com>, <ming.lei@redhat.com>, <steve@sk2.org>,
+        <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>
+CC:     Sergei Shtepa <sergei.shtepa@veeam.com>
+Subject: [PATCH 0/1] block io layer filters api
+Date:   Thu, 27 Aug 2020 22:13:38 +0300
+Message-ID: <1598555619-14792-1-git-send-email-sergei.shtepa@veeam.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200827183138.GA1929779@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-27_10:2020-08-27,2020-08-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- lowpriorityscore=0 clxscore=1011 mlxscore=0 malwarescore=0 adultscore=0
- mlxlogscore=999 bulkscore=0 spamscore=0 impostorscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008270138
+Content-Type: text/plain
+X-Originating-IP: [172.24.14.5]
+X-ClientProxiedBy: prgmbx02.amust.local (172.24.0.172) To prgmbx01.amust.local
+ (172.24.0.171)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A29C604D26B607C6A
+X-Veeam-MMEX: True
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx2.veeam.com [172.18.16.6]); Thu, 27 Aug 2020 15:13:55 -0400 (EDT)
+X-Veeam-MailScanner-Information: Please contact email@veeam.com if you have any problems
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/20 2:31 PM, Bjorn Helgaas wrote:
-> Re the subject line, this patch does a lot more than just "introduce a
-> flag"; AFAICT it actually enables important VFIO functionality, e.g.,
-> something like:
-> 
->    vfio/pci: Enable MMIO access for s390 detached VFs
-> 
+Hello everyone! Requesting for your comments and suggestions.
 
-Fair -- maybe s/Enable/Restore/ as this functionality had been working 
-until the mem bit enforcement was added to vfio via abafbc551fdd.
+We propose new kernel API that should be beneficial for out-of-tree
+kernel modules of multiple backup vendors: block layer filter API.
 
-> On Thu, Aug 13, 2020 at 11:40:43AM -0400, Matthew Rosato wrote:
->> s390x has the notion of providing VFs to the kernel in a manner
->> where the associated PF is inaccessible other than via firmware.
->> These are not treated as typical VFs and access to them is emulated
->> by underlying firmware which can still access the PF.  After
->> the referened commit however these detached VFs were no longer able
->> to work with vfio-pci as the firmware does not provide emulation of
->> the PCI_COMMAND_MEMORY bit.  In this case, let's explicitly recognize
->> these detached VFs so that vfio-pci can allow memory access to
->> them again.
-> 
-> Out of curiosity, in what sense is the PF inaccessible?  Is it
-> *impossible* for Linux to access the PF, or is it just not enumerated
-> by clp_list_pci() so Linux doesn't know about it?
+Functionality:
+* Provide callback to intercept bio requests, the main purpose is to
+allow block level snapshots for the devices that do not support it,
+for example, non-LVM block devices and implementation of changed block
+tracking for faster incremental backups without system reconfiguration
+or reboot, but there could be other use cases that we have not thought of.
+* Allow multiple filters to work at the same time. The order in which the
+request is intercepted is determined by their altitude.
+* When new block devices appear, send a synchronous request to the
+registered filter to add it for filtering.
+* If a block device is permanently deleted or disappears, send a
+synchronous request to remove the device from filtering.
 
-So, it is not enumerated via clp_list_pci because it is not assigned to 
-the host partition -- So while it is physically available to the machine 
-and the firmware can see it, the machine is divided up into multiple 
-logical partitions -- The partition where we are running the host kernel 
-in this scenario has no access to the PF.  Basically, think bare metal 
-hypervisor and only the VF was passed through to the kernel guest.
+Why dm-snap and dm-era is not the solution:
+Device mapper must be set up in advance, usually backup vendors have very
+little ability to change or convince users to modify the existing setup
+at the time of software installation.
+One of the most common setups is still a block device without LVM and
+formatted with ext4.
+Convincing users to redeploy or reconfigure machine, just to make block
+level snapshots/backup software work, is a challenging task.
 
-> VFs do not implement PCI_COMMAND, so I guess "firmware does not
-> provide emulation of PCI_COMMAND_MEMORY" means something like "we
-> can't access the PF so we can't enable/disable PCI_COMMAND_MEMORY"?
-> 
+As of now, commit c62b37d96b6e removed make_request_fn from
+struct request_queue and our out-of-tree module [1] can no longer
+hook/replace it to intercept bio requests. And fops in struct gendisk
+is declared as const and cannot be hooked as well.
 
-So, the root issue is that vfio-pci added enforcement of the bit via 
-abafbc551fdd -- Then subsequently waived the requirement for VFs via 
-bugfix ebfa440ce38b since as you say it can't be on for VFs per the PCIe 
-spec -- Problem is, vfio can't tell these devices are VFs because 
-is_virtfn=0 for these devices.
+We would appreciate your feedback!
 
-Fundamentally, I am trying to find a proper way to tell vfio it's OK to 
-waive the requirement for these devices too.
+[1] https://github.com/veeam/veeamsnap
 
-> s/referened/referenced/
-> 
->> Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
->> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
->> ---
->>   arch/s390/pci/pci_bus.c            | 13 +++++++++++++
->>   drivers/vfio/pci/vfio_pci_config.c |  8 ++++----
->>   include/linux/pci.h                |  4 ++++
->>   3 files changed, 21 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
->> index 642a993..1b33076 100644
->> --- a/arch/s390/pci/pci_bus.c
->> +++ b/arch/s390/pci/pci_bus.c
->> @@ -184,6 +184,19 @@ static inline int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
->>   }
->>   #endif
->>   
->> +void pcibios_bus_add_device(struct pci_dev *pdev)
->> +{
->> +	struct zpci_dev *zdev = to_zpci(pdev);
->> +
->> +	/*
->> +	 * If we have a VF on a non-multifunction bus, it must be a VF that is
->> +	 * detached from its parent PF.  We rely on firmware emulation to
->> +	 * provide underlying PF details.
-> 
-> What exactly does "multifunction bus" mean?  I'm familiar with
-> multi-function *devices*, but not multi-function buses.
-> 
+Sergei Shtepa (1):
+  block io layer filters api
 
-So, this flag is effectively stating whether proper SR-IOV support is 
-available for devices on the bus.  This is an interesting point though, 
-I don't think this will catch all instances of this scenario (vs a 
-more-direct check for a device that has a vfn but no linked PF).  I need 
-to look at this again, thanks.
+ block/Kconfig               |  11 ++
+ block/Makefile              |   1 +
+ block/blk-core.c            |  11 +-
+ block/blk-filter-internal.h |  34 +++++
+ block/blk-filter.c          | 288 ++++++++++++++++++++++++++++++++++++
+ block/genhd.c               |  24 +++
+ include/linux/blk-filter.h  |  41 +++++
+ include/linux/genhd.h       |   2 +
+ 8 files changed, 410 insertions(+), 2 deletions(-)
+ create mode 100644 block/blk-filter-internal.h
+ create mode 100644 block/blk-filter.c
+ create mode 100644 include/linux/blk-filter.h
 
->> +	 */
->> +	if (zdev->vfn && !zdev->zbus->multifunction)
->> +		pdev->detached_vf = 1;
->> +}
->> +
->>   static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
->>   {
->>   	struct pci_bus *bus;
->> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
->> index d98843f..98f93d1 100644
->> --- a/drivers/vfio/pci/vfio_pci_config.c
->> +++ b/drivers/vfio/pci/vfio_pci_config.c
->> @@ -406,7 +406,7 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
->>   	 * PF SR-IOV capability, there's therefore no need to trigger
->>   	 * faults based on the virtual value.
->>   	 */
->> -	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
->> +	return dev_is_vf(&pdev->dev) || (cmd & PCI_COMMAND_MEMORY);
-> 
-> I'm not super keen on the idea of having two subtly different ways of
-> identifying VFs.  I think that will be confusing.  This seems to be
-> the critical line, so whatever we do here, it will be out of the
-> ordinary and probably deserves a little comment.
-> 
-
-Another notion that Alex floated was the idea of tagging these devices 
-that don't implement the PCI_COMMAND_MEMORY bit via a dev_flags bit 
-rather than changing the way we identify VFs.  It's grown on me and I've 
-tried it out as an alternative.  Does this sort of approach sound better?
-
-> If Linux doesn't see the PF, does pci_physfn(VF) return NULL, i.e., is
-> VF->physfn NULL?
-> 
-
-pci_physfn(VF) == VF because is_virtfn=0 for these devices.
-
+-- 
+2.20.1
 
