@@ -2,146 +2,112 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F2BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BBEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 522A82177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02552177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:45:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AMPa8N1A"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jySuFVee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgH0PpL (ORCPT
+        id S1727945AbgH0PpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:45:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41746 "EHLO
+        Thu, 27 Aug 2020 11:45:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726924AbgH0PpH (ORCPT
+        with ESMTP id S1726938AbgH0PpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:45:07 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F55EC061264;
-        Thu, 27 Aug 2020 08:45:06 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id f24so5320237edw.10;
-        Thu, 27 Aug 2020 08:45:06 -0700 (PDT)
+        Thu, 27 Aug 2020 11:45:08 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EAD5C061232
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 08:45:08 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id x17so1802002uao.5
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 08:45:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=74Ao/c7oeFoBT1F8v8BlKUziYBzWC4YEYws/h439jKs=;
-        b=AMPa8N1AoD9YB7fIeGgmF/cNowE7jTvmdnSlHkNXqWgTuHGj1LDyz6RY9dorKnL/fN
-         Z30pyVOeUrs4fDWQn3hrs1dZvRxrbplQZbImRrNJNHdCgPH/5mhyGT43pJeH7xkrp6Sb
-         MZBcScUrs/MJyLn42oxJRGaNJrvbJexbN1cPg2Cxkb3XtnP+LC3+ovtJFuj8hqptSUOv
-         CcXCkksNHNjATY9ob/FlyIIO46cj2X4u3uwybNf4+PMBFfX+68NaraOwOxzF+DfICVCM
-         VN25BNvOEthy10Y2DCDS0ilfaqRXmZ3ernBzLlAAUqcBNegk+XnORCZVVMope4D1TZQ+
-         iXvA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HdB0pPDBq5ZlSvrIwz1JATX0kjJ8iII0iAds3ECexio=;
+        b=jySuFVeeNbfR2c8zFN2XhnZFz/Wi84T9HhLrjTppcXCO4HGJwh2J0jsBunahfcPJy9
+         pL+NE+pzbJv77HHBDPaunvCXm1mDBE7bn5LNsLJBF9QYy9jlrJBPLKdvMLnF4Pe+eH6y
+         Vi0Rc/SAcjS4gaT0/eKBgAGHG6eJJcNb0xq+w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=74Ao/c7oeFoBT1F8v8BlKUziYBzWC4YEYws/h439jKs=;
-        b=f6srJWownTppSnU2+3MptZvEHdePKHnvbEXq54deOOW5/FFNInOh2MhO+dlDMKLC4V
-         TpRtYq8GsF1rgDEC4DkwD7n0aDcdbXVc15lBXl1GBDykVcaE/e1y01mVsOpP9mvv6P+u
-         W1oxEvOT6F0u88HAeUZCmnJb1c2/FFxOWWgmin3ck/4zz85xvas1gRWE0mRzVcyjYzKS
-         iGhjfFdHSUGyXEtosG+HoQXrpK8nwjTtQmDlFkSSAtpQ7lG6Oxn+ioaEe/A85N1P6WP/
-         xrheaxSSYgWM2iylX+hC7Lr0f6OTUZ/sQmVwgqd/za+anrKEVy2zmMdtLJhg4YoOaRnP
-         kA2A==
-X-Gm-Message-State: AOAM531gg3WXCpmSqM85jFSKewr0BVAeTYfxwSmLzJdvcUldxs+gBKq8
-        xqZVe2tQfvthzkTgT68kYJQ=
-X-Google-Smtp-Source: ABdhPJxRtAe6Y1ma+0338eCNyd9I0m6G1oP+UGM2tA/8xgx0U3OYLFtKYBAAwxNFg0VrZz+x/RmEmw==
-X-Received: by 2002:a05:6402:3088:: with SMTP id de8mr20472098edb.88.1598543104973;
-        Thu, 27 Aug 2020 08:45:04 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id u4sm1804409edt.11.2020.08.27.08.45.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 08:45:03 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 17:45:02 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     hch@lst.de, joro@8bytes.org, linux@armlinux.org.uk,
-        will@kernel.org, inki.dae@samsung.com, sw0312.kim@samsung.com,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        jonathanh@nvidia.com, vdumpa@nvidia.com, digetx@gmail.com,
-        matthias.bgg@gmail.com, yong.wu@mediatek.com,
-        geert+renesas@glider.be, magnus.damm@gmail.com, t-kristo@ti.com,
-        s-anna@ti.com, laurent.pinchart@ideasonboard.com,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/18] iommu/tegra: Add IOMMU_DOMAIN_DMA support
-Message-ID: <20200827154502.GA1660457@ulmo>
-References: <cover.1597931875.git.robin.murphy@arm.com>
- <cd11bc7851dbe46db6d14821a942678047331913.1597931876.git.robin.murphy@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HdB0pPDBq5ZlSvrIwz1JATX0kjJ8iII0iAds3ECexio=;
+        b=O5mRw+057bnIRczkHFj6illd0IAAX9AEOk2SEcbt/tLjN+GL3OzQ8UI+kivDPHdxbB
+         03oPgyiT+r8cUTpPMT48EOJwQkqbHWdATJX1awCzTMUAKOiCFsHp1sa0dImoOcIMwAzo
+         y4k/tmYBBiG2gsunLA0R4cOFqc9trHcB0KQwD8IIAqGuztTNeFHIrBwYRQuPGfVftnui
+         AVpjXRdqNe3DmPQJMvZVWx0iCaNhjOL84+BeE4i9cvjlVm56jxVyODhW9fHU6J4Sqfeh
+         g87vcP/vG28nDaob0Si23hDO5vIWDgtpLlOKr0mp2eToN3p1pQ7O/CBP93cWiNM05K9b
+         zf/Q==
+X-Gm-Message-State: AOAM530aFzJxFTYw7SA9+z7m5QCwKcQ3Qrv9wRVWomQFlEVgmUhdL5KB
+        CFXL4w5s7jwm6r+O2GFG+ILSlhibwl43eA==
+X-Google-Smtp-Source: ABdhPJxN7pZoQ31ziNhp6t4MX/wTeqbHU1DC3wWABypz6vtn+mmD2qbxYQ8fNLBeE0lmLDdpbe6OLg==
+X-Received: by 2002:ab0:65c6:: with SMTP id n6mr8065464uaq.57.1598543106238;
+        Thu, 27 Aug 2020 08:45:06 -0700 (PDT)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id e124sm387784vsc.2.2020.08.27.08.45.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 08:45:05 -0700 (PDT)
+Received: by mail-ua1-f49.google.com with SMTP id v20so1805309ual.4
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 08:45:05 -0700 (PDT)
+X-Received: by 2002:a9f:2b89:: with SMTP id y9mr12664378uai.0.1598543104976;
+ Thu, 27 Aug 2020 08:45:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
-Content-Disposition: inline
-In-Reply-To: <cd11bc7851dbe46db6d14821a942678047331913.1597931876.git.robin.murphy@arm.com>
-User-Agent: Mutt/1.14.6 (2020-07-11)
+References: <20200827084102.1.I7a5f56b411071eeecae84b7e33981d39170ccf2a@changeid>
+In-Reply-To: <20200827084102.1.I7a5f56b411071eeecae84b7e33981d39170ccf2a@changeid>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 27 Aug 2020 08:44:53 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=U4f_aUn2N91yCNXyjTJJkrCaGH-gk_pJeCDJHXPxh=nw@mail.gmail.com>
+Message-ID: <CAD=FV=U4f_aUn2N91yCNXyjTJJkrCaGH-gk_pJeCDJHXPxh=nw@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-msm: We need to restore_dll_config for sc7180
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---YiEDa0DAkWCtVeE4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Aug 20, 2020 at 04:08:32PM +0100, Robin Murphy wrote:
-> Now that arch/arm is wired up for default domains and iommu-dma,
-> implement the corresponding driver-side support for DMA domains.
->=20
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+On Thu, Aug 27, 2020 at 8:41 AM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> Although sc7180 is supposed to have a hardware fix that means that we
+> don't have to restore the DLL config like we did with sdm845,
+> apparently the hardware fix doesn't work in all cases.  Until it's
+> understood under exactly which cases we the hardware fix malfunctions,
+> let's go back to restoring the DLL config whenever we do runtime
+> resume.  This is safe and gets things working again.
+>
+> NOTE: we don't need to introduce a whole new "struct
+> sdhci_msm_variant_info" for sc7180 since it would be exactly the same
+> as the sdm845 one.  We'll just refer to that one.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
->  drivers/iommu/tegra-smmu.c | 37 +++++++++++++++++++++----------------
->  1 file changed, 21 insertions(+), 16 deletions(-)
+>
+>  drivers/mmc/host/sdhci-msm.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-We can't do that yet because it will currently still break for use-cases
-such as display where we don't properly set up identity mappings during
-boot. The result is that the dma-iommu code will enable translations
-before the driver gets a chance to set up any mappings and if the
-display controller was left on by the bootloader, scanning out a splash
-screen, this causes faults between the point where dma-iommu is being
-set up for the display controller and where the display controller
-starts mapping its own buffers (rather than the ones mapped by the
-bootloader).
+Sorry for the spam.  I was too busy debugging and preparing my other
+patches and didn't realize that Veerabhadrarao was sending at the
+exact same time.  Let's take that one, AKA:
 
-That said, I do have a series that I've been carrying around for longer
-than I've wanted that does exactly this for Tegra SMMU and I'd prefer if
-you could drop this particular change from your series so that I can
-keep working on resolving the identity mapping issues first.
+https://lore.kernel.org/r/1598541694-15694-1-git-send-email-vbadigan@codeaurora.org
 
-Thierry
-
---YiEDa0DAkWCtVeE4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9H1PwACgkQ3SOs138+
-s6GMrhAAqb0k0/ZQ/J5VIibNnM1oZSG1CTD/3tuwm94u1T1J++b71xlQpN0U7Fru
-gJNX22olSrdpzdecS9LQ3Twqu4qgPzLazvenfBLxxrDuwS466j3hbbW8cG1Tlb/m
-6lEbacziO0f91GP7ao5dAG0HIPZvIYfU1PIA/eOPnBcOlFVvWVfCnN6gOjPOSocz
-20X/S1W6d5Jo7x2T0PtA0TFpD9BZVzjZA2q9XVzPSxkqLfEVMU00Yp/TnHySfWJ3
-+sfRxeaUl5Ysjrtkd5YeFoIGlVctyKIKtGCIR60HU4bPlB4cdaVaaJBVkJAM7kQh
-p+UGnGgl09/DyAe57qVaEWsbcXwHaxeveFmdjMHn9y0veGidzQPg0KtDUL2k7D3V
-NXHKnets8HdkODT8PjTSbS3ELLEHf1GxsYAcR9aHvV1FLMl3c/8ZmMA1RZ5CIAbD
-rmFaxQENmVHUev0lQnwlYP7Wwt2YyXc62L9UfyhrIkQjHmm/D+uIlPmjkr/YDreI
-xndQ7H0OgVFKuc9nfSpnBOgIEeLDNr2AA59wzUxHikB+5MfDyxOk5TqnsjdcqSqr
-b8257AC5ZWe79OOD0/hwDAlmSlx/hB3lO2kmm3BhLX+5tOTQv7vTSgr9BTppkZrD
-dQHiT2TjMsiQyBhXhceazD0hhSAC3MSh1+TpgLDrBy2Sh96zUQ8=
-=Dzgn
------END PGP SIGNATURE-----
-
---YiEDa0DAkWCtVeE4--
+-Doug
