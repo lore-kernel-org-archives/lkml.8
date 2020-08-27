@@ -2,122 +2,188 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 416F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 618EFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 134532078A
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:17:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598509078;
-	bh=5YIDpfZB6MI9rzG942H97ZhO24uA2f81DXB8mKBx5YI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y2oMepTLUIoDsKndXDGRK4x3XPUFeIg1urGWFsjnyOwfdCUBf4zg28X+BbcuthP6N
-	 7Y9AeDKHOjIKZ3hiE0LzijL0faqgIlVteoF4JQSc91sTCubthTTkBC6Iw+c8oV+kvq
-	 SQJAI+UytGKsnjmiZWHNG34JIt46HUtjvqePK9ks=
+	by mail.kernel.org (Postfix) with ESMTP id 11D4D2078A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:18:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="xpzEgaM1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgH0GRz (ORCPT
+        id S1727099AbgH0GSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:17:55 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:41993 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgH0GRt (ORCPT
+        Thu, 27 Aug 2020 02:18:00 -0400
+Received: from gateway24.websitewelcome.com ([192.185.51.209]:30958 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727022AbgH0GR4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:17:49 -0400
-Received: by mail-ej1-f65.google.com with SMTP id j25so6064004ejk.9;
-        Wed, 26 Aug 2020 23:17:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JZG8HBT8DE1dNj4xlJRchHMwVc5I9x4bxVIe8VtVQDc=;
-        b=UXUv+jnTxbHy2LAlYAONTH9CHB1AfEiRsupiLK3RLc8PG/0S3HtrMcEcZ/E34Bu1hO
-         jAeOagMCWDI/+cnWvwSOccNtbPFAfRsrbiofgdQ5j98OicG5i4AHv9QIGR5bBSYHteei
-         sHrRg3A4U5GPgWBBbb7fLXfmfvAF9hbAkw6cobhHkiDhsP2ED3SL9nUNdPJpUyDMWvHs
-         ywbA9mNftSK6CyK1ItrHwy3OCm33w5zgM/rMBV48qjCosNf1pzA2VgmQmqG5/P9qfXAA
-         y80Wz6gHIv6BkD/QDFawBk9YuDZcSMTGiKmBXVwUFxvUD2pCusUYOoPKHLw3h2kFmm2c
-         9gBQ==
-X-Gm-Message-State: AOAM531vwMk2XvBBGm4wdFn3PhYX+abgwA5scyGv0yxTNfr5xDqRnNI1
-        /FVaC6NoIyOoZZ7JLfKvj0k=
-X-Google-Smtp-Source: ABdhPJwtnm3Q3rP55hJh0omZ1VciZFvqj06f/eN1729A2GVqJHVD8CL1kk2xojDHBSTSUILxlI74Pg==
-X-Received: by 2002:a17:906:fcc8:: with SMTP id qx8mr1203962ejb.13.1598509066941;
-        Wed, 26 Aug 2020 23:17:46 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id r15sm764343edv.94.2020.08.26.23.17.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Aug 2020 23:17:46 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 08:17:44 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] Input: gpio_keys - Simplify with dev_err_probe()
-Message-ID: <20200827061744.GB3355@kozik-lap>
-References: <20200826200827.30931-1-krzk@kernel.org>
- <20200826200827.30931-2-krzk@kernel.org>
- <CAHp75VcgE+HJOKkV6-crzH1w+qOtSKR8=i1Y3ufnhTiAcYV=7A@mail.gmail.com>
+        Thu, 27 Aug 2020 02:17:56 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id D924215CD
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 01:17:52 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id BBEOkdSm6LFNkBBEOk6nwQ; Thu, 27 Aug 2020 01:17:52 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=qHxOnyBIlnPK0Cq/zWOJblisYvm45RWVknmbdrQpGHk=; b=xpzEgaM11EX/CfqgzsxXGERJgx
+        dRv/NW4pbAJZ6+ZRnGx/+hbiChmfGtgS8uiNtM8AI1HHeR/+caudItE14kZegj7qoEs1X+QN9Zt6B
+        zjcsbquQtKrJ6/UnhAmXoD35QOIPIv5TgJ0dfk4cs7nH1xWACHneMSZ7ciyECo+P5hV+OkMr6sxeb
+        11BbwNM4qDor8EcdZtXn6k2/JIS7uPHD2X+vYhw9bm+XqFZrkYrRboZDGMEH/OSTsaNUnGAhPr6hP
+        Q89kUgZjLeW1h82iskK/q+QVG0NRS82KhqgL/fYPyBgA6B6XeGh/e0j5fO4DU4TWWIFAxSUj5Tpc8
+        PG5KfxSQ==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:44752 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1kBBEO-000D9J-C6; Thu, 27 Aug 2020 01:17:52 -0500
+Subject: Re: [PATCH v2 2/4] brcmfmac: drop unnecessary "fallthrough" comments
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200827060441.15487-1-digetx@gmail.com>
+ <20200827060441.15487-3-digetx@gmail.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ AP7RWS474w==
+Message-ID: <9ba55d08-879b-cf66-b5d9-cc8fd292a4aa@embeddedor.com>
+Date:   Thu, 27 Aug 2020 01:23:55 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200827060441.15487-3-digetx@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHp75VcgE+HJOKkV6-crzH1w+qOtSKR8=i1Y3ufnhTiAcYV=7A@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1kBBEO-000D9J-C6
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:44752
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 13
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 12:05:51AM +0300, Andy Shevchenko wrote:
-> On Wednesday, August 26, 2020, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> 
-> > Common pattern of handling deferred probe can be simplified with
-> > dev_err_probe() and devm_fwnode_gpiod_get_optional().   Less code and
-> > the error value gets printed.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> >
-> > ---
-> >
-> > Changes since v1:
-> > 1. Use devm_fwnode_gpiod_get_optional
-> > ---
-> >  drivers/input/keyboard/gpio_keys.c | 21 ++++-----------------
-> >  1 file changed, 4 insertions(+), 17 deletions(-)
-> >
-> > diff --git a/drivers/input/keyboard/gpio_keys.c
-> > b/drivers/input/keyboard/gpio_keys.c
-> > index f2d4e4daa818..a07ac6fa25ed 100644
-> > --- a/drivers/input/keyboard/gpio_keys.c
-> > +++ b/drivers/input/keyboard/gpio_keys.c
-> > @@ -494,23 +494,10 @@ static int gpio_keys_setup_key(struct
-> > platform_device *pdev,
-> >         spin_lock_init(&bdata->lock);
-> >
-> >         if (child) {
-> > -               bdata->gpiod = devm_fwnode_gpiod_get(dev, child,
-> > -                                                    NULL, GPIOD_IN, desc);
-> > -               if (IS_ERR(bdata->gpiod)) {
-> > -                       error = PTR_ERR(bdata->gpiod);
-> > -                       if (error == -ENOENT) {
-> > -                               /*
-> > -                                * GPIO is optional, we may be dealing with
-> > -                                * purely interrupt-driven setup.
-> > -                                */
-> 
-> 
-> Can we preserve this comment?
+Hi,
 
-Sure.
+There is a patch that address this, already:
 
-Best regards,
-Krzysztof
+https://lore.kernel.org/lkml/20200821063758.GA17783@embeddedor/
+
+Thanks
+--
+Gustavo
+
+On 8/27/20 01:04, Dmitry Osipenko wrote:
+> There is no need to insert the "fallthrough" comment if there is nothing
+> in-between of case switches. Hence let's remove the unnecessary comments
+> in order to make code cleaner a tad.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c | 2 --
+>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c   | 2 --
+>  2 files changed, 4 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+> index 1a7ab49295aa..0dc4de2fa9f6 100644
+> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+> @@ -916,9 +916,7 @@ int brcmf_sdiod_probe(struct brcmf_sdio_dev *sdiodev)
+>  		f2_blksz = SDIO_4373_FUNC2_BLOCKSIZE;
+>  		break;
+>  	case SDIO_DEVICE_ID_BROADCOM_4359:
+> -		/* fallthrough */
+>  	case SDIO_DEVICE_ID_BROADCOM_4354:
+> -		/* fallthrough */
+>  	case SDIO_DEVICE_ID_BROADCOM_4356:
+>  		f2_blksz = SDIO_435X_FUNC2_BLOCKSIZE;
+>  		break;
+> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+> index ac3ee93a2378..b16944a898f9 100644
+> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+> @@ -4306,9 +4306,7 @@ static void brcmf_sdio_firmware_callback(struct device *dev, int err,
+>  					   CY_43455_MESBUSYCTRL, &err);
+>  			break;
+>  		case SDIO_DEVICE_ID_BROADCOM_4359:
+> -			/* fallthrough */
+>  		case SDIO_DEVICE_ID_BROADCOM_4354:
+> -			/* fallthrough */
+>  		case SDIO_DEVICE_ID_BROADCOM_4356:
+>  			brcmf_dbg(INFO, "set F2 watermark to 0x%x*4 bytes\n",
+>  				  CY_435X_F2_WATERMARK);
+> 
