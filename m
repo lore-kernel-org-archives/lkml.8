@@ -2,112 +2,76 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DFFC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96861C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A5E3207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:15:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="AjG26tSd"
+	by mail.kernel.org (Postfix) with ESMTP id 80FDA2087C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgH0QPd (ORCPT
+        id S1727818AbgH0QQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:15:33 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:42742 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbgH0QPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:15:32 -0400
-Received: from zn.tnic (p200300ec2f104500059e4b9a4804679d.dip0.t-ipconnect.de [IPv6:2003:ec:2f10:4500:59e:4b9a:4804:679d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1267A1EC036E;
-        Thu, 27 Aug 2020 18:15:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1598544930;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Zos8xr317Mr6fieRUdMgTR11Ta63JVFDYPbNfeN3+Xc=;
-        b=AjG26tSdODJnmsurfGgr2dmB/A6Jy4Uyglm8Oq362pBl6mWgj1TJVTlTzQ4hfS1nA8fEdT
-        J/KHqgS3TnkHuDJDUgvTHJv1FrR2Hgdyj/esjY1KvoGCuGF6ZuXRdeGclk08BKqf7tZ5xy
-        oUs162RR8o1V6h+anzuHdorD3FGkToo=
-Date:   Thu, 27 Aug 2020 18:15:27 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v36 12/24] x86/sgx: Add SGX_IOC_ENCLAVE_CREATE
-Message-ID: <20200827161527.GC30897@zn.tnic>
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-13-jarkko.sakkinen@linux.intel.com>
- <20200826145239.GC22390@zn.tnic>
- <20200827132436.GA4674@linux.intel.com>
+        Thu, 27 Aug 2020 12:16:02 -0400
+Received: from smtprelay0242.hostedemail.com ([216.40.44.242]:48044 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726197AbgH0QP7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 12:15:59 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id A8A618384366;
+        Thu, 27 Aug 2020 16:15:58 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: drop48_1110f0b2706e
+X-Filterd-Recvd-Size: 1744
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf04.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 27 Aug 2020 16:15:57 +0000 (UTC)
+Message-ID: <4a680693ac758647c8e936ef71f067571c12f46d.camel@perches.com>
+Subject: Re: [PATCH v2 08/10] fs/ntfs3: Add Kconfig, Makefile and doc
+From:   Joe Perches <joe@perches.com>
+To:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Cc:     Pali =?ISO-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Date:   Thu, 27 Aug 2020 09:15:55 -0700
+In-Reply-To: <8fc9d4a25f25472384d9de2b6d5e8111@paragon-software.com>
+References: <74de75d537ac486e9fcfe7931181a9b9@paragon-software.com>
+         <63ae69b5-ee05-053d-feb6-6c9b5ed04499@infradead.org>
+         <8fc9d4a25f25472384d9de2b6d5e8111@paragon-software.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200827132436.GA4674@linux.intel.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 04:24:36PM +0300, Jarkko Sakkinen wrote:
-> I have not checked if this passes checkpatch.pl yet, but I would
-> be surprised if that did not pass (obviously I'll check that).
+On Thu, 2020-08-27 at 16:01 +0000, Konstantin Komarov wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> Sent: Friday, August 21, 2020 8:23 PM
+[]
+> > > +- Full journaling support (currently journal replaying is supported) over JBD.
+> > 
+> >           journalling
+> > seems to be preferred.
+> > 
+> Have to disagree on this. According to "journaling" term usage in
+> different sources, the single-L seems to be the standard.
 
-Right, when you're done with the patchset, just do
+In the kernel it seems to be a tie:
 
-checkpatch.pl -g ...
+$ git grep -i -w journalling | wc -l
+109
+$ git grep -i -w journaling | wc -l
+111
 
-on it before sending and you'll be good to go. Just remember to read the
-suggestions checkpatch gives with turned on brain and sanity-check them
-instead of blindly following them.
+I think 1 l better.
 
-> I'm sorry about that. This was not intentional. I'll revisit them by
-> going through all your responses from here:
-> 
->   https://patchwork.kernel.org/patch/11581715/
 
-Actually this one:
-
-https://lkml.kernel.org/r/20200617220844.57423-12-jarkko.sakkinen@linux.intel.com
-
-i.e., the v33 version.
-
-Also, make sure you go through the review comments of v34 and v35 in
-case you haven't done so yet.
-
-> v34 had the splitting of the big driver patch into multiple patches.
-> 
-> During that process I've obviously failed to address these.
-
-Yeah, that can happen - I mean, this is not even close to being an easy
-patchset so thanks for putting in the effort.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
