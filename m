@@ -2,201 +2,194 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5921AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE45C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE532177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AAF92177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:20:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OnhNILNH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VLU/EdII"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgH0OTg (ORCPT
+        id S1727897AbgH0OUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:19:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727878AbgH0OFi (ORCPT
+        Thu, 27 Aug 2020 10:20:33 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32544 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728029AbgH0OI7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:05:38 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A7EC061239;
-        Thu, 27 Aug 2020 07:04:22 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ls14so2646347pjb.3;
-        Thu, 27 Aug 2020 07:04:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zeAqt+L6g1vrQKWXIoolqUPOf3l3HNvz8g6zB2yyrdI=;
-        b=OnhNILNH79CwzJfLX9pU2ERgM5FfOBMz09TdRKvhkLzIZW5EGAehJtlDgnynAWsvfT
-         T//Y5PEBkgfX45MrBipWKt/AcvQk9Ar3m8LXBI9K6yQw1qkWmNA1tIt91zC5mkT+xxt6
-         WU2XNWOSMVBqCiAXlPqt4at6gbYqLpOKkN1hYBtqtQFsuCJB8SucZj7K5fP7Tfgmdaby
-         Awua82yghSmwwvMUhcROtP3iLPJ/mmJpWNo7HdY4sD4pgv6eGBaTbwgqTY7/VJ3hHjIE
-         27w/jJQF+hp0XatwPf3Ksx1LmjDYVWbDNHoJst9Pq6ShdfV47btGtxqzdke+imB3ZM/C
-         qfDw==
+        Thu, 27 Aug 2020 10:08:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598537287;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CvdhiPhYSGUOeaIN0B943JFU94tDWV4/UOsJxiz1v3Q=;
+        b=VLU/EdIIUF3TolhlPrwmiZP747TI/B2Ku9ggaDjMmAhFnO8LdifPtgVdu30bAKi6+7tZsj
+        kQmU+kHq8lBRzoCurGQQ3vrjmfTEvsG3iaW3aNgsDEc9K8r5vmnxUpkJtE0dFZsRvkJPnb
+        6ciVJMnw5i7lM9y8xfXXDz9RYv/iWxM=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-309-LevPGzZBNViChtpIXAFixg-1; Thu, 27 Aug 2020 10:08:05 -0400
+X-MC-Unique: LevPGzZBNViChtpIXAFixg-1
+Received: by mail-wm1-f69.google.com with SMTP id p23so2186340wmc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 07:08:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zeAqt+L6g1vrQKWXIoolqUPOf3l3HNvz8g6zB2yyrdI=;
-        b=e18zROpaKkbr1wpyR5h2TztxU7JCYjxpRwtZdNUfPWqRefre1bW3ZtKv25jXue3d+Z
-         XCGA/mZJcmUOUZXMl62Z6gEueQCvWaoYJLj5sCOJQjUo1RblDMu93VAx0uqxSkLDcpjp
-         CbHMaDVtSZFp8LNOi6BNqqZ27rCoD81dpbmH1x9Z5o2Oz4Sne9UDS1Uku5Wpac6mNoL/
-         TT5c9YZhTZLnByz4PZEyh6JcnLXmRvwCmVqEHF3TXDN49p2fGtAc+S0n3oYghv+ta4cR
-         56y1Th2m34msR3Bryb6ORJS33hbuhljnV4qVRTUWmb1NHk0j/T6M6O8ueHMURu/nHI27
-         1OIQ==
-X-Gm-Message-State: AOAM531ShvZVLz2u/50uDg2vO3pQHwqmesSzzAb7+MewxkNyBVYdptCf
-        hXGZraXCBSlSJM2uwBs9V5Tbv7eQrmI=
-X-Google-Smtp-Source: ABdhPJyJ+9QkifpDjycw3SplohaUIxF5lHNpUuo8KMqk+GwoNlCd8161IAJcKF1+hBnL7ApGZ1YxUQ==
-X-Received: by 2002:a17:90a:e815:: with SMTP id i21mr2825462pjy.216.1598537061348;
-        Thu, 27 Aug 2020 07:04:21 -0700 (PDT)
-Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id fs12sm2371092pjb.21.2020.08.27.07.04.17
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CvdhiPhYSGUOeaIN0B943JFU94tDWV4/UOsJxiz1v3Q=;
+        b=Q8A9moGVwK0A2hu9/QWpEmnSEZz7jhtHxsnAXXwmIa4/OXA4kohRo0q8KGeQ40jYoB
+         bw9m+R+a5dHBrzDyer262iwhvvr5ShSlkXjKTfgL88vkmBYmh4QwW4Jsrh6hzY53x/Lo
+         rKoehAi/pAx1jJFogg5+SoBB2aNS2FGeihiqeXGY859uOYzfWV0RbHYG6rn4ejE+MhS+
+         G0OPNowaxwdhbrFpKozxuPozrUH7ZsVtWCO661fsvCtVv938mkbZNfv5zBE/gkst6IaX
+         T/EuUCX0yvsp0VZwNjPc+dnvMC2ASTURfLY6ENsTQ7m4isehHDqQewO45qTJ85IQ9XWm
+         yh4Q==
+X-Gm-Message-State: AOAM532VrXbLPI3lQDS+zmUwExZPYKTxz0bNIUm0tIakm8dhvPSa2d4h
+        PE61bSqM75spkcHdI2sF+odlotqxKdyKI3Ow5eyvbjCVfueLz4Jr//IsCps++APt8dC/LoIK1aB
+        2o1G9C1RmSpVFq+LCe6gJW73z
+X-Received: by 2002:a5d:66c1:: with SMTP id k1mr19971165wrw.8.1598537283952;
+        Thu, 27 Aug 2020 07:08:03 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzWw4gY+gfT3ioYFr28ZoapW9vPXQZrcRf4b8LhwoAGjeKf6Sd713KoEGCbzoU3U0KCeejqiw==
+X-Received: by 2002:a5d:66c1:: with SMTP id k1mr19971132wrw.8.1598537283631;
+        Thu, 27 Aug 2020 07:08:03 -0700 (PDT)
+Received: from steredhat.lan ([5.171.209.212])
+        by smtp.gmail.com with ESMTPSA id t14sm7282780wrg.38.2020.08.27.07.08.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 07:04:20 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v5 19/20] tools: gpio: add multi-line monitoring to gpio-event-mon
-Date:   Thu, 27 Aug 2020 22:00:19 +0800
-Message-Id: <20200827140020.159627-20-warthog618@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200827140020.159627-1-warthog618@gmail.com>
-References: <20200827140020.159627-1-warthog618@gmail.com>
+        Thu, 27 Aug 2020 07:08:03 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 16:07:58 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Aleksa Sarai <asarai@suse.de>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Jann Horn <jannh@google.com>, io-uring@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-kernel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
+        Kees Cook <keescook@chromium.org>,
+        Jeff Moyer <jmoyer@redhat.com>
+Subject: Re: [PATCH v5 2/3] io_uring: add IOURING_REGISTER_RESTRICTIONS opcode
+Message-ID: <20200827140758.mboc7z2us2yqp356@steredhat.lan>
+References: <20200827134044.82821-1-sgarzare@redhat.com>
+ <20200827134044.82821-3-sgarzare@redhat.com>
+ <206a32b6-ba20-fc91-1906-e6bf377798ae@kernel.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <206a32b6-ba20-fc91-1906-e6bf377798ae@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend gpio-event-mon to support monitoring multiple lines.
-This would require multiple lineevent requests to implement using uAPI v1,
-but can be performed with a single line request using uAPI v2.
+On Thu, Aug 27, 2020 at 07:49:45AM -0600, Jens Axboe wrote:
+> On 8/27/20 7:40 AM, Stefano Garzarella wrote:
+> > @@ -6414,6 +6425,19 @@ static int io_init_req(struct io_ring_ctx *ctx, struct io_kiocb *req,
+> >  	if (unlikely(sqe_flags & ~SQE_VALID_FLAGS))
+> >  		return -EINVAL;
+> >  
+> > +	if (unlikely(ctx->restricted)) {
+> > +		if (!test_bit(req->opcode, ctx->restrictions.sqe_op))
+> > +			return -EACCES;
+> > +
+> > +		if ((sqe_flags & ctx->restrictions.sqe_flags_required) !=
+> > +		    ctx->restrictions.sqe_flags_required)
+> > +			return -EACCES;
+> > +
+> > +		if (sqe_flags & ~(ctx->restrictions.sqe_flags_allowed |
+> > +				  ctx->restrictions.sqe_flags_required))
+> > +			return -EACCES;
+> > +	}
+> > +
+> 
+> This should be a separate function, ala:
+> 
+> if (unlikely(ctx->restricted)) {
+> 	ret = io_check_restriction(ctx, req);
+> 	if (ret)
+> 		return ret;
+> }
+> 
+> to move it totally out of the (very) hot path.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- tools/gpio/gpio-event-mon.c | 45 ++++++++++++++++++++++++++++---------
- 1 file changed, 34 insertions(+), 11 deletions(-)
+I'll fix.
 
-diff --git a/tools/gpio/gpio-event-mon.c b/tools/gpio/gpio-event-mon.c
-index d6a831200c18..e50bb107ea3a 100644
---- a/tools/gpio/gpio-event-mon.c
-+++ b/tools/gpio/gpio-event-mon.c
-@@ -26,7 +26,8 @@
- #include "gpio-utils.h"
- 
- int monitor_device(const char *device_name,
--		   unsigned int line,
-+		   unsigned int *lines,
-+		   unsigned int num_lines,
- 		   struct gpio_v2_line_config *config,
- 		   unsigned int loops)
- {
-@@ -47,7 +48,7 @@ int monitor_device(const char *device_name,
- 		goto exit_free_name;
- 	}
- 
--	ret = gpiotools_request_line(device_name, &line, 1, config,
-+	ret = gpiotools_request_line(device_name, lines, num_lines, config,
- 				     "gpio-event-mon");
- 	if (ret < 0)
- 		goto exit_device_close;
-@@ -55,8 +56,10 @@ int monitor_device(const char *device_name,
- 		lfd = ret;
- 
- 	/* Read initial states */
--	values.mask = 1;
-+	values.mask = 0;
- 	values.bits = 0;
-+	for (i = 0; i < num_lines; i++)
-+		gpiotools_set_bit(&values.mask, i);
- 	ret = gpiotools_get_values(lfd, &values);
- 	if (ret < 0) {
- 		fprintf(stderr,
-@@ -65,9 +68,23 @@ int monitor_device(const char *device_name,
- 		goto exit_line_close;
- 	}
- 
--	fprintf(stdout, "Monitoring line %d on %s\n", line, device_name);
--	fprintf(stdout, "Initial line value: %d\n",
--		gpiotools_test_bit(values.bits, 0));
-+	if (num_lines == 1) {
-+		fprintf(stdout, "Monitoring line %d on %s\n", lines[0], device_name);
-+		fprintf(stdout, "Initial line value: %d\n",
-+			gpiotools_test_bit(values.bits, 0));
-+	} else {
-+		fprintf(stdout, "Monitoring lines %d", lines[0]);
-+		for (i = 1; i < num_lines - 1; i++)
-+			fprintf(stdout, ", %d", lines[i]);
-+		fprintf(stdout, " and %d on %s\n", lines[i], device_name);
-+		fprintf(stdout, "Initial line values: %d",
-+			gpiotools_test_bit(values.bits, 0));
-+		for (i = 1; i < num_lines - 1; i++)
-+			fprintf(stdout, ", %d",
-+				gpiotools_test_bit(values.bits, i));
-+		fprintf(stdout, " and %d\n",
-+			gpiotools_test_bit(values.bits, i));
-+	}
- 
- 	while (1) {
- 		struct gpio_v2_line_event event;
-@@ -126,7 +143,7 @@ void print_usage(void)
- 	fprintf(stderr, "Usage: gpio-event-mon [options]...\n"
- 		"Listen to events on GPIO lines, 0->1 1->0\n"
- 		"  -n <name>  Listen on GPIOs on a named device (must be stated)\n"
--		"  -o <n>     Offset to monitor\n"
-+		"  -o <n>     Offset of line to monitor (may be repeated)\n"
- 		"  -d         Set line as open drain\n"
- 		"  -s         Set line as open source\n"
- 		"  -r         Listen for rising edges\n"
-@@ -146,7 +163,8 @@ void print_usage(void)
- int main(int argc, char **argv)
- {
- 	const char *device_name = NULL;
--	unsigned int line = -1;
-+	unsigned int lines[GPIO_V2_LINES_MAX];
-+	unsigned int num_lines = 0;
- 	unsigned int loops = 0;
- 	struct gpio_v2_line_config config;
- 	int c;
-@@ -162,7 +180,12 @@ int main(int argc, char **argv)
- 			device_name = optarg;
- 			break;
- 		case 'o':
--			line = strtoul(optarg, NULL, 10);
-+			if (num_lines >= GPIO_V2_LINES_MAX) {
-+				print_usage();
-+				return -1;
-+			}
-+			lines[num_lines] = strtoul(optarg, NULL, 10);
-+			num_lines++;
- 			break;
- 		case 'd':
- 			config.flags |= GPIO_V2_LINE_FLAG_OPEN_DRAIN;
-@@ -182,7 +205,7 @@ int main(int argc, char **argv)
- 		}
- 	}
- 
--	if (!device_name || line == -1) {
-+	if (!device_name || num_lines == 0) {
- 		print_usage();
- 		return -1;
- 	}
-@@ -191,5 +214,5 @@ int main(int argc, char **argv)
- 		       "falling edges\n");
- 		config.flags |= EDGE_FLAGS;
- 	}
--	return monitor_device(device_name, line, &config, loops);
-+	return monitor_device(device_name, lines, num_lines, &config, loops);
- }
--- 
-2.28.0
+> 
+> >  	if ((sqe_flags & IOSQE_BUFFER_SELECT) &&
+> >  	    !io_op_defs[req->opcode].buffer_select)
+> >  		return -EOPNOTSUPP;
+> > @@ -8714,6 +8738,71 @@ static int io_unregister_personality(struct io_ring_ctx *ctx, unsigned id)
+> >  	return -EINVAL;
+> >  }
+> >  
+> > +static int io_register_restrictions(struct io_ring_ctx *ctx, void __user *arg,
+> > +				    unsigned int nr_args)
+> > +{
+> > +	struct io_uring_restriction *res;
+> > +	size_t size;
+> > +	int i, ret;
+> > +
+> > +	/* We allow only a single restrictions registration */
+> > +	if (ctx->restricted)
+> > +		return -EBUSY;
+> > +
+> > +	if (!arg || nr_args > IORING_MAX_RESTRICTIONS)
+> > +		return -EINVAL;
+> > +
+> > +	size = array_size(nr_args, sizeof(*res));
+> > +	if (size == SIZE_MAX)
+> > +		return -EOVERFLOW;
+> > +
+> > +	res = memdup_user(arg, size);
+> > +	if (IS_ERR(res))
+> > +		return PTR_ERR(res);
+> > +
+> > +	for (i = 0; i < nr_args; i++) {
+> > +		switch (res[i].opcode) {
+> > +		case IORING_RESTRICTION_REGISTER_OP:
+> > +			if (res[i].register_op >= IORING_REGISTER_LAST) {
+> > +				ret = -EINVAL;
+> > +				goto out;
+> > +			}
+> > +
+> > +			__set_bit(res[i].register_op,
+> > +				  ctx->restrictions.register_op);
+> > +			break;
+> > +		case IORING_RESTRICTION_SQE_OP:
+> > +			if (res[i].sqe_op >= IORING_OP_LAST) {
+> > +				ret = -EINVAL;
+> > +				goto out;
+> > +			}
+> > +
+> > +			__set_bit(res[i].sqe_op, ctx->restrictions.sqe_op);
+> > +			break;
+> > +		case IORING_RESTRICTION_SQE_FLAGS_ALLOWED:
+> > +			ctx->restrictions.sqe_flags_allowed = res[i].sqe_flags;
+> > +			break;
+> > +		case IORING_RESTRICTION_SQE_FLAGS_REQUIRED:
+> > +			ctx->restrictions.sqe_flags_required = res[i].sqe_flags;
+> > +			break;
+> > +		default:
+> > +			ret = -EINVAL;
+> > +			goto out;
+> > +		}
+> > +	}
+> > +
+> > +	ctx->restricted = 1;
+> > +
+> > +	ret = 0;
+> 
+> I'd set ret = 0 above the switch, that's the usual idiom - start at
+> zero, have someone set it to -ERROR if something fails.
+
+Yes, it is better. I'll fix it.
+
+Thanks,
+Stefano
 
