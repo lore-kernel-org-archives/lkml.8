@@ -2,100 +2,229 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A2BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 200292087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6855B22B4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:24:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QB4W7D5e"
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="YQiJIeRD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgH0QXv (ORCPT
+        id S1727030AbgH0QY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:23:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47846 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726232AbgH0QXt (ORCPT
+        Thu, 27 Aug 2020 12:24:28 -0400
+Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:48064 "EHLO
+        relaydlg-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726200AbgH0QYY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:23:49 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 665B2C061264;
-        Thu, 27 Aug 2020 09:23:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=15+7ZeGTiVqYsgGTf8WTKBRYLUjS9SNNpRwCigns3M8=; b=QB4W7D5eRkbr7yQH+De6JSrJuO
-        42UzsVfF3G+jIeAwpPRr1+Ut+b2uV/aVPqBzgeA8pFVqHeMq3Qn4KsG9zgBkoJWf+iCottELfWkXJ
-        ny2zfnEQ9QUqFo7D7raiPaBaCuudqTz7wY8fGXmA2AElFX8XO3pV2XxOM4xsJc8KGwURzwbJ8Q6VT
-        dwOxzuZC+/7GuoAHEIqSARpB/NQcdvmwoToRAehicBxQvQdztKrnN6mp8NHuqHTNOI4nbJ67MMjRv
-        R21/cL36QHF8U6HYqQy2qir2GHIda/+oDojfskBBUHi1YiSPZ8t7dGbLwzX4wwcJ+XgEdTl54x9kg
-        FbrJO33g==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBKgX-0001up-DA; Thu, 27 Aug 2020 16:23:33 +0000
-Date:   Thu, 27 Aug 2020 17:23:33 +0100
-From:   "hch@infradead.org" <hch@infradead.org>
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Cc:     "hch@infradead.org" <hch@infradead.org>,
-        "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
+        Thu, 27 Aug 2020 12:24:24 -0400
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id F0536820D7;
+        Thu, 27 Aug 2020 19:24:21 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paragon-software.com; s=mail; t=1598545461;
+        bh=OhOFVzvb94CEyYGinUxtmM6MzbSpiMNb4ADL68UbxqI=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=YQiJIeRDYXzRKrD6UstupI2B9Byzits5GM/4ZweDN6WmWf/jAewKh9aQfyYHV1iBj
+         amDG8JQLnktv2pNVBoEwWTyNNNZzD46xzYbY02IMkLGsVgq/x1Fy1eauh5GYnlRjRZ
+         VmLl/Os2sTeYalyhf9U+lJ5vPyioFkjF7Jtd/YgE=
+Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Thu, 27 Aug 2020 19:24:21 +0300
+Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
+ by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
+ id 15.01.1847.003; Thu, 27 Aug 2020 19:24:21 +0300
+From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To:     =?iso-8859-1?Q?Pali_Roh=E1r?= <pali@kernel.org>
+CC:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Huffman, Amber" <amber.huffman@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Message-ID: <20200827162333.GA6822@infradead.org>
-References: <20200821123222.32093-1-kai.heng.feng@canonical.com>
- <20200825062320.GA27116@infradead.org>
- <cd5aa2fef13f14b30c139d03d5256cf93c7195dc.camel@intel.com>
- <20200827063406.GA13738@infradead.org>
- <660c8671a51eec447dc7fab22bacbc9c600508d9.camel@intel.com>
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: RE: [PATCH v2 08/10] fs/ntfs3: Add Kconfig, Makefile and doc
+Thread-Topic: [PATCH v2 08/10] fs/ntfs3: Add Kconfig, Makefile and doc
+Thread-Index: AdZ302F8VVG9og4hTA6+RhoU6EU4hgBSfjSAANwmvxA=
+Date:   Thu, 27 Aug 2020 16:24:21 +0000
+Message-ID: <c30f0c3684b44dada4697275b4443f15@paragon-software.com>
+References: <74de75d537ac486e9fcfe7931181a9b9@paragon-software.com>
+ <20200823101643.2qljlqzxne4r32am@pali>
+In-Reply-To: <20200823101643.2qljlqzxne4r32am@pali>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.8.36]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <660c8671a51eec447dc7fab22bacbc9c600508d9.camel@intel.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 04:13:44PM +0000, Derrick, Jonathan wrote:
-> On Thu, 2020-08-27 at 06:34 +0000, hch@infradead.org wrote:
-> > On Wed, Aug 26, 2020 at 09:43:27PM +0000, Derrick, Jonathan wrote:
-> > > Feel free to review my set to disable the MSI remapping which will
-> > > make
-> > > it perform as well as direct-attached:
-> > > 
-> > > https://patchwork.kernel.org/project/linux-pci/list/?series=325681
-> > 
-> > So that then we have to deal with your schemes to make individual
-> > device direct assignment work in a convoluted way?
-> 
-> That's not the intent of that patchset -at all-. It was to address the
-> performance bottlenecks with VMD that you constantly complain about. 
+From: Pali Roh=E1r <pali@kernel.org>
+Sent: Sunday, August 23, 2020 1:17 PM
+>=20
+> On Friday 21 August 2020 16:25:37 Konstantin Komarov wrote:
+> > +Mount Options
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +The list below describes mount options supported by NTFS3 driver in ad=
+dtion to
+> > +generic ones.
+> > +
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+> > +
+> > +nls=3Dname		These options inform the driver how to interpret path
+> > +			strings and translate them to Unicode and back. In case
+> > +			none of these options are set, or if specified codepage
+> > +			doesn't exist on the system, the default codepage will be
+> > +			used (CONFIG_NLS_DEFAULT).
+> > +			Examples:
+> > +				'nls=3Dutf8'
+> > +
+> > +uid=3D
+> > +gid=3D
+>=20
+> IIRC ntfs filesystem had concept of storing unix owner/group. Was it
+> dropped? Or it is incompatible with current Windows implementation? I'm
+> just curious if we cannot use ntfs-native unix permissions instead of
+> forcing them from mount options. Maybe as improvement for future.
+>=20
+> Normally owner/group on ntfs is stored in that windows SID format.
+> ntfs-3g fuse driver has some mount option where you can specify mapping
+> table between SID and unix to make permissions compatible with existing
+> windows installations.
+>=20
+> Such functionality could be a nice feature once somebody would have time
+> to implement it in future...
+>=20
 
-I know.  But once we fix that bottleneck we fix the next issue,
-then to tackle the next.  While at the same time VMD brings zero
-actual benefits.
+If you mean the way on how WLS implements the unix ownership and permission=
+s (using NTFS extended attributes to store values), then it seems to be qui=
+te handy way of operation. Will be done in future versions.
 
-> > Please just give us
-> > a disable nob for VMD, which solves _all_ these problems without
-> > adding
-> > any.
-> 
-> I don't see the purpose of this line of discussion. VMD has been in the
-> kernel for 5 years. We are constantly working on better support.
+> > +umask=3D			Controls the default permissions for files/directories crea=
+ted
+> > +			after the NTFS volume is mounted.
+> > +
+> > +fmask=3D
+> > +dmask=3D			Instead of specifying umask which applies both to
+> > +			files and directories, fmask applies only to files and
+> > +			dmask only to directories.
+> > +
+> > +nohidden		Files with the Windows-specific HIDDEN (FILE_ATTRIBUTE_HIDDE=
+N)
+> > +			attribute will not be shown under Linux.
+>=20
+> What other people think? It is useful mount option which would disallow
+> access to hidden files? Hidden attribute is normal attribute which even
+> normal user without admin rights on Windows can set on its own files.
+>=20
+> Also concept of hidden files is already present for fat filesystems and
+> we do not have such mount option nor for msdosfs, vfat nor for exfat.
+>=20
+> Konstantin, what is purpose of this mount option? I would like to know
+> what usecases have this option.
+>=20
 
-Please just work with the platform people to allow the host to disable
-VMD.  That is the only really useful value add here.
+It is indeed discussional mount option. The purpose of it is to protect use=
+rs from modifying/deleting Windows system files, which may affect bootabili=
+ty of the OS. Unlikely the case for fat32/exfat nowadays, but quite actual =
+for ntfs (dual-boot win/lin configurations).
+
+> > +sys_immutable		Files with the Windows-specific SYSTEM
+> > +			(FILE_ATTRIBUTE_SYSTEM) attribute will be marked as system
+> > +			immutable files.
+> > +
+> > +discard			Enable support of the TRIM command for improved performance
+> > +			on delete operations, which is recommended for use with the
+> > +			solid-state drives (SSD).
+> > +
+> > +force			Forces the driver to mount partitions even if 'dirty' flag
+> > +			(volume dirty) is set. Not recommended for use.
+> > +
+> > +sparse			Create new files as "sparse".
+> > +
+> > +showmeta		Use this parameter to show all meta-files (System Files) on
+> > +			a mounted NTFS partition.
+> > +			By default, all meta-files are hidden.
+> > +
+> > +no_acs_rules		"No access rules" mount option sets access rights for
+> > +			files/folders to 777 and owner/group to root. This mount
+> > +			option absorbs all other permissions:
+> > +			- permissions change for files/folders will be reported
+> > +				as successful, but they will remain 777;
+> > +			- owner/group change will be reported as successful, but
+> > +				they will stay as root
+>=20
+> What about rather adding "mode=3D" and "dmode=3D" mount option which woul=
+d
+> specify permissions for all files and directories? Other filesystems
+> have support for "mode=3D" mount option and I think it is better if
+> filesystems have some "common" options and not each filesystem its own
+> mount option for similar features.
+>=20
+
+According to what we can see: some file systems provide umask/dmask mount o=
+ptions, others provide mode/dmode. It's hard for us to decide which pair sh=
+ould be presented (and providing both may be a bit confusing for usage). Bu=
+t as for implementation - it could be done easily, if needed.
+
+> > diff --git a/fs/ntfs3/Kconfig b/fs/ntfs3/Kconfig
+> > new file mode 100644
+> > index 000000000000..92a9c68008c8
+> > --- /dev/null
+> > +++ b/fs/ntfs3/Kconfig
+> > @@ -0,0 +1,23 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +config NTFS3_FS
+> > +	tristate "NTFS Read-Write file system support"
+> > +	select NLS
+> > +	help
+> > +	  Windows OS native file system (NTFS) support up to NTFS version 3.1=
+.
+> > +
+> > +	  Y or M enables the NTFS3 driver with full features enabled (read,
+> > +	  write, journal replaying, sparse/compressed files support).
+> > +	  File system type to use on mount is "ntfs3". Module name (M option)
+> > +	  is also "ntfs3".
+> > +
+> > +	  Documentation: <file:Documentation/filesystems/ntfs3.rst>
+> > +
+> > +config NTFS3_64BIT_CLUSTER
+> > +	bool "64 bits per NTFS clusters"
+> > +	depends on NTFS3_FS && 64BIT
+> > +	help
+> > +	  Windows implementation of ntfs.sys uses 32 bits per clusters.
+> > +	  If activated 64 bits per clusters you will be able to use 4k cluste=
+r
+> > +	  for 16T+ volumes. Windows will not be able to mount such volumes.
+>=20
+> Would it be possible to change this compile time option into mount
+> option?
+>=20
+> Because I do not see any benefit in compile time option which makes
+> kernel's ntfs driver "fully" incompatible with Windows implementation.
+>=20
+> For me it looks like that mount option for such functionality is more
+> suitable.
+
+It would be possible, but I can't find any pros for this. Overall, having t=
+he "switch" which will turn this off/on in the runtime won't give any benef=
+its.=20
+The support for 64bit-sized number of cluster won't break compatibility wit=
+h Windows, it may just extend ntfs3 capabilities over the windows. Windows =
+in general does not support volumes with more than 2^32 clusters for NTFS. =
+NTFS3 will mount such volumes, Windows won't. But everthing mountable in Wi=
+ndows, will be mountable by ntfs3 and, after this, by Windows again, nevert=
+heless if this option is enabled or not.
+
+Thanks.
