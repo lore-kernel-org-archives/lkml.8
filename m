@@ -2,77 +2,76 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3ED3C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A03DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD7D22B40
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3006B22B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:18:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MM43WGiC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbgH0MPa (ORCPT
+        id S1728948AbgH0MSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 08:15:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59598 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728820AbgH0Lxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 07:53:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 1F147AC50;
-        Thu, 27 Aug 2020 11:07:43 +0000 (UTC)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     jpoimboe@redhat.com, jikos@kernel.org, pmladek@suse.com,
-        joe.lawrence@redhat.com, shuah@kernel.org
-Cc:     live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>
-Subject: [PATCH] selftests/livepatch: Do not check order when using "comm" for dmesg checking
-Date:   Thu, 27 Aug 2020 13:07:09 +0200
-Message-Id: <20200827110709.26824-1-mbenes@suse.cz>
-X-Mailer: git-send-email 2.28.0
+        Thu, 27 Aug 2020 08:18:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728934AbgH0Lu6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 07:50:58 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56942C06123C;
+        Thu, 27 Aug 2020 04:49:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=awfRf66HgGbxCRr70kQw5NQ84A89ap4b1ms7NbzviQY=; b=MM43WGiCJfh+YM6OHLDNcC42DR
+        pCMfp7AylWwoKAKC2yUp9DqtyVcDCvZ294vX53tJH+ONZFQUEoUj+CsnNi9VL5zbnJCrGCLb3bgSv
+        /kY7uRJjUM0QaQHJH7VemyieIhcgfz4Bk/km3qYJg6n9d7k8rSpd1dRAjGEYgHLAL+4YJP1s4r5+0
+        VQlVZVpXrpqQEonTGOUxbutnU2mLfQcGbcWW8xsuUilR48V9yyEvvW2yEcEdmr4LwFnSOEO2Lr82Z
+        ElAvoFZbdnFEFKid73m8Jm54EhcyJH92Wudd/QC9ImfJPxq+eQYpDfw9fcL5Bbyvt2QnoJshuHXQj
+        G++v5ebA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBGPC-0000TM-Ld; Thu, 27 Aug 2020 11:49:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 127FF301A66;
+        Thu, 27 Aug 2020 13:49:19 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C22922C1263AB; Thu, 27 Aug 2020 13:49:19 +0200 (CEST)
+Date:   Thu, 27 Aug 2020 13:49:19 +0200
+From:   peterz@infradead.org
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Eddy Wu <Eddy_Wu@trendmicro.com>,
+        x86@kernel.org, "David S . Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH v2 15/15] kprobes: Free kretprobe_instance with rcu
+ callback
+Message-ID: <20200827114919.GB2674@hirez.programming.kicks-ass.net>
+References: <159852811819.707944.12798182250041968537.stgit@devnote2>
+ <159852826969.707944.15092569392287597887.stgit@devnote2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159852826969.707944.15092569392287597887.stgit@devnote2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-check_result() uses "comm" to check expected results of selftests output
-in dmesg. Everything works fine if timestamps in dmesg are unique. If
-not, like in this example
+On Thu, Aug 27, 2020 at 08:37:49PM +0900, Masami Hiramatsu wrote:
 
-[   86.844422] test_klp_callbacks_demo: pre_unpatch_callback: test_klp_callbacks_mod -> [MODULE_STATE_LIVE] Normal state
-[   86.844422] livepatch: 'test_klp_callbacks_demo': starting unpatching transition
+> +void recycle_rp_inst(struct kretprobe_instance *ri)
 
-, "comm" fails with "comm: file 2 is not in sorted order". Suppress the
-order checking with --nocheck-order option.
-
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
----
-
-The strange thing is, I can reproduce the issue easily and reliably on
-older codestreams (4.12) but not on current upstream in my testing
-environment. I think the change makes sense regardless though.
-
- tools/testing/selftests/livepatch/functions.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/livepatch/functions.sh b/tools/testing/selftests/livepatch/functions.sh
-index 1aba83c87ad3..846c7ed71556 100644
---- a/tools/testing/selftests/livepatch/functions.sh
-+++ b/tools/testing/selftests/livepatch/functions.sh
-@@ -278,7 +278,7 @@ function check_result {
- 	# help differentiate repeated testing runs.  Remove them with a
- 	# post-comparison sed filter.
- 
--	result=$(dmesg | comm -13 "$SAVED_DMESG" - | \
-+	result=$(dmesg | comm --nocheck-order -13 "$SAVED_DMESG" - | \
- 		 grep -e 'livepatch:' -e 'test_klp' | \
- 		 grep -v '\(tainting\|taints\) kernel' | \
- 		 sed 's/^\[[ 0-9.]*\] //')
--- 
-2.28.0
-
+Also note, that at this point there is no external caller of this
+function anymore.
