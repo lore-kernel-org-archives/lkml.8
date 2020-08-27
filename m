@@ -2,122 +2,157 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 526B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 05:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E387C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 05:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 314B12080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 05:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2A22074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 05:11:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="ncsiABwT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgH0FH5 (ORCPT
+        id S1726321AbgH0FLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 01:07:57 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:51936 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbgH0FH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 01:07:56 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 07R56DIM011495
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Wed, 26 Aug 2020 22:06:33 -0700
-Received: from pek-qzhang2-d1.wrs.com (128.224.162.183) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 26 Aug 2020 22:06:16 -0700
-From:   <qiang.zhang@windriver.com>
-To:     <tglx@linutronix.de>, <longman@redhat.com>, <elver@google.com>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] debugobjects: install cpu hotplug callback
-Date:   Thu, 27 Aug 2020 13:06:14 +0800
-Message-ID: <20200827050614.15100-1-qiang.zhang@windriver.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 27 Aug 2020 01:11:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbgH0FLD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 01:11:03 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AC8CC061240;
+        Wed, 26 Aug 2020 22:11:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FtBbdyMfeeBQSJz0ZhSXfAlqnNGhPBDN8gv9qmafBlo=; b=ncsiABwTDcPMYRpZQckinWUIn
+        O7LSRHxQSLYCyO9iuP16qlLKPIeGWSMZeEl/bnRgjRA5NF0DnuI+cjiHGli8HHyv/ZZMZESRS7ojy
+        BID0JCcXJZh2fKbKWz8vGSGnq6LRhpriWSxc3EAer13xTphughtNmBlWjelv6HSnxBl/k=;
+Received: from ip-109-41-66-178.web.vodafone.de ([109.41.66.178] helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1kBABd-0004Yq-Oj; Thu, 27 Aug 2020 07:10:59 +0200
+Received: from [::1] (helo=localhost)
+        by localhost with esmtp (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1kBABa-0001DP-Ty; Thu, 27 Aug 2020 07:10:54 +0200
+Date:   Thu, 27 Aug 2020 07:10:19 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, b.galvani@gmail.com, phh@phh.me,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH 1/2] power: supply: Add support for RN5T618/RC5T619
+ charger and fuel gauge
+Message-ID: <20200827071019.7022301c@kemnade.info>
+In-Reply-To: <20200826215950.bkzk76lwax7l6arz@earth.universe>
+References: <20200815165610.10647-1-andreas@kemnade.info>
+        <20200815165610.10647-2-andreas@kemnade.info>
+        <20200826174817.vhus3j4i4t7u7jc4@earth.universe>
+        <20200826202834.42b1673f@aktux>
+        <20200826215950.bkzk76lwax7l6arz@earth.universe>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/kyTL0mKiSKwRlAhHZgPo7Ph"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zqiang <qiang.zhang@windriver.com>
+--Sig_/kyTL0mKiSKwRlAhHZgPo7Ph
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Due to cpu hotplug, it may never be online after it's offline,
-some objects in percpu pool is never free, in order to avoid
-this happening, install cpu hotplug callback, call this callback
-func to free objects in percpu pool when cpu going offline.
+Hi,
 
-Signed-off-by: Zqiang <qiang.zhang@windriver.com>
----
- v1->v2:
- Modify submission information.
+On Wed, 26 Aug 2020 23:59:50 +0200
+Sebastian Reichel <sebastian.reichel@collabora.com> wrote:
 
- include/linux/cpuhotplug.h |  1 +
- lib/debugobjects.c         | 23 +++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
+> Hi,
+>=20
+> On Wed, Aug 26, 2020 at 08:28:34PM +0200, Andreas Kemnade wrote:
+> > On Wed, 26 Aug 2020 19:48:17 +0200
+> > Sebastian Reichel <sebastian.reichel@collabora.com> wrote: =20
+> > > On Sat, Aug 15, 2020 at 06:56:09PM +0200, Andreas Kemnade wrote: =20
+> > > > [...]
+> > > > +static int rn5t618_battery_current_now(struct rn5t618_power_info *=
+info,
+> > > > +				       union power_supply_propval *val)
+> > > > +{
+> > > > +	u16 res;
+> > > > +	int ret;
+> > > > +
+> > > > +	ret =3D rn5t618_battery_read_doublereg(info, RN5T618_CC_AVEREG1, =
+&res);
+> > > > +	if (ret)
+> > > > +		return ret;
+> > > > +
+> > > > +	val->intval =3D res;
+> > > > +	/* 2's complement */
+> > > > +	if (val->intval & (1 << 13))
+> > > > +		val->intval =3D val->intval - (1 << 14); =20
+>=20
+> Btw. I think sign_extend32() can be used here?
+>=20
+> > > > +	/* negate current to be positive when discharging */
+> > > > +	val->intval *=3D -1000;   =20
+> > >=20
+> > > mh, the sign is not documented (which should be fixed). At least
+> > > sbs-battery does it the other way around (negative current when
+> > > discharging, positive otherwise). Some drivers do not support
+> > > signed current and always report positive values (e.g. ACPI driver).
+> > >=20
+> > > What did you use as reference for swapping the sign?
+> > >  =20
+> > Well, I have searched for documentation, found nothing and used the
+> > bq27xxx driver as reference  which I am used to from the GTA04/GTA02,
+> > so things behave equal. That are the devices where a was most
+> > intensively looking at those values.
+> > I thought that there would be some unwritten rule about that. =20
+>=20
+> The mess is mostly due to lacking reviewing from my side
+> (and possibly my predecessors). I just went through a dozen of
+> drivers and it looks like most either do not support signed current
+> (and use negative values as error code :() or use negative current
+> for discharge. I could not find any other driver using negative
+> numbers for charging. I think it's best to negative =3D discharge as
+> official correct value and will send an update patch for the
+> documentation later.
+>=20
+ok, I will remove that sign-change and keep/update the comment
+so that you know that the driver does it the official way
+and send a v2 with the other things you mentioned.
 
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index a2710e654b64..2e77db655cfa 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -36,6 +36,7 @@ enum cpuhp_state {
- 	CPUHP_X86_MCE_DEAD,
- 	CPUHP_VIRT_NET_DEAD,
- 	CPUHP_SLUB_DEAD,
-+	CPUHP_DEBUG_OBJ_DEAD,
- 	CPUHP_MM_WRITEBACK_DEAD,
- 	CPUHP_MM_VMSTAT_DEAD,
- 	CPUHP_SOFTIRQ_DEAD,
-diff --git a/lib/debugobjects.c b/lib/debugobjects.c
-index fe4557955d97..50e21ed0519e 100644
---- a/lib/debugobjects.c
-+++ b/lib/debugobjects.c
-@@ -19,6 +19,7 @@
- #include <linux/slab.h>
- #include <linux/hash.h>
- #include <linux/kmemleak.h>
-+#include <linux/cpu.h>
- 
- #define ODEBUG_HASH_BITS	14
- #define ODEBUG_HASH_SIZE	(1 << ODEBUG_HASH_BITS)
-@@ -433,6 +434,23 @@ static void free_object(struct debug_obj *obj)
- 	}
- }
- 
-+#if defined(CONFIG_HOTPLUG_CPU)
-+static int object_cpu_offline(unsigned int cpu)
-+{
-+	struct debug_percpu_free *percpu_pool;
-+	struct hlist_node *tmp;
-+	struct debug_obj *obj;
-+
-+	percpu_pool = per_cpu_ptr(&percpu_obj_pool, cpu);
-+	hlist_for_each_entry_safe(obj, tmp, &percpu_pool->free_objs, node) {
-+		hlist_del(&obj->node);
-+		kmem_cache_free(obj_cache, obj);
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
- /*
-  * We run out of memory. That means we probably have tons of objects
-  * allocated.
-@@ -1367,6 +1385,11 @@ void __init debug_objects_mem_init(void)
- 	} else
- 		debug_objects_selftest();
- 
-+#if defined(CONFIG_HOTPLUG_CPU)
-+	cpuhp_setup_state_nocalls(CPUHP_DEBUG_OBJ_DEAD, "object:offline", NULL,
-+					object_cpu_offline);
-+#endif
-+
- 	/*
- 	 * Increase the thresholds for allocating and freeing objects
- 	 * according to the number of possible CPUs available in the system.
--- 
-2.17.1
+Regards,
+Andreas
 
+--Sig_/kyTL0mKiSKwRlAhHZgPo7Ph
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl9HQDsACgkQl4jFM1s/
+ye8x/w//ddKmAMtDh/yN1Lq+lECRNbWAZpc4SP4ObqqZZ+O+a/a1J7Op5FLYfLHN
+YeLYLUymiotJLKlY6WtJDsUHSzlAUGA2qXSmN+tqzlIgENjr0JWY3rlCwRQ+SZaP
+CJ1Iyygx68x+DDFHpsmWDyeDkMYRLxzYLX+Ps+iw0MNIjqGStqkngZ8SoOj1Yqwl
+3LZ3FNV/MzMDdHJVk7WeYkRX9y/j6eCc4noiXeM0BJbC6Xv9UcLLz4d6RfYhBZLn
+vqETJt0v/IBXTy2rap38Hd+Sa0l7gmg9MPKzn30LbxYbzkCXSMlcbDV/lvtQvddN
++UBjKBnwNcvdH0NJOpALZ8DcXlG+YPEg3n61eL2VLLDkSN/vmtij0Fy+L0paIF31
+Diee1W/uuAj7CAU9nP9jjgx3nC281gEvBq2UpqZzbB9ElALE2pEMzq70CO5AloZQ
+ObVC076t0jpulMl97sIqDdgiJoqDckMjVOEXtc97osuFQYECBLoV+ievO1vd++Cl
+R08ht6tHai+BKrlbHhaWw45ztrJJu3sOGUOHYWyWduywHYT8E5zzJBRRYxGUpMi4
+YksqSX2JKcCP0U/mchQZs0V8FV8i/kTOJREHL6jYTDjGjAi1OfYOYwWoD03L63pP
+5q9/Z63sXbmkX3uQtbHuGvRI2+ChpY6zAOzn0XHJMHK3XpwdimM=
+=5h+f
+-----END PGP SIGNATURE-----
+
+--Sig_/kyTL0mKiSKwRlAhHZgPo7Ph--
