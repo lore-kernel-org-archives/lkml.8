@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 080E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F148BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D65912087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB0622BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598554737;
-	bh=r5Xm7hCPTgUxCPDwRqkBbYLBFo+wmkUoqPhKAWH0uTM=;
+	s=default; t=1598554743;
+	bh=lTP4eUtATnmEnI0HqNZwmrnqoYep1G5LOirB6UKLfcQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SGZm+CONMRCfucdOrrEl6ey6Td3SOimHtXaCpXYB/aGsbRdNqVsQtrhmxaaMok0YG
-	 /1xAQCIaxYUt0ubaPvbawkBerkB2DKW8V3pn6IVdWsvKEzzCT5f0k7bRBgKKZhvFvs
-	 N2eqfnX9poif7x/eZ6GWkNrip5H/uDtaHxEdhDU8=
+	b=gsxuQ0Fuyb6DPBb3rrSYeL4DYn/HEi73jGcSvbhlw6l40MefHDX/4XflbwAV2aNW5
+	 XX0XZ8tSXFjbXan/SBC9DPO/gV63WlH3bzGdrWxne117R5+4BHTMfXVnAHQBLiPHcU
+	 ppNhF+2znzq1Y1pITAzhmBO9UjUh6S6HQtcSR+zY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgH0S64 (ORCPT
+        id S1727950AbgH0S7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:58:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48832 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 14:59:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727877AbgH0S6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:58:53 -0400
+        id S1727913AbgH0S67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 14:58:59 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D86D22BF3;
-        Thu, 27 Aug 2020 18:58:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC8A322BF3;
+        Thu, 27 Aug 2020 18:58:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598554732;
-        bh=r5Xm7hCPTgUxCPDwRqkBbYLBFo+wmkUoqPhKAWH0uTM=;
+        s=default; t=1598554738;
+        bh=lTP4eUtATnmEnI0HqNZwmrnqoYep1G5LOirB6UKLfcQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x8XnVCSwAskwG29dNxeSfmoMTP3/55x3xAH6Z2r24xOzmgU7ncFlhgjK9teOemAM2
-         gloX1ekbbkj9zllC5jy9hsqEfIlIWMbwY/o6o9bb12HY/e5heOrYfLSnnwajy5H/1Y
-         3ypd+6+M82lldUwO3fVKxuhv5W0m+bOLv8aZ05y8=
+        b=iGQrB7o+DQa7HKDbYBD5iqkM+vGnWt1nyGK8SB27tPLOd4u8CNu0vxDZgAGsiTo6q
+         aCz1Qu5ZrCiI95OA4ysL+qHlnkb3TQLH5mraFpVAqiYNDt3YTfZnjWTd2oC9O//RtZ
+         CRj0ExTo/FleloV5trX1FTw5OzA+3HBelFryAbTo=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -52,9 +52,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         clang-built-linux@googlegroups.com
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 03/27] Input: pwm-beeper - Simplify with dev_err_probe()
-Date:   Thu, 27 Aug 2020 20:58:05 +0200
-Message-Id: <20200827185829.30096-4-krzk@kernel.org>
+Subject: [PATCH v3 05/27] Input: rotary_encoder - Simplify with dev_err_probe()
+Date:   Thu, 27 Aug 2020 20:58:07 +0200
+Message-Id: <20200827185829.30096-6-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
 References: <20200827185829.30096-1-krzk@kernel.org>
@@ -70,46 +70,28 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/input/misc/pwm-beeper.c | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+ drivers/input/misc/rotary_encoder.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
-index d6b12477748a..8c0085e8c552 100644
---- a/drivers/input/misc/pwm-beeper.c
-+++ b/drivers/input/misc/pwm-beeper.c
-@@ -132,13 +132,8 @@ static int pwm_beeper_probe(struct platform_device *pdev)
- 		return -ENOMEM;
+diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc/rotary_encoder.c
+index 6d613f2a017c..ea56c9f4975a 100644
+--- a/drivers/input/misc/rotary_encoder.c
++++ b/drivers/input/misc/rotary_encoder.c
+@@ -236,12 +236,8 @@ static int rotary_encoder_probe(struct platform_device *pdev)
+ 		device_property_read_bool(dev, "rotary-encoder,relative-axis");
  
- 	beeper->pwm = devm_pwm_get(dev, NULL);
--	if (IS_ERR(beeper->pwm)) {
--		error = PTR_ERR(beeper->pwm);
--		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Failed to request PWM device: %d\n",
--				error);
--		return error;
+ 	encoder->gpios = devm_gpiod_get_array(dev, NULL, GPIOD_IN);
+-	if (IS_ERR(encoder->gpios)) {
+-		err = PTR_ERR(encoder->gpios);
+-		if (err != -EPROBE_DEFER)
+-			dev_err(dev, "unable to get gpios: %d\n", err);
+-		return err;
 -	}
-+	if (IS_ERR(beeper->pwm))
-+		return dev_err_probe(dev, PTR_ERR(beeper->pwm), "Failed to request PWM device\n");
- 
- 	/* Sync up PWM state and ensure it is off. */
- 	pwm_init_state(beeper->pwm, &state);
-@@ -151,13 +146,9 @@ static int pwm_beeper_probe(struct platform_device *pdev)
- 	}
- 
- 	beeper->amplifier = devm_regulator_get(dev, "amp");
--	if (IS_ERR(beeper->amplifier)) {
--		error = PTR_ERR(beeper->amplifier);
--		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Failed to get 'amp' regulator: %d\n",
--				error);
--		return error;
--	}
-+	if (IS_ERR(beeper->amplifier))
-+		return dev_err_probe(dev, PTR_ERR(beeper->amplifier),
-+				     "Failed to get 'amp' regulator\n");
- 
- 	INIT_WORK(&beeper->work, pwm_beeper_work);
- 
++	if (IS_ERR(encoder->gpios))
++		return dev_err_probe(dev, PTR_ERR(encoder->gpios), "unable to get gpios\n");
+ 	if (encoder->gpios->ndescs < 2) {
+ 		dev_err(dev, "not enough gpios found\n");
+ 		return -EINVAL;
 -- 
 2.17.1
 
