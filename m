@@ -4,84 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2562CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDD5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E36F2087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A8B2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598552438;
-	bh=JhM6FPCbA4g1z4X4hZMMnSc4eTsjqr+y2d9PBalJfoE=;
+	s=default; t=1598552715;
+	bh=Z0fq8dm88+dU9bSyD1/ti5vEZonGfauWaztGQMRRjv4=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=BeqUwU6d1vw2ai7iN35IcYWj5XgyppJD1JZMV5BdkkDr67/2HZOH8qaT/Q4q9oNMX
-	 b36aNkoMpmJYUMpAcRomet61/IOoiKsf3beN/i7vsXMUllUklvGAsOR+kMQJbMfIjI
-	 HMsIb9735CFfMvvh+cW0Fb9INJrawme4gHskmqTo=
+	b=CvRGYJM1OO5f9ZTj9P4DcrgXdgBwVAwaymCSMB6qtUuhynvmQmi/BF0FIHEyzu/P5
+	 6dIcNNyBdfHIghjbz2rI8FnJZI7FP0k0dRjJBA14kDsOAkP9OsaPzHEkVOirZcAWIJ
+	 isyvBC9mv+gMvz5na33wfffiMPTdpLiJZT93Aeps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgH0SUh (ORCPT
+        id S1726828AbgH0SZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:20:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57262 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 14:25:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726093AbgH0SUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:20:36 -0400
+        id S1726197AbgH0SZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 14:25:13 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 406372087C;
-        Thu, 27 Aug 2020 18:20:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 834FE2087C;
+        Thu, 27 Aug 2020 18:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598552435;
-        bh=JhM6FPCbA4g1z4X4hZMMnSc4eTsjqr+y2d9PBalJfoE=;
+        s=default; t=1598552713;
+        bh=Z0fq8dm88+dU9bSyD1/ti5vEZonGfauWaztGQMRRjv4=;
         h=From:To:Cc:Subject:Date:From;
-        b=GHiQMeaIk65r2UV1/jqLWfcHN5K9tNcqt6fAMkuc9mFSQl+EGf4OFMw3jAVFMN3SG
-         PgVJXu0JZnQWMMJqw8v3gG3uiKGm9V/aSMoGc4FcdEiSe3cupExXE6OtX8ewMYIdPf
-         Nelj9ozSWjzGKjfjtlHpKgOG1epskzT92/jwKXN4=
+        b=IwTyGYXlnbFOhjBVfmnr32F+ohdbcGf6mHx2E6En0fwR5qRBHq9yO91+/S6zv2h0w
+         4+NDrFOePMEVUsNYcT3MvpBJoxWD+XLp4nmvr2ulQcvggxIVrcUxRGGgOk39RdthS2
+         ksaZ/x2Y9mvHGkvPkj4TIMDEonMo0PEZr+dfXpt8=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Security Officers <security@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2] MAINTAINERS: Add the security document to SECURITY CONTACT
-Date:   Thu, 27 Aug 2020 20:20:29 +0200
-Message-Id: <20200827182029.3458-1-krzk@kernel.org>
+To:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        CK Hu <ck.hu@mediatek.com>, HS Liao <hs.liao@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3] mailbox: mediatek: Fix handling of platform_get_irq() error
+Date:   Thu, 27 Aug 2020 20:25:07 +0200
+Message-Id: <20200827182507.4938-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When changing the document related to kernel security workflow, notify
-the security mailing list as its concerned by this.
+platform_get_irq() returns -ERRNO on error.  In such case casting to u32
+and comparing to 0 would pass the check.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: <security@kernel.org>
+Fixes: 623a6143a845 ("mailbox: mediatek: Add Mediatek CMDQ driver")
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
 ---
 
-Changes since v1:
-1. Changed order - F: go to end of entry,
-2. Remove embargoed-hardware-issues
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Changes since v2:
+1. Fix subject.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8107b3d5d6df..19064a4ae9b0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15621,6 +15621,7 @@ F:	include/uapi/linux/sed*
- SECURITY CONTACT
- M:	Security Officers <security@kernel.org>
- S:	Supported
-+F:	Documentation/admin-guide/security-bugs.rst
+Changes since v1:
+1. Correct u32->int,
+2. Fix left-over '!'.
+---
+ drivers/mailbox/mtk-cmdq-mailbox.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+index 484d4438cd83..5665b6ea8119 100644
+--- a/drivers/mailbox/mtk-cmdq-mailbox.c
++++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+@@ -69,7 +69,7 @@ struct cmdq_task {
+ struct cmdq {
+ 	struct mbox_controller	mbox;
+ 	void __iomem		*base;
+-	u32			irq;
++	int			irq;
+ 	u32			thread_nr;
+ 	u32			irq_mask;
+ 	struct cmdq_thread	*thread;
+@@ -525,10 +525,8 @@ static int cmdq_probe(struct platform_device *pdev)
+ 	}
  
- SECURITY SUBSYSTEM
- M:	James Morris <jmorris@namei.org>
+ 	cmdq->irq = platform_get_irq(pdev, 0);
+-	if (!cmdq->irq) {
+-		dev_err(dev, "failed to get irq\n");
+-		return -EINVAL;
+-	}
++	if (cmdq->irq < 0)
++		return cmdq->irq;
+ 
+ 	plat_data = (struct gce_plat *)of_device_get_match_data(dev);
+ 	if (!plat_data) {
 -- 
 2.17.1
 
