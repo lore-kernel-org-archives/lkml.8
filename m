@@ -2,164 +2,157 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA5AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E627BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4976320848
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:33:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598560420;
-	bh=VHsROdKs2GEdTQFMnkMuUYNmQM5R5a6tmWKg4n+BRpI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=PqSFsNEwNgVQ6ERrd5DL2Rt1IOeNwQKqN6QXfkz9HqfNX94FdYb+9zwPlI3+gjh9h
-	 m002YfDa/Mdcby0o3N5YwH1nTRlsEwQ/qJAWFckMy26Jn3bdoPS9R3R0sMqB0orH6F
-	 ts+k4rJh9/HkjWHM5xTS+uzcIv+AG+hjP28uTuro=
+	by mail.kernel.org (Postfix) with ESMTP id B9D7A20825
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:34:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGluub3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgH0Udj (ORCPT
+        id S1727075AbgH0Ued (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 16:33:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbgH0Udi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:33:38 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B08BA20825;
-        Thu, 27 Aug 2020 20:33:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598560417;
-        bh=VHsROdKs2GEdTQFMnkMuUYNmQM5R5a6tmWKg4n+BRpI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=MYOLYhgB7+6C3asPTPP4/fTyye9AIK1HUr0ELcuS4+6DZiwJjOqeYc6sO0DfTud+6
-         sbcmnzXN6aGEIWGJaF3h+yhRZHckW8ylKPUywfBBJh6NXTNbeSFpg5YQf4n5SNNk1d
-         RZvwonxTZxp+afPkDp2zdcM9YXA7Chd+QjaPq3WY=
-Date:   Thu, 27 Aug 2020 15:33:35 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Matthew Rosato <mjrosato@linux.ibm.com>, bhelgaas@google.com,
-        schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
-        oohall@gmail.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: Introduce flag for detached virtual functions
-Message-ID: <20200827203335.GA2101829@bjorn-Precision-5520>
+        Thu, 27 Aug 2020 16:34:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58796 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgH0Uec (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 16:34:32 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABB54C061264;
+        Thu, 27 Aug 2020 13:34:31 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id i10so7279855iow.3;
+        Thu, 27 Aug 2020 13:34:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tQmZy5Fs8y3pKGibFRn4qfvS82sf5UsP9bVenOs9w8M=;
+        b=TGluub3o0DcHHdpzdlkvAkCCrUrqPvYvrMKiUY7Oya5/GhcRW6Z8MtPqxBD6PQaENX
+         N+tC5zt1jtp/bE8E8d4I7CsnYYGj1u1Ff/mWNGRyIaO9vFQ2WkWTcEZVkBwx7xGdCEQs
+         MtyEAngQS9fnwluf2fSVj1KpNSod9p4SJw88kqHdQ0ji2ccFateEQYLoTPGeoH3TMpQs
+         h8eK7kj6Yjb5dHrS7D9h6G525ntwLHMXx5WbVu/pEq4EuJKabCCXNwK4ru3qEpjNku0s
+         9FjfVTc4K5pixSB2VO+ORtIpkCF0iZPoFkGEwI4XNAoz6jOtDDCpVxiGN56MokOZBCMp
+         4/yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tQmZy5Fs8y3pKGibFRn4qfvS82sf5UsP9bVenOs9w8M=;
+        b=Tj5oFmwzdtWFZheX8tmvIKIS2DLix11Fpf8c3EReKczHBYAht8cXmUMUkfcY5ECpJU
+         YaK3H1tmlFa0F9HIDadRIHOR+p7hedDwmnzDoLv7CQVhUV/GtY0gh6VSJNkv3jrBvu4B
+         uUXm68a8JbOyAppw3zlUaJwEFCgTWWZG9GLNTenFoX5krAk4fOlLPWk1rqm/Zw4dN34y
+         TO5u2ev+biqm7f5G4F1FgglX/9avQl5tdpV9T9EX2i0dXmcRIWIUT/X1qmZfNLxd4ekd
+         TRxe4JUYMfi+chvbh54UtfYXk5EOX8p0R5vri3bwF5KE11CFoy3wAdPffZVYzfclmlRt
+         4TdQ==
+X-Gm-Message-State: AOAM532SI9mFqgt/dEpoe2lUtYbVBCHIV9Z6eb7h78ks+iv2kzyNnYZa
+        4gtK83Sw14HOBdMbdJZwT6opPUvFT1EbM7tGIoKTR54F+Mo=
+X-Google-Smtp-Source: ABdhPJwio1s/8EqJEggK9yW52tIgV6weBWbp4FU34wVr0UPOM8b2uPn2IcThLM+sA4l+KLK8o42jIVY2RpTBaCnKptA=
+X-Received: by 2002:a05:6638:130d:: with SMTP id r13mr20345874jad.89.1598560471002;
+ Thu, 27 Aug 2020 13:34:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827131748.46b3f8bc@x1.home>
+References: <cover.1588079622.git.christophe.leroy@c-s.fr> <0d2201efe3c7727f2acc718aefd7c5bb22c66c57.1588079622.git.christophe.leroy@c-s.fr>
+ <87wo34tbas.fsf@mpe.ellerman.id.au> <2f9b7d02-9e2f-4724-2608-c5573f6507a2@csgroup.eu>
+ <6862421a-5a14-2e38-b825-e39e6ad3d51d@csgroup.eu> <87imd5h5kb.fsf@mpe.ellerman.id.au>
+In-Reply-To: <87imd5h5kb.fsf@mpe.ellerman.id.au>
+From:   Dmitry Safonov <0x7f454c46@gmail.com>
+Date:   Thu, 27 Aug 2020 21:34:19 +0100
+Message-ID: <CAJwJo6ZANqYkSHbQ+3b+Fi_VT80MtrzEV5yreQAWx-L8j8x2zA@mail.gmail.com>
+Subject: Re: [PATCH v8 2/8] powerpc/vdso: Remove __kernel_datapage_offset and
+ simplify __get_datapage()
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, nathanl@linux.ibm.com,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linuxppc-dev@lists.ozlabs.org, Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 01:17:48PM -0600, Alex Williamson wrote:
-> On Thu, 27 Aug 2020 13:31:38 -0500
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
-> > Re the subject line, this patch does a lot more than just "introduce a
-> > flag"; AFAICT it actually enables important VFIO functionality, e.g.,
-> > something like:
-> > 
-> >   vfio/pci: Enable MMIO access for s390 detached VFs
-> > 
-> > On Thu, Aug 13, 2020 at 11:40:43AM -0400, Matthew Rosato wrote:
-> > > s390x has the notion of providing VFs to the kernel in a manner
-> > > where the associated PF is inaccessible other than via firmware.
-> > > These are not treated as typical VFs and access to them is emulated
-> > > by underlying firmware which can still access the PF.  After
-> > > the referened commit however these detached VFs were no longer able
-> > > to work with vfio-pci as the firmware does not provide emulation of
-> > > the PCI_COMMAND_MEMORY bit.  In this case, let's explicitly recognize
-> > > these detached VFs so that vfio-pci can allow memory access to
-> > > them again.  
-> > 
-> > Out of curiosity, in what sense is the PF inaccessible?  Is it
-> > *impossible* for Linux to access the PF, or is it just not enumerated
-> > by clp_list_pci() so Linux doesn't know about it?
-> > 
-> > VFs do not implement PCI_COMMAND, so I guess "firmware does not
-> > provide emulation of PCI_COMMAND_MEMORY" means something like "we
-> > can't access the PF so we can't enable/disable PCI_COMMAND_MEMORY"?
-> > 
-> > s/referened/referenced/
-> > 
-> > > Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
-> > > Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> > > ---
-> > >  arch/s390/pci/pci_bus.c            | 13 +++++++++++++
-> > >  drivers/vfio/pci/vfio_pci_config.c |  8 ++++----
-> > >  include/linux/pci.h                |  4 ++++
-> > >  3 files changed, 21 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
-> > > index 642a993..1b33076 100644
-> > > --- a/arch/s390/pci/pci_bus.c
-> > > +++ b/arch/s390/pci/pci_bus.c
-> > > @@ -184,6 +184,19 @@ static inline int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
-> > >  }
-> > >  #endif
-> > >  
-> > > +void pcibios_bus_add_device(struct pci_dev *pdev)
-> > > +{
-> > > +	struct zpci_dev *zdev = to_zpci(pdev);
-> > > +
-> > > +	/*
-> > > +	 * If we have a VF on a non-multifunction bus, it must be a VF that is
-> > > +	 * detached from its parent PF.  We rely on firmware emulation to
-> > > +	 * provide underlying PF details.  
-> > 
-> > What exactly does "multifunction bus" mean?  I'm familiar with
-> > multi-function *devices*, but not multi-function buses.
-> > 
-> > > +	 */
-> > > +	if (zdev->vfn && !zdev->zbus->multifunction)
-> > > +		pdev->detached_vf = 1;
-> > > +}
-> > > +
-> > >  static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
-> > >  {
-> > >  	struct pci_bus *bus;
-> > > diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> > > index d98843f..98f93d1 100644
-> > > --- a/drivers/vfio/pci/vfio_pci_config.c
-> > > +++ b/drivers/vfio/pci/vfio_pci_config.c
-> > > @@ -406,7 +406,7 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
-> > >  	 * PF SR-IOV capability, there's therefore no need to trigger
-> > >  	 * faults based on the virtual value.
-> > >  	 */
-> > > -	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
-> > > +	return dev_is_vf(&pdev->dev) || (cmd & PCI_COMMAND_MEMORY);  
-> > 
-> > I'm not super keen on the idea of having two subtly different ways of
-> > identifying VFs.  I think that will be confusing.  This seems to be
-> > the critical line, so whatever we do here, it will be out of the
-> > ordinary and probably deserves a little comment.
-> > 
-> > If Linux doesn't see the PF, does pci_physfn(VF) return NULL, i.e., is
-> > VF->physfn NULL?
-> 
-> FWIW, pci_physfn() never returns NULL, it returns the provided pdev if
-> is_virtfn is not set.  This proposal wouldn't change that return value.
-> AIUI pci_physfn(), the caller needs to test that the returned device is
-> different from the provided device if there's really code that wants to
-> traverse to the PF.
+Hello,
 
-Oh, so this VF has is_virtfn==0.  That seems weird.  There are lots of
-other ways that a VF is different: Vendor/Device IDs are 0xffff, BARs
-are zeroes, etc.
+On Wed, 26 Aug 2020 at 15:39, Michael Ellerman <mpe@ellerman.id.au> wrote:
+> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+[..]
+> > arch_remap() gets replaced by vdso_remap()
+> >
+> > For arch_unmap(), I'm wondering how/what other architectures do, because
+> > powerpc seems to be the only one to erase the vdso context pointer when
+> > unmapping the vdso.
+>
+> Yeah. The original unmap/remap stuff was added for CRIU, which I thought
+> people tested on other architectures (more than powerpc even).
+>
+> Possibly no one really cares about vdso unmap though, vs just moving the
+> vdso.
+>
+> We added a test for vdso unmap recently because it happened to trigger a
+> KAUP failure, and someone actually hit it & reported it.
 
-It sounds like you're sweeping those under the rug by avoiding the
-normal enumeration path (e.g., you don't have to size the BARs), but
-if it actually is a VF, it seems like there might be fewer surprises
-if we treat it as one.
+You right, CRIU cares much more about moving vDSO.
+It's done for each restoree and as on most setups vDSO is premapped and
+used by the application - it's actively tested.
+Speaking about vDSO unmap - that's concerning only for heterogeneous C/R,
+i.e when an application is migrated from a system that uses vDSO to the one
+which doesn't - it's much rare scenario.
+(for arm it's !CONFIG_VDSO, for x86 it's `vdso=0` boot parameter)
 
-Why don't you just set is_virtfn=1 since it *is* a VF, and then deal
-with the special cases where you want to touch the PF?
+Looking at the code, it seems quite easy to provide/maintain .close() for
+vm_special_mapping. A bit harder to add a test from CRIU side
+(as glibc won't know on restore that it can't use vdso anymore),
+but totally not impossible.
 
-Bjorn
+> Running that test on arm64 segfaults:
+>
+>   # ./sigreturn_vdso
+>   VDSO is at 0xffff8191f000-0xffff8191ffff (4096 bytes)
+>   Signal delivered OK with VDSO mapped
+>   VDSO moved to 0xffff8191a000-0xffff8191afff (4096 bytes)
+>   Signal delivered OK with VDSO moved
+>   Unmapped VDSO
+>   Remapped the stack executable
+>   [   48.556191] potentially unexpected fatal signal 11.
+>   [   48.556752] CPU: 0 PID: 140 Comm: sigreturn_vdso Not tainted 5.9.0-rc2-00057-g2ac69819ba9e #190
+>   [   48.556990] Hardware name: linux,dummy-virt (DT)
+>   [   48.557336] pstate: 60001000 (nZCv daif -PAN -UAO BTYPE=--)
+>   [   48.557475] pc : 0000ffff8191a7bc
+>   [   48.557603] lr : 0000ffff8191a7bc
+>   [   48.557697] sp : 0000ffffc13c9e90
+>   [   48.557873] x29: 0000ffffc13cb0e0 x28: 0000000000000000
+>   [   48.558201] x27: 0000000000000000 x26: 0000000000000000
+>   [   48.558337] x25: 0000000000000000 x24: 0000000000000000
+>   [   48.558754] x23: 0000000000000000 x22: 0000000000000000
+>   [   48.558893] x21: 00000000004009b0 x20: 0000000000000000
+>   [   48.559046] x19: 0000000000400ff0 x18: 0000000000000000
+>   [   48.559180] x17: 0000ffff817da300 x16: 0000000000412010
+>   [   48.559312] x15: 0000000000000000 x14: 000000000000001c
+>   [   48.559443] x13: 656c626174756365 x12: 7865206b63617473
+>   [   48.559625] x11: 0000000000000003 x10: 0101010101010101
+>   [   48.559828] x9 : 0000ffff818afda8 x8 : 0000000000000081
+>   [   48.559973] x7 : 6174732065687420 x6 : 64657070616d6552
+>   [   48.560115] x5 : 000000000e0388bd x4 : 000000000040135d
+>   [   48.560270] x3 : 0000000000000000 x2 : 0000000000000001
+>   [   48.560412] x1 : 0000000000000003 x0 : 00000000004120b8
+>   Segmentation fault
+>   #
+>
+> So I think we need to keep the unmap hook. Maybe it should be handled by
+> the special_mapping stuff generically.
+
+I'll cook a patch for vm_special_mapping if you don't mind :-)
+
+Thanks,
+             Dmitry
