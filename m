@@ -2,111 +2,166 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B06A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17CA420786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81B2A22D2B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:54:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WCV1mi5c";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cXOXNSJy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbgH0HyC (ORCPT
+        id S1728356AbgH0HyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:54:02 -0400
-Received: from mga06.intel.com ([134.134.136.31]:13056 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgH0HyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:54:02 -0400
-IronPort-SDR: vz4bzoQ2rOVep7gF8OnzVv2aaOcIS+Q9r3sY/Js14XZW9M1UBFwXOFDpCIQGWnAm9Y3E8/9QRd
- VxnZps+SMYiw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="217988356"
-X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
-   d="scan'208";a="217988356"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 00:54:01 -0700
-IronPort-SDR: /BlwljAFZPlXT5EC9L5SRl7mceno88GYplxunrJ7L2uL1bUWgMSzIEaQL0RSsrVtsYVIhpPo00
- ai3Jx3cDTxYA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
-   d="scan'208";a="295638978"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 27 Aug 2020 00:54:01 -0700
-Received: from [10.249.76.175] (vramuthx-MOBL1.gar.corp.intel.com [10.249.76.175])
-        by linux.intel.com (Postfix) with ESMTP id D6A1A5806C6;
-        Thu, 27 Aug 2020 00:53:57 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v3 1/1] extcon: ptn5150: Set the VBUS and POLARITY
- property capability
-To:     Chanwoo Choi <cw00.choi@samsung.com>, linux-kernel@vger.kernel.org
-Cc:     vijaikumar.kanagarajan@gmail.com, krzk@kernel.org,
-        myungjoo.ham@samsung.com, heikki.krogerus@linux.intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com
-References: <20200827065128.55094-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CGME20200827065143epcas1p3da86f8d70e6d78c64a925f4d9c0f92eb@epcas1p3.samsung.com>
- <20200827065128.55094-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <e0ac8482-d607-6095-0d9b-2918f0e7a0f2@samsung.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <47fef2ec-012c-03c7-13ef-0882b4f7146b@linux.intel.com>
-Date:   Thu, 27 Aug 2020 15:53:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 27 Aug 2020 03:54:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727048AbgH0HyR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:54:17 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D57EC061264;
+        Thu, 27 Aug 2020 00:54:17 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 07:54:14 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598514855;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BmdgD8aRx+NkXrffxySXTl0IhoJmFxLLR11F0fHAfoA=;
+        b=WCV1mi5cLPrURoLGTJZWjt3waIVtqs512M1B3jNDZrIownPEQSWlH6bLcpZkoCHsx1qPiM
+        T9aCs498D6YKp68mP/3eW5sFCk3ns8CRRvRLMYrfkDz/KFbMbCOeAy6BOmZWM3q0OefHLO
+        H092AzHn0SzbhGcqF5G5pEvuB4FHujGF7Q9cdXbXPKjKl7guXwPbKhxjAQvPPDEA8Ciueh
+        UjyGA0unV4T00KdnjRsQFfu71okHylwiKUshiRsCnNE6wETTdsakHNgTqWnNQrp+kMqqPh
+        Dj+ypOqfyPOyJYNCyRzP/oyDknnmHLS4M/38sMaXXcAQ01ue2TD5iHKA56UX2A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598514855;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BmdgD8aRx+NkXrffxySXTl0IhoJmFxLLR11F0fHAfoA=;
+        b=cXOXNSJyG94rIBCrdoqG5I0PxzOXkkuCLJNS4TnYHsYqzbVbAO2+8rJHQVgghkdJSPTLO0
+        IRKJ4/hmWo1Jx2Dg==
+From:   "tip-bot2 for Boqun Feng" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/core] lockdep/selftest: Introduce recursion3
+Cc:     Boqun Feng <boqun.feng@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200807074238.1632519-20-boqun.feng@gmail.com>
+References: <20200807074238.1632519-20-boqun.feng@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <e0ac8482-d607-6095-0d9b-2918f0e7a0f2@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Message-ID: <159851485457.20229.17439142206591711184.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The following commit has been merged into the locking/core branch of tip:
 
-On 27/8/2020 3:56 pm, Chanwoo Choi wrote:
-> On 8/27/20 3:51 PM, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Set the capability value of property for VBUS and POLARITY.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->>   drivers/extcon/extcon-ptn5150.c | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>
->> diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
->> index 841c9fe211f1..20d49a54c36e 100644
->> --- a/drivers/extcon/extcon-ptn5150.c
->> +++ b/drivers/extcon/extcon-ptn5150.c
->> @@ -275,6 +275,13 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
->>   		return ret;
->>   	}
->>   
->> +	extcon_set_property_capability(info->edev, EXTCON_USB,
->> +				       EXTCON_PROP_USB_VBUS);
->> +	extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
->> +				       EXTCON_PROP_USB_VBUS);
->> +	extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
->> +				       EXTCON_PROP_USB_TYPEC_POLARITY);
-> 
-> Above codes used the space for the indentation to keep the vertical line.
-> I think that we better to use tab for the indentation.
-> 
-> If there are no objection, I'll fix and then apply it.
-Thank you!, no objection , please fix it.
+Commit-ID:     96a16f45aed89cf024606a11679b0609d09552c7
+Gitweb:        https://git.kernel.org/tip/96a16f45aed89cf024606a11679b0609d09552c7
+Author:        Boqun Feng <boqun.feng@gmail.com>
+AuthorDate:    Fri, 07 Aug 2020 15:42:38 +08:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 26 Aug 2020 12:42:08 +02:00
 
-Regards
-Vadivel
-> 
->> +
->>   	/* Initialize PTN5150 device and print vendor id and version id */
->>   	ret = ptn5150_init_dev_type(info);
->>   	if (ret)
->>
-> 
-> 
+lockdep/selftest: Introduce recursion3
+
+Add a test case shows that USED_IN_*_READ and ENABLE_*_READ can cause
+deadlock too.
+
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20200807074238.1632519-20-boqun.feng@gmail.com
+---
+ lib/locking-selftest.c | 55 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 55 insertions(+)
+
+diff --git a/lib/locking-selftest.c b/lib/locking-selftest.c
+index 17f8f6f..a899b3f 100644
+--- a/lib/locking-selftest.c
++++ b/lib/locking-selftest.c
+@@ -1249,6 +1249,60 @@ GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion2_soft_rlock)
+ #include "locking-selftest-wlock.h"
+ GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion2_soft_wlock)
+ 
++#undef E1
++#undef E2
++#undef E3
++/*
++ * read-lock / write-lock recursion that is unsafe.
++ *
++ * A is a ENABLED_*_READ lock
++ * B is a USED_IN_*_READ lock
++ *
++ * read_lock(A);
++ *			write_lock(B);
++ * <interrupt>
++ * read_lock(B);
++ * 			write_lock(A); // if this one is read_lock(), no deadlock
++ */
++
++#define E1()				\
++					\
++	IRQ_DISABLE();			\
++	WL(B);				\
++	LOCK(A);			\
++	UNLOCK(A);			\
++	WU(B);				\
++	IRQ_ENABLE();
++
++#define E2()				\
++					\
++	RL(A);				\
++	RU(A);				\
++
++#define E3()				\
++					\
++	IRQ_ENTER();			\
++	RL(B);				\
++	RU(B);				\
++	IRQ_EXIT();
++
++/*
++ * Generate 24 testcases:
++ */
++#include "locking-selftest-hardirq.h"
++#include "locking-selftest-rlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion3_hard_rlock)
++
++#include "locking-selftest-wlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion3_hard_wlock)
++
++#include "locking-selftest-softirq.h"
++#include "locking-selftest-rlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion3_soft_rlock)
++
++#include "locking-selftest-wlock.h"
++GENERATE_PERMUTATIONS_3_EVENTS(irq_read_recursion3_soft_wlock)
++
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ # define I_SPINLOCK(x)	lockdep_reset_lock(&lock_##x.dep_map)
+ # define I_RWLOCK(x)	lockdep_reset_lock(&rwlock_##x.dep_map)
+@@ -2413,6 +2467,7 @@ void locking_selftest(void)
+ 
+ 	DO_TESTCASE_6x2x2RW("irq read-recursion", irq_read_recursion);
+ 	DO_TESTCASE_6x2x2RW("irq read-recursion #2", irq_read_recursion2);
++	DO_TESTCASE_6x2x2RW("irq read-recursion #3", irq_read_recursion3);
+ 
+ 	ww_tests();
+ 
