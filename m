@@ -2,197 +2,118 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF3DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E089BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11FE722CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:44:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598546680;
-	bh=Q5aYYSu8IY0KtYyVdillqXz7kNeaqxHQnPYNT03oQfk=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=PwLsdeo5Vjg/AahuaKuoVDluspbhNUTqSk4ex/0n4cyw3xPjGaBiiglXbU884FZSC
-	 iA2gY3acWZK/wQjt9CGNTLlw5QbK8sJSZSGW6RhvIqdaFT0bjtUR3QJIsPwUX+uNnc
-	 KveWzZfRminvN6yrcJfffAvEBT2cvhCB6kJvFAis=
+	by mail.kernel.org (Postfix) with ESMTP id C24B422BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:46:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgH0Qoi (ORCPT
+        id S1727802AbgH0QqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:44:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51100 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgH0Qoh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:44:37 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 690C4C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:44:37 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id i10so6533713iow.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:44:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yD0oCQhhV/YgON9Q9qRgw4PKAGTMOkPcQdtUeu+eeGo=;
-        b=H05tKdjRA7CpsxEhAgD2n+R4Zle8k6MFcogR4vh+WxqFQFBrWtVUdJz3+SUM49oHD9
-         zfD94Dxq/goNnWe5STC8ZOGq3O1pQQzCsLTtD8+q8FTmclfPnQU473ymDA4x/Nd0v02C
-         lEFjhLE0CSByi+9XTNWb9TYCy0ZrRoSh1D7gE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yD0oCQhhV/YgON9Q9qRgw4PKAGTMOkPcQdtUeu+eeGo=;
-        b=nxKzdHdnRaYExBYQOsjpCgtpy7heJ7ygBA5ezxDoQhEEPW6CyRzENBWKd11OW4reiF
-         iwg7zPBu/5aqlI95MvcFfSJR72hUHqFMRuxgf+NzAHj34SRDQkCbXqwBAMLID1BLl3/a
-         g7uPhyfTJyDsy6pkCvFEM1OwAnaHoiH/7WxCkPiXCT0Akk37r9uladsm+3bGZs8flQEZ
-         ZVI3dKSODes2yzp6ZK2Lu96+t2zJLHqC2ql5WoG8vR5jie+Ii4MUrm/puC8lI/3+OZIR
-         FaQ/j+x2MVVFDZTx4F0rQGTR35eqXWqzhErZxRgIcW+tAmAQ9GHoiDrAmObjyIM7nt6p
-         NFwA==
-X-Gm-Message-State: AOAM530Jc1aKdDfyS25sJJN2/W0UC37NvHRpbK1Gj4gVifbuthl0Cg/u
-        RcWDs8orrl2BgptAC7XgU+GFpw==
-X-Google-Smtp-Source: ABdhPJy0QNZLAye/+ntACjbnw1CEGNqxV2Hk5ydPtsRxq1oIDicWP2J9Mdu1tNXeMBU5axSrEjfP7A==
-X-Received: by 2002:a02:843:: with SMTP id 64mr14945203jac.59.1598546676673;
-        Thu, 27 Aug 2020 09:44:36 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id v11sm632346ili.66.2020.08.27.09.44.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 09:44:36 -0700 (PDT)
-Subject: Re: [PATCH] staging: ion: remove from the tree
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        laura@labbott.name, sumit.semwal@linaro.org, john.stultz@linaro.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        =?UTF-8?Q?Arve_Hj=c3=b8nnev=c3=a5g?= <arve@android.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Christian Brauner <christian@brauner.io>,
-        Christoph Hellwig <hch@infradead.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Martijn Coenen <maco@android.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Todd Kjos <tkjos@android.com>, devel@driverdev.osuosl.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200827123627.538189-1-gregkh@linuxfoundation.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <6be71d12-1335-e53a-72ed-bd4392f20394@linuxfoundation.org>
-Date:   Thu, 27 Aug 2020 10:44:34 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200827123627.538189-1-gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 27 Aug 2020 12:46:07 -0400
+Received: from mga09.intel.com ([134.134.136.24]:41896 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727020AbgH0QqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 12:46:00 -0400
+IronPort-SDR: eYyH0TwhRav9kD/2TiL8b9Kwl5vALgICsbcCKAMgkyT13W3U0XlxCrNthxiH5r5jw/B3nygPfA
+ pjfSxxKaoJiw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="157550589"
+X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
+   d="scan'208";a="157550589"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 09:45:59 -0700
+IronPort-SDR: ImMD13yCvWB8O00pj8iqY8/mHChXArSLmVWfinKoF3yFxpCwikQuDtkwpHerhJy9eRYUTwD+y0
+ FW9qKLVi2qrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
+   d="scan'208";a="403460440"
+Received: from irsmsx601.ger.corp.intel.com ([163.33.146.7])
+  by fmsmga001.fm.intel.com with ESMTP; 27 Aug 2020 09:45:57 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ irsmsx601.ger.corp.intel.com (163.33.146.7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 27 Aug 2020 17:45:55 +0100
+Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
+ fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
+ Thu, 27 Aug 2020 09:45:53 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "hch@infradead.org" <hch@infradead.org>
+CC:     "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
+        "kw@linux.com" <kw@linux.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Huffman, Amber" <amber.huffman@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
+Thread-Topic: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
+Thread-Index: AQHWd7clLgwBVuAUCESee06o/u7QiKlI1l4AgAKTLgCAAJR+AIAAodyAgAAC1ICAAAYeAA==
+Date:   Thu, 27 Aug 2020 16:45:53 +0000
+Message-ID: <eb45485d9107440a667e598da99ad949320b77b1.camel@intel.com>
+References: <20200821123222.32093-1-kai.heng.feng@canonical.com>
+         <20200825062320.GA27116@infradead.org>
+         <cd5aa2fef13f14b30c139d03d5256cf93c7195dc.camel@intel.com>
+         <20200827063406.GA13738@infradead.org>
+         <660c8671a51eec447dc7fab22bacbc9c600508d9.camel@intel.com>
+         <20200827162333.GA6822@infradead.org>
+In-Reply-To: <20200827162333.GA6822@infradead.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.212.223.90]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <63FD82EA9164D5498895AF11A6D56E22@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/20 6:36 AM, Greg Kroah-Hartman wrote:
-> The ION android code has long been marked to be removed, now that we
-> dma-buf support merged into the real part of the kernel.
-> 
-> It was thought that we could wait to remove the ion kernel at a later
-> time, but as the out-of-tree Android fork of the ion code has diverged
-> quite a bit, and any Android device using the ion interface uses that
-> forked version and not this in-tree version, the in-tree copy of the
-> code is abandonded and not used by anyone.
-> 
-> Combine this abandoned codebase with the need to make changes to it in
-> order to keep the kernel building properly, which then causes merge
-> issues when merging those changes into the out-of-tree Android code, and
-> you end up with two different groups of people (the in-kernel-tree
-> developers, and the Android kernel developers) who are both annoyed at
-> the current situation.  Because of this problem, just drop the in-kernel
-> copy of the ion code now, as it's not used, and is only causing problems
-> for everyone involved.
-> 
-> Cc: "Arve Hjønnevåg" <arve@android.com>
-> Cc: "Christian König" <christian.koenig@amd.com>
-> Cc: Christian Brauner <christian@brauner.io>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Hridya Valsaraju <hridya@google.com>
-> Cc: Joel Fernandes <joel@joelfernandes.org>
-> Cc: John Stultz <john.stultz@linaro.org>
-> Cc: Laura Abbott <laura@labbott.name>
-> Cc: Martijn Coenen <maco@android.com>
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Todd Kjos <tkjos@android.com>
-> Cc: devel@driverdev.osuosl.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linaro-mm-sig@lists.linaro.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->   MAINTAINERS                                   |  10 -
->   drivers/staging/android/Kconfig               |   2 -
->   drivers/staging/android/Makefile              |   2 -
->   drivers/staging/android/TODO                  |   5 -
->   drivers/staging/android/ion/Kconfig           |  27 -
->   drivers/staging/android/ion/Makefile          |   4 -
->   drivers/staging/android/ion/ion.c             | 649 ------------------
->   drivers/staging/android/ion/ion.h             | 302 --------
->   drivers/staging/android/ion/ion_cma_heap.c    | 138 ----
->   drivers/staging/android/ion/ion_heap.c        | 286 --------
->   drivers/staging/android/ion/ion_page_pool.c   | 155 -----
->   drivers/staging/android/ion/ion_system_heap.c | 377 ----------
->   drivers/staging/android/uapi/ion.h            | 127 ----
->   tools/testing/selftests/Makefile              |   3 +-
->   tools/testing/selftests/android/Makefile      |  39 --
->   tools/testing/selftests/android/config        |   5 -
->   .../testing/selftests/android/ion/.gitignore  |   4 -
->   tools/testing/selftests/android/ion/Makefile  |  20 -
->   tools/testing/selftests/android/ion/README    | 101 ---
->   tools/testing/selftests/android/ion/ion.h     | 134 ----
->   .../testing/selftests/android/ion/ion_test.sh |  58 --
->   .../selftests/android/ion/ionapp_export.c     | 127 ----
->   .../selftests/android/ion/ionapp_import.c     |  79 ---
->   .../selftests/android/ion/ionmap_test.c       | 136 ----
->   .../testing/selftests/android/ion/ionutils.c  | 253 -------
->   .../testing/selftests/android/ion/ionutils.h  |  55 --
->   .../testing/selftests/android/ion/ipcsocket.c | 227 ------
->   .../testing/selftests/android/ion/ipcsocket.h |  35 -
->   tools/testing/selftests/android/run.sh        |   3 -
->   29 files changed, 1 insertion(+), 3362 deletions(-)
->   delete mode 100644 drivers/staging/android/ion/Kconfig
->   delete mode 100644 drivers/staging/android/ion/Makefile
->   delete mode 100644 drivers/staging/android/ion/ion.c
->   delete mode 100644 drivers/staging/android/ion/ion.h
->   delete mode 100644 drivers/staging/android/ion/ion_cma_heap.c
->   delete mode 100644 drivers/staging/android/ion/ion_heap.c
->   delete mode 100644 drivers/staging/android/ion/ion_page_pool.c
->   delete mode 100644 drivers/staging/android/ion/ion_system_heap.c
->   delete mode 100644 drivers/staging/android/uapi/ion.h
->   delete mode 100644 tools/testing/selftests/android/Makefile
->   delete mode 100644 tools/testing/selftests/android/config
->   delete mode 100644 tools/testing/selftests/android/ion/.gitignore
->   delete mode 100644 tools/testing/selftests/android/ion/Makefile
->   delete mode 100644 tools/testing/selftests/android/ion/README
->   delete mode 100644 tools/testing/selftests/android/ion/ion.h
->   delete mode 100755 tools/testing/selftests/android/ion/ion_test.sh
->   delete mode 100644 tools/testing/selftests/android/ion/ionapp_export.c
->   delete mode 100644 tools/testing/selftests/android/ion/ionapp_import.c
->   delete mode 100644 tools/testing/selftests/android/ion/ionmap_test.c
->   delete mode 100644 tools/testing/selftests/android/ion/ionutils.c
->   delete mode 100644 tools/testing/selftests/android/ion/ionutils.h
->   delete mode 100644 tools/testing/selftests/android/ion/ipcsocket.c
->   delete mode 100644 tools/testing/selftests/android/ion/ipcsocket.h
->   delete mode 100755 tools/testing/selftests/android/run.sh
-> 
->
-
-For selftest changes in this patch:
-
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-
-thanks,
--- Shuah
-
-
+T24gVGh1LCAyMDIwLTA4LTI3IGF0IDE3OjIzICswMTAwLCBoY2hAaW5mcmFkZWFkLm9yZyB3cm90
+ZToNCj4gT24gVGh1LCBBdWcgMjcsIDIwMjAgYXQgMDQ6MTM6NDRQTSArMDAwMCwgRGVycmljaywg
+Sm9uYXRoYW4gd3JvdGU6DQo+ID4gT24gVGh1LCAyMDIwLTA4LTI3IGF0IDA2OjM0ICswMDAwLCBo
+Y2hAaW5mcmFkZWFkLm9yZyB3cm90ZToNCj4gPiA+IE9uIFdlZCwgQXVnIDI2LCAyMDIwIGF0IDA5
+OjQzOjI3UE0gKzAwMDAsIERlcnJpY2ssIEpvbmF0aGFuIHdyb3RlOg0KPiA+ID4gPiBGZWVsIGZy
+ZWUgdG8gcmV2aWV3IG15IHNldCB0byBkaXNhYmxlIHRoZSBNU0kgcmVtYXBwaW5nIHdoaWNoIHdp
+bGwNCj4gPiA+ID4gbWFrZQ0KPiA+ID4gPiBpdCBwZXJmb3JtIGFzIHdlbGwgYXMgZGlyZWN0LWF0
+dGFjaGVkOg0KPiA+ID4gPiANCj4gPiA+ID4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
+cm9qZWN0L2xpbnV4LXBjaS9saXN0Lz9zZXJpZXM9MzI1NjgxDQo+ID4gPiANCj4gPiA+IFNvIHRo
+YXQgdGhlbiB3ZSBoYXZlIHRvIGRlYWwgd2l0aCB5b3VyIHNjaGVtZXMgdG8gbWFrZSBpbmRpdmlk
+dWFsDQo+ID4gPiBkZXZpY2UgZGlyZWN0IGFzc2lnbm1lbnQgd29yayBpbiBhIGNvbnZvbHV0ZWQg
+d2F5Pw0KPiA+IA0KPiA+IFRoYXQncyBub3QgdGhlIGludGVudCBvZiB0aGF0IHBhdGNoc2V0IC1h
+dCBhbGwtLiBJdCB3YXMgdG8gYWRkcmVzcyB0aGUNCj4gPiBwZXJmb3JtYW5jZSBib3R0bGVuZWNr
+cyB3aXRoIFZNRCB0aGF0IHlvdSBjb25zdGFudGx5IGNvbXBsYWluIGFib3V0LiANCj4gDQo+IEkg
+a25vdy4gIEJ1dCBvbmNlIHdlIGZpeCB0aGF0IGJvdHRsZW5lY2sgd2UgZml4IHRoZSBuZXh0IGlz
+c3VlLA0KPiB0aGVuIHRvIHRhY2tsZSB0aGUgbmV4dC4gIFdoaWxlIGF0IHRoZSBzYW1lIHRpbWUg
+Vk1EIGJyaW5ncyB6ZXJvDQo+IGFjdHVhbCBiZW5lZml0cy4NCj4gDQoNCkp1c3QgYSBmZXcgYmVu
+ZWZpdHMgYW5kIHRoZXJlIGFyZSBvdGhlciB1c2VycyB3aXRoIHVuaXF1ZSB1c2UgY2FzZXM6DQox
+LiBQYXNzdGhyb3VnaCBvZiB0aGUgZW5kcG9pbnQgdG8gT1NlcyB3aGljaCBkb24ndCBuYXRpdmVs
+eSBzdXBwb3J0DQpob3RwbHVnIGNhbiBlbmFibGUgaG90cGx1ZyBmb3IgdGhhdCBPUyB1c2luZyB0
+aGUgZ3Vlc3QgVk1EIGRyaXZlcg0KMi4gU29tZSBoeXBlcnZpc29ycyBoYXZlIGEgbGltaXQgb24g
+dGhlIG51bWJlciBvZiBkZXZpY2VzIHRoYXQgY2FuIGJlDQpwYXNzZWQgdGhyb3VnaC4gVk1EIGVu
+ZHBvaW50IGlzIGEgc2luZ2xlIGRldmljZSB0aGF0IGV4cGFuZHMgdG8gbWFueS4NCjMuIEV4cGFu
+c2lvbiBvZiBwb3NzaWJsZSBidXMgbnVtYmVycyBiZXlvbmQgMjU2IGJ5IHVzaW5nIG90aGVyDQpz
+ZWdtZW50cy4NCjQuIEN1c3RvbSBSQUlEIExFRCBwYXR0ZXJucyBkcml2ZW4gYnkgbGVkY3RsDQoN
+CkknbSBub3QgdHJ5aW5nIHRvIG1hcmtldCB0aGlzLiBKdXN0IHBvaW50aW5nIG91dCB0aGF0IHRo
+aXMgaXNuJ3QNCiJicmluZ2luZyB6ZXJvIGFjdHVhbCBiZW5lZml0cyIgdG8gbWFueSB1c2Vycy4N
+Cg0KDQo+ID4gPiBQbGVhc2UganVzdCBnaXZlIHVzDQo+ID4gPiBhIGRpc2FibGUgbm9iIGZvciBW
+TUQsIHdoaWNoIHNvbHZlcyBfYWxsXyB0aGVzZSBwcm9ibGVtcyB3aXRob3V0DQo+ID4gPiBhZGRp
+bmcNCj4gPiA+IGFueS4NCj4gPiANCj4gPiBJIGRvbid0IHNlZSB0aGUgcHVycG9zZSBvZiB0aGlz
+IGxpbmUgb2YgZGlzY3Vzc2lvbi4gVk1EIGhhcyBiZWVuIGluIHRoZQ0KPiA+IGtlcm5lbCBmb3Ig
+NSB5ZWFycy4gV2UgYXJlIGNvbnN0YW50bHkgd29ya2luZyBvbiBiZXR0ZXIgc3VwcG9ydC4NCj4g
+DQo+IFBsZWFzZSBqdXN0IHdvcmsgd2l0aCB0aGUgcGxhdGZvcm0gcGVvcGxlIHRvIGFsbG93IHRo
+ZSBob3N0IHRvIGRpc2FibGUNCj4gVk1ELiAgVGhhdCBpcyB0aGUgb25seSByZWFsbHkgdXNlZnVs
+IHZhbHVlIGFkZCBoZXJlLg0KDQpDaGVlcnMNCg==
