@@ -2,225 +2,121 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EF8C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC5622B40
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B53A2207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:36:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="wHwCCfOV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H8vbnYW/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgH0Gfv (ORCPT
+        id S1727115AbgH0GgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:35:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40140 "EHLO
+        Thu, 27 Aug 2020 02:36:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727892AbgH0Gfd (ORCPT
+        with ESMTP id S1727957AbgH0GgE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:35:33 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 663B4C061231
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 23:35:33 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id x10so6013882ybj.19
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 23:35:33 -0700 (PDT)
+        Thu, 27 Aug 2020 02:36:04 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9748BC061263
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 23:36:03 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b18so4186927wrs.7
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 23:36:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=pLxaBib0LMkN4D4wR9hiVJIAOm60ZZrqLyNtSVQ6McE=;
-        b=wHwCCfOVlKR+vTkeXOUL2ZliPAhdFBIlxDc+gQIk+nJ0ruhpVVIEiioyadTtOxwW/B
-         NyuwpzBLYY3JGG7d+DpNz3uLscGKU6ea+m6fDZpubsy5qULyWo6c2LELhhZ8Z0TNUBOG
-         PfNN8Ei1PEtGLZkBRw/S+v+P5zmDovIfN/LOcml/Fi4tlH1a3zFKu2wNbqxNg6hNQSvt
-         ZSP9dzkUWMUOeMjxtihy6F0HFKpCTn+5DjFovfX1C6lXdKyS5hlMvI1r7fcOXVYJVFSt
-         0W23vbW7N7snvf4TnYXDLNbzRwzfitJxfDqKLLWpquCKn7MdxeL/31xHWswe6qLOwOv/
-         Cs5g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=akR5LsWB+L7ENwYAw9D4wcSK8jvQH6F09dbiIXvyFCk=;
+        b=H8vbnYW/S+H7tZZYYO5Fs3PPBaCtYQdePiDEDqJOjsMv5DF6G2r7fYacs24CCUEaAt
+         M3e1iWPRZPukneXLcYdSJGgvQQ826VwRp17Sv20+QJTNJvXWHfkZABR3zVA0DWOcTzdg
+         WEgIW3cZElL+bglDngYnh1LuIaHi/EV/2I1iKVO3m3j4xIQwohTnASGkYv8BwxHFT6Tg
+         htWl0SMTHiOOLoP79DFGPB7xALFkOssU25a1B7AThZesH2WFhTlnyAwyQG09UCxIlfQt
+         dDsHe95PD32mdOGZohe5PKfcsO5FWScCiMzdkncTi71joxY8dybGZxXjcXIt1WNujlh7
+         /dkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=pLxaBib0LMkN4D4wR9hiVJIAOm60ZZrqLyNtSVQ6McE=;
-        b=n1sYTRQ7W5USSPOrgq6Xa1d0MUWeC5oiciX19RPxKk5rot5L47+1hocPnccUJavIId
-         Mm2hzd4MwcYlub1l7/VudvUKlpkBCI/CkKdXSWcEwDQTlFxOXREyqJeYj0RtnX5mcthB
-         QQWQX5RXasXZV9LQOBBRalNaLCvfPb8tx86KP97Unl6qIjs1YnzEVtD0EuTfSwIFGH8a
-         KZL3BJqqwOsLQEDk1hYF7xCj8POswsQM7NrXD61zct6bFjXiQkxbMBUqkajXwY8P3wEZ
-         neX1akmuNZODF8snlbRpJ++W13r5rI/aZn+P2lC1a58JRKmuJUKJl1RshBoUtkztG2xG
-         pJKQ==
-X-Gm-Message-State: AOAM533fZQtVIoVEe1aY47vPx3HcdH7lrHJiXT/VVnNtqWOJDRkE5G3x
-        MYs9yh8K5amuyeecUz9efYAE5HYAqVOjIc7r0Q==
-X-Google-Smtp-Source: ABdhPJz66lEBcU2uHus1V086mNXk3LCt5yHkf8vbymGDl41kU7EQRALFBPJs7iT+92xVfsT0baMMKGLnl7YUkNR0tQ==
-X-Received: from lg.mtv.corp.google.com ([100.89.4.209]) (user=lokeshgidra
- job=sendgmr) by 2002:a25:ab0d:: with SMTP id u13mr28407715ybi.248.1598510132559;
- Wed, 26 Aug 2020 23:35:32 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 23:35:21 -0700
-In-Reply-To: <20200827063522.2563293-1-lokeshgidra@google.com>
-Message-Id: <20200827063522.2563293-3-lokeshgidra@google.com>
-Mime-Version: 1.0
-References: <20200827063522.2563293-1-lokeshgidra@google.com>
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH v8 2/3] Teach SELinux about anonymous inodes
-From:   Lokesh Gidra <lokeshgidra@google.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        James Morris <jmorris@namei.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Eric Biggers <ebiggers@kernel.org>
-Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Daniel Colascione <dancol@dancol.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        KP Singh <kpsingh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Thomas Cedeno <thomascedeno@google.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Aaron Goidel <acgoide@tycho.nsa.gov>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Adrian Reber <areber@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        kaleshsingh@google.com, calin@google.com, surenb@google.com,
-        nnk@google.com, jeffv@google.com, kernel-team@android.com,
-        Daniel Colascione <dancol@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=akR5LsWB+L7ENwYAw9D4wcSK8jvQH6F09dbiIXvyFCk=;
+        b=EjTfjZpHv9+pY6azRrDJjyIzA6J+X1zhsKFV5gZ+O+XQ5p+JzTN4H9JIuTxPZGq0P9
+         1+MAANLdAlHK0c6S5lA4GE4WncwePkQzdvXrLs76eDZhZyCKb1/KHS4bCI8IMX1vBXn8
+         41Pt6iUzSQTWHil8OrM+5DpJtLG8zNdBFDUIs9F3M8+i7Mn3xrd1T9VpPQ/NsS/5gVe0
+         cvDVBLO43Frwr7aS5Y7gwcKFxnRNlyWIvAqRrmI0VKFrvPpT77OasbA60hYefMajPJPb
+         uxk9Z8Ff3h8h1Dh7b8Rsx4RQbJ1Au94uNHfMQEqwQevNRoHWH1NPRWMnCFpr0yuvbR+p
+         YeBA==
+X-Gm-Message-State: AOAM533lEwInYuUeoQd8TrYXA4fKGV+QevseLqu9HPukeRgWVexA+77s
+        hMIkxTULMn1GB8E0d1mbihnqsw==
+X-Google-Smtp-Source: ABdhPJyUoPKR71NVAZJhTV3U26Io2C1TwglVVoLwoSOZIX2rFDKJaRv5rbS/qFs4nDKGnwNHN81ydA==
+X-Received: by 2002:a05:6000:1c7:: with SMTP id t7mr879463wrx.145.1598510162237;
+        Wed, 26 Aug 2020 23:36:02 -0700 (PDT)
+Received: from dell ([91.110.221.141])
+        by smtp.gmail.com with ESMTPSA id q11sm3530317wrw.61.2020.08.26.23.36.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 23:36:01 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 07:35:59 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Maya Erez <merez@codeaurora.org>, wil6210@qti.qualcomm.com
+Subject: Re: [PATCH 12/30] wireless: ath: wil6210: wmi: Correct misnamed
+ function parameter 'ptr_'
+Message-ID: <20200827063559.GP3248864@dell>
+References: <20200826093401.1458456-13-lee.jones@linaro.org>
+ <20200826155625.A5A88C433A1@smtp.codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200826155625.A5A88C433A1@smtp.codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Colascione <dancol@google.com>
+On Wed, 26 Aug 2020, Kalle Valo wrote:
 
-This change uses the anon_inodes and LSM infrastructure introduced in
-the previous patch to give SELinux the ability to control
-anonymous-inode files that are created using the new anon_inode_getfd_secure()
-function.
+> Lee Jones <lee.jones@linaro.org> wrote:
+> 
+> > Fixes the following W=1 kernel build warning(s):
+> > 
+> >  drivers/net/wireless/ath/wil6210/wmi.c:279: warning: Function parameter or member 'ptr_' not described in 'wmi_buffer_block'
+> >  drivers/net/wireless/ath/wil6210/wmi.c:279: warning: Excess function parameter 'ptr' description in 'wmi_buffer_block'
+> > 
+> > Cc: Maya Erez <merez@codeaurora.org>
+> > Cc: Kalle Valo <kvalo@codeaurora.org>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: linux-wireless@vger.kernel.org
+> > Cc: wil6210@qti.qualcomm.com
+> > Cc: netdev@vger.kernel.org
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> 
+> Failed to apply:
+> 
+> error: patch failed: drivers/net/wireless/ath/wil6210/wmi.c:266
+> error: drivers/net/wireless/ath/wil6210/wmi.c: patch does not apply
+> stg import: Diff does not apply cleanly
+> 
+> Patch set to Changes Requested.
 
-A SELinux policy author detects and controls these anonymous inodes by
-adding a name-based type_transition rule that assigns a new security
-type to anonymous-inode files created in some domain. The name used
-for the name-based transition is the name associated with the
-anonymous inode for file listings --- e.g., "[userfaultfd]" or
-"[perf_event]".
+Are you applying them in order?
 
-Example:
+It may be affected by:
 
-type uffd_t;
-type_transition sysadm_t sysadm_t : anon_inode uffd_t "[userfaultfd]";
-allow sysadm_t uffd_t:anon_inode { create };
+ wireless: ath: wil6210: wmi: Fix formatting and demote non-conforming function headers
 
-(The next patch in this series is necessary for making userfaultfd
-support this new interface.  The example above is just
-for exposition.)
+I'll also rebase onto the latest -next and resubmit.
 
-Signed-off-by: Daniel Colascione <dancol@google.com>
-Acked-by: Casey Schaufler <casey@schaufler-ca.com>
-Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Andrew Morton <akpm@linux-foundation.org>
----
- security/selinux/hooks.c            | 53 +++++++++++++++++++++++++++++
- security/selinux/include/classmap.h |  2 ++
- 2 files changed, 55 insertions(+)
-
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index a340986aa92e..b83f56e5ef40 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -2926,6 +2926,58 @@ static int selinux_inode_init_security(struct inode *inode, struct inode *dir,
- 	return 0;
- }
- 
-+static int selinux_inode_init_security_anon(struct inode *inode,
-+					    const struct qstr *name,
-+					    const struct inode *context_inode)
-+{
-+	const struct task_security_struct *tsec = selinux_cred(current_cred());
-+	struct common_audit_data ad;
-+	struct inode_security_struct *isec;
-+	int rc;
-+
-+	if (unlikely(!selinux_state.initialized))
-+		return 0;
-+
-+	isec = selinux_inode(inode);
-+
-+	/*
-+	 * We only get here once per ephemeral inode.  The inode has
-+	 * been initialized via inode_alloc_security but is otherwise
-+	 * untouched.
-+	 */
-+
-+	if (context_inode) {
-+		struct inode_security_struct *context_isec =
-+			selinux_inode(context_inode);
-+		isec->sclass = context_isec->sclass;
-+		isec->sid = context_isec->sid;
-+	} else {
-+		isec->sclass = SECCLASS_ANON_INODE;
-+		rc = security_transition_sid(
-+			&selinux_state, tsec->sid, tsec->sid,
-+			isec->sclass, name, &isec->sid);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	isec->initialized = LABEL_INITIALIZED;
-+
-+	/*
-+	 * Now that we've initialized security, check whether we're
-+	 * allowed to actually create this type of anonymous inode.
-+	 */
-+
-+	ad.type = LSM_AUDIT_DATA_INODE;
-+	ad.u.inode = inode;
-+
-+	return avc_has_perm(&selinux_state,
-+			    tsec->sid,
-+			    isec->sid,
-+			    isec->sclass,
-+			    FILE__CREATE,
-+			    &ad);
-+}
-+
- static int selinux_inode_create(struct inode *dir, struct dentry *dentry, umode_t mode)
- {
- 	return may_create(dir, dentry, SECCLASS_FILE);
-@@ -6987,6 +7039,7 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
- 
- 	LSM_HOOK_INIT(inode_free_security, selinux_inode_free_security),
- 	LSM_HOOK_INIT(inode_init_security, selinux_inode_init_security),
-+	LSM_HOOK_INIT(inode_init_security_anon, selinux_inode_init_security_anon),
- 	LSM_HOOK_INIT(inode_create, selinux_inode_create),
- 	LSM_HOOK_INIT(inode_link, selinux_inode_link),
- 	LSM_HOOK_INIT(inode_unlink, selinux_inode_unlink),
-diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
-index 40cebde62856..ba2e01a6955c 100644
---- a/security/selinux/include/classmap.h
-+++ b/security/selinux/include/classmap.h
-@@ -249,6 +249,8 @@ struct security_class_mapping secclass_map[] = {
- 	  {"open", "cpu", "kernel", "tracepoint", "read", "write"} },
- 	{ "lockdown",
- 	  { "integrity", "confidentiality", NULL } },
-+	{ "anon_inode",
-+	  { COMMON_FILE_PERMS, NULL } },
- 	{ NULL }
-   };
- 
 -- 
-2.28.0.297.g1956fa8f8d-goog
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
