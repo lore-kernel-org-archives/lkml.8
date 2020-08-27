@@ -2,101 +2,125 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB34C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B62C2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A88322054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:52:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zJeJtPAj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gjBwiPji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgH0Ovt (ORCPT
+        id S1728165AbgH0OwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:51:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33302 "EHLO
+        Thu, 27 Aug 2020 10:52:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727906AbgH0Ovq (ORCPT
+        with ESMTP id S1726093AbgH0Ov5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:51:46 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F02ACC061264;
-        Thu, 27 Aug 2020 07:51:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=CXo1VsNJMnumrlPogWjBzw/zPcnBvymTjxJVEjV9DV8=; b=zJeJtPAjIfwokijM3k3lS2EFrm
-        p9b5Je7DxKqNlk4czOD+QNZUCgF5kKnpUWj0iQiV8X9efsyedLsuRlOLEEIxaRVC3qtB1UZU8eTIo
-        f5FTAHewB3b+83F7e2HolU51i5Hxr25cV7RlGmTPHLJQwLbjOxid5eDC51q5OOmzIrUFiChw+gBl3
-        riyvif8xmDNzt3vRE2YCjf8JJJ51SPyNvpVmOx0TZIVr7JemYwDbUiDS8fCgJfWKa97RtmQtzhius
-        3YQ2HkBL3/4rWTd6I55RDITc7Y2/JJdWKJ4B+7sYH7q56rXJGcqQb7ZHnP1P9Df9IO54dLGAYRJOR
-        v3JnR6og==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBJFf-0007Dp-1X; Thu, 27 Aug 2020 14:51:43 +0000
-Subject: Re: [PATCH v2] null_blk: add support for max open/active zone limit
- for zoned devices
-To:     Niklas Cassel <niklas.cassel@wdc.com>, Jens Axboe <axboe@kernel.dk>
-Cc:     damien.lemoal@wdc.com, johannes.thumshirn@wdc.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200827135018.63644-1-niklas.cassel@wdc.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6d9fb163-f9d9-1f2d-d88c-db9d3a6185b4@infradead.org>
-Date:   Thu, 27 Aug 2020 07:51:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 27 Aug 2020 10:51:57 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D35EDC061264;
+        Thu, 27 Aug 2020 07:51:56 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f26so6728543ljc.8;
+        Thu, 27 Aug 2020 07:51:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=txhfrSF9RX3MqxwN9hoW/kar0+P8SVn2XnHOzqJQ9IY=;
+        b=gjBwiPji3SaNbCP9jML1HZoNahK/I6qqs0rl0EygcZbZRptYdcMLHdy1mv7UHcaDp0
+         +SUHGKslVz5TRz1z7pi7ETrhxoG2F4LiDXmAi5z22/+KyryUnUvOlH3Du1iqooWTAmiI
+         gyt4ZHvwYsreEvMfFGES4WdC5hyJ9xDyNT6KxBEdkshROOsM3DbwVyaKf5XqbIzaLCW3
+         2lgsa4SeK2WfjzhOr36LgK+d+MnFbnwSH3ryYf8jPNSSscvVS66RS1qRwWmJCTBwaMcE
+         NwJdJy/VloyZP1dH0avdKUyPtuRnd6MBdpz+2Rhxdc+62XDR8G5XrE3S0sk3qNda5+Jq
+         Uswg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=txhfrSF9RX3MqxwN9hoW/kar0+P8SVn2XnHOzqJQ9IY=;
+        b=sKa358u3eSein4TlZIZqelc63X+gVmMrTUNj3kNmcoAKvaAwrNAFPHDLDrtFXgl3Rw
+         ZpN60xPejRg22LG/0cui5K9qny1lEZlCdzzeXN0ZZigK+ZQkGy86e9RlFFeaqWQKscrF
+         Gckf/QJDMZ/Cg41NDJV8EuD0GKNTMLlhhEtaKerUDQbQT+pJ2U8QLsRw5yfzFR4iz6Xr
+         Ojq01HOWoNOq1dVx2jqklQvLsXJ8YjKp8bMXtiycEaY60NgVHmbNwQ1+/hU6XAZp281t
+         Vy0414SUOaUqofwpslwSqa9JNBbGfPQ+TD5rA6BALe73a2/eQQRBP170RSTuTfrX33+a
+         qsRA==
+X-Gm-Message-State: AOAM533+q8iTBF16hzQs7h9/hOYFyw5HZNC+YlPyHhDpHj5V0i6gXilQ
+        K+ouEdqY0voV3VzSy8QHrzGz/+UMRt1NftG7awk=
+X-Google-Smtp-Source: ABdhPJxkVhI0j2VsdBWVwc0FSlt/bcCfk71WFFX36z10VABx6cu21rQwkSKWef3JMaP2Bwmgr7KClVB6jt0m6gXA8C8=
+X-Received: by 2002:a2e:160d:: with SMTP id w13mr10443684ljd.470.1598539914375;
+ Thu, 27 Aug 2020 07:51:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200827135018.63644-1-niklas.cassel@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1598527137-6915-1-git-send-email-u0084500@gmail.com> <20200827140001.GE813478@kuha.fi.intel.com>
+In-Reply-To: <20200827140001.GE813478@kuha.fi.intel.com>
+From:   ChiYuan Huang <u0084500@gmail.com>
+Date:   Thu, 27 Aug 2020 22:51:43 +0800
+Message-ID: <CADiBU393V_iQw_8Hx2braL=8QpvQuTY0059C-XkqmjO9W=aBgQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] usb typec: mt6360: Add support for mt6360 Type-C driver
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
+        matthias.bgg@gmail.com, Guenter Roeck <linux@roeck-us.net>,
+        cy_huang <cy_huang@richtek.com>, gene_chen@richtek.com,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/20 6:50 AM, Niklas Cassel wrote:
-> Add support for user space to set a max open zone and a max active zone
-> limit via configfs. By default, the default values are 0 == no limit.
-
-Hi,
-
-How does a user find out about how to use/set these limits?
-
-
-> Call the block layer API functions used for exposing the configured
-> limits to sysfs.
-> 
-> Add accounting in null_blk_zoned so that these new limits are respected.
-> Performing an operating that would exceed these limits results in a
-> standard I/O error.
-> 
-> A max open zone limit exists in the ZBC standard.
-> While null_blk_zoned is used to test the Zoned Block Device model in
-> Linux, when it comes to differences between ZBC and ZNS, null_blk_zoned
-> mostly follows ZBC.
-> 
-> Therefore, implement the manage open zone resources function from ZBC,
-> but additionally add support for max active zones.
-> This enables user space not only to test against a device with an open
-> zone limit, but also to test against a device with an active zone limit.
-> 
-> Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
-> ---
-> Changes since v1:
-> -Fixed review comments by Damien Le Moal.
-> 
->  drivers/block/null_blk.h       |   5 +
->  drivers/block/null_blk_main.c  |  16 +-
->  drivers/block/null_blk_zoned.c | 319 +++++++++++++++++++++++++++------
->  3 files changed, 282 insertions(+), 58 deletions(-)
-
-thanks.
--- 
-~Randy
-
+Heikki Krogerus <heikki.krogerus@linux.intel.com> =E6=96=BC 2020=E5=B9=B48=
+=E6=9C=8827=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=8810:00=E5=AF=AB=E9=
+=81=93=EF=BC=9A
+>
+> On Thu, Aug 27, 2020 at 07:18:55PM +0800, cy_huang wrote:
+> > From: ChiYuan Huang <cy_huang@richtek.com>
+> >
+> > Mediatek MT6360 is a multi-functional IC that includes USB Type-C.
+> > It works with Type-C Port Controller Manager to provide USB PD
+> > and USB Type-C functionalities.
+> >
+> > v1 to v2
+> > 1. Add fix to Prevent the race condition from interrupt and tcpci port
+> > unregister during module remove.
+> >
+> > v2 to v3
+> > 1. Change comment style for the head of source code.
+> > 2. No need to print error for platform_get_irq_byname.
+> > 3. Fix tcpci_register_port check from IS_ERR_OR_NULL to IS_ERR.
+> > 4. Rename driver/Kconfig/Makefile form mt6360 to mt636x.
+> > 5. Rename DT binding documents from mt6360 to mt636x.
+>
+> You don't place additional changelog here...
+>
+> > Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+> > ---
+>
+> You put it here, after that '---' marker:
+> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#th=
+e-canonical-patch-format
+>
+HI Hekki:
+     after reading the document, I have a little bit confused how to
+use diffstat for the changelog.
+      Is there any example that make me know to write a clear
+description for the changelog?
+>
+> >  drivers/usb/typec/tcpm/Kconfig        |   8 ++
+> >  drivers/usb/typec/tcpm/Makefile       |   1 +
+> >  drivers/usb/typec/tcpm/tcpci_mt6360.c | 212 ++++++++++++++++++++++++++=
+++++++++
+> >  3 files changed, 221 insertions(+)
+> >  create mode 100644 drivers/usb/typec/tcpm/tcpci_mt6360.c
+>
+> thanks,
+>
+> --
+> heikki
