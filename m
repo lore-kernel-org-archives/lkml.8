@@ -2,143 +2,146 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136D8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC54C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF6E4207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB400207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 13:37:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="BnewPwO8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bVAl9fYO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgH0NgX (ORCPT
+        id S1728030AbgH0Ng4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 09:36:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48822 "EHLO
+        Thu, 27 Aug 2020 09:36:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727877AbgH0Nal (ORCPT
+        with ESMTP id S1728358AbgH0NcR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:30:41 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC349C06123C
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:30:18 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id s19so2331650eju.6
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:30:18 -0700 (PDT)
+        Thu, 27 Aug 2020 09:32:17 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F390C061233
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:32:17 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id l7so1578314wrx.8
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 06:32:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m3bZHQbkUK7ru+mSIlVCeklpmkkabE1NV08rauGz/SA=;
-        b=BnewPwO81kBvVFqomm9QXypRQ1vKnYBm3Xuds0ivqXpKN6sew0LIMekfam22SF/fZF
-         ucvahfcOXZOCnVhnEJXEHozHM8Yg3MAzKX/Dlc2etkqT9cT67PAgKlx5jSY3w4Vc7UP/
-         lA3xGIcK8+LhYi2uldqLp0dH4t2gv5tLikb6a2HDm/dyQxVTBpngvVTgdZd9gKq6Gn/t
-         jHoyRFQRNFNA+TseGZYKIsSYd4K/zk+Mn+LvlMRPwmXNo/Xe+A+tge1nVKqRGYohjCRE
-         LKfWAuXpyZnKZSiojtR/FVgGa3Qkiof15CDWFMvtTLK1jIgm5Y6A/Pt4nRnHsJ2IHL6u
-         /Kjw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CnBhoFWrprIDN00i9AYEpJ0QWAj8a6NyJSnQAwk3nKA=;
+        b=bVAl9fYOg0wza5dd/3tsnmIXV42c6nLllLNKNTFK8PjWan+hZljgOF+GzgjWbmw7GO
+         5wHgbTeo+R1TJnD4EdKyvTWm/6pWTDf6wuuIyllBCRwn85yFk6XJzpuZDvriihbyFd8b
+         6TO336OedwDKN+td71Uk0A/l7KGkJmNqK/eCB/DpYDMVcTk/INOPrZjCyb6psMpSaFXF
+         ycU3t8B+r2ryjj3NMZklGbquNyFKNn/byEEOcfiDNQDgM3+eLN0vdg5onuY0bGjDdS9V
+         fOqq2o29rJUykd+ke34BnoiKhMxK5x8O0G4cQ01iE8HUgmr0MVzyAP9Ds/jRtnQsX+7l
+         mQZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m3bZHQbkUK7ru+mSIlVCeklpmkkabE1NV08rauGz/SA=;
-        b=ZtmVHMf4oBiT1DTcd0cUOciWsnCysbQUMhjvqdV+8jF9KJrqYD/8HCxoKNYxAa7E/M
-         QKfS1swlrzipLm+gSH78drh13syKR/8XW/fCiAKitXdLNDwx9C8dEDnV1LYzeCjA1sA7
-         pN9Bl/5y0Pi3U0tMbMlwsUHHeMoTD4/zfVxptOqtHXZTFc+8sNSNzdP+OaztR6s6oucJ
-         9fR/TXtj/AVxjbP2HKdxYG90MoKudizmuF6KQqiKfwaelsG1tDeslbLTXt5CpwrdC9hK
-         SJBjhlpQju0l52to7no/8qbO8lMInAwcTj5E/ms73G1zngfD3dOJFEpcdqEpnOnnBVdN
-         +CjA==
-X-Gm-Message-State: AOAM532KLY1hnTXmJZD/PFAo8gFuxgzjKIprkfi3FSPI6vUq47Dly6A6
-        CbzlgLxhwXgzhkJDw0yE990F/dYwopyAKK7N5HBA
-X-Google-Smtp-Source: ABdhPJxjQNf2tUYMG8mTbfyZlnlvWwxh2T296na0R444Fnqj3QwzjsW5Kea1i/+9tcu0OeYYDuxkPOxpkx+bIs7B5pc=
-X-Received: by 2002:a17:906:7c46:: with SMTP id g6mr20387671ejp.178.1598535017320;
- Thu, 27 Aug 2020 06:30:17 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CnBhoFWrprIDN00i9AYEpJ0QWAj8a6NyJSnQAwk3nKA=;
+        b=VIuROTpsTuj++u1wKNJMExXCEyNN7S6mWAcBKjFJep8qOygrxs1lc9Et4gZxpxIlXp
+         H9OQfd4Z49TgmQ/YrjuHneGfE/Rs95D6zp5cSDUmTtJg6qd8bZDlSZgyG4zEwgPJU5lD
+         GcoVtUlbnv9oJVcIcVhwgt+Jj+rsuXjy453Tj1uQ9RX7GiW0sWnJL0CpuCcCKzMXkJF3
+         gzFCGAENO+wkC0u+HVw7/HtbFY/SU/jE5BUIJR0oVNQrkIesULhmo6NwjBpQsiQQhrJt
+         RCzeNCaqhflJtceJzWOfVD2fhEcFcrOcGjgD1/HRrchVlgupSXJSe7YCkIOtrNARv/Yg
+         GAcg==
+X-Gm-Message-State: AOAM532X/ocg/+RAedHCLxVb+YCTlK6FQx2Q3uwC7BIbgq+WV9BG9fB6
+        PdH5J5dfBq+TDr++KCvG0KF+6Q==
+X-Google-Smtp-Source: ABdhPJzghwmF7BWi41naSgeIRR+oSU925DS1i8kyQhq5YclNstFArZhHJGZY3RCecBjbuL+khXKqXw==
+X-Received: by 2002:a5d:4701:: with SMTP id y1mr21181346wrq.416.1598535135779;
+        Thu, 27 Aug 2020 06:32:15 -0700 (PDT)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id g14sm4873096wmk.37.2020.08.27.06.32.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 06:32:14 -0700 (PDT)
+Subject: Re: [PATCH] interconnect: Show bandwidth for disabled paths as zero
+ in debugfs
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Evan Green <evgreen@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>
+References: <20200729104933.1.If8e80e4c0c7ddf99056f6e726e59505ed4e127f3@changeid>
+ <20200825000846.GC486007@google.com>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <ef2fa54c-7a20-8d3a-67d2-b26f70ac80c1@linaro.org>
+Date:   Thu, 27 Aug 2020 16:32:14 +0300
 MIME-Version: 1.0
-References: <CAHC9VhRuvK55JVyHOxckThbRQ7sCwkeZsudwCaBo2f5G4g11VA@mail.gmail.com>
- <20200824132252.31261-1-peter.enderborg@sony.com> <20200824132252.31261-2-peter.enderborg@sony.com>
- <CAHC9VhR8PscKpA5BrgTNj8cq_eQ6svqru6UXidc=v5+Ha+PM7Q@mail.gmail.com>
- <6cbe5d27-ebb2-70a6-bad4-31c9f310eff2@sony.com> <CAHC9VhRGaE4FwE8iXo_zeAPdimE9ryMR+r4Jcq=ZpF_2aTJxzQ@mail.gmail.com>
- <59fa190f-37c0-79f3-ea46-8f821d820e1c@sony.com>
-In-Reply-To: <59fa190f-37c0-79f3-ea46-8f821d820e1c@sony.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 27 Aug 2020 09:30:05 -0400
-Message-ID: <CAHC9VhRE94YVK5bTcqqbNYJu-EwjbcwjSFgqV8jkyLn9HD39Ag@mail.gmail.com>
-Subject: Re: [RFC PATCH] selinux: Add denied trace with permssion filter
-To:     peter enderborg <peter.enderborg@sony.com>
-Cc:     linux-kernel@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200825000846.GC486007@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 11:06 AM peter enderborg
-<peter.enderborg@sony.com> wrote:
-> On 8/26/20 4:45 PM, Paul Moore wrote:
-> > On Wed, Aug 26, 2020 at 10:34 AM peter enderborg
-> > <peter.enderborg@sony.com> wrote:
-> >> On 8/26/20 3:42 PM, Paul Moore wrote:
-> >>> On Mon, Aug 24, 2020 at 9:23 AM Peter Enderborg
-> >>> <peter.enderborg@sony.com> wrote:
-> >>>> This adds tracing of all denies. They are grouped with trace_seq for
-> >>>> each audit.
-> >>>>
-> >>>> A filter can be inserted with a write to it's filter section.
-> >>>>
-> >>>> echo "permission==\"entrypoint\"" > events/avc/selinux_denied/filter
-> >>>>
-> >>>> A output will be like:
-> >>>>           runcon-1046  [002] .N..   156.351738: selinux_denied:
-> >>>>           trace_seq=2 result=-13
-> >>>>           scontext=system_u:system_r:cupsd_t:s0-s0:c0.
-> >>>>           c1023 tcontext=system_u:object_r:bin_t:s0
-> >>>>           tclass=file permission=entrypoint
-> >>>>
-> >>>> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
-> >>>> ---
-> >>>>  include/trace/events/avc.h | 37 +++++++++++++++++++++++++++++++++++++
-> >>>>  security/selinux/avc.c     | 27 +++++++++++++++++++++++++--
-> >>>>  2 files changed, 62 insertions(+), 2 deletions(-)
-> >>> My most significant comment is that I don't think we want, or need,
-> >>> two trace points in the avc_audit_post_callback() function.  Yes, I
-> >>> understand they are triggered slightly differently, but from my
-> >>> perspective there isn't enough difference between the two tracepoints
-> >>> to warrant including both.  However, while the tracepoints may be
-> >> We tried that but that was problematic too.
-> > My apologies if I was on that thread, but can you remind me why it was
-> > a problem?  Why can't we use a single tracepoint to capture the AVC
-> > information?
->
-> The problem is parsing the event.
->
-> https://lkml.org/lkml/2020/8/18/842
->
-> https://lkml.org/lkml/2020/8/21/526
->
-> and the "single list" version
->
-> https://lkml.org/lkml/2020/8/17/1346
->
-> With this patch we follow standard message format so no plugin should be needed.
+Hi Matthias,
 
-I'm evidently missing something very fundamental (likely), and/or I'm
-just not communicating very clearly (also likely), because the above
-links don't appear to make any sense with respect to my question.
+Thanks for the patch!
 
-Let me try a reset ... Why can't we basically take the
-"selinux_denied" TRACE_EVENT implementation in your patch and use it
-to replace the "selinux_audited" TRACE_EVENT in the selinux/next tree
-(of course with the necessary changes to the AVC callback code)?
+On 8/25/20 03:08, Matthias Kaehlcke wrote:
+> On Wed, Jul 29, 2020 at 10:50:12AM -0700, Matthias Kaehlcke wrote:
+>> For disabled paths the 'interconnect_summary' in debugfs currently shows
+>> the orginally requested bandwidths. This is confusing, since the bandwidth
+>> requests aren't active. Instead show the bandwidths for disabled
+>> paths/requests as zero.
+>>
+>> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> 
+> ping, any comments on this?
+> 
 
-If the "selinux_denied" implementation is valid from a tracing point
-of view, why can we not do this?  Of course if the "selinux_denied"
-implementation is not a valid TRACE_EVENT then I'm not sure why this
-was suggested for SELinux :)
+Looks good to me! Just in case, I'll also add:
+Fixes: 7d374b209083 ("interconnect: Add helpers for enabling/disabling a path")
 
--- 
-paul moore
-www.paul-moore.com
+Thanks,
+Georgi
