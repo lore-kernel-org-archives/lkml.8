@@ -2,89 +2,132 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AC2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC97C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F226A22BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:22:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598512936;
-	bh=xqpEWCNUHC36j728axPvEzv4x72zk9bh91GMKmUqGRg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=xJwmTw7ODhAJs09fW4R0dzxPFZxGOxPuphoiL7PVIcMPDBwYadCoIEZxldWo25TNw
-	 4c2aTiFfRDz2cqyuQzqProu6IPlemHXDk1Y7DSsDuLJkjMvXND23HWtHBXBqaBieT/
-	 t/JriW738Hki296qfGEX57SQyPWjoCkf40FTwHqM=
+	by mail.kernel.org (Postfix) with ESMTP id EA36222BEB
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:22:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cAgk5+wH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbgH0HWP (ORCPT
+        id S1728182AbgH0HW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:22:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726882AbgH0HVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:21:52 -0400
-Received: from mail.kernel.org (ip5f5ad5a8.dynamic.kabel-deutschland.de [95.90.213.168])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F19322BEA;
-        Thu, 27 Aug 2020 07:21:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598512912;
-        bh=xqpEWCNUHC36j728axPvEzv4x72zk9bh91GMKmUqGRg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GBFFMVA9Yi9eVLz+FfgGXh8a2EbChvc6bg/FWEn5JZ3Y0EXKC2ceVCb+59caB53ta
-         XxZ4B+r5agRbEce4vUdZCGco9XI7yR9tcJjGyHEtxY+pxR3PZUc1fYdXeMERwAG8wN
-         AMBjNd/tqeiqnpdcGLuuYwlGBAAxIQ6GFB6B44Yg=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kBCEI-002s5B-6T; Thu, 27 Aug 2020 09:21:50 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v10 0/4] Add a glossary for the media subsystem
-Date:   Thu, 27 Aug 2020 09:21:44 +0200
-Message-Id: <cover.1598512802.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Thu, 27 Aug 2020 03:22:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbgH0HW0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:22:26 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C670C061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:22:26 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id b9so3847134oiy.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:22:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=nHYyDnDGU0SstXAm4qaNf6rFQtn/4uEmUBDoFdDHiDI=;
+        b=cAgk5+wHgubtgnNdBBZNCrVs6B6Nx05jKGBCcKZxZr5GenekXuvXzpC84SZuhInHPw
+         M8YECkQo+6ANeLWcIlK39VqoBvYWexpUBWUBokrl2BscDUHF2hbjUrokiTysi+ylo4Z6
+         oMpEHD8nh+FXAYWuAgynRfvSK0SLhkuLs7NCdGySSe2FCeL4juT9hHXZaCFNFO5/RQgt
+         w6gsjsCuSJI/eeIlWrvTIoWDd6wJLQYcvl8tFN21KyFZHUpK0sEwVXIjurH2RulajoG5
+         ALrvRtS8VOZdM7ruX1XNXAow8KCQH3I0qElMj4969Q+gjvqJH/zGMfwLr2f3nfYqX+mN
+         ZOcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=nHYyDnDGU0SstXAm4qaNf6rFQtn/4uEmUBDoFdDHiDI=;
+        b=o0G4LLhMYpTVb4sjdLyMmInn1BDISIBLuNWuOdMVTPaCF4qPbdt/ZNirlw7BPTBBx+
+         v4qSOfZpBB+hh5UTYszPZfk6U9EUl54qGgXAVME5pac/gvkLpcf7hOr+d13SWMbJJByC
+         aYV9q3qtT5buIwaVg/RtD08hmwDX8Ymy5I8VZCkhP24I0kNcC3Sem+3IQuJCmT20+xY5
+         MCGTQPNuUpIw4IZIZh0cFeRcLERm2yLx38q1f+eR/Btx6meJQbOrOHaXgp9Qr7VC+/qb
+         aEchBY6XctbR0DeT+JxFk5E/EE2UPpAvkVnuuAJDGdHjsNczXxiMjjD2Qphb+xOwN+Uv
+         TqdQ==
+X-Gm-Message-State: AOAM530aCeE4hEtXwrprxSGd5K7m8Rm8PDyqbsJF3ANYSK6x9m4eImWl
+        e7qGpjaHX+awxf+g9bTf/LCGBNmEj/8peBvPKBA=
+X-Google-Smtp-Source: ABdhPJyw1DVjlkfy2n9wlQ6tG0Kkp9FMfkL5isxbfsnOGkxBIdIXCrmYwkIgB2YXkoRCLKSwlglwOKSB1q8PUj7qJL0=
+X-Received: by 2002:a05:6808:311:: with SMTP id i17mr6336757oie.72.1598512944261;
+ Thu, 27 Aug 2020 00:22:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200826201420.3414123-1-ndesaulniers@google.com>
+In-Reply-To: <20200826201420.3414123-1-ndesaulniers@google.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Thu, 27 Aug 2020 09:22:13 +0200
+Message-ID: <CA+icZUUKqMaN5rUjz+U9itZ9-3_4EoqdBTP+41+WUjr=UzPN-g@mail.gmail.com>
+Subject: Re: [PATCH] compiler-clang: add build check for clang 10.0.1
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are too many technical terms at the media subsystem, and sometimes
-the same thing is refered differently at the documentation and on the ML
-and IRC discussions.
+On Wed, Aug 26, 2020 at 10:14 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> During Plumbers 2020, we voted to just support the latest release of
+> Clang for now.  Add a compile time check for this.
+>
+> Older clang's may work, but we will likely drop workarounds for older
+> versions.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/9
+> Link: https://github.com/ClangBuiltLinux/linux/issues/941
+> Suggested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Let's add a glossary to the uAPI documentation, in order to start using
-a common vocabulary at the subsystem's discussion and to let things
-clearer for people trying to understand the subsystem.
+Nice to see This Is Happening!
 
-I'm pretty sure that this document doesn't cover everything, but it can
-(and should) be improved overtime.
+See also my other replies to Kees and Nathan comments.
 
-On version 10, I addressed the comments from Hans (minor adjustments
-and typos). Also, two patches were folded together.
+Acked-by: Sedat Dilek <sedat.dilek@gmail.com>
 
-Mauro Carvalho Chehab (4):
-  media: open.rst: better document device node naming
-  media: open.rst: remove the minor number range
-  media: docs: add glossary.rst with common terms used at V4L2 spec
-  media: open.rst: document mc-centric and video-node-centric
+- Sedat -
 
- .../userspace-api/media/glossary.rst          | 216 ++++++++++++++++++
- Documentation/userspace-api/media/index.rst   |   3 +
- .../userspace-api/media/v4l/open.rst          | 110 +++++++--
- 3 files changed, 315 insertions(+), 14 deletions(-)
- create mode 100644 Documentation/userspace-api/media/glossary.rst
-
--- 
-2.26.2
-
-
+> ---
+>  include/linux/compiler-clang.h | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
+> index cee0c728d39a..7338d3ffd240 100644
+> --- a/include/linux/compiler-clang.h
+> +++ b/include/linux/compiler-clang.h
+> @@ -3,6 +3,14 @@
+>  #error "Please don't include <linux/compiler-clang.h> directly, include <linux/compiler.h> instead."
+>  #endif
+>
+> +#define CLANG_VERSION (__clang_major__ * 10000 \
+> +                    + __clang_minor__ * 100    \
+> +                    + __clang_patchlevel__)
+> +
+> +#if CLANG_VERSION < 100001
+> +# error Sorry, your compiler is too old - please upgrade it.
+> +#endif
+> +
+>  /* Compiler specific definitions for Clang compiler */
+>
+>  /* same as gcc, this was present in clang-2.6 so we can assume it works
+> --
+> 2.28.0.297.g1956fa8f8d-goog
+>
