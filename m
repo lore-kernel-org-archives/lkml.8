@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB788C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D4E4C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF3A522B4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAD7B207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:50:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgH0GuT (ORCPT
+        id S1727968AbgH0Guk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:50:19 -0400
-Received: from mailrelay116.isp.belgacom.be ([195.238.20.143]:45553 "EHLO
+        Thu, 27 Aug 2020 02:50:40 -0400
+Received: from mailrelay116.isp.belgacom.be ([195.238.20.143]:45576 "EHLO
         mailrelay116.isp.belgacom.be" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726123AbgH0GuS (ORCPT
+        by vger.kernel.org with ESMTP id S1726123AbgH0Guk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 02:50:18 -0400
-IronPort-SDR: 5SjhM9jq+1JRj0Our1dMKcL24jpI1/OXw7rlQ/6g6ZCXZXzJV3mB1eD8hKWitGz30rJ4ViYCm+
- G540Vr/MuDSwRBBoLPmHiAbUq5SxYhSSsoplVD3PhVKesePh5rWHIoAf2mtYzjFY/NnIqrsUHp
- yuu/gmtmOv6G7EPkWjZ/SI80IJSkifBO/cA4xsRXcfhUljxcsvPQX691lo4e7xHENgvkOoYc9W
- JplH2z+Ud3VHLRw9gpqNBXx0ETexXseOwKfzfro/OTffuvMvLWhfsSbYeiqXzQLuIWvbDDU/2T
- iRU=
+        Thu, 27 Aug 2020 02:50:40 -0400
+IronPort-SDR: GRLZ7WcFO6WVt6F6tdr/XT/maDaktNshkCXAQttBEndOQMdR+6zw7vGAjgtLKHV1SLTCfuOVv4
+ 9y/XC+5kbFOdmFIs9Ec2IL0k6F+PmTsWvJ7c6pVeY1Kdvtcp8Wm8mMV8s8tQkRNJa+JHdk2MDl
+ L6AAleUCBlg2mhawADrbcgHCxYJEw+WbIibH2yDq/tSZW8q1tv5xym0Jbjufwlugv2aCHIws20
+ bOlmG0TsCZ1fCU7NRP5rYqOl51BA2C3/zxES3gNNQCKg+WHiRql3tAKLiHaZLcAjm3v2MK2HAO
+ fXQ=
 X-Belgacom-Dynamic: yes
-IronPort-PHdr: =?us-ascii?q?9a23=3AbPsOnROZfSOiopfUEG4l6mtUPXoX/o7sNwtQ0K?=
+IronPort-PHdr: =?us-ascii?q?9a23=3AmxkVPxNXUp7UKYv6aqgl6mtUPXoX/o7sNwtQ0K?=
  =?us-ascii?q?IMzox0K/z4psbcNUDSrc9gkEXOFd2Cra4d1ayP6furADRcqb+681k6OKRWUB?=
  =?us-ascii?q?EEjchE1ycBO+WiTXPBEfjxciYhF95DXlI2t1uyMExSBdqsLwaK+i764jEdAA?=
  =?us-ascii?q?jwOhRoLerpBIHSk9631+ev8JHPfglEnjWwba5zIRmssAndqMcbjYR/JqotxR?=
@@ -53,25 +53,25 @@ IronPort-PHdr: =?us-ascii?q?9a23=3AbPsOnROZfSOiopfUEG4l6mtUPXoX/o7sNwtQ0K?=
  =?us-ascii?q?d19gHVT6DTnkmUjaehduxI0ifH+k+YznuIsV0eWgMmAvaNZmwWekaD9Yex3U?=
  =?us-ascii?q?jFVbL7Ubk=3D?=
 X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2CCBAD4Vkdf/xCltltfgRCBQ4EeglB?=
- =?us-ascii?q?fjTiSS4pWhywLAQEBAQEBAQEBNAECBAEBhEyCOyU3Bg4CAwEBAQMCBQEBBgE?=
- =?us-ascii?q?BAQEBAQUEAYYPRYI3IoNSASMjgT8SgyaCWCmzTYQQgUODRYFCgTiIJ4UZgUE?=
- =?us-ascii?q?/gRGDToQEhjAEtlKCbYMMhFySNg8hgnWdTy2SHqFcgXtNIBiDJFAZDZxoQjA?=
- =?us-ascii?q?3AgYKAQEDCVcBPQGNTYJGAQE?=
-X-IPAS-Result: =?us-ascii?q?A2CCBAD4Vkdf/xCltltfgRCBQ4EeglBfjTiSS4pWhywLA?=
- =?us-ascii?q?QEBAQEBAQEBNAECBAEBhEyCOyU3Bg4CAwEBAQMCBQEBBgEBAQEBAQUEAYYPR?=
- =?us-ascii?q?YI3IoNSASMjgT8SgyaCWCmzTYQQgUODRYFCgTiIJ4UZgUE/gRGDToQEhjAEt?=
- =?us-ascii?q?lKCbYMMhFySNg8hgnWdTy2SHqFcgXtNIBiDJFAZDZxoQjA3AgYKAQEDCVcBP?=
- =?us-ascii?q?QGNTYJGAQE?=
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2DgBgD4Vkdf/xCltltfgRCBRYEcglB?=
+ =?us-ascii?q?fjTiSS5ICCwEBAQEBAQEBATQBAgQBAYRMgjslOBMCAwEBAQMCBQEBBgEBAQE?=
+ =?us-ascii?q?BAQUEAYYPRUMBDAGBZiKDRwsBIyOBPxKDJoJYKbMaM4QQgUODRYFCgTgBiCa?=
+ =?us-ascii?q?FGYFBP4RfijQEj26KK5w5gm2DDIRckjYPIaBELZIeoV2Bek0gGIMkUBkNnGh?=
+ =?us-ascii?q?CMDcCBgoBAQMJVwE9AYUginMBAQ?=
+X-IPAS-Result: =?us-ascii?q?A2DgBgD4Vkdf/xCltltfgRCBRYEcglBfjTiSS5ICCwEBA?=
+ =?us-ascii?q?QEBAQEBATQBAgQBAYRMgjslOBMCAwEBAQMCBQEBBgEBAQEBAQUEAYYPRUMBD?=
+ =?us-ascii?q?AGBZiKDRwsBIyOBPxKDJoJYKbMaM4QQgUODRYFCgTgBiCaFGYFBP4RfijQEj?=
+ =?us-ascii?q?26KK5w5gm2DDIRckjYPIaBELZIeoV2Bek0gGIMkUBkNnGhCMDcCBgoBAQMJV?=
+ =?us-ascii?q?wE9AYUginMBAQ?=
 Received: from 16.165-182-91.adsl-dyn.isp.belgacom.be (HELO localhost.localdomain) ([91.182.165.16])
-  by relay.skynet.be with ESMTP; 27 Aug 2020 08:50:17 +0200
+  by relay.skynet.be with ESMTP; 27 Aug 2020 08:50:35 +0200
 From:   Fabian Frederick <fabf@skynet.be>
 To:     davem@davemloft.net, kuba@kernel.org
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Fabian Frederick <fabf@skynet.be>
-Subject: [PATCH 4/7 net-next] vxlan: check rtnl_configure_link return code correctly
-Date:   Thu, 27 Aug 2020 08:50:01 +0200
-Message-Id: <20200827065001.5734-1-fabf@skynet.be>
+Subject: [PATCH 5/7 net-next] vxlan: add VXLAN_NL2FLAG macro
+Date:   Thu, 27 Aug 2020 08:50:19 +0200
+Message-Id: <20200827065019.5787-1-fabf@skynet.be>
 X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -80,26 +80,182 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rtnl_configure_link is always checked if < 0 for error code.
+Replace common flag assignment with a macro.
+This could yet be simplified with changelink/supported but it would
+remove clarity
 
 Signed-off-by: Fabian Frederick <fabf@skynet.be>
 ---
- drivers/net/vxlan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/vxlan.c | 113 +++++---------------------------------------
+ include/net/vxlan.h |  10 ++++
+ 2 files changed, 23 insertions(+), 100 deletions(-)
 
 diff --git a/drivers/net/vxlan.c b/drivers/net/vxlan.c
-index 14f903d09c010..1e9ab1002281c 100644
+index 1e9ab1002281c..e9b561b9d23e1 100644
 --- a/drivers/net/vxlan.c
 +++ b/drivers/net/vxlan.c
-@@ -3890,7 +3890,7 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
+@@ -4034,14 +4034,7 @@ static int vxlan_nl2conf(struct nlattr *tb[], struct nlattr *data[],
+ 	if (data[IFLA_VXLAN_TTL])
+ 		conf->ttl = nla_get_u8(data[IFLA_VXLAN_TTL]);
+ 
+-	if (data[IFLA_VXLAN_TTL_INHERIT]) {
+-		err = vxlan_nl2flag(conf, data, IFLA_VXLAN_TTL_INHERIT,
+-				    VXLAN_F_TTL_INHERIT, changelink, false,
+-				    extack);
+-		if (err)
+-			return err;
+-
+-	}
++	VXLAN_NL2FLAG(IFLA_VXLAN_TTL_INHERIT, VXLAN_F_TTL_INHERIT, changelink, false);
+ 
+ 	if (data[IFLA_VXLAN_LABEL])
+ 		conf->label = nla_get_be32(data[IFLA_VXLAN_LABEL]) &
+@@ -4061,37 +4054,10 @@ static int vxlan_nl2conf(struct nlattr *tb[], struct nlattr *data[],
+ 	if (data[IFLA_VXLAN_AGEING])
+ 		conf->age_interval = nla_get_u32(data[IFLA_VXLAN_AGEING]);
+ 
+-	if (data[IFLA_VXLAN_PROXY]) {
+-		err = vxlan_nl2flag(conf, data, IFLA_VXLAN_PROXY,
+-				    VXLAN_F_PROXY, changelink, false,
+-				    extack);
+-		if (err)
+-			return err;
+-	}
+-
+-	if (data[IFLA_VXLAN_RSC]) {
+-		err = vxlan_nl2flag(conf, data, IFLA_VXLAN_RSC,
+-				    VXLAN_F_RSC, changelink, false,
+-				    extack);
+-		if (err)
+-			return err;
+-	}
+-
+-	if (data[IFLA_VXLAN_L2MISS]) {
+-		err = vxlan_nl2flag(conf, data, IFLA_VXLAN_L2MISS,
+-				    VXLAN_F_L2MISS, changelink, false,
+-				    extack);
+-		if (err)
+-			return err;
+-	}
+-
+-	if (data[IFLA_VXLAN_L3MISS]) {
+-		err = vxlan_nl2flag(conf, data, IFLA_VXLAN_L3MISS,
+-				    VXLAN_F_L3MISS, changelink, false,
+-				    extack);
+-		if (err)
+-			return err;
+-	}
++	VXLAN_NL2FLAG(IFLA_VXLAN_PROXY, VXLAN_F_PROXY, changelink, false);
++	VXLAN_NL2FLAG(IFLA_VXLAN_RSC, VXLAN_F_RSC, changelink, false);
++	VXLAN_NL2FLAG(IFLA_VXLAN_L2MISS, VXLAN_F_L2MISS, changelink, false);
++	VXLAN_NL2FLAG(IFLA_VXLAN_L3MISS, VXLAN_F_L3MISS, changelink, false);
+ 
+ 	if (data[IFLA_VXLAN_LIMIT]) {
+ 		if (changelink) {
+@@ -4102,13 +4068,7 @@ static int vxlan_nl2conf(struct nlattr *tb[], struct nlattr *data[],
+ 		conf->addrmax = nla_get_u32(data[IFLA_VXLAN_LIMIT]);
  	}
  
- 	err = rtnl_configure_link(dev, NULL);
--	if (err)
-+	if (err < 0)
- 		goto unlink;
+-	if (data[IFLA_VXLAN_COLLECT_METADATA]) {
+-		err = vxlan_nl2flag(conf, data, IFLA_VXLAN_COLLECT_METADATA,
+-				    VXLAN_F_COLLECT_METADATA, changelink, false,
+-				    extack);
+-		if (err)
+-			return err;
+-	}
++	VXLAN_NL2FLAG(IFLA_VXLAN_COLLECT_METADATA, VXLAN_F_COLLECT_METADATA, changelink, false);
  
- 	if (f) {
+ 	if (data[IFLA_VXLAN_PORT_RANGE]) {
+ 		if (!changelink) {
+@@ -4142,60 +4102,13 @@ static int vxlan_nl2conf(struct nlattr *tb[], struct nlattr *data[],
+ 			conf->flags |= VXLAN_F_UDP_ZERO_CSUM_TX;
+ 	}
+ 
+-	if (data[IFLA_VXLAN_UDP_ZERO_CSUM6_TX]) {
+-		err = vxlan_nl2flag(conf, data, IFLA_VXLAN_UDP_ZERO_CSUM6_TX,
+-				    VXLAN_F_UDP_ZERO_CSUM6_TX, changelink,
+-				    false, extack);
+-		if (err)
+-			return err;
+-	}
+-
+-	if (data[IFLA_VXLAN_UDP_ZERO_CSUM6_RX]) {
+-		err = vxlan_nl2flag(conf, data, IFLA_VXLAN_UDP_ZERO_CSUM6_RX,
+-				    VXLAN_F_UDP_ZERO_CSUM6_RX, changelink,
+-				    false, extack);
+-		if (err)
+-			return err;
+-	}
+-
+-	if (data[IFLA_VXLAN_REMCSUM_TX]) {
+-		err = vxlan_nl2flag(conf, data, IFLA_VXLAN_REMCSUM_TX,
+-				    VXLAN_F_REMCSUM_TX, changelink, false,
+-				    extack);
+-		if (err)
+-			return err;
+-	}
+-
+-	if (data[IFLA_VXLAN_REMCSUM_RX]) {
+-		err = vxlan_nl2flag(conf, data, IFLA_VXLAN_REMCSUM_RX,
+-				    VXLAN_F_REMCSUM_RX, changelink, false,
+-				    extack);
+-		if (err)
+-			return err;
+-	}
+-
+-	if (data[IFLA_VXLAN_GBP]) {
+-		err = vxlan_nl2flag(conf, data, IFLA_VXLAN_GBP,
+-				    VXLAN_F_GBP, changelink, false, extack);
+-		if (err)
+-			return err;
+-	}
+-
+-	if (data[IFLA_VXLAN_GPE]) {
+-		err = vxlan_nl2flag(conf, data, IFLA_VXLAN_GPE,
+-				    VXLAN_F_GPE, changelink, false,
+-				    extack);
+-		if (err)
+-			return err;
+-	}
+-
+-	if (data[IFLA_VXLAN_REMCSUM_NOPARTIAL]) {
+-		err = vxlan_nl2flag(conf, data, IFLA_VXLAN_REMCSUM_NOPARTIAL,
+-				    VXLAN_F_REMCSUM_NOPARTIAL, changelink,
+-				    false, extack);
+-		if (err)
+-			return err;
+-	}
++	VXLAN_NL2FLAG(IFLA_VXLAN_UDP_ZERO_CSUM6_TX, VXLAN_F_UDP_ZERO_CSUM6_TX, changelink, false);
++	VXLAN_NL2FLAG(IFLA_VXLAN_UDP_ZERO_CSUM6_RX, VXLAN_F_UDP_ZERO_CSUM6_RX, changelink, false);
++	VXLAN_NL2FLAG(IFLA_VXLAN_REMCSUM_TX, IFLA_VXLAN_REMCSUM_TX, changelink, false);
++	VXLAN_NL2FLAG(IFLA_VXLAN_REMCSUM_RX, VXLAN_F_REMCSUM_RX, changelink, false);
++	VXLAN_NL2FLAG(IFLA_VXLAN_GBP, VXLAN_F_GBP, changelink, false);
++	VXLAN_NL2FLAG(IFLA_VXLAN_GPE, VXLAN_F_GPE, changelink, false);
++	VXLAN_NL2FLAG(IFLA_VXLAN_REMCSUM_NOPARTIAL, VXLAN_F_REMCSUM_NOPARTIAL, changelink, false);
+ 
+ 	if (tb[IFLA_MTU]) {
+ 		if (changelink) {
+diff --git a/include/net/vxlan.h b/include/net/vxlan.h
+index 3a41627cbdfe5..8a56b7a0f75f9 100644
+--- a/include/net/vxlan.h
++++ b/include/net/vxlan.h
+@@ -290,6 +290,16 @@ struct vxlan_dev {
+ 					 VXLAN_F_UDP_ZERO_CSUM6_RX |	\
+ 					 VXLAN_F_COLLECT_METADATA)
+ 
++
++#define VXLAN_NL2FLAG(iflag, flag, changelink, changelink_supported) {   \
++	if (data[iflag]) {						 \
++		err = vxlan_nl2flag(conf, data, iflag, flag, changelink, \
++				    changelink_supported, extack);       \
++		if (err)						 \
++			return err;					 \
++	}								 \
++}
++
+ struct net_device *vxlan_dev_create(struct net *net, const char *name,
+ 				    u8 name_assign_type, struct vxlan_config *conf);
+ 
 -- 
 2.27.0
 
