@@ -2,130 +2,140 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A0DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04399C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 114EC20737
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64992177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:06:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="it1TP+nh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HGhCur1m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgH0RFy (ORCPT
+        id S1727921AbgH0RGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:05:54 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23759 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727833AbgH0RFH (ORCPT
+        Thu, 27 Aug 2020 13:06:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgH0RGi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:05:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598547906;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W/YGWSLvG6lY5R83KUArknDiX8BRYjrRNnmUZit1EZI=;
-        b=it1TP+nhbyvKMKD4sqVyQ2F5VGiXfY8qo4YyFAMugQBl3TrpEnW7rTZcB7M0woaKZ2VAaz
-        cD5Wlt+s2+PyJMwxJwnnyVfMUhc+fxK7F1YFtFFuCtzy2XddU53PCZ66qjVSN4cA5LVXFC
-        AeyZ026sMq7Roh4HzottpeSNQ0JOOXs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-574-6nczjpt-Ol2xEaivnHONIQ-1; Thu, 27 Aug 2020 13:05:04 -0400
-X-MC-Unique: 6nczjpt-Ol2xEaivnHONIQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 41B1818BFEC4;
-        Thu, 27 Aug 2020 17:05:02 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.35.206.185])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AEB3B196F3;
-        Thu, 27 Aug 2020 17:04:56 +0000 (UTC)
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@alien8.de>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>
-Subject: [PATCH 5/8] KVM: SVM: refactor exit labels in svm_create_vcpu
-Date:   Thu, 27 Aug 2020 20:04:31 +0300
-Message-Id: <20200827170434.284680-6-mlevitsk@redhat.com>
-In-Reply-To: <20200827170434.284680-1-mlevitsk@redhat.com>
-References: <20200827170434.284680-1-mlevitsk@redhat.com>
+        Thu, 27 Aug 2020 13:06:38 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35F77C061264;
+        Thu, 27 Aug 2020 10:06:38 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id b79so5154334wmb.4;
+        Thu, 27 Aug 2020 10:06:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/fFA1WLpHbnNTNwIh9B2EeU8KTOzhsZgTvYscZeUWFg=;
+        b=HGhCur1mL4dshQkU9byv+6eK1rO2nm7oO/8OP4K75mn6WMyTdMUeeIKbbnVdQFJvB4
+         cQZQ7Veom8LgedeStKQFIh9smUbJasu/TX/jSNoprLsC+ipaidHMGmEqZD7Ko11/X0+x
+         7lVh78IbsEIYOE6zpRcTCaWB1tHQLit4ddogoszLPZXZZyWBsbpsVCOuc0DxES51FJUd
+         OxwHwXlarzXo76tuWI91YYfURGnCAn2LjLqwjj/JWNgTIwea+Vy/5QDQmGlawwUHSrrA
+         3nJUd9jcf93VCqw/EYGU5oQUUgFMtIbEEKWYvxfg7mP7blU6FI94S0gqsjUTjldDkaFs
+         kCaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/fFA1WLpHbnNTNwIh9B2EeU8KTOzhsZgTvYscZeUWFg=;
+        b=G97vgbrWHUgCUFBlGESN4Lw9NTvjXd5gdatld6CdxgBM+8kL3HbWxGVsNmf0yBRU0F
+         IRwApPXmOtBd7D0DeEoHTf3sUgmpW/s9/1PLj5+ww57pSwdiZg3/IvR4fRbJpLSH0qTP
+         6CLxPPZNYvNqJJ0PM4/xa1zR8wGoPACnB/LQqs2mhdqfpQ1/xBulddd4aqWniR7v2tcc
+         UxbdPfEyDsgAkxp++Ib2mIVSBT9AbLzQEijc/CkRB6m3y+Mx0lvqTnYvU+sPv9/l3mBH
+         GfKoKZmQpzCKiwPlC4mccXrRn4z1AB0xYtyZgr2RtHJqedtPuDrR/Acr9B8BquQvUdqD
+         8nAA==
+X-Gm-Message-State: AOAM533/JT+NC0T9c3ayYTMQY62iwyPs8I+BIz5rnl8CWCS/fwEeLNrz
+        /lN6h7eBh0pGAd04yM7FQ9y18I3rBhPmFEt0
+X-Google-Smtp-Source: ABdhPJxMurd9bLa/1v0D1EHiQ6jIp4qAvIxdw+FCd+eRWkUKmFnA6sFqkDDsUT+hEcqkUxDDpW1ZUA==
+X-Received: by 2002:a7b:c0c8:: with SMTP id s8mr12206518wmh.72.1598547996825;
+        Thu, 27 Aug 2020 10:06:36 -0700 (PDT)
+Received: from medion (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id 22sm5792136wmk.10.2020.08.27.10.06.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 10:06:36 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+X-Google-Original-From: Alex Dewar <alex.dewar@gmx.co.uk>
+Date:   Thu, 27 Aug 2020 18:06:34 +0100
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] netlabel: remove unused param from audit_log_format()
+Message-ID: <20200827170634.wogybzcxux7sgefb@medion>
+References: <20200827163712.106303-1-alex.dewar90@gmail.com>
+ <CAHC9VhRgi54TXae1Wi+SSzkuy9BL7HH=pZCHL1p215M9ZXKEOA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhRgi54TXae1Wi+SSzkuy9BL7HH=pZCHL1p215M9ZXKEOA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kernel coding style suggests not to use labels like error1,error2
+On Thu, Aug 27, 2020 at 01:00:58PM -0400, Paul Moore wrote:
+> On Thu, Aug 27, 2020 at 12:39 PM Alex Dewar <alex.dewar90@gmail.com> wrote:
+> >
+> > Commit d3b990b7f327 ("netlabel: fix problems with mapping removal")
+> > added a check to return an error if ret_val != 0, before ret_val is
+> > later used in a log message. Now it will unconditionally print "...
+> > res=0". So don't print res anymore.
+> >
+> > Addresses-Coverity: ("Dead code")
+> > Fixes: d3b990b7f327 ("netlabel: fix problems with mapping removal")
+> > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+> > ---
+> >
+> > I wasn't sure whether it was intended that something other than ret_val
+> > be printed in the log, so that's why I'm sending this as an RFC.
+> 
+> It's intentional for a couple of reasons:
+> 
+> * The people who care about audit logs like to see success/fail (e.g.
+> "res=X") for audit events/records, so printing this out gives them the
+> warm fuzzies.
+> 
+> * For a lot of awful reasons that I won't bore you with, we really
+> don't want to add/remove fields in the middle of an audit record so we
+> pretty much need to keep the "res=0" there even if it seems a bit
+> redundant.
+> 
+> So NACK from me, but thanks for paying attention just the same :)
 
-Suggested-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
----
- arch/x86/kvm/svm/svm.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+Would you rather just have an explicit "res=0" in there, without looking
+at ret_val? The thing is that ret_val will *always* be zero at this point in
+the code, because, if not, the function will already have returned.
+That's why Coverity flagged it up as a redundant check.
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 290b2d0cd78e3..b617579095277 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -1196,11 +1196,11 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
- 
- 	hsave_page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
- 	if (!hsave_page)
--		goto free_page1;
-+		goto error_free_vmcb_page;
- 
- 	err = avic_init_vcpu(svm);
- 	if (err)
--		goto free_page2;
-+		goto error_free_hsave_page;
- 
- 	/* We initialize this flag to true to make sure that the is_running
- 	 * bit would be set the first time the vcpu is loaded.
-@@ -1212,11 +1212,11 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
- 
- 	svm->msrpm = svm_vcpu_init_msrpm();
- 	if (!svm->msrpm)
--		goto free_page2;
-+		goto error_free_hsave_page;
- 
- 	svm->nested.msrpm = svm_vcpu_init_msrpm();
- 	if (!svm->nested.msrpm)
--		goto free_page3;
-+		goto error_free_msrpm;
- 
- 	svm->vmcb = page_address(vmcb_page);
- 	svm->vmcb_pa = __sme_set(page_to_pfn(vmcb_page) << PAGE_SHIFT);
-@@ -1228,11 +1228,11 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
- 
- 	return 0;
- 
--free_page3:
-+error_free_msrpm:
- 	svm_vcpu_free_msrpm(svm->msrpm);
--free_page2:
-+error_free_hsave_page:
- 	__free_page(hsave_page);
--free_page1:
-+error_free_vmcb_page:
- 	__free_page(vmcb_page);
- out:
- 	return err;
--- 
-2.26.2
-
+> 
+> >  net/netlabel/netlabel_domainhash.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/net/netlabel/netlabel_domainhash.c b/net/netlabel/netlabel_domainhash.c
+> > index f73a8382c275..526762b2f3a9 100644
+> > --- a/net/netlabel/netlabel_domainhash.c
+> > +++ b/net/netlabel/netlabel_domainhash.c
+> > @@ -612,9 +612,8 @@ int netlbl_domhsh_remove_entry(struct netlbl_dom_map *entry,
+> >         audit_buf = netlbl_audit_start_common(AUDIT_MAC_MAP_DEL, audit_info);
+> >         if (audit_buf != NULL) {
+> >                 audit_log_format(audit_buf,
+> > -                                " nlbl_domain=%s res=%u",
+> > -                                entry->domain ? entry->domain : "(default)",
+> > -                                ret_val == 0 ? 1 : 0);
+> > +                                " nlbl_domain=%s",
+> > +                                entry->domain ? entry->domain : "(default)");
+> >                 audit_log_end(audit_buf);
+> >         }
+> >
+> 
+> -- 
+> paul moore
+> www.paul-moore.com
