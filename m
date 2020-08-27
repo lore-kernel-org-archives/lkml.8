@@ -2,62 +2,130 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C18BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 140AEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE3422087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE2C207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:00:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H9Avjr9T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgH0UAJ (ORCPT
+        id S1727882AbgH0UAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 16:00:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53458 "EHLO
+        Thu, 27 Aug 2020 16:00:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgH0UAI (ORCPT
+        with ESMTP id S1726120AbgH0UAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:00:08 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB8AC061264;
-        Thu, 27 Aug 2020 13:00:08 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E74A5126C36AC;
-        Thu, 27 Aug 2020 12:43:19 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 13:00:05 -0700 (PDT)
-Message-Id: <20200827.130005.1183262344042579840.davem@davemloft.net>
-To:     dhowells@redhat.com
-Cc:     netdev@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dinghao.liu@zju.edu.cn
-Subject: Re: [PATCH net] rxrpc: Fix memory leak in rxkad_verify_response()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <159854374644.1432629.4927711289531557914.stgit@warthog.procyon.org.uk>
-References: <159854374644.1432629.4927711289531557914.stgit@warthog.procyon.org.uk>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 27 Aug 2020 12:43:20 -0700 (PDT)
+        Thu, 27 Aug 2020 16:00:21 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74731C061264;
+        Thu, 27 Aug 2020 13:00:21 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id k15so4321448pfc.12;
+        Thu, 27 Aug 2020 13:00:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J7FsTR8MREGabBVt8LZ1j+20Xw6tV3sc64t+TrTmz1s=;
+        b=H9Avjr9TBzYfwPOkz9EdvQOD/Hp2R/foNgj3n1RhDeUBaZ+T5lK3N+jmOVnF21fOPt
+         cveijGliKTaLjmDGdxLWA8yVPczBusBiXh8fEduLfVMgyZ0AxHteuhJDmjK+uvJjLgPq
+         hM8m0PARzvkixd1ZpgNhwBjSF1Ql6JaTzlrCF6hmmq+YjKNxQIvus1kjO8clKsH8C/t2
+         Nr82ezEM0MgwJqZL7nrR3nrQCfjaqM4GPuz/FwXoB+2fw+2pY2HJ58nma+QCs85J+WsJ
+         mBjjdnKmcvQsh0zyRUoV3RFVkHHilb03CsDzzWN0tKOzpTSWidOkEcJRc4N+Npaqr7Eh
+         iyLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J7FsTR8MREGabBVt8LZ1j+20Xw6tV3sc64t+TrTmz1s=;
+        b=fbeD/6r7Vl27Y2IqIeZ6zvwNxmU23eLlH3MsoN/g240zWVGH/HGJIdL8f/BZ8WCEQt
+         Yre5rFnP7qrynbF9l+8PxTN7t3r4wbX72Yr838hFTdf0xYzd9Mq269xUf54aQ/fT4VAv
+         HFDEKIspaFNBhYTl53aFTT0qH6jnz/T+9a+02MsZyyTDUbEan0fvy5PMTu9R3YseKS22
+         7b0VCiOfXpwO3A9pn0Cf7Li+zsWUIVl/6g2zPhGAq9O8ARlShglQsKw2+JdZXACN00R9
+         LNUxHB33T4oNXukKMNK9iGU3ZeDgYEV7d7IOyKoVNNNtTImmb+fdBXOrPYZHqV/LcG9J
+         Dx3A==
+X-Gm-Message-State: AOAM533NYVqpbWLiet/0R4FzWAJ3lUoatolrG/z6JjaHSN2ShDsdbXMs
+        hTM3wEERTS+v849sJu4X8rLU4+wBnkai9vPLmDQ=
+X-Google-Smtp-Source: ABdhPJzMVgucetaUrBARc94LCHK9ltEz39VRjcWxPvDTspL6QeAi4Dc29DqGVOxpjkKfh4YtQxfRbS/CdGszBd3FklY=
+X-Received: by 2002:a63:f24a:: with SMTP id d10mr15673608pgk.4.1598558421035;
+ Thu, 27 Aug 2020 13:00:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200827192642.1725-1-krzk@kernel.org> <20200827192642.1725-14-krzk@kernel.org>
+In-Reply-To: <20200827192642.1725-14-krzk@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 27 Aug 2020 23:00:05 +0300
+Message-ID: <CAHp75VdQYzuiXBXYBrwaLKzZDZWtyT1_kLAWVU0G7fXTi8fAGQ@mail.gmail.com>
+Subject: Re: [PATCH v2 14/18] iio: light: isl29018: Simplify with dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
-Date: Thu, 27 Aug 2020 16:55:46 +0100
+On Thu, Aug 27, 2020 at 10:28 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
 
-> From: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> 
-> Fix a memory leak in rxkad_verify_response() whereby the response buffer
-> doesn't get freed if we fail to allocate a ticket buffer.
-> 
-> Fixes: ef68622da9cc ("rxrpc: Handle temporary errors better in rxkad security")
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Applied, thank you.
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/iio/light/isl29018.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/iio/light/isl29018.c b/drivers/iio/light/isl29018.c
+> index ac8ad0f32689..2689867467a8 100644
+> --- a/drivers/iio/light/isl29018.c
+> +++ b/drivers/iio/light/isl29018.c
+> @@ -746,12 +746,9 @@ static int isl29018_probe(struct i2c_client *client,
+>         chip->suspended = false;
+>
+>         chip->vcc_reg = devm_regulator_get(&client->dev, "vcc");
+> -       if (IS_ERR(chip->vcc_reg)) {
+> -               err = PTR_ERR(chip->vcc_reg);
+> -               if (err != -EPROBE_DEFER)
+> -                       dev_err(&client->dev, "failed to get VCC regulator!\n");
+> -               return err;
+> -       }
+> +       if (IS_ERR(chip->vcc_reg))
+> +               return dev_err_probe(&client->dev, PTR_ERR(chip->vcc_reg),
+> +                                    "failed to get VCC regulator!\n");
+>
+>         err = regulator_enable(chip->vcc_reg);
+>         if (err) {
+> --
+> 2.17.1
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
