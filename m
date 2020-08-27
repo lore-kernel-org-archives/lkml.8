@@ -2,144 +2,180 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B23C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F341C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD01D207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E32CA207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 10:14:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kLi7Icac"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8XIF+kh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgH0KMl (ORCPT
+        id S1728501AbgH0KOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:12:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46016 "EHLO
+        Thu, 27 Aug 2020 06:14:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgH0KMe (ORCPT
+        with ESMTP id S1726938AbgH0KOP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 06:12:34 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53FA0C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:12:34 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 17so3121630pfw.9
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 03:12:34 -0700 (PDT)
+        Thu, 27 Aug 2020 06:14:15 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41DCCC061264;
+        Thu, 27 Aug 2020 03:14:15 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f7so4824874wrw.1;
+        Thu, 27 Aug 2020 03:14:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NJv+kX0fx+tQS4yK9UoZ8qyQVF+m9p2XpweB7RFLEmo=;
-        b=kLi7Icack7lOIO0wq/nfvgRAgBD76TneJHfLt62pddUwAvuIwFGXPrt1RPO8ERlHSo
-         jKOKr6Lrr2qByhU+y6ZmL9L813/DyrKinJcgIS7+KnjcL77/HCvBxrD4ZhmPbVAsHVIn
-         O5YKdLMrouJ3H29P/pzRpIb4owUvrYRpqQgJlBH3dcSERgXGWf/UyxE4RDoCA2o7w0ad
-         Tlu+f6TfGreAJScwgA+LinJxOc2eB9u1t427zGHYB1yHLCdJhS/hDO6U1c7GY4KEl3Xj
-         q6I7v/VS9qIH9hk9ODo0rX5fGAxRmbql8etWjJt15uj+qUnmMQ0DDhSxx2ciI6xaVGcp
-         lSgw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tJ2qBYy1J9smz6qD4q0DxxYWxBNZOLm22YIjuTjWy58=;
+        b=T8XIF+khS4jpM77nipAtN+a/XOqeLm8xxGRePhStxNqWXy8Gu4z4Zb1CfJOCXvI7en
+         qWVVlK5OZtOsctcmy5ojT08hByjmpmKQ3PbiuCXftsjw4oUEQmJ5oM+Dity207FYBjbl
+         1ZmoVCpQ7/mK6ocozChiIBfAluWAUwssRcKDO/eGvb6dmK0FRssyLyeMs3Y0SXiKhz0+
+         SzG+d5dYoBNxNuomF0+q9ZnuINlQXZFEWOMrGh1TjF0kfJFgu0XGTcb4mtiXQusMIKJu
+         UcRNJxNXbnGHfl+Ei631aBDn0Oj1oKLj64V6DAkELJ5TbWutoqWIjVjcQgoVF2Y2Rj35
+         cPrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NJv+kX0fx+tQS4yK9UoZ8qyQVF+m9p2XpweB7RFLEmo=;
-        b=EmQ7TOt50Y2ccZqO4ckA9gT+BMWqTdFnJHUVg9bSnYMoy7HYf55WY8dyMJxa+9WFJC
-         WKqbSDMP7S2kLMU/lHFr2LbeiPLY4pcQgt3Ccn0qFOPrp+DoY+Vn+ghXI5ZpKToHDy6r
-         THsUYTJ+8uastD+vKNpigxwI7k+bAS+hhtEo5e5pBmS/2y7W/2NQ78mHrAaVR1TuBUwE
-         AZ4LIbbj56UMu5J28ZhdyS/BrZj/JDnvcH+P0XsiIp2JA5cTNraozW61cj5tOsqaelEd
-         /UyG8YzXGBMHjubDD8+pLlVIysquzkuHA6EQOJg26sCJ6MDjK5g5xKiQqmu2tjOwp9Bd
-         WhQw==
-X-Gm-Message-State: AOAM533va76+t7tXIdksUmXsyGZmFuUYfEawYZkGWwDhYDggaZ7xXVgX
-        rYDvYl14g9Lr+52HckQyVfIQFg==
-X-Google-Smtp-Source: ABdhPJxcA/y5X1Cy7gMI+Ti+jy6KE1Bhf1haAh9otEUPNYOnJ/WNKO1u9FcJcYInXzwj9ZyU8C4HHg==
-X-Received: by 2002:a05:6a00:2285:: with SMTP id f5mr15977535pfe.173.1598523153812;
-        Thu, 27 Aug 2020 03:12:33 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id fv21sm1717054pjb.16.2020.08.27.03.12.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Aug 2020 03:12:32 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 15:42:31 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tJ2qBYy1J9smz6qD4q0DxxYWxBNZOLm22YIjuTjWy58=;
+        b=GCbZJs83+Yk5JXXHMh9JR9Kk6daxJjMQZhLzOTgwQUp5BsJvggNsNZOKQf75NQUytv
+         KA+XgKOcF5QEJRjOQBDsSAYv0b6Q++a+K/NkdMJ3loPQIqmnqvKAQ0ZrJkCTIgTjR7cG
+         X8okxKQvGupsGl0LG/cxxXk4gRmzDBq5YCTHS3V5drKU9p8IEjhjMLFkNEXggm5DpDyo
+         UTZDcLAgc83/yg9qrlEoygxPywqZtfbrEbe1SrJdk7uNGi/Neajlw5QaTBs05DspLeRj
+         oVFU2Jfou8FmrxCjzVUZlvAzNaLW95KgSRmbjpHM7FJOpV2uUz7beu2mm9RbWZvx1R+6
+         qDSg==
+X-Gm-Message-State: AOAM531LTucqoRpQAILn5zT/Ssw5VCFnn7JP4p1j0ccuza4VE7Ku+MpC
+        jOsdVKNRX64m+Phj2yWEJE0=
+X-Google-Smtp-Source: ABdhPJzoaFIsQ+ZYOs5pL6W9QlfgL20KwUOQGWj00SwcVaCQQLHNo9AfR5mkWRaX9EBKsqRQguNZmg==
+X-Received: by 2002:adf:8401:: with SMTP id 1mr19272710wrf.274.1598523253871;
+        Thu, 27 Aug 2020 03:14:13 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.119.187])
+        by smtp.gmail.com with ESMTPSA id b204sm4736840wmd.34.2020.08.27.03.14.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 03:14:13 -0700 (PDT)
+Subject: Re: [PATCH v21 4/4] arm64: dts: mt8183: add scp node
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Eddie Huang <eddie.huang@mediatek.com>,
+        Erin Lo <erin.lo@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
         open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        madhuparnabhowmik10@gmail.com
-Subject: Re: Kernel panic : Unable to handle kernel paging request at virtual
- address - dead address between user and kernel address ranges
-Message-ID: <20200827101231.smqrhqu5da6jlz6i@vireshk-i7>
-References: <CA+G9fYvUwH2FA9GOeA_7GYpLA31uOmEpg32VKnJ8-d5QSK4PdQ@mail.gmail.com>
- <20200827090813.fjugeqbb47fachy7@vireshk-i7>
- <CAK8P3a2zxybiMDzHXkTsT=VpHJOLkwd1=YTtCNU04vuMjZLkxA@mail.gmail.com>
+        Alexandre Courbot <acourbot@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <20191112110330.179649-1-pihsun@chromium.org>
+ <20191112110330.179649-5-pihsun@chromium.org>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <2abf8fdd-7b7c-73b0-beea-9c9ac56869dc@gmail.com>
+Date:   Thu, 27 Aug 2020 12:14:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2zxybiMDzHXkTsT=VpHJOLkwd1=YTtCNU04vuMjZLkxA@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20191112110330.179649-5-pihsun@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27-08-20, 11:48, Arnd Bergmann wrote:
-> > > [    3.680477]  dev_pm_opp_put_clkname+0x30/0x58
-> > > [    3.683431]  sdhci_msm_probe+0x284/0x9a0
+
+
+On 12/11/2019 12:03, Pi-Hsun Shih wrote:
+> From: Eddie Huang <eddie.huang@mediatek.com>
 > 
-> dev_pm_opp_put_clkname() is part of the error handling in the
-> probe function, so I would deduct there are two problems:
+> Add scp node to mt8183 and mt8183-evb
 > 
-> - something failed during the probe and the driver is trying
->   to unwind
-> - the error handling it self is buggy and tries to undo something
->   again that has already been undone.
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+> Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
 
-Right.
+Sorry I somehow oversaw this. Next time please don't doubt to ping me.
 
-> This points to Viresh's
-> d05a7238fe1c mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()
+Bjorn, do I understand correctly that you don't send emails to the list 
+informing of the inclusion of a patch/series in your tree?
 
-I completely forgot that Ulf already pushed this patch and I was
-wondering on which of the OPP core changes I wrote have done this :(
+Anyway applied now to v5.9-next/dts64 :)
 
-> Most likely this is not the entire problem but it uncovered a preexisting
-> bug.
+Thanks!
 
-I think this is.
-
-Naresh: Can you please test with this diff ?
-
-diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index b7e47107a31a..401839a97b57 100644
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -2286,7 +2286,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
-        ret = dev_pm_opp_of_add_table(&pdev->dev);
-        if (ret != -ENODEV) {
-                dev_err(&pdev->dev, "Invalid OPP table in Device tree\n");
--               goto opp_cleanup;
-+               goto opp_put_clkname;
-        }
- 
-        /* Vote for maximum clock rate for maximum performance */
-@@ -2451,6 +2451,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
-                                   msm_host->bulk_clks);
- opp_cleanup:
-        dev_pm_opp_of_remove_table(&pdev->dev);
-+opp_put_clkname:
-        dev_pm_opp_put_clkname(msm_host->opp_table);
- bus_clk_disable:
-        if (!IS_ERR(msm_host->bus_clk))
-
--- 
-viresh
+> ---
+> Changes from v20 ... v14:
+>   - No change.
+> 
+> Changes from v13:
+>   - Change the size of the cfg register region.
+> 
+> Changes from v12 ... v10:
+>   - No change.
+> 
+> Changes from v9:
+>   - Remove extra reserve-memory-vpu_share node.
+> 
+> Changes from v8:
+>   - New patch.
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 11 +++++++++++
+>   arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 12 ++++++++++++
+>   2 files changed, 23 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> index 1fb195c683c3..ddb7a7ac9655 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> @@ -24,6 +24,17 @@ memory@40000000 {
+>   	chosen {
+>   		stdout-path = "serial0:921600n8";
+>   	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +		scp_mem_reserved: scp_mem_region {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0 0x50000000 0 0x2900000>;
+> +			no-map;
+> +		};
+> +	};
+>   };
+>   
+>   &auxadc {
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> index 10b32471bc7b..e582f5e6691d 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> @@ -269,6 +269,18 @@ pwrap: pwrap@1000d000 {
+>   			clock-names = "spi", "wrap";
+>   		};
+>   
+> +		scp: scp@10500000 {
+> +			compatible = "mediatek,mt8183-scp";
+> +			reg = <0 0x10500000 0 0x80000>,
+> +			      <0 0x105c0000 0 0x19080>;
+> +			reg-names = "sram", "cfg";
+> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&infracfg CLK_INFRA_SCPSYS>;
+> +			clock-names = "main";
+> +			memory-region = <&scp_mem_reserved>;
+> +			status = "disabled";
+> +		};
+> +
+>   		systimer: timer@10017000 {
+>   			compatible = "mediatek,mt8183-timer",
+>   				     "mediatek,mt6765-timer";
+> 
