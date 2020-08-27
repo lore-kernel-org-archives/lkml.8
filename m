@@ -2,126 +2,177 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C92C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D70BBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9F42177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:43:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XunWIOHV"
+	by mail.kernel.org (Postfix) with ESMTP id BF46622B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:44:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbgH0Mmt (ORCPT
+        id S1728512AbgH0Mny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 08:42:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38220 "EHLO
+        Thu, 27 Aug 2020 08:43:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728869AbgH0MXO (ORCPT
+        with ESMTP id S1728977AbgH0MXs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 08:23:14 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CDE1C061235
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 05:23:08 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id h12so3231691pgm.7
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 05:23:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wRmOM+lY0GqSNROHa6fviQnhx1T7htrFs5kxwy8CYOE=;
-        b=XunWIOHVfK46PUPdGCFBrt6DQrmEql78iGdRDQ0dSgBP6EPJpisz0AG6MSEfUeoyQj
-         /lI1wGZYoKgNcrxl3LKW3RLbNXEcrC78QEzcnUPfdHnazq2tWJ72wCR469Kh6xWUcauR
-         u9N+UjKuxt4IRdttNS3wQRF3v8JWH8b+Y9mALm0rmTs8glD8Jw/c7OTRm6uSa+7tVg2o
-         iHt3MzI9VXbVQ2/T17enKfOtCOwkE+0VIPNyAbU22DRTzsXIVN67aTRaQdAZumBCJzST
-         VFEYlB2yVkK/oGveiTrKmeJkiCGShajE4Fm2aH2CIoyfOugohZ09a3FRn2Zb7NqUZfLC
-         Qmnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wRmOM+lY0GqSNROHa6fviQnhx1T7htrFs5kxwy8CYOE=;
-        b=A/3dajj/wdYVerrb1ereCbAZvvYw9KRtsZIvzaiV3VSsUqJmACvMmlPcpoHF2X+vV8
-         4rltG7ESa31Gm905uplkH7SRXTI8H1D/896vrX9hCG4PzNuq0LhtoCM1ZmixI0poZzt7
-         Sk0CUWFokQDm/yFFzMvMUyquK/nziQbVo5cATeZTxubzJ94dSG5eBnwGRrdK32YoxXHz
-         QcpDmjbTQpOTXtQmQKe1hg26wcu8VJzFgGRVVXBtsNRHIpmcXSE66YSZu0g50LV9uP/W
-         PPtlW8qV/4nQIXDvrl3hiOu6RC6UEOY1cmBry45ZRqoQP7CXfMMnKYO6DZdCSW8YIMLQ
-         szfA==
-X-Gm-Message-State: AOAM531ssX5xtuNpCEOTGIev5D/ELuXpBFEkFwKlphueA/aJpHOM0t87
-        CgLgsWMza8ZX1KxdLgGJLgMwjlgflIa5U3U5RqDaxw==
-X-Google-Smtp-Source: ABdhPJyPMy1rnX8KIgwVSqzPqTkYUTZKABfqU1VKffDJp9ShtMn+0fBihbauCAdMKqIPYGStK6xy+LlF4EdY3vc9i3E=
-X-Received: by 2002:a63:4c:: with SMTP id 73mr14564236pga.286.1598530986286;
- Thu, 27 Aug 2020 05:23:06 -0700 (PDT)
+        Thu, 27 Aug 2020 08:23:48 -0400
+Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 937E7C061235;
+        Thu, 27 Aug 2020 05:23:47 -0700 (PDT)
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 0CE80634C87;
+        Thu, 27 Aug 2020 15:23:37 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1kBGwL-0000XK-Cs; Thu, 27 Aug 2020 15:23:37 +0300
+Date:   Thu, 27 Aug 2020 15:23:37 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v10 4/4] media: open.rst: document mc-centric and
+ video-node-centric
+Message-ID: <20200827122337.GD851@valkosipuli.retiisi.org.uk>
+References: <cover.1598512802.git.mchehab+huawei@kernel.org>
+ <ce0a0412fb21ba3256c42aa7aeceb7b33bd358ab.1598512802.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-References: <cover.1597425745.git.andreyknvl@google.com> <8a499341bbe4767a4ee1d3b8acb8bd83420ce3a5.1597425745.git.andreyknvl@google.com>
- <b7884e93-008f-6b9f-32d8-6c03c7e14243@arm.com>
-In-Reply-To: <b7884e93-008f-6b9f-32d8-6c03c7e14243@arm.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 27 Aug 2020 14:22:55 +0200
-Message-ID: <CAAeHK+x+DMs9jdeB58XaoJTO-kv+iiWT1_BuhYiJzJH-DoY9EQ@mail.gmail.com>
-Subject: Re: [PATCH 25/35] kasan: introduce CONFIG_KASAN_HW_TAGS
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ce0a0412fb21ba3256c42aa7aeceb7b33bd358ab.1598512802.git.mchehab+huawei@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 1:31 PM Vincenzo Frascino
-<vincenzo.frascino@arm.com> wrote:
->
-> Hi Andrey,
->
-> On 8/14/20 6:27 PM, Andrey Konovalov wrote:
-> > +config=C2=B7KASAN_HW_TAGS
-> > +=C2=BB bool=C2=B7"Hardware=C2=B7tag-based=C2=B7mode"
-> > +=C2=BB depends=C2=B7on=C2=B7HAVE_ARCH_KASAN_HW_TAGS
-> > +=C2=BB depends=C2=B7on=C2=B7SLUB
-> > +=C2=BB help
-> > +=C2=BB =C2=B7=C2=B7Enables=C2=B7hardware=C2=B7tag-based=C2=B7KASAN=C2=
-=B7mode.
-> > +
-> > +=C2=BB =C2=B7=C2=B7This=C2=B7mode=C2=B7requires=C2=B7both=C2=B7Memory=
-=C2=B7Tagging=C2=B7Extension=C2=B7and=C2=B7Top=C2=B7Byte=C2=B7Ignore
-> > +=C2=BB =C2=B7=C2=B7support=C2=B7by=C2=B7the=C2=B7CPU=C2=B7and=C2=B7the=
-refore=C2=B7is=C2=B7only=C2=B7supported=C2=B7for=C2=B7modern=C2=B7arm64
-> > +=C2=BB =C2=B7=C2=B7CPUs=C2=B7(MTE=C2=B7added=C2=B7in=C2=B7ARMv8.5=C2=
-=B7ISA).
-> > +
->
-> I do not thing we should make KASAN_HW_TAGS MTE specific especially becau=
-se it
-> is in the common code (e.g. SPARC ADI might want to implement it in futur=
-e).
->
-> Probably would be better to provide some indirection in the generic code =
-an
-> implement the MTE backend entirely in arch code.
->
-> Thoughts?
+Hi Mauro,
 
-I think we can reword the help text to say that it enables tag-based
-KASAN mode that is backed by the hardware in general, and mention that
-this is currently only implemented for arm64 through MTE. I don't
-think it makes sense to provide a common arch interface at this point
-to keep the code simpler. We can do that when (and if) another
-hardware backend is added.
+On Thu, Aug 27, 2020 at 09:21:48AM +0200, Mauro Carvalho Chehab wrote:
+> When we added support for omap3, back in 2010, we added a new
+> type of V4L2 devices that aren't fully controlled via the V4L2
+> device node.
+> 
+> Yet, we have never clearly documented in the V4L2 specification
+> the differences between the two types.
+> 
+> Let's document them based on the the current implementation.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  .../userspace-api/media/v4l/open.rst          | 58 +++++++++++++++++--
+>  1 file changed, 52 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/userspace-api/media/v4l/open.rst b/Documentation/userspace-api/media/v4l/open.rst
+> index b9367e02b884..e9cfbe954918 100644
+> --- a/Documentation/userspace-api/media/v4l/open.rst
+> +++ b/Documentation/userspace-api/media/v4l/open.rst
+> @@ -13,6 +13,52 @@
+>  Opening and Closing Devices
+>  ***************************
+>  
+> +.. _v4l2_hardware_control:
+> +
+> +Controlling a hardware peripheral via V4L2
+> +==========================================
+> +
+> +A V4L2 hardware peripheral is usually complex: support for it is
+> +implemented via a bridge driver and often by several additional drivers.
+
+How about this, instead:
+
+Hardware that is supported using the V4L2 uAPI often consists of multiple
+devices or peripherals, each of which have their own driver.
+
+> +The bridge driver exposes one or more V4L2 device nodes
+> +(see :ref:`v4l2_device_naming`).
+> +
+> +There are other drivers providing support for other components of
+> +the hardware, which may also expose device nodes, called V4L2 sub-devices.
+> +
+> +When such V4L2 sub-devices are exposed, they allow controlling those
+> +other hardware components - usually connected via a serial bus (like
+> +I²C, SMBus or SPI). Depending on the bridge driver, those sub-devices
+> +can be controlled indirectly via the bridge driver or explicitly via
+> +the :ref:`Media Controller <media_controller>` and via the
+> +:ref:`V4L2 sub-devices <subdev>`.
+> +
+> +The devices that require the use of the
+> +:ref:`Media Controller <media_controller>` are called **MC-centric**
+> +devices. The devices that are fully controlled via V4L2 device nodes
+> +are called **video-node-centric**.
+> +
+> +Userspace can check if a V4L2 hardware peripheral is MC-centric by
+> +calling :ref:`VIDIOC_QUERYCAP` and checking the
+> +:ref:`device_caps field <device-capabilities>`.
+> +
+> +If the device returns ``V4L2_CAP_IO_MC`` flag at ``device_caps``,
+> +then it is MC-centric, otherwise, it is video-node-centric.
+> +
+> +It is required for MC-centric hardware to identify the V4L2
+
+s/hardware/drivers/
+
+> +sub-devices and to configure the pipelines via the
+> +:ref:`media controller API <media_controller>` before using the peripheral.
+> +Also, the sub-devices' configuration shall be controlled via the
+> +:ref:`sub-device API <subdev>`.
+> +
+> +.. note::
+> +
+> +   A video-node-centric may still provide media-controller and
+> +   sub-device interfaces as well.
+> +
+> +  However, in that case the media-controller and the sub-device
+> +  interfaces are read-only and just provide information about the
+> +  device. The actual configuration is done via the video nodes.
+>  
+>  .. _v4l2_device_naming:
+>  
+> @@ -109,7 +155,7 @@ Related Devices
+>  Devices can support several functions. For example video capturing, VBI
+>  capturing and radio support.
+>  
+> -The V4L2 API creates different nodes for each of these functions.
+> +The V4L2 API creates different V4L2 device nodes for each of these functions.
+>  
+>  The V4L2 API was designed with the idea that one device node could
+>  support all functions. However, in practice this never worked: this
+> @@ -119,17 +165,17 @@ switching a device node between different functions only works when
+>  using the streaming I/O API, not with the
+>  :ref:`read() <func-read>`/\ :ref:`write() <func-write>` API.
+>  
+> -Today each device node supports just one function.
+> +Today each V4L2 device node supports just one function.
+>  
+>  Besides video input or output the hardware may also support audio
+>  sampling or playback. If so, these functions are implemented as ALSA PCM
+>  devices with optional ALSA audio mixer devices.
+>  
+>  One problem with all these devices is that the V4L2 API makes no
+> -provisions to find these related devices. Some really complex devices
+> -use the Media Controller (see :ref:`media_controller`) which can be
+> -used for this purpose. But most drivers do not use it, and while some
+> -code exists that uses sysfs to discover related devices (see
+> +provisions to find these related V4L2 device nodes. Some really complex
+> +hardware use the Media Controller (see :ref:`media_controller`) which can
+> +be used for this purpose. But several drivers do not use it, and while some
+> +code exists that uses sysfs to discover related V4L2 device nodes (see
+>  libmedia_dev in the
+>  `v4l-utils <http://git.linuxtv.org/cgit.cgi/v4l-utils.git/>`__ git
+>  repository), there is no library yet that can provide a single API
+> 
+
+-- 
+Sakari Ailus
