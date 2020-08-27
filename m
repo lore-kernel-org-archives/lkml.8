@@ -2,83 +2,90 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5171C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31465C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60FBC22B4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:49:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="FMWxyd/5"
+	by mail.kernel.org (Postfix) with ESMTP id F07332054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:49:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598539787;
+	bh=BqFUTSxUc/Ju1HCKmJR/+W5ucBL8lkWX4COp4tweWik=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=YMOmP6TRLeuRrJC1C0W+WBm6IcFbSFhiG/GzsuxtGcD+hqZMxZeL6+uUSw2iPbNoH
+	 cw79UeUB5+vglf8dSxPcVfsG3qOYOUrcLcHa3D952eASDgV7UeeY/CdfjqvO2QHl5n
+	 GRX94RNBX9Wz9Ls47N/CZL2PuPOD11A853aE/7z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgH0Otl (ORCPT
+        id S1728204AbgH0Otp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:49:41 -0400
-Received: from mout.gmx.net ([212.227.17.20]:34275 "EHLO mout.gmx.net"
+        Thu, 27 Aug 2020 10:49:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728085AbgH0N6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:58:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1598536675;
-        bh=uLRcuAAqrW07F82sdCLeqyG0DIS6eSFEXsO8Otq5bp0=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=FMWxyd/5iXXZPguaf7EKjRwG2pjmyud5WcYyk5d3zmTSl1E2kVEtgswydUbWAt04Z
-         8whhoWHz9f7gggJOApBoe6DI8hk0D1uoa+2+VlVqXkZOBwpaI+QdTaDwzmZ7ISMzCt
-         /lWrLkydxD3exYUwBPVQJ1TD9EVe88Yg0XBedEHc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [217.61.146.7] ([217.61.146.7]) by web-mail.gmx.net
- (3c-app-gmx-bap26.server.lan [172.19.172.96]) (via HTTP); Thu, 27 Aug 2020
- 15:57:55 +0200
-MIME-Version: 1.0
-Message-ID: <trinity-b7618ae5-0917-4595-81bb-51764215b02e-1598536674992@3c-app-gmx-bap26>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        HS Liao <hs.liao@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Aw: [PATCH v2] maiblox: mediatek: Fix handling of
- platform_get_irq() error
-Content-Type: text/plain; charset=UTF-8
-Date:   Thu, 27 Aug 2020 15:57:55 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <20200827073128.28389-1-krzk@kernel.org>
-References: <20200827073128.28389-1-krzk@kernel.org>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:drKYd56QSglEjBuE+8kuiQEXMZ69EFTHi5u/RppsCaMnl2/1bzI+ad4TQuZM0LpPqMNI+
- bExz9I1CKtGN34wjU1YyJSm3LBeYZfKsPeRgTyXRClOF+OWGliHzwAXMA+ay1Ks7D+mPHiPtHbzU
- K7Ew5QronW1DJL7BgSoozF64nGFtmUs1gN1Q5Cbmsj8D0iZBWQ2GkaBGD7vwnwyTTRp23etWN1fV
- Ala6BRWTs6AQTtgkQcNxFsGd2VeHOX+wQYRIBHc5NbPtEQ8KWzYB2777+aCB41SXzFtjx0nnZ5ZM
- cU=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2UK820SKAxA=:vbeSVlKXwhbcN7oKajiC5U
- 3CJwxk7wBAzk3AXJ4fc/GGxrx0mzp2YROODrLeVB01H8r8bEJ23+5MulE1Ya5ThF7nVZ7jLTZ
- 5EiwmTD2uL6xoIeSjnTo2N8uXwX+EDBa+Vf7DjGjovmwmPJSwYT3l7B7C8VAMa0QmefAgtdJm
- MNkzCWPjV/iUVAPqn5iXJxWmfHXNpnF/aQB+EsaWo2IsE66zAOajIpC+rjprzr4gHKxAXWK/0
- OO0l6eTS1Rvo4f12zHnTFBWjbI7qQwJEF4Y8bWRZhVPEJdx43zBAmRtmIGtB7Yhla4+3bShHl
- 76oyFO5bXPD1zVEF712nAZt8Jgp8RS962sDTjuPScKUif2LNz3n82zW879xdCez4RIZ078KJ2
- xuhG4IeYbs37Lb0kZe5yTXCvDP1QD24XVIKUErRXVxncixl8dsLNlMSKAy4usz4pryMEl7BGB
- 2WmbN4ZAXtxo01PUsBXfzJGRf0Ved7eZ4tmOdUGWUv+t4NuxofjC65l6Cl+ICE0O0EQVuyN46
- ZcMftG9E3nVtZiZFtrnGg4q5lySvnzklOZARVkgkvvfpSw+QSKF6p0GUlzgfSf7mceFbbLj2i
- p6c8wm1ft4WIYm3WQnSjnyr6vF5Zu3X4daci59TJY9OTbQYV6/Q22eIXWsdUxBfVT4OdQfEMI
- 1s8InPqms8jiow8NwjVs8pWSKhTtdnBQPXJT5gKWBQYM80ZgjcY+ervVV67nAAhWV1rk=
+        id S1728115AbgH0N6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 09:58:16 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3042122CAE;
+        Thu, 27 Aug 2020 13:57:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598536646;
+        bh=BqFUTSxUc/Ju1HCKmJR/+W5ucBL8lkWX4COp4tweWik=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=hwAqjMewviDxBQItQUfEfRSQgnQutlirg6Npg3CE67+3sJ7AtbLMMTew6JfkR7gYV
+         1JfGwWRwkp7eapIZJBT55NrKFD0f5ZapTZOKuulAr7LRZD6LrOgpkhYpISvAQ0d7Zg
+         Fko3qtacqdyZ0IzAiWcLHTjWYwVu0Kx0og3apI0E=
+Date:   Thu, 27 Aug 2020 14:56:50 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Akshu Agrawal <akshu.agrawal@amd.com>
+Cc:     Takashi Iwai <tiwai@suse.com>,
+        Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>, YueHaibing <yuehaibing@huawei.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+In-Reply-To: <20200826185454.5545-1-akshu.agrawal@amd.com>
+References: <20200826185454.5545-1-akshu.agrawal@amd.com>
+Subject: Re: [v2] ASoC: AMD: Clean kernel log from deferred probe error messages
+Message-Id: <159853660471.29762.8889359073042281465.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Gesendet: Donnerstag, 27. August 2020 um 09:31 Uhr
-> Von: "Krzysztof Kozlowski" <krzk@kernel.org>
-> Betreff: [PATCH v2] maiblox: mediatek: Fix handling of platform_get_irq() error
+On Thu, 27 Aug 2020 00:24:20 +0530, Akshu Agrawal wrote:
+> While the driver waits for DAIs to be probed and retries probing,
+> have the error messages at debug level instead of error.
 
-typo in subject i guess it should be "mailbox"
+Applied to
 
-regards Frank
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/1] ASoC: AMD: Clean kernel log from deferred probe error messages
+      commit: f7660445c8e7fda91e8b944128554249d886b1d4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
