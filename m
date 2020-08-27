@@ -2,91 +2,67 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC794C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82365C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96AE120786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BF9720786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:48:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgH0HrZ (ORCPT
+        id S1728372AbgH0HsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:47:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50622 "EHLO mx2.suse.de"
+        Thu, 27 Aug 2020 03:48:04 -0400
+Received: from verein.lst.de ([213.95.11.211]:37012 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgH0HrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:47:24 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 4A2A8AC1F;
-        Thu, 27 Aug 2020 07:47:55 +0000 (UTC)
-Subject: Re: [patch V2 28/46] x86/xen: Consolidate XEN-MSI init
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200826111628.794979401@linutronix.de>
- <20200826112333.420224092@linutronix.de>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <fc8d8b63-f908-2520-7cf7-42ead4aa4bd8@suse.com>
-Date:   Thu, 27 Aug 2020 09:47:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1726851AbgH0HsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:48:03 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id EC6DB68C65; Thu, 27 Aug 2020 09:47:58 +0200 (CEST)
+Date:   Thu, 27 Aug 2020 09:47:58 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Justin Sanders <justin@coraid.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Xianting Tian <xianting_tian@126.com>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org
+Subject: Re: fix block device size update serialization v2
+Message-ID: <20200827074758.GA8009@lst.de>
+References: <20200823091043.2600261-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200826112333.420224092@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200823091043.2600261-1-hch@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.08.20 13:16, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> X86 cannot store the irq domain pointer in struct device without breaking
-> XEN because the irq domain pointer takes precedence over arch_*_msi_irqs()
-> fallbacks.
-> 
-> To achieve this XEN MSI interrupt management needs to be wrapped into an
-> irq domain.
-> 
-> Move the x86_msi ops setup into a single function to prepare for this.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Jens, can you consider this for 5.9?  It reliably fixes the reported
+hangs with nvme hotremoval that we've had for a few releases.
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
-
-
-Juergen
+On Sun, Aug 23, 2020 at 11:10:40AM +0200, Christoph Hellwig wrote:
+> Hi Jens,
+> 
+> this series fixes how we update i_size for the block device inodes (and
+> thus the block device).  Different helpers use two different locks
+> (bd_mutex and i_rwsem) to protect the update, and it appears device
+> mapper uses yet another internal lock.  A lot of the drivers do the
+> update handcrafted in often crufty ways.  And in addition to that mess
+> it turns out that the "main" lock, bd_mutex is pretty dead lock prone
+> vs other spots in the block layer that acquire it during revalidation
+> operations, as reported by Xianting.
+> 
+> Fix all that by adding a dedicated spinlock just for the size updates.
+> 
+> Changes since v1:
+>  - don't call __invalidate_device under the new spinlock
+>  - don't call into the file system code from the nvme removal code
+---end quoted text---
