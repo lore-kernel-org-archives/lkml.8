@@ -2,74 +2,133 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F28C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85360C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D2E72080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64E092080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 23:30:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mdsSv4Ok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgH0XVO (ORCPT
+        id S1727913AbgH0XaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 19:21:14 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:52844 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727909AbgH0XVO (ORCPT
+        Thu, 27 Aug 2020 19:30:02 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:47858 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgH0XaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 19:21:14 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 18C9129D96;
-        Thu, 27 Aug 2020 19:21:10 -0400 (EDT)
-Date:   Fri, 28 Aug 2020 09:21:22 +1000 (AEST)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Joe Perches <joe@perches.com>
-cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Denis Efremov <efremov@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
-Subject: Re: [PATCH 17/19] z2ram: reindent
-In-Reply-To: <b88538f92386f41b938c502ae2daec5800a85dcf.camel@perches.com>
-Message-ID: <alpine.LNX.2.23.453.2008280859300.10@nippy.intranet>
-References: <8570915f668159f93ba2eb845a3bbc05f8ee3a99.camel@perches.com>         <EF673A30-F88D-4E4E-8A2B-E942153830AC@physik.fu-berlin.de> <b88538f92386f41b938c502ae2daec5800a85dcf.camel@perches.com>
+        Thu, 27 Aug 2020 19:30:00 -0400
+Received: from [192.168.1.17] (50-47-107-221.evrt.wa.frontiernet.net [50.47.107.221])
+        by linux.microsoft.com (Postfix) with ESMTPSA id E933820B7178;
+        Thu, 27 Aug 2020 16:29:59 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E933820B7178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598571000;
+        bh=wuKHk2etmpOkKZ+mX7e+4wCZgquz5pl8IyY73pe5ZGE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mdsSv4OkGJMTMEOR4egTE96ddEeTMglYTT1hGi4Mg8TENH/qtgadEXQL0r3OVgcQD
+         52TN+lI4fLsEvE8/gDF2BhNlrwpElC61jUMDzf2H9Y4Cxf2BW5W/Y49hGX5a0mV9Ws
+         CKRpea0tNFI2a/iRndFW6ApzdMv4xJh4gtCcnAm0=
+Subject: Re: [PATCH 1/4] drivers: hv: dxgkrnl: core code
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org, iourit@microsoft.com,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org
+References: <20200814123856.3880009-1-sashal@kernel.org>
+ <20200814123856.3880009-2-sashal@kernel.org>
+ <20200814125528.GA56456@kroah.com>
+From:   Iouri Tarassov <iourit@linux.microsoft.com>
+Message-ID: <58011269-e910-b3e4-2a3c-552b08c90574@linux.microsoft.com>
+Date:   Thu, 27 Aug 2020 16:29:59 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200814125528.GA56456@kroah.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 8/14/2020 5:55 AM, Greg KH wrote:
+> On Fri, Aug 14, 2020 at 08:38:53AM -0400, Sasha Levin wrote:
+> > Add support for a Hyper-V based vGPU implementation that exposes the
+> > DirectX API to Linux userspace.
+> > 
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+> Better, but what is this mess:
+>
+> > +#define ISERROR(ret)					(ret < 0)
 
-> @@ -109,34 +111,28 @@ static void get_z2ram(void)
-...
->  	}
-> -
-> -	return;
->  }
->  
+The VM bus messages return the NTSTATUS error code from the host. 
+NTSTATUS is integer and the positive values indicate success.
+The success error code needs to be returned by IOCTLs to the DxCore 
+applications. The ISERROR() macro is used in places where the NTSTATUS 
+success code could be returned from a function. "if (ret)" cannot be 
+used. I will add a comment to the macro in the next patch.
 
-It would be good to have a semantic patch for that change.
+>
+> ?
+>
+> > +#define EINTERNALERROR					EINVAL
+This macro will be removed in the next patch
+> And that?
+>
+> > +
+> > +#define DXGKRNL_ASSERT(exp)
+> > +#define UNUSED(x) (void)(x)
+The UNUSED macro will be removed.
+The DXGKRNL_ASSERT() macro will be changed to generate a memory dump and 
+BUG_ON when DXGDEBUG is enabled. It is used to catch internal errors in 
+the debug code. There will be no bugcheck in the released driver.
+>
+> Ick, no, please.
+>
+> > +#undef pr_fmt
+>
+> In a .h file?
+>
+> > +#define pr_fmt(fmt)	"dxgk:err: " fmt
+> > +#define pr_fmt1(fmt)	"dxgk: " fmt
+> > +#define pr_fmt2(fmt)	"dxgk:    " fmt
+This will be fixed in the next patch set.
+> Why?
+>
+> > +
+> > +#define DXGKDEBUG 1
+> > +/* #define USEPRINTK 1 */
+> > +
+> > +#ifndef DXGKDEBUG
+> > +#define TRACE_DEBUG(...)
+> > +#define TRACE_DEFINE(...)
+> > +#define TRACE_FUNC_ENTER(...)
+> > +#define TRACE_FUNC_EXIT(...)
+>
+> No, please do not to custom "trace" printk messages, that is what ftrace
+> is for, no individual driver should ever need to do that.
+>
+> Just use the normal dev_*() calls for error messages and the like, do
+> not try to come up with a custom tracing framework for one tiny
+> individual driver.  If every driver in kernel did that, we would have a
+> nightmare...
+I understand the concern. This will be fixed later when we learn and 
+pick the final tracing technology for the driver. The current 
+implementation allows the hardware vendors to quickly identify issues 
+without learning about ftrace. They just need to enable the WSL debug 
+console and mount debugfs.
+> thanks,
+>
+> greg k-h
+>
+Thank you for your time and good comments.
+Iouri
 
->  
-> -		if (z2ram_map[z2ram_size] == 0) {
-> +		if (z2ram_map[z2ram_size] == 0)
->  			break;
-> -		}
->  
-
-And that one.
-
-Reason being, a semantic patch only has to be debugged once, whereas 
-manual churn has to be done correctly over and over again.
-
-TBH, this kind of transformation can happen when code is displayed.
-It doesn't have to involve git at all. Otherwise, why have 5 billion 
-transistors? You'd be better off with an Amiga.
