@@ -2,87 +2,101 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98184C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54960C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6910F20786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE8520786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:49:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JWxMGUFm"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fGt2KG+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgH0HtZ (ORCPT
+        id S1728328AbgH0Htp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:49:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbgH0HtY (ORCPT
+        Thu, 27 Aug 2020 03:49:45 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:44797 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728047AbgH0Hto (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:49:24 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40298C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:49:24 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id v12so2395987lfo.13
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:49:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lElIBShK3Hp7NMxxbsrQqbzfkPcAAq5ICVuJ1mMPOCE=;
-        b=JWxMGUFmaxfU3ly/x3p4my4tdIgRs0RsCQLtN6ezg8b6eMHKZEds0Jj5fMDi4bX4Fb
-         zj1iKGc8eaOM/PITn4uff+Uzeev9nW0jBeZV/UTnwPmeL9vfF7E/NYAu2hWDpp9UNRZz
-         PIzYceRCwp+3d00tDnc1YBXOOlvfeew4cSrr2UVkZlDmDNBhWl7yDrr9oByjBpiXyJ8n
-         65y5M9BCQDNyO1sxC70TYy+I2K+yNvN1au7o11PnhcKmzruWjvQ6zHWGrbH+5U/XRTTe
-         6pmSCn2VV7T1EfBi5yW+85hE8WUieZn5+VU8RzW2ZR4FC9RIOlafdBbS0w3pytkfK96u
-         H1bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lElIBShK3Hp7NMxxbsrQqbzfkPcAAq5ICVuJ1mMPOCE=;
-        b=bZbbZIrf/+iQW0OG7Il0FFfLTe1sGWily7st3+HtfiHlZONXkEJ/VMkSHDTGuU0ilg
-         s6xBeEUQY+hKU3mPRUdEavv8SQr++EarwbCg4/fp6qWzLMBLD6+axb6+L/79tdEl5d0Q
-         Yyg8oZcn9nwbZHHBZ/ZIHOrMpN9JTCOWlqa28LaMoR0B1gNWmpNhg1PjEjxa6xY+iBPB
-         ba48/8TthS5IDlrZgtfWtf3+qVVMNApIAvtCZFQYgNoBy6BBQPhptS3wlrYJIYPuSVZZ
-         NVEeIbuI9uW2h4y4XKUs+oh8zdL65NjBgGx/iKyam6Hq3ugosL3wn0+i4OkIDDeqaoxN
-         uFfw==
-X-Gm-Message-State: AOAM530OW23ZmyrmM1E+JIUZLGriEPWjuqQkoI8w3aYAqmxD6zZL8+43
-        IcXRe5U5qiPiY36bZYR+Bn84sEXILDGiC6fCrjo=
-X-Google-Smtp-Source: ABdhPJyAzOca9gSV+IpIgIEFzJODabWI4uw61tDKkkKZgLWmurp0tXP+OWS/LvPvAuV6QNjFjl7rUODcmADUuVU5vyk=
-X-Received: by 2002:a19:7d04:: with SMTP id y4mr9303618lfc.51.1598514562719;
- Thu, 27 Aug 2020 00:49:22 -0700 (PDT)
+        Thu, 27 Aug 2020 03:49:44 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598514584; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=t5gOl7DiMwPormDKrvq/jDuEzzPigBia0L5h8NiJzbE=; b=fGt2KG+QpN/O+/v2dB7d7bVVXXl2rdGCvNwAihewTvmCgZc6GXvaQ2+Cwplho4hHcUTAd0f8
+ lZd+aTjMabiMFjpxz/ffswg2TBkFV9wHIwyZV2h6MNnp+gV18Lvhyw8g9ORa3Mvfbvwctel/
+ /CDYvaohDRM7j6kP7m/ZganZBIE=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5f47657ffb5eb2479c9e463f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 07:49:19
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 63DA4C433C6; Thu, 27 Aug 2020 07:49:19 +0000 (UTC)
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D5B5C433CA;
+        Thu, 27 Aug 2020 07:49:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0D5B5C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Ondrej Zary <linux@zary.sk>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Lee Jones <lee.jones@linaro.org>, davem@davemloft.net,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        Benjamin Reed <breed@users.sourceforge.net>,
+        Javier Achirica <achirica@users.sourceforge.net>,
+        Jean Tourrilhes <jt@hpl.hp.com>,
+        "Fabrice Bellet" <fabrice@bellet.info>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 12/30] net: wireless: cisco: airo: Fix a myriad of coding style issues
+References: <20200814113933.1903438-1-lee.jones@linaro.org>
+        <87a6ytmmhm.fsf@codeaurora.org> <20200817112706.000000f2@intel.com>
+        <202008172335.02988.linux@zary.sk>
+Date:   Thu, 27 Aug 2020 10:49:12 +0300
+In-Reply-To: <202008172335.02988.linux@zary.sk> (Ondrej Zary's message of
+        "Mon, 17 Aug 2020 23:35:02 +0200")
+Message-ID: <87v9h4le9z.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-References: <20200824232511.16485-1-luc.vanoostenryck@gmail.com>
-In-Reply-To: <20200824232511.16485-1-luc.vanoostenryck@gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 27 Aug 2020 09:49:11 +0200
-Message-ID: <CANiq72muR=59yG16-0d2gNuOZbHJYiDhRKTfKAvh9-i2NJMAHg@mail.gmail.com>
-Subject: Re: [PATCH] remove comment about sparse not supporting __has_attribute
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luc,
+Ondrej Zary <linux@zary.sk> writes:
 
-On Tue, Aug 25, 2020 at 1:25 AM Luc Van Oostenryck
-<luc.vanoostenryck@gmail.com> wrote:
+> On Monday 17 August 2020 20:27:06 Jesse Brandeburg wrote:
+>> On Mon, 17 Aug 2020 16:27:01 +0300
+>> Kalle Valo <kvalo@codeaurora.org> wrote:
+>> 
+>> > I was surprised to see that someone was using this driver in 2015, so
+>> > I'm not sure anymore what to do. Of course we could still just remove
+>> > it and later revert if someone steps up and claims the driver is still
+>> > usable. Hmm. Does anyone any users of this driver?
+>> 
+>> What about moving the driver over into staging, which is generally the
+>> way I understood to move a driver slowly out of the kernel?
 >
-> Sparse supports __has_attribute() since 2018-08-31, so the comment
-> is not true anymore but more importantly is rather confusing.
->
-> So remove it.
->
-> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+> Please don't remove random drivers.
 
-Thanks! Queuing it.
+We don't want to waste time on obsolete drivers and instead prefer to
+use our time on more productive tasks. For us wireless maintainers it's
+really hard to know if old drivers are still in use or if they are just
+broken.
 
-Cheers,
-Miguel
+> I still have the Aironet PCMCIA card and can test the driver.
+
+Great. Do you know if the airo driver still works with recent kernels?
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
