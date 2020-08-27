@@ -2,95 +2,120 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AEEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4BEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45EBC207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:28:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598531320;
-	bh=BQ2PfC14EjZcHO5/A0/xOkceEttXN7nIfJxY+G3kTLo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KM2kD7IhOZTmz0dItpk6sEe6I75GDlqwACastqtmi+eHPRuo2z+YwBZuLNAkxXsZq
-	 c/Ky40H2R+QtMZPQSxw435mKdJi+kgG4mXykpPxt+FjXyN6lBv6bp8nFh4jj8Ev6R5
-	 2ZvbP2b5cYGeOeMAu2n8E9KQJ8rryD5ZrRysXGF8=
+	by mail.kernel.org (Postfix) with ESMTP id 2EDD72177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 12:30:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nth4/rZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbgH0M2O (ORCPT
+        id S1728852AbgH0MaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 08:28:14 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43612 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728899AbgH0MCU (ORCPT
+        Thu, 27 Aug 2020 08:30:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728960AbgH0L4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 08:02:20 -0400
-Received: by mail-oi1-f194.google.com with SMTP id j21so4348967oii.10;
-        Thu, 27 Aug 2020 05:02:11 -0700 (PDT)
+        Thu, 27 Aug 2020 07:56:38 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63D29C061233
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 04:01:36 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id o184so2580692vsc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 04:01:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YjN36ux3ZCiiBlL2gD5vkxNtFHi1HK0Zk2s0f0PusEQ=;
+        b=nth4/rZi82Zdz4tORtG6KRkbO6PJcfhbUipiV7FzRSL7ARbIxYr/bK46JmHMNDbTWX
+         /cgbjFquc0bNf/O9zhcb50kBbuQT/lS/x/91HjSw/POXb2FfQGCzWKcC2DfjqUIh+aSN
+         waVMbLrc837pa9LSXJQBOpjxHx326Qd09J/H8tAMadBVGSKCnbfs+1DFxHWfcgtTAVvP
+         YXhk6Cl869ZBNCyaNJIAqpZe+3AqRVL5pSgcQXSB/W0Lpn6vS8GkQ/5PWNZzspG8BGba
+         apse2isGgrRFGohOdCM3+lUOZrnJw2U7KJg43iRhNC16HW9uDu1fhIAo8faNhAH+ngPp
+         8xeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=w87Wjrt0hH5OBUFHY4Ofs51H+e/iPgf40ZaoFuUim6c=;
-        b=qan5h1BODPXOIyL15mJe0fpHyNcBVRiaQftXM9Vd3xTvAeGwo+bu1IUJUqyFut2QZ9
-         YC0y6HpCILRka2bEKbK7Zm41fafDizTzo1C6fXHzYJdHBQEmOlTY4pJRLedStJ+6evHb
-         4UDCrvtWADVX6VFqH3GxTYyP2yj7E3h/l4MtghwsQLaMQsRQpaNLNax82//FsYSmkvPw
-         4ETGTC3MdRuG8Czt1xDlYcLviGx3SD34+5LMdEVTL/bLoOuEcwwEeYaqOqs6T2wIl3Tg
-         1yaa0lnST+R8sUADjZ4ONIBnkgQZ1uWuBzKUwYI+DxTP5za/TQJNxORwfy5UoxDcHePj
-         my7A==
-X-Gm-Message-State: AOAM5336dmSkADWLHoHoBAXuegZ83v7GSOzsTJSWo1Le4C5TENDc+m1K
-        Ak5GmQxWtO8DLo47EHWCuqmvGVLkGqp/0wqUqPbT4+f1
-X-Google-Smtp-Source: ABdhPJzV+sSj3VgjAs1ALzDiBgJpH5s/BbK9M6Z51fs6trVCmIFa01P8Nl7JAaX5UBSFeJsJfheOg1+NTiCNPTDLBJY=
-X-Received: by 2002:aca:110a:: with SMTP id 10mr6149426oir.68.1598525705214;
- Thu, 27 Aug 2020 03:55:05 -0700 (PDT)
+        bh=YjN36ux3ZCiiBlL2gD5vkxNtFHi1HK0Zk2s0f0PusEQ=;
+        b=H0iYprdweLEqhBMfz4EejVet8vAv65P6VWb2n3x64ncCUzfA60C719XZMBqtAeDIUk
+         zjppLgLBg8xnqQ+U1N5MT06D+liMxTGgvAG8wft2YA+qzoX9lhMCj7seL/lWbDhNkFk3
+         C4t1lCwgTOf0BYBsoYdjyOonrQEG9MbFBFYvWqag5yqNIlFoh91UHtvol2Y+MXEqxtAK
+         fjoV35NNA8H6hOPUtvHuq0Vw1uqbbaxKrXpkaqN6mDY1cfxhtjsUEt70dbCdttV7m9Lw
+         xKf2oxw9p19egOjfNJnVWPHByRrvemw41iYwl8Rt8RinJe54Xjb2pAJ2yIDAoSaVLjWP
+         MtPQ==
+X-Gm-Message-State: AOAM532Y7K9/6ypz4ngLQWblO+6bUH3R8AGKKhltc18etToTu6y7RGLs
+        xzDb6bTfaEZOG+7QbMfQPQswDoE0ttAqJvqiLxo+wQ==
+X-Google-Smtp-Source: ABdhPJyJUYc+NBvK+NXE8XWvv2+AizG6r7WTq/pC7wizO0q+ooK8tNj0sdNML6eLDXSPdAK5R9iEpw1HwRiMxWxMe8g=
+X-Received: by 2002:a67:e3cc:: with SMTP id k12mr4760839vsm.173.1598526095417;
+ Thu, 27 Aug 2020 04:01:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <906198d77aa73613a1b588425aa45e5025ee60cb.1598505843.git.viresh.kumar@linaro.org>
-In-Reply-To: <906198d77aa73613a1b588425aa45e5025ee60cb.1598505843.git.viresh.kumar@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 27 Aug 2020 12:54:53 +0200
-Message-ID: <CAJZ5v0iTmowt48RHZGrx6aFm4OsJ0FXHk1WWstAJ=hvc7oJ_dw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] cpufreq: No need to verify cpufreq_driver in show_scaling_cur_freq()
+References: <CA+G9fYvK5UkERLuBSRH5t2=j5==dbtw45GTMta9MafyJDqFsFA@mail.gmail.com>
+ <20200827094651.3grvs6ungv3dh7y3@vireshk-i7>
+In-Reply-To: <20200827094651.3grvs6ungv3dh7y3@vireshk-i7>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 27 Aug 2020 16:31:24 +0530
+Message-ID: <CA+G9fYsdpmd92vRWz8z5Lp+=F+vV4dNVZrc5o3MH5WVWD8pWvA@mail.gmail.com>
+Subject: Re: WARNING: at drivers/opp/core.c:678 dev_pm_opp_set_rate+0x4cc/0x5d4
+ - on arm x15
 To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+Cc:     open list <linux-kernel@vger.kernel.org>,
         Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>, sbhanu@codeaurora.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>, nm@ti.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 7:24 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On Thu, 27 Aug 2020 at 15:16, Viresh Kumar <viresh.kumar@linaro.org> wrote:
 >
-> "cpufreq_driver" is guaranteed to be valid here, no need to check it
-> here.
+> On 27-08-20, 15:04, Naresh Kamboju wrote:
+> > While boot testing arm x15 devices the Kernel warning noticed with linux next
+> > tag 20200825.
+> >
+> > BAD:  next-20200825
+> > GOOD:  next-20200824
+> >
+> > metadata:
+> >   git branch: master
+> >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> >   git commit: 3a00d3dfd4b68b208ecd5405e676d06c8ad6bb63
+> >   git describe: next-20200825
+> >   make_kernelversion: 5.9.0-rc2
+> >   kernel-config:
+> > https://builds.tuxbuild.com/LDTu4GFMmvkJspza5LJIjQ/kernel.config
+> >
+> > We are working on git bisect and boot testing on x15 and get back to you.
 >
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/cpufreq.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Was this working earlier ? But considering that multiple things
+> related to OPP broke recently, it may be a OPP core bug as well. Not
+> sure though.
 >
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 02ab56b2a0d8..47aa90f9a7c2 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -703,8 +703,7 @@ static ssize_t show_scaling_cur_freq(struct cpufreq_policy *policy, char *buf)
->         freq = arch_freq_get_on_cpu(policy->cpu);
->         if (freq)
->                 ret = sprintf(buf, "%u\n", freq);
-> -       else if (cpufreq_driver && cpufreq_driver->setpolicy &&
-> -                       cpufreq_driver->get)
-> +       else if (cpufreq_driver->setpolicy && cpufreq_driver->get)
->                 ret = sprintf(buf, "%u\n", cpufreq_driver->get(policy->cpu));
->         else
->                 ret = sprintf(buf, "%u\n", policy->cur);
-> --
+> Can you give me delta between both the next branches for drivers/opp/
+> path ? I didn't get these tags after fetching linux-next.
 
-This and the [2/2] applied, the latter with some minor edits in the
-subject/changelog.
+git log --oneline next-20200824..next-20200825 -- drivers/opp/
+b0531b897c9a opp: Set required OPPs in reverse order when scaling down
+b11044e5204e opp: Reduce code duplication in _set_required_opps()
+c67ba698f5fe opp: Allow dev_pm_opp_get_opp_table() to return -EPROBE_DEFER
+8aaf6264fc7f opp: Remove _dev_pm_opp_find_and_remove_table() wrapper
+f3364e17d571 opp: Split out _opp_set_rate_zero()
+10b217365b94 opp: Reuse the enabled flag in !target_freq path
+72f80ce4ef9b opp: Rename regulator_enabled and use it as status of all resources
 
-Thanks!
+- Naresh
