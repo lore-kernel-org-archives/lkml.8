@@ -2,135 +2,132 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B24AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C6BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C16492080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:18:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KenVDEFv"
+	by mail.kernel.org (Postfix) with ESMTP id E5C572177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598519932;
+	bh=eyGOZg/y/QcXFOJgZoOtuvDPU8rg6VzNRmKctKnURZ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jtEqfL4aQFINg+1VQZbra6yqB84WaB3GC/AldcazumFhU/0Wjh0qnZAWgwQMxjUCh
+	 cW74MBwXOOhHPEpXfDz2RYRlsQ4puVL9fCaB7qa6c7aZhaivhPIzYYr565vszQ0Vug
+	 RHhG7HbTMlk3FI1lpPAx0Z79fM+Lc75qNsoMS2vY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbgH0JSZ (ORCPT
+        id S1728446AbgH0JSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:18:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728001AbgH0JSZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:18:25 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CB98C061264;
-        Thu, 27 Aug 2020 02:18:23 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id z18so2310270pjr.2;
-        Thu, 27 Aug 2020 02:18:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h7+8HLI9zKQR9DySug9QefBQRiFvqULBiV9jhwrlBeg=;
-        b=KenVDEFvugPYVDiW0qfljf3gFBe4kQ2kxAnyruOIRojcZpLhDMo/C2BG9iD5iUWbpC
-         /+8ZZEgP5bywxngLHe58nD9tJiAWlCLwV/+VM5e4MhJjrQ0U+IvERA2H3MY1mvaj9ijQ
-         Y/UmjbajiJV2hX+9IryhGcQwHSsYNNtM6op2onr0fktryw+4Pe/u31tO0cSbYf+UBfZx
-         dy3alMk2qAm57/oVVWMNSB35tiF939XU5l0zNPovVjnmnmpR72kJ0GBVwKX8yKeRsNre
-         VyVMfOjbcAx8a3iMLIllKrnuHgoGqDFRaY+RyX2zM+39LCcEI1bfLNvAXOvqJ1p50zQJ
-         iT2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h7+8HLI9zKQR9DySug9QefBQRiFvqULBiV9jhwrlBeg=;
-        b=UQ45T0eVHUHI5xc1a3POWSX5NnkMGrdmsiEyI5i0YjYeTkaDyV4SMgQZgsr4zLW+3g
-         jTIReN+Go6d6xNmY3eC8IOQLjoq7JvwY33YNhxcS1wZP1PfyvIhyW/oQNZlgWaGP/3nw
-         rN5fMaimzXzaBVgPa6wPQ8TfsSP3lZkLRjLmGsbFnZRtjWIcSnpBIZTCieTUks/tvEen
-         MnKsBgXVT43kHkOBB9oAR5Y98Mn4BxdcqvrwZTJh/BRcPFc7GH3HWgu1gL3cU+R8CAsB
-         K8UFeR7VcEIT8tf2+wWyAd6NOoZc7KqbHBde5fK/uf//WNTr4wBqAVLyMlFAswGBSQFD
-         fy3A==
-X-Gm-Message-State: AOAM530Qdq8pep1viAROY949TQnofzZ7iN8gAxy5txPh9ipaupioGfcc
-        6i2kcBnbxdK2uSznX0myoyj4cP306RPuWBJF0Zk=
-X-Google-Smtp-Source: ABdhPJw4ckKkt/hDHVTDDwSkKKrQodyA6470M4C7i0Y+T+CQF0FSSC88NaLbGEGsn5fVLR3+vQEciaK5QvtyPcp4QLU=
-X-Received: by 2002:a17:90b:509:: with SMTP id r9mr10179422pjz.228.1598519902569;
- Thu, 27 Aug 2020 02:18:22 -0700 (PDT)
+        Thu, 27 Aug 2020 05:18:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727897AbgH0JSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:18:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 045052080C;
+        Thu, 27 Aug 2020 09:18:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598519925;
+        bh=eyGOZg/y/QcXFOJgZoOtuvDPU8rg6VzNRmKctKnURZ0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=esepNnSVmYNkD0epnb+1wYHjyodtG/x2Cmq2wrlli5PQv1aBJjWgCRTPt/ft3mz+I
+         s/wnvmq66qRfKMb4MQ4H9Na9SVr8U5ojM6LGZImkQMCmUvbnbLe31AMAI8dIVfLXiS
+         wQZFDGO9yA5Zd9spv8Tlcm2nIEUNchgvtUYp/LyU=
+Date:   Thu, 27 Aug 2020 11:18:59 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Subject: Re: [PATCH 01/19] char_dev: replace cdev_map with an xarray
+Message-ID: <20200827091859.GA393660@kroah.com>
+References: <20200826062446.31860-1-hch@lst.de>
+ <20200826062446.31860-2-hch@lst.de>
+ <20200826081905.GB1796103@kroah.com>
+ <20200827085353.GA12111@lst.de>
 MIME-Version: 1.0
-References: <20200826181706.11098-1-krzk@kernel.org> <20200826181706.11098-22-krzk@kernel.org>
-In-Reply-To: <20200826181706.11098-22-krzk@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Aug 2020 12:18:06 +0300
-Message-ID: <CAHp75Vex+1nx5ue+mYSwRTzjMOJPeghqLfg2csk3XfvhUr4avA@mail.gmail.com>
-Subject: Re: [PATCH 22/24] Input: sis_i2c - Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bastien Nocera <hadess@hadess.net>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-input <linux-input@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827085353.GA12111@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 9:20 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and also it prints the error value.
+On Thu, Aug 27, 2020 at 10:53:53AM +0200, Christoph Hellwig wrote:
+> On Wed, Aug 26, 2020 at 10:19:05AM +0200, Greg Kroah-Hartman wrote:
+> > On Wed, Aug 26, 2020 at 08:24:28AM +0200, Christoph Hellwig wrote:
+> > > None of the complicated overlapping regions bits of the kobj_map are
+> > > required for the character device lookup, so just a trivial xarray
+> > > instead.
+> > > 
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > 
+> > Really?  This is ok to use and just as fast?  If so, wonderful, it would
+> > be great to clean up kobj_map users.
+> 
+> Xarrays provide pretty efficient as long as we have a unsigned long
+> or smaller index (check, dev_t is small) and the indices are reasonable
+> clustered (check, minors for the same major).  Memory usage will go down
+> vs the probes, and lookup speed up.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Ok, great!
 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/input/touchscreen/sis_i2c.c | 20 ++++++--------------
->  1 file changed, 6 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/input/touchscreen/sis_i2c.c b/drivers/input/touchscreen/sis_i2c.c
-> index 6274555f1673..348a2ba9b7c9 100644
-> --- a/drivers/input/touchscreen/sis_i2c.c
-> +++ b/drivers/input/touchscreen/sis_i2c.c
-> @@ -311,23 +311,15 @@ static int sis_ts_probe(struct i2c_client *client,
->
->         ts->attn_gpio = devm_gpiod_get_optional(&client->dev,
->                                                 "attn", GPIOD_IN);
-> -       if (IS_ERR(ts->attn_gpio)) {
-> -               error = PTR_ERR(ts->attn_gpio);
-> -               if (error != -EPROBE_DEFER)
-> -                       dev_err(&client->dev,
-> -                               "Failed to get attention GPIO: %d\n", error);
-> -               return error;
-> -       }
-> +       if (IS_ERR(ts->attn_gpio))
-> +               return dev_err_probe(&client->dev, PTR_ERR(ts->attn_gpio),
-> +                                    "Failed to get attention GPIO\n");
->
->         ts->reset_gpio = devm_gpiod_get_optional(&client->dev,
->                                                  "reset", GPIOD_OUT_LOW);
-> -       if (IS_ERR(ts->reset_gpio)) {
-> -               error = PTR_ERR(ts->reset_gpio);
-> -               if (error != -EPROBE_DEFER)
-> -                       dev_err(&client->dev,
-> -                               "Failed to get reset GPIO: %d\n", error);
-> -               return error;
-> -       }
-> +       if (IS_ERR(ts->reset_gpio))
-> +               return dev_err_probe(&client->dev, PTR_ERR(ts->reset_gpio),
-> +                                    "Failed to get reset GPIO\n");
->
->         sis_ts_reset(ts);
->
-> --
-> 2.17.1
->
+xarrays weren't around when this code was written (back in the 2.5
+days).
 
+> > > +	mutex_lock(&chrdevs_lock);
+> > > +	for (i = 0; i < count; i++) {
+> > > +		error = xa_insert(&cdev_map, dev + i, p, GFP_KERNEL);
+> > > +		if (error)
+> > > +			goto out_unwind;
+> > > +	}
+> > > +	mutex_unlock(&chrdevs_lock);
+> > >  
+> > >  	kobject_get(p->kobj.parent);
+> > 
+> > Can't you drop this kobject_get() too?
+> 
+> I'll have to drop it or add back the put on the delete side.  And
+> I think the latter is safer for now, because..
+> 
+> > 
+> > And also the "struct kobj" in struct cdev can be gone as well, as the
+> > kobj_map was the only "real" user of this structure.  I know some
+> > drivers liked to touch that field as well, but it never actually did
+> > anything for them, so it was pointless, but it will take some 'make
+> > allmodconfig' builds to flush them out.
+> 
+> I looked at it, but it does get registered and shows up in sysfs.
 
--- 
-With Best Regards,
-Andy Shevchenko
+It does?  Where does that happen?  I see a bunch of kobject_init()
+calls, but nothing that registers it in sysfs that I can see.
+
+Note, this is not the kobject that shows up in /sys/dev/char/ as a
+symlink, that comes from the driver core logic and is independent of the
+cdev code.
+
+The kobject does handle the structure lifetime rules, but that should be
+able to be replaced with a simple kref instead.
+
+> I don't really dare to touch this for now, as it can have huge
+> implications.  Better done in a separate series (if we can actually do
+> it at all).
+
+Fair enough, I will be willing to tackle that once this gets merged, so
+this is fine as-is.
+
+thanks,
+
+greg k-h
