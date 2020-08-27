@@ -2,122 +2,109 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E43CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B73CBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D22322CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F63222BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:03:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sHpuHPRk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g518Chah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgH0IDM (ORCPT
+        id S1728334AbgH0IDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:03:12 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:48262 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbgH0IDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:03:03 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598515382; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=deplzEvxYDzNg5sadmLOiZaUYk7lhFmqIsbII+EbBmw=; b=sHpuHPRkAnHKlWa32cv3WScxW8xLfzFcfr5yjtglkapQgn94cdXZK0lc5NWNQfEh0xFdmiVJ
- 0nC2+Za7ztTATyyBIky52WwA3ywnTwJLpA62vz+qkwTIij8ZwkTscUD1SbRIda5GguO/ud8V
- kgFBWq2TSm1Bo7yORgh+58UEPRc=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
- 5f47689ae2d4d29fc8d95bb8 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 08:02:34
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 661A6C43387; Thu, 27 Aug 2020 08:02:34 +0000 (UTC)
-Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 02436C433C6;
-        Thu, 27 Aug 2020 08:02:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 02436C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "\<netdev\@vger.kernel.org\>" <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Kaloyan Nikolov <konik98@gmail.com>
-Subject: Re: [PATCH net] mwifiex: Increase AES key storage size to 256 bits
-References: <20200825153829.38043-1-luzmaximilian@gmail.com>
-        <CA+ASDXPoxdMb4b5d0Ayv=JFACHcq7EXub14pJtJfcCV2di95Rg@mail.gmail.com>
-Date:   Thu, 27 Aug 2020 11:02:28 +0300
-In-Reply-To: <CA+ASDXPoxdMb4b5d0Ayv=JFACHcq7EXub14pJtJfcCV2di95Rg@mail.gmail.com>
-        (Brian Norris's message of "Tue, 25 Aug 2020 12:30:28 -0700")
-Message-ID: <87mu2gldnv.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Thu, 27 Aug 2020 04:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727786AbgH0IDO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 04:03:14 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D31E5C061264;
+        Thu, 27 Aug 2020 01:03:13 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id h15so4391245wrt.12;
+        Thu, 27 Aug 2020 01:03:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zPWziuz3LCO0WQPUnYkp4/1miRf1Z3XiRWMKLQJruX4=;
+        b=g518ChahuatEds8QIMSD+o8jx/MfIXKn0ioukoF10QqjB8WzfDRDdhPOy8iLUtoVD6
+         L2/Rql8RMcp9/T3IwtLShmTIg5auKyNbNG3cJh7p8aR7QAEvCPjCTdst3xSy89HDL0VV
+         MsFwRW6mC0S3vY/ujOaiahHA0EkxbHntu7wbo9iVKBVArGF1oFvuFAnUuY5gYxgvMzIE
+         QJWCgwgEyqu8q0LYwdtBptX5N5K/SSVsp4OVMYQEt5KbpvEpGOQvFmo9zl9OJPd705Yr
+         D5UPS0968YqhjP3rzZlwtMqviXV+hsajAWHtt681iRmxdAVpSfbZ2owCGj6wmOU5GT2a
+         LFpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zPWziuz3LCO0WQPUnYkp4/1miRf1Z3XiRWMKLQJruX4=;
+        b=l9YwWL7cflwndM/6+iRdyU5U1EFaafsRX1svBRJB6iOVgZdvj/v7S+gv+R6NVFIifw
+         n2MRvC9B1Ykja4UD1wG0v5BwkTR/VUR8Z9yDYt+PV+9ZiMVdAIzLzdiK1L7ZkhFiLGzU
+         A5n+FPwYnqTW7/RE8N8ypq06UXZukLLZB4+a2p+OoMsDilj9slObftNVUSiJ+e33sCNA
+         8WEV5bmSJwT6K2YmIcmYRRvT5rMLYHQI0t53obSp8OwGIF85uwE9e4ihScX7Gj3y3mmj
+         HsoJ0Gi9MmM96AJ80Bum/5kJ80WdB6ZXoyINac11opDtCL0mEcRjB1XnOIKMnVAU9JjL
+         Gp1g==
+X-Gm-Message-State: AOAM533onAFoJF0qsXPwX7m4znao2D5P9rQsAAKiZ8Y724ewU7bGdtEa
+        HqlDOKgqXVTj87kjCjLsWe8=
+X-Google-Smtp-Source: ABdhPJzGp61xe0Gsy8NKvKUnUa/mtH0mX+6nZ5odV/vnmJpvRw48eE0aNfPx4UtYEFibakuMAWTcTA==
+X-Received: by 2002:adf:f192:: with SMTP id h18mr15865363wro.247.1598515392581;
+        Thu, 27 Aug 2020 01:03:12 -0700 (PDT)
+Received: from Red ([2a01:cb1d:3d5:a100:264b:feff:fe03:2806])
+        by smtp.googlemail.com with ESMTPSA id e2sm4251407wrt.66.2020.08.27.01.03.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 01:03:11 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 10:03:10 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: sun8i-ss - remove redundant memzero_explicit()
+Message-ID: <20200827080310.GA29222@Red>
+References: <20200827074023.15565-1-efremov@linux.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827074023.15565-1-efremov@linux.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Brian Norris <briannorris@chromium.org> writes:
+On Thu, Aug 27, 2020 at 10:40:23AM +0300, Denis Efremov wrote:
+> Remove redundant memzero_explicit() in sun8i_ss_cipher() before calling
+> kfree_sensitive(). kfree_sensitive() will zero the memory with
+> memzero_explicit().
+> 
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> ---
+>  drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
+> index deb8b39a86db..ed2a69f82e1c 100644
+> --- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
+> +++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-cipher.c
+> @@ -248,7 +248,6 @@ static int sun8i_ss_cipher(struct skcipher_request *areq)
+>  			offset = areq->cryptlen - ivsize;
+>  			if (rctx->op_dir & SS_DECRYPTION) {
+>  				memcpy(areq->iv, backup_iv, ivsize);
+> -				memzero_explicit(backup_iv, ivsize);
+>  				kfree_sensitive(backup_iv);
+>  			} else {
+>  				scatterwalk_map_and_copy(areq->iv, areq->dst, offset,
+> -- 
+> 2.26.2
+> 
 
-> Hi,
->
-> On Tue, Aug 25, 2020 at 8:38 AM Maximilian Luz <luzmaximilian@gmail.com> wrote:
->>
->> Following commit e18696786548 ("mwifiex: Prevent memory corruption
->> handling keys") the mwifiex driver fails to authenticate with certain
->> networks, specifically networks with 256 bit keys, and repeatedly asks
->> for the password. The kernel log repeats the following lines (id and
->> bssid redacted):
->>
->>     mwifiex_pcie 0000:01:00.0: info: trying to associate to '<id>' bssid <bssid>
->>     mwifiex_pcie 0000:01:00.0: info: associated to bssid <bssid> successfully
->>     mwifiex_pcie 0000:01:00.0: crypto keys added
->>     mwifiex_pcie 0000:01:00.0: info: successfully disconnected from <bssid>: reason code 3
->>
->> Tracking down this problem lead to the overflow check introduced by the
->> aforementioned commit into mwifiex_ret_802_11_key_material_v2(). This
->> check fails on networks with 256 bit keys due to the current storage
->> size for AES keys in struct mwifiex_aes_param being only 128 bit.
->>
->> To fix this issue, increase the storage size for AES keys to 256 bit.
->>
->> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
->> Reported-by: Kaloyan Nikolov <konik98@gmail.com>
->> Tested-by: Kaloyan Nikolov <konik98@gmail.com>
->
-> Thanks for this! I just happened to notice this breakage here, as we
-> just merged the relevant -stable updates. I think it would be wise to
-> get the Fixes tag Dan noted, when Kalle lands this.
+Hello
 
-Ok, I'll queue this for v5.9 and add the Fixes tag.
+Could you add:
+Fixes: 453431a54934 ("mm, treewide: rename kzfree() to kfree_sensitive()")
 
-If anyone is bored it would be great to get patchwork automatically
-pickup the Fixes tags :) It already does that Acked-by, Reported-by and
-Tested-by tags:
-
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-Reported-by: Kaloyan Nikolov <konik98@gmail.com>
-Tested-by: Kaloyan Nikolov <konik98@gmail.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Brian Norris <briannorris@chromium.org>
-Tested-by: Brian Norris <briannorris@chromium.org>
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Regards
