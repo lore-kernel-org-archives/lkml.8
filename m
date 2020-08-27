@@ -7,121 +7,114 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45100C433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E65EBC433E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 120FA207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C50A420BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:33:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="oI+Xm2ET"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lYOrebd0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgH0WaF (ORCPT
+        id S1728082AbgH0Wdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 18:30:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48504 "EHLO
+        Thu, 27 Aug 2020 18:33:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbgH0WaF (ORCPT
+        with ESMTP id S1728054AbgH0Wdp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 18:30:05 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9852C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 15:30:04 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id s16so5989880qtn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 15:30:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fJ9qJt6OX2+WeqcsogZiCHLA68aY3qughbK/gCdupAY=;
-        b=oI+Xm2ETkWYOHEctXypXfT7xmzm3loPC9+zkZyJ1x8N7QeG6teMe1pDHazuXxRcTFY
-         ZYxjJz39+DhuZnbhle0KciuXBsib5qGiX3vNJsVIhF8tE251m/BMEX7hxm8zamg0nunl
-         SRsL7DL+qNDgmBpxdsibHt83qbee+fKlFWZ2g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fJ9qJt6OX2+WeqcsogZiCHLA68aY3qughbK/gCdupAY=;
-        b=H8w76H1xyee2xmqC9dt0L261fz3x2tbu5CeMbDiylOKUM7qMsaUK5ZtGicnLlkCdZR
-         tjOCpWCr6bmMlFDck2fXhpUjvOchiLVR0S09gQ3ptwUAy42JZfwI7qJyFZ9Tdyh709xW
-         aWOV1sJ4l/OBQAwUPdP+ZFqlQkciJpEJPEPEBEHAtrdBWcqeNLvkinGxApZ8klYjF39o
-         KtNNhZ0zNpb64cPRgWGNxbVuhbRyXGBkSlEq96+4g2JdJCs44sasFwVz1fovIUwyGNzx
-         51ELAxsd/Qn28vgsSQ3f9G/efqO2nTuJnylXqDr/NpJnShBG7qT4+eaxu1NxYVj31mXJ
-         Oa2w==
-X-Gm-Message-State: AOAM532j8Y7M64HlE19BCYZQYoCgD96fPMtvK5vn6gX8Cq/4tvxQNkRq
-        ogljLgIXUSQumyxT6a6h8Vyjog==
-X-Google-Smtp-Source: ABdhPJzknUmF89nKZjOODh71AjWBA600WSf08aGsbIH/xZS7FAnrQFFr6PUQfEuSfSii63BnCttvbg==
-X-Received: by 2002:ac8:7698:: with SMTP id g24mr20968039qtr.217.1598567402879;
-        Thu, 27 Aug 2020 15:30:02 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id w44sm3178673qtj.86.2020.08.27.15.30.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 15:30:02 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 18:30:01 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, will@kernel.org,
-        npiggin@gmail.com, elver@google.com, jgross@suse.com,
-        paulmck@kernel.org, rostedt@goodmis.org, rjw@rjwysocki.net,
-        svens@linux.ibm.com, tglx@linutronix.de,
-        mathieu.desnoyers@efficios.com
-Subject: Re: [PATCH v2 03/11] sched,idle,rcu: Push rcu_idle deeper into the
- idle path
-Message-ID: <20200827223001.GA3821640@google.com>
-References: <20200821084738.508092956@infradead.org>
- <20200821085348.310943801@infradead.org>
- <20200827011826.GA1942571@google.com>
- <20200827012419.GB1942571@google.com>
- <20200827074748.GY2674@hirez.programming.kicks-ass.net>
+        Thu, 27 Aug 2020 18:33:45 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A8B4C061264;
+        Thu, 27 Aug 2020 15:33:45 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BcyF10lGTz9sPB;
+        Fri, 28 Aug 2020 08:33:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1598567622;
+        bh=lmvn/ZGe/3UDRoc/5WUAswCHgpiyFOhBnbOILWKgyt4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lYOrebd0kyIc5T6N93C6fMzQm7qduBxItQYATmdO2n2xpbQR0ZYYxQy6phzpEIccL
+         kzxdzLOfVVQ7ek3hfg31jmOYC/5Qdx5+NGBLyxB6LMM9k6d1V2mqBMkVGu/BxtZKx1
+         SkNYiVvnBrpe2WMCqlkhOVSzsOZX0GBku9DGtFjJQ4SpFLLuyoN8pN7N9uAwdDAvuN
+         F5Hs+UL8uira8nELT0teEY5SVyEpXWn5vp85xQ1mR0mKI7oGkhJkScNBUKhYMr3EG6
+         yjk/QW/mU9cA5wrpVpYw8aVNOBHFW1EshYYhI4BRAIlac3ANitgg+ipzMVTtnbGwVE
+         eSxiLiqEj42vw==
+Date:   Fri, 28 Aug 2020 08:33:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "kernelci.org bot" <bot@kernelci.org>
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+Message-ID: <20200828083340.24d99009@canb.auug.org.au>
+In-Reply-To: <20200827124549.GD167163@linux.ibm.com>
+References: <20200827182058.1c7d75ed@canb.auug.org.au>
+        <20200827124549.GD167163@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827074748.GY2674@hirez.programming.kicks-ass.net>
+Content-Type: multipart/signed; boundary="Sig_/Xvn8QAz2O0btk/AJFCIzn_f";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 09:47:48AM +0200, peterz@infradead.org wrote:
-> On Wed, Aug 26, 2020 at 09:24:19PM -0400, Joel Fernandes wrote:
-> > On Wed, Aug 26, 2020 at 09:18:26PM -0400, Joel Fernandes wrote:
-> > > On Fri, Aug 21, 2020 at 10:47:41AM +0200, Peter Zijlstra wrote:
-> > > > Lots of things take locks, due to a wee bug, rcu_lockdep didn't notice
-> > > > that the locking tracepoints were using RCU.
-> > > > 
-> > > > Push rcu_idle_{enter,exit}() as deep as possible into the idle paths,
-> > > > this also resolves a lot of _rcuidle()/RCU_NONIDLE() usage.
-> > > > 
-> > > > Specifically, sched_clock_idle_wakeup_event() will use ktime which
-> > > > will use seqlocks which will tickle lockdep, and
-> > > > stop_critical_timings() uses lock.
-> > > 
-> > > I was wondering if those tracepoints should just use _rcuidle variant of the
-> > > trace call. But that's a terrible idea considering that would add unwanted
-> > > overhead I think.
-> > > 
-> > > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > 
-> > BTW, if tracepoint is converted to use RCU-trace flavor, then these kinds of
-> > issues go away, no? That RCU flavor is always watching.
-> 
-> All trace_*_rcuidle() and RCU_NONIDLE() usage is a bug IMO.
-> 
-> Ideally RCU-trace goes away too.
+--Sig_/Xvn8QAz2O0btk/AJFCIzn_f
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-I was thinking that unless the rcu_idle_enter/exit calls coincide with points
-in the kernel where instrumentation is not allowed, there is always a chance
-somebody wants to use tracepoints after rcu_idle_enter or before exit. In
-this case, trace_*_rcuidle() is unavoidable unless you can move the
-rcu_idle_enter/exit calls deeper as you are doing.
+Hi Mike,
 
-Maybe objtool can help with that?
+On Thu, 27 Aug 2020 15:45:49 +0300 Mike Rapoport <rppt@linux.ibm.com> wrote:
+>
+> On Thu, Aug 27, 2020 at 06:20:58PM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> >=20
+> > After merging the akpm-current tree, today's linux-next build (mips
+> > cavium_octeon_defconfig) failed like this:
+> >=20
+> > arch/mips/cavium-octeon/dma-octeon.c:205:7: error: =E2=80=98mem=E2=80=
+=99 undeclared (first use in this function); did you mean =E2=80=98sem=E2=
+=80=99?
+> >=20
+> > Caused by commit
+> >=20
+> >   52e1a745395d ("arch, drivers: replace for_each_membock() with for_eac=
+h_mem_range()")
+> >=20
+> > Reported by "kernelci.org bot" <bot@kernelci.org>. =20
+>=20
+> Here's the fix:
+>=20
+> From 9e46da6793528e35883ff81835d65a864bf98007 Mon Sep 17 00:00:00 2001
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> Date: Thu, 27 Aug 2020 15:42:49 +0300
+> Subject: [PATCH] mips: fix cavium-octeon build caused by memblock refacto=
+ring
 
-The other solution is RCU-trace if you can't push the rcu_idle_enter/exit
-calls any deeper and still want to get rid of trace_*_rcuidle thingies. Me
-and Mathieu were talking at LPC about tracepoint conversion to RCU-trace and
-we can work on it if that's the right direction.
+Thanks, I have added that to linux-next today.
 
-thanks,
+--=20
+Cheers,
+Stephen Rothwell
 
- - Joel
+--Sig_/Xvn8QAz2O0btk/AJFCIzn_f
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9INMQACgkQAVBC80lX
+0GyXTAf/WLJXgbKJdZ4nNUwPFGSRmsM1OzWBt+AO4RlkEjpdgiw7+xBa5aI0LB0/
+e0cD+RBZGFSU/+vko+nkHlsxHuWIxTvkGXA6v82qanLv+OmrZYFO347dA7b+cVrD
+KgVnv2oIQoH8iUGHPFgqRJ+FsFAnh38fToY4rjVU+We2pNJ4bIZqZs7qUMjgyf3N
+hNp8dxiqbVmn29+fw5WebUkxthkXPvoigjwBnPXZuK7WDNg4GDP14uFDAh01rNb9
+tjU3jnnd6IcV1OOxBCfKqyzDfjfGhTqASGynPnmSmfR4asqNJqb1DxjmlzvYxy2z
+/zZPuEgtI+SB3MnriBMqYR8dXuGYbw==
+=5QCt
+-----END PGP SIGNATURE-----
+
+--Sig_/Xvn8QAz2O0btk/AJFCIzn_f--
