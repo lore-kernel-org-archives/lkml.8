@@ -2,124 +2,244 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FF7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B61EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A53FE22BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:19:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vhTBCzgb"
+	by mail.kernel.org (Postfix) with ESMTP id 010D622BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbgH0HTX (ORCPT
+        id S1728001AbgH0HVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:19:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726851AbgH0HTW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:19:22 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E525C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:19:21 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id h3so3807381oie.11
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 00:19:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=0wRVxxRBrrXGuGqR4AB9DKE0dYwS8RlpkKHyA8lloZg=;
-        b=vhTBCzgbGDUV3mcqoV5yagn+6W0CBogPAlqKt5dQ+UYjP1Tr5ETBTBkFGIeKqJIvef
-         1Arr7FjVtctVCuLgq2F15jLrVKlC1L77ApDkP6ZVLN8Dp3dRFAtn8mEXbPrO8D6xSBCa
-         JDwVTpANVwzYdOlO+Ih+l+NgW/R2FUK0b2b6US1yJCpjb2hJiRHq2s+umHXqCM8BCeQ9
-         hIrIhUBBI/HUdx9xGvh1pIJfwpPAIBKGeOpq8E4At4O/UATb9UjTK1W34UW/TgOim8Hl
-         eDXjKfMvBCMwzCnVmO9pJ5Pu6APfegpggPngKJf1gTKe78Jht/h8WG8aLwtL/9czSAdY
-         jXQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=0wRVxxRBrrXGuGqR4AB9DKE0dYwS8RlpkKHyA8lloZg=;
-        b=Dpe977ivpGuW5URqQ2tsyV2g9eseEK8rDbi6PI++ScYdPTa20NIM9FjHJKVkMWYbMf
-         uuKUzUVvPhdG/4Bb9X+nL1AA5ELCujmXxWdqC/eK10YGFfBx+eI18x5qq0+wi8ebHyf0
-         2KOHHEBtgFWt2IF2YCt1PYAqM2GSVRhYNjmZezpRFZVoQMzJ2e/5N9LqWKHoqHqIQLSB
-         dZGcGjiLF/OrGARdfvYNzTovUevQYCWV0drLiwb0LlBBw523M2goxNmW8VL5eYgQzyjw
-         914WUlMNW9TaayMXtarwV13GvQRLf+RkHiD1aW5JhiSjD1nAtYZv8nuSR7rc+pjF6yul
-         qChQ==
-X-Gm-Message-State: AOAM533syyemUeVojrLBwh0CaepiJ/np3h0Pd2Mm02eOuqH+0wsD4WyM
-        PkLQhwiTa2JuXuKoTce5nW5B8OnxwW3lfLR7ELs=
-X-Google-Smtp-Source: ABdhPJx9kpBlueuJXaWzTH8db0dluRAlapnjSs1ROR7mrrr5hhRaso1vEsWLFJDslzR1/jl6tpsCn3mvhfrxrKY2Ax8=
-X-Received: by 2002:aca:acd5:: with SMTP id v204mr5974706oie.35.1598512759141;
- Thu, 27 Aug 2020 00:19:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200826201420.3414123-1-ndesaulniers@google.com>
- <CANiq72no2qO3BBTU3MhVCp4mDLqzMg7NhWGObHV3wtFCRjaziw@mail.gmail.com> <20200826212648.GA1005132@ubuntu-n2-xlarge-x86>
-In-Reply-To: <20200826212648.GA1005132@ubuntu-n2-xlarge-x86>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Thu, 27 Aug 2020 09:19:08 +0200
-Message-ID: <CA+icZUX_mR6E+tO+qR4xML78qBZe2Rs4Ck7BgerwtgGaGJ9hgA@mail.gmail.com>
-Subject: Re: [PATCH] compiler-clang: add build check for clang 10.0.1
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 27 Aug 2020 03:21:10 -0400
+Received: from mga06.intel.com ([134.134.136.31]:9957 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726851AbgH0HVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:21:07 -0400
+IronPort-SDR: ZU+kEIkeQHThxgfYg4ZD1gxZW56GCsI/Ywy04dUg5CExByd9fOZF2APhI273jMdTVQlunez6aK
+ 81sfO2FCvLzA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="217983852"
+X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
+   d="scan'208";a="217983852"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 00:21:06 -0700
+IronPort-SDR: 14hahzv+OKGNrnBo8GyTvqPQNzyAjiVb5Sx7ullWZnJrlmnWZV23RaHPAOAHg6I2pfrEvi6Zhy
+ S1C4jSqZznpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,358,1592895600"; 
+   d="scan'208";a="295632011"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
+  by orsmga003.jf.intel.com with ESMTP; 27 Aug 2020 00:21:04 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>
+Subject: [PATCH V2] scsi: ufs-pci: Add LTR support for Intel controllers
+Date:   Thu, 27 Aug 2020 10:20:30 +0300
+Message-Id: <20200827072030.24655-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 11:26 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Wed, Aug 26, 2020 at 11:17:34PM +0200, Miguel Ojeda wrote:
-> > On Wed, Aug 26, 2020 at 10:14 PM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> > >
-> > > During Plumbers 2020, we voted to just support the latest release of
-> > > Clang for now.  Add a compile time check for this.
-> >
-> > Since this effectively enforces a minimum version for Clang, I'd
-> > also update `Documentation/process/changes.rst` and
-> > `Documentation/admin-guide/README.rst` to mention this, and perhaps
-> > use that as a commit title ("implement minimum version for Clang")
-> > since that is the important change, not the implementation so much!
->
-> I was actually going to comment on this separately but you beat me to it
-> :) this patch probably should have been sent as a series with the
-> Documentation update to avoid confusion for the reviewers:
->
+Intel host controllers support the setting of latency tolerance.
+Accordingly, implement the PM QoS ->set_latency_tolerance() callback. The
+raw register values are also exposed via debugfs.
 
-Agreed... This patch should be combined with the other one and sent as
-a patch-series.
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
 
-- Sedat -
 
-> https://lore.kernel.org/lkml/20200826191555.3350406-1-ndesaulniers@google.com/
->
-> Cheers,
-> Nathan
->
-> > [Actually, I'd remove the particular GCC version from the
-> > `admin-guide/README.rst` to avoid having the version in 2 places (that
-> > doc already links to the other one), but that should be another
-> > patch.]
-> >
-> > Reviewed-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-> >
-> > Cheers,
-> > Miguel
+Changes in V2:
+
+	Put debugfs code altogether
+
+
+ drivers/scsi/ufs/ufshcd-pci.c | 127 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 125 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/scsi/ufs/ufshcd-pci.c b/drivers/scsi/ufs/ufshcd-pci.c
+index 5a95a7bfbab0..df3a564c3e33 100644
+--- a/drivers/scsi/ufs/ufshcd-pci.c
++++ b/drivers/scsi/ufs/ufshcd-pci.c
+@@ -13,6 +13,14 @@
+ #include "ufshcd.h"
+ #include <linux/pci.h>
+ #include <linux/pm_runtime.h>
++#include <linux/pm_qos.h>
++#include <linux/debugfs.h>
++
++struct intel_host {
++	u32		active_ltr;
++	u32		idle_ltr;
++	struct dentry	*debugfs_root;
++};
+ 
+ static int ufs_intel_disable_lcc(struct ufs_hba *hba)
+ {
+@@ -44,20 +52,134 @@ static int ufs_intel_link_startup_notify(struct ufs_hba *hba,
+ 	return err;
+ }
+ 
++#define INTEL_ACTIVELTR		0x804
++#define INTEL_IDLELTR		0x808
++
++#define INTEL_LTR_REQ		BIT(15)
++#define INTEL_LTR_SCALE_MASK	GENMASK(11, 10)
++#define INTEL_LTR_SCALE_1US	(2 << 10)
++#define INTEL_LTR_SCALE_32US	(3 << 10)
++#define INTEL_LTR_VALUE_MASK	GENMASK(9, 0)
++
++static void intel_cache_ltr(struct ufs_hba *hba)
++{
++	struct intel_host *host = ufshcd_get_variant(hba);
++
++	host->active_ltr = readl(hba->mmio_base + INTEL_ACTIVELTR);
++	host->idle_ltr = readl(hba->mmio_base + INTEL_IDLELTR);
++}
++
++static void intel_ltr_set(struct device *dev, s32 val)
++{
++	struct ufs_hba *hba = dev_get_drvdata(dev);
++	struct intel_host *host = ufshcd_get_variant(hba);
++	u32 ltr;
++
++	pm_runtime_get_sync(dev);
++
++	/*
++	 * Program latency tolerance (LTR) accordingly what has been asked
++	 * by the PM QoS layer or disable it in case we were passed
++	 * negative value or PM_QOS_LATENCY_ANY.
++	 */
++	ltr = readl(hba->mmio_base + INTEL_ACTIVELTR);
++
++	if (val == PM_QOS_LATENCY_ANY || val < 0) {
++		ltr &= ~INTEL_LTR_REQ;
++	} else {
++		ltr |= INTEL_LTR_REQ;
++		ltr &= ~INTEL_LTR_SCALE_MASK;
++		ltr &= ~INTEL_LTR_VALUE_MASK;
++
++		if (val > INTEL_LTR_VALUE_MASK) {
++			val >>= 5;
++			if (val > INTEL_LTR_VALUE_MASK)
++				val = INTEL_LTR_VALUE_MASK;
++			ltr |= INTEL_LTR_SCALE_32US | val;
++		} else {
++			ltr |= INTEL_LTR_SCALE_1US | val;
++		}
++	}
++
++	if (ltr == host->active_ltr)
++		goto out;
++
++	writel(ltr, hba->mmio_base + INTEL_ACTIVELTR);
++	writel(ltr, hba->mmio_base + INTEL_IDLELTR);
++
++	/* Cache the values into intel_host structure */
++	intel_cache_ltr(hba);
++out:
++	pm_runtime_put(dev);
++}
++
++static void intel_ltr_expose(struct device *dev)
++{
++	dev->power.set_latency_tolerance = intel_ltr_set;
++	dev_pm_qos_expose_latency_tolerance(dev);
++}
++
++static void intel_ltr_hide(struct device *dev)
++{
++	dev_pm_qos_hide_latency_tolerance(dev);
++	dev->power.set_latency_tolerance = NULL;
++}
++
++static void intel_add_debugfs(struct ufs_hba *hba)
++{
++	struct dentry *dir = debugfs_create_dir(dev_name(hba->dev), NULL);
++	struct intel_host *host = ufshcd_get_variant(hba);
++
++	intel_cache_ltr(hba);
++
++	host->debugfs_root = dir;
++	debugfs_create_x32("active_ltr", 0444, dir, &host->active_ltr);
++	debugfs_create_x32("idle_ltr", 0444, dir, &host->idle_ltr);
++}
++
++static void intel_remove_debugfs(struct ufs_hba *hba)
++{
++	struct intel_host *host = ufshcd_get_variant(hba);
++
++	debugfs_remove_recursive(host->debugfs_root);
++}
++
++static int ufs_intel_common_init(struct ufs_hba *hba)
++{
++	struct intel_host *host;
++
++	host = devm_kzalloc(hba->dev, sizeof(*host), GFP_KERNEL);
++	if (!host)
++		return -ENOMEM;
++	ufshcd_set_variant(hba, host);
++	intel_ltr_expose(hba->dev);
++	intel_add_debugfs(hba);
++	return 0;
++}
++
++static void ufs_intel_common_exit(struct ufs_hba *hba)
++{
++	intel_remove_debugfs(hba);
++	intel_ltr_hide(hba->dev);
++}
++
+ static int ufs_intel_ehl_init(struct ufs_hba *hba)
+ {
+ 	hba->quirks |= UFSHCD_QUIRK_BROKEN_AUTO_HIBERN8;
+-	return 0;
++	return ufs_intel_common_init(hba);
+ }
+ 
+ static struct ufs_hba_variant_ops ufs_intel_cnl_hba_vops = {
+ 	.name                   = "intel-pci",
++	.init			= ufs_intel_common_init,
++	.exit			= ufs_intel_common_exit,
+ 	.link_startup_notify	= ufs_intel_link_startup_notify,
+ };
+ 
+ static struct ufs_hba_variant_ops ufs_intel_ehl_hba_vops = {
+ 	.name                   = "intel-pci",
+ 	.init			= ufs_intel_ehl_init,
++	.exit			= ufs_intel_common_exit,
+ 	.link_startup_notify	= ufs_intel_link_startup_notify,
+ };
+ 
+@@ -162,6 +284,8 @@ ufshcd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		return err;
+ 	}
+ 
++	pci_set_drvdata(pdev, hba);
++
+ 	hba->vops = (struct ufs_hba_variant_ops *)id->driver_data;
+ 
+ 	err = ufshcd_init(hba, mmio_base, pdev->irq);
+@@ -171,7 +295,6 @@ ufshcd_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		return err;
+ 	}
+ 
+-	pci_set_drvdata(pdev, hba);
+ 	pm_runtime_put_noidle(&pdev->dev);
+ 	pm_runtime_allow(&pdev->dev);
+ 
+-- 
+2.17.1
+
