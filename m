@@ -7,62 +7,59 @@ X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE85C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86B5C433E1
 	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBD4420825
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB2A520825
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:57:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TQB6dctE";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wl1BNZCE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="skE3NEeP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3AvQcN9b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728710AbgH0H46 (ORCPT
+        id S1728704AbgH0H4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:56:58 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36582 "EHLO
+        Thu, 27 Aug 2020 03:56:54 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36668 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbgH0Hy1 (ORCPT
+        with ESMTP id S1728403AbgH0Hy1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 03:54:27 -0400
-Date:   Thu, 27 Aug 2020 07:54:24 -0000
+Date:   Thu, 27 Aug 2020 07:54:23 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598514865;
+        s=2020; t=1598514864;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=w6tcGtJrvRcbQhtixqj4vbfrcEniRUb9RXpR3YqCwCo=;
-        b=TQB6dctEgX0fc8AumrRync/Zakej1MV8+C5SdB3pfIiqbvm9FXGb0p9QXojiHnpHW8kgs7
-        s9D0mf98P3DDjWTwtaxrTYTl70PEZYBvhAShWuprkGJJXeXVynFhuUyKXE4zt0MFuxiLD/
-        79wuAEeezkyjkX+nBPttwGTYUMy7Vm6S5m/C8GKILD4WqTtfygzAonkBxHq0NETsexpZPi
-        bac/bKso9X8/aFQnGTYv7QUzqowWKeWLGKNjq8W+x40cRmElfI4KUdQAF+p0SWXCQJMdcI
-        hNn+SNdCSMocakz/Ch8shNQ7feSiBGfg65xzlZedTUL9VqHfZM5KrF89DcYYMg==
+        bh=oYQQtXOFwo/FnJTzFjXfsGesTri4WbONWXo8+yKYZ7o=;
+        b=skE3NEePSFLxg1Tl6mpcMoGye3q2YLnglgpSUIMMjHklq6mjc61+RQ/NNJO+kKh7BUcX89
+        rck00zku+Di7syyaEPdF/dC7oE7A9sQUKAtr5y5svKQV1nsqGOYifpWlimirk6XX5k7c/u
+        Bt4PDu6pMJO43fpsH2CttQRqWxgHL9hHSz2HUxXcL2FoTTOkAZY9HjYCURj7CSvSvQtvlQ
+        YS3ZqPAWogr2xx82uouSfw4Ml9e6qxe0/yNNysjrQwB12uPeI+Mfe3+sbgwU9HIU8W0Grv
+        /Jq/qw+4IoemW7nszGCv02X8dvDJGja1/vnpSeKtez4bIi4togQrRh+pqlqT+w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598514865;
+        s=2020e; t=1598514864;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=w6tcGtJrvRcbQhtixqj4vbfrcEniRUb9RXpR3YqCwCo=;
-        b=Wl1BNZCEH17lXb7fiw6YMVZ+QKNrI6EiUgUned3CXaSaiecJCXQT442N0omRBF5gMGBrOH
-        dpPVpFKbfK+5YPBQ==
-From:   "tip-bot2 for Nicholas Piggin" <tip-bot2@linutronix.de>
+        bh=oYQQtXOFwo/FnJTzFjXfsGesTri4WbONWXo8+yKYZ7o=;
+        b=3AvQcN9bM4lYM77cUKPHKp+6ToUzX6X6m+TGVm9i/3Ga/vszcTd+KMFMXLFim6O1Tiyx7p
+        eHqSLv/+gzau0NAQ==
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] lockdep: Only trace IRQ edges
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Marco Elver <elver@google.com>, x86 <x86@kernel.org>,
+Subject: [tip: locking/core] locking/refcount: Provide __refcount API to
+ obtain the old value
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Kees Cook <keescook@chromium.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200723105615.1268126-1-npiggin@gmail.com>
-References: <20200723105615.1268126-1-npiggin@gmail.com>
+In-Reply-To: <20200729111120.GA2638@hirez.programming.kicks-ass.net>
+References: <20200729111120.GA2638@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Message-ID: <159851486478.20229.13478044751401692917.tip-bot2@tip-bot2>
+Message-ID: <159851486357.20229.16363998255260125178.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -74,139 +71,186 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     044d0d6de9f50192f9697583504a382347ee95ca
-Gitweb:        https://git.kernel.org/tip/044d0d6de9f50192f9697583504a382347ee95ca
-Author:        Nicholas Piggin <npiggin@gmail.com>
-AuthorDate:    Thu, 23 Jul 2020 20:56:14 +10:00
+Commit-ID:     a435b9a14356587cf512ea6473368a579373c74c
+Gitweb:        https://git.kernel.org/tip/a435b9a14356587cf512ea6473368a579373c74c
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Wed, 29 Jul 2020 13:00:57 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 26 Aug 2020 12:41:56 +02:00
+CommitterDate: Wed, 26 Aug 2020 12:42:02 +02:00
 
-lockdep: Only trace IRQ edges
+locking/refcount: Provide __refcount API to obtain the old value
 
-Problem:
+David requested means to obtain the old/previous value from the
+refcount API for tracing purposes.
 
-  raw_local_irq_save(); // software state on
-  local_irq_save(); // software state off
-  ...
-  local_irq_restore(); // software state still off, because we don't enable IRQs
-  raw_local_irq_restore(); // software state still off, *whoopsie*
+Duplicate (most of) the API as __refcount*() with an additional
+'int *' argument into which, if !NULL, the old value will be stored.
 
-existing instances:
-
- - lock_acquire()
-     raw_local_irq_save()
-     __lock_acquire()
-       arch_spin_lock(&graph_lock)
-         pv_wait() := kvm_wait() (same or worse for Xen/HyperV)
-           local_irq_save()
-
- - trace_clock_global()
-     raw_local_irq_save()
-     arch_spin_lock()
-       pv_wait() := kvm_wait()
-	 local_irq_save()
-
- - apic_retrigger_irq()
-     raw_local_irq_save()
-     apic->send_IPI() := default_send_IPI_single_phys()
-       local_irq_save()
-
-Possible solutions:
-
- A) make it work by enabling the tracing inside raw_*()
- B) make it work by keeping tracing disabled inside raw_*()
- C) call it broken and clean it up now
-
-Now, given that the only reason to use the raw_* variant is because you don't
-want tracing. Therefore A) seems like a weird option (although it can be done).
-C) is tempting, but OTOH it ends up converting a _lot_ of code to raw just
-because there is one raw user, this strips the validation/tracing off for all
-the other users.
-
-So we pick B) and declare any code that ends up doing:
-
-	raw_local_irq_save()
-	local_irq_save()
-	lockdep_assert_irqs_disabled();
-
-broken. AFAICT this problem has existed forever, the only reason it came
-up is because commit: 859d069ee1dd ("lockdep: Prepare for NMI IRQ
-state tracking") changed IRQ tracing vs lockdep recursion and the
-first instance is fairly common, the other cases hardly ever happen.
-
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-[rewrote changelog]
+Requested-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Tested-by: Marco Elver <elver@google.com>
-Link: https://lkml.kernel.org/r/20200723105615.1268126-1-npiggin@gmail.com
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20200729111120.GA2638@hirez.programming.kicks-ass.net
 ---
- arch/powerpc/include/asm/hw_irq.h | 11 ++++-------
- include/linux/irqflags.h          | 15 +++++++--------
- 2 files changed, 11 insertions(+), 15 deletions(-)
+ include/linux/refcount.h | 65 ++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 57 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm/hw_irq.h
-index 3a0db7b..35060be 100644
---- a/arch/powerpc/include/asm/hw_irq.h
-+++ b/arch/powerpc/include/asm/hw_irq.h
-@@ -200,17 +200,14 @@ static inline bool arch_irqs_disabled(void)
- #define powerpc_local_irq_pmu_save(flags)			\
- 	 do {							\
- 		raw_local_irq_pmu_save(flags);			\
--		trace_hardirqs_off();				\
-+		if (!raw_irqs_disabled_flags(flags))		\
-+			trace_hardirqs_off();			\
- 	} while(0)
- #define powerpc_local_irq_pmu_restore(flags)			\
- 	do {							\
--		if (raw_irqs_disabled_flags(flags)) {		\
--			raw_local_irq_pmu_restore(flags);	\
--			trace_hardirqs_off();			\
--		} else {					\
-+		if (!raw_irqs_disabled_flags(flags))		\
- 			trace_hardirqs_on();			\
--			raw_local_irq_pmu_restore(flags);	\
--		}						\
-+		raw_local_irq_pmu_restore(flags);		\
- 	} while(0)
- #else
- #define powerpc_local_irq_pmu_save(flags)			\
-diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
-index 00d553d..3ed4e87 100644
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -191,25 +191,24 @@ do {						\
+diff --git a/include/linux/refcount.h b/include/linux/refcount.h
+index 0e3ee25..7fabb1a 100644
+--- a/include/linux/refcount.h
++++ b/include/linux/refcount.h
+@@ -165,7 +165,7 @@ static inline unsigned int refcount_read(const refcount_t *r)
+  *
+  * Return: false if the passed refcount is 0, true otherwise
+  */
+-static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
++static inline __must_check bool __refcount_add_not_zero(int i, refcount_t *r, int *oldp)
+ {
+ 	int old = refcount_read(r);
  
- #define local_irq_disable()				\
- 	do {						\
-+		bool was_disabled = raw_irqs_disabled();\
- 		raw_local_irq_disable();		\
--		trace_hardirqs_off();			\
-+		if (!was_disabled)			\
-+			trace_hardirqs_off();		\
- 	} while (0)
+@@ -174,12 +174,20 @@ static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
+ 			break;
+ 	} while (!atomic_try_cmpxchg_relaxed(&r->refs, &old, old + i));
  
- #define local_irq_save(flags)				\
- 	do {						\
- 		raw_local_irq_save(flags);		\
--		trace_hardirqs_off();			\
-+		if (!raw_irqs_disabled_flags(flags))	\
-+			trace_hardirqs_off();		\
- 	} while (0)
++	if (oldp)
++		*oldp = old;
++
+ 	if (unlikely(old < 0 || old + i < 0))
+ 		refcount_warn_saturate(r, REFCOUNT_ADD_NOT_ZERO_OVF);
  
- #define local_irq_restore(flags)			\
- 	do {						\
--		if (raw_irqs_disabled_flags(flags)) {	\
--			raw_local_irq_restore(flags);	\
--			trace_hardirqs_off();		\
--		} else {				\
-+		if (!raw_irqs_disabled_flags(flags))	\
- 			trace_hardirqs_on();		\
--			raw_local_irq_restore(flags);	\
--		}					\
-+		raw_local_irq_restore(flags);		\
- 	} while (0)
+ 	return old;
+ }
  
- #define safe_halt()				\
++static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
++{
++	return __refcount_add_not_zero(i, r, NULL);
++}
++
+ /**
+  * refcount_add - add a value to a refcount
+  * @i: the value to add to the refcount
+@@ -196,16 +204,24 @@ static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
+  * cases, refcount_inc(), or one of its variants, should instead be used to
+  * increment a reference count.
+  */
+-static inline void refcount_add(int i, refcount_t *r)
++static inline void __refcount_add(int i, refcount_t *r, int *oldp)
+ {
+ 	int old = atomic_fetch_add_relaxed(i, &r->refs);
+ 
++	if (oldp)
++		*oldp = old;
++
+ 	if (unlikely(!old))
+ 		refcount_warn_saturate(r, REFCOUNT_ADD_UAF);
+ 	else if (unlikely(old < 0 || old + i < 0))
+ 		refcount_warn_saturate(r, REFCOUNT_ADD_OVF);
+ }
+ 
++static inline void refcount_add(int i, refcount_t *r)
++{
++	__refcount_add(i, r, NULL);
++}
++
+ /**
+  * refcount_inc_not_zero - increment a refcount unless it is 0
+  * @r: the refcount to increment
+@@ -219,9 +235,14 @@ static inline void refcount_add(int i, refcount_t *r)
+  *
+  * Return: true if the increment was successful, false otherwise
+  */
++static inline __must_check bool __refcount_inc_not_zero(refcount_t *r, int *oldp)
++{
++	return __refcount_add_not_zero(1, r, oldp);
++}
++
+ static inline __must_check bool refcount_inc_not_zero(refcount_t *r)
+ {
+-	return refcount_add_not_zero(1, r);
++	return __refcount_inc_not_zero(r, NULL);
+ }
+ 
+ /**
+@@ -236,9 +257,14 @@ static inline __must_check bool refcount_inc_not_zero(refcount_t *r)
+  * Will WARN if the refcount is 0, as this represents a possible use-after-free
+  * condition.
+  */
++static inline void __refcount_inc(refcount_t *r, int *oldp)
++{
++	__refcount_add(1, r, oldp);
++}
++
+ static inline void refcount_inc(refcount_t *r)
+ {
+-	refcount_add(1, r);
++	__refcount_inc(r, NULL);
+ }
+ 
+ /**
+@@ -261,10 +287,13 @@ static inline void refcount_inc(refcount_t *r)
+  *
+  * Return: true if the resulting refcount is 0, false otherwise
+  */
+-static inline __must_check bool refcount_sub_and_test(int i, refcount_t *r)
++static inline __must_check bool __refcount_sub_and_test(int i, refcount_t *r, int *oldp)
+ {
+ 	int old = atomic_fetch_sub_release(i, &r->refs);
+ 
++	if (oldp)
++		*oldp = old;
++
+ 	if (old == i) {
+ 		smp_acquire__after_ctrl_dep();
+ 		return true;
+@@ -276,6 +305,11 @@ static inline __must_check bool refcount_sub_and_test(int i, refcount_t *r)
+ 	return false;
+ }
+ 
++static inline __must_check bool refcount_sub_and_test(int i, refcount_t *r)
++{
++	return __refcount_sub_and_test(i, r, NULL);
++}
++
+ /**
+  * refcount_dec_and_test - decrement a refcount and test if it is 0
+  * @r: the refcount
+@@ -289,9 +323,14 @@ static inline __must_check bool refcount_sub_and_test(int i, refcount_t *r)
+  *
+  * Return: true if the resulting refcount is 0, false otherwise
+  */
++static inline __must_check bool __refcount_dec_and_test(refcount_t *r, int *oldp)
++{
++	return __refcount_sub_and_test(1, r, oldp);
++}
++
+ static inline __must_check bool refcount_dec_and_test(refcount_t *r)
+ {
+-	return refcount_sub_and_test(1, r);
++	return __refcount_dec_and_test(r, NULL);
+ }
+ 
+ /**
+@@ -304,12 +343,22 @@ static inline __must_check bool refcount_dec_and_test(refcount_t *r)
+  * Provides release memory ordering, such that prior loads and stores are done
+  * before.
+  */
+-static inline void refcount_dec(refcount_t *r)
++static inline void __refcount_dec(refcount_t *r, int *oldp)
+ {
+-	if (unlikely(atomic_fetch_sub_release(1, &r->refs) <= 1))
++	int old = atomic_fetch_sub_release(1, &r->refs);
++
++	if (oldp)
++		*oldp = old;
++
++	if (unlikely(old <= 1))
+ 		refcount_warn_saturate(r, REFCOUNT_DEC_LEAK);
+ }
+ 
++static inline void refcount_dec(refcount_t *r)
++{
++	__refcount_dec(r, NULL);
++}
++
+ extern __must_check bool refcount_dec_if_one(refcount_t *r);
+ extern __must_check bool refcount_dec_not_one(refcount_t *r);
+ extern __must_check bool refcount_dec_and_mutex_lock(refcount_t *r, struct mutex *lock);
