@@ -2,97 +2,53 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB15FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C157AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC1220786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B23320786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgH0Hq2 (ORCPT
+        id S1728270AbgH0Hq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:46:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49900 "EHLO mx2.suse.de"
+        Thu, 27 Aug 2020 03:46:56 -0400
+Received: from ozlabs.org ([203.11.71.1]:48159 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgH0Hq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:46:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 49C1EACF2;
-        Thu, 27 Aug 2020 07:46:57 +0000 (UTC)
-Subject: Re: [patch V2 27/46] x86/xen: Rework MSI teardown
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200826111628.794979401@linutronix.de>
- <20200826112333.326841410@linutronix.de>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <5c18f793-9212-b7f0-583d-896e1957ba1a@suse.com>
-Date:   Thu, 27 Aug 2020 09:46:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200826112333.326841410@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726882AbgH0Hqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:46:55 -0400
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 4BcZYn4Gh6z9sTj; Thu, 27 Aug 2020 17:46:53 +1000 (AEST)
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+To:     Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@ozlabs.org
+Cc:     daniel.vetter@ffwll.ch, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, b.zolnierkie@samsung.com,
+        sam@ravnborg.org, linux-fbdev@vger.kernel.org
+In-Reply-To: <20200821104910.3363818-1-mpe@ellerman.id.au>
+References: <20200821104910.3363818-1-mpe@ellerman.id.au>
+Subject: Re: [PATCH] video: fbdev: controlfb: Fix build for COMPILE_TEST=y && PPC_PMAC=n
+Message-Id: <159851436069.52163.17558243673000868151.b4-ty@ellerman.id.au>
+Date:   Thu, 27 Aug 2020 17:46:53 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.08.20 13:16, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
+On Fri, 21 Aug 2020 20:49:10 +1000, Michael Ellerman wrote:
+> The build is currently broken, if COMPILE_TEST=y and PPC_PMAC=n:
 > 
-> X86 cannot store the irq domain pointer in struct device without breaking
-> XEN because the irq domain pointer takes precedence over arch_*_msi_irqs()
-> fallbacks.
+>   linux/drivers/video/fbdev/controlfb.c: In function ‘control_set_hardware’:
+>   linux/drivers/video/fbdev/controlfb.c:276:2: error: implicit declaration of function ‘btext_update_display’
+>     276 |  btext_update_display(p->frame_buffer_phys + CTRLFB_OFF,
+>         |  ^~~~~~~~~~~~~~~~~~~~
 > 
-> XENs MSI teardown relies on default_teardown_msi_irqs() which invokes
-> arch_teardown_msi_irq(). default_teardown_msi_irqs() is a trivial iterator
-> over the msi entries associated to a device.
-> 
-> Implement this loop in xen_teardown_msi_irqs() to prepare for removal of
-> the fallbacks for X86.
-> 
-> This is a preparatory step to wrap XEN MSI alloc/free into a irq domain
-> which in turn allows to store the irq domain pointer in struct device and
-> to use the irq domain functions directly.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> [...]
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
+Applied to powerpc/fixes.
 
+[1/1] video: fbdev: controlfb: Fix build for COMPILE_TEST=y && PPC_PMAC=n
+      https://git.kernel.org/powerpc/c/4d618b9f3fcab84e9ec28c180de46fb2c929d096
 
-Juergen
+cheers
