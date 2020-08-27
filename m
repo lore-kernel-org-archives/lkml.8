@@ -2,118 +2,109 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E089BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA22C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C24B422BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66C2822D2A
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:49:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mx+FJh+q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgH0QqH (ORCPT
+        id S1727781AbgH0QtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:46:07 -0400
-Received: from mga09.intel.com ([134.134.136.24]:41896 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727020AbgH0QqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:46:00 -0400
-IronPort-SDR: eYyH0TwhRav9kD/2TiL8b9Kwl5vALgICsbcCKAMgkyT13W3U0XlxCrNthxiH5r5jw/B3nygPfA
- pjfSxxKaoJiw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="157550589"
-X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
-   d="scan'208";a="157550589"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 09:45:59 -0700
-IronPort-SDR: ImMD13yCvWB8O00pj8iqY8/mHChXArSLmVWfinKoF3yFxpCwikQuDtkwpHerhJy9eRYUTwD+y0
- FW9qKLVi2qrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
-   d="scan'208";a="403460440"
-Received: from irsmsx601.ger.corp.intel.com ([163.33.146.7])
-  by fmsmga001.fm.intel.com with ESMTP; 27 Aug 2020 09:45:57 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- irsmsx601.ger.corp.intel.com (163.33.146.7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 27 Aug 2020 17:45:55 +0100
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
- Thu, 27 Aug 2020 09:45:53 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "hch@infradead.org" <hch@infradead.org>
-CC:     "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Huffman, Amber" <amber.huffman@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Thread-Topic: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Thread-Index: AQHWd7clLgwBVuAUCESee06o/u7QiKlI1l4AgAKTLgCAAJR+AIAAodyAgAAC1ICAAAYeAA==
-Date:   Thu, 27 Aug 2020 16:45:53 +0000
-Message-ID: <eb45485d9107440a667e598da99ad949320b77b1.camel@intel.com>
-References: <20200821123222.32093-1-kai.heng.feng@canonical.com>
-         <20200825062320.GA27116@infradead.org>
-         <cd5aa2fef13f14b30c139d03d5256cf93c7195dc.camel@intel.com>
-         <20200827063406.GA13738@infradead.org>
-         <660c8671a51eec447dc7fab22bacbc9c600508d9.camel@intel.com>
-         <20200827162333.GA6822@infradead.org>
-In-Reply-To: <20200827162333.GA6822@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.212.223.90]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <63FD82EA9164D5498895AF11A6D56E22@intel.com>
-Content-Transfer-Encoding: base64
+        Thu, 27 Aug 2020 12:49:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726938AbgH0QtC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 12:49:02 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F567C06121B
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:49:02 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id g14so6556777iom.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 09:49:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/xGpOY5v3rYoFqTd5QFQEPCm9lS0N53r2cL3cEdKtPw=;
+        b=mx+FJh+qUi0eylsu7L5BZKzqa0QvffqcQd1piV8hJ6N9eT9+EcGAtY/vTkjhlPEDuW
+         i4bJW+Hw5vkXE3QOjP00yzvGOx8NdmAa5xDpJxtAH1b5y/tb+6lcmCXNX04NRc+y3ZGO
+         Tz4AfmmZltBKDUOJrlkUu4MwuW1406+6ICT01nQWL7eOtK1K7beaV3+fgjuvh9xLhMGb
+         1rdiHTd4Wm9XHDp5nDwcQsgX1umcQciurhny3pj2qPHE/IeYwdyvZVs437s79yJd4Pd1
+         qQ4F0jgXjb7kjVvvsCi6v5HMTX/eP5Xw6c88+9OJjIQmO9nUDfZHpZ+yJF9iMaD1WVC5
+         Sovw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/xGpOY5v3rYoFqTd5QFQEPCm9lS0N53r2cL3cEdKtPw=;
+        b=sFCHw6VKyPZWC4Dyr9b3ZaNU5o8Lg8AevcItSU6xTfRK4zvC7s6DugsvGlJVy2vr3E
+         rKPysfNEZSL0wLynGUSdfW9BB1o3qmp5bVaNUaNKYtH3/uLP3cZz5Vz/TZg11wKK8dKY
+         of6kPPZFs8RbPrDbEh8dMuUP82Mj38F593Dzh2q/OADB/1ey/fD/WV7PvtIa1/OgMZQz
+         UC51HxxBb0TqEnDHECIKqHBJ5rG5qFGi4JsWn/pGS7w9mVSiD+0EGXA79RR5OrEa4JG4
+         lFSXOjpswvWwIMBXG5oTSO2qfTrQZm9NGx6yUUhpqvI/h2wpf1l43/82vsVozcPzfdgc
+         wHwA==
+X-Gm-Message-State: AOAM5331MeSv3d8qk4o4+KTe1YoMQaOMCNr2qPQD45DBBu12rE9rj0xg
+        FmkmixUhv9pK3qWCAtniK0ZWog==
+X-Google-Smtp-Source: ABdhPJx+UxHqjKJ/wh4vVsrsKz1c7ecfzQJTGkjRy2EK647UYYIw8L0JJ2F4rqhbalqI+shH+xs5XQ==
+X-Received: by 2002:a5d:924c:: with SMTP id e12mr17853974iol.28.1598546940951;
+        Thu, 27 Aug 2020 09:49:00 -0700 (PDT)
+Received: from google.com ([2601:285:8380:9270::f2a2])
+        by smtp.gmail.com with ESMTPSA id 187sm1430125iow.34.2020.08.27.09.48.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 09:49:00 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 10:48:57 -0600
+From:   Ross Zwisler <zwisler@google.com>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-kernel@vger.kernel.org,
+        Mattias Nissler <mnissler@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Benjamin Gordon <bmgordon@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Dmitry Torokhov <dtor@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Micah Morton <mortonm@google.com>,
+        Raul Rangel <rrangel@google.com>, Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH v8 1/2] Add a "nosymfollow" mount option.
+Message-ID: <20200827164857.GA414369@google.com>
+References: <20200819164317.637421-1-zwisler@google.com>
+ <20200826204819.GA4414@google.com>
+ <20200827015940.GY1236603@ZenIV.linux.org.uk>
+ <20200827154139.vwuflrlvj257krnw@yavin.dot.cyphar.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827154139.vwuflrlvj257krnw@yavin.dot.cyphar.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA4LTI3IGF0IDE3OjIzICswMTAwLCBoY2hAaW5mcmFkZWFkLm9yZyB3cm90
-ZToNCj4gT24gVGh1LCBBdWcgMjcsIDIwMjAgYXQgMDQ6MTM6NDRQTSArMDAwMCwgRGVycmljaywg
-Sm9uYXRoYW4gd3JvdGU6DQo+ID4gT24gVGh1LCAyMDIwLTA4LTI3IGF0IDA2OjM0ICswMDAwLCBo
-Y2hAaW5mcmFkZWFkLm9yZyB3cm90ZToNCj4gPiA+IE9uIFdlZCwgQXVnIDI2LCAyMDIwIGF0IDA5
-OjQzOjI3UE0gKzAwMDAsIERlcnJpY2ssIEpvbmF0aGFuIHdyb3RlOg0KPiA+ID4gPiBGZWVsIGZy
-ZWUgdG8gcmV2aWV3IG15IHNldCB0byBkaXNhYmxlIHRoZSBNU0kgcmVtYXBwaW5nIHdoaWNoIHdp
-bGwNCj4gPiA+ID4gbWFrZQ0KPiA+ID4gPiBpdCBwZXJmb3JtIGFzIHdlbGwgYXMgZGlyZWN0LWF0
-dGFjaGVkOg0KPiA+ID4gPiANCj4gPiA+ID4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
-cm9qZWN0L2xpbnV4LXBjaS9saXN0Lz9zZXJpZXM9MzI1NjgxDQo+ID4gPiANCj4gPiA+IFNvIHRo
-YXQgdGhlbiB3ZSBoYXZlIHRvIGRlYWwgd2l0aCB5b3VyIHNjaGVtZXMgdG8gbWFrZSBpbmRpdmlk
-dWFsDQo+ID4gPiBkZXZpY2UgZGlyZWN0IGFzc2lnbm1lbnQgd29yayBpbiBhIGNvbnZvbHV0ZWQg
-d2F5Pw0KPiA+IA0KPiA+IFRoYXQncyBub3QgdGhlIGludGVudCBvZiB0aGF0IHBhdGNoc2V0IC1h
-dCBhbGwtLiBJdCB3YXMgdG8gYWRkcmVzcyB0aGUNCj4gPiBwZXJmb3JtYW5jZSBib3R0bGVuZWNr
-cyB3aXRoIFZNRCB0aGF0IHlvdSBjb25zdGFudGx5IGNvbXBsYWluIGFib3V0LiANCj4gDQo+IEkg
-a25vdy4gIEJ1dCBvbmNlIHdlIGZpeCB0aGF0IGJvdHRsZW5lY2sgd2UgZml4IHRoZSBuZXh0IGlz
-c3VlLA0KPiB0aGVuIHRvIHRhY2tsZSB0aGUgbmV4dC4gIFdoaWxlIGF0IHRoZSBzYW1lIHRpbWUg
-Vk1EIGJyaW5ncyB6ZXJvDQo+IGFjdHVhbCBiZW5lZml0cy4NCj4gDQoNCkp1c3QgYSBmZXcgYmVu
-ZWZpdHMgYW5kIHRoZXJlIGFyZSBvdGhlciB1c2VycyB3aXRoIHVuaXF1ZSB1c2UgY2FzZXM6DQox
-LiBQYXNzdGhyb3VnaCBvZiB0aGUgZW5kcG9pbnQgdG8gT1NlcyB3aGljaCBkb24ndCBuYXRpdmVs
-eSBzdXBwb3J0DQpob3RwbHVnIGNhbiBlbmFibGUgaG90cGx1ZyBmb3IgdGhhdCBPUyB1c2luZyB0
-aGUgZ3Vlc3QgVk1EIGRyaXZlcg0KMi4gU29tZSBoeXBlcnZpc29ycyBoYXZlIGEgbGltaXQgb24g
-dGhlIG51bWJlciBvZiBkZXZpY2VzIHRoYXQgY2FuIGJlDQpwYXNzZWQgdGhyb3VnaC4gVk1EIGVu
-ZHBvaW50IGlzIGEgc2luZ2xlIGRldmljZSB0aGF0IGV4cGFuZHMgdG8gbWFueS4NCjMuIEV4cGFu
-c2lvbiBvZiBwb3NzaWJsZSBidXMgbnVtYmVycyBiZXlvbmQgMjU2IGJ5IHVzaW5nIG90aGVyDQpz
-ZWdtZW50cy4NCjQuIEN1c3RvbSBSQUlEIExFRCBwYXR0ZXJucyBkcml2ZW4gYnkgbGVkY3RsDQoN
-CkknbSBub3QgdHJ5aW5nIHRvIG1hcmtldCB0aGlzLiBKdXN0IHBvaW50aW5nIG91dCB0aGF0IHRo
-aXMgaXNuJ3QNCiJicmluZ2luZyB6ZXJvIGFjdHVhbCBiZW5lZml0cyIgdG8gbWFueSB1c2Vycy4N
-Cg0KDQo+ID4gPiBQbGVhc2UganVzdCBnaXZlIHVzDQo+ID4gPiBhIGRpc2FibGUgbm9iIGZvciBW
-TUQsIHdoaWNoIHNvbHZlcyBfYWxsXyB0aGVzZSBwcm9ibGVtcyB3aXRob3V0DQo+ID4gPiBhZGRp
-bmcNCj4gPiA+IGFueS4NCj4gPiANCj4gPiBJIGRvbid0IHNlZSB0aGUgcHVycG9zZSBvZiB0aGlz
-IGxpbmUgb2YgZGlzY3Vzc2lvbi4gVk1EIGhhcyBiZWVuIGluIHRoZQ0KPiA+IGtlcm5lbCBmb3Ig
-NSB5ZWFycy4gV2UgYXJlIGNvbnN0YW50bHkgd29ya2luZyBvbiBiZXR0ZXIgc3VwcG9ydC4NCj4g
-DQo+IFBsZWFzZSBqdXN0IHdvcmsgd2l0aCB0aGUgcGxhdGZvcm0gcGVvcGxlIHRvIGFsbG93IHRo
-ZSBob3N0IHRvIGRpc2FibGUNCj4gVk1ELiAgVGhhdCBpcyB0aGUgb25seSByZWFsbHkgdXNlZnVs
-IHZhbHVlIGFkZCBoZXJlLg0KDQpDaGVlcnMNCg==
+On Fri, Aug 28, 2020 at 01:41:39AM +1000, Aleksa Sarai wrote:
+> On 2020-08-27, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > On Wed, Aug 26, 2020 at 02:48:19PM -0600, Ross Zwisler wrote:
+> > 
+> > > Al, now that the changes to fs/namei.c have landed and we're past the merge
+> > > window for v5.9, what are your thoughts on this patch and the associated test?
+> > 
+> > Humm...  should that be nd->path.mnt->mnt_flags or link->mnt->mnt_flags?
+> > Usually it's the same thing, but they might differ.  IOW, is that about the
+> > directory we'd found it in, or is it about the link itself?
+> 
+> Now that you mention it, I think link->mnt->mnt_flags makes more sense.
+> The restriction should apply in the context of whatever filesystem
+> contains the symlink, and that would matches FreeBSD's semantics (at
+> least as far as I can tell from a quick look at sys/kern/vfs_lookup.c).
+
+Yep, changing this to link->mnt->mnt_flags makes sense to me, as you're right
+that we care about the link itself and not the link's parent directory.  Thank
+you for the review, and I'll send out v9 momentarily.
