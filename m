@@ -2,96 +2,214 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B50C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C84C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8D8E22B4E
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB2BA2177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:30:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EocTlq0O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbgH0OaF convert rfc822-to-8bit (ORCPT
+        id S1728008AbgH0OaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:30:05 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:57430 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728048AbgH0OWC (ORCPT
+        Thu, 27 Aug 2020 10:30:17 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4984 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727793AbgH0OYS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:22:02 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-223-AW3ZNV-SP0aGNzZHgpXBVg-1; Thu, 27 Aug 2020 15:13:22 +0100
-X-MC-Unique: AW3ZNV-SP0aGNzZHgpXBVg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 27 Aug 2020 15:13:21 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 27 Aug 2020 15:13:21 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: NTP adjustments to CLOCK_MONATONIC
-Thread-Topic: NTP adjustments to CLOCK_MONATONIC
-Thread-Index: AdZ8dpybr71tOIXqSjuzMi+avyML6Q==
-Date:   Thu, 27 Aug 2020 14:13:21 +0000
-Message-ID: <3df4f582304949648e104a2837555bad@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 27 Aug 2020 10:24:18 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07RE2VUc064531;
+        Thu, 27 Aug 2020 10:24:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : subject : to : cc
+ : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=FTRLjuVSGLLDtNNu6/bc57ixywQRqLJ/pzpYQqt7L3Y=;
+ b=EocTlq0ObfGvEZigSQuK/GZpMAWhRrsX0ntZ37O4xtHkVEY49/4RLDMi0aPbq7URtCYt
+ uzFdcHYtXUJUiwbqBv/o2TfqceI81RyekrudvWLm3YUhhLVog1zkBQclqvm8gP7aNeNC
+ 7Tih7RUM6l7FyU7ZuL+vmrZrz2b0LDrVZ7NehP6AihP8dHp5xf7TxlgqaLzm8X5LY0ey
+ R8/KIADzD4RSc1c5WTb8TNh3pzENxPiAc1K9b1NZpCxd5Uid1Ak33g0GZ4b4xRElgLZ3
+ mhjh2GmiprZ0c+Yhf0nPjc0F+tQ3DsIgHj5nerbL4LCYghgKpOtH4qkhnj1b+2Crlcja yQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 336dy2hdpv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 10:24:14 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07RE41OF073832;
+        Thu, 27 Aug 2020 10:24:13 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 336dy2hdpp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 10:24:13 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07REN8i7004383;
+        Thu, 27 Aug 2020 14:24:13 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma01wdc.us.ibm.com with ESMTP id 332uwatjrd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 14:24:13 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07REO5rt41746780
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Aug 2020 14:24:05 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B2E48BE051;
+        Thu, 27 Aug 2020 14:24:09 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5D251BE04F;
+        Thu, 27 Aug 2020 14:24:08 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.170.64])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 27 Aug 2020 14:24:08 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: Re: [PATCH v10 02/16] s390/vfio-ap: use new AP bus interface to
+ search for queue devices
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        kernel test robot <lkp@intel.com>
+References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+ <20200821195616.13554-3-akrowiak@linux.ibm.com>
+ <20200825121334.0ff35d7a.cohuck@redhat.com>
+Message-ID: <b1c6bad8-3ec6-183c-3e35-9962e9c721c7@linux.ibm.com>
+Date:   Thu, 27 Aug 2020 10:24:07 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200825121334.0ff35d7a.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-27_07:2020-08-27,2020-08-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 bulkscore=0 priorityscore=1501 clxscore=1015
+ mlxlogscore=999 suspectscore=3 lowpriorityscore=0 adultscore=0 spamscore=0
+ mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008270103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've just noticed some strange behaviour of some code that is
-comparing CLOCK_MONATONIC to a second (external) clock source.
 
-Normally the difference is between +/-200ns in 10ms.
-Which is well within the ppm errors of the crystals.
 
-However for around 90 seconds after system boot the error
-was massive - I have to force a difference of around 8000ns/10ms
-to see similar behaviour.
+On 8/25/20 6:13 AM, Cornelia Huck wrote:
+> On Fri, 21 Aug 2020 15:56:02 -0400
+> Tony Krowiak<akrowiak@linux.ibm.com>  wrote:
+>
+>> This patch refactor's the vfio_ap device driver to use the AP bus's
+> s/refactor's/refactors/
 
-The only explanation I can guess at is that it was subject
-to NTP's maximum slew rate of 0.5ms/sec (1/2000) while NTP
-was aligning CLOCK_REALTIME.
+Of course, what was I thinking?:)
 
-While the NTP adjustments for clock frequency drift aren't
-unreasonable for CLOCK_MONATONIC, including the adjustments
-for the boot time offset is rather horrid.
+>> ap_get_qdev() function to retrieve the vfio_ap_queue struct containing
+>> information about a queue that is bound to the vfio_ap device driver.
+>> The bus's ap_get_qdev() function retrieves the queue device from a
+>> hashtable keyed by APQN. This is much more efficient than looping over
+>> the list of devices attached to the AP bus by several orders of
+>> magnitude.
+>>
+>> Signed-off-by: Tony Krowiak<akrowiak@linux.ibm.com>
+>> Reported-by: kernel test robot<lkp@intel.com>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_drv.c     | 27 ++-------
+>>   drivers/s390/crypto/vfio_ap_ops.c     | 86 +++++++++++++++------------
+>>   drivers/s390/crypto/vfio_ap_private.h |  8 ++-
+>>   3 files changed, 59 insertions(+), 62 deletions(-)
+>>
+> (...)
+>
+>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+>> index e0bde8518745..ad3925f04f61 100644
+>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>> @@ -26,43 +26,26 @@
+>>   
+>>   static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
+>>   
+>> -static int match_apqn(struct device *dev, const void *data)
+>> -{
+>> -	struct vfio_ap_queue *q = dev_get_drvdata(dev);
+>> -
+>> -	return (q->apqn == *(int *)(data)) ? 1 : 0;
+>> -}
+>> -
+>>   /**
+>> - * vfio_ap_get_queue: Retrieve a queue with a specific APQN from a list
+>> - * @matrix_mdev: the associated mediated matrix
+>> + * vfio_ap_get_queue: Retrieve a queue with a specific APQN.
+>>    * @apqn: The queue APQN
+>>    *
+>> - * Retrieve a queue with a specific APQN from the list of the
+>> - * devices of the vfio_ap_drv.
+>> - * Verify that the APID and the APQI are set in the matrix.
+>> + * Retrieve a queue with a specific APQN from the AP queue devices attached to
+>> + * the AP bus.
+>>    *
+>> - * Returns the pointer to the associated vfio_ap_queue
+>> + * Returns the pointer to the vfio_ap_queue with the specified APQN, or NULL.
+>>    */
+>> -static struct vfio_ap_queue *vfio_ap_get_queue(
+>> -					struct ap_matrix_mdev *matrix_mdev,
+>> -					int apqn)
+>> +static struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
+>>   {
+>> +	struct ap_queue *queue;
+>>   	struct vfio_ap_queue *q;
+>> -	struct device *dev;
+>>   
+>> -	if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
+>> -		return NULL;
+>> -	if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
+> I think you should add some explanation to the patch description why
+> testing the matrix bitmasks is not needed anymore.
 
-In this case they stopped after 90 seconds, but a bigger
-offset could take hours (or even days?) to clear.
+As a result of this comment, I took a closer look at the code to
+determine the reason for eliminating the matrix_mdev
+parameter. The reason is because the code below (i.e., find the device
+and get the driver data) was also repeated in the vfio_ap_irq_disable_apqn()
+function, so I replaced it with a call to the function above; however, the
+vfio_ap_irq_disable_apqn() function  does not have a reference to the
+matrix_mdev, so I eliminated the matrix_mdev parameter. Note that the
+vfio_ap_irq_disable_apqn() is called for each APQN assigned to a matrix
+mdev, so there is no need to test the bitmasks there.
 
-This rather breaks what timekeeping.rst says about CLOCK_MONATONIC
-being useful for 'reliable timestamps and measuring short time
-intervals accurately'.
+The other place from which the function above is called is
+the handle_pqap() function which does have a reference to the
+matrix_mdev. In order to ensure the integrity of the instruction
+being intercepted - i.e., PQAP(AQIC) enable/disable IRQ for aN
+AP queue - the testing of the matrix bitmasks probably ought to
+be performed, so it will be done there instead of in the
+vfio_ap_get_queue() function above.
 
-Any idea what happens to CLOCK_MONATONIC over a leap second?
-Its offset to CLOCK_REALTIME should really change by 1 second.
 
-I can't use CLOCK_MONATONIC_RAW because the hrtimer code
-doesn't support it.
-
-There are also programs that need to do things (like send RTP)
-every 20ms - not every 20.01ms.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+> +	queue = ap_get_qdev(apqn);
+> +	if (!queue)
+>   		return NULL;
+>   
+> -	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+> -				 &apqn, match_apqn);
+> -	if (!dev)
+> -		return NULL;
+> -	q = dev_get_drvdata(dev);
+> -	q->matrix_mdev = matrix_mdev;
+> -	put_device(dev);
+> +	q = dev_get_drvdata(&queue->ap_dev.device);
+> +	put_device(&queue->ap_dev.device);
+>   
+>   	return q;
+>   }
+> (...)
+>
 
