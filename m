@@ -2,301 +2,175 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED424C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE66AC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7DD32080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCB432087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:51:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ex/gpgjo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YCjzclLy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgH0Tvd (ORCPT
+        id S1727838AbgH0Tvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:51:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52076 "EHLO
+        Thu, 27 Aug 2020 15:51:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgH0Tvc (ORCPT
+        with ESMTP id S1726236AbgH0Tvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:51:32 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3831C061264;
-        Thu, 27 Aug 2020 12:51:31 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d22so4319475pfn.5;
-        Thu, 27 Aug 2020 12:51:31 -0700 (PDT)
+        Thu, 27 Aug 2020 15:51:52 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B46C3C061264;
+        Thu, 27 Aug 2020 12:51:52 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id mw10so3152098pjb.2;
+        Thu, 27 Aug 2020 12:51:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gcd1nB19OTH1zKv6qhSqc5xobRaHVee78g1PzbEl6fI=;
-        b=ex/gpgjovMoKhy+gwxNUzVmwdddR+jvZu5aH2FiNpjTquN08Wii0oVRnzjAILdzc7M
-         0bmTucnzTPnopfTBGMk80abYdFtN69xKYbokxYZKljcp18CujGDWVFUIQ6npTqta0xzD
-         2Crf7GPhGLOOpwZDpCbQtsDRqjAEyhwlO4xV0UbLnTA02CJwXm9JiZs05MEVbs1c/4eT
-         QfQssqJBixDV7Sp7cxuZJgGJzU9S/uHgB8g++h6p/qJWBKpK2+z8B215WH4hxRDVJkQa
-         EjuT59THU9Een7KH8ca9JDOmfxqbYYQQj8re2bgrC+uMbxy9tZMrJuIP0+X8iOzyV3xJ
-         kchA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HeJN9f1Z10RS6kmYpW2mlXYutbYxxEGXhrktNJI/FiI=;
+        b=YCjzclLyWmOQtWConHJtmVuvFL2mO0/fGIrPjG8XYkkxS9gUnZAMRTb5xnjradovfO
+         vD1U9H0iy0axqZxzLylhSMYXDIVA6lZ7GbYKcT5h+Lh4sve6wE4yI7DvyXhoMAuFIvKk
+         ezD9veuDwDwXifdDRXopz8m7DCHv19EFGfeHkVUhlgTDoWax1ZLSHe8Jx4EXS0JkxDee
+         5ay+dHUd13OBuDb0W0IyRLVa+RvsQigA3Igt24eKuK6IUYlBaJ/guVl+LclIjxGQY5sw
+         Zbw9aiWpi2kVd4+nj+hJC/I6A90ojwU+fjHcIo3sYvsOLxuAMXG5/IHtbVkTmV2eDSvA
+         zWjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gcd1nB19OTH1zKv6qhSqc5xobRaHVee78g1PzbEl6fI=;
-        b=qAmzbwQRo4pPXu2znHZ9sdW/1AjluOriFuCVjeYrhH2ly6Idj8yxEkYzQTHOFSm+oW
-         tnNzIEamJNz74aiE4U9mIi+WnvADrCtv2KKTcerp30BqbactKKchk165jhZqg75Apo2z
-         3XP6mD6FvtibHz3btl+3IVmBx8YgwhhGSMfFzsRZlVZoZeKdMWVJWD1XW09rGfhx/cuJ
-         gbjd8oD5U9v8jOVX6U5QdUj0GutzUpIA3nZx9lge9JThYvde2e/oRpSNrwScTlW908ji
-         CQs0oJgQehQWx1Uc+MwNnsq9btQd1wTOtghGZARKM7oAcSZcyL6CG8ztNidcSe4ujl0r
-         I78A==
-X-Gm-Message-State: AOAM533h4R/getXQQS647Y265CVBKTCO6JzI9z/HAtScTN4lQNJj8fZH
-        t+V4EYc0cAb+qVkgA7zsqv6zKc991aoAz8H5YYU=
-X-Google-Smtp-Source: ABdhPJygfJzIrG3kwV1/jhIjw8ITN96yhEa6YFN7u9Xjf/ec+8mvoIJ8bbkGi47nXk15GCawUM1CW08gWBIe8YlHpT4=
-X-Received: by 2002:a17:902:8208:: with SMTP id x8mr6293153pln.65.1598557891210;
- Thu, 27 Aug 2020 12:51:31 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HeJN9f1Z10RS6kmYpW2mlXYutbYxxEGXhrktNJI/FiI=;
+        b=D7cpthav4pLaMC0rI5wGJJ1ZuHvvvMitVpbgsI8+cenENFMfpDiiyGCJKrJ5/FDw4n
+         Q7uwAHW0wa4Liy//Fi8OUijfWxFWpuBypzJw4FpPggfAP9M729pUxqxB/b2lFRMm1OFg
+         xSts55DjhZmNZudB8cG7YP5Gd6UlpnICB6l2yjzGV/mI533Vu+EEFcv04DsHQ7EeBlYP
+         Xl+8i5MUa45SY3+rtB6XFFiOODeXtWsNny43cx4e8UD2YcyYmBYqM+p/NsW9rOmgh3Nd
+         vxbcNYqLmxrofKej0vZ1BCvmyhWFhYPjm45zwmwqt1SncgIuycqklpBx2OYGqS3tgfy7
+         OyCA==
+X-Gm-Message-State: AOAM5330w65iF8Tmf/iLE5g0pW8kcQvYQE9Uuf83Tku/u0zZBsRFwGJL
+        /zL1tClLGX8e418Q+3HLRD8=
+X-Google-Smtp-Source: ABdhPJyclDqGuxinp7ETmsLEuRXVIZoMOGRaL4uJ6MEPRwaptHLx1zF23RJqHQeBoieLl6ZDLBXWAw==
+X-Received: by 2002:a17:90a:1862:: with SMTP id r89mr389135pja.59.1598557912308;
+        Thu, 27 Aug 2020 12:51:52 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p20sm2977705pjz.49.2020.08.27.12.51.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Aug 2020 12:51:51 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 12:51:50 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Robert Jones <rjones@gateworks.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: gsc-hwmon: add fan sensor
+Message-ID: <20200827195150.GA233489@roeck-us.net>
+References: <1598548892-17103-1-git-send-email-tharvey@gateworks.com>
 MIME-Version: 1.0
-References: <20200827192642.1725-1-krzk@kernel.org> <20200827192642.1725-8-krzk@kernel.org>
-In-Reply-To: <20200827192642.1725-8-krzk@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Aug 2020 22:51:14 +0300
-Message-ID: <CAHp75VfhmCBG615xW5XD6m9Fzkbv_3C5LiQCjTjhOAC7yFmE+A@mail.gmail.com>
-Subject: Re: [PATCH v2 08/18] iio: adc: stm32: Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Beniamin Bia <beniamin.bia@analog.com>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1598548892-17103-1-git-send-email-tharvey@gateworks.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 10:28 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and also it prints the error value.
-
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
+On Thu, Aug 27, 2020 at 10:21:32AM -0700, Tim Harvey wrote:
+> Add a fan sensor to report RPM's from a fan tach input.
+> 
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 > ---
->
-> Changes since v1:
-> 1. Convert to devm_clk_get_optional
-> 2. Update also stm32-dfsdm-core and stm32-dac-core.
-> 3. Wrap around 100 characters (accepted by checkpatch).
-> ---
->  drivers/iio/adc/stm32-adc-core.c   | 67 +++++++++---------------------
->  drivers/iio/adc/stm32-adc.c        |  9 +---
->  drivers/iio/adc/stm32-dfsdm-adc.c  |  9 +---
->  drivers/iio/adc/stm32-dfsdm-core.c |  8 +---
->  drivers/iio/dac/stm32-dac-core.c   |  5 +--
->  5 files changed, 26 insertions(+), 72 deletions(-)
->
-> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
-> index 0e2068ec068b..707c85dab7df 100644
-> --- a/drivers/iio/adc/stm32-adc-core.c
-> +++ b/drivers/iio/adc/stm32-adc-core.c
-> @@ -582,11 +582,9 @@ static int stm32_adc_core_switches_probe(struct device *dev,
->         priv->syscfg = syscon_regmap_lookup_by_phandle(np, "st,syscfg");
->         if (IS_ERR(priv->syscfg)) {
->                 ret = PTR_ERR(priv->syscfg);
-> -               if (ret != -ENODEV) {
-> -                       if (ret != -EPROBE_DEFER)
-> -                               dev_err(dev, "Can't probe syscfg: %d\n", ret);
-> -                       return ret;
-> -               }
-> +               if (ret != -ENODEV)
-> +                       return dev_err_probe(dev, ret, "Can't probe syscfg\n");
-> +
->                 priv->syscfg = NULL;
->         }
->
-> @@ -596,12 +594,9 @@ static int stm32_adc_core_switches_probe(struct device *dev,
->                 priv->booster = devm_regulator_get_optional(dev, "booster");
->                 if (IS_ERR(priv->booster)) {
->                         ret = PTR_ERR(priv->booster);
-> -                       if (ret != -ENODEV) {
-> -                               if (ret != -EPROBE_DEFER)
-> -                                       dev_err(dev, "can't get booster %d\n",
-> -                                               ret);
-> -                               return ret;
-> -                       }
-> +                       if (ret != -ENODEV)
-> +                               dev_err_probe(dev, ret, "can't get booster\n");
-> +
->                         priv->booster = NULL;
->                 }
->         }
-> @@ -612,11 +607,9 @@ static int stm32_adc_core_switches_probe(struct device *dev,
->                 priv->vdd = devm_regulator_get_optional(dev, "vdd");
->                 if (IS_ERR(priv->vdd)) {
->                         ret = PTR_ERR(priv->vdd);
-> -                       if (ret != -ENODEV) {
-> -                               if (ret != -EPROBE_DEFER)
-> -                                       dev_err(dev, "can't get vdd %d\n", ret);
-> -                               return ret;
-> -                       }
-> +                       if (ret != -ENODEV)
-> +                               return dev_err_probe(dev, ret, "can't get vdd\n");
-> +
->                         priv->vdd = NULL;
->                 }
->         }
-> @@ -669,42 +662,20 @@ static int stm32_adc_probe(struct platform_device *pdev)
->         priv->common.phys_base = res->start;
->
->         priv->vdda = devm_regulator_get(&pdev->dev, "vdda");
-> -       if (IS_ERR(priv->vdda)) {
-> -               ret = PTR_ERR(priv->vdda);
-> -               if (ret != -EPROBE_DEFER)
-> -                       dev_err(&pdev->dev, "vdda get failed, %d\n", ret);
-> -               return ret;
-> -       }
-> +       if (IS_ERR(priv->vdda))
-> +               return dev_err_probe(&pdev->dev, PTR_ERR(priv->vdda), "vdda get failed\n");
->
->         priv->vref = devm_regulator_get(&pdev->dev, "vref");
-> -       if (IS_ERR(priv->vref)) {
-> -               ret = PTR_ERR(priv->vref);
-> -               if (ret != -EPROBE_DEFER)
-> -                       dev_err(&pdev->dev, "vref get failed, %d\n", ret);
-> -               return ret;
-> -       }
-> +       if (IS_ERR(priv->vref))
-> +               return dev_err_probe(&pdev->dev, PTR_ERR(priv->vref), "vref get failed\n");
->
-> -       priv->aclk = devm_clk_get(&pdev->dev, "adc");
-> -       if (IS_ERR(priv->aclk)) {
-> -               ret = PTR_ERR(priv->aclk);
-> -               if (ret != -ENOENT) {
-> -                       if (ret != -EPROBE_DEFER)
-> -                               dev_err(&pdev->dev, "Can't get 'adc' clock\n");
-> -                       return ret;
-> -               }
-> -               priv->aclk = NULL;
-> -       }
-> +       priv->aclk = devm_clk_get_optional(&pdev->dev, "adc");
-> +       if (IS_ERR(priv->aclk))
-> +               return dev_err_probe(&pdev->dev, PTR_ERR(priv->aclk), "Can't get 'adc' clock\n");
->
-> -       priv->bclk = devm_clk_get(&pdev->dev, "bus");
-> -       if (IS_ERR(priv->bclk)) {
-> -               ret = PTR_ERR(priv->bclk);
-> -               if (ret != -ENOENT) {
-> -                       if (ret != -EPROBE_DEFER)
-> -                               dev_err(&pdev->dev, "Can't get 'bus' clock\n");
-> -                       return ret;
-> -               }
-> -               priv->bclk = NULL;
-> -       }
-> +       priv->bclk = devm_clk_get_optional(&pdev->dev, "bus");
-> +       if (IS_ERR(priv->bclk))
-> +               return dev_err_probe(&pdev->dev, PTR_ERR(priv->bclk), "Can't get 'bus' clock\n");
->
->         ret = stm32_adc_core_switches_probe(dev, priv);
->         if (ret)
-> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-> index 3eb9ebe8372f..b8e764ca54a6 100644
-> --- a/drivers/iio/adc/stm32-adc.c
-> +++ b/drivers/iio/adc/stm32-adc.c
-> @@ -1805,13 +1805,8 @@ static int stm32_adc_dma_request(struct device *dev, struct iio_dev *indio_dev)
->         adc->dma_chan = dma_request_chan(dev, "rx");
->         if (IS_ERR(adc->dma_chan)) {
->                 ret = PTR_ERR(adc->dma_chan);
-> -               if (ret != -ENODEV) {
-> -                       if (ret != -EPROBE_DEFER)
-> -                               dev_err(dev,
-> -                                       "DMA channel request failed with %d\n",
-> -                                       ret);
-> -                       return ret;
-> -               }
-> +               if (ret != -ENODEV)
-> +                       return dev_err_probe(dev, ret, "DMA channel request failed with\n");
->
->                 /* DMA is optional: fall back to IRQ mode */
->                 adc->dma_chan = NULL;
-> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-> index 5e10fb4f3704..12c951078c1f 100644
-> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
-> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-> @@ -1473,13 +1473,8 @@ static int stm32_dfsdm_adc_init(struct device *dev, struct iio_dev *indio_dev)
->         /* Optionally request DMA */
->         ret = stm32_dfsdm_dma_request(dev, indio_dev);
->         if (ret) {
-> -               if (ret != -ENODEV) {
-> -                       if (ret != -EPROBE_DEFER)
-> -                               dev_err(dev,
-> -                                       "DMA channel request failed with %d\n",
-> -                                       ret);
-> -                       return ret;
-> -               }
-> +               if (ret != -ENODEV)
-> +                       return dev_err_probe(dev, ret, "DMA channel request failed with\n");
->
->                 dev_dbg(dev, "No DMA support\n");
->                 return 0;
-> diff --git a/drivers/iio/adc/stm32-dfsdm-core.c b/drivers/iio/adc/stm32-dfsdm-core.c
-> index 26e2011c5868..34e4e6e59acf 100644
-> --- a/drivers/iio/adc/stm32-dfsdm-core.c
-> +++ b/drivers/iio/adc/stm32-dfsdm-core.c
-> @@ -243,12 +243,8 @@ static int stm32_dfsdm_parse_of(struct platform_device *pdev,
->          * on use case.
->          */
->         priv->clk = devm_clk_get(&pdev->dev, "dfsdm");
-> -       if (IS_ERR(priv->clk)) {
-> -               ret = PTR_ERR(priv->clk);
-> -               if (ret != -EPROBE_DEFER)
-> -                       dev_err(&pdev->dev, "Failed to get clock (%d)\n", ret);
-> -               return ret;
-> -       }
-> +       if (IS_ERR(priv->clk))
-> +               return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk), "Failed to get clock\n");
->
->         priv->aclk = devm_clk_get(&pdev->dev, "audio");
->         if (IS_ERR(priv->aclk))
-> diff --git a/drivers/iio/dac/stm32-dac-core.c b/drivers/iio/dac/stm32-dac-core.c
-> index 7e5809ba0dee..906436780347 100644
-> --- a/drivers/iio/dac/stm32-dac-core.c
-> +++ b/drivers/iio/dac/stm32-dac-core.c
-> @@ -150,10 +150,7 @@ static int stm32_dac_probe(struct platform_device *pdev)
->         rst = devm_reset_control_get_optional_exclusive(dev, NULL);
->         if (rst) {
->                 if (IS_ERR(rst)) {
-> -                       ret = PTR_ERR(rst);
-> -                       if (ret != -EPROBE_DEFER)
-> -                               dev_err(dev, "reset get failed, %d\n", ret);
-> -
-> +                       ret = dev_err_probe(dev, PTR_ERR(rst), "reset get failed\n");
->                         goto err_hw_stop;
->                 }
->
-> --
-> 2.17.1
->
+>  drivers/hwmon/gsc-hwmon.c               | 34 ++++++++++++++++++++++++++++++---
+>  include/linux/platform_data/gsc_hwmon.h |  1 +
+>  2 files changed, 32 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hwmon/gsc-hwmon.c b/drivers/hwmon/gsc-hwmon.c
+> index c6d4567..a86a0e5 100644
+> --- a/drivers/hwmon/gsc-hwmon.c
+> +++ b/drivers/hwmon/gsc-hwmon.c
+> @@ -17,6 +17,7 @@
+>  
+>  #define GSC_HWMON_MAX_TEMP_CH	16
+>  #define GSC_HWMON_MAX_IN_CH	16
+> +#define GSC_HWMON_MAX_FAN_CH	16
+>  
+>  #define GSC_HWMON_RESOLUTION	12
+>  #define GSC_HWMON_VREF		2500
+> @@ -27,11 +28,14 @@ struct gsc_hwmon_data {
+>  	struct regmap *regmap;
+>  	const struct gsc_hwmon_channel *temp_ch[GSC_HWMON_MAX_TEMP_CH];
+>  	const struct gsc_hwmon_channel *in_ch[GSC_HWMON_MAX_IN_CH];
+> +	const struct gsc_hwmon_channel *fan_ch[GSC_HWMON_MAX_FAN_CH];
+>  	u32 temp_config[GSC_HWMON_MAX_TEMP_CH + 1];
+>  	u32 in_config[GSC_HWMON_MAX_IN_CH + 1];
+> +	u32 fan_config[GSC_HWMON_MAX_FAN_CH + 1];
+>  	struct hwmon_channel_info temp_info;
+>  	struct hwmon_channel_info in_info;
+> -	const struct hwmon_channel_info *info[3];
+> +	struct hwmon_channel_info fan_info;
+> +	const struct hwmon_channel_info *info[4];
+>  	struct hwmon_chip_info chip;
+>  };
+>  
+> @@ -155,6 +159,9 @@ gsc_hwmon_read(struct device *dev, enum hwmon_sensor_types type, u32 attr,
+>  	case hwmon_temp:
+>  		ch = hwmon->temp_ch[channel];
+>  		break;
+> +	case hwmon_fan:
+> +		ch = hwmon->fan_ch[channel];
+> +		break;
+>  	default:
+>  		return -EOPNOTSUPP;
+>  	}
+> @@ -187,6 +194,9 @@ gsc_hwmon_read(struct device *dev, enum hwmon_sensor_types type, u32 attr,
+>  		/* adjust by uV offset */
+>  		tmp += ch->mvoffset;
+>  		break;
+> +	case mode_fan:
+> +		tmp *= 30; /* convert to revolutions per minute */
+> +		break;
+>  	case mode_voltage_24bit:
+>  	case mode_voltage_16bit:
+>  		/* no adjustment needed */
+> @@ -211,6 +221,9 @@ gsc_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
+>  	case hwmon_temp:
+>  		*buf = hwmon->temp_ch[channel]->name;
+>  		break;
+> +	case hwmon_fan:
+> +		*buf = hwmon->fan_ch[channel]->name;
+> +		break;
+>  	default:
+>  		return -ENOTSUPP;
+>  	}
+> @@ -304,7 +317,7 @@ static int gsc_hwmon_probe(struct platform_device *pdev)
+>  	struct gsc_hwmon_platform_data *pdata = dev_get_platdata(dev);
+>  	struct gsc_hwmon_data *hwmon;
+>  	const struct attribute_group **groups;
+> -	int i, i_in, i_temp;
+> +	int i, i_in, i_temp, i_fan;
+>  
+>  	if (!pdata) {
+>  		pdata = gsc_hwmon_get_devtree_pdata(dev);
+> @@ -324,7 +337,9 @@ static int gsc_hwmon_probe(struct platform_device *pdev)
+>  	if (IS_ERR(hwmon->regmap))
+>  		return PTR_ERR(hwmon->regmap);
+>  
+> -	for (i = 0, i_in = 0, i_temp = 0; i < hwmon->pdata->nchannels; i++) {
+> +	for (i = 0, i_in = 0, i_temp = 0, i_fan = 0;
+> +	     i < hwmon->pdata->nchannels; i++)
+> +	{
 
+ERROR: that open brace { should be on the previous line
+#125: FILE: drivers/hwmon/gsc-hwmon.c:340:
++	for (i = 0, i_in = 0, i_temp = 0, i_fan = 0;
++	     i < hwmon->pdata->nchannels; i++)
++	{
 
--- 
-With Best Regards,
-Andy Shevchenko
+Besides, the line length limit is now 100 columns, so the line split
+is unnecessary.
+
+Thanks,
+Guenter
