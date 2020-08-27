@@ -2,192 +2,173 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7A6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD04C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8FAD20737
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:57:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aJFr4QsY"
+	by mail.kernel.org (Postfix) with ESMTP id B90E8207F7
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 21:01:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgH0U5Z (ORCPT
+        id S1726939AbgH0VBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 16:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgH0U5Y (ORCPT
+        Thu, 27 Aug 2020 17:01:02 -0400
+Received: from smtprelay0199.hostedemail.com ([216.40.44.199]:34456 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726147AbgH0VBB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:57:24 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC3BAC061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 13:57:24 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id b3so4615241qtg.13
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 13:57:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rJfXwaHbG/yykBPHsUHYR3+FIiWYlEcAMtX9/Xzsg+c=;
-        b=aJFr4QsYzFbEMiwLTBIQsnM40LGFQfg+Gsrddv3kW9ogalLiJfj1zhVV75Ea1aU27+
-         0GkrmXRvvoPBpF2s/XdCoER+59/2L03CB92Xp+q88xt+wOYEV+cfQoqGsDHHc46KT526
-         1+q/24ycdtUW49/HRko61JwNbzO9DqJp7vmA0WAj0xjS4DN6xAYh3kdX+qwDXEzQ2807
-         GmiC6mImtFFMpbo02wdazfTD1BgEn4DMACnVJ1eyB+wukqEv5V2dCl6wYypDKb69PcZu
-         x+7xppHOLWx1PGc2wTq6An1Vigr2HBqEdlUh+rBxWvIt8/RnG0gbt7kAkUgqGinwVHh6
-         K82g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rJfXwaHbG/yykBPHsUHYR3+FIiWYlEcAMtX9/Xzsg+c=;
-        b=GLpZhypC4DilFHbzzKXDwvfqy4fphkCI7ekNe5FRm+lw0UThtbbHiC/5u0x0k09fja
-         KvmLuCbd0D1SkyYJnzXfaXOxvGxXVFCPvQqJu5rs8jpVXzPAdVfZxYHaSz71tiKRAP3Y
-         DLDFyOWjy/IKcBayQHWIJXfN0Q4Nq5y6OPNMdX5FwRJM6PGORGyJbpbRCRyxNvmMUCV2
-         /npQg5iddLE2QdWUIHpCF1s3fihUutFYQK3yjH2oVwSp9Sgv3MBfJU6dC9a/M1hJXuyl
-         /Hxd6MJygtxDWVYgDjNEli7sLYyZJbbt7+dbdUZMjNysS7ZXeGUEuctG+TX+shw7kk2R
-         RsGg==
-X-Gm-Message-State: AOAM530wYSrqFJwUAevKTEzBBa1lqVaBCljMeCMRLDLsr2HL8vULNxWV
-        XWOXSu6BgUb8xu19YvO/mzg=
-X-Google-Smtp-Source: ABdhPJyJH5wOx352swjJy+MwtjI8YzjEBzWve1uOF5Z5co/I2zyXjP77V8bsW0YRMtubd1vE4CU2iA==
-X-Received: by 2002:aed:35b2:: with SMTP id c47mr11445305qte.95.1598561843011;
-        Thu, 27 Aug 2020 13:57:23 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id r6sm2742617qtu.93.2020.08.27.13.57.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 13:57:22 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 13:57:20 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Zhenyu Ye <yezhenyu2@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2] arm64: use a common .arch preamble for inline assembly
-Message-ID: <20200827205720.GA987541@ubuntu-n2-xlarge-x86>
-References: <20200805181920.4013059-1-samitolvanen@google.com>
- <20200827203608.1225689-1-samitolvanen@google.com>
+        Thu, 27 Aug 2020 17:01:01 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 411CB18224504;
+        Thu, 27 Aug 2020 21:01:00 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: stew80_430513e27070
+X-Filterd-Recvd-Size: 7057
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 27 Aug 2020 21:00:58 +0000 (UTC)
+Message-ID: <f1b510509b10d6f1e7af89296c3dbe68d056d1e5.camel@perches.com>
+Subject: Re: [Cocci] [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+From:   Joe Perches <joe@perches.com>
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        cocci <cocci@systeme.lip6.fr>, Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Date:   Thu, 27 Aug 2020 14:00:57 -0700
+In-Reply-To: <cf9b1ea3716305447be43bffc8f90b7ef7292f5b.camel@perches.com>
+References: <20200824222322.22962-1-alex.dewar90@gmail.com>
+         <48f2dc90-7852-eaf1-55d7-2c85cf954688@rasmusvillemoes.dk>
+         <20200827071537.GA168593@kroah.com>
+         <20200827131819.7rcl2f5js3hkoqj2@lenovo-laptop>
+         <def24e9e-018c-9712-0d07-d4cbc84f07d9@rasmusvillemoes.dk>
+         <20200827144846.yauuttjaqtxaldxg@lenovo-laptop>
+         <5d1dfb9b031130d4d20763ec621233a19d6a88a2.camel@perches.com>
+         <alpine.DEB.2.22.394.2008272141220.2482@hadrien>
+         <cf9b1ea3716305447be43bffc8f90b7ef7292f5b.camel@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827203608.1225689-1-samitolvanen@google.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 01:36:08PM -0700, Sami Tolvanen wrote:
-> Commit 7c78f67e9bd9 ("arm64: enable tlbi range instructions") breaks
-> LLVM's integrated assembler, because -Wa,-march is only passed to
-> external assemblers and therefore, the new instructions are not enabled
-> when IAS is used.
-> 
-> This change adds a common architecture version preamble, which can be
-> used in inline assembly blocks that contain instructions that require
-> a newer architecture version, and uses it to fix __TLBI_0 and __TLBI_1
-> with ARM64_TLB_RANGE.
-> 
-> Fixes: 7c78f67e9bd9 ("arm64: enable tlbi range instructions")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1106
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+On Thu, 2020-08-27 at 13:29 -0700, Joe Perches wrote:
+> On Thu, 2020-08-27 at 21:42 +0200, Julia Lawall wrote:
+> > On Thu, 27 Aug 2020, Joe Perches wrote:
+> > 
+> > > On Thu, 2020-08-27 at 15:48 +0100, Alex Dewar wrote:
+> > > > On Thu, Aug 27, 2020 at 03:41:06PM +0200, Rasmus Villemoes wrote:
+> > > > > On 27/08/2020 15.18, Alex Dewar wrote:
+> > > > > > On Thu, Aug 27, 2020 at 09:15:37AM +0200, Greg Kroah-Hartman wrote:
+> > > > > > > On Thu, Aug 27, 2020 at 08:42:06AM +0200, Rasmus Villemoes wrote:
+> > > > > > > > On 25/08/2020 00.23, Alex Dewar wrote:
+> > > > > > > > > kernel/cpu.c: don't use snprintf() for sysfs attrs
+> > > > > > > > > 
+> > > > > > > > > As per the documentation (Documentation/filesystems/sysfs.rst),
+> > > > > > > > > snprintf() should not be used for formatting values returned by sysfs.
+> > > > > > > > > 
+> > > > > > > > 
+> > > > > > > > Can we have a sysfs_sprintf() (could just be a macro that does sprintf)
+> > > > > > > > to make it clear to the next reader that we know we're in a sysfs show
+> > > > > > > > method? It would make auditing uses of sprintf() much easier.
+> > > > > > > 
+> > > > > > > Code churn to keep code checkers quiet for pointless reasons?  What
+> > > > > > > could go wrong with that...
+> > > > > 
+> > > > > I did not (mean to) suggest replacing existing sprintf() calls in sysfs
+> > > > > show methods. But when changes _are_ being made, such as when replacing
+> > > > > snprintf() calls for whatever reasons, can we please not make it harder
+> > > > > for people doing manual audits (those are "code checkers" as well, I
+> > > > > suppose, but they do tend to only make noise when finding something).
+> > > > > 
+> > > > > > > It should be pretty obvious to any reader that you are in a sysfs show
+> > > > > > > method, as almost all of them are trivially tiny and obvious.
+> > > > > 
+> > > > > git grep doesn't immediately show that, not even with a suitable -C
+> > > > > argument, as you can't really know the potential callers unless you open
+> > > > > the file and see that the function is only assigned as a .show method.
+> > > > > And even that can be a pain because it's all hidden behind five levels
+> > > > > of magic macros that build identifiers with ##.
+> > > > > 
+> > > > > > Perhaps I should have mentioned this in the commit message, but the problem
+> > > > > > is that snprintf() doesn't return the number of bytes written to the
+> > > > > > destination buffer,
+> > > > > 
+> > > > > I'm perfectly well aware of that, TYVM (you may want to 'git log
+> > > > > --author Villemoes lib/vsprintf.c').
+> > > > > 
+> > > > >  but the number of bytes that *would have been written if
+> > > > > > they fitted*, which may be more than the bounds specified [1]. So "return
+> > > > > > snprintf(...)" for sysfs attributes is an antipattern. If you need bounded
+> > > > > > string ops, scnprintf() is the way to go. Using snprintf() can give a
+> > > > > > false sense of security, because it isn't necessarily safe.
+> > > > > 
+> > > > > Huh? This all seems utterly irrelevant WRT a change that replaces
+> > > > > PAGE_SIZE by INT_MAX (because that's what sprintf() is going to pretend
+> > > > > you passed). You get the same return value.
+> > > > > 
+> > > > > But I'm not at all concerned about whether one passes the proper buffer
+> > > > > size or not in sysfs show methods; with my embedded hat on, I'm all for
+> > > > > saving a few bytes of .text here and there. The problem, as far as I'm
+> > > > > concerned, is merely that adding sprintf() callers makes it harder to
+> > > > > find the problematic sprintf() instances.
+> > > > > 
+> > > > 
+> > > > Apologies, I think I might have expressed myself poorly, being a kernel noob
+> > > > ;-). I know that this is a stylistic change rather than a functional
+> > > > one -- I meant that I was hoping that it would be helpful to get rid of bad
+> > > > uses of snprintf().
+> > > > 
+> > > > I really like your idea of helper methods though :-). If in show()
+> > > > methods we could have something like:
+> > > > 	return sysfs_itoa(buf, i);
+> > > > in place of:
+> > > > 	return sprintf(buf, "%d\n", i);
+> > > > 
+> > > > ... then we wouldn't be introducing any new calls to sprintf() as you
+> > > > say, but we'd still be removing a call to snprintf() (which also may be
+> > > > problematic). Plus we'd have type checking on the argument.
+> > > > 
+> > > > For returning strings, we could have a bounded and unbounded variant of
+> > > > the function. As it seems like only single values should be returned via
+> > > > sysfs, if we did things this way then it would only be these
+> > > > string-returning functions which could cause buffer overflow problems
+> > > > and kernel devs could focus their attention accordingly...
+> > > > 
+> > > > What do people think? I'm happy to have a crack, provided this is
+> > > > actually a sensible thing to do! I'm looking for a newbie-level project
+> > > > to get started with.
+> > > 
+> > > Not a bad idea.
+> > > 
+> > > Coccinelle should be able to transform the various .show
+> > > methods to something sysfs_ prefixed in a fairly automated
+> > > way.
+> > 
+> > Something like
+> > 
+> > identifier f;
+> > fresh identifier = "sysfs" ## f;
+> > 
+> > may be useful.  Let me know if further help is needed.
 
-I have verified that this fixes the build with LLVM_IAS=1. Additionally,
-I have booted a kernel with this patch on my Raspberry Pi and saw no
-adverse affects through a compilation workload.
+cocci syntax eludes me, but I imagine something like:
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+@@
+identifier f_show =~ "^.*_show$";
+@@
+ssize_t f_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+{
+-	sprintf
++	kobj_sprintf
+	(...);
 
-> ---
-> Changes in v2:
-> - Switched to a standard preamble for the architecture version.
-> 
-> ---
->  arch/arm64/Makefile               | 11 ++++++++---
->  arch/arm64/include/asm/compiler.h |  6 ++++++
->  arch/arm64/include/asm/tlbflush.h |  6 ++++--
->  3 files changed, 18 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-> index b45f0124cc16..20ab5c9375a5 100644
-> --- a/arch/arm64/Makefile
-> +++ b/arch/arm64/Makefile
-> @@ -82,8 +82,8 @@ endif
->  # compiler to generate them and consequently to break the single image contract
->  # we pass it only to the assembler. This option is utilized only in case of non
->  # integrated assemblers.
-> -ifneq ($(CONFIG_AS_HAS_ARMV8_4), y)
-> -branch-prot-flags-$(CONFIG_AS_HAS_PAC) += -Wa,-march=armv8.3-a
-> +ifeq ($(CONFIG_AS_HAS_PAC), y)
-> +asm-arch := armv8.3-a
->  endif
->  endif
->  
-> @@ -91,7 +91,12 @@ KBUILD_CFLAGS += $(branch-prot-flags-y)
->  
->  ifeq ($(CONFIG_AS_HAS_ARMV8_4), y)
->  # make sure to pass the newest target architecture to -march.
-> -KBUILD_CFLAGS	+= -Wa,-march=armv8.4-a
-> +asm-arch := armv8.4-a
-> +endif
-> +
-> +ifdef asm-arch
-> +KBUILD_CFLAGS	+= -Wa,-march=$(asm-arch) \
-> +		   -DARM64_ASM_ARCH='"$(asm-arch)"'
->  endif
->  
->  ifeq ($(CONFIG_SHADOW_CALL_STACK), y)
-> diff --git a/arch/arm64/include/asm/compiler.h b/arch/arm64/include/asm/compiler.h
-> index 51a7ce87cdfe..6fb2e6bcc392 100644
-> --- a/arch/arm64/include/asm/compiler.h
-> +++ b/arch/arm64/include/asm/compiler.h
-> @@ -2,6 +2,12 @@
->  #ifndef __ASM_COMPILER_H
->  #define __ASM_COMPILER_H
->  
-> +#ifdef ARM64_ASM_ARCH
-> +#define ARM64_ASM_PREAMBLE ".arch " ARM64_ASM_ARCH "\n"
-> +#else
-> +#define ARM64_ASM_PREAMBLE
-> +#endif
-> +
->  /*
->   * The EL0/EL1 pointer bits used by a pointer authentication code.
->   * This is dependent on TBI0/TBI1 being enabled, or bits 63:56 would also apply.
-> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-> index d493174415db..cc3f5a33ff9c 100644
-> --- a/arch/arm64/include/asm/tlbflush.h
-> +++ b/arch/arm64/include/asm/tlbflush.h
-> @@ -28,14 +28,16 @@
->   * not. The macros handles invoking the asm with or without the
->   * register argument as appropriate.
->   */
-> -#define __TLBI_0(op, arg) asm ("tlbi " #op "\n"				       \
-> +#define __TLBI_0(op, arg) asm (ARM64_ASM_PREAMBLE			       \
-> +			       "tlbi " #op "\n"				       \
->  		   ALTERNATIVE("nop\n			nop",		       \
->  			       "dsb ish\n		tlbi " #op,	       \
->  			       ARM64_WORKAROUND_REPEAT_TLBI,		       \
->  			       CONFIG_ARM64_WORKAROUND_REPEAT_TLBI)	       \
->  			    : : )
->  
-> -#define __TLBI_1(op, arg) asm ("tlbi " #op ", %0\n"			       \
-> +#define __TLBI_1(op, arg) asm (ARM64_ASM_PREAMBLE			       \
-> +			       "tlbi " #op ", %0\n"			       \
->  		   ALTERNATIVE("nop\n			nop",		       \
->  			       "dsb ish\n		tlbi " #op ", %0",     \
->  			       ARM64_WORKAROUND_REPEAT_TLBI,		       \
-> 
-> base-commit: 15bc20c6af4ceee97a1f90b43c0e386643c071b4
-> -- 
-> 2.28.0.297.g1956fa8f8d-goog
-> 
+
