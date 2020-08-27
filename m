@@ -2,114 +2,93 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4998C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE58C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94FE42177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:19:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cIV9jK65"
+	by mail.kernel.org (Postfix) with ESMTP id 840B12177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgH0STP (ORCPT
+        id S1727108AbgH0SUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:19:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727822AbgH0SS4 (ORCPT
+        Thu, 27 Aug 2020 14:20:05 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:38182 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726120AbgH0SUE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:18:56 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDFF6C061264;
-        Thu, 27 Aug 2020 11:18:55 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id 2so3051397pjx.5;
-        Thu, 27 Aug 2020 11:18:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AxmULkJUlPJ0j1k6lcIgCZG5M7EGNDQkghcppoKAqWM=;
-        b=cIV9jK65cCq1DtQMSLjUfQ078BoS4IFTNZmc0plZjtfXSjK6UECYi+74VZ+YHiVYFN
-         h4P3NKLNdBQv22Dl/7fANby7hhpv9vTK/MX2hYrYi00/suujYOUlxLEDxmrB09IxD6AR
-         0sDoNy12cSu70635GDgiFbPJL2qpFNa64k2I6Z/VCmjlcKCS2ut/svN7dnj5llIBZlRn
-         bs74rGsDy8Ky8lV6vF6dwpjBnGyhmUA9NZLUfIGL3V1RB0Z3J2hJtZ4PUAnrKVmFGthW
-         dZvMLyFdxNFP1AfXi6FuigjXTUGivszRpoE8JqGHzcBLruZnjsJVq8h2Qi8/zzJrkm0U
-         xhdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AxmULkJUlPJ0j1k6lcIgCZG5M7EGNDQkghcppoKAqWM=;
-        b=JRHPwW2ytf5mBVeVqoUloniDFbSLOGSOcJplBmP3kPaQxVyOLqS8suxZn1eb7VEAXJ
-         ottyu3310UFHg/GP91B/Y7UFp8y9DEqmDnFBMveJGoEKGPOJ2AE/mWINkX6ZAn9Qb16O
-         wLcnuLKWPcPOWdcss/B9ywmYxF2xbhbfOWKD3QCf9o/fFD30zJ9kaGs8rcEGAnFi5O76
-         4CxkWu/Grwp+j/vyECw+lN4lc/aVtyA9vNhao/jFYZ9RIuvfGT7RgNOyd6IMMWnZZMt5
-         Q7i/eHtmvCYw5A3jOgvAAosE7sxrBfOP/ubXw89VvmjOQof/hwKt8rudLx42B6WElAvg
-         cH4A==
-X-Gm-Message-State: AOAM533RE0QyYz4gUA6uNodiMRXx/PkuRbNKbG5KC4IQdmmTcmI4YRi/
-        r8Fv40DBDoUA9JOcPl8gDuY=
-X-Google-Smtp-Source: ABdhPJyHl3YlRZvGe3nPyemkInLkd2D+iFh/iW4Fs2NFdP9gnVxtl/xHR1ozdtFi43v4aIOFEkSx4g==
-X-Received: by 2002:a17:90a:d712:: with SMTP id y18mr93319pju.79.1598552335285;
-        Thu, 27 Aug 2020 11:18:55 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id q18sm3580179pfn.106.2020.08.27.11.18.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 11:18:54 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM SPI DRIVER),
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-        Yendapally Reddy Dhananjaya Reddy 
-        <yendapally.reddy@broadcom.com>,
-        linux-spi@vger.kernel.org (open list:SPI SUBSYSTEM),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 5/5] arm64: dts: ns2: Fixed QSPI compatible string
-Date:   Thu, 27 Aug 2020 11:18:42 -0700
-Message-Id: <20200827181842.1000451-6-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200827181842.1000451-1-f.fainelli@gmail.com>
-References: <20200827181842.1000451-1-f.fainelli@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 27 Aug 2020 14:20:04 -0400
+X-IronPort-AV: E=Sophos;i="5.76,360,1592838000"; 
+   d="scan'208";a="55707965"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 28 Aug 2020 03:20:01 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 99E274009650;
+        Fri, 28 Aug 2020 03:19:59 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH] arm64: dts: renesas: Add HiHope RZ/G2H board with idk-1110wr display
+Date:   Thu, 27 Aug 2020 19:19:18 +0100
+Message-Id: <20200827181918.30130-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The string was incorrectly defined before from least to most specific,
-swap the compatible strings accordingly.
+The HiHope RZ/G2H is advertised as compatible with panel idk-1110wr from
+Advantech, however the panel isn't sold alongside the board. New dts,
+enabling the lvds node to get the panel to work with HiHope RZ/G2H.
 
-Fixes: ff73917d38a6 ("ARM64: dts: Add QSPI Device Tree node for NS2")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
- arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/renesas/Makefile              |  1 +
+ .../r8a774e1-hihope-rzg2h-ex-idk-1110wr.dts       | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h-ex-idk-1110wr.dts
 
-diff --git a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-index 15f7b0ed3836..39802066232e 100644
---- a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-@@ -745,7 +745,7 @@ nand: nand@66460000 {
- 		};
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index d7902294faf3..46445474cf3e 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -21,6 +21,7 @@ dtb-$(CONFIG_ARCH_R8A774C0) += r8a774c0-ek874-mipi-2.1.dtb
  
- 		qspi: spi@66470200 {
--			compatible = "brcm,spi-bcm-qspi", "brcm,spi-ns2-qspi";
-+			compatible = "brcm,spi-ns2-qspi", "brcm,spi-bcm-qspi";
- 			reg = <0x66470200 0x184>,
- 				<0x66470000 0x124>,
- 				<0x67017408 0x004>,
+ dtb-$(CONFIG_ARCH_R8A774E1) += r8a774e1-hihope-rzg2h.dtb
+ dtb-$(CONFIG_ARCH_R8A774E1) += r8a774e1-hihope-rzg2h-ex.dtb
++dtb-$(CONFIG_ARCH_R8A774E1) += r8a774e1-hihope-rzg2h-ex-idk-1110wr.dtb
+ 
+ dtb-$(CONFIG_ARCH_R8A77950) += r8a77950-salvator-x.dtb
+ dtb-$(CONFIG_ARCH_R8A77950) += r8a77950-ulcb.dtb
+diff --git a/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h-ex-idk-1110wr.dts b/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h-ex-idk-1110wr.dts
+new file mode 100644
+index 000000000000..3b7339127bc0
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h-ex-idk-1110wr.dts
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the HiHope RZ/G2H sub board connected
++ * to an Advantech IDK-1110WR 10.1" LVDS panel
++ *
++ * Copyright (C) 2020 Renesas Electronics Corp.
++ */
++
++#include "r8a774e1-hihope-rzg2h-ex.dts"
++#include "hihope-rzg2-ex-lvds.dtsi"
++#include "rzg2-advantech-idk-1110wr-panel.dtsi"
++
++&lvds0 {
++	status = "okay";
++};
 -- 
-2.25.1
+2.17.1
 
