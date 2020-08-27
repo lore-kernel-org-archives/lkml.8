@@ -2,125 +2,166 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D1FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 05:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C74FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61ECE2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 05:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F402D20786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 06:00:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mGpQuaLH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OHUT2pXB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgH0FsQ (ORCPT
+        id S1726803AbgH0GAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 01:48:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4620 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726093AbgH0FsQ (ORCPT
+        Thu, 27 Aug 2020 02:00:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34688 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbgH0GAv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 01:48:16 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07R5Wi3g048787;
-        Thu, 27 Aug 2020 01:47:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : reply-to : references : mime-version : content-type
- : in-reply-to; s=pp1; bh=zSIWCgv1AFSTEWsdYYA2McSDyTkrvCd17IJDAQrUJbw=;
- b=mGpQuaLHPjFChdnevl1ny1zznoXkwqTQSUc16gqFAZIkB4cjQnbgETgIvhNhO3lEMhX6
- 2tefzQ3d1kLHWJ1xNE18cOcVY8qxmGJCSNbp83oVdbjGCcbQ0LhZuGVHJphpi8dbmloT
- V3ohDTLc3c+Rimr78EZWVVGiJcNbi8mWI6mqo0WZ+L/ACeA1DBodOnZ3o0Zdg5cL2lVl
- wbvIaVrVDzn6chuk8e/DPL9DVwChPLShrnJAz/X/qKMORg42V92jGnpvgkYqcYcfTB8S
- jDe5PP+/b5zsZQzBV4j0w4rGbvY16qlST6qCmkMRQlQQJ0VpUfGxR3tfUrqNHrfbR7cT JQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3366ax0ws0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 01:47:50 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07R5X7MR050140;
-        Thu, 27 Aug 2020 01:47:50 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3366ax0wr8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 01:47:49 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07R5kpMG027213;
-        Thu, 27 Aug 2020 05:47:48 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06ams.nl.ibm.com with ESMTP id 332uk6daq9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 05:47:48 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07R5ljgY61735298
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Aug 2020 05:47:45 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 438215204F;
-        Thu, 27 Aug 2020 05:47:45 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id 0EF8152050;
-        Thu, 27 Aug 2020 05:47:42 +0000 (GMT)
-Date:   Thu, 27 Aug 2020 11:17:42 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     acme@kernel.org, peterz@infradead.org, jolsa@redhat.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        maddy@linux.ibm.com, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        daniel@iogearbox.net, brho@google.com
-Subject: Re: [RFC v2] perf/core: Fixes hung issue on perf stat command during
- cpu hotplug
-Message-ID: <20200827054742.GA5431@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20200826145411.489169-1-kjain@linux.ibm.com>
+        Thu, 27 Aug 2020 02:00:51 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92D62C061247
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 23:00:50 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id 144so4930749qkl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 23:00:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=NtN8IRKJbzMJm++6LA+dfi/0c6Tg1EKcXVsplcKZjIA=;
+        b=OHUT2pXBHEvz0iQbWGht6j79B2je+0WG1m4V06yzQSmQ8xZ0CTqRyOf2DFbg599fsQ
+         in1XxmVaKLFPXQhY7e0CbKCZIThDyunI62UcrwGETKCLwUyDACGT2fLoIa3QLMv47ujv
+         hgKSCIE6sM0G45Nwf8tJ3cjUfi8x9N3IqHqNVIiH6kcIddQlA6kvjjZv0Oim2YJnkLfm
+         ouySm8zYZ+EhX/1rThbbUYa/8d8DgEZotJ7lglQKUB6h/0VxGLttAqZkMyZl4QQKBdya
+         iAKe52c5+KP365662n/5VnEJpllmtyDO+8oPDP1f7h9ofPcCZCTQ4x/tw+0zmWL7oX+p
+         I5zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=NtN8IRKJbzMJm++6LA+dfi/0c6Tg1EKcXVsplcKZjIA=;
+        b=nSXsfNp+9zU/DBtm5Kq42/5M7wBSrqQMM9jfvfnyjnzjmj2eShSZmJ48ehaTfx/I20
+         U9wb8nhrZetU/9RcxnMnpW0Y2FZ1C3q/LtiZRna6zMTSAWOPQ/OslQ8KeTKctOJRZfsT
+         8h2axTVHk5zNiE2HSvZ7jtydiaw+X8E7hyUDC/grXr2MIrx+2bdP9tBCV/WEEzVj2Ln2
+         9qLePCUTrTd3qcgtp08RS2vWbrNbpP/ogMstaqRoiE845/XLNfkkKa02Xz3veRAPIdKD
+         ZomOMgEhfj41akIq2CV99eMHhyzQ/n6rP6I28pG290zH23rCHueIErwCeWPiLYIM+4km
+         abbQ==
+X-Gm-Message-State: AOAM5302TRt0aqj9iACcDsFkkOdUaxmg3FoR5kawJR2l0uJalmLJ6UCm
+        KZ8eMBnQG7k78vii2zYDMV6Xjw==
+X-Google-Smtp-Source: ABdhPJzTi4TOXzZ1Rou+0ylWYjoURnjNtWOQ/tpkqfSGOVu4C9+0/TdnaP1vDHHc5DUgSCwUiy9Ugg==
+X-Received: by 2002:a37:2750:: with SMTP id n77mr17039241qkn.26.1598508048964;
+        Wed, 26 Aug 2020 23:00:48 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id d9sm885200qkl.7.2020.08.26.23.00.46
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Wed, 26 Aug 2020 23:00:47 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 23:00:33 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+cc:     Hugh Dickins <hughd@google.com>, Michal Hocko <mhocko@suse.com>,
+        Qian Cai <cai@lca.pw>, akpm@linux-foundation.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, nao.horiguchi@gmail.com,
+        osalvador@suse.de, mike.kravetz@oracle.com
+Subject: Re: [Resend PATCH 1/6] mm/memcg: warning on !memcg after readahead
+ page charged
+In-Reply-To: <alpine.LSU.2.11.2008241849020.1171@eggly.anvils>
+Message-ID: <alpine.LSU.2.11.2008262222380.4405@eggly.anvils>
+References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com> <20200820145850.GA4622@lca.pw> <20200821080127.GD32537@dhcp22.suse.cz> <20200821123934.GA4314@lca.pw> <20200821134842.GF32537@dhcp22.suse.cz> <20200824151013.GB3415@dhcp22.suse.cz>
+ <12425e06-38ce-7ff4-28ce-b0418353fc67@linux.alibaba.com> <alpine.LSU.2.11.2008241849020.1171@eggly.anvils>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200826145411.489169-1-kjain@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-27_01:2020-08-26,2020-08-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- phishscore=0 clxscore=1011 malwarescore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 mlxlogscore=999 adultscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008270041
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Kajol Jain <kjain@linux.ibm.com> [2020-08-26 20:24:11]:
+On Mon, 24 Aug 2020, Hugh Dickins wrote:
+> On Tue, 25 Aug 2020, Alex Shi wrote:
+> > reproduce using our linux-mm random bug collection on NUMA systems.
+> > >>
+> > >> OK, I must have missed that this was on ppc. The order makes more sense
+> > >> now. I will have a look at this next week.
+> > > 
+> > > OK, so I've had a look and I know what's going on there. The
+> > > move_pages12 is migrating hugetlb pages. Those are not charged to any
+> > > memcg. We have completely missed this case. There are two ways going
+> > > around that. Drop the warning and update the comment so that we do not
+> > > forget about that or special case hugetlb pages.
+> > > 
+> > > I think the first option is better.
+> > > 
+> > 
+> > 
+> > Hi Michal,
+> > 
+> > Compare to ignore the warning which is designed to give, seems addressing
+> > the hugetlb out of charge issue is a better solution, otherwise the memcg
+> > memory usage is out of control on hugetlb, is that right?
 
-> Commit 2ed6edd33a21 ("perf: Add cond_resched() to task_function_call()")
-> added assignment of ret value as -EAGAIN in case function
-> call to 'smp_call_function_single' fails.
-> For non-zero ret value, it did
-> 'ret = !ret ? data.ret : -EAGAIN;', which always
-> assign -EAGAIN to ret and make second if condition useless.
-> 
-> In scenarios like when executing a perf stat with --per-thread option, and
-> if any of the monitoring cpu goes offline, the 'smp_call_function_single'
-> function could return -ENXIO, and with the above check,
-> task_function_call hung and increases CPU
-> usage (because of repeated 'smp_call_function_single()')
-> 
-> Recration scenario:
-> 	# perf stat -a --per-thread && (offline a CPU )
-> 
-> Patch here removes the tertiary condition added as part of that
-> commit and added a check for NULL and -EAGAIN.
-> 
-> Fixes: 2ed6edd33a21("perf: Add cond_resched() to task_function_call()")
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> Reported-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+I agree: it seems that hugetlb is not participating in memcg and lrus,
+so it should not even be calling mem_cgroup_migrate().  That happens
+because hugetlb finds the rest of migrate_page_states() useful,
+but maybe there just needs to be an "if (!PageHuge(page))" or
+"if (!PageHuge(newpage))" before its call to mem_cgroup_migrate() -
+but I have not yet checked whether either of those actually works.
 
-Tested-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+The same could be done inside mem_cgroup_migrate() instead,
+but it just seems wrong for hugetlb to be getting that far,
+if it has no other reason to enter mm/memcontrol.c.
 
+> 
+> Please don't suppose that this is peculiar to hugetlb: I'm not
+> testing hugetlb at all (sorry), but I see the VM_WARN_ON_ONCE from
+> mem_cgroup_page_lruvec(), and from mem_cgroup_migrate(), and from
+> mem_cgroup_swapout().
+> 
+> In all cases seen on a PageAnon page (well, in one case PageKsm).
+> And not related to THP either: seen also on machine incapable of THP.
+> 
+> Maybe there's an independent change in 5.9-rc that's defeating
+> expectations here, or maybe they were never valid.  Worth
+> investigating, even though the patch is currently removed,
+> to find out why expectations were wrong.
 
--- 
-Thanks and Regards
-Srikar Dronamraju
+It was very well worth investigating.  And at the time of writing
+the above, I thought it was coming up very quickly on all machines,
+but in fact it only came up quickly on the one exercising KSM;
+on the other machines it took about an hour to appear, so no
+wonder that you and others had not already seen it.
+
+While I'd prefer to spring the answer on you all in the patch that
+fixes it, there's something more there that I don't fully understand
+yet, and want to sort out before posting; so I'd better not keep you
+in suspense... we broke the memcg charging of ksm_might_need_to_copy()
+pages a couple of releases ago, and not noticed until your warning.
+
+What's surprising is that the same bug can affect PageAnon pages too,
+even when there's been no KSM involved whatsoever.  I put in the KSM
+fix, set all the machines running, expecting to get more info on the
+PageAnon instances, but all of them turned out to be fixed.
+
+> 
+> You'll ask me for more info, stacktraces etc, and I'll say sorry,
+> no time today.  Please try the swapping tests I sent before.
+> 
+> And may I say, the comment
+> /* Readahead page is charged too, to see if other page uncharged */
+> is nonsensical to me, and much better deleted: maybe it would make
+> some sense if the reader could see the comment it replaces - as
+> they can in the patch - but not in the resulting source file.
+
+I stand by that remark; but otherwise, I think this was a helpful
+commit that helped to identify a bug, just as it was intended to do.
+(I say "helped to" because its warnings alerted, but did not point
+to the culprit: I had to add another in lru_cache_add() to find it.)
+
+Hugh
