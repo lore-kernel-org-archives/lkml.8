@@ -2,294 +2,109 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 048D3C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC816C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C88812177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80DA22B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:13:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gT+2q1bj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jCj7kqX+"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ZcSb+Tsy";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lwpSDbB1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgH0PNK (ORCPT
+        id S1727907AbgH0PNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:13:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgH0Lkl (ORCPT
+        Thu, 27 Aug 2020 11:13:36 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:44971 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728432AbgH0PNJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 07:40:41 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DB5FC061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 04:40:41 -0700 (PDT)
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598528439;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hRVUPS50FqpUFurkc9NmV4w2bFkVgg+jrupTDzl0cNQ=;
-        b=gT+2q1bjnh6/8N9f+Z5Gotu8NAlctpYuW/Mw/Tv/wWlm9JKE6PuANWmx/ziiZtS+9SmhCq
-        oOzofUd29FOQlguQp9FBZ4X7zLAEFFhuKXbPDO3PRWYiW/WliDIR3YYsWK2KC3JhAo5Iru
-        GyxwYL+pUJAoWa6aTagtdD+q4BbgHY06HzTjaqDr4x7EDJCSVHk5QMs7UhUDIg7u8JyaCc
-        CLB8JUpve4hEsRbyQVQQWLoSBDahhntvwSZvKZr3ilWXcy7q/FH1VKe4JNxa6Wycw4H+pf
-        r2/dDcXp3V1CW96tqDMjsq2vnMH1QUuA7gKlByOrfzuRp5k7EidMG+gM8fEGiw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598528439;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hRVUPS50FqpUFurkc9NmV4w2bFkVgg+jrupTDzl0cNQ=;
-        b=jCj7kqX+80fTThedvYMb2q7YVEX0A2lfsdFm9RACg7itntdQLN5ADTH7CGUu7JwT5TyUJX
-        y5H98o3r6N742xAQ==
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Subject: [PATCH v1 3/8] seqlock: Introduce seqcount_latch_t
-Date:   Thu, 27 Aug 2020 13:40:39 +0200
-Message-Id: <20200827114044.11173-4-a.darwish@linutronix.de>
-In-Reply-To: <20200827114044.11173-1-a.darwish@linutronix.de>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200827114044.11173-1-a.darwish@linutronix.de>
+        Thu, 27 Aug 2020 11:13:09 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 203EF10EE;
+        Thu, 27 Aug 2020 11:13:06 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 27 Aug 2020 11:13:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=C/+mFJaBBx5jcHqjlyBhhPH/qkk
+        DdWRrn/96ZVyikyo=; b=ZcSb+TsyY8AG17EFmMntByiRrLy2Lh1IfkRkMEQymPZ
+        cBcUY1EuPHNlGjHYWKjhW4pGw66Eg5mYIQnjCl3trZ7AnfpucJlzTEu+nV1BbKVa
+        /4P1yYCuvveNxTtT63biuulyh0oCLxC/YxxjjmWoUk9dNGwAfuBBLdw6UvhZLWGw
+        2zScotb/2225H9yv5N0SKsppUOs67egIThQIJd623FKPns4YQP/02DDyYVnqttER
+        InUlKmC5oSu5YBf7WxYOPvxlImiyLk26wZhrLo6S33B5BtfnTzKe7P05NSY024zv
+        5ZRhnTS+CVk/zpwrO9iEVul/U1zUBDJnbe8fkgo5uFA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=C/+mFJ
+        aBBx5jcHqjlyBhhPH/qkkDdWRrn/96ZVyikyo=; b=lwpSDbB1z9TXIfrhnhHFXk
+        ZDgT7aOVf6k/VJCn2VeF7cDJWHqdiB6pinj8ywPIdwDAkr43aGpKLiWmPP1n5zM6
+        cInkraCNo8y8R0rwxt33bug8JkzfU/dbNnUahI/Z9ZD7rL8f4iXuOioiIvkF0ns3
+        OhIiTv+Wrb/y9vUF7KKtUskK8x2jglThLLtp7msp8cbsr9IuOYLPmybqc/8qV8nJ
+        Uf2zR5/lq9roGEyymHhvnc5gL1Zuhy0OjGMNjOMK7wMqtNRoPbrRWDbm4vOPMoe1
+        W13qwOPnJKNqlCop0wYuSMbXBOhkHqUxg1YMcuS41bBADysD3f5SsHypEOR+gIFA
+        ==
+X-ME-Sender: <xms:fs1HX7oexFet15xeOQMnDHXEvA1DZBkS1q0z_j0iWSj_NbGcwWSaKA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvgedgkedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:fs1HX1pNinnZpn-Z99_x8lSk7hyrNk8L28GRWJAp71h3WSdtFHQfGw>
+    <xmx:fs1HX4MjulN24sDECRxkoXxOEDYVbwMGXNBTMiDsjpJuFY2FFklXkw>
+    <xmx:fs1HX-480H3lNDsRUh75-AHkzPaFCacIVGlmDUQeh3k5pyKHAmUKyQ>
+    <xmx:gc1HX8R6BKTkBwn2zx2eBdBdqPd4VQTYYJUpRXKGIrwqJWOPM11BxQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6B5273280065;
+        Thu, 27 Aug 2020 11:13:02 -0400 (EDT)
+Date:   Thu, 27 Aug 2020 17:13:00 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, mchehab@kernel.org, robh+dt@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 0/3] ARM: dts: sun8i: r40: Enable IR on BananaPi M2U
+Message-ID: <20200827151300.zu3drnnortto5647@gilmour.lan>
+References: <20200825171358.1286902-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ot7wtlx72g4ekyyy"
+Content-Disposition: inline
+In-Reply-To: <20200825171358.1286902-1-jernej.skrabec@siol.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Latch sequence counters are a multiversion concurrency control mechanism
-where the seqcount_t counter even/odd value is used to switch between
-two copies of protected data. This allows the seqcount_t read path to
-safely interrupt its write side critical section (e.g. from NMIs).
 
-Initially, latch sequence counters were implemented as a single write
-function above plain seqcount_t: raw_write_seqcount_latch(). The read
-side was expected to use plain seqcount_t raw_read_seqcount().
+--ot7wtlx72g4ekyyy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-A specialized latch read function, raw_read_seqcount_latch(), was later
-added. It became the standardized way for latch read paths.  Due to the
-dependent load, it has one read memory barrier less than the plain
-seqcount_t raw_read_seqcount() API.
+On Tue, Aug 25, 2020 at 07:13:55PM +0200, Jernej Skrabec wrote:
+> This series first adds nodes to R40 DTSI and then enable IR receiver
+> for BananaPi M2 Ultra board.
 
-Only raw_write_seqcount_latch() and raw_read_seqcount_latch() should be
-used with latch sequence counters. Having *unique* read and write path
-APIs means that latch sequence counters are actually a data type of
-their own -- just inappropriately overloading plain seqcount_t.
+Applied all three, thanks!
+Maxime
 
-Introduce seqcount_latch_t. This adds type-safety and ensures that only
-the correct latch-safe APIs are to be used.
+--ot7wtlx72g4ekyyy
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Not to break bisection, let the latch APIs also accept plain seqcount_t
-or seqcount_raw_spinlock_t. After converting all call sites to
-seqcount_latch_t, only that new data type will be allowed.
+-----BEGIN PGP SIGNATURE-----
 
-References: 9b0fd802e8c0 ("seqcount: Add raw_write_seqcount_latch()")
-References: 7fc26327b756 ("seqlock: Introduce raw_read_seqcount_latch()")
-References: aadd6e5caaac ("time/sched_clock: Use raw_read_seqcount_latch()")
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
----
- Documentation/locking/seqlock.rst |  18 ++++++
- include/linux/seqlock.h           | 104 +++++++++++++++++++++---------
- 2 files changed, 91 insertions(+), 31 deletions(-)
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0fNfAAKCRDj7w1vZxhR
+xUAjAQDDiSUFApIM2/5AnuNCdLMGzEYkz0pHqwujbG61g6UOuAD+IUZ3P1fJUSKs
+y55trL0dgZJ8dtwoyb94ofzk8tmhNwY=
+=m1f1
+-----END PGP SIGNATURE-----
 
-diff --git a/Documentation/locking/seqlock.rst b/Documentation/locking/seqlock.rst
-index 62c5ad98c11c..a334b584f2b3 100644
---- a/Documentation/locking/seqlock.rst
-+++ b/Documentation/locking/seqlock.rst
-@@ -139,6 +139,24 @@ with the associated LOCKTYPE lock acquired.
- 
- Read path: same as in :ref:`seqcount_t`.
- 
-+
-+.. _seqcount_latch_t:
-+
-+Latch sequence counters (``seqcount_latch_t``)
-+----------------------------------------------
-+
-+Latch sequence counters are a multiversion concurrency control mechanism
-+where the embedded seqcount_t counter even/odd value is used to switch
-+between two copies of protected data. This allows the sequence counter
-+read path to safely interrupt its own write side critical section.
-+
-+Use seqcount_latch_t when the write side sections cannot be protected
-+from interruption by readers. This is typically the case when the read
-+side can be invoked from NMI handlers.
-+
-+Check `raw_write_seqcount_latch()` for more information.
-+
-+
- .. _seqlock_t:
- 
- Sequential locks (``seqlock_t``)
-diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-index 962d9768945f..f83fbf2180db 100644
---- a/include/linux/seqlock.h
-+++ b/include/linux/seqlock.h
-@@ -587,34 +587,76 @@ static inline void write_seqcount_t_invalidate(seqcount_t *s)
- 	kcsan_nestable_atomic_end();
- }
- 
--/**
-- * raw_read_seqcount_latch() - pick even/odd seqcount_t latch data copy
-- * @s: Pointer to seqcount_t or any of the seqcount_locktype_t variants
-+/*
-+ * Latch sequence counters (seqcount_latch_t)
-+ *
-+ * A sequence counter variant where the counter even/odd value is used to
-+ * switch between two copies of protected data. This allows the read path,
-+ * typically NMIs, to safely interrupt the write side critical section.
-  *
-- * Use seqcount_t latching to switch between two storage places protected
-- * by a sequence counter. Doing so allows having interruptible, preemptible,
-- * seqcount_t write side critical sections.
-+ * As the write sections are fully preemptible, no special handling for
-+ * PREEMPT_RT is needed.
-+ */
-+typedef struct {
-+	seqcount_t seqcount;
-+} seqcount_latch_t;
-+
-+/**
-+ * SEQCNT_LATCH_ZERO() - static initializer for seqcount_latch_t
-+ * @seq_name: Name of the seqcount_latch_t instance
-+ */
-+#define SEQCNT_LATCH_ZERO(seq_name) {					\
-+	.seqcount		= SEQCNT_ZERO(seq_name.seqcount),	\
-+}
-+
-+/**
-+ * seqcount_latch_init() - runtime initializer for seqcount_latch_t
-+ * @s: Pointer to the seqcount_latch_t instance
-+ */
-+static inline void seqcount_latch_init(seqcount_latch_t *s)
-+{
-+	seqcount_init(&s->seqcount);
-+}
-+
-+/**
-+ * raw_read_seqcount_latch() - pick even/odd latch data copy
-+ * @s: Pointer to seqcount_t, seqcount_raw_spinlock_t, or seqcount_latch_t
-  *
-- * Check raw_write_seqcount_latch() for more details and a full reader and
-- * writer usage example.
-+ * See raw_write_seqcount_latch() for details and a full reader/writer
-+ * usage example.
-  *
-  * Return: sequence counter raw value. Use the lowest bit as an index for
-- * picking which data copy to read. The full counter value must then be
-- * checked with read_seqcount_retry().
-+ * picking which data copy to read. The full counter must then be checked
-+ * with read_seqcount_latch_retry().
-  */
--#define raw_read_seqcount_latch(s)					\
--	raw_read_seqcount_t_latch(__seqcount_ptr(s))
-+#define raw_read_seqcount_latch(s)						\
-+({										\
-+	/*									\
-+	 * Pairs with the first smp_wmb() in raw_write_seqcount_latch().	\
-+	 * Due to the dependent load, a full smp_rmb() is not needed.		\
-+	 */									\
-+	_Generic(*(s),								\
-+		 seqcount_t:		  READ_ONCE(((seqcount_t *)s)->sequence),			\
-+		 seqcount_raw_spinlock_t: READ_ONCE(((seqcount_raw_spinlock_t *)s)->seqcount.sequence),	\
-+		 seqcount_latch_t:	  READ_ONCE(((seqcount_latch_t *)s)->seqcount.sequence));	\
-+})
- 
--static inline int raw_read_seqcount_t_latch(seqcount_t *s)
-+/**
-+ * read_seqcount_latch_retry() - end a seqcount_latch_t read section
-+ * @s:		Pointer to seqcount_latch_t
-+ * @start:	count, from raw_read_seqcount_latch()
-+ *
-+ * Return: true if a read section retry is required, else false
-+ */
-+static inline int
-+read_seqcount_latch_retry(const seqcount_latch_t *s, unsigned start)
- {
--	/* Pairs with the first smp_wmb() in raw_write_seqcount_latch() */
--	int seq = READ_ONCE(s->sequence); /* ^^^ */
--	return seq;
-+	return read_seqcount_retry(&s->seqcount, start);
- }
- 
- /**
-- * raw_write_seqcount_latch() - redirect readers to even/odd copy
-- * @s: Pointer to seqcount_t or any of the seqcount_locktype_t variants
-+ * raw_write_seqcount_latch() - redirect latch readers to even/odd copy
-+ * @s: Pointer to seqcount_t, seqcount_raw_spinlock_t, or seqcount_latch_t
-  *
-  * The latch technique is a multiversion concurrency control method that allows
-  * queries during non-atomic modifications. If you can guarantee queries never
-@@ -633,7 +675,7 @@ static inline int raw_read_seqcount_t_latch(seqcount_t *s)
-  * The basic form is a data structure like::
-  *
-  *	struct latch_struct {
-- *		seqcount_t		seq;
-+ *		seqcount_latch_t	seq;
-  *		struct data_struct	data[2];
-  *	};
-  *
-@@ -643,13 +685,13 @@ static inline int raw_read_seqcount_t_latch(seqcount_t *s)
-  *	void latch_modify(struct latch_struct *latch, ...)
-  *	{
-  *		smp_wmb();	// Ensure that the last data[1] update is visible
-- *		latch->seq++;
-+ *		latch->seq.sequence++;
-  *		smp_wmb();	// Ensure that the seqcount update is visible
-  *
-  *		modify(latch->data[0], ...);
-  *
-  *		smp_wmb();	// Ensure that the data[0] update is visible
-- *		latch->seq++;
-+ *		latch->seq.sequence++;
-  *		smp_wmb();	// Ensure that the seqcount update is visible
-  *
-  *		modify(latch->data[1], ...);
-@@ -668,8 +710,8 @@ static inline int raw_read_seqcount_t_latch(seqcount_t *s)
-  *			idx = seq & 0x01;
-  *			entry = data_query(latch->data[idx], ...);
-  *
-- *		// read_seqcount_retry() includes needed smp_rmb()
-- *		} while (read_seqcount_retry(&latch->seq, seq));
-+ *		// This includes needed smp_rmb()
-+ *		} while (read_seqcount_latch_retry(&latch->seq, seq));
-  *
-  *		return entry;
-  *	}
-@@ -693,14 +735,14 @@ static inline int raw_read_seqcount_t_latch(seqcount_t *s)
-  *	When data is a dynamic data structure; one should use regular RCU
-  *	patterns to manage the lifetimes of the objects within.
-  */
--#define raw_write_seqcount_latch(s)					\
--	raw_write_seqcount_t_latch(__seqcount_ptr(s))
--
--static inline void raw_write_seqcount_t_latch(seqcount_t *s)
--{
--       smp_wmb();      /* prior stores before incrementing "sequence" */
--       s->sequence++;
--       smp_wmb();      /* increment "sequence" before following stores */
-+#define raw_write_seqcount_latch(s)						\
-+{										\
-+       smp_wmb();      /* prior stores before incrementing "sequence" */	\
-+       _Generic(*(s),								\
-+		seqcount_t:		((seqcount_t *)s)->sequence++,		\
-+		seqcount_raw_spinlock_t:((seqcount_raw_spinlock_t *)s)->seqcount.sequence++, \
-+		seqcount_latch_t:	((seqcount_latch_t *)s)->seqcount.sequence++); \
-+       smp_wmb();      /* increment "sequence" before following stores */	\
- }
- 
- /*
--- 
-2.28.0
-
+--ot7wtlx72g4ekyyy--
