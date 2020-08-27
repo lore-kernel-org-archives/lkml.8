@@ -2,146 +2,102 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6999C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76414C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E013207CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C17207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 09:58:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjXHtluf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgH0JzK (ORCPT
+        id S1728072AbgH0J6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:55:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43278 "EHLO
+        Thu, 27 Aug 2020 05:58:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbgH0JzK (ORCPT
+        with ESMTP id S1726093AbgH0J6J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:55:10 -0400
-Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FE70C061264;
-        Thu, 27 Aug 2020 02:55:08 -0700 (PDT)
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id DFFEA634C87;
-        Thu, 27 Aug 2020 12:54:56 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1kBEcT-0000Wi-9P; Thu, 27 Aug 2020 12:54:57 +0300
-Date:   Thu, 27 Aug 2020 12:54:57 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH v10 1/4] media: open.rst: better document device node
- naming
-Message-ID: <20200827095457.GB851@valkosipuli.retiisi.org.uk>
-References: <cover.1598512802.git.mchehab+huawei@kernel.org>
- <b2eec3a6928660ca6a0f18580725026771669787.1598512802.git.mchehab+huawei@kernel.org>
+        Thu, 27 Aug 2020 05:58:09 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 587D0C061264;
+        Thu, 27 Aug 2020 02:58:09 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id i13so2358397pjv.0;
+        Thu, 27 Aug 2020 02:58:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tsSPi3tJV6tt9MRH9X9IRqMWBLmb6vhjP03IMQT77sE=;
+        b=WjXHtlufRYtaf/khSMswHWqVqBQduDN9Kgb+Bw4FEZc6pvPVLEGceIvBAlBGwuSLbe
+         MNcSvM+j39nJ2sNxBc3evDkzN/I86r5/Py16Vz3wgLQ/tAcVDpwQe5limKNH9RVpnXwS
+         mg5cgS1yWRSeQMb/9F+Z8cHUjsOAhBuE69X8sTqEDx8O/OHzS4xH32afcL+XZB9aQ02+
+         qIlNYWrzy8KZ7+Ly2FDDuYie8fw2SeZ7/F+0BI3hjqD+jxdjGsLiwqypJiCxKqG74TvQ
+         urqW5930WoJm3kvgGcyRxUaIeK8N+tTMqGNY3GbukxlfhZXfsN3QygqLwL2EHbZcdpcY
+         V3Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tsSPi3tJV6tt9MRH9X9IRqMWBLmb6vhjP03IMQT77sE=;
+        b=dQ2TOpCZ67z7HItodcdFMfo4XUt9UopI9WQS/4ATY65cPv6dF0l0je8S6C1xi8QSZu
+         ee1B3P2QznE9+WnYTNqRTjnSfqkZq2Nh8HyQwj1nf9uIZSNnbDZKvyoUX8pheUjF4k8B
+         YBdgTCNdVhgX9+y5rYkA0oobOfujRGJhRhA7R8zWe4KWaS/m+8R0Ril/Q1d5LS78zzt5
+         4Uc8f5ChZ7ABLM+hTDLvhMbUZp6ePBlhgWhIJM+gZY9UcE79hv9+pVANhmR1fE/wgXJN
+         r0xDBheoISamjwyyrHR3KFKex4UOTrPf+LU+jS8S1ED7sVdjsHLzUXUf1Tl38s/CDYAp
+         C7mQ==
+X-Gm-Message-State: AOAM530lXdJGyqsdvQwRt4W2Sdv9kdWEJSHvmZHaWRQFja/KRtWYsIFG
+        R8WQgTW1mmqc16Jy0Q/uKhhKfE6bIXWdQ68X/FA=
+X-Google-Smtp-Source: ABdhPJxBnaQ1cbucAx/3wJaRhRAn0tdxu0ryrc6qcTtQjsQSGuSpLTIErgLrborEu41xqWA6kPRlcAuseuhhubTXuRQ=
+X-Received: by 2002:a17:90a:2c06:: with SMTP id m6mr10266874pjd.129.1598522287969;
+ Thu, 27 Aug 2020 02:58:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b2eec3a6928660ca6a0f18580725026771669787.1598512802.git.mchehab+huawei@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200825133216.9163-1-valentin.schneider@arm.com>
+ <159851487090.20229.14835640470330793284.tip-bot2@tip-bot2>
+ <CAHp75VfJumPP=wKuU=OjFB11RUhPp0_5_+ogupQLFeEWKfbybA@mail.gmail.com> <20200827092730.GI1362448@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200827092730.GI1362448@hirez.programming.kicks-ass.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 27 Aug 2020 12:57:51 +0300
+Message-ID: <CAHp75VdK-FMC10utfVO3+7J+UevPKDqrs+w_6XM6MsrC3CPe3g@mail.gmail.com>
+Subject: Re: [tip: sched/core] sched/topology: Move sd_flag_debug out of linux/sched/topology.h
+To:     "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tip-commits@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        x86 <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro,
+On Thu, Aug 27, 2020 at 12:27 PM <peterz@infradead.org> wrote:
+>
+> On Thu, Aug 27, 2020 at 11:50:07AM +0300, Andy Shevchenko wrote:
+> > On Thu, Aug 27, 2020 at 10:57 AM tip-bot2 for Valentin Schneider
+> > <tip-bot2@linutronix.de> wrote:
+> > >
+> > > The following commit has been merged into the sched/core branch of tip:
+> >
+> > > Fixes: b6e862f38672 ("sched/topology: Define and assign sched_domain flag metadata")
+> > > Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > Link: https://lkml.kernel.org/r/20200825133216.9163-1-valentin.schneider@arm.com
+> >
+> > Hmm... I'm wondering if this bot is aware of tags given afterwards in
+> > the thread?
+>
+> Sorry, your tag came in after I'd already queued the lot.
 
-Thanks for working on this!
+No problem, just was wondering!
 
-On Thu, Aug 27, 2020 at 09:21:45AM +0200, Mauro Carvalho Chehab wrote:
-> Right now, only kAPI documentation describes the device naming.
-> However, such description is needed at the uAPI too. Add it,
-> and describe how to get an unique identifier for a given device.
-> 
-> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  .../userspace-api/media/v4l/open.rst          | 43 +++++++++++++++++--
->  1 file changed, 40 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/userspace-api/media/v4l/open.rst b/Documentation/userspace-api/media/v4l/open.rst
-> index 38046ef20141..332763053292 100644
-> --- a/Documentation/userspace-api/media/v4l/open.rst
-> +++ b/Documentation/userspace-api/media/v4l/open.rst
-> @@ -14,12 +14,14 @@ Opening and Closing Devices
->  ***************************
->  
->  
-> -Device Naming
-> -=============
-> +.. _v4l2_device_naming:
-> +
-> +V4L2 Device Node Naming
-> +=======================
->  
->  V4L2 drivers are implemented as kernel modules, loaded manually by the
->  system administrator or automatically when a device is first discovered.
-> -The driver modules plug into the "videodev" kernel module. It provides
-> +The driver modules plug into the ``videodev`` kernel module. It provides
->  helper functions and a common application interface specified in this
->  document.
->  
-> @@ -30,6 +32,41 @@ option CONFIG_VIDEO_FIXED_MINOR_RANGES. In that case minor numbers
->  are allocated in ranges depending on the device node type (video, radio,
->  etc.).
->  
-> +The device nodes supported by the Video4Linux subsystem are:
-> +
-> +======================== ====================================================
-> +Default device node name Usage
-> +======================== ====================================================
-> +``/dev/videoX``		 Video and metadata for capture/output devices
-> +``/dev/vbiX``		 Vertical blank data (i.e. closed captions, teletext)
-> +``/dev/radioX``		 Radio tuners and modulators
-> +``/dev/swradioX``	 Software Defined Radio tuners and modulators
-> +``/dev/v4l-touchX``	 Touch sensors
-> +``/dev/v4l-subdevX``	 Video sub-devices (used by sensors and other
-> +			 components of the hardware peripheral)\ [#]_
-> +======================== ====================================================
-> +
-> +Where ``X`` is a non-negative number.
-
-s/number/integer/
-
-Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-
-> +
-> +.. note::
-> +
-> +   1. The actual device node name is system-dependent, as udev rules may apply.
-> +   2. There is no guarantee that ``X`` will remain the same for the same
-> +      device, as the number depends on the device driver's probe order.
-> +      If you need an unique name, udev default rules produce
-> +      ``/dev/v4l/by-id/`` and ``/dev/v4l/by-path/`` directories containing
-> +      links that can be used uniquely to identify a V4L2 device node::
-> +
-> +	$ tree /dev/v4l
-> +	/dev/v4l
-> +	├── by-id
-> +	│   └── usb-OmniVision._USB_Camera-B4.04.27.1-video-index0 -> ../../video0
-> +	└── by-path
-> +	    └── pci-0000:00:14.0-usb-0:2:1.0-video-index0 -> ../../video0
-> +
-> +.. [#] **V4L2 sub-device nodes** (e. g. ``/dev/v4l-subdevX``) use a different
-> +       set of system calls, as covered at :ref:`subdev`.
-> +
->  Many drivers support "video_nr", "radio_nr" or "vbi_nr" module
->  options to select specific video/radio/vbi node numbers. This allows the
->  user to request that the device node is named e.g. /dev/video5 instead
-> 
 
 -- 
-Sakari Ailus
+With Best Regards,
+Andy Shevchenko
