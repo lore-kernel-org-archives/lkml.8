@@ -2,330 +2,126 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C668CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C713C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA4A20786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D92620786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:59:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uOEiMz58";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BMRsOCOw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="WufcuUyw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgH0H7E (ORCPT
+        id S1728442AbgH0H7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:59:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728378AbgH0HyW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:54:22 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE58FC061233;
-        Thu, 27 Aug 2020 00:54:21 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 07:54:19 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598514860;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1IAsJwXAtxR10SvvujO/TxVsBMgI4VZEygzqUTq7TQo=;
-        b=uOEiMz58S1FclAQlcIavK2/6L7cuQy6zWq2M70yxH1ICaqqHnOMeQ5dQmjIS2EEs7wC+NZ
-        LVC2XdOt8T1jerRv4MNDEbO39wuVOW9QZMYqPaKLl1HH4RgVt/CChR3x534Brs4U+5Jmvt
-        N0Z6gQoKuWYZC71+wf+K8yfbWTBVvCSt7C6QpUUwn/KcYKQU6pOpEpyYejWhr//UcJ6PWS
-        V8bwf3ogZS81rz1DIy3SkV+NEGzdQXwhuYLwo/LMxBIQwEVXs0KARUg0GzWoQmw2latmcv
-        PUmRQKjkawwsbYwW9uaSfrbzbdADO1ayigt+/DXWPXFHgmdYp1ttcXbugZ4RLQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598514860;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1IAsJwXAtxR10SvvujO/TxVsBMgI4VZEygzqUTq7TQo=;
-        b=BMRsOCOwTDOeixaGAOBQZVuhQF9nHnSkeC+Ih+K6EmZoXwWQTY56eYBV6sMBo2Bn289A9f
-        5iFi1Y4geT/ed4CA==
-From:   "tip-bot2 for Boqun Feng" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] lockdep: Extend __bfs() to work with multiple
- types of dependencies
-Cc:     Boqun Feng <boqun.feng@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200807074238.1632519-8-boqun.feng@gmail.com>
-References: <20200807074238.1632519-8-boqun.feng@gmail.com>
-MIME-Version: 1.0
-Message-ID: <159851485971.20229.16683302872240308936.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        Thu, 27 Aug 2020 03:59:13 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:8942 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728587AbgH0H7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:59:06 -0400
+IronPort-SDR: pcQTABDNzCOEZzVXUHdHR+VQg279JaBcMZMVpmFp4+RY4P0r8TpEUcqSdNCdiuaTz3lvgfF1i4
+ VQGOE+SdLDOXfrYRNsEiW6Tj/20R0aSR5ayzhL411S0jeVhK2GMjl109fPURBGKpp2/iz2hi7F
+ MHfRoSRZuQV/DzQs9bdPtrUe2SnnCcCU34ppC76d5FifhrDGvKKWHoNMJSB3QJCb5h8m8o9eLd
+ /pO7JzSsESETJweFOwkAxRHlf9/nTc9WURJcGlq55bXQYxP6I/0isYsL+T3qKm6HKBFjMBAfYg
+ 1HM=
+X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
+   d="scan'208";a="13619585"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 27 Aug 2020 09:59:04 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Thu, 27 Aug 2020 09:59:04 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Thu, 27 Aug 2020 09:59:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1598515144; x=1630051144;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references;
+  bh=Oe/LRi3jeDUnyT2lJ6K1yeZAK9stHhVflXPfWhtYVhk=;
+  b=WufcuUywO6Xag/qsdyaGEbHwJ2O1eqkNNC6SmY0gdYk6N//6LTx88QGN
+   SwGDgxRFWn4FsR2mZ1xW2qhXZG4NR0fmEj6lq+kaWt4GkhJVpiS7YvTcf
+   D3O8o9tbyXlx0MFoxRHpkKTE2uZ93GMrCaHn/gE6wd7820MevshqGKz6r
+   IqvLuEg94FwwKaeXqVIIufVVfbP4i6WX6b8/silxEZDCJhWj6qQMYTgMy
+   2D8hCCR3bd71ZxcR1x0CzMzHCnQtx5FPkN/+VuuxMqH2VLAanuVb+OTIn
+   TFDIxc0rR46qBt9wa+p0EcNa4pmEvcRALnobIdPjsf/zrXVMpFf2e9J3G
+   w==;
+IronPort-SDR: 9Fyq4A42C5ZokLxgWBJ4iX6M5+kl8NRn9XLfdUEB/cYGt91pe7DrmnL1p8AsSXFops5VDWXROK
+ qsi6nj4l7CNS7dpGwm3jwuBAUBOKPqduAl3H8hsdN4IufG7qqxmQDlSDs2ynggyGaLe9BjboGQ
+ 51xVYgttTNCkrqObbU5aLLQU2SGYIkixVp2ynyLzUPEPCwb02pyuSYSq/B9Uj1ETxSRMhxk+lC
+ 1tlUQTRfg1kjnhpb4FMM0jCxvKm1JO1ug3ZtGnuSExTdpxsHfYNynBcTQFwxmEWjV7JRPG/+lD
+ cSU=
+X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
+   d="scan'208";a="13619584"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 27 Aug 2020 09:59:04 +0200
+Received: from herburgerg-w.tq-net.de (herburgerg-w.tq-net.de [10.122.52.145])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id C7C1C280065;
+        Thu, 27 Aug 2020 09:59:04 +0200 (CEST)
+From:   Gregor Herburger <gregor.herburger@ew.tq-group.com>
+To:     york.sun@nxp.com, bp@alien8.de, mchehab@kernel.org,
+        tony.luck@intel.com, james.morse@arm.com, rrichter@marvell.com
+Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gregor Herburger <gregor.herburger@ew.tq-group.com>
+Subject: [PATCH v2 1/1] edac: fsl_ddr_edac: fix expected data message
+Date:   Thu, 27 Aug 2020 09:56:00 +0200
+Message-Id: <20200827075600.22335-1-gregor.herburger@ew.tq-group.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200817095302.GD549@zn.tnic>
+References: <20200817095302.GD549@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the locking/core branch of tip:
+When a correctable single bit error occurs, the driver calculates the
+bad_data_bit respectively the bad_ecc_bit. If there is no error in the
+corresponding data, the value becomes -1. With this the expected data
+message is calculated.
 
-Commit-ID:     6971c0f345620aae5e6172207a57b7524603a34e
-Gitweb:        https://git.kernel.org/tip/6971c0f345620aae5e6172207a57b7524603a34e
-Author:        Boqun Feng <boqun.feng@gmail.com>
-AuthorDate:    Fri, 07 Aug 2020 15:42:26 +08:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 26 Aug 2020 12:42:04 +02:00
+In the case of an error in the lower 32 bits or no error (-1) the right
+side operand of the bit-shift becomes negative which is undefined
+behavior.
 
-lockdep: Extend __bfs() to work with multiple types of dependencies
+This can result in wrong and misleading messages like this:
+[  311.103794] EDAC FSL_DDR MC0: Faulty Data bit: 36
+[  311.108490] EDAC FSL_DDR MC0: Expected Data / ECC:   0xffffffef_ffffffff / 0x80000059
+[  311.116135] EDAC FSL_DDR MC0: Captured Data / ECC:   0xffffffff_ffffffef / 0x59
 
-Now we have four types of dependencies in the dependency graph, and not
-all the pathes carry real dependencies (the dependencies that may cause
-a deadlock), for example:
+Fix this by only calculating the expected data where the error occurred.
 
-	Given lock A and B, if we have:
+With the fix the dmesg output looks like this:
+[  311.103794] EDAC FSL_DDR MC0: Faulty Data bit: 36
+[  311.108490] EDAC FSL_DDR MC0: Expected Data / ECC:   0xffffffef_ffffffef / 0x59
+[  311.116135] EDAC FSL_DDR MC0: Captured Data / ECC:   0xffffffff_ffffffef / 0x59
 
-	CPU1			CPU2
-	=============		==============
-	write_lock(A);		read_lock(B);
-	read_lock(B);		write_lock(A);
-
-	(assuming read_lock(B) is a recursive reader)
-
-	then we have dependencies A -(ER)-> B, and B -(SN)-> A, and a
-	dependency path A -(ER)-> B -(SN)-> A.
-
-	In lockdep w/o recursive locks, a dependency path from A to A
-	means a deadlock. However, the above case is obviously not a
-	deadlock, because no one holds B exclusively, therefore no one
-	waits for the other to release B, so who get A first in CPU1 and
-	CPU2 will run non-blockingly.
-
-	As a result, dependency path A -(ER)-> B -(SN)-> A is not a
-	real/strong dependency that could cause a deadlock.
-
->From the observation above, we know that for a dependency path to be
-real/strong, no two adjacent dependencies can be as -(*R)-> -(S*)->.
-
-Now our mission is to make __bfs() traverse only the strong dependency
-paths, which is simple: we record whether we only have -(*R)-> for the
-previous lock_list of the path in lock_list::only_xr, and when we pick a
-dependency in the traverse, we 1) filter out -(S*)-> dependency if the
-previous lock_list only has -(*R)-> dependency (i.e. ->only_xr is true)
-and 2) set the next lock_list::only_xr to true if we only have -(*R)->
-left after we filter out dependencies based on 1), otherwise, set it to
-false.
-
-With this extension for __bfs(), we now need to initialize the root of
-__bfs() properly (with a correct ->only_xr), to do so, we introduce some
-helper functions, which also cleans up a little bit for the __bfs() root
-initialization code.
-
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200807074238.1632519-8-boqun.feng@gmail.com
+Signed-off-by: Gregor Herburger <gregor.herburger@ew.tq-group.com>
 ---
- include/linux/lockdep.h  |   2 +-
- kernel/locking/lockdep.c | 113 +++++++++++++++++++++++++++++++-------
- 2 files changed, 96 insertions(+), 19 deletions(-)
+ drivers/edac/fsl_ddr_edac.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 35c8bb0..57d642d 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -57,6 +57,8 @@ struct lock_list {
- 	u16				distance;
- 	/* bitmap of different dependencies from head to this */
- 	u8				dep;
-+	/* used by BFS to record whether "prev -> this" only has -(*R)-> */
-+	u8				only_xr;
+diff --git a/drivers/edac/fsl_ddr_edac.c b/drivers/edac/fsl_ddr_edac.c
+index 6d8ea226010d..4b6989cf1947 100644
+--- a/drivers/edac/fsl_ddr_edac.c
++++ b/drivers/edac/fsl_ddr_edac.c
+@@ -343,9 +343,9 @@ static void fsl_mc_check(struct mem_ctl_info *mci)
  
- 	/*
- 	 * The parent field is used to implement breadth-first search, and the
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 16ad1b7..5abc227 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1551,8 +1551,72 @@ static inline u8 calc_depb(struct held_lock *prev, struct held_lock *next)
- }
+ 		fsl_mc_printk(mci, KERN_ERR,
+ 			"Expected Data / ECC:\t%#8.8x_%08x / %#2.2x\n",
+-			cap_high ^ (1 << (bad_data_bit - 32)),
+-			cap_low ^ (1 << bad_data_bit),
+-			syndrome ^ (1 << bad_ecc_bit));
++			(bad_data_bit > 31) ? cap_high ^ (1 << (bad_data_bit - 32)) : cap_high,
++			(bad_data_bit <= 31) ? cap_low ^ (1 << (bad_data_bit)) : cap_low,
++			(bad_ecc_bit != -1) ? syndrome ^ (1 << (bad_ecc_bit)) : syndrome);
+ 	}
  
- /*
-- * Forward- or backward-dependency search, used for both circular dependency
-- * checking and hardirq-unsafe/softirq-unsafe checking.
-+ * Initialize a lock_list entry @lock belonging to @class as the root for a BFS
-+ * search.
-+ */
-+static inline void __bfs_init_root(struct lock_list *lock,
-+				   struct lock_class *class)
-+{
-+	lock->class = class;
-+	lock->parent = NULL;
-+	lock->only_xr = 0;
-+}
-+
-+/*
-+ * Initialize a lock_list entry @lock based on a lock acquisition @hlock as the
-+ * root for a BFS search.
-+ *
-+ * ->only_xr of the initial lock node is set to @hlock->read == 2, to make sure
-+ * that <prev> -> @hlock and @hlock -> <whatever __bfs() found> is not -(*R)->
-+ * and -(S*)->.
-+ */
-+static inline void bfs_init_root(struct lock_list *lock,
-+				 struct held_lock *hlock)
-+{
-+	__bfs_init_root(lock, hlock_class(hlock));
-+	lock->only_xr = (hlock->read == 2);
-+}
-+
-+/*
-+ * Similar to bfs_init_root() but initialize the root for backwards BFS.
-+ *
-+ * ->only_xr of the initial lock node is set to @hlock->read != 0, to make sure
-+ * that <next> -> @hlock and @hlock -> <whatever backwards BFS found> is not
-+ * -(*S)-> and -(R*)-> (reverse order of -(*R)-> and -(S*)->).
-+ */
-+static inline void bfs_init_rootb(struct lock_list *lock,
-+				  struct held_lock *hlock)
-+{
-+	__bfs_init_root(lock, hlock_class(hlock));
-+	lock->only_xr = (hlock->read != 0);
-+}
-+
-+/*
-+ * Breadth-First Search to find a strong path in the dependency graph.
-+ *
-+ * @source_entry: the source of the path we are searching for.
-+ * @data: data used for the second parameter of @match function
-+ * @match: match function for the search
-+ * @target_entry: pointer to the target of a matched path
-+ * @offset: the offset to struct lock_class to determine whether it is
-+ *          locks_after or locks_before
-+ *
-+ * We may have multiple edges (considering different kinds of dependencies,
-+ * e.g. ER and SN) between two nodes in the dependency graph. But
-+ * only the strong dependency path in the graph is relevant to deadlocks. A
-+ * strong dependency path is a dependency path that doesn't have two adjacent
-+ * dependencies as -(*R)-> -(S*)->, please see:
-+ *
-+ *         Documentation/locking/lockdep-design.rst
-+ *
-+ * for more explanation of the definition of strong dependency paths
-+ *
-+ * In __bfs(), we only traverse in the strong dependency path:
-+ *
-+ *     In lock_list::only_xr, we record whether the previous dependency only
-+ *     has -(*R)-> in the search, and if it does (prev only has -(*R)->), we
-+ *     filter out any -(S*)-> in the current dependency and after that, the
-+ *     ->only_xr is set according to whether we only have -(*R)-> left.
-  */
- static enum bfs_result __bfs(struct lock_list *source_entry,
- 			     void *data,
-@@ -1582,6 +1646,7 @@ static enum bfs_result __bfs(struct lock_list *source_entry,
- 	__cq_enqueue(cq, source_entry);
- 
- 	while ((lock = __cq_dequeue(cq))) {
-+		bool prev_only_xr;
- 
- 		if (!lock->class) {
- 			ret = BFS_EINVALIDNODE;
-@@ -1602,10 +1667,26 @@ static enum bfs_result __bfs(struct lock_list *source_entry,
- 
- 		head = get_dep_list(lock, offset);
- 
--		DEBUG_LOCKS_WARN_ON(!irqs_disabled());
-+		prev_only_xr = lock->only_xr;
- 
- 		list_for_each_entry_rcu(entry, head, entry) {
- 			unsigned int cq_depth;
-+			u8 dep = entry->dep;
-+
-+			/*
-+			 * Mask out all -(S*)-> if we only have *R in previous
-+			 * step, because -(*R)-> -(S*)-> don't make up a strong
-+			 * dependency.
-+			 */
-+			if (prev_only_xr)
-+				dep &= ~(DEP_SR_MASK | DEP_SN_MASK);
-+
-+			/* If nothing left, we skip */
-+			if (!dep)
-+				continue;
-+
-+			/* If there are only -(*R)-> left, set that for the next step */
-+			entry->only_xr = !(dep & (DEP_SN_MASK | DEP_EN_MASK));
- 
- 			visit_lock_entry(entry, lock);
- 			if (match(entry, data)) {
-@@ -1827,8 +1908,7 @@ unsigned long lockdep_count_forward_deps(struct lock_class *class)
- 	unsigned long ret, flags;
- 	struct lock_list this;
- 
--	this.parent = NULL;
--	this.class = class;
-+	__bfs_init_root(&this, class);
- 
- 	raw_local_irq_save(flags);
- 	lockdep_lock();
-@@ -1854,8 +1934,7 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
- 	unsigned long ret, flags;
- 	struct lock_list this;
- 
--	this.parent = NULL;
--	this.class = class;
-+	__bfs_init_root(&this, class);
- 
- 	raw_local_irq_save(flags);
- 	lockdep_lock();
-@@ -1898,10 +1977,9 @@ check_noncircular(struct held_lock *src, struct held_lock *target,
- {
- 	enum bfs_result ret;
- 	struct lock_list *target_entry;
--	struct lock_list src_entry = {
--		.class = hlock_class(src),
--		.parent = NULL,
--	};
-+	struct lock_list src_entry;
-+
-+	bfs_init_root(&src_entry, src);
- 
- 	debug_atomic_inc(nr_cyclic_checks);
- 
-@@ -1937,10 +2015,9 @@ check_redundant(struct held_lock *src, struct held_lock *target)
- {
- 	enum bfs_result ret;
- 	struct lock_list *target_entry;
--	struct lock_list src_entry = {
--		.class = hlock_class(src),
--		.parent = NULL,
--	};
-+	struct lock_list src_entry;
-+
-+	bfs_init_root(&src_entry, src);
- 
- 	debug_atomic_inc(nr_redundant_checks);
- 
-@@ -3556,8 +3633,7 @@ check_usage_forwards(struct task_struct *curr, struct held_lock *this,
- 	struct lock_list root;
- 	struct lock_list *target_entry;
- 
--	root.parent = NULL;
--	root.class = hlock_class(this);
-+	bfs_init_root(&root, this);
- 	ret = find_usage_forwards(&root, lock_flag(bit), &target_entry);
- 	if (bfs_error(ret)) {
- 		print_bfs_bug(ret);
-@@ -3583,8 +3659,7 @@ check_usage_backwards(struct task_struct *curr, struct held_lock *this,
- 	struct lock_list root;
- 	struct lock_list *target_entry;
- 
--	root.parent = NULL;
--	root.class = hlock_class(this);
-+	bfs_init_rootb(&root, this);
- 	ret = find_usage_backwards(&root, lock_flag(bit), &target_entry);
- 	if (bfs_error(ret)) {
- 		print_bfs_bug(ret);
+ 	fsl_mc_printk(mci, KERN_ERR,
+-- 
+2.17.1
+
