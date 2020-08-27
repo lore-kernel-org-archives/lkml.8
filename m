@@ -2,146 +2,90 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0060EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5EDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8AB722BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:20:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598552445;
-	bh=m7vhbAFnI7P7AwdKlzAn0wqD1YPTHJSRQ+ZyXNR7MXY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=hapWyfOx9J42oxOtPTW7RMdThR3cViUsj4Kv5buucWXOnfBBxaTT/QgA9r/wsvdkz
-	 McLBbgrO3dT0t8MZI/DRmbyJ3RBp92uPQ/frOFRo4ORHKudffDzWD3KJMZaDcOlJZu
-	 fLH4GSeerD2HEtS8jbMSCsGeIY+aeBsCPAIRow5w=
+	by mail.kernel.org (Postfix) with ESMTP id 6AA8922BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:22:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgH0SUo (ORCPT
+        id S1726887AbgH0SW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:20:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57484 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 14:22:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34154 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726093AbgH0SUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:20:42 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A730E2087E;
-        Thu, 27 Aug 2020 18:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598552442;
-        bh=m7vhbAFnI7P7AwdKlzAn0wqD1YPTHJSRQ+ZyXNR7MXY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UkvStWoB1OiC87isw5L+RU0aRZ6Byn64sN6W7fqyqnYslW1VbyUto3Ot7HnJdzmV/
-         BpHMqJ6kR2FuX03H7NAUtZrH7Q62VQWR+Hm7VJz4TNIG5szeBamrDedrrHkWMj3Ds6
-         qwX6HCvJ0Dk2KiupyPg7/GXt0z0MFg9xlpzjsATc=
-Date:   Thu, 27 Aug 2020 13:20:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [patch V2 34/46] PCI/MSI: Make arch_.*_msi_irq[s] fallbacks
- selectable
-Message-ID: <20200827182040.GA2049623@bjorn-Precision-5520>
+        id S1726234AbgH0SW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 14:22:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 8B5EAACE3;
+        Thu, 27 Aug 2020 18:22:55 +0000 (UTC)
+Date:   Thu, 27 Aug 2020 19:22:21 +0100
+From:   Mel Gorman <mgorman@suse.de>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched/numa: use runnable_avg to classify node
+Message-ID: <20200827182221.GG3033@suse.de>
+References: <20200825121818.30260-1-vincent.guittot@linaro.org>
+ <20200827153534.GF3033@suse.de>
+ <CAKfTPtCRmts+qH+hexKbhZ7595zGs1U3Q5V4-XzHgpU0dJd+1Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200826112333.992429909@linutronix.de>
+In-Reply-To: <CAKfTPtCRmts+qH+hexKbhZ7595zGs1U3Q5V4-XzHgpU0dJd+1Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Rob,
-cover https://lore.kernel.org/r/20200826111628.794979401@linutronix.de/
-this  https://lore.kernel.org/r/20200826112333.992429909@linutronix.de/]
-
-On Wed, Aug 26, 2020 at 01:17:02PM +0200, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
+On Thu, Aug 27, 2020 at 05:43:11PM +0200, Vincent Guittot wrote:
+> > The testing was a mixed bag of wins and losses but wins more than it
+> > loses. Biggest loss was a 9.04% regression on nas-SP using openmp for
+> > parallelisation on Zen1. Biggest win was around 8% gain running
+> > specjbb2005 on Zen2 (with some major gains of up to 55% for some thread
+> > counts). Most workloads were stable across multiple Intel and AMD
+> > machines.
+> >
+> > There were some oddities in changes in NUMA scanning rate but that is
+> > likely a side-effect because the locality over time for the same loads
+> > did not look obviously worse. There was no negative result I could point
+> > at that was not offset by a positive result elsewhere. Given it's not
+> > a univeral win or loss, matching numa and lb balancing as closely as
+> > possible is best so
+> >
+> > Reviewed-by: Mel Gorman <mgorman@suse.de>
 > 
-> The arch_.*_msi_irq[s] fallbacks are compiled in whether an architecture
-> requires them or not. Architectures which are fully utilizing hierarchical
-> irq domains should never call into that code.
+> Thanks.
 > 
-> It's not only architectures which depend on that by implementing one or
-> more of the weak functions, there is also a bunch of drivers which relies
-> on the weak functions which invoke msi_controller::setup_irq[s] and
-> msi_controller::teardown_irq.
+> I will try to reproduce the nas-SP test on my setup to see what is going one
 > 
-> Make the architectures and drivers which rely on them select them in Kconfig
-> and if not selected replace them by stub functions which emit a warning and
-> fail the PCI/MSI interrupt allocation.
 
-Sorry, I really don't understand this, so these are probably stupid
-questions.
+You can try but you might be chasing ghosts. Please note that this nas-SP
+observation was only on zen1 and only for C-class and OMP. The other
+machines tested for the same class and OMP were fine (including zen2). Even
+D-class on the same machine with OMP was fine as was MPI in both cases. The
+bad result indicated that NUMA scanning and faulting was higher but that
+is more likely to be a problem with NUMA balancing than your patch.
 
-If CONFIG_PCI_MSI_ARCH_FALLBACKS is defined, we will supply
-implementations of:
+In the five iterations, two iterations showed a large spike in scan rate
+towards the end of an iteration but not the other three. The scan rate
+was also not consistently high so there is a degree of luck involved with
+SP specifically and there is not a consistently penalty as a result of
+your patch.
 
-  arch_setup_msi_irq
-  arch_teardown_msi_irq
-  arch_setup_msi_irqs
-  arch_teardown_msi_irqs
-  default_teardown_msi_irqs    # non-weak
+The only thing to be aware of is that this patch might show up in
+bisections once it's merged for both performance gains and losses.
 
-You select CONFIG_PCI_MSI_ARCH_FALLBACKS for ia64, mips, powerpc,
-s390, sparc, and x86.  I see that all of those arches implement at
-least one of the functions above.  But x86 doesn't and I can't figure
-out why it needs to select CONFIG_PCI_MSI_ARCH_FALLBACKS.
-
-I assume there's a way to convert these arches to hierarchical irq
-domains so they wouldn't need this at all?  Is there a sample
-conversion to look at?
-
-And I can't figure out what's special about tegra, rcar, and xilinx
-that makes them need it as well.  Is there something I could grep for
-to identify them?  Is there a way to convert them so they don't need
-it?
-
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -193,17 +193,38 @@ void pci_msi_mask_irq(struct irq_data *d
->  void pci_msi_unmask_irq(struct irq_data *data);
->  
->  /*
-> - * The arch hooks to setup up msi irqs. Those functions are
-> - * implemented as weak symbols so that they /can/ be overriden by
-> - * architecture specific code if needed.
-> + * The arch hooks to setup up msi irqs. Default functions are implemented
-
-s/msi/MSI/ to match the one below.
-
-> + * as weak symbols so that they /can/ be overriden by architecture specific
-> + * code if needed. These hooks must be enabled by the architecture or by
-> + * drivers which depend on them via msi_controller based MSI handling.
+-- 
+Mel Gorman
+SUSE Labs
