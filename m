@@ -2,90 +2,119 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 730C0C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45E072054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE4122B4E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:59:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="f3o5WdOE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XUB4mNqp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgH0O6p (ORCPT
+        id S1728404AbgH0O7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:58:45 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:32637 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729026AbgH0MOw (ORCPT
+        Thu, 27 Aug 2020 10:59:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35549 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728067AbgH0O6s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 08:14:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598530492; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=xKkJldCpFuFFwvk5Ekpm5a9GeD8MRoy70tGm5lWY6Xk=; b=f3o5WdOEfYGvDREvSuMQBuWgQQWuPWyY3EFEeFHGo9LU7mzYRylVB/CQnFqemUXhaINYgwYz
- E4jc0/yMOvLCx9JRMXWFQJY7xEJLmTrlIaF3aMlIegGWpOgndDAICzz7Q1mSyfCJjaVi15YE
- Uu0UxBFtzliG9S3t06ya+VPkr9w=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5f47a11dc9ede11f5eb55929 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 12:03:41
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2039EC43391; Thu, 27 Aug 2020 12:03:41 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 27 Aug 2020 10:58:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598540323;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=hzfczoY08KCAOXrJ4QPUBcOl3kLlAqwyM9dLVlxgAlg=;
+        b=XUB4mNqpQVGX1lJOTw7ArMwptRJKdM8lobpXI/acVB9WOQX4mUptM1HhIKECvN5IoS89nq
+        DstFmxawp/RVa/5fEgiICJWEsvkK2pRX+xRBQNF/gRoZ0T0Aj0h6rze2JZlFLVGIdCkZyN
+        8nXnCITRriEBwucli6TqjO6JeO3NQEE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-462-OgZhy-oMOZaq0ggeHWE2Pg-1; Thu, 27 Aug 2020 10:58:41 -0400
+X-MC-Unique: OgZhy-oMOZaq0ggeHWE2Pg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1E98DC433C6;
-        Thu, 27 Aug 2020 12:03:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1E98DC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 00/30] Set 3: Rid W=1 warnings in Wireless
-References: <20200826093401.1458456-1-lee.jones@linaro.org>
-Date:   Thu, 27 Aug 2020 15:03:37 +0300
-In-Reply-To: <20200826093401.1458456-1-lee.jones@linaro.org> (Lee Jones's
-        message of "Wed, 26 Aug 2020 10:33:31 +0100")
-Message-ID: <87y2m09tye.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 85FA08018A4;
+        Thu, 27 Aug 2020 14:58:39 +0000 (UTC)
+Received: from steredhat.redhat.com (ovpn-113-96.ams2.redhat.com [10.36.113.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1D6495C1C2;
+        Thu, 27 Aug 2020 14:58:32 +0000 (UTC)
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Moyer <jmoyer@redhat.com>,
+        Aleksa Sarai <asarai@suse.de>,
+        Sargun Dhillon <sargun@sargun.me>,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: [PATCH v6 0/3] io_uring: add restrictions to support untrusted
+ applications and guests
+Date:   Thu, 27 Aug 2020 16:58:28 +0200
+Message-Id: <20200827145831.95189-1-sgarzare@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> writes:
+v6:
+ - moved restriction checks in a function [Jens]
+ - changed ret value handling in io_register_restrictions() [Jens]
 
-> This set is part of a larger effort attempting to clean-up W=1
-> kernel builds, which are currently overwhelmingly riddled with
-> niggly little warnings.
->
-> There are quite a few W=1 warnings in the Wireless.  My plan
-> is to work through all of them over the next few weeks.
-> Hopefully it won't be too long before drivers/net/wireless
-> builds clean with W=1 enabled.
+v5: https://lore.kernel.org/io-uring/20200827134044.82821-1-sgarzare@redhat.com/
+v4: https://lore.kernel.org/io-uring/20200813153254.93731-1-sgarzare@redhat.com/
+v3: https://lore.kernel.org/io-uring/20200728160101.48554-1-sgarzare@redhat.com/
+RFC v2: https://lore.kernel.org/io-uring/20200716124833.93667-1-sgarzare@redhat.com
+RFC v1: https://lore.kernel.org/io-uring/20200710141945.129329-1-sgarzare@redhat.com
 
-How much patches are there going to be? I was first positive about the
-idea but now I am really starting to wonder if this is worth the effort,
-these patches are spamming my patchwork significantly and taking too
-much time. At least please hold of on any new patches for at least a
-week so I can catch up with all patches I have.
+Following the proposal that I send about restrictions [1], I wrote this series
+to add restrictions in io_uring.
 
-And like I said already before, follow the title style we use so that I
-don't need to edit every patch myself:
+I also wrote helpers in liburing and a test case (test/register-restrictions.c)
+available in this repository:
+https://github.com/stefano-garzarella/liburing (branch: io_uring_restrictions)
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches#commit_title_is_wrong
+Just to recap the proposal, the idea is to add some restrictions to the
+operations (sqe opcode and flags, register opcode) to safely allow untrusted
+applications or guests to use io_uring queues.
+
+The first patch changes io_uring_register(2) opcodes into an enumeration to
+keep track of the last opcode available.
+
+The second patch adds IOURING_REGISTER_RESTRICTIONS opcode and the code to
+handle restrictions.
+
+The third patch adds IORING_SETUP_R_DISABLED flag to start the rings disabled,
+allowing the user to register restrictions, buffers, files, before to start
+processing SQEs.
+
+Comments and suggestions are very welcome.
+
+Thank you in advance,
+Stefano
+
+[1] https://lore.kernel.org/io-uring/20200609142406.upuwpfmgqjeji4lc@steredhat/
+
+Stefano Garzarella (3):
+  io_uring: use an enumeration for io_uring_register(2) opcodes
+  io_uring: add IOURING_REGISTER_RESTRICTIONS opcode
+  io_uring: allow disabling rings during the creation
+
+ fs/io_uring.c                 | 172 ++++++++++++++++++++++++++++++++--
+ include/uapi/linux/io_uring.h |  60 +++++++++---
+ 2 files changed, 215 insertions(+), 17 deletions(-)
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.26.2
+
