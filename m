@@ -2,149 +2,73 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1964DC433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DECC433E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E612620872
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:48:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsiMaFmh"
+	by mail.kernel.org (Postfix) with ESMTP id A5EEC20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 22:48:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgH0WsQ (ORCPT
+        id S1728069AbgH0Ws0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 18:48:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbgH0WsO (ORCPT
+        Thu, 27 Aug 2020 18:48:26 -0400
+Received: from smtprelay0113.hostedemail.com ([216.40.44.113]:49820 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727906AbgH0WsV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 18:48:14 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E7A4C061264;
-        Thu, 27 Aug 2020 15:48:13 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id p25so7764061qkp.2;
-        Thu, 27 Aug 2020 15:48:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Y2apmauJqQxWRpgQvwb+Zmg3D+lXVvnQVjZBHrBv0Go=;
-        b=RsiMaFmhnOCD5XVKA2gNSkEsXK540EqNGscrDEBjxtDvkRikQp/qmY1NJ+ybo84OOp
-         Eyvfz5G4N10SSYayeFA3jEXXizLZsivTuL8P3vHjoqdhZYH1AAh8+r+yQHvpbvtwBDih
-         TunbvS1/nhe7a5QXX7X+7H4UFu0uUwcD8l8R5B+/IRg/H9tPcKGZpW7lZotP6A1vowpC
-         cW8o5ARcOqPUoFjGR5IevTyD14DTtEW1k59XzNa2kd7bKjjK4NHTpiHH7kVpjQ4UbvQQ
-         RhP+gz9w9wFjZO2cfdU4nYyNQJoBUHuA5zUxu2JtD5tWMLNNKWL8WRkcggs3/PlWfRjN
-         OMNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=Y2apmauJqQxWRpgQvwb+Zmg3D+lXVvnQVjZBHrBv0Go=;
-        b=kpSI5DCFkFMKCOMImfdwNz9jhP4tt5NmfG4qB/OPvreQvw4/Kiri5kBgf/xVKMGQuN
-         9XFN04DfrNaJx10mcDrfor58HXr/wo4AqnW9Z0tk3v/wlRwGfXyM49PiEtmc4G0aUMAC
-         8GyW/phR4hBUF5yNbicqVLHFUgFnhJAwA8Sm2ZulGUYMIHLIbLKWb/Va00gytr0vEUns
-         i32ipez3lIN6s/rUhfgLrCFRHhyuuK+eo3cwMYjYmV7NVy7Ad7isUXrmzquqUud+igVN
-         vOSI6YS++BDQ1HxlZJkh4G1inGZrdJiWzudOFfe4t48pX1zvP+htHtvtHGzZYNQkf+fE
-         qYAg==
-X-Gm-Message-State: AOAM533hwM9uiEP2Y+o9KidN2rLsCeCgDisfZJvyUy1xcfalXC8cSCgF
-        x+nH9Sg4PTC95wZAqxg+A2g=
-X-Google-Smtp-Source: ABdhPJzwDTK91WvNvq8E6g5kUeSK5dWZl7/Bap/DMiLhxt0h5fc0gSs3IYAL5uhBmfvgsemamjTKQg==
-X-Received: by 2002:a05:620a:148a:: with SMTP id w10mr14211312qkj.281.1598568492613;
-        Thu, 27 Aug 2020 15:48:12 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id a20sm2909161qtw.45.2020.08.27.15.48.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 15:48:12 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Thu, 27 Aug 2020 18:48:10 -0400
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
+        Thu, 27 Aug 2020 18:48:21 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id DC5BC181D330D;
+        Thu, 27 Aug 2020 22:48:19 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: oven23_04042e627070
+X-Filterd-Recvd-Size: 1848
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 27 Aug 2020 22:48:17 +0000 (UTC)
+Message-ID: <773aa01add27d7c5595f5cda9d3d2b791190c374.camel@perches.com>
+Subject: Re: [Cocci] [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+From:   Joe Perches <joe@perches.com>
+To:     Denis Efremov <efremov@linux.com>,
+        Julia Lawall <julia.lawall@inria.fr>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v6 27/76] x86/sev-es: Add CPUID handling to #VC handler
-Message-ID: <20200827224810.GA986963@rani.riverdale.lan>
-References: <20200824085511.7553-1-joro@8bytes.org>
- <20200824085511.7553-28-joro@8bytes.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, cocci <cocci@systeme.lip6.fr>,
+        accessrunner-general@lists.sourceforge.net,
+        Alex Dewar <alex.dewar90@gmail.com>
+Date:   Thu, 27 Aug 2020 15:48:16 -0700
+In-Reply-To: <adfca3f2-561a-9d91-c064-cf01c2b573e7@linux.com>
+References: <20200824222322.22962-1-alex.dewar90@gmail.com>
+         <48f2dc90-7852-eaf1-55d7-2c85cf954688@rasmusvillemoes.dk>
+         <20200827071537.GA168593@kroah.com>
+         <20200827131819.7rcl2f5js3hkoqj2@lenovo-laptop>
+         <def24e9e-018c-9712-0d07-d4cbc84f07d9@rasmusvillemoes.dk>
+         <20200827144846.yauuttjaqtxaldxg@lenovo-laptop>
+         <5d1dfb9b031130d4d20763ec621233a19d6a88a2.camel@perches.com>
+         <alpine.DEB.2.22.394.2008272141220.2482@hadrien>
+         <5853c58e-7d26-2cf9-6cbf-698ecd93cbf9@linux.com>
+         <alpine.DEB.2.22.394.2008272334500.2482@hadrien>
+         <d6d5836196208d5280cedf5837952096c3518852.camel@perches.com>
+         <adfca3f2-561a-9d91-c064-cf01c2b573e7@linux.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200824085511.7553-28-joro@8bytes.org>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:54:22AM +0200, Joerg Roedel wrote:
-> From: Tom Lendacky <thomas.lendacky@amd.com>
-> 
-> Handle #VC exceptions caused by CPUID instructions. These happen in
-> early boot code when the KASLR code checks for RDTSC.
-> 
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> [ jroedel@suse.de: Adapt to #VC handling framework ]
-> Co-developed-by: Joerg Roedel <jroedel@suse.de>
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> Link: https://lore.kernel.org/r/20200724160336.5435-27-joro@8bytes.org
-> ---
-> +
-> +static enum es_result vc_handle_cpuid(struct ghcb *ghcb,
-> +				      struct es_em_ctxt *ctxt)
-> +{
-> +	struct pt_regs *regs = ctxt->regs;
-> +	u32 cr4 = native_read_cr4();
-> +	enum es_result ret;
-> +
-> +	ghcb_set_rax(ghcb, regs->ax);
-> +	ghcb_set_rcx(ghcb, regs->cx);
-> +
-> +	if (cr4 & X86_CR4_OSXSAVE)
+On Fri, 2020-08-28 at 01:38 +0300, Denis Efremov wrote:
+> > This will match it (the difference is in the ';'):
 
-Will this ever happen? trampoline_32bit_src will clear CR4 except for
-PAE and possibly LA57, no?
+thanks.
 
-> +		/* Safe to read xcr0 */
-> +		ghcb_set_xcr0(ghcb, xgetbv(XCR_XFEATURE_ENABLED_MASK));
-> +	else
-> +		/* xgetbv will cause #GP - use reset value for xcr0 */
-> +		ghcb_set_xcr0(ghcb, 1);
-> +
-> +	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_CPUID, 0, 0);
-> +	if (ret != ES_OK)
-> +		return ret;
-> +
-> +	if (!(ghcb_rax_is_valid(ghcb) &&
-> +	      ghcb_rbx_is_valid(ghcb) &&
-> +	      ghcb_rcx_is_valid(ghcb) &&
-> +	      ghcb_rdx_is_valid(ghcb)))
-> +		return ES_VMM_ERROR;
-> +
-> +	regs->ax = ghcb->save.rax;
-> +	regs->bx = ghcb->save.rbx;
-> +	regs->cx = ghcb->save.rcx;
-> +	regs->dx = ghcb->save.rdx;
-> +
-> +	return ES_OK;
-> +}
-> -- 
-> 2.28.0
-> 
+
