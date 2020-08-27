@@ -2,92 +2,98 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9002CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D64712177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D259206F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:52:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3zZxERI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I4CqqHi8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbgH0IuY (ORCPT
+        id S1727935AbgH0IwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:50:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33054 "EHLO
+        Thu, 27 Aug 2020 04:52:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgH0IuY (ORCPT
+        with ESMTP id S1726988AbgH0IwT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:50:24 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D6E7C061264;
-        Thu, 27 Aug 2020 01:50:24 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id m34so2851439pgl.11;
-        Thu, 27 Aug 2020 01:50:24 -0700 (PDT)
+        Thu, 27 Aug 2020 04:52:19 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F31DC06121B
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 01:52:18 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id m22so5518403ljj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 01:52:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HrNuCDj4eeY3Gt0lR5aH+iOHvrk1h2wIReFPr2GJWg8=;
-        b=e3zZxERIuuUx3PGrF81pU/4X+c2wV6hZMC1+ZOMXUSoGRCbvjFxMIKK/iZooSZ9qTa
-         B2adxyQx8HkVHhbWr2iYrTaIXV0mVhPpeDR1uhaHulGi7zcPuUN5XnjW29aHcgdnyFT+
-         ll6/mOu2f4OKWvGP38xp9pmti9U6KqMngr+XHLct87tqig1YnXLMe6kzJpWcYykgfqjb
-         IH6R0F6hTdnZ5I33Bth2YfAk3weoG/CzrA1XE/HcyvOWnAmTXAdU+lHPR/+yU0BIKxiG
-         T2ZFbHNdGYvhomWyTKTcYwJoiMxRbrozZSjgPsg8AOAaBeLhHtuiZGxOc6Nf6FNX0mkS
-         jidw==
+        bh=yYacB22eYqjS0h2EHD7vpnW368MZpgmYVMb0jVEC+0k=;
+        b=I4CqqHi8i6aZUgWVs79dQH94/DTsPWfoTtqiUAGLfoUuyChmrVFlCJt2xtstW36Y4j
+         srvtiSanJALvFkGgcExhOsRLJbdHal2iROBeZUh3KvND7j42b6+Few3BMJlywvKTA7dk
+         ybPUE3SK0t+TFNUTx8lqxIfifMsnc/xuZHJ1ZNs5saEACMpfE+DV06RyD4dc+tMEIecr
+         I2BAxZtGiqRHJEg+8eBXUoM9SUQUsRKQoo5M6Pmfww7FbPgNKKtKPjTn0PNhRle64LMB
+         waN3UegYTBknmsNPNhbhnfmpgGvCbM23phLffVIVJpeM8L3Z2wTYNWoWZ4Xe4xSgWSpT
+         bZQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HrNuCDj4eeY3Gt0lR5aH+iOHvrk1h2wIReFPr2GJWg8=;
-        b=YxMs+F+XuHCBTVMyDyeYaSf2OntKQd8OFjJbA+24BYeEazCIHD2Cp2x+zgXRxUoa0b
-         jd1iEYh2veNa8JtdCWbghBBhvUEzhTc+LvF7tj4htmrx6uD6G3JT7ZVv9bP1xBa+haHd
-         oIWb5ooxL84fZQJYri6EmPPnzCvljT+3lNUuILNkoV51726rxdB07RJ1qDqZD9HWX9NZ
-         gvjbo7A/gcPf4SU/WAXbOuJgV0lRc5GXIRxkSGggwaefvBfrII9gzKx7QUQ5r6JkzpjP
-         yTk2YNjmXfMTxGMBUQr8l1t3iIrTkVuKq8vsEbYC+R3FWQlN0xuMcviBp6ZFskWonhqL
-         pVCA==
-X-Gm-Message-State: AOAM531IR4bXjjkC5R1Mmxowpj1xpWpr6GwfnKDozdwYfbSAFsMUMkLu
-        4zXM0EMImJpHaZ42r6RybjEMUItgvmZ62pRv/C1EUVk8OR7tKg==
-X-Google-Smtp-Source: ABdhPJwaxPlgvM3l0aEl6pPRV5nMux3/djL0qCuROkyJLN2bzDOwRCsRKSuXRFAFxKGbVqMawBQUdolbAsHi0l4x9fk=
-X-Received: by 2002:a17:902:8208:: with SMTP id x8mr4039738pln.65.1598518223339;
- Thu, 27 Aug 2020 01:50:23 -0700 (PDT)
+        bh=yYacB22eYqjS0h2EHD7vpnW368MZpgmYVMb0jVEC+0k=;
+        b=WPFJwXBNg+JWvwd8AW7q1jbV7Vq0W5+8EHPhqRGcuN1yn2xGWV/cc+Wb049/rBG+ZC
+         UmX42LUbsUJMZesaOD6ZD6DC7sBg/JOUFUleuGQUakh60hJORSnGuIBkoTlDpGZvoeMM
+         n6ajWUy6VGu4ODAj3BOr9FPebnE+y3hyQRII5qdym/sjBb+y3rzsVilalyGgNiXf9YGO
+         FCfWo7f3rpuOTuyZIu2ZgXaIjvzWgOkK0bl5vZ9mDp9harxwbzjGyz7hDpEKe0SQkoPh
+         yYbeFeuS09KcFf3DlkqE4lVR7FO4+0YwxKEJ05x8hFpuj4LSmMSdMWzsEiOdzqW86xqi
+         cXfQ==
+X-Gm-Message-State: AOAM533vyZBOscsYDahIaVv68YX0T/C3LaTZC2HKaFI3z0M+Psec7Yj7
+        F8qxBzo7HzqEDjyVfaTUkGA/BNYuwpZ66Tju7JtCjw==
+X-Google-Smtp-Source: ABdhPJzMK/QQzozGDxzhZ1ptVcFeOA7pCMf7o4BoinmpKAwFETGR2jOwjTUEQE5hG43D4uonIeuqoQ+98b/Uh0VfqsM=
+X-Received: by 2002:a2e:8144:: with SMTP id t4mr9913723ljg.100.1598518336643;
+ Thu, 27 Aug 2020 01:52:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200825133216.9163-1-valentin.schneider@arm.com> <159851487090.20229.14835640470330793284.tip-bot2@tip-bot2>
-In-Reply-To: <159851487090.20229.14835640470330793284.tip-bot2@tip-bot2>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Aug 2020 11:50:07 +0300
-Message-ID: <CAHp75VfJumPP=wKuU=OjFB11RUhPp0_5_+ogupQLFeEWKfbybA@mail.gmail.com>
-Subject: Re: [tip: sched/core] sched/topology: Move sd_flag_debug out of linux/sched/topology.h
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     linux-tip-commits@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>
+References: <20200817001702.1646-1-zhiyong.tao@mediatek.com>
+In-Reply-To: <20200817001702.1646-1-zhiyong.tao@mediatek.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 27 Aug 2020 10:52:05 +0200
+Message-ID: <CACRpkdYedyDcnL5DUD33Z2iT1jEJ_W1gvB_a8VaFnNAH1mKgzQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] Mediatek pinctrl patch on mt8192
+To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>, srv_heupstream@mediatek.com,
+        hui.liu@mediatek.com, huang eddie <eddie.huang@mediatek.com>,
+        Chuanjia Liu <chuanjia.liu@mediatek.com>,
+        Biao Huang <biao.huang@mediatek.com>,
+        Hongzhou Yang <hongzhou.yang@mediatek.com>,
+        Erin Lo <erin.lo@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>, sj.huang@mediatek.com,
+        seiya.wang@mediatek.com, jg_poxu@mediatek.com,
+        sin_jieyang@mediatek.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 10:57 AM tip-bot2 for Valentin Schneider
-<tip-bot2@linutronix.de> wrote:
->
-> The following commit has been merged into the sched/core branch of tip:
+On Mon, Aug 17, 2020 at 2:18 AM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
 
-> Fixes: b6e862f38672 ("sched/topology: Define and assign sched_domain flag metadata")
-> Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Link: https://lkml.kernel.org/r/20200825133216.9163-1-valentin.schneider@arm.com
+> This series includes 3 patches:
+> 1.add pinctrl file on mt8192.
+> 2.add pinctrl binding document on mt8192.
+> 3.add pinctrl driver on MT8192.
 
-Hmm... I'm wondering if this bot is aware of tags given afterwards in
-the thread?
-
--- 
-With Best Regards,
-Andy Shevchenko
+Patches applied for v5.10!
+Thanks!
+Linus Walleij
