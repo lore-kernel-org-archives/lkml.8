@@ -2,106 +2,145 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E795FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D253CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0A2B2087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A44382087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 17:20:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWE4cj2q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uUZl8zMT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgH0RRp (ORCPT
+        id S1727049AbgH0RUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:17:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56344 "EHLO
+        Thu, 27 Aug 2020 13:20:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgH0RRo (ORCPT
+        with ESMTP id S1726236AbgH0RUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 13:17:44 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2528C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:17:43 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id e23so7927758ejb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 10:17:43 -0700 (PDT)
+        Thu, 27 Aug 2020 13:20:12 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B77AC061264;
+        Thu, 27 Aug 2020 10:20:11 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id t2so5911487wma.0;
+        Thu, 27 Aug 2020 10:20:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5OIXKak5CEekt91tBtePjKK7hyZyPdsZcnjuQkNzrSo=;
-        b=KWE4cj2qvrEE8G+CfaEkwPZ5HC48biSw26mjeQ+bKm/jjmH8GqGDuazluzoasWRbSd
-         l5Tp1Pns0uwfNdmAqjiEq4WRpS7jFckJMyXHFyS30D8qC1U8eMwGskQmECUg5A4fnZ+B
-         AJoA1qu4kVltvyaHWgKTdG/UqUTwbwReYGDmNI5WcHBfDczd09xJz42yD+SVmkzIkTVk
-         COul0bw6ea4TEIotjUFfAc0xDy0Yfr3f+N/oQIj7/NQMI9CxqnuWVfTAoFKeihBOOvZ0
-         9qyihpolL2pFLnMv+vnQ63RBmky2EZ803qchw7sxXpoMsfFv0ZsLcmOd/d/i4pcc8Oa1
-         BhTg==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qPzfWQyO8ZKoNnlsZry2pD1TDViebKl3N80Cpi3LHjU=;
+        b=uUZl8zMTtihRqQsz4gBJGEgvEf5Zq5lvFj/4ZdmwjCUkbcYJC1JdN2DzavNp1LKNBD
+         Ixr3ql0Jpl6EyJyyVY7tfBrZEJwB4ZS+iIzQB7cJztZRtXEYuwz/fOxfcULcIwB2adxM
+         zsXbe2pdS9VEgC9ZVchN8Nitc6dN+xpTB15k6G99AOTH2dIgGSloNxTa+dZ7uo/zHUnk
+         kuLhL9fZza2PBXazblTnUQuNUK/7XQqhO3VSK8VGLA2OoOKtOJqRQkcM26w5KfCn7YCS
+         DDLNXk+XYjljtcz3Fs3V9eoXANNjCcuoqb69A6oguNI3hZgD6nbA9pb/YHWWGe8oDy1v
+         vzAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5OIXKak5CEekt91tBtePjKK7hyZyPdsZcnjuQkNzrSo=;
-        b=arPPWsfT1BHCN45TYR7n2GKJsFPHjrFL2WPMJbJO/h5YWUm4gpDHRUo0lrV3C9L+pm
-         JFxgTY9AEP5IdMReqzSbnJY188v8VEkglqdXqtpedoaS5qjNyooUhh9UAdw28KAy3pjx
-         qVMU6CpTUeR2HOp5Z7ThpF9pS1UVK9vcoR/rherBhlWOKFcXeUIcM5L1Hk8jqVmrO3fe
-         3sMVXqJ2YsJQkmJMdhbvA1By+8fxLvs/kAmIw9gqvWImic2GXvrzBhq6qvOe2SWWyLud
-         +2YTC28UHYibuc6dQTl324TMOKeqG13FM6ADH8L78qmQQESbtlNhuWCnkk+I9TtoRdpx
-         6Gwg==
-X-Gm-Message-State: AOAM531a0PlEVvuYMzg7TIFOA+D0QGKz260LTi/7RUvj56ZsuVHeIeev
-        s7T/efrNvXB3bbDCrO2rULo=
-X-Google-Smtp-Source: ABdhPJxM3zzY1kLYK4bC0x/JgwzvHYPtI8uSavB5UklHNL187UZg7fJYwYTBrk4om2zcqNZKgYoVBQ==
-X-Received: by 2002:a17:906:390d:: with SMTP id f13mr3830053eje.86.1598548662322;
-        Thu, 27 Aug 2020 10:17:42 -0700 (PDT)
-Received: from localhost.localdomain (93-103-18-160.static.t-2.net. [93.103.18.160])
-        by smtp.gmail.com with ESMTPSA id l23sm2261214eje.46.2020.08.27.10.17.41
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qPzfWQyO8ZKoNnlsZry2pD1TDViebKl3N80Cpi3LHjU=;
+        b=N6SPzc8CBsdVCb9uQClBjc7Ekd2bNjJiEQ8HBsxPob5SxsrTiNyFm+sNM1UMTeKOBJ
+         DiiBnkGT+0hBBNLQmEAVjsbrlCC4FEgDW3LMMGRLWZ5/oHQqtzEy3GH8S86PXNFeHbl0
+         3kfYLRC0S3fjVAnxJ3jhHubgzJnBUAz1tyv6W87WQ/81fK2UVh+UgwUREpShPXNK68S3
+         bW4YX/8gLgSTd+zSXs5inBUXJ0DjDIm5BE2VumXg+pedcvE74HGHAkYFcMjPuvqvdOoP
+         Jvm1I/yBFuMArUbqeeqXaT7fR79FgzOkSmiqncOtATEPNT19zFGId/zRay6qE4OKyN8d
+         vDHA==
+X-Gm-Message-State: AOAM533r+9oRPAfD6F67jWiem/O8Z9JukSoFxLsATXHHeiByJD/rp8C4
+        9tnO7h4D6tiJLBGLVKTQE1M=
+X-Google-Smtp-Source: ABdhPJxhATxQqFdUH4qNQi4vx9VSHG0W0+jNHTBZWQNVpbQRI5dqPQ06C7MWgfWWLfj/hnjEsJXing==
+X-Received: by 2002:a1c:2808:: with SMTP id o8mr12238734wmo.108.1598548809699;
+        Thu, 27 Aug 2020 10:20:09 -0700 (PDT)
+Received: from medion (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id v11sm7003911wrr.10.2020.08.27.10.20.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 10:17:41 -0700 (PDT)
-From:   Uros Bizjak <ubizjak@gmail.com>
-To:     x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Uros Bizjak <ubizjak@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] x86/entry/64: Do not include inst.h in calling.h
-Date:   Thu, 27 Aug 2020 19:17:35 +0200
-Message-Id: <20200827171735.93825-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 27 Aug 2020 10:20:09 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+X-Google-Original-From: Alex Dewar <alex.dewar@gmx.co.uk>
+Date:   Thu, 27 Aug 2020 18:20:06 +0100
+To:     Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Paul Moore <paul@paul-moore.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] netlabel: remove unused param from audit_log_format()
+Message-ID: <20200827172006.gudui4alfbbf2a2p@medion>
+References: <20200827163712.106303-1-alex.dewar90@gmail.com>
+ <CAHC9VhRgi54TXae1Wi+SSzkuy9BL7HH=pZCHL1p215M9ZXKEOA@mail.gmail.com>
+ <20200827170634.wogybzcxux7sgefb@medion>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827170634.wogybzcxux7sgefb@medion>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-inst.h was included in calling.h solely to instantiate RDPID macro.
-The usage of RDPID was removed in commit 6a3ea3e68b8a8a.
+On Thu, Aug 27, 2020 at 06:06:34PM +0100, Alex Dewar wrote:
+> On Thu, Aug 27, 2020 at 01:00:58PM -0400, Paul Moore wrote:
+> > On Thu, Aug 27, 2020 at 12:39 PM Alex Dewar <alex.dewar90@gmail.com> wrote:
+> > >
+> > > Commit d3b990b7f327 ("netlabel: fix problems with mapping removal")
+> > > added a check to return an error if ret_val != 0, before ret_val is
+> > > later used in a log message. Now it will unconditionally print "...
+> > > res=0". So don't print res anymore.
+> > >
+> > > Addresses-Coverity: ("Dead code")
+> > > Fixes: d3b990b7f327 ("netlabel: fix problems with mapping removal")
+> > > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+> > > ---
+> > >
+> > > I wasn't sure whether it was intended that something other than ret_val
+> > > be printed in the log, so that's why I'm sending this as an RFC.
+> > 
+> > It's intentional for a couple of reasons:
+> > 
+> > * The people who care about audit logs like to see success/fail (e.g.
+> > "res=X") for audit events/records, so printing this out gives them the
+> > warm fuzzies.
+> > 
+> > * For a lot of awful reasons that I won't bore you with, we really
+> > don't want to add/remove fields in the middle of an audit record so we
+> > pretty much need to keep the "res=0" there even if it seems a bit
+> > redundant.
+> > 
+> > So NACK from me, but thanks for paying attention just the same :)
+> 
+> Would you rather just have an explicit "res=0" in there, without looking
+> at ret_val? The thing is that ret_val will *always* be zero at this point in
+> the code, because, if not, the function will already have returned.
+> That's why Coverity flagged it up as a redundant check.
 
-Fixes: 6a3ea3e68b8a8a ("x86/entry/64: Do not use RDPID in paranoid entry to accomodate KVM")
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
----
- arch/x86/entry/calling.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
-index ae9b0d4615b3..07a9331d55e7 100644
---- a/arch/x86/entry/calling.h
-+++ b/arch/x86/entry/calling.h
-@@ -6,7 +6,6 @@
- #include <asm/percpu.h>
- #include <asm/asm-offsets.h>
- #include <asm/processor-flags.h>
--#include <asm/inst.h>
- 
- /*
- 
--- 
-2.26.2
-
+Sorry, I meant "res=1". The code will always print res=1, because
+ret_val is always 0.
+> 
+> > 
+> > >  net/netlabel/netlabel_domainhash.c | 5 ++---
+> > >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/net/netlabel/netlabel_domainhash.c b/net/netlabel/netlabel_domainhash.c
+> > > index f73a8382c275..526762b2f3a9 100644
+> > > --- a/net/netlabel/netlabel_domainhash.c
+> > > +++ b/net/netlabel/netlabel_domainhash.c
+> > > @@ -612,9 +612,8 @@ int netlbl_domhsh_remove_entry(struct netlbl_dom_map *entry,
+> > >         audit_buf = netlbl_audit_start_common(AUDIT_MAC_MAP_DEL, audit_info);
+> > >         if (audit_buf != NULL) {
+> > >                 audit_log_format(audit_buf,
+> > > -                                " nlbl_domain=%s res=%u",
+> > > -                                entry->domain ? entry->domain : "(default)",
+> > > -                                ret_val == 0 ? 1 : 0);
+> > > +                                " nlbl_domain=%s",
+> > > +                                entry->domain ? entry->domain : "(default)");
+> > >                 audit_log_end(audit_buf);
+> > >         }
+> > >
+> > 
+> > -- 
+> > paul moore
+> > www.paul-moore.com
