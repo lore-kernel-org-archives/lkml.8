@@ -2,159 +2,195 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F97C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE81C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69B272177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:55:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NU6KxZo/"
+	by mail.kernel.org (Postfix) with ESMTP id 1235D2177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbgH0Izv (ORCPT
+        id S1728111AbgH0I4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:55:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727030AbgH0Izu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:55:50 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55298C061264;
-        Thu, 27 Aug 2020 01:55:49 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id 5so3770008otp.12;
-        Thu, 27 Aug 2020 01:55:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yYRU5RWjdCABcW+SWFbp3Yrowl6dALpg4gGN9PPMym4=;
-        b=NU6KxZo/Iocb1DwO8n2E2MmxQxjBz2QmvF6tuBRu/iXnmUOHthNxzm8LmtICLTuW1q
-         W7cR9OOP5WiyZFhHBnj9HnPZgnLKBqljoZKc1H7WR2AgHS2gt2i+EI4VamX98hMKz+v4
-         MlSIRxfx4Wtwpw5DUksXVn2aKQSE7rjY3AuVpocTsN4WSthyGK3E98tFYBGTaiZIyvHk
-         e0s/kC6il6ZhcB3FvfbkGUI2NIEU5LgRiqENR8ShqRGjmnJH3uGl8J5cUA61r/zRms/M
-         HXBdTKOY3u+LnMkAnxlOYE28knMiU0xVrl0nt+mtNIF5/rjKCWvpxofnnE4VLDMHeVVT
-         6hTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yYRU5RWjdCABcW+SWFbp3Yrowl6dALpg4gGN9PPMym4=;
-        b=lspfdG3GVDDEusxG51MKZLvI42v2KUzkoWGoxtDyse15nwCS3/cQ+IReitRbfNUJtF
-         bc88qaSGxrW9+lMQQtoRXi/qGjHhBLmMz98j/X8pZSem5L/dPMAmyL25N22Uq3VY/AO4
-         q0Q10PXXJ/lPsRmTHiimb8MZltCk6nwxpolbgmctPTPjcYnLvQP9MQcmGQJ+saher/US
-         twdt3Sp38zueCbV7iCPXINAJ279wnLCAR4TXVE0vr62hD7AQg9WUssBXG/PEnUUQaEoh
-         /zBmkoyXhSiuM5UKcO/TOTp+wLgKnEqZDnFIa3yvlGAnTe4pOYaCgt0hswse7FGSAWrF
-         I4oA==
-X-Gm-Message-State: AOAM532nkMJI4bUpIwyoX0n8q7ZsB4OfKwMqiCEIl3ZQrPxiFLWAHwQG
-        Q/obR90Sp9Zq6go3sKoRQpn3G8dgzoRj/qWcyQM=
-X-Google-Smtp-Source: ABdhPJyYmnPw+UXq5Pnbrb1d8+Ls6OeV0jJ9/BCH19PZH76AENpdIFCNPcG4tB6nf4A3wQ8tAgaLGVlATIaLG7vJeOg=
-X-Received: by 2002:a9d:4c04:: with SMTP id l4mr12187928otf.207.1598518548666;
- Thu, 27 Aug 2020 01:55:48 -0700 (PDT)
+        Thu, 27 Aug 2020 04:56:31 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2695 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726395AbgH0I4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 04:56:31 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 4F95897B38DD409779FE;
+        Thu, 27 Aug 2020 09:56:27 +0100 (IST)
+Received: from [127.0.0.1] (10.210.169.222) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 27 Aug
+ 2020 09:56:25 +0100
+From:   John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v8 00/18] blk-mq/scsi: Provide hostwide shared tags for
+ SCSI HBAs
+To:     <axboe@kernel.dk>
+CC:     <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+        <don.brace@microsemi.com>, <kashyap.desai@broadcom.com>,
+        <ming.lei@redhat.com>, <bvanassche@acm.org>,
+        <dgilbert@interlog.com>, <paolo.valente@linaro.org>,
+        <hare@suse.de>, <hch@lst.de>, <sumit.saxena@broadcom.com>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <esc.storagedev@microsemi.com>,
+        <megaraidlinux.pdl@broadcom.com>, <chenxiang66@hisilicon.com>,
+        <luojiaxing@huawei.com>
+References: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
+Message-ID: <8369f4e3-6b59-609e-f5ef-3a51fa4d7b5f@huawei.com>
+Date:   Thu, 27 Aug 2020 09:53:58 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <20200826063850.47625-1-alexandru.ardelean@analog.com> <20200826120042.200364-1-alexandru.ardelean@analog.com>
-In-Reply-To: <20200826120042.200364-1-alexandru.ardelean@analog.com>
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Thu, 27 Aug 2020 11:55:37 +0300
-Message-ID: <CA+U=DsrMDSTQKEc2_3+W8u4bLraAowVB3nB4huKY--v8gnds2Q@mail.gmail.com>
-Subject: Re: [PATCH v2] iio: stm32-dac: Replace indio_dev->mlock with own
- device lock
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Jonathan Cameron <jic23@kernel.org>, alexandre.torgue@st.com,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.169.222]
+X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 3:03 PM Alexandru Ardelean
-<alexandru.ardelean@analog.com> wrote:
->
-> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
->
-> As part of the general cleanup of indio_dev->mlock, this change replaces
-> it with a local lock. The lock protects against potential races when
-> reading the CR reg and then updating, so that the state of pm_runtime
-> is consistent between the two operations.
->
-> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
+Hi Jens,
 
-Forgot the changelog here.
-Apologies.
+I was wondering if you could kindly consider the block changes in this 
+series, since I have now dropped the RFC flag?
 
-Changelog v1 -> v2:
-* removed whitespace change for 'common' field
-* updated comment about the lock usage
+I guess patch 5/18 (using pointers to bitmaps) would be of first 
+concern. We did discuss this previously, and I think what we're doing 
+now could be considered satisfactory.
 
->  drivers/iio/dac/stm32-dac.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
-> index 092c796fa3d9..7a8aed476850 100644
-> --- a/drivers/iio/dac/stm32-dac.c
-> +++ b/drivers/iio/dac/stm32-dac.c
-> @@ -26,9 +26,11 @@
->  /**
->   * struct stm32_dac - private data of DAC driver
->   * @common:            reference to DAC common data
-> + * @lock:              lock to protect the data buffer during regmap ops
->   */
->  struct stm32_dac {
->         struct stm32_dac_common *common;
-> +       struct mutex            lock;
->  };
->
->  static int stm32_dac_is_enabled(struct iio_dev *indio_dev, int channel)
-> @@ -58,10 +60,10 @@ static int stm32_dac_set_enable_state(struct iio_dev *indio_dev, int ch,
->         int ret;
->
->         /* already enabled / disabled ? */
-> -       mutex_lock(&indio_dev->mlock);
-> +       mutex_lock(&dac->lock);
->         ret = stm32_dac_is_enabled(indio_dev, ch);
->         if (ret < 0 || enable == !!ret) {
-> -               mutex_unlock(&indio_dev->mlock);
-> +               mutex_unlock(&dac->lock);
->                 return ret < 0 ? ret : 0;
->         }
->
-> @@ -69,13 +71,13 @@ static int stm32_dac_set_enable_state(struct iio_dev *indio_dev, int ch,
->                 ret = pm_runtime_get_sync(dev);
->                 if (ret < 0) {
->                         pm_runtime_put_noidle(dev);
-> -                       mutex_unlock(&indio_dev->mlock);
-> +                       mutex_unlock(&dac->lock);
->                         return ret;
->                 }
->         }
->
->         ret = regmap_update_bits(dac->common->regmap, STM32_DAC_CR, msk, en);
-> -       mutex_unlock(&indio_dev->mlock);
-> +       mutex_unlock(&dac->lock);
->         if (ret < 0) {
->                 dev_err(&indio_dev->dev, "%s failed\n", en ?
->                         "Enable" : "Disable");
-> @@ -327,6 +329,8 @@ static int stm32_dac_probe(struct platform_device *pdev)
->         indio_dev->info = &stm32_dac_iio_info;
->         indio_dev->modes = INDIO_DIRECT_MODE;
->
-> +       mutex_init(&dac->lock);
-> +
->         ret = stm32_dac_chan_of_init(indio_dev);
->         if (ret < 0)
->                 return ret;
-> --
-> 2.25.1
->
+Thanks,
+john
+
+> 
+> Here is v8 of the patchset.
+> 
+> In this version of the series, we keep the shared sbitmap for driver tags,
+> and introduce changes to fix up the tag budgeting across request queues.
+> We also have a change to count requests per-hctx for when an elevator is
+> enabled, as an optimisation. I also dropped the debugfs changes - more on
+> that below.
+> 
+> Some performance figures:
+> 
+> Using 12x SAS SSDs on hisi_sas v3 hw. mq-deadline results are included,
+> but it is not always an appropriate scheduler to use.
+> 
+> Tag depth 		4000 (default)			260**
+> 
+> Baseline (v5.9-rc1):
+> none sched:		2094K IOPS			513K
+> mq-deadline sched:	2145K IOPS			1336K
+> 
+> Final, host_tagset=0 in LLDD *, ***:
+> none sched:		2120K IOPS			550K
+> mq-deadline sched:	2121K IOPS			1309K
+> 
+> Final ***:
+> none sched:		2132K IOPS			1185			
+> mq-deadline sched:	2145K IOPS			2097	
+> 
+> * this is relevant as this is the performance in supporting but not
+>    enabling the feature
+> ** depth=260 is relevant as some point where we are regularly waiting for
+>     tags to be available. Figures were are a bit unstable here.
+> *** Included "[PATCH V4] scsi: core: only re-run queue in
+>      scsi_end_request() if device queue is busy"
+> 
+> A copy of the patches can be found here:
+> https://github.com/hisilicon/kernel-dev/tree/private-topic-blk-mq-shared-tags-v8
+> 
+> The hpsa patch depends on:
+> https://lore.kernel.org/linux-scsi/20200430131904.5847-1-hare@suse.de/
+> 
+> And the smartpqi patch is not to be accepted.
+> 
+> Comments (and testing) welcome, thanks!
+> 
+> Differences to v7:
+> - Add null_blk and scsi_debug support
+> - Drop debugfs tags patch - it's too difficult to be the same between
+> hostwide and non-hostwide, as discussed:
+> https://lore.kernel.org/linux-scsi/1591810159-240929-1-git-send-email-john.garry@huawei.com/T/#mb3eb462d8be40273718505989abd12f8228c15fd
+> And from commit 6bf0eb550452 ("sbitmap: Consider cleared bits in
+> sbitmap_bitmap_show()"), I guess not many used this anyway...
+> - Add elevator per-hctx request count for optimisation
+> - Break up "blk-mq: rename blk_mq_update_tag_set_depth()" into 2x patches
+> - Pass flags for avoid per-hq queue tags init/free for hostwide tags
+> - Add Don's reviewed-tag and tested-by tags to appropiate patches
+> 	- (@Don, please let me know if issue with how I did this)
+> - Add "scsi: core: Show nr_hw_queues in sysfs"
+> - Rework megaraid SAS patch to have module param (Kashyap)
+> - rebase
+> 
+> V7 is here for more info:
+> https://lore.kernel.org/linux-scsi/1591810159-240929-1-git-send-email-john.garry@huawei.com/T/#t
+> 
+> Hannes Reinecke (5):
+>    blk-mq: Rename blk_mq_update_tag_set_depth()
+>    blk-mq: Free tags in blk_mq_init_tags() upon error
+>    scsi: Add host and host template flag 'host_tagset'
+>    hpsa: enable host_tagset and switch to MQ
+>    smartpqi: enable host tagset
+> 
+> John Garry (10):
+>    blk-mq: Pass flags for tag init/free
+>    blk-mq: Use pointers for blk_mq_tags bitmap tags
+>    blk-mq: Facilitate a shared sbitmap per tagset
+>    blk-mq: Relocate hctx_may_queue()
+>    blk-mq: Record nr_active_requests per queue for when using shared
+>      sbitmap
+>    blk-mq: Record active_queues_shared_sbitmap per tag_set for when using
+>      shared sbitmap
+>    null_blk: Support shared tag bitmap
+>    scsi: core: Show nr_hw_queues in sysfs
+>    scsi: hisi_sas: Switch v3 hw to MQ
+>    scsi: scsi_debug: Support host tagset
+> 
+> Kashyap Desai (2):
+>    blk-mq, elevator: Count requests per hctx to improve performance
+>    scsi: megaraid_sas: Added support for shared host tagset for
+>      cpuhotplug
+> 
+> Ming Lei (1):
+>    blk-mq: Rename BLK_MQ_F_TAG_SHARED as BLK_MQ_F_TAG_QUEUE_SHARED
+> 
+>   block/bfq-iosched.c                         |   9 +-
+>   block/blk-core.c                            |   2 +
+>   block/blk-mq-debugfs.c                      |  10 +-
+>   block/blk-mq-sched.c                        |  13 +-
+>   block/blk-mq-tag.c                          | 149 ++++++++++++++------
+>   block/blk-mq-tag.h                          |  56 +++-----
+>   block/blk-mq.c                              |  81 +++++++----
+>   block/blk-mq.h                              |  76 +++++++++-
+>   block/kyber-iosched.c                       |   4 +-
+>   block/mq-deadline.c                         |   6 +
+>   drivers/block/null_blk_main.c               |   6 +
+>   drivers/block/rnbd/rnbd-clt.c               |   2 +-
+>   drivers/scsi/hisi_sas/hisi_sas.h            |   3 +-
+>   drivers/scsi/hisi_sas/hisi_sas_main.c       |  36 ++---
+>   drivers/scsi/hisi_sas/hisi_sas_v3_hw.c      |  87 +++++-------
+>   drivers/scsi/hosts.c                        |   1 +
+>   drivers/scsi/hpsa.c                         |  44 +-----
+>   drivers/scsi/hpsa.h                         |   1 -
+>   drivers/scsi/megaraid/megaraid_sas_base.c   |  39 +++++
+>   drivers/scsi/megaraid/megaraid_sas_fusion.c |  29 ++--
+>   drivers/scsi/scsi_debug.c                   |  28 ++--
+>   drivers/scsi/scsi_lib.c                     |   2 +
+>   drivers/scsi/scsi_sysfs.c                   |  11 ++
+>   drivers/scsi/smartpqi/smartpqi_init.c       |  45 ++++--
+>   include/linux/blk-mq.h                      |  13 +-
+>   include/linux/blkdev.h                      |   3 +
+>   include/scsi/scsi_host.h                    |   9 +-
+>   27 files changed, 484 insertions(+), 281 deletions(-)
+> 
+
