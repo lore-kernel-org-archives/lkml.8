@@ -2,74 +2,129 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E749C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C246AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81D84207F7
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4CAD20786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 01:44:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCMAE4A6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgH0Big (ORCPT
+        id S1726853AbgH0BoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 21:38:36 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:23126 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbgH0Bif (ORCPT
+        Wed, 26 Aug 2020 21:44:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbgH0BoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 21:38:35 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.9]) by rmmx-syy-dmz-app07-12007 (RichMail) with SMTP id 2ee75f470e8b6d9-61641; Thu, 27 Aug 2020 09:38:20 +0800 (CST)
-X-RM-TRANSID: 2ee75f470e8b6d9-61641
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [192.168.21.77] (unknown[10.42.68.12])
-        by rmsmtp-syy-appsvr05-12005 (RichMail) with SMTP id 2ee55f470e8be69-26624;
-        Thu, 27 Aug 2020 09:38:20 +0800 (CST)
-X-RM-TRANSID: 2ee55f470e8be69-26624
-Subject: Re: [PATCH] ASoC: fsl_spdif: Fix unnecessary check
- infsl_spdif_probe()
-To:     Mark Brown <broonie@kernel.org>
-Cc:     timur@kernel.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20200826150918.16116-1-tangbin@cmss.chinamobile.com>
- <20200826165308.GJ4965@sirena.org.uk>
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-Message-ID: <f2196e55-6458-4f55-96ac-bd18ecb461d1@cmss.chinamobile.com>
-Date:   Thu, 27 Aug 2020 09:37:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200826165308.GJ4965@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Wed, 26 Aug 2020 21:44:19 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 314F9C06138E;
+        Wed, 26 Aug 2020 18:44:19 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x143so2226487pfc.4;
+        Wed, 26 Aug 2020 18:44:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=28q+FTG5opePGVSIsaIYRmsu38zCqcpXVW1uX+shyDY=;
+        b=UCMAE4A6F8nWN3GQ+EJ7w7NwkF+QwWwrcJXypnO2izF/1cw2HlTGp/P5LuuZ39OMkY
+         DrzQrgtJY2/fTO3hZGQxByqnkGy7V64joUs3nRbsxzagjV31gkJDnETCIpVuncIZ/PGd
+         PiMkTGGkjj7Qiiu35syni2S0EX+A+C3UEQzv7enBR9q3Iz76B+LiH4WSepTapuYzPgnp
+         T4ej50f60XDN4sBQfYuHCFPLWrAl31GxDCTEy4zCS5a2n5Wk7sVYbgvAiaF+D//vy5kV
+         NrE0dF50Nyt6R896IPjX7VDLCrZQMngkHTV0rZphjlLsvXzbTb4IsVNqNxH9EwALHUF8
+         1D/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=28q+FTG5opePGVSIsaIYRmsu38zCqcpXVW1uX+shyDY=;
+        b=RCxfvVuvN+OFyD3P/rhhxlQDufJ8PqU4pYRZFNGmR3sTykRotoCf8G2Wxg3lF5/5vg
+         7Xfe/Na7xP4J+mGPN8MfNF9YUDD+Erck+K/VdTw77HAvImOuoJ+9/PDwMLJ2oBuYBDPN
+         1QL+Q8tDcyOVgj7fNrYhyBTf37V4CEqqX6w6Qy7BMMiwyTZemhMUUdIdxt2K7qk3iiBQ
+         j46+DmvT5pIjtthwp7awubk/aNiAlgGMyhuqq1gkOwfVn7nLvYXXKaFeBYioVf8jEApC
+         ES92ixaJHIbRvzNs7ivCk8aOmv4tP0Y270TW7VFzI2Gvrq1NqotqqePf0ZGCPhHr/vXV
+         VD2g==
+X-Gm-Message-State: AOAM533zO/85nbC1lBj+l0VyAvxw788Ihu6qGto2WzS4oUYP7+Vuri/w
+        ruhCIMV8J2T57gLYysGkf629RrP71yoXHg==
+X-Google-Smtp-Source: ABdhPJzhA7Iw8NMu79kV0Gp7/hURXXIDMaCMf6jy4uUJyT8HHfVjURroX52uQY8zP0HGIjvboD3EnA==
+X-Received: by 2002:a62:1cca:: with SMTP id c193mr7752598pfc.3.1598492658721;
+        Wed, 26 Aug 2020 18:44:18 -0700 (PDT)
+Received: from localhost.localdomain ([2401:e180:8891:f88d:4578:9e9b:6ebc:aff1])
+        by smtp.gmail.com with ESMTPSA id q2sm281821pgs.90.2020.08.26.18.44.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Aug 2020 18:44:18 -0700 (PDT)
+From:   Johnny Chuang <johnny.chuang.emc@gmail.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Peter Hutterer <peter.hutterer@who-t.net>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        Harry Cutts <hcutts@chromium.org>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>
+Cc:     James Chen <james.chen@emc.com.tw>,
+        Jennifer Tsai <jennifer.tsai@emc.com.tw>,
+        Paul Liang <paul.liang@emc.com.tw>,
+        Jeff Chuang <jeff.chuang@emc.com.tw>
+Subject: [PATCH v2] Input: elants_i2c - Report resolution of ABS_MT_TOUCH_MAJOR by FW information.
+Date:   Thu, 27 Aug 2020 09:44:11 +0800
+Message-Id: <1598492651-9072-1-git-send-email-johnny.chuang.emc@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark
+This patch adds a new behavior to report touch major resolution
+based on information provided by firmware.
 
-在 2020/8/27 0:53, Mark Brown 写道:
-> On Wed, Aug 26, 2020 at 11:09:18PM +0800, Tang Bin wrote:
->> The function fsl_spdif_probe() is only called with an openfirmware
->> platform device. Therefore there is no need to check that the passed
->> in device is NULL.
-> Why is this an issue - the check will make things more robust if someone
-> manages to load the driver on a non-DT system and otherwise costs us a
-> couple of instructions?
-Thanks for your reply.
+In initial process, driver acquires touch information from touch ic.
+This information contains of one flag about reporting resolution of
+ABS_MT_TOUCH_MAJOR is needed, or not.
+Touch driver will report touch major resolution after geting this flag.
 
-In this function,  function fsl_spdif_probe() can be triggered only if 
-the platform_device and platform_driver matches,
+Signed-off-by: Johnny Chuang <johnny.chuang.emc@gmail.com>
+---
+Changes in v2:
+  - register real resolution instead of true/false.
+---
+ drivers/input/touchscreen/elants_i2c.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-so I think the judgement at the beginning is redundant.
-
-Thanks
-
-Tang Bin
-
-
+diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+index b0bd5bb..dc7f4a5 100644
+--- a/drivers/input/touchscreen/elants_i2c.c
++++ b/drivers/input/touchscreen/elants_i2c.c
+@@ -151,6 +151,7 @@ struct elants_data {
+ 
+ 	bool wake_irq_enabled;
+ 	bool keep_power_in_suspend;
++	u8 report_major_resolution;
+ 
+ 	/* Must be last to be used for DMA operations */
+ 	u8 buf[MAX_PACKET_SIZE] ____cacheline_aligned;
+@@ -459,6 +460,9 @@ static int elants_i2c_query_ts_info(struct elants_data *ts)
+ 	rows = resp[2] + resp[6] + resp[10];
+ 	cols = resp[3] + resp[7] + resp[11];
+ 
++	/* Decide if report resolution of ABS_MT_TOUCH_MAJOR */
++	ts->report_major_resolution = resp[16];
++
+ 	/* Process mm_to_pixel information */
+ 	error = elants_i2c_execute_command(client,
+ 					   get_osr_cmd, sizeof(get_osr_cmd),
+@@ -1325,6 +1329,8 @@ static int elants_i2c_probe(struct i2c_client *client,
+ 			     0, MT_TOOL_PALM, 0, 0);
+ 	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
+ 	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
++	if (ts->report_major_resolution > 0)
++		input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, ts->report_major_resolution);
+ 
+ 	touchscreen_parse_properties(ts->input, true, &ts->prop);
+ 
+-- 
+2.7.4
 
