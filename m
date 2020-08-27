@@ -2,129 +2,88 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A1CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49323C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF6E20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:27:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oqBSHp+H"
+	by mail.kernel.org (Postfix) with ESMTP id 21F1E22B47
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:27:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgH0I1a (ORCPT
+        id S1728147AbgH0I1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:27:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbgH0I13 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:27:29 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A1B7C061264;
-        Thu, 27 Aug 2020 01:27:29 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id z18so2250016pjr.2;
-        Thu, 27 Aug 2020 01:27:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HZu39BmrS22KD4B9ZU5A9XCIkFWAsFL80Y7SUDG2qtE=;
-        b=oqBSHp+HrXhPE9QUUx68UGa9/YcMBY4IZZmU8tQEHoL0eR6q+q9L3KJxyU+5smq+mh
-         Qpb47EuOJNxtnzUze/6j+DruJ9FAig6k1cmSSVZe4HSNqO71XXMp0HWKvL//Jn/SrsVg
-         XDbTdaVO9ZDB9BadUVb0EXv/8MSvaT+iNh4DUhmXqSPdRZA+FvIWaEBj0KvH7/jwmzlc
-         kbK+AW0LRTkel5HNUFj1MK2DXbFfjbShHU7ash7Sspa9HWszpy9Gmt3BpJ8DPsAlNMxF
-         /XJN/Pw5pnUN3rRoxjBCOhTrLosJSp8mDe6aGlHjEfTDwyJ7xlixtSkiGR3gw2hRCCMF
-         7Bag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HZu39BmrS22KD4B9ZU5A9XCIkFWAsFL80Y7SUDG2qtE=;
-        b=PPAJ4nAx9Z25LG6kCDAHrAc33AsyVyBLPw/emyofQ1ZH10OpFwJDOqlB8XkPS7PVnG
-         5egFm+7vxXPxmDGG6H1y7hfhLeogk5bUisnpTOwuceTi0izFbUBslDNSAbuSFaBwbJrn
-         QKEqD7sKPjUhAn/V4LnmRS6lS/MfBMGMs9yiQuZw0ojH9KqW/zFYYyYBj6ZNFa2eizF3
-         rTd5OVobeRijL7MA9ciyhGhUJe59HeFzFOgzyikliHPcmZRhK6ryu9sqNFxbNgQtwrog
-         lEEGz/bs77cj6X2AggPNI/JqxMLSvbVQZcbkqWXiJ9NvK4IPAb2S1WlfC8WG7c/7FaJs
-         hzhA==
-X-Gm-Message-State: AOAM530ylKPK2EXqCiJf7svK8FtR6RmD6up/tjjm5LZxNvYHjb/cFkJx
-        fUxUKvSwAcwFUNyzdXAVUZXnLrehQCGIoG6D4gU=
-X-Google-Smtp-Source: ABdhPJy7FFxyHMt/VY+0213GOuICfPnBcgRzlKo9w1yk5kPoOdyCc69OPZ9PWgEDp1GqqASWBQKX2axNN3k90TDpCTE=
-X-Received: by 2002:a17:90a:2c06:: with SMTP id m6mr9988021pjd.129.1598516848820;
- Thu, 27 Aug 2020 01:27:28 -0700 (PDT)
+        Thu, 27 Aug 2020 04:27:47 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:49986 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726826AbgH0I1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 04:27:46 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A50017913B2FB90F1E44;
+        Thu, 27 Aug 2020 16:27:44 +0800 (CST)
+Received: from [127.0.0.1] (10.67.76.251) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Thu, 27 Aug 2020
+ 16:27:35 +0800
+Subject: Re: [PATCH RESEND] fs: Move @f_count to different cacheline with
+ @f_mode
+To:     Aleksa Sarai <cyphar@cyphar.com>
+CC:     Will Deacon <will@kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Yuqi Jin <jinyuqi@huawei.com>
+References: <1592987548-8653-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20200821160252.GC21517@willie-the-truck>
+ <a75e514c-7e2d-54ed-45d4-327b2a514e67@hisilicon.com>
+ <20200826082401.c6j5fwrbhl7vgmhj@yavin.dot.cyphar.com>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <803a5202-6240-b062-b1d9-2aed0e11ebad@hisilicon.com>
+Date:   Thu, 27 Aug 2020 16:27:34 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-References: <20200826161818.20969-1-krzk@kernel.org>
-In-Reply-To: <20200826161818.20969-1-krzk@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 Aug 2020 11:27:12 +0300
-Message-ID: <CAHp75Vf3s0+RrHnBoO4y4+t4Egth4uyYwtO5iPt9DbLJcunL6g@mail.gmail.com>
-Subject: Re: [PATCH v2] iio: adc: stm32: Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Etienne Carriere <etienne.carriere@st.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200826082401.c6j5fwrbhl7vgmhj@yavin.dot.cyphar.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.76.251]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 7:19 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and also it prints the error value.
+Hi Aleksa,
 
+在 2020/8/26 16:24, Aleksa Sarai 写道:
+> On 2020-08-26, Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
+>> 在 2020/8/22 0:02, Will Deacon 写道:
+>>>   - This thing is tagged with __randomize_layout, so it doesn't help anybody
+>>>     using that crazy plugin
+>>
+>> This patch isolated the @f_count with @f_mode absolutely and we don't care the
+>> base address of the structure, or I may miss something what you said.
+> 
+> __randomize_layout randomises the order of fields in a structure on each
+> kernel rebuild (to make attacks against sensitive kernel structures
+> theoretically harder because the offset of a field is per-build). It is
 
+My bad, I missed Will's comments for my poor understanding on it.
 
+> separate to ASLR or other base-related randomisation. However it depends
+> on having CONFIG_GCC_PLUGIN_RANDSTRUCT=y and I believe (at least for
+> distribution kernels) this isn't a widely-used configuration.
 
+Thanks for more explanations about it, in our test, this config is also
+disabled. If having CONFIG_GCC_PLUGIN_RANDSTRUCT=y, it seems this patch
+will lose its value.
+If it isn't widely-used for this config, hopefully we can do something on
+the scene.
 
+Thanks,
+Shaokun
 
->         priv->aclk = devm_clk_get(&pdev->dev, "adc");
->         if (IS_ERR(priv->aclk)) {
->                 ret = PTR_ERR(priv->aclk);
-> -               if (ret != -ENOENT) {
-> -                       if (ret != -EPROBE_DEFER)
-> -                               dev_err(&pdev->dev, "Can't get 'adc' clock\n");
-> -                       return ret;
-> -               }
-> +               if (ret != -ENOENT)
-> +                       return dev_err_probe(&pdev->dev, ret, "Can't get 'adc' clock\n");
-> +
->                 priv->aclk = NULL;
->         }
->
->         priv->bclk = devm_clk_get(&pdev->dev, "bus");
->         if (IS_ERR(priv->bclk)) {
->                 ret = PTR_ERR(priv->bclk);
-> -               if (ret != -ENOENT) {
-> -                       if (ret != -EPROBE_DEFER)
-> -                               dev_err(&pdev->dev, "Can't get 'bus' clock\n");
-> -                       return ret;
-> -               }
-> +               if (ret != -ENOENT)
-> +                       return dev_err_probe(&pdev->dev, ret, "Can't get 'bus' clock\n");
-> +
->                 priv->bclk = NULL;
->         }
+> 
 
-Again, devm_clk_get_optional() and even, if it exists,
-devm_clk_bulk_get_optional().
-
-Please, revisit all patches on this topic.
-
--- 
-With Best Regards,
-Andy Shevchenko
