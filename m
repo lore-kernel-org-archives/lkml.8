@@ -2,102 +2,97 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA32C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC5FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE292080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:12:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="laGqsRGl"
+	by mail.kernel.org (Postfix) with ESMTP id 689BC2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:13:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgH0QMw (ORCPT
+        id S1727040AbgH0QNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:12:52 -0400
-Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:47510 "EHLO
-        relaydlg-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726123AbgH0QMu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:12:50 -0400
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id 29D6B821F8;
-        Thu, 27 Aug 2020 19:12:46 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paragon-software.com; s=mail; t=1598544766;
-        bh=b0m2YScacBRU4oQW0bpcg+OTA+e/Nm/yF/uS+thlVMI=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=laGqsRGlmisNFsw4WpemS9WZFNsY6NuUVUMv2tuJ8GAGj9B26Mu+2IxQBlIuqZCYu
-         w6Pz83IGUlZeTkTsZxRleBxgi1BSx8XDS1fpvsWYjNZ2GR0cdqDed8F8VCBh8ga3cJ
-         rggDc0cQEz897TpsZZP8EmyvW3alaR+8IwJKTa4I=
-Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+        Thu, 27 Aug 2020 12:13:51 -0400
+Received: from mga07.intel.com ([134.134.136.100]:38038 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726200AbgH0QNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 12:13:49 -0400
+IronPort-SDR: PYckOmLkhBLHb71H1llARIlQufAsujM8iKT5pjGHZn6uvzofdY8831EwykE8p81inpnztK6buF
+ 6AAuTFMX+e9g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="220767089"
+X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
+   d="scan'208";a="220767089"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP; 27 Aug 2020 09:13:49 -0700
+IronPort-SDR: I/0T9QeSSiAzLcNzOUgzCWwJzVCUhDBw/R/f1qKDz74fs7YprQ4bBzPmRsV5pGC/e/87qkNItE
+ fQ9K1fgzkv6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
+   d="scan'208";a="373772496"
+Received: from irsmsx606.ger.corp.intel.com ([163.33.146.139])
+  by orsmga001.jf.intel.com with ESMTP; 27 Aug 2020 09:13:47 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ IRSMSX606.ger.corp.intel.com (163.33.146.139) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Thu, 27 Aug 2020 19:12:45 +0300
-Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
- by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
- id 15.01.1847.003; Thu, 27 Aug 2020 19:12:45 +0300
-From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To:     Joe Perches <joe@perches.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+ 15.1.1713.5; Thu, 27 Aug 2020 17:13:45 +0100
+Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
+ fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
+ Thu, 27 Aug 2020 09:13:44 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "hch@infradead.org" <hch@infradead.org>
+CC:     "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
+        "kw@linux.com" <kw@linux.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-CC:     =?iso-8859-1?Q?Pali_Roh=E1r?= <pali@kernel.org>
-Subject: RE: [PATCH v2 00/10] fs: NTFS read-write driver GPL implementation by
- Paragon Software.
-Thread-Topic: [PATCH v2 00/10] fs: NTFS read-write driver GPL implementation
- by Paragon Software.
-Thread-Index: AdZ30n3KUTPgxpZ7Q/+ZtR0YneODPwABJfsAAS00XHA=
-Date:   Thu, 27 Aug 2020 16:12:45 +0000
-Message-ID: <8dc38559e18f43238e5b4cba533963cd@paragon-software.com>
-References: <904d985365a34f0787a4511435417ab3@paragon-software.com>
- <ed518871bf6182bb7d9a2b95074985cf8af1d5c4.camel@perches.com>
-In-Reply-To: <ed518871bf6182bb7d9a2b95074985cf8af1d5c4.camel@perches.com>
-Accept-Language: ru-RU, en-US
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Huffman, Amber" <amber.huffman@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
+Thread-Topic: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
+Thread-Index: AQHWd7clLgwBVuAUCESee06o/u7QiKlI1l4AgAKTLgCAAJR+AIAAodyA
+Date:   Thu, 27 Aug 2020 16:13:44 +0000
+Message-ID: <660c8671a51eec447dc7fab22bacbc9c600508d9.camel@intel.com>
+References: <20200821123222.32093-1-kai.heng.feng@canonical.com>
+         <20200825062320.GA27116@infradead.org>
+         <cd5aa2fef13f14b30c139d03d5256cf93c7195dc.camel@intel.com>
+         <20200827063406.GA13738@infradead.org>
+In-Reply-To: <20200827063406.GA13738@infradead.org>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [172.30.8.36]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+x-originating-ip: [10.212.223.90]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <48C448FCBE462040A7F3805A669F8E2F@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches <joe@perches.com>
-Sent: Friday, August 21, 2020 10:21 PM
->=20
-> On Fri, 2020-08-21 at 16:24 +0000, Konstantin Komarov wrote:
-> > This patch adds NTFS Read-Write driver to fs/ntfs3.
->=20
-> Thanks.
-> Proper ntfs read/write support will be great addition.
->=20
-> Trivia:
->=20
-> If this patchset is submitted again with a new version,
-> please use something like "git format-patch --cover-letter"
-> and "git send-email" so all parts of the patches and replies
-> have the a single message thread to follow.
->=20
-> That will add an "in-reply-to" header of the 0/m patch
-> message-id to all n/m parts.
->=20
-
-Hi Joe! Thanks a lot. Will use git send-email for V3. format-patch and --co=
-ver-letter have been already used for v2.
-
-> One style oddity I noticed is the use of goto labels in
-> favor of if block indentation.  It's not terrible style,
-> just unusual for kernel code.
->=20
-
-AFAIK goto's are being quite widely used in kernel code as well. However V3=
- will introduce several goto's replacements with if blocks.
-
-Thanks!
+T24gVGh1LCAyMDIwLTA4LTI3IGF0IDA2OjM0ICswMDAwLCBoY2hAaW5mcmFkZWFkLm9yZyB3cm90
+ZToNCj4gT24gV2VkLCBBdWcgMjYsIDIwMjAgYXQgMDk6NDM6MjdQTSArMDAwMCwgRGVycmljaywg
+Sm9uYXRoYW4gd3JvdGU6DQo+ID4gRmVlbCBmcmVlIHRvIHJldmlldyBteSBzZXQgdG8gZGlzYWJs
+ZSB0aGUgTVNJIHJlbWFwcGluZyB3aGljaCB3aWxsDQo+ID4gbWFrZQ0KPiA+IGl0IHBlcmZvcm0g
+YXMgd2VsbCBhcyBkaXJlY3QtYXR0YWNoZWQ6DQo+ID4gDQo+ID4gaHR0cHM6Ly9wYXRjaHdvcmsu
+a2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LXBjaS9saXN0Lz9zZXJpZXM9MzI1NjgxDQo+IA0KPiBT
+byB0aGF0IHRoZW4gd2UgaGF2ZSB0byBkZWFsIHdpdGggeW91ciBzY2hlbWVzIHRvIG1ha2UgaW5k
+aXZpZHVhbA0KPiBkZXZpY2UgZGlyZWN0IGFzc2lnbm1lbnQgd29yayBpbiBhIGNvbnZvbHV0ZWQg
+d2F5Pw0KDQpUaGF0J3Mgbm90IHRoZSBpbnRlbnQgb2YgdGhhdCBwYXRjaHNldCAtYXQgYWxsLS4g
+SXQgd2FzIHRvIGFkZHJlc3MgdGhlDQpwZXJmb3JtYW5jZSBib3R0bGVuZWNrcyB3aXRoIFZNRCB0
+aGF0IHlvdSBjb25zdGFudGx5IGNvbXBsYWluIGFib3V0LiANCg0KDQo+IFBsZWFzZSBqdXN0IGdp
+dmUgdXMNCj4gYSBkaXNhYmxlIG5vYiBmb3IgVk1ELCB3aGljaCBzb2x2ZXMgX2FsbF8gdGhlc2Ug
+cHJvYmxlbXMgd2l0aG91dA0KPiBhZGRpbmcNCj4gYW55Lg0KDQpJIGRvbid0IHNlZSB0aGUgcHVy
+cG9zZSBvZiB0aGlzIGxpbmUgb2YgZGlzY3Vzc2lvbi4gVk1EIGhhcyBiZWVuIGluIHRoZQ0Ka2Vy
+bmVsIGZvciA1IHllYXJzLiBXZSBhcmUgY29uc3RhbnRseSB3b3JraW5nIG9uIGJldHRlciBzdXBw
+b3J0Lg0K
