@@ -2,112 +2,152 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F176C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A048C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1F22087C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62CE92078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:42:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgH0Cel (ORCPT
+        id S1726887AbgH0CmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 22:34:41 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:48760 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726790AbgH0Cek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 22:34:40 -0400
-Received: from localhost.localdomain (unknown [210.32.144.184])
-        by mail-app2 (Coremail) with SMTP id by_KCgAnKZyjG0df3OE5Ag--.51347S4;
-        Thu, 27 Aug 2020 10:34:14 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH] ice: Fix memleak in ice_set_ringparam
-Date:   Thu, 27 Aug 2020 10:34:10 +0800
-Message-Id: <20200827023410.3677-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: by_KCgAnKZyjG0df3OE5Ag--.51347S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr13uFy7ArWxXw1Utr1rtFb_yoW8XrWrpF
-        4vkry5Cr18Zr47Ww13Way8uF98tw4xJwn3WFZ7Jw1a9wn8AF4rtFZYkFyjgr15ZrZI9F1a
-        kF13urs7CFnxXrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9m1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
-        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
-        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
-        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxE
-        wVAFwVW8JwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I
-        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-        GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
-        rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-        0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUHWlkUUUUU=
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0EBlZdtPrBDAAQsV
+        Wed, 26 Aug 2020 22:42:23 -0400
+Received: from smtprelay0147.hostedemail.com ([216.40.44.147]:51240 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726790AbgH0CmW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 22:42:22 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id CFED71801DBD7;
+        Thu, 27 Aug 2020 02:42:20 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: actor37_421792427069
+X-Filterd-Recvd-Size: 5155
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 27 Aug 2020 02:42:18 +0000 (UTC)
+Message-ID: <e84ea9d311fe082af8a1afe2aba48303ffbb1bf1.camel@perches.com>
+Subject: Re: [PATCH v3] lib/string.c: implement stpcpy
+From:   Joe Perches <joe@perches.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        stable <stable@vger.kernel.org>, Andy Lavr <andy.lavr@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 26 Aug 2020 19:42:17 -0700
+In-Reply-To: <202008261932.FF4E5C0@keescook>
+References: <20200825135838.2938771-1-ndesaulniers@google.com>
+         <CAK7LNAQXo5-5W6hvNMEVPBPf3tRWaf-pQdSR-0OHyi4RCGhjsQ@mail.gmail.com>
+         <d56bf7b93f7a28c4a90e4e16fd412e6934704346.camel@perches.com>
+         <CAKwvOd=YrVtPsB7HYPO0N=K7QJm9KstayqqeYQERSaGtGy2Bjg@mail.gmail.com>
+         <CAK7LNAQKwOo=Oas+7Du9+neSm=Ev6pxdPV7ges7eEEpW+jh8Ug@mail.gmail.com>
+         <202008261627.7B2B02A@keescook>
+         <77428f28620d4e5ecad1556396f2b0f8f0daef41.camel@perches.com>
+         <202008261932.FF4E5C0@keescook>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When kcalloc() on rx_rings fails, we should free tx_rings
-and xdp_rings to prevent memleak. Similarly, when
-ice_alloc_rx_bufs() fails, we should free xdp_rings.
+On Wed, 2020-08-26 at 19:33 -0700, Kees Cook wrote:
+> On Wed, Aug 26, 2020 at 04:57:41PM -0700, Joe Perches wrote:
+> > On Wed, 2020-08-26 at 16:38 -0700, Kees Cook wrote:
+> > > On Thu, Aug 27, 2020 at 07:59:45AM +0900, Masahiro Yamada wrote:
+> > []
+> > > > OK, then stpcpy(), strcpy() and sprintf()
+> > > > have the same level of unsafety.
+> > > 
+> > > Yes. And even snprintf() is dangerous because its return value is how
+> > > much it WOULD have written, which when (commonly) used as an offset for
+> > > further pointer writes, causes OOB writes too. :(
+> > > https://github.com/KSPP/linux/issues/105
+> > > 
+> > > > strcpy() is used everywhere.
+> > > 
+> > > Yes. It's very frustrating, but it's not an excuse to continue
+> > > using it nor introducing more bad APIs.
+> > > 
+> > > $ git grep '\bstrcpy\b' | wc -l
+> > > 2212
+> > > $ git grep '\bstrncpy\b' | wc -l
+> > > 751
+> > > $ git grep '\bstrlcpy\b' | wc -l
+> > > 1712
+> > > 
+> > > $ git grep '\bstrscpy\b' | wc -l
+> > > 1066
+> > > 
+> > > https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy
+> > > https://github.com/KSPP/linux/issues/88
+> > > 
+> > > https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
+> > > https://github.com/KSPP/linux/issues/89
+> > > 
+> > > https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> > > https://github.com/KSPP/linux/issues/90
+> > > 
+> > > We have no way right now to block the addition of deprecated API usage,
+> > > which makes ever catching up on this replacement very challenging.
+> > 
+> > These could be added to checkpatch's deprecated_api test.
+> > ---
+> >  scripts/checkpatch.pl | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > index 149518d2a6a7..f9ccb2a63a95 100755
+> > --- a/scripts/checkpatch.pl
+> > +++ b/scripts/checkpatch.pl
+> > @@ -605,6 +605,9 @@ foreach my $entry (@mode_permission_funcs) {
+> >  $mode_perms_search = "(?:${mode_perms_search})";
+> >  
+> >  our %deprecated_apis = (
+> > +	"strcpy"				=> "strscpy",
+> > +	"strncpy"				=> "strscpy",
+> > +	"strlcpy"				=> "strscpy",
+> >  	"synchronize_rcu_bh"			=> "synchronize_rcu",
+> >  	"synchronize_rcu_bh_expedited"		=> "synchronize_rcu_expedited",
+> >  	"call_rcu_bh"				=> "call_rcu",
+> > 
+> > 
+> 
+> Good idea, yeah. We, unfortunately, need to leave strncpy() off this
+> list for now because it's not *strictly* deprecated (see the notes in
+> bug report[1]), but the others can be.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/net/ethernet/intel/ice/ice_ethtool.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+OK, but it is in Documentation/process/deprecated.rst
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_ethtool.c b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-index 9e8e9531cd87..caf64eb5e96d 100644
---- a/drivers/net/ethernet/intel/ice/ice_ethtool.c
-+++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
-@@ -2863,7 +2863,7 @@ ice_set_ringparam(struct net_device *netdev, struct ethtool_ringparam *ring)
- 	rx_rings = kcalloc(vsi->num_rxq, sizeof(*rx_rings), GFP_KERNEL);
- 	if (!rx_rings) {
- 		err = -ENOMEM;
--		goto done;
-+		goto free_xdp;
- 	}
- 
- 	ice_for_each_rxq(vsi, i) {
-@@ -2892,7 +2892,7 @@ ice_set_ringparam(struct net_device *netdev, struct ethtool_ringparam *ring)
- 			}
- 			kfree(rx_rings);
- 			err = -ENOMEM;
--			goto free_tx;
-+			goto free_xdp;
- 		}
- 	}
- 
-@@ -2943,6 +2943,15 @@ ice_set_ringparam(struct net_device *netdev, struct ethtool_ringparam *ring)
- 	}
- 	goto done;
- 
-+free_xdp:
-+	if (xdp_rings) {
-+		for (i = 0; i < vsi->num_xdp_txq; i++) {
-+			ice_free_tx_ring(vsi->xdp_rings[i]);
-+			*vsi->xdp_rings[i] = xdp_rings[i];
-+		}
-+		kfree(xdp_rings);
-+	}
-+
- free_tx:
- 	/* error cleanup if the Rx allocations failed after getting Tx */
- 	if (tx_rings) {
--- 
-2.17.1
+strncpy() on NUL-terminated strings
+-----------------------------------
+Use of strncpy() does not guarantee that the destination buffer
+will be NUL terminated. This can lead to various linear read overflows
+and other misbehavior due to the missing termination. It also NUL-pads the
+destination buffer if the source contents are shorter than the destination
+buffer size, which may be a needless performance penalty for callers using
+only NUL-terminated strings. The safe replacement is strscpy().
+(Users of strscpy() still needing NUL-padding should instead
+use strscpy_pad().)
+
+If a caller is using non-NUL-terminated strings, strncpy() can
+still be used, but destinations should be marked with the `__nonstring
+<https://gcc.gnu.org/onlinedocs/gcc/Common-Variable-Attributes.html>`_
+attribute to avoid future compiler warnings.
+
 
