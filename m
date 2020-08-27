@@ -2,199 +2,119 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 061D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEA82084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:37:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="stowNP4s"
+	by mail.kernel.org (Postfix) with ESMTP id DD0FD20825
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:40:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgH0UhG (ORCPT
+        id S1726873AbgH0UkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 16:37:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgH0UhF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:37:05 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2241C061264;
-        Thu, 27 Aug 2020 13:37:05 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id b14so7377402qkn.4;
-        Thu, 27 Aug 2020 13:37:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lLI7KZEcm6pK/DDnWR2PxemX1EjkQ7OUHds3UQLACGM=;
-        b=stowNP4s4FnAKpm3wilVDwZ2UBtbYh7M9bYohbaviVrLBO95Vh6XN9u2R0G+63fI7K
-         hSZvrXvBMAkyyfql/9f091cLTBZhyQxaO7MnxyRnZEow4QKjXL+fEjxXXRi/AVTxEaSB
-         UpRr2zVU3BGr98hRdGVLHMx+hz6Nfv8/P9FwuwDbdk3kEw73ehEF4MXpkVhE1RiBZx4J
-         tsr2G0hNVhxT9MJbkrNYf28MnGxpqd8FYI6HdJAkfnQmheB3aNec6sF8mgOte3Pl/Lrt
-         /T1gBgEng2HPz1vp6p0Yl7WE4znbptOkS0dMGeppvpUus0oArYvNPxs8PeW9RUVgVFZj
-         5YSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lLI7KZEcm6pK/DDnWR2PxemX1EjkQ7OUHds3UQLACGM=;
-        b=mRIlK84ANlDZZDcaHYBOj+OyD7X5gyfnB5unCRDm+WkCMwsVw7P9mbgpw+xjK5SjdX
-         vmYg62ZZbqRtQq98bBwa87E3x+skAlZ9wYs5Sg2nXkdu1+xM+pE9njfrQ+wG+M2CtkXU
-         lGT/TZXR8KqQp9KV3jpAoeEQxEK1a5uNocKhKzFh2BTxI/npQIZBhaowQl/3mzxcoR6O
-         d3BNkMjDSliRiJKQad/5WtYasB0iuZrnTWrHPzAYa/l17kyyOChicihpAfEf7r773p3d
-         Zk4vW0sRy3E+F6lJe412FAlzdFYXhX6BCj8LjnngYGEysE3sK2KGDFJfPAIB5zRmI3uu
-         q5aQ==
-X-Gm-Message-State: AOAM530mCHx1KLsoQ64+92obJUc1dPgEGRe8v5h1DV8OvM/2zir8+OBV
-        6iaq4c0/s/BaiaE+q1BbPtQOj27NKQnTx9YWBWo=
-X-Google-Smtp-Source: ABdhPJxIn16IqGO8iLFDL2GZqRySE9w8V54DO09ZfQFmMUoz0Flmvo7kWsRkwpQwHHMjGWlL01CnLFuD/at08gSXSKM=
-X-Received: by 2002:a37:9d4f:: with SMTP id g76mr19685247qke.395.1598560624726;
- Thu, 27 Aug 2020 13:37:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <f0a2cb7ea606f1a284d4c23cbf983da2954ce9b6.1598420968.git.mchehab+huawei@kernel.org>
- <CALLGbRL+duiHFd3w7hcD=u47k+JM5rLpOkMrRpW0aQm=oTfUnA@mail.gmail.com> <20200827194225.281eb7dc@coco.lan>
-In-Reply-To: <20200827194225.281eb7dc@coco.lan>
-From:   Steve deRosier <derosier@gmail.com>
-Date:   Thu, 27 Aug 2020 13:36:28 -0700
-Message-ID: <CALLGbRLsQpdtrcV9ydz4KJ4A9uaj4P1EhbF0_yMxcdLvOmnY9Q@mail.gmail.com>
-Subject: Re: [PATCH] Revert "wlcore: Adding suppoprt for IGTK key in wlcore driver"
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Kalle Valo <kvalo@codeaurora.org>, linuxarm@huawei.com,
-        mauro.chehab@huawei.com, John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Maital Hahn <maitalm@ti.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Raz Bouganim <r-bouganim@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Fuqian Huang <huangfq.daxian@gmail.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
+        Thu, 27 Aug 2020 16:40:22 -0400
+Received: from mga12.intel.com ([192.55.52.136]:18712 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726120AbgH0UkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 16:40:22 -0400
+IronPort-SDR: piM6LJS9zU7mKyQXFa6eBBcjK5UCiuIwqdvgQJ/nMUOoNeiBK8Ds8Q2ThH8pLgiKi3njjikUSc
+ Dkuwh244CuCw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="136109503"
+X-IronPort-AV: E=Sophos;i="5.76,361,1592895600"; 
+   d="scan'208";a="136109503"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 13:40:22 -0700
+IronPort-SDR: a8Epu/Guyx6APMv+Sh/B1GyPQ9QA0SrYmmogmr/rAyd5mLaH3XRzPMl35Du5jMpJFqB/ApEObC
+ juwatNfz5BzQ==
+X-IronPort-AV: E=Sophos;i="5.76,361,1592895600"; 
+   d="scan'208";a="475378700"
+Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 13:40:22 -0700
+Date:   Thu, 27 Aug 2020 13:40:20 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Peter Shier <pshier@google.com>,
         LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v2] KVM: nVMX: fix the layout of struct
+ kvm_vmx_nested_state_hdr
+Message-ID: <20200827204020.GE22351@sjchrist-ice>
+References: <20200713162206.1930767-1-vkuznets@redhat.com>
+ <CALMp9eR+DYVH0UZvbNKUNArzPdf1mvAoxakzj++szaVCD0Fcpw@mail.gmail.com>
+ <CALMp9eRGStwpYbeHbxo79zF9EyQ=35wwhNt03rjMHMDD9a5G0A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALMp9eRGStwpYbeHbxo79zF9EyQ=35wwhNt03rjMHMDD9a5G0A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro,
-
-On Thu, Aug 27, 2020 at 10:42 AM Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
->
-> Em Thu, 27 Aug 2020 08:48:30 -0700
-> Steve deRosier <derosier@gmail.com> escreveu:
->
-> > On Tue, Aug 25, 2020 at 10:49 PM Mauro Carvalho Chehab
-> > <mchehab+huawei@kernel.org> wrote:
-> > >
-> > > This patch causes a regression betwen Kernel 5.7 and 5.8 at wlcore:
-> > > with it applied, WiFi stops working, and the Kernel starts printing
-> > > this message every second:
-> > >
-> > >    wlcore: PHY firmware version: Rev 8.2.0.0.242
-> > >    wlcore: firmware booted (Rev 8.9.0.0.79)
-> > >    wlcore: ERROR command execute failure 14
+On Thu, Aug 27, 2020 at 11:25:25AM -0700, Jim Mattson wrote:
+> On Mon, Jul 13, 2020 at 11:23 AM Jim Mattson <jmattson@google.com> wrote:
 > >
-> > Only if NO firmware for the device in question supports the `KEY_IGTK`
-> > value, then this revert is appropriate. Otherwise, it likely isn't.
->
-> Yeah, that's what I suspect too: some specific firmware is required
-> for KEY_IGTK to work.
->
-> >  My suspicion is that the feature that `KEY_IGTK` is enabling is
-> > specific to a newer firmware that Mauro hasn't upgraded to. What the
-> > OP should do is find the updated firmware and give it a try.
->
-> I didn't try checking if linux-firmware tree has a newer version on
-> it. I'm using Debian Bullseye on this device. So, I suspect that
-> it may have a relatively new firmware.
->
-> Btw, that's also the version that came together with Fedora 32:
->
->         $ strings /lib/firmware/ti-connectivity/wl18xx-fw-4.bin |grep FRev
->         FRev 8.9.0.0.79
->         FRev 8.2.0.0.242
->
-> Looking at:
->         https://git.ti.com/cgit/wilink8-wlan/wl18xx_fw/
->
-> It sounds that there's a newer version released this year:
->
->         2020-05-28      Updated to FW 8.9.0.0.81
->         2018-07-29      Updated to FW 8.9.0.0.79
->
-> However, it doesn't reached linux-firmware upstream yet:
->
->         $ git log --pretty=oneline ti-connectivity/wl18xx-fw-4.bin
->         3a5103fc3c29 wl18xx: update firmware file 8.9.0.0.79
->         65b1c68c63f9 wl18xx: update firmware file 8.9.0.0.76
->         dbb85a5154a5 wl18xx: update firmware file
->         69a250dd556b wl18xx: update firmware file
->         dbe3f134bb69 wl18xx: update firmware file, remove conf file
->         dab4b79b3fbc wl18xx: add version 4 of the wl18xx firmware
->
-> > AND - since there's some firmware the feature doesn't work with, the
-> > driver should be fixed to detect the running firmware version and not
-> > do things that the firmware doesn't support.  AND the firmware writer
-> > should also make it so the firmware doesn't barf on bad input and
-> > instead rejects it politely.
->
-> Agreed. The main issue here seems to be that the current patch
-> assumes that this feature is available. A proper approach would
-> be to check if this feature is available before trying to use it.
->
-> Now, I dunno if version 8.9.0.0.81 has what's required for it to
-> work - or if KEY_IGTK require some custom firmware version.
->
-> If it works with such version, one way would be to add a check
-> for this specific version, disabling KEY_IGTK otherwise.
->
-> Also, someone from TI should be sending the newer version to
-> be added at linux-firmware.
->
-> I'll try to do a test maybe tomorrow.
->
-
-I think we're totally agreed on all of the above points.
-Fundamentally: the orig patch should've been coded defensively and
-tested properly since clearly it causes certain firmwares to break.
-Be nice if TI would both update the firmware and also update the
-driver to detect the relevant version for features.  I don't know
-about this one, but I do know the QCA firmwares (and others) have a
-set of feature flags that are detected by the drivers to determine
-what is supported.
-
-I look forward to hearing the results of your test.  This whole thing
-has gotten me interested. I'd be tempted to pull out the relevant dev
-boards and play with them myself, but IIRC they got sent back to a
-previous employer and I don't have access to them anymore.
-
-
-> > But I will say I'm making an educated guess; while I have played with
-> > the TI devices in the past, it was years ago and I won't claim to be
-> > an expert. I also am unable to fix it myself at this time.
+> > On Mon, Jul 13, 2020 at 9:22 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+> > >
+> > > Before commit 850448f35aaf ("KVM: nVMX: Fix VMX preemption timer
+> > > migration") struct kvm_vmx_nested_state_hdr looked like:
+> > >
+> > > struct kvm_vmx_nested_state_hdr {
+> > >         __u64 vmxon_pa;
+> > >         __u64 vmcs12_pa;
+> > >         struct {
+> > >                 __u16 flags;
+> > >         } smm;
+> > > }
+> > >
+> > > The ABI got broken by the above mentioned commit and an attempt
+> > > to fix that was made in commit 83d31e5271ac ("KVM: nVMX: fixes for
+> > > preemption timer migration") which made the structure look like:
+> > >
+> > > struct kvm_vmx_nested_state_hdr {
+> > >         __u64 vmxon_pa;
+> > >         __u64 vmcs12_pa;
+> > >         struct {
+> > >                 __u16 flags;
+> > >         } smm;
+> > >         __u32 flags;
+> > >         __u64 preemption_timer_deadline;
+> > > };
+> > >
+> > > The problem with this layout is that before both changes compilers were
+> > > allocating 24 bytes for this and although smm.flags is padded to 8 bytes,
+> > > it is initialized as a 2 byte value. Chances are that legacy userspaces
+> > > using old layout will be passing uninitialized bytes which will slip into
+> > > what is now known as 'flags'.
+> > >
+> > > Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > > Fixes: 850448f35aaf ("KVM: nVMX: Fix VMX preemption timer migration")
+> > > Fixes: 83d31e5271ac ("KVM: nVMX: fixes for preemption timer migration")
+> > > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 > >
-> > I'd just rather see it fixed properly instead of a knee-jerk reaction
-> > of reverting it simply because the OP doesn't have current firmware.
->
-> > And let's revisit the discussion of having a kernel splat because an
-> > unrelated piece of code fails yet the driver does exactly what it is
-> > supposed to do. We shouldn't be dumping registers and stack-trace when
-> > the code that crashed has nothing to do with the registers and
-> > stack-trace outputted. It is a false positive.  A simple printk WARN
-> > or ERROR should output notifying us that the chip firmware has crashed
-> > and why.  IMHO.
->
-> Thanks,
-> Mauro
+> > Oops!
+> >
+> > Reviewed-by: Jim Mattson <jmattson@google.com>
+> 
+> Whatever happened to this?
 
-Thanks,
-- Steve
+Paolo pushed an alternative solution for 5.8, commit 5e105c88ab485 ("KVM:
+nVMX: check for invalid hdr.vmx.flags").  His argument was that there was
+no point in adding proper padding since we already broke the ABI, i.e.
+damage done.
+
+So rather than pad the struct, which doesn't magically fix the ABI for old
+userspace, just check for unsupported flags.  That gives decent odds of
+failing the ioctl() for old userspace if it's passing garbage (through no
+fault of its own), prevents new userspace from setting unsupported flags,
+and allows KVM to grow the struct by conditioning consumption of new fields
+on an associated flag.
