@@ -2,107 +2,148 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6488DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 120B822BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:40:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="un7kjnEQ"
+	by mail.kernel.org (Postfix) with ESMTP id 3CEAC22B4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 16:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598546429;
+	bh=NDgTujQf40aEc0EizGnGw4M8AkJqzxUV0D0lyCYMSxE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MizRxIvG/eusB7cPNKD4FFSZsvtfL9805vcGMd64l7YR1LZ30B2OAvV/HlZLitjci
+	 VBJBQvQs+6NMWvwpRt0SysE+4DCdHxd72kxWV8jj38KyiiM+7gF/mOXI629TLCsz09
+	 pATeq3l5qBSoOUtKZ1uoZEKdtrVM+woLKA3eNrik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgH0QkW (ORCPT
+        id S1726876AbgH0Qk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:40:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50416 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbgH0QkN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 12:40:13 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4432BC061264;
-        Thu, 27 Aug 2020 09:40:13 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id x2so3289974ybf.12;
-        Thu, 27 Aug 2020 09:40:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WYSs0Dku1zdRA2KBaI0ZluOi6UmY5Y9GrXFeF+fDRFw=;
-        b=un7kjnEQ+aqsO+z8jtw8rj5enqEblNxAaBGnKPz5YF1M/H5UYX4IB2itVqzx4F9M+A
-         4Iw61Lgg+T2/csniC5jvZ46vzCXwe+6ucpfL//IIr2N4fzxId6yxup8IcTBmIH9J1wxH
-         xmgaggsssg9MRIaVUt4/uLPzY6xuiGzR9l3f6wTubw05+rhnAtN3ucwXRVkyO/E+iL2c
-         Jv+81bmqvmke2b2srFFNR6de7skjpZkTrzLADYU47UvUFd5kFw73lM1gHC3O60ILOWxW
-         I4ZCr2cSWmKOElAxgXNe3UVqleDnJSO5F8AP+wHoBbyarZgklem/skA1eZo7nJRMkMI8
-         wO1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WYSs0Dku1zdRA2KBaI0ZluOi6UmY5Y9GrXFeF+fDRFw=;
-        b=LknddWT94iGwy0TUuCFh4aLqFIfCjoDmqKnHuHRzAe3mBhxYE3N6pyN+K+hCo1ayhi
-         GISOETSch4gSBSmQfx2ezhAqfv72V4vOx4lhUehDRAbgmmhvFg/y39Uwb6xu/HQf/b1W
-         Xmmg3a7dXIydDk3QosNJBQrWfhv6K2Ohx4clTluOWNXf72cQcDUwVWjTC0aDV5Xn5Bf/
-         g3gA4O29cVgNrnEwz7+5Hm23SFCbqnp9gjo1wlEADOrIQwkLSti03udpArwC96EhBLsP
-         Oer5G2WVSiwYQWWUkGaP+Oe+ZAPtoQdQvITRhweqsgwL4NQyP8cpNPtawYeTwiwEHHPh
-         TIdA==
-X-Gm-Message-State: AOAM530j74d+cEuCNcQqM+Xpqex1b3UPzFhssKPkriQiZ4qFaFR8W1Pm
-        FkRB+bTBL1O6UYjXUI11MSyKhNqjiUnx7te1ntZ3ebl1odM=
-X-Google-Smtp-Source: ABdhPJxrvVPIJbZVxMNdYQbfcSKbpYNpnY4WH7M5vvvn2G4XY4Uv7BI34VoTls0DSRQbKIiloMf4ZMzXPy4YgYSJnGI=
-X-Received: by 2002:a25:2f4d:: with SMTP id v74mr28209467ybv.401.1598546412501;
- Thu, 27 Aug 2020 09:40:12 -0700 (PDT)
+        Thu, 27 Aug 2020 12:40:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728027AbgH0QkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 12:40:24 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CADC822CE3;
+        Thu, 27 Aug 2020 16:40:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598546423;
+        bh=NDgTujQf40aEc0EizGnGw4M8AkJqzxUV0D0lyCYMSxE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mRCSNp4pAoCiUVFY+m+No6Gv1citBlWKCrYHFRmsnx3XTXAway7KZJO0HsWP03Tk/
+         Cnt+B2XS9drI3EQ65RrRq5x9tugegcJ8Vtt12t+/UEHmerxXbR6vfxsMv1kOyx9zFv
+         R6O5cbpw4CSNlQv/+ZFL19gnBNdL++fZTpS4LEpU=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
+Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, x86@kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        linux-arch@vger.kernel.org, guoren@kernel.org
+Subject: [PATCH v3 12/16] sh: kprobes: Use generic kretprobe trampoline handler
+Date:   Fri, 28 Aug 2020 01:40:20 +0900
+Message-Id: <159854642001.736475.16312987975877408960.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <159854631442.736475.5062989489155389472.stgit@devnote2>
+References: <159854631442.736475.5062989489155389472.stgit@devnote2>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594676120-5862-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594676120-5862-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 27 Aug 2020 17:39:46 +0100
-Message-ID: <CA+V-a8tZAp_oTpG2MsdC47TtGP7=oM6CubCnjBoR6UhV4=opNg@mail.gmail.com>
-Subject: Re: [PATCH 6/9] dt-bindings: gpio: renesas,rcar-gpio: Add r8a774e1 support
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus and Bartosz,
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ arch/sh/kernel/kprobes.c |   59 +++-------------------------------------------
+ 1 file changed, 4 insertions(+), 55 deletions(-)
 
-On Mon, Jul 13, 2020 at 10:35 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> Document Renesas RZ/G2H (R8A774E1) GPIO blocks compatibility within the
-> relevant dt-bindings.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml | 1 +
->  1 file changed, 1 insertion(+)
->
-Gentle ping.
+diff --git a/arch/sh/kernel/kprobes.c b/arch/sh/kernel/kprobes.c
+index 318296f48f1a..118927ab63af 100644
+--- a/arch/sh/kernel/kprobes.c
++++ b/arch/sh/kernel/kprobes.c
+@@ -204,6 +204,7 @@ void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
+ 				      struct pt_regs *regs)
+ {
+ 	ri->ret_addr = (kprobe_opcode_t *) regs->pr;
++	ri->fp = NULL;
+ 
+ 	/* Replace the return addr with trampoline addr */
+ 	regs->pr = (unsigned long)kretprobe_trampoline;
+@@ -302,62 +303,10 @@ static void __used kretprobe_trampoline_holder(void)
+  */
+ int __kprobes trampoline_probe_handler(struct kprobe *p, struct pt_regs *regs)
+ {
+-	struct kretprobe_instance *ri = NULL;
+-	struct hlist_head *head, empty_rp;
+-	struct hlist_node *tmp;
+-	unsigned long flags, orig_ret_address = 0;
+-	unsigned long trampoline_address = (unsigned long)&kretprobe_trampoline;
++	regs->pc = __kretprobe_trampoline_handler(regs,
++			(unsigned long)&kretprobe_trampoline, NULL);
+ 
+-	INIT_HLIST_HEAD(&empty_rp);
+-	kretprobe_hash_lock(current, &head, &flags);
+-
+-	/*
+-	 * It is possible to have multiple instances associated with a given
+-	 * task either because an multiple functions in the call path
+-	 * have a return probe installed on them, and/or more then one return
+-	 * return probe was registered for a target function.
+-	 *
+-	 * We can handle this because:
+-	 *     - instances are always inserted at the head of the list
+-	 *     - when multiple return probes are registered for the same
+-	 *       function, the first instance's ret_addr will point to the
+-	 *       real return address, and all the rest will point to
+-	 *       kretprobe_trampoline
+-	 */
+-	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
+-		if (ri->task != current)
+-			/* another task is sharing our hash bucket */
+-			continue;
+-
+-		if (ri->rp && ri->rp->handler) {
+-			__this_cpu_write(current_kprobe, &ri->rp->kp);
+-			ri->rp->handler(ri, regs);
+-			__this_cpu_write(current_kprobe, NULL);
+-		}
+-
+-		orig_ret_address = (unsigned long)ri->ret_addr;
+-		recycle_rp_inst(ri, &empty_rp);
+-
+-		if (orig_ret_address != trampoline_address)
+-			/*
+-			 * This is the real return address. Any other
+-			 * instances associated with this task are for
+-			 * other calls deeper on the call stack
+-			 */
+-			break;
+-	}
+-
+-	kretprobe_assert(ri, orig_ret_address, trampoline_address);
+-
+-	regs->pc = orig_ret_address;
+-	kretprobe_hash_unlock(current, &flags);
+-
+-	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
+-		hlist_del(&ri->hlist);
+-		kfree(ri);
+-	}
+-
+-	return orig_ret_address;
++	return 1;
+ }
+ 
+ static int __kprobes post_kprobe_handler(struct pt_regs *regs)
 
-Cheers,
-Prabhakar
