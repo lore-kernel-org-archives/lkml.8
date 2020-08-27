@@ -2,368 +2,477 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 004ADC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF84C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D59632177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDF822177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 15:10:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="pIw2Krxm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgH0PJh (ORCPT
+        id S1728554AbgH0PKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:09:37 -0400
-Received: from mga17.intel.com ([192.55.52.151]:30276 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728514AbgH0PJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:09:08 -0400
-IronPort-SDR: S9Bp4f/Rzrn2qPkzgDKcAETXNUw6E+kuitsHHnWnfV+WQ+XH33R5izoPoCLHw7qRrEYHxva+b7
- YjDk/R+/E82Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="136563648"
-X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
-   d="scan'208";a="136563648"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 08:06:59 -0700
-IronPort-SDR: Zzs/tIq00IIT6afc/rOMVsxeYVwvPGq5jJFFVXHBk31Odx8dL3OuzQ9pPY32ooHfvNTc/bFfq6
- QxQRX02ck8Yg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
-   d="scan'208";a="332212852"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga002.fm.intel.com with ESMTP; 27 Aug 2020 08:06:59 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "H Peter Anvin" <hpa@zytor.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        "Jean-Philippe Brucker" <jean-philippe@linaro.org>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "David Woodhouse" <dwmw2@infradead.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        "Dave Hansen" <dave.hansen@intel.com>,
-        "Tony Luck" <tony.luck@intel.com>,
-        "Ashok Raj" <ashok.raj@intel.com>,
-        "Jacob Jun Pan" <jacob.jun.pan@intel.com>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        "Sohil Mehta" <sohil.mehta@intel.com>,
-        "Ravi V Shankar" <ravi.v.shankar@intel.com>
-Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "x86" <x86@kernel.org>, iommu@lists.linux-foundation.org,
-        Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v7 3/9] docs: x86: Add documentation for SVA (Shared Virtual Addressing)
-Date:   Thu, 27 Aug 2020 08:06:28 -0700
-Message-Id: <1598540794-132666-4-git-send-email-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.5.0
-In-Reply-To: <1598540794-132666-1-git-send-email-fenghua.yu@intel.com>
-References: <1598540794-132666-1-git-send-email-fenghua.yu@intel.com>
+        Thu, 27 Aug 2020 11:10:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728935AbgH0Lu6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 07:50:58 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAA48C0611E1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 04:49:55 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id k142so4534750qke.7
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 04:49:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:in-reply-to:message-id:mime-version:references:subject
+         :from:to:cc;
+        bh=E0DOGeEY62qLZ7uSRf9UfIpHkq96+GdwwPXcN18hEJ0=;
+        b=pIw2KrxmoMV7baKQC5k3kTG9I/MArgQOkxCEyQg7puGJNupue/a7c2lTegkZWYpXVj
+         MRoJDyBaISNiyxzjuMP2fAquo3bkxD+e3+sH+Yd1wAM03gSei7kjZIP/QrKrNYOCYXQK
+         IBbYHcuB8qgRiist7/ix7HynPAXoB1j25Lww9igyKbfY12dDMb4gNWRmIxvFqnkL3c0b
+         NBPxrFxAYADJVPolcWPSkobKgiUocNZEkcAIYX0Sk5a1Z1OPIe2DlKk/Rrw1qC/l3tML
+         lkmyTkfxZ/Vd/6xkglPtQkPmQw3NhD0MMoGzP2oJC97CBNez/q+Q6jyD9yjvqJj41FFx
+         nN9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=E0DOGeEY62qLZ7uSRf9UfIpHkq96+GdwwPXcN18hEJ0=;
+        b=S0VRrfk6wjc/HtUzxl8PI0pVBVj0WijmFFMVo86VXJMda+M3RKPrnXSfWFkg+0Bs64
+         iZ0JIj67k76E3U7YRXWvlxz5iB1uoThISQI4Ok/+X5CjhIAAobjjnIgrbFA6KBkhQBm0
+         nB1KzJ/LTxCsv9l5Z+tYrRYvtNN/u2mzPLyW6pVSyDs/BXGMD3eVpRU4NtgORoK36a3X
+         pj/CvoNdpset2mMxPzr4SAvdEbvbx+E2nr/oyVXA5WN3Su1KwFZxlBoQ4MAaTGIC53kV
+         /oVBdrybJynTUWABNV9SoE19B6dnNQysi1EhQFoQCshcvOvNXoaQljIcxDRHFf2WFV1y
+         MnvA==
+X-Gm-Message-State: AOAM531U8Fflq0B1+CtUpuXVEkKAOLLFQd7k2gKkmWDPZd9K2NA894co
+        bxqObwZDQZgJY1kM+zyTfOithVC5mw==
+X-Google-Smtp-Source: ABdhPJx4bULUmnyYEEBJ3ZbFaInsMrqKtXp7IHbERfvfk/Yok8RrNFYczmlckohS0u+OxxH3yv4/+3jxKA==
+X-Received: from jannh2.zrh.corp.google.com ([2a00:79e0:1b:201:1a60:24ff:fea6:bf44])
+ (user=jannh job=sendgmr) by 2002:a0c:f4cb:: with SMTP id o11mr18241148qvm.3.1598528994972;
+ Thu, 27 Aug 2020 04:49:54 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 13:49:29 +0200
+In-Reply-To: <20200827114932.3572699-1-jannh@google.com>
+Message-Id: <20200827114932.3572699-5-jannh@google.com>
+Mime-Version: 1.0
+References: <20200827114932.3572699-1-jannh@google.com>
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+Subject: [PATCH v5 4/7] coredump: Rework elf/elf_fdpic vma_dump_size() into
+ common helper
+From:   Jann Horn <jannh@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ashok Raj <ashok.raj@intel.com>
+At the moment, the binfmt_elf and binfmt_elf_fdpic code have slightly
+different code to figure out which VMAs should be dumped, and if so,
+whether the dump should contain the entire VMA or just its first page.
 
-ENQCMD and Data Streaming Accelerator (DSA) and all of their associated
-features are a complicated stack with lots of interconnected pieces.
-This documentation provides a big picture overview for all of the
-features.
+Eliminate duplicate code by reworking the binfmt_elf version into a generic
+core dumping helper in coredump.c.
 
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
+As part of that, change the heuristic for detecting executable/library
+header pages to check whether the inode is executable instead of looking at
+the file mode.
+This is less problematic in terms of locking because it lets us avoid
+get_user() under the mmap_sem. (And arguably it looks nicer and makes more
+sense in generic code.)
+
+Adjust a little bit based on the binfmt_elf_fdpic version:
+->anon_vma is only meaningful under CONFIG_MMU, otherwise we have to assume
+that the VMA has been written to.
+
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Jann Horn <jannh@google.com>
 ---
-v7:
-- Change the doc for updating PASID by IPI and context switch (Andy).
+ fs/binfmt_elf.c          | 120 ---------------------------------------
+ fs/binfmt_elf_fdpic.c    |  83 ++-------------------------
+ fs/coredump.c            | 101 ++++++++++++++++++++++++++++++++
+ include/linux/coredump.h |   1 +
+ 4 files changed, 106 insertions(+), 199 deletions(-)
 
-v3:
-- Replace deprecated intel_svm_bind_mm() by iommu_sva_bind_mm() (Baolu)
-- Fix a couple of typos (Baolu)
-
-v2:
-- Fix the doc format and add the doc in toctree (Thomas)
-- Modify the doc for better description (Thomas, Tony, Dave)
-
- Documentation/x86/index.rst |   1 +
- Documentation/x86/sva.rst   | 254 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 255 insertions(+)
- create mode 100644 Documentation/x86/sva.rst
-
-diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-index 265d9e9a093b..e5d5ff096685 100644
---- a/Documentation/x86/index.rst
-+++ b/Documentation/x86/index.rst
-@@ -30,3 +30,4 @@ x86-specific Documentation
-    usb-legacy-support
-    i386/index
-    x86_64/index
-+   sva
-diff --git a/Documentation/x86/sva.rst b/Documentation/x86/sva.rst
-new file mode 100644
-index 000000000000..6e7ac565e127
---- /dev/null
-+++ b/Documentation/x86/sva.rst
-@@ -0,0 +1,254 @@
-+.. SPDX-License-Identifier: GPL-2.0
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 5fd11a25d320..03478005a128 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1389,126 +1389,6 @@ static int load_elf_library(struct file *file)
+  * Jeremy Fitzhardinge <jeremy@sw.oz.au>
+  */
+ 
+-/*
+- * The purpose of always_dump_vma() is to make sure that special kernel mappings
+- * that are useful for post-mortem analysis are included in every core dump.
+- * In that way we ensure that the core dump is fully interpretable later
+- * without matching up the same kernel and hardware config to see what PC values
+- * meant. These special mappings include - vDSO, vsyscall, and other
+- * architecture specific mappings
+- */
+-static bool always_dump_vma(struct vm_area_struct *vma)
+-{
+-	/* Any vsyscall mappings? */
+-	if (vma == get_gate_vma(vma->vm_mm))
+-		return true;
+-
+-	/*
+-	 * Assume that all vmas with a .name op should always be dumped.
+-	 * If this changes, a new vm_ops field can easily be added.
+-	 */
+-	if (vma->vm_ops && vma->vm_ops->name && vma->vm_ops->name(vma))
+-		return true;
+-
+-	/*
+-	 * arch_vma_name() returns non-NULL for special architecture mappings,
+-	 * such as vDSO sections.
+-	 */
+-	if (arch_vma_name(vma))
+-		return true;
+-
+-	return false;
+-}
+-
+-/*
+- * Decide what to dump of a segment, part, all or none.
+- */
+-static unsigned long vma_dump_size(struct vm_area_struct *vma,
+-				   unsigned long mm_flags)
+-{
+-#define FILTER(type)	(mm_flags & (1UL << MMF_DUMP_##type))
+-
+-	/* always dump the vdso and vsyscall sections */
+-	if (always_dump_vma(vma))
+-		goto whole;
+-
+-	if (vma->vm_flags & VM_DONTDUMP)
+-		return 0;
+-
+-	/* support for DAX */
+-	if (vma_is_dax(vma)) {
+-		if ((vma->vm_flags & VM_SHARED) && FILTER(DAX_SHARED))
+-			goto whole;
+-		if (!(vma->vm_flags & VM_SHARED) && FILTER(DAX_PRIVATE))
+-			goto whole;
+-		return 0;
+-	}
+-
+-	/* Hugetlb memory check */
+-	if (is_vm_hugetlb_page(vma)) {
+-		if ((vma->vm_flags & VM_SHARED) && FILTER(HUGETLB_SHARED))
+-			goto whole;
+-		if (!(vma->vm_flags & VM_SHARED) && FILTER(HUGETLB_PRIVATE))
+-			goto whole;
+-		return 0;
+-	}
+-
+-	/* Do not dump I/O mapped devices or special mappings */
+-	if (vma->vm_flags & VM_IO)
+-		return 0;
+-
+-	/* By default, dump shared memory if mapped from an anonymous file. */
+-	if (vma->vm_flags & VM_SHARED) {
+-		if (file_inode(vma->vm_file)->i_nlink == 0 ?
+-		    FILTER(ANON_SHARED) : FILTER(MAPPED_SHARED))
+-			goto whole;
+-		return 0;
+-	}
+-
+-	/* Dump segments that have been written to.  */
+-	if (vma->anon_vma && FILTER(ANON_PRIVATE))
+-		goto whole;
+-	if (vma->vm_file == NULL)
+-		return 0;
+-
+-	if (FILTER(MAPPED_PRIVATE))
+-		goto whole;
+-
+-	/*
+-	 * If this looks like the beginning of a DSO or executable mapping,
+-	 * check for an ELF header.  If we find one, dump the first page to
+-	 * aid in determining what was mapped here.
+-	 */
+-	if (FILTER(ELF_HEADERS) &&
+-	    vma->vm_pgoff == 0 && (vma->vm_flags & VM_READ)) {
+-		u32 __user *header = (u32 __user *) vma->vm_start;
+-		u32 word;
+-		/*
+-		 * Doing it this way gets the constant folded by GCC.
+-		 */
+-		union {
+-			u32 cmp;
+-			char elfmag[SELFMAG];
+-		} magic;
+-		BUILD_BUG_ON(SELFMAG != sizeof word);
+-		magic.elfmag[EI_MAG0] = ELFMAG0;
+-		magic.elfmag[EI_MAG1] = ELFMAG1;
+-		magic.elfmag[EI_MAG2] = ELFMAG2;
+-		magic.elfmag[EI_MAG3] = ELFMAG3;
+-		if (unlikely(get_user(word, header)))
+-			word = 0;
+-		if (word == magic.cmp)
+-			return PAGE_SIZE;
+-	}
+-
+-#undef	FILTER
+-
+-	return 0;
+-
+-whole:
+-	return vma->vm_end - vma->vm_start;
+-}
+-
+ /* An ELF note in memory */
+ struct memelfnote
+ {
+diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
+index 76e8c0defdc8..f531c6198864 100644
+--- a/fs/binfmt_elf_fdpic.c
++++ b/fs/binfmt_elf_fdpic.c
+@@ -1215,76 +1215,6 @@ struct elf_prstatus_fdpic
+ 	int pr_fpvalid;		/* True if math co-processor being used.  */
+ };
+ 
+-/*
+- * Decide whether a segment is worth dumping; default is yes to be
+- * sure (missing info is worse than too much; etc).
+- * Personally I'd include everything, and use the coredump limit...
+- *
+- * I think we should skip something. But I am not sure how. H.J.
+- */
+-static int maydump(struct vm_area_struct *vma, unsigned long mm_flags)
+-{
+-	int dump_ok;
+-
+-	/* Do not dump I/O mapped devices or special mappings */
+-	if (vma->vm_flags & VM_IO) {
+-		kdcore("%08lx: %08lx: no (IO)", vma->vm_start, vma->vm_flags);
+-		return 0;
+-	}
+-
+-	/* If we may not read the contents, don't allow us to dump
+-	 * them either. "dump_write()" can't handle it anyway.
+-	 */
+-	if (!(vma->vm_flags & VM_READ)) {
+-		kdcore("%08lx: %08lx: no (!read)", vma->vm_start, vma->vm_flags);
+-		return 0;
+-	}
+-
+-	/* support for DAX */
+-	if (vma_is_dax(vma)) {
+-		if (vma->vm_flags & VM_SHARED) {
+-			dump_ok = test_bit(MMF_DUMP_DAX_SHARED, &mm_flags);
+-			kdcore("%08lx: %08lx: %s (DAX shared)", vma->vm_start,
+-			       vma->vm_flags, dump_ok ? "yes" : "no");
+-		} else {
+-			dump_ok = test_bit(MMF_DUMP_DAX_PRIVATE, &mm_flags);
+-			kdcore("%08lx: %08lx: %s (DAX private)", vma->vm_start,
+-			       vma->vm_flags, dump_ok ? "yes" : "no");
+-		}
+-		return dump_ok;
+-	}
+-
+-	/* By default, dump shared memory if mapped from an anonymous file. */
+-	if (vma->vm_flags & VM_SHARED) {
+-		if (file_inode(vma->vm_file)->i_nlink == 0) {
+-			dump_ok = test_bit(MMF_DUMP_ANON_SHARED, &mm_flags);
+-			kdcore("%08lx: %08lx: %s (share)", vma->vm_start,
+-			       vma->vm_flags, dump_ok ? "yes" : "no");
+-			return dump_ok;
+-		}
+-
+-		dump_ok = test_bit(MMF_DUMP_MAPPED_SHARED, &mm_flags);
+-		kdcore("%08lx: %08lx: %s (share)", vma->vm_start,
+-		       vma->vm_flags, dump_ok ? "yes" : "no");
+-		return dump_ok;
+-	}
+-
+-#ifdef CONFIG_MMU
+-	/* By default, if it hasn't been written to, don't write it out */
+-	if (!vma->anon_vma) {
+-		dump_ok = test_bit(MMF_DUMP_MAPPED_PRIVATE, &mm_flags);
+-		kdcore("%08lx: %08lx: %s (!anon)", vma->vm_start,
+-		       vma->vm_flags, dump_ok ? "yes" : "no");
+-		return dump_ok;
+-	}
+-#endif
+-
+-	dump_ok = test_bit(MMF_DUMP_ANON_PRIVATE, &mm_flags);
+-	kdcore("%08lx: %08lx: %s", vma->vm_start, vma->vm_flags,
+-	       dump_ok ? "yes" : "no");
+-	return dump_ok;
+-}
+-
+ /* An ELF note in memory */
+ struct memelfnote
+ {
+@@ -1529,13 +1459,9 @@ static bool elf_fdpic_dump_segments(struct coredump_params *cprm)
+ 	struct vm_area_struct *vma;
+ 
+ 	for (vma = current->mm->mmap; vma; vma = vma->vm_next) {
+-		unsigned long addr;
+-
+-		if (!maydump(vma, cprm->mm_flags))
+-			continue;
++		unsigned long size = vma_dump_size(vma, cprm->mm_flags);
+ 
+-		if (!dump_user_range(cprm, vma->vm_start,
+-				     vma->vma_end - vma->vm_start))
++		if (!dump_user_range(cprm, vma->vm_start, size))
+ 			return false;
+ 	}
+ 	return true;
+@@ -1547,8 +1473,7 @@ static size_t elf_core_vma_data_size(unsigned long mm_flags)
+ 	size_t size = 0;
+ 
+ 	for (vma = current->mm->mmap; vma; vma = vma->vm_next)
+-		if (maydump(vma, mm_flags))
+-			size += vma->vm_end - vma->vm_start;
++		size += vma_dump_size(vma, mm_flags);
+ 	return size;
+ }
+ 
+@@ -1694,7 +1619,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
+ 		phdr.p_offset = offset;
+ 		phdr.p_vaddr = vma->vm_start;
+ 		phdr.p_paddr = 0;
+-		phdr.p_filesz = maydump(vma, cprm->mm_flags) ? sz : 0;
++		phdr.p_filesz = vma_dump_size(vma, cprm->mm_flags);
+ 		phdr.p_memsz = sz;
+ 		offset += phdr.p_filesz;
+ 		phdr.p_flags = vma->vm_flags & VM_READ ? PF_R : 0;
+diff --git a/fs/coredump.c b/fs/coredump.c
+index 6042d15acd51..4ef4c49a65b7 100644
+--- a/fs/coredump.c
++++ b/fs/coredump.c
+@@ -936,3 +936,104 @@ void dump_truncate(struct coredump_params *cprm)
+ 	}
+ }
+ EXPORT_SYMBOL(dump_truncate);
 +
-+===========================================
-+Shared Virtual Addressing (SVA) with ENQCMD
-+===========================================
++/*
++ * The purpose of always_dump_vma() is to make sure that special kernel mappings
++ * that are useful for post-mortem analysis are included in every core dump.
++ * In that way we ensure that the core dump is fully interpretable later
++ * without matching up the same kernel and hardware config to see what PC values
++ * meant. These special mappings include - vDSO, vsyscall, and other
++ * architecture specific mappings
++ */
++static bool always_dump_vma(struct vm_area_struct *vma)
++{
++	/* Any vsyscall mappings? */
++	if (vma == get_gate_vma(vma->vm_mm))
++		return true;
 +
-+Background
-+==========
++	/*
++	 * Assume that all vmas with a .name op should always be dumped.
++	 * If this changes, a new vm_ops field can easily be added.
++	 */
++	if (vma->vm_ops && vma->vm_ops->name && vma->vm_ops->name(vma))
++		return true;
 +
-+Shared Virtual Addressing (SVA) allows the processor and device to use the
-+same virtual addresses avoiding the need for software to translate virtual
-+addresses to physical addresses. SVA is what PCIe calls Shared Virtual
-+Memory (SVM)
++	/*
++	 * arch_vma_name() returns non-NULL for special architecture mappings,
++	 * such as vDSO sections.
++	 */
++	if (arch_vma_name(vma))
++		return true;
 +
-+In addition to the convenience of using application virtual addresses
-+by the device, it also doesn't require pinning pages for DMA.
-+PCIe Address Translation Services (ATS) along with Page Request Interface
-+(PRI) allow devices to function much the same way as the CPU handling
-+application page-faults. For more information please refer to PCIe
-+specification Chapter 10: ATS Specification.
++	return false;
++}
 +
-+Use of SVA requires IOMMU support in the platform. IOMMU also is required
-+to support PCIe features ATS and PRI. ATS allows devices to cache
-+translations for the virtual address. IOMMU driver uses the mmu_notifier()
-+support to keep the device tlb cache and the CPU cache in sync. PRI allows
-+the device to request paging the virtual address before using if they are
-+not paged in the CPU page tables.
++/*
++ * Decide how much of @vma's contents should be included in a core dump.
++ */
++unsigned long vma_dump_size(struct vm_area_struct *vma, unsigned long mm_flags)
++{
++#define FILTER(type)	(mm_flags & (1UL << MMF_DUMP_##type))
 +
++	/* always dump the vdso and vsyscall sections */
++	if (always_dump_vma(vma))
++		goto whole;
 +
-+Shared Hardware Workqueues
-+==========================
++	if (vma->vm_flags & VM_DONTDUMP)
++		return 0;
 +
-+Unlike Single Root I/O Virtualization (SRIOV), Scalable IOV (SIOV) permits
-+the use of Shared Work Queues (SWQ) by both applications and Virtual
-+Machines (VM's). This allows better hardware utilization vs. hard
-+partitioning resources that could result in under utilization. In order to
-+allow the hardware to distinguish the context for which work is being
-+executed in the hardware by SWQ interface, SIOV uses Process Address Space
-+ID (PASID), which is a 20bit number defined by the PCIe SIG.
++	/* support for DAX */
++	if (vma_is_dax(vma)) {
++		if ((vma->vm_flags & VM_SHARED) && FILTER(DAX_SHARED))
++			goto whole;
++		if (!(vma->vm_flags & VM_SHARED) && FILTER(DAX_PRIVATE))
++			goto whole;
++		return 0;
++	}
 +
-+PASID value is encoded in all transactions from the device. This allows the
-+IOMMU to track I/O on a per-PASID granularity in addition to using the PCIe
-+Resource Identifier (RID) which is the Bus/Device/Function.
++	/* Hugetlb memory check */
++	if (is_vm_hugetlb_page(vma)) {
++		if ((vma->vm_flags & VM_SHARED) && FILTER(HUGETLB_SHARED))
++			goto whole;
++		if (!(vma->vm_flags & VM_SHARED) && FILTER(HUGETLB_PRIVATE))
++			goto whole;
++		return 0;
++	}
 +
++	/* Do not dump I/O mapped devices or special mappings */
++	if (vma->vm_flags & VM_IO)
++		return 0;
 +
-+ENQCMD
-+======
++	/* By default, dump shared memory if mapped from an anonymous file. */
++	if (vma->vm_flags & VM_SHARED) {
++		if (file_inode(vma->vm_file)->i_nlink == 0 ?
++		    FILTER(ANON_SHARED) : FILTER(MAPPED_SHARED))
++			goto whole;
++		return 0;
++	}
 +
-+ENQCMD is a new instruction on Intel platforms that atomically submits a
-+work descriptor to a device. The descriptor includes the operation to be
-+performed, virtual addresses of all parameters, virtual address of a completion
-+record, and the PASID (process address space ID) of the current process.
++	/* Dump segments that have been written to.  */
++	if ((!IS_ENABLED(CONFIG_MMU) || vma->anon_vma) && FILTER(ANON_PRIVATE))
++		goto whole;
++	if (vma->vm_file == NULL)
++		return 0;
 +
-+ENQCMD works with non-posted semantics and carries a status back if the
-+command was accepted by hardware. This allows the submitter to know if the
-+submission needs to be retried or other device specific mechanisms to
-+implement fairness or ensure forward progress can be made.
++	if (FILTER(MAPPED_PRIVATE))
++		goto whole;
 +
-+ENQCMD is the glue that ensures applications can directly submit commands
-+to the hardware and also permit hardware to be aware of application context
-+to perform I/O operations via use of PASID.
++	/*
++	 * If this is the beginning of an executable file mapping,
++	 * dump the first page to aid in determining what was mapped here.
++	 */
++	if (FILTER(ELF_HEADERS) &&
++	    vma->vm_pgoff == 0 && (vma->vm_flags & VM_READ) &&
++	    (READ_ONCE(file_inode(vma->vm_file)->i_mode) & 0111) != 0)
++		return PAGE_SIZE;
 +
-+Process Address Space Tagging
-+=============================
++#undef	FILTER
 +
-+A new thread scoped MSR (IA32_PASID) provides the connection between
-+user processes and the rest of the hardware. When an application first
-+accesses an SVA capable device this MSR is initialized with a newly
-+allocated PASID. The driver for the device calls an IOMMU specific API
-+that sets up the routing for DMA and page-requests.
++	return 0;
 +
-+For example, the Intel Data Streaming Accelerator (DSA) uses
-+iommu_sva_bind_device(), which will do the following.
-+
-+- Allocate the PASID, and program the process page-table (cr3) in the PASID
-+  context entries.
-+- Register for mmu_notifier() to track any page-table invalidations to keep
-+  the device tlb in sync. For example, when a page-table entry is invalidated,
-+  IOMMU propagates the invalidation to device tlb. This will force any
-+  future access by the device to this virtual address to participate in
-+  ATS. If the IOMMU responds with proper response that a page is not
-+  present, the device would request the page to be paged in via the PCIe PRI
-+  protocol before performing I/O.
-+
-+This MSR is managed with the XSAVE feature set as "supervisor state" to
-+ensure the MSR is updated during context switch.
-+
-+PASID Management
-+================
-+
-+The kernel must allocate a PASID on behalf of each process and program it
-+into the new MSR to communicate the process identity to platform hardware.
-+ENQCMD uses the PASID stored in this MSR to tag requests from this process.
-+When a user submits a work descriptor to a device using the ENQCMD
-+instruction, the PASID field in the descriptor is auto-filled with the
-+value from MSR_IA32_PASID. Requests for DMA from the device are also tagged
-+with the same PASID. The platform IOMMU uses the PASID in the transaction to
-+perform address translation. The IOMMU APIs setup the corresponding PASID
-+entry in IOMMU with the process address used by the CPU (for e.g cr3 in x86).
-+
-+The MSR must be configured on each logical CPU before any application
-+thread can interact with a device. Threads that belong to the same
-+process share the same page tables, thus the same MSR value.
-+
-+PASID is cleared when a process is created. The PASID allocation and MSR
-+programming may occur long after a process and its threads have been created.
-+One thread must call iommu_sva_bind_device() to allocate the PASID for the
-+process. If a thread uses ENQCMD without the MSR first being populated, it
-+will cause #GP. The kernel will update the PASID MSR with the PASID for all
-+threads in the process. A single process PASID can be used simultaneously
-+with multiple devices since they all share the same address space.
-+
-+One thread can call iommu_sva_unbind_device() to free the allocated PASID.
-+The kernel will clear the PASID MSR for all threads in the process.
-+
-+New threads inherit the MSR value from the parent.
-+
-+Relationships
-+=============
-+
-+ * Each process has many threads, but only one PASID
-+ * Devices have a limited number (~10's to 1000's) of hardware
-+   workqueues and each portal maps down to a single workqueue.
-+   The device driver manages allocating hardware workqueues.
-+ * A single mmap() maps a single hardware workqueue as a "portal"
-+ * For each device with which a process interacts, there must be
-+   one or more mmap()'d portals.
-+ * Many threads within a process can share a single portal to access
-+   a single device.
-+ * Multiple processes can separately mmap() the same portal, in
-+   which case they still share one device hardware workqueue.
-+ * The single process-wide PASID is used by all threads to interact
-+   with all devices.  There is not, for instance, a PASID for each
-+   thread or each thread<->device pair.
-+
-+FAQ
-+===
-+
-+* What is SVA/SVM?
-+
-+Shared Virtual Addressing (SVA) permits I/O hardware and the processor to
-+work in the same address space. In short, sharing the address space. Some
-+call it Shared Virtual Memory (SVM), but Linux community wanted to avoid
-+it with Posix Shared Memory and Secure Virtual Machines which were terms
-+already in circulation.
-+
-+* What is a PASID?
-+
-+A Process Address Space ID (PASID) is a PCIe-defined TLP Prefix. A PASID is
-+a 20 bit number allocated and managed by the OS. PASID is included in all
-+transactions between the platform and the device.
-+
-+* How are shared work queues different?
-+
-+Traditionally to allow user space applications interact with hardware,
-+there is a separate instance required per process. For example, consider
-+doorbells as a mechanism of informing hardware about work to process. Each
-+doorbell is required to be spaced 4k (or page-size) apart for process
-+isolation. This requires hardware to provision that space and reserve in
-+MMIO. This doesn't scale as the number of threads becomes quite large. The
-+hardware also manages the queue depth for Shared Work Queues (SWQ), and
-+consumers don't need to track queue depth. If there is no space to accept
-+a command, the device will return an error indicating retry. Also
-+submitting a command to an MMIO address that can't accept ENQCMD will
-+return retry in response. In the new DMWr PCIe terminology, devices need to
-+support DMWr completer capability. In addition it requires all switch ports
-+to support DMWr routing and must be enabled by the PCIe subsystem, much
-+like how PCIe Atomics() are managed for instance.
-+
-+SWQ allows hardware to provision just a single address in the device. When
-+used with ENQCMD to submit work, the device can distinguish the process
-+submitting the work since it will include the PASID assigned to that
-+process. This decreases the pressure of hardware requiring to support
-+hardware to scale to a large number of processes.
-+
-+* Is this the same as a user space device driver?
-+
-+Communicating with the device via the shared work queue is much simpler
-+than a full blown user space driver. The kernel driver does all the
-+initialization of the hardware. User space only needs to worry about
-+submitting work and processing completions.
-+
-+* Is this the same as SR-IOV?
-+
-+Single Root I/O Virtualization (SR-IOV) focuses on providing independent
-+hardware interfaces for virtualizing hardware. Hence its required to be
-+almost fully functional interface to software supporting the traditional
-+BAR's, space for interrupts via MSI-x, its own register layout.
-+Virtual Functions (VFs) are assisted by the Physical Function (PF)
-+driver.
-+
-+Scalable I/O Virtualization builds on the PASID concept to create device
-+instances for virtualization. SIOV requires host software to assist in
-+creating virtual devices, each virtual device is represented by a PASID
-+along with the BDF of the device.  This allows device hardware to optimize
-+device resource creation and can grow dynamically on demand. SR-IOV creation
-+and management is very static in nature. Consult references below for more
-+details.
-+
-+* Why not just create a virtual function for each app?
-+
-+Creating PCIe SRIOV type virtual functions (VF) are expensive. They create
-+duplicated hardware for PCI config space requirements, Interrupts such as
-+MSIx for instance. Resources such as interrupts have to be hard partitioned
-+between VF's at creation time, and cannot scale dynamically on demand. The
-+VF's are not completely independent from the Physical function (PF). Most
-+VF's require some communication and assistance from the PF driver. SIOV
-+creates a software defined device. Where all the configuration and control
-+aspects are mediated via the slow path. The work submission and completion
-+happen without any mediation.
-+
-+* Does this support virtualization?
-+
-+ENQCMD can be used from within a guest VM. In these cases the VMM helps
-+with setting up a translation table to translate from Guest PASID to Host
-+PASID. Please consult the ENQCMD instruction set reference for more
-+details.
-+
-+* Does memory need to be pinned?
-+
-+When devices support SVA, along with platform hardware such as IOMMU
-+supporting such devices, there is no need to pin memory for DMA purposes.
-+Devices that support SVA also support other PCIe features that remove the
-+pinning requirement for memory.
-+
-+Device TLB support - Device requests the IOMMU to lookup an address before
-+use via Address Translation Service (ATS) requests.  If the mapping exists
-+but there is no page allocated by the OS, IOMMU hardware returns that no
-+mapping exists.
-+
-+Device requests that virtual address to be mapped via Page Request
-+Interface (PRI). Once the OS has successfully completed  the mapping, it
-+returns the response back to the device. The device continues again to
-+request for a translation and continues.
-+
-+IOMMU works with the OS in managing consistency of page-tables with the
-+device. When removing pages, it interacts with the device to remove any
-+device-tlb that might have been cached before removing the mappings from
-+the OS.
-+
-+References
-+==========
-+
-+VT-D:
-+https://01.org/blogs/ashokraj/2018/recent-enhancements-intel-virtualization-technology-directed-i/o-intel-vt-d
-+
-+SIOV:
-+https://01.org/blogs/2019/assignable-interfaces-intel-scalable-i/o-virtualization-linux
-+
-+ENQCMD in ISE:
-+https://software.intel.com/sites/default/files/managed/c5/15/architecture-instruction-set-extensions-programming-reference.pdf
-+
-+DSA spec:
-+https://software.intel.com/sites/default/files/341204-intel-data-streaming-accelerator-spec.pdf
++whole:
++	return vma->vm_end - vma->vm_start;
++}
+diff --git a/include/linux/coredump.h b/include/linux/coredump.h
+index f0b71a74d0bc..bfecb8d79a7f 100644
+--- a/include/linux/coredump.h
++++ b/include/linux/coredump.h
+@@ -16,6 +16,7 @@ extern int dump_skip(struct coredump_params *cprm, size_t nr);
+ extern int dump_emit(struct coredump_params *cprm, const void *addr, int nr);
+ extern int dump_align(struct coredump_params *cprm, int align);
+ extern void dump_truncate(struct coredump_params *cprm);
++unsigned long vma_dump_size(struct vm_area_struct *vma, unsigned long mm_flags);
+ int dump_user_range(struct coredump_params *cprm, unsigned long start,
+ 		    unsigned long len);
+ #ifdef CONFIG_COREDUMP
 -- 
-2.19.1
+2.28.0.297.g1956fa8f8d-goog
 
