@@ -2,173 +2,79 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC62CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65614C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 849172071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C0EC2071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:05:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgH0UFC (ORCPT
+        id S1726952AbgH0UFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 16:05:02 -0400
-Received: from lists.gateworks.com ([108.161.130.12]:59424 "EHLO
-        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726120AbgH0UFB (ORCPT
+        Thu, 27 Aug 2020 16:05:14 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:21081
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726120AbgH0UFO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:05:01 -0400
-Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
-        by lists.gateworks.com with esmtp (Exim 4.82)
-        (envelope-from <tharvey@gateworks.com>)
-        id 1kBODQ-00039V-KZ; Thu, 27 Aug 2020 20:09:44 +0000
-From:   Tim Harvey <tharvey@gateworks.com>
-To:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Robert Jones <rjones@gateworks.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH v2] hwmon: gsc-hwmon: add fan sensor
-Date:   Thu, 27 Aug 2020 13:04:54 -0700
-Message-Id: <1598558694-743-1-git-send-email-tharvey@gateworks.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 27 Aug 2020 16:05:14 -0400
+X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
+   d="scan'208";a="357455363"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 22:05:11 +0200
+Date:   Thu, 27 Aug 2020 22:05:10 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Bernie Thompson <bernie@plugable.com>,
+        Denis Efremov <efremov@linux.com>,
+        kernel test robot <lkp@intel.com>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] coccinelle: api: fix kobj_to_dev.cocci warnings
+In-Reply-To: <13cd8bf4-06f9-04d7-e923-c397c506e8cc@web.de>
+Message-ID: <alpine.DEB.2.22.394.2008272204050.2482@hadrien>
+References: <13cd8bf4-06f9-04d7-e923-c397c506e8cc@web.de>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="8323329-1007646674-1598558711=:2482"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a fan sensor to report RPM's from a fan tach input.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
---
-v2:
- - avoid unnecessary line split and fix opening brace location
----
- drivers/hwmon/gsc-hwmon.c               | 32 +++++++++++++++++++++++++++++---
- include/linux/platform_data/gsc_hwmon.h |  1 +
- 2 files changed, 30 insertions(+), 3 deletions(-)
+--8323329-1007646674-1598558711=:2482
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-diff --git a/drivers/hwmon/gsc-hwmon.c b/drivers/hwmon/gsc-hwmon.c
-index c6d4567..1fe3741 100644
---- a/drivers/hwmon/gsc-hwmon.c
-+++ b/drivers/hwmon/gsc-hwmon.c
-@@ -17,6 +17,7 @@
- 
- #define GSC_HWMON_MAX_TEMP_CH	16
- #define GSC_HWMON_MAX_IN_CH	16
-+#define GSC_HWMON_MAX_FAN_CH	16
- 
- #define GSC_HWMON_RESOLUTION	12
- #define GSC_HWMON_VREF		2500
-@@ -27,11 +28,14 @@ struct gsc_hwmon_data {
- 	struct regmap *regmap;
- 	const struct gsc_hwmon_channel *temp_ch[GSC_HWMON_MAX_TEMP_CH];
- 	const struct gsc_hwmon_channel *in_ch[GSC_HWMON_MAX_IN_CH];
-+	const struct gsc_hwmon_channel *fan_ch[GSC_HWMON_MAX_FAN_CH];
- 	u32 temp_config[GSC_HWMON_MAX_TEMP_CH + 1];
- 	u32 in_config[GSC_HWMON_MAX_IN_CH + 1];
-+	u32 fan_config[GSC_HWMON_MAX_FAN_CH + 1];
- 	struct hwmon_channel_info temp_info;
- 	struct hwmon_channel_info in_info;
--	const struct hwmon_channel_info *info[3];
-+	struct hwmon_channel_info fan_info;
-+	const struct hwmon_channel_info *info[4];
- 	struct hwmon_chip_info chip;
- };
- 
-@@ -155,6 +159,9 @@ gsc_hwmon_read(struct device *dev, enum hwmon_sensor_types type, u32 attr,
- 	case hwmon_temp:
- 		ch = hwmon->temp_ch[channel];
- 		break;
-+	case hwmon_fan:
-+		ch = hwmon->fan_ch[channel];
-+		break;
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-@@ -187,6 +194,9 @@ gsc_hwmon_read(struct device *dev, enum hwmon_sensor_types type, u32 attr,
- 		/* adjust by uV offset */
- 		tmp += ch->mvoffset;
- 		break;
-+	case mode_fan:
-+		tmp *= 30; /* convert to revolutions per minute */
-+		break;
- 	case mode_voltage_24bit:
- 	case mode_voltage_16bit:
- 		/* no adjustment needed */
-@@ -211,6 +221,9 @@ gsc_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
- 	case hwmon_temp:
- 		*buf = hwmon->temp_ch[channel]->name;
- 		break;
-+	case hwmon_fan:
-+		*buf = hwmon->fan_ch[channel]->name;
-+		break;
- 	default:
- 		return -ENOTSUPP;
- 	}
-@@ -304,7 +317,7 @@ static int gsc_hwmon_probe(struct platform_device *pdev)
- 	struct gsc_hwmon_platform_data *pdata = dev_get_platdata(dev);
- 	struct gsc_hwmon_data *hwmon;
- 	const struct attribute_group **groups;
--	int i, i_in, i_temp;
-+	int i, i_in, i_temp, i_fan;
- 
- 	if (!pdata) {
- 		pdata = gsc_hwmon_get_devtree_pdata(dev);
-@@ -324,7 +337,7 @@ static int gsc_hwmon_probe(struct platform_device *pdev)
- 	if (IS_ERR(hwmon->regmap))
- 		return PTR_ERR(hwmon->regmap);
- 
--	for (i = 0, i_in = 0, i_temp = 0; i < hwmon->pdata->nchannels; i++) {
-+	for (i = 0, i_in = 0, i_temp = 0, i_fan = 0; i < hwmon->pdata->nchannels; i++) {
- 		const struct gsc_hwmon_channel *ch = &pdata->channels[i];
- 
- 		switch (ch->mode) {
-@@ -338,6 +351,16 @@ static int gsc_hwmon_probe(struct platform_device *pdev)
- 						     HWMON_T_LABEL;
- 			i_temp++;
- 			break;
-+		case mode_fan:
-+			if (i_fan == GSC_HWMON_MAX_FAN_CH) {
-+				dev_err(gsc->dev, "too many fan channels\n");
-+				return -EINVAL;
-+			}
-+			hwmon->fan_ch[i_fan] = ch;
-+			hwmon->fan_config[i_fan] = HWMON_F_INPUT |
-+						   HWMON_F_LABEL;
-+			i_fan++;
-+			break;
- 		case mode_voltage_24bit:
- 		case mode_voltage_16bit:
- 		case mode_voltage_raw:
-@@ -361,10 +384,13 @@ static int gsc_hwmon_probe(struct platform_device *pdev)
- 	hwmon->chip.info = hwmon->info;
- 	hwmon->info[0] = &hwmon->temp_info;
- 	hwmon->info[1] = &hwmon->in_info;
-+	hwmon->info[2] = &hwmon->fan_info;
- 	hwmon->temp_info.type = hwmon_temp;
- 	hwmon->temp_info.config = hwmon->temp_config;
- 	hwmon->in_info.type = hwmon_in;
- 	hwmon->in_info.config = hwmon->in_config;
-+	hwmon->fan_info.type = hwmon_fan;
-+	hwmon->fan_info.config = hwmon->fan_config;
- 
- 	groups = pdata->fan_base ? gsc_hwmon_groups : NULL;
- 	hwmon_dev = devm_hwmon_device_register_with_info(dev,
-diff --git a/include/linux/platform_data/gsc_hwmon.h b/include/linux/platform_data/gsc_hwmon.h
-index 37a8f554d..281f499 100644
---- a/include/linux/platform_data/gsc_hwmon.h
-+++ b/include/linux/platform_data/gsc_hwmon.h
-@@ -7,6 +7,7 @@ enum gsc_hwmon_mode {
- 	mode_voltage_24bit,
- 	mode_voltage_raw,
- 	mode_voltage_16bit,
-+	mode_fan,
- 	mode_max,
- };
- 
--- 
-2.7.4
 
+
+On Thu, 27 Aug 2020, Markus Elfring wrote:
+
+> > Generated by: scripts/coccinelle/api/kobj_to_dev.cocci
+> >
+> > Fixes: a2fc3718bc22 ("coccinelle: api: add kobj_to_dev.cocci script")
+>
+> I wonder about such a combination of information.
+>
+> I find it reasonable that two function implementations should be adjusted
+> according to a generated patch.
+> Thus I imagine that not the mentioned SmPL script is “fixed”
+> but the affected source file “drivers/video/fbdev/udlfb.c” may be improved.
+> Will the subject “[PATCH] video: udlfb: Fix kobj_to_dev.cocci warnings”
+> (or “[PATCH] video: udlfb: Use kobj_to_dev() instead of container_of()”)
+> be more appropriate for the proposed commit message?
+
+It seems that 0-day picks up new semantic patches that are added to trees
+in kernel.org, but that it's strategy for generating the patch is not
+ideal.  I'll just drop these Fixes lines.
+
+julia
+--8323329-1007646674-1598558711=:2482--
