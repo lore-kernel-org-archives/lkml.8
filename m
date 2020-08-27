@@ -2,194 +2,218 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19789C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAADBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E87B020786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0DAC20825
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 20:33:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RWeorijv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgH0U3l (ORCPT
+        id S1726851AbgH0UdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 16:29:41 -0400
-Received: from smtprelay0135.hostedemail.com ([216.40.44.135]:54372 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726147AbgH0U3l (ORCPT
+        Thu, 27 Aug 2020 16:33:05 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49568 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbgH0UdE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:29:41 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 2BD4F181D302B;
-        Thu, 27 Aug 2020 20:29:40 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: brass22_380a74227070
-X-Filterd-Recvd-Size: 8107
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf11.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 27 Aug 2020 20:29:37 +0000 (UTC)
-Message-ID: <cf9b1ea3716305447be43bffc8f90b7ef7292f5b.camel@perches.com>
-Subject: Re: [Cocci] [PATCH] usb: atm: don't use snprintf() for sysfs attrs
-From:   Joe Perches <joe@perches.com>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        cocci <cocci@systeme.lip6.fr>, Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        accessrunner-general@lists.sourceforge.net
-Date:   Thu, 27 Aug 2020 13:29:36 -0700
-In-Reply-To: <alpine.DEB.2.22.394.2008272141220.2482@hadrien>
-References: <20200824222322.22962-1-alex.dewar90@gmail.com>
-         <48f2dc90-7852-eaf1-55d7-2c85cf954688@rasmusvillemoes.dk>
-         <20200827071537.GA168593@kroah.com>
-         <20200827131819.7rcl2f5js3hkoqj2@lenovo-laptop>
-         <def24e9e-018c-9712-0d07-d4cbc84f07d9@rasmusvillemoes.dk>
-         <20200827144846.yauuttjaqtxaldxg@lenovo-laptop>
-         <5d1dfb9b031130d4d20763ec621233a19d6a88a2.camel@perches.com>
-         <alpine.DEB.2.22.394.2008272141220.2482@hadrien>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Thu, 27 Aug 2020 16:33:04 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07RKW898076324;
+        Thu, 27 Aug 2020 15:32:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598560328;
+        bh=aYp1+3+GIhxsev2f1k2D7ETcN46E5m3qO75FVMnA180=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=RWeorijvGe6nawyg39RIAjSMoLml/oNcTmDHjCMtBE3mWY4mgcypA7J3qCEmonjNB
+         gewW5pvg1thGKxlk5TRpiwYVjtPehdnuZuAKXx9m1XDRT0oMgATYYmV+nI/IlepRYG
+         8uqygl/ETJpwFZ6jpASwmIqoo4A/pncbK+aTK0+8=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07RKW8Wl064212
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 27 Aug 2020 15:32:08 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 27
+ Aug 2020 15:32:07 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 27 Aug 2020 15:32:07 -0500
+Received: from [10.250.69.147] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07RKW5WY114954;
+        Thu, 27 Aug 2020 15:32:06 -0500
+Subject: Re: [RESEND PATCH v2] mfd: syscon: Use a unique name with
+ regmap_config
+To:     Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>
+CC:     Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>,
+        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
+        David Lechner <david@lechnology.com>,
+        Tony Lindgren <tony@atomide.com>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Roger Quadros <rogerq@ti.com>, <kernel-team@android.com>
+References: <20200727211008.24225-1-s-anna@ti.com>
+ <0c1feaf91b9d285c1bded488437705da@misterjones.org>
+ <74bc1f9f-cc48-cec9-85f4-3376b66b40fc@ti.com>
+ <78b465b080772b6ba867e39a623c2310@kernel.org>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <ef1931eb-5677-d92c-732d-b67b5263425d@ti.com>
+Date:   Thu, 27 Aug 2020 15:32:05 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <78b465b080772b6ba867e39a623c2310@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-08-27 at 21:42 +0200, Julia Lawall wrote:
+Hi Marc,
+
++ Mark Brown
+
+On 8/27/20 3:06 PM, Marc Zyngier wrote:
+> Hi Suman,
 > 
-> On Thu, 27 Aug 2020, Joe Perches wrote:
+> On 2020-08-27 19:28, Suman Anna wrote:
+>> Hi Marc,
+>>
+>> On 8/27/20 9:46 AM, Marc Zyngier wrote:
+>>> Hi all,
+>>>
+>>> On 2020-07-27 22:10, Suman Anna wrote:
+>>>> The DT node full name is currently being used in regmap_config
+>>>> which in turn is used to create the regmap debugfs directories.
+>>>> This name however is not guaranteed to be unique and the regmap
+>>>> debugfs registration can fail in the cases where the syscon nodes
+>>>> have the same unit-address but are present in different DT node
+>>>> hierarchies. Replace this logic using the syscon reg resource
+>>>> address instead (inspired from logic used while creating platform
+>>>> devices) to ensure a unique name is given for each syscon.
+>>>>
+>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>> ---
+>>>> Hi Arnd,
+>>>> Lee is looking for your review on this patch. Can you please
+>>>> review and provide your comments.
+>>>>
+>>>> This is a resend of the patch that was posted previously, rebased
+>>>> now onto latest kernel.
+>>>>
+>>>> v2: https://patchwork.kernel.org/patch/11353355/
+>>>>  - Fix build warning reported by kbuild test bot
+>>>> v1: https://patchwork.kernel.org/patch/11346363/
+>>>>
+>>>>  drivers/mfd/syscon.c | 4 +++-
+>>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+>>>> index 3a97816d0cba..75859e492984 100644
+>>>> --- a/drivers/mfd/syscon.c
+>>>> +++ b/drivers/mfd/syscon.c
+>>>> @@ -101,12 +101,14 @@ static struct syscon *of_syscon_register(struct
+>>>> device_node *np, bool check_clk)
+>>>>          }
+>>>>      }
+>>>>
+>>>> -    syscon_config.name = of_node_full_name(np);
+>>>> +    syscon_config.name = kasprintf(GFP_KERNEL, "%pOFn@%llx", np,
+>>>> +                       (u64)res.start);
+>>>>      syscon_config.reg_stride = reg_io_width;
+>>>>      syscon_config.val_bits = reg_io_width * 8;
+>>>>      syscon_config.max_register = resource_size(&res) - reg_io_width;
+>>>>
+>>>>      regmap = regmap_init_mmio(NULL, base, &syscon_config);
+>>>> +    kfree(syscon_config.name);
+>>>>      if (IS_ERR(regmap)) {
+>>>>          pr_err("regmap init failed\n");
+>>>>          ret = PTR_ERR(regmap);
+>>>
+>>> This patch triggers some illegal memory accesses when debugfs is
+>>> enabled, as regmap does rely on config->name to be persistent
+>>> when the debugfs registration is deferred via regmap_debugfs_early_list
+>>> (__regmap_init() -> regmap_attach_dev() -> regmap_debugfs_init()...),
+>>> leading to a KASAN splat on demand.
+>>>
+>>
+>> Thanks, I missed the subtlety around the debugfs registration.
+>>
+>>> I came up with the following patch that solves the issue for me.
+>>>
+>>> Thanks,
+>>>
+>>>         M.
+>>>
+>>> From fd3f5f2bf72df53be18d13914fe349a34f81f16b Mon Sep 17 00:00:00 2001
+>>> From: Marc Zyngier <maz@kernel.org>
+>>> Date: Thu, 27 Aug 2020 14:45:34 +0100
+>>> Subject: [PATCH] mfd: syscon: Don't free allocated name for regmap_config
+>>>
+>>> The name allocated for the regmap_config structure is freed
+>>> pretty early, right after the registration of the MMIO region.
+>>>
+>>> Unfortunately, that doesn't follow the life cycle that debugfs
+>>> expects, as it can access the name field long after the free
+>>> has occured.
+>>>
+>>> Move the free on the error path, and keep it forever otherwise.
+>>
+>> Hmm, this is exactly what I was trying to avoid. The regmap_init does duplicate
+>> the name into map->name if config->name is given, and the regmap debugfs makes
+>> another copy of its own into debugfs_name when actually registered. If the rules
+>> for regmap_init is that the config->name should be persistent, then I guess we
+>> have no choice but to go with the below fix.
+>>
+>> Does something like below help?
+>>
+>> diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+>> index e93700af7e6e..96d8a0161c89 100644
+>> --- a/drivers/base/regmap/regmap.c
+>> +++ b/drivers/base/regmap/regmap.c
+>> @@ -1137,7 +1137,7 @@ struct regmap *__regmap_init(struct device *dev,
+>>                 if (ret != 0)
+>>                         goto err_regcache;
+>>         } else {
+>> -               regmap_debugfs_init(map, config->name);
+>> +               regmap_debugfs_init(map, map->name);
+>>
+>> But there are couple of other places in regmap code that uses config->name, but
+>> those won't be exercised with the syscon code.
 > 
-> > On Thu, 2020-08-27 at 15:48 +0100, Alex Dewar wrote:
-> > > On Thu, Aug 27, 2020 at 03:41:06PM +0200, Rasmus Villemoes wrote:
-> > > > On 27/08/2020 15.18, Alex Dewar wrote:
-> > > > > On Thu, Aug 27, 2020 at 09:15:37AM +0200, Greg Kroah-Hartman wrote:
-> > > > > > On Thu, Aug 27, 2020 at 08:42:06AM +0200, Rasmus Villemoes wrote:
-> > > > > > > On 25/08/2020 00.23, Alex Dewar wrote:
-> > > > > > > > kernel/cpu.c: don't use snprintf() for sysfs attrs
-> > > > > > > > 
-> > > > > > > > As per the documentation (Documentation/filesystems/sysfs.rst),
-> > > > > > > > snprintf() should not be used for formatting values returned by sysfs.
-> > > > > > > > 
-> > > > > > > 
-> > > > > > > Can we have a sysfs_sprintf() (could just be a macro that does sprintf)
-> > > > > > > to make it clear to the next reader that we know we're in a sysfs show
-> > > > > > > method? It would make auditing uses of sprintf() much easier.
-> > > > > > 
-> > > > > > Code churn to keep code checkers quiet for pointless reasons?  What
-> > > > > > could go wrong with that...
-> > > > 
-> > > > I did not (mean to) suggest replacing existing sprintf() calls in sysfs
-> > > > show methods. But when changes _are_ being made, such as when replacing
-> > > > snprintf() calls for whatever reasons, can we please not make it harder
-> > > > for people doing manual audits (those are "code checkers" as well, I
-> > > > suppose, but they do tend to only make noise when finding something).
-> > > > 
-> > > > > > It should be pretty obvious to any reader that you are in a sysfs show
-> > > > > > method, as almost all of them are trivially tiny and obvious.
-> > > > 
-> > > > git grep doesn't immediately show that, not even with a suitable -C
-> > > > argument, as you can't really know the potential callers unless you open
-> > > > the file and see that the function is only assigned as a .show method.
-> > > > And even that can be a pain because it's all hidden behind five levels
-> > > > of magic macros that build identifiers with ##.
-> > > > 
-> > > > > Perhaps I should have mentioned this in the commit message, but the problem
-> > > > > is that snprintf() doesn't return the number of bytes written to the
-> > > > > destination buffer,
-> > > > 
-> > > > I'm perfectly well aware of that, TYVM (you may want to 'git log
-> > > > --author Villemoes lib/vsprintf.c').
-> > > > 
-> > > >  but the number of bytes that *would have been written if
-> > > > > they fitted*, which may be more than the bounds specified [1]. So "return
-> > > > > snprintf(...)" for sysfs attributes is an antipattern. If you need bounded
-> > > > > string ops, scnprintf() is the way to go. Using snprintf() can give a
-> > > > > false sense of security, because it isn't necessarily safe.
-> > > > 
-> > > > Huh? This all seems utterly irrelevant WRT a change that replaces
-> > > > PAGE_SIZE by INT_MAX (because that's what sprintf() is going to pretend
-> > > > you passed). You get the same return value.
-> > > > 
-> > > > But I'm not at all concerned about whether one passes the proper buffer
-> > > > size or not in sysfs show methods; with my embedded hat on, I'm all for
-> > > > saving a few bytes of .text here and there. The problem, as far as I'm
-> > > > concerned, is merely that adding sprintf() callers makes it harder to
-> > > > find the problematic sprintf() instances.
-> > > > 
-> > > 
-> > > Apologies, I think I might have expressed myself poorly, being a kernel noob
-> > > ;-). I know that this is a stylistic change rather than a functional
-> > > one -- I meant that I was hoping that it would be helpful to get rid of bad
-> > > uses of snprintf().
-> > > 
-> > > I really like your idea of helper methods though :-). If in show()
-> > > methods we could have something like:
-> > > 	return sysfs_itoa(buf, i);
-> > > in place of:
-> > > 	return sprintf(buf, "%d\n", i);
-> > > 
-> > > ... then we wouldn't be introducing any new calls to sprintf() as you
-> > > say, but we'd still be removing a call to snprintf() (which also may be
-> > > problematic). Plus we'd have type checking on the argument.
-> > > 
-> > > For returning strings, we could have a bounded and unbounded variant of
-> > > the function. As it seems like only single values should be returned via
-> > > sysfs, if we did things this way then it would only be these
-> > > string-returning functions which could cause buffer overflow problems
-> > > and kernel devs could focus their attention accordingly...
-> > > 
-> > > What do people think? I'm happy to have a crack, provided this is
-> > > actually a sensible thing to do! I'm looking for a newbie-level project
-> > > to get started with.
-> > 
-> > Not a bad idea.
-> > 
-> > Coccinelle should be able to transform the various .show
-> > methods to something sysfs_ prefixed in a fairly automated
-> > way.
+> Is config->name always the same as map->name? If so, why don't you just
+> pass map once and for all? Is the lifetime of map->name the same as
+> that of config->name?
+
+map->name is created (kstrdup_const) from config->name if not NULL, so above
+replacement should be exactly equivalent, map is filled in _regmap_init. But it
+does make the regmap_debugfs_init callsites in the file look dissimilar.
+
 > 
-> Something like
+> My worry with this approach is that we start changing stuff in a rush,
+> and this would IMHO deserve a thorough investigation of whether this
+> change is actually safe.
 > 
-> identifier f;
-> fresh identifier = "sysfs" ## f;
-> 
-> may be useful.  Let me know if further help is needed.
+> I'd rather take the safe approach of either keeping the memory around
+> until we clearly understand what the implications are (and probably
+> this should involve the regmap maintainer), or to revert this patch
+> until we figure out the actual life cycle of the various names.
 
-Perhaps it's a bit more complicated.
+Yeah, agreed. Let's see what Mark suggests.
 
-Perhaps what's necessary is to find any
-appropriate .show function and change
-any use of strcpy/sprintf within those
-function to some other name.
+Mark,
+Can you clarify the lifecycle expectations on the config->name and do you have
+any suggestions here?
 
-For instance:
-
-drivers/isdn/mISDN/core.c-static ssize_t name_show(struct device *dev,
-drivers/isdn/mISDN/core.c-                       struct device_attribute *attr, char *buf)
-drivers/isdn/mISDN/core.c-{
-drivers/isdn/mISDN/core.c:      strcpy(buf, dev_name(dev));
-drivers/isdn/mISDN/core.c-      return strlen(buf);
-drivers/isdn/mISDN/core.c-}
-drivers/isdn/mISDN/core.c-static DEVICE_ATTR_RO(name);
-
-and macroized uses like:
-
-drivers/base/node.c-#define CACHE_ATTR(name, fmt)                                               \
-drivers/base/node.c-static ssize_t name##_show(struct device *dev,                              \
-drivers/base/node.c-                       struct device_attribute *attr,               \
-drivers/base/node.c-                       char *buf)                                   \
-drivers/base/node.c-{                                                                   \
-drivers/base/node.c-    return sprintf(buf, fmt "\n", to_cache_info(dev)->cache_attrs.name);\
-drivers/base/node.c-}                                                                   \
-drivers/base/node.c:DEVICE_ATTR_RO(name);
-drivers/base/node.c-
-drivers/base/node.c-CACHE_ATTR(size, "%llu")
-drivers/base/node.c-CACHE_ATTR(line_size, "%u")
-drivers/base/node.c-CACHE_ATTR(indexing, "%u")
-drivers/base/node.c-CACHE_ATTR(write_policy, "%u")
-
+regards
+Suman
