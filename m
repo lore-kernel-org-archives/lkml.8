@@ -2,117 +2,240 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272FBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F16C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0A8620786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56A1C20786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Hq4IaKnl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g+k8o1Eh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0Rod2lJB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbgH0H4E (ORCPT
+        id S1728603AbgH0H4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:56:04 -0400
-Received: from mail-eopbgr00087.outbound.protection.outlook.com ([40.107.0.87]:16061
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728483AbgH0Hzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:55:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RRUbg2kctkhAkaynb+r58qmJGfxmihGeWULmTtUzXmBcLRf0o81wMWwmz9jPIWXf946CMb96zse7Ts2fXP1LZJQeFUqFPipEBKwVZEmxP8LG3u7FwadL4SMgMVcwwj8by1CbbIrm24AGoIL5gC5xElBQxekmlPzq8FTMcuDiU0kttrXRA10WnfV+SKICPKC/UMWWUL151lx9x26uFKTNtZ4mev3MY+qI9uL0ohxaVBMuEwepepjw8MinNBOhduKiuGECB+PMc/Du4bZHGMqFbbMsA0m4ovsQPFbYL4/Qnkw81JQpB3JuTQxYKx8wICqARfXxDIcmd5jLjS2+MvSOtQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EqQ3PfO4lTFtQEE/pauAjtgGHv3nmXuntFu1goRmARE=;
- b=BgFTsP7x8/YA+pL4Fc34ovRb8K8OmfG/7X0QjPlkRgSe7Us2KWGqn5EJk7yQKqxjTSUgDZw3RisuZTFxpazbwBzTrP46Vah5UlqijvvUZnnVgQBi4BvfsuTHogKiAshBqBvoGZ636VJjTd1jTPqj/14d1DzvpSgUKx1sOgbyvVnq05m1srINXFKmXTO3I1I/IJC4ENGeYh0IDSL5jAAhXa4hranoe51/e1zeAU9y3DPUU6J6et0jU9r5poGkNMcJ4w5cwDQ1FJWCvjC9yljfyYIvydbD/jHV5fyKSjf/F3/BTRFpF3i5S4NXolWkDBd2dlYAB1k3RSHSwibnqFYTNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EqQ3PfO4lTFtQEE/pauAjtgGHv3nmXuntFu1goRmARE=;
- b=Hq4IaKnltB6WLkR8VSXpJqzHEQ41rcilILKGhtsA+mniFNeOAKs8oLdI02wmg3354IRXRDG1djQGOClfZpTNN8m2hfPaCzVEOIcXedEObo4RiaVc9z9oiaWlsf+q5tFGtmZUJ8YpeOJKpj1inmi5AzHgCH8jMs2PZoTz+ZqBLUk=
-Received: from VE1PR04MB6768.eurprd04.prod.outlook.com (2603:10a6:803:129::26)
- by VI1PR04MB4543.eurprd04.prod.outlook.com (2603:10a6:803:6e::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Thu, 27 Aug
- 2020 07:55:31 +0000
-Received: from VE1PR04MB6768.eurprd04.prod.outlook.com
- ([fe80::9149:1826:669a:4d6f]) by VE1PR04MB6768.eurprd04.prod.outlook.com
- ([fe80::9149:1826:669a:4d6f%7]) with mapi id 15.20.3326.021; Thu, 27 Aug 2020
- 07:55:31 +0000
-From:   Qiang Zhao <qiang.zhao@nxp.com>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>
-CC:     "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] watchdog: sbsa_gwdt: add shutdown hook to driver
-Thread-Topic: [PATCH] watchdog: sbsa_gwdt: add shutdown hook to driver
-Thread-Index: AQHWefAjnrqJazWM50KAGHPpwcHNk6lHQSuAgARYKyA=
-Date:   Thu, 27 Aug 2020 07:55:31 +0000
-Message-ID: <VE1PR04MB67681C26D81E855A152043BE91550@VE1PR04MB6768.eurprd04.prod.outlook.com>
-References: <20200824081804.23206-1-qiang.zhao@nxp.com>
- <cdfd0c4d-3433-f952-0e49-ebc0f7474e1a@roeck-us.net>
-In-Reply-To: <cdfd0c4d-3433-f952-0e49-ebc0f7474e1a@roeck-us.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: roeck-us.net; dkim=none (message not signed)
- header.d=none;roeck-us.net; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e1de29fe-d48c-4bb0-e012-08d84a5e9272
-x-ms-traffictypediagnostic: VI1PR04MB4543:
-x-microsoft-antispam-prvs: <VI1PR04MB454352DFACAAF0D335A4D62091550@VI1PR04MB4543.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aBPIF7aM1UN1zI21LXY+lQPxpS9si2x8qYShzoCtiPK/FBc07lJDLfjKnALsk3z1m+/VxoZ8XLrVp/nqNXwafx4oaP42QedJ3r0fpTYcj66C1iJCOZHXmTK9/acB46RcFEJTZtldX2YXMZNIy+CN8YIdD4oO/E1zePVU7LrJBdk/3gCHPX/4n/VTDIRttHaBeykBBxye1SU6p9weWHGYzs6xTEJmwII2wuWNpz2Hbrw8wkP+/QQ2GJb8xNJmifCnfdggxhLKQq7H6/QfHz7BOZwhGhEmDEiMWK7MeSeUn8fdMvr8A7RDbEFJC9U7leL2GshqSPkEow3TYtkjKRoyLA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6768.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(396003)(136003)(39860400002)(346002)(366004)(55016002)(33656002)(26005)(9686003)(8676002)(5660300002)(83380400001)(478600001)(186003)(76116006)(44832011)(66946007)(66446008)(66476007)(4744005)(64756008)(8936002)(66556008)(316002)(54906003)(53546011)(6506007)(110136005)(2906002)(86362001)(52536014)(71200400001)(4326008)(7696005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: MfW+JLyurTaKxJHGcVrJwL7L9a454QfF3C57YyMdBbV7zBVZT2WXGeUVHmsWcpDoAK6IHmOpJFSZnsP1xOYsftr6RS9u78fA5AJ0LuftEQiZxhpUh4jJtuVvPS7WQWPVLMzoK39+dma2OVyvTWN3fEKpLqngxMADy19uughtOlxVYIbLFQRhr1kBLEi3Ke1GIP9nc1a3l+n5ahK9Tj3DUhwfDS+KQJHXboby7nd5kVJCW3iCAoKLqNK2WXFZuLy4fuBaQyJQ3auTXxAJYAW2g52DmKEcwq8+RW0xW6a2zIOLfbEO3uwoyP9CCSoSgpPtbl+mZMaXWx2lKVLD3LL0rNDjGIlKAQEOY1zHiJFf8dUVOSTEKgvMaMQWha+u6qaxfoYtjUXBedKIgzF7gYdCLzK0ML7Je7ZJvh+a2fProZVYNx41pmRTnHooF7ZuHwLBKutZDfg/5ulqro76iz4RUAehXtKRGtLmpwP1NFhgdA7yiPj3jxCk63grFF/WDtBqX9+xJgoY7+KJkImrMTQ+Vd4sfKv/Q9Ybgp1xefjWBscEIEdFqmtVUwOrKPZuhiKhOlbSKUe6huMhAD+eBVboHJb3+YTu4ZI8af6F0GjVd6FV61oCrONKNDHX6ajJS2qFXy7wl1wGUUj46RsAez/m/w==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 27 Aug 2020 03:56:11 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:36776 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728424AbgH0Hyb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:54:31 -0400
+Date:   Thu, 27 Aug 2020 07:54:27 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598514868;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VwNDj4exCKcgi5b6FbBTzc0tc0/z7gQN+SMC+eABkek=;
+        b=g+k8o1Eh36LskHP/WK36boWbU/5de9dqGElNELhLvXOq+vbIpZMTSq32QbCjLVD7mjjmi6
+        sYDuPckUz9QgRh3/sfLluLv/mq0RRlUuVYMCzXgKZ/m6rhENeX2n2geardALkt5gDO8Urt
+        VhLoC7dtY2ofydBI4k3wSqcJOWP309rxE/V8ux8Y3LPTZ1mslPtuJNEBXkp8rfA6RoZeK2
+        vwd59KkGGAiXubO4bGe1Wp7Sf5NcpYNFvtYWhCHA/XRNiY6OwVPg0vniMFddR23xTwMFd6
+        Ub27tYAVptXgHXJagjM1VNIMo1kWshiMTrDAJEAQg5oakLA3mfj/smVrR4Dtkw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598514868;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VwNDj4exCKcgi5b6FbBTzc0tc0/z7gQN+SMC+eABkek=;
+        b=0Rod2lJBJUAv9rfU3yZ4m7Z8r412tbJRBv1yBU6NXEwkXYpssHOgwacHRaLCG45rwWh9RE
+        /ET66hGZ2XgczuBw==
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/core] cpuidle: Make CPUIDLE_FLAG_TLB_FLUSHED generic
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Marco Elver <elver@google.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200821085348.369441600@infradead.org>
+References: <20200821085348.369441600@infradead.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6768.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e1de29fe-d48c-4bb0-e012-08d84a5e9272
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Aug 2020 07:55:31.5609
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: v3wHE1JFw+d9uvqAuE/oWGDCD37e2adUIi6Rylam98HWyN99PnkOJUHb0wpT/k3yVb5CGo2/DMXiCgYk51Xo9Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4543
+Message-ID: <159851486767.20229.4562609465121962731.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gOC8yNC8yMCAyMToyOSBBTSwgR3VlbnRlciBSb2VjayA8bGludXhAcm9lY2stdXMubmV0PiB3
-cm90ZToNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHdWVudGVyIFJv
-ZWNrIDxncm9lY2s3QGdtYWlsLmNvbT4gT24gQmVoYWxmIE9mIEd1ZW50ZXIgUm9lY2sNCj4gU2Vu
-dDogMjAyMOW5tDjmnIgyNOaXpSAyMToyOQ0KPiBUbzogUWlhbmcgWmhhbyA8cWlhbmcuemhhb0Bu
-eHAuY29tPjsgd2ltQGxpbnV4LXdhdGNoZG9nLm9yZw0KPiBDYzogbGludXgtd2F0Y2hkb2dAdmdl
-ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0hdIHdhdGNoZG9nOiBzYnNhX2d3ZHQ6IGFkZCBzaHV0ZG93biBob29rIHRvIGRyaXZl
-cg0KPiANCj4gT24gOC8yNC8yMCAxOjE4IEFNLCBRaWFuZyBaaGFvIHdyb3RlOg0KPiA+IEZyb206
-IFpoYW8gUWlhbmcgPHFpYW5nLnpoYW9AbnhwLmNvbT4NCj4gPg0KPiA+IEtleGVjIG1heWJlIG5l
-ZWQgbW9yZSB0aW1lIHRoYW4gdGltZW91dCBvZiB3ZHQoc2JzYSkgd2hpY2ggd2lsbCByZXNldA0K
-PiA+IHRoZSBzeXN0ZW0uDQo+ID4gU28gaXQgaXMgbmVjZXNzYXJ5IHRvIGFkZCBzaHV0ZG93biBo
-b29rIHRvIGRpc2FibGUgdGhlIHdkdCB3aGVuIHJ1bg0KPiA+IGtleGVjLg0KPiA+DQo+IA0KPiBQ
-bGVhc2UgZXhwbGFpbiB3aHkgd2F0Y2hkb2dfc3RvcF9vbl9yZWJvb3QoKSBkb2VzIG5vdCB3b3Jr
-Lg0KPiANCg0KVGhhbmsgeW91IGZvciB5b3VyIGNvbW1lbnRzLCBpdCBpcyBoZWxwZnVsLg0KSSBp
-bnZlc3RpZ2F0ZSB0aGlzIGlzc3VlIGFnYWluLCBmb3VuZCB0aGF0IHRoaXMgd2F0Y2hkb2cgYXJl
-IGVuYWJsZWQgYnkgdWJvb3QsDQpNZWFud2hpbGUgaW4ga2VybmVsLCBpdCBpcyBub3QgdGhlIGRl
-ZmF1bHQgd2F0Y2hkb2csIGluIGFub3RoZXIgd29yZHMsIGl0IGlzIG5vdCBhY3RpdmUgaW4ga2Vy
-bmVsLg0KU28gd2F0Y2hkb2dfc3RvcF9vbl9yZWJvb3QoKSBkb2VzIG5vdCB3b3JrLg0KVGhpcyBw
-YXRjaCBpcyBub3QgdGhlIHJpZ2h0IHNvbHV0aW9uIGZvciB0aGUgc2l0dWF0aW9uLCBJIHdpbGwg
-YWJhbmRvbiBpdC4gDQoNCkJlc3QgUmVnYXJkcw0KUWlhbmcgWmhhbw0K
+The following commit has been merged into the locking/core branch of tip:
+
+Commit-ID:     bf9282dc26e7fe2a0736edc568762f0f05d12416
+Gitweb:        https://git.kernel.org/tip/bf9282dc26e7fe2a0736edc568762f0f05d12416
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Wed, 12 Aug 2020 12:22:17 +02:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 26 Aug 2020 12:41:53 +02:00
+
+cpuidle: Make CPUIDLE_FLAG_TLB_FLUSHED generic
+
+This allows moving the leave_mm() call into generic code before
+rcu_idle_enter(). Gets rid of more trace_*_rcuidle() users.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Tested-by: Marco Elver <elver@google.com>
+Link: https://lkml.kernel.org/r/20200821085348.369441600@infradead.org
+---
+ arch/x86/include/asm/mmu.h  |  1 +
+ arch/x86/mm/tlb.c           | 13 ++-----------
+ drivers/cpuidle/cpuidle.c   |  4 ++++
+ drivers/idle/intel_idle.c   | 16 ----------------
+ include/linux/cpuidle.h     | 13 +++++++------
+ include/linux/mmu_context.h |  5 +++++
+ 6 files changed, 19 insertions(+), 33 deletions(-)
+
+diff --git a/arch/x86/include/asm/mmu.h b/arch/x86/include/asm/mmu.h
+index 0a301ad..9257667 100644
+--- a/arch/x86/include/asm/mmu.h
++++ b/arch/x86/include/asm/mmu.h
+@@ -59,5 +59,6 @@ typedef struct {
+ 	}
+ 
+ void leave_mm(int cpu);
++#define leave_mm leave_mm
+ 
+ #endif /* _ASM_X86_MMU_H */
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 1a3569b..0951b47 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -555,21 +555,12 @@ void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
+ 		this_cpu_write(cpu_tlbstate.ctxs[new_asid].tlb_gen, next_tlb_gen);
+ 		load_new_mm_cr3(next->pgd, new_asid, true);
+ 
+-		/*
+-		 * NB: This gets called via leave_mm() in the idle path
+-		 * where RCU functions differently.  Tracing normally
+-		 * uses RCU, so we need to use the _rcuidle variant.
+-		 *
+-		 * (There is no good reason for this.  The idle code should
+-		 *  be rearranged to call this before rcu_idle_enter().)
+-		 */
+-		trace_tlb_flush_rcuidle(TLB_FLUSH_ON_TASK_SWITCH, TLB_FLUSH_ALL);
++		trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, TLB_FLUSH_ALL);
+ 	} else {
+ 		/* The new ASID is already up to date. */
+ 		load_new_mm_cr3(next->pgd, new_asid, false);
+ 
+-		/* See above wrt _rcuidle. */
+-		trace_tlb_flush_rcuidle(TLB_FLUSH_ON_TASK_SWITCH, 0);
++		trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, 0);
+ 	}
+ 
+ 	/* Make sure we write CR3 before loaded_mm. */
+diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+index 9bcda41..04becd7 100644
+--- a/drivers/cpuidle/cpuidle.c
++++ b/drivers/cpuidle/cpuidle.c
+@@ -22,6 +22,7 @@
+ #include <linux/module.h>
+ #include <linux/suspend.h>
+ #include <linux/tick.h>
++#include <linux/mmu_context.h>
+ #include <trace/events/power.h>
+ 
+ #include "cpuidle.h"
+@@ -228,6 +229,9 @@ int cpuidle_enter_state(struct cpuidle_device *dev, struct cpuidle_driver *drv,
+ 		broadcast = false;
+ 	}
+ 
++	if (target_state->flags & CPUIDLE_FLAG_TLB_FLUSHED)
++		leave_mm(dev->cpu);
++
+ 	/* Take note of the planned idle state. */
+ 	sched_idle_set_state(target_state);
+ 
+diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+index 8e0fb1a..9a810e4 100644
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -90,14 +90,6 @@ static unsigned int mwait_substates __initdata;
+ #define CPUIDLE_FLAG_ALWAYS_ENABLE	BIT(15)
+ 
+ /*
+- * Set this flag for states where the HW flushes the TLB for us
+- * and so we don't need cross-calls to keep it consistent.
+- * If this flag is set, SW flushes the TLB, so even if the
+- * HW doesn't do the flushing, this flag is safe to use.
+- */
+-#define CPUIDLE_FLAG_TLB_FLUSHED	BIT(16)
+-
+-/*
+  * MWAIT takes an 8-bit "hint" in EAX "suggesting"
+  * the C-state (top nibble) and sub-state (bottom nibble)
+  * 0x00 means "MWAIT(C1)", 0x10 means "MWAIT(C2)" etc.
+@@ -131,14 +123,6 @@ static __cpuidle int intel_idle(struct cpuidle_device *dev,
+ 	unsigned long eax = flg2MWAIT(state->flags);
+ 	unsigned long ecx = 1; /* break on interrupt flag */
+ 	bool tick;
+-	int cpu = smp_processor_id();
+-
+-	/*
+-	 * leave_mm() to avoid costly and often unnecessary wakeups
+-	 * for flushing the user TLB's associated with the active mm.
+-	 */
+-	if (state->flags & CPUIDLE_FLAG_TLB_FLUSHED)
+-		leave_mm(cpu);
+ 
+ 	if (!static_cpu_has(X86_FEATURE_ARAT)) {
+ 		/*
+diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+index b65909a..75895e6 100644
+--- a/include/linux/cpuidle.h
++++ b/include/linux/cpuidle.h
+@@ -75,12 +75,13 @@ struct cpuidle_state {
+ };
+ 
+ /* Idle State Flags */
+-#define CPUIDLE_FLAG_NONE       (0x00)
+-#define CPUIDLE_FLAG_POLLING	BIT(0) /* polling state */
+-#define CPUIDLE_FLAG_COUPLED	BIT(1) /* state applies to multiple cpus */
+-#define CPUIDLE_FLAG_TIMER_STOP BIT(2) /* timer is stopped on this state */
+-#define CPUIDLE_FLAG_UNUSABLE	BIT(3) /* avoid using this state */
+-#define CPUIDLE_FLAG_OFF	BIT(4) /* disable this state by default */
++#define CPUIDLE_FLAG_NONE       	(0x00)
++#define CPUIDLE_FLAG_POLLING		BIT(0) /* polling state */
++#define CPUIDLE_FLAG_COUPLED		BIT(1) /* state applies to multiple cpus */
++#define CPUIDLE_FLAG_TIMER_STOP 	BIT(2) /* timer is stopped on this state */
++#define CPUIDLE_FLAG_UNUSABLE		BIT(3) /* avoid using this state */
++#define CPUIDLE_FLAG_OFF		BIT(4) /* disable this state by default */
++#define CPUIDLE_FLAG_TLB_FLUSHED	BIT(5) /* idle-state flushes TLBs */
+ 
+ struct cpuidle_device_kobj;
+ struct cpuidle_state_kobj;
+diff --git a/include/linux/mmu_context.h b/include/linux/mmu_context.h
+index c51a841..03dee12 100644
+--- a/include/linux/mmu_context.h
++++ b/include/linux/mmu_context.h
+@@ -3,10 +3,15 @@
+ #define _LINUX_MMU_CONTEXT_H
+ 
+ #include <asm/mmu_context.h>
++#include <asm/mmu.h>
+ 
+ /* Architectures that care about IRQ state in switch_mm can override this. */
+ #ifndef switch_mm_irqs_off
+ # define switch_mm_irqs_off switch_mm
+ #endif
+ 
++#ifndef leave_mm
++static inline void leave_mm(int cpu) { }
++#endif
++
+ #endif
