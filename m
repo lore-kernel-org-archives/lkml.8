@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23461C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C06C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF60E22BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7CE42087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598554762;
-	bh=oefuxCdTWcUVkgR+QTDMbysB6a2BMg5jP1BMM4MlPAQ=;
+	s=default; t=1598554764;
+	bh=E/Nqu7k08v69pmYNgRfgpit87lGs45F9vZiVl/29fKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aKPFmljk8zP5Jv1fB4B4muX21EHKGgZgmFd4Xt0Wium/hBVA9CJ1ToA/VtWR23hmO
-	 88O0/+aU1atLX0eBQlZrr2763dkqzd/QvzyspKkQSr/VzKlWH8PQx62QYV2HIunLXe
-	 pRv4dSBDywbxo1MXJKwQpdqV8/DcW66cKld1A0ZA=
+	b=lOwqdeZOXritq/2RsMG4N93gZ8wHrq8bfQFgMlEhgzbzed26R0vWL+bvQukjyD+gV
+	 wYKQIQb6w/edqnFmTfg0gb5p8EYxRoWctXVc9lHd+Lbcugb+di/MO0kIEhz/CvPrun
+	 MDL09ltOVhiZZ8eodbn/j7O+AGKqfs3+aJQjuHJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgH0S7V (ORCPT
+        id S1728077AbgH0S7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:59:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49460 "EHLO mail.kernel.org"
+        Thu, 27 Aug 2020 14:59:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728035AbgH0S7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:59:16 -0400
+        id S1728051AbgH0S7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 14:59:19 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3FF022BEB;
-        Thu, 27 Aug 2020 18:59:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DF6522BEA;
+        Thu, 27 Aug 2020 18:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598554755;
-        bh=oefuxCdTWcUVkgR+QTDMbysB6a2BMg5jP1BMM4MlPAQ=;
+        s=default; t=1598554758;
+        bh=E/Nqu7k08v69pmYNgRfgpit87lGs45F9vZiVl/29fKk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z/sQfpSo7FWbJ1e7nO0cc5ELrY71M4qw9gq+zL5IWGl2LIHkck1DuJp0tfK64WHgk
-         sdS27aigrd1TaES47boxYWQCPRYu5dvQnuiiqsvj1Nv1fDMldOnndm3lPCkVEZzO/D
-         qYjESQffZNPQ24XZuSs5xQr65MTB0NBSO9E+7nuU=
+        b=Hadf1zyBhyuvwF6HlnRT6CWcw3uccgLCRNPwEn/21cy/oAfLzxahL6ff10c3qh/TU
+         kfcqCx3hdEm1oPPWznU0kyRcJXR04ZBldWzEFS54dBplZPC5x4k7G3soobrkuMjsYY
+         VKFl8b5cN8mLjcSzxlLq3oTMVsfG1SHBmKquMLGI=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -52,9 +52,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         clang-built-linux@googlegroups.com
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 10/27] Input: cy8ctma140 - Simplify with dev_err_probe()
-Date:   Thu, 27 Aug 2020 20:58:12 +0200
-Message-Id: <20200827185829.30096-11-krzk@kernel.org>
+Subject: [PATCH v3 11/27] Input: edf-ft5x06 - Simplify with dev_err_probe()
+Date:   Thu, 27 Aug 2020 20:58:13 +0200
+Message-Id: <20200827185829.30096-12-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200827185829.30096-1-krzk@kernel.org>
 References: <20200827185829.30096-1-krzk@kernel.org>
@@ -70,28 +70,30 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/input/touchscreen/cy8ctma140.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/input/touchscreen/edt-ft5x06.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/input/touchscreen/cy8ctma140.c b/drivers/input/touchscreen/cy8ctma140.c
-index a9be29139cbf..23da5bb00ead 100644
---- a/drivers/input/touchscreen/cy8ctma140.c
-+++ b/drivers/input/touchscreen/cy8ctma140.c
-@@ -259,12 +259,8 @@ static int cy8ctma140_probe(struct i2c_client *client,
- 	ts->regulators[1].supply = "vdd";
- 	error = devm_regulator_bulk_get(dev, ARRAY_SIZE(ts->regulators),
- 				      ts->regulators);
--	if (error) {
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index 6ff81d48da86..d4827ac963b0 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -1098,13 +1098,9 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+ 	tsdata->max_support_points = chip_data->max_support_points;
+ 
+ 	tsdata->vcc = devm_regulator_get(&client->dev, "vcc");
+-	if (IS_ERR(tsdata->vcc)) {
+-		error = PTR_ERR(tsdata->vcc);
 -		if (error != -EPROBE_DEFER)
--			dev_err(dev, "Failed to get regulators %d\n",
--				error);
+-			dev_err(&client->dev,
+-				"failed to request regulator: %d\n", error);
 -		return error;
 -	}
-+	if (error)
-+		return dev_err_probe(dev, error, "Failed to get regulators\n");
++	if (IS_ERR(tsdata->vcc))
++		return dev_err_probe(&client->dev, PTR_ERR(tsdata->vcc),
++				     "failed to request regulator\n");
  
- 	error = cy8ctma140_power_up(ts);
- 	if (error)
+ 	error = regulator_enable(tsdata->vcc);
+ 	if (error < 0) {
 -- 
 2.17.1
 
