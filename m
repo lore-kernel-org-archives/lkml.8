@@ -2,138 +2,208 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E295C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A28EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28BC422B4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14EA322B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 14:53:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SzqCyDHm"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="FSWu/Chr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgH0Owy (ORCPT
+        id S1727881AbgH0NSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:52:54 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55178 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbgH0NVm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:21:42 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07RDLL32051660;
-        Thu, 27 Aug 2020 08:21:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598534481;
-        bh=jcZmBfUXVLDbmP9+jachlmxqxGc7XxXtsRG81uIPyOc=;
-        h=From:To:Subject:Date;
-        b=SzqCyDHmBO2/C3U30I0112wCgCfaHCnbscxSsxiJFpWyQJ29kACluLvsyPdoZme/E
-         T8VSmxq0RJanT7Ca8gDvE1QUO8BzfvGjzgMwlPgsTc2ls+jcKotzckur082i8pyF8z
-         rPAIZ/jPIFyae6u3Hc+y5Hm3es6TFf6RwNqZFT0E=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07RDLLHU025533;
-        Thu, 27 Aug 2020 08:21:21 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 27
- Aug 2020 08:21:20 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 27 Aug 2020 08:21:20 -0500
-Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07RDLJJo113730;
-        Thu, 27 Aug 2020 08:21:19 -0500
-From:   Murali Karicheri <m-karicheri2@ti.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>,
-        <grygorii.strashko@ti.com>, <nsekhar@ti.com>,
-        <linux-omap@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net v4] net: ethernet: ti: cpsw_new: fix error handling in cpsw_ndo_vlan_rx_kill_vid()
-Date:   Thu, 27 Aug 2020 09:21:18 -0400
-Message-ID: <20200827132118.31768-1-m-karicheri2@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 27 Aug 2020 09:18:25 -0400
+Received: from crapouillou.net ([89.234.176.41]:37006 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727781AbgH0NMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 09:12:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1598533920; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Mq/0F8UbeXY3Pqih2k8p1w6/ERNeaq1vUKEH8bis0Sc=;
+        b=FSWu/ChrO6m3aqF4WvOluzzLTotjPD5+xJiLy1DDHnA09hWuOS5dVkh66xV9kJMZeSDI+U
+        idrPUynBOLcgq0XA+R5pgDVxeUQGLG60K9ITh9B64onMPNYytRUchw+RW8XPSSiQcOTnvo
+        gMXosxaVspVpJtfHDWebqzuQ5ql4c/8=
+Date:   Thu, 27 Aug 2020 15:11:49 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/1] USB: PHY: JZ4770: Fix uninitialized value written to
+ HW register
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
+        =?UTF-8?b?5ZGo5q2j?= <sernia.zhou@foxmail.com>,
+        =?UTF-8?b?5ryG6bmP5oyv?= <aric.pzqi@ingenic.com>, od@zcrc.me,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-Id: <PN4QFQ.KWNBY2ZWQ7XC2@crapouillou.net>
+In-Reply-To: <87v9h4i6t5.fsf@kernel.org>
+References: <20200827124308.71963-1-paul@crapouillou.net>
+        <20200827124308.71963-2-paul@crapouillou.net> <87v9h4i6t5.fsf@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes a bunch of issues in cpsw_ndo_vlan_rx_kill_vid()
+Hi Felipe,
 
- - pm_runtime_get_sync() returns non zero value. This results in
-   non zero value return to caller which will be interpreted as error.
-   So overwrite ret with zero.
- - If VID matches with port VLAN VID, then set error code.
- - Currently when VLAN interface is deleted, all of the VLAN mc addresses
-   are removed from ALE table, however the return values from ale function
-   calls are not checked. These functions can return error code -ENOENT.
-   But that shouldn't happen in a normal case. So add error print to
-   catch the situations so that these can be investigated and addressed.
-   return zero in these cases as these are not real error case, but only
-   serve to catch ALE table update related issues and help address the
-   same in the driver.
+Le jeu. 27 ao=FBt 2020 =E0 15:58, Felipe Balbi <balbi@kernel.org> a=20
+=E9crit :
+>=20
+> Hi,
+>=20
+> Paul Cercueil <paul@crapouillou.net> writes:
+>>  The 'reg' value was written to a hardware register in
+>>  ingenic_usb_phy_init(), while not being initialized anywhere.
+>=20
+> your patch does a lot more than fix the bug :-)
+>=20
+>>  Fixes: 2a6c0b82e651 ("USB: PHY: JZ4770: Add support for new Ingenic=20
+>> SoCs.")
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>   drivers/usb/phy/phy-jz4770.c | 28 +++++++++++-----------------
+>>   1 file changed, 11 insertions(+), 17 deletions(-)
+>>=20
+>>  diff --git a/drivers/usb/phy/phy-jz4770.c=20
+>> b/drivers/usb/phy/phy-jz4770.c
+>>  index d4ee3cb721ea..58771a8688f2 100644
+>>  --- a/drivers/usb/phy/phy-jz4770.c
+>>  +++ b/drivers/usb/phy/phy-jz4770.c
+>>  @@ -97,7 +97,7 @@ enum ingenic_usb_phy_version {
+>>   struct ingenic_soc_info {
+>>   	enum ingenic_usb_phy_version version;
+>>=20
+>>  -	void (*usb_phy_init)(struct usb_phy *phy);
+>>  +	u32 (*usb_phy_init)(struct usb_phy *phy);
+>=20
+> this is not fixing any bug
+>=20
+>>  @@ -172,7 +172,8 @@ static int ingenic_usb_phy_init(struct usb_phy=20
+>> *phy)
+>>   		return err;
+>>   	}
+>>=20
+>>  -	priv->soc_info->usb_phy_init(phy);
+>>  +	reg =3D priv->soc_info->usb_phy_init(phy);
+>>  +	writel(reg, priv->base + REG_USBPCR_OFFSET);
+>=20
+> not fixing any bug.
+>=20
+> Looking at the code, the bug follows after this line. It would suffice
+> to read REG_USBPCR_OFFSET in order to initialize reg. This bug fix=20
+> could
+> have been a one liner.
 
-Fixes: ed3525eda4c4 ("net: ethernet: ti: introduce cpsw switchdev based driver part 1 - dual-emac")
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- v4 - updated error message with name of the function failed.
- v3 - updated commit description to describe error check related to
-      port vlan VID
- v2 - updated comments from Grygorii, also return error code if VID
- drivers/net/ethernet/ti/cpsw_new.c | 27 +++++++++++++++++++++------
- 1 file changed, 21 insertions(+), 6 deletions(-)
+There's no need to re-read a register when you have the value readily=20
+available. It just needs to be returned from the usb_phy_init=20
+callbacks. But yes, it's not a one-liner.
 
-diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
-index 8d0a2bc7128d..8ed78577cded 100644
---- a/drivers/net/ethernet/ti/cpsw_new.c
-+++ b/drivers/net/ethernet/ti/cpsw_new.c
-@@ -1032,19 +1032,34 @@ static int cpsw_ndo_vlan_rx_kill_vid(struct net_device *ndev,
- 		return ret;
- 	}
- 
-+	/* reset the return code as pm_runtime_get_sync() can return
-+	 * non zero values as well.
-+	 */
-+	ret = 0;
- 	for (i = 0; i < cpsw->data.slaves; i++) {
- 		if (cpsw->slaves[i].ndev &&
--		    vid == cpsw->slaves[i].port_vlan)
-+		    vid == cpsw->slaves[i].port_vlan) {
-+			ret = -EINVAL;
- 			goto err;
-+		}
- 	}
- 
- 	dev_dbg(priv->dev, "removing vlanid %d from vlan filter\n", vid);
--	cpsw_ale_del_vlan(cpsw->ale, vid, 0);
--	cpsw_ale_del_ucast(cpsw->ale, priv->mac_addr,
--			   HOST_PORT_NUM, ALE_VLAN, vid);
--	cpsw_ale_del_mcast(cpsw->ale, priv->ndev->broadcast,
--			   0, ALE_VLAN, vid);
-+	ret = cpsw_ale_del_vlan(cpsw->ale, vid, 0);
-+	if (ret)
-+		dev_err(priv->dev, "cpsw_ale_del_vlan() failed: ret %d\n", ret);
-+	ret = cpsw_ale_del_ucast(cpsw->ale, priv->mac_addr,
-+				 HOST_PORT_NUM, ALE_VLAN, vid);
-+	if (ret)
-+		dev_err(priv->dev, "cpsw_ale_del_ucast() failed: ret %d\n",
-+			ret);
-+	ret = cpsw_ale_del_mcast(cpsw->ale, priv->ndev->broadcast,
-+				 0, ALE_VLAN, vid);
-+	if (ret)
-+		dev_err(priv->dev, "cpsw_ale_del_mcast failed. ret %d\n",
-+			ret);
- 	cpsw_ale_flush_multicast(cpsw->ale, ALE_PORT_HOST, vid);
-+	ret = 0;
- err:
- 	pm_runtime_put(cpsw->dev);
- 	return ret;
--- 
-2.17.1
+>=20
+>>  @@ -195,19 +196,15 @@ static void ingenic_usb_phy_remove(void *phy)
+>>   	usb_remove_phy(phy);
+>>   }
+>>=20
+>>  -static void jz4770_usb_phy_init(struct usb_phy *phy)
+>>  +static u32 jz4770_usb_phy_init(struct usb_phy *phy)
+>=20
+> not a bug fix
+>=20
+>>   {
+>>  -	struct jz4770_phy *priv =3D phy_to_jz4770_phy(phy);
+>>  -	u32 reg;
+>>  -
+>>  -	reg =3D USBPCR_AVLD_REG | USBPCR_COMMONONN | USBPCR_IDPULLUP_ALWAYS=20
+>> |
+>>  +	return USBPCR_AVLD_REG | USBPCR_COMMONONN |=20
+>> USBPCR_IDPULLUP_ALWAYS |
+>>   		USBPCR_COMPDISTUNE_DFT | USBPCR_OTGTUNE_DFT |=20
+>> USBPCR_SQRXTUNE_DFT |
+>>   		USBPCR_TXFSLSTUNE_DFT | USBPCR_TXRISETUNE_DFT |=20
+>> USBPCR_TXVREFTUNE_DFT |
+>>   		USBPCR_POR;
+>>  -	writel(reg, priv->base + REG_USBPCR_OFFSET);
+>=20
+> not a bug fix
+>=20
+>>   }
+>>=20
+>>  -static void jz4780_usb_phy_init(struct usb_phy *phy)
+>>  +static u32 jz4780_usb_phy_init(struct usb_phy *phy)
+>=20
+> not a bug fix
+>=20
+>>  @@ -216,11 +213,10 @@ static void jz4780_usb_phy_init(struct=20
+>> usb_phy *phy)
+>>   		USBPCR1_WORD_IF_16BIT;
+>>   	writel(reg, priv->base + REG_USBPCR1_OFFSET);
+>>=20
+>>  -	reg =3D USBPCR_TXPREEMPHTUNE | USBPCR_COMMONONN | USBPCR_POR;
+>>  -	writel(reg, priv->base + REG_USBPCR_OFFSET);
+>>  +	return USBPCR_TXPREEMPHTUNE | USBPCR_COMMONONN | USBPCR_POR;
+>=20
+> not a bug fix
+>=20
+>>   }
+>>=20
+>>  -static void x1000_usb_phy_init(struct usb_phy *phy)
+>>  +static u32 x1000_usb_phy_init(struct usb_phy *phy)
+>=20
+> not a bug fix
+>=20
+>>   {
+>>   	struct jz4770_phy *priv =3D phy_to_jz4770_phy(phy);
+>>   	u32 reg;
+>>  @@ -228,13 +224,12 @@ static void x1000_usb_phy_init(struct usb_phy=20
+>> *phy)
+>>   	reg =3D readl(priv->base + REG_USBPCR1_OFFSET) |=20
+>> USBPCR1_WORD_IF_16BIT;
+>>   	writel(reg, priv->base + REG_USBPCR1_OFFSET);
+>>=20
+>>  -	reg =3D USBPCR_SQRXTUNE_DCR_20PCT | USBPCR_TXPREEMPHTUNE |
+>>  +	return USBPCR_SQRXTUNE_DCR_20PCT | USBPCR_TXPREEMPHTUNE |
+>>   		USBPCR_TXHSXVTUNE_DCR_15MV | USBPCR_TXVREFTUNE_INC_25PPT |
+>>   		USBPCR_COMMONONN | USBPCR_POR;
+>>  -	writel(reg, priv->base + REG_USBPCR_OFFSET);
+>=20
+> not a bug fix
+>=20
+>>   }
+>>=20
+>>  -static void x1830_usb_phy_init(struct usb_phy *phy)
+>>  +static u32 x1830_usb_phy_init(struct usb_phy *phy)
+>=20
+> not a bug fix
+>=20
+>>   {
+>>   	struct jz4770_phy *priv =3D phy_to_jz4770_phy(phy);
+>>   	u32 reg;
+>>  @@ -246,9 +241,8 @@ static void x1830_usb_phy_init(struct usb_phy=20
+>> *phy)
+>>   		USBPCR1_DMPD | USBPCR1_DPPD;
+>>   	writel(reg, priv->base + REG_USBPCR1_OFFSET);
+>>=20
+>>  -	reg =3D USBPCR_IDPULLUP_OTG | USBPCR_VBUSVLDEXT=20
+>> |	USBPCR_TXPREEMPHTUNE |
+>>  +	return USBPCR_IDPULLUP_OTG | USBPCR_VBUSVLDEXT |=20
+>> USBPCR_TXPREEMPHTUNE |
+>>   		USBPCR_COMMONONN | USBPCR_POR;
+>>  -	writel(reg, priv->base + REG_USBPCR_OFFSET);
+>=20
+> not a bug fix
+
+Well, if you don't like my bug fix, next time wait for my Reviewed-by.
+
+Cheers,
+-Paul
+
 
