@@ -2,94 +2,151 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EBCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7A820707
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731CC20707
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:14:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CzK5MevC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgH0TML (ORCPT
+        id S1727860AbgH0TOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:12:11 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:51453 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbgH0TML (ORCPT
+        Thu, 27 Aug 2020 15:14:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgH0TOj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:12:11 -0400
-Received: from mail-qt1-f173.google.com ([209.85.160.173]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MI5YN-1kQY180hEd-00F8cb; Thu, 27 Aug 2020 21:12:09 +0200
-Received: by mail-qt1-f173.google.com with SMTP id s16so5466633qtn.7;
-        Thu, 27 Aug 2020 12:12:08 -0700 (PDT)
-X-Gm-Message-State: AOAM530+E3lTESCOzfSjs0XQ8qMNRt/gseORMyI5ADU1CRZWf1jnqMX2
-        im7gz4j9w5E4FU662l7KXEi7oS3unZYHU2sCkiY=
-X-Google-Smtp-Source: ABdhPJw+EArXZgXPjTSlMpKXPTOCSg68mzTCJLgLPGwcSgT0kaAMa3+ESnArOyRY8vKEKWcSZ3Y3GojZIw9BZzhKPWI=
-X-Received: by 2002:ac8:4652:: with SMTP id f18mr19785013qto.142.1598555527951;
- Thu, 27 Aug 2020 12:12:07 -0700 (PDT)
+        Thu, 27 Aug 2020 15:14:39 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70962C061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 12:14:39 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id m200so3556333ybf.10
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 12:14:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8EbCOeZ1KrDUva8Qo9ruBWoAtdzcTodwXUPT6QjLJgQ=;
+        b=CzK5MevCoTJjSYEKsR6BXPClIs48eH9pjn6p7fKUCBn5JS6ZcYj7+wuJVw63jDYkJm
+         zWBhJ/lu6AJgQP7W+lQVNnVjfA1GhaNAwSoc/7j4N4ysvalHprcpTMCgTFCsERwCEK3J
+         ZlUkGW7sKCTG7SMpWyt6WwFMcHSZIDUuxWzSSVTJ29v8jeP2+3X070RVHhD2opTeQPIu
+         5hqe5nAc2dApnbSaGk9LbKUyUgf6e6bDL5xmrdM7Hc0WVjjAQOXFc9/rV2MZYCdAan9+
+         0wHMAE7RqUcmSgEQezkLSqEt+nozFbyVnJi0BzlX1QdVJrL37eqS7KWadSAmRYvSk+U/
+         ZaEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8EbCOeZ1KrDUva8Qo9ruBWoAtdzcTodwXUPT6QjLJgQ=;
+        b=OhfNcSceTNTL2dercxdmeY+i8Gd24pUayw7n5dUEowmRWs8qb/dc3BxkMQiK87PPhA
+         v6HAkOzxSHa21WZ+tcRxXJw7FkqhDe/uSXfWblI/b0KZkgXMePc7NqdL+6WbY0/4a1Ak
+         553FYoT7aEYULkLxR2VkoFdeHueDRR7skFifWDm8i3J93vwv6xu733/fJutxcZ2TG2LT
+         gy4yshfBW2T8iSZJyM32CuyoaEz8wAYXivNkaa1tUjcD+FAk2AhZccreoRb+r6vhOxMJ
+         9ecEvqlkqm7okj+F0MJkm1ml2figDTQZIoC4cy2lxOAKWBjoYhaXak1YAMUl1rQxUtK/
+         O1NA==
+X-Gm-Message-State: AOAM5332Vdv54xEt8SHWpYxKT7IYmDfQwJPTzHHOSBDETCKWnj6HgcIe
+        bjQUrSZCW510fnIhk1KgOvgJxxRiHTJqaoOJCVjlvA==
+X-Google-Smtp-Source: ABdhPJxkQYG/edhUcGiwy3weZ87oxUfXXeGP9hZPA0qzfNe8+TonDNIFV26AsiWzge2Pm7kQqIj8Thn+X/uM5A/BanI=
+X-Received: by 2002:a5b:744:: with SMTP id s4mr32088872ybq.26.1598555678461;
+ Thu, 27 Aug 2020 12:14:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <202008271145.xE8qIAjp%lkp@intel.com> <20200827080558.GA3024@gondor.apana.org.au>
- <CAMj1kXHJrLtnJWYBKBYRtNHVS6rv51+crMsjLEnSqkud0BBaWw@mail.gmail.com>
- <20200827082447.GA3185@gondor.apana.org.au> <CAHk-=wg2RCgmW_KM8Gf9-3VJW1K2-FTXQsGeGHirBFsG5zPbsg@mail.gmail.com>
- <CAHk-=wgXW=YLxGN0QVpp-1w5GDd2pf1W-FqY15poKzoVfik2qA@mail.gmail.com>
-In-Reply-To: <CAHk-=wgXW=YLxGN0QVpp-1w5GDd2pf1W-FqY15poKzoVfik2qA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 27 Aug 2020 21:11:52 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a10oUYQHrSu-2rsa_rVemz3K+NBQtsuazn=dBAntsx1cw@mail.gmail.com>
-Message-ID: <CAK8P3a10oUYQHrSu-2rsa_rVemz3K+NBQtsuazn=dBAntsx1cw@mail.gmail.com>
-Subject: Re: lib/crypto/chacha.c:65:1: warning: the frame size of 1604 bytes
- is larger than 1024 bytes
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
+References: <cover.1597425745.git.andreyknvl@google.com> <f173aacd755e4644485c551198549ac52d1eb650.1597425745.git.andreyknvl@google.com>
+ <20200827095429.GC29264@gaia> <CAAeHK+xHQDMsTehppknjNTEMFh18ufWB1XLUGdVFoc-QZ-mVrw@mail.gmail.com>
+ <20200827131045.GM29264@gaia> <CAAeHK+xraz7E41b4LW6VW9xOH51UoZ+odNEDrDGtaJ71n=bQ3A@mail.gmail.com>
+ <20200827145642.GO29264@gaia>
+In-Reply-To: <20200827145642.GO29264@gaia>
+From:   Evgenii Stepanov <eugenis@google.com>
+Date:   Thu, 27 Aug 2020 12:14:26 -0700
+Message-ID: <CAFKCwrhAPrognS7WtKXV-nJN-9k6BW+RWmM56z-urvbWepTAKg@mail.gmail.com>
+Subject: Re: [PATCH 21/35] arm64: mte: Add in-kernel tag fault handler
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
         Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kbuild-all@lists.01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Branislav Rankov <Branislav.Rankov@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:rTGqvJp83cJvMl7PXhpT5npUgzEZjaJBngQQyqMDgjCmE0/Gi70
- JqIMY3G8MLjBXxL86mdAzHXCwQhCF+2ZHcCr5bHBAetJpq8u26xxDYwor/BhGqVq16zfVce
- zQZTFwcroWzaeucxsyunge347rVzcy0kd6FN3MSXoFYpBa3E9zCrVTIyYggWAARGvkkkEYZ
- xg3QQcGtSWM3v3uBbUj3g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3VzedD9GP/Q=:FCHiPVRz5+gKVGDFVZ7H5o
- 8IwiKxJvOXhJ+g86BeUfEgLViezfCLzXSFO78+ZWcz/pZLkd5mpV5UY+Vz/O+4pmBbb1m3T6o
- LV3Qj58BER05K/BFX97uq0dmjHq30DsSySi/lEKD/zXl8VTA8IC5R0kSnKlBMnVvw7lCTREh/
- K53/hEjyeDS3pIrDSJdBr7TkFaqoOkPuqJP8dM5kktm2hmExMEbDOtX/TWhBzU/JpgXAPgGr7
- FZz+/tXO/PkJ2t+Th3JVZTJTZ+XWhVohrYaRTn6kR1R5XD49TfLf8H4dg37DW4NfYv/HsBGVW
- 4tQSOqGnqlN3d3Yx7V36qfIrCLisx2I8jbjtLMPtPVlK4IKORLAEC0T6a3RYmlfNhOhYzPtYA
- ijY6LRb/kaxmbgfYJOoCzyANxH58yjvRw6rT2xh3yoD93kDRPA444aIe0D8sr5B3DNwi9q45H
- sxU73vQwUytdfGh++AD1CucUW7XFmE9kSkuofwuEmmSt2ukmkTgAijm4o+aMFD6lBUZqBQPqL
- /MFRwRd5YzZnbk3RxcOpt7HcjLjWxYz4zLyShTSoQS1MkyaKDO3Fqi+mK16693o/28bVadNzo
- BLcpb3BVOQ+vmF43POb8vG8xHNSIuV/tKpY3HrbkEtBxesRPj+EDeMfAFJLO2Vz4gYkLMFhG+
- lyHdTjOg0cKV6GlDFXDkONbBbSH9bViqZpTHuEwU8DcDhF/itLigNxpU1sR1Zfv+vHYt9XtFo
- 897+tgSq1IY+WDVyaiIlP/WUvCtDZes5vF2x0QsTtrEZXliB7quwZwF+KBDjcR/HQE/4e53GI
- mpBO7WNTvOIp1jxXh4jGq+2olvVieAU+Gtnud9aNfWmqO8fVnurByFFoni0KuD/29OJd9LIFS
- kXbH0Tkg8ajN5V4KOraI7c+3a9hkAwxtTF5jIjLV8GhDtzwVvKG4zIKRqvJY7roDM6zISluHN
- kiC2bQn8FHnhnOkA6UL6LTuFieYY6q+qxuM47EthPg/C01MlbuvWH
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 7:55 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Thu, Aug 27, 2020 at 7:56 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
 >
-> On Thu, Aug 27, 2020 at 10:34 AM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
+> On Thu, Aug 27, 2020 at 03:34:42PM +0200, Andrey Konovalov wrote:
+> > On Thu, Aug 27, 2020 at 3:10 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > On Thu, Aug 27, 2020 at 02:31:23PM +0200, Andrey Konovalov wrote:
+> > > > On Thu, Aug 27, 2020 at 11:54 AM Catalin Marinas
+> > > > <catalin.marinas@arm.com> wrote:
+> > > > > On Fri, Aug 14, 2020 at 07:27:03PM +0200, Andrey Konovalov wrote:
+> > > > > > +static int do_tag_recovery(unsigned long addr, unsigned int esr,
+> > > > > > +                        struct pt_regs *regs)
+> > > > > > +{
+> > > > > > +     report_tag_fault(addr, esr, regs);
+> > > > > > +
+> > > > > > +     /* Skip over the faulting instruction and continue: */
+> > > > > > +     arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
+> > > > >
+> > > > > Ooooh, do we expect the kernel to still behave correctly after this? I
+> > > > > thought the recovery means disabling tag checking altogether and
+> > > > > restarting the instruction rather than skipping over it.
+> [...]
+> > > > Can we disable MTE, reexecute the instruction, and then reenable MTE,
+> > > > or something like that?
+> > >
+> > > If you want to preserve the MTE enabled, you could single-step the
+> > > instruction or execute it out of line, though it's a bit more convoluted
+> > > (we have a similar mechanism for kprobes/uprobes).
+> > >
+> > > Another option would be to attempt to set the matching tag in memory,
+> > > under the assumption that it is writable (if it's not, maybe it's fine
+> > > to panic). Not sure how this interacts with the slub allocator since,
+> > > presumably, the logical tag in the pointer is wrong rather than the
+> > > allocation one.
+> > >
+> > > Yet another option would be to change the tag in the register and
+> > > re-execute but this may confuse the compiler.
 > >
-> > How are you guys testing? I have UBSAN and GCOV on, and don't see
-> > crazy frames on either i386 or x86-64.
+> > Which one of these would be simpler to implement?
 >
-> Oh, never mind. I also have COMPILE_TEST on, so it ends up disabling
-> GCOV_PROFILE_ALL and UBSAN_SANITIZE_ALL.
+> Either 2 or 3 would be simpler (re-tag the memory location or the
+> pointer) with the caveats I mentioned. Also, does the slab allocator
+> need to touch the memory on free with a tagged pointer? Otherwise slab
+> may hit an MTE fault itself.
 
-Ah right, that explains why I never saw the warning in my randconfig
-build tests, I run those with COMPILE_TEST force-enabled.
+Changing the memory tag can cause faults in other threads, and that
+could be very confusing.
+Probably the safest thing is to retag the register, single step and
+then retag it back, but be careful with the instructions that change
+the address register (like ldr x0, [x0]).
 
-       Arnd
+>
+> > Perhaps we could somehow only skip faulting instructions that happen
+> > in the KASAN test module?.. Decoding stack trace would be an option,
+> > but that's a bit weird.
+>
+> If you want to restrict this to the KASAN tests, just add some
+> MTE-specific accessors with a fixup entry similar to get_user/put_user.
+> __do_kernel_fault() (if actually called) will invoke the fixup code
+> which skips the access and returns an error. This way KASAN tests can
+> actually verify that tag checking works, I'd find this a lot more
+> useful.
+>
+> --
+> Catalin
