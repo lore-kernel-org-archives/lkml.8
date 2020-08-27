@@ -2,104 +2,91 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C35C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0083C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 926F62078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:31:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nzua3Ghu"
+	by mail.kernel.org (Postfix) with ESMTP id 8E31D2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 02:31:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgH0Cbn (ORCPT
+        id S1727015AbgH0Cb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 22:31:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbgH0Cbm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 22:31:42 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE72CC0612A0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 19:31:42 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id t9so2298710pfq.8
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 19:31:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=49yMxH6diGPmKrZzMb69pa6ebAiIJKOxRAHVKeFG8KQ=;
-        b=nzua3Ghu75BXNzDuPG/7vO5dh7uJ+wvamCkqYZ6Fq6grznw9z+7sTkMwkDTQuOT4mj
-         RL4aM32wQphKxz3CI7fWgU/sart6GTa+UHZsfHuRlXDTaKiz1klAf9DBh311fRqDgxuK
-         96mOy2VPdz9/2Dr6Pfmy2OeA9ggwAP3xrxVRQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=49yMxH6diGPmKrZzMb69pa6ebAiIJKOxRAHVKeFG8KQ=;
-        b=HfVj0S8chr2va9ZTgIqM6NxqteRYyQcoQg31Jks3K5d0UX4lpKlMUqv4BWW4ANxcUw
-         4ojNoGtb7Ef3Td5LSzubSfRFoePpyH89Yzb7bltZXkBJY30bbJsMghgsmBqfjKhJghN8
-         TfUSlEsaxMF2xJ7zCE+yB2aCbfgA899g+Ld8jmWV316OwVItxS5iOubjc4xCtEgItd7S
-         wKrRXLtMl5ods5mIu06nDKi4d6HQue185qAKotXy0V8Fa9jYiIyaoUW0Qw2XyDgUxBTQ
-         D7tmsg7P0fVaYR2NoN/3AHcTdPXaUn+giqAvcW42Z3H3dkikhtZjj5avpMnn21xxoW50
-         GJmw==
-X-Gm-Message-State: AOAM5323CUQ4YXFDpfZoVa1A3WiXHTr80hPG4Qg86ZqB7bekSi/O8PGJ
-        eN8s4fkI0tdNoEwyPxJ5xHcwNw==
-X-Google-Smtp-Source: ABdhPJxdskc51Ch/jDcJnLOl2DbAFS3Bt9aQlYLddIvMn/PUy2yGf0YlhGNRnyFSFQt+q/WnlfNvng==
-X-Received: by 2002:a63:9a41:: with SMTP id e1mr10278787pgo.183.1598495502091;
-        Wed, 26 Aug 2020 19:31:42 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a1sm586212pfd.65.2020.08.26.19.31.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 19:31:41 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 19:31:40 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Allen Pais <allen.lkml@gmail.com>
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH] linux/kernel.h: add container_from()
-Message-ID: <202008261929.A50D0DB3E8@keescook>
-References: <20200827013636.149307-1-allen.lkml@gmail.com>
+        Wed, 26 Aug 2020 22:31:57 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:45328 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726826AbgH0Cb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 22:31:57 -0400
+Received: from [10.130.0.60] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj9wFG0dfEnYOAA--.427S3;
+        Thu, 27 Aug 2020 10:31:35 +0800 (CST)
+Subject: Re: [PATCH] MIPS: Loongson: Fix complie errors without CONFIG_SMP
+To:     Matthew Wilcox <willy@infradead.org>
+References: <1598446407-8845-1-git-send-email-hejinyang@loongson.cn>
+ <20200826130122.GR17456@casper.infradead.org>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   hejinyang <hejinyang@loongson.cn>
+Message-ID: <5394f030-104c-f191-e581-4f1ed23a85a6@loongson.cn>
+Date:   Thu, 27 Aug 2020 10:31:33 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827013636.149307-1-allen.lkml@gmail.com>
+In-Reply-To: <20200826130122.GR17456@casper.infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxj9wFG0dfEnYOAA--.427S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xw43tr43uF18Ww1kGr47twb_yoW3ZwcEgw
+        4Du3W8JF13XFyvgFZFg3y8Zr4qgF4UWasrGw1rur12934Yqr95XayktrZxuFn8u3y5XrZ7
+        WF4S9FyFvanavjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbx8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
+        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+        7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
+        1j6r4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE
+        67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+        AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
+        c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
+        AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWU
+        JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHU
+        DUUUUU=
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 07:06:36AM +0530, Allen Pais wrote:
-> Introduce container_from() as a generic helper instead of
-> sub-systems defining a private from_* API
-> (Eg: from_tasklets recently introduced in
-> 12cc923f1ccc: Tasklet: Introduce new initialization API)
-> 
-> The helper is similar to container_of() in argument order
-> with the difference of naming the containing structure instead
-> of having to specify its type.
-> 
-> Suggested-by: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
-> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Suggested-by: Jens Axboe <axboe@kernel.dk>
-> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
 
-Acked-by: Kees Cook <keescook@chromium.org>
 
-Who can carry this so it can get used by multiple trees? Should I keep a
-git branch folks should merge when taking Allen's conversion patches?
+On 08/26/2020 09:01 PM, Matthew Wilcox wrote:
+> On Wed, Aug 26, 2020 at 08:53:27PM +0800, Jinyang He wrote:
+>> +++ b/arch/mips/include/asm/mach-loongson64/topology.h
+>> @@ -4,7 +4,11 @@
+>>   
+>>   #ifdef CONFIG_NUMA
+>>   
+>> +#ifdef CONFIG_SMP
+>>   #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
+>> +#else
+>> +#define cpu_to_node(cpu)	0
+>> +#endif
+> Are you saying you've enabled NUMA without enabling SMP?  Does that make
+> sense?
 
-(In the future we can do a treewide replacement of the
-subsystem-specific from*() macros into container_from())
+NUMA option normally work with more than two nodes, though Loongson64 use it
+default after patch 6fbde6b492dfc761ad60a68fb2cb32b1eb05b786. Loongson64(3A)'s
+each node consists of 4 cpus while it only has 4 cpus. In other words, it has
+only one node while open NUMA. I'm confused it if NUMA deponds on SMP.
 
-Thanks!
+I'll try fix it with unabling NUMA and SMP later.
 
--- 
-Kees Cook
+Thanks.:-)
+
