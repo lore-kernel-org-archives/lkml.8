@@ -2,128 +2,126 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCE0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F9DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3327820786
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:55:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x/ucfh1a";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P6TIop5O"
+	by mail.kernel.org (Postfix) with ESMTP id 0A0C920786
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbgH0Hzk (ORCPT
+        id S1728565AbgH0Hzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:55:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:36948 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728458AbgH0Hye (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:54:34 -0400
-Date:   Thu, 27 Aug 2020 07:54:31 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598514872;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hHd+FRlojFY64CD/2jb5BePt8oYJ9+8pMzCL6LC1ZaQ=;
-        b=x/ucfh1aF9vU3GSWyLh5Xq5NS137p56baxw9wBEGJPk4aRVVQdYddIqgmiHWVL13vt0C0Q
-        BNouOL3l/agb3Own7KAVNI2F3Gs5D2waHzPLi0naZtwbwWn+SNNEueZXJbwiGKgwRcZz7M
-        rH/U1tYVKYCxutuzXOQENoeYLWqFrAUikS7UDQUcJLxuQAfD4MdwlGrNw2+TuhNY96K2HL
-        gNYTfAqv+xcK5P5zeNbeOfOt1waSUSWBqbbJTMS2eT1vZjuEOVAMJiF/+LKZtSdI7GF8jL
-        QQEyW6Urce/B82m/UYA/7MwoRqypN0BnS+LHsKHwT9cr7wC5Gv6j4XVyDPOIfQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598514872;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hHd+FRlojFY64CD/2jb5BePt8oYJ9+8pMzCL6LC1ZaQ=;
-        b=P6TIop5O7Yv22fEEtt9CFTsbEfJkI6PodmEsmHfD/S11zziMwwMXEz1rrP/VVf1lwO2PLo
-        pEKyn+1gQmmy6GBw==
-From:   "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched: Bring the PF_IO_WORKER and PF_WQ_WORKER bits
- closer together
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200819195505.y3fxk72sotnrkczi@linutronix.de>
-References: <20200819195505.y3fxk72sotnrkczi@linutronix.de>
+        Thu, 27 Aug 2020 03:55:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55712 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728570AbgH0Hzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:55:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id BBBF2AD2E;
+        Thu, 27 Aug 2020 07:56:09 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 4F1A71E12C0; Thu, 27 Aug 2020 09:55:37 +0200 (CEST)
+Date:   Thu, 27 Aug 2020 09:55:37 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     =?utf-8?B?55Sw?= <xianting_tian@126.com>
+Cc:     Jan Kara <jack@suse.cz>, "bcrl@kvack.org" <bcrl@kvack.org>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] aio: use wait_for_completion_io() when waiting for
+ completion of io
+Message-ID: <20200827075537.GA15885@quack2.suse.cz>
+References: <1596634551-27526-1-git-send-email-xianting_tian@126.com>
+ <20200826132330.GD15126@quack2.suse.cz>
+ <26ae9330.63f4.1742b70dd88.Coremail.xianting_tian@126.com>
 MIME-Version: 1.0
-Message-ID: <159851487173.20229.8088199313658505193.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <26ae9330.63f4.1742b70dd88.Coremail.xianting_tian@126.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+Hello!
 
-Commit-ID:     01ccf592362a984534371b3596d4c953da6a7bb2
-Gitweb:        https://git.kernel.org/tip/01ccf592362a984534371b3596d4c953da6a7bb2
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Wed, 19 Aug 2020 21:55:05 +02:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 26 Aug 2020 12:41:58 +02:00
+On Wed 26-08-20 23:44:11, 田 wrote:
+> thanks for your kindly reply,
+> the normal wait path read_events()->wait_event_interruptible_hrtimeout(),
+> which will call schedule(), it does not account IO wait time.
 
-sched: Bring the PF_IO_WORKER and PF_WQ_WORKER bits closer together
+Not sure if there isn't some misunderstanding so I'll repeat what I've
+said: Yes, above path will not account as IO wait time and IMO that is much
+more common path which should be accounted as IO wait time. So I think that
+without fixing that path, fixing cornercases like you did in your patch is
+rather pointless.
 
-The bits PF_IO_WORKER and PF_WQ_WORKER are tested together in
-sched_submit_work() which is considered to be a hot path.
-If the two bits cross the 8 or 16 bit boundary then most architecture
-require multiple load instructions in order to create the constant
-value. Also, such a value can not be encoded within the compare opcode.
+								Honza
 
-By moving the bit definition within the same block, the compiler can
-create/use one immediate value.
-
-For some reason gcc-10 on ARM64 requires both bits to be next to each
-other in order to issue "tst reg, val; bne label". Otherwise the result
-is "mov reg1, val; tst reg, reg1; bne label".
-
-Move PF_VCPU out of the way so that PF_IO_WORKER can be next to
-PF_WQ_WORKER.
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200819195505.y3fxk72sotnrkczi@linutronix.de
----
- include/linux/sched.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 93ecd93..2bf0af1 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1489,9 +1489,10 @@ extern struct pid *cad_pid;
- /*
-  * Per process flags
-  */
-+#define PF_VCPU			0x00000001	/* I'm a virtual CPU */
- #define PF_IDLE			0x00000002	/* I am an IDLE thread */
- #define PF_EXITING		0x00000004	/* Getting shut down */
--#define PF_VCPU			0x00000010	/* I'm a virtual CPU */
-+#define PF_IO_WORKER		0x00000010	/* Task is an IO worker */
- #define PF_WQ_WORKER		0x00000020	/* I'm a workqueue worker */
- #define PF_FORKNOEXEC		0x00000040	/* Forked but didn't exec */
- #define PF_MCE_PROCESS		0x00000080      /* Process policy on mce errors */
-@@ -1515,7 +1516,6 @@ extern struct pid *cad_pid;
- #define PF_NO_SETAFFINITY	0x04000000	/* Userland is not allowed to meddle with cpus_mask */
- #define PF_MCE_EARLY		0x08000000      /* Early kill for mce process policy */
- #define PF_MEMALLOC_NOCMA	0x10000000	/* All allocation request will have _GFP_MOVABLE cleared */
--#define PF_IO_WORKER		0x20000000	/* Task is an IO worker */
- #define PF_FREEZER_SKIP		0x40000000	/* Freezer should not count it as freezable */
- #define PF_SUSPEND_TASK		0x80000000      /* This thread called freeze_processes() and should not be frozen */
- 
+> On 08/26/2020 21:23, Jan Kara wrote:
+> On Wed 05-08-20 09:35:51, Xianting Tian wrote:
+> > When waiting for the completion of io, we need account iowait time. As
+> > wait_for_completion() calls schedule_timeout(), which doesn't account
+> > iowait time. While wait_for_completion_io() calls io_schedule_timeout(),
+> > which will account iowait time.
+> >
+> > So using wait_for_completion_io() instead of wait_for_completion()
+> > when waiting for completion of io before exit_aio and io_destroy.
+> >
+> > Signed-off-by: Xianting Tian <xianting_tian@126.com>
+> 
+> Thanks for the patch! It looks good to me but IMO this is just scratching
+> the surface.  E.g. for AIO we are mostly going to wait in read_events() by
+> wait_event_interruptible_hrtimeout() and *that* doesn't account as IO wait
+> either? Which is IMO far bigger misaccounting... The two case you fix seem
+> to be just rare cornercases so what they do isn't a big deal either way.
+> 
+> So I agree it may be worth it to properly account waiting for AIO but if
+> you want to do that, then please handle mainly the common cases in AIO
+> code.
+> 
+>                                         Honza
+> 
+> > ---
+> >  fs/aio.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/fs/aio.c b/fs/aio.c
+> > index 91e7cc4..498b8a0 100644
+> > --- a/fs/aio.c
+> > +++ b/fs/aio.c
+> > @@ -892,7 +892,7 @@ void exit_aio(struct mm_struct *mm)
+> >  
+> >       if (!atomic_sub_and_test(skipped, &wait.count)) {
+> >            /* Wait until all IO for the context are done. */
+> > -          wait_for_completion(&wait.comp);
+> > +          wait_for_completion_io(&wait.comp);
+> >       }
+> >  
+> >       RCU_INIT_POINTER(mm->ioctx_table, NULL);
+> > @@ -1400,7 +1400,7 @@ static long read_events(struct kioctx *ctx, long min_nr, long nr,
+> >             * is destroyed.
+> >             */
+> >            if (!ret)
+> > -               wait_for_completion(&wait.comp);
+> > +               wait_for_completion_io(&wait.comp);
+> >  
+> >            return ret;
+> >       }
+> > --
+> > 1.8.3.1
+> >
+> --
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
