@@ -2,190 +2,131 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BDAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A072FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEAD22B4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:13:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hTYxcSPY"
+	by mail.kernel.org (Postfix) with ESMTP id 80A4722B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 18:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgH0SNK (ORCPT
+        id S1727000AbgH0SNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:13:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726243AbgH0SNI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 14:13:08 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8171C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:13:08 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id e5so2396298qvr.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 11:13:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ssRaouXMj2o/HtEZZ3R9vlEAQEleSnlrqRH6Z6mK0YM=;
-        b=hTYxcSPYcs/JpYjOgeSQeg6Xl3LxylMwCdjgvYwx1aZ0q9UMPVlNcB95FXYna3al52
-         IbTaBhRvKMuLTqjFu5nwJvvcRfM5hlW4mr0CAIw5t/TZ9K03o40d9+HsdyT9aHbx1V9u
-         6lZyigyUUK6y9vpQiHxICC3q0LPAv4EOwqGca0jbl9DK/0ufdjWzxlzp4M+vIrJCDfLD
-         rTLXzM7s1yCsMnkF3SLfrSOCuq2rWL6RINgYVQ1ynhxBGMt2E2ZfHWhIMvb97fvURbWm
-         /4HAoGwQtJz95MMLCIXruMdQ2RP37flfW+Z+PMdo9OixEUHbUjbtaq1V5cLjd1XtAf10
-         iwTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ssRaouXMj2o/HtEZZ3R9vlEAQEleSnlrqRH6Z6mK0YM=;
-        b=kEdKlyPWoGigOW1PpkrdCizMj0Jt+4iHC3xiVJFYktQQCWdd+4Bu4BtzpQdMjaP8qY
-         UzvwrCYmh4y7KnUsrIGtSMxSY7VQ1GxVJQXIWZU3VSPxM1xtNT7PnM4cpx+h4G7+7oku
-         L8zae+x7gUuz0dZoZVRmFWqIimPDlw69U1NWnkuyjB8W4tUMJptQHs5c4ErYpPXHyq3I
-         /Vq/JG+K3vrVWDy5OWPq45nbZkyVeqR5VGnoL/Tbp+9j15OsEw/ZkDkipEBZXgao9xPl
-         R6+3+VUnJopJdHw23k7NIa0/Nlgk7fOynfKfhNutTmDm04ikA7FD+Xd233neshHvxar2
-         MrtQ==
-X-Gm-Message-State: AOAM530FaPb1JcBuvvfZbBGod0Kq5+AishPvsLdV+dEHSM9m6lytZDl+
-        akTsIsOBNJpNXdciXQMeU6D40gcBK5a5yoQ5GfeNoQ==
-X-Google-Smtp-Source: ABdhPJy+icwO9xKN//159CWIuCBqk8MV0Dp0jEhUL4JCTuBiRCitMg1ap+ZOEoYO7Yy4bHcgdPptWx3uVVGIwM6G+34=
-X-Received: by 2002:a05:6214:10ca:: with SMTP id r10mr232930qvs.185.1598551987724;
- Thu, 27 Aug 2020 11:13:07 -0700 (PDT)
+        Thu, 27 Aug 2020 14:13:54 -0400
+Received: from mga17.intel.com ([192.55.52.151]:48462 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726243AbgH0SNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 14:13:54 -0400
+IronPort-SDR: WrnzObmuJOy57JjsYfD0y8fTXE8Bra6ttBhMYXfvLG78kKPXzT0MTLrU8vnsQtqx3j026zSFwR
+ +TGDvmuuDc8A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="136609330"
+X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
+   d="scan'208";a="136609330"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 11:13:53 -0700
+IronPort-SDR: kU95U/D1O7kHgHr1WXXPT1vdBAMIbglRTHBy0TxJgYsrsBJ105d5EwsufFz1dq2ONoiEaDdGpR
+ SH4Z20+xAPUA==
+X-IronPort-AV: E=Sophos;i="5.76,360,1592895600"; 
+   d="scan'208";a="339608214"
+Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.213.179.54]) ([10.213.179.54])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 11:13:49 -0700
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
+ <20200825002540.3351-26-yu-cheng.yu@intel.com>
+ <CALCETrVpLnZGfWWLpJO+aZ9aBbx5KGaCskejXiCXF1GtsFFoPg@mail.gmail.com>
+ <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com>
+ <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+ <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
+ <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
+ <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
+ <20200826164604.GW6642@arm.com> <87ft892vvf.fsf@oldenburg2.str.redhat.com>
+ <20200826170841.GX6642@arm.com> <87tuwow7kg.fsf@oldenburg2.str.redhat.com>
+ <CAMe9rOrhjLSaMNABnzd=Kp5UeVot1Qkx0_PnMng=sT+wd9Xubw@mail.gmail.com>
+ <873648w6qr.fsf@oldenburg2.str.redhat.com>
+From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
+Message-ID: <a770d45d-b147-a8c5-b7f8-30d668cbed84@intel.com>
+Date:   Thu, 27 Aug 2020 11:13:48 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200729212721.1ee4eef8@canb.auug.org.au> <87ft8lwxes.fsf@turtle.gmx.de>
- <CAMzD94Rz4NYnhheS8SmuL14MNM4VGxOnAW-WZ9k1JEqrbwyrvw@mail.gmail.com>
- <87y2m7gq86.fsf@turtle.gmx.de> <87pn7gh3er.fsf@turtle.gmx.de>
-In-Reply-To: <87pn7gh3er.fsf@turtle.gmx.de>
-From:   Brian Vazquez <brianvv@google.com>
-Date:   Thu, 27 Aug 2020 11:12:56 -0700
-Message-ID: <CAMzD94Rkq1RTZJG5UsEz9VhaCBbvObD1azqU2gsJzZ6gPYcfag@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the net-next tree
-To:     Sven Joachim <svenjoac@gmx.de>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <873648w6qr.fsf@oldenburg2.str.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sven,
+On 8/27/2020 6:36 AM, Florian Weimer wrote:
+> * H. J. Lu:
+> 
+>> On Thu, Aug 27, 2020 at 6:19 AM Florian Weimer <fweimer@redhat.com> wrote:
+>>>
+>>> * Dave Martin:
+>>>
+>>>> You're right that this has implications: for i386, libc probably pulls
+>>>> more arguments off the stack than are really there in some situations.
+>>>> This isn't a new problem though.  There are already generic prctls with
+>>>> fewer than 4 args that are used on x86.
+>>>
+>>> As originally posted, glibc prctl would have to know that it has to pull
+>>> an u64 argument off the argument list for ARCH_X86_CET_DISABLE.  But
+>>> then the u64 argument is a problem for arch_prctl as well.
+>>>
+>>
+>> Argument of ARCH_X86_CET_DISABLE is int and passed in register.
+> 
+> The commit message and the C source say otherwise, I think (not sure
+> about the C source, not a kernel hacker).
+> 
 
-I've been trying to reproduce it with your config but I didn't
-succeed. I also looked at the file after the preprocessor and it
-looked good:
+H.J. Lu suggested that we fix x86 arch_prctl() to take four arguments, 
+and then keep MMAP_SHSTK as an arch_prctl().  Because now the map flags 
+and size are all in registers, this also solves problems being pointed 
+out earlier.  Without a wrapper, the shadow stack mmap call (from user 
+space) will be:
 
-ret = ({ __builtin_expect(!!(ops->match == fib6_rule_match), 1) ?
-fib6_rule_match(rule, fl, flags) : ops->match(rule, fl, flags); })
+syscall(_NR_arch_prctl, ARCH_X86_CET_MMAP_SHSTK, size, MAP_32BIT).
 
-Note that fib4_rule_match doesn't appear as the
-CONFIG_IP_MULTIPLE_TABLES is not there.
+I think this would be a nice alternative to another new syscall.
 
-Could you share more details on how you're compiling it and what
-compiler you're using??
+If this looks good to everyone, I can send out new patches as response 
+to my current version, and then after all issues fixed, send v12.
 
 Thanks,
-Brian
-
-
-
-On Mon, Aug 24, 2020 at 1:08 AM Sven Joachim <svenjoac@gmx.de> wrote:
->
-> On 2020-08-22 08:16 +0200, Sven Joachim wrote:
->
-> > On 2020-08-21 09:23 -0700, Brian Vazquez wrote:
-> >
-> >> Hi Sven,
-> >>
-> >> Sorry for the late reply, did you still see this after:
-> >> https://patchwork.ozlabs.org/project/netdev/patch/20200803131948.41736-1-yuehaibing@huawei.com/
-> >> ??
-> >
-> > That patch is apparently already in 5.9-rc1 as commit 80fbbb1672e7, so
-> > yes I'm still seeing it.
->
-> Still present in 5.9-rc2 as of today, I have attached my .config for
-> reference.  Note that I have CONFIG_IPV6_MULTIPLE_TABLES=y, but
-> CONFIG_IP_MULTIPLE_TABLES is not mentioned at all there.
->
-> To build the kernel, I have now deselected IPV6_MULTIPLE_TABLES.  Not
-> sure why this was enabled in my .config which has grown organically over
-> many years.
->
-> Cheers,
->        Sven
->
->
-> >> On Mon, Aug 17, 2020 at 12:21 AM Sven Joachim <svenjoac@gmx.de> wrote:
-> >>
-> >>> On 2020-07-29 21:27 +1000, Stephen Rothwell wrote:
-> >>>
-> >>> > Hi all,
-> >>> >
-> >>> > After merging the net-next tree, today's linux-next build (i386
-> >>> defconfig)
-> >>> > failed like this:
-> >>> >
-> >>> > x86_64-linux-gnu-ld: net/core/fib_rules.o: in function
-> >>> `fib_rules_lookup':
-> >>> > fib_rules.c:(.text+0x5c6): undefined reference to `fib6_rule_match'
-> >>> > x86_64-linux-gnu-ld: fib_rules.c:(.text+0x5d8): undefined reference to
-> >>> `fib6_rule_match'
-> >>> > x86_64-linux-gnu-ld: fib_rules.c:(.text+0x64d): undefined reference to
-> >>> `fib6_rule_action'
-> >>> > x86_64-linux-gnu-ld: fib_rules.c:(.text+0x662): undefined reference to
-> >>> `fib6_rule_action'
-> >>> > x86_64-linux-gnu-ld: fib_rules.c:(.text+0x67a): undefined reference to
-> >>> `fib6_rule_suppress'
-> >>> > x86_64-linux-gnu-ld: fib_rules.c:(.text+0x68d): undefined reference to
-> >>> `fib6_rule_suppress'
-> >>>
-> >>> FWIW, I saw these errors in 5.9-rc1 today, so the fix in commit
-> >>> 41d707b7332f ("fib: fix fib_rules_ops indirect calls wrappers") was
-> >>> apparently not sufficient.
-> >>>
-> >>> ,----
-> >>> | $ grep IPV6 .config
-> >>> | CONFIG_IPV6=m
-> >>> | # CONFIG_IPV6_ROUTER_PREF is not set
-> >>> | # CONFIG_IPV6_OPTIMISTIC_DAD is not set
-> >>> | # CONFIG_IPV6_MIP6 is not set
-> >>> | # CONFIG_IPV6_ILA is not set
-> >>> | # CONFIG_IPV6_VTI is not set
-> >>> | CONFIG_IPV6_SIT=m
-> >>> | # CONFIG_IPV6_SIT_6RD is not set
-> >>> | CONFIG_IPV6_NDISC_NODETYPE=y
-> >>> | CONFIG_IPV6_TUNNEL=m
-> >>> | CONFIG_IPV6_MULTIPLE_TABLES=y
-> >>> | # CONFIG_IPV6_SUBTREES is not set
-> >>> | # CONFIG_IPV6_MROUTE is not set
-> >>> | # CONFIG_IPV6_SEG6_LWTUNNEL is not set
-> >>> | # CONFIG_IPV6_SEG6_HMAC is not set
-> >>> | # CONFIG_IPV6_RPL_LWTUNNEL is not set
-> >>> | # CONFIG_NF_SOCKET_IPV6 is not set
-> >>> | # CONFIG_NF_TPROXY_IPV6 is not set
-> >>> | # CONFIG_NF_DUP_IPV6 is not set
-> >>> | # CONFIG_NF_REJECT_IPV6 is not set
-> >>> | # CONFIG_NF_LOG_IPV6 is not set
-> >>> | CONFIG_NF_DEFRAG_IPV6=m
-> >>> `----
-> >>>
-> >>> > Caused by commit
-> >>> >
-> >>> >   b9aaec8f0be5 ("fib: use indirect call wrappers in the most common
-> >>> fib_rules_ops")
-> >>> >
-> >>> > # CONFIG_IPV6_MULTIPLE_TABLES is not set
-> >>> >
-> >>> > I have reverted that commit for today.
-> >>>
-> >>> Cheers,
-> >>>        Sven
-> >>>
+Yu-cheng
