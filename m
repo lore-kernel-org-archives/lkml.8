@@ -2,86 +2,106 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CF1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5554C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFBC222BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598513196;
-	bh=90a9ZhlFuSPAOjQxk04wDw4LIX5PUnsmuyC3grz/ji8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=rozLyztTv33ygUwMIqgxlsXeLRq/X9ra5OBbV54F6ANttAhxsb3t0Yc50YOqSIez0
-	 /MfUMRPkGFw0ax5+aCkA0sf9TqV9wdWsJ5PS60ZREleIBgD4EZ46vNh4BbY45svKAL
-	 4d7j7GxzReZkz8OKqLODPInqcUcdnMCy00wTzcyg=
+	by mail.kernel.org (Postfix) with ESMTP id B964A22BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 07:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgH0H0e (ORCPT
+        id S1727903AbgH0H2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:26:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37432 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727877AbgH0H0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:26:31 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00AA622BEA;
-        Thu, 27 Aug 2020 07:26:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598513191;
-        bh=90a9ZhlFuSPAOjQxk04wDw4LIX5PUnsmuyC3grz/ji8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oKECoV8CYsgDpAvjo7nOxplkehdURqkHPlg65V1JVtuu77hPtxa6fOKrcMnyoCKaQ
-         DIt6A2PvzLkzmlx4pCEeF80ZdllmPjytdu/u23q6ubzm7RtTLbFWEPcTGlOjaAUGe5
-         hfsdgV1C1q24sJ6MrAAE0rx1Hluvdr6ummKnbO4U=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        HS Liao <hs.liao@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] maiblox: mediatek: Fix handling of platform_get_irq() error
-Date:   Thu, 27 Aug 2020 09:26:26 +0200
-Message-Id: <20200827072626.23331-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 27 Aug 2020 03:28:40 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:56730 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726123AbgH0H2j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:28:39 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 7D88B1C0BDF; Thu, 27 Aug 2020 09:28:36 +0200 (CEST)
+Date:   Thu, 27 Aug 2020 09:28:36 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Harald Arnesen <harald@skogtun.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Matthew Auld <matthew.auld@intel.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [Intel-gfx] 5.9-rc1: graphics regression moved from -next to
+ mainline
+Message-ID: <20200827072836.GA21780@amd>
+References: <7efa547d-b7a4-b873-f1aa-4f19eb849fa3@skogtun.org>
+ <CAHk-=wj3WskPCtHncCWLdaP6xVecLp8bDBTT57vyiU-0=Ld6QQ@mail.gmail.com>
+ <d4db4a52-3001-cb02-4888-a9dfd55cdd7c@skogtun.org>
+ <656b8f9f-d696-c75d-aef6-2b8b5170f2f6@skogtun.org>
+ <CAHk-=wiAK=AiqTD47o-BFFZciQXpEC0SiiDnXLWJUcQtCo-Pig@mail.gmail.com>
+ <101bff45-0ebd-8fb6-7c99-963aa4fcc588@skogtun.org>
+ <CAPM=9twLvHu_XLJ89GVXpNo=PHPZLJuRpHggkfzvvuVf+xrwoA@mail.gmail.com>
+ <0f06d704-c14e-0d86-c8bb-8c7b3a34758a@skogtun.org>
+ <CAHk-=wh=MjX6+Bn-ooHT_wf4VTpe7y-5czbAUT=vaAn2VCBNBQ@mail.gmail.com>
+ <1aa00cf1-427d-2ad7-8497-b5a007a64d81@skogtun.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
+Content-Disposition: inline
+In-Reply-To: <1aa00cf1-427d-2ad7-8497-b5a007a64d81@skogtun.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-platform_get_irq() returns -ERRNO on error.  In such case comparison
-to 0 would pass the check.
 
-Fixes: 623a6143a845 ("mailbox: mediatek: Add Mediatek CMDQ driver")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/mailbox/mtk-cmdq-mailbox.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+--cNdxnHkX5QqsyA0e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 484d4438cd83..76e4dfcf5228 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -525,10 +525,8 @@ static int cmdq_probe(struct platform_device *pdev)
- 	}
- 
- 	cmdq->irq = platform_get_irq(pdev, 0);
--	if (!cmdq->irq) {
--		dev_err(dev, "failed to get irq\n");
--		return -EINVAL;
--	}
-+	if (!cmdq->irq < 0)
-+		return cmdq->irq;
- 
- 	plat_data = (struct gce_plat *)of_device_get_match_data(dev);
- 	if (!plat_data) {
--- 
-2.17.1
+Hi!
 
+> >> It's a Thinkpad T520.
+> >=20
+> > Oh, so this is a 64-bit machine? Yeah, that patch to flush vmalloc
+> > ranges won't make any difference on x86-64.
+> >=20
+> > Or are you for some reason running a 32-bit kernel on that thing? Have
+> > you tried building a 64-bit one (user-space can be 32-bit, it should
+> > all just work. Knock wood).
+>=20
+> No, I run a 64-bit kernel with 64-bit userspace (Void Linux).
+> Config is attached, in case anything is obvious from that.
+
+For the record, I'm running 5.9.0-rc2-next-20200825 w/o further
+patches, and it behaves okay on that 32-bit thinkpad x60.
+
+BTW... could we get the test farms to occassionaly boot in 32-bit
+mode? Those modern CPUs can still do that :-).
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--cNdxnHkX5QqsyA0e
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl9HYKQACgkQMOfwapXb+vI7cQCeKgek3+t3QWuXEdofF5AGGHYn
++bEAoJuudssoh32NRk5xNwp2hciDyvZv
+=u+U6
+-----END PGP SIGNATURE-----
+
+--cNdxnHkX5QqsyA0e--
