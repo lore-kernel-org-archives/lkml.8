@@ -2,186 +2,301 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE4EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED424C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B66C206E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7DD32080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 19:51:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=deltatee.com header.i=@deltatee.com header.b="D6qR5M8E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ex/gpgjo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgH0TuZ (ORCPT
+        id S1726894AbgH0Tvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:50:25 -0400
-Received: from ale.deltatee.com ([204.191.154.188]:54896 "EHLO
-        ale.deltatee.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727995AbgH0TtW (ORCPT
+        Thu, 27 Aug 2020 15:51:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbgH0Tvc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 15:49:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deltatee.com; s=20200525; h=Subject:Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=zXeGK/7+sQwwlqdp4+FvdJPQZh6zoxvuHVtp/tDmIC0=; b=D6qR5M8EB2osdSpNYqcFi5o3JU
-        MiWBaJJIsQ3oOaQbK1roenXRwyCIZvRhk6HZALlSt7juKT1TAFG+z6M7mP64rPJAkQBdEZjzgwNU0
-        +nxDMf3sEiaxqSaS0bS0CCbPODMtY6v1uhQPCwsCj4kmGQlJ7N4xBL4t4yQ6HfEVrj8muXXqZCyh0
-        3/RTDnEyAv+Z+Bw4EtLviW0ci5c5QeEHiprb89yh2OudAxWrNORvCk8xEiE8p5pVsZUV+qteFW8K8
-        13m9ZPfrqFz46urEIgRqmWv/lStAqp2lV7orJna2EtoTpNNlUkgEovB8JtNLCUvmBBmL8bkwif/ap
-        xCyVyQHQ==;
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1kBNtg-0000Ce-JP; Thu, 27 Aug 2020 13:49:21 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1kBNta-0001c5-5n; Thu, 27 Aug 2020 13:49:14 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, Omar Sandoval <osandov@osandov.com>
-Cc:     Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 27 Aug 2020 13:49:06 -0600
-Message-Id: <20200827194912.6135-6-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200827194912.6135-1-logang@deltatee.com>
-References: <20200827194912.6135-1-logang@deltatee.com>
+        Thu, 27 Aug 2020 15:51:32 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3831C061264;
+        Thu, 27 Aug 2020 12:51:31 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id d22so4319475pfn.5;
+        Thu, 27 Aug 2020 12:51:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gcd1nB19OTH1zKv6qhSqc5xobRaHVee78g1PzbEl6fI=;
+        b=ex/gpgjovMoKhy+gwxNUzVmwdddR+jvZu5aH2FiNpjTquN08Wii0oVRnzjAILdzc7M
+         0bmTucnzTPnopfTBGMk80abYdFtN69xKYbokxYZKljcp18CujGDWVFUIQ6npTqta0xzD
+         2Crf7GPhGLOOpwZDpCbQtsDRqjAEyhwlO4xV0UbLnTA02CJwXm9JiZs05MEVbs1c/4eT
+         QfQssqJBixDV7Sp7cxuZJgGJzU9S/uHgB8g++h6p/qJWBKpK2+z8B215WH4hxRDVJkQa
+         EjuT59THU9Een7KH8ca9JDOmfxqbYYQQj8re2bgrC+uMbxy9tZMrJuIP0+X8iOzyV3xJ
+         kchA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gcd1nB19OTH1zKv6qhSqc5xobRaHVee78g1PzbEl6fI=;
+        b=qAmzbwQRo4pPXu2znHZ9sdW/1AjluOriFuCVjeYrhH2ly6Idj8yxEkYzQTHOFSm+oW
+         tnNzIEamJNz74aiE4U9mIi+WnvADrCtv2KKTcerp30BqbactKKchk165jhZqg75Apo2z
+         3XP6mD6FvtibHz3btl+3IVmBx8YgwhhGSMfFzsRZlVZoZeKdMWVJWD1XW09rGfhx/cuJ
+         gbjd8oD5U9v8jOVX6U5QdUj0GutzUpIA3nZx9lge9JThYvde2e/oRpSNrwScTlW908ji
+         CQs0oJgQehQWx1Uc+MwNnsq9btQd1wTOtghGZARKM7oAcSZcyL6CG8ztNidcSe4ujl0r
+         I78A==
+X-Gm-Message-State: AOAM533h4R/getXQQS647Y265CVBKTCO6JzI9z/HAtScTN4lQNJj8fZH
+        t+V4EYc0cAb+qVkgA7zsqv6zKc991aoAz8H5YYU=
+X-Google-Smtp-Source: ABdhPJygfJzIrG3kwV1/jhIjw8ITN96yhEa6YFN7u9Xjf/ec+8mvoIJ8bbkGi47nXk15GCawUM1CW08gWBIe8YlHpT4=
+X-Received: by 2002:a17:902:8208:: with SMTP id x8mr6293153pln.65.1598557891210;
+ Thu, 27 Aug 2020 12:51:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, osandov@osandov.com, sagi@grimberg.me, Chaitanya.Kulkarni@wdc.com, sbates@raithlin.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH blktests 05/11] nvme: Add common helpers for passthru tests
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20200827192642.1725-1-krzk@kernel.org> <20200827192642.1725-8-krzk@kernel.org>
+In-Reply-To: <20200827192642.1725-8-krzk@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 27 Aug 2020 22:51:14 +0300
+Message-ID: <CAHp75VfhmCBG615xW5XD6m9Fzkbv_3C5LiQCjTjhOAC7yFmE+A@mail.gmail.com>
+Subject: Re: [PATCH v2 08/18] iio: adc: stm32: Simplify with dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Beniamin Bia <beniamin.bia@analog.com>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add some simple helpers to setup a passthru target that
-passes through to a nvme test device.
+On Thu, Aug 27, 2020 at 10:28 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- tests/nvme/rc | 81 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-diff --git a/tests/nvme/rc b/tests/nvme/rc
-index 8865d543f4c1..9553dc64b05c 100644
---- a/tests/nvme/rc
-+++ b/tests/nvme/rc
-@@ -24,6 +24,17 @@ _require_test_dev_is_nvme() {
- 	return 0
- }
- 
-+_test_dev_nvme_ctrl() {
-+	local dev
-+
-+	dev=$(cat "${TEST_DEV_SYSFS}/device/dev")
-+	echo "/dev/char/${dev}"
-+}
-+
-+_test_dev_nvme_nsid() {
-+	cat "${TEST_DEV_SYSFS}/nsid"
-+}
-+
- _cleanup_nvmet() {
- 	local dev
- 	local port
-@@ -146,6 +157,27 @@ _remove_nvmet_subsystem() {
- 	rmdir "${subsys_path}"
- }
- 
-+_create_nvmet_passthru() {
-+	local nvmet_subsystem="$1"
-+	local subsys_path="${NVMET_CFS}/subsystems/${nvmet_subsystem}"
-+	local passthru_path="${subsys_path}/passthru"
-+
-+	mkdir -p "${subsys_path}"
-+	printf 1 > "${subsys_path}/attr_allow_any_host"
-+
-+	printf "%s" "$(_test_dev_nvme_ctrl)" > "${passthru_path}/device_path"
-+	printf 1 > "${passthru_path}/enable"
-+}
-+
-+_remove_nvmet_passhtru() {
-+	local nvmet_subsystem="$1"
-+	local subsys_path="${NVMET_CFS}/subsystems/${nvmet_subsystem}"
-+	local passthru_path="${subsys_path}/passthru"
-+
-+	printf 0 > "${passthru_path}/enable"
-+	rmdir "${subsys_path}"
-+}
-+
- _add_nvmet_subsys_to_port() {
- 	local port="$1"
- 	local nvmet_subsystem="$2"
-@@ -181,6 +213,55 @@ _find_nvme_loop_dev() {
- 	done
- }
- 
-+_find_nvme_passthru_loop_dev() {
-+	local subsys=$1
-+	local nsid
-+	local dev
-+
-+	dev=$(_find_nvme_loop_dev "${subsys}")
-+	nsid=$(_test_dev_nvme_nsid)
-+	echo "/dev/${dev}n${nsid}"
-+}
-+
-+_nvmet_passthru_target_setup() {
-+	local subsys_name=$1
-+
-+	_create_nvmet_passthru "${subsys_name}"
-+	port="$(_create_nvmet_port "loop")"
-+	_add_nvmet_subsys_to_port "${port}" "${subsys_name}"
-+
-+	echo "$port"
-+}
-+
-+_nvmet_passthru_target_connect() {
-+	local subsys_name=$1
-+
-+	nvme connect -t loop -n "${subsys_name}" >>"${FULL}" 2>&1
-+	nsdev=$(_find_nvme_passthru_loop_dev "${subsys_name}")
-+
-+	# The following tests can race with the creation
-+	# of the device so ensure the block device exists
-+	# before continuing
-+	while [ ! -b "${nsdev}" ]; do sleep 1; done
-+
-+	echo "${nsdev}"
-+}
-+
-+_nvmet_passthru_target_disconnect() {
-+	local subsys_name=$1
-+
-+	nvme disconnect -n "${subsys_name}" >>"${FULL}" 2>&1
-+}
-+
-+_nvmet_passthru_target_cleanup() {
-+	local port=$1
-+	local subsys_name=$2
-+
-+	_remove_nvmet_subsystem_from_port "${port}" "${subsys_name}"
-+	_remove_nvmet_port "${port}"
-+	_remove_nvmet_passhtru "${subsys_name}"
-+}
-+
- _filter_discovery() {
- 	sed -n -r -e "s/Generation counter [0-9]+/Generation counter X/" \
- 		  -e '/Discovery Log Number|Log Entry|trtype|subnqn/p'
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
+> ---
+>
+> Changes since v1:
+> 1. Convert to devm_clk_get_optional
+> 2. Update also stm32-dfsdm-core and stm32-dac-core.
+> 3. Wrap around 100 characters (accepted by checkpatch).
+> ---
+>  drivers/iio/adc/stm32-adc-core.c   | 67 +++++++++---------------------
+>  drivers/iio/adc/stm32-adc.c        |  9 +---
+>  drivers/iio/adc/stm32-dfsdm-adc.c  |  9 +---
+>  drivers/iio/adc/stm32-dfsdm-core.c |  8 +---
+>  drivers/iio/dac/stm32-dac-core.c   |  5 +--
+>  5 files changed, 26 insertions(+), 72 deletions(-)
+>
+> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+> index 0e2068ec068b..707c85dab7df 100644
+> --- a/drivers/iio/adc/stm32-adc-core.c
+> +++ b/drivers/iio/adc/stm32-adc-core.c
+> @@ -582,11 +582,9 @@ static int stm32_adc_core_switches_probe(struct device *dev,
+>         priv->syscfg = syscon_regmap_lookup_by_phandle(np, "st,syscfg");
+>         if (IS_ERR(priv->syscfg)) {
+>                 ret = PTR_ERR(priv->syscfg);
+> -               if (ret != -ENODEV) {
+> -                       if (ret != -EPROBE_DEFER)
+> -                               dev_err(dev, "Can't probe syscfg: %d\n", ret);
+> -                       return ret;
+> -               }
+> +               if (ret != -ENODEV)
+> +                       return dev_err_probe(dev, ret, "Can't probe syscfg\n");
+> +
+>                 priv->syscfg = NULL;
+>         }
+>
+> @@ -596,12 +594,9 @@ static int stm32_adc_core_switches_probe(struct device *dev,
+>                 priv->booster = devm_regulator_get_optional(dev, "booster");
+>                 if (IS_ERR(priv->booster)) {
+>                         ret = PTR_ERR(priv->booster);
+> -                       if (ret != -ENODEV) {
+> -                               if (ret != -EPROBE_DEFER)
+> -                                       dev_err(dev, "can't get booster %d\n",
+> -                                               ret);
+> -                               return ret;
+> -                       }
+> +                       if (ret != -ENODEV)
+> +                               dev_err_probe(dev, ret, "can't get booster\n");
+> +
+>                         priv->booster = NULL;
+>                 }
+>         }
+> @@ -612,11 +607,9 @@ static int stm32_adc_core_switches_probe(struct device *dev,
+>                 priv->vdd = devm_regulator_get_optional(dev, "vdd");
+>                 if (IS_ERR(priv->vdd)) {
+>                         ret = PTR_ERR(priv->vdd);
+> -                       if (ret != -ENODEV) {
+> -                               if (ret != -EPROBE_DEFER)
+> -                                       dev_err(dev, "can't get vdd %d\n", ret);
+> -                               return ret;
+> -                       }
+> +                       if (ret != -ENODEV)
+> +                               return dev_err_probe(dev, ret, "can't get vdd\n");
+> +
+>                         priv->vdd = NULL;
+>                 }
+>         }
+> @@ -669,42 +662,20 @@ static int stm32_adc_probe(struct platform_device *pdev)
+>         priv->common.phys_base = res->start;
+>
+>         priv->vdda = devm_regulator_get(&pdev->dev, "vdda");
+> -       if (IS_ERR(priv->vdda)) {
+> -               ret = PTR_ERR(priv->vdda);
+> -               if (ret != -EPROBE_DEFER)
+> -                       dev_err(&pdev->dev, "vdda get failed, %d\n", ret);
+> -               return ret;
+> -       }
+> +       if (IS_ERR(priv->vdda))
+> +               return dev_err_probe(&pdev->dev, PTR_ERR(priv->vdda), "vdda get failed\n");
+>
+>         priv->vref = devm_regulator_get(&pdev->dev, "vref");
+> -       if (IS_ERR(priv->vref)) {
+> -               ret = PTR_ERR(priv->vref);
+> -               if (ret != -EPROBE_DEFER)
+> -                       dev_err(&pdev->dev, "vref get failed, %d\n", ret);
+> -               return ret;
+> -       }
+> +       if (IS_ERR(priv->vref))
+> +               return dev_err_probe(&pdev->dev, PTR_ERR(priv->vref), "vref get failed\n");
+>
+> -       priv->aclk = devm_clk_get(&pdev->dev, "adc");
+> -       if (IS_ERR(priv->aclk)) {
+> -               ret = PTR_ERR(priv->aclk);
+> -               if (ret != -ENOENT) {
+> -                       if (ret != -EPROBE_DEFER)
+> -                               dev_err(&pdev->dev, "Can't get 'adc' clock\n");
+> -                       return ret;
+> -               }
+> -               priv->aclk = NULL;
+> -       }
+> +       priv->aclk = devm_clk_get_optional(&pdev->dev, "adc");
+> +       if (IS_ERR(priv->aclk))
+> +               return dev_err_probe(&pdev->dev, PTR_ERR(priv->aclk), "Can't get 'adc' clock\n");
+>
+> -       priv->bclk = devm_clk_get(&pdev->dev, "bus");
+> -       if (IS_ERR(priv->bclk)) {
+> -               ret = PTR_ERR(priv->bclk);
+> -               if (ret != -ENOENT) {
+> -                       if (ret != -EPROBE_DEFER)
+> -                               dev_err(&pdev->dev, "Can't get 'bus' clock\n");
+> -                       return ret;
+> -               }
+> -               priv->bclk = NULL;
+> -       }
+> +       priv->bclk = devm_clk_get_optional(&pdev->dev, "bus");
+> +       if (IS_ERR(priv->bclk))
+> +               return dev_err_probe(&pdev->dev, PTR_ERR(priv->bclk), "Can't get 'bus' clock\n");
+>
+>         ret = stm32_adc_core_switches_probe(dev, priv);
+>         if (ret)
+> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+> index 3eb9ebe8372f..b8e764ca54a6 100644
+> --- a/drivers/iio/adc/stm32-adc.c
+> +++ b/drivers/iio/adc/stm32-adc.c
+> @@ -1805,13 +1805,8 @@ static int stm32_adc_dma_request(struct device *dev, struct iio_dev *indio_dev)
+>         adc->dma_chan = dma_request_chan(dev, "rx");
+>         if (IS_ERR(adc->dma_chan)) {
+>                 ret = PTR_ERR(adc->dma_chan);
+> -               if (ret != -ENODEV) {
+> -                       if (ret != -EPROBE_DEFER)
+> -                               dev_err(dev,
+> -                                       "DMA channel request failed with %d\n",
+> -                                       ret);
+> -                       return ret;
+> -               }
+> +               if (ret != -ENODEV)
+> +                       return dev_err_probe(dev, ret, "DMA channel request failed with\n");
+>
+>                 /* DMA is optional: fall back to IRQ mode */
+>                 adc->dma_chan = NULL;
+> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+> index 5e10fb4f3704..12c951078c1f 100644
+> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
+> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+> @@ -1473,13 +1473,8 @@ static int stm32_dfsdm_adc_init(struct device *dev, struct iio_dev *indio_dev)
+>         /* Optionally request DMA */
+>         ret = stm32_dfsdm_dma_request(dev, indio_dev);
+>         if (ret) {
+> -               if (ret != -ENODEV) {
+> -                       if (ret != -EPROBE_DEFER)
+> -                               dev_err(dev,
+> -                                       "DMA channel request failed with %d\n",
+> -                                       ret);
+> -                       return ret;
+> -               }
+> +               if (ret != -ENODEV)
+> +                       return dev_err_probe(dev, ret, "DMA channel request failed with\n");
+>
+>                 dev_dbg(dev, "No DMA support\n");
+>                 return 0;
+> diff --git a/drivers/iio/adc/stm32-dfsdm-core.c b/drivers/iio/adc/stm32-dfsdm-core.c
+> index 26e2011c5868..34e4e6e59acf 100644
+> --- a/drivers/iio/adc/stm32-dfsdm-core.c
+> +++ b/drivers/iio/adc/stm32-dfsdm-core.c
+> @@ -243,12 +243,8 @@ static int stm32_dfsdm_parse_of(struct platform_device *pdev,
+>          * on use case.
+>          */
+>         priv->clk = devm_clk_get(&pdev->dev, "dfsdm");
+> -       if (IS_ERR(priv->clk)) {
+> -               ret = PTR_ERR(priv->clk);
+> -               if (ret != -EPROBE_DEFER)
+> -                       dev_err(&pdev->dev, "Failed to get clock (%d)\n", ret);
+> -               return ret;
+> -       }
+> +       if (IS_ERR(priv->clk))
+> +               return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk), "Failed to get clock\n");
+>
+>         priv->aclk = devm_clk_get(&pdev->dev, "audio");
+>         if (IS_ERR(priv->aclk))
+> diff --git a/drivers/iio/dac/stm32-dac-core.c b/drivers/iio/dac/stm32-dac-core.c
+> index 7e5809ba0dee..906436780347 100644
+> --- a/drivers/iio/dac/stm32-dac-core.c
+> +++ b/drivers/iio/dac/stm32-dac-core.c
+> @@ -150,10 +150,7 @@ static int stm32_dac_probe(struct platform_device *pdev)
+>         rst = devm_reset_control_get_optional_exclusive(dev, NULL);
+>         if (rst) {
+>                 if (IS_ERR(rst)) {
+> -                       ret = PTR_ERR(rst);
+> -                       if (ret != -EPROBE_DEFER)
+> -                               dev_err(dev, "reset get failed, %d\n", ret);
+> -
+> +                       ret = dev_err_probe(dev, PTR_ERR(rst), "reset get failed\n");
+>                         goto err_hw_stop;
+>                 }
+>
+> --
+> 2.17.1
+>
+
+
 -- 
-2.20.1
-
+With Best Regards,
+Andy Shevchenko
