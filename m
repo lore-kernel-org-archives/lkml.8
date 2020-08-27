@@ -2,137 +2,137 @@ Return-Path: <SRS0=OCv1=CF=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9ACC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7D9C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D490206F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD8D2177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 27 Aug 2020 08:53:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ROARXQDZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rNirvoBE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgH0Ixs (ORCPT
+        id S1728110AbgH0Ix6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:53:48 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44711 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726851AbgH0Ixp (ORCPT
+        Thu, 27 Aug 2020 04:53:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728046AbgH0Ix5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 04:53:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598518423;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=RrMwwJkiIN6IE4DKC1Do1r49qx7TdOB11Zk1v1eRJzw=;
-        b=ROARXQDZLVEYPhCBxvnfBjuzwFO6A0J3B4DJjbOvE6hzdSH0Ao9rqcEV09llnNO/VNLOjd
-        gedk2pXdFWOxoM/44nb8hfDUd/HGlGeCT6bjYaqZOSWMxTDeJZmZmEan1L0PFCGlRB9slY
-        7OlYa5joLdm4Nyi73hvwbDVbL2zpSf0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-541-k-L04AzZPEukU3yiqK1pgg-1; Thu, 27 Aug 2020 04:53:41 -0400
-X-MC-Unique: k-L04AzZPEukU3yiqK1pgg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BF0AF185FD6C;
-        Thu, 27 Aug 2020 08:53:40 +0000 (UTC)
-Received: from firesoul.localdomain (unknown [10.40.208.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C4C347B9F2;
-        Thu, 27 Aug 2020 08:53:37 +0000 (UTC)
-Received: from [192.168.42.3] (localhost [IPv6:::1])
-        by firesoul.localdomain (Postfix) with ESMTP id B205C30736C8B;
-        Thu, 27 Aug 2020 10:53:36 +0200 (CEST)
-Subject: [PATCH] tools build feature: cleanup feature files on make clean
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org
-Date:   Thu, 27 Aug 2020 10:53:36 +0200
-Message-ID: <159851841661.1072907.13770213104521805592.stgit@firesoul>
-User-Agent: StGit/0.19
+        Thu, 27 Aug 2020 04:53:57 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E3A5C061264;
+        Thu, 27 Aug 2020 01:53:56 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 5so3766650otp.12;
+        Thu, 27 Aug 2020 01:53:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wJqkqfKDzNHfiL/tMPJGSfWZ8ecLoIaK4a3CdN76f08=;
+        b=rNirvoBEcyW1jBwdIu+fwpbS49hBLs1+mFh7z2yzTaggVxkQ28bv9uNU8qZRAXpKPt
+         zN1oCIRrfarUUbUfKdtOiAIRRxXNZ0KvTIVr+j6KeUsj2V+gBe1OI7vp39yUFNeB71x1
+         18yO6MEZ0+FR/mO/Z3r1VQTllsPVysn1DQoK2knEe2IKBgdSxf50ssWjNKfSwQdJhvUx
+         RmYwz7YgihE9tdlXP3OulXvrF3pcPTKQxI7SKP9RzLy1SkKIr5rx07eugRW8LfPquP7k
+         GLD4MCvEVFBDZK5bertBsAyHV669YvZvNmQiZeRFAHztbZJCNCecI3skBmn59hVfeasr
+         GnnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wJqkqfKDzNHfiL/tMPJGSfWZ8ecLoIaK4a3CdN76f08=;
+        b=QzsE7fWVUSMxtQe9cXUwVsknWxzhFSESYU+mmCTC7yxuqPQPJ0DyOIBTViZLXNvo0p
+         ZQfOUlY7KkLkAxUrPhOaJau8m9tA9bLE5ewaeS2e3rSJTdywKzpn79qAaJu1utF2dkeh
+         ZE61u8XvdepEj7QKQQ2Tr0Tet5RGQZiCkpcLyHRtTJ329GsHdJuQCiC0BI63ixfnwGEm
+         ZEvdCfmQ8sV6f8I38ltjIxoJXSv/GiPX7+WhJGM9beRzOcBwXCKuCxAl+pNLfPgb+SDn
+         hiLcUWd3lWOCcG/h9ho/7jTLnm9eNHSfks574WDhx7uBaHeV5JZiXZkGu09r7wmQ8Xsr
+         /p6g==
+X-Gm-Message-State: AOAM531NacZwQi+2kyJZKjx4SCVdH7Utv9rb/2Ltz+7tsJe0zZEoQPCP
+        dwMJMo64/gXfzuMvdT1d7pzl/Np7WTFpWlyykC3ToMFZyFdywUpa
+X-Google-Smtp-Source: ABdhPJyNg9E+EYqZ3jMKYxrnDs3Fs/guWQT2WPErhXYuDxBwtvuuHvN5YzBTQvexOOWAYySUThg+sI7u84kGPM4z7eE=
+X-Received: by 2002:a9d:2ac5:: with SMTP id e63mr12914667otb.119.1598518435737;
+ Thu, 27 Aug 2020 01:53:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200826132203.236748-1-alexandru.ardelean@analog.com> <20200827065625.GB17964@kozik-lap>
+In-Reply-To: <20200827065625.GB17964@kozik-lap>
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+Date:   Thu, 27 Aug 2020 11:53:44 +0300
+Message-ID: <CA+U=Dsoo6YABe5ODLp+eFNPGFDjk5ZeQEceGkqjxXcVEhLWubw@mail.gmail.com>
+Subject: Re: [PATCH] iio: adc: exynos_adc: Replace indio_dev->mlock with own
+ device lock
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>, kgene@kernel.org,
+        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The system for "Auto-detecting system features" located under
-tools/build/ are (currently) used by perf, libbpf and bpftool. It can
-contain stalled feature detection files, which are not cleaned up by
-libbpf and bpftool on make clean (side-note: perf tool is correct).
+On Thu, Aug 27, 2020 at 9:57 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Wed, Aug 26, 2020 at 04:22:03PM +0300, Alexandru Ardelean wrote:
+> > From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> >
+> > As part of the general cleanup of indio_dev->mlock, this change replaces
+> > it with a local lock, to protect potential concurrent access to the
+> > completion callback during a conversion.
+>
+> I don't know the bigger picture (and no links here for general cleanup)
+> but I assume it is part of wider work and that mlock is unwanted. In
+> such case:
+>
+> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
+> If it is part of some bigger work, please put a link to lore.kernel.org
+> under separators ---, so everyone can get the context.
 
-Fix this by making the users invoke the make clean target.
+Will keep that in mind.
+I am not sure if there is a lore.kernel.org link that's easy to find
+for a discussion on this topic, maybe I can describe it here and use
+the link [from this later].
 
-Some details about the changes. The libbpf Makefile already had a
-clean-config target (which seems to be copy-pasted from perf), but this
-target was not "connected" (a make dependency) to clean target. Choose
-not to rename target as someone might be using it. Did change the output
-from "CLEAN config" to "CLEAN feature-detect", to make it more clear
-what happens.
-
-This is related to the complaint and troubleshooting in link:
-Link: https://lore.kernel.org/lkml/20200818122007.2d1cfe2d@carbon/
-
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
----
- tools/build/Makefile |    2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-index 8462690a039b..02c99bc95c69 100644
---- a/tools/bpf/bpftool/Makefile
-+++ b/tools/bpf/bpftool/Makefile
-@@ -176,7 +176,11 @@ $(OUTPUT)bpftool: $(OBJS) $(LIBBPF)
- $(OUTPUT)%.o: %.c
- 	$(QUIET_CC)$(CC) $(CFLAGS) -c -MMD -o $@ $<
- 
--clean: $(LIBBPF)-clean
-+feature-detect-clean:
-+	$(call QUIET_CLEAN, feature-detect)
-+	$(Q)$(MAKE) -C $(srctree)/tools/build/feature/ clean >/dev/null
-+
-+clean: $(LIBBPF)-clean feature-detect-clean
- 	$(call QUIET_CLEAN, bpftool)
- 	$(Q)$(RM) -- $(OUTPUT)bpftool $(OUTPUT)*.o $(OUTPUT)*.d
- 	$(Q)$(RM) -- $(BPFTOOL_BOOTSTRAP) $(OUTPUT)*.skel.h $(OUTPUT)vmlinux.h
-diff --git a/tools/build/Makefile b/tools/build/Makefile
-index 727050c40f09..722f1700d96a 100644
---- a/tools/build/Makefile
-+++ b/tools/build/Makefile
-@@ -38,6 +38,8 @@ clean:
- 	$(call QUIET_CLEAN, fixdep)
- 	$(Q)find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
- 	$(Q)rm -f $(OUTPUT)fixdep
-+	$(call QUIET_CLEAN, feature-detect)
-+	$(Q)$(MAKE) -C feature/ clean >/dev/null
- 
- $(OUTPUT)fixdep-in.o: FORCE
- 	$(Q)$(MAKE) $(build)=fixdep
-diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index bf8ed134cb8a..bbb89551468a 100644
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@ -269,10 +269,10 @@ install: install_lib install_pkgconfig install_headers
- ### Cleaning rules
- 
- config-clean:
--	$(call QUIET_CLEAN, config)
-+	$(call QUIET_CLEAN, feature-detect)
- 	$(Q)$(MAKE) -C $(srctree)/tools/build/feature/ clean >/dev/null
- 
--clean:
-+clean: config-clean
- 	$(call QUIET_CLEAN, libbpf) $(RM) -rf $(CMD_TARGETS)		     \
- 		*~ .*.d .*.cmd LIBBPF-CFLAGS $(BPF_HELPER_DEFS)		     \
- 		$(SHARED_OBJDIR) $(STATIC_OBJDIR)			     \
+This was something that popped up during reviews we got from Jonathan
+[or others], saying "please don't use indio_dev->mlock, that is an IIO
+framework lock, and an IIO driver should not use it".
+Reasons include [and some may be repeated a bit]:
+- this could cause a deadlock if the IIO framework holds this lock and
+an IIO driver also tries to get a hold of this lock
+- similar to the previous point, this mlock is taken by
+iio_device_claim_direct_mode() and released by
+iio_device_release_direct_mode() ; which means that mlock aims to
+become more of an IIO framework lock, than a general usage lock;
+- this wasn't policed/reviewed intensely in the older driver [a few
+years ago], but has become a point in recent reviews;
+- if we want to develop/enhance the IIO framework, some elements like
+this need to be taken care of, as more drivers get added and more
+complexity gets added;
+- there is an element of fairness [obviously], where someone writing a
+new IIO driver, takes an older one as example, and gets hit on the
+review; the person feels they did a good job in mimicking the old
+driver; their feeling is correct; the IIO framework should provide
+good references and/or cleanup existing drivers;
+- same as the previous point, we don't want to keep telling people
+writing new IIO drivers [and starting out with IIO] to "not use mlock
+[because it was copied from an old driver]"; it's more/needless review
+work
 
 
+>
+>
+> Best regards,
+> Krzysztof
+>
+> >
+> > Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > ---
+> >  drivers/iio/adc/exynos_adc.c | 12 ++++++++----
+> >  1 file changed, 8 insertions(+), 4 deletions(-)
+> >
