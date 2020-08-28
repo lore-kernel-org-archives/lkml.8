@@ -2,102 +2,142 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D0FC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAA6C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4AC2075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE1E4208D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:35:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iUJdiq08"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xrmlci1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgH1Jbk (ORCPT
+        id S1728806AbgH1Jfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:31:40 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:57644 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728016AbgH1JbW (ORCPT
+        Fri, 28 Aug 2020 05:35:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728532AbgH1JfZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:31:22 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07S9RKLH005422;
-        Fri, 28 Aug 2020 11:30:46 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=GZcXYK4IQ/ttyWbgQ2w+8/AUl4mLyk/JntubDt8xpu4=;
- b=iUJdiq08j1aAdX0H//CuLIvKCyuHq+0qo06HR0veCNKqtfts+9GPogoz7knCy4K6H2Tn
- rII6qYVUpDXcqmuN2R0T010lAr8/3hIeUNaCs48mgCAMxjSkLcbuhj168DSlabMBrPB8
- UbzyAqIycsEyWw0NfqB9/v/EohNmJRNe8FH5aK9W+ZOqXrDx0eVzEEcGSxIAiWsM3sB5
- qtjPsBRjuo2xWipwyiMeUAbrQCZF+usgqdzZFm125aVg5bTXq9sbdTojV/8HiF6vfaDn
- HNQgrnRPXS4jTFLUciLAAyKgaiHN3j4tm6bvLLXALI28xEY5BaKPfDGmxatcXU+ux7Bz NQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 332t8g5mm2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 11:30:46 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 753D510002A;
-        Fri, 28 Aug 2020 11:30:38 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 547472AD2DE;
-        Fri, 28 Aug 2020 11:30:38 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Aug
- 2020 11:30:37 +0200
-Subject: Re: [PATCH v7 3/3] ARM: dts: stm32: add initial support for
- stm32mp157-odyssey board
-To:     Marcin Sloniewski <marcin.sloniewski@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <mani@kernel.org>, <a.fatoum@pengutronix.de>, <sam@ravnborg.org>,
-        <linus.walleij@linaro.org>, <arnd@arndb.de>, <broonie@kernel.org>,
-        <lkundrak@v3.sk>, <daniel@0x0f.com>,
-        <kuninori.morimoto.gx@renesas.com>, <allen.chen@ite.com.tw>,
-        <robh@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>
-References: <20200809164450.289731-1-marcin.sloniewski@gmail.com>
- <20200809164450.289731-3-marcin.sloniewski@gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <8a95db7e-865a-db34-ae8a-b2fe3533ab8d@st.com>
-Date:   Fri, 28 Aug 2020 11:30:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 28 Aug 2020 05:35:25 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 606DFC061232
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:35:25 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id v24so175336uaj.7
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:35:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/mdittT6+6EzCIerCsP+eMrYewGCwnIzPurZ3euQ7cw=;
+        b=xrmlci1XQklPdv8VwdCziv8Ar/UxceOi05ImtRTPFIMg7t76W0VOXgbBWgcSxJjQkG
+         7OJJGmztUHDLhPlStrGS21cIy5G6Pdq52sx8L7JibwmnsKieNyqGFvCapPJ8yi2BDPDJ
+         CgTRJM8yNZAoZXqD+jmroylm/y1t+0HhlTzN1rbouTe7W23Peslwhhfnh4ywe1FFVZic
+         O/JgK5vKgaqEaa9wlPsvOpPgYkM9103S/GERZ5qOGtuZhDMhq6PMFsYao4NsTuvl/BK4
+         lSouNSllEvVZ6zGY0cl/i5I6yOn8sKy4YCKbn5aOCd8rM+cQQDHY1BfGR/48IyyGYfg5
+         QugA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/mdittT6+6EzCIerCsP+eMrYewGCwnIzPurZ3euQ7cw=;
+        b=Co5OXjVI7DEw2w38eBxc9MzattPdQQVbm3SPL9CMJvqBhCDg/ATwbEfQEiuD1DCVp1
+         mcYaNIYRny4Ejd/eB0n5LD8LtrxLEg/xrlISGpG4oxOsSLscBmVkKLIVkrH53V5AIOeL
+         iJMnh8LLYzlYA1wtqqg1Z4ReXrhcRKlIrH81jK+6+s5gremrzvGi2DNAc73+Clwch2PX
+         de9UIk4BK+SXvDjbzta/vLwe7D+RjTEI8jVx1rCtYpyFRB06ePSJs4EbA2jIlHKxKFbt
+         E3CKzWZAJuoorcEkTn/KywAimgO7nItGWn4SJTEmip14HzhQyUuzVZG+ZNqeVFHSQHDX
+         kHww==
+X-Gm-Message-State: AOAM533AyFUHQSCHqP/9zx5n0Ezqq1MULATyu+fJZT4EKgKS4gaf3iLf
+        fzLla9kzCW3Wr3edzDl6MtZKd4LPW686/7ZovZtZ8Q==
+X-Google-Smtp-Source: ABdhPJzxNEeZfoY+k3gp0uBoTm4yCYE5kPlcV9PGhfGkgvhiqDyqVKsddEc6lWq8Z8xFJlOpwC9vsbIVbRpsPgjPmsM=
+X-Received: by 2002:ab0:3114:: with SMTP id e20mr380470ual.104.1598607324469;
+ Fri, 28 Aug 2020 02:35:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200809164450.289731-3-marcin.sloniewski@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-28_05:2020-08-28,2020-08-28 signatures=0
+References: <CA+G9fYvUwH2FA9GOeA_7GYpLA31uOmEpg32VKnJ8-d5QSK4PdQ@mail.gmail.com>
+ <20200827090813.fjugeqbb47fachy7@vireshk-i7> <CAK8P3a2zxybiMDzHXkTsT=VpHJOLkwd1=YTtCNU04vuMjZLkxA@mail.gmail.com>
+ <20200827101231.smqrhqu5da6jlz6i@vireshk-i7> <CA+G9fYv=XLtsuD=tVR1HHotwpKLkbwZVyPr4UhY-jD+6-duTmw@mail.gmail.com>
+ <CA+G9fYvSEHua0EpW64rASucWuS-U2STAZxufrfN75UDspGt2cA@mail.gmail.com>
+In-Reply-To: <CA+G9fYvSEHua0EpW64rASucWuS-U2STAZxufrfN75UDspGt2cA@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 28 Aug 2020 11:34:47 +0200
+Message-ID: <CAPDyKFrpOqpBiSvkvO7sXHiQDOwdXYmx-80Ji5wW79QF-MrOuQ@mail.gmail.com>
+Subject: Re: Kernel panic : Unable to handle kernel paging request at virtual
+ address - dead address between user and kernel address ranges
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        madhuparnabhowmik10@gmail.com,
+        Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marcin,
+On Fri, 28 Aug 2020 at 11:22, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> On Thu, 27 Aug 2020 at 17:06, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >
+> > On Thu, 27 Aug 2020 at 15:42, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 27-08-20, 11:48, Arnd Bergmann wrote:
+> > > > > > [    3.680477]  dev_pm_opp_put_clkname+0x30/0x58
+> > > > > > [    3.683431]  sdhci_msm_probe+0x284/0x9a0
+> > > >
+> > > > dev_pm_opp_put_clkname() is part of the error handling in the
+> > > > probe function, so I would deduct there are two problems:
+> > > >
+> > > > - something failed during the probe and the driver is trying
+> > > >   to unwind
+> > > > - the error handling it self is buggy and tries to undo something
+> > > >   again that has already been undone.
+> > >
+> > > Right.
+> > >
+> > > > This points to Viresh's
+> > > > d05a7238fe1c mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()
+> > >
+> > > I completely forgot that Ulf already pushed this patch and I was
+> > > wondering on which of the OPP core changes I wrote have done this :(
+> > >
+> > > > Most likely this is not the entire problem but it uncovered a preexisting
+> > > > bug.
+> > >
+> > > I think this is.
+> > >
+> > > Naresh: Can you please test with this diff ?
+> >
+> > I have applied your patch and tested but still see the reported problem.
+>
+> The git bisect shows that the first bad commit is,
+> d05a7238fe1c mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()
+>
+> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Reported-by: Anders Roxell <anders.roxell@linaro.org>
 
-On 8/9/20 6:44 PM, Marcin Sloniewski wrote:
-> Add support for Seeed Studio's stm32mp157c odyssey board.
-> Board consists of SoM with stm32mp157c with 4GB eMMC and 512 MB DDR3 RAM
-> and carrier board with USB and ETH interfaces, SD card connector,
-> wifi and BT chip AP6236.
-> 
-> In this patch only basic kernel boot is supported and interfacing
-> SD card and on-board eMMC.
-> 
-> Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
-> ---
+I am not sure what version of the patch you tested. However, I have
+dropped Viresh's v1 and replaced it with v2 [1]. It's available for
+testing at:
 
-Series applied on stm32-next.
+https://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git next
 
-Regards
-Alex
+Can you please check if it still causes problems, then I will drop it, again.
 
+Kind regards
+Uffe
+
+[1] https://lkml.org/lkml/2020/8/28/43
