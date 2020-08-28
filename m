@@ -2,168 +2,99 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71798C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC6DC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E020208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F3C208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:38:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xCIRThnO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RduLXisF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgH1GfQ (ORCPT
+        id S1726924AbgH1Gii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 02:35:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38620 "EHLO
+        Fri, 28 Aug 2020 02:38:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbgH1GfP (ORCPT
+        with ESMTP id S1726010AbgH1Gif (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 02:35:15 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F82BC06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 23:35:15 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id g6so85397pjl.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 23:35:15 -0700 (PDT)
+        Fri, 28 Aug 2020 02:38:35 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F296C061264;
+        Thu, 27 Aug 2020 23:38:35 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id nv17so79997pjb.3;
+        Thu, 27 Aug 2020 23:38:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FQ9m7rOG4pcefSrbBbgAU9ykq2A7WMGzE5Rx/ZaZNLs=;
-        b=xCIRThnOhSion0cQo5SnfvpCnaQG5BTb+lcXkAp+x9occ7CJb8PjpxomAr//zInYM1
-         BKO77WX4AQJutbPU1/ztPjon47v93xZiJDju4dIqOCXj8C/S8A7dDnG02kXh6NC6aK2A
-         7LPN78JgoYB+zUKe72OTgcfYDQ+KyRfAaXSc3W1+qbPFec/jW8w9PXbhVShSNDJ+O4OG
-         AhmIZyzWLziG/DpLZGjfKRGYB2pyg7cdeigEm2OjND5rRn8ilmpoozis97CTd6B5gbSr
-         KlbekG5rJzNADfl3dTL9R9naRyG3r2pqsmNz+7Nq3A/WKN91dBovrS82d/NLYMm7F6pZ
-         WPww==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p9NrqtGA0lEAyvaWExHEOIkVPg1Ur6ql2DVuQwYEcRI=;
+        b=RduLXisFsEQzUmokLu8gVohrbfs3Yi3mSW+4TbL7YZgQQ3/aZcpnYnHLScI4+UuzBU
+         N2IUrrW6FAZXVM/n+n+7rPCfBl85j+538sRO8uiGBbNnwDtNuWUypt09X9zeiHgMii0v
+         8pkPrCvPARwQA1bHqL4fiT+aNdkPy4tEEwKe0myb2VUYdnCT+aUepjGePG8GY87HdJ+O
+         oW60geGXTK0i0hd8sLTzK/T1cnlrxbliSLulJHmsQtZTcDmQUSaUQkoEin2fPPsIpVNg
+         s5594T/jV37+xUcucPEl3rZHbc7KAU7iIucna9FHVQplpemsHea4Sah4OvIXGlnRgnac
+         byGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FQ9m7rOG4pcefSrbBbgAU9ykq2A7WMGzE5Rx/ZaZNLs=;
-        b=B0jqQnurslonEuGTbQZgzrj9e4ddd6uLZYueQL4szUPFhfxu2pmMeZLuC+71+F/g+4
-         uBYSN0as9wn4EYbFz75FK3PzpprJXqhLxXdSIX8bxCAAwONVQssBmohrtNvOpU6Sa9gq
-         yVXOPe2MagOgTBsvyjLOcAyZ/+ryEuCpAP567kvRLigxEVKy04zn3EPYk1+PxKOnibCl
-         LoxLktc9wQ/EciVXU37tPTN4px4ikuV2RKDmoosihfLD0HCva0/t+pP3Tqguv7rNcSda
-         BTllwdUzTtNWxPm/J8lQaeVIQZdR8UIeNf3yZBCWElZg5v23kXTmOgatKzqkmQLdZ7J7
-         EAiw==
-X-Gm-Message-State: AOAM532EspVNo99qwskkkz9Q4RBvwxsdsY5AATgLFhzhD5OWZ19pxDml
-        w8qlkB2FKshoKErDNdf1KGA/9Q==
-X-Google-Smtp-Source: ABdhPJw9EzNUIFcdrMBzZ7k++cAXU94s6WolbnROMNHYs4Dk5ewHyG7KWFYqu1Glqd5JUO+EPQfXwQ==
-X-Received: by 2002:a17:90a:e7c8:: with SMTP id kb8mr385908pjb.104.1598596514394;
-        Thu, 27 Aug 2020 23:35:14 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id f13sm222789pfd.215.2020.08.27.23.35.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Aug 2020 23:35:13 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 12:05:11 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Niklas Cassel <nks@flawful.org>
-Subject: Re: [PATCH v2] opp: Power on (virtual) power domains managed by the
- OPP core
-Message-ID: <20200828063511.y47ofywtu5qo57bq@vireshk-i7>
-References: <20200826093328.88268-1-stephan@gerhold.net>
- <20200827100104.yuf2nzb6qras7zcw@vireshk-i7>
- <20200827114422.GA1784@gerhold.net>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p9NrqtGA0lEAyvaWExHEOIkVPg1Ur6ql2DVuQwYEcRI=;
+        b=alcupNMIAoqe+FuP1fwRJxTglZ24/4gLfrRQJAF0oFO5V2jKu1v24qPfR2IGZG9MWs
+         masM1HDRenLa/7GwmNYQe1kDKyd2WqTOmS0MUeK/lSGfUmsJeRjhdWvt275O6JZDhvKm
+         bSUIYVuJsd5M+e6MVTLSbxEsna0VGICyyX2h62E8I0V+iolT76UcDJf/1Ecq24Es7Csp
+         LtvlzvEJ8SaSjwOWHGgEczcujexn+e46JCMF9tTImT2zveXc+vGn8BJpI8Aa5M95WqYq
+         YC8BUuql7CFkkW2fymwT+tNYjCByGHpDsDsPuzdY9JLA4NDf0ZnbQJhO9IeTSvr0w2zf
+         +yaA==
+X-Gm-Message-State: AOAM530qJDSBs3+Dg4VyDgLkufyKw9tlW0hhelIFdqVAHQw6SfG30NVx
+        qY6xm17B+LriAguv9xwM6f4=
+X-Google-Smtp-Source: ABdhPJxJugxcrisQy51S+DhhH5XVTik2EScUjH+nlVz9HSkLZd+WEAfljrs/0p3kTdhlACFzl0pafg==
+X-Received: by 2002:a17:902:b40b:: with SMTP id x11mr187530plr.196.1598596714863;
+        Thu, 27 Aug 2020 23:38:34 -0700 (PDT)
+Received: from kun-vb-ubnt64.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id b8sm304757pfp.48.2020.08.27.23.38.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 23:38:33 -0700 (PDT)
+From:   Kun Zhao <zk.zkxz@gmail.com>
+Cc:     zkxz@hotmail.com, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] In the device tree file openbmc-flash-layout.dtsi, rofs partition offset is defined as 0x4c0000, while its node name is "rofs@c0000" which is a typo. It should be "rofs@4c0000".
+Date:   Thu, 27 Aug 2020 23:38:31 -0700
+Message-Id: <20200828063831.12578-1-zk.zkxz@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827114422.GA1784@gerhold.net>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27-08-20, 13:44, Stephan Gerhold wrote:
-> Hmm. Actually I was using this parameter for initial testing, and forced
-> on the power domains from the qcom-cpufreq-nvmem driver. For my v1 patch
-> I wanted to enable the power domains in dev_pm_opp_set_rate(), so there
-> using the virt_devs parameter was not possible.
+ARM: dts: openbmc-flash-layout: Fix a typo of rofs offset
 
-Right, as we really do not want to enable it there and leave it for
-the real consumers to handle.
+Signed-off-by: Kun Zhao <zk.zkxz@gmail.com>
+---
+ arch/arm/boot/dts/openbmc-flash-layout.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> On the other hand, creating the device links would be possible from the
-> platform driver by using the parameter.
-
-Right.
-
-> > And so I think again if this patch should be picked instead of letting
-> > the platform handle this ?
-> 
-> It seems like originally the motivation for the parameter was that
-> cpufreq consumers do *not* need to power on the power domains:
-> 
-> Commit 17a8f868ae3e ("opp: Return genpd virtual devices from dev_pm_opp_attach_genpd()"):
->  "The cpufreq drivers don't need to do runtime PM operations on
->   the virtual devices returned by dev_pm_domain_attach_by_name() and so
->   the virtual devices weren't shared with the callers of
->   dev_pm_opp_attach_genpd() earlier.
-> 
->   But the IO device drivers would want to do that. This patch updates
->   the prototype of dev_pm_opp_attach_genpd() to accept another argument
->   to return the pointer to the array of genpd virtual devices."
-
-Not just that I believe. There were also arguments that only the real
-consumer knows how to handle multiple power domains. For example for a
-USB or Camera module which can work in multiple modes, we may want to
-enable only one power domain in say slow mode and another power domain
-in fast mode. And so these kind of complex behavior/choices better be
-left for the end consumer and not try to handle this generically in
-the OPP core.
-
-> But the reason why I made this patch is that actually something *should*
-> enable the power domains even for the cpufreq case.
-
-Ulf, what do you think about this ? IIRC from our previous discussions
-someone asked me not do so.
-
-> If every user of dev_pm_opp_attach_genpd() ends up creating these device
-> links we might as well manage those directly from the OPP core.
-
-Sure, I am all in for reducing code duplication, but ...
-
-> I cannot think of any use case where you would not want to manage those
-> power domains using device links. And if there is such a use case,
-> chances are good that this use case is so special that using the OPP API
-> to set the performance states would not work either. In either case,
-> this seems like something that should be discussed once there is such a
-> use case.
-
-The example I gave earlier shows a common case where we need to handle
-this at the end users which still want to use the OPP API.
-
-> At the moment, there are only two users of dev_pm_opp_attach_genpd():
-> 
->   - cpufreq (qcom-cpufreq-nvmem)
->   - I/O (venus, recently added in linux-next [1])
-> 
-> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=9a538b83612c8b5848bf840c2ddcd86dda1c8c76
-> 
-> In fact, venus adds the device link exactly the same way as in my patch.
-> So we could move that to the OPP core, simplify the venus code and
-> remove the virt_devs parameter. That would be my suggestion.
-> 
-> I can submit a v3 with that if you agree (or we take this patch as-is
-> and remove the parameter separately - I just checked and creating a
-> device link twice does not seem to cause any problems...)
-
-I normally tend to agree with the logic that lets only focus on what's
-upstream and not think of virtual cases which may never happen. But I
-was told that this is too common of a scenario and so it made sense to
-do it this way.
-
-Maybe Ulf can again throw some light here :)
-
+diff --git a/arch/arm/boot/dts/openbmc-flash-layout.dtsi b/arch/arm/boot/dts/openbmc-flash-layout.dtsi
+index 6c26524e93e1..b47e14063c38 100644
+--- a/arch/arm/boot/dts/openbmc-flash-layout.dtsi
++++ b/arch/arm/boot/dts/openbmc-flash-layout.dtsi
+@@ -20,7 +20,7 @@ kernel@80000 {
+ 		label = "kernel";
+ 	};
+ 
+-	rofs@c0000 {
++	rofs@4c0000 {
+ 		reg = <0x4c0000 0x1740000>;
+ 		label = "rofs";
+ 	};
 -- 
-viresh
+2.28.0
+
