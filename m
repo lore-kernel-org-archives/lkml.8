@@ -2,188 +2,157 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4BAC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B45C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC58420872
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E3F207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:04:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FwSk+QOE"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lJklyuEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbgH1LD0 (ORCPT
+        id S1729207AbgH1LDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 07:03:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729187AbgH1LBo (ORCPT
+        Fri, 28 Aug 2020 07:03:55 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52338 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729150AbgH1LDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 07:01:44 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 042A3C061234
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:54:27 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id t9so468771pfq.8
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:54:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fhcvo1n+CsYdI8OH67mOVUpzZUMHRybLogH+vvrmtQs=;
-        b=FwSk+QOEwpmwMFOoywfLT/+2bJceyMtZXet2C1AMWtwW3s6qZCMu0HjZPeY0DZ1yLk
-         Tg96kygIN8rSOY+i7AiPT+J0042frtmo1SqBqHXKQAwzGOBip7+WoaZymZtzlWiEU55X
-         qodqG9yf4CZsdtUGTG5Sd9fJJtT5A/Pgv/yrGGsZHI7IH676imoYcmoINtfsz6Oocr4o
-         bC4fsuACX6jcuM4oNu0Cd5JAV5lSmby7vAx5pT1YTcGXvvrF0aobHyEJGMfJdZsecmvf
-         lUpLfF1skl6oElBhFVfCNo62Ou82oQfUOX7adtdyJPaSEzIsaOV6OQX+PKUh8pTLTBcX
-         d66g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fhcvo1n+CsYdI8OH67mOVUpzZUMHRybLogH+vvrmtQs=;
-        b=WmG4MzAWpDLYl3dydE7AYab33FDmfhfAk3tKC9nOFcYUp9eA/sTHlDpUi+9v2VMiC/
-         /MOZ6U0cE+sI0XI6V27wh8ph3dj7n3ICUEjiUVlsA/uYmwMkVqnhRGkNPiELMVrm3F33
-         cyiV2OlDLidPRQomSNKDf1VyFef4O1N2bGMqFgXz6NAOqXnrB4gX6O361HiDgqoDL69s
-         /bVqntXvJFtd3jdklBNXMObT2dfiWIWyljUrS5x2nWwpajgztwVScUYIjwOHDZHOAd5+
-         NhL0NK+ZDYSjuPhIcEoYsQOCMaOK++2pJYse0m7pJdlB/TQGA/GE7UTNWHuk9iNOTjFH
-         FFtw==
-X-Gm-Message-State: AOAM5302ndgcUonvmUq2hX3M0TwwVsxd9aeL2cTKD7eYuQQyUpjDAYDu
-        X2ZKNc2Lo/c/jqbgnPbwOUEIr6D19zP3ShGqLGBKgQ==
-X-Google-Smtp-Source: ABdhPJw8pypePukEK0vS4XNEe8uxvJs9NntGAggpPmMOwU0fcfpoDp4x7PlyIPIJw3cN6pb7j3rX+HijCx9y79yN0V8=
-X-Received: by 2002:aa7:8c0f:: with SMTP id c15mr784835pfd.135.1598612066279;
- Fri, 28 Aug 2020 03:54:26 -0700 (PDT)
+        Fri, 28 Aug 2020 07:03:33 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07SB3SHf010025;
+        Fri, 28 Aug 2020 06:03:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598612608;
+        bh=Ht/kpmfFKKAmBLtxYmnb3a0fKfLy/bJ2ohoyyGN62fI=;
+        h=From:To:CC:Subject:Date;
+        b=lJklyuEmEg0ftZAPvTCVT7ipc+wvIBXH4IJghDVOomz5BdvT0w4ic7Swno4kTYFY5
+         GsO32P4IFyA/VIE1o2vx7K0OuIFbEgEjcaBGFnpevNcmhliFQMbUrmKzz4F0wnOKMk
+         4E1JHK/pe6pbsqWfeVcUDputRhLnV/vKTkv+KtXo=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07SB3S3t055872
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Aug 2020 06:03:28 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 28
+ Aug 2020 06:03:27 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 28 Aug 2020 06:03:27 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07SB3Po4020682;
+        Fri, 28 Aug 2020 06:03:26 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <linux-kernel@vger.kernel.org>, <andy.shevchenko@gmail.com>
+Subject: [PATCH] dmaengine: Mark dma_request_slave_channel() deprecated
+Date:   Fri, 28 Aug 2020 14:05:07 +0300
+Message-ID: <20200828110507.22407-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20200826201420.3414123-1-ndesaulniers@google.com>
- <20200826214228.GB1005132@ubuntu-n2-xlarge-x86> <20200827190217.GA3610840@elver.google.com>
-In-Reply-To: <20200827190217.GA3610840@elver.google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Fri, 28 Aug 2020 12:54:15 +0200
-Message-ID: <CAAeHK+zyjKWrSU-udVuqLN1i2c0bxNTMVirGjaRfXN=opn6spw@mail.gmail.com>
-Subject: Re: [PATCH] compiler-clang: add build check for clang 10.0.1
-To:     Marco Elver <elver@google.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 9:02 PM Marco Elver <elver@google.com> wrote:
->
-> On Wed, Aug 26, 2020 at 02:42PM -0700, Nathan Chancellor wrote:
-> > On Wed, Aug 26, 2020 at 01:14:19PM -0700, Nick Desaulniers wrote:
-> > > During Plumbers 2020, we voted to just support the latest release of
-> > > Clang for now.  Add a compile time check for this.
-> > >
-> > > Older clang's may work, but we will likely drop workarounds for older
-> > > versions.
-> >
-> > I think this part of the commit message is a little wishy-washy. If we
-> > are breaking the build for clang < 10.0.1, we are not saying "may work",
-> > we are saying "won't work". Because of this, we should take the
-> > opportunity to clean up behind us and revert/remove parts of:
-> >
-> > 87e0d4f0f37f ("kbuild: disable clang's default use of -fmerge-all-constants")
-> > b0fe66cf0950 ("ARM: 8905/1: Emit __gnu_mcount_nc when using Clang 10.0.0 or newer")
-> > b9249cba25a5 ("arm64: bti: Require clang >= 10.0.1 for in-kernel BTI support")
-> > 3acf4be23528 ("arm64: vdso: Fix compilation with clang older than 8")
-> >
-> > This could be a series or a part of this commit, I do not have a
-> > strong preference. If we are not going to clean up behind us, this
-> > should be a warning and not an error.
->
-> There are also some other documentation that would go stale. We probably
-> have to change KASAN docs to look something like the below.
->
-> I wish we could also remove the "but detection of out-of-bounds accesses
-> for global variables is only supported since Clang 11", but Clang 10 is
-> a vast improvement so I'm not complaining. :-)
->
-> Acked-by: Marco Elver <elver@google.com>
->
-> Thanks,
-> -- Marco
->
-> ------ >8 ------
->
-> From 13d03b55c69dec813d94c1481dcb294971f164ef Mon Sep 17 00:00:00 2001
-> From: Marco Elver <elver@google.com>
-> Date: Thu, 27 Aug 2020 20:56:34 +0200
-> Subject: [PATCH] kasan: Remove mentions of unsupported Clang versions
->
-> Since the kernel now requires at least Clang 10.0.1, remove any mention
-> of old Clang versions and simplify the documentation.
->
-> Signed-off-by: Marco Elver <elver@google.com>
-> ---
->  Documentation/dev-tools/kasan.rst | 4 ++--
->  lib/Kconfig.kasan                 | 9 ++++-----
->  2 files changed, 6 insertions(+), 7 deletions(-)
->
-> diff --git a/Documentation/dev-tools/kasan.rst b/Documentation/dev-tools/kasan.rst
-> index 38fd5681fade..4abc84b1798c 100644
-> --- a/Documentation/dev-tools/kasan.rst
-> +++ b/Documentation/dev-tools/kasan.rst
-> @@ -13,10 +13,10 @@ KASAN uses compile-time instrumentation to insert validity checks before every
->  memory access, and therefore requires a compiler version that supports that.
->
->  Generic KASAN is supported in both GCC and Clang. With GCC it requires version
-> -8.3.0 or later. With Clang it requires version 7.0.0 or later, but detection of
-> +8.3.0 or later. Any supported Clang version is compatible, but detection of
->  out-of-bounds accesses for global variables is only supported since Clang 11.
->
-> -Tag-based KASAN is only supported in Clang and requires version 7.0.0 or later.
-> +Tag-based KASAN is only supported in Clang.
->
->  Currently generic KASAN is supported for the x86_64, arm64, xtensa, s390 and
->  riscv architectures, and tag-based KASAN is supported only for arm64.
-> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-> index 047b53dbfd58..033a5bc67ac4 100644
-> --- a/lib/Kconfig.kasan
-> +++ b/lib/Kconfig.kasan
-> @@ -54,9 +54,9 @@ config KASAN_GENERIC
->           Enables generic KASAN mode.
->
->           This mode is supported in both GCC and Clang. With GCC it requires
-> -         version 8.3.0 or later. With Clang it requires version 7.0.0 or
-> -         later, but detection of out-of-bounds accesses for global variables
-> -         is supported only since Clang 11.
-> +         version 8.3.0 or later. Any supported Clang version is compatible,
-> +         but detection of out-of-bounds accesses for global variables is
-> +         supported only since Clang 11.
->
->           This mode consumes about 1/8th of available memory at kernel start
->           and introduces an overhead of ~x1.5 for the rest of the allocations.
-> @@ -78,8 +78,7 @@ config KASAN_SW_TAGS
->           Enables software tag-based KASAN mode.
->
->           This mode requires Top Byte Ignore support by the CPU and therefore
-> -         is only supported for arm64. This mode requires Clang version 7.0.0
-> -         or later.
-> +         is only supported for arm64. This mode requires Clang.
->
->           This mode consumes about 1/16th of available memory at kernel start
->           and introduces an overhead of ~20% for the rest of the allocations.
-> --
-> 2.28.0.297.g1956fa8f8d-goog
->
+New drivers should use dma_request_chan() instead
+dma_request_slave_channel()
 
-Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
+dma_request_slave_channel() is a simple wrapper for dma_request_chan()
+eating up the error code for channel request failure and makes deferred
+probing impossible.
 
-Thanks!
+Move the dma_request_slave_channel() into the header as inline function,
+mark it as deprecated.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ drivers/dma/dmaengine.c   | 18 ------------------
+ include/linux/dmaengine.h | 15 +++++++++------
+ 2 files changed, 9 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index a53e71d2bbd4..ac8ef6cf7626 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -871,24 +871,6 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
+ }
+ EXPORT_SYMBOL_GPL(dma_request_chan);
+ 
+-/**
+- * dma_request_slave_channel - try to allocate an exclusive slave channel
+- * @dev:	pointer to client device structure
+- * @name:	slave channel name
+- *
+- * Returns pointer to appropriate DMA channel on success or NULL.
+- */
+-struct dma_chan *dma_request_slave_channel(struct device *dev,
+-					   const char *name)
+-{
+-	struct dma_chan *ch = dma_request_chan(dev, name);
+-	if (IS_ERR(ch))
+-		return NULL;
+-
+-	return ch;
+-}
+-EXPORT_SYMBOL_GPL(dma_request_slave_channel);
+-
+ /**
+  * dma_request_chan_by_mask - allocate a channel satisfying certain capabilities
+  * @mask:	capabilities that the channel must satisfy
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 011371b7f081..dd357a747780 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -1472,7 +1472,6 @@ void dma_issue_pending_all(void);
+ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+ 				       dma_filter_fn fn, void *fn_param,
+ 				       struct device_node *np);
+-struct dma_chan *dma_request_slave_channel(struct device *dev, const char *name);
+ 
+ struct dma_chan *dma_request_chan(struct device *dev, const char *name);
+ struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
+@@ -1502,11 +1501,6 @@ static inline struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+ {
+ 	return NULL;
+ }
+-static inline struct dma_chan *dma_request_slave_channel(struct device *dev,
+-							 const char *name)
+-{
+-	return NULL;
+-}
+ static inline struct dma_chan *dma_request_chan(struct device *dev,
+ 						const char *name)
+ {
+@@ -1575,6 +1569,15 @@ void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
+ #define dma_request_channel(mask, x, y) \
+ 	__dma_request_channel(&(mask), x, y, NULL)
+ 
++/* Deprecated, please use dma_request_chan() directly */
++static inline struct dma_chan * __deprecated
++dma_request_slave_channel(struct device *dev, const char *name)
++{
++	struct dma_chan *ch = dma_request_chan(dev, name);
++
++	return IS_ERR(ch) ? NULL : ch;
++}
++
+ static inline struct dma_chan
+ *dma_request_slave_channel_compat(const dma_cap_mask_t mask,
+ 				  dma_filter_fn fn, void *fn_param,
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
