@@ -2,259 +2,140 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AFCC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC318C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0013F20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:57:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qQ8Cgste"
+	by mail.kernel.org (Postfix) with ESMTP id C8FF020848
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:57:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598579861;
+	bh=ytVYmdvTxAHSvpNi2RcVC8TEBHrhZKe/ZTew0OdUFkg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=s2uo6+3DQkLFIeYzyLkn6oWltIBdra/9lZRbPLCccZBUykgG1vn2O1uyNSueeVan5
+	 bvEKeEmiZO6YyiC2EtYXHUJxKYKWoc+h5XvASSSWA/2GCkXMkGeOQ0ESB7hxj4tZNa
+	 4z/9QzgOUerWald+pTM/78nhrU6++YzoGIS701yM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgH1B5e (ORCPT
+        id S1728396AbgH1B53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 21:57:34 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:38488 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728352AbgH1B5V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 21:57:21 -0400
-Received: from tusharsu-Ubuntu.lan (c-71-197-163-6.hsd1.wa.comcast.net [71.197.163.6])
-        by linux.microsoft.com (Postfix) with ESMTPSA id BF96F20C27C2;
-        Thu, 27 Aug 2020 18:57:19 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BF96F20C27C2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        Thu, 27 Aug 2020 21:57:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728338AbgH1B5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 21:57:20 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40E602080C;
+        Fri, 28 Aug 2020 01:57:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1598579840;
-        bh=nzyuBFV9kqZh5RxX8gM1RD80E78BulBKErd8/nU8wOk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qQ8CgstekmkhlgT3EHBgPitdAENMOLwat19paNBoRTiLk5rVm55zMx1m01d9hTdhI
-         iqt1GFyGT8SoNc101UZkyHNbF4+BrMoMQKP356gnOcNe5F0opgu6YbtVb7Vqe/vVPc
-         Ikyd8fsnAJGd6hpVVItcvTckgrkzPxvL68YLrMAA=
-From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
-To:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
-        casey@schaufler-ca.com, agk@redhat.com, snitzer@redhat.com,
-        gmazyland@gmail.com
-Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
-        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com
-Subject: [PATCH v3 5/6] IMA: add hook to measure critical data from kernel components
-Date:   Thu, 27 Aug 2020 18:57:03 -0700
-Message-Id: <20200828015704.6629-6-tusharsu@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200828015704.6629-1-tusharsu@linux.microsoft.com>
-References: <20200828015704.6629-1-tusharsu@linux.microsoft.com>
+        bh=ytVYmdvTxAHSvpNi2RcVC8TEBHrhZKe/ZTew0OdUFkg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=n1Ug5cjFKvK7LDWSaWQXnOwQtS4KmW086f5qCkSAxdNbnQDxNtBCQeh3u0gd4Amc+
+         CUwWt7TRQR8rg+BpnvA9u0wFBEUn/MsJKg/KeUyjQLJxyRNxNCbhce6vL/LoWFUHO3
+         2hIJRZeNqAsqoo93U3qbnLy96JyVfjPvNiqnhdSY=
+Date:   Fri, 28 Aug 2020 10:57:14 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eddy Wu <Eddy_Wu@trendmicro.com>, x86@kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        linux-arch@vger.kernel.org, guoren@kernel.org
+Subject: Re: [PATCH v3 01/16] kprobes: Add generic kretprobe trampoline
+ handler
+Message-Id: <20200828105714.b499777a12e5cd5d11855f8b@kernel.org>
+In-Reply-To: <159854632381.736475.17150452390088286224.stgit@devnote2>
+References: <159854631442.736475.5062989489155389472.stgit@devnote2>
+        <159854632381.736475.17150452390088286224.stgit@devnote2>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, IMA does not provide a generic function for kernel components
-to measure their data. A generic function provided by IMA would
-enable various parts of the kernel with easier and faster on-boarding to
-use IMA infrastructure, would avoid code duplication, and consistent
-usage of IMA policy "critical_kernel_data_sources" across the kernel.
+On Fri, 28 Aug 2020 01:38:44 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Add a new IMA func CRITICAL_DATA and a corresponding IMA hook
-ima_measure_critical_data() to support measuring various critical kernel
-components. Limit the measurement to the components that are specified
-in the IMA policy - CRITICAL_DATA+critical_kernel_data_sources.
+> +unsigned long __kretprobe_trampoline_handler(struct pt_regs *regs,
+> +					unsigned long trampoline_address,
+> +					void *frame_pointer)
+> +{
+> +	struct kretprobe_instance *ri = NULL;
+> +	struct hlist_head *head, empty_rp;
+> +	struct hlist_node *tmp;
+> +	unsigned long flags, orig_ret_address = 0;
+> +	kprobe_opcode_t *correct_ret_addr = NULL;
+> +	bool skipped = false;
+> +
+> +	INIT_HLIST_HEAD(&empty_rp);
+> +	kretprobe_hash_lock(current, &head, &flags);
+> +
+> +	/*
+> +	 * It is possible to have multiple instances associated with a given
+> +	 * task either because multiple functions in the call path have
+> +	 * return probes installed on them, and/or more than one
+> +	 * return probe was registered for a target function.
+> +	 *
+> +	 * We can handle this because:
+> +	 *     - instances are always pushed into the head of the list
+> +	 *     - when multiple return probes are registered for the same
+> +	 *	 function, the (chronologically) first instance's ret_addr
+> +	 *	 will be the real return address, and all the rest will
+> +	 *	 point to kretprobe_trampoline.
+> +	 */
+> +	hlist_for_each_entry(ri, head, hlist) {
+> +		if (ri->task != current)
+> +			/* another task is sharing our hash bucket */
+> +			continue;
+> +		/*
+> +		 * Return probes must be pushed on this hash list correct
+> +		 * order (same as return order) so that it can be popped
+> +		 * correctly. However, if we find it is pushed it incorrect
+> +		 * order, this means we find a function which should not be
+> +		 * probed, because the wrong order entry is pushed on the
+> +		 * path of processing other kretprobe itself.
+> +		 */
+> +		if (ri->fp != frame_pointer) {
+> +			if (!skipped)
+> +				pr_warn("kretprobe is stacked incorrectly. Trying to fixup.\n");
+> +			skipped = true;
+> +			continue;
+> +		}
+> +
+> +		orig_ret_address = (unsigned long)ri->ret_addr;
+> +		if (skipped)
+> +			pr_warn("%ps must be blacklisted because of incorrect kretprobe order\n",
+> +				ri->rp->kp.addr);
+> +
+> +		if (orig_ret_address != trampoline_address)
+> +			/*
+> +			 * This is the real return address. Any other
+> +			 * instances associated with this task are for
+> +			 * other calls deeper on the call stack
+> +			 */
+> +			break;
+> +	}
+> +
+> +	kretprobe_assert(ri, orig_ret_address, trampoline_address);
+> +
+> +	correct_ret_addr = ri->ret_addr;
 
-Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
----
- Documentation/ABI/testing/ima_policy |  8 ++++++-
- include/linux/ima.h                  | 11 +++++++++
- security/integrity/ima/ima.h         |  1 +
- security/integrity/ima/ima_api.c     |  2 +-
- security/integrity/ima/ima_main.c    | 24 ++++++++++++++++++++
- security/integrity/ima/ima_policy.c  | 34 ++++++++++++++++++++++++----
- 6 files changed, 73 insertions(+), 7 deletions(-)
+Oops, here is an insane code... why we have orig_ret_address *and* correct_ret_addr?
+I'll clean this up.
 
-diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
-index 7ccdc1964e29..36d9cee9704d 100644
---- a/Documentation/ABI/testing/ima_policy
-+++ b/Documentation/ABI/testing/ima_policy
-@@ -29,7 +29,7 @@ Description:
- 		base: 	func:= [BPRM_CHECK][MMAP_CHECK][CREDS_CHECK][FILE_CHECK][MODULE_CHECK]
- 				[FIRMWARE_CHECK]
- 				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
--				[KEXEC_CMDLINE] [KEY_CHECK]
-+				[KEXEC_CMDLINE] [KEY_CHECK] [CRITICAL_DATA]
- 			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
- 			       [[^]MAY_EXEC]
- 			fsmagic:= hex value
-@@ -51,6 +51,8 @@ Description:
- 			critical_kernel_data_sources:= list of kernel
- 			components (eg, selinux|apparmor|dm-crypt) that
- 			contain data critical to the security of the kernel.
-+			Only valid when action is "measure" and func is
-+			CRITICAL_DATA.
- 
- 		default policy:
- 			# PROC_SUPER_MAGIC
-@@ -128,3 +130,7 @@ Description:
- 		keys added to .builtin_trusted_keys or .ima keyring:
- 
- 			measure func=KEY_CHECK keyrings=.builtin_trusted_keys|.ima
-+
-+		Example of measure rule using CRITICAL_DATA to measure critical data
-+
-+			measure func=CRITICAL_DATA critical_kernel_data_sources=selinux|apparmor|dm-crypt
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index d15100de6cdd..136fc02580db 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -26,6 +26,10 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
- extern void ima_post_path_mknod(struct dentry *dentry);
- extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
- extern void ima_kexec_cmdline(int kernel_fd, const void *buf, int size);
-+extern int ima_measure_critical_data(const char *event_name,
-+				     const char *event_data_source,
-+				     const void *buf, int buf_len,
-+				     bool measure_buf_hash);
- 
- #ifdef CONFIG_IMA_KEXEC
- extern void ima_add_kexec_buffer(struct kimage *image);
-@@ -104,6 +108,13 @@ static inline int ima_file_hash(struct file *file, char *buf, size_t buf_size)
- }
- 
- static inline void ima_kexec_cmdline(int kernel_fd, const void *buf, int size) {}
-+static inline int ima_measure_critical_data(const char *event_name,
-+					    const char *event_data_source,
-+					    const void *buf, int buf_len,
-+					    bool measure_buf_hash)
-+{
-+	return -EOPNOTSUPP;
-+}
- #endif /* CONFIG_IMA */
- 
- #ifndef CONFIG_IMA_KEXEC
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index ba332de8ed0b..00b84052c8f1 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -200,6 +200,7 @@ static inline unsigned int ima_hash_key(u8 *digest)
- 	hook(POLICY_CHECK, policy)			\
- 	hook(KEXEC_CMDLINE, kexec_cmdline)		\
- 	hook(KEY_CHECK, key)				\
-+	hook(CRITICAL_DATA, critical_data)		\
- 	hook(MAX_CHECK, none)
- 
- #define __ima_hook_enumify(ENUM, str)	ENUM,
-diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-index af218babd198..9917e1730cb6 100644
---- a/security/integrity/ima/ima_api.c
-+++ b/security/integrity/ima/ima_api.c
-@@ -176,7 +176,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
-  *		subj=, obj=, type=, func=, mask=, fsmagic=
-  *	subj,obj, and type: are LSM specific.
-  *	func: FILE_CHECK | BPRM_CHECK | CREDS_CHECK | MMAP_CHECK | MODULE_CHECK
-- *	| KEXEC_CMDLINE | KEY_CHECK
-+ *	| KEXEC_CMDLINE | KEY_CHECK | CRITICAL_DATA
-  *	mask: contains the permission mask
-  *	fsmagic: hex value
-  *
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 52cbbc1f7ea2..a889bf40cb7e 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -869,6 +869,30 @@ void ima_kexec_cmdline(int kernel_fd, const void *buf, int size)
- 	fdput(f);
- }
- 
-+/**
-+ * ima_measure_critical_data - measure critical data
-+ * @event_name: name for the given data
-+ * @event_data_source: name of the event data source
-+ * @buf: pointer to buffer containing data to measure
-+ * @buf_len: length of buffer(in bytes)
-+ * @measure_buf_hash: if set to true - will measure hash of the buf,
-+ *                    instead of buf
-+ *
-+ * Buffers can only be measured, not appraised.
-+ */
-+int ima_measure_critical_data(const char *event_name,
-+			      const char *event_data_source,
-+			      const void *buf, int buf_len,
-+			      bool measure_buf_hash)
-+{
-+	if (!event_name || !event_data_source || !buf || !buf_len)
-+		return -EINVAL;
-+
-+	return process_buffer_measurement(NULL, buf, buf_len, event_name,
-+					  CRITICAL_DATA, 0, event_data_source,
-+					  measure_buf_hash);
-+}
-+
- static int __init init_ima(void)
- {
- 	int error;
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index c8a044705347..0c5202c1f26e 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -510,14 +510,23 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
- {
- 	int i;
- 
--	if (func == KEY_CHECK) {
--		return (rule->flags & IMA_FUNC) && (rule->func == func) &&
--		       ima_match_rule_data(rule, rule->keyrings, func_data,
--					   true, cred);
--	}
- 	if ((rule->flags & IMA_FUNC) &&
- 	    (rule->func != func && func != POST_SETATTR))
- 		return false;
-+
-+	switch (func) {
-+	case KEY_CHECK:
-+		return ((rule->func == func) &&
-+			ima_match_rule_data(rule, rule->keyrings,
-+					    func_data, true, cred));
-+	case CRITICAL_DATA:
-+		return ((rule->func == func) &&
-+			ima_match_rule_data(rule, rule->data_sources,
-+					    func_data, false, cred));
-+	default:
-+		break;
-+	}
-+
- 	if ((rule->flags & IMA_MASK) &&
- 	    (rule->mask != mask && func != POST_SETATTR))
- 		return false;
-@@ -1113,6 +1122,19 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
- 		if (ima_rule_contains_lsm_cond(entry))
- 			return false;
- 
-+		break;
-+	case CRITICAL_DATA:
-+		if (entry->action & ~(MEASURE | DONT_MEASURE))
-+			return false;
-+
-+		if (!(entry->flags & IMA_DATA_SOURCES) ||
-+		    (entry->flags & ~(IMA_FUNC | IMA_UID | IMA_PCR |
-+		    IMA_DATA_SOURCES)))
-+			return false;
-+
-+		if (ima_rule_contains_lsm_cond(entry))
-+			return false;
-+
- 		break;
- 	default:
- 		return false;
-@@ -1245,6 +1267,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 			else if (IS_ENABLED(CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS) &&
- 				 strcmp(args[0].from, "KEY_CHECK") == 0)
- 				entry->func = KEY_CHECK;
-+			else if (strcmp(args[0].from, "CRITICAL_DATA") == 0)
-+				entry->func = CRITICAL_DATA;
- 			else
- 				result = -EINVAL;
- 			if (!result)
+Thanks,
+
 -- 
-2.17.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
