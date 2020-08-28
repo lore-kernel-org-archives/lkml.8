@@ -2,118 +2,99 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA62DC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2FDC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A316A20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:41:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tVXPHHRw"
+	by mail.kernel.org (Postfix) with ESMTP id 9039420C56
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:43:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598600588;
+	bh=hwP7Z1Qw6TB+HuWMynMqgGLHide/4Ajq/hNm8rqV4M8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ucyz5w3EbkxyneaiUQgjhTf0cmcHWT99Gbarxm/k9GUKjA+NP5IrSGuM264C9Lqu0
+	 bgzUtijzi4PLReSlrpmbUKkH8I7xLuGVj8WrFxZAOTl5R+GHVxx0uNdmvfQxnukFfv
+	 CIVQP7AAzPOaYsDf5V1Km5gCA1/mvEbJ4VbI60dI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgH1Hlj (ORCPT
+        id S1728480AbgH1HnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:41:39 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:37437 "EHLO m43-7.mailgun.net"
+        Fri, 28 Aug 2020 03:43:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbgH1Hli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:41:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598600497; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=mZd4az/p4FmBgUWML4ZQBopjKpxj4NlCZjT6BNlLexk=; b=tVXPHHRws/FdCJzIflZAqWIZs9Mij1biTv5O67/yL9Xcsu5VTdRUTdQv1t8WYfjpa49p/5R2
- XA9Zxo5ocTMzVevOQJP+g9VaiJm9vuM/g9l1BsW9dn9DyJqoxDw8xi+IUoUGEufVTjqLva08
- E7C2D8DANLLDOo5eY6EUUJ9blto=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f48b5304b620c27d30c28ea (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 28 Aug 2020 07:41:36
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AF5E8C433AF; Fri, 28 Aug 2020 07:41:36 +0000 (UTC)
-Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726566AbgH1HnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 03:43:04 -0400
+Received: from localhost.localdomain (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E0134C433CA;
-        Fri, 28 Aug 2020 07:41:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E0134C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Steve deRosier <derosier@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linuxarm@huawei.com, mauro.chehab@huawei.com,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Maital Hahn <maitalm@ti.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Raz Bouganim <r-bouganim@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Fuqian Huang <huangfq.daxian@gmail.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Revert "wlcore: Adding suppoprt for IGTK key in wlcore driver"
-References: <f0a2cb7ea606f1a284d4c23cbf983da2954ce9b6.1598420968.git.mchehab+huawei@kernel.org>
-        <CALLGbRL+duiHFd3w7hcD=u47k+JM5rLpOkMrRpW0aQm=oTfUnA@mail.gmail.com>
-Date:   Fri, 28 Aug 2020 10:41:29 +0300
-In-Reply-To: <CALLGbRL+duiHFd3w7hcD=u47k+JM5rLpOkMrRpW0aQm=oTfUnA@mail.gmail.com>
-        (Steve deRosier's message of "Thu, 27 Aug 2020 08:48:30 -0700")
-Message-ID: <873647kyja.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EBA620776;
+        Fri, 28 Aug 2020 07:42:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598600583;
+        bh=hwP7Z1Qw6TB+HuWMynMqgGLHide/4Ajq/hNm8rqV4M8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OlhVIskDIZNItaSs02q3XH8z3VGMmLh/fO8UGAfQdFl19Mx+30v3O2wvJOlp7Jbke
+         MSvZCRLWiTlIA+YT1VRrGbNK81UNEF1rf/RsYJbnpS5nQlwC+ojb1JUzSp5V3nk17P
+         vMkqbXiRtTVjFwZ6ofvhObQ/ha92Sq8TL7c89GiI=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: [PATCH] drm/bridge: Fix the dsi remote end-points
+Date:   Fri, 28 Aug 2020 13:12:50 +0530
+Message-Id: <20200828074251.3788165-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Steve deRosier <derosier@gmail.com> writes:
+DSI end-points are supposed to be at node 0 and node 1 as per binding.
+So fix this and use node 0 and node 1 for dsi.
 
-> On Tue, Aug 25, 2020 at 10:49 PM Mauro Carvalho Chehab
-> <mchehab+huawei@kernel.org> wrote:
->>
->> This patch causes a regression betwen Kernel 5.7 and 5.8 at wlcore:
->> with it applied, WiFi stops working, and the Kernel starts printing
->> this message every second:
->>
->>    wlcore: PHY firmware version: Rev 8.2.0.0.242
->>    wlcore: firmware booted (Rev 8.9.0.0.79)
->>    wlcore: ERROR command execute failure 14
->
-> Only if NO firmware for the device in question supports the `KEY_IGTK`
-> value, then this revert is appropriate. Otherwise, it likely isn't.
->  My suspicion is that the feature that `KEY_IGTK` is enabling is
-> specific to a newer firmware that Mauro hasn't upgraded to. What the
-> OP should do is find the updated firmware and give it a try.
->
-> AND - since there's some firmware the feature doesn't work with, the
-> driver should be fixed to detect the running firmware version and not
-> do things that the firmware doesn't support.  AND the firmware writer
-> should also make it so the firmware doesn't barf on bad input and
-> instead rejects it politely.
->
-> But I will say I'm making an educated guess; while I have played with
-> the TI devices in the past, it was years ago and I won't claim to be
-> an expert. I also am unable to fix it myself at this time.
->
-> I'd just rather see it fixed properly instead of a knee-jerk reaction
-> of reverting it simply because the OP doesn't have current firmware.
+Reported-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Fixes: 23278bf54afe ("drm/bridge: Introduce LT9611 DSI to HDMI bridge")
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ drivers/gpu/drm/bridge/lontium-lt9611.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Yeah, a proper fix for this is of course better but if there's no fix,
-say within the next week or so, let's revert this. A new version of the
-patch implementing IGTK, with proper feature detection, can be always
-added later.
-
+diff --git a/drivers/gpu/drm/bridge/lontium-lt9611.c b/drivers/gpu/drm/bridge/lontium-lt9611.c
+index 1009fc4ed4ed..d734d9402c35 100644
+--- a/drivers/gpu/drm/bridge/lontium-lt9611.c
++++ b/drivers/gpu/drm/bridge/lontium-lt9611.c
+@@ -960,13 +960,13 @@ static const struct drm_bridge_funcs lt9611_bridge_funcs = {
+ static int lt9611_parse_dt(struct device *dev,
+ 			   struct lt9611 *lt9611)
+ {
+-	lt9611->dsi0_node = of_graph_get_remote_node(dev->of_node, 1, -1);
++	lt9611->dsi0_node = of_graph_get_remote_node(dev->of_node, 0, -1);
+ 	if (!lt9611->dsi0_node) {
+ 		dev_err(lt9611->dev, "failed to get remote node for primary dsi\n");
+ 		return -ENODEV;
+ 	}
+ 
+-	lt9611->dsi1_node = of_graph_get_remote_node(dev->of_node, 2, -1);
++	lt9611->dsi1_node = of_graph_get_remote_node(dev->of_node, 1, -1);
+ 
+ 	lt9611->ac_mode = of_property_read_bool(dev->of_node, "lt,ac-mode");
+ 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.26.2
+
