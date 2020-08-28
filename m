@@ -2,147 +2,121 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC16C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497FCC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12C882074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22D332098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:39:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598636363;
+	bh=nds4FCanqTVJv34u/NxVJCyvtJsI4h+1rVN+aRFYiGg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vKydga5BJ2DOVsW5rq5WKqfEDtM3HkziYJCfSExOEsWHbEd96BmNAoMBVanW3SR+L
+	 0DzglYOEOIZttUplZbN6hJcM0+ejbg1O+bBJf6ytQVROaGjU1MteuapNZMW9gv7CEd
+	 s/9UaZnd2l2mIbS2Zfhim+ym5PKmYJGIIAItl2qc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgH1ReS (ORCPT
+        id S1726940AbgH1RjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 13:34:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:54172 "EHLO foss.arm.com"
+        Fri, 28 Aug 2020 13:39:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727069AbgH1ReD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 13:34:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDB59106F;
-        Fri, 28 Aug 2020 10:34:02 -0700 (PDT)
-Received: from e108754-lin.cambridge.arm.com (unknown [10.1.199.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 647213F71F;
-        Fri, 28 Aug 2020 10:34:01 -0700 (PDT)
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org,
-        dietmar.eggemann@arm.com, catalin.marinas@arm.com,
-        sudeep.holla@arm.com, will@kernel.org, valentin.schneider@arm.com
-Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, ionela.voinescu@arm.com
-Subject: [PATCH v4 4/5] arch_topology, cpufreq: constify arch_* cpumasks
-Date:   Fri, 28 Aug 2020 18:33:02 +0100
-Message-Id: <20200828173303.11939-5-ionela.voinescu@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200828173303.11939-1-ionela.voinescu@arm.com>
-References: <20200828173303.11939-1-ionela.voinescu@arm.com>
+        id S1726677AbgH1RjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 13:39:19 -0400
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41F8720DD4
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 17:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598636358;
+        bh=nds4FCanqTVJv34u/NxVJCyvtJsI4h+1rVN+aRFYiGg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TyRrjGkegJtc5NUYxIc2CRRvLWWkqf3QVI21p9DZd3r+zXtNHhiTBFd3UlkrkLutM
+         m2gdFyeVpnX0PkMaqL510A5pXF7hkUeHvcLoBDY0+OUjfZznfyPRQlCtxAFsXLhhnV
+         xMSL/cxiwuYQZXZgTbn4Xr4D7RH+IXBRyvCTlYAE=
+Received: by mail-wm1-f45.google.com with SMTP id k20so140671wmi.5
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 10:39:18 -0700 (PDT)
+X-Gm-Message-State: AOAM531QZpB3cMs+MKR+9ZC2D1U85GqMgSOz4b0ZmZjMRQyhULGnocyv
+        YjutU/ukSWJ+ecIegc+OmntDZ2yImE2HW/Oid/mQ0w==
+X-Google-Smtp-Source: ABdhPJyhwm17L0OXGgBqLsRtUxnb+FTpBy4Z2839DwNgsYJBjPegOYm2k1/SJF+gcG8rpzzWXr5f2DuOidvrokSrcrI=
+X-Received: by 2002:a1c:7e02:: with SMTP id z2mr214706wmc.138.1598636356748;
+ Fri, 28 Aug 2020 10:39:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <a770d45d-b147-a8c5-b7f8-30d668cbed84@intel.com>
+ <4BDFD364-798C-4537-A88E-F94F101F524B@amacapital.net> <CAMe9rOoTjSwRSPuqP6RKkDzPA_VPh5gVYRVFJ-ezAD4Et-FUng@mail.gmail.com>
+ <CALCETrW=-ahC7GUCCyX7nPjCHfG3tiyDespud2Z7UbB6yWWWAA@mail.gmail.com>
+ <CAMe9rOrt5hz6qsNAxPgdKCOhRcKKESv-D3rxdSfraeJ-LFHM4w@mail.gmail.com>
+ <87v9h3thj9.fsf@oldenburg2.str.redhat.com> <CAMe9rOr=BZw3GyXf0g6tAZnfa8NbamoyBoU9KqoxtHg9c2yZhw@mail.gmail.com>
+In-Reply-To: <CAMe9rOr=BZw3GyXf0g6tAZnfa8NbamoyBoU9KqoxtHg9c2yZhw@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 28 Aug 2020 10:39:05 -0700
+X-Gmail-Original-Message-ID: <CALCETrUUKb6oyBmB3CSeVy1xT7mcnV=BD2eipAnKUhma7K3qKw@mail.gmail.com>
+Message-ID: <CALCETrUUKb6oyBmB3CSeVy1xT7mcnV=BD2eipAnKUhma7K3qKw@mail.gmail.com>
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     "H.J. Lu" <hjl.tools@gmail.com>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Yu, Yu-cheng" <yu-cheng.yu@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Dave Hansen <dave.hansen@intel.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+On Fri, Aug 28, 2020 at 4:38 AM H.J. Lu <hjl.tools@gmail.com> wrote:
+>
+> On Thu, Aug 27, 2020 at 11:24 PM Florian Weimer <fweimer@redhat.com> wrote:
+> >
+> > * H. J. Lu:
+> >
+> > > Can you think of ANY issues of passing more arguments to arch_prctl?
+> >
+> > On x32, the glibc arch_prctl system call wrapper only passes two
+> > arguments to the kernel, and applications have no way of detecting that.
+> > musl only passes two arguments on all architectures.  It happens to work
+> > anyway with default compiler flags, but that's an accident.
+>
+> In the current glibc, there is no arch_prctl wrapper for i386.  There are
+> arch_prctl wrappers with 2 arguments for x86-64 and x32.  But this isn't an
+> issue for glibc since glibc is both the provider and the user of the new
+> arch_prctl extension.  Besides,
+>
+> long syscall(long number, ...);
+>
+> is always available.
 
-The passed cpumask arguments to arch_set_freq_scale() and
-arch_freq_counters_available() are only iterated over, so reflect this
-in the prototype. This also allows to pass system cpumasks like
-cpu_online_mask without getting a warning.
-
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
----
- arch/arm64/kernel/topology.c  | 2 +-
- drivers/base/arch_topology.c  | 4 ++--
- drivers/cpufreq/cpufreq.c     | 5 +++--
- include/linux/arch_topology.h | 2 +-
- include/linux/cpufreq.h       | 3 ++-
- 5 files changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-index 0801a0f3c156..9a9f2b8dedf5 100644
---- a/arch/arm64/kernel/topology.c
-+++ b/arch/arm64/kernel/topology.c
-@@ -253,7 +253,7 @@ static int __init init_amu_fie(void)
- }
- late_initcall_sync(init_amu_fie);
- 
--bool arch_freq_counters_available(struct cpumask *cpus)
-+bool arch_freq_counters_available(const struct cpumask *cpus)
- {
- 	return amu_freq_invariant() &&
- 	       cpumask_subset(cpus, amu_fie_cpus);
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index 5708eb724790..6d304f0eb810 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -21,13 +21,13 @@
- #include <linux/sched.h>
- #include <linux/smp.h>
- 
--__weak bool arch_freq_counters_available(struct cpumask *cpus)
-+__weak bool arch_freq_counters_available(const struct cpumask *cpus)
- {
- 	return false;
- }
- DEFINE_PER_CPU(unsigned long, freq_scale) = SCHED_CAPACITY_SCALE;
- 
--void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
-+void arch_set_freq_scale(const struct cpumask *cpus, unsigned long cur_freq,
- 			 unsigned long max_freq)
- {
- 	unsigned long scale;
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index f97c743a988d..fe1f7606b899 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -160,8 +160,9 @@ u64 get_cpu_idle_time(unsigned int cpu, u64 *wall, int io_busy)
- }
- EXPORT_SYMBOL_GPL(get_cpu_idle_time);
- 
--__weak void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
--		unsigned long max_freq)
-+__weak void arch_set_freq_scale(const struct cpumask *cpus,
-+				unsigned long cur_freq,
-+				unsigned long max_freq)
- {
- }
- EXPORT_SYMBOL_GPL(arch_set_freq_scale);
-diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
-index 69b1dabe39dc..810c83336257 100644
---- a/include/linux/arch_topology.h
-+++ b/include/linux/arch_topology.h
-@@ -30,7 +30,7 @@ static inline unsigned long topology_get_freq_scale(int cpu)
- 	return per_cpu(freq_scale, cpu);
- }
- 
--bool arch_freq_counters_available(struct cpumask *cpus);
-+bool arch_freq_counters_available(const struct cpumask *cpus);
- 
- DECLARE_PER_CPU(unsigned long, thermal_pressure);
- 
-diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-index 091df9968945..8f22072c8d90 100644
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -1011,7 +1011,8 @@ static inline void sched_cpufreq_governor_change(struct cpufreq_policy *policy,
- extern void arch_freq_prepare_all(void);
- extern unsigned int arch_freq_get_on_cpu(int cpu);
- 
--extern void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
-+extern void arch_set_freq_scale(const struct cpumask *cpus,
-+				unsigned long cur_freq,
- 				unsigned long max_freq);
- 
- /* the following are really really optional */
--- 
-2.17.1
-
+Userspace is probably full of tools and libraries that contain tables
+of system calls and their signatures.  Think tracing, audit, container
+management, etc.  I don't know how they will react to the addition of
+new arguments.
