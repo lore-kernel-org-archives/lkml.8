@@ -2,99 +2,96 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17410C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872EBC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC84F208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:40:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598596853;
-	bh=o0DvwBJycu4mClUYxJbCqVEQk81q47GMWC6SPnDCSnA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fyt1E2rqLfKQq/4NVLTFV8yWqiB6snNNuPyTpXUpHv7jABNso72vIswPd2RNWKCig
-	 9wGtLLyUIv5qt+J4vflntDyiNIo+XXZFX8cOdebMtZ2LgjTg/q5tq8gGawfC6BhOtl
-	 PcKUzfoEXzPk3nF6drl6G06DQPsrw1Lnl1j6g7Fg=
+	by mail.kernel.org (Postfix) with ESMTP id 6093E208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:41:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tuO7I7Zg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgH1Gkv (ORCPT
+        id S1727101AbgH1Glb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 02:40:51 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:43184 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbgH1Gkv (ORCPT
+        Fri, 28 Aug 2020 02:41:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbgH1Gla (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 02:40:51 -0400
-Received: by mail-ej1-f67.google.com with SMTP id m22so54395eje.10;
-        Thu, 27 Aug 2020 23:40:49 -0700 (PDT)
+        Fri, 28 Aug 2020 02:41:30 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FBB6C061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 23:41:30 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id w186so114044qkd.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 23:41:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=47u249WoOKvff2fyHs9WmY21fPfIUlTwd8Bs+zLxxKI=;
+        b=tuO7I7ZgDLcZwUJYIM2xzStVY+afv0vrDAHi6sEz04TSFDyMBc9uFs85rX+9cMIhKu
+         8u8t8LtXLFpWlHC70zrSj7U7+md0izdi3IiyEBGFZHDTgtYqoq+oJtaMMeqZ08ECBOOQ
+         YD+65gNfZJd+t+8tNCCxPt+xRkOLFFnNP+3k8H/WSup0QIc+ecPk5v3MuzUtNYYi5HX4
+         hE22DIhVGHxmapYftouW5rz0DZqGO5BRQafgmx2m3ww2+/TNJ0ql4gdplpxYyfnFCvr0
+         Hbw9iRQ7kAVYUBioqGb8uyyziq4GKYGFEN6u8lWdGhqV0HzT6bJYgOODleytFbbSr6Bp
+         44Fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CdphvIxkab/YX1ffuXPnoifp6qWQpQf0APCtuuMP1Lw=;
-        b=nX03C9yhufTPAh5mHQQQTIQwn16/VdoduYkKzR9PyE7danmJlLzUlWR4AI7yPYJKgv
-         tTy49WHYMQ+okTnF4hohwB1+EuqGjF0aj5SMsThA3QYl5sEl9RWSICe6olHvGiMnCq8d
-         CEvNgDOcoc1SI7RwCblu/vcF7T6Ll0HwkQET8vsrs+M+u5x7ahTfocl6+vKPd+KJJL0Z
-         Uy6goLsBykTThMqC731YeXo4SwY4oVcmzLqDJQgqnBvY0/tG6ooV7IzjOH2ZaWS/73nb
-         aZJHAFAzry3eGtzWCtspwAxDmgOz1BvihfiqwNK7yrDFTwTrk6L4LipnqySG4mBOIpWg
-         wkfw==
-X-Gm-Message-State: AOAM532Pp89juW6y8TBoi+An54BTV5KS1yT/vwUNQH5P4VcAYVUue0bP
-        U8wYS5B71RGle1/qrKUjRUU=
-X-Google-Smtp-Source: ABdhPJwTxtk1I8/HNlEgrbvBSVMeu1t34ItwkeBp44qDs/tNjiLPiQBZ1khYH/UgBI7CkJn7BP42qQ==
-X-Received: by 2002:a17:906:970e:: with SMTP id k14mr291072ejx.417.1598596848763;
-        Thu, 27 Aug 2020 23:40:48 -0700 (PDT)
-Received: from pi3 ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id 24sm162457edx.35.2020.08.27.23.40.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 23:40:48 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 08:40:45 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     linux-clk@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
-Subject: Re: [PATCH 3/3] clk: samsung: Use cached clk_hws instead of
- __clk_lookup() calls
-Message-ID: <20200828064045.GC17406@pi3>
-References: <20200826171529.23618-1-s.nawrocki@samsung.com>
- <CGME20200826171557eucas1p13c960ad6abc814cf53bc125f5c4d9b39@eucas1p1.samsung.com>
- <20200826171529.23618-3-s.nawrocki@samsung.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=47u249WoOKvff2fyHs9WmY21fPfIUlTwd8Bs+zLxxKI=;
+        b=tNvh/zXdqUZpS/82Xo30GSektag48YvpSo7iEFZWWIShyZKHqZF8CE9oVOTrlPtpaY
+         x6UB5mTcj+rYdziSr56sN6UxjwfZfW/tLQrG3ymYA4EduqwcD/S7X/l3roNEVie+EWzx
+         nFY8gpQsVukLeKK3IeBqsmizDwfSmU2VxXutkf3gNYEdqjcBVQmwnrOLqog9/TaIz16i
+         fv9Ss49VbV/PIToLTGYrL3B5tGRdOhyM+O6ePp0JnKpgyU24bGJiPfDNbYOTV6781/iG
+         /1oG1x8ElekNjg+5TuQDA5AAV/rWczTFkX+wsSfxK/qE9lcSvVh3kQFuJwLcWTIhuguB
+         vjrg==
+X-Gm-Message-State: AOAM532yZMSfCbbNlzsA0Xs0KzhaYYy1GluZ3wVkEAz6YYDFhTBGw4sF
+        LGdkTi6ldxwOs5c/wvBZCi4bLO3nA5CVy1VhlRA=
+X-Google-Smtp-Source: ABdhPJwmTgQ9pZiwVAfemzWED7EnbtiuBJGQrE5kt0Kpnd/acZC/136IB/IJ07cdSPyrMiBF+7Y8/tyBj3+GDRe2eQY=
+X-Received: by 2002:a37:6653:: with SMTP id a80mr12682735qkc.127.1598596889266;
+ Thu, 27 Aug 2020 23:41:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200826171529.23618-3-s.nawrocki@samsung.com>
+References: <20200827180904.96399-1-ubizjak@gmail.com> <20200827201423.GD1236603@ZenIV.linux.org.uk>
+In-Reply-To: <20200827201423.GD1236603@ZenIV.linux.org.uk>
+From:   Uros Bizjak <ubizjak@gmail.com>
+Date:   Fri, 28 Aug 2020 08:41:18 +0200
+Message-ID: <CAFULd4ai5mWTSB_9-G+brpJJ6_3VFtqdcFm-4YtoNbhskXNctA@mail.gmail.com>
+Subject: Re: [PATCH v2] x86: Use xorl %0,%0 in __get_user_asm
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 07:15:29PM +0200, Sylwester Nawrocki wrote:
-> For the CPU clock registration two parent clocks are required, these
-> are now being passed as struct clk_hw pointers, rather than by the
-> global scope names. That allows us to avoid  __clk_lookup() calls
-> and simplifies a bit the CPU clock registration function.
-> While at it drop unneeded extern keyword in the function declaration.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
->  drivers/clk/samsung/clk-cpu.c        | 37 +++++++++++++++---------------------
->  drivers/clk/samsung/clk-cpu.h        |  6 +++---
->  drivers/clk/samsung/clk-exynos3250.c |  6 ++++--
->  drivers/clk/samsung/clk-exynos4.c    |  7 +++++--
->  drivers/clk/samsung/clk-exynos5250.c |  4 +++-
->  drivers/clk/samsung/clk-exynos5420.c |  6 +++---
->  drivers/clk/samsung/clk-exynos5433.c | 10 ++++++++--
->  7 files changed, 41 insertions(+), 35 deletions(-)
+On Thu, Aug 27, 2020 at 10:14 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Thu, Aug 27, 2020 at 08:09:04PM +0200, Uros Bizjak wrote:
+> > xorl %0,%0 is equivalent to xorq %0,%0 as both will zero the
+> > entire register.  Use xorl %0,%0 for all operand sizes to avoid
+> > REX prefix byte when legacy registers are used and to avoid size
+> > prefix byte when 16bit registers are used.
+> >
+> > Zeroing the full register is OK in this use case.  xorl %0,%0 also
+> > breaks register dependency chains, avoiding potential partial
+> > register stalls with 8 and 16bit operands.
+>
+> No objections, but talking about stalls is more than slightly
+> ridiculous - we'd just taken a #PF, failed there, flipped
+> pt_regs %rip to fixup section, returned from fault and are
+> about to fail whatever syscall that had been; a stall here
+> is really not an issue...
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Should I submit a v3 with the offending sentence removed, or could I
+just ask a committer to remove it on the fly?
 
-Best regards,
-Krzysztof
+Uros.
