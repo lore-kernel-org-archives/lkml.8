@@ -2,296 +2,128 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F18C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F7EC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3604E2075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:01:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598630486;
-	bh=nXz5kfUXz09l/Kb7BqdnTAyQCPcigswsGuJeG0ZG9So=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V/7GB72M5Ilyi1lxYLwLN6jWlVgTdmQTCasrFQiHoxLdhVKKPnL8km8wJrr7RZfzM
-	 N5ZzY2HxDZpfDXz1wnRwl2MpsNyQ0uDTg/DP6EjuMxj735TPoKDyxxgghnCbGfyQrW
-	 G5mif/LBjjwjhUkoQ3otGrykcZqaYUV16mZpqItg=
+	by mail.kernel.org (Postfix) with ESMTP id 8DA9E2075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:01:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="eblrhkig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbgH1QBX (ORCPT
+        id S1728480AbgH1QBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 12:01:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52422 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728431AbgH1QBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 12:01:09 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 923A92100A;
-        Fri, 28 Aug 2020 16:01:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598630468;
-        bh=nXz5kfUXz09l/Kb7BqdnTAyQCPcigswsGuJeG0ZG9So=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jOp3KS9KX0rpCK8tb3SMghR4Rs6RDRX3v8euzd2xD4QzIQGpCUnK6ZhoatkVIwqpu
-         0rzvmlb1YcczOli27u0lvM/HBttC12L2KjCw844fR9EBo03JLfOhp8iO0JTVUHv9zD
-         khNurayb0JRut1595ZX769jTA067f7vouGeQkUVs=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 3/3] media: imx258: Get clock from device properties and enable it
-Date:   Fri, 28 Aug 2020 18:00:53 +0200
-Message-Id: <20200828160053.6064-3-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200828160053.6064-1-krzk@kernel.org>
-References: <20200828160053.6064-1-krzk@kernel.org>
+        Fri, 28 Aug 2020 12:01:30 -0400
+Received: from mail-eopbgr760088.outbound.protection.outlook.com ([40.107.76.88]:24277
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728449AbgH1QBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 12:01:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bVqBWjC823IcSO78EYTQ87e5lbDIZd3cIV8QYJXi4yan0nXTfRUYOK/rL9O0zwY8RnNhydj/ApYqiw1xxRrlmJjSSWBE1MbN8bOdHXQFR2MdVrRb/EKAP7ERPMrW/ZfAmQZhrw4CGPBmR8h7zamvHP4rKQFOxgtYV3dr06l5gJGPUr+CeiCxwZo3jcJK/8dnO2wrjGKaupFDjubPv0Z0GNx2f+Y3bkf5HDWX0L7B0ZMgEFpeicAlftUMk5BWgmJwdlzRgC/B3V2pwK/4hKMEBkWTAsiJpqOySpdoMzj9ERuKO/naHMVEiDxQu+9ehU4S7rBQEbn2AZ3jzgYNAwVDWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ENWppkERbh7WaRSqkIkXzXh1zSRU7ETAdfCt/ptph20=;
+ b=ndjjbo7AaRJ8mVaZVK1KTAz1mw1W7uNTA90Vi5ZnY0lc+MHQ71bcyjXSBOA0l1wKTuonVFIvie/Td1L8Eh0bvpwwIA85htLzUtjElkEGbmcOe9TBGPtekUHNKipA6eReu/kTArvA+3sc2trjcpnhgYBbBv4uSDSKbSVhNJWeeRT3kZaZbOLbVsg5tiFurzwYh9xcK1mLg2zr94J1RzFi9P6/GITWaAcYOH5BwdkzsEEdRAqs6hcrB56bp8qAHTc+LuaPoDMiungZFPk5JqHAuZlWzWUXwNFA5hfPPueujEfSJiWFLQ2yy5ebRp3m6f3Sf106EKRkEednexLoixkh6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=openfive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ENWppkERbh7WaRSqkIkXzXh1zSRU7ETAdfCt/ptph20=;
+ b=eblrhkigIUs2OOU2NC6iN7KzxoTqrh3HbqXTAv8lLIw7AtTf8+3g5Sq7050Qs2XfAF6BmMkwJMMKmimkvnTS+EhkZ0JEvTdjAS/PJQzLBsUUoCXRmZU/iI0oocd+jQ9ohAt4OJ5oU++RUUiNu1N44w/dELbxo4cdEM6D7yjZfuk=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=sifive.com;
+Received: from DM6PR13MB3451.namprd13.prod.outlook.com (2603:10b6:5:1c3::10)
+ by DM5PR1301MB2105.namprd13.prod.outlook.com (2603:10b6:4:33::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.5; Fri, 28 Aug
+ 2020 16:01:13 +0000
+Received: from DM6PR13MB3451.namprd13.prod.outlook.com
+ ([fe80::f570:90c6:f6d5:c078]) by DM6PR13MB3451.namprd13.prod.outlook.com
+ ([fe80::f570:90c6:f6d5:c078%7]) with mapi id 15.20.3326.019; Fri, 28 Aug 2020
+ 16:01:13 +0000
+From:   Sagar Kadam <sagar.kadam@sifive.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, yash.shah@sifive.com,
+        Sagar Kadam <sagar.kadam@sifive.com>
+Subject: [PATCH v2] convert l2 cache dt bindings to YAML format
+Date:   Fri, 28 Aug 2020 21:30:52 +0530
+Message-Id: <1598630453-31125-1-git-send-email-sagar.kadam@sifive.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG3P274CA0023.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::35)
+ To DM6PR13MB3451.namprd13.prod.outlook.com (2603:10b6:5:1c3::10)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by SG3P274CA0023.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3326.19 via Frontend Transport; Fri, 28 Aug 2020 16:01:10 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [159.117.144.156]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: db5c5527-351b-4a35-4a8f-08d84b6b9663
+X-MS-TrafficTypeDiagnostic: DM5PR1301MB2105:
+X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR1301MB21053B755163821E7C948AC897520@DM5PR1301MB2105.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:989;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: IrgSi+1sZkgILUo94dRusGEmTf2rBy1gKd8Vxs5Ai20YS8JKcxl8xFcCtGSn5VN051Kb+MT91ZIhRXKsTi8bcOFrvxCp+7uXPw3EUO6fBycSEZFOhR6ClPbFJZM/ooeKTcobrtvbtHm3X5c0jCqy4fFSEEeEKjcFMIPJeljr9bb065hcuq8+tE8TWiQvKY+vuGK1uH32dzEnvI9UCvsucP61DmY6eOWdbPZaIvnFqUsK4II3MurRIbX8NfAnLxSL4N6t10A5gBz9D5eEzmyz2ik+KQcai67kLcDh2MIyW7U3kSUa/FWttH6o6Nb6qUOn3yWB6ZoYmk4Q5AcB44IJUnXEALbVlwwDK3OLCWKj0tUTy6P/vnMZXcaW/33jxap2gcalO1VnjfhjC+8ReW/tzw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR13MB3451.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(396003)(346002)(376002)(39850400004)(136003)(107886003)(186003)(478600001)(36756003)(966005)(42882007)(52116002)(5660300002)(83380400001)(2906002)(83170400001)(4326008)(6916009)(44832011)(2616005)(66946007)(6666004)(956004)(6486002)(8936002)(4744005)(26005)(8676002)(66556008)(66476007)(316002)(16576012);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: ieIn45z++cHh5sT1lDexQa61n074pEsK7CnRktkRM4/NlmygDODVdRJ4TumiGYTBKnNoV6tn47iqHPF0vcDGLRHHDpBDMGa2fZzDbLfhJm6Zl1z4iNcIWVGRNhgvMSTQgCQSq0tJEQE5MpwnZmtWnc+7M8shIXkDIDWn+dtDtTcptzcUTx2R6AI9Q0I8rPdZkfRcwBgzghOiqHb4U2DHwLTfLzcHKFxSZ7OtyjU9omspORGev0uWV3Cy3s2KtzOLAdHqaAjViiHRs7iVgelxcfPpnOihHI3isXhHnlM22Hi3aAxUS6704Z4kw7QTOsBfRi9Jg++91nFjStstZZNXNj9hkIDpqtZOaH4mtG9E3wQdwh5EGnIrHg4dGMl4CqtTTRMIPdHv4zJSjl8Lf0vru3+WRDum/1rjboljwwR4cXgkWUUNqQ5fVR6D+3nSszuG0Byv5jUt3ZJxZPlfnVszY9niW0fO6Af0S8tpBJWCenvJ5WuJIPrAdOruuGb9jILgrVbuJRlsNzGOF0uTLn82au3aphJThq99Laehb0B9t7BQ/KMyfnwGbc+WEnhU9FutT3h/PsqLV9Yy8EIfRfXrM4u2Qy6E/gSKudjdq06oYjIY0OWIXL4E01H5Y7WYOIVl928wP3sw1R5+liB01fI4FQ==
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db5c5527-351b-4a35-4a8f-08d84b6b9663
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR13MB3451.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2020 16:01:13.4205
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wQS4gEZDGpeAOY+YUX20N+UHpTGi78kUuavPEy45x15NWFiKW8F+k/YIlu+h+ZrO64NyrPeSCdo2HAUavfMLGg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB2105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The IMX258 sensor driver checked in device properties for a
-clock-frequency property which actually does not mean that the clock is
-really running such frequency or is it even enabled.
+This patch is created and tested on top of mainline linux 
+commit d012a7190fc1 ("Linux 5.9-rc2")
 
-Get the provided clock and check it frequency.  If none is provided,
-fall back to old property.
+Reference log of "make dt_binding_check" is available here[1].
 
-Enable the clock when accessing the IMX258 registers and when streaming
-starts.
+I was able to reproduce the error after excluding the DT_SCHEMA_FILES
+option. Just in case required the failure log is here[2].
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/media/i2c/imx258.c | 107 ++++++++++++++++++++++++++++++-------
- 1 file changed, 87 insertions(+), 20 deletions(-)
+[1] https://paste.ubuntu.com/p/R5b52vCkKJ/
+[2] https://paste.ubuntu.com/p/gwYY3hd9Rx/
 
-diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-index c20bac9b00ec..4d763dcabb1d 100644
---- a/drivers/media/i2c/imx258.c
-+++ b/drivers/media/i2c/imx258.c
-@@ -2,6 +2,7 @@
- // Copyright (C) 2018 Intel Corporation
- 
- #include <linux/acpi.h>
-+#include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/i2c.h>
- #include <linux/module.h>
-@@ -68,6 +69,9 @@
- #define REG_CONFIG_MIRROR_FLIP		0x03
- #define REG_CONFIG_FLIP_TEST_PATTERN	0x02
- 
-+/* Input clock frequency in Hz */
-+#define IMX258_INPUT_CLOCK_FREQ		19200000
-+
- struct imx258_reg {
- 	u16 address;
- 	u8 val;
-@@ -610,6 +614,8 @@ struct imx258 {
- 
- 	/* Streaming on/off */
- 	bool streaming;
-+
-+	struct clk *clk;
- };
- 
- static inline struct imx258 *to_imx258(struct v4l2_subdev *_sd)
-@@ -747,6 +753,12 @@ static int imx258_set_ctrl(struct v4l2_ctrl *ctrl)
- 	if (pm_runtime_get_if_in_use(&client->dev) == 0)
- 		return 0;
- 
-+	ret = clk_prepare_enable(imx258->clk);
-+	if (ret) {
-+		dev_err(&client->dev, "failed to enable clock\n");
-+		goto out;
-+	}
-+
- 	switch (ctrl->id) {
- 	case V4L2_CID_ANALOGUE_GAIN:
- 		ret = imx258_write_reg(imx258, IMX258_REG_ANALOG_GAIN,
-@@ -779,6 +791,8 @@ static int imx258_set_ctrl(struct v4l2_ctrl *ctrl)
- 		break;
- 	}
- 
-+out:
-+	clk_disable_unprepare(imx258->clk);
- 	pm_runtime_put(&client->dev);
- 
- 	return ret;
-@@ -972,10 +986,40 @@ static int imx258_stop_streaming(struct imx258 *imx258)
- 	return 0;
- }
- 
-+static int imx258_power_on(struct imx258 *imx258)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(&imx258->sd);
-+	int ret;
-+
-+	ret = pm_runtime_get_sync(&client->dev);
-+	if (ret < 0)
-+		goto err;
-+
-+	ret = clk_prepare_enable(imx258->clk);
-+	if (ret) {
-+		dev_err(&client->dev, "failed to enable clock\n");
-+		goto err;
-+	}
-+
-+	return 0;
-+
-+err:
-+	pm_runtime_put_noidle(&client->dev);
-+
-+	return ret;
-+}
-+
-+static void imx258_power_off(struct imx258 *imx258)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(&imx258->sd);
-+
-+	clk_disable_unprepare(imx258->clk);
-+	pm_runtime_put(&client->dev);
-+}
-+
- static int imx258_set_stream(struct v4l2_subdev *sd, int enable)
- {
- 	struct imx258 *imx258 = to_imx258(sd);
--	struct i2c_client *client = v4l2_get_subdevdata(sd);
- 	int ret = 0;
- 
- 	mutex_lock(&imx258->mutex);
-@@ -985,11 +1029,9 @@ static int imx258_set_stream(struct v4l2_subdev *sd, int enable)
- 	}
- 
- 	if (enable) {
--		ret = pm_runtime_get_sync(&client->dev);
--		if (ret < 0) {
--			pm_runtime_put_noidle(&client->dev);
-+		ret = imx258_power_on(imx258);
-+		if (ret < 0)
- 			goto err_unlock;
--		}
- 
- 		/*
- 		 * Apply default & customized values
-@@ -997,10 +1039,10 @@ static int imx258_set_stream(struct v4l2_subdev *sd, int enable)
- 		 */
- 		ret = imx258_start_streaming(imx258);
- 		if (ret)
--			goto err_rpm_put;
-+			goto err_power_off;
- 	} else {
- 		imx258_stop_streaming(imx258);
--		pm_runtime_put(&client->dev);
-+		imx258_power_off(imx258);
- 	}
- 
- 	imx258->streaming = enable;
-@@ -1008,8 +1050,8 @@ static int imx258_set_stream(struct v4l2_subdev *sd, int enable)
- 
- 	return ret;
- 
--err_rpm_put:
--	pm_runtime_put(&client->dev);
-+err_power_off:
-+	imx258_power_off(imx258);
- err_unlock:
- 	mutex_unlock(&imx258->mutex);
- 
-@@ -1201,21 +1243,41 @@ static int imx258_probe(struct i2c_client *client)
- 	int ret;
- 	u32 val = 0;
- 
--	device_property_read_u32(&client->dev, "clock-frequency", &val);
--	if (val != 19200000)
--		return -EINVAL;
-+	imx258 = devm_kzalloc(&client->dev, sizeof(*imx258), GFP_KERNEL);
-+	if (!imx258)
-+		return -ENOMEM;
-+
-+	imx258->clk = devm_clk_get_optional(&client->dev, NULL);
-+	if (!imx258->clk) {
-+		dev_info(&client->dev, "no clock provided, using clock-frequency property\n");
-+
-+		device_property_read_u32(&client->dev, "clock-frequency", &val);
-+		if (val != IMX258_INPUT_CLOCK_FREQ)
-+			return -EINVAL;
-+	} else if (IS_ERR(imx258->clk)) {
-+		return dev_err_probe(&client->dev, PTR_ERR(imx258->clk), "error getting clock\n");
-+	} else {
-+		if (clk_get_rate(imx258->clk) != IMX258_INPUT_CLOCK_FREQ) {
-+			dev_err(&client->dev, "input clock frequency not supported\n");
-+			return -EINVAL;
-+		}
-+
-+		ret = clk_prepare_enable(imx258->clk);
-+		if (ret) {
-+			dev_err(&client->dev, "failed to enable clock\n");
-+			return ret;
-+		}
-+	}
- 
- 	/*
- 	 * Check that the device is mounted upside down. The driver only
- 	 * supports a single pixel order right now.
- 	 */
- 	ret = device_property_read_u32(&client->dev, "rotation", &val);
--	if (ret || val != 180)
--		return -EINVAL;
--
--	imx258 = devm_kzalloc(&client->dev, sizeof(*imx258), GFP_KERNEL);
--	if (!imx258)
--		return -ENOMEM;
-+	if (ret || val != 180) {
-+		ret = -EINVAL;
-+		goto error_prop_read;
-+	}
- 
- 	/* Initialize subdev */
- 	v4l2_i2c_subdev_init(&imx258->sd, client, &imx258_subdev_ops);
-@@ -1223,14 +1285,14 @@ static int imx258_probe(struct i2c_client *client)
- 	/* Check module identity */
- 	ret = imx258_identify_module(imx258);
- 	if (ret)
--		return ret;
-+		goto error_prop_read;
- 
- 	/* Set default mode to max resolution */
- 	imx258->cur_mode = &supported_modes[0];
- 
- 	ret = imx258_init_controls(imx258);
- 	if (ret)
--		return ret;
-+		goto error_prop_read;
- 
- 	/* Initialize subdev */
- 	imx258->sd.internal_ops = &imx258_internal_ops;
-@@ -1252,8 +1314,13 @@ static int imx258_probe(struct i2c_client *client)
- 	pm_runtime_enable(&client->dev);
- 	pm_runtime_idle(&client->dev);
- 
-+	clk_disable_unprepare(imx258->clk);
-+
- 	return 0;
- 
-+error_prop_read:
-+	clk_disable_unprepare(imx258->clk);
-+
- error_media_entity:
- 	media_entity_cleanup(&imx258->sd.entity);
- 
+Change History:
+====================
+V2:
+-Fixed bot failure mentioned by Rob Herring
+-Updated dt-schema and kernel as suggested
+
+V1:
+Base version
+
+Sagar Kadam (1):
+  dt-bindings: riscv: sifive-l2-cache: convert bindings to json-schema
+
+ .../devicetree/bindings/riscv/sifive-l2-cache.txt  | 51 ------------
+ .../devicetree/bindings/riscv/sifive-l2-cache.yaml | 92 ++++++++++++++++++++++
+ 2 files changed, 92 insertions(+), 51 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
+ create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
+
 -- 
-2.17.1
+2.7.4
 
