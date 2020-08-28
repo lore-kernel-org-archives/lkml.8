@@ -2,110 +2,177 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E09C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91879C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE8982086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 658A42086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:54:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IpyZq3V4"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="H3QonVVq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbgH1Mxq (ORCPT
+        id S1729448AbgH1Myo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 08:53:46 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:13426 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729172AbgH1MxM (ORCPT
+        Fri, 28 Aug 2020 08:54:44 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12042 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729417AbgH1Myd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 08:53:12 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598619192; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=Wj2BdT67evytWv+SyfrUVgpdPA51zx+19n8so/CABzM=; b=IpyZq3V4Cse4G1t913ElgCLcPgox7xdXx4fd7RtbjJusAOFIC0r1n0sg6IHkM6NIGowJXD+v
- tJYApfAQF7dHIz4UvSyRJz8FtmZ7Np8iVTun9QYlh90gWwxX+/Jijhj9hv/1bbipckmO9aqX
- abbs7yOJ0p0hiU4cWSMSzob/0CM=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f48fe276a801be9b2db42f7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 28 Aug 2020 12:52:55
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2FDC1C433C6; Fri, 28 Aug 2020 12:52:55 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D8DF1C433CA;
-        Fri, 28 Aug 2020 12:52:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D8DF1C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Amit Pundir <amit.pundir@linaro.org>
-Cc:     Govind Singh <govinds@codeaurora.org>,
-        Rakesh Pillai <pillair@qti.qualcomm.com>,
-        Brian Norris <briannorris@chromium.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        ath10k <ath10k@lists.infradead.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>
-Subject: Re: [PATCH] wireless: ath10k: Return early in ath10k_qmi_event_server_exit() to avoid hard crash on reboot
-References: <20200602052533.15048-1-john.stultz@linaro.org>
-        <CA+ASDXMbNvbBdsC11dzUPX7RkMFYhJev2npPsRD_SnGQB+1hag@mail.gmail.com>
-        <CALAqxLVA1ZQjwEdbX5KGbSyLnMBAzm9PoN_Ta_Z7rBf4w3GOvQ@mail.gmail.com>
-        <CA+ASDXPddgOvEX___unx7N2YsQctsZN+1vkwPbi8Ab_zfwFfzw@mail.gmail.com>
-        <20200603002715.GA5349@Mani-XPS-13-9360>
-        <87zh9diyam.fsf@codeaurora.org>
-        <CAMi1Hd3FBRrwysMX6NLhKzjDukm-YPooR7LX64i=HJHDD8_Dvw@mail.gmail.com>
-Date:   Fri, 28 Aug 2020 15:52:49 +0300
-In-Reply-To: <CAMi1Hd3FBRrwysMX6NLhKzjDukm-YPooR7LX64i=HJHDD8_Dvw@mail.gmail.com>
-        (Amit Pundir's message of "Mon, 17 Aug 2020 14:36:09 +0530")
-Message-ID: <87ft876ify.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Fri, 28 Aug 2020 08:54:33 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f48fe4f0000>; Fri, 28 Aug 2020 05:53:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 28 Aug 2020 05:54:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 28 Aug 2020 05:54:19 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Aug
+ 2020 12:54:06 +0000
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.47) by
+ HQMAIL101.nvidia.com (172.20.187.10) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Fri, 28 Aug 2020 12:54:06 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dIxyLcwohxDqu0MxMWLcbxcZb7VW4eYE2xXcH6s4ni2VIyyKj6TkIH7f2wCcrQoeM3xmFeiZ53WR2pGYgsBJWGzPpZGEvrQBc/iiaEc2pUkWda/lXxUb7Ogp6372ggFoWGp3bdHWZahwdzWSuMSsPY/FCFWw0xLOw5cddZMsiCkyNNLUeAEjfHqY0XMvY+nBwrSLqsqfevfdx+743Y78iaBecHiV4OoFyNEZ6itlgI7EakUVfESnWk9evGcNUkOB1qclzdRTlTyXif6uN5tH16nqomuWrgUdG7IUgngdR1OVGh8702pCSWI0KNNraEZ6ze3z35hkPiX8Ueitwy6YcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qV68vSrNC9se5jzAxDi47xoA7ucOBEGcpYcUqXTypis=;
+ b=OI/QeSDEjnfShrAMrIr9+ZIgKToGlF/BMSuyjYpmx/AbVYapqNPQXjR2+QZ6t8bVO9p+LVWHB4x2BpH0kyvg6wdLCm5B2/7T0w5m7tr4lnbUPC9H7MbB8GuMuQKGi3D+vBRpINXxMcWU53LpDMGzT2BXDZpz3i/fka/df/ZbmD0fhiz1Ry1PUDQZEZ7lYb1L0xXEA7mZ9B4SbDi3tJS9pmdN/G5UPs7uMzTQgmatJWDmjXKPxjzZY+3gMYUQVutdA88RhlNaPCCyf53CfEHWWbUcXMMGW7rNIolsoJORrCfKKV5HI/8nqxwfVONGpTq/8SsMB3bhonazHaNzPXScsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM5PR1201MB0203.namprd12.prod.outlook.com (2603:10b6:4:56::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Fri, 28 Aug
+ 2020 12:54:05 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3305.032; Fri, 28 Aug 2020
+ 12:54:05 +0000
+Date:   Fri, 28 Aug 2020 09:54:03 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        <iommu@lists.linux-foundation.org>, <linux-hyperv@vger.kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "Jon Derrick" <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        "Stephen Hemminger" <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        "Dimitri Sivanich" <sivanich@hpe.com>, Russ Anderson <rja@hpe.com>,
+        <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
+        <xen-devel@lists.xenproject.org>, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Jacob Pan" <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [patch V2 34/46] PCI/MSI: Make arch_.*_msi_irq[s] fallbacks
+ selectable
+Message-ID: <20200828125403.GR1152540@nvidia.com>
+References: <20200826112333.992429909@linutronix.de>
+ <20200827182040.GA2049623@bjorn-Precision-5520>
+ <20200828112142.GA14208@e121166-lin.cambridge.arm.com>
+ <20200828121944.GQ1152540@nvidia.com>
+ <0cc8bfd9258dfc507585fd0f19a945e3@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <0cc8bfd9258dfc507585fd0f19a945e3@kernel.org>
+X-ClientProxiedBy: MN2PR19CA0057.namprd19.prod.outlook.com
+ (2603:10b6:208:19b::34) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by MN2PR19CA0057.namprd19.prod.outlook.com (2603:10b6:208:19b::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Fri, 28 Aug 2020 12:54:04 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kBdtL-000S41-Nn; Fri, 28 Aug 2020 09:54:03 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d581baf4-370b-4be9-e186-08d84b5171d1
+X-MS-TrafficTypeDiagnostic: DM5PR1201MB0203:
+X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
+X-Microsoft-Antispam-PRVS: <DM5PR1201MB0203C10F9A0026FA765135F7C2520@DM5PR1201MB0203.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 99qg/bsIPqkeKS7ryrP4eqAxd56hw+Ylq/tweF+dab3EBvIkaLviTgN6iglzJ5OsZOKlo/5c9DaBYyV3FconsXmq0HJDTBNVszdqgHaLxrdx80gVV9RaQUC6rOvi8aXBbMUezdePcc2NOvqkjZODagPSVaMzbDVHpMx/AxOa1x6V5Ag9Wq5BpZeH6ZdFZJIWHhsbpyomPgWmdQL63/XWJR8ctcmOzF3cdkdY/Mn2uNTauTK45CE3QKDZ63adUKXhMAmpdhlCuia5v1F3OX6StyQcqf0ismuqOg40S48W5nzx9AKkZWmNCMg3bLb4TOlgo4y8r3vlH6K/5T4QIA8kQg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(39860400002)(396003)(366004)(136003)(346002)(8676002)(66556008)(66476007)(426003)(186003)(478600001)(6916009)(7416002)(5660300002)(7406005)(9786002)(36756003)(9746002)(316002)(26005)(2616005)(4744005)(1076003)(86362001)(54906003)(66946007)(2906002)(8936002)(33656002)(4326008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: VsJyEC5KTaLbmpkQg6kW5X/Yid3P8Z9gSpq5BWGR/iGVLiAUD8Vso0j+6CPHoi2G+j3rV0OaO+vnv4E4AAijDXuONSZMdFkOtWoZfOEzKZwhHmetBaxh3WKUNSIfBUSEJaazsWLGXbdwqwGZP+kxwUbGsLKR025LJi4hOCRHS0hXcIFuDGhClMxryTChldEQ6WPzyt91cFKwXvS51dEvGUGpSBo/8rgyyrItvlFyWuHtwenaAQDhetEltotg2/gZtR9D+IX6SAR50x4iZGI5vwCMqRNsAtAD2rDAKIwoxYA3I2SoEp5cLF0UCsEu5TJn6ET4NEkwT/PH9b7oXYcEqna+76UbmYuu2ninY0zrv62dyWldESfiYmf9MPu5+DuFGxvlTs7sUFR4s1HHDzDJ+dpfJc4fdLbexNihzZE13gEq8f9bIkHG85ovNxfNluwc4N3YRYW5WBcyWjQ7nKNK8mvEgiD8IsZ/eIDwFQPWYpffAOLo0Ui3KBs1JavnmhK1zB1GZAIFci56uDtWFj4HYomHjatYnsFFV6dKSeo4qJVlgD8hilOjSnEJowdgxw/Y/a4rjkbC91lb7M+JTFVMgBXVoozZkJDXLhAwP+8exjh0kgQ3wKJsa2nZL5dyuKgBnQ3Vhcrck7Z94OaSF9FJ1Q==
+X-MS-Exchange-CrossTenant-Network-Message-Id: d581baf4-370b-4be9-e186-08d84b5171d1
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2020 12:54:04.8508
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HnNGus0RZDrUE5Se7xNKVvFs7SideYLF5oKLxSj7NaTAVEaFKVdLLcsoZRrqebIj
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0203
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598619215; bh=qV68vSrNC9se5jzAxDi47xoA7ucOBEGcpYcUqXTypis=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-LD-Processed:
+         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
+         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
+         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+         X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=H3QonVVqVNaGYeE6xB/Wi1aG2QYbpmwGQd11p/xq8ciXwvdVmAQ85KXYflMU90x2Y
+         uyXEIPduLJj6Sn80HH0S31oPsjAHLoNvpcI5jFUteresOmLY2GqTZHHGZEqfmGorOG
+         j7odn6teWF4uj1bTGdQblWF60gBfmSrdAASdgs15hS76HaPOpCRr5ABFYPYmJR9Eu9
+         x/rahSsbA4iIOfsN3gdaaFxRPNwxt3ABWvAMyNIv3gaB/SnqUNiaZEiGorgqT2cG2/
+         LDL75Y767C0MJW+Fe8JriW5eMmlDKdw2pTz+Gua4UG1jxt7KfkSHNibXNa/7VCPUyz
+         xJDY5yrlyCg/Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Amit Pundir <amit.pundir@linaro.org> writes:
+On Fri, Aug 28, 2020 at 01:47:59PM +0100, Marc Zyngier wrote:
 
-> On Mon, 8 Jun 2020 at 17:07, Kalle Valo <kvalo@codeaurora.org> wrote:
->> > I don't agree with this. If you read through the replies to the bug report,
->> > it is clear that NS migration uncovered a corner case or even a bug. So we
->> > should try to fix that indeed.
->>
->> I'm with Mani, we should try to fix ath10k instead. Hopefully we can
->> find a fix soon.
->
-> Hi Team,
->
-> Any updates on this? I can reproduce this hard crash on v5.9-rc1 as well.
->
-> It is not a blocker for us because we switched to a userspace
-> workaround, where we do not wait for modem to shutdown gracefully and
-> SIGKILL it instead, during the shutdown/reboot process. But I'm happy
-> to take a swing at any intermediate/in-progress solution available.
+> > So the arch_setup_msi_irq/etc is not really an arch hook, but some
+> > infrastructure to support those 4 PCI root port drivers.
+> 
+> I happen to have a *really old* patch addressing Tegra [1], which
+> I was never able to test (no HW). Rebasing it shouldn't be too hard,
+> and maybe you can find someone internally willing to give it a spin?
 
-Govind submitted this patch and later he asked to drop it, but I think
-it would be a good idea to test it anyway:
+Sure, that helps a bunch, I will ask internally if someone in that BU
+can take a look.
 
-ath10k: Move msa region map/unmap to init/deinit path
-
-https://lkml.kernel.org/r/1591191231-31917-1-git-send-email-govinds@codeaurora.org
-
-(patchwork is down so I cannot give a patchwork link)
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Thanks,
+Jason
