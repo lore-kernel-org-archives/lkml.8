@@ -2,101 +2,109 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F3FC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 137E0C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C71920665
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:10:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IAJ0KU/y"
+	by mail.kernel.org (Postfix) with ESMTP id C7D2620665
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:11:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbgH1IKc (ORCPT
+        id S1728641AbgH1ILF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 04:10:32 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54842 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728593AbgH1IKW (ORCPT
+        Fri, 28 Aug 2020 04:11:05 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:42718 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728629AbgH1IKj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 04:10:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598602221;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xvafGB3h1uSuShOcxklJX4Q2Ef6CI/lwjYNIZ0zdVjc=;
-        b=IAJ0KU/y5M3VFQYb7/2GeCjUEQEkMijjGGhKGvBRTD7dtRO/0Eb30o7/ebdIk5/tWm3JYc
-        u9T8IJasvDzws8iDwRYVss7soKgmWRKyXwNDR+WwJ6UHM5YCkOj4Fx1MzgmrXKwLXEHSXi
-        zb2I7PpQp4HK/CfHlsUrrI6abjvzUSs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-498-RHOgIQ7tOa6GJlcVJUT-kg-1; Fri, 28 Aug 2020 04:10:17 -0400
-X-MC-Unique: RHOgIQ7tOa6GJlcVJUT-kg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 204F5425E8;
-        Fri, 28 Aug 2020 08:10:15 +0000 (UTC)
-Received: from gondolin (ovpn-113-255.ams2.redhat.com [10.36.113.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F2C85D9F3;
-        Fri, 28 Aug 2020 08:10:05 +0000 (UTC)
-Date:   Fri, 28 Aug 2020 10:10:02 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v10 01/16] s390/vfio-ap: add version vfio_ap module
-Message-ID: <20200828101002.57c0d81f.cohuck@redhat.com>
-In-Reply-To: <8b3eb14e-c388-3025-1bfb-2dc7fb820de3@linux.ibm.com>
-References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
-        <20200821195616.13554-2-akrowiak@linux.ibm.com>
-        <20200825120432.13a1b444.cohuck@redhat.com>
-        <ca016eca-1ee7-2d0f-c2ec-3ef147b6216a@linux.ibm.com>
-        <20200827123240.42e0c787.cohuck@redhat.com>
-        <8b3eb14e-c388-3025-1bfb-2dc7fb820de3@linux.ibm.com>
-Organization: Red Hat GmbH
+        Fri, 28 Aug 2020 04:10:39 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R961e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0U750IIp_1598602237;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U750IIp_1598602237)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 28 Aug 2020 16:10:37 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Wei Yang <richard.weiyang@linux.alibaba.com>
+Subject: [PATCH] mm/mmap: leave adjust_next as virtual address instead of page frame number
+Date:   Fri, 28 Aug 2020 16:10:31 +0800
+Message-Id: <20200828081031.11306-1-richard.weiyang@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 10:39:07 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+Instead of convert adjust_next between virtual address and page frame
+number, let's just store the virtual address into adjust_next.
 
-> Currently there are two tools that probably need to be aware of
-> the changes to these assignment interfaces:
-> * The hades test framework has tests that will fail if run against
->  =C2=A0=C2=A0 these patches that should be skipped if over-provisioning is
->  =C2=A0=C2=A0 allowed. There are also tests under development to test the
->  =C2=A0=C2=A0 function introduced by these patches that will fail if run =
-against
->  =C2=A0=C2=A0 an older version of the driver. These tests should be skipp=
-ed in
->  =C2=A0=C2=A0 that case.
-> * There is a tool under development for configuring AP matrix
->  =C2=A0=C2=A0 mediated devices that probably need to be aware of the chan=
-ge
->  =C2=A0=C2=A0 introduced by this series.
->=20
-> Since a tool would have to first determine whether a new sysfs
-> interface documenting facilities is available and it would only
-> expose one facility at this point, it seems reasonable for these tools
-> to check for the sysfs guest_matrix attribute to discern whether
-> over-provisioning is available or not. I'll go ahead and remove this
-> patch from the series.
+Also, this patch fixes one typo in the comment of
+vma_adjust_trans_huge().
 
-Thanks for the explanation, that seems reasonable to me.
+Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+---
+ mm/huge_memory.c | 4 ++--
+ mm/mmap.c        | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 78c84bee7e29..2c633ba14440 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2300,13 +2300,13 @@ void vma_adjust_trans_huge(struct vm_area_struct *vma,
+ 
+ 	/*
+ 	 * If we're also updating the vma->vm_next->vm_start, if the new
+-	 * vm_next->vm_start isn't page aligned and it could previously
++	 * vm_next->vm_start isn't hpage aligned and it could previously
+ 	 * contain an hugepage: check if we need to split an huge pmd.
+ 	 */
+ 	if (adjust_next > 0) {
+ 		struct vm_area_struct *next = vma->vm_next;
+ 		unsigned long nstart = next->vm_start;
+-		nstart += adjust_next << PAGE_SHIFT;
++		nstart += adjust_next;
+ 		if (nstart & ~HPAGE_PMD_MASK &&
+ 		    (nstart & HPAGE_PMD_MASK) >= next->vm_start &&
+ 		    (nstart & HPAGE_PMD_MASK) + HPAGE_PMD_SIZE <= next->vm_end)
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 90b1298d4222..e4c9bbfd4103 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -758,7 +758,7 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+ 			 * vma expands, overlapping part of the next:
+ 			 * mprotect case 5 shifting the boundary up.
+ 			 */
+-			adjust_next = (end - next->vm_start) >> PAGE_SHIFT;
++			adjust_next = (end - next->vm_start);
+ 			exporter = next;
+ 			importer = vma;
+ 			VM_WARN_ON(expand != importer);
+@@ -768,7 +768,7 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+ 			 * split_vma inserting another: so it must be
+ 			 * mprotect case 4 shifting the boundary down.
+ 			 */
+-			adjust_next = -((vma->vm_end - end) >> PAGE_SHIFT);
++			adjust_next = -(vma->vm_end - end);
+ 			exporter = vma;
+ 			importer = next;
+ 			VM_WARN_ON(expand != importer);
+@@ -840,8 +840,8 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+ 	}
+ 	vma->vm_pgoff = pgoff;
+ 	if (adjust_next) {
+-		next->vm_start += adjust_next << PAGE_SHIFT;
+-		next->vm_pgoff += adjust_next;
++		next->vm_start += adjust_next;
++		next->vm_pgoff += adjust_next >> PAGE_SHIFT;
+ 	}
+ 
+ 	if (root) {
+-- 
+2.20.1 (Apple Git-117)
 
