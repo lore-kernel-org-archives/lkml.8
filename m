@@ -2,142 +2,138 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCD8C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29205C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7527F2098B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 013E12098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:46:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DxLnbNzw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="icC1Bpgn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgH1RqQ (ORCPT
+        id S1727051AbgH1Rqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 13:46:16 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:57694 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725979AbgH1RqO (ORCPT
+        Fri, 28 Aug 2020 13:46:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725979AbgH1Rq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 13:46:14 -0400
-Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9706920B7178;
-        Fri, 28 Aug 2020 10:46:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9706920B7178
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1598636773;
-        bh=m37BaxWxUXh3A97LPLILcR9FmKnNZX9n5ZLW8ZhgKzA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=DxLnbNzw0LBuLnBudQJkFay0TVSMAkA5Yfunem0PmWAqYVz3/cqwFwnhU3nC7DRpo
-         z/f4oaZ4BZcwekMW5SNIARBu3FkcG/5NgHAS6kjA2roHwpV8XreNzuXEJixg7i7nE3
-         4pThmLJOor1xMgZ1Ul0ziOdPp2z/vn4B4lu9KPG8=
-Subject: Re: [PATCH v4 2/5] powerpc: Use libfdt functions to fetch IMA buffer
- properties
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
-        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        vincenzo.frascino@arm.com, mark.rutland@arm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
-References: <20200819172134.11243-1-nramas@linux.microsoft.com>
- <20200819172134.11243-3-nramas@linux.microsoft.com>
- <8736478x7l.fsf@morokweng.localdomain>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <53685243-60b6-b21b-7f48-827bb296aa72@linux.microsoft.com>
-Date:   Fri, 28 Aug 2020 10:46:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 28 Aug 2020 13:46:27 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60AF7C061264;
+        Fri, 28 Aug 2020 10:46:27 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id t4so1397674iln.1;
+        Fri, 28 Aug 2020 10:46:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pHD2od9a3q3ducRP27N4YhrcnzJznka8g9wB3couczI=;
+        b=icC1BpgngsKcBshxupbrzi25rjmsbAQOUN7MB16qmho0eYgKflLT7ANJDf3pUDnubN
+         78YGL05njlRMtdciiZsYVN1VVQBMZjIe6pdf/yGP9BwzPCATHFugUx2WpO0GwB/oM/td
+         0fxLIn9YE98lUR6z93flUX7/YZT1bSXD8CjH+N+BS7Q3W0YWocw7ma5YnyqNywfSoYkK
+         uQVabMZ/STD/n3oAfEe2stGAK92d83/wNDqP4Iw3itV6btGDhCX29orA4o/j41AJaIom
+         anIODK7Y8nBxVFvG7/VA/SAMIZt37AHDfS/0UKi44VRdVWWh9s3JonKzphJdhvBH0fNY
+         k6qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pHD2od9a3q3ducRP27N4YhrcnzJznka8g9wB3couczI=;
+        b=qxzYvrxJGAgaoeuyi9q5k+Q643Q4G5Ke1oVC7xhzWS6ltrMTeoUJeekG4JTNQkWLsS
+         gaM398A9IKzUNc6LWxrDTfDvsZG0yzqjsMUxwBbFxkULvHdKYzJi7k7D+imsIaF8G+mb
+         NHI9O88dnqQZghaOg073S+6sODFucgnl/ekkrjruxw1c7bDm1AhIQ1N4WSxsLioQrL2e
+         o6Z8L+JbyOxwDtgGDpdII5AzVGYCFQ5Eo8FmXgpK1bKxsS/8KgkvPz/HyMD6lRddoNRS
+         HSKv1pc+eN/XZ16d9xZWaVBHLopFkg9q/WPGmse9m29F5ZgpSbrKDL0wOCuKbPrX9Wf+
+         ccFw==
+X-Gm-Message-State: AOAM5302lipA1LtVv7XoHpg/70z8SOoX7ombKU5Ys3bjqSuxLXsC3N8V
+        I3TuvZei+O0OQSkPvv2twMcyrpuVNFcSe1BERxQ=
+X-Google-Smtp-Source: ABdhPJxEPJRWFsSsLDEp8AT+kPrU4AEp/SFFKSWD282FnHn23h5DqcZW5RrwWZvBUnzwjewVJ+Pvt/vIrYZcV2MQjUc=
+X-Received: by 2002:a05:6e02:586:: with SMTP id c6mr30110ils.13.1598636785749;
+ Fri, 28 Aug 2020 10:46:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <8736478x7l.fsf@morokweng.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <a770d45d-b147-a8c5-b7f8-30d668cbed84@intel.com>
+ <4BDFD364-798C-4537-A88E-F94F101F524B@amacapital.net> <CAMe9rOoTjSwRSPuqP6RKkDzPA_VPh5gVYRVFJ-ezAD4Et-FUng@mail.gmail.com>
+ <CALCETrW=-ahC7GUCCyX7nPjCHfG3tiyDespud2Z7UbB6yWWWAA@mail.gmail.com>
+ <CAMe9rOrt5hz6qsNAxPgdKCOhRcKKESv-D3rxdSfraeJ-LFHM4w@mail.gmail.com>
+ <87v9h3thj9.fsf@oldenburg2.str.redhat.com> <CAMe9rOr=BZw3GyXf0g6tAZnfa8NbamoyBoU9KqoxtHg9c2yZhw@mail.gmail.com>
+ <CALCETrUUKb6oyBmB3CSeVy1xT7mcnV=BD2eipAnKUhma7K3qKw@mail.gmail.com>
+In-Reply-To: <CALCETrUUKb6oyBmB3CSeVy1xT7mcnV=BD2eipAnKUhma7K3qKw@mail.gmail.com>
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+Date:   Fri, 28 Aug 2020 10:45:49 -0700
+Message-ID: <CAMe9rOoWYJwg9Ug5-vrBs-iYUFTbKj-izdiCBEvGSj-3_zhSLw@mail.gmail.com>
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        "Yu, Yu-cheng" <yu-cheng.yu@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Dave Hansen <dave.hansen@intel.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/20 4:50 PM, Thiago Jung Bauermann wrote:
-> 
-> Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
-> 
->> @@ -63,7 +29,22 @@ void remove_ima_buffer(void *fdt, int chosen_node)
->>   	if (!prop)
->>   		return;
->>   
->> -	ret = do_get_kexec_buffer(prop, len, &addr, &size);
->> +	ret = fdt_address_cells(fdt, chosen_node);
-> 
-> This change was already present in the previous version of the patch but
-> it was just today that I noticed a problem: there's no #address-cells
-> property in /chosen. This code will still work though because if there's
-> no property this function returns 2 which is the correct value for
-> ppc64. But it's conceptually wrong. You need to pass the node offset for
-> / so that it gets the #address-cells property from there.
+On Fri, Aug 28, 2020 at 10:39 AM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> On Fri, Aug 28, 2020 at 4:38 AM H.J. Lu <hjl.tools@gmail.com> wrote:
+> >
+> > On Thu, Aug 27, 2020 at 11:24 PM Florian Weimer <fweimer@redhat.com> wrote:
+> > >
+> > > * H. J. Lu:
+> > >
+> > > > Can you think of ANY issues of passing more arguments to arch_prctl?
+> > >
+> > > On x32, the glibc arch_prctl system call wrapper only passes two
+> > > arguments to the kernel, and applications have no way of detecting that.
+> > > musl only passes two arguments on all architectures.  It happens to work
+> > > anyway with default compiler flags, but that's an accident.
+> >
+> > In the current glibc, there is no arch_prctl wrapper for i386.  There are
+> > arch_prctl wrappers with 2 arguments for x86-64 and x32.  But this isn't an
+> > issue for glibc since glibc is both the provider and the user of the new
+> > arch_prctl extension.  Besides,
+> >
+> > long syscall(long number, ...);
+> >
+> > is always available.
+>
+> Userspace is probably full of tools and libraries that contain tables
+> of system calls and their signatures.  Think tracing, audit, container
+> management, etc.  I don't know how they will react to the addition of
+> new arguments.
 
-Thanks for the info.
-Will fix this.
+Yes, they need to be updated to understand other new operations
+added for CET.
 
-> 
->> +	if (ret < 0)
->> +		return;
->> +	addr_cells = ret;
->> +
->> +	ret = fdt_size_cells(fdt, chosen_node);
-> 
-> Here we're not so lucky. The default value returned when no #size-cells
-> property is present is 1, which is wrong for ppc64 so this change
-> introduces a bug. You also need to pass the node offset for / here.
-
-Will fix this.
-
-> 
->> +	if (ret < 0)
->> +		return;
->> +	size_cells = ret;
->> +
->> +	if (len < 4 * (addr_cells + size_cells))
->> +		return;
->> +
->> +	addr = of_read_number(prop, addr_cells);
->> +	size = of_read_number(prop + 4 * addr_cells, size_cells);
->> +
->>   	fdt_delprop(fdt, chosen_node, FDT_PROP_IMA_KEXEC_BUFFER);
->>   	if (ret)
->>   		return;
->> @@ -129,9 +110,15 @@ int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node)
->>   	if (!image->arch.ima_buffer_size)
->>   		return 0;
->>   
->> -	ret = get_addr_size_cells(&addr_cells, &size_cells);
->> -	if (ret)
->> +	ret = fdt_address_cells(fdt, chosen_node);
->> +	if (ret < 0)
->> +		return ret;
->> +	addr_cells = ret;
->> +
->> +	ret = fdt_size_cells(fdt, chosen_node);
->> +	if (ret < 0)
->>   		return ret;
->> +	size_cells = ret;
->>   
->>   	entry_size = 4 * (addr_cells + size_cells);
-> 
-> Ditto here.
-> 
-
-Will fix this.
-
-thanks,
-  -lakshmi
+-- 
+H.J.
