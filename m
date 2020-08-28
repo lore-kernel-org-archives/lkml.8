@@ -2,141 +2,109 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACFCC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C71C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9787D2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BDB52086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:18:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="YxmGdsnf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SOTxbauG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbgH1JSG (ORCPT
+        id S1728947AbgH1JSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:18:06 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:44978 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726010AbgH1JSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:18:03 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 6B7EB5754C;
-        Fri, 28 Aug 2020 09:18:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        in-reply-to:content-disposition:content-type:content-type
-        :mime-version:references:message-id:subject:subject:from:from
-        :date:date:received:received:received; s=mta-01; t=1598606279;
-         x=1600420680; bh=PUk//xOzd/M0oYjICwsVKn2q7OnTIXAG1A0ffeeY6Wg=; b=
-        YxmGdsnf9SqRx7b08HVZC6O61XFt1CNpKrRF02a1iD4LWquzPgpaaRxBfSQuuLW2
-        pWO34ze7GIjsOSTG11r+UsRZr2hJVdHQGAwlM6iR2KoLGKpZxPAGi79v28eMDwlN
-        hK5VaG5f22UwDfGl5mCsBK+U8M2MN2283e/sYhsxDy0=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id RnCPCZ0Ln2Q9; Fri, 28 Aug 2020 12:17:59 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 781195753E;
-        Fri, 28 Aug 2020 12:17:59 +0300 (MSK)
-Received: from localhost (172.17.204.212) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Fri, 28
- Aug 2020 12:17:59 +0300
-Date:   Fri, 28 Aug 2020 12:17:58 +0300
-From:   Roman Bolshakov <r.bolshakov@yadro.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-CC:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        <linux-scsi@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
-        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
-        <linux-spdx@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <GR-QLogic-Storage-Upstream@marvell.com>,
-        Arun Easi <aeasi@marvell.com>
-Subject: Re: [PATCH] MAINTAINERS: orphan sections with qlogic.com group alias
-Message-ID: <20200828091758.GF54274@SPB-NB-133.local>
-References: <20200828070824.8032-1-lukas.bulwahn@gmail.com>
+        Fri, 28 Aug 2020 05:18:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgH1JSh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:18:37 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60CAAC061264;
+        Fri, 28 Aug 2020 02:18:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=7oEiKFdKtw+fNVAzipGQKKCx4WxHDyWDHaSbCtVw8Hc=; b=SOTxbauG+aJgX2PjBxPuX6SqoA
+        DwnLiY9B69lbseA4S62pEIvcb0QBu6EnWogxEy6L0/9MMcWoGka8PI55opXYzY9ew+Dgsi0ttyjQr
+        /yzwyvQN4ZRaCr6/UmRlQomebL1qYBHoUmwhVb9LPP6Z/09JeZMAwHhevzIiUW7pRj2shkdGJaRnl
+        T+0kfenZcuT4GGJxamXZG4xJEOBXaiTi5wIzDVA3634O6E3//6fJMI8QB3rEBFWgJLkPWtxkTIC5L
+        gvh8J80hbXwFOCMwTJuf7CM0vfV4JLgFnpQHEXv4e955lb1UrKheek6WzMplDC/0wXHeSZmGYCap1
+        AClRaoKA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBaWU-0006xd-Qo; Fri, 28 Aug 2020 09:18:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 15D28305C10;
+        Fri, 28 Aug 2020 11:18:13 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C34E52C56DB16; Fri, 28 Aug 2020 11:18:13 +0200 (CEST)
+Date:   Fri, 28 Aug 2020 11:18:13 +0200
+From:   peterz@infradead.org
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Eddy_Wu@trendmicro.com,
+        x86@kernel.org, davem@davemloft.net, rostedt@goodmis.org,
+        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        linux-arch@vger.kernel.org, cameron@moodycamel.com,
+        oleg@redhat.com, will@kernel.org, paulmck@kernel.org
+Subject: Re: [RFC][PATCH 7/7] kprobes: Replace rp->free_instance with freelist
+Message-ID: <20200828091813.GU1362448@hirez.programming.kicks-ass.net>
+References: <20200827161237.889877377@infradead.org>
+ <20200827161754.594247581@infradead.org>
+ <20200828084851.GQ1362448@hirez.programming.kicks-ass.net>
+ <20200828181341.c1da066360c6085d48850e22@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200828070824.8032-1-lukas.bulwahn@gmail.com>
-X-Originating-IP: [172.17.204.212]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+In-Reply-To: <20200828181341.c1da066360c6085d48850e22@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 09:08:24AM +0200, Lukas Bulwahn wrote:
-> Previous attempts of getting an answer from the qlogic.com group alias,
-> i.e., QLogic-Storage-Upstream@qlogic.com, have remained unanswered; see
-> links below.
+On Fri, Aug 28, 2020 at 06:13:41PM +0900, Masami Hiramatsu wrote:
+> On Fri, 28 Aug 2020 10:48:51 +0200
+> peterz@infradead.org wrote:
 > 
-> Mark those sections Orphan to prepare their deletion or give an actual
-> person a chance to step up to maintain those drivers.
+> > On Thu, Aug 27, 2020 at 06:12:44PM +0200, Peter Zijlstra wrote:
+> > >  struct kretprobe_instance {
+> > >  	union {
+> > > +		/*
+> > > +		 * Dodgy as heck, this relies on not clobbering freelist::refs.
+> > > +		 * llist: only clobbers freelist::next.
+> > > +		 * rcu: clobbers both, but only after rp::freelist is gone.
+> > > +		 */
+> > > +		struct freelist_node freelist;
+> > >  		struct llist_node llist;
+> > > -		struct hlist_node hlist;
+> > >  		struct rcu_head rcu;
+> > >  	};
+> > 
+> > Masami, make sure to make this something like:
+> > 
+> > 	union {
+> > 		struct freelist_node freelist;
+> > 		struct rcu_head rcu;
+> > 	};
+> > 	struct llist_node llist;
+> > 
+> > for v4, because after some sleep I'm fairly sure what I wrote above was
+> > broken.
+> > 
+> > We'll only use RCU once the freelist is gone, so sharing that storage
+> > should still be okay.
 > 
-> Link: https://lore.kernel.org/linux-spdx/20190606205526.447558989@linutronix.de
-> Link: https://lore.kernel.org/linux-spdx/alpine.DEB.2.21.2006300644130.4919@felia
-> Link: https://lore.kernel.org/linux-spdx/alpine.DEB.2.21.2008270740140.31123@felia
-> 
-> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> applies cleanly on current master and next-20200828
-> 
-> James, Martin, please pick this minor non-urgent patch.
-> 
-> Anil, Sudarsana, if these drivers are still maintained by qlogic, please
-> provide actual names of people that maintain these drivers.
-> 
->  MAINTAINERS | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3b186ade3597..415058b48a2e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3507,15 +3507,13 @@ F:	drivers/net/ethernet/broadcom/bnx2.*
->  F:	drivers/net/ethernet/broadcom/bnx2_*
->  
->  BROADCOM BNX2FC 10 GIGABIT FCOE DRIVER
-> -M:	QLogic-Storage-Upstream@qlogic.com
->  L:	linux-scsi@vger.kernel.org
-> -S:	Supported
-> +S:	Orphan
->  F:	drivers/scsi/bnx2fc/
->  
->  BROADCOM BNX2I 1/10 GIGABIT iSCSI DRIVER
-> -M:	QLogic-Storage-Upstream@qlogic.com
->  L:	linux-scsi@vger.kernel.org
-> -S:	Supported
-> +S:	Orphan
->  F:	drivers/scsi/bnx2i/
->  
->  BROADCOM BNX2X 10 GIGABIT ETHERNET DRIVER
-> @@ -14212,9 +14210,8 @@ F:	Documentation/networking/device_drivers/ethernet/qlogic/LICENSE.qla3xxx
->  F:	drivers/net/ethernet/qlogic/qla3xxx.*
->  
->  QLOGIC QLA4XXX iSCSI DRIVER
-> -M:	QLogic-Storage-Upstream@qlogic.com
->  L:	linux-scsi@vger.kernel.org
-> -S:	Supported
-> +S:	Orphan
->  F:	Documentation/scsi/LICENSE.qla4xxx
->  F:	drivers/scsi/qla4xxx/
->  
-> -- 
-> 2.17.1
-> 
+> Hmm, would you mean there is a chance that an instance belongs to
+> both freelist and llist?
 
-CC'd Arun,
+So the freelist->refs thing is supposed to pin freelist->next for
+concurrent usage, but if we instantly stick it on the
+current->kretprobe_instances llist while it's still elevated, we'll
+overwrite ->next, which would be bad.
 
-I think it's worth to update the alias to:
-
-GR-QLogic-Storage-Upstream@marvell.com
