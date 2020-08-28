@@ -2,98 +2,222 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62022C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC150C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0821020872
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598635172;
-	bh=alXfXWyjeCC+Y9Ph5sCPNsdaWdumqkWEgNkamywB1tc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HlTKTqXuKCLHvixG69jfw98c9bP3bHGW5wnuueE6jfY55PwuKEDj8JDbrt+5JbEwM
-	 OCiPpx25VBsxueryDIa8/E+/1ZBWGUQEU5qWIsGq9/S5qNX3weFtFjELIPzfOd7q/R
-	 DY9QXDiTCOOLuYVdzcsEAYx22Ee9L0lqlTYsDQds=
+	by mail.kernel.org (Postfix) with ESMTP id B085C20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:20:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="UBa1hdG6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgH1RTa (ORCPT
+        id S1726939AbgH1RUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 13:19:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725814AbgH1RT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 13:19:27 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72F7D20848;
-        Fri, 28 Aug 2020 17:19:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598635166;
-        bh=alXfXWyjeCC+Y9Ph5sCPNsdaWdumqkWEgNkamywB1tc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UfZnx+gLqk5r6tBqGGGNmQyOoB57+KOZTJ8hZFY/o167swKJZlOOfEyyqihawwFWF
-         9NvQxcv6YhbecnPPPTiaCBdNzkB9I+M9brO4j82H6hht0nxHwzVzVfPomjJhfkEAkE
-         jIN80CXFvTvJbW/cj3rR729BUByTECidvBH6mzSs=
-Date:   Fri, 28 Aug 2020 10:19:24 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     "luobin (L)" <luobin9@huawei.com>
-Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
-        <chiqijun@huawei.com>
-Subject: Re: [PATCH net-next v1 3/3] hinic: add support to query function
- table
-Message-ID: <20200828101924.30372b7e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <ef510fbe-8b73-a50e-445f-2b3771072529@huawei.com>
-References: <20200827111321.24272-1-luobin9@huawei.com>
-        <20200827111321.24272-4-luobin9@huawei.com>
-        <20200827124404.496ff40b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <ef510fbe-8b73-a50e-445f-2b3771072529@huawei.com>
+        Fri, 28 Aug 2020 13:20:50 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:11687 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbgH1RUo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 13:20:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1598635243; x=1630171243;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=gHenN6fwJGp5BObIYNPC3TZqcQqp7idU10NNnHU1wyQ=;
+  b=UBa1hdG6bp43Mw/CnhECggZqvNZgEnKqtCiEk+4IPyvJx0hotC8TDGkS
+   TjFcEdWgZN6Un/QYBEAEz9NjbEnF51zaZjNdkF7j70wv6H5y+7Hs5RX7i
+   yC7QqjxxniwvOllTD8/KKUU9d7khrS+gd3rsjkHS8uweZheD0HLQvUEiu
+   6m/BQziYBJPQnuJQgxNh75QaJHARVlDZVmAKjYWjHzKkTd6+VeQ4Mmk3P
+   d3vbUtIPa3gLfNDrWj6dYqwXMhNlY3uj18nBwdgnjMkZ2z+rYV/jwFGcv
+   MLg9DSwqd2s/FhViF4UTlPG1+DFhIsXVVLXUII81TasdpWsicU9T29Anj
+   Q==;
+IronPort-SDR: fH1d980RkWhep6zBYWJwaTYiIkILA6AOK/v199lCmiB5IlE6eRf1FWnuN9h1ZgQMsa5XPQOXhM
+ jAdsqitlHt6KhcVWVZKLvHjSM9xkqdYxxrTZtXczIew/T8CO3zpc5y8dd1Chiq0AY9TWQKy/Lu
+ br+2W22PPAXCqnj1cycc/OGaPAnDXu5d0pLyo0WShvPE9/1v1nxZt5FaYpyBKtu5eTtZci/a0k
+ einluRzs5J5YA9wp8gekC+jwIW6Wqh7xSO+1wOA1eBlUJVUmK/Ul4Aj4/lZYCh/DQHmwYExIKR
+ mro=
+X-IronPort-AV: E=Sophos;i="5.76,364,1592841600"; 
+   d="scan'208";a="146018507"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Aug 2020 01:20:42 +0800
+IronPort-SDR: nSEB2uzb2XynYpNU4eU9WA2NqldtnYuDDcw/LcavM3tCBKKfe07dN5XrkQq3Iex+1aI18RVdqx
+ pet5PfEzWA1A==
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 10:08:14 -0700
+IronPort-SDR: ldEYICpeaM843o92uGCkExcLgncDIk+5aq2ei6+za4TuMPcSGbsH5252HtlnN6bcwl8Uf7E4Dj
+ xbTV4ZcaT/5A==
+WDCIronportException: Internal
+Received: from 6hj08h2.ad.shared (HELO jedi-01.hgst.com) ([10.86.59.137])
+  by uls-op-cesaip01.wdc.com with ESMTP; 28 Aug 2020 10:20:41 -0700
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Anup Patel <anup.patel@wdc.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Ingo Molnar <mingo@kernel.org>, linux-efi@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Mike Rapoport <rppt@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: [PATCH v7 0/9] Add UEFI support for RISC-V
+Date:   Fri, 28 Aug 2020 10:20:27 -0700
+Message-Id: <20200828172036.8056-1-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Aug 2020 11:16:22 +0800 luobin (L) wrote:
-> On 2020/8/28 3:44, Jakub Kicinski wrote:
-> > On Thu, 27 Aug 2020 19:13:21 +0800 Luo bin wrote:  
-> >> +	switch (idx) {
-> >> +	case VALID:
-> >> +		return funcfg_table_elem->dw0.bs.valid;
-> >> +	case RX_MODE:
-> >> +		return funcfg_table_elem->dw0.bs.nic_rx_mode;
-> >> +	case MTU:
-> >> +		return funcfg_table_elem->dw1.bs.mtu;
-> >> +	case VLAN_MODE:
-> >> +		return funcfg_table_elem->dw1.bs.vlan_mode;
-> >> +	case VLAN_ID:
-> >> +		return funcfg_table_elem->dw1.bs.vlan_id;
-> >> +	case RQ_DEPTH:
-> >> +		return funcfg_table_elem->dw13.bs.cfg_rq_depth;
-> >> +	case QUEUE_NUM:
-> >> +		return funcfg_table_elem->dw13.bs.cfg_q_num;  
-> > 
-> > The first two patches look fairly unobjectionable to me, but here the
-> > information does not seem that driver-specific. What's vlan_mode, and
-> > vlan_id in the context of PF? Why expose mtu, is it different than
-> > netdev mtu? What's valid? rq_depth?
-> > .
-> >   
-> The vlan_mode and vlan_id in function table are provided for VF in QinQ scenario
-> and they are useless for PF. Querying VF's function table is unsupported now, so
-> there is no need to expose vlan_id and vlan mode and I'll remove them in my next
-> patchset. The function table is saved in hw and we expose the mtu to ensure the
-> mtu saved in hw is same with netdev mtu. The valid filed indicates whether this
-> function is enabled or not and the hw can judge whether the RQ buffer in host is
-> sufficient by comparing the values of rq depth, pi and ci.
+This series adds UEFI support for RISC-V.
 
-Queue depth is definitely something we can add to the ethtool API.
-You already expose raw producer and consumer indexes so the calculation
-can be done, anyway.
+Linux kernel: v5.9-rc2 
+U-Boot: v2020.07 
+OpenSBI: master
+
+Patch 1-3 are generic riscv feature addition required for UEFI support.
+Patch 4-7 adds the efi stub support for RISC-V which was reviewed few months back.
+https://www.spinics.net/lists/linux-efi/msg19144.html
+Patch 8 just renames arm-init code so that it can be used across different
+architectures.
+Patch 9 adds the runtime services for RISC-V.
+
+The working set of patches can also be found in following git repo.
+https://github.com/atishp04/linux/tree/uefi_riscv_5.10_v7
+
+The patches have been verified on following platforms:
+1. Qemu (both RV32 & RV64) for the following bootflow
+   OpenSBI->U-Boot->Linux
+   EDK2->Linux
+2. HiFive unleashed using (RV64) for the following bootflow
+   OpenSBI->U-Boot->Linux
+   EDK2->Linux
+
+Thanks Abner & Daniel for all work done for EDK2.
+The EDK2 instructions are available here.
+https://github.com/JohnAZoidberg/riscv-edk2-docker/
+
+Note:
+1. Currently, EDK2 RISC-V port doesn't support OVMF package. That's why
+EFI_GENERIC_STUB_INITRD_CMDLINE_LOADER should be enabled to load initrd via
+commandline until OVMF patches are available.
+
+2. For RV32, maximum allocated memory should be 1G as RISC-V kernel can not map
+beyond 1G of physical memory for RV32.
+
+3. Runtime services have been verified with fwts on EDK2.
+
+***********************************************************************
+[root@fedora-riscv ~]# fwts uefirtvariable
+Running 1 tests, results appended to results.log
+Test: UEFI Runtime service variable interface tests.                        
+  Test UEFI RT service get variable interface.            1 passed             
+  Test UEFI RT service get next variable name interface.  4 passed             
+  Test UEFI RT service set variable interface.            7 passed, 1 warning  
+  Test UEFI RT service query variable info interface.     1 passed             
+  Test UEFI RT service variable interface stress test.    2 passed             
+  Test UEFI RT service set variable interface stress t..  4 passed             
+  Test UEFI RT service query variable info interface s..  1 passed             
+  Test UEFI RT service get variable interface, invalid..  5 passed             
+  Test UEFI RT variable services supported status.        1 skipped 
+
+Test           |Pass |Fail |Abort|Warn |Skip |Info |
+uefirtvariable |   25|     |     |    1|    1|     |
+Total:         |   25|    0|    0|    1|    1|    0|
+
+***********************************************************************
+
+Changes from v6->v7:
+1. Fixed build error reported on linux-next for patch2.
+
+Changes from v5->v6:
+1. Fixed the static declaration for pt_ops.
+2. Added Reviewed/Acked-by.
+
+Changes from v4->v5:
+1. Late mappings allocations are now done through function pointers.
+2. EFI run time services are verified using full linux boot and fwts using EDK2.
+
+Changes from v3->v4:
+1. Used pgd mapping to avoid copying DT to bss.
+
+Changes from v2->v3:
+1. Fixed few bugs in run time services page table mapping.
+2. Dropped patch 1 as it is already taken into efi-tree.
+3. Sent few generic mmu fixes as a separate series to ease the merge conflicts.
+
+Changes from v1->v2:
+1. Removed patch 1 as it is already taken into efi-tree.
+2. Fixed compilation issues with patch 9.
+3. Moved few function prototype declaration to header file to keep kbuild happy.
+
+Changes from previous version:
+1. Added full ioremap support.
+2. Added efi runtime services support.
+3. Fixes mm issues
+
+Anup Patel (1):
+RISC-V: Move DT mapping outof fixmap
+
+Atish Patra (8):
+RISC-V: Add early ioremap support
+RISC-V: Implement late mapping page table allocation functions
+include: pe.h: Add RISC-V related PE definition
+RISC-V: Add PE/COFF header for EFI stub
+RISC-V: Add EFI stub support.
+efi: Rename arm-init to efi-init common for all arch
+RISC-V: Add EFI runtime services
+RISC-V: Add page table dump support for uefi
+
+arch/riscv/Kconfig                            |  25 +++
+arch/riscv/Makefile                           |   1 +
+arch/riscv/configs/defconfig                  |   1 +
+arch/riscv/include/asm/Kbuild                 |   1 +
+arch/riscv/include/asm/efi.h                  |  56 +++++
+arch/riscv/include/asm/fixmap.h               |  16 +-
+arch/riscv/include/asm/io.h                   |   1 +
+arch/riscv/include/asm/mmu.h                  |   2 +
+arch/riscv/include/asm/pgtable.h              |   5 +
+arch/riscv/include/asm/sections.h             |  13 ++
+arch/riscv/kernel/Makefile                    |   5 +
+arch/riscv/kernel/efi-header.S                | 104 ++++++++++
+arch/riscv/kernel/efi.c                       | 105 ++++++++++
+arch/riscv/kernel/head.S                      |  17 +-
+arch/riscv/kernel/head.h                      |   2 -
+arch/riscv/kernel/image-vars.h                |  51 +++++
+arch/riscv/kernel/setup.c                     |  18 +-
+arch/riscv/kernel/vmlinux.lds.S               |  22 +-
+arch/riscv/mm/init.c                          | 191 +++++++++++++-----
+arch/riscv/mm/ptdump.c                        |  48 ++++-
+drivers/firmware/efi/Kconfig                  |   3 +-
+drivers/firmware/efi/Makefile                 |   4 +-
+.../firmware/efi/{arm-init.c => efi-init.c}   |   0
+drivers/firmware/efi/libstub/Makefile         |  10 +
+drivers/firmware/efi/libstub/efi-stub.c       |  11 +-
+drivers/firmware/efi/libstub/riscv-stub.c     | 110 ++++++++++
+drivers/firmware/efi/riscv-runtime.c          | 143 +++++++++++++
+include/linux/pe.h                            |   3 +
+28 files changed, 901 insertions(+), 67 deletions(-)
+create mode 100644 arch/riscv/include/asm/efi.h
+create mode 100644 arch/riscv/include/asm/sections.h
+create mode 100644 arch/riscv/kernel/efi-header.S
+create mode 100644 arch/riscv/kernel/efi.c
+create mode 100644 arch/riscv/kernel/image-vars.h
+rename drivers/firmware/efi/{arm-init.c => efi-init.c} (100%)
+create mode 100644 drivers/firmware/efi/libstub/riscv-stub.c
+create mode 100644 drivers/firmware/efi/riscv-runtime.c
+
+--
+2.24.0
+
