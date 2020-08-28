@@ -2,269 +2,102 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFA5C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9479CC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7388208C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6840F2054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:21:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="N8KwPRQV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgH1OVZ (ORCPT
+        id S1728004AbgH1OVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:21:25 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:41366 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbgH1OVW (ORCPT
+        Fri, 28 Aug 2020 10:21:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbgH1OVj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:21:22 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: nicolas)
-        with ESMTPSA id F3AA629AEA9
-Message-ID: <acb8d609f1afff6b24210426baaf4fe52dc6f4ee.camel@collabora.com>
-Subject: Re: [PATCH v2 08/14] media: uapi: h264: Drop SLICE_PARAMS 'size'
- field
-From:   Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Reply-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Date:   Fri, 28 Aug 2020 10:21:15 -0400
-In-Reply-To: <bac2020eabb375a6c9dbc689c0c5a3f6eae16e1e.camel@collabora.com>
-References: <20200806151310.98624-1-ezequiel@collabora.com>
-         <20200806151310.98624-9-ezequiel@collabora.com>
-         <20200806155028.GB1621078@aptenodytes>
-         <7e0ad157cabb656cbb4f24354146197e6a1d3f36.camel@collabora.com>
-         <20200819135430.GA1566@aptenodytes>
-         <bac2020eabb375a6c9dbc689c0c5a3f6eae16e1e.camel@collabora.com>
-Organization: Collabora
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-485015CwXDZx+PUjo0EI"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        Fri, 28 Aug 2020 10:21:39 -0400
+Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D0CC06121B
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:21:39 -0700 (PDT)
+Received: by mail-qv1-xf44.google.com with SMTP id l13so449443qvt.10
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:21:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xTI6+GkcETTpHWIvvBypzVxQQpyEAhXbsVHo/bIanMg=;
+        b=N8KwPRQVWfqwX32CjhM1MWZNedWHxDfw6QHu2eKgwvj9vZXqN5mcjL5D9YkLqZDqct
+         qVdRY6y2fQd5JqyhniJ/tWcO1kt9vPsrCbbIbQXo+iG2GLNyJPMdkKtsmiuk9BxGJtim
+         sYY782s/qFCyOcqJnIfqSkt3Mey4xuCjGbAzCME0dqtOf9yt+Oh3qnkDrmC2ueY6rOxF
+         W9/Ocv6Pq7/EYz8n7ZAcDH/9kMa9jBAWYr0uJcvBCbv9K3HdEAlny7to5qpZ6rD9BmS+
+         aeSPb8vfkGvF2XTgF18OVl35YbtXeH/Z5hi33XQem9U/qSlsPnsyh8Mw6NQ/8rFoA4iI
+         qCtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xTI6+GkcETTpHWIvvBypzVxQQpyEAhXbsVHo/bIanMg=;
+        b=juueA/FAO/wYOF10AEpPySC75QWU836lleuyngZxbeMVnuqdh5gd3Optk1mZZtQLgz
+         LRovyJqhjZyeSxnRL2EHcK9Lc3RQuRPS0UKfZ8eW7Ejfe6/gmej9NXWQLTUWgB7anAMc
+         QAKynjPoHztAqa52YeiyK2V3kdbeBrWNOfJtRqc8ByxgrCE8D1Epj2F1wdfcrvqtrE8T
+         9JJrZQdH1J9lbYV/7pt9amw9MR2pZfIOc2Oub90zUASm1Y5fA1B15fpf67ZWvIXv1KV3
+         0nwhtC9AmYjz1vCku7RK9WmNyhkKxaRZCZe7V2dRsC/OS5wW/q2jAS1TeynmL6Xh9LSO
+         Xuyg==
+X-Gm-Message-State: AOAM533vLXwKDScGQB4p0GrgvvBZId/bhwlerCLBMZLLpeZ65S21JzJA
+        02puvY8MM69+xz3tYEsU0XF1XepcuZMOTg==
+X-Google-Smtp-Source: ABdhPJyEOuyU0xtQdqC+cKFxXBrGrcvFZATJ82c4w6FNraYAEqPXVCLM//u0MJDGSkHpJPB93i0WeA==
+X-Received: by 2002:a05:6214:184a:: with SMTP id d10mr1927526qvy.190.1598624498625;
+        Fri, 28 Aug 2020 07:21:38 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id m17sm931967qkn.45.2020.08.28.07.21.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 07:21:37 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kBfG5-000hDT-3F; Fri, 28 Aug 2020 11:21:37 -0300
+Date:   Fri, 28 Aug 2020 11:21:37 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [RFC PATCH 0/2] mm/gup: fix gup_fast with dynamic page table
+ folding
+Message-ID: <20200828142137.GX24045@ziepe.ca>
+References: <20200828140314.8556-1-gerald.schaefer@linux.ibm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828140314.8556-1-gerald.schaefer@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 28, 2020 at 04:03:12PM +0200, Gerald Schaefer wrote:
+> Commit 1a42010cdc26 ("s390/mm: convert to the generic get_user_pages_fast
+> code") introduced a subtle but severe bug on s390 with gup_fast, due to
+> dynamic page table folding.
 
---=-485015CwXDZx+PUjo0EI
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I think the page walk code in mm/pagewalk.c has similar issues to
+GUP. I've been noodling on some patches to add the missing stack
+copies to pagewalk.c as they are clearly missing..
 
-Le jeudi 20 ao=C3=BBt 2020 =C3=A0 04:32 -0300, Ezequiel Garcia a =C3=A9crit=
- :
-> Hi Paul,
->=20
-> On Wed, 2020-08-19 at 15:54 +0200, Paul Kocialkowski wrote:
-> > Hi,
-> >=20
-> > On Fri 07 Aug 20, 11:44, Ezequiel Garcia wrote:
-> > > On Thu, 2020-08-06 at 17:50 +0200, Paul Kocialkowski wrote:
-> > > > Hi,
-> > > >=20
-> > > > On Thu 06 Aug 20, 12:13, Ezequiel Garcia wrote:
-> > > > > The SLICE_PARAMS control is intended for slice-based
-> > > > > devices. In this mode, the OUTPUT buffer contains
-> > > > > a single slice, and so the buffer's plane payload size
-> > > > > can be used to query the slice size.
-> > > >=20
-> > > > If we later extend the API for supporting multiple slices with dyna=
-mic array
-> > > > controls, I guess we'll need to know the size of each slice in each=
- control
-> > > > elements. So I'd rather keep that even if it's indeed redundant wit=
-h
-> > > > vb2_get_plane_payload in single-slice mode.
-> > > >=20
-> > >=20
-> > > If we later extend the API, another control (possibly
-> > > another decoding mode?) shall be introduced.
-> > >=20
-> > > This API covers single-slice-per-request as specified
-> > > and documented in patch 9/14 "Clarify SLICE_BASED mode".
-> > >=20
-> > > This is along the lines of the proposal drafted by Nicolas,
-> > > see my reply: https://lkml.org/lkml/2020/8/5/791.
-> > >=20
-> > > This applies to num_slices, slice size and slice start offset.
-> > >=20
-> > > There are multiple ways of doing this.
-> >=20
-> > If feels a bit problematic to remove these fields without a clear plan =
-yet
-> > on how to support multiple slices in the future. These may need to be a=
-dded
-> > again later, except that it will be too late and new controls will need=
- to be
-> > introduced.
-> >=20
->=20
-> As Nicolas and I have repeatedly mentioned we do have a plan :)
->=20
-> Nothing prevents us from implementing this now, but since it seems
-> we don't have any need since the 1-slice-per-buffer is working well,
-> there is no motivation for it.
->=20
-> As you well mention, it does require new controls. This is
-> totally expected since new decoding semantics will need new controls.
->=20
-> Here's my version of the plan:
->=20
-> enum v4l2_mpeg_video_h264_decode_mode {
->         V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
->         V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_ARRAY_BASED,
->         V4L2_MPEG_VIDEO_H264_DECODE_MODE_FRAME_BASED,
-> };
->=20
-> #define V4L2_CID_MPEG_VIDEO_H264_SLICE_ARRAY    (V4L2_CID_MPEG_BASE+1008)
->=20
-> struct v4l2_ctrl_h264_slice_array {
->         __u16 num_slices;
->=20
->         struct v4l2_ctrl_h264_slice slices[16];
-> }
+It would be good if this could be less GUP specific?
 
-Well, ideally the new dynamic array control format can hold this
-information for us, avoiding the 16 slice limit again, but that is
-inded the plan.
+Generically this is about walking the page table without holding the
+page table spinlocks using READ_ONCE.
 
->=20
-> struct v4l2_ctrl_h264_slice {
->         __u32 size;
->         __u32 start_byte_offset;
->         struct v4l2_ctrl_h264_slice_params params;
-> }
->=20
-> Now, the _specific_ way this will be done is not under
-> discussion at the moment.
->=20
-> > Also, could we consider adding more reserved fields to handle such futu=
-re needs?
-> >=20
->=20
-> I have considered that (on each control), but I fail
-> to see the reason for it. The same may be said of all controls,
-> yet I don't think we bloat each one just in case.=20
->=20
-> Thanks,
-> Ezequiel
->=20
-> > Cheers,
-> >=20
-> > Paul
-> >=20
-> > > Thanks!
-> > > Ezequiel
-> > >=20
-> > > > What do you think?
-> > > >=20
-> > > > Paul
-> > > >=20
-> > > > > To reduce the API surface drop the size from the
-> > > > > SLICE_PARAMS control.
-> > > > >=20
-> > > > > A follow-up change will remove other members in SLICE_PARAMS
-> > > > > so we don't need to add padding fields here.
-> > > > >=20
-> > > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > > > ---
-> > > > >  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 3 --=
--
-> > > > >  drivers/staging/media/sunxi/cedrus/cedrus_h264.c          | 7 ++=
-+----
-> > > > >  include/media/h264-ctrls.h                                | 3 --=
--
-> > > > >  3 files changed, 3 insertions(+), 10 deletions(-)
-> > > > >=20
-> > > > > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-code=
-c.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > > > index 427fc5727ec0..fff74b7bf32a 100644
-> > > > > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > > > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > > > @@ -1760,9 +1760,6 @@ enum v4l2_mpeg_video_h264_hierarchical_codi=
-ng_type -
-> > > > >      :stub-columns: 0
-> > > > >      :widths:       1 1 2
-> > > > > =20
-> > > > > -    * - __u32
-> > > > > -      - ``size``
-> > > > > -      -
-> > > > >      * - __u32
-> > > > >        - ``start_byte_offset``
-> > > > >          Offset (in bytes) from the beginning of the OUTPUT buffe=
-r to the start
-> > > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/d=
-rivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > > > index a9ba78b15907..8b6f05aadbe8 100644
-> > > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > > > @@ -324,17 +324,16 @@ static void cedrus_set_params(struct cedrus=
-_ctx *ctx,
-> > > > >  	struct vb2_buffer *src_buf =3D &run->src->vb2_buf;
-> > > > >  	struct cedrus_dev *dev =3D ctx->dev;
-> > > > >  	dma_addr_t src_buf_addr;
-> > > > > -	u32 len =3D slice->size * 8;
-> > > > > +	size_t slice_bytes =3D vb2_get_plane_payload(src_buf, 0);
-> > > > >  	unsigned int pic_width_in_mbs;
-> > > > >  	bool mbaff_pic;
-> > > > >  	u32 reg;
-> > > > > =20
-> > > > > -	cedrus_write(dev, VE_H264_VLD_LEN, len);
-> > > > > +	cedrus_write(dev, VE_H264_VLD_LEN, slice_bytes * 8);
-> > > > >  	cedrus_write(dev, VE_H264_VLD_OFFSET, 0);
-> > > > > =20
-> > > > >  	src_buf_addr =3D vb2_dma_contig_plane_dma_addr(src_buf, 0);
-> > > > > -	cedrus_write(dev, VE_H264_VLD_END,
-> > > > > -		     src_buf_addr + vb2_get_plane_payload(src_buf, 0));
-> > > > > +	cedrus_write(dev, VE_H264_VLD_END, src_buf_addr + slice_bytes);
-> > > > >  	cedrus_write(dev, VE_H264_VLD_ADDR,
-> > > > >  		     VE_H264_VLD_ADDR_VAL(src_buf_addr) |
-> > > > >  		     VE_H264_VLD_ADDR_FIRST | VE_H264_VLD_ADDR_VALID |
-> > > > > diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrl=
-s.h
-> > > > > index 4f05ee265997..f74736fcfa00 100644
-> > > > > --- a/include/media/h264-ctrls.h
-> > > > > +++ b/include/media/h264-ctrls.h
-> > > > > @@ -158,9 +158,6 @@ struct v4l2_h264_reference {
-> > > > >  };
-> > > > > =20
-> > > > >  struct v4l2_ctrl_h264_slice_params {
-> > > > > -	/* Size in bytes, including header */
-> > > > > -	__u32 size;
-> > > > > -
-> > > > >  	/* Offset in bytes to the start of slice in the OUTPUT buffer. =
-*/
-> > > > >  	__u32 start_byte_offset;
-> > > > > =20
-> > > > > --=20
-> > > > > 2.27.0
-> > > > >=20
->=20
->=20
-
---=-485015CwXDZx+PUjo0EI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCX0kS2wAKCRBxUwItrAao
-HA+PAJ40zmDEHTQHb5bgzxTtD4phCzBFBwCfff3ISQE0jFzkKpzRMfQsoyD3b70=
-=JV5A
------END PGP SIGNATURE-----
-
---=-485015CwXDZx+PUjo0EI--
-
+Jason
