@@ -2,125 +2,68 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D57F0C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4530C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB05320897
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F211208C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598658009;
+	bh=50sguD7rtX5oLh4iB1xcVdOM30H+NSDOVPOM3b/GmOw=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=uT3GO/kPOyrpazSfKDFMSyoLiAT4GssY0UrM4F8HXTEgKGiQyBiyKX1sqfzTCzk8l
+	 JjZ9+FtM3zRYFztmHuYvVB7YblPsClu/MaBCl5ujJALRdfshQEo4iEYxMfD22nopwF
+	 yG8iWJTPSlJ/XHB9Gm8+6luisGUSJmlEZOG8Wndo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgH1Xjh (ORCPT
+        id S1726924AbgH1XkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 19:39:37 -0400
-Received: from mga03.intel.com ([134.134.136.65]:21007 "EHLO mga03.intel.com"
+        Fri, 28 Aug 2020 19:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726649AbgH1Xjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 19:39:36 -0400
-IronPort-SDR: 56oNT3GQyWK4CNBXkOiko/x8UozCi5eMxYrV0vHtmlm1ixXAzEpWQ4axdDETz+lczjIwMsIKGC
- iNhN47Ab7ITw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="156766696"
-X-IronPort-AV: E=Sophos;i="5.76,365,1592895600"; 
-   d="scan'208";a="156766696"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 16:39:36 -0700
-IronPort-SDR: z459cfAwG2WPzJDS8O6sZb2k1TCHzoBT+lQ1QQ779wMU9U2N8zbRWsoMYm0W2/itXnvLNihTu/
- RAIM4lF9/E5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,365,1592895600"; 
-   d="scan'208";a="281087111"
-Received: from faerberc-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.36.74])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Aug 2020 16:39:29 -0700
-Date:   Sat, 29 Aug 2020 02:39:28 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v36 12/24] x86/sgx: Add SGX_IOC_ENCLAVE_CREATE
-Message-ID: <20200828233928.GA39420@linux.intel.com>
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-13-jarkko.sakkinen@linux.intel.com>
- <20200826145239.GC22390@zn.tnic>
- <20200827132436.GA4674@linux.intel.com>
- <20200827161527.GC30897@zn.tnic>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827161527.GC30897@zn.tnic>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        id S1726649AbgH1XkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 19:40:07 -0400
+Subject: Re: [GIT PULL] io_uring fixes for 5.9-rc3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598658007;
+        bh=50sguD7rtX5oLh4iB1xcVdOM30H+NSDOVPOM3b/GmOw=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=fGeH7q3qzhd+DNvs4+TXOl9AcUexIQu3vqZNwm2DxsxH2Mt00tzQal0qg8IQueSF7
+         PSvqEw3Fsda1VuVoQWh5QZqAQuXA+YR51a7ee9yWPflkegoQtPeURnNAd+2jsjArN7
+         0dYnE+tclxbtIuSyH88ocmRuCMgziEAfG7k96wFY=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <654bd4f0-7d2b-a39c-46ab-e7d180246bdd@kernel.dk>
+References: <654bd4f0-7d2b-a39c-46ab-e7d180246bdd@kernel.dk>
+X-PR-Tracked-List-Id: <io-uring.vger.kernel.org>
+X-PR-Tracked-Message-Id: <654bd4f0-7d2b-a39c-46ab-e7d180246bdd@kernel.dk>
+X-PR-Tracked-Remote: git://git.kernel.dk/linux-block.git tags/io_uring-5.9-2020-08-28
+X-PR-Tracked-Commit-Id: fdee946d0925f971f167d2606984426763355e4f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 24148d8648e37f8c15bedddfa50d14a31a0582c5
+Message-Id: <159865800738.1894.11850755109467704404.pr-tracker-bot@kernel.org>
+Date:   Fri, 28 Aug 2020 23:40:07 +0000
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 06:15:27PM +0200, Borislav Petkov wrote:
-> On Thu, Aug 27, 2020 at 04:24:36PM +0300, Jarkko Sakkinen wrote:
-> > I have not checked if this passes checkpatch.pl yet, but I would
-> > be surprised if that did not pass (obviously I'll check that).
-> 
-> Right, when you're done with the patchset, just do
-> 
-> checkpatch.pl -g ...
-> 
-> on it before sending and you'll be good to go. Just remember to read the
-> suggestions checkpatch gives with turned on brain and sanity-check them
-> instead of blindly following them.
-> 
-> > I'm sorry about that. This was not intentional. I'll revisit them by
-> > going through all your responses from here:
-> > 
-> >   https://patchwork.kernel.org/patch/11581715/
-> 
-> Actually this one:
-> 
-> https://lkml.kernel.org/r/20200617220844.57423-12-jarkko.sakkinen@linux.intel.com
-> 
-> i.e., the v33 version.
+The pull request you sent on Fri, 28 Aug 2020 14:03:22 -0600:
 
-Ya, pasted wrong link, sorry :-)
+> git://git.kernel.dk/linux-block.git tags/io_uring-5.9-2020-08-28
 
-> 
-> Also, make sure you go through the review comments of v34 and v35 in
-> case you haven't done so yet.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/24148d8648e37f8c15bedddfa50d14a31a0582c5
 
-I'll re-check them before I send a new version.
+Thank you!
 
-> > v34 had the splitting of the big driver patch into multiple patches.
-> > 
-> > During that process I've obviously failed to address these.
-> 
-> Yeah, that can happen - I mean, this is not even close to being an easy
-> patchset so thanks for putting in the effort.
-
-I'd guess that this will get less painful given that the patches are now
-more reasonably sizeda after chopping the driver patch.
-
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
-
-/Jarkko
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
