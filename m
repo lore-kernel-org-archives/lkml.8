@@ -2,541 +2,110 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BE6C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF702C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB9EA20737
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9DFB20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:36:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="g0Hlcxj5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uLYQM+vk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbgH1Lfl (ORCPT
+        id S1729246AbgH1Lft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 07:35:41 -0400
-Received: from mail-eopbgr130073.outbound.protection.outlook.com ([40.107.13.73]:41602
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729155AbgH1Lcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 07:32:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nV4W5XATDNDk5Bvz8GwTa6L1EBtXx4Vj1JXvLb2nIvWXeSeTBwqGXq2EFn4VPREIpZmQmn97u5sFzI+GvRWwGvh6yilSJ2gk6sNM9tg2N3icLUKdSdnOWG+sfibhq+iy4yNZQTrrgKoo20OxReHtmixJ2QHW7cmETPxuePfV+VZIhnxTcK3r+5T0BPRjC4CG9rxcD6vQ3Mk1ILzNeunSlYmeE0lI1r94DW5B5CHfR6WdxN+tNHl5hr3NAxINGeKCQFkYPcJw1qQlGb8tLe/fVL5a3DPh9XmEK1/zIObmq78HP+JvHJJ9ylsShoQgQ0QY/qQPIVcUXUS1dN6nLAyzGw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JzRpfAQbCtY1zBNGauz8qzxZAR5y4dJlyx2ip4qmhBY=;
- b=oLrk5gY7hqsYOJxUC1SesunWadQE6krAOeqv47inppUK0om7g0HAE/w8udN220CHeNr6gaxsAqns0W6ktxUcbTNFQ2vBuWepll31E1Pt3lJY2YCtW9SJ3/O59akXXE3gIlbOn+fWJDVjvCdKOqlTnknH4PTbcdIvapIb+6p38N6a6N9eA8jTcgXwSASJVRicTBOFds3GvfoICYcIJWoAR1+T3RnN5uFOtZGYC+Aa4S+Yx9d7b7IPeIAh9N2zzpfaB/sUzr5qc55+9OJBE+d8QO9rmefg40cRq+b2Zjjp2UO5c2qIOE+l/TTZjp2Z2LbSpI0/c582oe+EU0II02WNBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JzRpfAQbCtY1zBNGauz8qzxZAR5y4dJlyx2ip4qmhBY=;
- b=g0Hlcxj5DC/ew45it+W+31ruMRHg1nBf5JiEUjoqglSiq2TLGUh09KrR9ZRKU3TYiezP7mACu3BXt9AoMJyC3aTmB+Kb/9VrVzh8Xj8SKTQlsclLKkKeGdoJUt68YYI3Csu75ozokR8lKrbSPjk4kV7gSugOc/Odwr00NajDJNU=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
-Received: from DB6PR0401MB2598.eurprd04.prod.outlook.com (2603:10a6:4:39::7)
- by DBAPR04MB7413.eurprd04.prod.outlook.com (2603:10a6:10:1a6::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.21; Fri, 28 Aug
- 2020 11:13:43 +0000
-Received: from DB6PR0401MB2598.eurprd04.prod.outlook.com
- ([fe80::19ed:520c:8c98:e334]) by DB6PR0401MB2598.eurprd04.prod.outlook.com
- ([fe80::19ed:520c:8c98:e334%4]) with mapi id 15.20.3326.023; Fri, 28 Aug 2020
- 11:13:43 +0000
-From:   "Robert Chiras (OSS)" <robert.chiras@oss.nxp.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Ondrej Jirman <megous@megous.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com
-Subject: [PATCH 1/5] drm/bridge: nwl-dsi: Add support for video_pll
-Date:   Fri, 28 Aug 2020 14:13:28 +0300
-Message-Id: <1598613212-1113-2-git-send-email-robert.chiras@oss.nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598613212-1113-1-git-send-email-robert.chiras@oss.nxp.com>
-References: <1598613212-1113-1-git-send-email-robert.chiras@oss.nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: AM3PR07CA0114.eurprd07.prod.outlook.com
- (2603:10a6:207:7::24) To DB6PR0401MB2598.eurprd04.prod.outlook.com
- (2603:10a6:4:39::7)
+        Fri, 28 Aug 2020 07:35:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729218AbgH1Ld1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 07:33:27 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C359C061233
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 04:32:54 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id g1so316573pgm.9
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 04:32:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=sJlJAZsPRsD+xt0Gc+U8XLwW9T9mmZah5YOzeNxtWsw=;
+        b=uLYQM+vka2RYRGHsi4U4RPVXWSwQT64Ppm672AWI6TdxMES7oeAOuyYlyXLS5GP0Dw
+         /CRL5j0DcH8Alr1MKSZZIByH9Tw1K3SLiAPyb8r+vfZHlJ6Kre1472BCZkWsCb7OhhKz
+         suR4BdACHkLBSAFp7mTZxp/bAQ61zlm2Uj6evqvaY6NeIKXjqiPytAGo5Hq+jID/tc+I
+         lfU2csEiwNa8sHYqTK1aB9nh8fnGyF/4axHmk8jTRvjYdH0gdtNpeKb2Q74dMF+if8DE
+         9rTfqd+skkNnsWm9DAOfU4MP21N9/GXak5E9sAGbhvFWQBLYbH0PQBMqMu5ZbYezi+x4
+         NI3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=sJlJAZsPRsD+xt0Gc+U8XLwW9T9mmZah5YOzeNxtWsw=;
+        b=LOXO8M8/32sFdC+C486TI7yiUzj1+0kWPBxsrN+CypzMTClaky2TPG0RobI8g7wKv5
+         Kx9MLJmAYO/ZWzSuN+M/YP73jy/CYGeTAboeVHtRNj45/4UOEKqvzjiu0wnsj7UE6q4l
+         sKE3Qe0ZfoS90vONkR3mhlkqe3vG3hB6qKoKvPcQx7N4hhFyYCVJvchGKxAPJqK76iGw
+         zh2+B727cgLiA42Jx2xgnDFn0lKkl0uVtY4hh1aPGbaeaFQxvk3++cpI6c3m/AN72Kcn
+         dH04zhfWIdqiIlQhj0AV5jIohPR0ziflyUdOxjceQK6W/7PuqBC3gqTuFl85ANILVYxw
+         Emaw==
+X-Gm-Message-State: AOAM530GkKI5xuuGzLoAe7Rt7PAbJ1cJ4JJ5WbRTaT/LZJiEKXTjUfbt
+        Ks0Moa7iYCX4m2FrBR3S0LY=
+X-Google-Smtp-Source: ABdhPJxKmkf+J/hlM82diV7dv+qCAjQqm8Iz8p0rYb0Kow+MfjgaWD3fHOVXXswU/IrjgWfNN/qwVA==
+X-Received: by 2002:a63:4246:: with SMTP id p67mr938773pga.110.1598614373289;
+        Fri, 28 Aug 2020 04:32:53 -0700 (PDT)
+Received: from cosmos ([103.113.142.250])
+        by smtp.gmail.com with ESMTPSA id q71sm1158750pja.9.2020.08.28.04.32.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 28 Aug 2020 04:32:52 -0700 (PDT)
+Date:   Fri, 28 Aug 2020 17:02:46 +0530
+From:   Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+To:     mhiramat@kernel.org, rostedt@goodmis.org, mingo@redhat.com,
+        davem@davemloft.net, oleg@redhat.com, naveen.n.rao@linux.ibm.com,
+        anil.s.keshavamurthy@intel.com, tglx@linutronix.de, bp@alien8.de,
+        hpa@zytor.com
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] kprobes, x86/ptrace.h: fix regs argument order for i386
+Message-ID: <20200828113242.GA1424@cosmos>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fsr-ub1664-120.ea.freescale.net (83.217.231.2) by AM3PR07CA0114.eurprd07.prod.outlook.com (2603:10a6:207:7::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3348.7 via Frontend Transport; Fri, 28 Aug 2020 11:13:41 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [83.217.231.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e1c56df3-fc6d-49c1-2982-08d84b436c66
-X-MS-TrafficTypeDiagnostic: DBAPR04MB7413:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DBAPR04MB74139EA006690F26237B5264A2520@DBAPR04MB7413.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:813;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uoRz0oyk3KkTgCVhSGMsfMPDl50b5HEFgpdtCInHdpw0gUHrytAywuWdYtVlzapYZoFQJ2vSaHjuufoWX8GgM16F6kw3u+a1mRYfFs79r5d89S/rhCT8eLG8CcszxvjpMIxetd4ym13l1H946VUqj3o/ahBUfzD0dZKl6KgPcaNj/OeLioghxkdu5JE9e2wlCjOEUcZU9GFZ7IddyAC7ZaAi59eBp4hVw/qzfk2qCQnkHTmQbYnF2B8WGwEXJ0ZgWUpghbWyePCeb2SyfE/RwKfS+JwkOlfTTttU1XukevtLGRNzE0tXOcSmesOFG6OLQTPiGg1FqeZpGflur0RNMTqGf8J9W+q0PoxhfXadWqXQYnXFG59JxU9EKlIbhC23
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0401MB2598.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(396003)(366004)(136003)(39860400002)(16526019)(52116002)(86362001)(26005)(316002)(8676002)(6486002)(66556008)(30864003)(8936002)(2616005)(54906003)(66946007)(6512007)(6506007)(186003)(478600001)(66476007)(7416002)(110136005)(2906002)(83380400001)(6666004)(5660300002)(956004)(4326008)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: qJZEydrk4CcE1LOWHBwPOYwUmiy5eAW7u/928ceBPCkklpzfRn4XNP3NSuQWHwUZiFq2Z7LT4X5NCPQkeaVYKfihskiON97795ZfBLLwGXs1LnpTCv+/C3mzQYIZBmk9qn30fbM9D/UT/W6ic1oYLBrYg1+RCzxrUVWUvBlcn9TIfGi2ItZYsnYW5off9mo7OdGJVPa6N80vJ+yrLc1i/7B2/pX9Z8Q9ygdcqTqTe/XyIwpqm/jLY8g1NJL3WxXZQby6adLt2RLFyeZ1zXTjbxkaPJR/4TOyzOC4YpnCHbaK43jWl4EDGvXBiPvpjq60l/xw4+YMEDo695WreldmTVr8dvl2/JPS0k0+llTHxSe8jt0YnRe3b9EYol9eRSHjOtv7HA0KnBfCdny56SKbDkcLc1X+deUMWEcUqPlWZQBTld9DmNJbd/JUcvMfVXfHxEzZhCHvto375iY8JXorYLOODq+UjDhYnFN+VDhT58/ejk+L9D/GJ6Nu0lQY8SghQJDNfJX0jN2tBahVh8bxPfWykD80gnJeLRwVoI72RfHp26+22mWWy+pw8Ka1pg8qed/LcKyk8n4zRCUVux7/ih6yTx9tb3AhHuKeWVAmz4LRQf/VKOe+9G6bdOy3N3wmab+LFCSdNWFKf97VjDbIlA==
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e1c56df3-fc6d-49c1-2982-08d84b436c66
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR0401MB2598.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2020 11:13:42.9610
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MbTLSbP/ytJZGTdgCchFpNyzNj//zssV77t9CYd5piBjgf+Tt/hMHXjoQDFxwCVcaZK8n0qAsi7z+xj6yryBhQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7413
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Chiras <robert.chiras@nxp.com>
+On i386, the order of parameters passed on regs is eax,edx,and ecx
+(as per regparm(3) calling conventions).
 
-This patch adds support for a new clock 'video_pll' in order to better
-set the video_pll clock to a clock-rate that satisfies a mode's clock.
-The video PLL, on i.MX8MQ, can drive both DC pixel-clock and DSI phy_ref
-clock. When used with a bridge that can drive multiple modes, like a DSI
-to HDMI bridge, the DSI can't be statically configured for a specific
-mode in the DTS file.
-So, this patch adds access to the video PLL inside the DSI driver, so
-that modes can be filtered-out if the required combination of phy_ref
-and pixel-clock can't be achieved using the video PLL.
+Change the mapping in regs_get_kernel_argument(), so that arg1=ax
+arg2=dx, and arg3=cx.
 
-Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+Running the selftests testcase kprobes_args_use.tc shows the result
+as passed.
+
+Signed-off-by: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
 ---
- drivers/gpu/drm/bridge/nwl-dsi.c | 318 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 313 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/ptrace.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/nwl-dsi.c b/drivers/gpu/drm/bridge/nwl-dsi.c
-index ce94f79..1228466 100644
---- a/drivers/gpu/drm/bridge/nwl-dsi.c
-+++ b/drivers/gpu/drm/bridge/nwl-dsi.c
-@@ -39,6 +39,20 @@
- 
- #define NWL_DSI_MIPI_FIFO_TIMEOUT msecs_to_jiffies(500)
- 
-+/* Maximum Video PLL frequency: 1.2GHz */
-+#define MAX_PLL_FREQ 1200000000
-+
-+#define MBPS(x) ((x) * 1000000)
-+#define MIN_PHY_RATE MBPS(24)
-+#define MAX_PHY_RATE MBPS(30)
-+
-+/* Possible valid PHY reference clock rates*/
-+static u32 phyref_rates[] = {
-+	27000000,
-+	25000000,
-+	24000000,
-+};
-+
- enum transfer_direction {
- 	DSI_PACKET_SEND,
- 	DSI_PACKET_RECEIVE,
-@@ -67,6 +81,17 @@ struct nwl_dsi_transfer {
- 	size_t rx_len; /* in bytes */
- };
- 
-+struct mode_config {
-+	int				clock;
-+	int				crtc_clock;
-+	unsigned int			lanes;
-+	unsigned long			bitclock;
-+	unsigned long			phy_rates[3];
-+	unsigned long			pll_rates[3];
-+	int				phy_rate_idx;
-+	struct list_head		list;
-+};
-+
- struct nwl_dsi {
- 	struct drm_bridge bridge;
- 	struct mipi_dsi_host dsi_host;
-@@ -101,6 +126,7 @@ struct nwl_dsi {
- 	struct clk *rx_esc_clk;
- 	struct clk *tx_esc_clk;
- 	struct clk *core_clk;
-+	struct clk *pll_clk;
- 	/*
- 	 * hardware bug: the i.MX8MQ needs this clock on during reset
- 	 * even when not using LCDIF.
-@@ -115,6 +141,7 @@ struct nwl_dsi {
- 	int error;
- 
- 	struct nwl_dsi_transfer *xfer;
-+	struct list_head valid_modes;
- };
- 
- static const struct regmap_config nwl_dsi_regmap_config = {
-@@ -778,6 +805,207 @@ static void nwl_dsi_bridge_disable(struct drm_bridge *bridge)
- 	pm_runtime_put(dsi->dev);
- }
- 
-+static unsigned long nwl_dsi_get_bit_clock(struct nwl_dsi *dsi,
-+		unsigned long pixclock, u32 lanes)
-+{
-+	int bpp;
-+
-+	if (lanes < 1 || lanes > 4)
-+		return 0;
-+
-+	bpp = mipi_dsi_pixel_format_to_bpp(dsi->format);
-+
-+	return (pixclock * bpp) / lanes;
-+}
-+
-+/*
-+ * Utility function to calculate least commom multiple, using an improved
-+ * version of the Euclidean algorithm for greatest common factor.
-+ */
-+static unsigned long nwl_dsi_get_lcm(unsigned long a, unsigned long b)
-+{
-+	u32 gcf = 0; /* greatest common factor */
-+	unsigned long tmp_a = a;
-+	unsigned long tmp_b = b;
-+
-+	if (!a || !b)
-+		return 0;
-+
-+	while (tmp_a % tmp_b) {
-+		gcf = tmp_a % tmp_b;
-+		tmp_a = tmp_b;
-+		tmp_b = gcf;
-+	}
-+
-+	if (!gcf)
-+		return a;
-+
-+	return ((unsigned long long)a * b) / gcf;
-+}
-+
-+/*
-+ * This function tries to adjust the crtc_clock for a DSI device in such a way
-+ * that the video pll will be able to satisfy both Display Controller pixel
-+ * clock (feeding out DPI interface) and our input phy_ref clock.
-+ */
-+static void nwl_dsi_setup_pll_config(struct mode_config *config)
-+{
-+	unsigned long pll_rate;
-+	int div;
-+	size_t i, num_rates = ARRAY_SIZE(config->phy_rates);
-+
-+	config->crtc_clock = 0;
-+
-+	for (i = 0; i < num_rates; i++) {
-+		int crtc_clock;
-+
-+		if (!config->phy_rates[i])
-+			break;
-+		/*
-+		 * First, we need to check if phy_ref can actually be obtained
-+		 * from pixel clock. To do this, we check their lowest common
-+		 * multiple, which has to be in PLL range.
-+		 */
-+		pll_rate = nwl_dsi_get_lcm(config->clock, config->phy_rates[i]);
-+		if (pll_rate > MAX_PLL_FREQ) {
-+			/* Drop pll_rate to a realistic value */
-+			while (pll_rate > MAX_PLL_FREQ)
-+				pll_rate >>= 1;
-+			/* Make sure pll_rate can provide phy_ref rate */
-+			div = DIV_ROUND_UP(pll_rate, config->phy_rates[i]);
-+			pll_rate = config->phy_rates[i] * div;
-+		} else {
-+			/*
-+			 * Increase the pll rate to highest possible rate for
-+			 * better accuracy.
-+			 */
-+			while (pll_rate <= MAX_PLL_FREQ)
-+				pll_rate <<= 1;
-+			pll_rate >>= 1;
-+		}
-+
-+		/*
-+		 * Next, we need to tweak the pll_rate to a value that can also
-+		 * satisfy the crtc_clock.
-+		 */
-+		div = DIV_ROUND_CLOSEST(pll_rate, config->clock);
-+		if (lvl)
-+			pll_rate -= config->phy_rates[i] * lvl;
-+		crtc_clock = pll_rate / div;
-+		config->pll_rates[i] = pll_rate;
-+
-+		/*
-+		 * Pick a crtc_clock which is closest to pixel clock.
-+		 * Also, make sure that the pixel clock is a multiply of
-+		 * 50Hz.
-+		 */
-+		if (!(crtc_clock % 50) &&
-+		    abs(config->clock - crtc_clock) <
-+		    abs(config->clock - config->crtc_clock)) {
-+			config->crtc_clock = crtc_clock;
-+			config->phy_rate_idx = i;
-+		}
-+	}
-+}
-+
-+
-+/*
-+ * This function will try the required phy speed for current mode
-+ * If the phy speed can be achieved, the phy will save the speed
-+ * configuration
-+ */
-+static struct mode_config *nwl_dsi_mode_probe(struct nwl_dsi *dsi,
-+			    const struct drm_display_mode *mode)
-+{
-+	struct device *dev = dsi->dev;
-+	struct mode_config *config;
-+	union phy_configure_opts phy_opts;
-+	unsigned long clock = mode->clock * 1000;
-+	unsigned long bit_clk = 0;
-+	unsigned long phy_rates[3] = {0};
-+	int match_rates = 0;
-+	u32 lanes = dsi->lanes;
-+	size_t i = 0, num_rates = ARRAY_SIZE(phyref_rates);
-+
-+	list_for_each_entry(config, &dsi->valid_modes, list)
-+		if (config->clock == clock)
-+			return config;
-+
-+	phy_mipi_dphy_get_default_config(clock,
-+			mipi_dsi_pixel_format_to_bpp(dsi->format),
-+			lanes, &phy_opts.mipi_dphy);
-+	phy_opts.mipi_dphy.lp_clk_rate = clk_get_rate(dsi->tx_esc_clk);
-+
-+	while (i < num_rates) {
-+		int ret;
-+
-+		bit_clk = nwl_dsi_get_bit_clock(dsi, clock, lanes);
-+
-+		clk_set_rate(dsi->pll_clk, phyref_rates[i] * 32);
-+		clk_set_rate(dsi->phy_ref_clk, phyref_rates[i]);
-+		ret = phy_validate(dsi->phy, PHY_MODE_MIPI_DPHY, 0, &phy_opts);
-+
-+		/* Pick the non-failing rate, and search for more */
-+		if (!ret) {
-+			phy_rates[match_rates++] = phyref_rates[i++];
-+			continue;
-+		}
-+
-+		if (match_rates)
-+			break;
-+
-+		/* Reached the end of phyref_rates, try another lane config */
-+		if ((i++ == num_rates - 1) && (--lanes > 2)) {
-+			i = 0;
-+			continue;
-+		}
-+	}
-+
-+	/*
-+	 * Try swinging between min and max pll rates and see what rate (in terms
-+	 * of kHz) we can custom use to get the required bit-clock.
-+	 */
-+	if (!match_rates) {
-+		int min_div, max_div;
-+		int bit_clk_khz;
-+
-+		lanes = dsi->lanes;
-+		bit_clk = nwl_dsi_get_bit_clock(dsi, clock, lanes);
-+
-+		min_div = DIV_ROUND_UP(bit_clk, MAX_PHY_RATE);
-+		max_div = DIV_ROUND_DOWN_ULL(bit_clk, MIN_PHY_RATE);
-+		bit_clk_khz = bit_clk / 1000;
-+
-+		for (i = max_div; i > min_div; i--) {
-+			if (!(bit_clk_khz % i)) {
-+				phy_rates[0] = bit_clk / i;
-+				match_rates = 1;
-+				break;
-+			}
-+		}
-+	}
-+
-+	if (!match_rates) {
-+		DRM_DEV_DEBUG_DRIVER(dev,
-+			"Cannot setup PHY for mode: %ux%u @%d kHz\n",
-+			mode->hdisplay,
-+			mode->vdisplay,
-+			mode->clock);
-+
-+		return NULL;
-+	}
-+
-+	config = devm_kzalloc(dsi->dev, sizeof(struct mode_config), GFP_KERNEL);
-+	config->clock = clock;
-+	config->lanes = lanes;
-+	config->bitclock = bit_clk;
-+	memcpy(&config->phy_rates, &phy_rates, sizeof(phy_rates));
-+	list_add(&config->list, &dsi->valid_modes);
-+
-+	return config;
-+}
-+
-+
- static int nwl_dsi_get_dphy_params(struct nwl_dsi *dsi,
- 				   const struct drm_display_mode *mode,
- 				   union phy_configure_opts *phy_opts)
-@@ -809,6 +1037,38 @@ static bool nwl_dsi_bridge_mode_fixup(struct drm_bridge *bridge,
- 				      const struct drm_display_mode *mode,
- 				      struct drm_display_mode *adjusted_mode)
- {
-+	struct nwl_dsi *dsi = bridge_to_dsi(bridge);
-+	struct mode_config *config;
-+	unsigned long pll_rate;
-+
-+	DRM_DEV_DEBUG_DRIVER(dsi->dev, "Fixup mode:\n");
-+	drm_mode_debug_printmodeline(adjusted_mode);
-+
-+	config = nwl_dsi_mode_probe(dsi, adjusted_mode);
-+	if (!config)
-+		return false;
-+
-+	DRM_DEV_DEBUG_DRIVER(dsi->dev, "lanes=%u, data_rate=%lu\n",
-+			     config->lanes, config->bitclock);
-+	if (config->lanes < 2 || config->lanes > 4)
-+		return false;
-+
-+	/* Max data rate for this controller is 1.5Gbps */
-+	if (config->bitclock > 1500000000)
-+		return false;
-+
-+	pll_rate = config->pll_rates[config->phy_rate_idx];
-+	if (dsi->pll_clk && pll_rate) {
-+		clk_set_rate(dsi->pll_clk, pll_rate);
-+		DRM_DEV_DEBUG_DRIVER(dsi->dev,
-+				     "Video pll rate: %lu (actual: %lu)",
-+				     pll_rate, clk_get_rate(dsi->pll_clk));
-+	}
-+	/* Update the crtc_clock to be used by display controller */
-+	if (config->crtc_clock)
-+		adjusted_mode->crtc_clock = config->crtc_clock / 1000;
-+
-+
- 	/* At least LCDIF + NWL needs active high sync */
- 	adjusted_mode->flags |= (DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC);
- 	adjusted_mode->flags &= ~(DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC);
-@@ -822,14 +1082,29 @@ nwl_dsi_bridge_mode_valid(struct drm_bridge *bridge,
- 			  const struct drm_display_mode *mode)
- {
- 	struct nwl_dsi *dsi = bridge_to_dsi(bridge);
--	int bpp = mipi_dsi_pixel_format_to_bpp(dsi->format);
-+	struct mode_config *config;
-+	unsigned long pll_rate;
-+	int bit_rate;
- 
--	if (mode->clock * bpp > 15000000 * dsi->lanes)
-+	bit_rate = nwl_dsi_get_bit_clock(dsi, mode->clock * 1000, dsi->lanes);
-+
-+	DRM_DEV_DEBUG_DRIVER(dsi->dev, "Validating mode:");
-+	drm_mode_debug_printmodeline(mode);
-+
-+	if (bit_rate > MBPS(1500))
- 		return MODE_CLOCK_HIGH;
- 
--	if (mode->clock * bpp < 80000 * dsi->lanes)
-+	if (bit_rate < MBPS(80))
- 		return MODE_CLOCK_LOW;
- 
-+	config = nwl_dsi_mode_probe(dsi, mode);
-+	if (!config)
-+		return MODE_NOCLOCK;
-+
-+	pll_rate = config->pll_rates[config->phy_rate_idx];
-+	if (dsi->pll_clk && !pll_rate)
-+		nwl_dsi_setup_pll_config(config);
-+
- 	return MODE_OK;
- }
- 
-@@ -842,8 +1117,22 @@ nwl_dsi_bridge_mode_set(struct drm_bridge *bridge,
- 	struct device *dev = dsi->dev;
- 	union phy_configure_opts new_cfg;
- 	unsigned long phy_ref_rate;
-+	struct mode_config *config;
- 	int ret;
- 
-+	DRM_DEV_DEBUG_DRIVER(dsi->dev, "Setting mode:\n");
-+	drm_mode_debug_printmodeline(adjusted_mode);
-+
-+	config = nwl_dsi_mode_probe(dsi, adjusted_mode);
-+	/* New mode? This should NOT happen */
-+	if (!config) {
-+		DRM_DEV_ERROR(dsi->dev, "Unsupported mode provided:\n");
-+		drm_mode_debug_printmodeline(adjusted_mode);
-+		return;
-+	}
-+
-+	phy_ref_rate = config->phy_rates[config->phy_rate_idx];
-+	clk_set_rate(dsi->phy_ref_clk, phy_ref_rate);
- 	ret = nwl_dsi_get_dphy_params(dsi, adjusted_mode, &new_cfg);
- 	if (ret < 0)
- 		return;
-@@ -855,8 +1144,10 @@ nwl_dsi_bridge_mode_set(struct drm_bridge *bridge,
- 	if (new_cfg.mipi_dphy.hs_clk_rate == dsi->phy_cfg.mipi_dphy.hs_clk_rate)
- 		return;
- 
--	phy_ref_rate = clk_get_rate(dsi->phy_ref_clk);
--	DRM_DEV_DEBUG_DRIVER(dev, "PHY at ref rate: %lu\n", phy_ref_rate);
-+	DRM_DEV_DEBUG_DRIVER(dev,
-+			     "PHY at ref rate: %lu (actual: %lu)\n",
-+			     phy_ref_rate, clk_get_rate(dsi->phy_ref_clk));
-+
- 	/* Save the new desired phy config */
- 	memcpy(&dsi->phy_cfg, &new_cfg, sizeof(new_cfg));
- 
-@@ -1014,6 +1305,12 @@ static int nwl_dsi_parse_dt(struct nwl_dsi *dsi)
- 	}
- 	dsi->tx_esc_clk = clk;
- 
-+	/* The video_pll clock is optional */
-+	clk = devm_clk_get(dsi->dev, "video_pll");
-+	if (!IS_ERR(clk))
-+		dsi->pll_clk = clk;
-+
-+
- 	dsi->mux = devm_mux_control_get(dsi->dev, NULL);
- 	if (IS_ERR(dsi->mux)) {
- 		ret = PTR_ERR(dsi->mux);
-@@ -1066,6 +1363,9 @@ static int nwl_dsi_parse_dt(struct nwl_dsi *dsi)
- 			      PTR_ERR(dsi->rst_dpi));
- 		return PTR_ERR(dsi->rst_dpi);
- 	}
-+
-+	INIT_LIST_HEAD(&dsi->valid_modes);
-+
- 	return 0;
- }
- 
-@@ -1184,6 +1484,14 @@ static int nwl_dsi_probe(struct platform_device *pdev)
- static int nwl_dsi_remove(struct platform_device *pdev)
- {
- 	struct nwl_dsi *dsi = platform_get_drvdata(pdev);
-+	struct mode_config *config;
-+	struct list_head *pos, *tmp;
-+
-+	list_for_each_safe(pos, tmp, &dsi->valid_modes) {
-+		config = list_entry(pos, struct mode_config, list);
-+		list_del(pos);
-+		devm_kfree(dsi->dev, config);
-+	}
- 
- 	nwl_dsi_deselect_input(dsi);
- 	mipi_dsi_host_unregister(&dsi->dsi_host);
+diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
+index 40aa69d..d8324a2 100644
+--- a/arch/x86/include/asm/ptrace.h
++++ b/arch/x86/include/asm/ptrace.h
+@@ -327,8 +327,8 @@ static inline unsigned long regs_get_kernel_argument(struct pt_regs *regs,
+ 	static const unsigned int argument_offs[] = {
+ #ifdef __i386__
+ 		offsetof(struct pt_regs, ax),
+-		offsetof(struct pt_regs, cx),
+ 		offsetof(struct pt_regs, dx),
++		offsetof(struct pt_regs, cx),
+ #define NR_REG_ARGUMENTS 3
+ #else
+ 		offsetof(struct pt_regs, di),
 -- 
 2.7.4
 
