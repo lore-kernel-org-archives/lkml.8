@@ -2,176 +2,127 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6620C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD29C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91DEA20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:52:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598622730;
-	bh=AU0nkt3HD/dMAiwcwMOKnZmLAkdcDbmItz+LEm358+s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RHr9uOaw8gyPEzfGUwZlL50lmxALTx4IqP7FxYac3C24XP/BfV80NOFi4xaVjdsnU
-	 gZoP1HpCjwPhUvc3TGNfgNy9QZ/ew4+wSYPFbYHRGH6QXjtMnaZgAitPS82qdr7lIR
-	 +fqmb5c+pFhsikPHAq+lvKqtTsNYF5+rTl9ERJK8=
+	by mail.kernel.org (Postfix) with ESMTP id D181620776
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:52:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TXNXRBoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgH1NwH (ORCPT
+        id S1726944AbgH1Nwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 09:52:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726839AbgH1NvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 09:51:19 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5268C2075B;
-        Fri, 28 Aug 2020 13:51:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598622678;
-        bh=AU0nkt3HD/dMAiwcwMOKnZmLAkdcDbmItz+LEm358+s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dDE2Pb/vfjA6ZvgdhWz6qsU0cQrK/96wTx32dUikqCH3kKl1v0kNJDHM9W+zb9iuV
-         h2Uu6sTR7IFgCrfU3xoZc4Y89D+rMsc1AF+KODJ90mNwUGcYisdBtCwZFGl/+QAKu6
-         6n0f9NVDQTuMt6e3JEhxztkNF/8nGsgfGOGHVCfQ=
-Date:   Fri, 28 Aug 2020 22:51:13 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
-        "anil.s.keshavamurthy@intel.com" <anil.s.keshavamurthy@intel.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "cameron@moodycamel.com" <cameron@moodycamel.com>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "paulmck@kernel.org" <paulmck@kernel.org>
-Subject: Re: [RFC][PATCH 3/7] kprobes: Remove kretprobe hash
-Message-Id: <20200828225113.9541a5f67a3bcb17c4ce930c@kernel.org>
-In-Reply-To: <7df0a1af432040d9908517661c32dc34@trendmicro.com>
-References: <20200827161237.889877377@infradead.org>
-        <20200827161754.359432340@infradead.org>
-        <7df0a1af432040d9908517661c32dc34@trendmicro.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 28 Aug 2020 09:52:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49950 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbgH1Nwa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 09:52:30 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 164C8C061232
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 06:52:27 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id b18so1385533wrs.7
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 06:52:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=bBT41PTjpkxeOtnmEoEMjQZW/IInuRmPz2VzLucUDlQ=;
+        b=TXNXRBoWbCfR99+m6BuMsne9w7crcganml+VXuM1yhnfzWuyUSH8bIO08cnzoDO+m2
+         PoOxZ1XZCWmVpvGmwWQSOXJw8a5zy9utICHylZEC+OGmvvM+QZIjILR4hLtGB+1X93Jx
+         O/E3s9+nzriK6Li1EY/CGNZUVV1GIWCo88e38bMCc/Z8OHPMRXlEVyKa2H1XaGeqI/x1
+         U20TwxVeAX8bhrWFpGEgnobemVoi0YqygRdkRKKfARSa4l1O3vW3v11LyqgF3ItXNNHq
+         Wxy6Sa5yhI+DBZLt7+i/9zzueqt/+yzl5+rlXPifogidu42yZjHC28pPr+inXDVkeczj
+         RHPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=bBT41PTjpkxeOtnmEoEMjQZW/IInuRmPz2VzLucUDlQ=;
+        b=ecqo3BiZc4xKi0dcT0NQdhR6Tgtk2Gww/jpOTmq58KmJDoFYRGkv9/R+WNmLgZGoS0
+         KuzyaThIFUCg1jpHFLH4EAdTtmXIhOgdzyi4j1oa0EWsYEx7GISjwP5I6absMuSKsz6y
+         bFxR9uTsakxTKFHzDzACIWRM77AN/9x+8yhd5H6blgKM+AryUu1SgrDizZhzDZvAvO6S
+         KM8663KYK3JUmtlFeOLTcEjSukLdBr2n5Edhbhzr2miPhv7zEtjbruYa1wphZbc4R2s4
+         i5dWjwzv83yerGIkXVc9gSr0qeJp6DBRbxVkcOzy+1AY/N2NxbSRFaR2of5tLM+KnPR0
+         IakQ==
+X-Gm-Message-State: AOAM531e0fBlWZqElq0NokKEU98ER8OYgRb2ozXIQOloTUTXPk+11w6W
+        BvirkmkRCdLGxFEnfF3x3PoLKQ==
+X-Google-Smtp-Source: ABdhPJwxGZcjjbY0GowOYDW+dLIMgvBwqE/j+jaly5n+zkPdWErtdEEG2G5gKi3TLyKaKwyipUXMwQ==
+X-Received: by 2002:adf:e78b:: with SMTP id n11mr1624422wrm.256.1598622745919;
+        Fri, 28 Aug 2020 06:52:25 -0700 (PDT)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id m11sm1993303wrn.11.2020.08.28.06.52.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 06:52:25 -0700 (PDT)
+References: <c33df0ebe8be16b56741ce7f873221ab9087a0a6.1598564619.git.stefan@agner.ch>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Stefan Agner <stefan@agner.ch>, narmstrong@baylibre.com
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, khilman@baylibre.com,
+        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH] clk: meson: g12a: mark fclk_div2 as critical
+In-reply-to: <c33df0ebe8be16b56741ce7f873221ab9087a0a6.1598564619.git.stefan@agner.ch>
+Date:   Fri, 28 Aug 2020 15:52:24 +0200
+Message-ID: <1jft867u93.fsf@starbuckisacylon.baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Aug 2020 13:11:15 +0000
-"Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com> wrote:
 
-> > -----Original Message-----
-> > From: Peter Zijlstra <peterz@infradead.org>
-> > Sent: Friday, August 28, 2020 12:13 AM
-> > To: linux-kernel@vger.kernel.org; mhiramat@kernel.org
-> > Cc: Eddy Wu (RD-TW) <Eddy_Wu@trendmicro.com>; x86@kernel.org; davem@davemloft.net; rostedt@goodmis.org;
-> > naveen.n.rao@linux.ibm.com; anil.s.keshavamurthy@intel.com; linux-arch@vger.kernel.org; cameron@moodycamel.com;
-> > oleg@redhat.com; will@kernel.org; paulmck@kernel.org; peterz@infradead.org
-> > Subject: [RFC][PATCH 3/7] kprobes: Remove kretprobe hash
-> >
-> > @@ -1935,71 +1932,45 @@ unsigned long __kretprobe_trampoline_han
-> >                                         unsigned long trampoline_address,
-> >                                         void *frame_pointer)
-> >  {
-> > // ... removed
-> > // NULL here
-> > +       first = node = current->kretprobe_instances.first;
-> > +       while (node) {
-> > +               ri = container_of(node, struct kretprobe_instance, llist);
-> >
-> > -               orig_ret_address = (unsigned long)ri->ret_addr;
-> > -               if (skipped)
-> > -                       pr_warn("%ps must be blacklisted because of incorrect kretprobe order\n",
-> > -                               ri->rp->kp.addr);
-> > +               BUG_ON(ri->fp != frame_pointer);
-> >
-> > -               if (orig_ret_address != trampoline_address)
-> > +               orig_ret_address = (unsigned long)ri->ret_addr;
-> > +               if (orig_ret_address != trampoline_address) {
-> >                         /*
-> >                          * This is the real return address. Any other
-> >                          * instances associated with this task are for
-> >                          * other calls deeper on the call stack
-> >                          */
-> >                         break;
-> > +               }
-> > +
-> > +               node = node->next;
-> >         }
-> >
-> 
-> Hi, I found a NULL pointer dereference here, where current->kretprobe_instances.first == NULL in these two scenario:
+On Thu 27 Aug 2020 at 23:43, Stefan Agner <stefan@agner.ch> wrote:
 
-Thanks! that may be what I'm chasing.
+> On Amlogic Meson G12b platform, similar to fclk_div3, the fclk_div2
+> seems to be necessary for the system to operate correctly as well.
+>
+> Typically, the clock also gets chosen by the eMMC peripheral. This
+> probably masked the problem so far. However, when booting from a SD
+> card the clock seems to get disabled which leads to a system freeze.
+>
+> Let's mark this clock as critical, fixing boot from SD card on G12b
+> platforms.
+>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+>  drivers/clk/meson/g12a.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+> index fad616cac01e..2214b974f748 100644
+> --- a/drivers/clk/meson/g12a.c
+> +++ b/drivers/clk/meson/g12a.c
+> @@ -298,6 +298,7 @@ static struct clk_regmap g12a_fclk_div2 = {
+>  			&g12a_fclk_div2_div.hw
+>  		},
+>  		.num_parents = 1,
+> +		.flags = CLK_IS_CRITICAL,
+>  	},
+>  };
 
-> 
-> 1) In task "rs:main Q:Reg"
-> # insmod samples/kprobes/kretprobe_example.ko func=schedule
-> # pkill sddm-greeter
-> 
-> 2) In task "llvmpipe-10"
-> # insmod samples/kprobes/kretprobe_example.ko func=schedule
-> login plasmashell session from sddm graphical interface
+Hi Stephan,
 
-OK, schedule function will be the key. I guess the senario is..
+Thanks for reporting and fixing this. That's unfortunately the things we
+have to find the "hard way"
 
-1) kretporbe replace the return address with kretprobe_trampoline on task1's kernel stack
-2) the task1 forks task2 before returning to the kretprobe_trampoline
-3) while copying the process with the kernel stack, task2->kretprobe_instances.first = NULL
-4) task2 returns to the kretprobe_trampoline
-5) Bomb!
+Could you please:
+1) add a Fixes tag to commit description so stable can pick it up
 
-Hmm, we need to fixup the kernel stack when copying process. 
+Fixes: 085a4ea93d54 ("clk: meson: g12a: add peripheral clock controller")
 
-Thank you,
+2) Add a comment similar to the comment block of fdiv3 so we are pretty
+clear why this clock needs to be critical and don't have to dig in
+history find out.
 
-> 
-> based on Masami's v2 + Peter's lockless patch, I'll try the new branch once I can compile kernel
-> 
-> Stacktrace may not be really useful here:
-> [  402.008630] BUG: kernel NULL pointer dereference, address: 0000000000000018
-> [  402.008633] #PF: supervisor read access in kernel mode
-> [  402.008642] #PF: error_code(0x0000) - not-present page
-> [  402.008644] PGD 0 P4D 0
-> [  402.008646] Oops: 0000 [#1] PREEMPT SMP PTI
-> [  402.008649] CPU: 7 PID: 1505 Comm: llvmpipe-10 Kdump: loaded Not tainted 5.9.0-rc2-00111-g72091ec08f03-dirty #45
-> [  402.008650] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 07/29/2019
-> [  402.008653] RIP: 0010:__kretprobe_trampoline_handler+0xb8/0x17f
-> [  402.008655] Code: 65 4c 8b 34 25 80 6d 01 00 4c 89 e2 48 c7 c7 91 6b 85 91 49 8d b6 38 07 00 00 e8 d1 1a f9 ff 48 85 db 74 06 48 3b 5d d0 75 16 <49> 8b 75 18 48 c7 c7 a0 6c 85 91 48
->  8b 56 28 e8 b2 1a f9 ff 0f 0b
-> [  402.008655] RSP: 0018:ffffab408147bde0 EFLAGS: 00010246
-> [  402.008656] RAX: 0000000000000021 RBX: 0000000000000000 RCX: 0000000000000002
-> [  402.008657] RDX: 0000000080000002 RSI: ffffffff9189757d RDI: 00000000ffffffff
-> [  402.008658] RBP: ffffab408147be20 R08: 0000000000000001 R09: 000000000000955c
-> [  402.008658] R10: 0000000000000004 R11: 0000000000000000 R12: 0000000000000000
-> [  402.008659] R13: 0000000000000000 R14: ffff90736d305f40 R15: 0000000000000000
-> [  402.008661] FS:  00007f20f6ffd700(0000) GS:ffff9073781c0000(0000) knlGS:0000000000000000
-> [  402.008675] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  402.008678] CR2: 0000000000000018 CR3: 00000001ed256006 CR4: 00000000003706e0
-> [  402.008684] Call Trace:
-> [  402.008689]  ? elfcorehdr_read+0x40/0x40
-> [  402.008690]  ? elfcorehdr_read+0x40/0x40
-> [  402.008691]  trampoline_handler+0x42/0x60
-> [  402.008692]  kretprobe_trampoline+0x2a/0x50
-> [  402.008693] RIP: 0010:kretprobe_trampoline+0x0/0x50
-> 
-> TREND MICRO EMAIL NOTICE
-> 
-> The information contained in this email and any attachments is confidential and may be subject to copyright or other intellectual property protection. If you are not the intended recipient, you are not authorized to use or disclose this information, and we request that you notify us by reply mail or telephone and delete the original message from your mail system.
-> 
-> For details about what personal information we collect and why, please see our Privacy Notice on our website at: Read privacy policy<http://www.trendmicro.com/privacy>
+Also please Cc Marek Szyprowski <m.szyprowski@samsung.com> ... you guys
+apparently found this at them time :)
 
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Thanks
