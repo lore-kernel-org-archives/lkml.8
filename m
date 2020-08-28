@@ -2,173 +2,217 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81FDC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5916C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3526208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:25:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjYvfiUH"
+	by mail.kernel.org (Postfix) with ESMTP id 9000C208D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728977AbgH1JZB (ORCPT
+        id S1728979AbgH1JZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:25:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728444AbgH1JYt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:24:49 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C812BC06121B;
-        Fri, 28 Aug 2020 02:24:49 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id q93so318965pjq.0;
-        Fri, 28 Aug 2020 02:24:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=htXOCVPrq8HdJeur07eO9bXCbnwDHC4OtbEI9rP9Tn4=;
-        b=ZjYvfiUHWn6qehl41HAVN9MqkMLYMd1N1f2XYzRGEsH4Fm4wlkCNW0vbRL7jFh0pRC
-         3EVL2pLNlBbx1ES7doz+uRkg63ku2FJvNDTRZy2bJcGWm51jN4SM2KJ1NlMoylEBA0tw
-         4Q0W4DDa4aji4Qy0KWMM1l0F9VzH7KiAkeuZqmX7+6yNKAUA5tH9mOqXPLUBcR+RLPRs
-         d+3Z4fFh5wLml/0GwHJualYTyRME93NCPdJARqL58hG3iXWgGltsHyLMDsgfrPDOi1oe
-         uQE6MCXJ8+Zvlmq/XCmNNRwAmSO0Ufja96aovK6Y3Sy8YZ/l6g4d772FZ+kwzvW8ZIkk
-         XKMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=htXOCVPrq8HdJeur07eO9bXCbnwDHC4OtbEI9rP9Tn4=;
-        b=UWX3+pg1Xdw9Er8nDk6UR9rm9QJjDOd21JUp++60AWbWjoXjro7zWuhbp+97yYnpWm
-         W/6qosKXHuuqwY7tOcpl/+saNP/VgH49ySRp7x4eztr2kL3PLk54CKfZ1ZUPGo0TAE2p
-         zCZUZHNmOR7bBVE/keLV8d+gqSv2+d6UmUMsld4Kh/Rn8owrnS4tAzClh4RkyAGEeDeg
-         UXJ0g7rwBa2X/1Y0bEIv8BL3TtBshfUAPTYKDSya3IfJ58yYFBpr9vQDlJwngUSGBdW6
-         qdWDOooq4UwuNksbL81NnZ0j1tjt3/BlllqYrdXqcYAq21mXjR6kTk+S7TJEFb4srINf
-         i/cQ==
-X-Gm-Message-State: AOAM531yIs1FYZKznID9Weq7+tMJA3zXhMPE7Vs+E/TrNDWQjbs3eFhu
-        2lRtqF41T1VEk5zS34rUciQ=
-X-Google-Smtp-Source: ABdhPJwmM74/2Z6OmFics2+KVisBB1kXdKlLOQYV835VuXBGe2zlkLUneUWcyioQm8nI52NOwQVmhw==
-X-Received: by 2002:a17:90a:1992:: with SMTP id 18mr441099pji.135.1598606689274;
-        Fri, 28 Aug 2020 02:24:49 -0700 (PDT)
-Received: from localhost.localdomain ([2402:7500:46a:912:593d:4bfb:3bf8:35e0])
-        by smtp.gmail.com with ESMTPSA id n68sm813563pfn.145.2020.08.28.02.24.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Aug 2020 02:24:48 -0700 (PDT)
-From:   cy_huang <u0084500@gmail.com>
-To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        matthias.bgg@gmail.com, linux@roeck-us.net,
-        heikki.krogerus@linux.intel.com
-Cc:     cy_huang@richtek.com, gene_chen@richtek.com,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] usb typec: mt6360: Add MT6360 Type-C DT binding documentation
-Date:   Fri, 28 Aug 2020 17:24:34 +0800
-Message-Id: <1598606674-32326-2-git-send-email-u0084500@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598606674-32326-1-git-send-email-u0084500@gmail.com>
-References: <1598606674-32326-1-git-send-email-u0084500@gmail.com>
+        Fri, 28 Aug 2020 05:25:18 -0400
+Received: from mga06.intel.com ([134.134.136.31]:39993 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728444AbgH1JZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:25:14 -0400
+IronPort-SDR: 9CZpi8ei2mCr1v0WEXhOkEycKZmsC17QYyCW2uTavGdxuy4bT653hoReLezG1qBrQUuvYGXDnI
+ ICfsgmF8MROw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="218189706"
+X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
+   d="scan'208";a="218189706"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 02:25:12 -0700
+IronPort-SDR: ljITQStIr6qc/4T9DqFQ2ofcdbrMzm2rvj5b6jAZdkDfWWZvX43k87cnhDPKdLggi3nnGxuVVr
+ SQY4CplkU+nQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
+   d="scan'208";a="339817851"
+Received: from lkp-server01.sh.intel.com (HELO 4f455964fc6c) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 28 Aug 2020 02:25:11 -0700
+Received: from kbuild by 4f455964fc6c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kBadC-0002cB-Ey; Fri, 28 Aug 2020 09:25:10 +0000
+Date:   Fri, 28 Aug 2020 17:25:04 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: [gustavoars-linux:for-linus/kspp] BUILD SUCCESS
+ c165a08d2b2857c91c627039c4881f9d7ad1a3bd
+Message-ID: <5f48cd70.E3dHVnJyWwuZqPQb%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ChiYuan Huang <cy_huang@richtek.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git  for-linus/kspp
+branch HEAD: c165a08d2b2857c91c627039c4881f9d7ad1a3bd  arm64/cpuinfo: Remove unnecessary fallthrough annotation
 
-Add a devicetree binding documentation for the MT6360 Type-C driver.
+elapsed time: 721m
 
-usb typec: mt6360: Rename DT binding doument from mt6360 to mt636x
+configs tested: 147
+configs skipped: 14
 
-Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+sparc                               defconfig
+sh                ecovec24-romimage_defconfig
+arm                      pxa255-idp_defconfig
+mips                           ip32_defconfig
+sh                           se7721_defconfig
+sh                           se7206_defconfig
+s390                             alldefconfig
+mips                         rt305x_defconfig
+powerpc                     ep8248e_defconfig
+powerpc                     pseries_defconfig
+arm                        keystone_defconfig
+mips                         bigsur_defconfig
+sh                   sh7770_generic_defconfig
+arm                          iop32x_defconfig
+c6x                              alldefconfig
+arm                          pxa168_defconfig
+sh                            shmin_defconfig
+arm                         s3c2410_defconfig
+m68k                        m5272c3_defconfig
+sh                            migor_defconfig
+arm                        multi_v7_defconfig
+powerpc                  mpc866_ads_defconfig
+powerpc                      ep88xc_defconfig
+powerpc                      pmac32_defconfig
+sparc64                          alldefconfig
+powerpc                mpc7448_hpc2_defconfig
+arm                            qcom_defconfig
+mips                  maltasmvp_eva_defconfig
+nios2                            allyesconfig
+powerpc                           allnoconfig
+mips                          malta_defconfig
+arm                         lpc32xx_defconfig
+parisc                generic-32bit_defconfig
+mips                          rb532_defconfig
+ia64                             alldefconfig
+mips                        vocore2_defconfig
+arm                    vt8500_v6_v7_defconfig
+arc                              allyesconfig
+sh                             sh03_defconfig
+arm                         mv78xx0_defconfig
+m68k                       m5275evb_defconfig
+mips                       rbtx49xx_defconfig
+arm                        neponset_defconfig
+sh                     magicpanelr2_defconfig
+arm                         lpc18xx_defconfig
+mips                        jmr3927_defconfig
+arm                          exynos_defconfig
+arm                          pxa910_defconfig
+arm                          lpd270_defconfig
+mips                    maltaup_xpa_defconfig
+sh                             shx3_defconfig
+arm                            u300_defconfig
+nios2                               defconfig
+arc                                 defconfig
+mips                             allyesconfig
+mips                malta_kvm_guest_defconfig
+mips                  cavium_octeon_defconfig
+arc                             nps_defconfig
+arm                       spear13xx_defconfig
+powerpc                     powernv_defconfig
+ia64                         bigsur_defconfig
+arm                        multi_v5_defconfig
+sh                         ecovec24_defconfig
+sh                          sdk7780_defconfig
+c6x                         dsk6455_defconfig
+arc                              alldefconfig
+arm                  colibri_pxa270_defconfig
+mips                       lemote2f_defconfig
+s390                          debug_defconfig
+alpha                            alldefconfig
+m68k                       m5208evb_defconfig
+arm                           sama5_defconfig
+arm                            mmp2_defconfig
+sh                         apsh4a3a_defconfig
+mips                     loongson1c_defconfig
+mips                           rs90_defconfig
+sparc64                             defconfig
+mips                      pistachio_defconfig
+arm                         bcm2835_defconfig
+mips                     loongson1b_defconfig
+mips                            ar7_defconfig
+arc                            hsdk_defconfig
+alpha                               defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                                defconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                             defconfig
+x86_64               randconfig-a003-20200827
+x86_64               randconfig-a002-20200827
+x86_64               randconfig-a001-20200827
+x86_64               randconfig-a005-20200827
+x86_64               randconfig-a006-20200827
+x86_64               randconfig-a004-20200827
+i386                 randconfig-a002-20200827
+i386                 randconfig-a004-20200827
+i386                 randconfig-a003-20200827
+i386                 randconfig-a005-20200827
+i386                 randconfig-a006-20200827
+i386                 randconfig-a001-20200827
+i386                 randconfig-a013-20200827
+i386                 randconfig-a012-20200827
+i386                 randconfig-a011-20200827
+i386                 randconfig-a016-20200827
+i386                 randconfig-a015-20200827
+i386                 randconfig-a014-20200827
+i386                 randconfig-a013-20200828
+i386                 randconfig-a012-20200828
+i386                 randconfig-a011-20200828
+i386                 randconfig-a016-20200828
+i386                 randconfig-a014-20200828
+i386                 randconfig-a015-20200828
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
 ---
- .../bindings/usb/mediatek,mt6360-tcpc.yaml         | 73 ++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/mediatek,mt6360-tcpc.yaml
-
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,mt6360-tcpc.yaml b/Documentation/devicetree/bindings/usb/mediatek,mt6360-tcpc.yaml
-new file mode 100644
-index 00000000..9e8ab0d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mt6360-tcpc.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/usb/mediatek,mt6360-tcpc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Mediatek MT6360 Type-C Port Switch and Power Delivery controller DT bindings
-+
-+maintainers:
-+  - ChiYuan Huang <cy_huang@richtek.com>
-+
-+description: |
-+  Mediatek MT6360 is a multi-functional device. It integrates charger, ADC, flash, RGB indicators,
-+  regulators (BUCKs/LDOs), and TypeC Port Switch with Power Delivery controller.
-+  This document only describes MT6360 Type-C Port Switch and Power Delivery controller.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - mediatek,mt6360-tcpc
-+
-+  interrupts-extended:
-+    maxItems: 1
-+
-+  interrupt-names:
-+    items:
-+      - const: PD_IRQB
-+
-+patternProperties:
-+  "connector":
-+    type: object
-+    $ref: ../connector/usb-connector.yaml#
-+    description:
-+      Properties for usb c connector.
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - interrupts-extended
-+  - interrupt-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/usb/pd.h>
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        mt6360@34 {
-+            compatible = "mediatek,mt6360";
-+            reg = <0x34>;
-+
-+            tcpc {
-+                compatible = "mediatek,mt6360-tcpc";
-+                interrupts-extended = <&gpio26 3 IRQ_TYPE_LEVEL_LOW>;
-+                interrupt-names = "PD_IRQB";
-+
-+                connector {
-+                        compatible = "usb-c-connector";
-+                        label = "USB-C";
-+                        data-role = "dual";
-+                        power-role = "dual";
-+                        try-power-role = "sink";
-+                        source-pdos = <PDO_FIXED(5000, 1000, PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP)>;
-+                        sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP)>;
-+                        op-sink-microwatt = <10000000>;
-+                };
-+            };
-+        };
-+    };
-+...
--- 
-2.7.4
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
