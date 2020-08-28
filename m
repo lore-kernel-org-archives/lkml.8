@@ -2,122 +2,155 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FDFC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED15CC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2847620825
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2A220825
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:29:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mOK87iFM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q45ljkoj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbgH1P2D (ORCPT
+        id S1726720AbgH1P25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 11:28:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36754 "EHLO
+        Fri, 28 Aug 2020 11:28:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbgH1P1t (ORCPT
+        with ESMTP id S1726804AbgH1P2h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 11:27:49 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24BE7C061264;
-        Fri, 28 Aug 2020 08:27:49 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id g13so1664716ioo.9;
-        Fri, 28 Aug 2020 08:27:49 -0700 (PDT)
+        Fri, 28 Aug 2020 11:28:37 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35B34C061264;
+        Fri, 28 Aug 2020 08:28:37 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id z9so1286926wmk.1;
+        Fri, 28 Aug 2020 08:28:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o2zmhYfnTOjlCp7ra2OX3q7ngPbsdndePp/+MPwLm0U=;
-        b=mOK87iFMfQJ9TetCoD1ZZEd3Gk9eSNPPllmpQeO6U2ZsRm0lNnzQ5ZRXVIPiGncq22
-         i7VOrvP90lKo0C72DYh3xhHjlZxSQiQWMoEfZcRyf0P6fCviuLYU+hra5w5xeBdk7Ral
-         f5UqYdhHhnj3b14aks4eeuTOxDYd0QEYiPkHDLBa0CHZbk7AEOXyJ4/o42s9Otlp+1W7
-         2fx+awoDW3pwdE1Ns1dJrJSAl2cdZpGtHhD/q4Yvuw9wLBC7FmlrIbsOqJffUeSZ1+xe
-         ps2xs7MPh4QNKDixWqAD4tCTy5bLoJAmpJsT/3Tq1xPZjJJoWjy8b9Ei5Gyi14AycRDr
-         uKaQ==
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=4zDZVOKRqOadCUlMiFS7BJletMH5TookJPK9U8F8DgQ=;
+        b=q45ljkojrkWIZ3Ebo9FvI1Lwc65xJNNifYqixJ/Gl2DobnrWm6neaeJHXhKdfk7Wro
+         n4o7n/c9pMWz2rIouT98tE6PVM9wTYAd5SzXLVOX+6fCuAyqJQCrKWKKMXuAl7nxHrwP
+         VSztNt+zlvly9GWyR7Y3PooQewcTZLj0fCIWFC6lkSqaia1azlehizewnmeTax98toXx
+         3gYJsNbtkfO9WQeeaKmorzK25EN5dhJ+gdkNNJoLDZ3QG05lbvAY2DYa+cfEIPOQL8eK
+         w+Jfc/bDi1Uza/jwT6fz4Bg7xvscFtW9MNZSeQZmF436qwHm+Cfe7pmRSG7TXBE+zF5C
+         P2eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o2zmhYfnTOjlCp7ra2OX3q7ngPbsdndePp/+MPwLm0U=;
-        b=Cxh6NgJsb4acZQIBxxPlVr1pDen/K1TNTAt0Uj7BhPOqkazQyYEBR6gbFZdljk2f7W
-         yBN0MpBVXDRmbrxKArEeLmCv5aDIVEv9REZab9bYRhJL2y4dHM18J4w6ng0yAIY0JMR0
-         kn9k98TMEm45kXhpmDgUQ2s7xywD2/NUIZXPoVozlQDAW/+ld9jLTwtpSL7gQ/doEI77
-         XfgoRhfqvMU0rfjbM5HV1dTonCxxmKIQ335bMkdHNxYBre9vdn2cEoxVOX+kLcqQAzOf
-         iWu95iUYhgM1QH6dqYup3b/Bs0ReWX2NWbj5fRjSzuhVbwzGAMrTM4BI5RAqg68C2cYE
-         G2cg==
-X-Gm-Message-State: AOAM530BllSNN//01wMBcgJ1pVaAUKEdygeYsYBZHP0ap6fY3p31Cg3e
-        8yLVDWBRJOfP/+NcypA8u2j2ZaiVop4Pi0vhMUg=
-X-Google-Smtp-Source: ABdhPJzgUFbW5K9VQXTgxAOChCuEdEYjVCRZKxYaY9ONaicsREP1FfFEyVeVlPAclR9W9HFB4nKRjf+XFCmKrCGEadU=
-X-Received: by 2002:a05:6638:594:: with SMTP id a20mr1658187jar.127.1598628467885;
- Fri, 28 Aug 2020 08:27:47 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=4zDZVOKRqOadCUlMiFS7BJletMH5TookJPK9U8F8DgQ=;
+        b=f2FNhn+wGEi5e5Khi1iaX1282Bahk6NY4oG5GjXCRzeKvXKOwbR+qTgu1x2M3qTWQn
+         7Hq3Gj7+JiIGNes3kCLvKNEBVlInA1heAHuHfwP26VPIUvyv9tpHo5C6tWUpVtHvp1yc
+         /o4Fxt9f0DNIxbG3SVCw1nixVmV5WI/c3N7Ir4Jw9fD+YUHmu7AgDolPRrUgw5uSTcqQ
+         vQjGz1OiUB22BLJBcvWW0q8t5X1mDR7Yf8QyPhWJMKWJQBMKcSoq6iifuSJKOLz5wngO
+         i+OrUmXvQRfPUZDvnPtQ40RHX+pUlKXxM64r9KZqK/9p7BGhGDOONdHvKQ9oSuFYbkBA
+         5Iog==
+X-Gm-Message-State: AOAM533BsIvpSZUC4WJxj/HrAVMGUERibUom5xPsUYsfhsay9mjpBnBt
+        qyfOrCcDRV+q92K+WC5UZDqZNjF91bKjC4EX
+X-Google-Smtp-Source: ABdhPJyIba8MB1Xn/IiwRMPqwu6BvkixjiNRXT6y7dDgf/374vKBegMYD5ww1R3hcATH6g82JShmnw==
+X-Received: by 2002:a1c:7dc3:: with SMTP id y186mr2258830wmc.59.1598628515679;
+        Fri, 28 Aug 2020 08:28:35 -0700 (PDT)
+Received: from felia ([2001:16b8:2d94:4000:f807:c6f3:919:9c25])
+        by smtp.gmail.com with ESMTPSA id m125sm2927101wme.35.2020.08.28.08.28.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 08:28:34 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Fri, 28 Aug 2020 17:28:26 +0200 (CEST)
+X-X-Sender: lukas@felia
+To:     James Bottomley <jejb@linux.ibm.com>
+cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Roman Bolshakov <r.bolshakov@yadro.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+        linux-spdx@vger.kernel.org, linux-kernel@vger.kernel.org,
+        GR-QLogic-Storage-Upstream@marvell.com,
+        Arun Easi <aeasi@marvell.com>
+Subject: Re: [PATCH] MAINTAINERS: orphan sections with qlogic.com group
+ alias
+In-Reply-To: <1598626957.3883.17.camel@linux.ibm.com>
+Message-ID: <alpine.DEB.2.21.2008281719290.11677@felia>
+References: <20200828070824.8032-1-lukas.bulwahn@gmail.com> <20200828091758.GF54274@SPB-NB-133.local> <alpine.DEB.2.21.2008281524360.11562@felia> <1598626957.3883.17.camel@linux.ibm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200827181842.1000451-1-f.fainelli@gmail.com> <5afe8762-c0a3-ff10-5946-0eb2e7ddc0e5@broadcom.com>
-In-Reply-To: <5afe8762-c0a3-ff10-5946-0eb2e7ddc0e5@broadcom.com>
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-Date:   Fri, 28 Aug 2020 11:27:36 -0400
-Message-ID: <CAC=U0a3JwZr5tpNZ1ba63ORw5gfiBPAhOqYo4UZTOE-eJm8mjw@mail.gmail.com>
-Subject: Re: [PATCH 0/5] qspi binding and DTS fixes
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "maintainer:BROADCOM SPI DRIVER" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Yendapally Reddy Dhananjaya Reddy 
-        <yendapally.reddy@broadcom.com>,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good to me.
 
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 
-On Thu, Aug 27, 2020 at 3:30 PM Scott Branden
-<scott.branden@broadcom.com> wrote:
+On Fri, 28 Aug 2020, James Bottomley wrote:
+
+> On Fri, 2020-08-28 at 15:30 +0200, Lukas Bulwahn wrote:
+> > 
+> > On Fri, 28 Aug 2020, Roman Bolshakov wrote:
+> > 
+> > > On Fri, Aug 28, 2020 at 09:08:24AM +0200, Lukas Bulwahn wrote:
+> > > > Previous attempts of getting an answer from the qlogic.com group
+> > > > alias, i.e., QLogic-Storage-Upstream@qlogic.com, have remained
+> > > > unanswered; see links below.
+> > > > 
+> > > > Mark those sections Orphan to prepare their deletion or give an
+> > > > actual person a chance to step up to maintain those drivers.
+> > > > 
+> > > > Link: https://lore.kernel.org/linux-spdx/20190606205526.447558989
+> > > > @linutronix.de
+> > > > Link: https://lore.kernel.org/linux-spdx/alpine.DEB.2.21.20063006
+> > > > 44130.4919@felia
+> > > > Link: https://lore.kernel.org/linux-spdx/alpine.DEB.2.21.20082707
+> > > > 40140.31123@felia
+> > > > 
+> > > 
+> > > CC'd Arun,
+> > > 
+> > > I think it's worth to update the alias to:
+> > > 
+> > > GR-QLogic-Storage-Upstream@marvell.com
+> > > 
+> > 
+> > So, if these drivers are not orphans, you can answer Thomas
+> > Gleixner's original email from 2019. If you can quickly ack that
+> > patch set, I am happy to do the donkey work to get this apply nicely
+> > on the current master (please CC me on that response).
+> 
+> I have to wonder what the object is here: to get the problem fixed or
+> to make a public spectacle?
 >
-> Patch series looks good.
+
+Let us get the problem fixed; no spectacle here.
+
+> Because if the object had been to get the issue fixed, waiting a year
+> before escalating to the SCSI list isn't the best way to achieve
+> outcomes, nor is now demanding that the drivers be orphaned for lack of
+> response to you ... particularly as you've seen the drivers updated
+> over that time if you actually follow kernel releases.
 >
-> Acked-by: Scott Branden <scott.branden@broadcom.com>
->
-> On 2020-08-27 11:18 a.m., Florian Fainelli wrote:
-> > Hi all,
-> >
-> > This patch series fixes incorrectly defined compatible strings for the
-> > Broadcom QSPI controller which resulted in the strings not being
-> > ordered from most to least compatible.
-> >
-> > We will need to apply some changes to the spi-bcm-qspi.c driver in
-> > the future to assume no revision register exist, and these patches
-> > are a preliminary step towards that goal.
-> >
-> > Florian Fainelli (5):
-> >   dt-bindings: spi: Fix spi-bcm-qspi compatible ordering
-> >   ARM: dts: bcm: HR2: Fixed QSPI compatible string
-> >   ARM: dts: NSP: Fixed QSPI compatible string
-> >   ARM: dts: BCM5301X: Fixed QSPI compatible string
-> >   arm64: dts: ns2: Fixed QSPI compatible string
-> >
-> >  .../bindings/spi/brcm,spi-bcm-qspi.txt           | 16 ++++++++--------
-> >  arch/arm/boot/dts/bcm-hr2.dtsi                   |  2 +-
-> >  arch/arm/boot/dts/bcm-nsp.dtsi                   |  2 +-
-> >  arch/arm/boot/dts/bcm5301x.dtsi                  |  2 +-
-> >  arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi |  2 +-
-> >  5 files changed, 12 insertions(+), 12 deletions(-)
-> >
->
+
+I just followed Greg KH's advice; spdx licensing clean-up is not the top 
+most priority thing; so it just happened to be laying around for a year.
+Feel free to ignore this patch and we solve the problem instead.
+
+> Qlogic or now Marvell tends to rely somewhat heavily on outsourcing for
+> driver maintenance and support.  Outsourcers, fairly obviously, aren't
+> going to respond to legal issues like this which are outside of their
+> remit.  What needs to happen is that someone needs to find a person
+> within the Qlogic org who can get this fixed ... possibly involving
+> explaining the actual issue along the way.  Would you like us to use
+> our contacts to do that?
+> 
+
+Yes, I (and I will bet the licensing clean-up janitors) welcome if that 
+legal question can be resolved and the kernel can be cleaned up from 
+unneeded files.
+
+Lukas
