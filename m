@@ -2,104 +2,56 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80547C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 00:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601FAC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 00:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CAC3207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 00:39:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CkU0mwhi"
+	by mail.kernel.org (Postfix) with ESMTP id 49DFD2071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 00:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbgH1Aj0 (ORCPT
+        id S1728191AbgH1A5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 20:39:26 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60681 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbgH1AjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 20:39:23 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bd11z15KFz9sSn;
-        Fri, 28 Aug 2020 10:39:18 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1598575161;
-        bh=hw2QVv72fnMpKpu16MEIWpkdlhdwHEwKMjWP0v3x6IQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=CkU0mwhiRpaERUjfUxqWh6MrG5Y1HDM5YI3ps4hH60suB+XQQeYDWG4R6Xe5yCwHt
-         U02pYP1IcKfh6L2bylbe2y4J7qLmmSHJOcAy/kWLF5NnvdfJ8GZAEiRt3G7a6Jn7Qg
-         aQPva0I3DKoWWuYJvDdWCgMDcg/qBSVNAemUJdazwBAOYDl7KA6UcWjDzUYB5BTY+g
-         qXsqolp2dpf9pFk7SOgIFoHJWZSjPHMhLXaled5nuidww9/6+7ZBiH5wzGMwkw58yB
-         +1tHEFnSPFGbP6AHXdrQf76NBjR9jtQ6au2iCgCUppEcbefkLW6vKQi/TExw5d50En
-         GARYDPU+mLkew==
-Date:   Fri, 28 Aug 2020 10:39:11 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20200828103911.7f87cc1d@canb.auug.org.au>
+        Thu, 27 Aug 2020 20:57:37 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:54266 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgH1A5h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 20:57:37 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 403962ACE8;
+        Thu, 27 Aug 2020 20:57:34 -0400 (EDT)
+Date:   Fri, 28 Aug 2020 10:57:46 +1000 (AEST)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Joe Perches <joe@perches.com>
+cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Subject: Re: [PATCH 17/19] z2ram: reindent
+In-Reply-To: <5682daf68b94be288c05f859942ce06deec2b022.camel@perches.com>
+Message-ID: <alpine.LNX.2.23.453.2008281052580.8@nippy.intranet>
+References: <8570915f668159f93ba2eb845a3bbc05f8ee3a99.camel@perches.com>         <EF673A30-F88D-4E4E-8A2B-E942153830AC@physik.fu-berlin.de>         <b88538f92386f41b938c502ae2daec5800a85dcf.camel@perches.com>         <alpine.LNX.2.23.453.2008280859300.10@nippy.intranet>
+ <5682daf68b94be288c05f859942ce06deec2b022.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/rdDiGHzhoAGPz5IxfgPjeA/";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/rdDiGHzhoAGPz5IxfgPjeA/
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, 27 Aug 2020, Joe Perches wrote:
 
-Hi all,
+> 
+> checkpatch already does this.
+> 
 
-Today's linux-next merge of the net-next tree got a conflict in:
-
-  net/ipv4/raw.c
-
-between commit:
-
-  645f08975f49 ("net: Fix some comments")
-
-from the net tree and commit:
-
-  2bdcc73c88d2 ("net: ipv4: delete repeated words")
-
-from the net-next tree.
-
-I fixed it up (they each removed a different "and" - I kept the latter)
-and can carry the fix as necessary. This is now fixed as far as linux-next
-is concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/rdDiGHzhoAGPz5IxfgPjeA/
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9IUi8ACgkQAVBC80lX
-0GzfOgf+LT5gCWANakQWEiMOnGhgaYVymlk03R+65rDxrxpJQjUO3EilAeO1y382
-MYXPFWIAsXyFf568qw62nviiuUxWRc/qaQh+OMdibyl8UntVK6j/+lv3Xq/S8ThH
-VMhEs57nlbdnPnL0yqbkaJlKoeZ7FqGx2oKyLJ5ddiSLk3oHI17QO94NVxKhaIGr
-W4SsAGh/J9ENFNIO5HiLSfGGnAdYjqirdyEYVdXDFS/BL/rGghwx/V0djuFxC8+D
-6qyKfJ6o2yA2eV1rp9/ddkm9yh/R8MlztIZ2aQx2InNrRNdQ2buovF49cgCNj1ZD
-6rIFIPvghwKSjmPcibIfXbf8+WqBSA==
-=/4dJ
------END PGP SIGNATURE-----
-
---Sig_/rdDiGHzhoAGPz5IxfgPjeA/--
+Did you use checkpatch to generate this patch?
