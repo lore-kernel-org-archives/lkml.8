@@ -2,138 +2,110 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D953C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D73C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE0520776
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:21:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JP+5CFC9"
+	by mail.kernel.org (Postfix) with ESMTP id E6FF420776
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:22:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbgH1IVX (ORCPT
+        id S1728644AbgH1IW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 04:21:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbgH1IVP (ORCPT
+        Fri, 28 Aug 2020 04:22:28 -0400
+Received: from smtprelay0059.hostedemail.com ([216.40.44.59]:54576 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727971AbgH1IW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 04:21:15 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43A2AC061264;
-        Fri, 28 Aug 2020 01:21:15 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id q3so123706pls.11;
-        Fri, 28 Aug 2020 01:21:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hPzPMvRrv77BBmOrhLeE1sCRQ/ZQAnsF0J3gEikAgzA=;
-        b=JP+5CFC9J4zq+DPdRvPxJJc+hikHsnoHs89nPFz/04jCXNkslIAMbMoToQN57/KLsZ
-         /cah+/0X2sR5OZ0TrcoQlm2zOakwNHdBaVl738kt1YY2/eVMTHAmgKLuaQqkVeIeF3bl
-         OkwClLK24jfP3+h6t3go3mAEFyItEyRo7ddm9uLwTBqDJoBYh8XVISaeHVa82xMjzvFU
-         VQpoDIvhWGXuAXuO6GDDlP401utltHFI1x73Lg32xy1bLxVTTOVpwbzNwW2oBzAT9tuN
-         SeuxrUY/YdzYifBIB70YeLzmv2aghAgXQ6D8K7KuefSrlQ13CjCmv1gzLvlVn6dOHP8M
-         0q3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hPzPMvRrv77BBmOrhLeE1sCRQ/ZQAnsF0J3gEikAgzA=;
-        b=f5mUANTeVDaClbo00dNGKFrqJqg3HyButKbiwHLiXE9r/00vIMfkfDXXF67tcpODgV
-         T2RzEVRD8eDOqcTJdecL0u48IvW15DQRkB1nz4AYU6YYJb0o2smnmS1V/BwVLQIxrq85
-         tlYDha7CLC4AdMWkeavgharu27ZOCoBVhQGxCG9Jao6XmNAH+NIfC8LRS+QGFB26qj69
-         uL6lfuHznpKlrUwLr/HjeHKhpdt6qJgbwJbl9seEYNfZoaxKE2LAPyQ1Yka7U4Vhup96
-         Ke7QsgvQpdAYvD4a0dpQKmov9je+/QcPSO+NmYLGrDsNfizEiiNVfGTfug5hG3bf6ml7
-         mBVQ==
-X-Gm-Message-State: AOAM532HIP/VwBbiMBh/do8ubyuIDq079zSRpGW6HbjFv86wZceBySum
-        nUKbf1GbL7R3CeYt6hu/HA5uIP0ctoFawsuWIe443rGcofDDHQ==
-X-Google-Smtp-Source: ABdhPJxJexwvDTwE95+piicUKMhxJHBzj01cyOipRmXIaFbQ8CNvt5Lnf/6mEn6Dg7nr1qekqsoS7CojU5ctLQwD83w=
-X-Received: by 2002:a17:90a:2c06:: with SMTP id m6mr262760pjd.129.1598602874866;
- Fri, 28 Aug 2020 01:21:14 -0700 (PDT)
+        Fri, 28 Aug 2020 04:22:27 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 358A4180154A4;
+        Fri, 28 Aug 2020 08:22:26 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: head10_2f0dd8327074
+X-Filterd-Recvd-Size: 3029
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 28 Aug 2020 08:22:24 +0000 (UTC)
+Message-ID: <a98b0a411abdaf6b58c73322511087f57353fb22.camel@perches.com>
+Subject: Re: [Cocci] [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+From:   Joe Perches <joe@perches.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, cocci <cocci@systeme.lip6.fr>,
+        Alex Dewar <alex.dewar90@gmail.com>
+Date:   Fri, 28 Aug 2020 01:22:23 -0700
+In-Reply-To: <526af204ddf95f94012c6132d12693852bfe7442.camel@perches.com>
+References: <20200827071537.GA168593@kroah.com>
+         <20200827131819.7rcl2f5js3hkoqj2@lenovo-laptop>
+         <def24e9e-018c-9712-0d07-d4cbc84f07d9@rasmusvillemoes.dk>
+         <20200827144846.yauuttjaqtxaldxg@lenovo-laptop>
+         <5d1dfb9b031130d4d20763ec621233a19d6a88a2.camel@perches.com>
+         <alpine.DEB.2.22.394.2008272141220.2482@hadrien>
+         <5853c58e-7d26-2cf9-6cbf-698ecd93cbf9@linux.com>
+         <202008271517.ECC1F1F8F@keescook>
+         <5ebe5c2737b59d04f1b8a46008cd3159c638f9d0.camel@perches.com>
+         <d99c613aa70617f440c51d9413372b858a4ae826.camel@perches.com>
+         <202008280056.6442BCC@keescook>
+         <526af204ddf95f94012c6132d12693852bfe7442.camel@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-References: <20200827202452.27714-1-krzk@kernel.org>
-In-Reply-To: <20200827202452.27714-1-krzk@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 28 Aug 2020 11:20:58 +0300
-Message-ID: <CAHp75VdE-Nxr7yDPPyRjG2vJZs-nkZowi+daUJTKK348Su_Pow@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Move Hartmut Knaack to Credits
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 11:25 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Hartmut Knaack was an active reviewer and contributor to the IIO
-> subsystem and drivers.  However last message on LKML from him was sent
-> in October 2015.
+On Fri, 2020-08-28 at 01:10 -0700, Joe Perches wrote:
+> On Fri, 2020-08-28 at 00:58 -0700, Kees Cook wrote:
+> > On Thu, Aug 27, 2020 at 09:12:06PM -0700, Joe Perches wrote:
+> > > Perhaps something like the below with a sample conversion
+> > > that uses single and multiple sysfs_emit uses.
+> > 
+> > On quick review, I like it. :)
+> > 
+> > > [...]
+> > > +int sysfs_emit(char *buf, char *pos, const char *fmt, ...)
+> > > +{
+> > > +	int len;
+> > > +	va_list args;
+> > > +
+> > > +	WARN(pos < buf, "pos < buf\n");
+> > > +	WARN(pos - buf >= PAGE_SIZE, "pos >= PAGE_SIZE (%tu > %lu)\n",
+> > > +	     pos - buf, PAGE_SIZE);
+> > > +	if (pos < buf || pos - buf >= PAGE_SIZE)
+> > > +		return 0;
+> > 
+> > This can be:
+> > 
+> > 	if (WARN(pos < buf, "pos < buf\n") ||
+> > 	    WARN(pos - buf >= PAGE_SIZE, "pos >= PAGE_SIZE (%tu > %lu)\n",
+> > 		 pos - buf, PAGE_SIZE))
+> > 		return 0;
+> 
+> I have some vague recollection that WARN could be compiled
+> away to nothing somehow.  True or false?
+> 
+> If false, sure, of course, it'd be faster too.
 
-But this is not a problem we solve here. His address is invalid for a
-long time...
+I can't find an instance where WARN doesn't return the
+condition.
 
-> In thanks for Hartmut's effort, move him name to the Credits.
->
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: linux-iio <linux-iio@vger.kernel.org>
+And likely even faster would be to just show "invalid pos"
+instead of specific messages.
 
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
+	if (WARN(pos < buf || (pos - buf) >= PAGE_SIZE,
+		 "Invalid pos\n");
+		return 0;
 
-...and this?!
+or maybe use WARN_ONCE or no WARN at all.
 
-Reported-by: ?
-
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  CREDITS     | 4 ++++
->  MAINTAINERS | 1 -
->  2 files changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/CREDITS b/CREDITS
-> index 32ee70a7562e..edb81e3159b1 100644
-> --- a/CREDITS
-> +++ b/CREDITS
-> @@ -1953,6 +1953,10 @@ S: Am Bergfried 10
->  S: 63225 Langen
->  S: Germany
->
-> +N: Hartmut Knaack
-> +E: knaack.h@gmx.de
-> +D: IIO subsystem and drivers
-> +
->  N: Alain L. Knaff
->  E: Alain.Knaff@lll.lu
->  D: floppy driver
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 523ac1602b62..1276833532c4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8532,7 +8532,6 @@ F:        drivers/iio/multiplexer/iio-mux.c
->
->  IIO SUBSYSTEM AND DRIVERS
->  M:     Jonathan Cameron <jic23@kernel.org>
-> -R:     Hartmut Knaack <knaack.h@gmx.de>
->  R:     Lars-Peter Clausen <lars@metafoo.de>
->  R:     Peter Meerwald-Stadler <pmeerw@pmeerw.net>
->  L:     linux-iio@vger.kernel.org
-> --
-> 2.17.1
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
