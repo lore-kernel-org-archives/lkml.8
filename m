@@ -8,69 +8,72 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA612C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FFCC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9168420848
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C2DD20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:13:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oIgUGNf2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lF1UL+TI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgH1RLw (ORCPT
+        id S1726977AbgH1RNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 13:11:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52920 "EHLO
+        Fri, 28 Aug 2020 13:13:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgH1RLk (ORCPT
+        with ESMTP id S1726524AbgH1RNE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 13:11:40 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CE5DC061264;
-        Fri, 28 Aug 2020 10:11:40 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 67so722548pgd.12;
-        Fri, 28 Aug 2020 10:11:40 -0700 (PDT)
+        Fri, 28 Aug 2020 13:13:04 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 313DEC061264;
+        Fri, 28 Aug 2020 10:13:04 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id i10so745347pgk.1;
+        Fri, 28 Aug 2020 10:13:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:autocrypt:message-id:date:user-agent
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rDG1EPiaUFgoS+X3qPAWadr7JtwsBGe1tsCnul8o8A4=;
-        b=oIgUGNf2KHIEvO5akBpkx0/XBWNRlGmsy9c7VAJeHKzqIOgkMqC/Yu17uU27G1DKKI
-         v9NntSTinenFbaG9DbOFqQ2KmWY3Db5qme7UvdsfLse9EA4EZBHlHcK+dZCw97fH3WpV
-         QoqVWVA+68geO8O5XLa7x9H6hEa/HHjZrIymH8Ng5fMrG3O099QuaTrADrZlqj6wquDh
-         EJbXBKanu4H3/HJc4VbAH/1pXFEWiofh9rKmLLZc1qzPxjk4uP9D6OHNtG0xewwwAiIb
-         qZ4DkIVPD5+doZ6f7GX8zEHbj8qKxgaE9fkJ897JfwbcM3w4Eq6yAc4+Y0o0oiJqQ511
-         Eh/A==
+        bh=pc64rSr2chFs9EZYHsUa1F8H9M4u3O6q6aZBwq/cnSE=;
+        b=lF1UL+TIOF34xI0gDVCgdOkJkoXWfbDLOUQEps2md6MbTJzi1LJIf+Q9CsSukeKLpJ
+         NVykoYp11O/be3WeaB9D60AMEQkk+feCRwQUNc/aGwViZRvWA3vzlV0yhzxTzCvug69A
+         3nJmsWl88sX62qtu1hnqS8EqSjoXIE3xC8sePXitQfffaKriJRjr2gXU4Ft3I8Z/gpRK
+         BMaxRCX5LH1hCe1u8HDSammZs39GGTzQxS2FwDwigbViSW93DDh5tE/5cDYkr4hldRA5
+         8NyemNV9aPA9YrRnPp04zXYwo115d3aEdRtSxb/a9xLVsAw5bF8JmKz4XymlE/xGoI+i
+         XF5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rDG1EPiaUFgoS+X3qPAWadr7JtwsBGe1tsCnul8o8A4=;
-        b=edG+Ju+V2dC6TVzsX2k3LIIeknNkbOBPxtWHzKiN7VGYdUgAfhJPMC3/aK+1nu6b5C
-         p5uBqKfZ/0j1tyXGGlfjtf36PlKplsazlmsMAyq/QJFwrTFltfz1lhFAyhhK5ctis2vg
-         wRyr9rH6HSRhSkJADJ2wsozymuhCY8Xi5XKo/98S9KeNneFa5DgQLyZCZXfrdvGu86md
-         UefdbJGxTMFIfZwTMkbeiI1sFC+cHDxw4hKBg8NHAhLjSLlmszlbEgVyKmpu/LNotUIE
-         IzyBw6v+sZplTZz+M70XBJYjdTgf8kFJD3SVNGGC7OccPyvdneEs3cOutsOPUoDr+85b
-         aDwQ==
-X-Gm-Message-State: AOAM531WQFrXK8m4UmJPLi9VPP+1VMNEcx6ka14/Hol9pRr9omnWmAj6
-        sBJv63GIGxJ6/xooRCvMOQXvnQNtVeU=
-X-Google-Smtp-Source: ABdhPJx8hXEbh38V8Bye6HWw+m73JJ1gFkdbtIPwM1IjI4rWsFIW82Hv3mYeDiVdJz5U8cdukxJAtA==
-X-Received: by 2002:a62:ce8c:: with SMTP id y134mr14486pfg.198.1598634699320;
-        Fri, 28 Aug 2020 10:11:39 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=pc64rSr2chFs9EZYHsUa1F8H9M4u3O6q6aZBwq/cnSE=;
+        b=hXjEzZSiChV29L6GaZd/I2uvG0HTZ3wgNiX2C3SZNZlZWKDtgRASgkt7P+61vlJ7AD
+         umHeYFtrUjcChLoPq1VPtIp/JP3k00eObs05ZGcHwTBYPzY+lWEyzM2ZYMJ+6HhgNaQG
+         hZw0Hqdp+yS7LYpkd/oTRWSWNOdtpaWkKJtHD0l+8MOlKL2wLmuyRWL1H3BEIL2BS48O
+         T6HmPFbGZfTHaNlilnrQUaFHHachrfQPmudls4pnF5z/B8GeP/4RHLctA3wGeucdoCJg
+         eA4QNMi7CwpAlo+iT4iJhkSWcbi3NyGkXq2j2LJhwDXU2O04y+PkzNO8n7yh66tWp2Xc
+         HeZw==
+X-Gm-Message-State: AOAM531Ws0egAPRbYxe/uv1SVdPZ4gBufV6+tJejbstn+lHYMs+mDH/U
+        MX2d8hyD1twn/OkLHo1366gJGxoNqns=
+X-Google-Smtp-Source: ABdhPJz5IYrac9Jd2bpR+02zlBhzmSORsVMIOSwcQ48/9kg+WDgYP3D1zEAvTut8BlMMUkrlW2nkeQ==
+X-Received: by 2002:aa7:918d:: with SMTP id x13mr10844pfa.292.1598634783427;
+        Fri, 28 Aug 2020 10:13:03 -0700 (PDT)
 Received: from [10.67.50.75] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id k5sm92378pjl.3.2020.08.28.10.11.37
+        by smtp.googlemail.com with ESMTPSA id s64sm2350042pfs.111.2020.08.28.10.13.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Aug 2020 10:11:38 -0700 (PDT)
-Subject: Re: [PATCH 1/2] memory: brcmstb_dpfe: Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
+        Fri, 28 Aug 2020 10:13:02 -0700 (PDT)
+Subject: Re: [PATCH v2 3/6] ARM: dts: NSP: Fix SP804 compatible node
+To:     Andre Przywara <andre.przywara@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-References: <20200828153747.22358-1-krzk@kernel.org>
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com
+References: <20200828142018.43298-1-andre.przywara@arm.com>
+ <20200828142018.43298-4-andre.przywara@arm.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -126,12 +129,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
  M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <beeffed0-cbbd-bfe2-6749-d0bcf93c0e47@gmail.com>
-Date:   Fri, 28 Aug 2020 10:11:31 -0700
+Message-ID: <73b35bcd-0e8c-0f62-ed2b-e0c64261f930@gmail.com>
+Date:   Fri, 28 Aug 2020 10:12:59 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200828153747.22358-1-krzk@kernel.org>
+In-Reply-To: <20200828142018.43298-4-andre.przywara@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -140,11 +143,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/28/20 8:37 AM, Krzysztof Kozlowski wrote:
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and the error value gets printed.
+On 8/28/20 7:20 AM, Andre Przywara wrote:
+> The DT binding for SP804 requires to have an "arm,primecell" compatible
+> string.
+> Add this string so that the Linux primecell bus driver picks the device
+> up and activates the clock.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Fixes: a0efb0d28b77 ("ARM: dts: NSP: Add SP804 Support to DT")
+> Tested-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+
+This looks fine, however there is a ccbtimer1 instance that you missed,
+can you resubmit with it included?
+
+With that:
 
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
