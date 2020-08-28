@@ -2,145 +2,101 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97241C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D5AC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 680242075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52A220C56
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:04:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="J7Bf/zaG"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="bRuLBMoI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgH1QDU (ORCPT
+        id S1726881AbgH1QET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 12:03:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgH1QDO (ORCPT
+        Fri, 28 Aug 2020 12:04:19 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:61280 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725911AbgH1QES (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 12:03:14 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 980F8C06121B
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 09:03:14 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id v16so710356plo.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 09:03:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KBuL7NXBea5SmTknXExQrO1gykZeM6lofEf67YE+asM=;
-        b=J7Bf/zaGzFYq6t3l7kF0zNYOs8fUKYCIsQFC/xoW3zbpklt/D7o8M7Lj6wwx7b5jwY
-         xpTO3H1pBWcQ8Pd65huZY71y7Y5QFmN1S3G5ErqLHo29pBxga8EMUpO4gX2i+SE264P8
-         ntp+IDhNvXd7g6Yl6JrMXizmy8fNudINVLkSA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KBuL7NXBea5SmTknXExQrO1gykZeM6lofEf67YE+asM=;
-        b=q2pDNBq+JZCbnVWdrGpARaWD6wDdW09N2blV/pKHSGCtp+pDvsXzIqqpkWBDLGBXSw
-         aUIwNIagTyuYMSHbNX4ED4+6nomidTFDgNEp51Z+h4gmRW/WgNJqsZ56GyyMluOBhFOE
-         OVKrB70EXou2z/0Muj6+YnC92jQO52S8ScAATmNzzJZcmMCWIxJx8IHw7Ac+TW9zzb1G
-         jr8kYp1+RQI16MbjjZv5xta7h6YMeGaDEJFFIjdVHp2yC91tfbOAg07DnbaLhAwMS9AD
-         BdfMr+kPej9glmJT6zOTi7b6shm2ddKjFCT8f07ZNrEgx3Doziif7t0CdjW+0q02AZ8+
-         aKhA==
-X-Gm-Message-State: AOAM530rhq9EurXTEKbgpikppwQqnAKwYe7kivqX2RVHbQKW3FVXycWo
-        /8UwS32F0wbUF22qtLTgdeXklw==
-X-Google-Smtp-Source: ABdhPJxROrQ2ZtBP4ViEMwf9AJHkiAkMddzBePTwjlFoqmlXIbqH2WofO8/rNQX4eqrucnXq+FcyLg==
-X-Received: by 2002:a17:90a:fb4e:: with SMTP id iq14mr1782331pjb.133.1598630593340;
-        Fri, 28 Aug 2020 09:03:13 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:8ce8:955b:ae1b:d6ef])
-        by smtp.gmail.com with ESMTPSA id a25sm2157212pfk.151.2020.08.28.09.03.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 09:03:12 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH] ARM: dts: imx6q-icore-ofcap10: Use 10.1" Ampire panel compatible
-Date:   Fri, 28 Aug 2020 21:33:02 +0530
-Message-Id: <20200828160302.329179-1-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 28 Aug 2020 12:04:18 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07SFi0Uq021999;
+        Fri, 28 Aug 2020 10:53:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=qhUw5EM9tqAPaoYo4GOoztPzC9zw8DfW3LO1+A6Y+28=;
+ b=bRuLBMoIsUU2RjJIR8qts3Oo4Pv64klBTiafZz/oeRXu54YUvre3T6GR6XdO8NoY+wS9
+ H5LwBEmr8suz459X5hNyVLco6Er/QBsFs+uznnC5bK/pJ8dLewQQe/qqxNgyYShjnoGR
+ 3lj7BD1rKeyh+qIDgYHZ81wjltNgPX473U311KTEyoyMRLU10rgyopFs0seCy33pg3Mw
+ JQ/qNZsjxEmbeuQXvXAenGsdaz+eQpjdx7Be+HfNgESXNmghb14L9Ekjdvo9rzSR+wfM
+ d4SvcU9Ye8tzJQNtn07/GYi1iRT/QcMdi2NZOdfztWa0ttHtp8k/C4FTV7Aghf4jimVF +w== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 3330s3h7e8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 28 Aug 2020 10:53:51 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 28 Aug
+ 2020 16:53:49 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Fri, 28 Aug 2020 16:53:49 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 40F7A2C4;
+        Fri, 28 Aug 2020 15:53:49 +0000 (UTC)
+Date:   Fri, 28 Aug 2020 15:53:49 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        <patches@opensource.cirrus.com>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <m.szyprowski@samsung.com>,
+        <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 2/2] ASoC: wm8994: Ensure the device is resumed in
+ wm89xx_mic_detect functions
+Message-ID: <20200828155349.GK10899@ediswmail.ad.cirrus.com>
+References: <20200827173357.31891-1-s.nawrocki@samsung.com>
+ <CGME20200827173426eucas1p13f9f7d358dfcc440db160de3dc658ddf@eucas1p1.samsung.com>
+ <20200827173357.31891-2-s.nawrocki@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200827173357.31891-2-s.nawrocki@samsung.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 clxscore=1015
+ impostorscore=0 mlxscore=0 bulkscore=0 adultscore=0 phishscore=0
+ mlxlogscore=766 priorityscore=1501 malwarescore=0 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008280119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding display timings directly on device tree files make it difficult
-to maintain as a same copy of timings may exist on different files or
-panel-simple driver.
+On Thu, Aug 27, 2020 at 07:33:57PM +0200, Sylwester Nawrocki wrote:
+> When the wm8958_mic_detect, wm8994_mic_detect functions get called from
+> the machine driver, e.g. from the card's late_probe() callback, the CODEC
+> device may be PM runtime suspended and any regmap writes have no effect.
+> Add PM runtime calls to these functions to ensure the device registers
+> are updated as expected.
+> This suppresses an error during boot
+> "wm8994-codec: ASoC: error at snd_soc_component_update_bits on wm8994-codec"
+> caused by the regmap access error due to the cache_only flag being set.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
 
-We have a panel-simple driver for this particular usage so supporting
-on this driver will help to use the same timings on any device tree
-files if the board mounted on a similar vendor display.
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-Engicam C.TOUCH OF 10.1" LCD board uses Ampire 10.1" TFT LCD and
-it has supported by panel-simple already, so simply use that binding.
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Note:
-Panel patch in ML already,
-https://lkml.org/lkml/2020/8/28/685
-
- arch/arm/boot/dts/imx6q-icore-ofcap10.dts | 28 +++++++++++++----------
- 1 file changed, 16 insertions(+), 12 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-index 81cc346dd149..02aca1e28ce3 100644
---- a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-+++ b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-@@ -12,6 +12,17 @@
- / {
- 	model = "Engicam i.CoreM6 Quad/Dual OpenFrame Capacitive touch 10.1 Kit";
- 	compatible = "engicam,imx6-icore", "fsl,imx6q";
-+
-+	panel {
-+		compatible = "ampire,am-1280800n3tzqw-t00h";
-+		backlight = <&backlight_lvds>;
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&lvds0_out>;
-+			};
-+		};
-+	};
- };
- 
- &ldb {
-@@ -22,18 +33,11 @@ lvds-channel@0 {
- 		fsl,data-width = <24>;
- 		status = "okay";
- 
--		display-timings {
--			native-mode = <&timing0>;
--			timing0: timing0 {
--				clock-frequency = <60000000>;
--				hactive = <1280>;
--				vactive = <800>;
--				hback-porch = <40>;
--				hfront-porch = <40>;
--				vback-porch = <10>;
--				vfront-porch = <3>;
--				hsync-len = <80>;
--				vsync-len = <10>;
-+		port@4 {
-+			reg = <4>;
-+
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&panel_in>;
- 			};
- 		};
- 	};
--- 
-2.25.1
-
+Thanks,
+Charles
