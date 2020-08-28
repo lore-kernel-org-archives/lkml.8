@@ -2,103 +2,92 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61320C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAACC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4114F20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B91FE2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:46:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="auyb5gIu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgH1LnL (ORCPT
+        id S1729167AbgH1LqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 07:43:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729155AbgH1Llp (ORCPT
+        Fri, 28 Aug 2020 07:46:08 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:41382 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726904AbgH1Lpx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 07:41:45 -0400
-X-Greylist: delayed 74641 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 28 Aug 2020 04:41:43 PDT
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D298C061264;
-        Fri, 28 Aug 2020 04:41:43 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id B73AF2E1; Fri, 28 Aug 2020 13:41:37 +0200 (CEST)
-Date:   Fri, 28 Aug 2020 13:41:31 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare for device
- MSI
-Message-ID: <20200828114131.GA13881@8bytes.org>
-References: <20200826111628.794979401@linutronix.de>
+        Fri, 28 Aug 2020 07:45:53 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598615153; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=sNWgcqQR+6QhQGkc4LU06y2pSDolaw9TtjGFrjyf1bY=;
+ b=auyb5gIuQ1czI+quCjcZl+seR16VGGaRLxtqWzWFUzW5hQpUuhqER4atajN16pXH5lk8omrK
+ BQvAqd+T3FdJ79N4JyQU9NZVy2T66WoRz5GgOdVk6s7Th82K+MrMuIh3tb2wIW2dqNpcY90L
+ AL3jNTgEfJ+CEqmDRNMbdCafPzI=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5f48ee694b620c27d3639dbb (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 28 Aug 2020 11:45:45
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E9A37C4339C; Fri, 28 Aug 2020 11:45:44 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: rojay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3B36EC433C6;
+        Fri, 28 Aug 2020 11:45:44 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826111628.794979401@linutronix.de>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 28 Aug 2020 17:15:44 +0530
+From:   rojay@codeaurora.org
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     wsa@kernel.org, dianders@chromium.org,
+        saiprakash.ranjan@codeaurora.org, gregkh@linuxfoundation.org,
+        mka@chromium.org, akashast@codeaurora.org,
+        msavaliy@qti.qualcomm.com, skakit@codeaurora.org,
+        rnayak@codeaurora.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sumit.semwal@linaro.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH V2 1/2] i2c: i2c-qcom-geni: Store DMA mapping data in
+ geni_i2c_dev struct
+In-Reply-To: <159796912574.334488.10846610259602895929@swboyd.mtv.corp.google.com>
+References: <20200820103522.26242-1-rojay@codeaurora.org>
+ <20200820103522.26242-2-rojay@codeaurora.org>
+ <159796912574.334488.10846610259602895929@swboyd.mtv.corp.google.com>
+Message-ID: <fe91d99821775d82c3bd8de9d0988548@codeaurora.org>
+X-Sender: rojay@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 01:16:28PM +0200, Thomas Gleixner wrote:
-> This is the second version of providing a base to support device MSI (non
-> PCI based) and on top of that support for IMS (Interrupt Message Storm)
-> based devices in a halfways architecture independent way.
+On 2020-08-21 05:48, Stephen Boyd wrote:
+> Quoting Roja Rani Yarubandi (2020-08-20 03:35:21)
+>> Store DMA mapping data in geni_i2c_dev struct to enhance DMA mapping
+>> data scope. For example during shutdown callback to unmap DMA mapping,
+>> this stored DMA mapping data can be used to call geni_se_tx_dma_unprep
+>> and geni_se_rx_dma_unprep functions.
+>> 
+>> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
+>> ---
 > 
-> The first version can be found here:
-> 
->     https://lore.kernel.org/r/20200821002424.119492231@linutronix.de
-> 
-> It's still a mixed bag of bug fixes, cleanups and general improvements
-> which are worthwhile independent of device MSI.
-> 
-> There are quite a bunch of issues to solve:
-> 
->   - X86 does not use the device::msi_domain pointer for historical reasons
->     and due to XEN, which makes it impossible to create an architecture
->     agnostic device MSI infrastructure.
-> 
->   - X86 has it's own msi_alloc_info data type which is pointlessly
->     different from the generic version and does not allow to share code.
-> 
->   - The logic of composing MSI messages in an hierarchy is busted at the
->     core level and of course some (x86) drivers depend on that.
-> 
->   - A few minor shortcomings as usual
-> 
-> This series addresses that in several steps:
+> Can this be squashed with the next patch? I don't see how this stands 
+> on
+> its own.
 
-For all IOMMU changes:
-
-	Acked-by: Joerg Roedel <jroedel@suse.de>
-
+Okay.
