@@ -2,202 +2,184 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE82C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A24C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 022592075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:01:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jNbbYAAw"
+	by mail.kernel.org (Postfix) with ESMTP id 4098B2075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:01:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598630479;
+	bh=cUKLGExJz2RcE5gBspH6LUaYtyfTA5PI8XGobETwgvk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=LwHkT5khCfiVEIgelwmm2kiNRSHoFw64rK4Qr6N0qVockd0hhPxXzg/TAN4q9dzz8
+	 OLsPFFBBoid3aT/TJ8WCIRV606H/kvRz1wph4czhclE62Ax075JGxCQBbSP4Eu//KD
+	 BIyq0Up8Wx8TrCPkqVJz8FPW+aOuTmjZSqOnTWPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbgH1QBL (ORCPT
+        id S1728452AbgH1QBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 12:01:11 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:44752 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728338AbgH1QAe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 12:00:34 -0400
-Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id C8D502056538;
-        Fri, 28 Aug 2020 09:00:32 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C8D502056538
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1598630433;
-        bh=OVsLX7cMAA0hODgZXzEJKAhHMWh2W75uRXiZplng/RA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jNbbYAAwii8KuAcqgAiF25AQ3u/kPK8agQQzs+mt5pjjEqfKgZ47yZJuySB7b57QA
-         mkOM+7RZiihu2s3WaE8wixAIGbCIqPI/Pq9zyHDjQSNPC0MTyA8N6IiRskwJ/QKN/z
-         iPs7AHJF7n6mu/faxDbl330zdOqKGTrmkmrIW3DU=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
-        casey@schaufler-ca.com
-Cc:     tyhicks@linux.microsoft.com, tusharsu@linux.microsoft.com,
-        sashal@kernel.org, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] IMA: Support measurement of generic data during early boot
-Date:   Fri, 28 Aug 2020 09:00:20 -0700
-Message-Id: <20200828160021.11537-3-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200828160021.11537-1-nramas@linux.microsoft.com>
-References: <20200828160021.11537-1-nramas@linux.microsoft.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 28 Aug 2020 12:01:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728417AbgH1QBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 12:01:03 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E0502098B;
+        Fri, 28 Aug 2020 16:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598630461;
+        bh=cUKLGExJz2RcE5gBspH6LUaYtyfTA5PI8XGobETwgvk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iadQq1waQgmncxeH8RRxiOYnfm+e/sGq2kqlVH9J9fzrDBcXq/JUPdGwoA0feft+S
+         7KCxUljPKGqybMJqFIJSLFigEAVc+W3h9yvsbb9Gdm9fZhBnvlrHjMfPEcQtTChAEE
+         zVZMvVucXEgouDEUPjYGEQdcya/cO5e3AUqdthnQ=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 1/3] dt-bindings: media: imx258: Add bindings for IMX258 sensor
+Date:   Fri, 28 Aug 2020 18:00:51 +0200
+Message-Id: <20200828160053.6064-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Early boot measurement of data is currently very specific to key
-measurement. To make it generic to handle any early boot data
-measurement, additional arguments need to be saved in the queue
-for deferred processing. This includes the IMA hook func,
-data specific to the given func, and a boolean flag to indicate
-whether the given payload needs to be measured or a hash of
-the payload needs to be measured.
+Add bindings for the IMX258 camera sensor.  The bindings, just like the
+driver, are quite limited, e.g. do not support regulator supplies.
 
-Add new fields to ima_data_entry struct to pass additional data for
-the deferred handling of queued data. Update the queue functions to
-handle the new data saved in the ima_data_entry struct.
-
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- security/integrity/ima/ima.h                 | 11 ++++++--
- security/integrity/ima/ima_asymmetric_keys.c |  3 ++-
- security/integrity/ima/ima_queue_data.c      | 28 ++++++++++++++------
- 3 files changed, 31 insertions(+), 11 deletions(-)
+ .../devicetree/bindings/media/i2c/imx258.yaml | 92 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 93 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/imx258.yaml
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 872a06821c98..422fe833037d 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -266,18 +266,25 @@ struct ima_data_entry {
- 	void *payload;
- 	size_t payload_len;
- 	const char *event_name;
-+	const char *event_data;
-+	enum ima_hooks func;
-+	bool measure_payload_hash;
- };
- void ima_init_data_queue(void);
- bool ima_should_queue_data(void);
- bool ima_queue_data(const char *event_name, const void *payload,
--		    size_t payload_len);
-+		    size_t payload_len, const char *event_data,
-+		    enum ima_hooks func, bool measure_payload_hash);
- void ima_process_queued_data(void);
- #else
- static inline void ima_init_data_queue(void) {}
- static inline bool ima_should_queue_data(void) { return false; }
- static inline bool ima_queue_data(const char *event_name,
- 				  const void *payload,
--				  size_t payload_len) { return false; }
-+				  size_t payload_len,
-+				  const char *event_data,
-+				  enum ima_hooks func,
-+				  bool measure_payload_hash) { return false; }
- static inline void ima_process_queued_data(void) {}
- #endif /* CONFIG_IMA_QUEUE_EARLY_BOOT_DATA */
- 
-diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-index d91fddec5ae8..65423754765f 100644
---- a/security/integrity/ima/ima_asymmetric_keys.c
-+++ b/security/integrity/ima/ima_asymmetric_keys.c
-@@ -39,7 +39,8 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
- 
- 	if (ima_should_queue_data())
- 		queued = ima_queue_data(keyring->description, payload,
--					payload_len);
-+					payload_len, keyring->description,
-+					KEY_CHECK, false);
- 	if (queued)
- 		return;
- 
-diff --git a/security/integrity/ima/ima_queue_data.c b/security/integrity/ima/ima_queue_data.c
-index 563e26f66180..d466ee742377 100644
---- a/security/integrity/ima/ima_queue_data.c
-+++ b/security/integrity/ima/ima_queue_data.c
-@@ -60,6 +60,7 @@ static void ima_free_data_entry(struct ima_data_entry *entry)
- 
- 	kvfree(entry->payload);
- 	kfree(entry->event_name);
-+	kfree(entry->event_data);
- 	kfree(entry);
- }
- 
-@@ -74,7 +75,10 @@ static void *ima_kvmemdup(const void *src, size_t len)
- 
- static struct ima_data_entry *ima_alloc_data_entry(const char *event_name,
- 						   const void *payload,
--						   size_t payload_len)
-+						   size_t payload_len,
-+						   const char *event_data,
-+						   enum ima_hooks func,
-+						   bool measure_payload_hash)
- {
- 	struct ima_data_entry *entry;
- 
-@@ -88,9 +92,15 @@ static struct ima_data_entry *ima_alloc_data_entry(const char *event_name,
- 	 */
- 	entry->payload = ima_kvmemdup(payload, payload_len);
- 	entry->event_name = kstrdup(event_name, GFP_KERNEL);
-+	if (event_data)
-+		entry->event_data = kstrdup(event_data, GFP_KERNEL);
+diff --git a/Documentation/devicetree/bindings/media/i2c/imx258.yaml b/Documentation/devicetree/bindings/media/i2c/imx258.yaml
+new file mode 100644
+index 000000000000..ef789ad31143
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/imx258.yaml
+@@ -0,0 +1,92 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/i2c/imx258.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	entry->payload_len = payload_len;
-+	entry->func = func;
-+	entry->measure_payload_hash = measure_payload_hash;
++title: Sony IMX258 13 Mpixel CMOS Digital Image Sensor
++
++maintainers:
++  - Krzysztof Kozlowski <krzk@kernel.org>
++
++description: |-
++  IMX258 is a diagonal 5.867mm (Type 1/3.06) 13 Mega-pixel CMOS active pixel
++  type stacked image sensor with a square pixel array of size 4208 x 3120. It
++  is programmable through I2C interface.  Image data is sent through MIPI
++  CSI-2.
++
++properties:
++  compatible:
++    const: sony,imx258
++
++  clocks:
++    maxItems: 1
++
++  clock-frequency:
++    description: Frequency of input clock if clock is not provided
++    deprecated: true
++    const: 19200000
++
++  reg:
++    maxItems: 1
++
++  # See ../video-interfaces.txt for more details
++  port:
++    type: object
++    properties:
++      endpoint:
++        type: object
++        properties:
++          data-lanes:
++            items:
++              - const: 1
++              - const: 2
++              - const: 3
++              - const: 4
++
++          link-frequencies:
++            allOf:
++              - $ref: /schemas/types.yaml#/definitions/uint64-array
++            description:
++              Allowed data bus frequencies.
++
++        required:
++          - data-lanes
++          - link-frequencies
++
++required:
++  - compatible
++  - reg
++  - port
++
++
++if:
++  not:
++    required:
++      - clocks
++then:
++  required:
++    - clock-frequency
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    i2c0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        sensor@6c {
++            compatible = "sony,imx258";
++            reg = <0x6c>;
++            clocks = <&imx258_clk>;
++
++            port {
++                imx258_ep: endpoint {
++                    remote-endpoint = <&csi1_ep>;
++                    data-lanes = <1 2 3 4>;
++                    link-frequencies = /bits/ 64 <320000000>;
++                };
++            };
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index dc2aa691b75a..cca13d483d22 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16130,6 +16130,7 @@ M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ T:	git git://linuxtv.org/media_tree.git
++F:	Documentation/devicetree/bindings/media/i2c/imx258.yaml
+ F:	drivers/media/i2c/imx258.c
  
--	if (!entry->payload || !entry->event_name)
-+	if (!entry->payload || !entry->event_name ||
-+		(event_data && !entry->event_data))
- 		goto out;
- 
- 	INIT_LIST_HEAD(&entry->list);
-@@ -98,19 +108,21 @@ static struct ima_data_entry *ima_alloc_data_entry(const char *event_name,
- 
- out:
- 	integrity_audit_message(AUDIT_INTEGRITY_PCR, NULL,
--				event_name, func_measure_str(KEY_CHECK),
-+				event_name, func_measure_str(func),
- 				"ENOMEM", -ENOMEM, 0, -ENOMEM);
- 	ima_free_data_entry(entry);
- 	return NULL;
- }
- 
- bool ima_queue_data(const char *event_name, const void *payload,
--		    size_t payload_len)
-+		    size_t payload_len, const char *event_data,
-+		    enum ima_hooks func, bool measure_payload_hash)
- {
- 	bool queued = false;
- 	struct ima_data_entry *entry;
- 
--	entry = ima_alloc_data_entry(event_name, payload, payload_len);
-+	entry = ima_alloc_data_entry(event_name, payload, payload_len,
-+				     event_data, func, measure_payload_hash);
- 	if (!entry)
- 		return false;
- 
-@@ -165,9 +177,9 @@ void ima_process_queued_data(void)
- 			process_buffer_measurement(NULL, entry->payload,
- 						   entry->payload_len,
- 						   entry->event_name,
--						   KEY_CHECK, 0,
--						   entry->event_name,
--						   false);
-+						   entry->func, 0,
-+						   entry->event_data,
-+						   entry->measure_payload_hash);
- 		list_del(&entry->list);
- 		ima_free_data_entry(entry);
- 	}
+ SONY IMX274 SENSOR DRIVER
 -- 
-2.28.0
+2.17.1
 
