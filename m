@@ -2,123 +2,119 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFC7C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88731C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32A05208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57BF320791
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:01:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598594494;
+	bh=BUfH8WfAunZhF8fDtPUaM+v2rLlSiXdp/dFdKzj/AuE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q01Qm/eOK95jB943EYvQTj8nwo43eS5UWKXaMKBqwjA2S2qtMAOasVguTU6/lf9SB
+	 ADlzlJeaQrMCGa6LSLvO4VUoKaax7n3xte+h6WXm1NHDiR5Ol5fRCZqLL8liM47koC
+	 hafg/P807lTmyjM+YFbayD3rv4iAFZc7Sr/FEfn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgH1GAJ (ORCPT
+        id S1727825AbgH1GBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 02:00:09 -0400
-Received: from mga17.intel.com ([192.55.52.151]:35794 "EHLO mga17.intel.com"
+        Fri, 28 Aug 2020 02:01:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725849AbgH1GAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 02:00:07 -0400
-IronPort-SDR: RvNbL0lzqj8HYRC6ReaFedLaBQkRQev0btJZ3bBMCiu/VE+SCqKJ7FPlSEqGjHqo5ufsGB3lLQ
- /k0aa4X1+bag==
-X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="136677957"
-X-IronPort-AV: E=Sophos;i="5.76,362,1592895600"; 
-   d="scan'208";a="136677957"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 23:00:04 -0700
-IronPort-SDR: McsTh8G5D3tbZMqZlooEqwZTeP1Uyb5WLzaHsn6IM/SQPxe/wRQqU9dcd9Qrwpd32yBG1b+lUb
- OtfWWPNgvdeQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,362,1592895600"; 
-   d="scan'208";a="300117330"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by orsmga006.jf.intel.com with ESMTP; 27 Aug 2020 23:00:02 -0700
-Date:   Fri, 28 Aug 2020 13:56:03 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     David Laight <David.Laight@aculab.com>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "trix@redhat.com" <trix@redhat.com>,
-        "lgoncalv@redhat.com" <lgoncalv@redhat.com>
-Subject: Re: [PATCH v4 1/4] fpga: dfl: change data type of feature id to u16
-Message-ID: <20200828055603.GA5814@yilunxu-OptiPlex-7050>
-References: <1597027273-25288-1-git-send-email-yilun.xu@intel.com>
- <1597027273-25288-2-git-send-email-yilun.xu@intel.com>
- <20200812035604.GA2544@epycbox.lan>
- <3810fb75b42e45928a39a97449a01520@AcuMS.aculab.com>
- <20200813075843.GB7383@yilunxu-OptiPlex-7050>
- <54216e492cec4f84bc43dee176130e89@AcuMS.aculab.com>
- <20200813090409.GA1080@yilunxu-OptiPlex-7050>
- <20200820041431.GB4022@epycbox.lan>
+        id S1725849AbgH1GBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 02:01:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C44220791;
+        Fri, 28 Aug 2020 06:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598594491;
+        bh=BUfH8WfAunZhF8fDtPUaM+v2rLlSiXdp/dFdKzj/AuE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lzwddw+QutyLPhpntRMPv0eTIEG3GvvQomBWL+4KVVVkJatqq3srm5gw3MpqJMDWt
+         AZ9AssC4WQqVePCrOZ//hxANF6oGy0bAYqZubQyUMvSOMcA0XKuFsLm+VJbmb3Af4w
+         HNiN6edWKP91sRb1YaAJIn5y8UoylQQFJrXLC21E=
+Date:   Fri, 28 Aug 2020 08:01:27 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Iouri Tarassov <iourit@linux.microsoft.com>
+Cc:     Sasha Levin <sashal@kernel.org>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
+        iourit@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org
+Subject: Re: [PATCH 1/4] drivers: hv: dxgkrnl: core code
+Message-ID: <20200828060127.GA56396@kroah.com>
+References: <20200814123856.3880009-1-sashal@kernel.org>
+ <20200814123856.3880009-2-sashal@kernel.org>
+ <20200814125528.GA56456@kroah.com>
+ <58011269-e910-b3e4-2a3c-552b08c90574@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200820041431.GB4022@epycbox.lan>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <58011269-e910-b3e4-2a3c-552b08c90574@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 09:14:31PM -0700, Moritz Fischer wrote:
-> On Thu, Aug 13, 2020 at 05:04:09PM +0800, Xu Yilun wrote:
-> > On Thu, Aug 13, 2020 at 08:28:05AM +0000, David Laight wrote:
-> > > From: Xu Yilun
-> > > > Sent: 13 August 2020 08:59
-> > > > On Wed, Aug 12, 2020 at 08:52:39AM +0000, David Laight wrote:
-> > > > > From: Moritz Fischer
-> > > > > > Sent: 12 August 2020 04:56
-> > > > > >
-> > > > > > On Mon, Aug 10, 2020 at 10:41:10AM +0800, Xu Yilun wrote:
-> > > > > > > The feature id is stored in a 12 bit field in DFH. So a u16 variable is
-> > > > > > > enough for feature id.
-> > > > > > >
-> > > > > > > This patch changes all feature id related places to fit u16.
-> > > > >
-> > > > > How much bigger does it make the kernel?
-> > > > 
-> > > > The patch changes the definition of feature id from u64 to u16, and will
-> > > > make the kernel slightly smaller.
-> > > 
-> > > Unlikely.
-> > > Most of the structures will gain a 'pad' field.
-> > > Using u16 for function parameters and results almost certainly
-> > > requires instructions to mask the value.
-> > > Any arithmetic on u16 will require masking instructions on
-> > > (probably) all architectures except x86.
-> > > 
-> > > Using 'unsigned int' is probably best.
-> > > 
-> > > u16 is never a good idea unless you are defining enough
-> > > of them in a structure (eg as an array) to reduce the
-> > > structure size below some threshold.
-> > > (Or are matching some hardware layout.)
+On Thu, Aug 27, 2020 at 04:29:59PM -0700, Iouri Tarassov wrote:
+> On 8/14/2020 5:55 AM, Greg KH wrote:
+> > On Fri, Aug 14, 2020 at 08:38:53AM -0400, Sasha Levin wrote:
+> > > Add support for a Hyper-V based vGPU implementation that exposes the
+> > > DirectX API to Linux userspace.
+> > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
 > > 
-> > I got it. Thanks for your detailed explanation. I think we may change them to
-> > u32. Is it the same case for u8? Think we may also change the dfl_device_id.type.
+> > Better, but what is this mess:
 > > 
-> > 
-> > Hi Moritz:
-> > 
-> > The patch is applied to for-next, is it possible we recall it, or we
-> > make another fix after it?
-> > 
-> > Thanks,
-> > Yilun.
+> > > +#define ISERROR(ret)					(ret < 0)
 > 
-> Sorry for the delay, can you send a follow-up please?
+> The VM bus messages return the NTSTATUS error code from the host. NTSTATUS
+> is integer and the positive values indicate success.
+> The success error code needs to be returned by IOCTLs to the DxCore
+> applications. The ISERROR() macro is used in places where the NTSTATUS
+> success code could be returned from a function. "if (ret)" cannot be used. I
+> will add a comment to the macro in the next patch.
 
-Hi moritz:
+No, please just "open code" this, there is no need for a macro that is
+actually more characters than the original test.
 
-I think I don't have to change it now. As discussed with David, these
-fields aren't often accessed. So it should be OK.
+> > > +#define DXGKDEBUG 1
+> > > +/* #define USEPRINTK 1 */
+> > > +
+> > > +#ifndef DXGKDEBUG
+> > > +#define TRACE_DEBUG(...)
+> > > +#define TRACE_DEFINE(...)
+> > > +#define TRACE_FUNC_ENTER(...)
+> > > +#define TRACE_FUNC_EXIT(...)
+> > 
+> > No, please do not to custom "trace" printk messages, that is what ftrace
+> > is for, no individual driver should ever need to do that.
+> > 
+> > Just use the normal dev_*() calls for error messages and the like, do
+> > not try to come up with a custom tracing framework for one tiny
+> > individual driver.  If every driver in kernel did that, we would have a
+> > nightmare...
+> I understand the concern. This will be fixed later when we learn and pick
+> the final tracing technology for the driver.
 
-Thanks,
-Yilun.
+When is "later"?  We don't want to review something that you do not
+think is ready to be merged, do it now so we don't trip over things that
+you know you want to fix up.
 
-> 
-> Cheers,
-> Moritz
+> The current implementation
+> allows the hardware vendors to quickly identify issues without learning
+> about ftrace. They just need to enable the WSL debug console and mount
+> debugfs.
+
+Hardware vendors who know Linux already know about ftrace, don't make
+people have to read up and learn about custom ways to debug
+just-your-tiny-individual-driver.  Instead follow the customs and ways
+the _WHOLE_ kernel works, that is just polite, don't you think?
+
+thanks,
+
+greg k-h
