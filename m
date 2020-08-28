@@ -2,132 +2,162 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15709C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A6BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D786620DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C2C2078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:53:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ce1e8K/c"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eEicFJQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgH1Hwh (ORCPT
+        id S1728567AbgH1HxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:52:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727971AbgH1Hwg (ORCPT
+        Fri, 28 Aug 2020 03:53:05 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:14627 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbgH1HxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:52:36 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D0AC061264;
-        Fri, 28 Aug 2020 00:52:35 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id e14so52432ybf.4;
-        Fri, 28 Aug 2020 00:52:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=03SA6QLBtK3IQ4zuCDRLpEPFR1JjLUS7ypF2jRpTUus=;
-        b=Ce1e8K/caM4JvW4I6IlYWAdAdDrcDJjdidgiSSw3u1U2l7HQ3a2kOmczvvbkYGVOq4
-         erB9J73UZGJvV7XHy/RkrrCUhQw7V1lydp0AdbQo+pNvzOBgNLswc2RgdPqsMF58aheA
-         9Lrv0ex7Uj91QMqENp5Yv4cuToIFPSGWs2lkiKSxnpsSTe7Eq5ZlVjBnVhNFGFh4cIr2
-         jpoD9oU/YgAXieicPCZprdmCdMY/V0jc1YbWHaplTsQgOGXc03HEMZkGKzhEBMjjUyat
-         1huT8whAgyVZhNrXbK4bevxXwjsD6gaR28Big84Mi8vP/bi7JfPYO85puDNU0UBxCGih
-         WPdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=03SA6QLBtK3IQ4zuCDRLpEPFR1JjLUS7ypF2jRpTUus=;
-        b=EX4UI+f/S84rGP2WHMLxM04koDaErZ9EPWQ5qOUoJclQtR2QI0O5Q//jDGUd6nqcnS
-         V1gJGij/1W0ILzC8lwwYZvKQhxBrSpHG5TOdXb93Aeo8RnLenRphVgVQQ/iDAnS4Q7dO
-         ZyQW+qCWl/n1l7r5/83xDdn4HYF83xAh/gVkTesWaaLP3xo97H+otrQIZn8BI3f3pvZD
-         8WI16IcR7knuyNBT2YKoVqdqYOOGiEr9ZChfkbTlkJmK0FUvja2mmmz42rVhoJ+IIuZp
-         5XlCvQx6Q7eZt57nk6hhy7wtYPGRQF4qmRa2qfJlIKw601eF+mF7vCslyMPe8sq59XA3
-         i1rw==
-X-Gm-Message-State: AOAM533xsc1R/mFDOL702DqBJ59U3h2gmJkARR833VqNC7Wifg1I9O3H
-        BmrOAtYSEtPpa/igou+OzMr0YIavOypV8x70Ios=
-X-Google-Smtp-Source: ABdhPJxKaH3Rnxdft6nzQd34AAzAxueOyLTpZiz6Sebv+w7rBi0ECVdDr/vmwjJ5qeTeRA2GnUZW3Taq1UeJFdtPzj4=
-X-Received: by 2002:a25:2f4d:: with SMTP id v74mr720966ybv.401.1598601154899;
- Fri, 28 Aug 2020 00:52:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CA+V-a8t-HHWeo4zwnTuyZHnhc8u_aXqt_KZHr1trnXQB15Jj6A@mail.gmail.com> <TY2PR01MB36923A0548AAE7E0249042AFD8520@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY2PR01MB36923A0548AAE7E0249042AFD8520@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 28 Aug 2020 08:52:08 +0100
-Message-ID: <CA+V-a8v5sFVGVxNKDXvg8w=FeZnGdyV8q9deBuAaVMsx0bDcwg@mail.gmail.com>
-Subject: Re: [PATCH 08/20] dt-bindings: usb: usb-xhci: Document r8a774e1 support
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        alsa-devel <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 28 Aug 2020 03:53:04 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200828075302epoutp02e3d53d205f364bb2d03cf8169a06bba5~vX05OVvc21988019880epoutp02d
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:53:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200828075302epoutp02e3d53d205f364bb2d03cf8169a06bba5~vX05OVvc21988019880epoutp02d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598601182;
+        bh=jlBq3SJBm+2JHzvffYyFzkO+MdGJprsKzr0wdIZ+Y+c=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=eEicFJQUnyXV529QXiM3fjpKV42RFc7JUb2H23aGVzuhO/SF2CYbtYCnq1jDPL7V6
+         CNqS9ZO39z9eJg5i7COH5O9c03Nz/SsbD5NeDrohQRAuf5mlwl6ehBui6v85Ni5G5/
+         Wr30kme7j1O9KCFuqvrSmrf/Lkya+cLcxNWnUOZs=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p3.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200828075302epcas1p389f00dda9db2d94c66ebdde0e2ec6aba~vX04zhsLA1963019630epcas1p3T;
+        Fri, 28 Aug 2020 07:53:02 +0000 (GMT)
+Mime-Version: 1.0
+Subject: [PATCH v9 1/4] scsi: ufs: Add HPB feature related parameters
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Daejun Park <daejun7.park@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <963815509.21598598782155.JavaMail.epsvc@epcpadp2>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <963815509.21598601182211.JavaMail.epsvc@epcpadp2>
+Date:   Fri, 28 Aug 2020 16:17:04 +0900
+X-CMS-MailID: 20200828071704epcms2p6962ce22625d5c1cb605e86813842245c
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200828070950epcms2p5470bd43374be18d184dd802da09e73c8
+References: <963815509.21598598782155.JavaMail.epsvc@epcpadp2>
+        <CGME20200828070950epcms2p5470bd43374be18d184dd802da09e73c8@epcms2p6>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shimoda-san
+This is a patch for parameters to be used for HPB feature.
 
-On Fri, Aug 28, 2020 at 2:11 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
->
-> Hi Lad-san,
->
-> > From: Lad, Prabhakar, Sent: Friday, August 28, 2020 2:15 AM
-> >
-> > Hi Greg,
-> >
-> > On Thu, Jul 16, 2020 at 6:19 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > >
-> > > Document r8a774e1 xhci support. The driver will use the fallback
-> > > compatible string "renesas,rcar-gen3-xhci", therefore no driver
-> > > change is needed.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > Gentle ping.
->
-> Thank you for the ping. However, since the latest kernel has renesas,usb-xhci.yaml,
-> would you fix the patch?
->
-Thank you for pointing out, I have now posted a v2 [1] now. (I missed
-out Geert's comment earlier for this patch)
+Acked-by: Avri Altman <Avri.Altman@wdc.com>
+Reviewed-by: Can Guo <cang@codeaurora.org>
+Tested-by: Bean Huo <beanhuo@micron.com>
+Signed-off-by: Daejun Park <daejun7.park@samsung.com>
+---
+ drivers/scsi/ufs/ufs.h | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-[1] https://patchwork.kernel.org/patch/11742289/
+diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
+index f8ab16f30fdc..e879ac34c065 100644
+--- a/drivers/scsi/ufs/ufs.h
++++ b/drivers/scsi/ufs/ufs.h
+@@ -122,6 +122,7 @@ enum flag_idn {
+ 	QUERY_FLAG_IDN_WB_EN                            = 0x0E,
+ 	QUERY_FLAG_IDN_WB_BUFF_FLUSH_EN                 = 0x0F,
+ 	QUERY_FLAG_IDN_WB_BUFF_FLUSH_DURING_HIBERN8     = 0x10,
++	QUERY_FLAG_IDN_HPB_RESET                        = 0x11,
+ };
+ 
+ /* Attribute idn for Query requests */
+@@ -195,6 +196,9 @@ enum unit_desc_param {
+ 	UNIT_DESC_PARAM_PHY_MEM_RSRC_CNT	= 0x18,
+ 	UNIT_DESC_PARAM_CTX_CAPABILITIES	= 0x20,
+ 	UNIT_DESC_PARAM_LARGE_UNIT_SIZE_M1	= 0x22,
++	UNIT_DESC_HPB_LU_MAX_ACTIVE_REGIONS	= 0x23,
++	UNIT_DESC_HPB_LU_PIN_REGION_START_OFFSET	= 0x25,
++	UNIT_DESC_HPB_LU_NUM_PIN_REGIONS	= 0x27,
+ 	UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS	= 0x29,
+ };
+ 
+@@ -235,6 +239,8 @@ enum device_desc_param {
+ 	DEVICE_DESC_PARAM_PSA_MAX_DATA		= 0x25,
+ 	DEVICE_DESC_PARAM_PSA_TMT		= 0x29,
+ 	DEVICE_DESC_PARAM_PRDCT_REV		= 0x2A,
++	DEVICE_DESC_PARAM_HPB_VER		= 0x40,
++	DEVICE_DESC_PARAM_HPB_CONTROL		= 0x42,
+ 	DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP	= 0x4F,
+ 	DEVICE_DESC_PARAM_WB_PRESRV_USRSPC_EN	= 0x53,
+ 	DEVICE_DESC_PARAM_WB_TYPE		= 0x54,
+@@ -283,6 +289,10 @@ enum geometry_desc_param {
+ 	GEOMETRY_DESC_PARAM_ENM4_MAX_NUM_UNITS	= 0x3E,
+ 	GEOMETRY_DESC_PARAM_ENM4_CAP_ADJ_FCTR	= 0x42,
+ 	GEOMETRY_DESC_PARAM_OPT_LOG_BLK_SIZE	= 0x44,
++	GEOMETRY_DESC_PARAM_HPB_REGION_SIZE	= 0x48,
++	GEOMETRY_DESC_PARAM_HPB_NUMBER_LU	= 0x49,
++	GEOMETRY_DESC_PARAM_HPB_SUBREGION_SIZE	= 0x4A,
++	GEOMETRY_DESC_PARAM_HPB_MAX_ACTIVE_REGS	= 0x4B,
+ 	GEOMETRY_DESC_PARAM_WB_MAX_ALLOC_UNITS	= 0x4F,
+ 	GEOMETRY_DESC_PARAM_WB_MAX_WB_LUNS	= 0x53,
+ 	GEOMETRY_DESC_PARAM_WB_BUFF_CAP_ADJ	= 0x54,
+@@ -327,8 +337,10 @@ enum {
+ 
+ /* Possible values for dExtendedUFSFeaturesSupport */
+ enum {
++	UFS_DEV_HPB_SUPPORT		= BIT(7),
+ 	UFS_DEV_WRITE_BOOSTER_SUP	= BIT(8),
+ };
++#define UFS_DEV_HPB_SUPPORT_VERSION		0x310
+ 
+ #define POWER_DESC_MAX_SIZE			0x62
+ #define POWER_DESC_MAX_ACTV_ICC_LVLS		16
+@@ -537,6 +549,7 @@ struct ufs_dev_info {
+ 	u8 *model;
+ 	u16 wspecversion;
+ 	u32 clk_gating_wait_us;
++	u8 b_ufs_feature_sup;
+ 	u32 d_ext_ufs_feature_sup;
+ 	u8 b_wb_buffer_type;
+ 	u32 d_wb_alloc_units;
+-- 
+2.17.1
 
-Cheers,
-Prabhakar
+
