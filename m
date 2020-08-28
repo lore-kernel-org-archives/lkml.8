@@ -2,162 +2,215 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A6BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D21FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93C2C2078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22E5F2078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:53:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eEicFJQU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="B4Z8Dja0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbgH1HxF (ORCPT
+        id S1728601AbgH1HxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:53:05 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:14627 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbgH1HxE (ORCPT
+        Fri, 28 Aug 2020 03:53:14 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:42936 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728550AbgH1HxI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:53:04 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200828075302epoutp02e3d53d205f364bb2d03cf8169a06bba5~vX05OVvc21988019880epoutp02d
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:53:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200828075302epoutp02e3d53d205f364bb2d03cf8169a06bba5~vX05OVvc21988019880epoutp02d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598601182;
-        bh=jlBq3SJBm+2JHzvffYyFzkO+MdGJprsKzr0wdIZ+Y+c=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=eEicFJQUnyXV529QXiM3fjpKV42RFc7JUb2H23aGVzuhO/SF2CYbtYCnq1jDPL7V6
-         CNqS9ZO39z9eJg5i7COH5O9c03Nz/SsbD5NeDrohQRAuf5mlwl6ehBui6v85Ni5G5/
-         Wr30kme7j1O9KCFuqvrSmrf/Lkya+cLcxNWnUOZs=
-Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p3.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200828075302epcas1p389f00dda9db2d94c66ebdde0e2ec6aba~vX04zhsLA1963019630epcas1p3T;
-        Fri, 28 Aug 2020 07:53:02 +0000 (GMT)
-Mime-Version: 1.0
-Subject: [PATCH v9 1/4] scsi: ufs: Add HPB feature related parameters
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Daejun Park <daejun7.park@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <963815509.21598598782155.JavaMail.epsvc@epcpadp2>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <963815509.21598601182211.JavaMail.epsvc@epcpadp2>
-Date:   Fri, 28 Aug 2020 16:17:04 +0900
-X-CMS-MailID: 20200828071704epcms2p6962ce22625d5c1cb605e86813842245c
+        Fri, 28 Aug 2020 03:53:08 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598601188; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=G2ggMj5USA59n90K2ID7r0Ej+GA28vu9iBfIu7XutmM=;
+ b=B4Z8Dja0aghVw4c3omeDvtgd7W0koByj2a7S0BODZAm0KRz3FvoK1Chzx679YCGA8DCan29o
+ iklMmFvpnrGbp3NgbdvKmu4m5H+sPFKnjyfQpXq+udmWYSoAOSfNzujbiw525JWqhI+FA0NF
+ zidxzcun9yUp3BIZXhHbhYJV0vA=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5f48b7e34b620c27d30f25d3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 28 Aug 2020 07:53:07
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 84AACC4339C; Fri, 28 Aug 2020 07:53:07 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: wgong)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 52341C433C6;
+        Fri, 28 Aug 2020 07:53:06 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200828070950epcms2p5470bd43374be18d184dd802da09e73c8
-References: <963815509.21598598782155.JavaMail.epsvc@epcpadp2>
-        <CGME20200828070950epcms2p5470bd43374be18d184dd802da09e73c8@epcms2p6>
+Date:   Fri, 28 Aug 2020 15:53:06 +0800
+From:   Wen Gong <wgong@codeaurora.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-kernel-owner@vger.kernel.org, ath10k@lists.infradead.org,
+        ath11k@lists.infradead.org, abhishekpandit@google.com,
+        briannorris@google.com, drinkcat@google.com, tientzu@google.com
+Subject: Re: [for-next][PATCH 2/2] tracing: Use temp buffer when filtering
+ events
+In-Reply-To: <20160504135241.308454993@goodmis.org>
+References: <20160504135202.422290539@goodmis.org>
+ <20160504135241.308454993@goodmis.org>
+Message-ID: <b504b3d7e989cae108669a0cd3072454@codeaurora.org>
+X-Sender: wgong@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a patch for parameters to be used for HPB feature.
+On 2016-05-04 21:52, Steven Rostedt wrote:
+> From: "Steven Rostedt (Red Hat)" <rostedt@goodmis.org>
+> 
+> Filtering of events requires the data to be written to the ring buffer
+> before it can be decided to filter or not. This is because the 
+> parameters of
+> the filter are based on the result that is written to the ring buffer 
+> and
+> not on the parameters that are passed into the trace functions.
+> 
+> The ftrace ring buffer is optimized for writing into the ring buffer 
+> and
+> committing. The discard procedure used when filtering decides the event
+> should be discarded is much more heavy weight. Thus, using a temporary
+> filter when filtering events can speed things up drastically.
+> 
+> Without a temp buffer we have:
+> 
+>  # trace-cmd start -p nop
+>  # perf stat -r 10 hackbench 50
+>        0.790706626 seconds time elapsed ( +-  0.71% )
+> 
+>  # trace-cmd start -e all
+>  # perf stat -r 10 hackbench 50
+>        1.566904059 seconds time elapsed ( +-  0.27% )
+> 
+>  # trace-cmd start -e all -f 'common_preempt_count==20'
+>  # perf stat -r 10 hackbench 50
+>        1.690598511 seconds time elapsed ( +-  0.19% )
+> 
+>  # trace-cmd start -e all -f 'common_preempt_count!=20'
+>  # perf stat -r 10 hackbench 50
+>        1.707486364 seconds time elapsed ( +-  0.30% )
+> 
+> The first run above is without any tracing, just to get a based figure.
+> hackbench takes ~0.79 seconds to run on the system.
+> 
+> The second run enables tracing all events where nothing is filtered. 
+> This
+> increases the time by 100% and hackbench takes 1.57 seconds to run.
+> 
+> The third run filters all events where the preempt count will equal 
+> "20"
+> (this should never happen) thus all events are discarded. This takes 
+> 1.69
+> seconds to run. This is 10% slower than just committing the events!
+> 
+> The last run enables all events and filters where the filter will 
+> commit all
+> events, and this takes 1.70 seconds to run. The filtering overhead is
+> approximately 10%. Thus, the discard and commit of an event from the 
+> ring
+> buffer may be about the same time.
+> 
+> With this patch, the numbers change:
+> 
+>  # trace-cmd start -p nop
+>  # perf stat -r 10 hackbench 50
+>        0.778233033 seconds time elapsed ( +-  0.38% )
+> 
+>  # trace-cmd start -e all
+>  # perf stat -r 10 hackbench 50
+>        1.582102692 seconds time elapsed ( +-  0.28% )
+> 
+>  # trace-cmd start -e all -f 'common_preempt_count==20'
+>  # perf stat -r 10 hackbench 50
+>        1.309230710 seconds time elapsed ( +-  0.22% )
+> 
+>  # trace-cmd start -e all -f 'common_preempt_count!=20'
+>  # perf stat -r 10 hackbench 50
+>        1.786001924 seconds time elapsed ( +-  0.20% )
+> 
+> The first run is again the base with no tracing.
+> 
+> The second run is all tracing with no filtering. It is a little slower, 
+> but
+> that may be well within the noise.
+> 
+> The third run shows that discarding all events only took 1.3 seconds. 
+> This
+> is a speed up of 23%! The discard is much faster than even the commit.
+> 
+> The one downside is shown in the last run. Events that are not 
+> discarded by
+> the filter will take longer to add, this is due to the extra copy of 
+> the
+> event.
+> 
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace.c               | 154 
+> +++++++++++++++++++++++++++++++++++--
+>  kernel/trace/trace.h               |  19 ++++-
+>  kernel/trace/trace_events.c        |  10 +++
+>  kernel/trace/trace_events_filter.c |  10 +++
+>  4 files changed, 185 insertions(+), 8 deletions(-)
+> 
+...
+> @@ -1695,8 +1820,23 @@ trace_event_buffer_lock_reserve(struct
+> ring_buffer **current_rb,
+>  			  unsigned long flags, int pc)
+>  {
+>  	struct ring_buffer_event *entry;
+> +	int val;
+> 
+>  	*current_rb = trace_file->tr->trace_buffer.buffer;
+> +
+> +	if ((trace_file->flags &
+> +	     (EVENT_FILE_FL_SOFT_DISABLED | EVENT_FILE_FL_FILTERED)) &&
+> +	    (entry = this_cpu_read(trace_buffered_event))) {
+> +		/* Try to use the per cpu buffer first */
+> +		val = this_cpu_inc_return(trace_buffered_event_cnt);
+> +		if (val == 1) {
+> +			trace_event_setup(entry, type, flags, pc);
+> +			entry->array[0] = len;
+> +			return entry;
+> +		}
+> +		this_cpu_dec(trace_buffered_event_cnt);
+> +	}
+> +
+>  	entry = trace_buffer_lock_reserve(*current_rb,
+>  					 type, len, flags, pc);
+>  	/*
+this patch commit id is : 0fc1b09ff1ff404ddf753f5ffa5cd0adc8fdcdc9 which 
+has upstream.
 
-Acked-by: Avri Altman <Avri.Altman@wdc.com>
-Reviewed-by: Can Guo <cang@codeaurora.org>
-Tested-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Daejun Park <daejun7.park@samsung.com>
----
- drivers/scsi/ufs/ufs.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+how much size is the per cpu buffer?
+seems it is initilized in trace_buffered_event_enable,
+it is only 1 page size as below:
+void trace_buffered_event_enable(void)
+{
+...
+	for_each_tracing_cpu(cpu) {
+		page = alloc_pages_node(cpu_to_node(cpu),
+					GFP_KERNEL | __GFP_NORETRY, 0);
+If the size of buffer to trace is more than 1 page, such as 46680, then 
+it trigger kernel crash/panic in my case while run trace-cmd.
+After debugging, the trace_file->flags in 
+trace_event_buffer_lock_reserve is 0x40b while run trace-cmd, and it is 
+0x403 while collecting ftrace log.
 
-diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index f8ab16f30fdc..e879ac34c065 100644
---- a/drivers/scsi/ufs/ufs.h
-+++ b/drivers/scsi/ufs/ufs.h
-@@ -122,6 +122,7 @@ enum flag_idn {
- 	QUERY_FLAG_IDN_WB_EN                            = 0x0E,
- 	QUERY_FLAG_IDN_WB_BUFF_FLUSH_EN                 = 0x0F,
- 	QUERY_FLAG_IDN_WB_BUFF_FLUSH_DURING_HIBERN8     = 0x10,
-+	QUERY_FLAG_IDN_HPB_RESET                        = 0x11,
- };
- 
- /* Attribute idn for Query requests */
-@@ -195,6 +196,9 @@ enum unit_desc_param {
- 	UNIT_DESC_PARAM_PHY_MEM_RSRC_CNT	= 0x18,
- 	UNIT_DESC_PARAM_CTX_CAPABILITIES	= 0x20,
- 	UNIT_DESC_PARAM_LARGE_UNIT_SIZE_M1	= 0x22,
-+	UNIT_DESC_HPB_LU_MAX_ACTIVE_REGIONS	= 0x23,
-+	UNIT_DESC_HPB_LU_PIN_REGION_START_OFFSET	= 0x25,
-+	UNIT_DESC_HPB_LU_NUM_PIN_REGIONS	= 0x27,
- 	UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS	= 0x29,
- };
- 
-@@ -235,6 +239,8 @@ enum device_desc_param {
- 	DEVICE_DESC_PARAM_PSA_MAX_DATA		= 0x25,
- 	DEVICE_DESC_PARAM_PSA_TMT		= 0x29,
- 	DEVICE_DESC_PARAM_PRDCT_REV		= 0x2A,
-+	DEVICE_DESC_PARAM_HPB_VER		= 0x40,
-+	DEVICE_DESC_PARAM_HPB_CONTROL		= 0x42,
- 	DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP	= 0x4F,
- 	DEVICE_DESC_PARAM_WB_PRESRV_USRSPC_EN	= 0x53,
- 	DEVICE_DESC_PARAM_WB_TYPE		= 0x54,
-@@ -283,6 +289,10 @@ enum geometry_desc_param {
- 	GEOMETRY_DESC_PARAM_ENM4_MAX_NUM_UNITS	= 0x3E,
- 	GEOMETRY_DESC_PARAM_ENM4_CAP_ADJ_FCTR	= 0x42,
- 	GEOMETRY_DESC_PARAM_OPT_LOG_BLK_SIZE	= 0x44,
-+	GEOMETRY_DESC_PARAM_HPB_REGION_SIZE	= 0x48,
-+	GEOMETRY_DESC_PARAM_HPB_NUMBER_LU	= 0x49,
-+	GEOMETRY_DESC_PARAM_HPB_SUBREGION_SIZE	= 0x4A,
-+	GEOMETRY_DESC_PARAM_HPB_MAX_ACTIVE_REGS	= 0x4B,
- 	GEOMETRY_DESC_PARAM_WB_MAX_ALLOC_UNITS	= 0x4F,
- 	GEOMETRY_DESC_PARAM_WB_MAX_WB_LUNS	= 0x53,
- 	GEOMETRY_DESC_PARAM_WB_BUFF_CAP_ADJ	= 0x54,
-@@ -327,8 +337,10 @@ enum {
- 
- /* Possible values for dExtendedUFSFeaturesSupport */
- enum {
-+	UFS_DEV_HPB_SUPPORT		= BIT(7),
- 	UFS_DEV_WRITE_BOOSTER_SUP	= BIT(8),
- };
-+#define UFS_DEV_HPB_SUPPORT_VERSION		0x310
- 
- #define POWER_DESC_MAX_SIZE			0x62
- #define POWER_DESC_MAX_ACTV_ICC_LVLS		16
-@@ -537,6 +549,7 @@ struct ufs_dev_info {
- 	u8 *model;
- 	u16 wspecversion;
- 	u32 clk_gating_wait_us;
-+	u8 b_ufs_feature_sup;
- 	u32 d_ext_ufs_feature_sup;
- 	u8 b_wb_buffer_type;
- 	u32 d_wb_alloc_units;
--- 
-2.17.1
-
-
+Is it have any operation to disable this patch dynamically?
