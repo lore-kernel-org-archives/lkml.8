@@ -2,89 +2,165 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59450C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 03:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D3AC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 03:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C866206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 03:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E54620848
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 03:26:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gw03Ya3L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgH1DVt (ORCPT
+        id S1728041AbgH1D0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 23:21:49 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:3144 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728015AbgH1DVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 23:21:46 -0400
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 229623A5125A796D7393;
-        Fri, 28 Aug 2020 11:16:22 +0800 (CST)
-Received: from [10.174.61.242] (10.174.61.242) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Fri, 28 Aug 2020 11:16:22 +0800
-Subject: Re: [PATCH net-next v1 3/3] hinic: add support to query function
- table
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
-        <chiqijun@huawei.com>
-References: <20200827111321.24272-1-luobin9@huawei.com>
- <20200827111321.24272-4-luobin9@huawei.com>
- <20200827124404.496ff40b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   "luobin (L)" <luobin9@huawei.com>
-Message-ID: <ef510fbe-8b73-a50e-445f-2b3771072529@huawei.com>
-Date:   Fri, 28 Aug 2020 11:16:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 27 Aug 2020 23:26:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbgH1D0g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 23:26:36 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F0BEC061264;
+        Thu, 27 Aug 2020 20:26:36 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u128so5100867pfb.6;
+        Thu, 27 Aug 2020 20:26:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=iBQhZHSuHwT2I3fZ7mC/MttQdOOhPQb2HUpxN0OEuwE=;
+        b=Gw03Ya3LWIjg/S6j49TxS1k3q1026Pk4BNLPwKO26SSWjE34vMZizuprKVLBay9uzz
+         wwo/8aeJGTNoCjFRBRQ8zRhq03IsFKZ0NyuKmMqXky6p+6pL9yDXOVwtpsnurjtk0rF1
+         6pJXsptIhO013w3iLwhmEO/sFrFVliupbYVeEgvwGi4uFb8Va7qC2tl4egXrrGj5rri1
+         cvzf9XTosoWpIQsQDJIjFKC8tUGED3nFcKpj+x4VqNXn4vBYg5zZDWkCNdMfewIpjHwq
+         exlmDyE+n7zFp00ZNHuaToSJC3u3CDsDQodgGERqq97yvEXsJdUFe0S86QVq9YGjLS9r
+         CqmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=iBQhZHSuHwT2I3fZ7mC/MttQdOOhPQb2HUpxN0OEuwE=;
+        b=B3m/mKs0EQ7zqs/X+z37sHNhzPYFhTF6H9G5NPf1+9MWC3FF32VfkMmIq9DhWpCOMp
+         Rlq75tbSo8NCAxZTAxIxRDoDRuJpgJ9d2nnNxrMoiNLcAAQwBXJkr4y8WqG4+iN+qbtR
+         osBYTLYUfmyyOE1Aq+mS0BFKt51XgXYmDCNZF4QfeLMBQKQJmEwfoRIzEUwO0e8UiCCB
+         gPqVf5zbxa/kn9TyguiqruRMN00Av1nA1Cdr0mf5BUE1PHxs/nRiCnSR11GEVRd41taQ
+         PoGNzcxjfau2J1piVyTiYfwZyZXsTBA0zG94ZoSjFE7WDHJ5Gh6DBToHyk160qsO9yth
+         LNSg==
+X-Gm-Message-State: AOAM530/KC0//qpY4NmYHoEPyZ9QkKy3JB3w5olrODTIxDlVLdTaQCN9
+        VNHcOrXkeCCS+h5JMKTToBc=
+X-Google-Smtp-Source: ABdhPJyIan9x/B9Rk3wk3F8CelTdZ9oXTLM1WR4tobWEXkcK+Ab2CYk+omSEesgRS98XsZ4j+mL2qA==
+X-Received: by 2002:a65:6545:: with SMTP id a5mr17344497pgw.43.1598585195581;
+        Thu, 27 Aug 2020 20:26:35 -0700 (PDT)
+Received: from localhost (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id b20sm4585699pfp.140.2020.08.27.20.26.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 20:26:34 -0700 (PDT)
+Date:   Fri, 28 Aug 2020 13:26:28 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v3] mm: Fix kthread_use_mm() vs TLB invalidate
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        peterz@infradead.org, linux-arch@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>, axboe@kernel.dk,
+        hch@lst.de, jannh@google.com, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, luto@amacapital.net,
+        mathieu.desnoyers@efficios.com, torvalds@linux-foundation.org,
+        will@kernel.org
+References: <20200721154106.GE10769@hirez.programming.kicks-ass.net>
+        <87y2m8muag.fsf@linux.ibm.com>
+        <20200821130445.GP1362448@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200821130445.GP1362448@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200827124404.496ff40b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.61.242]
-X-ClientProxiedBy: dggeme718-chm.china.huawei.com (10.1.199.114) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+Message-Id: <1598583976.kyraed50wg.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/28 3:44, Jakub Kicinski wrote:
-> On Thu, 27 Aug 2020 19:13:21 +0800 Luo bin wrote:
->> +	switch (idx) {
->> +	case VALID:
->> +		return funcfg_table_elem->dw0.bs.valid;
->> +	case RX_MODE:
->> +		return funcfg_table_elem->dw0.bs.nic_rx_mode;
->> +	case MTU:
->> +		return funcfg_table_elem->dw1.bs.mtu;
->> +	case VLAN_MODE:
->> +		return funcfg_table_elem->dw1.bs.vlan_mode;
->> +	case VLAN_ID:
->> +		return funcfg_table_elem->dw1.bs.vlan_id;
->> +	case RQ_DEPTH:
->> +		return funcfg_table_elem->dw13.bs.cfg_rq_depth;
->> +	case QUEUE_NUM:
->> +		return funcfg_table_elem->dw13.bs.cfg_q_num;
-> 
-> The first two patches look fairly unobjectionable to me, but here the
-> information does not seem that driver-specific. What's vlan_mode, and
-> vlan_id in the context of PF? Why expose mtu, is it different than
-> netdev mtu? What's valid? rq_depth?
-> .
-> 
-The vlan_mode and vlan_id in function table are provided for VF in QinQ scenario
-and they are useless for PF. Querying VF's function table is unsupported now, so
-there is no need to expose vlan_id and vlan mode and I'll remove them in my next
-patchset. The function table is saved in hw and we expose the mtu to ensure the
-mtu saved in hw is same with netdev mtu. The valid filed indicates whether this
-function is enabled or not and the hw can judge whether the RQ buffer in host is
-sufficient by comparing the values of rq depth, pi and ci.
+Excerpts from peterz@infradead.org's message of August 21, 2020 11:04 pm:
+> On Fri, Aug 21, 2020 at 11:09:51AM +0530, Aneesh Kumar K.V wrote:
+>> Peter Zijlstra <peterz@infradead.org> writes:
+>>=20
+>> > For SMP systems using IPI based TLB invalidation, looking at
+>> > current->active_mm is entirely reasonable. This then presents the
+>> > following race condition:
+>> >
+>> >
+>> >   CPU0			CPU1
+>> >
+>> >   flush_tlb_mm(mm)	use_mm(mm)
+>> >     <send-IPI>
+>> > 			  tsk->active_mm =3D mm;
+>> > 			  <IPI>
+>> > 			    if (tsk->active_mm =3D=3D mm)
+>> > 			      // flush TLBs
+>> > 			  </IPI>
+>> > 			  switch_mm(old_mm,mm,tsk);
+>> >
+>> >
+>> > Where it is possible the IPI flushed the TLBs for @old_mm, not @mm,
+>> > because the IPI lands before we actually switched.
+>> >
+>> > Avoid this by disabling IRQs across changing ->active_mm and
+>> > switch_mm().
+>> >
+>> > [ There are all sorts of reasons this might be harmless for various
+>> > architecture specific reasons, but best not leave the door open at
+>> > all. ]
+>>=20
+>>=20
+>> Do we have similar race with exec_mmap()? I am looking at exec_mmap()
+>> runnning parallel to do_exit_flush_lazy_tlb(). We can get
+>>=20
+>> 	if (current->active_mm =3D=3D mm) {
+>>=20
+>> true and if we don't disable irq around updating tsk->mm/active_mm we
+>> can end up doing mmdrop on wrong mm?
+>=20
+> exec_mmap() is called after de_thread(), there should not be any mm
+> specific invalidations around I think.
+>=20
+> Then again, CLONE_VM without CLONE_THREAD might still be possible, so
+> yeah, we probably want IRQs disabled there too, just for consistency and
+> general paranoia if nothing else.
 
+The problem is probably not this TLB flushing race, but I think there
+is a lazy tlb race.
 
+  call_usermodehelper()
+    kernel_execve()
+      old_mm =3D current->mm;
+      active_mm =3D current->active_mm;
+      *** preempt *** ---------------------->schedule()
+                                               prev->active_mm =3D NULL;
+					       mmdrop(prev active mm)
+					     ...=20
+                      <----------------------schedule()
+      current->mm =3D mm;
+      current->active_mm =3D mm;
+      if (!old_mm)
+          mmdrop(active_mm); /* double free! */
+
+There's possibly other problematic interleavings. powerpc also has an
+issue with switching away a lazy tlb mm via IPI which is basically the
+same problem so I just illustrate the more general issue.
+
+I think we just make it a rule that these always get updated under
+local_irq_disable, to be safe.
+
+Trouble is we can't just do it, because some architectures can't do
+activate_mm with irqs disabled. ARM and UM, at least. UM can't even
+do preempt_disabled. We can probably change them to make them work,
+I'm not sure what the best way to go is, my first attempt is to require
+activate_mm to do the mm switching and the irq disable as well, but
+I'll need some help from the archs
+
+I'll send out rfcs in a minute.
+
+Thanks,
+Nick
