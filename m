@@ -2,148 +2,121 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D46C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91426C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A02D92087D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3C3207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598643590;
-	bh=xUFISk9C2T5Th/TVRS1zOH9gJGTo5NUogulgUtWd1kU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Ey248CS1ekEvR31dTAErNP+S1LbVLu2YEMNXLp5pEyZSphsHWFJR4FsKKuBa7P2Go
-	 w34q4NIptmvxb7b2K0W9HdNXVqF2MN5dsIsq3csSoEEJcWr2CBn/MQva258CMnWB1e
-	 wGyGrwRHn7pE//7pgy8mO55cgMVLXnX9TNaaV6Qs=
+	s=default; t=1598644204;
+	bh=ZmWodEUcLht7dY6eK4Ys1Tit4phjw4N00FF5dHYOwwk=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=MHGtlC+sMfMOVVO38ZDdcafRvgx6htZ4lYFd4sGrm1hxwBOlpBTecuc7yv3blibZL
+	 dSicrMZT0qkS66yqQOmk+5JkaitFsboXSV5x9uTTNh84q9R2W/EQEmq6Nmw2cd76i+
+	 VNWSqZDGLFs60BTUMAYbDfMchmJ0Vgyb0mLBvVyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbgH1Tjt (ORCPT
+        id S1726322AbgH1TuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 15:39:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725969AbgH1Tjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 15:39:46 -0400
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0FDA2087D
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 19:39:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598643585;
-        bh=xUFISk9C2T5Th/TVRS1zOH9gJGTo5NUogulgUtWd1kU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=N9hZCAXitny7X+xFMoghz/azRkTxxqJGZFJfVUgNxDYJYQcrYH3BO5cNXbM+ukhm1
-         UC5gCezt1fG/ImIewN9HfE4Wd4zSz/KAAZov6JPbCZoojn5jtiBQa1b8sF6+PgXedL
-         LtrMlfbi8Bh1Gg/5eVQ0jIlz6UwPjm4l5v9jHI5c=
-Received: by mail-ot1-f47.google.com with SMTP id 5so181070otp.12
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 12:39:45 -0700 (PDT)
-X-Gm-Message-State: AOAM533CFaZK84bl++E6Lor3VZglFcfmLkUlyOyjGw4j0RPI+8bIXQPg
-        F2Sk39Txwkt5Ivevbl9I7s0lbdL22ozt3Ysz7w==
-X-Google-Smtp-Source: ABdhPJyi4hrkJ9gGCQ7RWa0qmwaJus2XjYIXCWK0Rz7SdHaCJdzgpAplFiv/WVecDA/b30q8ixGX5hi9dJRXZEEjFy8=
-X-Received: by 2002:a05:6830:1d94:: with SMTP id y20mr159768oti.129.1598643585206;
- Fri, 28 Aug 2020 12:39:45 -0700 (PDT)
+        Fri, 28 Aug 2020 15:50:03 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45271 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725979AbgH1TuB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 15:50:01 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 5so206606otp.12;
+        Fri, 28 Aug 2020 12:50:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=V4kU8rE5CwRTb5R/8vCrL617SRo/ITfGbXVpB6N3JKs=;
+        b=pX/9yw8Am5e6ZBmPmU49qUlZSzvAn6D9oVommGJv4/orfNqpWT81Fh4ZTBdf/WDRb6
+         0o7iqaa9c+flIZgmnGnjIOR3/7+2Sw/ZnJowVpkylnABoL40VUGbI8tv8vuFRg6+enTV
+         D5ewPqN1+3jlz2SF1Y1c/+4jJcUHD0Tq4V2u3Qe6gLwswyDLG+GofSE9otg16A75jD3j
+         OG+0iC8KDROcKZgDtZtiudjaxGFjU981UdOdArLkf0LQ38gM7aKcXAeRA8owurcGZ139
+         0dFSJzZiejzlebnH1QA73C4trttzCQJQP2Aw4ncPapUqk6nCAHNKh54cwy0o/elykPWX
+         8w6w==
+X-Gm-Message-State: AOAM530u3E+70lK8LIR04Mo9rG1JYrV3jweDiwc9Xp82Xlh/AGuYQpvo
+        FnJjWqWiWEgsxl2eqr0vFhZTUnDmY8kqnAqNOZ5MR7V1N2U=
+X-Google-Smtp-Source: ABdhPJxTzJbLTgme/kBS4TSGRXCqhBAOsKmy3D3rKmEatSmjplXtjbkxIMnz0pH/V564niLBorliFBWqeDgLBRiAcEA=
+X-Received: by 2002:a9d:7e99:: with SMTP id m25mr204687otp.118.1598644200010;
+ Fri, 28 Aug 2020 12:50:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <1595930879-2478-1-git-send-email-kevin3.tang@gmail.com> <1595930879-2478-2-git-send-email-kevin3.tang@gmail.com>
-In-Reply-To: <1595930879-2478-2-git-send-email-kevin3.tang@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 28 Aug 2020 13:39:34 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKn+=idtoRiSqwSNQwfsiVRSrDSznQXWrpm=RET_hegRw@mail.gmail.com>
-Message-ID: <CAL_JsqKn+=idtoRiSqwSNQwfsiVRSrDSznQXWrpm=RET_hegRw@mail.gmail.com>
-Subject: Re: [PATCH RFC v6 1/6] dt-bindings: display: add Unisoc's drm master bindings
-To:     Kevin Tang <kevin3.tang@gmail.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Lyra Zhang <zhang.lyra@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 28 Aug 2020 21:49:49 +0200
+Message-ID: <CAJZ5v0hYtUUKQmMi4P1-m+R5EDUsbzBySfFMDK6k48QZw2WrqQ@mail.gmail.com>
+Subject: [GIT PULL] Power management fixes for v5.9-rc3
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 4:08 AM Kevin Tang <kevin3.tang@gmail.com> wrote:
->
-> From: Kevin Tang <kevin.tang@unisoc.com>
->
-> The Unisoc DRM master device is a virtual device needed to list all
-> DPU devices or other display interface nodes that comprise the
-> graphics subsystem
->
-> Cc: Orson Zhai <orsonzhai@gmail.com>
-> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
-> Signed-off-by: Kevin Tang <kevin.tang@unisoc.com>
-> ---
->  .../devicetree/bindings/display/sprd/drm.yaml      | 36 ++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/sprd/drm.yaml
+Hi Linus,
 
-If you want bindings reviewed, then you need to Cc
-devicetree@vger.kernel.org. Otherwise you may be waiting until the 6th
-version or later or never.
+Please pull from the tag
 
->
-> diff --git a/Documentation/devicetree/bindings/display/sprd/drm.yaml b/Documentation/devicetree/bindings/display/sprd/drm.yaml
-> new file mode 100644
-> index 0000000..b5792c0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/sprd/drm.yaml
-> @@ -0,0 +1,36 @@
-> +# SPDX-License-Identifier: GPL-2.0
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.9-rc3
 
-New bindings should be dual licensed:
+with top-most commit ef7d960403ecd87276e12b69c26bf0fdd5f21a0e
 
-(GPL-2.0-only OR BSD-2-Clause)
+ Merge branch 'pm-cpufreq'
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/sprd/drm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Unisoc DRM master device
+on top of commit d012a7190fc1fd72ed48911e77ca97ba4521bccd
 
-DRM is a Linux thing and shouldn't be part of a binding.
+ Linux 5.9-rc2
 
-> +
-> +maintainers:
-> +  - Mark Rutland <mark.rutland@arm.com>
+to receive power management fixes for 5.9-rc3.
 
-No, this should be you or someone that knows the h/w.
+These fix the recently added Tegra194 cpufreq driver and the handling
+of devices using runtime PM during system-wide suspend, improve the
+intel_pstate driver documentation and clean up the cpufreq core.
 
-> +
-> +description: |
-> +  The Unisoc DRM master device is a virtual device needed to list all
-> +  DPU devices or other display interface nodes that comprise the
-> +  graphics subsystem.
-> +
-> +properties:
-> +  compatible:
-> +    const: sprd,display-subsystem
-> +
-> +  ports:
-> +    description:
-> +      Should contain a list of phandles pointing to display interface port
-> +      of DPU devices.
-> +
-> +required:
-> +  - compatible
-> +  - ports
-> +
-> +examples:
-> +  - |
-> +    display-subsystem {
-> +        compatible = "sprd,display-subsystem";
-> +        ports = <&dpu_out>;
+Specifics:
 
-We generally try to avoid this virtual node as it doesn't represent
-any h/w. Can't you bind the driver to the DPU directly?
+ - Make the recently added Tegra194 cpufreq driver use
+   read_cpuid_mpir() instead of cpu_logical_map() to avoid
+   exporting logical_cpu_map (Sumit Gupta).
 
-Rob
+ - Drop the automatic system wakeup event reporting for devices
+   with pending runtime-resume requests during system-wide suspend
+   to avoid spurious aborts of the suspend flow (Rafael Wysocki).
+
+ - Fix build warning in the intel_pstate driver documentation and
+   improve the wording in there (Randy Dunlap).
+
+ - Clean up two pieces of code in the cpufreq core (Viresh Kumar).
+
+Thanks!
+
+
+---------------
+
+Rafael J. Wysocki (1):
+      PM: sleep: core: Fix the handling of pending runtime resume requests
+
+Randy Dunlap (1):
+      Documentation: fix pm/intel_pstate build warning and wording
+
+Sumit Gupta (1):
+      cpufreq: replace cpu_logical_map() with read_cpuid_mpir()
+
+Viresh Kumar (2):
+      cpufreq: No need to verify cpufreq_driver in show_scaling_cur_freq()
+      cpufreq: Use WARN_ON_ONCE() for invalid relation
+
+---------------
+
+ Documentation/admin-guide/pm/intel_pstate.rst |  4 ++--
+ drivers/base/power/main.c                     | 16 ++++++++++------
+ drivers/cpufreq/cpufreq.c                     |  3 +--
+ drivers/cpufreq/tegra194-cpufreq.c            | 10 +++++++---
+ include/linux/cpufreq.h                       |  4 ++--
+ 5 files changed, 22 insertions(+), 15 deletions(-)
