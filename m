@@ -2,152 +2,140 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34888C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C5AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBF820872
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:39:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598632780;
-	bh=YVCQjg73RxPTvlTXDUxrWS87exJNOw0r+AtJ4Kjw2bM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Xe/NTXkDYnFWLewwpFPvMrs2FqHIl1C/o8a8bKJh26sDAwMy21G1GXgGitxCsoaMq
-	 ZfTfvJCNty2Vhp2fOkU7N3NSBxVkucT5Ie1WEv7kkADfufC3r84/1LsM4q1k6e3Cnu
-	 8Tb8qo2STNwy13QNUG4gwuoZeWkWpxJG8kOdpTjI=
+	by mail.kernel.org (Postfix) with ESMTP id 54F9020872
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:42:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgH1QjM (ORCPT
+        id S1728182AbgH1Qmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 12:39:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40624 "EHLO mail.kernel.org"
+        Fri, 28 Aug 2020 12:42:40 -0400
+Received: from correo.us.es ([193.147.175.20]:46668 "EHLO mail.us.es"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726524AbgH1QjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 12:39:08 -0400
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1726929AbgH1Qmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 12:42:39 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id D54E518D00F
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 18:42:37 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id C66A0DA704
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 18:42:37 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id B8296DA84F; Fri, 28 Aug 2020 18:42:37 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 89478DA844;
+        Fri, 28 Aug 2020 18:42:35 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Fri, 28 Aug 2020 18:42:35 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (unknown [90.77.255.23])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57F7520872;
-        Fri, 28 Aug 2020 16:39:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598632748;
-        bh=YVCQjg73RxPTvlTXDUxrWS87exJNOw0r+AtJ4Kjw2bM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=OAnMIBUg/35kIR+XHFI3uW81Vhsq5RuiNO8PZO0o+7cScYYcfQFJ/tKoqYInqbOSi
-         dQWnnF3AWY7qf+6NtTYAPh1hjs5+LeMHiPoLIzkFYN69Mx3EDHR9KMKJKlYqzI8jS1
-         aTQbasoMLnPibL/SFcRCQ2iAC1tMlDy4bHOcscvs=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Vineet Gupta <vgupta@synopsys.com>
-Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH] arc: fix memory initialization for systems with two memory banks
-Date:   Fri, 28 Aug 2020 19:39:02 +0300
-Message-Id: <20200828163902.4548-1-rppt@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 51A0642EF4E1;
+        Fri, 28 Aug 2020 18:42:35 +0200 (CEST)
+Date:   Fri, 28 Aug 2020 18:42:34 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Will McVicker <willmcvicker@google.com>
+Cc:     stable@vger.kernel.org,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: [PATCH v3 1/1] netfilter: nat: add a range check for l3/l4
+ protonum
+Message-ID: <20200828164234.GA30990@salvia>
+References: <20200804113711.GA20988@salvia>
+ <20200824193832.853621-1-willmcvicker@google.com>
+ <20200824193832.853621-2-willmcvicker@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824193832.853621-2-willmcvicker@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+Hi Will,
 
-Rework if memory map initialization broke initialization of ARC systems
-with two memory banks. Before these changes, memblock was not aware of
-nodes configuration and the memory map was always allocated from the
-"lowmem" bank. After the addition of node information to memblock, the core
-mm attempts to allocate the memory map for the "highmem" bank from its
-node. The access to this memory using __va() fails because it can be only
-accessed using kmap.
+Given this is for -stable maintainers only, I'd suggest:
 
-Anther problem that was uncovered is that {min,max}_high_pfn are calculated
-from u64 high_mem_start variable which prevents truncation to 32-bit
-physical address and the PFN values are above the node and zone boundaries.
+1) Specify what -stable kernel versions this patch applies to.
+   Explain that this problem is gone since what kernel version.
 
-Use phys_addr_t type for high_mem_start and high_mem_size to ensure
-correspondence between PFNs and highmem zone boundaries and reserve the
-entire highmem bank until mem_init() to avoid accesses to it before highmem
-is enabled.
+2) Maybe clarify that this is only for stable in the patch subject,
+   e.g. [PATCH -stable v3] netfilter: nat: add a range check for l3/l4
 
-Fixes: 51930df5801e ("mm: free_area_init: allow defining max_zone_pfn in descend ing order")
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- arch/arc/mm/init.c | 27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+Otherwise, this -stable maintainers might not identify this patch as
+something that is targetted to them.
 
-diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
-index f886ac69d8ad..3a35b82a718e 100644
---- a/arch/arc/mm/init.c
-+++ b/arch/arc/mm/init.c
-@@ -26,8 +26,8 @@ static unsigned long low_mem_sz;
- 
- #ifdef CONFIG_HIGHMEM
- static unsigned long min_high_pfn, max_high_pfn;
--static u64 high_mem_start;
--static u64 high_mem_sz;
-+static phys_addr_t high_mem_start;
-+static phys_addr_t high_mem_sz;
- #endif
- 
- #ifdef CONFIG_DISCONTIGMEM
-@@ -69,6 +69,7 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
- 		high_mem_sz = size;
- 		in_use = 1;
- 		memblock_add_node(base, size, 1);
-+		memblock_reserve(base, size);
- #endif
- 	}
- 
-@@ -157,7 +158,7 @@ void __init setup_arch_memory(void)
- 	min_high_pfn = PFN_DOWN(high_mem_start);
- 	max_high_pfn = PFN_DOWN(high_mem_start + high_mem_sz);
- 
--	max_zone_pfn[ZONE_HIGHMEM] = max_high_pfn;
-+	max_zone_pfn[ZONE_HIGHMEM] = min_low_pfn;
- 
- 	high_memory = (void *)(min_high_pfn << PAGE_SHIFT);
- 	kmap_init();
-@@ -166,22 +167,26 @@ void __init setup_arch_memory(void)
- 	free_area_init(max_zone_pfn);
- }
- 
--/*
-- * mem_init - initializes memory
-- *
-- * Frees up bootmem
-- * Calculates and displays memory available/used
-- */
--void __init mem_init(void)
-+static void __init highmem_init(void)
- {
- #ifdef CONFIG_HIGHMEM
- 	unsigned long tmp;
- 
--	reset_all_zones_managed_pages();
-+	memblock_free(high_mem_start, high_mem_sz);
- 	for (tmp = min_high_pfn; tmp < max_high_pfn; tmp++)
- 		free_highmem_page(pfn_to_page(tmp));
- #endif
-+}
- 
-+/*
-+ * mem_init - initializes memory
-+ *
-+ * Frees up bootmem
-+ * Calculates and displays memory available/used
-+ */
-+void __init mem_init(void)
-+{
- 	memblock_free_all();
-+	highmem_init();
- 	mem_init_print_info(NULL);
- }
--- 
-2.26.2
+Thanks.
 
+On Mon, Aug 24, 2020 at 07:38:32PM +0000, Will McVicker wrote:
+> The indexes to the nf_nat_l[34]protos arrays come from userspace. So
+> check the tuple's family, e.g. l3num, when creating the conntrack in
+> order to prevent an OOB memory access during setup.  Here is an example
+> kernel panic on 4.14.180 when userspace passes in an index greater than
+> NFPROTO_NUMPROTO.
+> 
+> Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+> Modules linked in:...
+> Process poc (pid: 5614, stack limit = 0x00000000a3933121)
+> CPU: 4 PID: 5614 Comm: poc Tainted: G S      W  O    4.14.180-g051355490483
+> Hardware name: Qualcomm Technologies, Inc. SM8150 V2 PM8150 Google Inc. MSM
+> task: 000000002a3dfffe task.stack: 00000000a3933121
+> pc : __cfi_check_fail+0x1c/0x24
+> lr : __cfi_check_fail+0x1c/0x24
+> ...
+> Call trace:
+> __cfi_check_fail+0x1c/0x24
+> name_to_dev_t+0x0/0x468
+> nfnetlink_parse_nat_setup+0x234/0x258
+> ctnetlink_parse_nat_setup+0x4c/0x228
+> ctnetlink_new_conntrack+0x590/0xc40
+> nfnetlink_rcv_msg+0x31c/0x4d4
+> netlink_rcv_skb+0x100/0x184
+> nfnetlink_rcv+0xf4/0x180
+> netlink_unicast+0x360/0x770
+> netlink_sendmsg+0x5a0/0x6a4
+> ___sys_sendmsg+0x314/0x46c
+> SyS_sendmsg+0xb4/0x108
+> el0_svc_naked+0x34/0x38
+> 
+> Fixes: c1d10adb4a521 ("[NETFILTER]: Add ctnetlink port for nf_conntrack")
+> Signed-off-by: Will McVicker <willmcvicker@google.com>
+> ---
+>  net/netfilter/nf_conntrack_netlink.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
+> index 31fa94064a62..0b89609a6e9d 100644
+> --- a/net/netfilter/nf_conntrack_netlink.c
+> +++ b/net/netfilter/nf_conntrack_netlink.c
+> @@ -1129,6 +1129,8 @@ ctnetlink_parse_tuple(const struct nlattr * const cda[],
+>  	if (!tb[CTA_TUPLE_IP])
+>  		return -EINVAL;
+>  
+> +	if (l3num != NFPROTO_IPV4 && l3num != NFPROTO_IPV6)
+> +		return -EOPNOTSUPP;
+>  	tuple->src.l3num = l3num;
+>  
+>  	err = ctnetlink_parse_tuple_ip(tb[CTA_TUPLE_IP], tuple);
+> -- 
+> 2.28.0.297.g1956fa8f8d-goog
+> 
