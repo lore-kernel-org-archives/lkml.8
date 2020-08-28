@@ -2,224 +2,99 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F26C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77D1C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 107722078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC802078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:27:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nA+oGgFE"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="XQbewNZ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgH1O1A (ORCPT
+        id S1727786AbgH1O1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:27:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55420 "EHLO
+        Fri, 28 Aug 2020 10:27:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbgH1O0y (ORCPT
+        with ESMTP id S1726571AbgH1O1I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:26:54 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB5B2C061264;
-        Fri, 28 Aug 2020 07:26:53 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id z18so570007pjr.2;
-        Fri, 28 Aug 2020 07:26:53 -0700 (PDT)
+        Fri, 28 Aug 2020 10:27:08 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC6BC06121B
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:27:08 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id j25so1761421ejk.9
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:27:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Njx4yGGdSjtlv4/kUFdctE8YgPuI0pFS31rZi946uIQ=;
-        b=nA+oGgFEUKP7HuALh5OPPl9Z0m9rOwmP1CZHygF6jpe9k/E76nEAwYWVneVkXFBvL2
-         zx2vSaknMZ7Wrhidd/xVhRCoMxQhkYvxCqbV0gbMQxG7CXO2U/DxOYfW9QbTNVJs0tsf
-         RU0vmGrag5gZdm3XB21qMfD+hRUImzpvbw6uTb88awkUFlSIHPlfL+sn2292SJuy1U9o
-         jTsC78H/YD1ZUjRzbH8uKdFcZzlfTsI2fb6dXI4L86vJ7zjB/j8Us/X/6ZsQJMOg81JH
-         o5XoUandHSC+4TB2Lnownu3zMIWqTb9QaVWjTn77z4Pl1xBlHKnyQsKXOsY3EsKhF5aZ
-         Ez6g==
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gl0n7d6uzVJsvRESdz9U6Q5zoOE/mArKZEtiHXlxl+A=;
+        b=XQbewNZ6vbVoEOX8gsi1Rc4oDnVeju8D129HRlTSxUJHzvsLy8S4x4ttUv/Q1UbD7a
+         RvH7dXTmrZ/ZsiQSdTzwNPUfqx9vmGPSqZ3jM1W1LFFJhJpo1s7/hzIpe/U20goTwNkm
+         M/hx0L+ugVWf90stUZL9nRhUG59hiac/rQbow=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Njx4yGGdSjtlv4/kUFdctE8YgPuI0pFS31rZi946uIQ=;
-        b=nZy3wYjgZ+4Jogp3qF0RVXO9QdIP8jdJTkMIXEGj6HcNydA8t028sxCkXYoVC3GN1Q
-         XEuZpKA89Fqd1Dwtc3Sj908u4QHz7t9mCh017EwzpI/VkihZsELElvmLaeWb80G47eeq
-         e6MgBsYXV7J8TQDZMRF44UXDPYEtxYWq6ikrtXURZJislj3waYa9ALSOMhEe5r+lzaON
-         fvB7SgCigXywLRcYGO0M2xbeTinhTDjn1D69b2eG9Pney45zDeVaqbhplDO9lpTb7P/8
-         gBCbxVbQHdZZZQ5nJsI9sKeH3xgMYROFsOlmkFJ5WOH2uTJAhc84HgFhKCwjDFXO1KI9
-         PYUg==
-X-Gm-Message-State: AOAM531mq7KjmEQvZJTLP21E5RAl7T71kwh5TwuSim4kvwgzTge7q/eT
-        NJOvdGERyxxe1zIF3yvoDt/cEx+8CT0=
-X-Google-Smtp-Source: ABdhPJxoosLROmWIIrrYR/FJQR390fu7JN0qXevCw6ceRYDRQ2GyCKRF3czbcTsGLkPuMfS0dExw9w==
-X-Received: by 2002:a17:90b:4ad1:: with SMTP id mh17mr1475021pjb.54.1598624811264;
-        Fri, 28 Aug 2020 07:26:51 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w82sm1938404pfc.183.2020.08.28.07.26.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Aug 2020 07:26:50 -0700 (PDT)
-Subject: Re: [PATCH v1 1/1] driver: watchdog: Add mtk_wdt_init for mediatek
- watchdog hw init
-To:     Freddy Hsin <freddy.hsin@mediatek.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Cc:     wsd_upstream@mediatek.com, chang-an.chen@mediatek.com,
-        kuohong.wang@mediatek.com, chun-hung.wu@mediatek.com
-References: <1598600968-28498-1-git-send-email-freddy.hsin@mediatek.com>
- <1598600968-28498-2-git-send-email-freddy.hsin@mediatek.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <a63e9613-d448-d784-0c60-0fd8d1b9b937@roeck-us.net>
-Date:   Fri, 28 Aug 2020 07:26:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gl0n7d6uzVJsvRESdz9U6Q5zoOE/mArKZEtiHXlxl+A=;
+        b=AZih2TeOxWdbR+YZMIAf8ObaEL0mLQvu1xJJWA8M0InwMw9NbL2OghDcb8bW7Q/lIG
+         +wfz4En7FG03AVavy6zW1waxqYj3sSXz2KCmoIkYNR6RTjZWHAQAnGNY8YKtHYejWBW6
+         9rb9PQUP5x1RD9uf3sp6kQ0z0vzcCRN/CG8V0do9pPEpKRqoxJZKYcCSVLTqGjkQ9RFN
+         sQdnAwPhVEagw9SLCvKwEvVregEecx4WgFu39Uft08Y64h7qd3N8L5yocRmpKjmS8Yk5
+         ttzmW8P2JcqHa+Lw0bs7cmI0LZzmLikS5iZ8O2bIeS6ZV0j6Yvu1kBEZv/u2iEjm/QDV
+         j8fw==
+X-Gm-Message-State: AOAM530m5yaiFoo61oY/1sV/sJ957NfFKPqCBpJrBO0fRRMOU0zxzIPE
+        /bKXczuRXxivVvqb32EBTnn96vZLLmpvevYG8kcEoQ==
+X-Google-Smtp-Source: ABdhPJx/XumYJzNHjGferUrsD62R+WOS937oWA5dXyt/UPWotd7gXol3fLS1WId9GCqY81zy1C7DxVDsLeoyTNi+yYA=
+X-Received: by 2002:a17:906:ca55:: with SMTP id jx21mr2095017ejb.110.1598624827171;
+ Fri, 28 Aug 2020 07:27:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1598600968-28498-2-git-send-email-freddy.hsin@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200819221956.845195-1-vgoyal@redhat.com>
+In-Reply-To: <20200819221956.845195-1-vgoyal@redhat.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Fri, 28 Aug 2020 16:26:55 +0200
+Message-ID: <CAJfpegv5ro-nJTsbx7DMu6=CDXnQ=dzXBRYEKxKc6Bx+Bxmobw@mail.gmail.com>
+Subject: Re: [PATCH v3 00/18] virtiofs: Add DAX support
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        virtio-fs-list <virtio-fs@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/28/20 12:49 AM, Freddy Hsin wrote:
-> 1. add a hw initialization function
-> 2. enable/disable the watchdog depends on the original hw setting
-> 3. set WDOD_HW_RUNNING in start function in order to start
->    kicker after driver probe and clear the bit in stop function
-> 
-> Change-Id: I25aa797f3b88288f26984455e499e599e27f09fa
-> Signed-off-by: Freddy Hsin <freddy.hsin@mediatek.com>
+On Thu, Aug 20, 2020 at 12:21 AM Vivek Goyal <vgoyal@redhat.com> wrote:
+>
+> Hi All,
+>
+> This is V3 of patches. I had posted version v2 version here.
 
-The subject is misleading - what this really does it to honor
-that/if a watchdog is already running. However, WDOG_HW_RUNNING
-should not generally be set/cleared in the start/stop function.
-Also, calling mtk_wdt_stop is pointless if WDT_MODE_EN is not set,
-since clearing WDT_MODE_EN is all it does. On top of that,
-setting WDOG_HW_RUNNING in the probe function requires that
-max_hw_heartbeat_ms is set (instead of max_timeout).
+Pushed to:
 
-So if you really want to honor that the watchdog is already running
-at boot, you would have to initialize max_hw_heartbeat_ms, set
-WDOG_HW_RUNNING explicitly, and possibly call the ping function
-before changing the timeout.
+git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git#dax
+
+Fixed a couple of minor issues, and added two patches:
+
+1. move dax specific code from fuse core to a separate source file
+
+2. move dax specific data, as well as allowing dax to be configured out
+
+I think it would be cleaner to fold these back into the original
+series, but for now I'm just asking for comments and testing.
 
 Thanks,
-Guenter
-
-> ---
->  drivers/watchdog/mtk_wdt.c |   22 +++++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/watchdog/mtk_wdt.c b/drivers/watchdog/mtk_wdt.c
-> index d6a6393..59b5061 100644
-> --- a/drivers/watchdog/mtk_wdt.c
-> +++ b/drivers/watchdog/mtk_wdt.c
-> @@ -57,6 +57,9 @@
->  static bool nowayout = WATCHDOG_NOWAYOUT;
->  static unsigned int timeout;
->  
-> +static int mtk_wdt_start(struct watchdog_device *wdt_dev);
-> +static int mtk_wdt_stop(struct watchdog_device *wdt_dev);
-> +
->  struct mtk_wdt_dev {
->  	struct watchdog_device wdt_dev;
->  	void __iomem *wdt_base;
-> @@ -148,6 +151,19 @@ static int toprgu_register_reset_controller(struct platform_device *pdev,
->  	return ret;
->  }
->  
-> +static int mtk_wdt_init(struct watchdog_device *wdt_dev)
-> +{
-> +	struct mtk_wdt_dev *mtk_wdt = watchdog_get_drvdata(wdt_dev);
-> +	void __iomem *wdt_base;
-> +
-> +	wdt_base = mtk_wdt->wdt_base;
-> +
-> +	if (readl(wdt_base + WDT_MODE) & WDT_MODE_EN)
-> +		mtk_wdt_start(wdt_dev);
-> +	else
-> +		mtk_wdt_stop(wdt_dev);
-> +}
-> +
->  static int mtk_wdt_restart(struct watchdog_device *wdt_dev,
->  			   unsigned long action, void *data)
->  {
-> @@ -206,6 +222,8 @@ static int mtk_wdt_stop(struct watchdog_device *wdt_dev)
->  	reg |= WDT_MODE_KEY;
->  	iowrite32(reg, wdt_base + WDT_MODE);
->  
-> +	clear_bit(WDOG_HW_RUNNING, &wdt_dev->status);
-> +
->  	return 0;
->  }
->  
-> @@ -225,6 +243,8 @@ static int mtk_wdt_start(struct watchdog_device *wdt_dev)
->  	reg |= (WDT_MODE_EN | WDT_MODE_KEY);
->  	iowrite32(reg, wdt_base + WDT_MODE);
->  
-> +	set_bit(WDOG_HW_RUNNING, &wdt_dev->status);
-> +
->  	return 0;
->  }
->  
-> @@ -274,7 +294,7 @@ static int mtk_wdt_probe(struct platform_device *pdev)
->  
->  	watchdog_set_drvdata(&mtk_wdt->wdt_dev, mtk_wdt);
->  
-> -	mtk_wdt_stop(&mtk_wdt->wdt_dev);
-> +	mtk_wdt_init(&mtk_wdt->wdt_dev);
->  
->  	watchdog_stop_on_reboot(&mtk_wdt->wdt_dev);
->  	err = devm_watchdog_register_device(dev, &mtk_wdt->wdt_dev);
-> 
-
+Miklos
