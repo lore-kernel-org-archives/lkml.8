@@ -2,104 +2,95 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFD6C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E84DC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6C8206EB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:45:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zX1fH0mQ"
+	by mail.kernel.org (Postfix) with ESMTP id 5FB25206EB
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598625942;
+	bh=yowQq2NG4nJh8fvUPdSabbCLjACL84gdik/XV+FQwks=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ki2Vna/XOhYCjPzDTyO1yZc335WPgl8Q8n2obWLOwuyJSJyiKr2Vq+Z0NCrNLmcW/
+	 MnQlyyBWaYfVAuCQb91tvaCaVPs9K8luwMQmkU5Qeu5N1tUCwe6cXE8n/o+qXmoQbN
+	 8oFW99RdUPFkOLAji9peXRpJTTg6NfPU314iZWjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgH1Ope (ORCPT
+        id S1727995AbgH1Opk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:45:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58348 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbgH1Opc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:45:32 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 329EFC061232
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:45:31 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id j15so847253lfg.7
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:45:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vp97yrSpR+OTzyZcNc9C0oseKakFgiDLfmVqjpmNJf8=;
-        b=zX1fH0mQLlsOsTkogRPuQVazxLuvENgLGP+kJnv3g7XwwBkQ9LwPr6KCqTPSyamL3z
-         U+ae7wn4s7H9Vzjo3mh56JDMvY1fDhnXioztSrabgO8Z9W3tkgxjYtb0swHQNeqRQ6hq
-         DPiTqMgLwChxwCwItaY/EVXAD4nMXqzMVU8urFXOlw3E2lHCRx1YPFJerTVC7FWVctIJ
-         ZzHutDEnHuGvz2Cs/uV0b89yvMUSuHuGPt9EBQtCfjqb0bblSGtZba5BM1UkTVxYbBNY
-         DkAlccyj3nqVIMBdNZmven7zz1wB3TouEjPDLPOoe9e1qnWbZ5HefJ5G3eH8alDRvByi
-         rH4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vp97yrSpR+OTzyZcNc9C0oseKakFgiDLfmVqjpmNJf8=;
-        b=SUVr7GxjkJNZefizjCx9RlIBWnyl6q7AqBj6hk7RaRgx8TfOhQR9kZDd4sis39R6h/
-         e0kFNtuTW6g1qidHDu/I3yRND8XK13+IiWGpe995eR4xIn7UWMc4smSX0imcBYDq7e5s
-         O8+UhmWK0MhjkvFOLCNNBt+iqudUXLa5BdwuUDLPb2c01GDkzIsTF7mgV5Nn3584iDQt
-         FtNCRKwwAQe3zuOwORbAB8IEpL5irFsnMV5lVYXVQvXPjHqH6JLvO7PLSv5et6H23wiP
-         7CNl9xvej/jnF3hr1SgzZj1O8UZXBbA/leQb8G3ou8MA13I+V6DF73H0Hq67B45JSVyb
-         L9Wg==
-X-Gm-Message-State: AOAM530/4/ZXC2+R6Wc8BVdJufu984OBR5G/3k8HcV53PYksDnt3lL0Q
-        i7o/tnJjo2FcnL1mjIWvgdlDb/KkNKLuLxIfZ8PR3w==
-X-Google-Smtp-Source: ABdhPJx+CL6vs2cc7cG2OqOnis0aSEP4pn2vlz9pcsjIjwaB64AYzwUnTUOBlVOHMmWmYhWcLF5+RGBhHe1v7dy2JVo=
-X-Received: by 2002:ac2:4c05:: with SMTP id t5mr977971lfq.89.1598625930235;
- Fri, 28 Aug 2020 07:45:30 -0700 (PDT)
+        Fri, 28 Aug 2020 10:45:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726563AbgH1Opi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 10:45:38 -0400
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EB282098B;
+        Fri, 28 Aug 2020 14:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598625937;
+        bh=yowQq2NG4nJh8fvUPdSabbCLjACL84gdik/XV+FQwks=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Y0cWCO8ge9hfLF02ZtxEvxosDjutOC87NZ17e7tvvKiu7xWdHLHApsWBZL7yMny06
+         Z0U8NNv6izVo4IiNZpxRhsu7q1m2OwD2+oqig0Drvk4P6psQpZTzTqAXLAQW1F8p8v
+         ahnq83/17+Di0LDUha0RQcU824hIGR3VJe2Sq9RQ=
+Received: by mail-ej1-f44.google.com with SMTP id b17so1836896ejq.8;
+        Fri, 28 Aug 2020 07:45:37 -0700 (PDT)
+X-Gm-Message-State: AOAM533a9xXzjUWUQePDmWt0CXSEGNMECSSnLShxbJF6eXr1g4eDQWp1
+        h/nQAD1mRZq/BJ5IGaFi0hMJ4qLpvWXc9MQt7NM=
+X-Google-Smtp-Source: ABdhPJyT5wwhhF+qi42/UWTQ0IlzMYCJlb70Us/PK8hLjWA6/O+xiz2nwy7hIm9a46c4eumxWu9wAFKPHgG/7RBuIZ0=
+X-Received: by 2002:a17:906:4e03:: with SMTP id z3mr2118388eju.503.1598625936107;
+ Fri, 28 Aug 2020 07:45:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200828130602.42203-1-andre.przywara@arm.com> <20200828130602.42203-8-andre.przywara@arm.com>
-In-Reply-To: <20200828130602.42203-8-andre.przywara@arm.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 16:45:19 +0200
-Message-ID: <CACRpkdZ5er1MBiyYBNBG=7CfDyWv83GJtEURyBKbOHxSNP_GBA@mail.gmail.com>
-Subject: Re: [PATCH 07/10] ARM: dts: arm: Fix SP805 clocks
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+References: <20200827185829.30096-1-krzk@kernel.org> <20200827185829.30096-25-krzk@kernel.org>
+ <CACRpkdZNS6TTpUDEiezORKXu-h0Sdz_dPcCxmR+UbT_Rc+oMpw@mail.gmail.com>
+In-Reply-To: <CACRpkdZNS6TTpUDEiezORKXu-h0Sdz_dPcCxmR+UbT_Rc+oMpw@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 28 Aug 2020 16:45:24 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPej87cqgPtt4it66fp2CgjcyAQULG2260UH60hsnOZu7Q@mail.gmail.com>
+Message-ID: <CAJKOXPej87cqgPtt4it66fp2CgjcyAQULG2260UH60hsnOZu7Q@mail.gmail.com>
+Subject: Re: [PATCH v3 24/27] gpio: Add devm_fwnode_gpiod_get_optional() helpers
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
+        Linux Input <linux-input@vger.kernel.org>,
+        platform-driver-x86 <platform-driver-x86@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 3:06 PM Andre Przywara <andre.przywara@arm.com> wrote:
+On Fri, 28 Aug 2020 at 16:31, Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Thu, Aug 27, 2020 at 9:00 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> > Add devm_fwnode_gpiod_get_optional() and
+> > devm_fwnode_gpiod_get_index_optional() helpers, similar to regular
+> > devm_gpiod optional versions.  Drivers getting GPIOs from a firmware
+> > node might use it to remove some boilerplate code.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>
+> OK then, I suppose this gets merged with the rest?
+>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> The SP805 binding sets the name for the actual watchdog clock to
-> "wdog_clk" (with an underscore).
->
-> Change the name in the DTs for ARM Ltd. platforms to match that. The
-> Linux and U-Boot driver use the *first* clock for this purpose anyway,
-> so it does not break anything.
->
-> For MPS2 we only specify one clock so far, but the binding requires
-> two clocks to be named.
->
-> In practice, Linux would pick a clock named "apb_pclk" for the bus
-> clock, and the Linux and U-Boot SP805 driver would use the first clock
-> to derive the actual watchdog counter frequency. So since currently both
-> are the very same clock, we can just double the clock reference, and add
-> the correct clock-names, to match the binding.
->
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+That's the easiest unless you expect some conflicts. Only one next
+patch depends on this so worst case it could wait one cycle.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+Best regards,
+Krzysztof
