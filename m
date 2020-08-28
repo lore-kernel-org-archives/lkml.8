@@ -6,111 +6,113 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E53C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECACC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE1F20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A45520776
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgH1Rsr (ORCPT
+        id S1727842AbgH1RwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 13:48:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54708 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725814AbgH1Rsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 13:48:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id AFEBBAF19;
-        Fri, 28 Aug 2020 17:49:17 +0000 (UTC)
-Date:   Fri, 28 Aug 2020 19:48:39 +0200
-From:   Borislav Petkov <bp@suse.de>
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
-        Mel Gorman <mgorman@suse.com>
-Subject: Re: [LKP] Re: [x86/mce] 1de08dccd3: will-it-scale.per_process_ops
- -14.1% regression
-Message-ID: <20200828174839.GD19448@zn.tnic>
-References: <20200425114414.GU26573@shao2-debian>
- <20200425130136.GA28245@zn.tnic>
- <20200818082943.GA65567@shbuild999.sh.intel.com>
- <20200818200654.GA21494@agluck-desk2.amr.corp.intel.com>
- <20200819020437.GA2605@shbuild999.sh.intel.com>
- <20200821020259.GA90000@shbuild999.sh.intel.com>
- <20200824151425.GF4794@zn.tnic>
- <20200824153300.GA56944@shbuild999.sh.intel.com>
- <20200824161238.GI4794@zn.tnic>
- <20200825062305.GA83850@shbuild999.sh.intel.com>
+        Fri, 28 Aug 2020 13:52:03 -0400
+Received: from smtprelay0127.hostedemail.com ([216.40.44.127]:49450 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726794AbgH1RwC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 13:52:02 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 9C5C8100E7B4C;
+        Fri, 28 Aug 2020 17:52:00 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: edge90_0e065aa27077
+X-Filterd-Recvd-Size: 3579
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 28 Aug 2020 17:51:56 +0000 (UTC)
+Message-ID: <d8dce79d93363e19ea132ba8237a607a1ff28f09.camel@perches.com>
+Subject: Re: [PATCH v2 09/18] iio: afe: iio-rescale: Simplify with
+ dev_err_probe()
+From:   Joe Perches <joe@perches.com>
+To:     Peter Rosin <peda@axentia.se>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Beniamin Bia <beniamin.bia@analog.com>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-iio@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-amlogic@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Date:   Fri, 28 Aug 2020 10:51:55 -0700
+In-Reply-To: <b7a5a441-cda1-ad02-b723-255231f2bd94@axentia.se>
+References: <20200827192642.1725-1-krzk@kernel.org>
+         <20200827192642.1725-9-krzk@kernel.org>
+         <f4a5777e-fe85-9f3f-4818-f7539f223adc@axentia.se>
+         <20200828062443.GA17343@pi3>
+         <3a5cb59b-454e-2c3f-9f31-43147e843c66@axentia.se>
+         <CAJKOXPcqNE5U82UThzBTPCvucCf2LsCVSfAHE1vnecJGCKCaig@mail.gmail.com>
+         <b7a5a441-cda1-ad02-b723-255231f2bd94@axentia.se>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200825062305.GA83850@shbuild999.sh.intel.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 02:23:05PM +0800, Feng Tang wrote:
-> Also one good news is, we seem to identify the 2 key percpu variables
-> out of the list mentioned in previous email:  
-> 	'arch_freq_scale'
-> 	'tsc_adjust'
+On Fri, 2020-08-28 at 11:39 +0200, Peter Rosin wrote:
+> On 2020-08-28 09:03, Krzysztof Kozlowski wrote:
+> > > > If there is no consensus among discussing people, I find this 100 line
+> > > > more readable, already got review, checkpatch accepts it so if subsystem
+> > > > maintainer likes it, I prefer to leave it like this.
+> > > 
+> > > I'm not impressed by that argument. For the files I have mentioned, it
+> > > does not matter very much to me if you and some random person think that
+> > > 100 columns might *slightly* improve readability.
+> > > 
+> > > Quoting coding-style
+> > > 
+> > >   Statements longer than 80 columns should be broken into sensible chunks,
+> > >   unless exceeding 80 columns significantly increases readability and does
+> > >   not hide information.
+> > > 
+> > > Notice that word? *significantly*
+> > 
+> > Notice also checkpatch change...
 > 
-> These 2 variables are accessed in 2 hot call stacks (for this 288 CPU
-> Xeon Phi platform):
-> 
->   - arch_freq_scale is accessed in scheduler tick 
-> 	  arch_scale_freq_tick+0xaf/0xc0
-> 	  scheduler_tick+0x39/0x100
-> 	  update_process_times+0x3c/0x50
-> 	  tick_sched_handle+0x22/0x60
-> 	  tick_sched_timer+0x37/0x70
-> 	  __hrtimer_run_queues+0xfc/0x2a0
-> 	  hrtimer_interrupt+0x122/0x270
-> 	  smp_apic_timer_interrupt+0x6a/0x150
-> 	  apic_timer_interrupt+0xf/0x20
-> 
->   - tsc_adjust is accessed in idle entrance
-> 	  tsc_verify_tsc_adjust+0xeb/0xf0
-> 	  arch_cpu_idle_enter+0xc/0x20
-> 	  do_idle+0x91/0x280
-> 	  cpu_startup_entry+0x19/0x20
-> 	  start_kernel+0x4f4/0x516
-> 	  secondary_startup_64+0xb6/0xc0
-> 
-> From systemmap file, for bad kernel these 2 sit in one cache line, while
-> for good kernel they sit in 2 separate cache lines.
-> 
-> It also explains why it turns from a regression to an improvement with
-> updated gcc/kconfig, as the cache line sharing situation is reversed.
-> 
-> The direct patch I can think of is to make 'tsc_adjust' cache aligned
-> to separate these 2 'hot' variables. How do you think?
-> 
-> --- a/arch/x86/kernel/tsc_sync.c
-> +++ b/arch/x86/kernel/tsc_sync.c
-> @@ -29,7 +29,7 @@ struct tsc_adjust {
->  	bool		warned;
->  };
->  
-> -static DEFINE_PER_CPU(struct tsc_adjust, tsc_adjust);
-> +static DEFINE_PER_CPU_ALIGNED(struct tsc_adjust, tsc_adjust);
+> How is that relevant? checkpatch has *never* had the final say and its
+> heuristics can never be perfect. Meanwhile, coding style is talking about
+> exactly the case under discussion, and agrees with me perfectly.
 
-So why don't you define both variables with DEFINE_PER_CPU_ALIGNED and
-check if all your bad measurements go away this way?
+As the checkpatch maintainer, checkpatch is stupid.
+Using it as a primary argument should never be acceptable.
 
-You'd also need to check whether there's no detrimental effect from
-this change on other, i.e., !KNL platforms, and I think there won't
-be because both variables will be in separate cachelines then and all
-should be good.
+But line lengths from 81 to 100 columns should be exceptions
+rather than
+standard use.
 
-Hmm?
+Any named maintainer of actual code determines the style for
+that code.
 
--- 
-Regards/Gruss,
-    Boris.
+Style consistency and use of kernel standard mechanisms
+should be the primary goals here.
 
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
+
