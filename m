@@ -2,119 +2,73 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5923AC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 293BEC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 349EC2074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:41:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kJxyjpGZ"
+	by mail.kernel.org (Postfix) with ESMTP id 0CC8D2074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:42:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgH1RlG (ORCPT
+        id S1727069AbgH1RmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 13:41:06 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:56974 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725979AbgH1RlE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 13:41:04 -0400
-Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id C868220B7178;
-        Fri, 28 Aug 2020 10:41:02 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C868220B7178
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1598636463;
-        bh=B5UrEdKDUH9jR7Ae1rEu3ipYxtxUO5TupJFw9Ld6H34=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=kJxyjpGZXpgz/YZTr4JpGPULSjbavcGe/BP8zJO2pLyO2Txe97CE+o9uT928hiyDo
-         pt/EplTowulkW7Ooj+R7raJMvQCOK/ecQqBfj1LEsCddVsCTZZE4mYAtlvfFNjb6OY
-         hSmGdxieqHZcIN0Q11pWLHcqs8mvm2PWdYu8rwCw=
-Subject: Re: [PATCH v4 1/5] powerpc: Refactor kexec functions to move arch
- independent code to IMA
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
-        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        vincenzo.frascino@arm.com, mark.rutland@arm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
-References: <20200819172134.11243-1-nramas@linux.microsoft.com>
- <20200819172134.11243-2-nramas@linux.microsoft.com>
- <875z938xwy.fsf@morokweng.localdomain>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <3897c55e-11d2-113a-5cef-db750b33772f@linux.microsoft.com>
-Date:   Fri, 28 Aug 2020 10:40:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 28 Aug 2020 13:42:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:54350 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725979AbgH1Rl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 13:41:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 21A051FB;
+        Fri, 28 Aug 2020 10:41:58 -0700 (PDT)
+Received: from monolith.localdoman (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A911C3F71F;
+        Fri, 28 Aug 2020 10:41:56 -0700 (PDT)
+From:   Alexandru Elisei <alexandru.elisei@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, xxm@rock-chips.com
+Subject: [PATCH] iio: adc: rockchip_saradc: Select IIO_TRIGGERED_BUFFER
+Date:   Fri, 28 Aug 2020 18:42:42 +0100
+Message-Id: <20200828174242.338068-1-alexandru.elisei@arm.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <875z938xwy.fsf@morokweng.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/20 4:35 PM, Thiago Jung Bauermann wrote:
-> 
-> Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
-> 
->> The functions ima_get_kexec_buffer() and ima_free_kexec_buffer() that
->> handle carrying forward the IMA measurement logs on kexec for powerpc
->> do not have architecture specific code, but they are currently defined
->> for powerpc only.
->>
->> Move these functions to IMA subsystem so that it can be used for other
->> architectures as well. A later patch in this series will use these
->> functions for carrying forward the IMA measurement log for ARM64.
->>
->> Define FDT_PROP_IMA_KEXEC_BUFFER for the chosen node, namely
->> "linux,ima-kexec-buffer", that is added to the DTB to hold
->> the address and the size of the memory reserved to carry
->> the IMA measurement log.
->>
->> Co-developed-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
->> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
->> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> 
-> This patch removes two functions from arch/powerpc/kexec/ima.c, but adds
-> four to security/integrity/ima/ima_kexec.c. The extra ones are
-> get_addr_size_cells() and do_get_kexec_buffer(), which are being copied
-> from the powerpc code but can't be removed yet because they're still
-> used there by remove_ima_buffer() and setup_ima_buffer().
-> 
-> On the next patch you remove the need for these functions in powerpc
-> code and therefore delete them. This confused me at first, so I think it
-> would be cleared if you put patch 2 first in the series and then on this
-> patch you can simply move the four functions and delete them from
-> arch/powerpc/kexec/ima.c.
-> 
-> If you prefer to keep the current order, it's worth mentioning on the
-> commit log where get_addr_size_cells() and do_get_kexec_buffer() are
-> coming from.
-> 
-> Regardless:
-> 
-> Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> 
+Building the Rockchip saradc driver can trigger the following error if the
+driver is compiled into the kernel, but the IIO triggered buffer is not:
 
-Thanks for reviewing the changes Thiago.
+aarch64-linux-gnu-ld: drivers/iio/adc/rockchip_saradc.o: in function `rockchip_saradc_probe':
+/path/to/linux/drivers/iio/adc/rockchip_saradc.c:427: undefined reference to `devm_iio_triggered_buffer_setup'
 
-I'll update the commit log to describe the changes related to 
-get_addr_size_cells() and do_get_kexec_buffer().
+This is because commit 4e130dc7b413 ("iio: adc: rockchip_saradc: Add
+support iio buffers") added support for industrial I/O triggered buffers,
+but didn't update Kconfig to build the required file. Fix that.
 
-  -lakshmi
+Fixes: 4e130dc7b413 ("iio: adc: rockchip_saradc: Add support iio buffers")
+Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+---
+ drivers/iio/adc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 66d9cc073157..baa36a07a9cf 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -865,6 +865,7 @@ config ROCKCHIP_SARADC
+ 	tristate "Rockchip SARADC driver"
+ 	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
+ 	depends on RESET_CONTROLLER
++	select IIO_TRIGGERED_BUFFER
+ 	help
+ 	  Say yes here to build support for the SARADC found in SoCs from
+ 	  Rockchip.
+-- 
+2.28.0
 
