@@ -2,80 +2,86 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4822C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A989AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90880208C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A72220757
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:18:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="akxcjAXj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726550AbgH1PSo (ORCPT
+        id S1728329AbgH1PSy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 11:18:44 -0400
-Received: from mga01.intel.com ([192.55.52.88]:1989 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726400AbgH1PSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 11:18:20 -0400
-IronPort-SDR: pz4LaaT+8mwjNDf4JDySGScND6n/AzhucaSjsG6E5qq24R6aTSZHpDZl/+dpQlAcJF/Ju9wrFo
- W8Hvc/ca1MRg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="174732357"
-X-IronPort-AV: E=Sophos;i="5.76,364,1592895600"; 
-   d="scan'208";a="174732357"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 08:18:20 -0700
-IronPort-SDR: lpnUix3jb1jq5RniOzI6GlxCPQkIhMwJ2N2ThQElCFiFYWFOWsKKR9DPQKVUtEpN5FFTJ5NW61
- g8ymFrLqnyBg==
-X-IronPort-AV: E=Sophos;i="5.76,364,1592895600"; 
-   d="scan'208";a="300266458"
-Received: from lilymao-mobl.amr.corp.intel.com (HELO [10.209.185.175]) ([10.209.185.175])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 08:18:18 -0700
-Subject: Re: [PATCH 09/11] soundwire: intel: add dynamic debug trace for
- clock-stop invalid configs
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, sanyog.r.kale@intel.com,
-        mengdong.lin@intel.com, bard.liao@intel.com
-References: <20200818024120.20721-1-yung-chuan.liao@linux.intel.com>
- <20200818024120.20721-10-yung-chuan.liao@linux.intel.com>
- <20200826094817.GC2639@vkoul-mobl>
- <21038e8d-dbd9-76c7-c758-9933fb45024a@linux.intel.com>
- <20200828074952.GO2639@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <b5d8a731-d753-060a-f224-63de3b29b7d2@linux.intel.com>
-Date:   Fri, 28 Aug 2020 09:54:11 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 28 Aug 2020 11:18:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgH1PSi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 11:18:38 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 497A4C061232;
+        Fri, 28 Aug 2020 08:18:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=JKeQhoL4ZGEC1cQ3dqsE2L0OJR8mxSbszUgCFLGMeHU=; b=akxcjAXj7YDrUyYX/ul5o0ob5U
+        1i5uGkMZRpQ5UtXXOws2Aba+T8Q+HX0Y8z4nA/7EkMhIL1pW9f22OIg9Bld1yw5lexb4ubdOtr8jk
+        SDLi3SwWww7gVfAW+35tZgteI7vlPuuiNX0EuvxBBSaZ4F3OdCxw2j7gsW/WqjQbeYegHB71HNvj6
+        TtBUBJUtkFETb8dInAatRAxKIqT7RjQ05Ww9A4V8zHT9XZsknYq+FYy4JH6qu3K6vKIlDxaSDfanq
+        KumAjmhx4ZsB06vkUnJJ9keX87zp4QGtiyfNn5dlPLQkDgjva9CtqZAxhzoKWhAV5AcCkbZ7M079h
+        N83qcvtg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBg8m-0003cX-Cf; Fri, 28 Aug 2020 15:18:08 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 85D5A30015A;
+        Fri, 28 Aug 2020 17:18:06 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 353B42C5FEF21; Fri, 28 Aug 2020 17:18:06 +0200 (CEST)
+Date:   Fri, 28 Aug 2020 17:18:06 +0200
+From:   peterz@infradead.org
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Eddy_Wu@trendmicro.com,
+        x86@kernel.org, davem@davemloft.net, rostedt@goodmis.org,
+        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        linux-arch@vger.kernel.org, cameron@moodycamel.com,
+        oleg@redhat.com, will@kernel.org, paulmck@kernel.org
+Subject: Re: [PATCH v4 20/23] [RFC] kprobes: Remove task scan for updating
+ kretprobe_instance
+Message-ID: <20200828151806.GF1362448@hirez.programming.kicks-ass.net>
+References: <159861759775.992023.12553306821235086809.stgit@devnote2>
+ <159861781740.992023.4956784710984854658.stgit@devnote2>
+ <20200828125236.GA1362448@hirez.programming.kicks-ass.net>
+ <20200829001010.7ec1a183c2294f7bd843b153@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200828074952.GO2639@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200829001010.7ec1a183c2294f7bd843b153@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Aug 29, 2020 at 12:10:10AM +0900, Masami Hiramatsu wrote:
+> On Fri, 28 Aug 2020 14:52:36 +0200
+> peterz@infradead.org wrote:
 
->>>> Detect cases where the clock is assumed to be stopped but the IP is
->>>> not in the relevant state, and add a dynamic debug trace.
->>>
->>> you meant a debug print..and it looks like error print below (also in title).
->>
->> I don't understand the comment. Is the 'trace' confusing and are you asking
->> to e.g. change the commit message to 'add dynamic debug log'?
+> > >  	synchronize_rcu();
+> > 
+> > This one might help, this means we can do rcu_read_lock() around
+> > get_kretprobe() and it's usage. Can we call rp->handler() under RCU?
 > 
-> Question is what is dynamic about this?
-dev_dbg() is part of the kernel dynamic debug capability...
+> Yes, as I said above, the get_kretprobe() (and kretprobe handler) must be
+> called under preempt-disabled.
 
-https://www.kernel.org/doc/html/latest/admin-guide/dynamic-debug-howto.html
-
-Not sure what you are asking here?
+Then we don't need the ordering; we'll need READ_ONCE() (or
+rcu_derefernce()) to make sure the address dependency works on Alpha.
+And a comment/assertion that explains this might not go amiss in
+get_kretprobe().
