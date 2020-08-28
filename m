@@ -2,371 +2,174 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DBEC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AEFC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60EFD2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:02:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="XP3ypGun"
+	by mail.kernel.org (Postfix) with ESMTP id 6119F2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbgH1OC0 (ORCPT
+        id S1727888AbgH1OCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:02:26 -0400
-Received: from mail-dm6nam12on2058.outbound.protection.outlook.com ([40.107.243.58]:13760
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726400AbgH1N7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 09:59:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Nfeh3rQgVR3se1cqgjulvvtYxgJAEtsmTxQcvO7B6D7eLYqcMm21zeQ8C4KF9AQUUJrPOdNvntygppi7OG0YcCKclA+eLI7zzITOhWmjWhu5PmEFt9+ButyCQCIvYkjpHcwbNIRFKKEertkKUTxqa9h7wO121NGEkeUO0gJl7x3/dzinl7G7j/gNoyLqPZ/WpMfE9WD3ltLQYGDu9sZ0UCm/2zxZ06gy8GDfruEAUyhzVv7PS76J/qx/H3Y+YB+i/XHa8+hP6aBceUFv3e/RK/O3qK8qTEBUkrY8rCmhU7aiMHgjZB89L2w/IsLDj4aTRJN5oPT44D2i3z8676wTqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6Y6+76i69YSPQSJC0XuQtiIHhrHmnsqREJBig2DhdrA=;
- b=ErsumPtk/0cEOBQbQ4OUrprWo1P9uzE5x9bqcxh2nHBxR9KZ7ajZf5/4YoK2eJD5/27jW4pCs0hxlHqmq/uGRcsG5iTxV7FOjvT0/OAgOG4Ug14iZmKRvOSyD0pBLYULlT6TFO9LfGj057ulyAdRMGdBxtlAnE6uA3foryuDFV8w9C13pi8tS9abfluEE+KA/1/gs7iEtS5NYjX7WQjQusMsCxbbpMx7GTk84QoGQLcTXfjFg8eOx9arOdXKgTf6vV8fd+orHcBhaMhe3gIJswF8URlHw5zn4awHEVARuZcsufste1ikkWDF9xMC5awVsFh83uIlBc0ogUcCPWr9EQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=baylibre.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6Y6+76i69YSPQSJC0XuQtiIHhrHmnsqREJBig2DhdrA=;
- b=XP3ypGunGlVe2PtKeD263y8O5vhRAWKYgvJh1hA8Z8bhK+A8OEIe+XjMpGkBDbBIREeTfVjp/ry6ZY4Bu3Ogi9vMbQqWtvF+AkjLqCs4sh4ZnjlBTgykg+e1IdIwhmeMsaYnUoXB7anDEvJE6w5o/HXEwXjn0tZDiC1Imre0CL0=
-Received: from SN6PR01CA0013.prod.exchangelabs.com (2603:10b6:805:b6::26) by
- BN6PR02MB2465.namprd02.prod.outlook.com (2603:10b6:404:57::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3326.23; Fri, 28 Aug 2020 13:40:33 +0000
-Received: from SN1NAM02FT040.eop-nam02.prod.protection.outlook.com
- (2603:10b6:805:b6:cafe::a3) by SN6PR01CA0013.outlook.office365.com
- (2603:10b6:805:b6::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend
- Transport; Fri, 28 Aug 2020 13:40:33 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; baylibre.com; dkim=none (message not signed)
- header.d=none;baylibre.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT040.mail.protection.outlook.com (10.152.72.195) with Microsoft SMTP
- Server id 15.20.3326.19 via Frontend Transport; Fri, 28 Aug 2020 13:40:33
- +0000
-Received: from [149.199.38.66] (port=59882 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <shubhrajyoti.datta@xilinx.com>)
-        id 1kBebn-0004sr-AI; Fri, 28 Aug 2020 06:39:59 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by smtp.xilinx.com with smtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@xilinx.com>)
-        id 1kBecL-0006Ll-Ba; Fri, 28 Aug 2020 06:40:33 -0700
-Received: from xsj-pvapsmtp01 (smtp.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 07SDePiA028616;
-        Fri, 28 Aug 2020 06:40:25 -0700
-Received: from [10.140.6.59] (helo=xhdshubhraj40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@xilinx.com>)
-        id 1kBecC-0005it-OL; Fri, 28 Aug 2020 06:40:24 -0700
-From:   Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-To:     linux-clk@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, sboyd@kernel.org, robh+dt@kernel.org,
-        gregkh@linuxfoundation.org, mturquette@baylibre.com,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: [PATCH v6 5/8] clk: clock-wizard: Add support for fractional support
-Date:   Fri, 28 Aug 2020 19:09:53 +0530
-Message-Id: <1598621996-31040-6-git-send-email-shubhrajyoti.datta@xilinx.com>
-X-Mailer: git-send-email 2.1.1
-In-Reply-To: <1598621996-31040-1-git-send-email-shubhrajyoti.datta@xilinx.com>
-References: <1598621996-31040-1-git-send-email-shubhrajyoti.datta@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
+        Fri, 28 Aug 2020 10:02:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:50010 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727040AbgH1OAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 10:00:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E22081FB;
+        Fri, 28 Aug 2020 07:00:10 -0700 (PDT)
+Received: from [192.168.2.22] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82F923F71F;
+        Fri, 28 Aug 2020 07:00:09 -0700 (PDT)
+Subject: Re: [PATCH 3/6] ARM: dts: broadcom: Fix SP804 node
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+References: <20200826183805.19369-1-andre.przywara@arm.com>
+ <20200826183805.19369-4-andre.przywara@arm.com>
+ <c401554a-36ce-7e05-5ef0-5c05a2ca2868@gmail.com>
+ <44992125-7eaa-f35b-3344-16ae0d48f646@arm.com>
+ <3a3ce1d4-ddd5-f000-9cf0-5d06e2cc2047@gmail.com>
+ <ecb277f9-1328-c64c-dd42-7a346ba61f8e@gmail.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ i4aIXCH3Wv6K
+Organization: ARM Ltd.
+Message-ID: <60929faf-fdcf-a434-1acb-c77f92818955@arm.com>
+Date:   Fri, 28 Aug 2020 14:59:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: de716512-5375-4b91-2a5e-08d84b57f02f
-X-MS-TrafficTypeDiagnostic: BN6PR02MB2465:
-X-Microsoft-Antispam-PRVS: <BN6PR02MB24650776080ABFD979D40CC9AA520@BN6PR02MB2465.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:989;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /p6nF9Etq9vVagTTTBiZw5g4CNXXLAo0XSJsEYhI+P7bkYus2ZovNn3Ez2SPG9/AWF2sBtwtH6gllysUA0aFSzIxOvhJ+C5pJMpwWkJ8rNGv8Xxcn7CpZFLQLqrG1T5L7ISYS3qMwIAlYEYZHAI9tiQldkWsImQHpfp4Xa9hdGRHhCK7mA/5lKpuZzXf+I7F38sWlfX/JwJPYlLdqcb1s1zGQNePm0yf+1xqSG9eW3zE4mK1wWncpNXvUjlDAQj6lqdGKoLDIHWnMeO/N2E1Uar9oMaPCDFnIDHrLY0AJ3bRPvQ9vdAxAnLCfhclY9hN/5u/i73E5TreQSnB4NvL+MQaenZR9pNYPLqzQWaSQbSYKQsPPBofdAbs5sz7cD+5u5GMY7Q6+tsw/hufWZ65Cg==
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(396003)(136003)(346002)(39860400002)(376002)(46966005)(26005)(8936002)(4326008)(107886003)(8676002)(186003)(44832011)(36756003)(336012)(6666004)(5660300002)(2616005)(82310400002)(426003)(70586007)(70206006)(83380400001)(356005)(82740400003)(81166007)(47076004)(9786002)(6916009)(316002)(478600001)(7696005)(2906002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2020 13:40:33.6676
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: de716512-5375-4b91-2a5e-08d84b57f02f
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT040.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2465
+In-Reply-To: <ecb277f9-1328-c64c-dd42-7a346ba61f8e@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the set rate granularity is to integral divisors.
-Add support for the fractional divisors.
-Only the first output0 is fractional in the hardware.
+On 26/08/2020 21:55, Florian Fainelli wrote:
+> On 8/26/20 11:59 AM, Florian Fainelli wrote:
+>> On 8/26/20 11:53 AM, André Przywara wrote:
+>>> On 26/08/2020 19:42, Florian Fainelli wrote:
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
-v6:
-remove unnecessary typecast
-remove unnecessary locks
-use polled timeout
+Hi Florian,
 
- drivers/clk/clk-xlnx-clock-wizard.c | 166 +++++++++++++++++++++++++++++++++---
- 1 file changed, 153 insertions(+), 13 deletions(-)
+>>>
+>>> Hi,
+>>>
+>>>> On 8/26/20 11:38 AM, Andre Przywara wrote:
+>>>>> The DT binding for SP804 requires to have an "arm,primecell" compatible
+>>>>> string.
+>>>>> Add this string so that the Linux primecell bus driver picks the device
+>>>>> up and activates the clock.
+>>>>>
+>>>>> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+>>>>
+>>>> The commit subject should be:
+>>>>
+>>>> ARM: dts: NSP: Fix SP804 compatible node
+>>>>
+>>>> and we should probably have a Fixes tag that is:
+>>>>
+>>>> Fixes: a0efb0d28b77 ("ARM: dts: NSP: Add SP804 Support to DT")
+>>>>
+>>>> Could you please re-submit with those things corrected? Thanks
+>>>
+>>> Sure, will include that in a v2.
+>>>
+>>> Out of curiosity, do you have the hardware and can check the impact that
+>>> has?
+>>
+>> I have the hardware and could run some tests if you would like.
+>>
+>>> Not sure we actually create the device without the primecell compatible?
+>>> Or is the sp804 an exception here, compared to the other AMBA devices
+>>> (SP805, PL011)?
+>>
+>> No idea, I have never used those timers personally, and I doubt that
+>> anybody besides me within broadcom and hobbyists actually care about NSP
+>> these days.
+> 
+> Seems to be working fine for me with your patch applied, it probes:
+> 
+> # dmesg | grep sp804
+> [    0.035363] clocksource: arm,sp804: mask: 0xffffffff max_cycles:
+> 0xffffffff, max_idle_ns: 15290083572 ns
+> 
+> and it is usable:
+> 
+> # cat clocksource0/available_clocksource
+> arm_global_timer arm,sp804
+> 
+> and appears to work:
+> 
+> # echo "arm,sp804" > clocksource0/current_clocksource
+> [  105.108547] clocksource: Switched to clocksource arm,sp804
+> 
+> # date; sleep 5; date
+> Thu Jan  1 00:01:51 UTC 1970
+> Thu Jan  1 00:01:56 UTC 1970
+> 
+> Feel free to add Tested-by: Florian Fainelli <f.fainelli@gmail.com> in
+> your v2, thanks André!
 
-diff --git a/drivers/clk/clk-xlnx-clock-wizard.c b/drivers/clk/clk-xlnx-clock-wizard.c
-index 8dfcec8..1af59a4 100644
---- a/drivers/clk/clk-xlnx-clock-wizard.c
-+++ b/drivers/clk/clk-xlnx-clock-wizard.c
-@@ -29,20 +29,25 @@
- 
- #define WZRD_CLKFBOUT_MULT_SHIFT	8
- #define WZRD_CLKFBOUT_MULT_MASK		(0xff << WZRD_CLKFBOUT_MULT_SHIFT)
-+#define WZRD_CLKFBOUT_FRAC_SHIFT	16
-+#define WZRD_CLKFBOUT_FRAC_MASK		(0x3ff << WZRD_CLKFBOUT_FRAC_SHIFT)
- #define WZRD_DIVCLK_DIVIDE_SHIFT	0
- #define WZRD_DIVCLK_DIVIDE_MASK		(0xff << WZRD_DIVCLK_DIVIDE_SHIFT)
- #define WZRD_CLKOUT_DIVIDE_SHIFT	0
- #define WZRD_CLKOUT_DIVIDE_WIDTH	8
- #define WZRD_CLKOUT_DIVIDE_MASK		(0xff << WZRD_DIVCLK_DIVIDE_SHIFT)
-+#define WZRD_CLKOUT_FRAC_SHIFT		8
-+#define WZRD_CLKOUT_FRAC_MASK		0x3ff
- 
- #define WZRD_DR_MAX_INT_DIV_VALUE	255
--#define WZRD_DR_NUM_RETRIES		10000
- #define WZRD_DR_STATUS_REG_OFFSET	0x04
- #define WZRD_DR_LOCK_BIT_MASK		0x00000001
- #define WZRD_DR_INIT_REG_OFFSET		0x25C
- #define WZRD_DR_DIV_TO_PHASE_OFFSET	4
- #define WZRD_DR_BEGIN_DYNA_RECONF	0x03
- 
-+#define WZRD_USEC_POLL		10
-+#define WZRD_TIMEOUT_POLL		1000
- /* Get the mask from width */
- #define div_mask(width)			((1 << (width)) - 1)
- 
-@@ -52,6 +57,7 @@
- enum clk_wzrd_int_clks {
- 	wzrd_clk_mul,
- 	wzrd_clk_mul_div,
-+	wzrd_clk_mul_frac,
- 	wzrd_clk_int_max
- };
- 
-@@ -185,6 +191,134 @@ static const struct clk_ops clk_wzrd_clk_divider_ops = {
- 	.recalc_rate = clk_wzrd_recalc_rate,
- };
- 
-+static unsigned long clk_wzrd_recalc_ratef(struct clk_hw *hw,
-+					   unsigned long parent_rate)
-+{
-+	unsigned int val;
-+	u32 div, frac;
-+	struct clk_wzrd_divider *divider = to_clk_wzrd_divider(hw);
-+	void __iomem *div_addr = divider->base + divider->offset;
-+
-+	val = readl(div_addr);
-+	div = val & div_mask(divider->width);
-+	frac = (val >> WZRD_CLKOUT_FRAC_SHIFT) & WZRD_CLKOUT_FRAC_MASK;
-+
-+	return ((parent_rate * 1000) / ((div * 1000) + frac));
-+}
-+
-+static int clk_wzrd_dynamic_reconfig_f(struct clk_hw *hw, unsigned long rate,
-+				       unsigned long parent_rate)
-+{
-+	int err;
-+	u32 value, pre;
-+	unsigned long rate_div, f, clockout0_div;
-+	struct clk_wzrd_divider *divider = to_clk_wzrd_divider(hw);
-+	void __iomem *div_addr = divider->base + divider->offset;
-+
-+	rate_div = ((parent_rate * 1000) / rate);
-+	clockout0_div = rate_div / 1000;
-+
-+	pre = DIV_ROUND_CLOSEST((parent_rate * 1000), rate);
-+	f = (u32)(pre - (clockout0_div * 1000));
-+	f = f & WZRD_CLKOUT_FRAC_MASK;
-+
-+	value = ((f << WZRD_CLKOUT_DIVIDE_WIDTH) | (clockout0_div &
-+			WZRD_CLKOUT_DIVIDE_MASK));
-+
-+	/* Set divisor and clear phase offset */
-+	writel(value, div_addr);
-+	writel(0x0, div_addr + WZRD_DR_DIV_TO_PHASE_OFFSET);
-+
-+	/* Check status register */
-+	err= readl_poll_timeout(divider->base + WZRD_DR_STATUS_REG_OFFSET, value,
-+				value & WZRD_DR_LOCK_BIT_MASK,
-+				WZRD_USEC_POLL, WZRD_TIMEOUT_POLL);
-+	if (err)
-+		return err;
-+
-+	/* Initiate reconfiguration */
-+	writel(WZRD_DR_BEGIN_DYNA_RECONF,
-+	       divider->base + WZRD_DR_INIT_REG_OFFSET);
-+
-+	/* Check status register */
-+	err= readl_poll_timeout(divider->base + WZRD_DR_STATUS_REG_OFFSET, value,
-+				value & WZRD_DR_LOCK_BIT_MASK,
-+				WZRD_USEC_POLL, WZRD_TIMEOUT_POLL);
-+
-+	return err;
-+}
-+
-+static long clk_wzrd_round_rate_f(struct clk_hw *hw, unsigned long rate,
-+				  unsigned long *prate)
-+{
-+	return rate;
-+}
-+
-+static const struct clk_ops clk_wzrd_clk_divider_ops_f = {
-+	.round_rate = clk_wzrd_round_rate_f,
-+	.set_rate = clk_wzrd_dynamic_reconfig_f,
-+	.recalc_rate = clk_wzrd_recalc_ratef,
-+};
-+
-+static struct clk *clk_wzrd_register_divf(struct device *dev,
-+					  const char *name,
-+					  const char *parent_name,
-+					  unsigned long flags,
-+					  void __iomem *base, u16 offset,
-+					  u8 shift, u8 width,
-+					  u8 clk_divider_flags,
-+					  const struct clk_div_table *table,
-+					  spinlock_t *lock)
-+{
-+	struct clk_wzrd_divider *div;
-+	struct clk_hw *hw;
-+	struct clk_init_data init;
-+	int ret;
-+
-+	if (clk_divider_flags & CLK_DIVIDER_HIWORD_MASK) {
-+		if (width + shift > 16) {
-+			pr_warn("divider value exceeds LOWORD field\n");
-+			return ERR_PTR(-EINVAL);
-+		}
-+	}
-+
-+	/* allocate the divider */
-+	div = kzalloc(sizeof(*div), GFP_KERNEL);
-+	if (!div)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+
-+	if (clk_divider_flags & CLK_DIVIDER_READ_ONLY)
-+		init.ops = &clk_divider_ro_ops;
-+	else
-+		init.ops = &clk_wzrd_clk_divider_ops_f;
-+
-+	init.flags = flags;
-+	init.parent_names = (parent_name ? &parent_name : NULL);
-+	init.num_parents = (parent_name ? 1 : 0);
-+
-+	/* struct clk_divider assignments */
-+	div->base = base;
-+	div->offset = offset;
-+	div->shift = shift;
-+	div->width = width;
-+	div->flags = clk_divider_flags;
-+	div->lock = lock;
-+	div->hw.init = &init;
-+	div->table = table;
-+
-+	/* register the clock */
-+	hw = &div->hw;
-+	ret = clk_hw_register(dev, hw);
-+	if (ret) {
-+		kfree(div);
-+		return ERR_PTR(ret);
-+	}
-+
-+	return hw->clk;
-+}
-+
- static struct clk *clk_wzrd_register_divider(struct device *dev,
- 					     const char *name,
- 					     const char *parent_name,
-@@ -303,7 +437,7 @@ static SIMPLE_DEV_PM_OPS(clk_wzrd_dev_pm_ops, clk_wzrd_suspend,
- static int clk_wzrd_probe(struct platform_device *pdev)
- {
- 	int i, ret;
--	u32 reg;
-+	u32 reg, reg_f, mult;
- 	unsigned long rate;
- 	const char *clk_name;
- 	struct clk_wzrd *clk_wzrd;
-@@ -355,17 +489,13 @@ static int clk_wzrd_probe(struct platform_device *pdev)
- 		goto err_disable_clk;
- 	}
- 
--	/* we don't support fractional div/mul yet */
--	reg = readl(clk_wzrd->base + WZRD_CLK_CFG_REG(0)) &
--		    WZRD_CLKFBOUT_FRAC_EN;
--	reg |= readl(clk_wzrd->base + WZRD_CLK_CFG_REG(2)) &
--		     WZRD_CLKOUT0_FRAC_EN;
--	if (reg)
--		dev_warn(&pdev->dev, "fractional div/mul not supported\n");
--
- 	/* register multiplier */
- 	reg = (readl(clk_wzrd->base + WZRD_CLK_CFG_REG(0)) &
- 		     WZRD_CLKFBOUT_MULT_MASK) >> WZRD_CLKFBOUT_MULT_SHIFT;
-+	reg_f = (readl(clk_wzrd->base + WZRD_CLK_CFG_REG(0)) &
-+		     WZRD_CLKFBOUT_FRAC_MASK) >> WZRD_CLKFBOUT_FRAC_SHIFT;
-+
-+	mult = ((reg * 1000) + reg_f);
- 	clk_name = kasprintf(GFP_KERNEL, "%s_mul", dev_name(&pdev->dev));
- 	if (!clk_name) {
- 		ret = -ENOMEM;
-@@ -374,7 +504,7 @@ static int clk_wzrd_probe(struct platform_device *pdev)
- 	clk_wzrd->clks_internal[wzrd_clk_mul] = clk_register_fixed_factor
- 			(&pdev->dev, clk_name,
- 			 __clk_get_name(clk_wzrd->clk_in1),
--			 0, reg, 1);
-+			0, mult, 1000);
- 	kfree(clk_name);
- 	if (IS_ERR(clk_wzrd->clks_internal[wzrd_clk_mul])) {
- 		dev_err(&pdev->dev, "unable to register fixed-factor clock\n");
-@@ -413,8 +543,18 @@ static int clk_wzrd_probe(struct platform_device *pdev)
- 			ret = -EINVAL;
- 			goto err_rm_int_clks;
- 		}
--		clk_wzrd->clkout[i] = clk_wzrd_register_divider(&pdev->dev,
--								clkout_name,
-+		if (!i)
-+			clk_wzrd->clkout[i] = clk_wzrd_register_divf
-+				(&pdev->dev, clkout_name,
-+				clk_name, 0,
-+				clk_wzrd->base, (WZRD_CLK_CFG_REG(2) + i * 12),
-+				WZRD_CLKOUT_DIVIDE_SHIFT,
-+				WZRD_CLKOUT_DIVIDE_WIDTH,
-+				CLK_DIVIDER_ONE_BASED | CLK_DIVIDER_ALLOW_ZERO,
-+				NULL, &clkwzrd_lock);
-+		else
-+			clk_wzrd->clkout[i] = clk_wzrd_register_divider
-+				(&pdev->dev, clkout_name,
- 				clk_name, 0,
- 				clk_wzrd->base, (WZRD_CLK_CFG_REG(2) + i * 12),
- 				WZRD_CLKOUT_DIVIDE_SHIFT,
--- 
-2.1.1
+Wow, thanks a lot for this test!
 
+Sending out a v2 in a minute.
+
+Cheers,
+Andre
