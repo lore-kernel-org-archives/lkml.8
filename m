@@ -2,107 +2,90 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C94E0C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D241C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 919ED2080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:15:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ARMU3Sm1"
+	by mail.kernel.org (Postfix) with ESMTP id 1E1C02086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:17:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598606222;
+	bh=kZht2C+aKEFukt+Dpw8/uAC66G7++P2KlvN5dkpjiv8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=tPROzX8rcsbiWOx8q4VBe6hgOx2tcAWDMgj8ZnsauxvvBacgPiTf+w/8gdQgzMb+m
+	 rVQbxx2q1F9UsmnjQNK74h67456kF2XItAbPcaKGKETfJSALkrQiya4dMjFZQb6qsQ
+	 XjXZ7qBNE2gUTJgH80bYUoLRF3mNL56aq/08xcnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbgH1JPi (ORCPT
+        id S1728878AbgH1JQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:15:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbgH1JPe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:15:34 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0FEFC061264
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:15:33 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id o184so240434vsc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:15:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Zi8nSPHMdjjrzjQ95uIpbJn6FzlNcwjQhcXkzfbqLfM=;
-        b=ARMU3Sm1HfR4wX1HJxIZnHKc/bbvOhVrX9LVg6THxme0OoKcI6xmfOkKHnjYpbteCJ
-         VV1vimGJX0cqcH1aC9HPCwBN15ob8K/0SGVqqHmyitfUWuS7psXryKzORuPO1Smy7lvw
-         9HkaLdtakfX2KQt/oN4ePv3vSaRCZ2khzWeB+//oPpndINVRlK7rfd76r1ArDlVIbScf
-         DXrPfgo4r4UQWymB/8otAlH9gstuPpeB4VGamPFYq6kL6FwO+F8J4bczClot5TDZaZXA
-         nYvKm+4/wt3p4bQlQrZtheVKR5Zdm3utMCRueQ/QGk1uzppqHCqs09NbvNR6Bohm5Ekz
-         /KoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Zi8nSPHMdjjrzjQ95uIpbJn6FzlNcwjQhcXkzfbqLfM=;
-        b=eVFxzXyeFsiJbiiIPRsTyHIdPDlI5AtTKst7jkxu/ZKsOyP+hTNmY7IpsGvpQYc3t+
-         abMwQK1B3Aqf4tXBsM4MGaXGu2TAwqulRK4XTxkQdDaq5iD/XrAffTVifs7fbVOp9nI1
-         szIr/RkYMZBMoGVm2OJv/lyRWexYoJs13y5O01MiiHYKfKU1UXQ+dti0EPtuznP682Cs
-         RY1qu6tqevqNPsTngpm469YORmYhD1JTtg5JiHanAIR1RPopepTxcFs3c4bomMcwaNcQ
-         c9A17Ho6P8fOzHFUp+hjb6wbVABdkT7xfPr3YmVIR6+o9UnRjpujh1RHR6frHbm0VsMk
-         Y6OA==
-X-Gm-Message-State: AOAM530wcGgzzVFLLNJSFJd2fhZIvdP8RpzGG7PEIOHCjwdJ3jAd8hLY
-        2LSIXy5Glb3RM5pM+X0xiT7kDUEzxsBL124+/e5C9A==
-X-Google-Smtp-Source: ABdhPJyIDuUnOpmtIaCu/f8jrHWtD3Gs+OyjgcG3Z1bCdQZadwCfr0m7nO46s64/KtzS83TI683giQyQ5NxFVTcNIP4=
-X-Received: by 2002:a67:e218:: with SMTP id g24mr227520vsa.167.1598606133029;
- Fri, 28 Aug 2020 02:15:33 -0700 (PDT)
+        Fri, 28 Aug 2020 05:16:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48522 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728016AbgH1JQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:16:53 -0400
+Received: from mail.kernel.org (unknown [95.90.213.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 231372086A;
+        Fri, 28 Aug 2020 09:16:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598606213;
+        bh=kZht2C+aKEFukt+Dpw8/uAC66G7++P2KlvN5dkpjiv8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=b6608CxzsO8U32iO3dCebVcMJ+B243b1Eq/KkXefLcSxsWTam7Q/Vvk79xnfossNR
+         xc8+H1B4qyJVaPQww3euXmFhtjX2mAgBAt//5qJ+9ZE9EoW5e9iodWBClHXuOxn0s5
+         +QoPrJJl/wMuw0Z9BWroT440Z87dMBLuFsP9KvPs=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kBaV9-0047A9-6F; Fri, 28 Aug 2020 11:16:51 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-media@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>
+Subject: [PATCH v11 0/4] Add a glossary for the media subsystem
+Date:   Fri, 28 Aug 2020 11:16:46 +0200
+Message-Id: <cover.1598606093.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200827083330.1.I669bb4dc3d92bd04e9a695f97904797dc8241b79@changeid>
- <CA+G9fYtWpBQb8Ew_G=bjcR7wBHMgKm=EXV7vuk6FE9m0-4Ef3A@mail.gmail.com>
-In-Reply-To: <CA+G9fYtWpBQb8Ew_G=bjcR7wBHMgKm=EXV7vuk6FE9m0-4Ef3A@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 28 Aug 2020 14:45:21 +0530
-Message-ID: <CA+G9fYt-k9FMq0HcRN5iQyvt7yaz8YMpENcUktm7yQ1y+zgd1A@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sdhci-msm: When dev_pm_opp_of_add_table() returns 0
- it's not an error
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, vbadigan@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Aug 2020 at 01:57, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> On Thu, 27 Aug 2020 at 21:03, Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > The commit d05a7238fe1c ("mmc: sdhci-msm: Unconditionally call
-> > dev_pm_opp_of_remove_table()") works fine in the case where there is
-> > no OPP table.  However, if there is an OPP table then
-> > dev_pm_opp_of_add_table() will return 0.  Since 0 != -ENODEV then the
-> > "if (ret != -ENODEV)" will evaluate to true and we'll fall into the
-> > error case.  Oops.
-> >
-> > Let's fix this.
-> >
-> > Fixes: d05a7238fe1c ("mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()")
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
->
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
->
-> I will test this patch and report again on this email thread.
+There are too many technical terms at the media subsystem, and sometimes
+the same thing is refered differently at the documentation and on the ML
+and IRC discussions.
 
-Sorry this patch did not solve the reported problem.
-However, I would be testing the V2 set from Viresh Kumar.
+Let's add a glossary to the uAPI documentation, in order to start using
+a common vocabulary at the subsystem's discussion and to let things
+clearer for people trying to understand the subsystem.
 
-and report the test results on the other patch set [1].
-[1] https://lore.kernel.org/linux-pm/cover.1598594714.git.viresh.kumar@linaro.org
+I'm pretty sure that this document doesn't cover everything, but it can
+(and should) be improved overtime.
+
+On version 11, I addressed the comments from Sakari over the past
+version with some text improvements on a couple of paragraphs.
+
+Mauro Carvalho Chehab (4):
+  media: open.rst: better document device node naming
+  media: open.rst: remove the minor number range
+  media: docs: add glossary.rst with common terms used at V4L2 spec
+  media: open.rst: document mc-centric and video-node-centric
+
+ .../userspace-api/media/glossary.rst          | 216 ++++++++++++++++++
+ Documentation/userspace-api/media/index.rst   |   3 +
+ .../userspace-api/media/v4l/open.rst          | 111 +++++++--
+ 3 files changed, 316 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/userspace-api/media/glossary.rst
+
+-- 
+2.26.2
+
+
