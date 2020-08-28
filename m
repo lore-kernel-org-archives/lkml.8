@@ -2,335 +2,152 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CDCC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 04:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B64C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 04:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1C6208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 04:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DF72098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 04:23:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="n5tCaxUD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgH1EMM (ORCPT
+        id S1726141AbgH1EXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 00:12:12 -0400
-Received: from smtprelay0115.hostedemail.com ([216.40.44.115]:56988 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725536AbgH1EML (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 00:12:11 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id EE44B182CED34;
-        Fri, 28 Aug 2020 04:12:08 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: brake40_18021b527072
-X-Filterd-Recvd-Size: 10858
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Fri, 28 Aug 2020 04:12:07 +0000 (UTC)
-Message-ID: <d99c613aa70617f440c51d9413372b858a4ae826.camel@perches.com>
-Subject: Re: [Cocci] [PATCH] usb: atm: don't use snprintf() for sysfs attrs
-From:   Joe Perches <joe@perches.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Denis Efremov <efremov@linux.com>
-Cc:     Julia Lawall <julia.lawall@inria.fr>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org, cocci <cocci@systeme.lip6.fr>,
-        Alex Dewar <alex.dewar90@gmail.com>
-Date:   Thu, 27 Aug 2020 21:12:06 -0700
-In-Reply-To: <5ebe5c2737b59d04f1b8a46008cd3159c638f9d0.camel@perches.com>
-References: <20200824222322.22962-1-alex.dewar90@gmail.com>
-         <48f2dc90-7852-eaf1-55d7-2c85cf954688@rasmusvillemoes.dk>
-         <20200827071537.GA168593@kroah.com>
-         <20200827131819.7rcl2f5js3hkoqj2@lenovo-laptop>
-         <def24e9e-018c-9712-0d07-d4cbc84f07d9@rasmusvillemoes.dk>
-         <20200827144846.yauuttjaqtxaldxg@lenovo-laptop>
-         <5d1dfb9b031130d4d20763ec621233a19d6a88a2.camel@perches.com>
-         <alpine.DEB.2.22.394.2008272141220.2482@hadrien>
-         <5853c58e-7d26-2cf9-6cbf-698ecd93cbf9@linux.com>
-         <202008271517.ECC1F1F8F@keescook>
-         <5ebe5c2737b59d04f1b8a46008cd3159c638f9d0.camel@perches.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Fri, 28 Aug 2020 00:23:39 -0400
+Received: from mail-eopbgr1300109.outbound.protection.outlook.com ([40.107.130.109]:23498
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725774AbgH1EXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 00:23:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AXk1jBcyal0kryuHDU2ELg6OZRWBwepDI6SycnavA6OMvK4du9NXAZzRzEUwR2za/9wSEE2Py1gokqWzZDgQbAZyh0+qai0LxAqnHhzfKegrziot8IP2Jgg4eOoVNAfwufR8Die3Hb8DA47GaWPFLUn3XU5oPQLtSKu7XKu5QjNgB5pE4nvPehy9x0wsly3UMZKN/OlEJQGdZwKcFnIuEYFEa5OKzr7M605yUizjGxufCiWD9a9UDLQDOADEukapZf4ClouXbgBlZN1KA3aHpcokxgC9WGX3Wy9WYfLN8qzn/SRi/gbubnG6yqpNNcQBa7HNkrnOGRlrzm6RTtI3uw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hXuRTUxireoWx5kYnC7gjiklKcOOAY1qps5jYNqO7z8=;
+ b=nr1F7+EcztnKvcP2EUdVpwigDf21AD6IxcOmSVLeg7ufzOlqFiFZMEFMyDQVyCjK2OsAqwAJH4kgO6M2zpwGQS5lQCgyI8DY6V45c47kzBgC9NgKC0MpzCh9ABpP9ETXKmyqTg4wFp5a+LOpUvIgOQXb1jJOyk9nShEg8bIzBPUuQBiLzfDs07/sB6jECzIt9xOcZUuyWX8DV68vThE6Ag8uHwDGdd8U+6w4RnsVnkUyhQh0wa9YA4zySpvaPB9YIaLlBItxZ7opRENQ/MR5NiEiCh4I9ZkCjKrs7kIH1O7yNz0Ek1ehy8f6P2OiV2CKFcw1tmNSixAYTWVm0SKjVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hXuRTUxireoWx5kYnC7gjiklKcOOAY1qps5jYNqO7z8=;
+ b=n5tCaxUDwXTzKSSroNXaKV2B1i4Pfzn9Qar21V8nuSuEtUwDwnnQXqUndEEF9VABvXj/+9sDoJKvsw4Mkn5N0EhGubawJX3QGBgM2hqx7g8au1M7LSPwwODhE0N28LxOPzOc+x6VfqXfpeh3h/8L0qP0YvuMXR9jN+vLSZHFLAQ=
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
+ by TY2PR01MB2171.jpnprd01.prod.outlook.com (2603:1096:404:d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Fri, 28 Aug
+ 2020 04:23:31 +0000
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::9083:6001:8090:9f3]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::9083:6001:8090:9f3%6]) with mapi id 15.20.3305.032; Fri, 28 Aug 2020
+ 04:23:31 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: RE: [PATCH 1/2] dt-bindings: pwm: renesas,pwm-rcar: Add r8a774e1
+ support
+Thread-Topic: [PATCH 1/2] dt-bindings: pwm: renesas,pwm-rcar: Add r8a774e1
+ support
+Thread-Index: AQHWeszKwElZ4pDswkCEZ1j6DXZc7qlM8BsQ
+Date:   Fri, 28 Aug 2020 04:23:31 +0000
+Message-ID: <TY2PR01MB3692C481DF7758471C51873FD8520@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+References: <20200825104455.18000-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200825104455.18000-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200825104455.18000-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: bp.renesas.com; dkim=none (message not signed)
+ header.d=none;bp.renesas.com; dmarc=none action=none header.from=renesas.com;
+x-originating-ip: [240f:60:5f3e:1:b16e:b7b1:d350:3c9a]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 77a3e04c-f674-4981-3939-08d84b0a1f0b
+x-ms-traffictypediagnostic: TY2PR01MB2171:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY2PR01MB21710719DA3384F1BF64F8ADD8520@TY2PR01MB2171.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: m1s6tnT2iegZX034j0zc89q4PgsqiiKAhrVvBY586F1n7Pix2/u+I/GEaP+R3lQsTeIA5HGpWe7cqxh4cVymmGFU3Qma6uwWu50j4r5EJ9uXcr3xT+dOcmi1+NP9xABGSpzEQ3a3WgO2ZIxIKaGWeVl5t0pzoCD3AaEJ5YeMl474Ms5LPcBKCba0UxO0aVPyMppQ/V3PtwIM6skr/8gREAo6yw/qTpo5uK7furDRn/JR2ianN3jtrfnrk0H7gvUYv4aHjhDZwB6kLaWdps21Ag6785J6VD553sqUbnBlpMJ06RNed5ZBEQeR/QQdxY9wh1aDy6PwZ0aEaiuUSUNkQUNt/jaoqyperqxe7yEf92eab9uZ8P6q5nEXykr9ep9D
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(366004)(136003)(39860400002)(346002)(7696005)(55016002)(52536014)(4326008)(186003)(9686003)(86362001)(2906002)(33656002)(71200400001)(64756008)(66556008)(66476007)(66446008)(110136005)(8936002)(76116006)(6506007)(66946007)(478600001)(316002)(5660300002)(8676002)(7416002)(54906003)(142933001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: j76olSofpy7MUFo7xrQaZGtX1PKp1KbBdoKnYlfZ0fZydLBRPzsTd6EF4S00JlGzP9VDeV0K3mWHCBsFWGCdiXJvten4z3U82z4w4M4xpiIeJwrMSUPBejD6fQwKBFxJ1rXPxRD6PkB+PV751WXOufxEPWKxH8vO+clpyRlJpg6sxz/7Njcr0zp148MrBUdUz0V+x/a+k/3LQbyR67WA69AWWsGvYmuz000ayVEBJfMMY4/nKOMCMgQ8CsyRiER2mfB16XhaKZ7e4vkvmP1tIa/ijG7nvJk0Cmu51ddxbKOMp6nymh9p4InP0oJjhasyEYLTwGCT535HAjD6RB+Pf5ibnRo8IzzXaqwijykirB/V5154OZFZa0jEZmtRnUJdtC5oL9DIPNY4xbF8gYx0ngsEq+VGSGIkPhSYHb3wE9Fdvh+2q9GYNjK9CD8IWbzXEaKDAta7teoP/9SO5FIv7pBsLB+gdPuNyZLb4O8tGWlM08cgJNQT2gJ9ui4r21I7sBaHWRKNY2DeKpaEPKq8t4w3haEkpSW8QeZrTaE8j6/DyPkmTvfeBVGfuII82SjlKZ/PlbYjQhlbt+m+UAgybONXNqmtcoUnx9RvkzGixL+1dLnEuHsGY0KO6OJBs9M4d6tYG0lY+l75fPrbcCqxHckZLPvrD7O62s57W2miaagZhCBfdFBdrV8qvPZ/srqCtrtgHXIg+jOwDWaMr/oCFQ==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3692.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77a3e04c-f674-4981-3939-08d84b0a1f0b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2020 04:23:31.4361
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /nacFlbikso9qW/XGNaPRpj59WGZzVMTjOcqm2WCqeQ5ey9m+NMo2rFV/3P/RTK9rBjl63C/1Sq4bH727CFw5852ZGXZOripkfUl5vBGswxVp8HXFv12tyscc77qIsqh
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB2171
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-08-27 at 15:45 -0700, Joe Perches wrote:
-> On Thu, 2020-08-27 at 15:20 -0700, Kees Cook wrote:
-> > On Fri, Aug 28, 2020 at 12:01:34AM +0300, Denis Efremov wrote:
-> > > Just FYI, I've send an addition to the device_attr_show.cocci script[1] to turn
-> > > simple cases of snprintf (e.g. "%i") to sprintf. Looks like many developers would
-> > > like it more than changing snprintf to scnprintf. As for me, I don't like the idea
-> > > of automated altering of the original logic from bounded snprint to unbouded one
-> > > with sprintf.
-> > 
-> > Agreed. This just makes me cringe. If the API design declares that when
-> > a show() callback starts, buf has been allocated with PAGE_SIZE bytes,
-> > then that's how the logic should proceed, and it should be using
-> > scnprintf...
-> > 
-> > show(...) {
-> > 	size_t remaining = PAGE_SIZE;
-> > 
-> > 	...
-> > 	remaining -= scnprintf(buf, remaining, "fmt", var args ...);
-> > 	remaining -= scnprintf(buf, remaining, "fmt", var args ...);
-> > 	remaining -= scnprintf(buf, remaining, "fmt", var args ...);
-> > 
-> > 	return PAGE_SIZE - remaining;
-> > }
-> 
-> It seems likely that coccinelle could do those transform
-> with any of sprintf/snprintf/scnprint too.
-> 
-> Though my bikeshed would use a single function and have
-> that function know the maximum output size
+Hi Lad-san,
 
-Perhaps something like the below with a sample conversion
-that uses single and multiple sysfs_emit uses.
+> From: Lad Prabhakar, Sent: Tuesday, August 25, 2020 7:45 PM
+>=20
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>=20
+> Document RZ/G2H (R8A774E1) SoC bindings.
+>=20
+> No driver change is needed due to the fallback compatible value
+> "renesas,pwm-rcar".
+>=20
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.ren=
+esas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
 
-I believe coccinelle can _mostly_ automated this.
+Thank you for the patch!
 
----
- fs/sysfs/file.c       | 30 ++++++++++++++++++++++++++++++
- include/linux/sysfs.h |  8 ++++++++
- kernel/power/main.c   | 49 ++++++++++++++++++++++++++-----------------------
- 3 files changed, 64 insertions(+), 23 deletions(-)
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-index eb6897ab78e7..c0ff3ba8e373 100644
---- a/fs/sysfs/file.c
-+++ b/fs/sysfs/file.c
-@@ -707,3 +707,33 @@ int sysfs_change_owner(struct kobject *kobj, kuid_t kuid, kgid_t kgid)
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(sysfs_change_owner);
-+
-+/**
-+ *	sysfs_emit - scnprintf equivalent, aware of PAGE_SIZE buffer.
-+ *	@buf:	start of PAGE_SIZE buffer.
-+ *	@pos:	current position in buffer
-+ *              (pos - buf) must always be < PAGE_SIZE
-+ *	@fmt:	format
-+ *	@...:	arguments to format
-+ *
-+ *
-+ * Returns number of characters written at pos.
-+ */
-+int sysfs_emit(char *buf, char *pos, const char *fmt, ...)
-+{
-+	int len;
-+	va_list args;
-+
-+	WARN(pos < buf, "pos < buf\n");
-+	WARN(pos - buf >= PAGE_SIZE, "pos >= PAGE_SIZE (%tu > %lu)\n",
-+	     pos - buf, PAGE_SIZE);
-+	if (pos < buf || pos - buf >= PAGE_SIZE)
-+		return 0;
-+
-+	va_start(args, fmt);
-+	len = vscnprintf(pos, PAGE_SIZE - (pos - buf), fmt, args);
-+	va_end(args);
-+
-+	return len;
-+}
-+EXPORT_SYMBOL_GPL(sysfs_emit);
-diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-index 34e84122f635..5a21d3d30016 100644
---- a/include/linux/sysfs.h
-+++ b/include/linux/sysfs.h
-@@ -329,6 +329,8 @@ int sysfs_groups_change_owner(struct kobject *kobj,
- int sysfs_group_change_owner(struct kobject *kobj,
- 			     const struct attribute_group *groups, kuid_t kuid,
- 			     kgid_t kgid);
-+__printf(3, 4)
-+int sysfs_emit(char *buf, char *pos, const char *fmt, ...);
- 
- #else /* CONFIG_SYSFS */
- 
-@@ -576,6 +578,12 @@ static inline int sysfs_group_change_owner(struct kobject *kobj,
- 	return 0;
- }
- 
-+__printf(3, 4)
-+static inline int sysfs_emit(char *buf, char *pos, const char *fmt, ...)
-+{
-+	return 0;
-+}
-+
- #endif /* CONFIG_SYSFS */
- 
- static inline int __must_check sysfs_create_file(struct kobject *kobj,
-diff --git a/kernel/power/main.c b/kernel/power/main.c
-index 40f86ec4ab30..f3fb9f255234 100644
---- a/kernel/power/main.c
-+++ b/kernel/power/main.c
-@@ -100,7 +100,7 @@ int pm_async_enabled = 1;
- static ssize_t pm_async_show(struct kobject *kobj, struct kobj_attribute *attr,
- 			     char *buf)
- {
--	return sprintf(buf, "%d\n", pm_async_enabled);
-+	return sysfs_emit(buf, buf, "%d\n", pm_async_enabled);
- }
- 
- static ssize_t pm_async_store(struct kobject *kobj, struct kobj_attribute *attr,
-@@ -124,7 +124,7 @@ power_attr(pm_async);
- static ssize_t mem_sleep_show(struct kobject *kobj, struct kobj_attribute *attr,
- 			      char *buf)
- {
--	char *s = buf;
-+	char *pos = buf;
- 	suspend_state_t i;
- 
- 	for (i = PM_SUSPEND_MIN; i < PM_SUSPEND_MAX; i++)
-@@ -132,16 +132,16 @@ static ssize_t mem_sleep_show(struct kobject *kobj, struct kobj_attribute *attr,
- 			const char *label = mem_sleep_states[i];
- 
- 			if (mem_sleep_current == i)
--				s += sprintf(s, "[%s] ", label);
-+				pos += sysfs_emit(buf, pos, "[%s] ", label);
- 			else
--				s += sprintf(s, "%s ", label);
-+				pos += sysfs_emit(buf, pos, "%s ", label);
- 		}
- 
- 	/* Convert the last space to a newline if needed. */
--	if (s != buf)
--		*(s-1) = '\n';
-+	if (pos != buf)
-+		*(pos - 1) = '\n';
- 
--	return (s - buf);
-+	return pos - buf;
- }
- 
- static suspend_state_t decode_suspend_state(const char *buf, size_t n)
-@@ -202,7 +202,7 @@ bool sync_on_suspend_enabled = !IS_ENABLED(CONFIG_SUSPEND_SKIP_SYNC);
- static ssize_t sync_on_suspend_show(struct kobject *kobj,
- 				   struct kobj_attribute *attr, char *buf)
- {
--	return sprintf(buf, "%d\n", sync_on_suspend_enabled);
-+	return sysfs_emit(buf, buf, "%d\n", sync_on_suspend_enabled);
- }
- 
- static ssize_t sync_on_suspend_store(struct kobject *kobj,
-@@ -336,7 +336,7 @@ static ssize_t last_failed_dev_show(struct kobject *kobj,
- 	index %= REC_FAILED_NUM;
- 	last_failed_dev = suspend_stats.failed_devs[index];
- 
--	return sprintf(buf, "%s\n", last_failed_dev);
-+	return sysfs_emit(buf, buf, "%s\n", last_failed_dev);
- }
- static struct kobj_attribute last_failed_dev = __ATTR_RO(last_failed_dev);
- 
-@@ -350,7 +350,7 @@ static ssize_t last_failed_errno_show(struct kobject *kobj,
- 	index %= REC_FAILED_NUM;
- 	last_failed_errno = suspend_stats.errno[index];
- 
--	return sprintf(buf, "%d\n", last_failed_errno);
-+	return sysfs_emit(buf, buf, "%d\n", last_failed_errno);
- }
- static struct kobj_attribute last_failed_errno = __ATTR_RO(last_failed_errno);
- 
-@@ -366,7 +366,7 @@ static ssize_t last_failed_step_show(struct kobject *kobj,
- 	step = suspend_stats.failed_steps[index];
- 	last_failed_step = suspend_step_name(step);
- 
--	return sprintf(buf, "%s\n", last_failed_step);
-+	return sysfs_emit(buf, buf, "%s\n", last_failed_step);
- }
- static struct kobj_attribute last_failed_step = __ATTR_RO(last_failed_step);
- 
-@@ -474,7 +474,7 @@ bool pm_print_times_enabled;
- static ssize_t pm_print_times_show(struct kobject *kobj,
- 				   struct kobj_attribute *attr, char *buf)
- {
--	return sprintf(buf, "%d\n", pm_print_times_enabled);
-+	return sysfs_emit(buf, buf, "%d\n", pm_print_times_enabled);
- }
- 
- static ssize_t pm_print_times_store(struct kobject *kobj,
-@@ -504,7 +504,9 @@ static ssize_t pm_wakeup_irq_show(struct kobject *kobj,
- 					struct kobj_attribute *attr,
- 					char *buf)
- {
--	return pm_wakeup_irq ? sprintf(buf, "%u\n", pm_wakeup_irq) : -ENODATA;
-+	if (!pm_wakeup_irq)
-+		return -ENODATA;
-+	return sysfs_emit(buf, buf, "%u\n", pm_wakeup_irq);
- }
- 
- power_attr_ro(pm_wakeup_irq);
-@@ -514,7 +516,7 @@ bool pm_debug_messages_on __read_mostly;
- static ssize_t pm_debug_messages_show(struct kobject *kobj,
- 				      struct kobj_attribute *attr, char *buf)
- {
--	return sprintf(buf, "%d\n", pm_debug_messages_on);
-+	return sysfs_emit(buf, buf, "%d\n", pm_debug_messages_on);
- }
- 
- static ssize_t pm_debug_messages_store(struct kobject *kobj,
-@@ -704,8 +706,9 @@ static ssize_t wakeup_count_show(struct kobject *kobj,
- {
- 	unsigned int val;
- 
--	return pm_get_wakeup_count(&val, true) ?
--		sprintf(buf, "%u\n", val) : -EINTR;
-+	if (!pm_get_wakeup_count(&val, true))
-+		return -EINTR;
-+	return sysfs_emit(buf, buf, "%u\n", val);
- }
- 
- static ssize_t wakeup_count_store(struct kobject *kobj,
-@@ -747,17 +750,17 @@ static ssize_t autosleep_show(struct kobject *kobj,
- 	suspend_state_t state = pm_autosleep_state();
- 
- 	if (state == PM_SUSPEND_ON)
--		return sprintf(buf, "off\n");
-+		return sysfs_emit(buf, buf, "off\n");
- 
- #ifdef CONFIG_SUSPEND
- 	if (state < PM_SUSPEND_MAX)
--		return sprintf(buf, "%s\n", pm_states[state] ?
--					pm_states[state] : "error");
-+		return sysfs_emit(buf, buf, "%s\n",
-+				  pm_states[state] ?: "error");
- #endif
- #ifdef CONFIG_HIBERNATION
--	return sprintf(buf, "disk\n");
-+	return sysfs_emit(buf, buf, "disk\n");
- #else
--	return sprintf(buf, "error");
-+	return sysfs_emit(buf, buf, "error\n");
- #endif
- }
- 
-@@ -826,7 +829,7 @@ int pm_trace_enabled;
- static ssize_t pm_trace_show(struct kobject *kobj, struct kobj_attribute *attr,
- 			     char *buf)
- {
--	return sprintf(buf, "%d\n", pm_trace_enabled);
-+	return sysfs_emit(buf, buf, "%d\n", pm_trace_enabled);
- }
- 
- static ssize_t
-@@ -863,7 +866,7 @@ power_attr_ro(pm_trace_dev_match);
- static ssize_t pm_freeze_timeout_show(struct kobject *kobj,
- 				      struct kobj_attribute *attr, char *buf)
- {
--	return sprintf(buf, "%u\n", freeze_timeout_msecs);
-+	return sysfs_emit(buf, buf, "%u\n", freeze_timeout_msecs);
- }
- 
- static ssize_t pm_freeze_timeout_store(struct kobject *kobj,
+Best regards,
+Yoshihiro Shimoda
 
+>  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
+> b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
+> index daadde9ff9c4..5407c11e92a4 100644
+> --- a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
+> @@ -20,6 +20,7 @@ properties:
+>            - renesas,pwm-r8a774a1  # RZ/G2M
+>            - renesas,pwm-r8a774b1  # RZ/G2N
+>            - renesas,pwm-r8a774c0  # RZ/G2E
+> +          - renesas,pwm-r8a774e1  # RZ/G2H
+>            - renesas,pwm-r8a7778   # R-Car M1A
+>            - renesas,pwm-r8a7779   # R-Car H1
+>            - renesas,pwm-r8a7790   # R-Car H2
+> --
+> 2.17.1
 
