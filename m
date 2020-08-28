@@ -2,94 +2,130 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4644C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F33C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 945792071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:06:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h1hgyTlR"
+	by mail.kernel.org (Postfix) with ESMTP id A409120776
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:06:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598605615;
+	bh=MPhtp0UtdEZ75rpOuAq7t66CaY460V2FzguTeM/ym6U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oYnRLpmUx2Y1/M4f4S69vVUnlrykhgsS1Wv2Hx5tgXuPFO8lvKCI1VwzDp1Pwzcbl
+	 5CYBW3d+y9W81K8IM7trAO2eNTUxiBCNv44Vw28VPyK6uK2hdK9TUdWsYmXWJCzEEu
+	 L4L1ML97bSh3EKMCLN3Uxz6KACD/BEqYAcBUPcmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgH1JGq (ORCPT
+        id S1728780AbgH1JGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:06:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728362AbgH1JGg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:06:36 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5DAAC061232
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:06:34 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id d11so520507ejt.13
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:06:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HvV7eXBvyQgCBgrsjvWaIv2rEaJefsbSLUIuZLspMEA=;
-        b=h1hgyTlR8KltTUDbvjiOZ0FJPdU1qPb2uGFPxuC9WkmLFRhAEyeaFSrZW97ojGNcp0
-         ccRdiTageCHFfZJBLuATi1xd0boWZlbxqSGcqSlmEk1SE5ZKwTSi9YCZAIGfUZiNksWn
-         mBZgya8M2DBV7E+1WLVtyLXHnyeyR28qvSLsk3mBKW1XGhw+ERe3+pE8Hxv8ePRG2Uc3
-         FqDohuRqdAKDiQe60Wp7dd+SAqOlJDTYXWvF5PYjIrtO70S+9wpqgoV0PH57Lti/mkS7
-         lkA0rwUzvgBigA19Oou95yEg2rao3yIdKqpkBcEr/hgJpNN9FGAPgr0LiMO2eTLNh9sf
-         XsnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HvV7eXBvyQgCBgrsjvWaIv2rEaJefsbSLUIuZLspMEA=;
-        b=Fge027/jEnObOxLT6oauSzDnWZEu23mo3f0YZWR6i0+hOieDafKv9qfYJhrj6YPxlo
-         epcoRbq+pqqzz7gMVVGZyAP98HnBqqpgOv1s5QKO2iOY8ZQZ+gWme5f7ZL0mOGiuLGQ1
-         hVuDmyBBL9hYQy5CyerA8DnEgg58/TCiwwK4HyJd99BqUXIYeyglZfwp8RHB1fUpWHa8
-         02LIG8Pl0AQL/9RbuSf/IGTvbO00nBN2HVyc8Kr9zh8vg60h4ZMu9JeGFfhkPFonr6Wf
-         isFo47aeK/pENwnTHN0JBEpXnt3CFW+oddmCKTsq4e7jE6TL6r3bqY2k0qn7oyQUdyRv
-         V2Xw==
-X-Gm-Message-State: AOAM530mHuqw7A36msQpbJfoCelgYItXz7LsP5WFZ3gHu26E8iOUXNXr
-        zchKBfZo6hx3Ggm3H/rOzffYqBxZAEyK77eNRFcGIA==
-X-Google-Smtp-Source: ABdhPJzmAhVb+RcSV8T4sZX5/XRKDlKD6uVeC4jK3X8WbHU7aWhc8Y1BK4BLw7LNFeiAVXdSfK9JBKq/4Qwn8LtOpcU=
-X-Received: by 2002:a17:906:5f8d:: with SMTP id a13mr767284eju.226.1598605593511;
- Fri, 28 Aug 2020 02:06:33 -0700 (PDT)
+        Fri, 28 Aug 2020 05:06:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728016AbgH1JGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:06:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DC1D2071B;
+        Fri, 28 Aug 2020 09:06:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598605599;
+        bh=MPhtp0UtdEZ75rpOuAq7t66CaY460V2FzguTeM/ym6U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A0bRjlHrquKlHU4zHVZhrlp9d3Y2By2Ei+MSTE1ZwDh2nnxwrAeNuRNcjYusUPAWs
+         /fr41z6y8Lw1uo6Woec2U/a+1GiY680HU//nN0Uv6Tg48dqe1rWrt3toWDq29pFbSU
+         dw7RWdVwgAn1rYS+M/bDi/PADHv4ERW79Bc2D198=
+Date:   Fri, 28 Aug 2020 11:06:51 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH kernel] serial_core: Check for port state when tty is
+ in error state
+Message-ID: <20200828090651.GA1110962@kroah.com>
+References: <20200728124359.980-1-aik@ozlabs.ru>
 MIME-Version: 1.0
-References: <20200814100357.209340-1-thomas.preston@codethink.co.uk> <20200814100357.209340-2-thomas.preston@codethink.co.uk>
-In-Reply-To: <20200814100357.209340-2-thomas.preston@codethink.co.uk>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 11:06:21 +0200
-Message-ID: <CACRpkdZj-eAz0yse3OcKLiO0sPVHJMmhVZ_yLWFt1YKPe3hkRg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] pinctrl: mcp23s08: Fixup mcp23x17 regmap_config
-To:     Thomas Preston <thomas.preston@codethink.co.uk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>,
-        Phil Reid <preid@electromag.com.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728124359.980-1-aik@ozlabs.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 12:04 PM Thomas Preston
-<thomas.preston@codethink.co.uk> wrote:
+On Tue, Jul 28, 2020 at 10:43:59PM +1000, Alexey Kardashevskiy wrote:
+> At the moment opening a serial device node (such as /dev/ttyS3)
+> succeeds even if there is no actual serial device behind it.
+> Reading/writing/ioctls (most) expectantly fail as the uart port is not
+> initialized (the type is PORT_UNKNOWN) and the TTY_IO_ERROR error state
+> bit is set fot the tty.
 
-> - Fix a typo where mcp23x17 configs are referred to as mcp23x16.
-> - Fix precious range to include INTCAP{A,B}, which clear on read.
-> - Fix precious range to include GPIOB, which clears on read.
-> - Fix volatile range to include GPIOB, to fix debugfs registers
->   reporting different values than `gpioget gpiochip2 {0..15}`.
->
-> Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
+That is only if there is no ldisc set for the port, right?  I don't
+think that always will be the case if the port is not initialized.
 
-Since the other two patches seem wrong, please resend this one patch,
-also include the people on TO: here: Andy, Phil and Jan, who all use
-this chip a lot.
+Yes, we do clear this on port open, but we clear it before the
+->activate() callback happens.
 
-Yours,
-Linus Walleij
+Why not check for initialized instead?  That would seem to be what you
+want to do here instead of checking for an io error.
+
+> However syzkaller (a syscall fuzzer) found that setting line discipline
+> does not have these checks all the way down to io_serial_out() in
+> 8250_port.c (8250 is the default choice made by univ8250_console_init()).
+> As the result of PORT_UNKNOWN, uart_port::iobase is NULL which
+> a platform translates onto some address accessing which produces a crash
+> like below.
+> 
+> This adds tty_io_error() to uart_set_ldisc() to prevent the crash.
+> 
+> The example of crash on PPC64/pseries:
+> 
+> BUG: Unable to handle kernel data access on write at 0xc00a000000000001
+> Faulting instruction address: 0xc000000000c9c9cc
+> cpu 0x0: Vector: 300 (Data Access) at [c00000000c6d7800]
+>     pc: c000000000c9c9cc: io_serial_out+0xcc/0xf0
+>     lr: c000000000c9c9b4: io_serial_out+0xb4/0xf0
+>     sp: c00000000c6d7a90
+>    msr: 8000000000009033
+>    dar: c00a000000000001
+>  dsisr: 42000000
+>   current = 0xc00000000cd22500
+>   paca    = 0xc0000000035c0000   irqmask: 0x03   irq_happened: 0x01
+>     pid   = 1371, comm = syz-executor.0
+> Linux version 5.8.0-rc7-le-guest_syzkaller_a+fstn1 (aik@fstn1-p1) (gcc (Ubunt
+> untu) 2.30) #660 SMP Tue Jul 28 22:29:22 AEST 2020
+> enter ? for help
+> [c00000000c6d7a90] c0000000018a8cc0 _raw_spin_lock_irq+0xb0/0xe0 (unreliable)
+> [c00000000c6d7ad0] c000000000c9bdc0 serial8250_do_set_ldisc+0x140/0x180
+> [c00000000c6d7b10] c000000000c9bea4 serial8250_set_ldisc+0xa4/0xb0
+> [c00000000c6d7b50] c000000000c91138 uart_set_ldisc+0xb8/0x160
+> [c00000000c6d7b90] c000000000c5a22c tty_set_ldisc+0x23c/0x330
+> [c00000000c6d7c20] c000000000c4c220 tty_ioctl+0x990/0x12f0
+> [c00000000c6d7d20] c00000000056357c ksys_ioctl+0x14c/0x180
+> [c00000000c6d7d70] c0000000005635f0 sys_ioctl+0x40/0x60
+> [c00000000c6d7db0] c00000000003b814 system_call_exception+0x1a4/0x330
+> [c00000000c6d7e20] c00000000000d368 system_call_common+0xe8/0x214
+> 
+> Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+> ---
+> 
+> While looking at it, I noticed that a bunch of callbacks are prone to
+> this bug and since I wanted to fix them all with minimum effort,
+> I tried checking for PORT_UNKNOWN in uart_port_check() but it breaks
+> device opening. Another approach could be checking for uart_port::iobase
+> in 8250 (and probably uart_port::membase as well) but this will make
+> the rest of the code to think the device is ok while there is no device
+> at all.
+> 
+> What would the correct approach be and what is the expectation?
+
+We should probably check tty_port_initialized() on these code paths
+better, care to fix that up?
+
+thanks,
+
+greg k-h
