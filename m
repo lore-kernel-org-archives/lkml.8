@@ -2,84 +2,94 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B850C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1DFC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1F920776
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598602722;
-	bh=73FhKi65XqUq6hi2IN55t0uqmSmIWYCAODCd/AinFj8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SXNY/igQdUxxOiw8VryV8Vd+UAYWz0V3BmUTKSPYKwsVYxoZGXoSasJ3Cn+c6lWXV
-	 0ggSRiloYwnuvdSo3Dl9W1GWytXwkNJUJPZ8gFDUk80jpJiBtd4iTRacRDPPyqcMkW
-	 XHBZEed75kDXXn179itifsxHXMvgsNE/Z8CJw5Z0=
+	by mail.kernel.org (Postfix) with ESMTP id B2DB120776
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:19:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q5d0a9VU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbgH1ISl (ORCPT
+        id S1728647AbgH1ITK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 04:18:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbgH1ISi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 04:18:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Fri, 28 Aug 2020 04:19:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbgH1ITG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 04:19:06 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCF79C061264
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 01:19:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=NxdbOY70mCwnzqfUQdLkryP0Ss6jF6+w5CM4jdheeU0=; b=Q5d0a9VUPUoK43jNXOUDekTcKH
+        MdEsb/8mz6VjEdKeCu+tuxC3ETTCAM7uDRSTGQrNMQDWs0YrbtayBF+mAsE1cJooM0NxWwCXaZqua
+        GflmHqyP6Ik/ff2cU2UK3u6s8oz0LjYBsKz9t/B1gJVrfz8oJGncO4qtAJVSOEDuGzSunjqPaMUQt
+        6yJ4A5Bw6Eg46pCcDsiJDldNsVBK32R5b0nL5llc4NgAhze9iTpxMStLP/jBMRL0WDbalpGGu7WWy
+        Vbc+kHqahKj3BJx6QREoax6nqknEOz0yxXxNCQRy5mLyhjPSvfjtOcQbI0iOAxaysUdaa7BYn6bvP
+        0nyf5pJA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBZay-0003E0-F2; Fri, 28 Aug 2020 08:18:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6796E20776;
-        Fri, 28 Aug 2020 08:18:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598602718;
-        bh=73FhKi65XqUq6hi2IN55t0uqmSmIWYCAODCd/AinFj8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nJsPSQJEodX0ILukgCu32ZmCyFPd04361JBvas+tLcZqSeuXnBYQE6EWhzOZiCBot
-         V+CSUzgLhcKl2HAP+JS+kdHG0DHJXBDgm52im535Wzdhvp5YDXJuMS0qpX6oJEJEvp
-         QOsXVXqsaMOdyZmCeyfd2EFKXoSsP19IZMPaIATg=
-Date:   Fri, 28 Aug 2020 10:18:49 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Paras Sharma <parashar@codeaurora.org>
-Cc:     Jiri Slaby <jslaby@suse.com>, linux-arm-msm@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] serial: qcom_geni_serial: To correct QUP Version
- detection logic
-Message-ID: <20200828081849.GC1007729@kroah.com>
-References: <1597131794-1076-1-git-send-email-parashar@codeaurora.org>
- <20200811082330.GC113774@kroah.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2997D305C10;
+        Fri, 28 Aug 2020 10:18:44 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D25552C49BBC1; Fri, 28 Aug 2020 10:18:44 +0200 (CEST)
+Date:   Fri, 28 Aug 2020 10:18:44 +0200
+From:   peterz@infradead.org
+To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/5] seqlock: seqcount_LOCKTYPE_t: Standardize naming
+ convention
+Message-ID: <20200828081844.GM1362448@hirez.programming.kicks-ass.net>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200828010710.5407-1-a.darwish@linutronix.de>
+ <20200828010710.5407-2-a.darwish@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200811082330.GC113774@kroah.com>
+In-Reply-To: <20200828010710.5407-2-a.darwish@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 10:23:30AM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Aug 11, 2020 at 01:13:14PM +0530, Paras Sharma wrote:
-> > The current implementation reduces the sampling rate by half
-> > if qup HW version greater is than 2.5 by checking if the geni
-> > SE major version is greater than 2 and geni SE minor version
-> > is greater than 5.
-> > 
-> > This implementation fails when the version is 3 or greater.
-> > 
-> > Hence by adding the another check for geni SE major version,
-> > this problem can be solved.
-> > 
-> > Signed-off-by: Paras Sharma <parashar@codeaurora.org>
-> > ---
-> >  drivers/tty/serial/qcom_geni_serial.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
+On Fri, Aug 28, 2020 at 03:07:06AM +0200, Ahmed S. Darwish wrote:
+> At seqlock.h, sequence counters with associated locks are either called
+> seqcount_LOCKNAME_t, seqcount_LOCKTYPE_t, or seqcount_locktype_t.
 > 
-> Should this go to stable kernels?  If so, how far back?  What git commit
-> id is this patch fixing?  And if so, why not put a Fixes: tag on this as
-> well?
+> Standardize on "seqcount_LOCKTYPE_t" for all instances in comments,
+> kernel-doc, and SEQCOUNT_LOCKTYPE() generative macro paramters.
 
-Dropped from my review queue due to lack of response, please fix up and
-resend when you wish to have it reviewed again...
+> +#define SEQCOUNT_LOCKTYPE(locktype, locktype_t, preemptible, lockmember)	\
+> +typedef struct seqcount_##locktype {					\
+> +	__SEQ_LOCK(locktype_t	*lock);					\
+> +} seqcount_##locktype##_t;						\
 
-greg k-h
+Hurmph, so my thinking was that the above 'locktype' is not actually a
+type and therefore a misnomer.
+
+But I see your point about it being a bit of a mess.
+
+Would:
+
+ s/LOCKTYPE/LOCKNAME/g
+ s/seqcount_locktype_t/seqcount_LOCKNAME_t/g
+
+help? Then we're consistently at: seqcount_LOCKNAME_t, which is a type.
+
