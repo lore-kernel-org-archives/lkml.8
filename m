@@ -2,90 +2,148 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA81EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E052C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 846CC207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B102075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:30:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d4u9wTJI"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qWvhfPBP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgH1L2b (ORCPT
+        id S1729197AbgH1La1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 07:28:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27244 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729198AbgH1L2H (ORCPT
+        Fri, 28 Aug 2020 07:30:27 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53360 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728709AbgH1L3w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 07:28:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598614084;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vcVCnDfXCrpqdXroEZsRpzoOz05edQsOh2pIT4QY95E=;
-        b=d4u9wTJIhYCrrklCfYatvJ9ry1ZYxNLYhLyL6BtFCNGqMG38xjtTiIXHcUkdnk4bItdP99
-        Y8uD9oC2y7fCfjnIJ4gM3FyzqqZTpuUiLcxQi4xIwGaqaIYNluhdFIdG1DudZaALBl/ZHg
-        YdFCHwGUW9pV/AB0uQrtaxKH4A7Hel4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-182-KhS13XkaMoyyK4EiseYxow-1; Fri, 28 Aug 2020 07:28:02 -0400
-X-MC-Unique: KhS13XkaMoyyK4EiseYxow-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 43BEF64090;
-        Fri, 28 Aug 2020 11:28:01 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-112-54.ams2.redhat.com [10.36.112.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CCF325D9F3;
-        Fri, 28 Aug 2020 11:28:00 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id C877C9C87; Fri, 28 Aug 2020 13:27:59 +0200 (CEST)
-Date:   Fri, 28 Aug 2020 13:27:59 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Jiri Slaby <jirislaby@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        1882851@bugs.launchpad.net
-Subject: Re: [PATCH 1/2] drm/virtio: fix unblank
-Message-ID: <20200828112759.rmeeh5bonrewiqte@sirius.home.kraxel.org>
-References: <20200818072511.6745-1-kraxel@redhat.com>
- <20200818072511.6745-2-kraxel@redhat.com>
- <88ae71c2-c3ed-e0e4-e62c-bdf9d6534f2a@kernel.org>
+        Fri, 28 Aug 2020 07:29:52 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07SBSubY057960;
+        Fri, 28 Aug 2020 06:28:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598614136;
+        bh=K6J1dxqpyjkqrS/MebKa8sgd6/5VHr1CiLNX3jpx7pw=;
+        h=From:To:CC:Subject:Date;
+        b=qWvhfPBPFpUdwKJGs7+w7SHCWETcn124eVl+LPdMUmLNya2liW/NM8mAwMbM1wprG
+         zioL7jtMPyJ7cbuhOP2ENK+lBv1rtBfTcZjwrlZhgyaujt/wxgFfNi5F5t4yLn33Xu
+         jnCNEN0QFrpeySO3fchJ9ljMo9zkedIF7AjfY0E4=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07SBSuas117700
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Aug 2020 06:28:56 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 28
+ Aug 2020 06:28:56 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 28 Aug 2020 06:28:56 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07SBStBb116292;
+        Fri, 28 Aug 2020 06:28:55 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh@kernel.org>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH] ASoC: tlv320adcx140: Add digital mic channel enable routing
+Date:   Fri, 28 Aug 2020 06:28:55 -0500
+Message-ID: <20200828112855.10112-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <88ae71c2-c3ed-e0e4-e62c-bdf9d6534f2a@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 09:24:40AM +0200, Jiri Slaby wrote:
-> On 18. 08. 20, 9:25, Gerd Hoffmann wrote:
-> > When going through a disable/enable cycle without changing the
-> > framebuffer the optimization added by commit 3954ff10e06e ("drm/virtio:
-> > skip set_scanout if framebuffer didn't change") causes the screen stay
-> > blank.  Add a bool to force an update to fix that.
-> > 
-> > v2: use drm_atomic_crtc_needs_modeset() (Daniel).
-> > 
-> > Cc: 1882851@bugs.launchpad.net
-> > Fixes: 3954ff10e06e ("drm/virtio: skip set_scanout if framebuffer didn't change")
-> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> 
-> Tested-by: Jiri Slaby <jirislaby@kernel.org>
+Add the audio routing map to enable the digital mic paths when the
+analog mic paths are not enabled.
 
-Ping.  Need an ack or an review to merge this.
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ sound/soc/codecs/tlv320adcx140.c | 37 ++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-thanks,
-  Gerd
+diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
+index 5cd50d841177..5d1b2a03f0ac 100644
+--- a/sound/soc/codecs/tlv320adcx140.c
++++ b/sound/soc/codecs/tlv320adcx140.c
+@@ -412,6 +412,16 @@ static const struct snd_soc_dapm_widget adcx140_dapm_widgets[] = {
+ 	SND_SOC_DAPM_ADC("CH3_ADC", "CH3 Capture", ADCX140_IN_CH_EN, 5, 0),
+ 	SND_SOC_DAPM_ADC("CH4_ADC", "CH4 Capture", ADCX140_IN_CH_EN, 4, 0),
+ 
++	SND_SOC_DAPM_ADC("CH1_DIG", "CH1 Capture", ADCX140_IN_CH_EN, 7, 0),
++	SND_SOC_DAPM_ADC("CH2_DIG", "CH2 Capture", ADCX140_IN_CH_EN, 6, 0),
++	SND_SOC_DAPM_ADC("CH3_DIG", "CH3 Capture", ADCX140_IN_CH_EN, 5, 0),
++	SND_SOC_DAPM_ADC("CH4_DIG", "CH4 Capture", ADCX140_IN_CH_EN, 4, 0),
++	SND_SOC_DAPM_ADC("CH5_DIG", "CH5 Capture", ADCX140_IN_CH_EN, 3, 0),
++	SND_SOC_DAPM_ADC("CH6_DIG", "CH6 Capture", ADCX140_IN_CH_EN, 2, 0),
++	SND_SOC_DAPM_ADC("CH7_DIG", "CH7 Capture", ADCX140_IN_CH_EN, 1, 0),
++	SND_SOC_DAPM_ADC("CH8_DIG", "CH8 Capture", ADCX140_IN_CH_EN, 0, 0),
++
++
+ 	SND_SOC_DAPM_SWITCH("CH1_ASI_EN", SND_SOC_NOPM, 0, 0,
+ 			    &adcx140_dapm_ch1_en_switch),
+ 	SND_SOC_DAPM_SWITCH("CH2_ASI_EN", SND_SOC_NOPM, 0, 0,
+@@ -470,6 +480,15 @@ static const struct snd_soc_dapm_route adcx140_audio_map[] = {
+ 	{"CH3_ASI_EN", "Switch", "CH3_ADC"},
+ 	{"CH4_ASI_EN", "Switch", "CH4_ADC"},
+ 
++	{"CH1_ASI_EN", "Switch", "CH1_DIG"},
++	{"CH2_ASI_EN", "Switch", "CH2_DIG"},
++	{"CH3_ASI_EN", "Switch", "CH3_DIG"},
++	{"CH4_ASI_EN", "Switch", "CH4_DIG"},
++	{"CH5_ASI_EN", "Switch", "CH5_DIG"},
++	{"CH6_ASI_EN", "Switch", "CH6_DIG"},
++	{"CH7_ASI_EN", "Switch", "CH7_DIG"},
++	{"CH8_ASI_EN", "Switch", "CH8_DIG"},
++
+ 	{"CH5_ASI_EN", "Switch", "CH5_OUT"},
+ 	{"CH6_ASI_EN", "Switch", "CH6_OUT"},
+ 	{"CH7_ASI_EN", "Switch", "CH7_OUT"},
+@@ -541,6 +560,15 @@ static const struct snd_soc_dapm_route adcx140_audio_map[] = {
+ 	{"PDM Clk Div Select", "705.6 kHz", "MIC1P Input Mux"},
+ 	{"PDM Clk Div Select", "5.6448 MHz", "MIC1P Input Mux"},
+ 
++	{"MIC1P Input Mux", NULL, "CH1_DIG"},
++	{"MIC1M Input Mux", NULL, "CH2_DIG"},
++	{"MIC2P Input Mux", NULL, "CH3_DIG"},
++	{"MIC2M Input Mux", NULL, "CH4_DIG"},
++	{"MIC3P Input Mux", NULL, "CH5_DIG"},
++	{"MIC3M Input Mux", NULL, "CH6_DIG"},
++	{"MIC4P Input Mux", NULL, "CH7_DIG"},
++	{"MIC4M Input Mux", NULL, "CH8_DIG"},
++
+ 	{"MIC1 Analog Mux", "Line In", "MIC1P"},
+ 	{"MIC2 Analog Mux", "Line In", "MIC2P"},
+ 	{"MIC3 Analog Mux", "Line In", "MIC3P"},
+@@ -554,6 +582,15 @@ static const struct snd_soc_dapm_route adcx140_audio_map[] = {
+ 	{"MIC3M Input Mux", "Analog", "MIC3M"},
+ 	{"MIC4P Input Mux", "Analog", "MIC4P"},
+ 	{"MIC4M Input Mux", "Analog", "MIC4M"},
++
++	{"MIC1P Input Mux", "Digital", "MIC1P"},
++	{"MIC1M Input Mux", "Digital", "MIC1M"},
++	{"MIC2P Input Mux", "Digital", "MIC2P"},
++	{"MIC2M Input Mux", "Digital", "MIC2M"},
++	{"MIC3P Input Mux", "Digital", "MIC3P"},
++	{"MIC3M Input Mux", "Digital", "MIC3M"},
++	{"MIC4P Input Mux", "Digital", "MIC4P"},
++	{"MIC4M Input Mux", "Digital", "MIC4M"},
+ };
+ 
+ static const struct snd_kcontrol_new adcx140_snd_controls[] = {
+-- 
+2.28.0
 
