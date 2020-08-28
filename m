@@ -2,128 +2,215 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E83CC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 04:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3974EC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 04:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E07C620848
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 04:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 169A820848
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 04:54:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A+VsjOtC"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="wzNVuFCj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgH1Eve (ORCPT
+        id S1726439AbgH1EyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 00:51:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50904 "EHLO
+        Fri, 28 Aug 2020 00:54:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgH1Evc (ORCPT
+        with ESMTP id S1725809AbgH1EyG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 00:51:32 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58B9BC06121B
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 21:51:32 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id c15so1350193plq.4
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 21:51:32 -0700 (PDT)
+        Fri, 28 Aug 2020 00:54:06 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98ACCC061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 21:54:05 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id z9so46960wmk.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 21:54:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=G0VefugDvgS42hjIAoPJ8ISUdYbIoXgY2KSJmzSYe5M=;
-        b=A+VsjOtC36XhaswB06qIx+rbBgUaaLAIjugHfk+EIrxxf4Rh5nbZYd0sn+aQtsKlfY
-         nI9mB5700rbFAZTsXSZ+96t94xs6IB+ScLwy+1S3V6oQb7Js698iK3VMpGOhjbSYp0Br
-         6WwFiKajog8Xw7dxvUboaQGw4BG36xj8dgRZSh0B820UEB8iH6uIxHvhdDN1f6X/jwd/
-         VlOwxwNNKKXDlMVl2M4tf78pvRKuYn6CwP/C/56Ri+v7X9xtpM/YQP4qUWpS1Ku7DT8n
-         PesbyiHrNtHyOjveB5croFlMlZFiuFxBJg4g7Mp6STEx+HHJkOwpa5xI7beKz2pRG+8t
-         n2fw==
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xCkPRCKVOyv6UdC08SrLjktcyNyR3bWo2BWIKaXwLIU=;
+        b=wzNVuFCj/YGjuC6NDV1gHwffImireBFCVYVdrHj0WUr+2vvzYZTAgyeaw28x2dUPbd
+         ShRUHS3rP6pBj/FcTwkdikNlfeGx1bWm7WEKfEBmWiEz88ZxRXe1AW8Kh5Xr3w95ZWOL
+         uEhmg2WHxPEEvrNNBPr3SeykviI0capLfcMCr2WBcnYmQ84GYJYfxoWbI6GtvVjSlMpD
+         6xi87zx7+KFN+ckqJiXSKbzlyFqWY0+REM6PQJGxTAifwXNGrlEMz+pdRTl7AGAPKNG/
+         KwjOIJsHc0Opqh3TdvhPlFlqCdC0Dt7M1TzJLiHSACfAwNSWnvbjVieHE0Jndxidt1hH
+         BM6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G0VefugDvgS42hjIAoPJ8ISUdYbIoXgY2KSJmzSYe5M=;
-        b=QQB/7MKTYWc3g3g5iF3wceRT0uL1dNpkfFLKlK4HS11NMH4st8G4+U3wVk57nf/++T
-         4jemjVt98C4dDPz10t7fR5JSfJCp8gC9mrQdBamYVwd5QjYH/UqXqPX1+XpC9Mr7Ltm+
-         MMFGGNAYmLdrqyg7gxJeUXQJzla/4EEs47lYbJxVPvaRfVVojh8ggxoNMspo0Q5Y3Y7Y
-         RcVaFWgwe+MvnsFVLGdGyJoOA/qgNE5P2CQynDFlunDdSn7qFTW3/OO7I0kng/3Xwc6f
-         Iruqfc8rx3VmVEwGAXzc9ceorOfldaQLMsEvgTGAUcPl5ZhDC+JzWx0c8fHb/HcAkUCE
-         rSGw==
-X-Gm-Message-State: AOAM531ahcVLIpGLi5VG+nnw6XtdBfNOOWVSXmnds6gTpBCCSqZbYBxy
-        aD/o6VNdfxcxntfmSOeMD6TJVw==
-X-Google-Smtp-Source: ABdhPJy3YVFbXTROjqz+6HxX2wvPQtcLh2VQes+fyTjs7QckGVTwa69aPqxaHfs4We6PGYSEGpfmiA==
-X-Received: by 2002:a17:902:820b:: with SMTP id x11mr19055375pln.229.1598590291450;
-        Thu, 27 Aug 2020 21:51:31 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id m7sm4433763pfm.31.2020.08.27.21.51.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Aug 2020 21:51:30 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 10:21:28 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>, sbhanu@codeaurora.org,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>, nm@ti.com
-Subject: Re: WARNING: at drivers/opp/core.c:678
- dev_pm_opp_set_rate+0x4cc/0x5d4 - on arm x15
-Message-ID: <20200828045128.y7ybkd7dnvn4h6dt@vireshk-i7>
-References: <CA+G9fYvK5UkERLuBSRH5t2=j5==dbtw45GTMta9MafyJDqFsFA@mail.gmail.com>
- <20200827094651.3grvs6ungv3dh7y3@vireshk-i7>
- <20200827211832.3ebeda8a@canb.auug.org.au>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xCkPRCKVOyv6UdC08SrLjktcyNyR3bWo2BWIKaXwLIU=;
+        b=IW5y9+zQDO3x3G90sH6kuSjJVTTep8CujAvyOTdfx4acVwpp5D/anSDltGK26ClU/Z
+         Xl5s0seZ+zCoCHKBKil4eLne+otid5esxfBIjuNQop9gwubGxNpSLhm9ynRFdnZpnbBf
+         Q6pD0DIBh7qKNRY/cPBHuosiYDuEKC2XitErzycyyKwYHhlhpeAiIeO7DthQsx1EBrwS
+         EzqEmEEL2R73T/IigNFHkEr5VCNMJ4fdXnzkB/tSIdFv+1CEo0uGKYmleDGpudOQ8t4m
+         eX4YnI91aNxBJNz4SUXuI0xptYdEE1LQO9SNvPT9a3Duhy0CzjnWV1/4XRXpYnGR16sR
+         etzg==
+X-Gm-Message-State: AOAM532UHnxUCcqAkuNCDUNhsMkFXs48GU75PWufJUYfdpkeFSXqiHif
+        WiX3jFOtDaCeDHMDjC5rVRLRcy9g8Dks85b1+CBMdQ==
+X-Google-Smtp-Source: ABdhPJz3rZLWV6A3Em0ve8Z6e606P/Ks47lsI+RkOV083HeFssFde+guqsIX7d3OuAhb6RNGeYB7ks4hletdcMQevi4=
+X-Received: by 2002:a1c:1b17:: with SMTP id b23mr101507wmb.152.1598590444059;
+ Thu, 27 Aug 2020 21:54:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827211832.3ebeda8a@canb.auug.org.au>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20200827082251.1591-1-jiangyifei@huawei.com> <20200827082251.1591-3-jiangyifei@huawei.com>
+In-Reply-To: <20200827082251.1591-3-jiangyifei@huawei.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Fri, 28 Aug 2020 10:23:52 +0530
+Message-ID: <CAAhSdy36ZCubU-1+WzjMzBaR+RipgEhvRqd9AT+28=99-EUDaQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/2] target/kvm: Add interfaces needed for log dirty
+To:     Yifei Jiang <jiangyifei@huawei.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup.patel@wdc.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>, deepa.kernel@gmail.com,
+        kvm-riscv@lists.infradead.org, KVM General <kvm@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        "Zhangxiaofeng (F)" <victor.zhangxiaofeng@huawei.com>,
+        wu.wubin@huawei.com,
+        Zhanghailiang <zhang.zhanghailiang@huawei.com>,
+        "dengkai (A)" <dengkai1@huawei.com>,
+        yinyipeng <yinyipeng1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27-08-20, 21:18, Stephen Rothwell wrote:
-> Hi Viresh,
-> 
-> On Thu, 27 Aug 2020 15:16:51 +0530 Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 27-08-20, 15:04, Naresh Kamboju wrote:
-> > > While boot testing arm x15 devices the Kernel warning noticed with linux next
-> > > tag 20200825.
-> > > 
-> > > BAD:  next-20200825
-> > > GOOD:  next-20200824
-> > > 
-> > > metadata:
-> > >   git branch: master
-> > >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> > >   git commit: 3a00d3dfd4b68b208ecd5405e676d06c8ad6bb63
-> > >   git describe: next-20200825
-> > >   make_kernelversion: 5.9.0-rc2
-> > >   kernel-config:
-> > > https://builds.tuxbuild.com/LDTu4GFMmvkJspza5LJIjQ/kernel.config
-> > > 
-> > > We are working on git bisect and boot testing on x15 and get back to you.  
-> > 
-> > Was this working earlier ? But considering that multiple things
-> > related to OPP broke recently, it may be a OPP core bug as well. Not
-> > sure though.
-> > 
-> > Can you give me delta between both the next branches for drivers/opp/
-> > path ? I didn't get these tags after fetching linux-next.
-> 
-> Yeah, you need to explicitly fetch the tags as only the latest tag is
-> part of the branches in the tree.
+On Thu, Aug 27, 2020 at 1:54 PM Yifei Jiang <jiangyifei@huawei.com> wrote:
+>
+> Add two interfaces of log dirty for kvm_main.c, and detele the interface
+> kvm_vm_ioctl_get_dirty_log which is redundantly defined.
+>
+> CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT is added in defconfig.
+>
+> Signed-off-by: Yifei Jiang <jiangyifei@huawei.com>
+> Signed-off-by: Yipeng Yin <yinyipeng1@huawei.com>
+> ---
+>  arch/riscv/configs/defconfig |  1 +
+>  arch/riscv/kvm/Kconfig       |  1 +
+>  arch/riscv/kvm/mmu.c         | 43 ++++++++++++++++++++++++++++++++++++
+>  arch/riscv/kvm/vm.c          |  6 -----
+>  4 files changed, 45 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+> index d36e1000bbd3..857d799672c2 100644
+> --- a/arch/riscv/configs/defconfig
+> +++ b/arch/riscv/configs/defconfig
+> @@ -19,6 +19,7 @@ CONFIG_SOC_VIRT=y
+>  CONFIG_SMP=y
+>  CONFIG_VIRTUALIZATION=y
+>  CONFIG_KVM=y
+> +CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT=y
+>  CONFIG_HOTPLUG_CPU=y
+>  CONFIG_MODULES=y
+>  CONFIG_MODULE_UNLOAD=y
+> diff --git a/arch/riscv/kvm/Kconfig b/arch/riscv/kvm/Kconfig
+> index 2356dc52ebb3..91fcffc70e5d 100644
+> --- a/arch/riscv/kvm/Kconfig
+> +++ b/arch/riscv/kvm/Kconfig
+> @@ -26,6 +26,7 @@ config KVM
+>         select KVM_MMIO
+>         select HAVE_KVM_VCPU_ASYNC_IOCTL
+>         select SRCU
+> +       select KVM_GENERIC_DIRTYLOG_READ_PROTECT
+>         help
+>           Support hosting virtualized guest machines.
+>
+> diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
+> index 88bce80ee983..df2a470c25e4 100644
+> --- a/arch/riscv/kvm/mmu.c
+> +++ b/arch/riscv/kvm/mmu.c
+> @@ -358,6 +358,43 @@ void stage2_wp_memory_region(struct kvm *kvm, int slot)
+>         kvm_flush_remote_tlbs(kvm);
+>  }
+>
+> +/**
+> + * kvm_mmu_write_protect_pt_masked() - write protect dirty pages
+> + * @kvm:    The KVM pointer
+> + * @slot:   The memory slot associated with mask
+> + * @gfn_offset: The gfn offset in memory slot
+> + * @mask:   The mask of dirty pages at offset 'gfn_offset' in this memory
+> + *      slot to be write protected
+> + *
+> + * Walks bits set in mask write protects the associated pte's. Caller must
+> + * acquire kvm_mmu_lock.
+> + */
+> +static void kvm_mmu_write_protect_pt_masked(struct kvm *kvm,
+> +        struct kvm_memory_slot *slot,
+> +        gfn_t gfn_offset, unsigned long mask)
+> +{
+> +    phys_addr_t base_gfn = slot->base_gfn + gfn_offset;
+> +    phys_addr_t start = (base_gfn +  __ffs(mask)) << PAGE_SHIFT;
+> +    phys_addr_t end = (base_gfn + __fls(mask) + 1) << PAGE_SHIFT;
+> +
+> +    stage2_wp_range(kvm, start, end);
+> +}
+> +
+> +/*
+> + * kvm_arch_mmu_enable_log_dirty_pt_masked - enable dirty logging for selected
+> + * dirty pages.
+> + *
+> + * It calls kvm_mmu_write_protect_pt_masked to write protect selected pages to
+> + * enable dirty logging for them.
+> + */
+> +void kvm_arch_mmu_enable_log_dirty_pt_masked(struct kvm *kvm,
+> +        struct kvm_memory_slot *slot,
+> +        gfn_t gfn_offset, unsigned long mask)
+> +{
+> +    kvm_mmu_write_protect_pt_masked(kvm, slot, gfn_offset, mask);
+> +}
+> +
+> +
+>  int stage2_ioremap(struct kvm *kvm, gpa_t gpa, phys_addr_t hpa,
+>                    unsigned long size, bool writable)
+>  {
+> @@ -433,6 +470,12 @@ void kvm_arch_sync_dirty_log(struct kvm *kvm, struct kvm_memory_slot *memslot)
+>  {
+>  }
+>
+> +void kvm_arch_flush_remote_tlbs_memslot(struct kvm *kvm,
+> +                                       struct kvm_memory_slot *memslot)
+> +{
+> +       kvm_flush_remote_tlbs(kvm);
+> +}
+> +
+>  void kvm_arch_free_memslot(struct kvm *kvm, struct kvm_memory_slot *free)
+>  {
+>  }
+> diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
+> index 4f2498198cb5..f7405676903b 100644
+> --- a/arch/riscv/kvm/vm.c
+> +++ b/arch/riscv/kvm/vm.c
+> @@ -12,12 +12,6 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/kvm_host.h>
+>
+> -int kvm_vm_ioctl_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log)
+> -{
+> -       /* TODO: To be added later. */
+> -       return -ENOTSUPP;
+> -}
+> -
+>  int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+>  {
+>         int r;
+> --
+> 2.19.1
+>
+>
 
-Ah, I see. Thanks.
+I already have a similar change as part of v14 KVM RISC-V series.
 
--- 
-viresh
+Let us coordinate better. Please let us know in-advance for any
+KVM RISC-V feature you plan to work on. Otherwise, this leads to
+efforts wasted at your end or at our end.
+
+Regards,
+Anup
