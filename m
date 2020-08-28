@@ -2,114 +2,144 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6395C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 975F2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B90BE20665
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598620180;
-	bh=Jz1R7zl/5TWZ/3q3OHGpTZ7g+KdahLSUuNkMZ/xqGJo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LMItbL8+URrjLeK/bQQrr5tDWnYsQqhoxwi7sb4wLAbKTGCwuB8d45fEatGgQDl5M
-	 GHiMCfar6WgiqxVijt1lW25+mb0kyEtyI3h/shOpv9K0dpfoHAmEnqqfisZJB7Qm/G
-	 fALVJ/W4EToGGjuOES7tz68CSYC/iVhfYZWehPdo=
+	by mail.kernel.org (Postfix) with ESMTP id 5F97C20825
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:09:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hGMCcT8P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729532AbgH1NJh (ORCPT
+        id S1729543AbgH1NJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 09:09:37 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35284 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729397AbgH1NIo (ORCPT
+        Fri, 28 Aug 2020 09:09:42 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:53890 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729472AbgH1NHi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 09:08:44 -0400
-Received: by mail-ed1-f65.google.com with SMTP id ba12so1120747edb.2;
-        Fri, 28 Aug 2020 06:08:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E+aHZUYr4/xAk5Vx/I2zH6eSvAeQy3DL/RIU7rMycss=;
-        b=E6cZZR0YEuayjCgtPIhKLaUIm015EoxA1zp2DQ3mJjPxd8e8zcjzbcRiES2lP5KKil
-         ZHyxfWyVrPmfud2YWtfm3unM/emunX0V+iZXtBUG9oHa3pw3fCHCAbTTZmfYdIQKHH0U
-         rJT5GRgunJKmH1PyhbcYYS7Btq7HCcNhg5y1FuZZB0Qfo7Sl+fo9v6AMaXS4ztoHCxsR
-         avp1g1C8naIobLfPK0qRzrne94ZuHbkeyJEBl9xZv+olRpo2HmP0MBQXX53WZqcOO/JZ
-         tITcVbeNrmkmMhjjJ2jjzt85u1WmVXTJw2IxcJdBQ6duH9npieWavBV6l1Yrx3NgSErr
-         J7zw==
-X-Gm-Message-State: AOAM531Cr0WRLpsOxHehy9OwhcqbaIGYQtMpX3hNg6pX13RJ2Z2JcA4o
-        /IQpt6b6ooKDnE9aSm6JNU4=
-X-Google-Smtp-Source: ABdhPJw2sUyi5oI180j1s6a0iPM15L1BAjci1fZItmg5NmiUYVf2976kX7V0+smnXtOdifVljCX0Xg==
-X-Received: by 2002:a50:bf08:: with SMTP id f8mr1717050edk.207.1598620121241;
-        Fri, 28 Aug 2020 06:08:41 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id j21sm849059eja.109.2020.08.28.06.08.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 28 Aug 2020 06:08:40 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 15:08:37 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
-        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
-Subject: Re: [PATCH v3 00/19] dt-bindings / arm64: Cleanup of i.MX 8 bindings
-Message-ID: <20200828130837.GA14163@kozik-lap>
-References: <20200825193536.7332-1-krzk@kernel.org>
- <CACRpkdb4j2kJvpY23G-os9gTktZW5HT287MsvMZxC=ovgn_9LQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CACRpkdb4j2kJvpY23G-os9gTktZW5HT287MsvMZxC=ovgn_9LQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 28 Aug 2020 09:07:38 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200828130715euoutp010b4e82f23a33b08d8c003cc964676c41~vcHPTfz5V2226222262euoutp01_
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 13:07:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200828130715euoutp010b4e82f23a33b08d8c003cc964676c41~vcHPTfz5V2226222262euoutp01_
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598620035;
+        bh=NnSR6KpXMzjkk1wzGR33M6iWIlXpcOAe3kk+qj+qB+4=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=hGMCcT8PgBi3YIontvxdBk3nW7cA2o7WJu+mJWkHg1TXYiSvKP9HV3Y8jY3b/qHyB
+         5FSA81gW74Dktpa796sr621xl9a+vU2sd+QQUnm3kbqg6oSSpAyaqRW3CJ6NKyhiuv
+         7uvTDo/8+YJ8dJFWl2rKeTpVWmAQnv+Ta0yWBSnY=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200828130715eucas1p246140a05e1cd43922fbd9bef628d20af~vcHO8U_G00754707547eucas1p2q;
+        Fri, 28 Aug 2020 13:07:15 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 92.06.06456.381094F5; Fri, 28
+        Aug 2020 14:07:15 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200828130714eucas1p26b45e68ee12ca6c31b0ebe62bf699ba7~vcHOjg-7B1068210682eucas1p2P;
+        Fri, 28 Aug 2020 13:07:14 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200828130714eusmtrp13a412918e8e2928b42cccf3fe798a393~vcHOizK8z0481104811eusmtrp1V;
+        Fri, 28 Aug 2020 13:07:14 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-80-5f490183fdc7
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 79.CA.06314.281094F5; Fri, 28
+        Aug 2020 14:07:14 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200828130714eusmtip14b2df8adfb89d3bb54984db5839e7ede~vcHOB5hcD1484014840eusmtip1h;
+        Fri, 28 Aug 2020 13:07:14 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH] clk: meson: g12a: mark fclk_div2 as CLK_IGNORE_UNUSED
+Date:   Fri, 28 Aug 2020 15:07:07 +0200
+Message-Id: <20200828130707.9045-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpkleLIzCtJLcpLzFFi42LZduzned1mRs94g2WvWS02zljPavHm0RFm
+        i5/tW5gsFszmtvjYc4/V4vKuOWwWa4/cZbc4tugki8WhvmiLf9c2sjhweby/0cru8XTCZHaP
+        Tas62Tw2L6n36NuyitHj8ya5ALYoLpuU1JzMstQifbsErow9K8+xFeziqOhd9Zm5gfEdWxcj
+        J4eEgIlE24HVQDYXh5DACkaJWdOmMEI4Xxgl5m66xwLhfGaUWPa6nwWmZem+e6wQieWMEjN6
+        JiG07D1yAayKTcBQouttF9gSEYEEid/f5jOBFDEL7GWSePToMiNIQljATaK7fyuYzSKgKjHj
+        zSOwBl4BG4mVWzpYIdbJS6zecIAZpFlC4DWbxJQP15ghEi4SV7ach7pJWOLV8S3sELaMxOnJ
+        PSwQDc2MEg/PrWWHcHoYJS43zWCEqLKWuHPuF9A6DqCbNCXW79KHCDtK3J28jwUkLCHAJ3Hj
+        rSBImBnInLRtOjNEmFeio00IolpNYtbxdXBrD164BFXiIXFzYyhIWEggVuLi0jvMExjlZiGs
+        WsDIuIpRPLW0ODc9tdgwL7Vcrzgxt7g0L10vOT93EyMwYZz+d/zTDsavl5IOMQpwMCrx8O7Y
+        5x4vxJpYVlyZe4hRgoNZSYTX6ezpOCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8xotexgoJpCeW
+        pGanphakFsFkmTg4pRoYfaP1lnvenrVVSvq5xirZLzprjiVXcO9jXpL5eeqMTaFGtxaG6ai1
+        t0fM85/49NbEiLOtcw+vfxI649tqxif7DsS6ajQ1rw+tEDfWmib0TUXua8TiYvuQkt/mm1oy
+        Gu8HJl3dclFwbZJE3g3fZQ4eWvJnzd8cNGCZ0/98bUf71P2m0gq80++IKrEUZyQaajEXFScC
+        ANRsgI4UAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGLMWRmVeSWpSXmKPExsVy+t/xu7pNjJ7xBjtfqVlsnLGe1eLNoyPM
+        Fj/btzBZLJjNbfGx5x6rxeVdc9gs1h65y25xbNFJFotDfdEW/65tZHHg8nh/o5Xd4+mEyewe
+        m1Z1snlsXlLv0bdlFaPH501yAWxRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZG
+        pkr6djYpqTmZZalF+nYJehl7Vp5jK9jFUdG76jNzA+M7ti5GTg4JAROJpfvusYLYQgJLGSXe
+        byiBiMtInJzWwAphC0v8udYFVM8FVPOJUeLYmnPsIAk2AUOJrrddYINEBJIklp/dCVbELHCQ
+        SWJC0wmwImEBN4nu/q2MIDaLgKrEjDePwBp4BWwkVm7pgNogL7F6wwHmCYw8CxgZVjGKpJYW
+        56bnFhvqFSfmFpfmpesl5+duYgSG6bZjPzfvYLy0MfgQowAHoxIP74597vFCrIllxZW5hxgl
+        OJiVRHidzp6OE+JNSaysSi3Kjy8qzUktPsRoCrR8IrOUaHI+MIbySuINTQ3NLSwNzY3Njc0s
+        lMR5OwQOxggJpCeWpGanphakFsH0MXFwSjUwTntbkL7QX7Ku/+MkZlNznVTurFmze83Y/p88
+        U3/p1e5nywXLJ3cWpPWxN/K8jE1/VOEVuORi1aEjpdNvOn28xmzYxSR3bKbwWgGGJ2d4nkn0
+        bL/nFDZZ9PGGpmMxh1/v/hx1Sl8qZPO85IzFf7v2ChvNSOvV2apQ8zZ3p0vUQ+G1oRkzYmw8
+        lViKMxINtZiLihMBIs7O42kCAAA=
+X-CMS-MailID: 20200828130714eucas1p26b45e68ee12ca6c31b0ebe62bf699ba7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200828130714eucas1p26b45e68ee12ca6c31b0ebe62bf699ba7
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200828130714eucas1p26b45e68ee12ca6c31b0ebe62bf699ba7
+References: <CGME20200828130714eucas1p26b45e68ee12ca6c31b0ebe62bf699ba7@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 02:51:20PM +0200, Linus Walleij wrote:
-> On Tue, Aug 25, 2020 at 9:35 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> 
-> > This is a v3 of cleanup of i.XM 8 bindings and DTSes.
-> 
-> If you are going to be working a lot on Freescale SoC code going forward
-> I wouldn't mind if you could add yourself as maintainer for the
-> Freescale pin controller and GPIO at least, I already have high trust
-> in you in general so if the Freescale maintainers also have that I think you
-> should just sign up as maintainer. This makes it easier to do pull requests
-> and things like that.
+Add CLK_IGNORE_UNUSED flag to the "fclk_div2" clock to fix boot hang on
+the Hardkernel's Odroid N2 board (with bootloader booted from SD card and
+kernel loaded via FTFP).
 
-Thanks for encouragement.  Indeed I am planning to do more work around
-i.MX 8M platforms from NXP/Freescale. However there are already four
-maintainers for Freescale pin controller drivers so I doubt there is
-need for fifth entry :).
+It looks that this clock is disabled by the generic unused clocks
+scanning code before it gets enabled by the meson-gx-mmc driver.
 
-Different question is the GPIO driver which apparently lacks entry in
-Maintainers file.
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+Without this patch the only way to boot OdroidN2 board with mainline
+kernel is to append clk_ignore_unused kernel parameter. I've build the
+kernel from the default arm64's defconfig. The kernel is loaded via TFTP
+using vendor's u-boot.
+---
+ drivers/clk/clk.c        | 5 +++++
+ drivers/clk/meson/g12a.c | 1 +
+ 2 files changed, 6 insertions(+)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
+index 9803d44bb157..4106b6231be4 100644
+--- a/drivers/clk/meson/g12a.c
++++ b/drivers/clk/meson/g12a.c
+@@ -298,6 +298,7 @@ static struct clk_regmap g12a_fclk_div2 = {
+ 			&g12a_fclk_div2_div.hw
+ 		},
+ 		.num_parents = 1,
++		.flags = CLK_IGNORE_UNUSED,
+ 	},
+ };
+ 
+-- 
+2.17.1
 
