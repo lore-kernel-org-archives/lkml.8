@@ -2,102 +2,106 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A5CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B84EC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47CDD2078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 209C7208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:13:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZDezp3wk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x+bIkP5t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbgH1KM2 (ORCPT
+        id S1729049AbgH1KNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 06:12:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44138 "EHLO
+        Fri, 28 Aug 2020 06:13:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728218AbgH1KMZ (ORCPT
+        with ESMTP id S1729027AbgH1KM7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 06:12:25 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B906FC061264
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:12:23 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id k20so387747wmi.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:12:23 -0700 (PDT)
+        Fri, 28 Aug 2020 06:12:59 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73792C06121B
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:12:59 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id v138so295062vsv.7
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:12:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=8Ovq6P3MQ3z6dqGKr0Zb9utX+dneiZHadAh26MWglZM=;
-        b=ZDezp3wkEqtgdk6LmoGQzRQAoxHxEoE6rmuSVOSht7+w5dF0j0t+Vo/9Iy0v6Vr8ZQ
-         90M6+oCgfkbk782ciBITtNz/PGaHbvXI1im6Cg7Ar47ZRO749/qpJlSJoKOf3AImpA5c
-         kDuLG0cktm73ACvMnjXYG6RIjYk1isLNXulrfQ9tijq4yj+N7q7f4XYXmrXi1y2Mf8bA
-         tC/ke+Dx4BziV1myVVkTFooasFkI9oTIIv+GVyPLsNpOJCjL3FiyJurngi6Z2PyHxQbM
-         irOhPCAd/ohUAWI/ZIcj9rIyBlecrWgSqqO2UI5ZvaDYxz+xzdetbdtLR7h0zgLqRUcp
-         4o7A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6HXUI5DD/tO1jp0etl8fGdPWC411ikUQuHLqZtsU6UI=;
+        b=x+bIkP5tr77goYnNf4DekZG+QJ+jHXkO4/FPvOFxRgNHlmJ6xsunxMsebdA9GFg45M
+         xGT2/9kHOxpcilvFqcfu2YBahPukoY/4DgWyBz9p8zb8/WM8tAHTcQgYV2egkgd9VdjT
+         IhGPP9qIHcZ1CRHRsmLFvX2GvzKgCA9qKhw8gYjghhfXv86MQgNvKjhTYn4d9vqmYAKm
+         bLlYRh2MUqr/yhDxxB9FcNfBlORfSyb8K39aN9xZa9RFjlDvdHlLt6LRh4fIBd9v7O3y
+         YazOj7mT2LQYJarIFY/tgwB+mZeuMA0UBCNUVuMkWbEi7o40kIEWdbpZP4OlueGUNGIj
+         ITOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=8Ovq6P3MQ3z6dqGKr0Zb9utX+dneiZHadAh26MWglZM=;
-        b=gj2DuuvVkZp+UAh2OnigmFY7Su0qlROpMjUx0/IBWMOqBfNF6CnUg34dVoYvTUu2c+
-         aAj5T8jcIUSjtzEZH6DEpVzkGz2I+zN7OP6z7MKVcQAfE6L0yNHCi0StqQ2Hfc/T3IJl
-         4iHDmtuSl5IetqFc+5S3XD2y0OmOCVFiEmHb4RcW6cj52v2hgYHzKu4t8idqTCX7kK3/
-         RTglUtu4mIg1muRwx10uEQZ0CSOamoB58k/zX5g7vmi5nAgjp7UaDxWUeeVu8+25YDG6
-         CfUdlYthBYqlaRyzl04IQf9qTIo1AzNJWJliKqb+rauDTgRwhBziz3nHDXtstlSwA+Wo
-         frJA==
-X-Gm-Message-State: AOAM5331LpZ6cfJvbqYy9oOdiLftX/mYsaMdsGZzWgDwMQYh4YQIXgxu
-        cRUPGOpzUkTS+SeyRcuIlMCUlw==
-X-Google-Smtp-Source: ABdhPJyKmmE5smzdiPFgAo8SYJdXe+GE4Q9uo0Te9LwlUMOPWP9Iygbh8Dex7htNXU7nZnetQsDnUQ==
-X-Received: by 2002:a7b:cc90:: with SMTP id p16mr940437wma.100.1598609542190;
-        Fri, 28 Aug 2020 03:12:22 -0700 (PDT)
-Received: from dell ([91.110.221.141])
-        by smtp.gmail.com with ESMTPSA id g18sm1251588wru.27.2020.08.28.03.12.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 03:12:21 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 11:12:19 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, benjamin.chao@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
-Subject: Re: [PATCH v4 1/9] mfd: mt6360: Rearrange include file
-Message-ID: <20200828101219.GK1826686@dell>
-References: <1597661277-27862-1-git-send-email-gene.chen.richtek@gmail.com>
- <1597661277-27862-2-git-send-email-gene.chen.richtek@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6HXUI5DD/tO1jp0etl8fGdPWC411ikUQuHLqZtsU6UI=;
+        b=ntnLcQqb8hwx0DtyrWiygQxpo+G4d7dQwWX+75fTQJQ7SWChFNJCWi03OO4M2MNZBy
+         MYnQIe1Pqn+yN1AYMXB11QVW8bSc3wlvWEy4ifwplxEYXy28Rc/LlxyTnk5HQWUve4Bq
+         SDBl4aj+irST+c53LM+FOGuRy5ZQ1dNjx3RpJHImA4UGbiyl9n2XWzdjmb3gRj4wPDG7
+         sF2l1pXGzBzzHJ/UsqAvB86S2e4vcTxC+lAtMo12AXgRTlCtAGcTsAw5l++quA9VtrqX
+         B8GuG3u5R6kBiAspPNQHggmDvUhQTs2+SW3QPewtOFHBMi9WIl8yomVFeTBKA4a6dsmR
+         gyFw==
+X-Gm-Message-State: AOAM5322g1qt7l3vcxR8nHiIm2HJ4AkEM69kO6+wu17bbw8ZJebIoyIS
+        H1EQk+AAVAKJbRHpDc8uZOHe8VAPaul214gvi1FkBw==
+X-Google-Smtp-Source: ABdhPJyZVuGh5RBJk2bXJRF96bDHaTJMZw6jD2kqXZVAAm+GWUOTgbMYGRtiT+o7iBlggckDw3el3rN2C4q/JTGfpFI=
+X-Received: by 2002:a67:7905:: with SMTP id u5mr294659vsc.179.1598609578442;
+ Fri, 28 Aug 2020 03:12:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1597661277-27862-2-git-send-email-gene.chen.richtek@gmail.com>
+References: <CA+G9fYvK5UkERLuBSRH5t2=j5==dbtw45GTMta9MafyJDqFsFA@mail.gmail.com>
+ <20200827094651.3grvs6ungv3dh7y3@vireshk-i7> <20200827211832.3ebeda8a@canb.auug.org.au>
+ <20200828045128.y7ybkd7dnvn4h6dt@vireshk-i7>
+In-Reply-To: <20200828045128.y7ybkd7dnvn4h6dt@vireshk-i7>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 28 Aug 2020 15:42:47 +0530
+Message-ID: <CA+G9fYsn1S-SieuP85-Z4qKO+aNyqJarrBR0xx0X-YbtF9eo0g@mail.gmail.com>
+Subject: Re: WARNING: at drivers/opp/core.c:678 dev_pm_opp_set_rate+0x4cc/0x5d4
+ - on arm x15
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>, sbhanu@codeaurora.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>, nm@ti.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Aug 2020, Gene Chen wrote:
+On Fri, 28 Aug 2020 at 10:21, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 27-08-20, 21:18, Stephen Rothwell wrote:
+> > Hi Viresh,
+> >
+> > On Thu, 27 Aug 2020 15:16:51 +0530 Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 27-08-20, 15:04, Naresh Kamboju wrote:
+> > > > While boot testing arm x15 devices the Kernel warning noticed with linux next
+> > > > tag 20200825.
+> > > >
+> > > > BAD:  next-20200825
+> > > > GOOD:  next-20200824
+> > > >
+> > > > We are working on git bisect and boot testing on x15 and get back to you.
 
-> From: Gene Chen <gene_chen@richtek.com>
-> 
-> Rearrange include file without sorting by alphabet.
-> 
-> Signed-off-by: Gene Chen <gene_chen@richtek.com>
-> ---
->  drivers/mfd/mt6360-core.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+Viresh,
+I have applied the v2 patch series on top of linux next-20200824.
+and tested again the reported kernel warning is fixed [1]
 
-For my own reference (apply this as-is to your sign-off block):
-
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+[1] https://lkft.validation.linaro.org/scheduler/job/1717615#L1881
