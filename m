@@ -2,90 +2,95 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01A1C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 22:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABB2C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 22:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF92820714
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 22:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C9C320714
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 22:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598652027;
-	bh=RTI0M1l1Yi7/ZWeYW/pBhNtkY6GvFUX2GcOmkYjLkRQ=;
+	s=default; t=1598652060;
+	bh=AqlpOXWgqy+vDI7FSUvsc9WNHSfbJspzsQk2Isi6w0M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uNgfRNkZUl+W6JLshLSfyQYMqJBLUn6cyRqhz6dsilX5oFyIbqgTMFsbtAbu330P1
-	 BLBXF4Qs78bOhP74z6mpSCNNOP626APWYm23HgGmVR/Vr1c6JVnlAXPb39eHKdc2G8
-	 FLJhEy/qHbhIRxZhRdk7eEEK1Yk43UoUYggYXBVU=
+	b=khXVHcPRy0+nH6Kfjjh0h9ZuXfra5DcOMncQMWB9faSTkQwnb9/82RioEi8+23ThW
+	 8x1GPRrwGRbj5tIrQxltgKscnC0JjdTRtg2sCN1H9ZPhY+I1EALeWRhQJZ/Rt7IlZT
+	 odJnWkZvA0sRvxJ8obWOriQ3e43XLXzodhWIWjPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgH1WA0 (ORCPT
+        id S1726838AbgH1WA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 18:00:26 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41607 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbgH1WAZ (ORCPT
+        Fri, 28 Aug 2020 18:00:59 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36033 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbgH1WA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 18:00:25 -0400
-Received: by mail-io1-f67.google.com with SMTP id m23so542850iol.8;
-        Fri, 28 Aug 2020 15:00:24 -0700 (PDT)
+        Fri, 28 Aug 2020 18:00:58 -0400
+Received: by mail-io1-f66.google.com with SMTP id i10so574756iow.3;
+        Fri, 28 Aug 2020 15:00:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=wMHVWbiPBLcRjA2cjtQwy6nnc0JRKu1LeCAOKufBp48=;
-        b=UxlcM5Lke9rROq8Sxg2DL11nkcytwZkS5yrTp6q76WR0cZYHVsGTj/BTbdP+7+8ozr
-         nPwIC4noMNJqqdCmZv3m+COqUBhw5KmL+WzauCDqWd3aB86uK3XvPlpjXhQVXJlBixnF
-         z92h64H4syZqG1GohIh0fQSJo+8bKiuYKgpPTiMen1nIeI1TaMDlimkl0mkAwe/74xZ4
-         lVXKexBBAPdkRFS2cWdDAMWRN01zx9gx3rjKGmUS34TxkRsT7sYhByKnm/x41aDQM0T6
-         pNVUpmoTdeW1EG2ib/NVpnQfNNm1EjoJkE5rdTD0HMpiYVLUByfurU0gzobX8tjLsOQD
-         Qn0A==
-X-Gm-Message-State: AOAM532xcPML73cBc2MqJ8Sptb7JDfuA7JTC4rn7ozZEfcuYygBt+Alq
-        hYSshJPYLcb2MofpRfHRgmunkFlz4AXT
-X-Google-Smtp-Source: ABdhPJwCx/OejHv5kikm7x+v+SSME8DKxT8DEC7huiH8h7vtJ20q7dk2WOTs1KGDoOVWNyEPsoNmwA==
-X-Received: by 2002:a05:6602:2293:: with SMTP id d19mr660780iod.45.1598652024037;
-        Fri, 28 Aug 2020 15:00:24 -0700 (PDT)
+        bh=lr2PFn2vwVHM7+fNWOqX9WEJkm7KqjK2HFWWG2PzYWI=;
+        b=ujU6xApffE/27kdt0eqg0ErVn0VFlWU3FJ2uTl/8bqvAXOyld74nfKfVAisVU1fXD5
+         H4NsG0ArQQWoNjFrdx/b/s/+scF8SQjhzUtFSv7+oOpDgEszo4zdML6xLd9GDyygGT+O
+         HvdVfj+GqHUMfEz+KgTFf04zO5FNBBOAcLWuT4eIW3EWn0O1ZVuViOFVCkEg4vsUXJ7U
+         6s/DATCts/RnXysydigPe9GGBp9uQHqimJl3QRZBDzL/4nV105G8y680sCgu7W0ZiVrx
+         S2Ed0nGGKidmGDTjgpEV7sfTTUfucDaqnLn9xC9XLGQNNHKbzXe+dyk7S/qjUEAJAOuU
+         /PcQ==
+X-Gm-Message-State: AOAM531KiYOUMnodfkRxLQN1yXRrf/MlfHJLPnaXCQanxZLRij4yf3Ci
+        U+0BQU20C8Y5NwsXNKlPhQ==
+X-Google-Smtp-Source: ABdhPJwUajkb1x4SMJ2q/35pgpO3PXguDCOOu/bVYvf01Vqr7eCAnPU1vl13/MZXhiRa5Qke1/RNlg==
+X-Received: by 2002:a5d:80cb:: with SMTP id h11mr616301ior.189.1598652057793;
+        Fri, 28 Aug 2020 15:00:57 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id y9sm286427ila.65.2020.08.28.15.00.22
+        by smtp.gmail.com with ESMTPSA id r2sm312215ila.22.2020.08.28.15.00.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 15:00:23 -0700 (PDT)
-Received: (nullmailer pid 3479570 invoked by uid 1000);
-        Fri, 28 Aug 2020 22:00:21 -0000
-Date:   Fri, 28 Aug 2020 16:00:21 -0600
+        Fri, 28 Aug 2020 15:00:57 -0700 (PDT)
+Received: (nullmailer pid 3480425 invoked by uid 1000);
+        Fri, 28 Aug 2020 22:00:55 -0000
+Date:   Fri, 28 Aug 2020 16:00:55 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Alexandre Courbot <acourbot@chromium.org>
-Cc:     linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        linux-media@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Tiffany Lin <tiffany.lin@mediatek.com>
-Subject: Re: [PATCH v4 02/17] dt-bindings: media: mtk-vcodec: document SCP
- node
-Message-ID: <20200828220021.GA3479540@bogus>
-References: <20200821103608.2310097-1-acourbot@chromium.org>
- <20200821103608.2310097-3-acourbot@chromium.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Li Yang <leoyang.li@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 1/4] dt-bindings: arm: fsl: Add binding for Variscite
+ VAR-SOM-MX8MM module
+Message-ID: <20200828220055.GA3480329@bogus>
+References: <20200824191819.11057-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200821103608.2310097-3-acourbot@chromium.org>
+In-Reply-To: <20200824191819.11057-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Aug 2020 19:35:53 +0900, Alexandre Courbot wrote:
-> The mediatek codecs can use either the VPU or the SCP as their interface
-> to firmware. Reflect this in the DT bindings.
+On Mon, 24 Aug 2020 21:18:16 +0200, Krzysztof Kozlowski wrote:
+> Add a binding for the Variscite VAR-SOM-MX8MM System on Module.
 > 
-> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-> Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
 > ---
->  Documentation/devicetree/bindings/media/mediatek-vcodec.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> Based on top of:
+> https://lore.kernel.org/linux-arm-kernel/20200823172019.18606-1-krzk@kernel.org/
+> 
+> Changes since v1:
+> 1. None
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
