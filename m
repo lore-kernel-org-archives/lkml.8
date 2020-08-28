@@ -2,140 +2,164 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC318C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7057C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8FF020848
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:57:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598579861;
-	bh=ytVYmdvTxAHSvpNi2RcVC8TEBHrhZKe/ZTew0OdUFkg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=s2uo6+3DQkLFIeYzyLkn6oWltIBdra/9lZRbPLCccZBUykgG1vn2O1uyNSueeVan5
-	 bvEKeEmiZO6YyiC2EtYXHUJxKYKWoc+h5XvASSSWA/2GCkXMkGeOQ0ESB7hxj4tZNa
-	 4z/9QzgOUerWald+pTM/78nhrU6++YzoGIS701yM=
+	by mail.kernel.org (Postfix) with ESMTP id C36732086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:57:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jIwOfUjv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgH1B53 (ORCPT
+        id S1728384AbgH1B5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 21:57:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728338AbgH1B5U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 21:57:25 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:38468 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728335AbgH1B5U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 21:57:20 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40E602080C;
-        Fri, 28 Aug 2020 01:57:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598579840;
-        bh=ytVYmdvTxAHSvpNi2RcVC8TEBHrhZKe/ZTew0OdUFkg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=n1Ug5cjFKvK7LDWSaWQXnOwQtS4KmW086f5qCkSAxdNbnQDxNtBCQeh3u0gd4Amc+
-         CUwWt7TRQR8rg+BpnvA9u0wFBEUn/MsJKg/KeUyjQLJxyRNxNCbhce6vL/LoWFUHO3
-         2hIJRZeNqAsqoo93U3qbnLy96JyVfjPvNiqnhdSY=
-Date:   Fri, 28 Aug 2020 10:57:14 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Eddy Wu <Eddy_Wu@trendmicro.com>, x86@kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        linux-arch@vger.kernel.org, guoren@kernel.org
-Subject: Re: [PATCH v3 01/16] kprobes: Add generic kretprobe trampoline
- handler
-Message-Id: <20200828105714.b499777a12e5cd5d11855f8b@kernel.org>
-In-Reply-To: <159854632381.736475.17150452390088286224.stgit@devnote2>
-References: <159854631442.736475.5062989489155389472.stgit@devnote2>
-        <159854632381.736475.17150452390088286224.stgit@devnote2>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Received: from tusharsu-Ubuntu.lan (c-71-197-163-6.hsd1.wa.comcast.net [71.197.163.6])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 39B5820553ED;
+        Thu, 27 Aug 2020 18:57:19 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 39B5820553ED
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598579839;
+        bh=kFumSg9D6IWrKowDRCuR6JaYkRpAKGrG3kd2UMi5yG4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jIwOfUjvQXDXIMbP0VzJC16ORhjF/LMllEOYLfOMSnZnqc6XGKsLEaw8udDpMU8dN
+         Pza7ffFGu1KYIZvITQ4jggbSl9W/OsUTNFMOrjlofkqOXk3o96hovIq4uFI4cfZHk+
+         CD61VH/PhTFB7JNgZAjeC5JE+HqVFpu978bUOJQA=
+From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
+To:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com, agk@redhat.com, snitzer@redhat.com,
+        gmazyland@gmail.com
+Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
+        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com
+Subject: [PATCH v3 4/6] IMA: add policy to measure critical data from kernel components
+Date:   Thu, 27 Aug 2020 18:57:02 -0700
+Message-Id: <20200828015704.6629-5-tusharsu@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200828015704.6629-1-tusharsu@linux.microsoft.com>
+References: <20200828015704.6629-1-tusharsu@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Aug 2020 01:38:44 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+There would be several candidate kernel components suitable for IMA
+measurement. Not all of them would have support for IMA measurement.
+Also, system administrators may not want to measure data for all of
+them, even when they support IMA measurement. An IMA policy specific
+to various kernel components is needed to measure their respective
+critical data.
 
-> +unsigned long __kretprobe_trampoline_handler(struct pt_regs *regs,
-> +					unsigned long trampoline_address,
-> +					void *frame_pointer)
-> +{
-> +	struct kretprobe_instance *ri = NULL;
-> +	struct hlist_head *head, empty_rp;
-> +	struct hlist_node *tmp;
-> +	unsigned long flags, orig_ret_address = 0;
-> +	kprobe_opcode_t *correct_ret_addr = NULL;
-> +	bool skipped = false;
-> +
-> +	INIT_HLIST_HEAD(&empty_rp);
-> +	kretprobe_hash_lock(current, &head, &flags);
-> +
-> +	/*
-> +	 * It is possible to have multiple instances associated with a given
-> +	 * task either because multiple functions in the call path have
-> +	 * return probes installed on them, and/or more than one
-> +	 * return probe was registered for a target function.
-> +	 *
-> +	 * We can handle this because:
-> +	 *     - instances are always pushed into the head of the list
-> +	 *     - when multiple return probes are registered for the same
-> +	 *	 function, the (chronologically) first instance's ret_addr
-> +	 *	 will be the real return address, and all the rest will
-> +	 *	 point to kretprobe_trampoline.
-> +	 */
-> +	hlist_for_each_entry(ri, head, hlist) {
-> +		if (ri->task != current)
-> +			/* another task is sharing our hash bucket */
-> +			continue;
-> +		/*
-> +		 * Return probes must be pushed on this hash list correct
-> +		 * order (same as return order) so that it can be popped
-> +		 * correctly. However, if we find it is pushed it incorrect
-> +		 * order, this means we find a function which should not be
-> +		 * probed, because the wrong order entry is pushed on the
-> +		 * path of processing other kretprobe itself.
-> +		 */
-> +		if (ri->fp != frame_pointer) {
-> +			if (!skipped)
-> +				pr_warn("kretprobe is stacked incorrectly. Trying to fixup.\n");
-> +			skipped = true;
-> +			continue;
-> +		}
-> +
-> +		orig_ret_address = (unsigned long)ri->ret_addr;
-> +		if (skipped)
-> +			pr_warn("%ps must be blacklisted because of incorrect kretprobe order\n",
-> +				ri->rp->kp.addr);
-> +
-> +		if (orig_ret_address != trampoline_address)
-> +			/*
-> +			 * This is the real return address. Any other
-> +			 * instances associated with this task are for
-> +			 * other calls deeper on the call stack
-> +			 */
-> +			break;
-> +	}
-> +
-> +	kretprobe_assert(ri, orig_ret_address, trampoline_address);
-> +
-> +	correct_ret_addr = ri->ret_addr;
+Add a new IMA policy "critical_kernel_data_sources" to support measuring
+various critical kernel components. This policy would enable the
+system administrators to limit the measurement to the components,
+if the components support IMA measurement.
 
-Oops, here is an insane code... why we have orig_ret_address *and* correct_ret_addr?
-I'll clean this up.
+Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+---
+ Documentation/ABI/testing/ima_policy |  3 +++
+ security/integrity/ima/ima_policy.c  | 29 +++++++++++++++++++++++++++-
+ 2 files changed, 31 insertions(+), 1 deletion(-)
 
-Thanks,
-
+diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
+index cd572912c593..7ccdc1964e29 100644
+--- a/Documentation/ABI/testing/ima_policy
++++ b/Documentation/ABI/testing/ima_policy
+@@ -48,6 +48,9 @@ Description:
+ 			template:= name of a defined IMA template type
+ 			(eg, ima-ng). Only valid when action is "measure".
+ 			pcr:= decimal value
++			critical_kernel_data_sources:= list of kernel
++			components (eg, selinux|apparmor|dm-crypt) that
++			contain data critical to the security of the kernel.
+ 
+ 		default policy:
+ 			# PROC_SUPER_MAGIC
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 8866e84d0062..c8a044705347 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -33,6 +33,7 @@
+ #define IMA_PCR		0x0100
+ #define IMA_FSNAME	0x0200
+ #define IMA_KEYRINGS	0x0400
++#define IMA_DATA_SOURCES	0x0800
+ 
+ #define UNKNOWN		0
+ #define MEASURE		0x0001	/* same as IMA_MEASURE */
+@@ -84,6 +85,7 @@ struct ima_rule_entry {
+ 	} lsm[MAX_LSM_RULES];
+ 	char *fsname;
+ 	struct ima_rule_opt_list *keyrings; /* Measure keys added to these keyrings */
++	struct ima_rule_opt_list *data_sources; /* Measure data from these sources */
+ 	struct ima_template_desc *template;
+ };
+ 
+@@ -911,7 +913,7 @@ enum {
+ 	Opt_uid_lt, Opt_euid_lt, Opt_fowner_lt,
+ 	Opt_appraise_type, Opt_appraise_flag,
+ 	Opt_permit_directio, Opt_pcr, Opt_template, Opt_keyrings,
+-	Opt_err
++	Opt_data_sources, Opt_err
+ };
+ 
+ static const match_table_t policy_tokens = {
+@@ -948,6 +950,7 @@ static const match_table_t policy_tokens = {
+ 	{Opt_pcr, "pcr=%s"},
+ 	{Opt_template, "template=%s"},
+ 	{Opt_keyrings, "keyrings=%s"},
++	{Opt_data_sources, "critical_kernel_data_sources=%s"},
+ 	{Opt_err, NULL}
+ };
+ 
+@@ -1312,6 +1315,24 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 
+ 			entry->flags |= IMA_KEYRINGS;
+ 			break;
++		case Opt_data_sources:
++			ima_log_string(ab, "critical_kernel_data_sources",
++				       args[0].from);
++
++			if (entry->data_sources) {
++				result = -EINVAL;
++				break;
++			}
++
++			entry->data_sources = ima_alloc_rule_opt_list(args);
++			if (IS_ERR(entry->data_sources)) {
++				result = PTR_ERR(entry->data_sources);
++				entry->data_sources = NULL;
++				break;
++			}
++
++			entry->flags |= IMA_DATA_SOURCES;
++			break;
+ 		case Opt_fsuuid:
+ 			ima_log_string(ab, "fsuuid", args[0].from);
+ 
+@@ -1692,6 +1713,12 @@ int ima_policy_show(struct seq_file *m, void *v)
+ 		seq_puts(m, " ");
+ 	}
+ 
++	if (entry->flags & IMA_DATA_SOURCES) {
++		seq_puts(m, "critical_kernel_data_sources=");
++		ima_show_rule_opt_list(m, entry->data_sources);
++		seq_puts(m, " ");
++	}
++
+ 	if (entry->flags & IMA_PCR) {
+ 		snprintf(tbuf, sizeof(tbuf), "%d", entry->pcr);
+ 		seq_printf(m, pt(Opt_pcr), tbuf);
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.17.1
+
