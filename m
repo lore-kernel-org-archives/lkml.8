@@ -2,98 +2,145 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF1AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80E9C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE56F2078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE2BE2078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:47:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JT+2BSIr"
+	dkim=pass (2048-bit key) header.d=irrelevant.dk header.i=@irrelevant.dk header.b="Pc+M+Jf8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbgH1Hrj (ORCPT
+        id S1728564AbgH1Hrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:47:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728540AbgH1Hrb (ORCPT
+        Fri, 28 Aug 2020 03:47:43 -0400
+Received: from charlie.dont.surf ([128.199.63.193]:35382 "EHLO
+        charlie.dont.surf" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbgH1Hrf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:47:31 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BAA0C061264;
-        Fri, 28 Aug 2020 00:47:31 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id h19so232254ljg.13;
-        Fri, 28 Aug 2020 00:47:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+nxdFB2SD1U2sfuKxuZ2pIP6ISrQGy1F0qzmd7+b6wg=;
-        b=JT+2BSIrxkhf1IdPHgoLDn8lPHq133AytQ58puYNVftQgkfmYXdWyr4h3W0PEioNyQ
-         qji1nD02VddgP/JjROsxWPKE9rVJDXvtxk8qfbhppL/M6NZ2OE6asfcL+IYsfDzD4Sx1
-         He4AOmO1d8GT4i/GPt+mYuO3aVFfgke3hD/PegfXArnWN2FS/6aqej6PQ/vlkonhgUGD
-         ZUX8+bDukp+JkUvP79G8IxbydRBM9nUSZUsH4glkfOpip9cyEPTGhIDr0U3NN8ZRvfmg
-         XNOlMj8gXkJWhIvVjQ1qghyuhGxt7JiE6ICtwgQJOhQ1NIni6x3NcWJnrJCkzmnpNdj3
-         llYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+nxdFB2SD1U2sfuKxuZ2pIP6ISrQGy1F0qzmd7+b6wg=;
-        b=pS7Q15Z3chws4MD4UWcf2dSmmJ5R5Qw3uQVZtKLJrQfCpd5YR1T0hBSj+XAiuyrxKt
-         JCG4qLArENf+VmmHT/qNQlDl73XQb3vcau9UyG4MFQ9+K6lXNyjFjxKQD4eoDtrJ1rMf
-         1R9f5u8tUE3Ry/leLDOCHicEltNV9CzZe/cM8R/ehAKjo5k+ZUU7RQyOw+5dcC51H0Jq
-         mtSIl45zI2LKofSjGIyZfZV6Yq5XNOuNvkT6bfFpzZPiGVSMqhnmDpKjyah7M/SJc3ZO
-         hrfUAxSUOMz/j+THQp1ShYA/+I1tP2EQGKPcwkdq+99MGNLrBg3oyh26Ag5y3dpEybI8
-         tDyQ==
-X-Gm-Message-State: AOAM5306ujLSRFYJVVPJH1CNcpTEaffkbgtzagTGlfuyWQqHa/ok0GPp
-        xjOxJpmerK9dj/IMxalAN0kYHXG6Kvw=
-X-Google-Smtp-Source: ABdhPJy8Srr4VmzEiVkBuWffTSQD0zbomVX6iHd2wGQttsdmF3mW+/l/mCkAnKcJhgmgvj4Scs655w==
-X-Received: by 2002:a05:651c:1291:: with SMTP id 17mr317790ljc.366.1598600849729;
-        Fri, 28 Aug 2020 00:47:29 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id u10sm37756lju.113.2020.08.28.00.47.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Aug 2020 00:47:29 -0700 (PDT)
-Subject: Re: [PATCHv1 2/2] power: supply: smb347-charger: Use generic property
- framework
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sebastian Reichel <sre@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-References: <20200826144159.353837-1-sebastian.reichel@collabora.com>
- <20200826144159.353837-3-sebastian.reichel@collabora.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <7a06b330-0cd5-4487-7b05-81d7ad7702d5@gmail.com>
-Date:   Fri, 28 Aug 2020 10:47:28 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 28 Aug 2020 03:47:35 -0400
+Received: from apples.localdomain (80-167-98-190-cable.dk.customer.tdc.net [80.167.98.190])
+        by charlie.dont.surf (Postfix) with ESMTPSA id 4856BBF554;
+        Fri, 28 Aug 2020 07:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=irrelevant.dk;
+        s=default; t=1598600852;
+        bh=tBI8Q0spIHPr7fUks65vQIU+W7ZPCNmh06qQz3L0JC4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Pc+M+Jf8lB6jtFPZ+N9B6j5qFEorOUIsUpRKHm0Lly9uniOs6ZBhyATZ5tBJV1HDC
+         ufiVov1jsoHa3RiDDQJf7oarDnKKdv1v0vT0OXF2GAJoukMCSi+uQV7mwsaIUQGIfJ
+         /CzZ5aY1t8obZm3zLQMjxpI6QeRLT32964Rpj4T83IFJOWnECaO0zo0W5O53RGi0Sp
+         mhg7Ui7PSJrR0IHw6hUR+KF8Zt32sk28GGDJqQY7ShdBAD61t/pGB32CAlTOo2p54D
+         Y7KEuOF1YVAdPxGmU3M9VQGbvs6SVe7JX3qdBJTuqsxc5l4UwyjW7BnCTQrkwI4aG5
+         FKoKmZqSzEm/Q==
+Date:   Fri, 28 Aug 2020 09:47:28 +0200
+From:   Klaus Jensen <its@irrelevant.dk>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Niklas Cassel <Niklas.Cassel@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] null_blk: add support for max open/active zone limit
+ for zoned devices
+Message-ID: <20200828074728.GA1343822@apples.localdomain>
+References: <20200827135018.63644-1-niklas.cassel@wdc.com>
+ <CY4PR04MB3751526DC5833902749EBE48E7520@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200828072253.GA1331347@apples.localdomain>
+ <CY4PR04MB37514386D6A94A04F66EFF1DE7520@CY4PR04MB3751.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200826144159.353837-3-sebastian.reichel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Content-Disposition: inline
+In-Reply-To: <CY4PR04MB37514386D6A94A04F66EFF1DE7520@CY4PR04MB3751.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-26.08.2020 17:41, Sebastian Reichel пишет:
-> Simplify the driver and remove the DT specific code by
-> using the generic device property framework.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  drivers/power/supply/smb347-charger.c | 40 +++++++++++++--------------
->  1 file changed, 19 insertions(+), 21 deletions(-)
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
+--tThc/1wpZn/ma/RB
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Aug 28 07:36, Damien Le Moal wrote:
+> On 2020/08/28 16:23, Klaus Jensen wrote:
+> > On Aug 28 07:06, Damien Le Moal wrote:
+> >> On 2020/08/27 22:50, Niklas Cassel wrote:
+> >>> +static blk_status_t null_finish_zone(struct nullb_device *dev, struc=
+t blk_zone *zone)
+> >>> +{
+> >>> +	if (zone->type =3D=3D BLK_ZONE_TYPE_CONVENTIONAL)
+> >>> +		return BLK_STS_IOERR;
+> >>> +
+> >>> +	switch (zone->cond) {
+> >>> +	case BLK_ZONE_COND_FULL:
+> >>> +		/* finish operation on full is not an error */
+> >>> +		return BLK_STS_OK;
+> >>> +	case BLK_ZONE_COND_EMPTY:
+> >>> +		if (!null_manage_zone_resources(dev, zone))
+> >>
+> >> OK. So you are hitting a fuzzy case here that is not actually well des=
+cribed in
+> >> the standards. That is, does finishing an empty zone necessarilly impl=
+y a
+> >> temporary transition through imp open ? Which you are assuming is a ye=
+s here.
+> >> Personally, I would say that is not necessary, but no strong feeling e=
+ither way.
+> >>
+> >=20
+> > For ZNS, the spec is pretty clear that ZSE to ZSF is a legal direct
+> > transition. So I don't think the transition should be allowed to fail
+> > due to a lack of resources.
+>=20
+> I had a doubt and checked again ZBC & ZAC. I section 4.4.3.2.4 it says:
+>=20
+> The Zone Condition state machine (see 4.4.3.5) requires the specified zon=
+e to
+> have a Zone Condition of EXPLICITLY OPENED or IMPLICITLY OPENED before a =
+finish
+> zone operation is performed. If a zone with a Zone Condition of EMPTY or =
+CLOSED
+> is specified for a finish zone operation, prior to processing the finish =
+zone
+> operation, then the Zone Condition state machine requires that:
+> a) a manage open zone resources operation (see 4.4.3.2.6) be performed; a=
+nd
+> b) the Zone Condition becomes IMPLICITLY OPENED.
+>=20
+> And section 5.3 describing the zone finish command points to this section.
+> So this is not the same as ZNS.
+>=20
+> As Niklas mentioned, nullblk tends to follow more ZBC than ZNS, so the co=
+de is
+> correct in this respect. We could also lean toward ZNS on this one. I per=
+sonally
+>  have no strong opinion either way since there is not real good reasons f=
+or
+> finishing an empty zone that I can think of.
+>=20
+>=20
 
+Alrighty then; thanks for looking it up! I won't fight for the ZNS
+behavior then :)
+
+--tThc/1wpZn/ma/RB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEUigzqnXi3OaiR2bATeGvMW1PDekFAl9ItowACgkQTeGvMW1P
+Delr5AgAp9np/sJUFZpai+i7J4D/YZghj9cy3HB0x+/fHfiozmdY0jfozu/KaQn3
+wP+dh0Up/mBUSRtsHLl0kqy09kxaQsisIUgZYPRLFIvtTdNUhaEui6xzaewicfO9
+2kJFrFO/CFgJFQQFZ7Cszf6cgJjb/oBXn7Phj0o2f9pEgUfD4xfDric2M3/uAQ2B
+N4oFb3d89q8FDWd0r1MehqzDrBjW2qzt5N9B0DLXVdkWmEXD5ofEAmxrSRLYejde
+YC/8aBvwtd/xSifcGd2O7ywQPiDFWCg5kTC610AdcZ4EzoEV96HqnhTXluP02/s8
+HsiVJxqZJ4ULosvo1dZ2UQg78P+H2g==
+=9bE6
+-----END PGP SIGNATURE-----
+
+--tThc/1wpZn/ma/RB--
