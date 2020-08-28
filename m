@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F22CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5D6C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 544F2208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB712086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598606225;
-	bh=IBVeh1zZx2EXVnY8k4/KBmTXmlSvBkhFzMjL+yHXBoo=;
+	s=default; t=1598606236;
+	bh=BINRLNO/WzZxpSvpKg/DSQZ1C+g7y3QuKMPwUQv2Ut8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2cLM33yWgv0sPw+QntZnHUZ89oZdAxBvvoLiF0SLXlr/I3KZtaVW9qoO+Mzws+MSL
-	 WKRKtkISlWAeIF0sBgQ6PygvYgWN87lSjAiZFZe86ZuWZgeT7Lv2QFDixuXfBYEQgL
-	 NVOMteeViBReWqVxXDLhd1w9+ghmGOuUWtTprWxM=
+	b=QrGCP7TfmAF27GIJhOl7G4X1liDUf+tP7VeGhZyFaL1qhVpRe7fmtDjnkuk7UXWDH
+	 jdoTB+tF0r3ipC4pc+JBkcEJ4IMe9EP9Pcf+NOoGFBQaqEwoWgTdeuVAbiDnmsCNiy
+	 OS9+3y7dQiRf2c7pNWIoF3WTr5pKxqcEQiI2cybE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbgH1JRD (ORCPT
+        id S1728911AbgH1JRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:17:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48540 "EHLO mail.kernel.org"
+        Fri, 28 Aug 2020 05:17:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728444AbgH1JQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728362AbgH1JQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Aug 2020 05:16:54 -0400
 Received: from mail.kernel.org (unknown [95.90.213.181])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EB31208FE;
+        by mail.kernel.org (Postfix) with ESMTPSA id 23AB1208CA;
         Fri, 28 Aug 2020 09:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1598606213;
-        bh=IBVeh1zZx2EXVnY8k4/KBmTXmlSvBkhFzMjL+yHXBoo=;
+        bh=BINRLNO/WzZxpSvpKg/DSQZ1C+g7y3QuKMPwUQv2Ut8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SaEHHr49V5B5ntZjzcgf9tyQrDbYvKNTQwlowVmIQAijvkRK/AJ3AH+FqENYdFt+l
-         YtjBHDfuvvRxO297CzfX/h1Fctd+vTMrMXTVGoASQmyTX9yskbEv75/yjaGp9Q7A9k
-         CJ3hB3exaiWWeG5mnFyn2iSjq+Id1QPxNGKQXZiI=
+        b=MDq9wP9RaZhC1OKHCjwVC9xegBqpCsydBihStMI8lok8cOKf7HZeSZ8HVYpT4/1yp
+         ZrMsqbhxen+8KDCGh7K3YCoZSJUMQBTGvwlyze/LpBW8Pu4aqJSVXtn3RPYDBv9OpW
+         J5pizsyGTfTN6ZK21TyMBJ9ChSQo9iBq0Zn2sveY=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kBaV9-0047AD-8f; Fri, 28 Aug 2020 11:16:51 +0200
+        id 1kBaV9-0047AB-7a; Fri, 28 Aug 2020 11:16:51 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
@@ -49,54 +49,95 @@ Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Hans Verkuil <hans.verkuil@cisco.com>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         linux-media@vger.kernel.org
-Subject: [PATCH v11 2/4] media: open.rst: remove the minor number range
-Date:   Fri, 28 Aug 2020 11:16:48 +0200
-Message-Id: <e9835a51c2305b10d64231f9df2ec7fa6276030b.1598606093.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v11 1/4] media: open.rst: better document device node naming
+Date:   Fri, 28 Aug 2020 11:16:47 +0200
+Message-Id: <7a33a2ad9d8ad46446971d3ef2a5bb780eb50c9d.1598606093.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1598606093.git.mchehab+huawei@kernel.org>
 References: <cover.1598606093.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-minor numbers use to range between 0 to 255, but that
-was changed a long time ago. While it still applies when
-CONFIG_VIDEO_FIXED_MINOR_RANGES, when the minor number is
-dynamically allocated, this may not be true. In any case,
-this is not relevant, as udev will take care of it.
-
-So, remove this useless misinformation.
+Right now, only kAPI documentation describes the device naming.
+However, such description is needed at the uAPI too. Add it,
+and describe how to get an unique identifier for a given device.
 
 Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/userspace-api/media/v4l/open.rst | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ .../userspace-api/media/v4l/open.rst          | 43 +++++++++++++++++--
+ 1 file changed, 40 insertions(+), 3 deletions(-)
 
 diff --git a/Documentation/userspace-api/media/v4l/open.rst b/Documentation/userspace-api/media/v4l/open.rst
-index 7f1ff8a77059..4928f636c576 100644
+index 38046ef20141..7f1ff8a77059 100644
 --- a/Documentation/userspace-api/media/v4l/open.rst
 +++ b/Documentation/userspace-api/media/v4l/open.rst
-@@ -26,11 +26,10 @@ helper functions and a common application interface specified in this
+@@ -14,12 +14,14 @@ Opening and Closing Devices
+ ***************************
+ 
+ 
+-Device Naming
+-=============
++.. _v4l2_device_naming:
++
++V4L2 Device Node Naming
++=======================
+ 
+ V4L2 drivers are implemented as kernel modules, loaded manually by the
+ system administrator or automatically when a device is first discovered.
+-The driver modules plug into the "videodev" kernel module. It provides
++The driver modules plug into the ``videodev`` kernel module. It provides
+ helper functions and a common application interface specified in this
  document.
  
- Each driver thus loaded registers one or more device nodes with major
--number 81 and a minor number between 0 and 255. Minor numbers are
--allocated dynamically unless the kernel is compiled with the kernel
--option CONFIG_VIDEO_FIXED_MINOR_RANGES. In that case minor numbers
--are allocated in ranges depending on the device node type (video, radio,
--etc.).
-+number 81. Minor numbers are allocated dynamically unless the kernel
-+is compiled with the kernel option CONFIG_VIDEO_FIXED_MINOR_RANGES.
-+In that case minor numbers are allocated in ranges depending on the
-+device node type.
+@@ -30,6 +32,41 @@ option CONFIG_VIDEO_FIXED_MINOR_RANGES. In that case minor numbers
+ are allocated in ranges depending on the device node type (video, radio,
+ etc.).
  
- The device nodes supported by the Video4Linux subsystem are:
- 
++The device nodes supported by the Video4Linux subsystem are:
++
++======================== ====================================================
++Default device node name Usage
++======================== ====================================================
++``/dev/videoX``		 Video and metadata for capture/output devices
++``/dev/vbiX``		 Vertical blank data (i.e. closed captions, teletext)
++``/dev/radioX``		 Radio tuners and modulators
++``/dev/swradioX``	 Software Defined Radio tuners and modulators
++``/dev/v4l-touchX``	 Touch sensors
++``/dev/v4l-subdevX``	 Video sub-devices (used by sensors and other
++			 components of the hardware peripheral)\ [#]_
++======================== ====================================================
++
++Where ``X`` is a non-negative integer.
++
++.. note::
++
++   1. The actual device node name is system-dependent, as udev rules may apply.
++   2. There is no guarantee that ``X`` will remain the same for the same
++      device, as the number depends on the device driver's probe order.
++      If you need an unique name, udev default rules produce
++      ``/dev/v4l/by-id/`` and ``/dev/v4l/by-path/`` directories containing
++      links that can be used uniquely to identify a V4L2 device node::
++
++	$ tree /dev/v4l
++	/dev/v4l
++	├── by-id
++	│   └── usb-OmniVision._USB_Camera-B4.04.27.1-video-index0 -> ../../video0
++	└── by-path
++	    └── pci-0000:00:14.0-usb-0:2:1.0-video-index0 -> ../../video0
++
++.. [#] **V4L2 sub-device nodes** (e. g. ``/dev/v4l-subdevX``) use a different
++       set of system calls, as covered at :ref:`subdev`.
++
+ Many drivers support "video_nr", "radio_nr" or "vbi_nr" module
+ options to select specific video/radio/vbi node numbers. This allows the
+ user to request that the device node is named e.g. /dev/video5 instead
 -- 
 2.26.2
 
