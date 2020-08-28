@@ -2,256 +2,118 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2B3C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 02:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B936C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 02:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4941B20786
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 02:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 390F920872
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 02:34:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="L47wGV68"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="oTCOBXxK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgH1C1m (ORCPT
+        id S1728374AbgH1CeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 22:27:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56864 "EHLO
+        Thu, 27 Aug 2020 22:34:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbgH1C1l (ORCPT
+        with ESMTP id S1728015AbgH1CeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 22:27:41 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18346C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 19:27:41 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id l191so4720172pgd.5
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 19:27:41 -0700 (PDT)
+        Thu, 27 Aug 2020 22:34:17 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33093C061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 19:34:17 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id w186so4727525pgb.8
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 19:34:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QBB3ViJXjeVXr6xq5TDymDlWz187wLf2Wups+OkpPIc=;
-        b=L47wGV683+Zbw5/tOWGXiRX+YUj65SwjrwwTDVeYk2bKc50/eBgNkHvuee681PmARA
-         U74JEtCnYdCNB9A8hIVCA/ggO9Tqbu2EiatiU7Ci+xTJHaHyQQ7rbrMhkhvsWy6fskdo
-         bVu3jr0hElJ6hKDig/XMOkWnvhSoFGbdVn12l0dKAAc/K8Zx9LwSdv6yNPuC31tsguZt
-         a1/AZUd8MuoIYOJq+eUo7rYgAfVaoogeTY3+/CcKqK37qCixQsmMYI/4h/d3fY9x4jmp
-         qLJJsLN6AkvjV98jydDxdrt/0KAzXgJsJnEArjZ6NBAs0B0QskwhAbpsWmdxdr5vVA7R
-         C5bg==
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Wq4bW80PYQOUvc+r7HK1lpXC6FPGn4j7cEEATFFs/9U=;
+        b=oTCOBXxK+fBohpDAkvRznZQumncoBJKZyRDUp5HFU+2ZRiPwLX6uWoA9NjpXlRv9Uj
+         icW2nB2LIYQ3BBJJ5jc0w7AyYINngxONh8FoCPrv8LE173SZAToDmWc4rLiQ6SMAWZkG
+         V9U0nE2JGZmvxGpYfNpVz8bUrpq79nkE0RWb6j8X8UbgpE4mUlI7eV5Qt2A7HlcdNAE5
+         bqrR58QdJQi+3SKs2tTAraud3ZnTNgEeD5z/SW2yRbzo5PmThtJJQq3gtKXn3Qim7R3K
+         qMwKqM00zkG0/U+F4JcjD4I9lY0EvI7MsjALkGdm2syGd6euU7+d0cfNOlGm3F9JZq63
+         oMLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=QBB3ViJXjeVXr6xq5TDymDlWz187wLf2Wups+OkpPIc=;
-        b=NLmjRM6d8VM4WRNJB5jLQHFChGUwYdSyyDshDythVYkmwEJ7y1qONyHdHFBl1mXTNw
-         k84+JWwPRN/S7b96dA+fCVNGXuCGw/p6QItV5OQjwVLO8UMNQuqatnH2GRzgl/lNllgK
-         J56GotlZ5Mv3JetCZZiLRYB7mDzR5Ejibw/TxlFFVK96CT5bnLp7lKXcoEl6/gJw/Dhj
-         4ZxiLM1/+/epkvKCJgHtcH4m1IiOgpDK2c4p68k5okIbrKI4vwLl6stnm+5x56afcAQb
-         85s3jC3XRk3UKpAQvM/51qAlHFIn/ComiCG/2gG3enoNkT+bWBOF6QDZyOqdM8JzO+g1
-         6T5A==
-X-Gm-Message-State: AOAM530M2MkflDsaPuzzLGYwwRc9jVUvE28/t5Vqou9fx+VYLAfVy9Kl
-        pPZQNLTGq/C6aZo13M+muyFHJVUGY3shAw==
-X-Google-Smtp-Source: ABdhPJwaXkAK8Z/64XVgRBW9dtVJOvjap4lEv34JrOpwXxkeCF0BNKzAAlAQ/H5IYN5Y4r5hhnp/PA==
-X-Received: by 2002:a17:902:d215:: with SMTP id t21mr8724047ply.116.1598581659991;
-        Thu, 27 Aug 2020 19:27:39 -0700 (PDT)
-Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
-        by smtp.gmail.com with ESMTPSA id q10sm4084826pfs.75.2020.08.27.19.27.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 19:27:39 -0700 (PDT)
-Subject: Re: [PATCH v1 01/10] powerpc/pseries/iommu: Replace hard-coded page
- shift
-To:     Leonardo Bras <leobras.c@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Joel Stanley <joel@jms.id.au>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>,
-        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
-        David Dai <zdai@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20200817234033.442511-1-leobras.c@gmail.com>
- <20200817234033.442511-2-leobras.c@gmail.com>
- <6232948f-033d-8322-e656-544f12c5f784@ozlabs.ru>
- <31e913d842693b6e107cb2b8e51fd45118b1bd2c.camel@gmail.com>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- mQINBE+rT0sBEADFEI2UtPRsLLvnRf+tI9nA8T91+jDK3NLkqV+2DKHkTGPP5qzDZpRSH6mD
- EePO1JqpVuIow/wGud9xaPA5uvuVgRS1q7RU8otD+7VLDFzPRiRE4Jfr2CW89Ox6BF+q5ZPV
- /pS4v4G9eOrw1v09lEKHB9WtiBVhhxKK1LnUjPEH3ifkOkgW7jFfoYgTdtB3XaXVgYnNPDFo
- PTBYsJy+wr89XfyHr2Ev7BB3Xaf7qICXdBF8MEVY8t/UFsesg4wFWOuzCfqxFmKEaPDZlTuR
- tfLAeVpslNfWCi5ybPlowLx6KJqOsI9R2a9o4qRXWGP7IwiMRAC3iiPyk9cknt8ee6EUIxI6
- t847eFaVKI/6WcxhszI0R6Cj+N4y+1rHfkGWYWupCiHwj9DjILW9iEAncVgQmkNPpUsZECLT
- WQzMuVSxjuXW4nJ6f4OFHqL2dU//qR+BM/eJ0TT3OnfLcPqfucGxubhT7n/CXUxEy+mvWwnm
- s9p4uqVpTfEuzQ0/bE6t7dZdPBua7eYox1AQnk8JQDwC3Rn9kZq2O7u5KuJP5MfludMmQevm
- pHYEMF4vZuIpWcOrrSctJfIIEyhDoDmR34bCXAZfNJ4p4H6TPqPh671uMQV82CfTxTrMhGFq
- 8WYU2AH86FrVQfWoH09z1WqhlOm/KZhAV5FndwVjQJs1MRXD8QARAQABtCRBbGV4ZXkgS2Fy
- ZGFzaGV2c2tpeSA8YWlrQG96bGFicy5ydT6JAjgEEwECACIFAk+rT0sCGwMGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAAAoJEIYTPdgrwSC5fAIP/0wf/oSYaCq9PhO0UP9zLSEz66SSZUf7
- AM9O1rau1lJpT8RoNa0hXFXIVbqPPKPZgorQV8SVmYRLr0oSmPnTiZC82x2dJGOR8x4E01gK
- TanY53J/Z6+CpYykqcIpOlGsytUTBA+AFOpdaFxnJ9a8p2wA586fhCZHVpV7W6EtUPH1SFTQ
- q5xvBmr3KkWGjz1FSLH4FeB70zP6uyuf/B2KPmdlPkyuoafl2UrU8LBADi/efc53PZUAREih
- sm3ch4AxaL4QIWOmlE93S+9nHZSRo9jgGXB1LzAiMRII3/2Leg7O4hBHZ9Nki8/fbDo5///+
- kD4L7UNbSUM/ACWHhd4m1zkzTbyRzvL8NAVQ3rckLOmju7Eu9whiPueGMi5sihy9VQKHmEOx
- OMEhxLRQbzj4ypRLS9a+oxk1BMMu9cd/TccNy0uwx2UUjDQw/cXw2rRWTRCxoKmUsQ+eNWEd
- iYLW6TCfl9CfHlT6A7Zmeqx2DCeFafqEd69DqR9A8W5rx6LQcl0iOlkNqJxxbbW3ddDsLU/Y
- r4cY20++WwOhSNghhtrroP+gouTOIrNE/tvG16jHs8nrYBZuc02nfX1/gd8eguNfVX/ZTHiR
- gHBWe40xBKwBEK2UeqSpeVTohYWGBkcd64naGtK9qHdo1zY1P55lHEc5Uhlk743PgAnOi27Q
- ns5zuQINBE+rT0sBEACnV6GBSm+25ACT+XAE0t6HHAwDy+UKfPNaQBNTTt31GIk5aXb2Kl/p
- AgwZhQFEjZwDbl9D/f2GtmUHWKcCmWsYd5M/6Ljnbp0Ti5/xi6FyfqnO+G/wD2VhGcKBId1X
- Em/B5y1kZVbzcGVjgD3HiRTqE63UPld45bgK2XVbi2+x8lFvzuFq56E3ZsJZ+WrXpArQXib2
- hzNFwQleq/KLBDOqTT7H+NpjPFR09Qzfa7wIU6pMNF2uFg5ihb+KatxgRDHg70+BzQfa6PPA
- o1xioKXW1eHeRGMmULM0Eweuvpc7/STD3K7EJ5bBq8svoXKuRxoWRkAp9Ll65KTUXgfS+c0x
- gkzJAn8aTG0z/oEJCKPJ08CtYQ5j7AgWJBIqG+PpYrEkhjzSn+DZ5Yl8r+JnZ2cJlYsUHAB9
- jwBnWmLCR3gfop65q84zLXRQKWkASRhBp4JK3IS2Zz7Nd/Sqsowwh8x+3/IUxVEIMaVoUaxk
- Wt8kx40h3VrnLTFRQwQChm/TBtXqVFIuv7/Mhvvcq11xnzKjm2FCnTvCh6T2wJw3de6kYjCO
- 7wsaQ2y3i1Gkad45S0hzag/AuhQJbieowKecuI7WSeV8AOFVHmgfhKti8t4Ff758Z0tw5Fpc
- BFDngh6Lty9yR/fKrbkkp6ux1gJ2QncwK1v5kFks82Cgj+DSXK6GUQARAQABiQIfBBgBAgAJ
- BQJPq09LAhsMAAoJEIYTPdgrwSC5NYEP/2DmcEa7K9A+BT2+G5GXaaiFa098DeDrnjmRvumJ
- BhA1UdZRdfqICBADmKHlJjj2xYo387sZpS6ABbhrFxM6s37g/pGPvFUFn49C47SqkoGcbeDz
- Ha7JHyYUC+Tz1dpB8EQDh5xHMXj7t59mRDgsZ2uVBKtXj2ZkbizSHlyoeCfs1gZKQgQE8Ffc
- F8eWKoqAQtn3j4nE3RXbxzTJJfExjFB53vy2wV48fUBdyoXKwE85fiPglQ8bU++0XdOr9oyy
- j1llZlB9t3tKVv401JAdX8EN0++ETiOovQdzE1m+6ioDCtKEx84ObZJM0yGSEGEanrWjiwsa
- nzeK0pJQM9EwoEYi8TBGhHC9ksaAAQipSH7F2OHSYIlYtd91QoiemgclZcSgrxKSJhyFhmLr
- QEiEILTKn/pqJfhHU/7R7UtlDAmFMUp7ByywB4JLcyD10lTmrEJ0iyRRTVfDrfVP82aMBXgF
- tKQaCxcmLCaEtrSrYGzd1sSPwJne9ssfq0SE/LM1J7VdCjm6OWV33SwKrfd6rOtvOzgadrG6
- 3bgUVBw+bsXhWDd8tvuCXmdY4bnUblxF2B6GOwSY43v6suugBttIyW5Bl2tXSTwP+zQisOJo
- +dpVG2pRr39h+buHB3NY83NEPXm1kUOhduJUA17XUY6QQCAaN4sdwPqHq938S3EmtVhsuQIN
- BFq54uIBEACtPWrRdrvqfwQF+KMieDAMGdWKGSYSfoEGGJ+iNR8v255IyCMkty+yaHafvzpl
- PFtBQ/D7Fjv+PoHdFq1BnNTk8u2ngfbre9wd9MvTDsyP/TmpF0wyyTXhhtYvE267Av4X/BQT
- lT9IXKyAf1fP4BGYdTNgQZmAjrRsVUW0j6gFDrN0rq2J9emkGIPvt9rQt6xGzrd6aXonbg5V
- j6Uac1F42ESOZkIh5cN6cgnGdqAQb8CgLK92Yc8eiCVCH3cGowtzQ2m6U32qf30cBWmzfSH0
- HeYmTP9+5L8qSTA9s3z0228vlaY0cFGcXjdodBeVbhqQYseMF9FXiEyRs28uHAJEyvVZwI49
- CnAgVV/n1eZa5qOBpBL+ZSURm8Ii0vgfvGSijPGbvc32UAeAmBWISm7QOmc6sWa1tobCiVmY
- SNzj5MCNk8z4cddoKIc7Wt197+X/X5JPUF5nQRvg3SEHvfjkS4uEst9GwQBpsbQYH9MYWq2P
- PdxZ+xQE6v7cNB/pGGyXqKjYCm6v70JOzJFmheuUq0Ljnfhfs15DmZaLCGSMC0Amr+rtefpA
- y9FO5KaARgdhVjP2svc1F9KmTUGinSfuFm3quadGcQbJw+lJNYIfM7PMS9fftq6vCUBoGu3L
- j4xlgA/uQl/LPneu9mcvit8JqcWGS3fO+YeagUOon1TRqQARAQABiQRsBBgBCAAgFiEEZSrP
- ibrORRTHQ99dhhM92CvBILkFAlq54uICGwICQAkQhhM92CvBILnBdCAEGQEIAB0WIQQIhvWx
- rCU+BGX+nH3N7sq0YorTbQUCWrni4gAKCRDN7sq0YorTbVVSD/9V1xkVFyUCZfWlRuryBRZm
- S4GVaNtiV2nfUfcThQBfF0sSW/aFkLP6y+35wlOGJE65Riw1C2Ca9WQYk0xKvcZrmuYkK3DZ
- 0M9/Ikkj5/2v0vxz5Z5w/9+IaCrnk7pTnHZuZqOh23NeVZGBls/IDIvvLEjpD5UYicH0wxv+
- X6cl1RoP2Kiyvenf0cS73O22qSEw0Qb9SId8wh0+ClWet2E7hkjWFkQfgJ3hujR/JtwDT/8h
- 3oCZFR0KuMPHRDsCepaqb/k7VSGTLBjVDOmr6/C9FHSjq0WrVB9LGOkdnr/xcISDZcMIpbRm
- EkIQ91LkT/HYIImL33ynPB0SmA+1TyMgOMZ4bakFCEn1vxB8Ir8qx5O0lHMOiWMJAp/PAZB2
- r4XSSHNlXUaWUg1w3SG2CQKMFX7vzA31ZeEiWO8tj/c2ZjQmYjTLlfDK04WpOy1vTeP45LG2
- wwtMA1pKvQ9UdbYbovz92oyZXHq81+k5Fj/YA1y2PI4MdHO4QobzgREoPGDkn6QlbJUBf4To
- pEbIGgW5LRPLuFlOPWHmIS/sdXDrllPc29aX2P7zdD/ivHABslHmt7vN3QY+hG0xgsCO1JG5
- pLORF2N5XpM95zxkZqvYfC5tS/qhKyMcn1kC0fcRySVVeR3tUkU8/caCqxOqeMe2B6yTiU1P
- aNDq25qYFLeYxg67D/4w/P6BvNxNxk8hx6oQ10TOlnmeWp1q0cuutccblU3ryRFLDJSngTEu
- ZgnOt5dUFuOZxmMkqXGPHP1iOb+YDznHmC0FYZFG2KAc9pO0WuO7uT70lL6larTQrEneTDxQ
- CMQLP3qAJ/2aBH6SzHIQ7sfbsxy/63jAiHiT3cOaxAKsWkoV2HQpnmPOJ9u02TPjYmdpeIfa
- X2tXyeBixa3i/6dWJ4nIp3vGQicQkut1YBwR7dJq67/FCV3Mlj94jI0myHT5PIrCS2S8LtWX
- ikTJSxWUKmh7OP5mrqhwNe0ezgGiWxxvyNwThOHc5JvpzJLd32VDFilbxgu4Hhnf6LcgZJ2c
- Zd44XWqUu7FzVOYaSgIvTP0hNrBYm/E6M7yrLbs3JY74fGzPWGRbBUHTZXQEqQnZglXaVB5V
- ZhSFtHopZnBSCUSNDbB+QGy4B/E++Bb02IBTGl/JxmOwG+kZUnymsPvTtnNIeTLHxN/H/ae0
- c7E5M+/NpslPCmYnDjs5qg0/3ihh6XuOGggZQOqrYPC3PnsNs3NxirwOkVPQgO6mXxpuifvJ
- DG9EMkK8IBXnLulqVk54kf7fE0jT/d8RTtJIA92GzsgdK2rpT1MBKKVffjRFGwN7nQVOzi4T
- XrB5p+6ML7Bd84xOEGsj/vdaXmz1esuH7BOZAGEZfLRCHJ0GVCSssg==
-Message-ID: <1e77a3d9-dff9-f58b-45be-77be7cbea41a@ozlabs.ru>
-Date:   Fri, 28 Aug 2020 12:27:33 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Wq4bW80PYQOUvc+r7HK1lpXC6FPGn4j7cEEATFFs/9U=;
+        b=S3dv41007LS3gOjSfsLIZpEFknx3uT3+ykwmo70useusKhxuj8aW2NvbW+wytZoA+Z
+         bxvXtYmho/A3ySNBPC0P73VkNlFl2lQ49gdt35JkAPma4uHYnoxc1OUwOXVdwkxiF4ie
+         SAOppdeSQR9CUZJS8/Jn6bTOWVnIXkl2bInfBMTh4vtDjivPqBeVdDFPVkggaRWZNYvT
+         D6Bh/rMJdMIVi72RwtkTbj/cRSwdDOshIFOKzQhkyiyqTz4Gp5fsq1qb4eAjx3O5Skpl
+         I6HxozOYux0Jl3/inOn55fFDs76bFk68SjAJsrm0+JY2hqGxWRnfr4pF8MDmh5tPst3Z
+         sTig==
+X-Gm-Message-State: AOAM532G/GwrmqpqebFgMscCJpyHu/MCQZ5ZNzK1eCmZp3mNg3Ua8l68
+        NWLlaFtnDRiYd1/YpfQGItKJAgYKA+nfgp1eDmaDSTFp1/w2OX8H
+X-Google-Smtp-Source: ABdhPJxJQPdfEzCXFS9OWhsPamjtFq0jc35saCUnIZCNBxX9HEpqYBDHd3D3HTIPSLCWBE7TfpMBNcTzLVi0eqdnFrc=
+X-Received: by 2002:a17:902:221:: with SMTP id 30mr19150363plc.222.1598582056522;
+ Thu, 27 Aug 2020 19:34:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <31e913d842693b6e107cb2b8e51fd45118b1bd2c.camel@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200822095328.61306-1-songmuchun@bytedance.com>
+ <20200824135924.b485e000d358cee817c4f05c@linux-foundation.org>
+ <79800508-54c9-4cda-02de-29b1a6912e75@oracle.com> <CAMZfGtXh+FP0O92ccj532Y=K4m2S==eSK8LjYEM+p6cttV0p8Q@mail.gmail.com>
+ <231ec1f1-fe7a-c48a-2427-1311360d4b9b@oracle.com> <CAMZfGtWj5_Uh2KFAy4DGc0vzrNm4+Nge7rOBDAFQhh2aN7wOqA@mail.gmail.com>
+ <afaa721e-f86c-9b49-acd1-54c9017fb269@oracle.com>
+In-Reply-To: <afaa721e-f86c-9b49-acd1-54c9017fb269@oracle.com>
+From:   Muchun Song <songmuchun@bytedance.com>
+Date:   Fri, 28 Aug 2020 10:33:40 +0800
+Message-ID: <CAMZfGtU9U5dv5oOCopnsFN7XErY52nA47b0jreUqZ2C6VBmC7w@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] mm/hugetlb: Fix a race between hugetlb
+ sysctl handlers
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 28, 2020 at 5:51 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>
+> On 8/25/20 7:47 PM, Muchun Song wrote:
+> >
+> > CPU0:                                     CPU1:
+> >                                           proc_sys_write
+> > hugetlb_sysctl_handler                      proc_sys_call_handler
+> > hugetlb_sysctl_handler_common                 hugetlb_sysctl_handler
+> >   table->data = &tmp;                           hugetlb_sysctl_handler_common
+> >                                                   table->data = &tmp;
+> >     proc_doulongvec_minmax
+> >       do_proc_doulongvec_minmax             sysctl_head_finish
+> >         __do_proc_doulongvec_minmax
+> >           i = table->data;
+> >           *i = val;     // corrupt CPU1 stack
+>
+> Thanks Muchun!
+> Can you please add this to the commit message.
+
+OK, I will do that. Thanks.
+
+>
+> Also, when looking closer at the patch I do not think setting table->maxlen
+> is necessary in these routines.  maxlen is set when the hugetlb ctl_table
+> entries are defined and initialized.  This is not something you introduced.
+> The unnecessary assignments are in the existing code.  However, there is no
+> need to carry them forward.
+
+Yeah, I agree with you. I will remove the unnecessary assignment of
+table->maxlen.
+
+>
+> --
+> Mike Kravetz
 
 
-On 28/08/2020 01:32, Leonardo Bras wrote:
-> Hello Alexey, thank you for this feedback!
-> 
-> On Sat, 2020-08-22 at 19:33 +1000, Alexey Kardashevskiy wrote:
->>> +#define TCE_RPN_BITS		52		/* Bits 0-51 represent RPN on TCE */
->>
->> Ditch this one and use MAX_PHYSMEM_BITS instead? I am pretty sure this
->> is the actual limit.
-> 
-> I understand this MAX_PHYSMEM_BITS(51) comes from the maximum physical memory addressable in the machine. IIUC, it means we can access physical address up to (1ul << MAX_PHYSMEM_BITS). 
-> 
-> This 52 comes from PAPR "Table 9. TCE Definition" which defines bits
-> 0-51 as the RPN. By looking at code, I understand that it means we may input any address < (1ul << 52) to TCE.
-> 
-> In practice, MAX_PHYSMEM_BITS should be enough as of today, because I suppose we can't ever pass a physical page address over 
-> (1ul << 51), and TCE accepts up to (1ul << 52).
-> But if we ever increase MAX_PHYSMEM_BITS, it doesn't necessarily means that TCE_RPN_BITS will also be increased, so I think they are independent values. 
-> 
-> Does it make sense? Please let me know if I am missing something.
-
-The underlying hardware is PHB3/4 about which the IODA2 Version 2.4
-6Apr2012.pdf spec says:
-
-"The number of most significant RPN bits implemented in the TCE is
-dependent on the max size of System Memory to be supported by the platform".
-
-IODA3 is the same on this matter.
-
-This is MAX_PHYSMEM_BITS and PHB itself does not have any other limits
-on top of that. So the only real limit comes from MAX_PHYSMEM_BITS and
-where TCE_RPN_BITS comes from exactly - I have no idea.
-
-
-> 
->>
->>
->>> +#define TCE_RPN_MASK(ps)	((1ul << (TCE_RPN_BITS - (ps))) - 1)
->>>  #define TCE_VALID		0x800		/* TCE valid */
->>>  #define TCE_ALLIO		0x400		/* TCE valid for all lpars */
->>>  #define TCE_PCI_WRITE		0x2		/* write from PCI allowed */
->>> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
->>> index e4198700ed1a..8fe23b7dff3a 100644
->>> --- a/arch/powerpc/platforms/pseries/iommu.c
->>> +++ b/arch/powerpc/platforms/pseries/iommu.c
->>> @@ -107,6 +107,9 @@ static int tce_build_pSeries(struct iommu_table *tbl, long index,
->>>  	u64 proto_tce;
->>>  	__be64 *tcep;
->>>  	u64 rpn;
->>> +	const unsigned long tceshift = tbl->it_page_shift;
->>> +	const unsigned long pagesize = IOMMU_PAGE_SIZE(tbl);
->>> +	const u64 rpn_mask = TCE_RPN_MASK(tceshift);
->>
->> Using IOMMU_PAGE_SIZE macro for the page size and not using
->> IOMMU_PAGE_MASK for the mask - this incosistency makes my small brain
->> explode :) I understand the history but maaaaan... Oh well, ok.
->>
-> 
-> Yeah, it feels kind of weird after two IOMMU related consts. :)
-> But sure IOMMU_PAGE_MASK() would not be useful here :)
-> 
-> And this kind of let me thinking:
->>> +		rpn = __pa(uaddr) >> tceshift;
->>> +		*tcep = cpu_to_be64(proto_tce | (rpn & rpn_mask) << tceshift);
-> Why not:
-> 	rpn_mask =  TCE_RPN_MASK(tceshift) << tceshift;
-
-
-A mask for a page number (but not the address!) hurts my brain, masks
-are good against addresses but numbers should already have all bits
-adjusted imho, may be it is just me :-/
-
-
-> 	
-> 	rpn = __pa(uaddr) & rpn_mask;
-> 	*tcep = cpu_to_be64(proto_tce | rpn)
-> 
-> I am usually afraid of changing stuff like this, but I think it's safe.
-> 
->> Good, otherwise. Thanks,
-> 
-> Thank you for reviewing!
->  
-> 
-> 
 
 -- 
-Alexey
+Yours,
+Muchun
