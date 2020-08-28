@@ -2,60 +2,283 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C425BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFAFC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB9A720825
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFBCE2098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:51:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598597497;
+	bh=/bhjJvxPGi0YxD+jDxjpPtYNclCNwWY9zpiia8ZDhCA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MA8xqmrlEs9f2WF/l8boh7IWfeRqki7oyb7mZXCX7jarPDFpGYlaFRSpWxgbDomXt
+	 j2izRj9PlJGewHUIDm0dIR4UPrxRipTMVrLGi83aaYdEM1k4e6b5h5fVjvQbmDEilb
+	 Pd+9MEwp81KAUKOsfjTmiRwEbK/bjhMVjWU/bDtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgH1Gt7 (ORCPT
+        id S1727912AbgH1Gvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 02:49:59 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:35216 "EHLO fornost.hmeau.com"
+        Fri, 28 Aug 2020 02:51:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725858AbgH1Gt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 02:49:57 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1kBYCp-0003Fn-6X; Fri, 28 Aug 2020 16:49:48 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 28 Aug 2020 16:49:47 +1000
-Date:   Fri, 28 Aug 2020 16:49:47 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     davem@davemloft.net, mripard@kernel.org, wens@csie.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 02/18] crypto: sun8i-ss: Add support for the PRNG
-Message-ID: <20200828064946.GB26312@gondor.apana.org.au>
-References: <1598017415-39059-1-git-send-email-clabbe@baylibre.com>
- <1598017415-39059-3-git-send-email-clabbe@baylibre.com>
+        id S1725858AbgH1Gva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 02:51:30 -0400
+Received: from localhost (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AACB220825;
+        Fri, 28 Aug 2020 06:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598597489;
+        bh=/bhjJvxPGi0YxD+jDxjpPtYNclCNwWY9zpiia8ZDhCA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m+NiDIn6Xja1b4Arx3GBrQKP9KH40E5H+ysjB5zuUJtKdtHvV9n+YsQusa8lxVt2i
+         ffQqSDy0TV4qnzlB9Rq26sisxGmXN2owFlOX9PHeC9dBLE/nwL1j0EU0+qTDc95A1h
+         cReJsi/Enkve4dAcvZgX3f59Qn0SH28TPXnlFV/s=
+Date:   Fri, 28 Aug 2020 12:21:25 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bard Liao <yung-chuan.liao@linux.intel.com>, broonie@kernel.org
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
+        hui.wang@canonical.com, pierre-louis.bossart@linux.intel.com,
+        sanyog.r.kale@intel.com, mengdong.lin@intel.com,
+        bard.liao@intel.com
+Subject: Re: [PATCH 1/7] soundwire: bus: use property to set interrupt masks
+Message-ID: <20200828065125.GI2639@vkoul-mobl>
+References: <20200818140656.29014-1-yung-chuan.liao@linux.intel.com>
+ <20200818140656.29014-2-yung-chuan.liao@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1598017415-39059-3-git-send-email-clabbe@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200818140656.29014-2-yung-chuan.liao@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 01:43:19PM +0000, Corentin Labbe wrote:
->
-> +	err = pm_runtime_get_sync(ss->dev);
-> +	if (err < 0)
-> +		goto err_pm;
-> +	err = 0;
+Hi Mark,
 
-The error case needs to do this:
+On 18-08-20, 22:06, Bard Liao wrote:
+> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> 
+> Add a slave-level property and program the SCP_INT1_MASK as desired by
+> the codec driver. Since there is no DisCo property this has to be an
+> implementation-specific firmware property or hard-coded in the driver.
+> 
+> The only functionality change is that implementation-defined
+> interrupts are no longer set for amplifiers - those interrupts are
+> typically for jack detection or acoustic event detection/hotwording.
+> 
+> Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+> Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+> Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+> ---
+>  drivers/soundwire/bus.c         | 12 ++++++------
+>  include/linux/soundwire/sdw.h   |  2 ++
+>  sound/soc/codecs/max98373-sdw.c |  3 +++
+>  sound/soc/codecs/rt1308-sdw.c   |  2 ++
+>  sound/soc/codecs/rt5682-sdw.c   |  4 ++++
+>  sound/soc/codecs/rt700-sdw.c    |  4 ++++
+>  sound/soc/codecs/rt711-sdw.c    |  4 ++++
+>  sound/soc/codecs/rt715-sdw.c    |  4 ++++
+>  sound/soc/codecs/wsa881x.c      |  1 +
 
-https://patchwork.kernel.org/patch/11728595/
+This touches codecs, can you Ack it please
 
-Cheers,
+Ideally this should have been split up to header, the codec updates and
+finally the bus change!
+
+
+>  9 files changed, 30 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
+> index e6e0fb9a81b4..3b6a87bc254e 100644
+> --- a/drivers/soundwire/bus.c
+> +++ b/drivers/soundwire/bus.c
+> @@ -1184,13 +1184,13 @@ static int sdw_initialize_slave(struct sdw_slave *slave)
+>  		return ret;
+>  
+>  	/*
+> -	 * Set bus clash, parity and SCP implementation
+> -	 * defined interrupt mask
+> -	 * TODO: Read implementation defined interrupt mask
+> -	 * from Slave property
+> +	 * Set SCP_INT1_MASK register, typically bus clash and
+> +	 * implementation-defined interrupt mask. The Parity detection
+> +	 * may not always be correct on startup so its use is
+> +	 * device-dependent, it might e.g. only be enabled in
+> +	 * steady-state after a couple of frames.
+>  	 */
+> -	val = SDW_SCP_INT1_IMPL_DEF | SDW_SCP_INT1_BUS_CLASH |
+> -					SDW_SCP_INT1_PARITY;
+> +	val = slave->prop.scp_int1_mask;
+>  
+>  	/* Enable SCP interrupts */
+>  	ret = sdw_update(slave, SDW_SCP_INTMASK1, val, val);
+> diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
+> index 76052f12c9f7..6d91f2ca20b2 100644
+> --- a/include/linux/soundwire/sdw.h
+> +++ b/include/linux/soundwire/sdw.h
+> @@ -355,6 +355,7 @@ struct sdw_dpn_prop {
+>   * @dp0_prop: Data Port 0 properties
+>   * @src_dpn_prop: Source Data Port N properties
+>   * @sink_dpn_prop: Sink Data Port N properties
+> + * @scp_int1_mask: SCP_INT1_MASK desired settings
+>   */
+>  struct sdw_slave_prop {
+>  	u32 mipi_revision;
+> @@ -376,6 +377,7 @@ struct sdw_slave_prop {
+>  	struct sdw_dp0_prop *dp0_prop;
+>  	struct sdw_dpn_prop *src_dpn_prop;
+>  	struct sdw_dpn_prop *sink_dpn_prop;
+> +	u8 scp_int1_mask;
+>  };
+>  
+>  /**
+> diff --git a/sound/soc/codecs/max98373-sdw.c b/sound/soc/codecs/max98373-sdw.c
+> index 5fe724728e84..17fd1989e873 100644
+> --- a/sound/soc/codecs/max98373-sdw.c
+> +++ b/sound/soc/codecs/max98373-sdw.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/of.h>
+>  #include <linux/soundwire/sdw.h>
+>  #include <linux/soundwire/sdw_type.h>
+> +#include <linux/soundwire/sdw_registers.h>
+>  #include "max98373.h"
+>  #include "max98373-sdw.h"
+>  
+> @@ -287,6 +288,8 @@ static int max98373_read_prop(struct sdw_slave *slave)
+>  	unsigned long addr;
+>  	struct sdw_dpn_prop *dpn;
+>  
+> +	prop->scp_int1_mask = SDW_SCP_INT1_BUS_CLASH | SDW_SCP_INT1_PARITY;
+> +
+>  	/* BITMAP: 00001000  Dataport 3 is active */
+>  	prop->source_ports = BIT(3);
+>  	/* BITMAP: 00000010  Dataport 1 is active */
+> diff --git a/sound/soc/codecs/rt1308-sdw.c b/sound/soc/codecs/rt1308-sdw.c
+> index b0ba0d2acbdd..5cf10fd447eb 100644
+> --- a/sound/soc/codecs/rt1308-sdw.c
+> +++ b/sound/soc/codecs/rt1308-sdw.c
+> @@ -123,6 +123,8 @@ static int rt1308_read_prop(struct sdw_slave *slave)
+>  	unsigned long addr;
+>  	struct sdw_dpn_prop *dpn;
+>  
+> +	prop->scp_int1_mask = SDW_SCP_INT1_BUS_CLASH | SDW_SCP_INT1_PARITY;
+> +
+>  	prop->paging_support = true;
+>  
+>  	/* first we need to allocate memory for set bits in port lists */
+> diff --git a/sound/soc/codecs/rt5682-sdw.c b/sound/soc/codecs/rt5682-sdw.c
+> index 94bf6bee78e6..544073975020 100644
+> --- a/sound/soc/codecs/rt5682-sdw.c
+> +++ b/sound/soc/codecs/rt5682-sdw.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/soundwire/sdw.h>
+>  #include <linux/soundwire/sdw_type.h>
+> +#include <linux/soundwire/sdw_registers.h>
+>  #include <sound/core.h>
+>  #include <sound/pcm.h>
+>  #include <sound/pcm_params.h>
+> @@ -542,6 +543,9 @@ static int rt5682_read_prop(struct sdw_slave *slave)
+>  	unsigned long addr;
+>  	struct sdw_dpn_prop *dpn;
+>  
+> +	prop->scp_int1_mask = SDW_SCP_INT1_IMPL_DEF | SDW_SCP_INT1_BUS_CLASH |
+> +		SDW_SCP_INT1_PARITY;
+> +
+>  	prop->paging_support = false;
+>  
+>  	/* first we need to allocate memory for set bits in port lists */
+> diff --git a/sound/soc/codecs/rt700-sdw.c b/sound/soc/codecs/rt700-sdw.c
+> index 4d14048d1197..a46b957a3f1b 100644
+> --- a/sound/soc/codecs/rt700-sdw.c
+> +++ b/sound/soc/codecs/rt700-sdw.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/soundwire/sdw.h>
+>  #include <linux/soundwire/sdw_type.h>
+> +#include <linux/soundwire/sdw_registers.h>
+>  #include <linux/module.h>
+>  #include <linux/regmap.h>
+>  #include <sound/soc.h>
+> @@ -338,6 +339,9 @@ static int rt700_read_prop(struct sdw_slave *slave)
+>  	unsigned long addr;
+>  	struct sdw_dpn_prop *dpn;
+>  
+> +	prop->scp_int1_mask = SDW_SCP_INT1_IMPL_DEF | SDW_SCP_INT1_BUS_CLASH |
+> +		SDW_SCP_INT1_PARITY;
+> +
+>  	prop->paging_support = false;
+>  
+>  	/* first we need to allocate memory for set bits in port lists */
+> diff --git a/sound/soc/codecs/rt711-sdw.c b/sound/soc/codecs/rt711-sdw.c
+> index 45b928954b58..a877e366fec5 100644
+> --- a/sound/soc/codecs/rt711-sdw.c
+> +++ b/sound/soc/codecs/rt711-sdw.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/soundwire/sdw.h>
+>  #include <linux/soundwire/sdw_type.h>
+> +#include <linux/soundwire/sdw_registers.h>
+>  #include <linux/module.h>
+>  #include <linux/regmap.h>
+>  #include <sound/soc.h>
+> @@ -342,6 +343,9 @@ static int rt711_read_prop(struct sdw_slave *slave)
+>  	unsigned long addr;
+>  	struct sdw_dpn_prop *dpn;
+>  
+> +	prop->scp_int1_mask = SDW_SCP_INT1_IMPL_DEF | SDW_SCP_INT1_BUS_CLASH |
+> +		SDW_SCP_INT1_PARITY;
+> +
+>  	prop->paging_support = false;
+>  
+>  	/* first we need to allocate memory for set bits in port lists */
+> diff --git a/sound/soc/codecs/rt715-sdw.c b/sound/soc/codecs/rt715-sdw.c
+> index d11b23d6b240..0eb8943ed6ff 100644
+> --- a/sound/soc/codecs/rt715-sdw.c
+> +++ b/sound/soc/codecs/rt715-sdw.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/soundwire/sdw.h>
+>  #include <linux/soundwire/sdw_type.h>
+> +#include <linux/soundwire/sdw_registers.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/regmap.h>
+> @@ -436,6 +437,9 @@ static int rt715_read_prop(struct sdw_slave *slave)
+>  	unsigned long addr;
+>  	struct sdw_dpn_prop *dpn;
+>  
+> +	prop->scp_int1_mask = SDW_SCP_INT1_IMPL_DEF | SDW_SCP_INT1_BUS_CLASH |
+> +		SDW_SCP_INT1_PARITY;
+> +
+>  	prop->paging_support = false;
+>  
+>  	/* first we need to allocate memory for set bits in port lists */
+> diff --git a/sound/soc/codecs/wsa881x.c b/sound/soc/codecs/wsa881x.c
+> index d39d479e2378..68e774e69c85 100644
+> --- a/sound/soc/codecs/wsa881x.c
+> +++ b/sound/soc/codecs/wsa881x.c
+> @@ -1112,6 +1112,7 @@ static int wsa881x_probe(struct sdw_slave *pdev,
+>  	wsa881x->sconfig.type = SDW_STREAM_PDM;
+>  	pdev->prop.sink_ports = GENMASK(WSA881X_MAX_SWR_PORTS, 0);
+>  	pdev->prop.sink_dpn_prop = wsa_sink_dpn_prop;
+> +	pdev->prop.scp_int1_mask = SDW_SCP_INT1_BUS_CLASH | SDW_SCP_INT1_PARITY;
+>  	gpiod_direction_output(wsa881x->sd_n, 1);
+>  
+>  	wsa881x->regmap = devm_regmap_init_sdw(pdev, &wsa881x_regmap_config);
+> -- 
+> 2.17.1
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+~Vinod
