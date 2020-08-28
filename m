@@ -2,132 +2,134 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5529FC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 02:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C68C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 02:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E2A320786
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 02:20:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J8v9qS61"
+	by mail.kernel.org (Postfix) with ESMTP id 7D0D420786
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 02:23:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbgH1CUG (ORCPT
+        id S1728353AbgH1CXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 22:20:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728270AbgH1CUC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 22:20:02 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2B67C061264;
-        Thu, 27 Aug 2020 19:20:02 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id q93so3477609pjq.0;
-        Thu, 27 Aug 2020 19:20:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=WDsU53ggUOIO8hY0xz6zuIn+yi29IL9YgTObODIlPzE=;
-        b=J8v9qS61pcOAelCZNvP7NAULS7YDQPCXpQ7ns6LCgNd4u9gxMwiymUM+Hp9gsN+KBt
-         LGiuQJpGHFrw0e+rImSvccGBIDljpSQ0BqX0EAfLaqqrOSiXKbbJJJ1zFi6Fwdf+X9Yl
-         SzvRy+SbL96o/hmGJMNPCPdXMxYP9Jj0eBvH3rffynSWTF1WTYTJfrf1bzGS82q+Urmi
-         t5GEpGMHlLYBTfTvUKntkayfiM3yaSD8p+IHhmzBZufAjGw1uARPda1DqjKONUv2q0s0
-         ND29NB0wip4mx8Ux/PBu67ytdRoyG1GHuBac4jK666PamRA0wLXWB3n9IaUP++w6chs8
-         pdQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WDsU53ggUOIO8hY0xz6zuIn+yi29IL9YgTObODIlPzE=;
-        b=h8g7TLQB6wLy6EzSyyCb4ueWqIFPKh580dv7ff13kSk1/RJlAfy3I3ZJ59YPxnTZOC
-         AIXMxREOSsSRS3VLZQi8+KgmahQD/8tI8y4ZrR200w+AC9+G+bGu/qixbYhyzpjaOPFq
-         kCkNe+b5e+BzuMgDnbzMn7x8u2AEyBiLQerRXFvgogKhH9uvx4u0gdP9VQjfoKMtR0aJ
-         iIZn/ItZwmF4ICJ305Wf3N1ZTPMqZQWtfUzQGFRnqfekHqVzuQySmnC5+Q3r0yx66y+J
-         CCdfZnHPF0m1gHNLX28irwJUFi9lRb7UeKW6lJQ6YQvfT0m/5w3pN/nAZU8mWd2yxQFy
-         DfTQ==
-X-Gm-Message-State: AOAM530kYkNe016bkbgPYnDs3ftKu9c05ab0NlBHHrtGANE6ehYxWsjQ
-        Z8/9ipRjlKODEOcfnxLEpVA=
-X-Google-Smtp-Source: ABdhPJzJoEc7mvAiqaNUpfYyibeySDd/byEvyhehC3HM8+KaaE5kxRq+kCIRWXgI33S2mbM01jRr3g==
-X-Received: by 2002:a17:90a:ead1:: with SMTP id ev17mr455763pjb.147.1598581202186;
-        Thu, 27 Aug 2020 19:20:02 -0700 (PDT)
-Received: from localhost.localdomain ([2401:e180:8861:9155:4578:9e9b:6ebc:aff1])
-        by smtp.gmail.com with ESMTPSA id g17sm3388553pjl.37.2020.08.27.19.19.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Aug 2020 19:20:01 -0700 (PDT)
-From:   Johnny Chuang <johnny.chuang.emc@gmail.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Peter Hutterer <peter.hutterer@who-t.net>,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        Harry Cutts <hcutts@chromium.org>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>
-Cc:     James Chen <james.chen@emc.com.tw>,
-        Jennifer Tsai <jennifer.tsai@emc.com.tw>,
-        Paul Liang <paul.liang@emc.com.tw>,
-        Jeff Chuang <jeff.chuang@emc.com.tw>
-Subject: [PATCH v3] Input: elants_i2c - Report resolution of ABS_MT_TOUCH_MAJOR by FW information.
-Date:   Fri, 28 Aug 2020 10:19:55 +0800
-Message-Id: <1598581195-9874-1-git-send-email-johnny.chuang.emc@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 27 Aug 2020 22:23:20 -0400
+Received: from mga06.intel.com ([134.134.136.31]:11262 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727124AbgH1CXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 22:23:19 -0400
+IronPort-SDR: oN69aaIKuT3MHcPG6L+HKbo4OonV3BiLu7zrA1+FqwYupdcOJIqsL65M8hPyuzkATx2qjwJ/Po
+ oOyK4+yWfWLA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="218147304"
+X-IronPort-AV: E=Sophos;i="5.76,362,1592895600"; 
+   d="scan'208";a="218147304"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 19:23:17 -0700
+IronPort-SDR: SDlNF5XF0T6XTGSYyzumy72sZR+6YYyxh9CA46B43y2XpImrt6hFawuSD66v9iMzEEaIU1U3fK
+ G8mBACcT0ASQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,362,1592895600"; 
+   d="scan'208";a="373921645"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga001.jf.intel.com with ESMTP; 27 Aug 2020 19:23:14 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, kishon@ti.com, vkoul@kernel.org
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        gregkh@linuxfoundation.org, p.zabel@pengutronix.de,
+        balbi@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v9 0/2] phy: Add USB PHY support on Intel LGM SoC
+Date:   Fri, 28 Aug 2020 10:23:10 +0800
+Message-Id: <20200828022312.52724-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a new behavior to report touch major resolution
-based on information provided by firmware.
-
-In initial process, driver acquires touch information from touch ic.
-It contains one byte about the resolution value of ABS_MT_TOUCH_MAJOR.
-Touch driver will report touch major resolution by this information.
-
-Signed-off-by: Johnny Chuang <johnny.chuang.emc@gmail.com>
+The USB PHY provides the optimized for low power dissipation while active, idle, or on standby.
+Requires minimal external components, a single resistor, for best operation.
+Supports 10/5-Gbps high-speed data transmission rates through 3-m USB 3.x cable
 ---
-Changes in v2:
-  - register a real resolution value from firmware,
-	instead of hardcoding resolution value as 1 by flag.
-Changes in v3:
-  - modify git log message from flag to real value.
-  - modify driver comment from flag to real value.
+v9:
+  - Vinod review comments update
+  - remove depends on USB_SUPPORT
+  - replace ret variable by 0 in return statement
+  - replace dev_info by dev_dbg
+  - handle ret and extcon_get_state separately
+v8-resend:
+  - Correct the typo error in my previous patch
+v8:
+  - Rebase to V5.9-rc1
+v7:
+  - No Change
+v6:
+  - No Change
+v5:
+  - As per Felipe and Greg's suggestion usb phy driver reviewed patches
+    changed the folder from drivers/usb/phy to drivers/phy
+  - Reviewed-By tag added in commit message
+v4:
+  - Andy's review comments addressed
+  - drop the excess error debug prints
+  - error check optimized
+  - merge the split line to one line
+v3:
+  - Andy's review comments update
+  - hardcode return value changed to actual return value from the callee
+  - add error check is fixed according to the above
+  - correct the assignment in redundant
+  - combine the split line into one line
+v2:
+  - Address Phillip's review comments
+  - replace devm_reset_control_get() by devm_reset_control_get_exclusive()
+  - re-design the assert and deassert fucntion calls as per review comments
+  - address kbuild bot warnings
+  - add the comments
+v1:
+  - initial version
 ---
- drivers/input/touchscreen/elants_i2c.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+dt-bindings: usb: Add USB PHY support for Intel LGM SoC
+v9:
+  - No Change
+v8-resend:
+  - No change
+v8:
+  - No Change
+v7:
+  - Fixed the bot issue: usb-phy@e7e00000: '#phy-cells' is a required property
+v6:
+  - Fixed the bot issue.
+  - replace node-name by usb-phy@ in example
+v5:
+  - Reviewed-By tag added
+v4:
+  - No Change
+v3:
+  - No Change
+v2:
+  - No Change
+v1:
+  - initial version
+ 
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: phy: Add USB PHY support for Intel LGM SoC
+  phy: Add USB3 PHY support for Intel LGM SoC
 
-diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-index b0bd5bb..661a3ee 100644
---- a/drivers/input/touchscreen/elants_i2c.c
-+++ b/drivers/input/touchscreen/elants_i2c.c
-@@ -151,6 +151,7 @@ struct elants_data {
- 
- 	bool wake_irq_enabled;
- 	bool keep_power_in_suspend;
-+	u8 report_major_resolution;
- 
- 	/* Must be last to be used for DMA operations */
- 	u8 buf[MAX_PACKET_SIZE] ____cacheline_aligned;
-@@ -459,6 +460,9 @@ static int elants_i2c_query_ts_info(struct elants_data *ts)
- 	rows = resp[2] + resp[6] + resp[10];
- 	cols = resp[3] + resp[7] + resp[11];
- 
-+	/* get report resolution value of ABS_MT_TOUCH_MAJOR */
-+	ts->report_major_resolution = resp[16];
-+
- 	/* Process mm_to_pixel information */
- 	error = elants_i2c_execute_command(client,
- 					   get_osr_cmd, sizeof(get_osr_cmd),
-@@ -1325,6 +1329,8 @@ static int elants_i2c_probe(struct i2c_client *client,
- 			     0, MT_TOOL_PALM, 0, 0);
- 	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
- 	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
-+	if (ts->report_major_resolution > 0)
-+		input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, ts->report_major_resolution);
- 
- 	touchscreen_parse_properties(ts->input, true, &ts->prop);
- 
+ .../devicetree/bindings/phy/intel,lgm-usb-phy.yaml |  58 +++++
+ drivers/phy/Kconfig                                |  10 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-lgm-usb.c                          | 281 +++++++++++++++++++++
+ 4 files changed, 350 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
+ create mode 100644 drivers/phy/phy-lgm-usb.c
+
 -- 
-2.7.4
+2.11.0
 
