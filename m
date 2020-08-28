@@ -2,91 +2,120 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73ADFC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04442C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37ACA2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598612833;
-	bh=ce3X+CPXzJjnM0v2Pf7vZBH3LAK5LaMCifbYFTYxHyA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xGGRa7RRpfH9YJUWopN3nvl2wgQY2Hyx9o5OJDLF5ZManqBFK8pKDmCrzYjZcvO6Q
-	 ofYJw40oCXP8OvxDKxD6f/9R72cHpU3CIYe3j1borErE2vJNVGVbumQMxnyStAjMRP
-	 oI1D16jK29EyGbKqjZRRfNcwyAl8uL5GKq6eAurY=
+	by mail.kernel.org (Postfix) with ESMTP id D726C207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:11:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqNXrGMQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbgH1LGv (ORCPT
+        id S1729215AbgH1LIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 07:06:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47750 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729145AbgH1LF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 07:05:29 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C9622086A;
-        Fri, 28 Aug 2020 10:53:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598612019;
-        bh=ce3X+CPXzJjnM0v2Pf7vZBH3LAK5LaMCifbYFTYxHyA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F5kulvvskGAw7Hzf3n36URW/HuM8K6Hfv9ZBNXC9A5Gw2+uxEBiS4+D0a9tuPdAp9
-         FMu0LhcsXtQKCkXMb88X9rxPp2M8LKF5JcupazFZdaiUtzt99deBSMtXSnw31L0hJ1
-         JmiD/PHE99dA86SAQRl4hRWwX3xpRjhVVDb/IgQ4=
-Date:   Fri, 28 Aug 2020 11:53:34 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>, Borislav Petkov <bp@suse.de>,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Documentation: add minimum clang/llvm version
-Message-ID: <20200828105334.GA30563@willie-the-truck>
-References: <20200826191555.3350406-1-ndesaulniers@google.com>
+        Fri, 28 Aug 2020 07:08:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729177AbgH1LGr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 07:06:47 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D030C061264;
+        Fri, 28 Aug 2020 04:06:36 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id k20so516260wmi.5;
+        Fri, 28 Aug 2020 04:06:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bzCkNueS5Za9fJgI1E1trgmJ9rPWtcxrqIv2kBAEIIA=;
+        b=nqNXrGMQwoqzpRB0gErrvZ6yYPDlhcf0cEjJP4PIpxwB3TJzLQD9R6QDUdKahtv6/G
+         ZG5GzNPiR3HzMBsN7cl7yvedrbGYXei4jvXKk0FC+HLsZk4t3B8ErGvWAi6d0A1Hz3kD
+         cqzdi1s+VA8IcfGwk04GBOtpvpWF3RhR4DZWmDeft7V1jvKr3zwKGJdg/60VgxmAE6T5
+         /r/dLa1uLko+S0/vjA52DFxzWzL1etpUz08eF86r1EkTpCn33uxnV9yZ3UEHiMonJsZ2
+         nVKQawEmps+uIMH/wWb+Bl17iC79KiLZDSXwusWhNGVKTqelTrDd0SzrUeaKdQ5YGE8P
+         4fZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bzCkNueS5Za9fJgI1E1trgmJ9rPWtcxrqIv2kBAEIIA=;
+        b=Q9pcU0L4hpNSEdkVAg80LQpQ8rN0rvtec/Geb7QOS1wbJrpxiDJsaOIPQ5zAdfYjtA
+         nNDO9lR3siWOOSCQ36BjhR2hs31HB4PcvY1CPMD38tMbK4DnlUa2qJAv8QOOLQtUSE7a
+         wLIa04zOdlTUL6AILSUIVUVw6xTjMEmgMi6Gch6syGVDK8w6bxjgUht6K0pWUiL/Y/w9
+         ucre9CAlOJU09TXA+d3fu/mmDtRJgyfmzO9bQVFEtHj0egcGAvzQmr8clf/6xCk3LZQW
+         2KTq834GrQjubi6+GiVL3JETr5IBE3sHZZ8E9bKdfV8wZrz9HPC0ImTjGc2q9EkoVd8I
+         oYHA==
+X-Gm-Message-State: AOAM5323VWmKtPx9jqWd/4NJiGg28l0RQmShZt5SU29nRDlgfh5rMOJV
+        MEHbCEFzNz6w5AjlRvSwfnBCaPxAHUwsqwuiyi58a0DA+cs=
+X-Google-Smtp-Source: ABdhPJwEGhSTxPCFU8vPrE3opqM8wcD1YF7m5PGxddaCKQmaFW5dJBzjJv1a3VJ25037p9UaUp0nkEGDo0oVxkrByx4=
+X-Received: by 2002:a7b:c923:: with SMTP id h3mr1025587wml.29.1598612795186;
+ Fri, 28 Aug 2020 04:06:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826191555.3350406-1-ndesaulniers@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200827065355.15177-1-himadrispandya@gmail.com> <5dd266df-33cf-f351-7253-33a7f589cd56@gmail.com>
+In-Reply-To: <5dd266df-33cf-f351-7253-33a7f589cd56@gmail.com>
+From:   Himadri Pandya <himadrispandya@gmail.com>
+Date:   Fri, 28 Aug 2020 16:36:22 +0530
+Message-ID: <CAOY-YV=Ad6E2nbJ-m9SHW4zuet9VeDMLw9M-VtTebp0Far-8SA@mail.gmail.com>
+Subject: Re: [PATCH] net: usb: Fix uninit-was-stored issue in asix_read_phy_addr()
+To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Greg KH <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 12:15:55PM -0700, Nick Desaulniers wrote:
-> Based on a vote at the LLVM BoF at Plumbers 2020, we decided to start
-> small, supporting just one formal upstream release of LLVM for now.
-> 
-> We can probably widen the support window of supported versions over
-> time.  Also, note that LLVM's release process is different than GCC's.
-> GCC tends to have 1 major release per year while releasing minor updates
-> to the past 3 major versions.  LLVM tends to support one major release
-> and one minor release every six months.
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> Tested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
-> Changes V1 -> V2:
-> * fix typo, as per Will.
-> * add link to getting LLVM, as per Nathan.
-> * collect tags.
+On Thu, Aug 27, 2020 at 1:28 PM Sergei Shtylyov
+<sergei.shtylyov@gmail.com> wrote:
+>
+> Hello!
+>
+> On 27.08.2020 9:53, Himadri Pandya wrote:
+>
+> > The buffer size is 2 Bytes and we expect to receive the same amount of
+> > data. But sometimes we receive less data and run into uninit-was-stored
+> > issue upon read. Hence modify the error check on the return value to match
+> > with the buffer size as a prevention.
+> >
+> > Reported-and-tested by: syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com
+> > Signed-off-by: Himadri Pandya <himadrispandya@gmail.com>
+> > ---
+> >   drivers/net/usb/asix_common.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/net/usb/asix_common.c b/drivers/net/usb/asix_common.c
+> > index e39f41efda3e..7bc6e8f856fe 100644
+> > --- a/drivers/net/usb/asix_common.c
+> > +++ b/drivers/net/usb/asix_common.c
+> > @@ -296,7 +296,7 @@ int asix_read_phy_addr(struct usbnet *dev, int internal)
+> >
+> >       netdev_dbg(dev->net, "asix_get_phy_addr()\n");
+> >
+> > -     if (ret < 0) {
+> > +     if (ret < 2) {
+> >               netdev_err(dev->net, "Error reading PHYID register: %02x\n", ret);
+>
+>     Hm... printing possibly negative values as hex?
+>
 
-Acked-by: Will Deacon <will@kernel.org>
+Yeah. That's odd! Fixing it.
 
-Will
+Thanks,
+Himadri
+
+> [...]
+>
+> MBR, Sergei
