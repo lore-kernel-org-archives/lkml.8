@@ -2,158 +2,96 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4B3C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4C4C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7B82078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160F0208D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:54:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ZbNFPg5c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbgH1JuN convert rfc822-to-8bit (ORCPT
+        id S1728794AbgH1JyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:50:13 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2708 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728218AbgH1JuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:50:12 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id F3FFD3C63C4F4B09F077;
-        Fri, 28 Aug 2020 10:50:09 +0100 (IST)
-Received: from localhost (10.52.127.106) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 28 Aug
- 2020 10:50:05 +0100
-Date:   Fri, 28 Aug 2020 10:48:30 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Atish Patra <atish.patra@wdc.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Zong Li <zong.li@sifive.com>,
-        <linux-riscv@lists.infradead.org>, Will Deacon <will@kernel.org>,
-        <linux-arch@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
-        Ganapatrao Kulkarni <gkulkarni@cavium.com>,
-        Steven Price <steven.price@arm.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        "Paul Walmsley" <paul.walmsley@sifive.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Nick Hu <nickhu@andestech.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: [RFC/RFT PATCH 3/6] arm64, numa: Move pcibus_to_node definition
- to generic numa code
-Message-ID: <20200828104830.000007bf@Huawei.com>
-In-Reply-To: <20200814214725.28818-4-atish.patra@wdc.com>
-References: <20200814214725.28818-1-atish.patra@wdc.com>
-        <20200814214725.28818-4-atish.patra@wdc.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Fri, 28 Aug 2020 05:54:04 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:21581 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728218AbgH1JyA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:54:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1598608440; x=1630144440;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=DHIeByoeNNGhi1tQWHNSg9o1zcBPyZT+FLDAQ3S29Es=;
+  b=ZbNFPg5cPe46ndGtB/QuDhM8fVAw6uhpOd+OOuGttVA2tEbiYGdRzoSv
+   IiCDZyZHsVn+533U2IbLiyc8LUmwfaPHMokLDsbU7a4ClLPxphwK5VD6l
+   TPPQaCbaECQ0obUpjTZeLTNxdca1K9rDDkIUW9KAhNMhosn3RlA+wTBb6
+   M=;
+X-IronPort-AV: E=Sophos;i="5.76,363,1592870400"; 
+   d="scan'208";a="51943484"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 28 Aug 2020 09:53:58 +0000
+Received: from EX13D31EUB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id E2039240F6D;
+        Fri, 28 Aug 2020 09:53:46 +0000 (UTC)
+Received: from u3f2cd687b01c55.ant.amazon.com (10.43.162.38) by
+ EX13D31EUB001.ant.amazon.com (10.43.166.210) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Fri, 28 Aug 2020 09:53:29 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Alkaid <zgf574564920@gmail.com>
+CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
+        "SeongJae Park" <sjpark@amazon.de>, <Jonathan.Cameron@huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
+        <dwmw@amazon.com>, <fan.du@intel.com>, <foersleo@amazon.de>,
+        <gthelen@google.com>, <irogers@google.com>, <jolsa@redhat.com>,
+        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
+        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <rdunlap@infradead.org>,
+        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
+        <rppt@kernel.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC v7 06/10] mm/damon: Implement callbacks for physical memory monitoring
+Date:   Fri, 28 Aug 2020 11:53:15 +0200
+Message-ID: <20200828095315.27210-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CAJFQjcOCDFGq7pNgYWpKbrhBM5FQo76d274H8UU1ma_8TWjvuQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.52.127.106]
-X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.38]
+X-ClientProxiedBy: EX13d09UWA003.ant.amazon.com (10.43.160.227) To
+ EX13D31EUB001.ant.amazon.com (10.43.166.210)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Aug 2020 14:47:22 -0700
-Atish Patra <atish.patra@wdc.com> wrote:
+On Fri, 28 Aug 2020 04:11:56 -0400 Alkaid <zgf574564920@gmail.com> wrote:
 
-> pcibus_to_node is used only when numa is enabled and does not depend
-> on ISA. Thus, it can be moved the generic numa implementation.
 > 
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-
-From a more general unification point of view, there seem to
-be two ways architectures implement this.
-Either
-
-bus->sysdata.node
-
-Or as here.
-There are weird other options, but let us ignore those :)
-
-That is going to take a bit of unwinding should we
-want to take this unification further and perhaps we want to think
-about doing this in pci generic code rather than here?
-
-Perhaps this is one we are better keeping architecture specific for
-now?
-
-+CC Bjorn and Linux-pci
-
-
-> ---
->  arch/arm64/kernel/pci.c  | 10 ----------
->  drivers/base/arch_numa.c | 11 +++++++++++
->  2 files changed, 11 insertions(+), 10 deletions(-)
+> [-- Attachment #1: Type: text/plain, Size: 2677 bytes --]
 > 
-> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> index 1006ed2d7c60..07c122946c11 100644
-> --- a/arch/arm64/kernel/pci.c
-> +++ b/arch/arm64/kernel/pci.c
-> @@ -54,16 +54,6 @@ int raw_pci_write(unsigned int domain, unsigned int bus,
->  	return b->ops->write(b, devfn, reg, len, val);
->  }
->  
-> -#ifdef CONFIG_NUMA
-> -
-> -int pcibus_to_node(struct pci_bus *bus)
-> -{
-> -	return dev_to_node(&bus->dev);
-> -}
-> -EXPORT_SYMBOL(pcibus_to_node);
-> -
-> -#endif
-> -
->  #ifdef CONFIG_ACPI
->  
->  struct acpi_pci_generic_root_info {
-> diff --git a/drivers/base/arch_numa.c b/drivers/base/arch_numa.c
-> index 83341c807240..4ab1b20a615d 100644
-> --- a/drivers/base/arch_numa.c
-> +++ b/drivers/base/arch_numa.c
-> @@ -11,6 +11,7 @@
->  #include <linux/acpi.h>
->  #include <linux/memblock.h>
->  #include <linux/module.h>
-> +#include <linux/pci.h>
->  #include <linux/of.h>
->  
->  #ifdef CONFIG_ARM64
-> @@ -60,6 +61,16 @@ EXPORT_SYMBOL(cpumask_of_node);
->  
->  #endif
->  
-> +#ifdef CONFIG_PCI
-> +
-> +int pcibus_to_node(struct pci_bus *bus)
-> +{
-> +	return dev_to_node(&bus->dev);
-> +}
-> +EXPORT_SYMBOL(pcibus_to_node);
-> +
-> +#endif
-> +
->  static void numa_update_cpu(unsigned int cpu, bool remove)
->  {
->  	int nid = cpu_to_node(cpu);
+> Hi SeongJae,
+> 
+> I think there are potential memory leaks in the following execution paths
+
+Agreed, definitely memory leaks exists.  Thank you for let me know this!  I
+will post a patch for this soon.
 
 
+Thanks,
+SeongJae Park
+[...]
