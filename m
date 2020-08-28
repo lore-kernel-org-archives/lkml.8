@@ -2,127 +2,126 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD29C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EFCC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D181620776
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:52:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TXNXRBoW"
+	by mail.kernel.org (Postfix) with ESMTP id 13A8A20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:53:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598622785;
+	bh=T7BIgnulmA7Rr4VLtFe5t2nLsQIXVYWoUuHXGZx4Vjs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=zzNjb+yxvLHQXO1xkgC0MjXCGrwlBywHxDi2cSbx2pOftSKM4Pj7cv3+CAZbfrV0x
+	 PV74YmgES+83dhhMiI/Y8ChPp2B1UzhZrzGVQ5avcLrGvFMqPIukZXQw/ywE4WxcuC
+	 ZIWuMdX+xs90Ttcs9cD0U/uu+/8Zvoz3vZoLq85I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgH1Nwk (ORCPT
+        id S1726995AbgH1NxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 09:52:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbgH1Nwa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 09:52:30 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 164C8C061232
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 06:52:27 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id b18so1385533wrs.7
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 06:52:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=bBT41PTjpkxeOtnmEoEMjQZW/IInuRmPz2VzLucUDlQ=;
-        b=TXNXRBoWbCfR99+m6BuMsne9w7crcganml+VXuM1yhnfzWuyUSH8bIO08cnzoDO+m2
-         PoOxZ1XZCWmVpvGmwWQSOXJw8a5zy9utICHylZEC+OGmvvM+QZIjILR4hLtGB+1X93Jx
-         O/E3s9+nzriK6Li1EY/CGNZUVV1GIWCo88e38bMCc/Z8OHPMRXlEVyKa2H1XaGeqI/x1
-         U20TwxVeAX8bhrWFpGEgnobemVoi0YqygRdkRKKfARSa4l1O3vW3v11LyqgF3ItXNNHq
-         Wxy6Sa5yhI+DBZLt7+i/9zzueqt/+yzl5+rlXPifogidu42yZjHC28pPr+inXDVkeczj
-         RHPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=bBT41PTjpkxeOtnmEoEMjQZW/IInuRmPz2VzLucUDlQ=;
-        b=ecqo3BiZc4xKi0dcT0NQdhR6Tgtk2Gww/jpOTmq58KmJDoFYRGkv9/R+WNmLgZGoS0
-         KuzyaThIFUCg1jpHFLH4EAdTtmXIhOgdzyi4j1oa0EWsYEx7GISjwP5I6absMuSKsz6y
-         bFxR9uTsakxTKFHzDzACIWRM77AN/9x+8yhd5H6blgKM+AryUu1SgrDizZhzDZvAvO6S
-         KM8663KYK3JUmtlFeOLTcEjSukLdBr2n5Edhbhzr2miPhv7zEtjbruYa1wphZbc4R2s4
-         i5dWjwzv83yerGIkXVc9gSr0qeJp6DBRbxVkcOzy+1AY/N2NxbSRFaR2of5tLM+KnPR0
-         IakQ==
-X-Gm-Message-State: AOAM531e0fBlWZqElq0NokKEU98ER8OYgRb2ozXIQOloTUTXPk+11w6W
-        BvirkmkRCdLGxFEnfF3x3PoLKQ==
-X-Google-Smtp-Source: ABdhPJwxGZcjjbY0GowOYDW+dLIMgvBwqE/j+jaly5n+zkPdWErtdEEG2G5gKi3TLyKaKwyipUXMwQ==
-X-Received: by 2002:adf:e78b:: with SMTP id n11mr1624422wrm.256.1598622745919;
-        Fri, 28 Aug 2020 06:52:25 -0700 (PDT)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id m11sm1993303wrn.11.2020.08.28.06.52.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 06:52:25 -0700 (PDT)
-References: <c33df0ebe8be16b56741ce7f873221ab9087a0a6.1598564619.git.stefan@agner.ch>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Stefan Agner <stefan@agner.ch>, narmstrong@baylibre.com
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, khilman@baylibre.com,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH] clk: meson: g12a: mark fclk_div2 as critical
-In-reply-to: <c33df0ebe8be16b56741ce7f873221ab9087a0a6.1598564619.git.stefan@agner.ch>
-Date:   Fri, 28 Aug 2020 15:52:24 +0200
-Message-ID: <1jft867u93.fsf@starbuckisacylon.baylibre.com>
+        Fri, 28 Aug 2020 09:53:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57312 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbgH1Nw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 09:52:59 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FD3420776;
+        Fri, 28 Aug 2020 13:52:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598622778;
+        bh=T7BIgnulmA7Rr4VLtFe5t2nLsQIXVYWoUuHXGZx4Vjs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Uo6SO5R2ezrJiBPDRV1S93w8bWqnRhEY+W9XY9s6oSe7cKp02czOoNpg0rTdv9o0Q
+         ph8kxjMp/pXOSqcn2p1nxoQjh6mHG7VaVIxPqsu1ZI8ntzCsqdwIurHSpRrEdA3w+Q
+         ZxybgY1fooOM/99PO34iLFdwoPHAMX5TShHXGqVU=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kBeoK-007Qex-8b; Fri, 28 Aug 2020 14:52:56 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 28 Aug 2020 14:52:56 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [patch V2 34/46] PCI/MSI: Make arch_.*_msi_irq[s] fallbacks
+ selectable
+In-Reply-To: <20200828125403.GR1152540@nvidia.com>
+References: <20200826112333.992429909@linutronix.de>
+ <20200827182040.GA2049623@bjorn-Precision-5520>
+ <20200828112142.GA14208@e121166-lin.cambridge.arm.com>
+ <20200828121944.GQ1152540@nvidia.com>
+ <0cc8bfd9258dfc507585fd0f19a945e3@kernel.org>
+ <20200828125403.GR1152540@nvidia.com>
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <9346b8358726185a31f50b0fac257129@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: jgg@nvidia.com, lorenzo.pieralisi@arm.com, helgaas@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com, robh@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-08-28 13:54, Jason Gunthorpe wrote:
+> On Fri, Aug 28, 2020 at 01:47:59PM +0100, Marc Zyngier wrote:
+> 
+>> > So the arch_setup_msi_irq/etc is not really an arch hook, but some
+>> > infrastructure to support those 4 PCI root port drivers.
+>> 
+>> I happen to have a *really old* patch addressing Tegra [1], which
+>> I was never able to test (no HW). Rebasing it shouldn't be too hard,
+>> and maybe you can find someone internally willing to give it a spin?
+> 
+> Sure, that helps a bunch, I will ask internally if someone in that BU
+> can take a look.
 
-On Thu 27 Aug 2020 at 23:43, Stefan Agner <stefan@agner.ch> wrote:
+I just rebased[1] the patch onto -rc2, and provided a TODO list in the
+commit message.
 
-> On Amlogic Meson G12b platform, similar to fclk_div3, the fclk_div2
-> seems to be necessary for the system to operate correctly as well.
->
-> Typically, the clock also gets chosen by the eMMC peripheral. This
-> probably masked the problem so far. However, when booting from a SD
-> card the clock seems to get disabled which leads to a system freeze.
->
-> Let's mark this clock as critical, fixing boot from SD card on G12b
-> platforms.
->
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> ---
->  drivers/clk/meson/g12a.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-> index fad616cac01e..2214b974f748 100644
-> --- a/drivers/clk/meson/g12a.c
-> +++ b/drivers/clk/meson/g12a.c
-> @@ -298,6 +298,7 @@ static struct clk_regmap g12a_fclk_div2 = {
->  			&g12a_fclk_div2_div.hw
->  		},
->  		.num_parents = 1,
-> +		.flags = CLK_IS_CRITICAL,
->  	},
->  };
+Thanks,
 
-Hi Stephan,
+         M.
 
-Thanks for reporting and fixing this. That's unfortunately the things we
-have to find the "hard way"
-
-Could you please:
-1) add a Fixes tag to commit description so stable can pick it up
-
-Fixes: 085a4ea93d54 ("clk: meson: g12a: add peripheral clock controller")
-
-2) Add a comment similar to the comment block of fdiv3 so we are pretty
-clear why this clock needs to be critical and don't have to dig in
-history find out.
-
-Also please Cc Marek Szyprowski <m.szyprowski@samsung.com> ... you guys
-apparently found this at them time :)
-
-Thanks
+[1] 
+https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=irq/tegra-msi
+-- 
+Jazz is not dead. It just smells funny...
