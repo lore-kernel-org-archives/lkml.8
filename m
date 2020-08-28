@@ -2,134 +2,289 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A09D1C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43A8C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79B50208D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C6512098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:32:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgH1QbA (ORCPT
+        id S1727061AbgH1QcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 12:31:00 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:47696 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726649AbgH1Qa7 (ORCPT
+        Fri, 28 Aug 2020 12:32:12 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36937 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726649AbgH1QcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 12:30:59 -0400
-Date:   Fri, 28 Aug 2020 12:30:58 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
-Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Subject: Re: [PATCH 3/4] sh: Add SECCOMP_FILTER
-Message-ID: <20200828163057.GY3265@brightrain.aerifal.cx>
-References: <20200722231322.419642-1-kernel@mkarcher.dialup.fu-berlin.de>
- <20200722231322.419642-3-kernel@mkarcher.dialup.fu-berlin.de>
- <20200828155024.GX3265@brightrain.aerifal.cx>
+        Fri, 28 Aug 2020 12:32:10 -0400
+Received: by mail-lj1-f193.google.com with SMTP id w14so1991553ljj.4
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 09:32:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MTrVSpZ9C8pbL/8BIE49vy9556f5oKETpreng4WhtvM=;
+        b=fKVRQrmnM2Rp0E2xNGeZVHdD5Qrdk/gU92L9MigEKw27EU0+kqqbvCI2eJPclOr7XN
+         F0GHWsrtDbKIuJinuoTmBUFtTcX3iC3Lnv8Cz5OwHWoS8l2WC2BTWNaHYP5jhlXtQXMx
+         3hYEtQv8fCj+KRvQ91p1HCVwpdcJj3cXfTbPvrSMLvC/sLezksKhVQ/YmlIiM+DgtHkg
+         7b2R9XLT51ffLSTIkBe02bspoxMfiMKVI0DbKoQcbBXBO4Ol6h6o0bVPh9gUIMOqwRPw
+         EfqL5MOU36OCnuMjkra4faNsIJsADT/sZn0Ln6dN/qsCNZQc1NByrC0s92mG3q9peuyT
+         952w==
+X-Gm-Message-State: AOAM533Vj19UIGpjpN2HUE3BcKhHD3EWeKl9zAfoT+hMrXPzFFghEj0O
+        CGVtrVw5AE3+TOotD5OYtr1VDuTtO08=
+X-Google-Smtp-Source: ABdhPJxVhozefzKCWuOnKCweTEB6t3+HJdnKnvpGPQLql/uMye5UbfzGnGlvc9KOk15WHazGtYLUXg==
+X-Received: by 2002:a2e:918e:: with SMTP id f14mr1210827ljg.66.1598632327161;
+        Fri, 28 Aug 2020 09:32:07 -0700 (PDT)
+Received: from localhost.localdomain ([213.87.147.111])
+        by smtp.googlemail.com with ESMTPSA id w6sm397882lfn.73.2020.08.28.09.32.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 09:32:06 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Julia Lawall <Julia.Lawall@lip6.fr>
+Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [RFC PATCH] coccinelle: api: add flex_array_size.cocci script
+Date:   Fri, 28 Aug 2020 19:31:34 +0300
+Message-Id: <20200828163134.496386-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200828155024.GX3265@brightrain.aerifal.cx>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 11:50:25AM -0400, Rich Felker wrote:
-> On Thu, Jul 23, 2020 at 01:13:21AM +0200, Michael Karcher wrote:
-> > Port sh to use the new SECCOMP_FILTER code.
-> > 
-> > Signed-off-by: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
-> > ---
-> >  arch/sh/Kconfig                               | 1 +
-> >  arch/sh/kernel/entry-common.S                 | 2 ++
-> >  arch/sh/kernel/ptrace_32.c                    | 5 +++--
-> >  tools/testing/selftests/seccomp/seccomp_bpf.c | 8 +++++++-
-> >  4 files changed, 13 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-> > index 32d959849df9..10b510c16841 100644
-> > --- a/arch/sh/Kconfig
-> > +++ b/arch/sh/Kconfig
-> > @@ -27,6 +27,7 @@ config SUPERH
-> >  	select GENERIC_SMP_IDLE_THREAD
-> >  	select GUP_GET_PTE_LOW_HIGH if X2TLB
-> >  	select HAVE_ARCH_AUDITSYSCALL
-> > +	select HAVE_ARCH_SECCOMP_FILTER
-> >  	select HAVE_ARCH_KGDB
-> >  	select HAVE_ARCH_TRACEHOOK
-> >  	select HAVE_DEBUG_BUGVERBOSE
-> > diff --git a/arch/sh/kernel/entry-common.S b/arch/sh/kernel/entry-common.S
-> > index c4d88d61890d..ad963104d22d 100644
-> > --- a/arch/sh/kernel/entry-common.S
-> > +++ b/arch/sh/kernel/entry-common.S
-> > @@ -368,6 +368,8 @@ syscall_trace_entry:
-> >  	mov.l	7f, r11		! Call do_syscall_trace_enter which notifies
-> >  	jsr	@r11	    	! superior (will chomp R[0-7])
-> >  	 nop
-> > +	cmp/eq	#-1, r0
-> > +	bt	syscall_exit
-> >  	mov.l	r0, @(OFF_R0,r15)	! Save return value
-> >  	!			Reload R0-R4 from kernel stack, where the
-> >  	!   	    	    	parent may have modified them using
-> > diff --git a/arch/sh/kernel/ptrace_32.c b/arch/sh/kernel/ptrace_32.c
-> > index 64bfb714943e..25ccfbd02bfa 100644
-> > --- a/arch/sh/kernel/ptrace_32.c
-> > +++ b/arch/sh/kernel/ptrace_32.c
-> > @@ -485,8 +485,6 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
-> >  {
-> >  	long ret = 0;
-> >  
-> > -	secure_computing_strict(regs->regs[0]);
-> > -
-> >  	if (test_thread_flag(TIF_SYSCALL_TRACE) &&
-> >  	    tracehook_report_syscall_entry(regs))
-> >  		/*
-> > @@ -496,6 +494,9 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
-> >  		 */
-> >  		ret = -1L;
-> >  
-> > +	if (secure_computing() == -1)
-> > +		return -1;
-> > +
-> >  	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
-> >  		trace_sys_enter(regs, regs->regs[0]);
-> >  
-> 
-> This patch broke strace - it spews out bogus syscalls and gets the
-> tracee hung. I suspect the last hunk is wrong and breaks all
-> non-seccomp tracing. I'll follow up with further analysis and possibly
-> a fix if you don't find one sooner.
+Suggest flex_array_size() wrapper to compute the size of a
+flexible array member in a structure. The macro additionally
+checks for integer overflows.
 
-It looks like the problem is actually the hunk in entry-common.S, but
-this code has been wrong since ab99c733ae in 2008: it was storing the
-return value of do_syscall_trace_enter, which is supposed to replace
-the syscall number and make it fail, in r0 (the 5th argument) rather
-than r3 (the syscall number). This looks like the reason you put the
-(apparently wrong) branch to syscall_exit in there -- the existing
-code was not actually causing ENOSYS when do_syscall_trace_enter tried
-to replace nr with -1, because the -1 was put in the wrong place.
+The cocci script intentionally skips cases where count argument
+is not a member of a structure because this introduce false
+positives.
 
-I'm guessing something in syscall_exit assumes the registers have been
-reloaded (the code skipped by your branch) and blows up when they
-haven't.
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+Kees, Gustavo, may I have your acks if you find this script useful?
+Currently, it emits following warnings:
+./fs/select.c:994:25-26: WARNING opportunity for flex_array_size
+./include/linux/avf/virtchnl.h:711:34-35: WARNING opportunity for flex_array_size
+./include/linux/avf/virtchnl.h:722:43-44: WARNING opportunity for flex_array_size
+./include/linux/avf/virtchnl.h:738:40-41: WARNING opportunity for flex_array_size
+./include/linux/avf/virtchnl.h:749:46-47: WARNING opportunity for flex_array_size
+./drivers/dma/qcom/bam_dma.c:1055:35-36: WARNING opportunity for flex_array_size
+./drivers/md/dm-crypt.c:2895:45-46: WARNING opportunity for flex_array_size
+./drivers/md/dm-crypt.c:3381:47-48: WARNING opportunity for flex_array_size
+./drivers/md/dm-crypt.c:2484:45-46: WARNING opportunity for flex_array_size
+./drivers/md/dm-crypt.c:2484:45-46: WARNING opportunity for flex_array_size
+./net/sched/em_canid.c:198:48-49: WARNING opportunity for flex_array_size
+./include/linux/filter.h:741:42-43: WARNING opportunity for flex_array_size
+./fs/aio.c:677:42-43: WARNING opportunity for flex_array_size
+./include/rdma/rdmavt_qp.h:537:31-32: WARNING opportunity for flex_array_size
+./include/rdma/rdmavt_qp.h:537:31-32: WARNING opportunity for flex_array_size
+./lib/ts_fsm.c:311:49-50: WARNING opportunity for flex_array_size
+./mm/slab.c:3407:59-60: WARNING opportunity for flex_array_size
+./mm/slab.c:2139:55-56: WARNING opportunity for flex_array_size
+./mm/slab.c:3407:59-60: WARNING opportunity for flex_array_size
+./mm/slab.c:2139:55-56: WARNING opportunity for flex_array_size
 
-I think the right change is going to be something like replacing 
-mov.l r0, @(OFF_R0,r15) with mov r0, r3 and getting rid of the r3
-reload below. do_syscall_trace_enter should also be returning
-regs->regs[3] in the success case, not regs->regs[0] as it's doing, at
-least if it's to match other archs (that return the original syscall
-number on success). In any case, returning the 5th argument register
-is nonsense.
+ scripts/coccinelle/api/flex_array_size.cocci | 180 +++++++++++++++++++
+ 1 file changed, 180 insertions(+)
+ create mode 100644 scripts/coccinelle/api/flex_array_size.cocci
 
-I'm about to test a patch along these lines and will report what I
-find.
+diff --git a/scripts/coccinelle/api/flex_array_size.cocci b/scripts/coccinelle/api/flex_array_size.cocci
+new file mode 100644
+index 000000000000..b5264a826c29
+--- /dev/null
++++ b/scripts/coccinelle/api/flex_array_size.cocci
+@@ -0,0 +1,180 @@
++// SPDX-License-Identifier: GPL-2.0-only
++///
++/// Suggest flex_array_size() wrapper to compute the size of a
++/// flexible array member in a structure. The macro additionally
++/// checks for integer overflows.
++///
++// Confidence: High
++// Copyright: (C) 2020 Denis Efremov ISPRAS
++// Options: --no-includes --include-headers
++//
++// Keywords: flex_array_size
++//
++
++
++virtual context
++virtual report
++virtual org
++virtual patch
++
++@decl_flex@
++identifier name, array, size;
++type TA, TS;
++@@
++
++  struct name {
++    ...
++    TS size;
++    ...
++(
++    TA array[];
++|
++    TA array[\(0\|1\)];
++)
++  };
++
++@ptr_flex@
++identifier decl_flex.name;
++identifier instance;
++@@
++
++  struct name *instance;
++
++@struct_flex@
++identifier decl_flex.name;
++identifier instance;
++@@
++
++  struct name instance;
++
++@ptr_flex_size depends on !patch@
++identifier decl_flex.array, decl_flex.size;
++identifier ptr_flex.instance;
++type decl_flex.TA;
++position p;
++@@
++
++(
++* instance->size * sizeof(TA)@p
++|
++* instance->size * sizeof(*instance->array)@p
++)
++
++@depends on patch exists@
++identifier decl_flex.array, decl_flex.size;
++identifier ptr_flex.instance;
++type decl_flex.TA;
++@@
++
++(
++- instance->size * sizeof(TA)
+++ flex_array_size(instance, array, instance->size)
++|
++- instance->size * sizeof(*instance->array)
+++ flex_array_size(instance, array, instance->size)
++)
++
++@struct_flex_size depends on !patch@
++identifier decl_flex.array, decl_flex.size;
++identifier struct_flex.instance;
++type decl_flex.TA;
++position p;
++@@
++
++(
++* instance.size * sizeof(TA)@p
++|
++* instance.size * sizeof(*instance->array)@p
++)
++
++@depends on patch exists@
++identifier decl_flex.array, decl_flex.size;
++identifier struct_flex.instance;
++type decl_flex.TA;
++@@
++
++(
++- instance.size * sizeof(TA)
+++ flex_array_size(instance, array, instance.size)
++|
++- instance.size * sizeof(*instance->array)
+++ flex_array_size(instance, array, instance.size)
++)
++
++@func_arg_flex_size depends on !patch@
++identifier decl_flex.name, decl_flex.array, decl_flex.size;
++identifier func, instance;
++type decl_flex.TA;
++position p;
++@@
++
++  func(..., struct name *instance, ...) {
++    ... when any
++(
++*   instance->size * sizeof(TA)@p
++|
++*   instance->size * sizeof(*instance->array)@p
++)
++    ...
++  }
++
++@depends on patch exists@
++identifier decl_flex.name, decl_flex.array, decl_flex.size;
++identifier func, instance;
++type decl_flex.TA;
++@@
++
++  func(..., struct name *instance, ...) {
++    ... when any
++(
++-   instance->size * sizeof(TA)
+++   flex_array_size(instance, array, instance->size)
++|
++-   instance->size * sizeof(*instance->array)
+++   flex_array_size(instance, array, instance->size)
++)
++    ...
++  }
++
++
++@script:python depends on report@
++p << ptr_flex_size.p;
++@@
++
++coccilib.report.print_report(p[0],
++  "WARNING opportunity for flex_array_size")
++
++@script:python depends on org@
++p << ptr_flex_size.p;
++@@
++
++coccilib.org.print_todo(p[0],
++  "WARNING opportunity for flex_array_size")
++
++@script:python depends on report@
++p << struct_flex_size.p;
++@@
++
++coccilib.report.print_report(p[0],
++  "WARNING opportunity for flex_array_size")
++
++@script:python depends on org@
++p << struct_flex_size.p;
++@@
++
++coccilib.org.print_todo(p[0],
++  "WARNING opportunity for flex_array_size")
++
++@script:python depends on report@
++p << func_arg_flex_size.p;
++@@
++
++coccilib.report.print_report(p[0],
++  "WARNING opportunity for flex_array_size")
++
++@script:python depends on org@
++p << func_arg_flex_size.p;
++@@
++
++coccilib.org.print_todo(p[0],
++  "WARNING opportunity for flex_array_size")
+-- 
+2.26.2
 
-Rich
