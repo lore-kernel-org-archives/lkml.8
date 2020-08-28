@@ -2,103 +2,293 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A226C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA19EC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2436420825
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB9220848
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:04:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hEEhM6bX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IXX08sNM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729343AbgH1NEg (ORCPT
+        id S1729254AbgH1NEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 09:04:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42594 "EHLO
+        Fri, 28 Aug 2020 09:04:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729052AbgH1NEJ (ORCPT
+        with ESMTP id S1729123AbgH1NEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 09:04:09 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1106CC06121B
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 06:04:08 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e11so1214331ljn.6
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 06:04:07 -0700 (PDT)
+        Fri, 28 Aug 2020 09:04:16 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6A93C061264
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 06:04:13 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id q3so422677pls.11
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 06:04:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kY6QohH0kHOg+QzN8imLnNqmKHUkcybm8RndPGRcKBY=;
-        b=hEEhM6bXCEN77L0tGNTDS6zmOH04mOyuhnqNM5uPZYN0gYXTGXcdFAqeulpAUvxcWh
-         DCCXZNQm2W0N8pG5Q4oIUMSHcG+kSdHUexRSjlZzGNpsRL+09rLkUl8e9Ty9YRfA8xg/
-         zsviZhnOWi6K/8Se0ecZs49+o1JpUI0ouq1tOYIBK9lk72V2kJL3oTdKTp7G9JLHHmCA
-         VJ/Py+m0DYy20mN5LcZ9yqol6X9R+XQ9ZjGCIZvBAxdw3UZj0mnfSalWOQd4EIPK36wE
-         c7pd+QX7k2WKJoKBmSKL/j1M50mHmPityogf7HshbDgyYj4WAlQiauK+oot7jpk5Wut7
-         R1dA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PE8MD8kwekEL9Z0XSU3pdc+yEYrZR0wZcfz7tEycv0c=;
+        b=IXX08sNM4ek8rgeN0bVQyCZy5HnTLWHhrN3TvGcHhbTKbQqjyuPDDPZJEyL8UYojeo
+         12NqYxJQmekVK9Vj7VrbCUNwDPTc4fezaOk6a9OdxtBW1s9i+p+xyZReFC7Aac9CamWN
+         T0Nq8rFK+I9XkAYlFOOb/a1eQhsy8ECYXHGT31co3Wz7mvBUp7t6CckamgiSEjv+RqnP
+         zq0+pQGgSvDMqVZs1yobeLB0zA0331gA/lUYklTXIoLvz+Hf2nMdMhvqrBJAEg68SuYg
+         ykBkDnJWLEEtlkzYCRmVtAx1wJmyFWmxkVYe2yv8qUXjGE5WiOpzwKCmbmoT/3DZmHyY
+         Ht1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kY6QohH0kHOg+QzN8imLnNqmKHUkcybm8RndPGRcKBY=;
-        b=buuCyD+pwlpyDDq63Fi/Z1l8JPFn2g3t8m59lx84RZ6J9121+1dtc8S77DoS8nYTJT
-         JXN9GXo5oiZ4O3i1aplaqs030T1hIuZANok/Ur3+tyzSuT8pKVwzx2yltxgvnOPLGHW6
-         YC3mW1hkjxYJDd0laS4msLBctiBqmM+Kqy5/9zM7Ci9CyOCGGrImphbO9skN8kgCXgyI
-         bYOVpsNyigKfMksbM2HjF43VRdEuI1L8R8rrWH2FwAJCfQdawKFQnN8P/D6GwiLMH3kr
-         ZfXozX+At0Rr1lbl/w5JDbGfBPVdHR9xPsyUDueIlddfn9dhLzGjVpwJvZ9OkPVkCD9s
-         UhtQ==
-X-Gm-Message-State: AOAM531X1tbz7mTvM8lR5q2bOnXgBsRphWxE3wpaB2re+ZJt5Bc55DUy
-        sgSJiClv/i7C3StGL9HIkLmyFVNcxEcB6vAUxZ/jxg==
-X-Google-Smtp-Source: ABdhPJwsd1zLLYUQfLBwKIUDzPngm5BPAn1Oi62bpRLI87FQeo/xi46FUBxuYdvnnmkfHALpRVoAob1SKb1fomVrKmQ=
-X-Received: by 2002:a2e:6a17:: with SMTP id f23mr772794ljc.338.1598619846247;
- Fri, 28 Aug 2020 06:04:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PE8MD8kwekEL9Z0XSU3pdc+yEYrZR0wZcfz7tEycv0c=;
+        b=DgDRZZG7GpMNGa6QOZckQ3Sh1S7R4X8CSwLm0DFiOAsAKCCn91lM8RS2HisQKGw2eW
+         ZEO/ek3ILjAkrJSG4tY2AjYhUPEOACXp476jQrtTHLYdOxg77bUhxV80Y5CvxoCQpKS/
+         vNOfEmpIBc23eOgI8z2QF+f2WTzaJeh1bnelM5RnSFXd420rjzqMJRVq3qdbT7lrqKn1
+         uSWLRYF/WAHrb/3GTIOht49MKqRz1TBDSIF9tE1W9gIDh5rFiK0mnNTIUF6rdfFNmUut
+         UPL11QxrP0JqJ2BITUU6r1iru4grAqlBdk+DXqtM6E1Edmq/VNMRg74pWAbJzSlozYsy
+         1ySw==
+X-Gm-Message-State: AOAM532FWdPz+6KrE0yqthskC1SZ2FLcBXUREq4z0uLKDysSFjuhf9ez
+        79CnydQ9CdoHB6syZEgP2DAU
+X-Google-Smtp-Source: ABdhPJwYd005ketMKQ12FBg07eRO96W/Qc6IZUnAvBrFABVTS9KWlkkM8+tbO1PBzSeRr1pYGuVoKA==
+X-Received: by 2002:a17:902:9a93:: with SMTP id w19mr1178164plp.297.1598619852871;
+        Fri, 28 Aug 2020 06:04:12 -0700 (PDT)
+Received: from mani ([2409:4072:6d87:4cd4:5db4:99cb:1fe6:fc86])
+        by smtp.gmail.com with ESMTPSA id u8sm1723828pfm.133.2020.08.28.06.04.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 28 Aug 2020 06:04:12 -0700 (PDT)
+Date:   Fri, 28 Aug 2020 18:34:04 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
+Subject: Re: [PATCH 1/1] i2c: busses: Add support for atomic transfers in
+ Actions Semi Owl driver
+Message-ID: <20200828130404.GB17309@mani>
+References: <b086ef6d355d9730c839359e15eb06175283e323.1596485741.git.cristian.ciocaltea@gmail.com>
 MIME-Version: 1.0
-References: <20200826145153.10444-1-krzk@kernel.org> <20200826145153.10444-16-krzk@kernel.org>
-In-Reply-To: <20200826145153.10444-16-krzk@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 15:03:55 +0200
-Message-ID: <CACRpkdarHXwpNfVqODTn3ZZ02W5GTfynQDL3=Y+Mg8ytY8SOvA@mail.gmail.com>
-Subject: Re: [PATCH 16/16] iio: magnetometer: ak8974: Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Beniamin Bia <beniamin.bia@analog.com>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b086ef6d355d9730c839359e15eb06175283e323.1596485741.git.cristian.ciocaltea@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 4:53 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On 0803, Cristian Ciocaltea wrote:
+> Atomic transfers are required to properly power off a machine through
+> an I2C controlled PMIC, such as the Actions Semi ATC260x series.
+> 
+> System shutdown may happen with interrupts being disabled and, as a
+> consequence, the kernel may hang if the driver does not support atomic
+> transfers.
+> 
+> This functionality is essentially implemented by polling the FIFO
+> Status register until either Command Execute Completed or NACK Error
+> bits are set.
+> 
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> ---
+>  drivers/i2c/busses/i2c-owl.c | 80 ++++++++++++++++++++++++++----------
+>  1 file changed, 59 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-owl.c b/drivers/i2c/busses/i2c-owl.c
+> index 672f1f239bd6..90dd2e814313 100644
+> --- a/drivers/i2c/busses/i2c-owl.c
+> +++ b/drivers/i2c/busses/i2c-owl.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/i2c.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+> +#include <linux/iopoll.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+>  
+> @@ -76,6 +77,7 @@
+>  #define OWL_I2C_FIFOCTL_TFR	BIT(2)
+>  
+>  /* I2Cc_FIFOSTAT Bit Mask */
+> +#define OWL_I2C_FIFOSTAT_CECB	BIT(0)
+>  #define OWL_I2C_FIFOSTAT_RNB	BIT(1)
+>  #define OWL_I2C_FIFOSTAT_RFE	BIT(2)
+>  #define OWL_I2C_FIFOSTAT_TFF	BIT(5)
+> @@ -83,7 +85,8 @@
+>  #define OWL_I2C_FIFOSTAT_RFD	GENMASK(15, 8)
+>  
+>  /* I2C bus timeout */
+> -#define OWL_I2C_TIMEOUT		msecs_to_jiffies(4 * 1000)
+> +#define OWL_I2C_TIMEOUT_MS	(4 * 1000)
+> +#define OWL_I2C_TIMEOUT		msecs_to_jiffies(OWL_I2C_TIMEOUT_MS)
+>  
+>  #define OWL_I2C_MAX_RETRIES	50
+>  
+> @@ -161,29 +164,25 @@ static void owl_i2c_set_freq(struct owl_i2c_dev *i2c_dev)
+>  	writel(OWL_I2C_DIV_FACTOR(val), i2c_dev->base + OWL_I2C_REG_CLKDIV);
+>  }
+>  
+> -static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
+> +static int owl_i2c_xfer_data(struct owl_i2c_dev *i2c_dev)
+>  {
+> -	struct owl_i2c_dev *i2c_dev = _dev;
+>  	struct i2c_msg *msg = i2c_dev->msg;
+> -	unsigned long flags;
+>  	unsigned int stat, fifostat;
+>  
+> -	spin_lock_irqsave(&i2c_dev->lock, flags);
+> -
+>  	i2c_dev->err = 0;
+>  
+>  	/* Handle NACK from slave */
+>  	fifostat = readl(i2c_dev->base + OWL_I2C_REG_FIFOSTAT);
+>  	if (fifostat & OWL_I2C_FIFOSTAT_RNB) {
+>  		i2c_dev->err = -ENXIO;
+> -		goto stop;
+> +		return 1;
 
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and also it prints the error value.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+This looks odd! And moreover you're not making use of this return value
+anywhere.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Thanks,
+Mani
 
-Yours,
-Linus Walleij
+>  	}
+>  
+>  	/* Handle bus error */
+>  	stat = readl(i2c_dev->base + OWL_I2C_REG_STAT);
+>  	if (stat & OWL_I2C_STAT_BEB) {
+>  		i2c_dev->err = -EIO;
+> -		goto stop;
+> +		return 1;
+>  	}
+>  
+>  	/* Handle FIFO read */
+> @@ -196,18 +195,30 @@ static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
+>  	} else {
+>  		/* Handle the remaining bytes which were not sent */
+>  		while (!(readl(i2c_dev->base + OWL_I2C_REG_FIFOSTAT) &
+> -			 OWL_I2C_FIFOSTAT_TFF) && i2c_dev->msg_ptr < msg->len) {
+> +			OWL_I2C_FIFOSTAT_TFF) && i2c_dev->msg_ptr < msg->len) {
+>  			writel(msg->buf[i2c_dev->msg_ptr++],
+>  			       i2c_dev->base + OWL_I2C_REG_TXDAT);
+>  		}
+>  	}
+>  
+> -stop:
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t owl_i2c_interrupt(int irq, void *_dev)
+> +{
+> +	struct owl_i2c_dev *i2c_dev = _dev;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&i2c_dev->lock, flags);
+> +
+> +	owl_i2c_xfer_data(i2c_dev);
+> +
+>  	/* Clear pending interrupts */
+>  	owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_STAT,
+>  			   OWL_I2C_STAT_IRQP, true);
+>  
+>  	complete_all(&i2c_dev->msg_complete);
+> +
+>  	spin_unlock_irqrestore(&i2c_dev->lock, flags);
+>  
+>  	return IRQ_HANDLED;
+> @@ -235,8 +246,8 @@ static int owl_i2c_check_bus_busy(struct i2c_adapter *adap)
+>  	return 0;
+>  }
+>  
+> -static int owl_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+> -			       int num)
+> +static int owl_i2c_xfer_common(struct i2c_adapter *adap, struct i2c_msg *msgs,
+> +			       int num, bool atomic)
+>  {
+>  	struct owl_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
+>  	struct i2c_msg *msg;
+> @@ -280,11 +291,12 @@ static int owl_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+>  		goto err_exit;
+>  	}
+>  
+> -	reinit_completion(&i2c_dev->msg_complete);
+> +	if (!atomic)
+> +		reinit_completion(&i2c_dev->msg_complete);
+>  
+> -	/* Enable I2C controller interrupt */
+> +	/* Enable/disable I2C controller interrupt */
+>  	owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_CTL,
+> -			   OWL_I2C_CTL_IRQE, true);
+> +			   OWL_I2C_CTL_IRQE, !atomic);
+>  
+>  	/*
+>  	 * Select: FIFO enable, Master mode, Stop enable, Data count enable,
+> @@ -352,20 +364,33 @@ static int owl_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+>  
+>  	spin_unlock_irqrestore(&i2c_dev->lock, flags);
+>  
+> -	time_left = wait_for_completion_timeout(&i2c_dev->msg_complete,
+> -						adap->timeout);
+> +	if (atomic) {
+> +		/* Wait for Command Execute Completed or NACK Error bits */
+> +		ret = readl_poll_timeout_atomic(i2c_dev->base + OWL_I2C_REG_FIFOSTAT,
+> +						val, val & (OWL_I2C_FIFOSTAT_CECB |
+> +							    OWL_I2C_FIFOSTAT_RNB),
+> +						10, OWL_I2C_TIMEOUT_MS * 1000);
+> +	} else {
+> +		time_left = wait_for_completion_timeout(&i2c_dev->msg_complete,
+> +							adap->timeout);
+> +		if (!time_left)
+> +			ret = -ETIMEDOUT;
+> +	}
+>  
+>  	spin_lock_irqsave(&i2c_dev->lock, flags);
+> -	if (time_left == 0) {
+> +
+> +	if (ret) {
+>  		dev_err(&adap->dev, "Transaction timed out\n");
+>  		/* Send stop condition and release the bus */
+>  		owl_i2c_update_reg(i2c_dev->base + OWL_I2C_REG_CTL,
+>  				   OWL_I2C_CTL_GBCC_STOP | OWL_I2C_CTL_RB,
+>  				   true);
+> -		ret = -ETIMEDOUT;
+>  		goto err_exit;
+>  	}
+>  
+> +	if (atomic)
+> +		owl_i2c_xfer_data(i2c_dev);
+> +
+>  	ret = i2c_dev->err < 0 ? i2c_dev->err : num;
+>  
+>  err_exit:
+> @@ -379,9 +404,22 @@ static int owl_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+>  	return ret;
+>  }
+>  
+> +static int owl_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+> +			int num)
+> +{
+> +	return owl_i2c_xfer_common(adap, msgs, num, false);
+> +}
+> +
+> +static int owl_i2c_xfer_atomic(struct i2c_adapter *adap,
+> +			       struct i2c_msg *msgs, int num)
+> +{
+> +	return owl_i2c_xfer_common(adap, msgs, num, true);
+> +}
+> +
+>  static const struct i2c_algorithm owl_i2c_algorithm = {
+> -	.master_xfer    = owl_i2c_master_xfer,
+> -	.functionality  = owl_i2c_func,
+> +	.master_xfer	     = owl_i2c_xfer,
+> +	.master_xfer_atomic  = owl_i2c_xfer_atomic,
+> +	.functionality	     = owl_i2c_func,
+>  };
+>  
+>  static const struct i2c_adapter_quirks owl_i2c_quirks = {
+> -- 
+> 2.28.0
+> 
