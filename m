@@ -2,108 +2,70 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9146FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBBFC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7164A2075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3877820872
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598629920;
+	bh=YQ07odnS6NgebrciQwQis3LqHHVgGAFER6PkRV66vR8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gWGl9bHhakF6yhGJu1hGHeTZiqnnU8jgoQmUIeeycHc+vXYUsI/fy2MNt0PQTb20/
+	 CYllZHpXXcd/1aA0sFvIbEoqpS98l072Ulm6rXDMA3FJiNGziolrSVs3T5V4EvzQzG
+	 fVJt/b2A27ZChwWtkC9eSQ/QHCTEvMAvnVt/cItw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgH1Pu3 (ORCPT
+        id S1726465AbgH1Pv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 11:50:29 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:47682 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgH1Pu0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 11:50:26 -0400
-Date:   Fri, 28 Aug 2020 11:50:25 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
-Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Subject: Re: [PATCH 3/4] sh: Add SECCOMP_FILTER
-Message-ID: <20200828155024.GX3265@brightrain.aerifal.cx>
-References: <20200722231322.419642-1-kernel@mkarcher.dialup.fu-berlin.de>
- <20200722231322.419642-3-kernel@mkarcher.dialup.fu-berlin.de>
+        Fri, 28 Aug 2020 11:51:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725808AbgH1Pv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 11:51:58 -0400
+Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 434F02075B;
+        Fri, 28 Aug 2020 15:51:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598629917;
+        bh=YQ07odnS6NgebrciQwQis3LqHHVgGAFER6PkRV66vR8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XdcD+SDPBZoJ8xCKvlABgms53TZQHy5kuKzHcRX9uYdNgLYs9qFIUa8ybGbQoM3es
+         us4ywUkGYV8Wnf3ZIgaICTfPyCgcrCVbNd14zNZIOF+W4kisiLEBCiURwvD7jWUS3x
+         g/y143nD0WlWCDDlzt53e1eelwX5mhstgn59h2s0=
+Date:   Fri, 28 Aug 2020 08:51:55 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     Tong Zhang <ztong0001@gmail.com>
+Cc:     axboe@fb.com, hch@lst.de, sagi@grimberg.me,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] nvme-pci: cancel nvme device request before disabling
+Message-ID: <20200828155155.GA2826202@dhcp-10-100-145-180.wdl.wdc.com>
+References: <20200827150103.GA2613662@dhcp-10-100-145-180.wdl.wdc.com>
+ <20200828141707.4124-1-ztong0001@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200722231322.419642-3-kernel@mkarcher.dialup.fu-berlin.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200828141707.4124-1-ztong0001@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 23, 2020 at 01:13:21AM +0200, Michael Karcher wrote:
-> Port sh to use the new SECCOMP_FILTER code.
-> 
-> Signed-off-by: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
-> ---
->  arch/sh/Kconfig                               | 1 +
->  arch/sh/kernel/entry-common.S                 | 2 ++
->  arch/sh/kernel/ptrace_32.c                    | 5 +++--
->  tools/testing/selftests/seccomp/seccomp_bpf.c | 8 +++++++-
->  4 files changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-> index 32d959849df9..10b510c16841 100644
-> --- a/arch/sh/Kconfig
-> +++ b/arch/sh/Kconfig
-> @@ -27,6 +27,7 @@ config SUPERH
->  	select GENERIC_SMP_IDLE_THREAD
->  	select GUP_GET_PTE_LOW_HIGH if X2TLB
->  	select HAVE_ARCH_AUDITSYSCALL
-> +	select HAVE_ARCH_SECCOMP_FILTER
->  	select HAVE_ARCH_KGDB
->  	select HAVE_ARCH_TRACEHOOK
->  	select HAVE_DEBUG_BUGVERBOSE
-> diff --git a/arch/sh/kernel/entry-common.S b/arch/sh/kernel/entry-common.S
-> index c4d88d61890d..ad963104d22d 100644
-> --- a/arch/sh/kernel/entry-common.S
-> +++ b/arch/sh/kernel/entry-common.S
-> @@ -368,6 +368,8 @@ syscall_trace_entry:
->  	mov.l	7f, r11		! Call do_syscall_trace_enter which notifies
->  	jsr	@r11	    	! superior (will chomp R[0-7])
->  	 nop
-> +	cmp/eq	#-1, r0
-> +	bt	syscall_exit
->  	mov.l	r0, @(OFF_R0,r15)	! Save return value
->  	!			Reload R0-R4 from kernel stack, where the
->  	!   	    	    	parent may have modified them using
-> diff --git a/arch/sh/kernel/ptrace_32.c b/arch/sh/kernel/ptrace_32.c
-> index 64bfb714943e..25ccfbd02bfa 100644
-> --- a/arch/sh/kernel/ptrace_32.c
-> +++ b/arch/sh/kernel/ptrace_32.c
-> @@ -485,8 +485,6 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
->  {
->  	long ret = 0;
->  
-> -	secure_computing_strict(regs->regs[0]);
-> -
->  	if (test_thread_flag(TIF_SYSCALL_TRACE) &&
->  	    tracehook_report_syscall_entry(regs))
->  		/*
-> @@ -496,6 +494,9 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
->  		 */
->  		ret = -1L;
->  
-> +	if (secure_computing() == -1)
-> +		return -1;
-> +
->  	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
->  		trace_sys_enter(regs, regs->regs[0]);
->  
+On Fri, Aug 28, 2020 at 10:17:08AM -0400, Tong Zhang wrote:
+> This patch addresses an irq free warning and null pointer dereference
+> error problem when nvme devices got timeout error during initialization.
+> This problem happens when nvme_timeout() function is called while
+> nvme_reset_work() is still in execution. This patch fixed the problem by
+> setting flag of the problematic request to NVME_REQ_CANCELLED before
+> calling nvme_dev_disable() to make sure __nvme_submit_sync_cmd() returns
+> an error code and let nvme_submit_sync_cmd() fail gracefully.
+> The following is console output.
 
-This patch broke strace - it spews out bogus syscalls and gets the
-tracee hung. I suspect the last hunk is wrong and breaks all
-non-seccomp tracing. I'll follow up with further analysis and possibly
-a fix if you don't find one sooner.
+Thanks, this looks good to me.
 
-Rich
+Reviewed-by: Keith Busch <kbusch@kernel.org>
