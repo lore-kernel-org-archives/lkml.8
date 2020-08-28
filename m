@@ -2,125 +2,114 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC14C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5280BC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE40B20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B70420872
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:35:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="co7X3hz5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fRHT5WZF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgH1BeT (ORCPT
+        id S1728264AbgH1BfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 21:34:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48616 "EHLO
+        Thu, 27 Aug 2020 21:35:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgH1BeQ (ORCPT
+        with ESMTP id S1726147AbgH1BfU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 21:34:16 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6A55C061264;
-        Thu, 27 Aug 2020 18:34:15 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id g26so8045099qka.3;
-        Thu, 27 Aug 2020 18:34:15 -0700 (PDT)
+        Thu, 27 Aug 2020 21:35:20 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E648C061264;
+        Thu, 27 Aug 2020 18:35:20 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id 2so3561540pjx.5;
+        Thu, 27 Aug 2020 18:35:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gh2R5C2QjOQ666oc79uAj1kKwvvc0RN64Qt09/HynQs=;
-        b=co7X3hz5vvze5RP5XTWGnx8RUsuXrkVkgqO7xNh/JE+dHWA/TyQtSkXBWADzbyJadx
-         T0c+SXWIN8WI/21JNgiLb5HUWAqNkoP/mMff+f1r7RCKTh7JIK68q53N+1U9hXY3dQgS
-         uOeSLR1F8CG2K+7F9pk6zJdvemWnk6qekG7PYs5u31304PnesqQRIwY7ZRS69Ei993JT
-         7W5nBJYR5osmGyZRTBpaJmFk2JKIW3SZ3Gg7DOcgxhLehe90axbSX+sZUEU4hsgCPuMp
-         kV4/q3E5Q74NHPn5NDlvkWvBDoOeo9MA3WFaeXQEqb5fj6n8emRhN/WW0YrgGNN7y5Np
-         h7dQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=rxAwjBtuOkOHsCKI2ATmMoWk7nn27DCJ9baRXRPv7gw=;
+        b=fRHT5WZFbeMN+s2XVWB/NxbZCCyRDtI6J+tcc1/dyBOTnfX954wwDt3kriLkxSvyzM
+         p5zo85HxXxh3wTjsQ5b57HMd4x6/sq0M8kmBRo24B5PfrwE+6rngKdYU22ZH2PmEsbYN
+         tf/d/7IPgibKHH+/DjBwn8hyAZ6ccE2bFNzCoeUIrveT23AB7Dm/oPhej5AyFGNH2n1x
+         vjDk6zWGOfx50Np0VhiAGPPImXpKlR48Zwo0HtQStzP7Lqll037XWBGQdX4JFpds/PZJ
+         Zumtzf5UzA6ebwN2wGOVmZuYJzf6VXL9tw4eLOFGT8c7Bpo0X/aHtOGcS6ATBjvPFTta
+         K5mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gh2R5C2QjOQ666oc79uAj1kKwvvc0RN64Qt09/HynQs=;
-        b=eunTECGZl8CUUbXxkV++F066OBYkV7xymbt4rHPBd6mcIHy532k41JBSatelNxU5GM
-         kW19P/8gcL32V5NqlSVniTrsl8nW22aQPbuSlrFID0cJVMI9Jdurs5jVY1SxiX7b74un
-         8Moai/AtD+K7gl+u28sVhNeQcgiBgkJGDlrq2ALtu79Hj5XTFouOHcsarJw1YN56x5af
-         +sM/Xwojetc6UHt+UCfnVwjHRF2wnBHpOOm9zoQi4UvsDWMTJmcac7zt89L6X1OPIXod
-         tCK7WgijTS3zF1/HFlLj1CYIiUcMBnBX21Qp4Gw5gqE9GGgLeMAMXhRArPNIAbrxnJTj
-         S/mw==
-X-Gm-Message-State: AOAM531+DgK4X+Rsk1yVc7P4bXaM7YLsuoQDSf8RuArmgQfD1fzmOWWd
-        P1zURITbLsl5Vl82dc+iVLI=
-X-Google-Smtp-Source: ABdhPJwC5dR8KjB6ukidKXYL8mRsVjbdUzD5dwALrHMiGFd9jRfI5DhafXvsggJAHmjFqo0qxA39+Q==
-X-Received: by 2002:a37:ed5:: with SMTP id 204mr3992627qko.405.1598578455012;
-        Thu, 27 Aug 2020 18:34:15 -0700 (PDT)
-Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
-        by smtp.gmail.com with ESMTPSA id e63sm2658202qkf.29.2020.08.27.18.34.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Aug 2020 18:34:14 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 97CC527C0054;
-        Thu, 27 Aug 2020 21:34:13 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 27 Aug 2020 21:34:13 -0400
-X-ME-Sender: <xms:FF9IX9dS_Yp2ZKkBeec48r-YKN6-S--qSRVulVn_Zyn2_wLfPGRy2Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddviedggeelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
-    htvghrnhepvdelieegudfggeevjefhjeevueevieetjeeikedvgfejfeduheefhffggedv
-    geejnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgv
-    rhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfh
-    gvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:FF9IX7OLc94TMsHppDsCijhN35_ysf4qSRH0uCHQa5KoZCcAJxhhfQ>
-    <xmx:FF9IX2ilGYE-rtewURniFTIyJRip-vph-QOZgNWzqnNgCLKZQTOsgg>
-    <xmx:FF9IX29JSvOOE1jnqVpx-dQ5J81i7I-6N_LcUN1IbgVGGAs3P5OYOA>
-    <xmx:FV9IX1EDrPt68M1TnRMiyrgxq7ko1fnQDd0tjVgaM0RXk02JpHCY6YX_ifQ>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BF1BE306005F;
-        Thu, 27 Aug 2020 21:34:11 -0400 (EDT)
-Date:   Fri, 28 Aug 2020 09:34:10 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Cameron <cameron@moodycamel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
-        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
-        oleg@redhat.com, will@kernel.org, paulmck@kernel.org
-Subject: Re: [RFC][PATCH 6/7] freelist: Lock less freelist
-Message-ID: <20200828013410.GA49492@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200827161237.889877377@infradead.org>
- <20200827161754.535381269@infradead.org>
- <20200827190804.GA128237@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <CAFCw3do_4TrZSQ6kYQ7Y1RYTuD+PfXRyZFp7gSDs2oUXrBZGqQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFCw3do_4TrZSQ6kYQ7Y1RYTuD+PfXRyZFp7gSDs2oUXrBZGqQ@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rxAwjBtuOkOHsCKI2ATmMoWk7nn27DCJ9baRXRPv7gw=;
+        b=TnW/k6GBKS+pRvUvKMK9iEc6zal91lglHa9MraFXv6/cu0YJpd2EBZvatIZi2taYVR
+         fWYLbjvIhNaXk0AtR+y577OKwdymLwASTDUOaUfkVcXir7RM3dRk1C3AzQqhZmMskPJa
+         ACZQSQU9oCJLfpPDISSIKzCscbNA17SuExtnGAdu0yGmQxL3W7f0TN2rY2iw4zfvdq/V
+         weY7sNpX6QouuZ0VZLXXaHDsaSJaMkD7MtSJBeiY1ZSt+MkcOcT4GW6DQlQe7SCmYj5k
+         YSSyL8mPHgAHeDyTUchvQfeHTIrQWBJuF/f2CemrUIIAyMSQ1MST3Dg6jC9kDf3dWtGD
+         Lf6Q==
+X-Gm-Message-State: AOAM530nvCC7eAeX+v2189FXXY4zEyp919nQJ9eoob+L50KPcgUNRszA
+        IbfHWnx/LL1u4NHOTeG2FnT2vAdOFBQ=
+X-Google-Smtp-Source: ABdhPJzariVnAqnB4Hk/D+KzhbrZIV+Xpa5zg7Et27t3/fcuC6vm7zCm93AbP6pLhCsbe69QM36Ehg==
+X-Received: by 2002:a17:90a:d597:: with SMTP id v23mr352068pju.24.1598578519288;
+        Thu, 27 Aug 2020 18:35:19 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.6])
+        by smtp.googlemail.com with ESMTPSA id b6sm3309715pjz.33.2020.08.27.18.35.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Aug 2020 18:35:18 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH] KVM: LAPIC: Reset timer_advance_ns if timer mode switch
+Date:   Fri, 28 Aug 2020 09:35:08 +0800
+Message-Id: <1598578508-14134-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 03:57:22PM -0400, Cameron wrote:
-> On Thu, Aug 27, 2020 at 3:08 PM Boqun Feng <boqun.feng@gmail.com> wrote:
-> > So if try_cmpxchg_acquire() fails, we don't have ACQUIRE semantics on
-> > read of the new list->head, right? Then probably a
-> > smp_mb__after_atomic() is needed in that case?
-> 
-> Yes, there needs to be an acquire on the head after a failed cmpxchg;
-> does the atomic_fetch_add following that not have acquire semantics?
-> 
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Yes, you're right, the atomic_fecth_add() following is a fully-ordered
-atomic, so could provide the necessary ACQUIRE semantics. I was missing
-that. Maybe a few words explaining this helps.
+per-vCPU timer_advance_ns should be set to 0 if timer mode is not tscdeadline 
+otherwise we waste cpu cycles in the function lapic_timer_int_injected(), 
+especially on AMD platform which doesn't support tscdeadline mode. We can 
+reset timer_advance_ns to the initial value if switch back to tscdealine 
+timer mode.
 
-Regards,
-Boqun
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/lapic.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> Cameron
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 654649b..abc296d 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1499,10 +1499,16 @@ static void apic_update_lvtt(struct kvm_lapic *apic)
+ 			kvm_lapic_set_reg(apic, APIC_TMICT, 0);
+ 			apic->lapic_timer.period = 0;
+ 			apic->lapic_timer.tscdeadline = 0;
++			if (timer_mode == APIC_LVT_TIMER_TSCDEADLINE &&
++				lapic_timer_advance_dynamic)
++				apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_NS_INIT;
+ 		}
+ 		apic->lapic_timer.timer_mode = timer_mode;
+ 		limit_periodic_timer_frequency(apic);
+ 	}
++	if (timer_mode != APIC_LVT_TIMER_TSCDEADLINE &&
++		lapic_timer_advance_dynamic)
++		apic->lapic_timer.timer_advance_ns = 0;
+ }
+ 
+ /*
+-- 
+2.7.4
+
