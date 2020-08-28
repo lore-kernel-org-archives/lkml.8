@@ -2,227 +2,122 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFF9C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B33DC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A91820838
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC38208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:20:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iI2La+Zv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LUFgVPrt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgH1XQw (ORCPT
+        id S1726867AbgH1XUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 19:16:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53208 "EHLO
+        Fri, 28 Aug 2020 19:20:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbgH1XQt (ORCPT
+        with ESMTP id S1726720AbgH1XUv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 19:16:49 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A2EC061232
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 16:16:49 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id e7so811496qtj.11
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 16:16:48 -0700 (PDT)
+        Fri, 28 Aug 2020 19:20:51 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBC4EC061264
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 16:20:51 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id h2so370343plr.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 16:20:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GUiusd1WVdha2EfIkzMSJdUrei8ON9hbpIBb4XxxaCI=;
-        b=iI2La+ZvveBSC07B6Qw6ujjE0TnkENEdYY7iqIdsD9PjSI+El+bFJloTtBL2jzfPBs
-         4w+4yCRpKW4XpccZVIwh8b2/3VeKDrlJEnvSiFUNDbQmSVRopcePppU/9P1w9gZVdWbq
-         Daa2eRMdRUd/NGrrCSsXGIW/EqDw6JefvjlLRtFWMnNUtMHvpiTc1Ny6G73q4GhzysYx
-         BTg7FwpruP/CsWFV5JIvjobvC89LlpKBBvPPLnE7i1GvOPrShO/R0PdZzoAPhQtyOqhr
-         0cb2/CiIgHsTSzyxgjZIjJzRFeRcx0GElwSA9P6mykp8GSE4/C/knH2pXxci7CS1aJxY
-         HfeA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vekX/Mq23RWwnDgk+6LdcBexEyHMvoMGcRuZ1SgDRMk=;
+        b=LUFgVPrt2Xx4hKMx9nbPEckkaLhVk6gHlJYu31JIplGtbqqbxXGUs9Ik6zkfNEzONc
+         Fepsz9ipT6OZQsO5sUpYT1lTke6Xc3PnJAMODWEsolbqaXJvBZ7hg8bsyHYf9Vsqqf1m
+         qIT2L2wYuYRca4ABfr2Odlioxk5YGEVymiJNA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GUiusd1WVdha2EfIkzMSJdUrei8ON9hbpIBb4XxxaCI=;
-        b=fI61NWQfm+8OTyZqR0CIwEw+KN+RVVNifJzu1CMYbvIQKax+0Z7qxd+eRM+GbYeXag
-         XTJJ/IXXRbiEv/pYOvKKJezelw4Mtw367GDyaXIkH8oEmf8zSzkdJlpmuyU5C+rc+p7J
-         d2bw2yFHdfn/iR+FfVByblt1r6//OLk4iy25WjHrDSiT8SJEf4ULugyXn7ZUbrTyJE6I
-         lC8ep5TnyjjYK2EDJlRmm33egu8i63vs0wJK6pyCa71heZunQ4832dsVasR1QaAbOSOC
-         ualXSdJHXKCNgTaFjdYHCbEhgmB4WHyZpAs/4Ps0EBpjxbFcEzYucO11rjlir9g3VdNG
-         50jA==
-X-Gm-Message-State: AOAM533X1PmkoNMpaO06IV2hprkfGbNXw8J9QEScV5F1AkvVhRfdkLXL
-        K7uI72E78DkoWy3iVXl8I7iZmMgyWzCFOVzVgJ94sw==
-X-Google-Smtp-Source: ABdhPJzk3HhQJ+PBTgzg+a2kvBqGs9IZusZmReJJbwBL8DCVy5Ia0OqzaniEgfbBrgaqBqaTYzvAEhEnK3ZrPZzhYB0=
-X-Received: by 2002:ac8:7959:: with SMTP id r25mr3570738qtt.85.1598656607627;
- Fri, 28 Aug 2020 16:16:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vekX/Mq23RWwnDgk+6LdcBexEyHMvoMGcRuZ1SgDRMk=;
+        b=eRZ3e5uNToQj+m9x67DTwHVfRW6dPQfoQAZeFmJSyk820KhZMNlGv/Q9DHYN+K2VQV
+         xLqrx5Li7Gid2soduv+t6Z6/2peTR4bxTRo3YQwtUSSfUwM5enrPt653OfeZC+KqGVNa
+         ndOOGRZmXITvyD9RRbwrFzJgVIA7GvFibCOEl/4UnTUq/MRkQWkVPR1g6AN4dyxgl1Rq
+         DeWatHBWDgvONcMUZBZ0wR84jPY7B9ry/SgrYr9XOKx0xyp6nXIln43FaMWPPo4FM5GS
+         7eutCsRHQgojrgjQkI1Lc+L9inZDQKJN5wjpa/opZN80IPMu7OibWd74pBylcpcRepWl
+         LREA==
+X-Gm-Message-State: AOAM5325qDMHBwl0XpJWjDmIrTF1RG76IX4SdEWnhpbRfmKjFowxuv7H
+        tNYDOoEUFWSQD+QNm03NbaJgz5KxrvBvTA==
+X-Google-Smtp-Source: ABdhPJw5KEwmKeKe8mZkKXkaEnaqU+EpMdmR9lHHNGzs1BSmbnljanSuhsnw5f0EIMVjUuqQ+S6WOA==
+X-Received: by 2002:a17:902:c24b:: with SMTP id 11mr922349plg.64.1598656851274;
+        Fri, 28 Aug 2020 16:20:51 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id h10sm517971pgn.32.2020.08.28.16.20.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 16:20:50 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     cychiang@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: rt5682: Prefer async probe
+Date:   Fri, 28 Aug 2020 16:20:27 -0700
+Message-Id: <20200828162005.1.I4f67f494c4f759b0e5c7f487e040dfdcf16e0876@changeid>
+X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
 MIME-Version: 1.0
-References: <20200729212721.1ee4eef8@canb.auug.org.au> <87ft8lwxes.fsf@turtle.gmx.de>
- <CAMzD94Rz4NYnhheS8SmuL14MNM4VGxOnAW-WZ9k1JEqrbwyrvw@mail.gmail.com>
- <87y2m7gq86.fsf@turtle.gmx.de> <87pn7gh3er.fsf@turtle.gmx.de>
- <CAMzD94Rkq1RTZJG5UsEz9VhaCBbvObD1azqU2gsJzZ6gPYcfag@mail.gmail.com>
- <878sdyn6xz.fsf@turtle.gmx.de> <49315f94-1ae6-8280-1050-5fc0d1ead984@infradead.org>
-In-Reply-To: <49315f94-1ae6-8280-1050-5fc0d1ead984@infradead.org>
-From:   Brian Vazquez <brianvv@google.com>
-Date:   Fri, 28 Aug 2020 16:16:36 -0700
-Message-ID: <CAMzD94QKnE+1Cmm0RNFUVAYArBRB0S2VUUC5c4jTY9Z4xdZH0w@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the net-next tree
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Sven Joachim <svenjoac@gmx.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 8:12 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 8/28/20 8:09 AM, Sven Joachim wrote:
-> > On 2020-08-27 11:12 -0700, Brian Vazquez wrote:
-> >
-> >> I've been trying to reproduce it with your config but I didn't
-> >> succeed. I also looked at the file after the preprocessor and it
-> >> looked good:
-> >>
-> >> ret = ({ __builtin_expect(!!(ops->match == fib6_rule_match), 1) ?
-> >> fib6_rule_match(rule, fl, flags) : ops->match(rule, fl, flags); })
-> >
-> > However, in my configuration I have CONFIG_IPV6=m, and so
-> > fib6_rule_match is not available as a builtin.  I think that's why ld is
-> > complaining about the undefined reference.
->
-> Same here FWIW. CONFIG_IPV6=m.
+The probe of rt5682 is pretty slow.  A quick measurement shows that it
+takes ~650 ms on at least one board.  There's no reason to block all
+other drivers waiting for this probe to finish.  Set the flag to allow
+other drivers to probe while we're probing.
 
-Oh I see,
-I tried this and it seems to work fine for me, does this also fix your
-problem? if so, I'll prepare the patch, and thanks for helping!
-diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
-index 51678a528f85..40dfd1f55899 100644
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -16,7 +16,7 @@
- #include <net/ip_tunnels.h>
- #include <linux/indirect_call_wrapper.h>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+NOTE: I haven't done any analysis of the driver to see _why_ it's so
+slow, only that I have measured it to be slow.  Someone could
+certainly take the time to profile / optimize it, but in any case it
+still won't hurt to be async.
 
--#ifdef CONFIG_IPV6_MULTIPLE_TABLES
-+#if defined(CONFIG_IPV6_MULTIPLE_TABLES) && defined(CONFIG_IPV6)
+This is a very safe flag to turn on since:
 
->
->
-> > Changing the configuration to CONFIG_IPV6=y helps, FWIW.
-> >
-> >> Note that fib4_rule_match doesn't appear as the
-> >> CONFIG_IP_MULTIPLE_TABLES is not there.
-> >>
-> >> Could you share more details on how you're compiling it and what
-> >> compiler you're using??
-> >
-> > Tried with both gcc 9 and gcc 10 under Debian unstable, binutils 2.35.
-> > I usually use "make bindebpkg", but just running "make" is sufficient to
-> > reproduce the problem, as it happens when linking vmlinux.
-> >
-> > Cheers,
-> >        Sven
-> >
-> >
-> >> On Mon, Aug 24, 2020 at 1:08 AM Sven Joachim <svenjoac@gmx.de> wrote:
-> >>>
-> >>> On 2020-08-22 08:16 +0200, Sven Joachim wrote:
-> >>>
-> >>>> On 2020-08-21 09:23 -0700, Brian Vazquez wrote:
-> >>>>
-> >>>>> Hi Sven,
-> >>>>>
-> >>>>> Sorry for the late reply, did you still see this after:
-> >>>>> https://patchwork.ozlabs.org/project/netdev/patch/20200803131948.41736-1-yuehaibing@huawei.com/
-> >>>>> ??
-> >>>>
-> >>>> That patch is apparently already in 5.9-rc1 as commit 80fbbb1672e7, so
-> >>>> yes I'm still seeing it.
-> >>>
-> >>> Still present in 5.9-rc2 as of today, I have attached my .config for
-> >>> reference.  Note that I have CONFIG_IPV6_MULTIPLE_TABLES=y, but
-> >>> CONFIG_IP_MULTIPLE_TABLES is not mentioned at all there.
-> >>>
-> >>> To build the kernel, I have now deselected IPV6_MULTIPLE_TABLES.  Not
-> >>> sure why this was enabled in my .config which has grown organically over
-> >>> many years.
-> >>>
-> >>> Cheers,
-> >>>        Sven
-> >>>
-> >>>
-> >>>>> On Mon, Aug 17, 2020 at 12:21 AM Sven Joachim <svenjoac@gmx.de> wrote:
-> >>>>>
-> >>>>>> On 2020-07-29 21:27 +1000, Stephen Rothwell wrote:
-> >>>>>>
-> >>>>>>> Hi all,
-> >>>>>>>
-> >>>>>>> After merging the net-next tree, today's linux-next build (i386
-> >>>>>> defconfig)
-> >>>>>>> failed like this:
-> >>>>>>>
-> >>>>>>> x86_64-linux-gnu-ld: net/core/fib_rules.o: in function
-> >>>>>> `fib_rules_lookup':
-> >>>>>>> fib_rules.c:(.text+0x5c6): undefined reference to `fib6_rule_match'
-> >>>>>>> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x5d8): undefined reference to
-> >>>>>> `fib6_rule_match'
-> >>>>>>> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x64d): undefined reference to
-> >>>>>> `fib6_rule_action'
-> >>>>>>> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x662): undefined reference to
-> >>>>>> `fib6_rule_action'
-> >>>>>>> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x67a): undefined reference to
-> >>>>>> `fib6_rule_suppress'
-> >>>>>>> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x68d): undefined reference to
-> >>>>>> `fib6_rule_suppress'
-> >>>>>>
-> >>>>>> FWIW, I saw these errors in 5.9-rc1 today, so the fix in commit
-> >>>>>> 41d707b7332f ("fib: fix fib_rules_ops indirect calls wrappers") was
-> >>>>>> apparently not sufficient.
-> >>>>>>
-> >>>>>> ,----
-> >>>>>> | $ grep IPV6 .config
-> >>>>>> | CONFIG_IPV6=m
-> >>>>>> | # CONFIG_IPV6_ROUTER_PREF is not set
-> >>>>>> | # CONFIG_IPV6_OPTIMISTIC_DAD is not set
-> >>>>>> | # CONFIG_IPV6_MIP6 is not set
-> >>>>>> | # CONFIG_IPV6_ILA is not set
-> >>>>>> | # CONFIG_IPV6_VTI is not set
-> >>>>>> | CONFIG_IPV6_SIT=m
-> >>>>>> | # CONFIG_IPV6_SIT_6RD is not set
-> >>>>>> | CONFIG_IPV6_NDISC_NODETYPE=y
-> >>>>>> | CONFIG_IPV6_TUNNEL=m
-> >>>>>> | CONFIG_IPV6_MULTIPLE_TABLES=y
-> >>>>>> | # CONFIG_IPV6_SUBTREES is not set
-> >>>>>> | # CONFIG_IPV6_MROUTE is not set
-> >>>>>> | # CONFIG_IPV6_SEG6_LWTUNNEL is not set
-> >>>>>> | # CONFIG_IPV6_SEG6_HMAC is not set
-> >>>>>> | # CONFIG_IPV6_RPL_LWTUNNEL is not set
-> >>>>>> | # CONFIG_NF_SOCKET_IPV6 is not set
-> >>>>>> | # CONFIG_NF_TPROXY_IPV6 is not set
-> >>>>>> | # CONFIG_NF_DUP_IPV6 is not set
-> >>>>>> | # CONFIG_NF_REJECT_IPV6 is not set
-> >>>>>> | # CONFIG_NF_LOG_IPV6 is not set
-> >>>>>> | CONFIG_NF_DEFRAG_IPV6=m
-> >>>>>> `----
-> >>>>>>
-> >>>>>>> Caused by commit
-> >>>>>>>
-> >>>>>>>   b9aaec8f0be5 ("fib: use indirect call wrappers in the most common
-> >>>>>> fib_rules_ops")
-> >>>>>>>
-> >>>>>>> # CONFIG_IPV6_MULTIPLE_TABLES is not set
-> >>>>>>>
-> >>>>>>> I have reverted that commit for today.
-> >>>>>>
-> >>>>>> Cheers,
-> >>>>>>        Sven
->
->
-> --
-> ~Randy
->
+1. It's not like our probe order was defined by anything anyway.  When
+we probe is at the whim of when our i2c controller probes and that can
+be any time.
+
+2. If some other driver needs us then they have to handle the fact
+that we might not have probed yet anyway.
+
+3. There may be other drivers probing at the same time as us anyway
+because _they_ used async probe.
+
+While I won't say that it's impossible to tickle a bug by turning on
+async probe, I would assert that in almost all cases the bug was
+already there and needed to be fixed anyway.
+
+ sound/soc/codecs/rt5682-i2c.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/sound/soc/codecs/rt5682-i2c.c b/sound/soc/codecs/rt5682-i2c.c
+index 85aba311bdc8..6b4e0eb30c89 100644
+--- a/sound/soc/codecs/rt5682-i2c.c
++++ b/sound/soc/codecs/rt5682-i2c.c
+@@ -294,6 +294,7 @@ static struct i2c_driver rt5682_i2c_driver = {
+ 		.name = "rt5682",
+ 		.of_match_table = rt5682_of_match,
+ 		.acpi_match_table = rt5682_acpi_match,
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+ 	},
+ 	.probe = rt5682_i2c_probe,
+ 	.shutdown = rt5682_i2c_shutdown,
+-- 
+2.28.0.402.g5ffc5be6b7-goog
+
