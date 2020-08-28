@@ -2,232 +2,183 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A86CBC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22322C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D055207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0507B207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbgH1NM1 (ORCPT
+        id S1729175AbgH1NQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 09:12:27 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:38783 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729410AbgH1NLq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 09:11:46 -0400
-X-Originating-IP: 90.89.180.255
-Received: from lhopital-XPS-13-9360.home (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
-        (Authenticated sender: kevin.lhopital@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPA id D7B93C0012;
-        Fri, 28 Aug 2020 13:11:42 +0000 (UTC)
-From:   =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= 
-        <kevin.lhopital@bootlin.com>
-To:     linux-media@vger.kernel.org
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        mripard@kernel.org, wens@csie.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com,
-        =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= 
-        <kevin.lhopital@bootlin.com>
-Subject: [PATCH v2 1/3] dt-bindings: media: i2c: Add documentation for ov8865
-Date:   Fri, 28 Aug 2020 15:11:32 +0200
-Message-Id: <20200828131134.12113-2-kevin.lhopital@bootlin.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200828131134.12113-1-kevin.lhopital@bootlin.com>
-References: <20200828131134.12113-1-kevin.lhopital@bootlin.com>
+        Fri, 28 Aug 2020 09:16:41 -0400
+Received: from mga14.intel.com ([192.55.52.115]:62305 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729480AbgH1NMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 09:12:24 -0400
+IronPort-SDR: 6Q45NdKqU28mSGvdCT2CKnH+cg3DcmzYkPBfiCA1Xvl4lXFjPj4Uo4iIA9AzEQsq8BZYIKftcc
+ WGvyRPXA1mHA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="155918719"
+X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
+   d="scan'208";a="155918719"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 06:12:17 -0700
+IronPort-SDR: QGWTfQvXniq0ONUYCBZxLngfoYqrKUfxIbh8+L/QfvkWd7uCh4kyuMFgZtDvCgJhlzES/P+YL3
+ EMOdRigbeT9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
+   d="scan'208";a="403747958"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 28 Aug 2020 06:12:14 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 28 Aug 2020 16:12:14 +0300
+Date:   Fri, 28 Aug 2020 16:12:14 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Badhri Jagan Sridharan <badhri@google.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/14 v2] usb: typec: tcpci: Add support when hidden tx
+ registers are inaccessible
+Message-ID: <20200828131214.GH174928@kuha.fi.intel.com>
+References: <20200825042210.300632-1-badhri@google.com>
+ <20200825042210.300632-3-badhri@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825042210.300632-3-badhri@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a documentation for the sensor ov8865 from Omnivision.
+Looks like you forgot v1 somewhere :-)
 
-Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>
----
- .../devicetree/bindings/media/i2c/ov8865.yaml | 165 ++++++++++++++++++
- 1 file changed, 165 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8865.yaml
+On Mon, Aug 24, 2020 at 09:21:58PM -0700, Badhri Jagan Sridharan wrote:
+> TCPCI spec forbids direct access of TX_BUF_BYTE_x register.
+> The existing version of tcpci driver assumes that those registers
+> are directly addressible. Add support for tcpci chips which do
+> not support direct access to TX_BUF_BYTE_x registers. TX_BUF_BYTE_x
+> can only be accessed by I2C_WRITE_BYTE_COUNT.
+> 
+> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+> ---
+>  drivers/usb/typec/tcpm/tcpci.c | 49 +++++++++++++++++++++++++---------
+>  drivers/usb/typec/tcpm/tcpci.h |  8 ++++++
+>  2 files changed, 44 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
+> index f57d91fd0e09..90d348caa6a8 100644
+> --- a/drivers/usb/typec/tcpm/tcpci.c
+> +++ b/drivers/usb/typec/tcpm/tcpci.c
+> @@ -320,8 +320,7 @@ static int tcpci_set_vbus(struct tcpc_dev *tcpc, bool source, bool sink)
+>  	return 0;
+>  }
+>  
+> -static int tcpci_pd_transmit(struct tcpc_dev *tcpc,
+> -			     enum tcpm_transmit_type type,
+> +static int tcpci_pd_transmit(struct tcpc_dev *tcpc, enum tcpm_transmit_type type,
+>  			     const struct pd_message *msg)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov8865.yaml b/Documentation/devicetree/bindings/media/i2c/ov8865.yaml
-new file mode 100644
-index 000000000000..468ddfd48c7a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov8865.yaml
-@@ -0,0 +1,165 @@
-+# SPDX-License-Identifier: (GPL-2.0 0R BSD-2-Clause)
-+# Copyright (C) 2020 Kévin L'hôpital
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/i2c/ov8865.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Omnivision OV8865 Sensor Device Tree Bindings
-+
-+maintainers:
-+  - Kévin L'hôpital <kevin.lhopital@bootlin.com>
-+
-+description: |-
-+  The Omnivision OV8865 is a image sensor that supports up to 3264x2448. It
-+  provides a 10 bits output format and a MIPI CSI2 interface (up to 4-lane).
-+  This chip is programmable through I2C.
-+
-+properties:
-+  compatible:
-+    const: ovti,ov8865
-+
-+  reg:
-+    maxItems: 1
-+
-+  pinctrl-names:
-+    description:
-+      Default name for the ov8865 pinctrl.
-+
-+  pinctrl-0:
-+    description:
-+      Pinctrl for the ov8865.
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    description:
-+      Input clock name for the sensor.
-+
-+    items:
-+      - const: xclk
-+
-+  avdd-supply:
-+    description:
-+      Definition of the regulator used as analog power supply.
-+
-+  dovdd-supply:
-+    description:
-+      Definition of the regulator used as interface power supply.
-+
-+  vdd2-supply:
-+    description:
-+      Definition of the regulator used as digital power supply
-+
-+  afvdd-supply:
-+    description:
-+      Definition of the regulator used as actuator power supply.
-+
-+  powerdown-gpios:
-+    description:
-+      reference to the GPIO connceted to the powerdown pin. This is an active
-+      low signal on the OV8865.
-+
-+  reset-gpios:
-+    description:
-+      Reference to the GPIO connected to the reset pin. This is an active low
-+      signal for the OV8865.
-+
-+  rotation:
-+    description:
-+      Position of the sensor, the valid values are 0 (sensor mounted upright)
-+      and 180 (sensor mounted upside down).
-+
-+  port:
-+    type: object
-+    additionalProperties: false
-+    description:
-+      A node containing an output port node with an endpoint definition as
-+      documented in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+    properties:
-+      endpoint:
-+        type: object
-+
-+        properties:
-+          data-lanes:
-+            description:
-+              The driver only supports four-lane operation.
-+            items:
-+              - const: 1
-+              - const: 2
-+              - const: 3
-+              - const: 4
-+
-+          clock-lanes:
-+            items:
-+              const: 0
-+
-+          bus-type:
-+            description:
-+              The driver only supports the MIPI CSI2
-+            items:
-+              const: 4
-+
-+        required:
-+          - data-lanes
-+          - clock-lanes
-+          - bus-type
-+
-+    required:
-+      - endpoint
-+
-+required:
-+  - compatible
-+  - reg
-+  - pinctrl-names
-+  - pinctrl-0
-+  - clocks
-+  - clock-names
-+  - avdd-supply
-+  - dovdd-supply
-+  - vdd2-supply
-+  - afvdd-supply
-+  - powerdown-gpios
-+  - reset-gpios
-+  - port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/sun8i-a83t-ccu.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c2 {
-+         #address-cells = <1>;
-+         #size-cells = <0>;
-+          ov8865: camera@36 {
-+                 compatible = "ovti,ov8865";
-+                 reg = <0x36>;
-+                 pinctrl-names = "default";
-+                 pinctrl-0 = <&csi_mclk_pin>; 
-+                 clocks = <&ccu CLK_CSI_MCLK>;
-+                 clock-names ="xclk";
-+                 avdd-supply = <&reg_ov8865_avdd>;
-+                 dovdd-supply = <&reg_ov8865_dovdd>;
-+                 vdd2-supply = <&reg_ov8865_vdd2>;
-+                 afvdd-supply = <&reg_ov8865_afvdd>;
-+                 powerdown-gpios = <&pio 4 17 GPIO_ACTIVE_LOW>; /* PE17 */
-+                 reset-gpios = <&pio 4 16 GPIO_ACTIVE_LOW>; /* PE16 */
-+                 rotation = <180>;
-+
-+                 port {
-+                      ov8865_to_mipi_csi2: endpoint {
-+                                 remote-endpoint = <&mipi_csi2_from_ov8865>;
-+                                 data-lanes = <1 2 3 4>;
-+                                 clock-lanes = <0>;
-+                                 bus-type = <4>; /* V4L2_FWNODE_BUS_TYPE_CSI2_DPHY */
-+                      };
-+                 };
-+           };
-+    };
-+
-+...
+That does not look like a relevant change.
+
+>  {
+>  	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
+> @@ -330,23 +329,47 @@ static int tcpci_pd_transmit(struct tcpc_dev *tcpc,
+>  	int ret;
+>  
+>  	cnt = msg ? pd_header_cnt(header) * 4 : 0;
+> -	ret = regmap_write(tcpci->regmap, TCPC_TX_BYTE_CNT, cnt + 2);
+> -	if (ret < 0)
+> -		return ret;
+> +	/**
+> +	 * TCPCI spec forbids direct access of TCPC_TX_DATA.
+> +	 * But, since some of the chipsets offer this capability,
+> +	 * it's fair to support both.
+> +	 */
+> +	if (!tcpci->data->TX_BUF_BYTE_x_hidden) {
+
+Couldn't check if the flag is set first?
+
+        if (tcpci->data->TX_BUF_BYTE_x_hidden) {
+                ...
+
+> +		ret = regmap_write(tcpci->regmap, TCPC_TX_BYTE_CNT, cnt + 2);
+> +		if (ret < 0)
+> +			return ret;
+>  
+> -	ret = tcpci_write16(tcpci, TCPC_TX_HDR, header);
+> -	if (ret < 0)
+> -		return ret;
+> +		ret = tcpci_write16(tcpci, TCPC_TX_HDR, header);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		if (cnt > 0) {
+> +			ret = regmap_raw_write(tcpci->regmap, TCPC_TX_DATA, &msg->payload, cnt);
+> +			if (ret < 0)
+> +				return ret;
+> +		}
+> +	} else {
+> +		u8 buf[TCPC_TRANSMIT_BUFFER_MAX_LEN] = {0,};
+> +		u8 pos = 0;
+> +
+> +		/* Payload + header + TCPC_TX_BYTE_CNT */
+> +		buf[pos++] = cnt + 2;
+> +
+> +		if (msg)
+> +			memcpy(&buf[pos], &msg->header, sizeof(msg->header));
+> +
+> +		pos += sizeof(header);
+> +
+> +		if (cnt > 0)
+> +			memcpy(&buf[pos], msg->payload, cnt);
+>  
+> -	if (cnt > 0) {
+> -		ret = regmap_raw_write(tcpci->regmap, TCPC_TX_DATA,
+> -				       &msg->payload, cnt);
+> +		pos += cnt;
+> +		ret = regmap_raw_write(tcpci->regmap, TCPC_TX_BYTE_CNT, buf, pos);
+>  		if (ret < 0)
+>  			return ret;
+>  	}
+>  
+> -	reg = (PD_RETRY_COUNT << TCPC_TRANSMIT_RETRY_SHIFT) |
+> -		(type << TCPC_TRANSMIT_TYPE_SHIFT);
+> +	reg = (PD_RETRY_COUNT << TCPC_TRANSMIT_RETRY_SHIFT) | (type << TCPC_TRANSMIT_TYPE_SHIFT);
+>  	ret = regmap_write(tcpci->regmap, TCPC_TRANSMIT, reg);
+>  	if (ret < 0)
+>  		return ret;
+> diff --git a/drivers/usb/typec/tcpm/tcpci.h b/drivers/usb/typec/tcpm/tcpci.h
+> index fd26ca35814c..cf9d8b63adcb 100644
+> --- a/drivers/usb/typec/tcpm/tcpci.h
+> +++ b/drivers/usb/typec/tcpm/tcpci.h
+> @@ -128,9 +128,17 @@
+>  #define TCPC_VBUS_VOLTAGE_ALARM_HI_CFG		0x76
+>  #define TCPC_VBUS_VOLTAGE_ALARM_LO_CFG		0x78
+>  
+> +/* I2C_WRITE_BYTE_COUNT + 1 when TX_BUF_BYTE_x is only accessible I2C_WRITE_BYTE_COUNT */
+> +#define TCPC_TRANSMIT_BUFFER_MAX_LEN		31
+> +
+> +/*
+> + * @TX_BUF_BYTE_x_hidden
+> + *		optional; Set when TX_BUF_BYTE_x can only be accessed through I2C_WRITE_BYTE_COUNT.
+> + */
+>  struct tcpci;
+>  struct tcpci_data {
+>  	struct regmap *regmap;
+> +	unsigned char TX_BUF_BYTE_x_hidden:1;
+>  	int (*init)(struct tcpci *tcpci, struct tcpci_data *data);
+>  	int (*set_vconn)(struct tcpci *tcpci, struct tcpci_data *data,
+>  			 bool enable);
+> -- 
+> 2.28.0.297.g1956fa8f8d-goog
+
+thanks,
+
 -- 
-2.17.1
-
+heikki
