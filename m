@@ -2,69 +2,84 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB09C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D53C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA70920DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:49:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="a8d/peyy"
+	by mail.kernel.org (Postfix) with ESMTP id 7C3F020E65
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:49:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598600999;
+	bh=NNuyrQlMojjJklrBvWVr2Dpn4uxkjEtV2E5JBA+oGWU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F8bYtwDNE5hsjnMYymyDJRr3EhY1W2ioPQ7CsaoT9v5AwH/PcWl4zeBGpx23ECjE4
+	 ki3cpZ92DtHTzrQolCAjxWjjIooFUiR4xQL2IPg2dE2yNWOqZV6kcxyndSnzG3Ros0
+	 BxM7c7JuyniIBd/hkKRz06bCLf5qT9oGjPM8S+9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbgH1Htu (ORCPT
+        id S1728531AbgH1Ht5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:49:50 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:20893 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726571AbgH1Htt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:49:49 -0400
-X-UUID: 552b9658b9b740db87259b1cbdace8cb-20200828
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=0EKafp0Drld7nVRG3II9HXY8sizTyEYsQ0QqqSX3Mxw=;
-        b=a8d/peyy+GFrYEF9CYvnWm8+9kIJPVnJqhyXSuwUP9asBnqEA9mtfcOABJMTCUnXTfzAqnhVdk2TUlP1GKOQ62vq2e+iNmlToJalzwBREXamkeh7buqxW+5svNfoGo5So3eEWkgR4pjro6OAnQwnqScw/FO9QvIioUoYMXXY1QY=;
-X-UUID: 552b9658b9b740db87259b1cbdace8cb-20200828
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <freddy.hsin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2003930412; Fri, 28 Aug 2020 15:49:47 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 28 Aug 2020 15:49:43 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 28 Aug 2020 15:49:46 +0800
-From:   Freddy Hsin <freddy.hsin@mediatek.com>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-CC:     <wsd_upstream@mediatek.com>, <chang-an.chen@mediatek.com>,
-        <kuohong.wang@mediatek.com>, <chun-hung.wu@mediatek.com>
-Subject: [PATCH 0/1] Refine mtk wdt driver init flow
-Date:   Fri, 28 Aug 2020 15:49:27 +0800
-Message-ID: <1598600968-28498-1-git-send-email-freddy.hsin@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Fri, 28 Aug 2020 03:49:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42966 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726571AbgH1Ht4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 03:49:56 -0400
+Received: from localhost (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69DFB2078A;
+        Fri, 28 Aug 2020 07:49:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598600996;
+        bh=NNuyrQlMojjJklrBvWVr2Dpn4uxkjEtV2E5JBA+oGWU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nFQEiSEUytCjWefRFRgUjJQ2NVOhkve6dF106PTG/snvexkpMSDQaVsy1f652YuNP
+         L0Gf7X/f2LeYVV1xscapD0lUYVbMJeiFrmTvi/mvdATGE2eXcP0jRBliufZqV+pCUy
+         B2NEZmjDnXNMSRKLO8Em4aSntiwBewOH/eUSLVnk=
+Date:   Fri, 28 Aug 2020 13:19:52 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
+        hui.wang@canonical.com, sanyog.r.kale@intel.com,
+        mengdong.lin@intel.com, bard.liao@intel.com
+Subject: Re: [PATCH 09/11] soundwire: intel: add dynamic debug trace for
+ clock-stop invalid configs
+Message-ID: <20200828074952.GO2639@vkoul-mobl>
+References: <20200818024120.20721-1-yung-chuan.liao@linux.intel.com>
+ <20200818024120.20721-10-yung-chuan.liao@linux.intel.com>
+ <20200826094817.GC2639@vkoul-mobl>
+ <21038e8d-dbd9-76c7-c758-9933fb45024a@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: F61C1D996371B3870C761BAAAB54EFE1717CDD80FFDF00FED470060D87C340982000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <21038e8d-dbd9-76c7-c758-9933fb45024a@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIG10a193ZHRfaW5pdCgpIGZ1bmN0aW4gaW4gcHJvYmUgZmxvdyB0byBkZXRlcm1pbmUNCmVu
-YWJsZS9kaXNhYmxlIHRoZSBodyB3YXRjaGRvZyBieSBpdHMgb3JpZ2luYWwgc2V0dGluZw0KDQpG
-cmVkZHkgSHNpbiAoMSk6DQogIGRyaXZlcjogd2F0Y2hkb2c6IEFkZCBtdGtfd2R0X2luaXQgZm9y
-IG1lZGlhdGVrIHdhdGNoZG9nIGh3IGluaXQNCg0KIGRyaXZlcnMvd2F0Y2hkb2cvbXRrX3dkdC5j
-IHwgICAyMiArKysrKysrKysrKysrKysrKysrKystDQogMSBmaWxlIGNoYW5nZWQsIDIxIGluc2Vy
-dGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCg==
+On 26-08-20, 09:38, Pierre-Louis Bossart wrote:
+> 
+> 
+> On 8/26/20 4:48 AM, Vinod Koul wrote:
+> > On 18-08-20, 10:41, Bard Liao wrote:
+> > > From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> > > 
+> > > Detect cases where the clock is assumed to be stopped but the IP is
+> > > not in the relevant state, and add a dynamic debug trace.
+> > 
+> > you meant a debug print..and it looks like error print below (also in title).
+> 
+> I don't understand the comment. Is the 'trace' confusing and are you asking
+> to e.g. change the commit message to 'add dynamic debug log'?
 
+Question is what is dynamic about this?
+
+-- 
+~Vinod
