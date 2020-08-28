@@ -2,517 +2,105 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 821E4C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A28C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE52208D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B204D208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:27:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L0FafcRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgH1J1H (ORCPT
+        id S1728925AbgH1J1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:27:07 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10728 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728444AbgH1J1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:27:06 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BCEBCAE7B377A3557E6A;
-        Fri, 28 Aug 2020 17:27:03 +0800 (CST)
-Received: from localhost (10.174.151.129) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Fri, 28 Aug 2020
- 17:26:57 +0800
-From:   Ming Mao <maoming.maoming@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <alex.williamson@redhat.com>
-CC:     <cohuck@redhat.com>, <jianjay.zhou@huawei.com>,
-        <weidong.huang@huawei.com>, <peterx@redhat.com>,
-        <aarcange@redhat.com>, <wangyunjian@huawei.com>,
-        Ming Mao <maoming.maoming@huawei.com>
-Subject: [PATCH V3] vfio dma_map/unmap: optimized for hugetlbfs pages
-Date:   Fri, 28 Aug 2020 17:26:49 +0800
-Message-ID: <20200828092649.853-1-maoming.maoming@huawei.com>
-X-Mailer: git-send-email 2.26.2.windows.1
+        Fri, 28 Aug 2020 05:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728820AbgH1J1f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:27:35 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35C8EC061232
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:27:35 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id v138so240568vsv.7
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:27:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=52zKqUSdV0qZVoQTtvFuZSla22zZLeCM10kF2S2vylo=;
+        b=L0FafcRxcvqheShftDUhSlbBJqAncc/ePSfPwPCIweprjftt5/BSgKy3BKAM1BIq8e
+         d30cYn4yCMozW389UnScIzZA25N7mV48wgStk8TiZdT1bD6uB962M94nBJaZKxYvo/Gy
+         HU7t/wY2ow3sRQ4AXXumJAONBgcaPrIKF0N0/HyR1NZiEGAeCCCp/6LL8hM7zHiVXksw
+         bQO8ZmKqH8g/4wh2kgPILpNVwbm1LvlKJLjLtafFlsn49lhNg0zke4FGIMadetI0OUW5
+         8HDZwmB0ef7yW3dz4nuGmLZrudcB6G5cqT0pOWgpJ+K/D7+LGf7Czf+JNZ77oJE6OQui
+         K13g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=52zKqUSdV0qZVoQTtvFuZSla22zZLeCM10kF2S2vylo=;
+        b=IDERpJLL7LTpkfq+ca6sW5Il4SCcp1CNnfp7fXsjO2ubuw0d8DPEx6bd9s++y8XCEl
+         PIUlTN15Jw69ziocqh/bPn2f/A2NcxioJZl9+CFJz2WUIfUyrWJajWyECWsDnwnvxQ+K
+         x7pQfPwKI3F5UDd3FLNv9DqQCr1/DMi1KGoXK1Wk9xMMFCDlHeCiItQ3HJzBDv071FtG
+         UsKTGG1TK8y7iHFxNHWz8gX3FLkDnaFrVPtosi66+9s9Yk8TwwPtafaq985noy8IFfo/
+         vZfy+kB0i/NSH5vpVZNCkhHpgy9XlhGdQQs7H5Kmq7gQNJpX6rzJgd9pFdTIp3HZUJ6q
+         MtuQ==
+X-Gm-Message-State: AOAM531kKkV3NnXLNzpfbi7ENfHRP0hgovr/Gnz4T9W29Xv7QF09B2VO
+        YFYHwJOtooCkJmd+mBevd1a4iavWh7P4LMlRPQ5s1A==
+X-Google-Smtp-Source: ABdhPJy/B7VHMvzvzbEi7QEAfxMZ4jV3nwJaVkTt3w6kaS4gxUPya72WKU4yOeFrkvQuSmkZLEUi4A5sE5rkYCX+fYk=
+X-Received: by 2002:a67:f8ce:: with SMTP id c14mr251691vsp.14.1598606854311;
+ Fri, 28 Aug 2020 02:27:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.151.129]
-X-CFilter-Loop: Reflected
+References: <20200714121856.955680-1-hch@lst.de> <20200714121856.955680-10-hch@lst.de>
+ <20200828020045.GT3265@brightrain.aerifal.cx> <20200828021152.GU3265@brightrain.aerifal.cx>
+ <20200828042422.GA29734@lst.de>
+In-Reply-To: <20200828042422.GA29734@lst.de>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 28 Aug 2020 11:26:57 +0200
+Message-ID: <CAPDyKFrKJrUN8mJ94g0+0Vs3aT1uq9MmHWfvzcVaoA5efaYPmQ@mail.gmail.com>
+Subject: Re: [PATCH 09/10] sh: don't allow non-coherent DMA for NOMMU
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-spi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the original process of dma_map/unmap pages for VFIO-devices,
-to make sure the pages are contiguous, we have to check them one by one.
-As a result, dma_map/unmap could spend a long time.
-Using the hugetlb pages, we can avoid this problem.
-All pages in hugetlb pages are contiguous.And the hugetlb
-page should not be split.So we can delete the for loops.
+On Fri, 28 Aug 2020 at 06:24, Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Thu, Aug 27, 2020 at 10:11:53PM -0400, Rich Felker wrote:
+> > > This change broke SD card support on J2 because MMC_SPI spuriously
+> > > depends on HAS_DMA. It looks like it can be fixed just by removing
+> > > that dependency from drivers/mmc/host/Kconfig.
+> >
+> > It can't. mmp_spi_probe fails with ENOMEM, probably due to trying to
+> > do some DMA setup thing that's not going to be needed if the
+> > underlying SPI device doesn't support/use DMA.
+>
+> Adding the linux-mmc and linux-spi lists, as that seems pretty odd.
 
-Signed-off-by: Ming Mao <maoming.maoming@huawei.com>
----
- drivers/vfio/vfio_iommu_type1.c | 393 +++++++++++++++++++++++++++++++-
- 1 file changed, 382 insertions(+), 11 deletions(-)
+The mmc_spi driver needs modernizations, so I am not surprised to see
+odd things.
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 5e556ac91..a689b9698 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -479,6 +479,303 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
- 	return ret;
- }
- 
-+static bool is_hugetlb_page(unsigned long pfn)
-+{
-+	struct page *page;
-+
-+	if (!pfn_valid(pfn))
-+		return false;
-+
-+	page = pfn_to_page(pfn);
-+	/* only check for hugetlb pages */
-+	return page && PageHuge(page);
-+}
-+
-+static bool vaddr_is_hugetlb_page(unsigned long vaddr, int prot)
-+{
-+	unsigned long pfn;
-+	int ret;
-+	bool result;
-+
-+	if (!current->mm)
-+		return false;
-+
-+	ret = vaddr_get_pfn(current->mm, vaddr, prot, &pfn);
-+	if (ret)
-+		return false;
-+
-+	result = is_hugetlb_page(pfn);
-+
-+	put_pfn(pfn, prot);
-+
-+	return result;
-+}
-+
-+/*
-+ * get the number of residual PAGE_SIZE-pages in a hugetlb page
-+ * (including the page which pointed by this address)
-+ * @address: we count residual pages from this address to the end of
-+ * a hugetlb page
-+ * @order: the order of the same hugetlb page
-+ */
-+static long
-+hugetlb_get_residual_pages(unsigned long address, unsigned int order)
-+{
-+	unsigned long hugetlb_npage;
-+	unsigned long hugetlb_mask;
-+
-+	if (!order)
-+		return -EINVAL;
-+
-+	hugetlb_npage = 1UL << order;
-+	hugetlb_mask = hugetlb_npage - 1;
-+	address = address >> PAGE_SHIFT;
-+
-+	/*
-+	 * Since we count the page pointed by this address, the number of
-+	 * residual PAGE_SIZE-pages is greater than or equal to 1.
-+	 */
-+	return hugetlb_npage - (address & hugetlb_mask);
-+}
-+
-+static unsigned int
-+hugetlb_page_get_externally_pinned_num(struct vfio_dma *dma,
-+				unsigned long start,
-+				unsigned long npage)
-+{
-+	struct vfio_pfn *vpfn;
-+	struct rb_node *node;
-+	unsigned long end;
-+	unsigned int num = 0;
-+
-+	if (!dma || !npage)
-+		return 0;
-+
-+	end = start + npage - 1;
-+	/* If we find a page in dma->pfn_list, this page has been pinned externally */
-+	for (node = rb_first(&dma->pfn_list); node; node = rb_next(node)) {
-+		vpfn = rb_entry(node, struct vfio_pfn, node);
-+		if ((vpfn->pfn >= start) && (vpfn->pfn <= end))
-+			num++;
-+	}
-+
-+	return num;
-+}
-+
-+static long hugetlb_page_vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
-+					int prot, long npage, unsigned long pfn)
-+{
-+	long hugetlb_residual_npage;
-+	struct page *head;
-+	int ret = 0;
-+	unsigned int contiguous_npage;
-+	struct page **pages = NULL;
-+	unsigned int flags = 0;
-+
-+	if ((npage < 0) || !pfn_valid(pfn))
-+		return -EINVAL;
-+
-+	/* all pages are done? */
-+	if (!npage)
-+		goto out;
-+	/*
-+	 * Since pfn is valid,
-+	 * hugetlb_residual_npage is greater than or equal to 1.
-+	 */
-+	head = compound_head(pfn_to_page(pfn));
-+	hugetlb_residual_npage = hugetlb_get_residual_pages(vaddr,
-+						compound_order(head));
-+	/* The page of vaddr has been gotten by vaddr_get_pfn */
-+	contiguous_npage = min_t(long, (hugetlb_residual_npage - 1), npage);
-+	/* There is on page left in this hugetlb page. */
-+	if (!contiguous_npage)
-+		goto out;
-+
-+	pages = kvmalloc_array(contiguous_npage, sizeof(struct page *), GFP_KERNEL);
-+	if (!pages)
-+		return -ENOMEM;
-+
-+	if (prot & IOMMU_WRITE)
-+		flags |= FOLL_WRITE;
-+
-+	mmap_read_lock(mm);
-+	/* The number of pages pinned may be less than contiguous_npage */
-+	ret = pin_user_pages_remote(NULL, mm, vaddr + PAGE_SIZE, contiguous_npage,
-+				flags | FOLL_LONGTERM, pages, NULL, NULL);
-+	mmap_read_unlock(mm);
-+out:
-+	if (pages)
-+		kvfree(pages);
-+	return ret;
-+}
-+
-+/*
-+ * put pfns for a hugetlb page
-+ * @start:the PAGE_SIZE-page we start to put,can be any page in this hugetlb page
-+ * @npage:the number of PAGE_SIZE-pages need to put
-+ * @prot:IOMMU_READ/WRITE
-+ */
-+static int hugetlb_put_pfn(unsigned long start, unsigned int npage, int prot)
-+{
-+	struct page *page;
-+	struct page *head;
-+
-+	if (!npage || !pfn_valid(start))
-+		return 0;
-+
-+	page = pfn_to_page(start);
-+	if (!page || !PageHuge(page))
-+		return 0;
-+	head = compound_head(page);
-+	/*
-+	 * The last page should be in this hugetlb page.
-+	 * The number of putting pages should be equal to the number
-+	 * of getting pages.So the hugepage pinned refcount and the normal
-+	 * page refcount can not be smaller than npage.
-+	 */
-+	if ((head != compound_head(pfn_to_page(start + npage - 1)))
-+		|| (page_ref_count(head) < npage)
-+		|| (compound_pincount(page) < npage))
-+		return 0;
-+
-+	if ((prot & IOMMU_WRITE) && !PageDirty(page))
-+		set_page_dirty_lock(page);
-+
-+	atomic_sub(npage, compound_pincount_ptr(head));
-+	if (page_ref_sub_and_test(head, npage))
-+		__put_page(head);
-+
-+	mod_node_page_state(page_pgdat(head), NR_FOLL_PIN_RELEASED, npage);
-+	return 1;
-+}
-+
-+static long vfio_pin_hugetlb_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
-+				  long npage, unsigned long *pfn_base,
-+				  unsigned long limit)
-+{
-+	unsigned long pfn = 0;
-+	long ret, pinned = 0, lock_acct = 0;
-+	dma_addr_t iova = vaddr - dma->vaddr + dma->iova;
-+	long pinned_loop;
-+
-+	/* This code path is only user initiated */
-+	if (!current->mm)
-+		return -ENODEV;
-+
-+	ret = vaddr_get_pfn(current->mm, vaddr, dma->prot, pfn_base);
-+	if (ret)
-+		return ret;
-+
-+	pinned++;
-+	/*
-+	 * Since PG_reserved is not relevant for compound pages
-+	 * and the pfn of PAGE_SIZE-page which in hugetlb pages is valid,
-+	 * it is not necessary to check rsvd for hugetlb pages.
-+	 */
-+	if (!vfio_find_vpfn(dma, iova)) {
-+		if (!dma->lock_cap && current->mm->locked_vm + 1 > limit) {
-+			put_pfn(*pfn_base, dma->prot);
-+			pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n", __func__,
-+				limit << PAGE_SHIFT);
-+			return -ENOMEM;
-+		}
-+		lock_acct++;
-+	}
-+
-+	/* Lock all the consecutive pages from pfn_base */
-+	for (vaddr += PAGE_SIZE, iova += PAGE_SIZE; pinned < npage;
-+	     pinned += pinned_loop, vaddr += pinned_loop * PAGE_SIZE,
-+	     iova += pinned_loop * PAGE_SIZE) {
-+		ret = vaddr_get_pfn(current->mm, vaddr, dma->prot, &pfn);
-+		if (ret)
-+			break;
-+
-+		if (pfn != *pfn_base + pinned ||
-+		    !is_hugetlb_page(pfn)) {
-+			put_pfn(pfn, dma->prot);
-+			break;
-+		}
-+
-+		pinned_loop = 1;
-+		/*
-+		 * It is possible that the page of vaddr is the last PAGE_SIZE-page.
-+		 * In this case, vaddr + PAGE_SIZE might be another hugetlb page.
-+		 */
-+		ret = hugetlb_page_vaddr_get_pfn(current->mm, vaddr, dma->prot,
-+						npage - pinned - pinned_loop, pfn);
-+		if (ret < 0) {
-+			put_pfn(pfn, dma->prot);
-+			break;
-+		}
-+
-+		pinned_loop += ret;
-+		lock_acct += pinned_loop - hugetlb_page_get_externally_pinned_num(dma,
-+			pfn, pinned_loop);
-+
-+		if (!dma->lock_cap &&
-+		    current->mm->locked_vm + lock_acct > limit) {
-+			hugetlb_put_pfn(pfn, pinned_loop, dma->prot);
-+			pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
-+				__func__, limit << PAGE_SHIFT);
-+			ret = -ENOMEM;
-+			goto unpin_out;
-+		}
-+	}
-+
-+	ret = vfio_lock_acct(dma, lock_acct, false);
-+
-+unpin_out:
-+	if (ret) {
-+		for (pfn = *pfn_base ; pinned ; pfn++, pinned--)
-+			put_pfn(pfn, dma->prot);
-+		return ret;
-+	}
-+
-+	return pinned;
-+}
-+
-+static long vfio_unpin_hugetlb_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
-+					unsigned long pfn, long npage,
-+					bool do_accounting)
-+{
-+	long unlocked = 0, locked = 0;
-+	long i;
-+	long hugetlb_residual_npage;
-+	long contiguous_npage;
-+	struct page *head;
-+
-+	for (i = 0; i < npage;
-+	     i += contiguous_npage, iova += contiguous_npage * PAGE_SIZE) {
-+		if (!is_hugetlb_page(pfn))
-+			goto slow_path;
-+
-+		head = compound_head(pfn_to_page(pfn));
-+		hugetlb_residual_npage = hugetlb_get_residual_pages(iova,
-+								compound_order(head));
-+		contiguous_npage = min_t(long, hugetlb_residual_npage, (npage - i));
-+
-+		if (hugetlb_put_pfn(pfn, contiguous_npage, dma->prot)) {
-+			pfn += contiguous_npage;
-+			unlocked += contiguous_npage;
-+			locked += hugetlb_page_get_externally_pinned_num(dma, pfn,
-+									contiguous_npage);
-+		}
-+	}
-+slow_path:
-+	for (; i < npage; i++, iova += PAGE_SIZE) {
-+		if (put_pfn(pfn++, dma->prot)) {
-+			unlocked++;
-+			if (vfio_find_vpfn(dma, iova))
-+				locked++;
-+		}
-+	}
-+
-+	if (do_accounting)
-+		vfio_lock_acct(dma, locked - unlocked, true);
-+
-+	return unlocked;
-+}
-+
- /*
-  * Attempt to pin pages.  We really don't want to track all the pfns and
-  * the iommu can only map chunks of consecutive pfns anyway, so get the
-@@ -777,7 +1074,14 @@ static long vfio_sync_unpin(struct vfio_dma *dma, struct vfio_domain *domain,
- 	iommu_tlb_sync(domain->domain, iotlb_gather);
- 
- 	list_for_each_entry_safe(entry, next, regions, list) {
--		unlocked += vfio_unpin_pages_remote(dma,
-+		if (is_hugetlb_page(entry->phys >> PAGE_SHIFT))
-+			unlocked += vfio_unpin_hugetlb_pages_remote(dma,
-+						    entry->iova,
-+						    entry->phys >> PAGE_SHIFT,
-+						    entry->len >> PAGE_SHIFT,
-+						    false);
-+		else
-+			unlocked += vfio_unpin_pages_remote(dma,
- 						    entry->iova,
- 						    entry->phys >> PAGE_SHIFT,
- 						    entry->len >> PAGE_SHIFT,
-@@ -848,7 +1152,13 @@ static size_t unmap_unpin_slow(struct vfio_domain *domain,
- 	size_t unmapped = iommu_unmap(domain->domain, *iova, len);
- 
- 	if (unmapped) {
--		*unlocked += vfio_unpin_pages_remote(dma, *iova,
-+		if (is_hugetlb_page(phys >> PAGE_SHIFT))
-+			*unlocked += vfio_unpin_hugetlb_pages_remote(dma, *iova,
-+						     phys >> PAGE_SHIFT,
-+						     unmapped >> PAGE_SHIFT,
-+						     false);
-+		else
-+			*unlocked += vfio_unpin_pages_remote(dma, *iova,
- 						     phys >> PAGE_SHIFT,
- 						     unmapped >> PAGE_SHIFT,
- 						     false);
-@@ -858,6 +1168,57 @@ static size_t unmap_unpin_slow(struct vfio_domain *domain,
- 	return unmapped;
- }
- 
-+static size_t get_contiguous_pages(struct vfio_domain *domain, dma_addr_t start,
-+				dma_addr_t end, phys_addr_t phys_base)
-+{
-+	size_t len;
-+	phys_addr_t next;
-+
-+	if (!domain)
-+		return 0;
-+
-+	for (len = PAGE_SIZE;
-+	     !domain->fgsp && start + len < end; len += PAGE_SIZE) {
-+		next = iommu_iova_to_phys(domain->domain, start + len);
-+		if (next != phys_base + len)
-+			break;
-+	}
-+
-+	return len;
-+}
-+
-+static size_t hugetlb_get_contiguous_pages(struct vfio_domain *domain, dma_addr_t start,
-+				dma_addr_t end, phys_addr_t phys_base)
-+{
-+	size_t len;
-+	phys_addr_t next;
-+	unsigned long contiguous_npage;
-+	dma_addr_t max_len;
-+	unsigned long hugetlb_residual_npage;
-+	struct page *head;
-+	unsigned long limit;
-+
-+	if (!domain)
-+		return 0;
-+
-+	max_len = end - start;
-+	for (len = PAGE_SIZE;
-+	     !domain->fgsp && start + len < end; len += contiguous_npage * PAGE_SIZE) {
-+		next = iommu_iova_to_phys(domain->domain, start + len);
-+		if ((next != phys_base + len) ||
-+		    !is_hugetlb_page(next >> PAGE_SHIFT))
-+			break;
-+
-+		head = compound_head(pfn_to_page(next >> PAGE_SHIFT));
-+		hugetlb_residual_npage = hugetlb_get_residual_pages(start + len,
-+								compound_order(head));
-+		limit = ALIGN((max_len - len), PAGE_SIZE) >> PAGE_SHIFT;
-+		contiguous_npage = min_t(unsigned long, hugetlb_residual_npage, limit);
-+	}
-+
-+	return len;
-+}
-+
- static long vfio_unmap_unpin(struct vfio_iommu *iommu, struct vfio_dma *dma,
- 			     bool do_accounting)
- {
-@@ -892,7 +1253,7 @@ static long vfio_unmap_unpin(struct vfio_iommu *iommu, struct vfio_dma *dma,
- 	iommu_iotlb_gather_init(&iotlb_gather);
- 	while (iova < end) {
- 		size_t unmapped, len;
--		phys_addr_t phys, next;
-+		phys_addr_t phys;
- 
- 		phys = iommu_iova_to_phys(domain->domain, iova);
- 		if (WARN_ON(!phys)) {
-@@ -905,12 +1266,10 @@ static long vfio_unmap_unpin(struct vfio_iommu *iommu, struct vfio_dma *dma,
- 		 * may require hardware cache flushing, try to find the
- 		 * largest contiguous physical memory chunk to unmap.
- 		 */
--		for (len = PAGE_SIZE;
--		     !domain->fgsp && iova + len < end; len += PAGE_SIZE) {
--			next = iommu_iova_to_phys(domain->domain, iova + len);
--			if (next != phys + len)
--				break;
--		}
-+		if (is_hugetlb_page(phys >> PAGE_SHIFT))
-+			len = hugetlb_get_contiguous_pages(domain, iova, end, phys);
-+		else
-+			len = get_contiguous_pages(domain, iova, end, phys);
- 
- 		/*
- 		 * First, try to use fast unmap/unpin. In case of failure,
-@@ -1243,7 +1602,15 @@ static int vfio_pin_map_dma(struct vfio_iommu *iommu, struct vfio_dma *dma,
- 
- 	while (size) {
- 		/* Pin a contiguous chunk of memory */
--		npage = vfio_pin_pages_remote(dma, vaddr + dma->size,
-+		if (vaddr_is_hugetlb_page(vaddr + dma->size, dma->prot)) {
-+			npage = vfio_pin_hugetlb_pages_remote(dma, vaddr + dma->size,
-+					      size >> PAGE_SHIFT, &pfn, limit);
-+			/* try the normal page if failed */
-+			if (npage <= 0)
-+				npage = vfio_pin_pages_remote(dma, vaddr + dma->size,
-+					      size >> PAGE_SHIFT, &pfn, limit);
-+		} else
-+			npage = vfio_pin_pages_remote(dma, vaddr + dma->size,
- 					      size >> PAGE_SHIFT, &pfn, limit);
- 		if (npage <= 0) {
- 			WARN_ON(!npage);
-@@ -1255,7 +1622,11 @@ static int vfio_pin_map_dma(struct vfio_iommu *iommu, struct vfio_dma *dma,
- 		ret = vfio_iommu_map(iommu, iova + dma->size, pfn, npage,
- 				     dma->prot);
- 		if (ret) {
--			vfio_unpin_pages_remote(dma, iova + dma->size, pfn,
-+			if (is_hugetlb_page(pfn))
-+				vfio_unpin_hugetlb_pages_remote(dma, iova + dma->size, pfn,
-+						npage, true);
-+			else
-+				vfio_unpin_pages_remote(dma, iova + dma->size, pfn,
- 						npage, true);
- 			break;
- 		}
--- 
-2.23.0
+My guess is that in ->probe() we check "if
+(spi->master->dev.parent->dma_mask)" - > and runs dma_map*()
+operations, which fails and leads to bailing out of ->probe() to
+return an error code.
 
+However, by looking at the code, one get the feeling that the DMA
+support is somewhat prepared to be made optional. I guess it has never
+been really tested, as the Kconfig option has "depends on HAS_DMA"  -
+and it's been like that as long as I can remember.
 
+Kind regards
+Uffe
