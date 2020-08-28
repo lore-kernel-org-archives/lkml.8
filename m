@@ -2,70 +2,102 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DA7C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4FDC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25F0D20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:29:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598646572;
-	bh=6s+JKAcukgHJvyOlLcKcKxulszNqq3PTtN0lElB7ZyE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Kjnk2wzI85uFc2xp80vq4/8iRJXF4FtK22snjIrP+2C9V3Ilg2JCVi5kNVOYjnq72
-	 7HcLy1SDaIre0uDZioMI+7V1ATcWdcX6lXVvGn+xJzfJ2mvWXgZTKRfNv61d1Iyi0O
-	 XFLXopK8W5YvLvdX6wYq5f82ppTjeVSG79Tqu9I8=
+	by mail.kernel.org (Postfix) with ESMTP id A43152074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:33:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="anwXKXlc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgH1U31 (ORCPT
+        id S1726524AbgH1Udm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 16:29:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726775AbgH1U3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 16:29:13 -0400
-Subject: Re: [GIT PULL] Device properties framework fix for v5.9-rc3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598646553;
-        bh=6s+JKAcukgHJvyOlLcKcKxulszNqq3PTtN0lElB7ZyE=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=lEcy0m+2aeLENGI/3v5BonKt9rsIE41df2PAotJZ4DhZB7yj8nUf7y5/eHyejswZs
-         b6yh1BF+JLQ/BlL32xhMtj4E1HnmQevL6SvVHx4TqEiltupgZrD0UmcaLrDawRSAO/
-         22L5bM/6Lp6sDorPCvUG2d/+QcTdiQi/H8PzOYXQ=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0jWBqqU_-w5yn9iGaJZT6wFnaqNHUvE9e6TRKZhxyxFkg@mail.gmail.com>
-References: <CAJZ5v0jWBqqU_-w5yn9iGaJZT6wFnaqNHUvE9e6TRKZhxyxFkg@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0jWBqqU_-w5yn9iGaJZT6wFnaqNHUvE9e6TRKZhxyxFkg@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git devprop-5.9-rc3
-X-PR-Tracked-Commit-Id: c15e1bdda4365a5f17cdadf22bf1c1df13884a9e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 005c53447a63cbce10de37406975a34d7bdc8704
-Message-Id: <159864655299.14109.18285197718685056798.pr-tracker-bot@kernel.org>
-Date:   Fri, 28 Aug 2020 20:29:12 +0000
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Fri, 28 Aug 2020 16:33:42 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:39144 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbgH1Udl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 16:33:41 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07SKXXP4029943;
+        Fri, 28 Aug 2020 15:33:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598646814;
+        bh=EV957dVqXwgi4Qk6sYNVR1mRHi86YzzOiCLQ3wQfmGk=;
+        h=From:To:CC:Subject:Date;
+        b=anwXKXlczXZPKKsHA3SQ8baan66Be5woMdSG7ZS63I8hXHa3WmlD32e3lsmhrRrXT
+         +ZNARGwVq3aizuf9fM1pG0ckgArR7YSMcQxk57IPH6G2jIoOEdEp8761QU1AA0prdA
+         rW1qFErenthRq6asQqN/mgogrhSe8bK0dKEwFLNc=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07SKXXu9096410;
+        Fri, 28 Aug 2020 15:33:33 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 28
+ Aug 2020 15:33:33 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 28 Aug 2020 15:33:33 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07SKXWE7008196;
+        Fri, 28 Aug 2020 15:33:33 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, <netdev@vger.kernel.org>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next] net: ethernet: ti: am65-cpts: fix i2083 genf (and estf) Reconfiguration Issue
+Date:   Fri, 28 Aug 2020 23:33:25 +0300
+Message-ID: <20200828203325.29588-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 28 Aug 2020 21:52:35 +0200:
+The new bit TX_GENF_CLR_EN has been added in AM65x SR2.0 to fix i2083
+errata, which can be just set unconditionally for all SoCs.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git devprop-5.9-rc3
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+ drivers/net/ethernet/ti/am65-cpts.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/005c53447a63cbce10de37406975a34d7bdc8704
-
-Thank you!
-
+diff --git a/drivers/net/ethernet/ti/am65-cpts.c b/drivers/net/ethernet/ti/am65-cpts.c
+index 365b5b9c6897..75056c14b161 100644
+--- a/drivers/net/ethernet/ti/am65-cpts.c
++++ b/drivers/net/ethernet/ti/am65-cpts.c
+@@ -83,6 +83,8 @@ struct am65_cpts_regs {
+ #define AM65_CPTS_CONTROL_HW8_TS_PUSH_EN	BIT(15)
+ #define AM65_CPTS_CONTROL_HW1_TS_PUSH_OFFSET	(8)
+ 
++#define AM65_CPTS_CONTROL_TX_GENF_CLR_EN	BIT(17)
++
+ #define AM65_CPTS_CONTROL_TS_SYNC_SEL_MASK	(0xF)
+ #define AM65_CPTS_CONTROL_TS_SYNC_SEL_SHIFT	(28)
+ 
+@@ -986,7 +988,9 @@ struct am65_cpts *am65_cpts_create(struct device *dev, void __iomem *regs,
+ 
+ 	am65_cpts_set_add_val(cpts);
+ 
+-	am65_cpts_write32(cpts, AM65_CPTS_CONTROL_EN | AM65_CPTS_CONTROL_64MODE,
++	am65_cpts_write32(cpts, AM65_CPTS_CONTROL_EN |
++			  AM65_CPTS_CONTROL_64MODE |
++			  AM65_CPTS_CONTROL_TX_GENF_CLR_EN,
+ 			  control);
+ 	am65_cpts_write32(cpts, AM65_CPTS_INT_ENABLE_TS_PEND_EN, int_enable);
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.17.1
+
