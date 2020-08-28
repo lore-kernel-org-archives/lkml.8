@@ -2,95 +2,103 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B66C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C5DC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13DE4208C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:19:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qXErMp4M"
+	by mail.kernel.org (Postfix) with ESMTP id 6B6ED208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:20:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgH1OTn (ORCPT
+        id S1727777AbgH1OUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:19:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbgH1OTe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:19:34 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D46CC061264;
-        Fri, 28 Aug 2020 07:19:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=CgkzEyu0nU72gWHm4QE/GrxCk7mtJkJ1KRfoVj7KTxU=; b=qXErMp4MVkKtX8+yfaAqaWid7U
-        hp1ZkOY9TbMDQoNfoh50zxxhiXqksCVZymihPqoo3xdi9ufHVlPx1z2eeG0jJI79WkyvuhVAUvEVl
-        avjbStouRLh5Y+vQbOaTVKFm6dfezPizfn379Z5MINu4MDKHgURH5/1aPv/1ZvMBKRRimcRgWQ8sB
-        46rsc2KEFDoZ5J/NPy3w7ADlimjd+OF7gGJBTq0H1D621rD329L4O0NSG3o5fougcXt4nGQUIEBxw
-        F0m9k0e2LZdoUfcpu3tjtKGl2Na8KH/i5VsK6vCMLiEFAtbvoY1jVXWVloXeUHvZfbUAU20l7VPqu
-        f2UJG26Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBfDr-0006yS-Qg; Fri, 28 Aug 2020 14:19:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 21F7C300238;
-        Fri, 28 Aug 2020 16:19:17 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C80752C5FDBE8; Fri, 28 Aug 2020 16:19:17 +0200 (CEST)
-Date:   Fri, 28 Aug 2020 16:19:17 +0200
-From:   peterz@infradead.org
-To:     "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
-        "anil.s.keshavamurthy@intel.com" <anil.s.keshavamurthy@intel.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "cameron@moodycamel.com" <cameron@moodycamel.com>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "paulmck@kernel.org" <paulmck@kernel.org>
-Subject: Re: [RFC][PATCH 3/7] kprobes: Remove kretprobe hash
-Message-ID: <20200828141917.GE1362448@hirez.programming.kicks-ass.net>
-References: <20200827161237.889877377@infradead.org>
- <20200827161754.359432340@infradead.org>
- <7df0a1af432040d9908517661c32dc34@trendmicro.com>
- <20200828225113.9541a5f67a3bcb17c4ce930c@kernel.org>
- <23d43cfb12c54a1fbc766ea313ecb5a6@trendmicro.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23d43cfb12c54a1fbc766ea313ecb5a6@trendmicro.com>
+        Fri, 28 Aug 2020 10:20:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:50328 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbgH1OU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 10:20:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4400E1FB;
+        Fri, 28 Aug 2020 07:20:28 -0700 (PDT)
+Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.195.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E0F33F71F;
+        Fri, 28 Aug 2020 07:20:26 -0700 (PDT)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Chanho Min <chanho.min@lge.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Wei Xu <xuwei5@hisilicon.com>
+Subject: [PATCH v2 0/6] dt-bindings: Convert SP804 to Json-schema (and fix users)
+Date:   Fri, 28 Aug 2020 15:20:12 +0100
+Message-Id: <20200828142018.43298-1-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 02:11:18PM +0000, Eddy_Wu@trendmicro.com wrote:
-> > From: Masami Hiramatsu <mhiramat@kernel.org>
-> >
-> > OK, schedule function will be the key. I guess the senario is..
-> >
-> > 1) kretporbe replace the return address with kretprobe_trampoline on task1's kernel stack
-> > 2) the task1 forks task2 before returning to the kretprobe_trampoline
-> > 3) while copying the process with the kernel stack, task2->kretprobe_instances.first = NULL
-> 
-> I think new process created by fork/clone uses a brand new kernel
-> stack? I thought only user stack are copied.  Otherwise any process
-> launch should crash in the same way
+This is the second attempt at converting the SP804 timer binding to yaml.
+Compared to v1, I forbid additional properties, and included the primecell
+binding. Also the clock-names property is now listed, although without
+further requirements on the names. Changelog below.
 
-I was under the same impression, we create a brand new stack-frame for
-the new task, this 'fake' frame we can schedule into.
+--------------
+The yaml conversion is done in the first patch, the remaining five fix
+some DT users.
 
-It either points to ret_from_fork() for new user tasks, or
-kthread_frame_init() for kernel threads.
+I couldn't test any of those DT files on actual machines, but tried
+to make the changes in a way that would be transparent to at least the
+Linux driver. The only other SP804 DT user I could find is FreeBSD,
+but they seem to use a different binding (no clocks, but a
+clock-frequency property).
+
+Cheers,
+Andre
+
+Changelog v1 .. v2:
+- Add additional-properties: false
+- Allow clock-names property
+- Include primecell binding
+- Fix subject on Broadcom patch
+- Add Florian's Tested-by: on Broadcom patch
+- Add Linus' Acked-by: on Arm patch
+
+Andre Przywara (6):
+  dt-bindings: timers: sp-804: Convert to json-schema
+  ARM: dts: arm: Fix SP804 users
+  ARM: dts: NSP: Fix SP804 compatible node
+  ARM: dts: hisilicon: Fix SP804 users
+  ARM: dts: nspire: Fix SP804 users
+  arm64: dts: lg: Fix SP804 users
+
+ .../devicetree/bindings/timer/arm,sp804.txt   | 29 ------
+ .../devicetree/bindings/timer/arm,sp804.yaml  | 93 +++++++++++++++++++
+ arch/arm/boot/dts/arm-realview-pb11mp.dts     | 16 ++--
+ arch/arm/boot/dts/bcm-nsp.dtsi                |  2 +-
+ arch/arm/boot/dts/hi3620.dtsi                 | 30 ++++--
+ arch/arm/boot/dts/hip04.dtsi                  |  4 +-
+ arch/arm/boot/dts/mps2.dtsi                   |  6 +-
+ arch/arm/boot/dts/nspire.dtsi                 | 12 ++-
+ arch/arm/boot/dts/vexpress-v2p-ca9.dts        |  4 +-
+ arch/arm64/boot/dts/lg/lg1312.dtsi            |  6 +-
+ arch/arm64/boot/dts/lg/lg1313.dtsi            |  6 +-
+ 11 files changed, 144 insertions(+), 64 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/arm,sp804.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/arm,sp804.yaml
+
+-- 
+2.17.1
+
+
