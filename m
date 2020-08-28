@@ -2,111 +2,99 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA392C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A01C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C17EE20757
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E4F207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:39:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bthwUPub"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c/N+dOXa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgH1OjC (ORCPT
+        id S1727913AbgH1OjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:39:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbgH1Oi5 (ORCPT
+        Fri, 28 Aug 2020 10:39:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45065 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726571AbgH1OjV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:38:57 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 220FEC06121B
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:38:57 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id w14so1577114ljj.4
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:38:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z+TaixqXEGVGQ2T/QrWllmigc9Bn2yBozBpoORD/TJw=;
-        b=bthwUPubnbhn6YaESsUooZlnlA4AAH2u5bkxHyDnFmhCm7Kh8U+RM/LdfdzTy1rYap
-         u44U0H4icDS300YJtLrAeN/7futTwYEW9VcOBuA4MuLVEaALI8PfhMowA05SL1w4Aht9
-         EJ2c2krhGZEMNpmqLnZCHr6FP5hI4iwU/AKWJelCBMzkKU5f+mZY9UODyo7eprjDDebs
-         O9ZHQCcn+Y4eCdnY+/38i5UVPDt5HBdr12ZRgh8q2eFBE/mFaM9AMXRKlxfxAn0quOPM
-         bjoy/WikU5yTdZRSThu37hA3MaGWPoh5PN6jQeqLm+WZnnKTMUmXjqT3ChLDKmm4LnUk
-         xFAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z+TaixqXEGVGQ2T/QrWllmigc9Bn2yBozBpoORD/TJw=;
-        b=kxP5sc6/kordyhxvZ7WEsMmENhhUIk4gh5GsGyEuZ3fnEJySIjVRWwBHFMgY8X2vaS
-         t/XfzKaNejpocONOLEVy+hFM5YZop7tpvi3xZDMw9JJ2WTAgNsuRkFy7jCB/gw92VJEY
-         yyqcRaa3GoUK3ZdCALdI1qQAiODazEQ/xlDLLl4SAC+AZs2ogb4v2cNkSnVsW2ayTu6Z
-         1uv2/5d8vz6X1bNP730AfVIG/LyvPHCuCVygW51sdaUcc7xJa6qEw4GUxHgZXdH/35ZW
-         b20X7Vkh8EEAAuzKSr3vP1ED90LM/SBtDmULPJWnVQs6vw7/IX0sQACoRN8G4WHYRdMc
-         8L+Q==
-X-Gm-Message-State: AOAM5317CpLsbBPEEFxCv7IJ9yr792fJJ0oh8oiiOnG2mAJAwadClNGb
-        VDusbSrjoh3koEsGYld2F9mMC8pmpyoJ73ca99wFng==
-X-Google-Smtp-Source: ABdhPJwaDJ3Gr/qcSUh/+gWWdKq8kAihgP6kukxSpzeXwrAWcBQEZ3gQKkku9u7kwQPG+FNQX7jTEbu12MB2QtmIP4I=
-X-Received: by 2002:a2e:81d9:: with SMTP id s25mr1013703ljg.104.1598625535585;
- Fri, 28 Aug 2020 07:38:55 -0700 (PDT)
+        Fri, 28 Aug 2020 10:39:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598625558;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xXdUNx6QngQBU5zDo1lz76/LssJKQsScUXNWpp00Eho=;
+        b=c/N+dOXanFHcfaUNPhbdMtX2/SqpRULmFZciwNMVkmwjrHuUQmzy8tYQ3dWIwK7Kf2cCKS
+        d/yrqvKsJjyfaLmw0LoCGBmu5RvPxrMIsh9eYjEfg58B68uKCIR8ShP3GubPHQcPsUHu7d
+        aI8hU8XqX7RsvrPkn6AhyXIxiZT22pM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-161-M3x4kwkqNj6QiCGto2MI8A-1; Fri, 28 Aug 2020 10:39:14 -0400
+X-MC-Unique: M3x4kwkqNj6QiCGto2MI8A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1EA17100746C;
+        Fri, 28 Aug 2020 14:39:13 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-116-215.rdu2.redhat.com [10.10.116.215])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 946967D4ED;
+        Fri, 28 Aug 2020 14:39:02 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 0C65B220C5B; Fri, 28 Aug 2020 10:39:02 -0400 (EDT)
+Date:   Fri, 28 Aug 2020 10:39:01 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        virtio-fs-list <virtio-fs@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>
+Subject: Re: [PATCH v3 00/18] virtiofs: Add DAX support
+Message-ID: <20200828143901.GB1115001@redhat.com>
+References: <20200819221956.845195-1-vgoyal@redhat.com>
+ <CAJfpegv5ro-nJTsbx7DMu6=CDXnQ=dzXBRYEKxKc6Bx+Bxmobw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200817001702.1646-1-zhiyong.tao@mediatek.com>
- <CACRpkdYedyDcnL5DUD33Z2iT1jEJ_W1gvB_a8VaFnNAH1mKgzQ@mail.gmail.com> <1598581434.5835.2.camel@mtksdaap41>
-In-Reply-To: <1598581434.5835.2.camel@mtksdaap41>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 16:38:44 +0200
-Message-ID: <CACRpkdY9hbLOTjzQm34xL32PU01tRMkcB4_qTeFqwQM9Yam75A@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] Mediatek pinctrl patch on mt8192
-To:     CK Hu <ck.hu@mediatek.com>
-Cc:     Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Sean Wang <sean.wang@kernel.org>,
-        srv_heupstream@mediatek.com,
-        Chuanjia Liu <chuanjia.liu@mediatek.com>,
-        Biao Huang <biao.huang@mediatek.com>,
-        Erin Lo <erin.lo@mediatek.com>, hui.liu@mediatek.com,
-        seiya.wang@mediatek.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        sin_jieyang@mediatek.com,
-        Hongzhou Yang <hongzhou.yang@mediatek.com>,
-        sj.huang@mediatek.com, Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        huang eddie <eddie.huang@mediatek.com>, jg_poxu@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegv5ro-nJTsbx7DMu6=CDXnQ=dzXBRYEKxKc6Bx+Bxmobw@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 4:24 AM CK Hu <ck.hu@mediatek.com> wrote:
-> On Thu, 2020-08-27 at 10:52 +0200, Linus Walleij wrote:
-> > On Mon, Aug 17, 2020 at 2:18 AM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
+On Fri, Aug 28, 2020 at 04:26:55PM +0200, Miklos Szeredi wrote:
+> On Thu, Aug 20, 2020 at 12:21 AM Vivek Goyal <vgoyal@redhat.com> wrote:
 > >
-> > > This series includes 3 patches:
-> > > 1.add pinctrl file on mt8192.
-> > > 2.add pinctrl binding document on mt8192.
-> > > 3.add pinctrl driver on MT8192.
+> > Hi All,
 > >
-> > Patches applied for v5.10!
->
-> I does not see these patches in your tree [1], have you applied them? I
-> would like to pick these patches from your tree.
+> > This is V3 of patches. I had posted version v2 version here.
+> 
+> Pushed to:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git#dax
+> 
+> Fixed a couple of minor issues, and added two patches:
+> 
+> 1. move dax specific code from fuse core to a separate source file
+> 
+> 2. move dax specific data, as well as allowing dax to be configured out
+> 
+> I think it would be cleaner to fold these back into the original
+> series, but for now I'm just asking for comments and testing.
 
-They are on my harddrive while testing, then they do onto the
-server for testing, then they go to linux-next for testing.
+Thanks Miklos. I will have a look and test.
 
-Give it some days and some patience.
+Vivek
 
-Yours,
-Linus Walleij
