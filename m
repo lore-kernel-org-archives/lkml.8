@@ -2,148 +2,123 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81BDC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40313C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C575920776
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:00:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598605247;
-	bh=WodDMLAzT5cE12h1NufdIcnmxtUHl6XcO+3xR6spA1U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SV636XphDBaP+YBmFatvE6NMXXguJ3oVshZHx6bqEu97zzy+5uLXh5Vwg9O/WFo/J
-	 AFEqNGullNy8DH+7QxDlgi0gsJCoc25STmMXHsJ9fskTf9HSMOB5L02YNm2IagLT7V
-	 NwQJ3BcAkBN8Z0SMzrxRNsj+rlUMtNFbg5KHg98U=
+	by mail.kernel.org (Postfix) with ESMTP id 2572F20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:01:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbgH1JAr (ORCPT
+        id S1728855AbgH1JBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:00:47 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:32897 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728455AbgH1JAo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:00:44 -0400
-Received: by mail-ej1-f66.google.com with SMTP id a21so564477ejp.0;
-        Fri, 28 Aug 2020 02:00:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BoGGK/CeRvP+1P6A40PXG1dSM618NDQKChv/ftgEPFk=;
-        b=guLKbhtJnPk/1XY7+iSihpzZk1QEXhbCIuYJKb5HBo8Bld7AmD3ro1At34nYUoe4Nx
-         JIxhRRj5JSiIVddA3vsiCs5rjoZRiG1XM5+KDicA6hnxpwmGyidxgQGqgJtM/Jn1iIgc
-         le8h29ShTtmUJ60YFc50kEiwQhUKNeip12Z1CEzbhuLXctwL1+qLyUWTiKIDAt+5MllO
-         1g1WBqYAm6MyMJEFCY8zS0Ta0M7eT0wB1yOcFxh9u9UuH6lkJNlPuZbFWsmDJmFC2y5W
-         UHrx56e1WG16J+5MTxDwxc6V0MLcneZJnjLEKEYgk7zi4+0UXcI1tNwOWA3ZYaLANhMw
-         f0gw==
-X-Gm-Message-State: AOAM532UyOS7WSo5Nkr1EDwxNkE6HAismFQ07nNIp2wvy66cK8PT0ecv
-        ySaF65iBH/xsp42nEuAtDgZ/JYQSApNeTbx2
-X-Google-Smtp-Source: ABdhPJyJXWNff4qgN77yujQ0S8TX7b6tdnQWjdtoPIPC5tlF6n/b5lr2j8ZBFOvEx9vm66q7OEHoFQ==
-X-Received: by 2002:a17:906:2a0d:: with SMTP id j13mr795771eje.474.1598605241866;
-        Fri, 28 Aug 2020 02:00:41 -0700 (PDT)
-Received: from pi3 ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id d23sm312329ejj.74.2020.08.28.02.00.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 02:00:40 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 11:00:38 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>
-Subject: Re: [PATCH] MAINTAINERS: Move Hartmut Knaack to Credits
-Message-ID: <20200828090038.GA17717@pi3>
-References: <20200827202452.27714-1-krzk@kernel.org>
- <CAHp75VdE-Nxr7yDPPyRjG2vJZs-nkZowi+daUJTKK348Su_Pow@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdE-Nxr7yDPPyRjG2vJZs-nkZowi+daUJTKK348Su_Pow@mail.gmail.com>
+        Fri, 28 Aug 2020 05:01:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:44434 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728627AbgH1JA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:00:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 657D21FB;
+        Fri, 28 Aug 2020 02:00:57 -0700 (PDT)
+Received: from e120877-lin.cambridge.arm.com (e120877-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4B0A03F71F;
+        Fri, 28 Aug 2020 02:00:56 -0700 (PDT)
+From:   vincent.donnefort@arm.com
+To:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org
+Cc:     linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
+        valentin.schneider@arm.com, qais.yousef@arm.com,
+        Vincent Donnefort <vincent.donnefort@arm.com>
+Subject: [PATCH v2] sched/debug: Add new tracepoint to track cpu_capacity
+Date:   Fri, 28 Aug 2020 10:00:49 +0100
+Message-Id: <1598605249-72651-1-git-send-email-vincent.donnefort@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 11:20:58AM +0300, Andy Shevchenko wrote:
-> On Thu, Aug 27, 2020 at 11:25 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > Hartmut Knaack was an active reviewer and contributor to the IIO
-> > subsystem and drivers.  However last message on LKML from him was sent
-> > in October 2015.
-> 
-> But this is not a problem we solve here. His address is invalid for a
-> long time...
+From: Vincent Donnefort <vincent.donnefort@arm.com>
 
-I did not receive any bounces so I cannot confirm it. However I can
-quote you if you are sure that email is not valid.
+rq->cpu_capacity is a key element in several scheduler parts, such as EAS
+task placement and load balancing. Tracking this value enables testing
+and/or debugging by a toolkit.
 
-> 
-> > In thanks for Hartmut's effort, move him name to the Credits.
-> >
-> > Cc: Jonathan Cameron <jic23@kernel.org>
-> > Cc: linux-iio <linux-iio@vger.kernel.org>
-> 
-> > Cc: Hartmut Knaack <knaack.h@gmx.de>
-> 
-> ...and this?!
+Signed-off-by: Vincent Donnefort <vincent.donnefort@arm.com>
 
-Since email is not bouncing, he might still receive it.
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 021ad7b..7e19d59 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -2055,6 +2055,7 @@ const struct sched_avg *sched_trace_rq_avg_dl(struct rq *rq);
+ const struct sched_avg *sched_trace_rq_avg_irq(struct rq *rq);
+ 
+ int sched_trace_rq_cpu(struct rq *rq);
++int sched_trace_rq_cpu_capacity(struct rq *rq);
+ int sched_trace_rq_nr_running(struct rq *rq);
+ 
+ const struct cpumask *sched_trace_rd_span(struct root_domain *rd);
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 8ab48b3..f94ddd1 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -630,6 +630,10 @@ DECLARE_TRACE(pelt_se_tp,
+ 	TP_PROTO(struct sched_entity *se),
+ 	TP_ARGS(se));
+ 
++DECLARE_TRACE(sched_cpu_capacity_tp,
++	TP_PROTO(struct rq *rq),
++	TP_ARGS(rq));
++
+ DECLARE_TRACE(sched_overutilized_tp,
+ 	TP_PROTO(struct root_domain *rd, bool overutilized),
+ 	TP_ARGS(rd, overutilized));
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 06b0a40..e468271 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -36,6 +36,7 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(pelt_rt_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(pelt_dl_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(pelt_irq_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(pelt_se_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_cpu_capacity_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_overutilized_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_cfs_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_se_tp);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 44f7a0b..27f4392 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -8116,6 +8116,8 @@ static void update_cpu_capacity(struct sched_domain *sd, int cpu)
+ 		capacity = 1;
+ 
+ 	cpu_rq(cpu)->cpu_capacity = capacity;
++	trace_sched_cpu_capacity_tp(cpu_rq(cpu));
++
+ 	sdg->sgc->capacity = capacity;
+ 	sdg->sgc->min_capacity = capacity;
+ 	sdg->sgc->max_capacity = capacity;
+@@ -11318,6 +11320,18 @@ int sched_trace_rq_cpu(struct rq *rq)
+ }
+ EXPORT_SYMBOL_GPL(sched_trace_rq_cpu);
+ 
++int sched_trace_rq_cpu_capacity(struct rq *rq)
++{
++	return rq ?
++#ifdef CONFIG_SMP
++		rq->cpu_capacity
++#else
++		SCHED_CAPACITY_SCALE
++#endif
++		: -1;
++}
++EXPORT_SYMBOL_GPL(sched_trace_rq_cpu_capacity);
++
+ const struct cpumask *sched_trace_rd_span(struct root_domain *rd)
+ {
+ #ifdef CONFIG_SMP
+-- 
+2.7.4
 
-> 
-> Reported-by: ?
-
-Reported-by is for problems/bugs, so here Suggested feels better.
-
-Best regards,
-Krzysztof
-
-> 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  CREDITS     | 4 ++++
-> >  MAINTAINERS | 1 -
-> >  2 files changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/CREDITS b/CREDITS
-> > index 32ee70a7562e..edb81e3159b1 100644
-> > --- a/CREDITS
-> > +++ b/CREDITS
-> > @@ -1953,6 +1953,10 @@ S: Am Bergfried 10
-> >  S: 63225 Langen
-> >  S: Germany
-> >
-> > +N: Hartmut Knaack
-> > +E: knaack.h@gmx.de
-> > +D: IIO subsystem and drivers
-> > +
-> >  N: Alain L. Knaff
-> >  E: Alain.Knaff@lll.lu
-> >  D: floppy driver
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 523ac1602b62..1276833532c4 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -8532,7 +8532,6 @@ F:        drivers/iio/multiplexer/iio-mux.c
-> >
-> >  IIO SUBSYSTEM AND DRIVERS
-> >  M:     Jonathan Cameron <jic23@kernel.org>
-> > -R:     Hartmut Knaack <knaack.h@gmx.de>
-> >  R:     Lars-Peter Clausen <lars@metafoo.de>
-> >  R:     Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> >  L:     linux-iio@vger.kernel.org
-> > --
-> > 2.17.1
-> >
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
