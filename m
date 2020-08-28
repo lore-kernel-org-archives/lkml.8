@@ -2,202 +2,89 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3589C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 18:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D01C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 18:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B67082074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 18:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 805532075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 18:29:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vOYlFM74"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fUqN/qrt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbgH1S04 (ORCPT
+        id S1727902AbgH1S3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 14:26:56 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:42402 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgH1S0z (ORCPT
+        Fri, 28 Aug 2020 14:29:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgH1S3W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 14:26:55 -0400
+        Fri, 28 Aug 2020 14:29:22 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCCC2C061264
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 11:29:21 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id e23so29859otk.7
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 11:29:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1598639213; x=1630175213;
-  h=date:from:to:subject:message-id:references:mime-version:
-   in-reply-to;
-  bh=YlXbxw/O9okB0AahvRarA2ldWVFp/ZEo5xO3UByBIcM=;
-  b=vOYlFM74MDWVojXBzRaAMsJzXq8viV8GqMjP0GfSqwMQMt4Fsfu5kvyT
-   G4sNkn34osHmRQs+u3Djc0Htnh6k60rMHAm4muSyEzGIlN4hNGEhLxAhY
-   kjn9nd05R5GyC930LiAs1X2uBI4klZenva+N97hQWye2cK4O0JZOlAish
-   M=;
-X-IronPort-AV: E=Sophos;i="5.76,364,1592870400"; 
-   d="scan'208";a="50648672"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-c6afef2e.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 28 Aug 2020 18:26:50 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-c6afef2e.us-west-2.amazon.com (Postfix) with ESMTPS id C3D3AA2536;
-        Fri, 28 Aug 2020 18:26:48 +0000 (UTC)
-Received: from EX13D10UWA003.ant.amazon.com (10.43.160.248) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 28 Aug 2020 18:26:40 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D10UWA003.ant.amazon.com (10.43.160.248) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 28 Aug 2020 18:26:40 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
- Server id 15.0.1497.2 via Frontend Transport; Fri, 28 Aug 2020 18:26:39 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id 2E14F4087C; Fri, 28 Aug 2020 18:26:40 +0000 (UTC)
-Date:   Fri, 28 Aug 2020 18:26:40 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
-        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
-        <linux-mm@kvack.org>, <kamatam@amazon.com>,
-        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
-        <roger.pau@citrix.com>, <axboe@kernel.dk>, <davem@davemloft.net>,
-        <rjw@rjwysocki.net>, <len.brown@intel.com>, <pavel@ucw.cz>,
-        <peterz@infradead.org>, <eduval@amazon.com>, <sblbir@amazon.com>,
-        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>
-Subject: Re: [PATCH v3 00/11] Fix PM hibernation in Xen guests
-Message-ID: <20200828182640.GA20719@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-References: <cover.1598042152.git.anchalag@amazon.com>
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3Uqz1c4wz/+QeP0lM37IWyWpsW+8C5dMpeQfSu9DoCw=;
+        b=fUqN/qrtMEMO1vhmrWg18jXZ1lLte1cnW9Dn+onsT+OTP1TlLgml7d0yrIF7Kzqc+4
+         PhxEu3abE9D0QKhUGRAHmQ3sMJvqeCojDVHC912uDllWZbw0LR7vUWf9YOGMjQHKyj/w
+         w8VrgsfzDeaW9UjiISiTPXjTE8DJiYaBCTcVi41UCUlc/VPG85nmefKnjQqBwpQsGmpe
+         Em9kBR+E/F2IJIxcyhszVcmJjdalSi2Yi6aXLJy5Jocz2J5XcrbfQWt2PKnvWTe+ZQhw
+         u6G6de0S6vFEeVRwEpitdqPKj7wGfqBQYrp7kCs35PkSDszusnwzz4saPhKK4H3biwE4
+         chuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3Uqz1c4wz/+QeP0lM37IWyWpsW+8C5dMpeQfSu9DoCw=;
+        b=cP4Cb6keiJs6kskUFv8pZQAHf2xS+U8a4WGQTzj4LKywwIkEvdCYEqFvIPR07jB65K
+         3K1C8NwumTo0XKOogBX2P9ZD0oWbzi7mYQqn8fokqO8KaefMBeq/MElsm+0Fz+0GnM96
+         jef0NSedLST0Ek4BKWOx9m8SZDgSsGPV9gZRlvcpo7XH2tyDTGbfyCGy6gltYLrf5RCx
+         MKbKJTwcYo8J6O17VMjrBpiOOvgqx07x1DEw2Z1ZcIcIoq5zGf2S1ezm/ysGaSBDRxAw
+         bwzvZi8FXFkjnqLOIh1aPLk3W/qghP7oKWiZr5jZSB6ewv1lpSPra6CHmPsEC5hjUjNr
+         0BLg==
+X-Gm-Message-State: AOAM533aeAbKL0iDhxMx1W/bsxf8HiCnhq3kl7NAMxN6LPaf00ESm+Da
+        YyUC5lIfbG9Rug3NHoDgKbD2LtvR8lzAdcC02bizuQ==
+X-Google-Smtp-Source: ABdhPJzz92se4PNrhB2hOBoElmY3QW0kQDcYEwrrHi7oPMn+QHDAsAH4wkO7+qT/DwnKY98YLJ0pL8Ysp5VsQFW9pgg=
+X-Received: by 2002:a05:6830:1ad0:: with SMTP id r16mr2244855otc.295.1598639359262;
+ Fri, 28 Aug 2020 11:29:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1598042152.git.anchalag@amazon.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20200828085622.8365-1-chenyi.qiang@intel.com> <20200828085622.8365-5-chenyi.qiang@intel.com>
+In-Reply-To: <20200828085622.8365-5-chenyi.qiang@intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Fri, 28 Aug 2020 11:29:07 -0700
+Message-ID: <CALMp9eThgAgzvvPDktD2PZOthqPWMYNKTAhu=NpcXq=6fbiGJA@mail.gmail.com>
+Subject: Re: [PATCH 4/5] KVM: nVMX: Fix the update value of nested load
+ IA32_PERF_GLOBAL_CTRL control
+To:     Chenyi Qiang <chenyi.qiang@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 10:22:43PM +0000, Anchal Agarwal wrote:
-> Hello,
-> This series fixes PM hibernation for hvm guests running on xen hypervisor.
-> The running guest could now be hibernated and resumed successfully at a
-> later time. The fixes for PM hibernation are added to block and
-> network device drivers i.e xen-blkfront and xen-netfront. Any other driver
-> that needs to add S4 support if not already, can follow same method of
-> introducing freeze/thaw/restore callbacks.
-> The patches had been tested against upstream kernel and xen4.11. Large
-> scale testing is also done on Xen based Amazon EC2 instances. All this testing
-> involved running memory exhausting workload in the background.
->   
-> Doing guest hibernation does not involve any support from hypervisor and
-> this way guest has complete control over its state. Infrastructure
-> restrictions for saving up guest state can be overcome by guest initiated
-> hibernation.
->   
-> These patches were send out as RFC before and all the feedback had been
-> incorporated in the patches. The last v1 & v2 could be found here:
->   
-> [v1]: https://lkml.org/lkml/2020/5/19/1312
-> [v2]: https://lkml.org/lkml/2020/7/2/995
-> All comments and feedback from v2 had been incorporated in v3 series.
-> 
-> Known issues:
-> 1.KASLR causes intermittent hibernation failures. VM fails to resumes and
-> has to be restarted. I will investigate this issue separately and shouldn't
-> be a blocker for this patch series.
-> 2. During hibernation, I observed sometimes that freezing of tasks fails due
-> to busy XFS workqueuei[xfs-cil/xfs-sync]. This is also intermittent may be 1
-> out of 200 runs and hibernation is aborted in this case. Re-trying hibernation
-> may work. Also, this is a known issue with hibernation and some
-> filesystems like XFS has been discussed by the community for years with not an
-> effectve resolution at this point.
-> 
-> Testing How to:
-> ---------------
-> 1. Setup xen hypervisor on a physical machine[ I used Ubuntu 16.04 +upstream
-> xen-4.11]
-> 2. Bring up a HVM guest w/t kernel compiled with hibernation patches
-> [I used ubuntu18.04 netboot bionic images and also Amazon Linux on-prem images].
-> 3. Create a swap file size=RAM size
-> 4. Update grub parameters and reboot
-> 5. Trigger pm-hibernation from within the VM
-> 
-> Example:
-> Set up a file-backed swap space. Swap file size>=Total memory on the system
-> sudo dd if=/dev/zero of=/swap bs=$(( 1024 * 1024 )) count=4096 # 4096MiB
-> sudo chmod 600 /swap
-> sudo mkswap /swap
-> sudo swapon /swap
-> 
-> Update resume device/resume offset in grub if using swap file:
-> resume=/dev/xvda1 resume_offset=200704 no_console_suspend=1
-> 
-> Execute:
-> --------
-> sudo pm-hibernate
-> OR
-> echo disk > /sys/power/state && echo reboot > /sys/power/disk
-> 
-> Compute resume offset code:
-> "
-> #!/usr/bin/env python
-> import sys
-> import array
-> import fcntl
-> 
-> #swap file
-> f = open(sys.argv[1], 'r')
-> buf = array.array('L', [0])
-> 
-> #FIBMAP
-> ret = fcntl.ioctl(f.fileno(), 0x01, buf)
-> print buf[0]
-> "
-> 
-> Aleksei Besogonov (1):
->   PM / hibernate: update the resume offset on SNAPSHOT_SET_SWAP_AREA
-> 
-> Anchal Agarwal (4):
->   x86/xen: Introduce new function to map HYPERVISOR_shared_info on
->     Resume
->   x86/xen: save and restore steal clock during PM hibernation
->   xen: Introduce wrapper for save/restore sched clock offset
->   xen: Update sched clock offset to avoid system instability in
->     hibernation
-> 
-> Munehisa Kamata (5):
->   xen/manage: keep track of the on-going suspend mode
->   xenbus: add freeze/thaw/restore callbacks support
->   x86/xen: add system core suspend and resume callbacks
->   xen-blkfront: add callbacks for PM suspend and hibernation
->   xen-netfront: add callbacks for PM suspend and hibernation
-> 
-> Thomas Gleixner (1):
->   genirq: Shutdown irq chips in suspend/resume during hibernation
-> 
->  arch/x86/xen/enlighten_hvm.c      |   7 +++
->  arch/x86/xen/suspend.c            |  63 ++++++++++++++++++++
->  arch/x86/xen/time.c               |  15 ++++-
->  arch/x86/xen/xen-ops.h            |   3 +
->  drivers/block/xen-blkfront.c      | 122 ++++++++++++++++++++++++++++++++++++--
->  drivers/net/xen-netfront.c        |  96 +++++++++++++++++++++++++++++-
->  drivers/xen/events/events_base.c  |   1 +
->  drivers/xen/manage.c              |  46 ++++++++++++++
->  drivers/xen/xenbus/xenbus_probe.c |  96 +++++++++++++++++++++++++-----
->  include/linux/irq.h               |   2 +
->  include/xen/xen-ops.h             |   3 +
->  include/xen/xenbus.h              |   3 +
->  kernel/irq/chip.c                 |   2 +-
->  kernel/irq/internals.h            |   1 +
->  kernel/irq/pm.c                   |  31 +++++++---
->  kernel/power/user.c               |   7 ++-
->  16 files changed, 464 insertions(+), 34 deletions(-)
-> 
-> -- 
-> 2.16.6
+On Fri, Aug 28, 2020 at 1:54 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
 >
-A gentle ping on the series in case there is any more feedback or can we plan to
-merge this? I can then send the series with minor fixes pointed by tglx@
-
-Thanks,
-Anchal
+> A minor fix for the update of VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL field
+> in exit_ctls_high.
+>
+> Fixes: 03a8871add95 ("KVM: nVMX: Expose load IA32_PERF_GLOBAL_CTRL
+> VM-{Entry,Exit} control")
+> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
+> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
