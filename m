@@ -2,128 +2,93 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD399C43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E7AC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9973E20C56
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B07D620C56
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:30:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sdCwCAI9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y+/niy0d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbgH1Iab (ORCPT
+        id S1728666AbgH1Iaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 04:30:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56452 "EHLO
+        Fri, 28 Aug 2020 04:30:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728269AbgH1Ia3 (ORCPT
+        with ESMTP id S1728269AbgH1Iab (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 04:30:29 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4BB5C061264;
-        Fri, 28 Aug 2020 01:30:28 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id j15so276766lfg.7;
-        Fri, 28 Aug 2020 01:30:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LflMgJmibSpFeOHc4WL2YJ+POCyG0pEvbGVH5SBOv0E=;
-        b=sdCwCAI9GltezF0rEB2fLfVxKx/8qRdfoKbbiRoFKxvVCYIkR3/N1t+zeTEEbig46m
-         +Kyj/BDTYw6OGVtSPlqNjGOO+fv9AYhJPWBogZ4zZlmC2yxHp+dH2Ko7FVvt1wfQtAEJ
-         C3EGMetrjmTC/sV3gobl9IyF5UkoeKSYqq3m2hVHVbaEPYOGuzFFd5jgWMxslMdgQGer
-         9+UFDbyhkm+yhdM7yCy9ywuHycOSmJv+CRYhHhUfXf/FoN7mgRZ9eqL8dvW5VmgrW/Oe
-         mvL9YOYm9HUrthueMnVNdX9U8x9oc0gEqLz7mTAFACitArMxyd1dGhLSQEfC89ew0Qql
-         tX3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LflMgJmibSpFeOHc4WL2YJ+POCyG0pEvbGVH5SBOv0E=;
-        b=gCsHhKqohe0/MSCkH+0iFeWo2ANHY2pdneE5uK8GqO9Tbsr3R8wef5psDc4g5nwfjw
-         iWBRHA0dxxQ1wJjYX+iQ6MTPpz767pDdzSQJ5D6FA3wteboI8Y6GCoPQ8BRuLBmG0q1J
-         XEZABPxA14rT9Hx9lYY4EmV8HTtIyRd586HXQ+xv9FvGe46S7m6e8SPPXUsmAnJBKIXt
-         9bXGSt5Xxqu1oevArpUghSGEPU6lL1a5iq3sepx3G4bnsDEjzD6klEcpDjkPziULV1MC
-         /743Z72sx6etFDifID3tr4yBCdhkfFn2zTLxMLhjBbRDXYv0sOr84aD9nWSMXx0VyCku
-         Wyzw==
-X-Gm-Message-State: AOAM532+vJoP3yOfEk5DfzLdFC45gD4DMO8c6Xhh2QkH5Az26l5Qfts9
-        P/cM65bHlEosFoK17lVAsoKjO+Z91co=
-X-Google-Smtp-Source: ABdhPJzLnvqVFe/sNW/j+lmpEBM4x5/CZ5x6tV+zcsDznlhemeqh60v+eDDBRVDdroYZaI53iNUCkA==
-X-Received: by 2002:a19:24c2:: with SMTP id k185mr276673lfk.120.1598603426636;
-        Fri, 28 Aug 2020 01:30:26 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id h6sm130676lfc.84.2020.08.28.01.30.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Aug 2020 01:30:25 -0700 (PDT)
-Subject: Re: [PATCH v5 13/36] PM / devfreq: tegra30: Use MC timings for
- building OPP table
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-References: <20200814000621.8415-1-digetx@gmail.com>
- <CGME20200814000944epcas1p3dfd0104c5fa640695dfcd4949f6b1818@epcas1p3.samsung.com>
- <20200814000621.8415-14-digetx@gmail.com>
- <1b0d75fe-79af-70eb-8450-999a3bc72bac@samsung.com>
- <1de8aa41-8001-cf46-026c-b00f8df0b9a3@gmail.com>
- <2a255211-5426-d78f-d266-cdb958f4c658@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a11d60af-3a67-6a76-57ae-7cb9bad13bed@gmail.com>
-Date:   Fri, 28 Aug 2020 11:30:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 28 Aug 2020 04:30:31 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E202C061264
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 01:30:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=U2ldR6xzPBv+6k+oJRaius2b5lZqMbGSNQquGmhHMdo=; b=Y+/niy0dQsqt6fTP2Sx45/kBCt
+        3KkQ61Loc0XLxreekumo+EctLcAD0TBEy4NDBhZXy+euo71i9lNlGHnci9scSvHI2R9TrWJdZ41Lo
+        2h0GgozNqHwl2Lwkn34LxCjwPEsr/w+C0o/yiRtkxuzsaDAQ+vflEWzDMyyxUZwD5QGCkV9Z+oklT
+        hpNDukZiWBn+WFdOzzbaEqe6w2wXPbJDd0yaKk4oN/crMGhScvDtfvqyJvxxQ5wCEPfbbZRTAujNt
+        HlXdGtcaKw47dosnDXTvlOiD6PzXChpyCOubdTkpb0SjADv0HrQ4trl8rwszd2QKYsrMdyFrWsXPX
+        FtbeCQ3Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBZmB-00046c-0e; Fri, 28 Aug 2020 08:30:25 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5C65A300238;
+        Fri, 28 Aug 2020 10:30:22 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 42CFB2C5F134B; Fri, 28 Aug 2020 10:30:22 +0200 (CEST)
+Date:   Fri, 28 Aug 2020 10:30:22 +0200
+From:   peterz@infradead.org
+To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 3/5] seqlock: seqcount_t: Implement all read APIs as
+ statement expressions
+Message-ID: <20200828083022.GO1362448@hirez.programming.kicks-ass.net>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200828010710.5407-1-a.darwish@linutronix.de>
+ <20200828010710.5407-4-a.darwish@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <2a255211-5426-d78f-d266-cdb958f4c658@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828010710.5407-4-a.darwish@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-28.08.2020 04:47, Chanwoo Choi пишет:
-> Hi,
-...
->> Hence the NULL-checking is unnecessary.
->>
->> When I first encountered the of_device_get_match_data(), I was also
->> thinking that adding the NULL-checks is a good idea, but later on
->> somebody pointed out to me (maybe Thierry) that it's unnecessary to do.
-> 
-> OK. Thanks.
-> 
->>
->>>> +
->>>> +	mc = tegra_get_memory_controller(soc_data->mc_compatible);
->>>> +	if (IS_ERR(mc))
->>>> +		return PTR_ERR(mc);
->>>
->>> You better to add error log.
->>
->> In practice we should get only -EPROBE_DEFER here ever. I'll consider
->> adding the message in the next revision, at least just for consistency.
-> 
-> In order to handle -EPROBE_DEFER, recommend the using of dev_err_probe().
+On Fri, Aug 28, 2020 at 03:07:08AM +0200, Ahmed S. Darwish wrote:
+>  #define __read_seqcount_begin(s)					\
+> +({									\
+> +	unsigned seq;							\
+> +									\
+> +	do {								\
+> +		seq = __seqcount_sequence(s);				\
+> +		if (likely(! (seq & 1)))				\
+> +			break;						\
+> +		cpu_relax();						\
+> +	} while (true);							\
+> +									\
+> +	kcsan_atomic_next(KCSAN_SEQLOCK_REGION_MAX);			\
+> +	seq;								\
+> +})
 
-Hello, Chanwoo!
+Since we're there anyway, does it make sense to (re)write this like:
 
-Thank you for the suggestion! I wasn't aware about the dev_err_probe()
-until recently and will use this new helper in the v6!
+	while ((seq = __seqcount_sequence(s)) & 1)
+		cpu_relax();
 
-Thanks!
+?
+
