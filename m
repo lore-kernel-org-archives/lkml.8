@@ -2,158 +2,115 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C50AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 22:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E242DC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 22:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34FB22086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 22:26:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XVJY152q"
+	by mail.kernel.org (Postfix) with ESMTP id ACA902086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 22:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598653609;
+	bh=S01LC1e4Xd/Rb0OpBXn57vh9WrYjBt6uM4gurSlRj6A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bQaUYtO1rdSKH34awp2dBh5oK9TIViXa7MfbtCnRlnH3e24CWtnJjuOv+698XuJBk
+	 9UOYvEhdRLBhAcqoN/JFGi7oirYYuHBdawlNp/u1nGRpwviH7cDHs2tTunBADBeNRm
+	 tvZ9TpH++YcEUSQgjQgROuC1vOr9JhuxCFMpjLUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgH1W0R (ORCPT
+        id S1727875AbgH1W0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 18:26:17 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4826 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbgH1WZ5 (ORCPT
+        Fri, 28 Aug 2020 18:26:45 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37027 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbgH1W0K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 18:25:57 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4983f90000>; Fri, 28 Aug 2020 15:23:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 28 Aug 2020 15:25:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 28 Aug 2020 15:25:56 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Aug
- 2020 22:25:51 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 28 Aug 2020 22:25:51 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.174.186]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f49846e0002>; Fri, 28 Aug 2020 15:25:50 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <robh+dt@kernel.org>
-CC:     <skomatineni@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: [PATCH 4.19 4/7] arm64: tegra: Add missing timeout clock to Tegra210 SDMMC
-Date:   Fri, 28 Aug 2020 15:25:14 -0700
-Message-ID: <1598653517-13658-5-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598653517-13658-1-git-send-email-skomatineni@nvidia.com>
-References: <1598653517-13658-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Fri, 28 Aug 2020 18:26:10 -0400
+Received: by mail-io1-f66.google.com with SMTP id b16so622655ioj.4;
+        Fri, 28 Aug 2020 15:26:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4duqBmGrOIE5h/MJFYsH8A08MjLB2XqWQDb7B6Dfs74=;
+        b=TmtOIpaHqGCAZgJqPOx28dvGaCvJHfiuT0c014Excs6ark6RVFMYjaF/4z5/jXoILg
+         iZWXp3mKR+Z0p7sKr/Kra4ByspMwik+MH7uqL3nqw8DprcKb8SSBmErshqdqk+7JCGsN
+         54H+xUqC1muXm0SCJlr3ThKrrGUtck5SBqqZYzkI3qzzYZY54Jn1DLJxdt/b48iMc3XJ
+         +reavvzaTvNHSJIK+AmQbteSoQP/XDDgOUBG21eygCVWllnCLYer0ZcEFR5eTJVIC4xU
+         hwDQ0Es/3mP0DI02be9tLyxnUssNMocwJ/7kOyAg+FEWCMVGdg94gDKg4Pqv9b8D59/H
+         hd4w==
+X-Gm-Message-State: AOAM53245nuzsEpP2JP5bbGQugWDBrjsuKHm6iXxfDl4ChBwh/E24EDp
+        j3oCGHFmdKO2jcomSqYscQ==
+X-Google-Smtp-Source: ABdhPJyWo64sqjslBZ2g1+ACJ1BfQG2GiCxOUhoNMkowfb9iLK/cF8i/5RAnmdqpHsTGdOTEKzSrEA==
+X-Received: by 2002:a05:6602:1589:: with SMTP id e9mr699348iow.85.1598653569509;
+        Fri, 28 Aug 2020 15:26:09 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id y8sm255986iom.26.2020.08.28.15.26.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 15:26:08 -0700 (PDT)
+Received: (nullmailer pid 3514602 invoked by uid 1000);
+        Fri, 28 Aug 2020 22:26:04 -0000
+Date:   Fri, 28 Aug 2020 16:26:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, Han Xu <han.xu@nxp.com>,
+        linux-kernel@vger.kernel.org, Frank Li <frank.li@nxp.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-watchdog@vger.kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-pm@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-mmc@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Anson Huang <Anson.Huang@nxp.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-gpio@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-serial@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH v3 13/19] dt-bindings: nvmem: imx-ocotp: Update i.MX 8M
+ compatibles
+Message-ID: <20200828222604.GA3514520@bogus>
+References: <20200825193536.7332-1-krzk@kernel.org>
+ <20200825193536.7332-14-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598653433; bh=1OXJ+c8/lWDuHO0/vsrjng+eqTuoCWFXnUTYobDhqk8=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=XVJY152qHjYvn/TPvRe7StPK1hkFenPA3TbaAFQKBkfin1obXrgdmTKlLI/ze5hn3
-         n1B0R4casNqzsohvM+lAjhysLOzbvTDS/Jrgf3xs1Yvn/Ht3O/GzIohIz1yCM1hwyD
-         UDFcmw8lZjnh+FWdeFJPo/zBQLA5+XkUkLKehmbgnJLcBKkPA9R+25hk5XJgPrBD2h
-         yPR8rvPbiPobtJd3nKTzT4WEu71sJwOKc0hRTpsMkPNdRPdplbR4yzsCv9jXJgsdnL
-         yZPWtxflwluHqqwQ7NMcJL3ISIqX2yPF/tlQNuWFErWYy1Scc47v0OAlTEAQnsuhhG
-         n7zqA/NGuO49Q==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825193536.7332-14-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 742af7e7a0a1 ("arm64: tegra: Add Tegra210 support")
+On Tue, 25 Aug 2020 21:35:30 +0200, Krzysztof Kozlowski wrote:
+> DTSes with new i.MX 8M SoCs use two compatibles so update the binding to
+> fix dtbs_check warnings like:
+> 
+>   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: efuse@30350000: compatible:1: 'syscon' was expected
+>     From schema: Documentation/devicetree/bindings/nvmem/imx-ocotp.yaml
+> 
+>   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: efuse@30350000:
+>     compatible: ['fsl,imx8mn-ocotp', 'fsl,imx8mm-ocotp', 'syscon'] is too long
+> 
+>   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: efuse@30350000:
+>     compatible: Additional items are not allowed ('syscon' was unexpected)
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> ---
+> 
+> Changes since v2:
+> 1. Remove moved compatibles.
+> ---
+>  .../devicetree/bindings/nvmem/imx-ocotp.yaml  | 38 +++++++++++--------
+>  1 file changed, 23 insertions(+), 15 deletions(-)
+> 
 
-Tegra210 uses separate SDMMC_LEGACY_TM clock for data timeout and
-this clock is not enabled currently which is not recommended.
-
-Tegra SDMMC advertises 12Mhz as timeout clock frequency in host
-capability register.
-
-So, this clock should be kept enabled by SDMMC driver.
-
-Fixes: 742af7e7a0a1 ("arm64: tegra: Add Tegra210 support")
-Cc: stable <stable@vger.kernel.org> # 4.19
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index 6597c08..64a0cb5 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -1020,44 +1020,48 @@
- 	};
- 
- 	sdhci@700b0000 {
--		compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
-+		compatible = "nvidia,tegra210-sdhci";
- 		reg = <0x0 0x700b0000 0x0 0x200>;
- 		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&tegra_car TEGRA210_CLK_SDMMC1>;
--		clock-names = "sdhci";
-+		clocks = <&tegra_car TEGRA210_CLK_SDMMC1>,
-+			 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
-+		clock-names = "sdhci", "tmclk";
- 		resets = <&tegra_car 14>;
- 		reset-names = "sdhci";
- 		status = "disabled";
- 	};
- 
- 	sdhci@700b0200 {
--		compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
-+		compatible = "nvidia,tegra210-sdhci";
- 		reg = <0x0 0x700b0200 0x0 0x200>;
- 		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&tegra_car TEGRA210_CLK_SDMMC2>;
--		clock-names = "sdhci";
-+		clocks = <&tegra_car TEGRA210_CLK_SDMMC2>,
-+			 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
-+		clock-names = "sdhci", "tmclk";
- 		resets = <&tegra_car 9>;
- 		reset-names = "sdhci";
- 		status = "disabled";
- 	};
- 
- 	sdhci@700b0400 {
--		compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
-+		compatible = "nvidia,tegra210-sdhci";
- 		reg = <0x0 0x700b0400 0x0 0x200>;
- 		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&tegra_car TEGRA210_CLK_SDMMC3>;
--		clock-names = "sdhci";
-+		clocks = <&tegra_car TEGRA210_CLK_SDMMC3>,
-+			 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
-+		clock-names = "sdhci", "tmclk";
- 		resets = <&tegra_car 69>;
- 		reset-names = "sdhci";
- 		status = "disabled";
- 	};
- 
- 	sdhci@700b0600 {
--		compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
-+		compatible = "nvidia,tegra210-sdhci";
- 		reg = <0x0 0x700b0600 0x0 0x200>;
- 		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&tegra_car TEGRA210_CLK_SDMMC4>;
--		clock-names = "sdhci";
-+		clocks = <&tegra_car TEGRA210_CLK_SDMMC4>,
-+			 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
-+		clock-names = "sdhci", "tmclk";
- 		resets = <&tegra_car 15>;
- 		reset-names = "sdhci";
- 		status = "disabled";
--- 
-2.7.4
-
+Reviewed-by: Rob Herring <robh@kernel.org>
