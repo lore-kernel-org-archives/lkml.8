@@ -2,70 +2,106 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA8AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413DBC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A20A320757
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:20:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598595647;
-	bh=scjglykxmNbZFUSc67vmSEgE253PfmmwfpBC3STILM4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SpfrvQGep2OcmEV+OLpxh3iQwVEwPwbOxcsVTKaCSxg9Nez43GJh95LyNvEZDC4TU
-	 L1+7bbRrJZLLA7Fpjcif880+tKkgjc9XRHyz2Ox1io2O+gOVQLARGZ+nQB0a01BFZV
-	 TNQ2gqsgmAia4806SFI+jz1AelC75RLfaTnJMNR8=
+	by mail.kernel.org (Postfix) with ESMTP id 13EB620757
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:24:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aM1pukEv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgH1GUq (ORCPT
+        id S1728063AbgH1GYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 02:20:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725849AbgH1GUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 02:20:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 28 Aug 2020 02:24:22 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53491 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725858AbgH1GYS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 02:24:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598595857;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=TZgOlmN9m49e++aSj4JPimMgy9NjdrTL35m0T++hZyQ=;
+        b=aM1pukEv+frLqm1sbyFKzeg1EoWbysRX8S/zmBAWwJk66sGw/kBgFd5oc8lKQWCMNBgYfC
+        lKRRMdrLR+/e2IH33VRqKiJk/mQP9SwcBVq/HSYyKzifAg71m3WSY60+71wR5EXmdHRnwU
+        ncWWn1k5/RxU4+sgqXd6DzOL5ayINro=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-443-M3H7_1grNueY-FhKFkSSmQ-1; Fri, 28 Aug 2020 02:24:12 -0400
+X-MC-Unique: M3H7_1grNueY-FhKFkSSmQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC3032071B;
-        Fri, 28 Aug 2020 06:20:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598595645;
-        bh=scjglykxmNbZFUSc67vmSEgE253PfmmwfpBC3STILM4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wyMmEdV2cLXm5F3JKjx5n91Zmz9mzIf74jP24ws/FvMT1DvUgZvwWhRdu6l5YIUOF
-         b4Y5FzB6QyfxDXdJ+8CCU82xaEMk6gtERrHX1sLeZi2WhZOMDH6QfDAF46i2f/pbWu
-         j6dCdAkHslm3XEv7sKnlP6JDdC0aC2HvVmi8xL6Q=
-Date:   Fri, 28 Aug 2020 08:20:42 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Qiushi Wu <wu000273@umn.edu>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, Kangjie Lu <kjlu@umn.edu>
-Subject: Re: Some questions about the patching process
-Message-ID: <20200828062042.GF56396@kroah.com>
-References: <CAMV6ehGKBfXN89XeDzMHKQ_6qLg41R2Tb7=sE+NC7KrbPsigDw@mail.gmail.com>
- <20200827182730.GA712693@kroah.com>
- <CAMV6ehEwaStF7Xvy-u4p+eU9C1UObCN8eVmuJmVZRFykROdnnw@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 501DC1DDFF;
+        Fri, 28 Aug 2020 06:24:08 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-112-37.ams2.redhat.com [10.36.112.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4A6655D9F1;
+        Fri, 28 Aug 2020 06:23:55 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     "H.J. Lu" <hjl.tools@gmail.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Yu\, Yu-cheng" <yu-cheng.yu@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Dave Hansen <dave.hansen@intel.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for shadow stack
+References: <a770d45d-b147-a8c5-b7f8-30d668cbed84@intel.com>
+        <4BDFD364-798C-4537-A88E-F94F101F524B@amacapital.net>
+        <CAMe9rOoTjSwRSPuqP6RKkDzPA_VPh5gVYRVFJ-ezAD4Et-FUng@mail.gmail.com>
+        <CALCETrW=-ahC7GUCCyX7nPjCHfG3tiyDespud2Z7UbB6yWWWAA@mail.gmail.com>
+        <CAMe9rOrt5hz6qsNAxPgdKCOhRcKKESv-D3rxdSfraeJ-LFHM4w@mail.gmail.com>
+Date:   Fri, 28 Aug 2020 08:23:54 +0200
+In-Reply-To: <CAMe9rOrt5hz6qsNAxPgdKCOhRcKKESv-D3rxdSfraeJ-LFHM4w@mail.gmail.com>
+        (H. J. Lu's message of "Thu, 27 Aug 2020 18:44:27 -0700")
+Message-ID: <87v9h3thj9.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMV6ehEwaStF7Xvy-u4p+eU9C1UObCN8eVmuJmVZRFykROdnnw@mail.gmail.com>
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 02:17:20PM -0500, Qiushi Wu wrote:
-> Hi Greg,
-> Thanks for your response!
+* H. J. Lu:
 
-<snip>
+> Can you think of ANY issues of passing more arguments to arch_prctl?
 
-You responded in html format which got rejected by the public list,
-please resend in text-only and I will be glad to reply.
+On x32, the glibc arch_prctl system call wrapper only passes two
+arguments to the kernel, and applications have no way of detecting that.
+musl only passes two arguments on all architectures.  It happens to work
+anyway with default compiler flags, but that's an accident.
 
-thanks,
+Thanks,
+Florian
 
-greg k-h
