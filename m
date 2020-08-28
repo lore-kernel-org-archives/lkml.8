@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AC4C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBC6C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACF672086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 045512086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:06:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uD4QSdK6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wnRuOp88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgH1OFs (ORCPT
+        id S1727872AbgH1OGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:05:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52020 "EHLO
+        Fri, 28 Aug 2020 10:06:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727017AbgH1OFB (ORCPT
+        with ESMTP id S1726814AbgH1OFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:05:01 -0400
+        Fri, 28 Aug 2020 10:05:34 -0400
 Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54BC6C061264
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:05:01 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id t6so1427032ljk.9
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:05:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89DC7C061264
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:05:33 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w25so1421384ljo.12
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:05:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=laQRo0IXBoxlRUsr9rNJ2izAqPaxJoclO77g1cLJXao=;
-        b=uD4QSdK6hO5ieBLz6ebVFwPy3jNa6V9k7enpVeXEEsKLFgH9aua6aN8wr2dAW5QEPY
-         2L91KzVAzOjc+tpBpt101DQmX3P5eO/ngLJFTjUVELwsmhDDyuB1Q5/IHtQiKQgPNNGT
-         ndkMmRk/qQiJMs0npYgVuZ8Qlbd98UU7JB/tgNadTn0zUtmcucr52jvRJYoFxQikIcyB
-         7F1Dnr//0Nfe/JUw+3hUTZNURDYaSSA4V586hhcFYSZoE5RuB/bSo+IfupSpmyINg8mE
-         D1VIkQyJqvm+oUnJDfQ/sq2uZ7AV2yMX4ro2xucZ7/2kQyrvi+dml/tkDuGl1pECxbwK
-         rDtg==
+        bh=peoAMhin340g8hfujS0m2ecCBCi8hVoacuqHhCFz4m8=;
+        b=wnRuOp88vxN4lXK4sfBVZy9DYmyxBdGcOPdLP35yzgUkT9VXxZetgT5ohQXAnunZkt
+         SoEe8EdsMihiNH44I3YIFiBLpyEGQ1Cm6fXh5tbK9SaIDuuKnQItWv+2abAZkytC3VNa
+         G3SLv7kCUiM3zgv/CbSlY9DMB5N6Nig6xc4EGouM+Hyz9HOwA5P1S2c5cXGUSolaGT46
+         ealsDnAifQV3i/bpYOac3L0nP9U8+PexkVEw66IpXAf9TbsqqBZ3jdfSNXpu3k5paoXs
+         GC6jCNGMPuSQEceIIK2+Gj8e4iuyrieyHdN4Tr24FDzHoxH35Ogc7yl8zrugGsOCtGk8
+         Twuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=laQRo0IXBoxlRUsr9rNJ2izAqPaxJoclO77g1cLJXao=;
-        b=Wq7Mgg7/6D4WvGgmUxH+b45lV/AfHLD7a8lzunG410jTbIa49FU+TKZgeIHPJ8QIPF
-         LiYD7uHPhGWISBjhJWn+K0vP3Eegnvlr5pt11FQjwThpu9i86cNvpd3konU434OoBUgR
-         h1NKChSX3cWdkwisDF/CQtbV0AUqecAJBtweDZKXo9DXOG+AEuESiXPOaDHcwEA+ViTA
-         zQ2gjzwCvbI4PMJFYv8SPBxqHnM7DggdJzGMLL8SKSiNmUTIUs2vL7W6gFRoikGh+l5y
-         nd9WRI4tjRD+kbld78eu5AgfzvTMcw6YTjrdVuUcMJTSAFXdF0XQswcGmQhQYdc1rgvp
-         wcww==
-X-Gm-Message-State: AOAM530nI9EHA3SFJNqFD4mXFGgY8BKAeeRLi/u/fCg1/cGZwf/+hlqM
-        W//ciovCYY24gl8VUPaLSQstGjxqNsbFnUim5yAL3KMMRGw=
-X-Google-Smtp-Source: ABdhPJyyJ624adHJmQkytow4DYDghT/t6aR0J3mHhUm27rjibPXnfdnqsNPV1YMqF5OlX+vZJV1NgSgZ6OJ+x+2c9KI=
-X-Received: by 2002:a2e:6a17:: with SMTP id f23mr883960ljc.338.1598623499763;
- Fri, 28 Aug 2020 07:04:59 -0700 (PDT)
+        bh=peoAMhin340g8hfujS0m2ecCBCi8hVoacuqHhCFz4m8=;
+        b=WNNq8lkYwFWLEtwbxyax2aiaol56XFmH2FvlfgtM0v4uuzaYSFppDpV2FXSpxVacKL
+         gj0/IfP5K8hTyx9uTJojxx7I3MTvXadUBAGE78Z4P/j8e5zkR2MnrrqqYUrA+9ZPyHi3
+         p7ffa1xai7rQ4B7og65/Q8sVOy5mqetp5yKkq3go7/qIhx7jcrgoh6HJ8xiouMVmHbfp
+         EZ9o667cDaJ01Dk4uN1NF7URv92+1SqNDc1JF9P4piDpdbaEXDmxZshvQ//Lx1pc8RBH
+         B2V5qfVCHxkcbw6SdoP9El+ABUn6wVzHCnEFbcRqGPWdlN9oWi17v6ddW12IXyu9lmXO
+         mWlw==
+X-Gm-Message-State: AOAM532Q+zrAgL+dqvtZ09DOVWwihjQKufJMpK629TZgLjiCX6GeZxNl
+        ejIqlh1j0cncp+k96ZMHkaFwkBIOOdyeNlF1+9g4SQy0/FI=
+X-Google-Smtp-Source: ABdhPJyZK+nyo5nTYz3NzSKuoc28bBQ5aH56BgFuYIxHsyIWvpg2GG1PynT6PAdWZQLdLlwBIDygqkN4EcQix8MSwgI=
+X-Received: by 2002:a2e:4e09:: with SMTP id c9mr1005540ljb.283.1598623531997;
+ Fri, 28 Aug 2020 07:05:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200827071107.27429-1-krzk@kernel.org>
-In-Reply-To: <20200827071107.27429-1-krzk@kernel.org>
+References: <20200827071107.27429-1-krzk@kernel.org> <20200827071107.27429-2-krzk@kernel.org>
+In-Reply-To: <20200827071107.27429-2-krzk@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 16:04:48 +0200
-Message-ID: <CACRpkdZ+qLRVpjaYKTjnXLLheTjaSKABEWJhvDvEcSOLgFJVaw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] drm/mcde: Fix handling of platform_get_irq() error
+Date:   Fri, 28 Aug 2020 16:05:21 +0200
+Message-ID: <CACRpkdbFJxfF6wGPAw_jEA0bYzT7JBYZOWEb1PbVc1iT8uJJrw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/tve200: Fix handling of platform_get_irq() error
 To:     Krzysztof Kozlowski <krzk@kernel.org>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Eric Anholt <eric@anholt.net>,
@@ -78,7 +78,7 @@ On Thu, Aug 27, 2020 at 9:11 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 > platform_get_irq() returns -ERRNO on error.  In such case comparison
 > to 0 would pass the check.
 >
-> Fixes: 5fc537bfd000 ("drm/mcde: Add new driver for ST-Ericsson MCDE")
+> Fixes: 179c02fe90a4 ("drm/tve200: Add new driver for TVE200")
 > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
