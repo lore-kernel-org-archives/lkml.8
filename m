@@ -7,102 +7,97 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C01C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBD2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9363F20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F53E2080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598650862;
-	bh=rWVmQwhZQeje6Df3eQ00N7Jlh4F/ZOtxnxcC/BqcCo0=;
+	s=default; t=1598650893;
+	bh=zTSZE0kNPAeUzE/CoMpzXXc16yal+OWfRBU1zjKsV8Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NXWM4y1uRtHf1NOzz4CYXTPDra+Jd+euDOmKwa3QzYCyVj7lGTpDXql9xZY17FrE4
-	 Xo2cvlRhFCxRIQmdfoP9pUSFJ/GHV/F6AIv+shHpwRLFp+tsIKmNHQI3Ly4FvliL8c
-	 /5yhS5pUQ0GGEf9HkUdDoKX8lpPoAmWAjA2/5LEs=
+	b=Se70Da8H6uhn7BZF15gkuOKf4SRox8BRPG8q5Nf5G7OLQHlbVRN0nkJfd/yksDRGr
+	 DFaqosP2yp9oLCgaD7jPaZZyQ4VRK5mkBTh/yfwN3uAO5rFt/PLP+o5OmUeY/gCEFF
+	 2FLhQivbBvxyWWgonL/B3JKgAH2pZ+tm48Ct1NDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgH1VlB (ORCPT
+        id S1726977AbgH1Vlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 17:41:01 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37048 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgH1VlA (ORCPT
+        Fri, 28 Aug 2020 17:41:32 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42754 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgH1Vlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 17:41:00 -0400
-Received: by mail-io1-f67.google.com with SMTP id b16so528133ioj.4;
-        Fri, 28 Aug 2020 14:40:59 -0700 (PDT)
+        Fri, 28 Aug 2020 17:41:31 -0400
+Received: by mail-io1-f66.google.com with SMTP id g13so497278ioo.9;
+        Fri, 28 Aug 2020 14:41:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=mS4Zu08qQZpZXMImrRzIfdT+5oFEqMPjqg/4ZwW6vpw=;
-        b=Lwihk+ACG9zc5OfgMIzrXs7Ifb/iRbulTlYsUldcJz0ir6y3pRhuAzMIbnFNfTukAx
-         tCNGDEUz1RdsxPKNH+3djjB3n2P8WLkQFKhCExrHdAGgc0kOXcIeabG4kcmZmf8wQ/b9
-         x1mzNl0z86N3F1nQwmHrYxuzvRJlihpaodM9iFDByuUHM9fZEwffqa6YiJUH2d5IWyVA
-         DPYODIHdbWiGCKkWCUrYcjOPr7/47pJJ5VXhb+e3NuX2s2mIqdAgy3bTK4jI/ZH+fGqy
-         2sVNqzR2RvjFvbQ6hPyidne28dVj8srJWmBUiUP14urPQ91jDY2O8PYBnzi320/MYPvL
-         i8Pw==
-X-Gm-Message-State: AOAM530Ql+RlR5mLlD7VbV4nesAQI2g6ntAXbVpYC2/FgErnsaKec6FG
-        53YluWzay/wBL3PTQPm5sw==
-X-Google-Smtp-Source: ABdhPJwOj6BZZBaf0EDaLZohN5F7o1+QFYl6wqAXpILr7Io/VbZMByRExEnFwRSZL8c77C+W1L2ScA==
-X-Received: by 2002:a6b:c997:: with SMTP id z145mr613456iof.136.1598650859348;
-        Fri, 28 Aug 2020 14:40:59 -0700 (PDT)
+        bh=d/272Ge9F+h939RcGifK+OjeQK+BeVfrxyuLoTuNL9w=;
+        b=BJDDM9iJFaFAgrhASeUxSxQD6Vy6zmqTxA05HGRbgSPm78AxjhsDzYE0QHmgZNF9GY
+         VQW6zhoCmpynluVZj5cUaFQXNWc1Gg2pX5c5n1xyzfTKq2P+H2aiaQTLvxbeAH8OdEKP
+         ALbjt2LI2QrctkeuH7dfoaT7h7mQYhDwGQVNUmimQ27scJ5i3HNqNpz4+VvZTZua+gkl
+         /Wi6CZVQugLg+NJha3V4Dy2wwnJBJwHfEn7Y5zztKbQQKDB50lp5iuVfqTQS1c/H90Jd
+         sO6zWgnlNPnYjQZywJb8Wjx3ppgBZJbtB/pPg0eDEx72PvDPOkpi3/791zWpmUR5XJRn
+         lVCg==
+X-Gm-Message-State: AOAM533S+WSnZr446GDyYLsaTqmUdCeinnrXMw/ukmi/Hcbzj1m/7PWm
+        TwRjExXTeQ/LYU9wuQAwxja0kLkOG0Eg
+X-Google-Smtp-Source: ABdhPJyHlTGuXiCcZmcVqwDVyL9Vhx+k1VLxvQ69KwJSEwIlfx8NYYd5PsezubKDxVh/gRFnzeSRbg==
+X-Received: by 2002:a02:820b:: with SMTP id o11mr2979024jag.136.1598650890419;
+        Fri, 28 Aug 2020 14:41:30 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id i10sm198351ioo.49.2020.08.28.14.40.57
+        by smtp.gmail.com with ESMTPSA id c12sm276839ilq.79.2020.08.28.14.41.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 14:40:58 -0700 (PDT)
-Received: (nullmailer pid 3448918 invoked by uid 1000);
-        Fri, 28 Aug 2020 21:40:56 -0000
-Date:   Fri, 28 Aug 2020 15:40:56 -0600
+        Fri, 28 Aug 2020 14:41:29 -0700 (PDT)
+Received: (nullmailer pid 3449714 invoked by uid 1000);
+        Fri, 28 Aug 2020 21:41:27 -0000
+Date:   Fri, 28 Aug 2020 15:41:27 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     "Robert Chiras (OSS)" <robert.chiras@oss.nxp.com>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, Ondrej Jirman <megous@megous.com>,
-        Sam Ravnborg <sam@ravnborg.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        Fabio Estevam <festevam@gmail.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/5] dt-bindings: display/bridge: nwl-dsi: Document
- video_pll clock
-Message-ID: <20200828214056.GA3448236@bogus>
-References: <1598613212-1113-1-git-send-email-robert.chiras@oss.nxp.com>
- <1598613212-1113-3-git-send-email-robert.chiras@oss.nxp.com>
+To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Cc:     devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        sre@kernel.org, dmurphy@ti.com, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: power: Add the bq256xx dt bindings
+Message-ID: <20200828214127.GA3449324@bogus>
+References: <20200828195219.15560-1-r-rivera-matos@ti.com>
+ <20200828195219.15560-2-r-rivera-matos@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1598613212-1113-3-git-send-email-robert.chiras@oss.nxp.com>
+In-Reply-To: <20200828195219.15560-2-r-rivera-matos@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Aug 2020 14:13:29 +0300, Robert Chiras (OSS) wrote:
-> From: Robert Chiras <robert.chiras@nxp.com>
+On Fri, 28 Aug 2020 14:52:18 -0500, Ricardo Rivera-Matos wrote:
+> Add the bindings for the bq256xx series of battery charging ICs.
 > 
-> Add documentation for a new clock 'video_pll'.
+> Datasheets:
+> - https://www.ti.com/lit/ds/symlink/bq25600.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25601.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25600d.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25601d.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25611d.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25618.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25619.pdf
 > 
-> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
 > ---
->  Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../bindings/power/supply/bq256xx.yaml        | 97 +++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/bq256xx.yaml
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: mipi_dsi@30a00000: clocks: [[4294967295, 163], [4294967295, 244], [4294967295, 245], [4294967295, 164], [4294967295, 128]] is too short
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.example.dt.yaml: mipi_dsi@30a00000: clock-names: ['core', 'rx_esc', 'tx_esc', 'phy_ref', 'lcdif'] is too short
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/bq256xx.example.dt.yaml: battery: 'termination-current-microamp' does not match any of the regexes: '^ocv-capacity-table-[0-9]+$', 'pinctrl-[0-9]+'
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/battery.yaml
 
 
-See https://patchwork.ozlabs.org/patch/1353197
+See https://patchwork.ozlabs.org/patch/1353535
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
