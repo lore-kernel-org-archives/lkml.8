@@ -2,239 +2,118 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3AAC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 016FDC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DFBC207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:32:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598621553;
-	bh=tZ9uQzkb+ExAZr5uhfv1xxUUAsoHvUK3Z0MNvDQ1CGw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=UCLWABEvOuxqd3XKJuMxG6k9UpS/AgU+NEyf9PlonIs8/3d69FYlSl9DrC2gAjsn3
-	 C3pAo8BbIJOM0oUKPKNIzlvbPBIl3zcsSLk0sHRNL4Aee4+UziWonN6hjSAiGbLzbO
-	 dt/ITVKWLAbMEambu8McyzS9pijGz5gCuGHF8Muk=
+	by mail.kernel.org (Postfix) with ESMTP id D1A36207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:38:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pCT4pUfI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729468AbgH1Nbu (ORCPT
+        id S1729525AbgH1Nil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 09:31:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729172AbgH1N36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 09:29:58 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BEE8207DF;
-        Fri, 28 Aug 2020 13:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598621384;
-        bh=tZ9uQzkb+ExAZr5uhfv1xxUUAsoHvUK3Z0MNvDQ1CGw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=iS7XKfy2983XHdzMECKdhqeAmDKoKIOh61Fnqe1+aXkdvgLGiRwviCT2b5uaoRUXB
-         Yo/ajqTcVh6Qz4SHA7tyN0NsG2YqP6h51OdceXVgupLbsv/wjYCVnX9+KPhhOFIMI/
-         NGTEHpwsaD9yH/pYLReGB1v6REB52Ha0xH87WlMU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 6A2FC3522679; Fri, 28 Aug 2020 06:29:44 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 06:29:44 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Tree for Aug 26
-Message-ID: <20200828132944.GN2855@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200826163330.16e5b0d4@canb.auug.org.au>
- <CADYN=9KQcdLH=BfXZ2riuH0icw7d+2HbfPxvww7fiJG2G=8ALQ@mail.gmail.com>
- <20200826193945.GT2855@paulmck-ThinkPad-P72>
- <CADYN=9+XRhPOkds36JdHU-h2h3va=JJj6aeDHmNUzrpCHWEJ0A@mail.gmail.com>
+        Fri, 28 Aug 2020 09:38:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729413AbgH1Nd1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 09:33:27 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB1B1C061264;
+        Fri, 28 Aug 2020 06:30:57 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id i7so383257wre.13;
+        Fri, 28 Aug 2020 06:30:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=rLh0TPLDRuHOF1sa434RgV9ws5clmGQaNXDdUaR7GmQ=;
+        b=pCT4pUfIHlx9O2ITdmY6m/sbmp1b1Z/cp65/o1lcKDvl+A7DMxXchyIHOA3WZkjsnF
+         Ism/mGsI1nxAb3iPvLqcseknvp16pzyRaW7N12cqo/tAfKaQLv11ndd95ebWN8IBp/sl
+         xdJntUwPN/YbxE+zK5hu7FXMWD+z3QXXSx+7mgf4ANazLT1oBJyPJKGxnP1c8MVM8iRu
+         kV+8zEi6/87Y1xmCWm/qxLLkNr5o/HwZTwv+uyUoF876Xsi7mbAtItMVLPgojpKICY9e
+         h4ZjhziNfOgPemc/weD7q5VXzTVlLhfmKwgW4ghnwWtxi3Q+f8bLea4WWfHZWopVXQuH
+         ohWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=rLh0TPLDRuHOF1sa434RgV9ws5clmGQaNXDdUaR7GmQ=;
+        b=dX2FToRh8fq5gO+xziDaU3R/vO+/MeJidtpPJzO5qPZD66/oQYnbgZEJISjfO/A72q
+         +sAcj5bUtucWDleEks8IHRrPJT9egzYL4Nr7upRB0ph8i8696v04cpl1vzJevGNWJntA
+         6vq5fncKOszMdokPMfYfj8/qqW9DbhyYaxxPMqZ+1dm9z86Gcr9fTXEDvf0T7J2zRD0l
+         DZckUBEc/Cjj6Uz4DPKl/BiVaWmysUTGQjwvaJYaisVeJ2BoxK8JZ1uDN0sItjvJsWAu
+         vtsHyH2StC5lb1DhTwZLtorOthWGe7LjXUqiEGdiEXgRj7vywCcjqNxw98i4AF7RoZmP
+         /KGA==
+X-Gm-Message-State: AOAM5333+N9zPW/t52r2DKg9Uu/YjfDuikT/yiKZ6BOc0uZOkEMuW0GO
+        DN+ULrMlE5KdGmRWZwo42yg=
+X-Google-Smtp-Source: ABdhPJyfgahGUNslcWxi1Qo1bcb+12VpnW3m9WmMwH9GuULHZ3CZ8GQBwKDjrNeoJpwJ4+ZgVCKvEQ==
+X-Received: by 2002:adf:de08:: with SMTP id b8mr1503680wrm.4.1598621456377;
+        Fri, 28 Aug 2020 06:30:56 -0700 (PDT)
+Received: from felia ([2001:16b8:2d94:4000:f807:c6f3:919:9c25])
+        by smtp.gmail.com with ESMTPSA id n205sm2539670wma.47.2020.08.28.06.30.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 06:30:55 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Fri, 28 Aug 2020 15:30:44 +0200 (CEST)
+X-X-Sender: lukas@felia
+To:     Roman Bolshakov <r.bolshakov@yadro.com>
+cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+        linux-spdx@vger.kernel.org, linux-kernel@vger.kernel.org,
+        GR-QLogic-Storage-Upstream@marvell.com,
+        Arun Easi <aeasi@marvell.com>
+Subject: Re: [PATCH] MAINTAINERS: orphan sections with qlogic.com group
+ alias
+In-Reply-To: <20200828091758.GF54274@SPB-NB-133.local>
+Message-ID: <alpine.DEB.2.21.2008281524360.11562@felia>
+References: <20200828070824.8032-1-lukas.bulwahn@gmail.com> <20200828091758.GF54274@SPB-NB-133.local>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADYN=9+XRhPOkds36JdHU-h2h3va=JJj6aeDHmNUzrpCHWEJ0A@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 09:37:17AM +0200, Anders Roxell wrote:
-> On Wed, 26 Aug 2020 at 21:39, Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Wed, Aug 26, 2020 at 08:19:01PM +0200, Anders Roxell wrote:
-> > > On Wed, 26 Aug 2020 at 08:33, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> >
-> > [ . . . ]
-> >
-> > > I've built and run an arm64 allmodconfig kernel where I use the
-> > > defconfig as the base, I do this for testing purposes.
-> > > I can see the following call trace [1]:
-> > >
-> > > [ 2595.811453][    T1] Running tests on all trace events:
-> > > [ 2595.860933][    T1] Testing all events:
-> > > [ 4316.066072][    T8] kworker/dying (8) used greatest stack depth:
-> > > 27056 bytes left
-> > > [ 8561.924871][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for
-> > > 22s! [migration/0:14]
-> > > [ 8561.934498][    C0] Modules linked in:
-> > > [ 8561.942303][    C0] irq event stamp: 4044
-> > > [ 8561.949044][    C0] hardirqs last  enabled at (4043):
-> > > [<ffffa000126b530c>] _raw_spin_unlock_irqrestore+0xac/0x138
-> > > [ 8561.960848][    C0] hardirqs last disabled at (4044):
-> > > [<ffffa000126a89f8>] __schedule+0xf8/0x7e0
-> > > [ 8561.971418][    C0] softirqs last  enabled at (3698):
-> > > [<ffffa00010001b04>] __do_softirq+0x524/0x5f8
-> > > [ 8561.982191][    C0] softirqs last disabled at (3689):
-> > > [<ffffa000101216c8>] __irq_exit_rcu+0x128/0x1a0
-> > > [ 8561.993068][    C0] CPU: 0 PID: 14 Comm: migration/0 Tainted: G
-> > >    W         5.9.0-rc2-next-20200826-00005-g24628bb4c0bf #1
-> > > [ 8562.005684][    C0] Hardware name: linux,dummy-virt (DT)
-> > > [ 8562.013247][    C0] pstate: 80400005 (Nzcv daif +PAN -UAO BTYPE=--)
-> > > [ 8562.021657][    C0] pc : arch_local_irq_enable+0x58/0x80
-> > > [ 8562.029323][    C0] lr : _raw_spin_unlock_irq+0x84/0xc0
-> > > [ 8562.036739][    C0] sp : ffff0000698efaa0
-> > > [ 8562.042984][    C0] x29: ffff0000698efaa0 x28: ffff00006ad0f270
-> > > [ 8562.053814][    C0] x27: ffff00006ad0f248 x26: ffff0000698d4718
-> > > [ 8562.064687][    C0] x25: ffff00006ad0e798 x24: ffffa000139e3a40
-> > > [ 8562.075506][    C0] x23: 0000000000000001 x22: ffffa000154f5000
-> > > [ 8562.086425][    C0] x21: ffff00006ad0e798 x20: ffff00006ad0e780
-> > > [ 8562.097255][    C0] x19: ffffa000126a905c x18: 00000000000014c0
-> > > [ 8562.108071][    C0] x17: 0000000000001500 x16: 0000000000001440
-> > > [ 8562.118918][    C0] x15: 00000000f1f1f1f1 x14: 003d090000000000
-> > > [ 8562.129739][    C0] x13: 00003d0900000000 x12: ffff80000d31df41
-> > > [ 8562.140544][    C0] x11: 1fffe0000d31df40 x10: ffff80000d31df40
-> > > [ 8562.151366][    C0] x9 : dfffa00000000000 x8 : ffff0000698efa07
-> > > [ 8562.162247][    C0] x7 : 0000000000000001 x6 : 00007ffff2ce20c0
-> > > [ 8562.173072][    C0] x5 : ffff0000698d4040 x4 : dfffa00000000000
-> > > [ 8562.183954][    C0] x3 : ffffa0001040f904 x2 : 0000000000000007
-> > > [ 8562.194811][    C0] x1 : ffffa00014080000 x0 : 00000000000000e0
-> > > [ 8562.205858][    C0] Call trace:
-> > > [ 8562.211739][    C0]  arch_local_irq_enable+0x58/0x80
-> > > [ 8562.219076][    C0]  _raw_spin_unlock_irq+0x84/0xc0
-> > > [ 8562.226394][    C0]  __schedule+0x75c/0x7e0
-> > > [ 8562.233074][    C0]  preempt_schedule_notrace+0x64/0xc0
-> > > [ 8562.268210][    C0]  ftrace_ops_list_func+0x494/0x4e0
-> > > [ 8562.275735][    C0]  ftrace_graph_call+0x0/0x4
-> > > [ 8562.282647][    C0]  preempt_count_add+0xc/0x240
-> > > [ 8562.289686][    C0]  schedule+0xe4/0x160
-> > > [ 8562.296187][    C0]  smpboot_thread_fn+0x47c/0x540
-> > > [ 8562.303377][    C0]  kthread+0x23c/0x260
-> > > [ 8562.309906][    C0]  ret_from_fork+0x10/0x18
-> > > [ 8562.316604][    C0] Kernel panic - not syncing: softlockup: hung tasks
-> > > [ 8562.325230][    C0] CPU: 0 PID: 14 Comm: migration/0 Tainted: G
-> > >    W    L    5.9.0-rc2-next-20200826-00005-g24628bb4c0bf #1
-> > > [ 8562.337861][    C0] Hardware name: linux,dummy-virt (DT)
-> > > [ 8562.345374][    C0] Call trace:
-> > > [ 8562.351228][    C0]  dump_backtrace+0x0/0x320
-> > > [ 8562.358070][    C0]  show_stack+0x38/0x60
-> > > [ 8562.364728][    C0]  dump_stack+0x1c0/0x280
-> > > [ 8562.371447][    C0]  panic+0x32c/0x614
-> > > [ 8562.377868][    C0]  watchdog_timer_fn+0x49c/0x560
-> > > [ 8562.385076][    C0]  __run_hrtimer+0x1cc/0x360
-> > > [ 8562.392021][    C0]  __hrtimer_run_queues+0x1a0/0x220
-> > > [ 8562.399500][    C0]  hrtimer_interrupt+0x1f8/0x440
-> > > [ 8562.406807][    C0]  arch_timer_handler_virt+0x68/0xa0
-> > > [ 8562.414338][    C0]  handle_percpu_devid_irq+0x118/0x2a0
-> > > [ 8562.421992][    C0]  __handle_domain_irq+0x150/0x1c0
-> > > [ 8562.429315][    C0]  gic_handle_irq+0x98/0x120
-> > > [ 8562.436297][    C0]  el1_irq+0xd4/0x1c0
-> >
-> > We appear to have taken an interrupt here, just after releasing
-> > an irq-disabled lock and enabling interrupts.
-> >
-> > > [ 8562.442748][    C0]  arch_local_irq_enable+0x58/0x80
-> > > [ 8562.450116][    C0]  _raw_spin_unlock_irq+0x84/0xc0
-> > > [ 8562.457360][    C0]  __schedule+0x75c/0x7e0
-> > > [ 8562.464142][    C0]  preempt_schedule_notrace+0x64/0xc0
-> > > [ 8562.471745][    C0]  ftrace_ops_list_func+0x494/0x4e0
-> > > [ 8562.479195][    C0]  ftrace_graph_call+0x0/0x4
-> > > [ 8562.486159][    C0]  preempt_count_add+0xc/0x240
-> > > [ 8562.493210][    C0]  schedule+0xe4/0x160
-> >
-> > We are trying to sleep, so we took a pass through the scheduler and
-> > did some tracing.
-> >
-> > > [ 8562.499737][    C0]  smpboot_thread_fn+0x47c/0x540
-> >
-> > Here we might be bringing up a CPU?  Except that according to your
-> > dmesg, there is only one CPU.  ("RCU restricting CPUs from NR_CPUS=256
-> > to nr_cpu_ids=1").  So this seems unlikely.
-> >
-> > Huh.  The first dmesg in output-next-20200826.log is instead a
-> > DEBUG_LOCKS_WARN_ON() from lockdep.  Might this be related?  Or do you
-> > also see this warning when boot happens quickly?
-> >
-> > (I do see the soft lockup later on.)
-> >
-> > > [ 8562.506960][    C0]  kthread+0x23c/0x260
-> > > [ 8562.513496][    C0]  ret_from_fork+0x10/0x18
-> > > [ 8562.521052][    C0] Kernel Offset: disabled
-> > > [ 8562.527725][    C0] CPU features: 0x0240002,20002004
-> > > [ 8562.534950][    C0] Memory Limit: none
-> > > [ 8562.543830][    C0] ---[ end Kernel panic - not syncing:
-> > > softlockup: hung tasks ]---
-> > >
-> > > When I tested to checkout and build e6df9766894d ("Merge remote-tracking branch
-> > > 'irqchip/irq/irqchip-next' into master") that was merged into today's
-> > > tag I was able to
-> > > boot [2]. When I checked out 25e6e115dd1d ("Merge remote-tracking
-> > > branch 'rcu/rcu/next' into master") and built and tested that I was
-> > > able to boot [3] after a
-> > > looong time. To clarify, the rcu merge comes after the irqchip merge.
-> > >
-> > > I also tried to only revert the rcu tree from todays next tag like this:
-> > > "git diff e6df9766894d..25e6e115dd1d | patch -Rp1". When I built that
-> > > I was able to
-> > > boot [4] too.
-> > >
-> > > Any idea what's going on here?
-> >
-> > Could you please try bisecting the RCU commits?
+
+
+On Fri, 28 Aug 2020, Roman Bolshakov wrote:
+
+> On Fri, Aug 28, 2020 at 09:08:24AM +0200, Lukas Bulwahn wrote:
+> > Previous attempts of getting an answer from the qlogic.com group alias,
+> > i.e., QLogic-Storage-Upstream@qlogic.com, have remained unanswered; see
+> > links below.
+> > 
+> > Mark those sections Orphan to prepare their deletion or give an actual
+> > person a chance to step up to maintain those drivers.
+> > 
+> > Link: https://lore.kernel.org/linux-spdx/20190606205526.447558989@linutronix.de
+> > Link: https://lore.kernel.org/linux-spdx/alpine.DEB.2.21.2006300644130.4919@felia
+> > Link: https://lore.kernel.org/linux-spdx/alpine.DEB.2.21.2008270740140.31123@felia
+> > 
 > 
-> I did a bisect and found:
-> 3c8e1e3eca23 ("rcu: Always set .need_qs from __rcu_read_lock() for strict GPs")
+> CC'd Arun,
 > 
-> When I reverted that on next-20200826 and on next-20200827 the
-> allmodconfig kernel boots [1], there's other issues that I can see in
-> the log but not this one.
-
-Thank you for bisecting!
-
-I take it that you have CONFIG_RCU_STRICT_GRACE_PERIOD=y in your .config?
-Ah, you do, according to this line in your dmesg:
-
-	rcu: 	RCU strict (and thus non-scalable) grace periods enabled.
-
-And much else besides, serious debugging enabled!  ;-)
-
-Does this reproduce with CONFIG_RCU_STRICT_GRACE_PERIOD=n?  My guess,
-given the commit that your bisection converged on, is that it will not
-reproduce in that case.
-
-							Thanx, Paul
-
-> Cheers,
-> Anders
-> [1] https://people.linaro.org/~anders.roxell/output-next-20200827-3c8e1e3eca23.log
+> I think it's worth to update the alias to:
 > 
-> >  They are linear,
-> > extending from 0d23eddbe5d4 ("rcu: Remove KCSAN stubs") to 72cc80705122
-> > ("rcu: Remove unused "cpu" parameter from rcu_report_qs_rdp()".
-> >
-> > I do regularly test single-CPU premptible RCU, but not on ARM.  Nor do
-> > I normally enable quite this much debug, so I might have missed something.
-> >
-> >                                                         Thanx, Paul
-> >
-> > > Cheers,
-> > > Anders
-> > > [1] https://people.linaro.org/~anders.roxell/output-next-20200826.log
-> > > [2] https://people.linaro.org/~anders.roxell/output-next-20200826-bisect-e6df9766894d.log
-> > > [3] https://people.linaro.org/~anders.roxell/output-next-20200826-bisect-25e6e115dd1d.log
-> > > [4] https://people.linaro.org/~anders.roxell/output-next-20200826-bisect-revert-e6df9766894d-25e6e115dd1d.log
+> GR-QLogic-Storage-Upstream@marvell.com
+> 
+
+So, if these drivers are not orphans, you can answer Thomas Gleixner's 
+original email from 2019. If you can quickly ack that patch set, I am 
+happy to do the donkey work to get this apply nicely on the current 
+master (please CC me on that response).
+
+Lukas
