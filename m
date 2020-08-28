@@ -2,185 +2,94 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 402EBC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4644C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 200AA2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 945792071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:06:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h1hgyTlR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbgH1JE3 (ORCPT
+        id S1728753AbgH1JGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:04:29 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:52639 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726834AbgH1JE1 (ORCPT
+        Fri, 28 Aug 2020 05:06:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728362AbgH1JGg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:04:27 -0400
-X-IronPort-AV: E=Sophos;i="5.76,363,1592841600"; 
-   d="scan'208";a="98664409"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 28 Aug 2020 17:04:22 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id 187A348990C4;
-        Fri, 28 Aug 2020 17:04:16 +0800 (CST)
-Received: from [10.167.225.206] (10.167.225.206) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Fri, 28 Aug 2020 17:04:16 +0800
-Subject: Re: [PATCH] fs: Kill DCACHE_DONTCACHE dentry even if
- DCACHE_REFERENCED is set
-To:     Dave Chinner <david@fromorbit.com>
-CC:     <viro@zeniv.linux.org.uk>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <y-goto@fujitsu.com>
-References: <20200821015953.22956-1-lihao2018.fnst@cn.fujitsu.com>
- <20200827063748.GA12096@dread.disaster.area>
- <6b3b3439-2199-8f00-ceca-d65769e94fe0@cn.fujitsu.com>
- <20200828003541.GD12096@dread.disaster.area>
-From:   "Li, Hao" <lihao2018.fnst@cn.fujitsu.com>
-Message-ID: <d7852ad6-d304-895d-424d-3053bf07f0f5@cn.fujitsu.com>
-Date:   Fri, 28 Aug 2020 17:04:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.1.1
+        Fri, 28 Aug 2020 05:06:36 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5DAAC061232
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:06:34 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id d11so520507ejt.13
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HvV7eXBvyQgCBgrsjvWaIv2rEaJefsbSLUIuZLspMEA=;
+        b=h1hgyTlR8KltTUDbvjiOZ0FJPdU1qPb2uGFPxuC9WkmLFRhAEyeaFSrZW97ojGNcp0
+         ccRdiTageCHFfZJBLuATi1xd0boWZlbxqSGcqSlmEk1SE5ZKwTSi9YCZAIGfUZiNksWn
+         mBZgya8M2DBV7E+1WLVtyLXHnyeyR28qvSLsk3mBKW1XGhw+ERe3+pE8Hxv8ePRG2Uc3
+         FqDohuRqdAKDiQe60Wp7dd+SAqOlJDTYXWvF5PYjIrtO70S+9wpqgoV0PH57Lti/mkS7
+         lkA0rwUzvgBigA19Oou95yEg2rao3yIdKqpkBcEr/hgJpNN9FGAPgr0LiMO2eTLNh9sf
+         XsnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HvV7eXBvyQgCBgrsjvWaIv2rEaJefsbSLUIuZLspMEA=;
+        b=Fge027/jEnObOxLT6oauSzDnWZEu23mo3f0YZWR6i0+hOieDafKv9qfYJhrj6YPxlo
+         epcoRbq+pqqzz7gMVVGZyAP98HnBqqpgOv1s5QKO2iOY8ZQZ+gWme5f7ZL0mOGiuLGQ1
+         hVuDmyBBL9hYQy5CyerA8DnEgg58/TCiwwK4HyJd99BqUXIYeyglZfwp8RHB1fUpWHa8
+         02LIG8Pl0AQL/9RbuSf/IGTvbO00nBN2HVyc8Kr9zh8vg60h4ZMu9JeGFfhkPFonr6Wf
+         isFo47aeK/pENwnTHN0JBEpXnt3CFW+oddmCKTsq4e7jE6TL6r3bqY2k0qn7oyQUdyRv
+         V2Xw==
+X-Gm-Message-State: AOAM530mHuqw7A36msQpbJfoCelgYItXz7LsP5WFZ3gHu26E8iOUXNXr
+        zchKBfZo6hx3Ggm3H/rOzffYqBxZAEyK77eNRFcGIA==
+X-Google-Smtp-Source: ABdhPJzmAhVb+RcSV8T4sZX5/XRKDlKD6uVeC4jK3X8WbHU7aWhc8Y1BK4BLw7LNFeiAVXdSfK9JBKq/4Qwn8LtOpcU=
+X-Received: by 2002:a17:906:5f8d:: with SMTP id a13mr767284eju.226.1598605593511;
+ Fri, 28 Aug 2020 02:06:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200828003541.GD12096@dread.disaster.area>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.167.225.206]
-X-ClientProxiedBy: G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.205) To
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201)
-X-yoursite-MailScanner-ID: 187A348990C4.ADFE2
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: lihao2018.fnst@cn.fujitsu.com
+References: <20200814100357.209340-1-thomas.preston@codethink.co.uk> <20200814100357.209340-2-thomas.preston@codethink.co.uk>
+In-Reply-To: <20200814100357.209340-2-thomas.preston@codethink.co.uk>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Aug 2020 11:06:21 +0200
+Message-ID: <CACRpkdZj-eAz0yse3OcKLiO0sPVHJMmhVZ_yLWFt1YKPe3hkRg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] pinctrl: mcp23s08: Fixup mcp23x17 regmap_config
+To:     Thomas Preston <thomas.preston@codethink.co.uk>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>,
+        Phil Reid <preid@electromag.com.au>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/28 8:35, Dave Chinner wrote:
-> On Thu, Aug 27, 2020 at 05:58:07PM +0800, Li, Hao wrote:
->> On 2020/8/27 14:37, Dave Chinner wrote:
->>> On Fri, Aug 21, 2020 at 09:59:53AM +0800, Hao Li wrote:
->>>> Currently, DCACHE_REFERENCED prevents the dentry with DCACHE_DONTCACHE
->>>> set from being killed, so the corresponding inode can't be evicted. If
->>>> the DAX policy of an inode is changed, we can't make policy changing
->>>> take effects unless dropping caches manually.
->>>>
->>>> This patch fixes this problem and flushes the inode to disk to prepare
->>>> for evicting it.
->>>>
->>>> Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
->>>> ---
->>>>  fs/dcache.c | 3 ++-
->>>>  fs/inode.c  | 2 +-
->>>>  2 files changed, 3 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/fs/dcache.c b/fs/dcache.c
->>>> index ea0485861d93..486c7409dc82 100644
->>>> --- a/fs/dcache.c
->>>> +++ b/fs/dcache.c
->>>> @@ -796,7 +796,8 @@ static inline bool fast_dput(struct dentry *dentry)
->>>>  	 */
->>>>  	smp_rmb();
->>>>  	d_flags = READ_ONCE(dentry->d_flags);
->>>> -	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED;
->>>> +	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED
->>>> +			| DCACHE_DONTCACHE;
->>> Seems reasonable, but you need to update the comment above as to
->>> how this flag fits into this code....
->> Yes. I will change it. Thanks.
->>
->>>>  	/* Nothing to do? Dropping the reference was all we needed? */
->>>>  	if (d_flags == (DCACHE_REFERENCED | DCACHE_LRU_LIST) && !d_unhashed(dentry))
->>>> diff --git a/fs/inode.c b/fs/inode.c
->>>> index 72c4c347afb7..5218a8aebd7f 100644
->>>> --- a/fs/inode.c
->>>> +++ b/fs/inode.c
->>>> @@ -1632,7 +1632,7 @@ static void iput_final(struct inode *inode)
->>>>  	}
->>>>  
->>>>  	state = inode->i_state;
->>>> -	if (!drop) {
->>>> +	if (!drop || (drop && (inode->i_state & I_DONTCACHE))) {
->>>>  		WRITE_ONCE(inode->i_state, state | I_WILL_FREE);
->>>>  		spin_unlock(&inode->i_lock);
->>> What's this supposed to do? We'll only get here with drop set if the
->>> filesystem is mounting or unmounting.
->> The variable drop will also be set to True if I_DONTCACHE is set on
->> inode->i_state.
->> Although mounting/unmounting will set the drop variable, it won't set
->> I_DONTCACHE if I understand correctly. As a result,
->> drop && (inode->i_state & I_DONTCACHE) will filter out mounting/unmounting.
-> So what does this have to do with changing the way the dcache
-> treats DCACHE_DONTCACHE?
-After changing the way the dcache treats DCACHE_DONTCACHE, the dentry with
-DCACHE_DONTCACHE set will be killed unconditionally even if
-DCACHE_REFERENCED is set, and its inode will be processed by iput_final().
-This inode has I_DONTCACHE flag, so op->drop_inode() will return true,
-and the inode will be evicted _directly_ even though it has dirty pages.
-I think the kernel will run into error state because it doesn't writeback
-dirty pages of this inode before evicting. This is why I write back this
-inode here.
+On Fri, Aug 14, 2020 at 12:04 PM Thomas Preston
+<thomas.preston@codethink.co.uk> wrote:
 
-According to my test, if I revert the second hunk of this patch, kernel
-will hang after running the following command:
-echo 123 > test.txt && xfs_io -c "chattr +x" test.txt
-
-The backtrace is:
-
-xfs_fs_destroy_inode+0x204/0x24d
-destroy_inode+0x3b/0x65
-evict+0x150/0x1aa
-iput+0x117/0x19a
-dentry_unlink_inode+0x12b/0x12f
-__dentry_kill+0xee/0x211
-dentry_kill+0x112/0x22f
-dput+0x79/0x86
-__fput+0x200/0x23f
-____fput+0x25/0x28
-task_work_run+0x144/0x177
-do_exit+0x4fb/0xb94
-
-This backtrace is printed with an ASSERT(0) statement in xfs_fs_destroy_inode().
+> - Fix a typo where mcp23x17 configs are referred to as mcp23x16.
+> - Fix precious range to include INTCAP{A,B}, which clear on read.
+> - Fix precious range to include GPIOB, which clears on read.
+> - Fix volatile range to include GPIOB, to fix debugfs registers
+>   reporting different values than `gpioget gpiochip2 {0..15}`.
 >
-> Also, if I_DONTCACHE is set, but the inode has also been unlinked or
-> is unhashed, should we be writing it back? i.e. it might have been
-> dropped for a different reason to I_DONTCACHE....
-This is a problem I didn't realize. You are right. If the inode has been
-unlinked/unhashed and the I_DONTCACHE is also set, the appended condition
-will lead to unnecessary writeback.
+> Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
 
-I think I need to handle the inode writeback more carefully. Maybe I can
-revert the second hunk and remove I_DONTCACHE from generic_drop_inode()
-and then change
+Since the other two patches seem wrong, please resend this one patch,
+also include the people on TO: here: Andy, Phil and Jan, who all use
+this chip a lot.
 
-if (!drop && (sb->s_flags & SB_ACTIVE))
-
-to
-
-if (!drop && !(inode->i_state & I_DONTCACHE) && (sb->s_flags & SB_ACTIVE))
-
-This approach would be more suitable.
->
-> IOWs, if there is a problem with how I_DONTCACHE is being handled,
-> then the problem must already exists regardless of the
-> DCACHE_DONTCACHE behaviour, right? So shouldn't this be a separate
-> bug fix with it's own explanation of the problem and the fix?
-I do think the way we treat I_DONTCACHE in current kernel is not suitable.
-generic_drop_inode() is used to determine if the inode should be evicted
-without writeback, so I_DONTCACHE shouldn't be handled in this function.
-The suitable approach is illustrated above. I can submit a patch to fix
-this problem if this new approach is acceptable.
-
-Thanks,
-Hao Li
-> Cheers,
->
-> Dave.
-
-
-
+Yours,
+Linus Walleij
