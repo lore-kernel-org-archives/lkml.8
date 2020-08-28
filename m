@@ -2,102 +2,153 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1090C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95472C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2CEA208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:07:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="etwiKp50"
+	by mail.kernel.org (Postfix) with ESMTP id 765862078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:08:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbgH1KH1 (ORCPT
+        id S1729006AbgH1KIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 06:07:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbgH1KHW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 06:07:22 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C4B9C061264
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:07:22 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id n18so321723qtw.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:07:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5DWcFLVs7+8PT9sQYHTE5MVq2/WH2ViS0B9HUra8F8Q=;
-        b=etwiKp50YqqxjzNCos9NIO00Jr03pW7DFzF+Cvwstbmltbe9cyLAlWjE9Xp5sWs/IL
-         mYWsCdfDQ1SIpHqOLw0iohb8cAnYQ4fp82ri8qdE+Oe8ipMwEQgvOvtxGNY/kjgj0BnO
-         Osap4Lk/2ZNxm+wPPZfQBRfx0sZHGI5kpBRzHLU2PlrWR3GfdYCi+vi9BKlqRH1vVPTY
-         x5Nd2DqACB6QAWHqcYuTfIEgTRMK9pgQkMWijliEYKB+E5zf4T7XsE7ccvWw9xrthxem
-         Rr3KPr1lLUQhK8sngJNY/ojPmZk61KhUR3EEC8bEiwDmkWbFVisUoy9GtQuxzHN3Z5P6
-         /YDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5DWcFLVs7+8PT9sQYHTE5MVq2/WH2ViS0B9HUra8F8Q=;
-        b=BupEPIgE1p7HAyQCQUuRCexplWblkRE55SRJ+h2horzXvDxbtNPefG66FtYazL6eqZ
-         4+IyCG3mkc5ziG7IN9eYlDGPTpnbwylfBlN0eVUo56uKMh7435iw9WcNeBhootVqbGn5
-         ww60fw/rkbkK773aOzQiWqI7CDkcD4G81TfUw4FmEq1n/AFQoAFP4OOtOcjO/CsrFJv2
-         f0he5HuiI1PqTAE2z9wLXHOZdnxdi2rIW3WvN40QuHLg1JFEnspVdNu6NlGKGvQIS730
-         uleSc1p2yhib1bq3/m652/15qXa6RYP0aIVGzNpd7rmD4rSWOlVRWIj2ge3zUeSKQ/hu
-         YJOg==
-X-Gm-Message-State: AOAM531UuYOcX4L7TyhJluoMgwwCO0LWlEPQQv9zMg/M/ChcZrWeRUVV
-        wf4g8wVryDMvmaKz0OdlL6CdFzYGgrIOYnw8leA=
-X-Google-Smtp-Source: ABdhPJy4gCDMbQqc7Vwj3MiA4Z3DFCbhUavBfMoOblyXw08G/6XNk2GPgBbHhVh4rciyk58fLBp2f9YpkyzkGk4tI8w=
-X-Received: by 2002:ac8:165d:: with SMTP id x29mr798396qtk.117.1598609239779;
- Fri, 28 Aug 2020 03:07:19 -0700 (PDT)
+        Fri, 28 Aug 2020 06:08:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46890 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728218AbgH1KH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 06:07:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 0FEA4AC5E;
+        Fri, 28 Aug 2020 10:08:29 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 050C21E12C0; Fri, 28 Aug 2020 12:07:56 +0200 (CEST)
+Date:   Fri, 28 Aug 2020 12:07:55 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     syzbot <syzbot+3622cea378100f45d59f@syzkaller.appspotmail.com>
+Cc:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu, linux-mm@kvack.org
+Subject: Re: kernel BUG at fs/ext4/inode.c:LINE!
+Message-ID: <20200828100755.GG7072@quack2.suse.cz>
+References: <000000000000d3a33205add2f7b2@google.com>
 MIME-Version: 1.0
-References: <20200827132435.24925-1-geert+renesas@glider.be>
-In-Reply-To: <20200827132435.24925-1-geert+renesas@glider.be>
-From:   Greentime Hu <green.hu@gmail.com>
-Date:   Fri, 28 Aug 2020 18:06:42 +0800
-Message-ID: <CAEbi=3ete4X_CKqKOHJwBUegSevRix_h9C5+3K8TGyDv4Vk5Fw@mail.gmail.com>
-Subject: Re: [PATCH] nds32: Fix bogus reference to <asm/procinfo.h>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Nick Hu <nickhu@andestech.com>, Vincent Chen <deanbo422@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000d3a33205add2f7b2@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Geert Uytterhoeven <geert+renesas@glider.be> =E6=96=BC 2020=E5=B9=B48=E6=9C=
-=8827=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=889:24=E5=AF=AB=E9=81=93=
-=EF=BC=9A
->
-> Andestech(nds32) never had <asm/procinfo.h>.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  arch/nds32/kernel/setup.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/nds32/kernel/setup.c b/arch/nds32/kernel/setup.c
-> index a066efbe53c0c098..3671129e205852b7 100644
-> --- a/arch/nds32/kernel/setup.c
-> +++ b/arch/nds32/kernel/setup.c
-> @@ -52,7 +52,7 @@ EXPORT_SYMBOL(elf_hwcap);
->
->  /*
->   * The following string table, must sync with HWCAP_xx bitmask,
-> - * which is defined in <asm/procinfo.h>
-> + * which is defined above
->   */
->  static const char *hwcap_str[] =3D {
->         "mfusr_pc",
+On Wed 26-08-20 19:48:16, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    c3d8f220 Merge tag 'kbuild-fixes-v5.9' of git://git.kernel..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15f83cb6900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=bb68b9e8a8cc842f
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3622cea378100f45d59f
+> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1287ac96900000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11c7ac46900000
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+3622cea378100f45d59f@syzkaller.appspotmail.com
+> 
+> ------------[ cut here ]------------
+> kernel BUG at fs/ext4/inode.c:2598!
+> invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 1 PID: 27612 Comm: syz-executor879 Not tainted 5.9.0-rc1-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> RIP: 0010:mpage_prepare_extent_to_map+0xd34/0xd40 fs/ext4/inode.c:2598
 
-Thank you, Geert.
-Acked-by: Greentime Hu <green.hu@gmail.com>
-I'll put it in the next branch.
+Doh, so this is:
+
+                        wait_on_page_writeback(page);
+>>>                     BUG_ON(PageWriteback(page));
+
+in mpage_prepare_extent_to_map(). So we have PageWriteback() page after we
+have called wait_on_page_writeback() on a locked page. Not sure how this
+could ever happen even less how ext4 could cause this...
+
+Anyway, syzbot has found a reproducer so I'll try if it reproduces in my
+KVM...
+
+								Honza
+
+
+> Code: 89 e8 a0 74 9f ff 0f 0b e8 59 81 70 ff 4c 89 e7 48 c7 c6 da a3 07 89 e8 8a 74 9f ff 0f 0b e8 43 81 70 ff 0f 0b e8 3c 81 70 ff <0f> 0b e8 c5 b3 25 06 0f 1f 44 00 00 55 41 57 41 56 41 55 41 54 53
+> RSP: 0018:ffffc9000a0974d8 EFLAGS: 00010293
+> RAX: ffffffff820476e4 RBX: 00fffe000000a01f RCX: ffff88808ea5c340
+> RDX: 0000000000000000 RSI: 000000000000a01f RDI: 000000000000ffff
+> RBP: ffffea00020d4f80 R08: ffffffff820471e4 R09: fffff9400041a9f1
+> R10: fffff9400041a9f1 R11: 0000000000000000 R12: ffffea00020d4f80
+> R13: ffffc9000a0977b0 R14: 1ffffd400041a9f1 R15: dffffc0000000000
+> FS:  00007f5055f25700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00000000004ae4b0 CR3: 00000000a2d7f000 CR4: 00000000001506e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  ext4_writepages+0xa98/0x3750 fs/ext4/inode.c:2735
+>  do_writepages+0xda/0x1f0 mm/page-writeback.c:2352
+>  __filemap_fdatawrite_range+0x2a5/0x350 mm/filemap.c:422
+>  filemap_write_and_wait_range+0xca/0x160 mm/filemap.c:655
+>  iomap_dio_rw+0x5a7/0xeb0 fs/iomap/direct-io.c:478
+>  ext4_dio_read_iter fs/ext4/file.c:77 [inline]
+>  ext4_file_read_iter+0x544/0x6d0 fs/ext4/file.c:129
+>  call_read_iter include/linux/fs.h:1876 [inline]
+>  generic_file_splice_read+0x3c5/0x640 fs/splice.c:312
+>  do_splice_to fs/splice.c:870 [inline]
+>  splice_direct_to_actor+0x3bd/0xb60 fs/splice.c:950
+>  do_splice_direct+0x201/0x340 fs/splice.c:1059
+>  do_sendfile+0x86d/0x1210 fs/read_write.c:1540
+>  __do_sys_sendfile64 fs/read_write.c:1601 [inline]
+>  __se_sys_sendfile64 fs/read_write.c:1587 [inline]
+>  __x64_sys_sendfile64+0x164/0x1a0 fs/read_write.c:1587
+>  do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x448bc9
+> Code: e8 1c e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 0b 06 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f5055f24ce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+> RAX: ffffffffffffffda RBX: 00000000006e4a28 RCX: 0000000000448bc9
+> RDX: 0000000000000000 RSI: 0000000000000006 RDI: 0000000000000004
+> RBP: 00000000006e4a20 R08: 0000000000000000 R09: 0000000000000000
+> R10: 00008400fffffffb R11: 0000000000000246 R12: 00000000006e4a2c
+> R13: 00007ffdc73a76df R14: 00007f5055f259c0 R15: 20c49ba5e353f7cf
+> Modules linked in:
+> ---[ end trace aba5fca59eda2183 ]---
+> RIP: 0010:mpage_prepare_extent_to_map+0xd34/0xd40 fs/ext4/inode.c:2598
+> Code: 89 e8 a0 74 9f ff 0f 0b e8 59 81 70 ff 4c 89 e7 48 c7 c6 da a3 07 89 e8 8a 74 9f ff 0f 0b e8 43 81 70 ff 0f 0b e8 3c 81 70 ff <0f> 0b e8 c5 b3 25 06 0f 1f 44 00 00 55 41 57 41 56 41 55 41 54 53
+> RSP: 0018:ffffc9000a0974d8 EFLAGS: 00010293
+> RAX: ffffffff820476e4 RBX: 00fffe000000a01f RCX: ffff88808ea5c340
+> RDX: 0000000000000000 RSI: 000000000000a01f RDI: 000000000000ffff
+> RBP: ffffea00020d4f80 R08: ffffffff820471e4 R09: fffff9400041a9f1
+> R10: fffff9400041a9f1 R11: 0000000000000000 R12: ffffea00020d4f80
+> R13: ffffc9000a0977b0 R14: 1ffffd400041a9f1 R15: dffffc0000000000
+> FS:  00007f5055f25700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00000000004ae4b0 CR3: 00000000a2d7f000 CR4: 00000000001506e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this issue, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
