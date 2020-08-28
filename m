@@ -2,138 +2,105 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01138C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E77BC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D55C1206FA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1615B20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:18:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Whppa+bZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgH1UPp (ORCPT
+        id S1726460AbgH1USG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 16:15:45 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:48187 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbgH1UPn (ORCPT
+        Fri, 28 Aug 2020 16:18:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:38768 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726007AbgH1USD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 16:15:43 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MS43X-1k0w3a1rdj-00TU2H; Fri, 28 Aug 2020 22:15:41 +0200
-Received: by mail-qk1-f175.google.com with SMTP id g72so204338qke.8;
-        Fri, 28 Aug 2020 13:15:41 -0700 (PDT)
-X-Gm-Message-State: AOAM5331iSCAYRtGmzgu+rq3Lq2kDdtGxdGldSh7WOtPnW/VNRPyAgqC
-        boaVuzk+1UouW8HWvJ8PblfeaOVw4CCZCClGYEI=
-X-Google-Smtp-Source: ABdhPJyFxFIv+GcJZpKlS+lPDRy1qPULULsQ3S/m8TXtBVzsR15m6l0uoJmkbm1MsalFQvPRw8Dsa1/8I63jaxHy9uo=
-X-Received: by 2002:a37:a04b:: with SMTP id j72mr892253qke.352.1598645740122;
- Fri, 28 Aug 2020 13:15:40 -0700 (PDT)
+        Fri, 28 Aug 2020 16:18:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598645882;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KWyHfTHifX4s3mVQhhcUAJcvryyZ6mo0hzR0AcO35fk=;
+        b=Whppa+bZpo+1zTU+t5CcmD1uwl+LQRfHX8YHKtIpJ/1ZtwwD5mytcx7yJBJxB0WG0ZrpAu
+        0TJxVEjveRLF5jH9QKYxqNfe3W9C9jwz3CTBRDf5kqIGCa+Z3pgi0PMLbd0tZXRoOHZTCW
+        h2moTccYeGQrn1sBFF29m+ykQSCOOQ8=
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
+ [209.85.167.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-576-Ox3fh0q_PQWeC47cgxkT9w-1; Fri, 28 Aug 2020 16:18:00 -0400
+X-MC-Unique: Ox3fh0q_PQWeC47cgxkT9w-1
+Received: by mail-oi1-f200.google.com with SMTP id p4so184279oic.18
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 13:18:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=KWyHfTHifX4s3mVQhhcUAJcvryyZ6mo0hzR0AcO35fk=;
+        b=dBpLEAuPLGXs4YgGENRo6PRPRVLIChl4bRBp4xtG9Hpos2zR2zwHj8bKVJ+853Lh5C
+         b4RGz+9XXfZjzVnddIvcT2GB3xTZX2eSZeFj50r7TCzJF1E7aFQEAUZOPX5EB8G7zJ/X
+         uxkkNoCUnGrD7UqOwKCbWKg2KmgsQ/5KNH0x7ot+/bgMSbjVvOcRmmxQqZvkpGMuu9FU
+         xJNOGbjNlvDpzAxa2xapAL2Tt5tFbrd1F7TlCU2MzlKu8+jHnJQ3bMOBAeLPhSflIqHm
+         ukDkIDNGxit73rR/7XPp3j67sh0DVjH9yQ7PMgnnvTa/MTh98+jKDBqATtXky4DHzTTY
+         J/OA==
+X-Gm-Message-State: AOAM532kYzbCkip1hfkebN5IdZTzDrJGeD7DWEDodkNrzO7zl0MfcRxj
+        Jb02004sEGgasn/CwGeIWvtVqVQswQk36IzqZryCAQuUQYSHdoWnoxCpErpzJPnUJxPRo4tXgx3
+        3j3omc6wWQ/eZ9rJjkhdTBfy5
+X-Received: by 2002:a05:6830:20d1:: with SMTP id z17mr263794otq.179.1598645879654;
+        Fri, 28 Aug 2020 13:17:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw0nfNYShd/fLaNgYR9tr4qsn5gYzr5yuS0DTc5RPzbGI202F6TSa9iWZ9O85GKeYOjvc4HsA==
+X-Received: by 2002:a05:6830:20d1:: with SMTP id z17mr263783otq.179.1598645879392;
+        Fri, 28 Aug 2020 13:17:59 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id z13sm62938oia.30.2020.08.28.13.17.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Aug 2020 13:17:58 -0700 (PDT)
+Subject: Re: [PATCH v3 5/5] fpga manager: xilinx-spi: provide better
+ diagnostics on programming failure
+To:     Luca Ceresoli <luca@lucaceresoli.net>, linux-fpga@vger.kernel.org
+Cc:     Moritz Fischer <mdf@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anatolij Gustschin <agust@denx.de>
+References: <20200828195808.27975-1-luca@lucaceresoli.net>
+ <20200828195808.27975-5-luca@lucaceresoli.net>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <20e0b1e3-938e-9020-a4b5-02e24692557d@redhat.com>
+Date:   Fri, 28 Aug 2020 13:17:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200622192900.22757-1-minchan@kernel.org> <20200622192900.22757-4-minchan@kernel.org>
- <CAK8P3a0Mnp2ekmX-BX9yr+N8fy2=gBtASELLXoa9uGSpSS9aOA@mail.gmail.com>
- <9c339413-68c7-344e-dd01-327cb988d385@kernel.dk> <ffe549f6-bed5-07f9-43a7-ec8cc12ab59d@kernel.dk>
-In-Reply-To: <ffe549f6-bed5-07f9-43a7-ec8cc12ab59d@kernel.dk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 28 Aug 2020 22:15:24 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0rWjvSTDO_p7mKDv24OcdnWvMaM+_pHPEDGZGwn5BG=Q@mail.gmail.com>
-Message-ID: <CAK8P3a0rWjvSTDO_p7mKDv24OcdnWvMaM+_pHPEDGZGwn5BG=Q@mail.gmail.com>
-Subject: Re: [PATCH v8 3/4] mm/madvise: introduce process_madvise() syscall:
- an external memory hinting API
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com,
-        SeongJae Park <sj38.park@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Arjun Roy <arjunroy@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christian Brauner <christian@brauner.io>,
-        Daniel Colascione <dancol@google.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        SeongJae Park <sjpark@amazon.de>,
-        linux-man <linux-man@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:nyLHj6ZpuzHpQ/Rd2Zu2ZXBe+DoHH8w3eBCH+32bWGdcQqn303K
- /toMw6tB1D0VEVbfcBpipXwuXza07IgVsiY6a1nX4T/okWht3ONmbaiWoBfg7WkLg2xDUo0
- JnWfRr2eAG31Xl7tZ06m50/3gEY2iGyZoryyr0eupPi1V4KQ2qjC0XW6WpEvtKBsW0susOp
- VqSXHs4R2Ls4zQu7Tx70Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7msRCAyRGig=:DAPNv7qMT9UJ8LGCCJMsYg
- i9VkG4C7kuFe9V9lQ3fFeZnp54+jORtKOSaBCTchQWjnHDeKFkuUYEQ7x5PC2R0dhgmpYTL8T
- EJvbZ27r4EC0qcpRs5T5E0Yi5ZVTXnylbdOiJ4pvNlOE8tmpeNOScD0oGM9wb0Tr1Tl78swol
- vdhL9izIxBzx1ebZ8hPHzR9YLRH6dAMGPiHwH0By7YLILRMJehpec+9PTfk6nNqx3mgQXYrU5
- FkeQqdZBryVgG8qSEDEhKJAkNKuqlfB03zuc/Z/32p5lujRx4TkcBqvMLteb+I/0s8b1S6mXD
- MHY8AnS4yXtZjkB9R8nONJJTxVeqSNIFx/JwfyxQAI03sVpG7/Yne1/XPn81NAPev3PFgbONc
- McLl0MQNN9HpfyJbU1xj25suvPMsJMIMlbpn0EIH2N8cXlmE1eMTPwNiUcmZi11m5stcWqNYK
- aPn6YkJ3dLXgYIBNZ7bFwG2qH9N2uknSXE5i52zH2uZmq17QLVPksdSMWcHRxSNa+u4mkKpjI
- 0O8012W/3RBizbqFYxXUw1DcPjcvom2Aqqz4YJhmtFMxaVo9/xda/ofktyLGIJn+pS6jZzHFH
- Uh9q/WEHR8BAVtmsf9yFJzf0fbWQF7bvHLPZ4rG/0tt7jZjC5gZkeDUmFUGikTWRyiAGm9ycS
- nnS66N/IZ2S+rRYLrB30mqpON3X/cEhLNrWiOT/gyxVc/r2dhvpEA6ey5LnoKQiZaif9Pewuq
- 2YWb+9HmLgI0O7VWq0pRDui9KQiBwTigdT5wwg16wW7RxCELirjHu3IA+Q06fkVc9s+txrR63
- xUVE7RIQp3aJ/tEZLVkT6+iSgfWn41SayDMenKgLpe+4Vo49iqU6Wsow03ny4rZEl+s5xFn
+In-Reply-To: <20200828195808.27975-5-luca@lucaceresoli.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 9:27 PM Jens Axboe <axboe@kernel.dk> wrote:
-> On 8/28/20 12:24 PM, Jens Axboe wrote:
 
-> >> @@ -1683,8 +1683,13 @@ ssize_t import_iovec(int type, const struct
-> >> iovec __user * uvector,
-> >>  {
-> >>         ssize_t n;
-> >>         struct iovec *p;
-> >> -       n = rw_copy_check_uvector(type, uvector, nr_segs, fast_segs,
-> >> -                                 *iov, &p);
-> >> +
-> >> +       if (in_compat_syscall())
-> >> +               n = compat_rw_copy_check_uvector(type, uvector, nr_segs,
-> >> +                                                fast_segs, *iov, &p);
-> >> +       else
-> >> +               n = rw_copy_check_uvector(type, uvector, nr_segs,
-> >> +                                         fast_segs, *iov, &p);
-> >>         if (n < 0) {
-> >>                 if (p != *iov)
-> >>                         kfree(p);
-> >
-> > Doesn't work for the async case, where you want to be holding on to the
-> > allocated iovec. But in general I think it's a good helper for the sync
-> > case, which is by far the majority.
+On 8/28/20 12:58 PM, Luca Ceresoli wrote:
+> When the DONE pin does not go high after programming to confirm programming
+> success, the INIT_B pin provides some info on the reason. Use it if
+> available to provide a more explanatory error message.
 >
-> Nevermind, I'm an idiot for reading this totally wrong.
->
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 
-I think you are right about the need to pick the compat vs native
-behavior based on req->ctx->compat instead of in_compat_syscall()
-inside of io_import_iovec().
+This patch set looks good to me.
 
-That one can probably call a lower-level version and when all other
-callers get changed to calling
+Thanks
 
-ssize_t import_iovec(int type, const struct iovec __user * uvector,
-                 unsigned nr_segs, unsigned fast_segs,
-                 struct iovec **iov, struct iov_iter *i)
-{
-       return __import_iovec(type, uvector, nr_segs, fast_segs, iov,
-i, in_compat_syscall());
-}
+Tom
 
-      Arnd
+Reviewed-by: Tom Rix <trix@redhat.com>
+
+
