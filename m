@@ -2,171 +2,164 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7488FC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DCFC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 472BD207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05379207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:51:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bartavi.nl header.i=@bartavi.nl header.b="JNpAnPzr"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OHEg8KIT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgH1UpS (ORCPT
+        id S1726614AbgH1UvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 16:45:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgH1UpP (ORCPT
+        Fri, 28 Aug 2020 16:51:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46820 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726033AbgH1UvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 16:45:15 -0400
-X-Greylist: delayed 281 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 28 Aug 2020 13:45:14 PDT
-Received: from outbound.soverin.net (outbound.soverin.net [IPv6:2a01:4f8:fff0:2d:8::218])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA2B3C061264;
-        Fri, 28 Aug 2020 13:45:14 -0700 (PDT)
-Received: from smtp.soverin.net (unknown [10.10.3.24])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by outbound.soverin.net (Postfix) with ESMTPS id 1F35460AF2;
-        Fri, 28 Aug 2020 20:45:13 +0000 (UTC)
-Received: from smtp.soverin.net (smtp.soverin.net [159.69.232.138]) by soverin.net
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=bartavi.nl; s=soverin;
-        t=1598647511; bh=8xkQ/ltprH+eyjeuEUkHOc9x8L26C1hcmS7SUa7P7s4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JNpAnPzrJUHZiv2iPFS+Ir1ER9mHSTWUR5Xuahenw8OD2iuq3VQqXMBsm96iMr3Po
-         Y5DhzGUuzf8YV8m6vcgTLl6Ok2fz9xg6td5z3MVuNnni4zJFLECPEhaobqbhjlRGfF
-         k3Pcq/lMD8BQfD5fpATP+AkbhYDAyIrxqu5J76dJzCOM78Co2YYGPizPdF+Gj1dhp8
-         aOPli3D1lemLBOu3NrDu2MYqEA8mtvCtlbm8R7j27iD2OR3d2ea6mhTNqD41WGJecO
-         SmYTsYvvO3Vsu5TqJ5XVe7EY9JgEw7CPAsVsKUj08I+VOiIIxFpDdiO/91pZ5iGQIo
-         otpjgveZ0KWTw==
-From:   Bart Groeneveld <avi@bartavi.nl>
-To:     linux-kernel@vger.kernel.org
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-        Bart Groeneveld <avi@bartavi.nl>
-Subject: [PATCH v3] net: Use standardized (IANA) local port range
-Date:   Fri, 28 Aug 2020 22:44:47 +0200
-Message-Id: <20200828204447.32838-1-avi@bartavi.nl>
-In-Reply-To: <20200828203959.32010-1-avi@bartavi.nl>
-References: <20200828203959.32010-1-avi@bartavi.nl>
+        Fri, 28 Aug 2020 16:51:05 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07SKWZ8d029115;
+        Fri, 28 Aug 2020 16:50:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=references : from : to :
+ cc : subject : in-reply-to : date : message-id : mime-version :
+ content-type; s=pp1; bh=Ny7eNfWhtcq4Ar5c7KEMz0IptA0ExTcP1Tp3zXIUI3o=;
+ b=OHEg8KITkuARJ/TpltkffH95tKQ/B5JQbeV5YBbX3V73zR20f5QyOgwD3nSG8aIMkKB7
+ 4RXDNhR9mQNuVqa17HEA7RuyIafMfZFJ7/ETWs1LJqT8uYWsXHfY+2HDcNAZiUUehoKV
+ DMsfLfJH9oLF/MKUMwS1dTPCOfgMuFAxy829J36MzijUfIfQ3rGT/Vb3239qc3qpwLJU
+ 6D6tG+dZeiaIGWBk5UK0uwIw715HgeQSWzeQjICR2IBdJioABr1me1ECZCMMqZa0S2PB
+ a602zbmobZrEyfrp7WSUKhiw/W1j1Sbd6inwNfZaKubZv0VUfzcWX1vvrJJKTykcuSu8 iA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3378hms2dk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 16:50:26 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07SKWqB5029504;
+        Fri, 28 Aug 2020 16:50:25 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3378hms2d0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 16:50:25 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07SKlBNH020665;
+        Fri, 28 Aug 2020 20:50:23 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma01dal.us.ibm.com with ESMTP id 332utu9ujg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 20:50:23 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07SKoN4423462308
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Aug 2020 20:50:23 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1CD23AE05C;
+        Fri, 28 Aug 2020 20:50:23 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91C44AE05F;
+        Fri, 28 Aug 2020 20:50:12 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.211.108.111])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Fri, 28 Aug 2020 20:50:12 +0000 (GMT)
+References: <20200819172134.11243-1-nramas@linux.microsoft.com>
+ <20200819172134.11243-5-nramas@linux.microsoft.com>
+User-agent: mu4e 1.4.10; emacs 27.1
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
+        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
+        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
+        vincenzo.frascino@arm.com, mark.rutland@arm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
+        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
+        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
+Subject: Re: [PATCH v4 4/5] arm64: Store IMA log information in kimage used
+ for kexec
+In-reply-to: <20200819172134.11243-5-nramas@linux.microsoft.com>
+Date:   Fri, 28 Aug 2020 17:50:09 -0300
+Message-ID: <875z928pha.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-28_15:2020-08-28,2020-08-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ adultscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0 bulkscore=0
+ mlxscore=0 mlxlogscore=999 phishscore=0 spamscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008280145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IANA specifies User ports as 1024-49151,
-and Private ports (local/ephemeral/dynamic/w/e) as 49152-65535 [1].
 
-This means Linux uses 32768-49151 'illegally'.
-This is not just a matter of following specifications:
-IANA actually assigns numbers in this range [1].
+Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
 
-I understand that Linux uses 61000-65535 for masquarading/NAT [2],
-so I left the high value at 60999.
-This means the high value still does not follow the specification,
-but it also doesn't conflict with it.
+> Address and size of the buffer containing the IMA measurement log need
+> to be passed from the current kernel to the next kernel on kexec.
+>
+> Add address and size fields to "struct kimage_arch" for ARM64 platform
+> to hold the address and size of the IMA measurement log buffer.
+> Define an architecture specific function for ARM64 namely
+> arch_ima_add_kexec_buffer() that will set the address and size of
+> the current kernel's IMA buffer to be passed to the next kernel on kexec.
+>
+> Co-developed-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
-This change will effectively halve the available ephemeral ports,
-increasing the risk of port exhaustion. But:
-a) I don't think that warrants ignoring standards.
-	Consider for example setting up a (corporate) firewall blocking
-	all unknown external services.
-	It will only allow outgoing trafiic at port 80,443 and 49152-65535.
-	A Linux computer behind such a firewall will not be able to connect
-	to *any* external service *half of the time*.
-	Of course, the firewall can be adjusted to also allow 32768-49151,
-	but that allows computers to use some services against the policy.
-b) It is only an issue with more than 11848 *outgoing* connections.
-	I think that is a niche case (I know, citation needed, but still).
-	If someone finds themselves in such a niche case,
-	they can still modify ip_local_port_range.
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-This patch keeps the low and high value at different parity,
-as to optimize port assignment [3].
+IMHO this patch and the next one can be squashed together. Also, a minor
+comment below.
 
-[1]: https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.txt
-[2]: https://marc.info/?l=linux-kernel&m=117900026927289
-[3]: See for example commit 1580ab63fc9a03593072cc5656167a75c4f1d173 ("tcp/dccp: better use of ephemeral ports in connect()")
+> ---
+>  arch/arm64/include/asm/ima.h           | 17 +++++++++++++++++
+>  arch/arm64/include/asm/kexec.h         |  3 +++
+>  arch/arm64/kernel/machine_kexec_file.c | 17 +++++++++++++++++
+>  3 files changed, 37 insertions(+)
+>  create mode 100644 arch/arm64/include/asm/ima.h
+>
+> diff --git a/arch/arm64/include/asm/ima.h b/arch/arm64/include/asm/ima.h
+> new file mode 100644
+> index 000000000000..70ac39b74607
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/ima.h
+> @@ -0,0 +1,17 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_ARCH_IMA_H
+> +#define _ASM_ARCH_IMA_H
+> +
+> +struct kimage;
+> +
+> +#ifdef CONFIG_IMA_KEXEC
+> +int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
+> +			      size_t size);
+> +#else
+> +static inline int arch_ima_add_kexec_buffer(struct kimage *image,
+> +			unsigned long load_addr, size_t size)
+> +{
+> +	return 0;
+> +}
 
-Signed-off-by: Bart Groeneveld <avi@bartavi.nl>
----
- Documentation/networking/ip-sysctl.rst | 4 ++--
- net/ipv4/af_inet.c                     | 2 +-
- net/ipv4/inet_connection_sock.c        | 2 +-
- net/ipv4/inet_hashtables.c             | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+There's no need to define arch_ima_add_kexec_buffer() if
+CONFIG_IMA_KEXEC isn't set because in that case, the code which calls
+this function in ima_add_kexec_buffer() won't be part of the build.
 
-diff --git a/Documentation/networking/ip-sysctl.rst b/Documentation/networking/ip-sysctl.rst
-index 837d51f9e1fa..5048b326f773 100644
---- a/Documentation/networking/ip-sysctl.rst
-+++ b/Documentation/networking/ip-sysctl.rst
-@@ -1024,7 +1024,7 @@ ip_local_port_range - 2 INTEGERS
- 	If possible, it is better these numbers have different parity
- 	(one even and one odd value).
- 	Must be greater than or equal to ip_unprivileged_port_start.
--	The default values are 32768 and 60999 respectively.
-+	The default values are 49152 and 60999 respectively.
- 
- ip_local_reserved_ports - list of comma separated ranges
- 	Specify the ports which are reserved for known third-party
-@@ -1047,7 +1047,7 @@ ip_local_reserved_ports - list of comma separated ranges
- 	ip_local_port_range, e.g.::
- 
- 	    $ cat /proc/sys/net/ipv4/ip_local_port_range
--	    32000	60999
-+	    49152	60999
- 	    $ cat /proc/sys/net/ipv4/ip_local_reserved_ports
- 	    8080,9148
- 
-diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
-index 4307503a6f0b..f95a9ffffdc9 100644
---- a/net/ipv4/af_inet.c
-+++ b/net/ipv4/af_inet.c
-@@ -1838,7 +1838,7 @@ static __net_init int inet_init_net(struct net *net)
- 	 * Set defaults for local port range
- 	 */
- 	seqlock_init(&net->ipv4.ip_local_ports.lock);
--	net->ipv4.ip_local_ports.range[0] =  32768;
-+	net->ipv4.ip_local_ports.range[0] =  49152;
- 	net->ipv4.ip_local_ports.range[1] =  60999;
- 
- 	seqlock_init(&net->ipv4.ping_group_range.lock);
-diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-index b457dd2d6c75..322bcfce0737 100644
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -196,7 +196,7 @@ inet_csk_find_open_port(struct sock *sk, struct inet_bind_bucket **tb_ret, int *
- 	attempt_half = (sk->sk_reuse == SK_CAN_REUSE) ? 1 : 0;
- other_half_scan:
- 	inet_get_local_port_range(net, &low, &high);
--	high++; /* [32768, 60999] -> [32768, 61000[ */
-+	high++; /* [49152, 60999] -> [49152, 61000[ */
- 	if (high - low < 4)
- 		attempt_half = 0;
- 	if (attempt_half) {
-diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
-index 239e54474b65..547b95a4891a 100644
---- a/net/ipv4/inet_hashtables.c
-+++ b/net/ipv4/inet_hashtables.c
-@@ -695,7 +695,7 @@ int __inet_hash_connect(struct inet_timewait_death_row *death_row,
- 	l3mdev = inet_sk_bound_l3mdev(sk);
- 
- 	inet_get_local_port_range(net, &low, &high);
--	high++; /* [32768, 60999] -> [32768, 61000[ */
-+	high++; /* [49152, 60999] -> [49152, 61000[ */
- 	remaining = high - low;
- 	if (likely(remaining > 1))
- 		remaining &= ~1U;
+> +#endif /* CONFIG_IMA_KEXEC */
+> +#endif /* _ASM_ARCH_IMA_H */
+
 -- 
-2.28.0
-
+Thiago Jung Bauermann
+IBM Linux Technology Center
