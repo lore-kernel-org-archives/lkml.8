@@ -2,83 +2,139 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96140C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985E1C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF9F20825
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 761F12073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:03:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="XUd1hfAy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbgH1T7H (ORCPT
+        id S1726820AbgH1UD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 15:59:07 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:54751 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725979AbgH1T6X (ORCPT
+        Fri, 28 Aug 2020 16:03:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726460AbgH1UD1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 15:58:23 -0400
-Received: from [78.134.86.56] (port=54992 helo=melee.dev.aim)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1kBkVv-0008I1-Ur; Fri, 28 Aug 2020 21:58:20 +0200
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     linux-fpga@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Moritz Fischer <mdf@kernel.org>, Tom Rix <trix@redhat.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anatolij Gustschin <agust@denx.de>
-Subject: [PATCH v3 1/5] fpga manager: xilinx-spi: remove stray comment
-Date:   Fri, 28 Aug 2020 21:58:04 +0200
-Message-Id: <20200828195808.27975-1-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.28.0
+        Fri, 28 Aug 2020 16:03:27 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 737FEC06121B
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 13:03:25 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id 5so948296pgl.4
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 13:03:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=h7Ftm48B3zFmIS9M4aT7GVlSUnSM7LcCY/YqVFwhLHo=;
+        b=XUd1hfAyoS3QpCSSDAtZZ4HWcuSrlNFYYcOyQBKSJodElFHPqQmepn/jSxfDhXtjph
+         IMLLUf86iQd+mOQcSNo4mtJhoj+wykLrWjnJ+TQ5GessrrCwly5QOj92iAFong1Tu7yM
+         cG8/D3zz7cai+Z5TdtOB3VPw6LVfosJU5uVBBKJig3gmXJxg76P88VpwTM4SR11yn7hL
+         tbYigjN6TOgmffKRkck0h5OZPorG8r4cs1tzcXkRxPhTN11Ng5PBIxWWb5BhaX5Orpp5
+         XyVCVKrZQKaPI1Zgrxou88EbFniVHY3NQdMDf6vTaw42heBSSFpQVrngznIShUAyaBQp
+         PK5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=h7Ftm48B3zFmIS9M4aT7GVlSUnSM7LcCY/YqVFwhLHo=;
+        b=HnlH4JlqxDKb8jEGqbLYSJLkVWSJz64cpjbF4ID0jin4YNhRRRccdiz2zKUUAGt0Vy
+         giuFUdTPrmRxi1pg/rnt5LW4EVOBNJkZF5qvL2vyOQzhVcoJAf9OLI00JYJMw7UYxm8V
+         NqA0eZAVNB/WfNpW7tYXzjV8xcFCOeeMOnCu/4imH1YL8E3F/A1g5Tdu3+ILEtz5ywIu
+         XnBNNe7qQXltzqkFIT2sMiKxRfkdQY/FIMbBVz1MZL0V/jQhazMHw57m4utvn+8RfOxr
+         6xkH8y88MD/HXuAjqySJVfd1NA1TFw7S7bVFU0hx+7kHRmOByuPGaoJrxDAkaGcLAOPa
+         FBBQ==
+X-Gm-Message-State: AOAM5325On+VtgdX6igu5VodTT3BNq3axG6dwK1sOX208DPQr3t811Oj
+        5KkhWI6QhN/i+YrMdiQiVmZO96hNcNMJMc5I
+X-Google-Smtp-Source: ABdhPJxSXzNhTuv3cHgMU3UDiBBvHEeMnOCm0dbPY8aUswPt0mPJGecOb/Hx4Q2e3wEFwkGsInCCGg==
+X-Received: by 2002:a62:b608:: with SMTP id j8mr542187pff.126.1598645004641;
+        Fri, 28 Aug 2020 13:03:24 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id x1sm262394pfp.7.2020.08.28.13.03.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Aug 2020 13:03:23 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [GIT PULL] io_uring fixes for 5.9-rc3
+Message-ID: <654bd4f0-7d2b-a39c-46ab-e7d180246bdd@kernel.dk>
+Date:   Fri, 28 Aug 2020 14:03:22 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove comment committed by mistake.
+Hi Linus,
 
-Fixes: dd2784c01d93 ("fpga manager: xilinx-spi: check INIT_B pin during write_init")
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+A few fixes in here, all based on reports and test cases from folks
+using it. Most of it is stable material as well.
 
----
+- Hashed work cancelation fix (Pavel)
 
-Changes in v3: none.
+- poll wakeup signalfd fix
 
-Changes in v2: none.
----
- drivers/fpga/xilinx-spi.c | 1 -
- 1 file changed, 1 deletion(-)
+- memlock accounting fix
 
-diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
-index 2967aa2a74e2..502fae0d1d85 100644
---- a/drivers/fpga/xilinx-spi.c
-+++ b/drivers/fpga/xilinx-spi.c
-@@ -57,7 +57,6 @@ static int wait_for_init_b(struct fpga_manager *mgr, int value,
- 
- 	if (conf->init_b) {
- 		while (time_before(jiffies, timeout)) {
--			/* dump_state(conf, "wait for init_d .."); */
- 			if (gpiod_get_value(conf->init_b) == value)
- 				return 0;
- 			usleep_range(100, 400);
+- nonblocking poll retry fix
+
+- Ensure we never return -ERESTARTSYS for reads
+
+- Ensure offset == -1 is consistent with preadv2() as documented
+
+- IOPOLL -EAGAIN handling fixes
+
+- Remove useless task_work bounce for block based -EAGAIN retry 
+
+Please pull!
+
+
+The following changes since commit 867a23eab52847d41a0a6eae41a64d76de7782a8:
+
+  io_uring: kill extra iovec=NULL in import_iovec() (2020-08-20 05:36:19 -0600)
+
+are available in the Git repository at:
+
+  git://git.kernel.dk/linux-block.git tags/io_uring-5.9-2020-08-28
+
+for you to fetch changes up to fdee946d0925f971f167d2606984426763355e4f:
+
+  io_uring: don't bounce block based -EAGAIN retry off task_work (2020-08-27 16:48:34 -0600)
+
+----------------------------------------------------------------
+io_uring-5.9-2020-08-28
+
+----------------------------------------------------------------
+Jens Axboe (9):
+      io_uring: don't recurse on tsk->sighand->siglock with signalfd
+      io_uring: revert consumed iov_iter bytes on error
+      io_uring: fix imbalanced sqo_mm accounting
+      io_uring: don't use poll handler if file can't be nonblocking read/written
+      io_uring: ensure read requests go through -ERESTART* transformation
+      io_uring: make offset == -1 consistent with preadv2/pwritev2
+      io_uring: clear req->result on IOPOLL re-issue
+      io_uring: fix IOPOLL -EAGAIN retries
+      io_uring: don't bounce block based -EAGAIN retry off task_work
+
+Pavel Begunkov (1):
+      io-wq: fix hang after cancelling pending hashed work
+
+ fs/io-wq.c    | 21 +++++++++++--
+ fs/io_uring.c | 99 ++++++++++++++++++++++++++++++++++-------------------------
+ 2 files changed, 76 insertions(+), 44 deletions(-)
+
 -- 
-2.28.0
+Jens Axboe
 
