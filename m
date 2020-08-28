@@ -2,43 +2,43 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A24C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F18C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4098B2075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3604E2075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:01:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598630479;
-	bh=cUKLGExJz2RcE5gBspH6LUaYtyfTA5PI8XGobETwgvk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=LwHkT5khCfiVEIgelwmm2kiNRSHoFw64rK4Qr6N0qVockd0hhPxXzg/TAN4q9dzz8
-	 OLsPFFBBoid3aT/TJ8WCIRV606H/kvRz1wph4czhclE62Ax075JGxCQBbSP4Eu//KD
-	 BIyq0Up8Wx8TrCPkqVJz8FPW+aOuTmjZSqOnTWPU=
+	s=default; t=1598630486;
+	bh=nXz5kfUXz09l/Kb7BqdnTAyQCPcigswsGuJeG0ZG9So=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=V/7GB72M5Ilyi1lxYLwLN6jWlVgTdmQTCasrFQiHoxLdhVKKPnL8km8wJrr7RZfzM
+	 N5ZzY2HxDZpfDXz1wnRwl2MpsNyQ0uDTg/DP6EjuMxj735TPoKDyxxgghnCbGfyQrW
+	 G5mif/LBjjwjhUkoQ3otGrykcZqaYUV16mZpqItg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbgH1QBQ (ORCPT
+        id S1728473AbgH1QBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 12:01:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52322 "EHLO mail.kernel.org"
+        Fri, 28 Aug 2020 12:01:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728417AbgH1QBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 12:01:03 -0400
+        id S1728431AbgH1QBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 12:01:09 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E0502098B;
-        Fri, 28 Aug 2020 16:00:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 923A92100A;
+        Fri, 28 Aug 2020 16:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598630461;
-        bh=cUKLGExJz2RcE5gBspH6LUaYtyfTA5PI8XGobETwgvk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iadQq1waQgmncxeH8RRxiOYnfm+e/sGq2kqlVH9J9fzrDBcXq/JUPdGwoA0feft+S
-         7KCxUljPKGqybMJqFIJSLFigEAVc+W3h9yvsbb9Gdm9fZhBnvlrHjMfPEcQtTChAEE
-         zVZMvVucXEgouDEUPjYGEQdcya/cO5e3AUqdthnQ=
+        s=default; t=1598630468;
+        bh=nXz5kfUXz09l/Kb7BqdnTAyQCPcigswsGuJeG0ZG9So=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jOp3KS9KX0rpCK8tb3SMghR4Rs6RDRX3v8euzd2xD4QzIQGpCUnK6ZhoatkVIwqpu
+         0rzvmlb1YcczOli27u0lvM/HBttC12L2KjCw844fR9EBo03JLfOhp8iO0JTVUHv9zD
+         khNurayb0JRut1595ZX769jTA067f7vouGeQkUVs=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
@@ -51,135 +51,247 @@ To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
         linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/3] dt-bindings: media: imx258: Add bindings for IMX258 sensor
-Date:   Fri, 28 Aug 2020 18:00:51 +0200
-Message-Id: <20200828160053.6064-1-krzk@kernel.org>
+Subject: [PATCH 3/3] media: imx258: Get clock from device properties and enable it
+Date:   Fri, 28 Aug 2020 18:00:53 +0200
+Message-Id: <20200828160053.6064-3-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200828160053.6064-1-krzk@kernel.org>
+References: <20200828160053.6064-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add bindings for the IMX258 camera sensor.  The bindings, just like the
-driver, are quite limited, e.g. do not support regulator supplies.
+The IMX258 sensor driver checked in device properties for a
+clock-frequency property which actually does not mean that the clock is
+really running such frequency or is it even enabled.
+
+Get the provided clock and check it frequency.  If none is provided,
+fall back to old property.
+
+Enable the clock when accessing the IMX258 registers and when streaming
+starts.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- .../devicetree/bindings/media/i2c/imx258.yaml | 92 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 93 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/imx258.yaml
+ drivers/media/i2c/imx258.c | 107 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 87 insertions(+), 20 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/imx258.yaml b/Documentation/devicetree/bindings/media/i2c/imx258.yaml
-new file mode 100644
-index 000000000000..ef789ad31143
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/imx258.yaml
-@@ -0,0 +1,92 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/i2c/imx258.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Sony IMX258 13 Mpixel CMOS Digital Image Sensor
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+
-+description: |-
-+  IMX258 is a diagonal 5.867mm (Type 1/3.06) 13 Mega-pixel CMOS active pixel
-+  type stacked image sensor with a square pixel array of size 4208 x 3120. It
-+  is programmable through I2C interface.  Image data is sent through MIPI
-+  CSI-2.
-+
-+properties:
-+  compatible:
-+    const: sony,imx258
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-frequency:
-+    description: Frequency of input clock if clock is not provided
-+    deprecated: true
-+    const: 19200000
-+
-+  reg:
-+    maxItems: 1
-+
-+  # See ../video-interfaces.txt for more details
-+  port:
-+    type: object
-+    properties:
-+      endpoint:
-+        type: object
-+        properties:
-+          data-lanes:
-+            items:
-+              - const: 1
-+              - const: 2
-+              - const: 3
-+              - const: 4
-+
-+          link-frequencies:
-+            allOf:
-+              - $ref: /schemas/types.yaml#/definitions/uint64-array
-+            description:
-+              Allowed data bus frequencies.
-+
-+        required:
-+          - data-lanes
-+          - link-frequencies
-+
-+required:
-+  - compatible
-+  - reg
-+  - port
-+
-+
-+if:
-+  not:
-+    required:
-+      - clocks
-+then:
-+  required:
-+    - clock-frequency
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        sensor@6c {
-+            compatible = "sony,imx258";
-+            reg = <0x6c>;
-+            clocks = <&imx258_clk>;
-+
-+            port {
-+                imx258_ep: endpoint {
-+                    remote-endpoint = <&csi1_ep>;
-+                    data-lanes = <1 2 3 4>;
-+                    link-frequencies = /bits/ 64 <320000000>;
-+                };
-+            };
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index dc2aa691b75a..cca13d483d22 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16130,6 +16130,7 @@ M:	Sakari Ailus <sakari.ailus@linux.intel.com>
- L:	linux-media@vger.kernel.org
- S:	Maintained
- T:	git git://linuxtv.org/media_tree.git
-+F:	Documentation/devicetree/bindings/media/i2c/imx258.yaml
- F:	drivers/media/i2c/imx258.c
+diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
+index c20bac9b00ec..4d763dcabb1d 100644
+--- a/drivers/media/i2c/imx258.c
++++ b/drivers/media/i2c/imx258.c
+@@ -2,6 +2,7 @@
+ // Copyright (C) 2018 Intel Corporation
  
- SONY IMX274 SENSOR DRIVER
+ #include <linux/acpi.h>
++#include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/i2c.h>
+ #include <linux/module.h>
+@@ -68,6 +69,9 @@
+ #define REG_CONFIG_MIRROR_FLIP		0x03
+ #define REG_CONFIG_FLIP_TEST_PATTERN	0x02
+ 
++/* Input clock frequency in Hz */
++#define IMX258_INPUT_CLOCK_FREQ		19200000
++
+ struct imx258_reg {
+ 	u16 address;
+ 	u8 val;
+@@ -610,6 +614,8 @@ struct imx258 {
+ 
+ 	/* Streaming on/off */
+ 	bool streaming;
++
++	struct clk *clk;
+ };
+ 
+ static inline struct imx258 *to_imx258(struct v4l2_subdev *_sd)
+@@ -747,6 +753,12 @@ static int imx258_set_ctrl(struct v4l2_ctrl *ctrl)
+ 	if (pm_runtime_get_if_in_use(&client->dev) == 0)
+ 		return 0;
+ 
++	ret = clk_prepare_enable(imx258->clk);
++	if (ret) {
++		dev_err(&client->dev, "failed to enable clock\n");
++		goto out;
++	}
++
+ 	switch (ctrl->id) {
+ 	case V4L2_CID_ANALOGUE_GAIN:
+ 		ret = imx258_write_reg(imx258, IMX258_REG_ANALOG_GAIN,
+@@ -779,6 +791,8 @@ static int imx258_set_ctrl(struct v4l2_ctrl *ctrl)
+ 		break;
+ 	}
+ 
++out:
++	clk_disable_unprepare(imx258->clk);
+ 	pm_runtime_put(&client->dev);
+ 
+ 	return ret;
+@@ -972,10 +986,40 @@ static int imx258_stop_streaming(struct imx258 *imx258)
+ 	return 0;
+ }
+ 
++static int imx258_power_on(struct imx258 *imx258)
++{
++	struct i2c_client *client = v4l2_get_subdevdata(&imx258->sd);
++	int ret;
++
++	ret = pm_runtime_get_sync(&client->dev);
++	if (ret < 0)
++		goto err;
++
++	ret = clk_prepare_enable(imx258->clk);
++	if (ret) {
++		dev_err(&client->dev, "failed to enable clock\n");
++		goto err;
++	}
++
++	return 0;
++
++err:
++	pm_runtime_put_noidle(&client->dev);
++
++	return ret;
++}
++
++static void imx258_power_off(struct imx258 *imx258)
++{
++	struct i2c_client *client = v4l2_get_subdevdata(&imx258->sd);
++
++	clk_disable_unprepare(imx258->clk);
++	pm_runtime_put(&client->dev);
++}
++
+ static int imx258_set_stream(struct v4l2_subdev *sd, int enable)
+ {
+ 	struct imx258 *imx258 = to_imx258(sd);
+-	struct i2c_client *client = v4l2_get_subdevdata(sd);
+ 	int ret = 0;
+ 
+ 	mutex_lock(&imx258->mutex);
+@@ -985,11 +1029,9 @@ static int imx258_set_stream(struct v4l2_subdev *sd, int enable)
+ 	}
+ 
+ 	if (enable) {
+-		ret = pm_runtime_get_sync(&client->dev);
+-		if (ret < 0) {
+-			pm_runtime_put_noidle(&client->dev);
++		ret = imx258_power_on(imx258);
++		if (ret < 0)
+ 			goto err_unlock;
+-		}
+ 
+ 		/*
+ 		 * Apply default & customized values
+@@ -997,10 +1039,10 @@ static int imx258_set_stream(struct v4l2_subdev *sd, int enable)
+ 		 */
+ 		ret = imx258_start_streaming(imx258);
+ 		if (ret)
+-			goto err_rpm_put;
++			goto err_power_off;
+ 	} else {
+ 		imx258_stop_streaming(imx258);
+-		pm_runtime_put(&client->dev);
++		imx258_power_off(imx258);
+ 	}
+ 
+ 	imx258->streaming = enable;
+@@ -1008,8 +1050,8 @@ static int imx258_set_stream(struct v4l2_subdev *sd, int enable)
+ 
+ 	return ret;
+ 
+-err_rpm_put:
+-	pm_runtime_put(&client->dev);
++err_power_off:
++	imx258_power_off(imx258);
+ err_unlock:
+ 	mutex_unlock(&imx258->mutex);
+ 
+@@ -1201,21 +1243,41 @@ static int imx258_probe(struct i2c_client *client)
+ 	int ret;
+ 	u32 val = 0;
+ 
+-	device_property_read_u32(&client->dev, "clock-frequency", &val);
+-	if (val != 19200000)
+-		return -EINVAL;
++	imx258 = devm_kzalloc(&client->dev, sizeof(*imx258), GFP_KERNEL);
++	if (!imx258)
++		return -ENOMEM;
++
++	imx258->clk = devm_clk_get_optional(&client->dev, NULL);
++	if (!imx258->clk) {
++		dev_info(&client->dev, "no clock provided, using clock-frequency property\n");
++
++		device_property_read_u32(&client->dev, "clock-frequency", &val);
++		if (val != IMX258_INPUT_CLOCK_FREQ)
++			return -EINVAL;
++	} else if (IS_ERR(imx258->clk)) {
++		return dev_err_probe(&client->dev, PTR_ERR(imx258->clk), "error getting clock\n");
++	} else {
++		if (clk_get_rate(imx258->clk) != IMX258_INPUT_CLOCK_FREQ) {
++			dev_err(&client->dev, "input clock frequency not supported\n");
++			return -EINVAL;
++		}
++
++		ret = clk_prepare_enable(imx258->clk);
++		if (ret) {
++			dev_err(&client->dev, "failed to enable clock\n");
++			return ret;
++		}
++	}
+ 
+ 	/*
+ 	 * Check that the device is mounted upside down. The driver only
+ 	 * supports a single pixel order right now.
+ 	 */
+ 	ret = device_property_read_u32(&client->dev, "rotation", &val);
+-	if (ret || val != 180)
+-		return -EINVAL;
+-
+-	imx258 = devm_kzalloc(&client->dev, sizeof(*imx258), GFP_KERNEL);
+-	if (!imx258)
+-		return -ENOMEM;
++	if (ret || val != 180) {
++		ret = -EINVAL;
++		goto error_prop_read;
++	}
+ 
+ 	/* Initialize subdev */
+ 	v4l2_i2c_subdev_init(&imx258->sd, client, &imx258_subdev_ops);
+@@ -1223,14 +1285,14 @@ static int imx258_probe(struct i2c_client *client)
+ 	/* Check module identity */
+ 	ret = imx258_identify_module(imx258);
+ 	if (ret)
+-		return ret;
++		goto error_prop_read;
+ 
+ 	/* Set default mode to max resolution */
+ 	imx258->cur_mode = &supported_modes[0];
+ 
+ 	ret = imx258_init_controls(imx258);
+ 	if (ret)
+-		return ret;
++		goto error_prop_read;
+ 
+ 	/* Initialize subdev */
+ 	imx258->sd.internal_ops = &imx258_internal_ops;
+@@ -1252,8 +1314,13 @@ static int imx258_probe(struct i2c_client *client)
+ 	pm_runtime_enable(&client->dev);
+ 	pm_runtime_idle(&client->dev);
+ 
++	clk_disable_unprepare(imx258->clk);
++
+ 	return 0;
+ 
++error_prop_read:
++	clk_disable_unprepare(imx258->clk);
++
+ error_media_entity:
+ 	media_entity_cleanup(&imx258->sd.entity);
+ 
 -- 
 2.17.1
 
