@@ -2,114 +2,114 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE20EC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCBEC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7B420776
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:56:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DFvfG+CV"
+	by mail.kernel.org (Postfix) with ESMTP id BF44620776
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:58:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598623132;
+	bh=SpTHr264Yj5qROOV9l4xhdNrZFLq921O7KsjMz/LhwA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cVswJf6/zZFfJsxNT/bBVZ50f+ZntBmBRLGDyvxWPSIfgiHcwRfjmyaLQwiV2tQrk
+	 qNO0XenUN32t8dozDXkEI5zK0OgvGM5+K8y9UjVcBz1y26usdMXfL+hxY7JyMbkmzJ
+	 zdpuTpU7RSEcnAyEixBb8hUdVM0W6yoXxs2Xpni0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgH1N4r (ORCPT
+        id S1726912AbgH1N61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 09:56:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbgH1N4T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 09:56:19 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA019C061264;
-        Fri, 28 Aug 2020 06:56:18 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id o4so1410808wrn.0;
-        Fri, 28 Aug 2020 06:56:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=tNnC4MJvn0YjQrnjipXsey8gWX0l8zpkvsFTkYPZMtw=;
-        b=DFvfG+CV/NabXSoKc7HsspXMZviwC0JAjzPglV9m/Z7tQZwz2Mm32FnFtmXnTecyQ7
-         y4DbbKRszeuKs6Olk3lbgPsOrFYiBX70UBisAn41m4r5NXiKpxbKyBJ2IGqyBltVMDcy
-         SQDebQmU0xzznWVNqklhsKDg177XCldRwVQbj/Yc7MVrAgJEeCUHXafE1um6q13Esu7q
-         Dv01Cst5L424ZexQCWPzONb9ZehitJJ5WvMjG+1uJcbKoFC1+ph42iBwiDqO3E4qTyRK
-         Ava4Tl+KdmwmSJ9QJFMDHhNiqTSo35zKZFwmp+fNU3iE2RkkiV1wC3HBWWLsAl4Ah8qh
-         jhgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tNnC4MJvn0YjQrnjipXsey8gWX0l8zpkvsFTkYPZMtw=;
-        b=bHwyH/6IDkW4/u3Uo+UGh68kAv6JJED7p7r9gyig3VUVAunWiPhhyjVLTXBVYkonl1
-         JgKI0zeXTzrbASElbooWk7rGDy5s3RBiKATTA9+rKjnRBlB/9LwS/yAPFE5JQbPxYiRh
-         r9JsxZVfCm6Iry6TqVckHhVqbCzbdCOr2dkL1xc6E0TrTK2YDkLKlATykXeQRTA5D3jZ
-         +r7xvv3X9cEJR9SGTykDFpAFlBPd6Kmahtubev7Z28Sa7741Kw1muwANCM6AgDUn4agH
-         2dpkc3C8HHLyekjjXiWXA153dOmFrSGandA7+OqYSdMV0l9asGlXcfU5EIX7u5BCd+QK
-         JD7g==
-X-Gm-Message-State: AOAM5328p6aRqprxH0UeoN7+6yrvQXRa1Z4sIvc1Dww4JNVibucv7bip
-        p1KLViFEOq4LSL8Bc2NesTU=
-X-Google-Smtp-Source: ABdhPJzOs7Ukf3vzvCE+JHO212o3YOfnaw8XSZwGBL6HLr2/Z+gFDcduI5jRVM3FYHa4X3MXC5gSUw==
-X-Received: by 2002:adf:fec6:: with SMTP id q6mr1651248wrs.59.1598622977484;
-        Fri, 28 Aug 2020 06:56:17 -0700 (PDT)
-Received: from lenovo-laptop.home ([2a00:23c4:4b87:b300:cc3a:c411:9a4b:dba6])
-        by smtp.gmail.com with ESMTPSA id v11sm2046865wrr.10.2020.08.28.06.56.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 06:56:16 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] netlabel: remove unused param from audit_log_format()
-Date:   Fri, 28 Aug 2020 14:55:23 +0100
-Message-Id: <20200828135523.12867-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <CAHC9VhRtTykJVze_93ed+n+v14Ai9J5Mbre9nGEc2rkqbqKc_g@mail.gmail.com>
-References: <CAHC9VhRtTykJVze_93ed+n+v14Ai9J5Mbre9nGEc2rkqbqKc_g@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Fri, 28 Aug 2020 09:58:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60434 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbgH1N6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 09:58:11 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8925520776;
+        Fri, 28 Aug 2020 13:58:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598623090;
+        bh=SpTHr264Yj5qROOV9l4xhdNrZFLq921O7KsjMz/LhwA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=i9sl61eavdgFXBk/XhPbbdtnUTUefunlnuMhrscT4UhB4pFLbXw7w5QKEU3zChxrQ
+         8Qy782YHhMt06VeOi1Q2dqq4dRAsBx0N039QvWmWDErpIvaiXJV6AGbthFUPsUJoXv
+         jL5VYguh/esGbsL0NsDAtVJEsT53PI3PTnVVhbF4=
+Date:   Fri, 28 Aug 2020 22:58:05 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     peterz@infradead.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, Eddy_Wu@trendmicro.com,
+        x86@kernel.org, davem@davemloft.net, rostedt@goodmis.org,
+        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        linux-arch@vger.kernel.org, cameron@moodycamel.com,
+        oleg@redhat.com, will@kernel.org, paulmck@kernel.org
+Subject: Re: [PATCH v4 04/23] arm64: kprobes: Use generic kretprobe
+ trampoline handler
+Message-Id: <20200828225805.01b685e634c62f99913ddc87@kernel.org>
+In-Reply-To: <20200828133718.GB1362448@hirez.programming.kicks-ass.net>
+References: <159861759775.992023.12553306821235086809.stgit@devnote2>
+        <159861764221.992023.10214437014901668680.stgit@devnote2>
+        <20200828133131.GA71981@C02TD0UTHF1T.local>
+        <20200828133718.GB1362448@hirez.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit d3b990b7f327 ("netlabel: fix problems with mapping removal")
-added a check to return an error if ret_val != 0, before ret_val is
-later used in a log message. Now it will unconditionally print "...
-res=1". So just drop the check.
+On Fri, 28 Aug 2020 15:37:18 +0200
+peterz@infradead.org wrote:
 
-Addresses-Coverity: ("Dead code")
-Fixes: d3b990b7f327 ("netlabel: fix problems with mapping removal")
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
----
-v2: Still print the res field, because it's useful (Paul)
+> On Fri, Aug 28, 2020 at 02:31:31PM +0100, Mark Rutland wrote:
+> > Hi,
+> > 
+> > On Fri, Aug 28, 2020 at 09:27:22PM +0900, Masami Hiramatsu wrote:
+> > > Use the generic kretprobe trampoline handler, and use the
+> > > kernel_stack_pointer(regs) for framepointer verification.
+> > > 
+> > > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > > ---
+> > >  arch/arm64/kernel/probes/kprobes.c |   78 +-----------------------------------
+> > >  1 file changed, 3 insertions(+), 75 deletions(-)
+> > 
+> > > +	return (void *)kretprobe_trampoline_handler(regs, &kretprobe_trampoline,
+> > > +					(void *)kernel_stack_pointer(regs));
+> > >  }
+> > >  
+> > >  void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
+> > >  				      struct pt_regs *regs)
+> > >  {
+> > >  	ri->ret_addr = (kprobe_opcode_t *)regs->regs[30];
+> > > +	ri->fp = (void *)kernel_stack_pointer(regs);
+> > 
+> > This is probably a nomenclature problem, but what exactly is
+> > kretprobe_instance::fp used for?
+> > 
+> > I ask because arm64's frame pointer lives in x29 (and is not necessarily
+> > the same as the stack pointer at function boundaries), so the naming
+> > is potentially misleading and possibly worth a comment or rename.
+> 
+> IIUC ri->rp is used for matching up the frame between the moment we
+> install the return trampoline on the stack and actually hitting that
+> trampoline.
 
- net/netlabel/netlabel_domainhash.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Yeah, it is confusing, sorry. On x86, CONFIG_FRAME_POINTER can be disabled,
+so we used the address of stack entry where arch_prepare_kretprobe() stores
+the trampoline address.
+For arm64 which doesn't use a stack entry for call, I decided to use the
+stack address when the target function is called.
+Indeed, it should be commented.
 
-diff --git a/net/netlabel/netlabel_domainhash.c b/net/netlabel/netlabel_domainhash.c
-index f73a8382c275e..dc8c39f51f7d3 100644
---- a/net/netlabel/netlabel_domainhash.c
-+++ b/net/netlabel/netlabel_domainhash.c
-@@ -612,9 +612,8 @@ int netlbl_domhsh_remove_entry(struct netlbl_dom_map *entry,
- 	audit_buf = netlbl_audit_start_common(AUDIT_MAC_MAP_DEL, audit_info);
- 	if (audit_buf != NULL) {
- 		audit_log_format(audit_buf,
--				 " nlbl_domain=%s res=%u",
--				 entry->domain ? entry->domain : "(default)",
--				 ret_val == 0 ? 1 : 0);
-+				 " nlbl_domain=%s res=1",
-+				 entry->domain ? entry->domain : "(default)");
- 		audit_log_end(audit_buf);
- 	}
- 
+Thank you,
+
 -- 
-2.28.0
-
+Masami Hiramatsu <mhiramat@kernel.org>
