@@ -2,113 +2,130 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950B7C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B13C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E51D2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E62302086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:44:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LvoKCakW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rL15LOzC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgH1IoV (ORCPT
+        id S1728719AbgH1Iol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 04:44:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58562 "EHLO
+        Fri, 28 Aug 2020 04:44:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728548AbgH1IoO (ORCPT
+        with ESMTP id S1728707AbgH1IoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 04:44:14 -0400
+        Fri, 28 Aug 2020 04:44:21 -0400
 Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAFCFC06121B
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 01:44:13 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id y2so146408uaq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 01:44:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB391C061264
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 01:44:21 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id k18so137742uao.11
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 01:44:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zeXlfnXZ4sTJswhwNtffWf0Y5RYZt7CDOEurreh9XAI=;
-        b=LvoKCakWRKLvx/0BHLE5JGzq92yOk3o/lHDjeCNYJRZW2x4PnX4osD+BUJKunyCUj2
-         /bqB9UVotpxVrZ5G923Rznp1fq4DzwoO4tD3hKWIMMQNSfyK3iXaOd14ozrYm5Ye5HCq
-         0Rzr3iNz8cf5rlznhBgAvVEGYCLwb4S4oXh7MRVdr9zhOVoLT4PZvIkIJuc4utbIjTcz
-         UqJF64cJ6Jk/hR8jwWu49mRJ8G2l8vDf+TK1xPJS06hCvHJZ7/rD3Laa0bSm+pCy/iJL
-         0Mb1WU+Xtn3sOlJLpNsl3jOqTIEXq6svmJo31r7nkA/4n6OYkyyD33PSoncLANEO2ydm
-         Em/w==
+        bh=uTWUI5230ITwP2yP66ukJ+wNHyXX/sqNoITAtXVuFps=;
+        b=rL15LOzCdw6xdKRCWQazp27CLIKDRF/eM575VOML6XSrlwujYfvPyV6ZMwSTNFGTfh
+         Qpu3kZC+zFXQc4Whiw7JUr8liH2f/OoYv09CShh+CTJ5h2dGykBurLwF78MFoVXR6yeF
+         T7xZ/LQaxVsDNgatt2q5xb9u5YecVoHTiCi39TdNtztkzpxEmaAYdbBzrdRrwfO2E/hb
+         t0kn0QS02+/hRdKWze5VgjUdHqtvxAFwdrY5fSV8njnzbNX0Ynr0JGOzoyFuHCetJ8RT
+         o2CnKaWNcV+3FC1snIr4weAmUJNZv1pBtczTVxnWfMVeBrfuzGV0aFWACzwXUg+rOvCA
+         DuTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zeXlfnXZ4sTJswhwNtffWf0Y5RYZt7CDOEurreh9XAI=;
-        b=DCXlcks0ocDs6U4CJWVkTUhjqmaiMnxoG3L+DrQf2k+b7UZNq5QHaqdc4joYBGA9EF
-         gNopb53UFvd9rouWuXqAdoB9F5jf0ZAMZgmDNjzsfNdPTQ4S/KHqtX6xUtyDPiXA/X3K
-         ugVBfxWWib+056BoTaccd+kHneO+c+fXPnLodthOq6LPdn+z00wJwzNhhSjESVZlsC1h
-         vaL37TD+4z61yoxoWblNE0lH7XGNVYrfl/Sef441I/C4ddGhd0BvP24G4BBQzs1jtNKp
-         plqDOwFf21dWEtuqnyRgNqNg61ZXPy9MLRA1nzY+ZMz5crLe754B1+zx0REo69DYSD0h
-         U0/A==
-X-Gm-Message-State: AOAM532PpEd5Xx8dqUifwUXVs7Y5sKiWHsDNS6Pv1PHvqu37CT9lJe9H
-        41ZOSC7SbR5/qIk9EH6NH3bviNZJyezrk4oHpq5Xfg==
-X-Google-Smtp-Source: ABdhPJxDXAOV/vb6si47r9ICjb8OmqVI+/7MJPxURFzZTGQqh0+TR5mXHiyTJTbQAY+DumtfmYUO31qltv4NzpdAdck=
-X-Received: by 2002:ab0:2848:: with SMTP id c8mr283199uaq.15.1598604253138;
- Fri, 28 Aug 2020 01:44:13 -0700 (PDT)
+        bh=uTWUI5230ITwP2yP66ukJ+wNHyXX/sqNoITAtXVuFps=;
+        b=IAFRwwxk5d8Syf6nAGmjL/E505bPx5GIVjjVh3BHKKZdXmDtoBzx0mMKVWnXX4yiQQ
+         Yyapd5muXljI1YqZS1YozfO0drUl+28C+s9LygiCqKELiXenP0H+aCGUUddOdUlgnJRa
+         vfXWjsVDQkHW+yCB/o8nQ+hXqDKa7nL/SLUvyA+XgF+fzZbuD7wynWoEIxjeupjb4kzu
+         H01RcEfhoYkfqrVvnjqXx+k+0xMraUSd0kdWR92B4FTKDqZetkHd1ZSs83j7qik1aRv2
+         RYqkQtY7vX8xTN9yWx0ai+jNyKSP5kHL5EXXwbc8oPtiSawhC9DTlJQtiQ4EeAVIvMEX
+         RrWQ==
+X-Gm-Message-State: AOAM530wIqxi1o0LEbKUwh3P6/T6DRyxyKAL/rFPAhM2n67ZUy3RGUSJ
+        6lWPD70i4VmpphaqD2hgZ0IKz2Xea8q5ysOwNIHQkQ==
+X-Google-Smtp-Source: ABdhPJxhkzPvcP1szr4uYROolGFNyCKo7d2OSli8XptERldHHbNbbnIX/77d3DD7+J1vhaw5c7yvGuz/6wyAIsvU17o=
+X-Received: by 2002:a9f:2190:: with SMTP id 16mr283460uac.19.1598604260956;
+ Fri, 28 Aug 2020 01:44:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200814014346.6496-1-wenbin.mei@mediatek.com>
- <20200814014346.6496-3-wenbin.mei@mediatek.com> <CAPDyKFpt6-a+pkTXb2RZdx=yTONetugSCKbtSsRD2xQ3PRPhDQ@mail.gmail.com>
- <1dfc1938-f5e8-c4c8-57c7-d7b6c33dcb1d@gmail.com>
-In-Reply-To: <1dfc1938-f5e8-c4c8-57c7-d7b6c33dcb1d@gmail.com>
+References: <20200827083330.1.I669bb4dc3d92bd04e9a695f97904797dc8241b79@changeid>
+ <20200828050935.m32njmxdrgbudw4r@vireshk-i7>
+In-Reply-To: <20200828050935.m32njmxdrgbudw4r@vireshk-i7>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 28 Aug 2020 10:43:34 +0200
-Message-ID: <CAPDyKFp+nFq11YcnNSe6sfDx-gkBHiYAjNE+r-OQ8HdrK1LBKw@mail.gmail.com>
-Subject: Re: [v5,2/3] arm64: dts: mt7622: add reset node for mmc device
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Wenbin Mei <wenbin.mei@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
+Date:   Fri, 28 Aug 2020 10:43:44 +0200
+Message-ID: <CAPDyKFpt+8GF9K1evMJwPQ-hwsSOiC2GQkNTFER2axw5AF+fHg@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-msm: When dev_pm_opp_of_add_table() returns 0
+ it's not an error
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "# 4.0+" <stable@vger.kernel.org>
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 at 10:23, Matthias Brugger <matthias.bgg@gmail.com> wrote:
+On Fri, 28 Aug 2020 at 07:09, Viresh Kumar <viresh.kumar@linaro.org> wrote:
 >
->
->
-> On 24/08/2020 11:50, Ulf Hansson wrote:
-> > On Fri, 14 Aug 2020 at 03:44, Wenbin Mei <wenbin.mei@mediatek.com> wrote:
-> >>
-> >> This commit adds reset node for mmc device.
-> >>
-> >> Cc: <stable@vger.kernel.org> # v5.4+
-> >> Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
-> >> Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
-> >> Tested-by: Frank Wunderlich <frank-w@public-files.de>
+> On 27-08-20, 08:33, Douglas Anderson wrote:
+> > The commit d05a7238fe1c ("mmc: sdhci-msm: Unconditionally call
+> > dev_pm_opp_of_remove_table()") works fine in the case where there is
+> > no OPP table.  However, if there is an OPP table then
+> > dev_pm_opp_of_add_table() will return 0.  Since 0 != -ENODEV then the
+> > "if (ret != -ENODEV)" will evaluate to true and we'll fall into the
+> > error case.  Oops.
 > >
-> > I can pick this for my fixes branch, together with the other changes,
-> > however deferring that until Matthias acks it.
+> > Let's fix this.
+> >
+> > Fixes: d05a7238fe1c ("mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()")
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> >
+> >  drivers/mmc/host/sdhci-msm.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> > index b7e47107a31a..55101dba42bd 100644
+> > --- a/drivers/mmc/host/sdhci-msm.c
+> > +++ b/drivers/mmc/host/sdhci-msm.c
+> > @@ -2284,7 +2284,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
+> >
+> >       /* OPP table is optional */
+> >       ret = dev_pm_opp_of_add_table(&pdev->dev);
+> > -     if (ret != -ENODEV) {
+> > +     if (ret && ret != -ENODEV) {
+> >               dev_err(&pdev->dev, "Invalid OPP table in Device tree\n");
+> >               goto opp_cleanup;
+> >       }
 >
-> Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Wow!
 >
-> My understanding is, that this will land also in v5.9-rc[3,4], correct?
+> How many bugs did I introduce with a simple patch :(
+>
+> @Ulf, since this is material for 5.10 I was planning to resend the
+> original patch itself with all the things fixed. Will you be able to
+> rebase your tree? Or do you want to apply fixes separately ?
 
-Correct.
+I have rebased my tree, to get rid of the problems completely.
 
-Applied for fixes, thanks!
-
-[...]
+Thanks everybody for helping out!
 
 Kind regards
 Uffe
