@@ -2,106 +2,78 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5AAC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA7EC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D374A208C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:08:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oEsScVLb"
+	by mail.kernel.org (Postfix) with ESMTP id 4CE9B208C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:08:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598598510;
+	bh=ZvYOOOLLhxM1hflSpZB75b7Lg8qtxAvJHgbIokXn4jw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=v/t6ar9fPphH3DZh/vWZGPvRZzPLti3OIHZIthnzDzzPJvo32H1zFL9XIV2ArKBYN
+	 GkEeOfSgBNMowLg8Xufnva/7DmRm05+79K2aGXF5eLnXPyJf3HnZkcrPIRE3yM50O1
+	 44Y0Rkhs6shqbXNy8JSlp9OvxXz3xxDeLVnF/z4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgH1HIN (ORCPT
+        id S1728407AbgH1HI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:08:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgH1HIN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:08:13 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5932C061264;
-        Fri, 28 Aug 2020 00:08:12 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id s2so111425pjr.4;
-        Fri, 28 Aug 2020 00:08:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QKDUbYPcPEh8IBd+SIHE5bvSSUow+Zho8PuNcnzF93Q=;
-        b=oEsScVLblMKfSEP1QEYR9B1R6dZSAtZAbml7BDMDCoTnWnSyNFtCGBgqKMjF88CEGX
-         G1FtgKUHMZfM1L3sjghPQXJ5WFFqBXjx9HIQoht/Dw+CL4vDyJNddadzkScAJLKIhHX+
-         5h8qxdXVjEx2gYOLZtDEQ9Wr89boL8zXto4DFFVsBhAbpu2zrkdm4a7FY9RV09lJl1+O
-         LydZLXT1Z1ZGuMXvS/uhWs1oqtTZ43muGe3vn8NWYi8VdrZloKnlK/qKf7/TX4/h5N/+
-         YkYG0hhWGobNv+UTexKHNpOODDcCZqUCdbQOBoOmaQvkqclWP+9tfODYuiVCRDWlfwZM
-         qASQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QKDUbYPcPEh8IBd+SIHE5bvSSUow+Zho8PuNcnzF93Q=;
-        b=fUtrceJimXtMigglEynuSf+Y4ZoQ0G9wl7XhX4TnVDrqXofcpk0QC0Nb+SrUW/jxQn
-         3xktsnnefhbyEeM67e/+rrnkD41zyiQT/IrIXAKL/mk/pIjfpL2qYwmX1YYMcYl3iiV/
-         RpH5Wa9VwYkPOjGk+YdfUzeh54Om3CrAzEEofYCghnlKMrkE6xA7BiI4HDhABdD00Slp
-         q+JuSJ4XqY10gb+YxYQFcvmJoxzpWzNz0OJqDgtJegpIwp3q2vtqF4/79nlMhKG+gEFm
-         VOzTfWsZVyPDxgotg2rwYwXVS0cDGbv2Q6qhAIWCj47G1xBDDrW+WfIG9Zbeebnf/hz0
-         rVeA==
-X-Gm-Message-State: AOAM531TZqE0T7qb2n6QW0gpFRwxpFR/KFzuCGPxwtZ/DyhRM93FnJfN
-        1MyHzpGjLL/aiS6J771TB70=
-X-Google-Smtp-Source: ABdhPJycyDfw8uZMHIfKVJw+n62ExArLbwu/fPa6q0T9K+JFC5wpBeyzT7hhgGdJrVE1mF1p5FOdlw==
-X-Received: by 2002:a17:90b:1b12:: with SMTP id nu18mr72152pjb.126.1598598492452;
-        Fri, 28 Aug 2020 00:08:12 -0700 (PDT)
-Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8880:9ae0:b81a:ad7:9450:beeb])
-        by smtp.gmail.com with ESMTPSA id i1sm473447pgq.41.2020.08.28.00.08.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 00:08:11 -0700 (PDT)
-From:   Xie He <xie.he.0141@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Krzysztof Halasa <khc@pm.waw.pl>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>, Martin Schiller <ms@dev.tdt.de>
-Subject: [PATCH net] drivers/net/wan/hdlc_cisco: Add hard_header_len
-Date:   Fri, 28 Aug 2020 00:07:52 -0700
-Message-Id: <20200828070752.54444-1-xie.he.0141@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 28 Aug 2020 03:08:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728320AbgH1HIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 03:08:25 -0400
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AF3F208C9;
+        Fri, 28 Aug 2020 07:08:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598598504;
+        bh=ZvYOOOLLhxM1hflSpZB75b7Lg8qtxAvJHgbIokXn4jw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MrpZP9sPl3pous88EkRmY3yTSpWSvUUC5YeJANAq8ckaIlm1RQmHNUpeakTgx/zAs
+         5bEFHU+SWHVm0l2EZ/LMKJXPnh7FTgP0Pew+/mIYlU84amOdvkW716KOLoF6zlPwr3
+         j4uJ6bxLirJEyq2ci3jNFFAQdZISFl3n4Tb1EYPs=
+Received: by mail-lj1-f172.google.com with SMTP id w14so166663ljj.4;
+        Fri, 28 Aug 2020 00:08:24 -0700 (PDT)
+X-Gm-Message-State: AOAM530nlsvbbLAYKnO43fCqJxhdpxcjdxUavgzzhpca7u3dnjmeK05f
+        uqdl6uICbFs4NQ4SrQb8DwfKYBoHNbakdyUl/O4=
+X-Google-Smtp-Source: ABdhPJwDxwnTegqkGcim7YBtcif4W/XgOp/pZ2Mqt5pw3/OWQc7tRq9NrRCJraTuvVs/Zn6bXxCKz9TpF2uvlyIvdB4=
+X-Received: by 2002:a2e:7504:: with SMTP id q4mr222246ljc.41.1598598502529;
+ Fri, 28 Aug 2020 00:08:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200826062446.31860-1-hch@lst.de> <20200826062446.31860-13-hch@lst.de>
+In-Reply-To: <20200826062446.31860-13-hch@lst.de>
+From:   Song Liu <song@kernel.org>
+Date:   Fri, 28 Aug 2020 00:08:11 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW46Wg5Ju6coY73z7U6tr6hzcpnvMbj7tuxmVNsoH9NVxw@mail.gmail.com>
+Message-ID: <CAPhsuW46Wg5Ju6coY73z7U6tr6hzcpnvMbj7tuxmVNsoH9NVxw@mail.gmail.com>
+Subject: Re: [PATCH 12/19] md: use __register_blkdev to allocate devices on demand
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Al Viro <viro@zeniv.linux.org.uk>, linux-block@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-ide@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver didn't set hard_header_len. This patch sets hard_header_len
-for it according to its header_ops->create function.
+On Tue, Aug 25, 2020 at 11:53 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Use the simpler mechanism attached to major_name to allocate a brd device
+> when a currently unregistered minor is accessed.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-This driver's header_ops->create function (cisco_hard_header) creates
-a header of (struct hdlc_header), so hard_header_len should be set to
-sizeof(struct hdlc_header).
-
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
----
- drivers/net/wan/hdlc_cisco.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/wan/hdlc_cisco.c b/drivers/net/wan/hdlc_cisco.c
-index d8cba3625c18..444130655d8e 100644
---- a/drivers/net/wan/hdlc_cisco.c
-+++ b/drivers/net/wan/hdlc_cisco.c
-@@ -370,6 +370,7 @@ static int cisco_ioctl(struct net_device *dev, struct ifreq *ifr)
- 		memcpy(&state(hdlc)->settings, &new_settings, size);
- 		spin_lock_init(&state(hdlc)->lock);
- 		dev->header_ops = &cisco_header_ops;
-+		dev->hard_header_len = sizeof(struct hdlc_header);
- 		dev->type = ARPHRD_CISCO;
- 		call_netdevice_notifiers(NETDEV_POST_TYPE_CHANGE, dev);
- 		netif_dormant_on(dev);
--- 
-2.25.1
-
+Acked-by: Song Liu <song@kernel.org>
