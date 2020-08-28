@@ -2,140 +2,141 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D73C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD72C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDDD52078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B49B2078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:09:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CZyvI4mE"
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="jq7S48P6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729077AbgH1KJB (ORCPT
+        id S1729085AbgH1KJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 06:09:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729053AbgH1KIs (ORCPT
+        Fri, 28 Aug 2020 06:09:14 -0400
+Received: from de-smtp-delivery-102.mimecast.com ([62.140.7.102]:50274 "EHLO
+        de-smtp-delivery-102.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729079AbgH1KJD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 06:08:48 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A013BC061233
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:08:48 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id c25so193590uas.13
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:08:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YuUZC5yykdxlzV9TZ9jygIZUaAZV3AvDbw/Md6MDSbk=;
-        b=CZyvI4mE5e6GC31FhNtjJu4hgn/6iN7+1V4C5ulyqQvdp/AkkHHa9duZvoDIUje0iQ
-         13aWi+vlxmpSwceKGI1Anf3Byyh4SWXLKs3jeJ2nnbUFWCEYFRbhuGFkEsY9mwkVfh5g
-         XQ1as2Rl9K2S8AjjSi9TqOjxKgqyQC4RAPaNlfnpEL5bV9hKEXDYJ9bVe+7JTBdTWyOH
-         YeBAr+lgKzo7JflY+R63AZ8Y8c1qTk6XxDXT+WH/ksJYiC7WjqC5dszMUwfVwr4JFqG8
-         b6B/uhfMQaV9bmR25nehSmrMuQzH5bpZNHzGyUS68pJ+ypT42I9akYEysVHy4sbJqEc8
-         Fv+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YuUZC5yykdxlzV9TZ9jygIZUaAZV3AvDbw/Md6MDSbk=;
-        b=Rcn3D4xQaJXDe9m+GhDnz1GSBAykV9er8CT/uwrudWdzc86izspoxgJqxdWcrhzw+N
-         cdTKIBCr4JqYiPXBPGG8m9cxwNbkpDpeTB9c+Q1NG3BfcrownT/6+huWuCGMJR7DPnGC
-         Rcc4ODj4CwWIHUFtV1rTBW02uED2JxI6IEZYerVyp26fdg9dAHSyWE7TX1wy3URqq2Pl
-         VQy4G34aeJxF0nQQbFz84mrDdNpmjK2Jsaosnh8LejVO4X+qwwdfM3n0WREtKnJRiQRz
-         Dv3KZI5SwOox92PkUa+B0JZI3WJ2x7QFPfzF/GyEubaZVHKA3ZO4soakdvszDEFIBahE
-         Wmkg==
-X-Gm-Message-State: AOAM530soGxKiwgDPQumvIChJ4PaIFqEziXElFvXpFy296oudL5IFKnM
-        Cj0ZvlGRpHfE//J1QkK8U6QkNrj14xTV6/7Mh/lp3w==
-X-Google-Smtp-Source: ABdhPJyMI1UajVVYge2yCsL28v/NmQmEpJ4WfUVdXK+0KPWRsZ+SNiSYd8hwXxBo8btg1zi6xsg31YVKtF3Ev5GX/6U=
-X-Received: by 2002:a9f:35d0:: with SMTP id u16mr384896uad.113.1598609327689;
- Fri, 28 Aug 2020 03:08:47 -0700 (PDT)
+        Fri, 28 Aug 2020 06:09:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+        t=1598609341;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0y5Y8i2aj+MVbgI+nQbMkokFUpyufW5gJ6he5rj/7eU=;
+        b=jq7S48P6mAHLVidwEQvhqpoAfHh8qw2NxpHU1c3LYKCb4UvnxU5kBgyEykAlm20r/Ac3Ck
+        3a33Mmet6i50QhQ/stwy06mmy8s5zOQM4bKb6YWJF3dpodPEC5GH7ncm4alUmG5v6/7zW/
+        z2GyAVcRCdYY1/VcRd8sX4i7wh8Fr/s=
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com
+ (mail-am6eur05lp2113.outbound.protection.outlook.com [104.47.18.113])
+ (Using TLS) by relay.mimecast.com with ESMTP id
+ de-mta-26-weU-VTKFOl6kzDKl2V-2Kg-1; Fri, 28 Aug 2020 12:08:59 +0200
+X-MC-Unique: weU-VTKFOl6kzDKl2V-2Kg-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J6Illbl90VBWUX3ZJuBjrvdYTVp9IMuiI5Pb6zsHjD6OZVyiQGkkHLUuzVGW+uPJqRwYQqdYkdSwPARzC6tdmmFUzd9R4aZWHh6k+w3cdZ5kwNMLx5VyBiRypnl5/6mF1+Qk58ZXhkZ5p9nnZyDe84csiLPQrSS9+9IDwSMy30pJhcRpITloVQw/ro3JBrpXz6fwFKpKhOGqX+yC+/Lk6BFVnCUtlsDbeaeJqacCWfg2Mwprrzm3glArQKOmKGOf6Z8kr8Tk3c0Aa0hO3DJAXkXoxJzZsa8Gi6NNpibbQAcw52G9yydPKTo7iymNFGfhThquClTiQFLfGH0h4lnKaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0y5Y8i2aj+MVbgI+nQbMkokFUpyufW5gJ6he5rj/7eU=;
+ b=lUj6o7rNmHCvpgUYU/PiuynQQVwcuNkLZkm+PerdFLEOUP6voI9ICBQnlEk4Wlz3Gwp7dopmvgeLg41lM/poDNofwQYAubDKwQ28ssKktKF/YYTwqkVzEIIgGwSeTijkbH8CNcmS07c90B9JdpKNLvCxMSJjPWDRwfArTKGR2vscjzlJAPKoU/ZEStSVxB5LbNuDOKFFRx5kiSJSFpn0EGKNIHWUocEbdCewxRypweMULrisqZgNKrPZ9Q0tPjEwxlo7bt9hEvbqieP/YmK1eec7wHbHq2nfJGWokdj1N8TAM2tCtvl8xNLctSLyWRfej6pmwe0YWqPHc4L9SadZSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=suse.com;
+Received: from VI1PR04MB7102.eurprd04.prod.outlook.com (2603:10a6:800:124::12)
+ by VI1PR04MB4126.eurprd04.prod.outlook.com (2603:10a6:803:47::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Fri, 28 Aug
+ 2020 10:08:58 +0000
+Received: from VI1PR04MB7102.eurprd04.prod.outlook.com
+ ([fe80::c8e6:73d6:6e2e:9adf]) by VI1PR04MB7102.eurprd04.prod.outlook.com
+ ([fe80::c8e6:73d6:6e2e:9adf%5]) with mapi id 15.20.3326.023; Fri, 28 Aug 2020
+ 10:08:58 +0000
+Date:   Fri, 28 Aug 2020 18:08:39 +0800
+From:   joeyli <jlee@suse.com>
+To:     Timo Witte <timo.witte@gmail.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "open list:ACER WMI LAPTOP EXTRAS" 
+        <platform-driver-x86@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: acer-wmi: add automatic keyboard
+ background light toggle key as KEY_LIGHTS_TOGGLE
+Message-ID: <20200828100839.GK7501@linux-l9pv.suse>
+References: <20200804001423.36778-1-timo.witte@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804001423.36778-1-timo.witte@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: HK2PR06CA0022.apcprd06.prod.outlook.com
+ (2603:1096:202:2e::34) To VI1PR04MB7102.eurprd04.prod.outlook.com
+ (2603:10a6:800:124::12)
 MIME-Version: 1.0
-References: <CA+G9fYvUwH2FA9GOeA_7GYpLA31uOmEpg32VKnJ8-d5QSK4PdQ@mail.gmail.com>
- <20200827090813.fjugeqbb47fachy7@vireshk-i7> <CAK8P3a2zxybiMDzHXkTsT=VpHJOLkwd1=YTtCNU04vuMjZLkxA@mail.gmail.com>
- <20200827101231.smqrhqu5da6jlz6i@vireshk-i7> <CA+G9fYv=XLtsuD=tVR1HHotwpKLkbwZVyPr4UhY-jD+6-duTmw@mail.gmail.com>
- <CA+G9fYvSEHua0EpW64rASucWuS-U2STAZxufrfN75UDspGt2cA@mail.gmail.com> <CAPDyKFrpOqpBiSvkvO7sXHiQDOwdXYmx-80Ji5wW79QF-MrOuQ@mail.gmail.com>
-In-Reply-To: <CAPDyKFrpOqpBiSvkvO7sXHiQDOwdXYmx-80Ji5wW79QF-MrOuQ@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 28 Aug 2020 15:38:36 +0530
-Message-ID: <CA+G9fYtg=CYucGhtZNig7AoXjSSQDokddhERZH5SfEJBsRBZYg@mail.gmail.com>
-Subject: Re: Kernel panic : Unable to handle kernel paging request at virtual
- address - dead address between user and kernel address ranges
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        madhuparnabhowmik10@gmail.com,
-        Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from linux-l9pv.suse (124.11.22.254) by HK2PR06CA0022.apcprd06.prod.outlook.com (2603:1096:202:2e::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Fri, 28 Aug 2020 10:08:54 +0000
+X-Originating-IP: [124.11.22.254]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bd232d66-b517-47fa-97bf-08d84b3a60d6
+X-MS-TrafficTypeDiagnostic: VI1PR04MB4126:
+X-Microsoft-Antispam-PRVS: <VI1PR04MB4126255A514A1BF98E69DFBFA3520@VI1PR04MB4126.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:262;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: s25LJZZM8TxNtuhG2ENMU0W+fEjsFm2blrGmYZmIbo/lGZthj5HCitsBjRUyT+Fe6gA9MTmmUHzlyL2zAvwzrg+ve6fCePTekESY55hrVdZAB0pU80HpwgWYFhtX6mMHVoXMZ/JGOT6nYOXA24lq7+5R/GvWye6pxQQ1FOp/Oy5N2mHDxHhNXC0MWqYqDKdS0rJFNOUHnxdy1CZ3miBC/VM1RsWnsXnUfLniZRspKs4OrZ/feRq/17KjCW17RHOdeXvZffKPNwtDb2D6Resi/Z0TfHIViUIrD4cr50Zzcg7md6GCmcvvpMEjX4vPYmk9ZXSZb+57MjhRtk3pJrii6bTZW1X/GeX2u42NPO81p3BWVX+nlc6vfp5Mxd5d77l5
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB7102.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(136003)(376002)(366004)(39860400002)(346002)(7696005)(8676002)(6506007)(956004)(186003)(52116002)(8936002)(83380400001)(5660300002)(6666004)(26005)(6916009)(16526019)(54906003)(316002)(8886007)(55016002)(4326008)(9686003)(478600001)(33656002)(36756003)(2906002)(66946007)(1076003)(66556008)(86362001)(66476007)(43062003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: gFIKeEC3EpjdaQ5SD1D/iwmX1PXVM5DmBe4ds3YMGOumHF1TvBVwmydXjqWdCwi951VExB0sGGovwM78VOvCYa2dMuZD8Fj0Jt1AUmsKMD8QUMic9nBpYdlu0rujtx97MAs+yAFL8u8N84SJeS3gl3bQfyzGjDDqeIzToEifKkFwrM/ze/ZBcb5ZRRquJl6CNWgZaldMYp6U6ejJQ9KpYhrppqZZNQBQ7EDFOzmJSgh0QfzcHb58beiSb3x6Qc6ZWpveVEnsDICBClpJEIV6bFquQxc16aBNqTbkEb9dmQCh9AHQACbHcD6ZrDaNFwblseqtcyK5ei3he19SlyBYljSgGC9gz7XirBUx/deqTuyvUseA7Yw15Fk2NvwS3ssl23d29h8O++KhCVFYRqY4WzBkWw0poh69m1MmJDjJAA81OxPUlSmrMt73uMnUEKR0et4g0cnOsdwt3KW/2PGLxKCFhdzM2RwQexHnGUmY6FMnyUP7zolV5/tLcRWIvYLkYMDnWXhXLKRCmo96X55ytk4BB2QoVowKjHxja5B1Lk199aSr4KDo3lGWgEuSGzOb4kBrU4lTb1EvPjSqSLun3f4iGYaJDPCJ3xtFqAugJA6sz5EQteGNdNgrHNSQBtSL4vE8nrZ/ATPO8MUIWieNzg==
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd232d66-b517-47fa-97bf-08d84b3a60d6
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB7102.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2020 10:08:58.1620
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Bh15kyLRawTgleeVD9o/hEGMDvn10XAyHayADxCanXtsnY0r+2sw2avXF+gt/kM/
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Aug 2020 at 15:05, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Fri, 28 Aug 2020 at 11:22, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >
-> > On Thu, 27 Aug 2020 at 17:06, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > >
-> > > On Thu, 27 Aug 2020 at 15:42, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > >
-> > > > On 27-08-20, 11:48, Arnd Bergmann wrote:
-> > > > > > > [    3.680477]  dev_pm_opp_put_clkname+0x30/0x58
-> > > > > > > [    3.683431]  sdhci_msm_probe+0x284/0x9a0
-> > > > >
-> > > > > dev_pm_opp_put_clkname() is part of the error handling in the
-> > > > > probe function, so I would deduct there are two problems:
-> > > > >
-> > > > > - something failed during the probe and the driver is trying
-> > > > >   to unwind
-> > > > > - the error handling it self is buggy and tries to undo something
-> > > > >   again that has already been undone.
-> > > >
-> > > > Right.
-> > > >
-> > > > > This points to Viresh's
-> > > > > d05a7238fe1c mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()
-> > > >
-> > > > I completely forgot that Ulf already pushed this patch and I was
-> > > > wondering on which of the OPP core changes I wrote have done this :(
-> > > >
-> > > > > Most likely this is not the entire problem but it uncovered a preexisting
-> > > > > bug.
-> > > >
-> > > > I think this is.
-> > > >
-> > > > Naresh: Can you please test with this diff ?
-> > >
-> > > I have applied your patch and tested but still see the reported problem.
-> >
-> > The git bisect shows that the first bad commit is,
-> > d05a7238fe1c mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()
-> >
-> > Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> > Reported-by: Anders Roxell <anders.roxell@linaro.org>
->
-> I am not sure what version of the patch you tested.
+Hi Timo,
 
-I have applied The v2 patch series on top of linux next-20200824.
-and tested again the reported kernel panic still there on db410c [1]
+On Tue, Aug 04, 2020 at 02:14:23AM +0200, Timo Witte wrote:
+> Got a dmesg message on my AMD Renoir based Acer laptop:
+> "acer_wmi: Unknown key number - 0x84" when toggling keyboard
+> background light
+> 
+> Signed-off-by: Timo Witte <timo.witte@gmail.com>
 
-https://lkft.validation.linaro.org/scheduler/job/1717611#L1874
+Reviewed-by: "Lee, Chun-Yi" <jlee@suse.com>
 
-- Naresh
+Thanks for your help!
+Joey Lee
+
+> ---
+>  drivers/platform/x86/acer-wmi.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index 60c18f21588d..87797f785d6a 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -111,6 +111,7 @@ static const struct key_entry acer_wmi_keymap[] __initconst = {
+>  	{KE_KEY, 0x64, {KEY_SWITCHVIDEOMODE} },	/* Display Switch */
+>  	{KE_IGNORE, 0x81, {KEY_SLEEP} },
+>  	{KE_KEY, 0x82, {KEY_TOUCHPAD_TOGGLE} },	/* Touch Pad Toggle */
+> +	{KE_IGNORE, 0x84, {KEY_LIGHTS_TOGGLE} }, /* Automatic Keyboard background light toggle */
+>  	{KE_KEY, KEY_TOUCHPAD_ON, {KEY_TOUCHPAD_ON} },
+>  	{KE_KEY, KEY_TOUCHPAD_OFF, {KEY_TOUCHPAD_OFF} },
+>  	{KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
+> -- 
+> 2.27.0
+
