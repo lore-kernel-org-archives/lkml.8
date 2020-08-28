@@ -2,118 +2,102 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67F4C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 251A6C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A7A92078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7CD2078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:09:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T9enyjml"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YDvbZll7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbgH1KJY (ORCPT
+        id S1729103AbgH1KJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 06:09:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43670 "EHLO
+        Fri, 28 Aug 2020 06:09:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729079AbgH1KJU (ORCPT
+        with ESMTP id S1728532AbgH1KJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 06:09:20 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB7E1C061264;
-        Fri, 28 Aug 2020 03:09:20 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id k15so403320pfc.12;
-        Fri, 28 Aug 2020 03:09:20 -0700 (PDT)
+        Fri, 28 Aug 2020 06:09:42 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46A79C061264
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:09:42 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id z9so398774wmk.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:09:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZHzBTEqiDK4axPBETGabpIdpXz6s1djywLVqOpLrIug=;
-        b=T9enyjmlwfTWxjknmDmppmvnYxe4xHyWpqkIas/0XLDkgVDcR6B+5tCZiMAzy6KRaZ
-         zu+vgGSFu88poO4Av7eyhr27kv71owDOS//MDGrL5Zob8OaRq3iJzjc3p1EiGLEk1Ta1
-         ISnnM/GcLf5v/csuFhteu7s82Mi5WiR6PSd1nDdoKB0vBj32qgvYJad7lTa18+xhNL1Z
-         L1wKIPBmJa+z3i/NyWwmQuWnAUL7rL+WkmrSwBSN/hCXMnnWSl+0sSeBh33M18smlAMb
-         N3sdKpsgOH+8K2GoVawj36iWMRlieqZdNBEYRjDbeee0qYjdXN2wjVvKmzuBJ0weWJlu
-         NoRQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=m1YLyJUJCn3oBul9/khpe2532Xp6POTXvt7taeRkGPU=;
+        b=YDvbZll7Ma7sTT+UPVORezULJlnx2tLfQ5IeE3Ehw57Kq2kkU/64SeqXuWw20swHB3
+         DRSP1n7jHPr8urmDdaKZSWN+tS6LcvCpPSGokVwqyHBZ5IvOprC+08jw+ruC99ayLMuG
+         8atji1mzhlt/j6cS1lgrOfyGuwEcNpksJ0etGBqElxC6aXiAhR+hQzrS0PzcfF7Qd6Ux
+         oXeBNlOxbPHK4b0Zo0A84nlF+KGFkhzVo040o6iK1myBSFcKSWVru5dkp0z4tzSwLfK7
+         LP9lNSlKR5ZaMMfDdYgCsNu4oLwPZAVk2SssF2ZcRVPK5CD3bjwFQU1KXK3W6xzh8aEN
+         yqmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZHzBTEqiDK4axPBETGabpIdpXz6s1djywLVqOpLrIug=;
-        b=cbMyB2ME1JtvoN3sgePr46ICgAxOCNfon5PPjB21LSs5smCfGMm50/DyiNlpahMdKC
-         i4lptKuWWMg62wxvwZ/5Z8d16JXGSgcAOTHife5Md1gJ8SQk4y+X5NiHxSt2IucWzlbD
-         WlAB9tFQl0cA6RYjrcpy+viLiQxgGe3sbEuHBtf8awBtX5vwa/lHByxLKaQBqkHNKW0C
-         x7Qy4pywO7/eX8haglRsxv4IxaXac6C5gId+AT6aOtqwVVc5kgHeGP8xEdVXgCCDb1PD
-         BBsOmK6wWzBrXeNDEvw6IIyHdfRvLTFEVKy3Q7d3lcvQU1wDf659qGPjO7TZREq1tD+4
-         tS4g==
-X-Gm-Message-State: AOAM533SFpu0O9f+MHsmdFp4xkZAN6OtpeO+BnsFt9yTBOMOfl/ctb7S
-        noQyQfzuGyGOY/jC/zvBIDmSuIULn40n8jKVAU4=
-X-Google-Smtp-Source: ABdhPJz1hTTI76acslLEASjcBmeKJrOH00nsYVH7K4pa6SeRREesUDiP52LRTdXwDptltpeZW1jpW2MQB+KsMqQd9wg=
-X-Received: by 2002:aa7:95b8:: with SMTP id a24mr621160pfk.219.1598609360115;
- Fri, 28 Aug 2020 03:09:20 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=m1YLyJUJCn3oBul9/khpe2532Xp6POTXvt7taeRkGPU=;
+        b=cAeRxEprVFGsHli0gCihvOOGJEL2P5BqWezDmTGt6ohTGfSMDf3sc0wBhBIfs5Nrbr
+         FQzKULfUJAWCcSF5NUYtd6cBZ9LC/SAxuMxKtLP58H/MQ6zt5xzo/kWki4RjaQVzaQVc
+         qcoqgjISpgvAYE0pL2p0ukQK/SztiUScdPko2eaFzFjV0fu3r7JF5LjW2MZTt2IZdIPQ
+         4s5N/oOt3ar1fAQzxIUv81ucDUehdNeE4Bh3BAjtoRVXkOEZeghK4ZXi3dakKm0wbfxt
+         Jq5ntp+ilHZknTqpQLSBWq7jQbKAhhfp6e8RDmbMaPLS41D0XnaoOXaf5bJjR0/4jSAH
+         1cQg==
+X-Gm-Message-State: AOAM5335xctTHLC+wYmkco03faXlZ5z+5a4NCSXX2+VL7q1DQiclPjvC
+        dHpFnPlQFzy9D6JSTlr3uZMY+w==
+X-Google-Smtp-Source: ABdhPJxgckZPiiORSGh1t7YPnXLaoCx7sqGLxWs0rDpMahar5tKh4ddv01PRLYLdrPq+EKDyrsXwZg==
+X-Received: by 2002:a1c:541b:: with SMTP id i27mr837248wmb.179.1598609380973;
+        Fri, 28 Aug 2020 03:09:40 -0700 (PDT)
+Received: from dell ([91.110.221.141])
+        by smtp.gmail.com with ESMTPSA id c206sm1419164wmf.47.2020.08.28.03.09.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 03:09:40 -0700 (PDT)
+Date:   Fri, 28 Aug 2020 11:09:38 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/3] mfd: madera: Simplify with dev_err_probe()
+Message-ID: <20200828100938.GH1826686@dell>
+References: <20200826144935.10067-1-krzk@kernel.org>
 MIME-Version: 1.0
-References: <20200814100357.209340-1-thomas.preston@codethink.co.uk> <20200814100357.209340-2-thomas.preston@codethink.co.uk>
-In-Reply-To: <20200814100357.209340-2-thomas.preston@codethink.co.uk>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 28 Aug 2020 13:09:03 +0300
-Message-ID: <CAHp75Vefo6djXk0x9OLiqJ=jZV8dkTEoPBRwBfcr41txfSGyRw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] pinctrl: mcp23s08: Fixup mcp23x17 regmap_config
-To:     Thomas Preston <thomas.preston@codethink.co.uk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200826144935.10067-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 1:35 PM Thomas Preston
-<thomas.preston@codethink.co.uk> wrote:
->
-> - Fix a typo where mcp23x17 configs are referred to as mcp23x16.
+On Wed, 26 Aug 2020, Krzysztof Kozlowski wrote:
 
-I'm not sure it's correct. MPC23016 is an existing I=C2=B2C IO expander.
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/mfd/madera-core.c | 11 +++--------
+>  1 file changed, 3 insertions(+), 8 deletions(-)
 
-> - Fix precious range to include INTCAP{A,B}, which clear on read.
-> - Fix precious range to include GPIOB, which clears on read.
-> - Fix volatile range to include GPIOB, to fix debugfs registers
->   reporting different values than `gpioget gpiochip2 {0..15}`.
+Applied, thanks.
 
-I'm wondering if you read all the datasheets before doing these changes.
-MPC2308
-MPC23016
-MPC23017
-...
-
-> -static const struct regmap_range mcp23x16_volatile_range =3D {
-> +static const struct regmap_range mcp23x17_volatile_range =3D {
->         .range_min =3D MCP_INTF << 1,
-> -       .range_max =3D MCP_GPIO << 1,
-> +       .range_max =3D (MCP_GPIO << 1) + 1,
-
-This looks weird. Usually we do a mask or a bit based mask, like (1 << x) -=
- 1.
-
->  };
-
-...
-
-> +static const struct regmap_range mcp23x17_precious_range =3D {
-> +       .range_min =3D MCP_INTCAP << 1,
-> +       .range_max =3D (MCP_GPIO << 1) + 1,
-
-Ditto.
-
->  };
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
