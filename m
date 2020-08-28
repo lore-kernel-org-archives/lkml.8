@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CEBC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5404CC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF97C20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3501E20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598642451;
-	bh=Dd93FE9oQpev+CVY2ipzNLkXaKzEf3vCB92IiF1lQ2Y=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=xlD2GViWRd1smrTAW08P7yFJAEuTGJg/KMT5BTMOFQjYr7TUVMQWTkfFVjbtwJJUE
-	 1dy+xjKRKKL08tcPbtLMieDOkPOvRE17i/56SjEhZsCfKRBT0PA3pkYXw0BYmjQVrb
-	 C0wnQyJvqqcjUhRKsRiPMpjuE11Nky/8yTyhF5gE=
+	s=default; t=1598642455;
+	bh=tCiKCoT33Ggoi/1v/hk0H+qANkB2eST5EjHvrPEODE4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ANgSgqx5PhREOPHZfMNrAib9W8otU5AEOzgnEdzj5M7DAYzbcFArg52NqElFD3gMd
+	 4WUlHg2PCyLEQl0GSF1kCCtYCXW8NNsXdULELWdPp3fowZMudlgX8oI9vrZiWukO7k
+	 YyR1iGH2CXWwSPFKaJm8KwMJWiiaxvYRiADS05mo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726396AbgH1TUt (ORCPT
+        id S1726584AbgH1TUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 15:20:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44566 "EHLO mail.kernel.org"
+        Fri, 28 Aug 2020 15:20:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbgH1TUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 15:20:48 -0400
+        id S1725894AbgH1TUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 15:20:52 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 585882073A;
-        Fri, 28 Aug 2020 19:20:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EC8620897;
+        Fri, 28 Aug 2020 19:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598642448;
-        bh=Dd93FE9oQpev+CVY2ipzNLkXaKzEf3vCB92IiF1lQ2Y=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VonmhDxf/JRylSInuRvDeO2JGgW/YHN1EdjvQfXOZElmu2Qtqr2/V7StFOSH9LRT1
-         rmRmx0h8WuTAu/ke2we0v+40aGO2D8HPmr26gjT5A9WAIuROz78VShOOjaztrN5w7G
-         VD8ARDgOTmiqVV3cegtVqlWZq4+zhoesR6GSVw/k=
+        s=default; t=1598642452;
+        bh=tCiKCoT33Ggoi/1v/hk0H+qANkB2eST5EjHvrPEODE4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MYnTcWmka2xDbOWnMi2rNhLPwPrt9uvs9bJsfWUPtY0ZNNmVpfCvhGRcwJ9GrWRnc
+         POx6/jYAx9p/vjUpUfoPW9OKrEWN3jzwfUGPEfYIZHU4EuTVkiDfTTaUjFQ7NzY1AB
+         1fw1RXTf7I6pueX5kXDnlLVTMOLHR5H2ao5aAYmc=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
@@ -52,42 +52,55 @@ To:     Miquel Raynal <miquel.raynal@bootlin.com>,
         linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/4] dt-bindings: mtd: nand-controller: Fix matching with size-cells==1
-Date:   Fri, 28 Aug 2020 21:20:34 +0200
-Message-Id: <20200828192037.22897-1-krzk@kernel.org>
+Subject: [PATCH 2/4] ARM: dts: imx23: Align GPMI NAND node name with schema
+Date:   Fri, 28 Aug 2020 21:20:35 +0200
+Message-Id: <20200828192037.22897-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200828192037.22897-1-krzk@kernel.org>
+References: <20200828192037.22897-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most of Freescale/NXP GPMI device trees use size-cells==1 (even when
-actually not needed except few boards).  This fixes dtbs_check warnings
-like:
+Device tree schema expects NAND controller to be named
+"nand-controller", otherwise dtbs_check complain with a warning like:
 
-    arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: #size-cells:0:0: 0 was expected
+    arch/arm/boot/dts/imx28-eukrea-mbmx283lc.dt.yaml: gpmi-nand@8000c000:
+        $nodename:0: 'gpmi-nand@8000c000' does not match '^nand-controller(@.*)?'
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- Documentation/devicetree/bindings/mtd/nand-controller.yaml | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx23-evk.dts | 2 +-
+ arch/arm/boot/dts/imx23.dtsi    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-index 40fc5b0b2b8c..0879e1108837 100644
---- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-+++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-@@ -34,7 +34,10 @@ properties:
-     const: 1
+diff --git a/arch/arm/boot/dts/imx23-evk.dts b/arch/arm/boot/dts/imx23-evk.dts
+index 0b2701ca2921..8cbaf1c81174 100644
+--- a/arch/arm/boot/dts/imx23-evk.dts
++++ b/arch/arm/boot/dts/imx23-evk.dts
+@@ -53,7 +53,7 @@
  
-   "#size-cells":
--    const: 0
-+    description:
-+      Depends on your controller. Put zero unless you need a mapping between CS
-+      lines and dedicated memory regions.
-+    enum: [0, 1]
+ 	apb@80000000 {
+ 		apbh@80000000 {
+-			gpmi-nand@8000c000 {
++			nand-controller@8000c000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&gpmi_pins_a &gpmi_pins_fixup>;
+ 				status = "okay";
+diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
+index 18289f6fb1f3..7f4c602454a5 100644
+--- a/arch/arm/boot/dts/imx23.dtsi
++++ b/arch/arm/boot/dts/imx23.dtsi
+@@ -76,7 +76,7 @@
+ 				status = "disabled";
+ 			};
  
-   ranges: true
- 
+-			gpmi-nand@8000c000 {
++			nand-controller@8000c000 {
+ 				compatible = "fsl,imx23-gpmi-nand";
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
 -- 
 2.17.1
 
