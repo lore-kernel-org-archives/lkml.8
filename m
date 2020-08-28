@@ -2,181 +2,90 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2812BC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E714EC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1E112078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:47:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VqvDd/7J"
+	by mail.kernel.org (Postfix) with ESMTP id B798A2078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:50:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598651453;
+	bh=c0oFMsA1O5Pk2FIlsZnCdtv0QkCZMVnLi1aqyfLV4zA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1tIBTOIfPs3wXbYoneuZjrnUB0JzZlMkX2GYpRHeGyWNel20QrMWiWhU0EbcmhkZ2
+	 4+V0MNsk5xBTedVDHn+9D1Crp+Z6rKT2lHb1QGnQEmlHvHdrjH1v9q1PPjYavxyfS5
+	 Ne85ItQGHCTOPwnzlJHUD6GwE4tLMTwUJzBy+zAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgH1Vrn (ORCPT
+        id S1726720AbgH1Vuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 17:47:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39446 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgH1Vrn (ORCPT
+        Fri, 28 Aug 2020 17:50:52 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33912 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgH1Vuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 17:47:43 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15F34C06121B
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 14:47:42 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id 109so500709otv.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 14:47:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O1rtOVVZTmOiLPUX5y+uamzdccZJCnIu4DK04RrHtrw=;
-        b=VqvDd/7JFJoefDnYMDd2TnyWSeNLC0c+tjwlXhfGi7Vr5XBCIXjWeQTN7ktw/f3JlW
-         L8n0EnP4ai7P5w/pGbf0OKl8qGyXDV/uccgr+DtB9WD3906b4faaiDn/QMmRuoSgjyJ2
-         nnhMkrwUTxKGnhf40Ppjk8Bwb4Nwkdt2Hh30lRCdCiGiVLUpAtML9UfNsMuyOHLqKtJV
-         Jy8FhnvcJzxu85ibASKpleexf/WWmDegSfu1FQzzE3PUze7xY1wHbGjPYFfVLejZWH0L
-         WdqzUFhQNBf6+c6LclO8fnlu6ORYB3+dPyavBA5FkK5cwYvKxeXKNfdpw1EDfvcKB3oM
-         6Oxw==
+        Fri, 28 Aug 2020 17:50:51 -0400
+Received: by mail-io1-f68.google.com with SMTP id w20so561803iom.1;
+        Fri, 28 Aug 2020 14:50:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O1rtOVVZTmOiLPUX5y+uamzdccZJCnIu4DK04RrHtrw=;
-        b=bjBx+N2ROT8oK5d7RbYUeMtWUsps9hKp2qICdOtofNirHb4g69izC3iUECAp7plC7y
-         SBHx7aYHP/Ft77DHdBdREXr2SpdPH3kVxOtIcrxfMr0UBswpX9mGVsvt/WpJHqzliNn9
-         MpBYs2lbeTf8c4SXxXssesMy34L/V2aHfM9jpC447lbyCZiZo58hlBKD5D1itpVfsdYK
-         ZikF0Nt1RwAWrebfZhSwWuX0owqNSoD50Fk9RpRC2cshyxkMpA15lX3ODhVVyJrHyziu
-         rdICbH5fFeum35eOzwy8IYOyGxTU4y24obxaYAHwxR56TkEvDqZhxyF2B3PLJLItkH/U
-         8+iw==
-X-Gm-Message-State: AOAM533HAj513Au22Sk1bCL40pDwSPCo2A6L23oAkhjnD8S/8VT5Fyox
-        /islV2kDVWLYmWk9uxxjeIk8D37PUAR9X4vE968Kwg==
-X-Google-Smtp-Source: ABdhPJyMeFzXcU8ZYWbFliiFHaaxRlttnm8/Tw1m92IbDIMbgCL+hffrDsJOTSvlWzGztVIo6kzT1O4fvBLlhbuQVi8=
-X-Received: by 2002:a9d:7846:: with SMTP id c6mr452529otm.221.1598651260423;
- Fri, 28 Aug 2020 14:47:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0roQvlk2we8ViOmNkNlFjgs4mr1pn/4U547TOwbQwGs=;
+        b=DZZg7NJ+53iQW0JOPTDSiLzrc2w76KFlnEAnqMU8MVI6XXM1+ptGjaYOCbyR6mZv4A
+         I1BZ804GU6Z3j++6Mr45kBJ7GpbVpTQpsIMMv147sbVuu1LY/BZukbwjPhYa2YbkjEsw
+         oOFoeiEq6xggitJ09ZNWds7RWvXrz6YP9O/qaIm90yEswTsIxWlKvH9c7YkpI2jbmPfB
+         AuQZ+T9/hUpQhPOMACRG9FhUveBg064W+OVRo+Xkjnd/durH5wVedq6bbYV5PLovjG61
+         uqpqccOPRYqcTWoieiuV4KxsS/TS8E0B5p+Ahdx4BZ3ILne72VMfFKC1A84flU2W/2tf
+         XWdA==
+X-Gm-Message-State: AOAM532Ib/zRwgQot5CPLb7f6RlLGN4jD/TLt9XqCkOu0DNU5DyrgT3p
+        3DFMhWhS13WJo2WpSO/j+w==
+X-Google-Smtp-Source: ABdhPJzrJi7is5WkCexaCeFBszVQDb9yHUjlIsPgQHlrp3pBr97/6Ei066osxzBoBKHpBO/xjq6zoQ==
+X-Received: by 2002:a05:6638:a9a:: with SMTP id 26mr3111326jas.21.1598651450494;
+        Fri, 28 Aug 2020 14:50:50 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id p7sm289507ilj.56.2020.08.28.14.50.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 14:50:49 -0700 (PDT)
+Received: (nullmailer pid 3466509 invoked by uid 1000);
+        Fri, 28 Aug 2020 21:50:47 -0000
+Date:   Fri, 28 Aug 2020 15:50:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     robh+dt@kernel.org, u.kleine-koenig@pengutronix.de,
+        andriy.shevchenko@intel.com, rahul.tanwar.linux@gmail.com,
+        thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org, qi-ming.wu@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, p.zabel@pengutronix.de,
+        linux-kernel@vger.kernel.org, rtanwar@maxlinear.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v11 1/2] Add DT bindings YAML schema for PWM fan
+ controller of LGM SoC
+Message-ID: <20200828215047.GA3466454@bogus>
+References: <cover.1598331849.git.rahul.tanwar@linux.intel.com>
+ <cb86a768550b592b5fc4713bd07689bf84ba044b.1598331849.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-References: <20200808043512.106865-1-john.stultz@linaro.org> <20200828120154.GA1674264@ulmo>
-In-Reply-To: <20200828120154.GA1674264@ulmo>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Fri, 28 Aug 2020 14:47:27 -0700
-Message-ID: <CALAqxLWHc1Vx5eHS02EePb_dJheG+d9yi2Vfop74mWfQUB-hdA@mail.gmail.com>
-Subject: Re: [RFC][PATCH] pinctrl: Rework driver_deferred_probe_check_state()
- evaluation since default timeout has changed
-To:     Thierry Reding <treding@nvidia.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>, Len Brown <len.brown@intel.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb86a768550b592b5fc4713bd07689bf84ba044b.1598331849.git.rahul.tanwar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 5:02 AM Thierry Reding <treding@nvidia.com> wrote:
->
-> On Sat, Aug 08, 2020 at 04:35:12AM +0000, John Stultz wrote:
-> > In commit bec6c0ecb243 ("pinctrl: Remove use of
-> > driver_deferred_probe_check_state_continue()"), we removed the
-> > use of driver_deferred_probe_check_state_continue() which
-> > effectively never returned -ETIMED_OUT, with the
-> > driver_deferred_probe_check_state() function that had been
-> > reworked to properly return ETIMED_OUT when the deferred probe
-> > timeout expired. Along with that change, we set the default
-> > timeout to 30 seconds.
-> >
-> > However, since moving the timeout to 30 seconds caused some
-> > issues for some users with optional dt links, we set the
-> > default timeout back to zero - see commit ce68929f07de ("driver
-> > core: Revert default driver_deferred_probe_timeout value to 0")
-> >
-> > This in essence changed the behavior of the pinctrl's usage
-> > of driver_deferred_probe_check_state(), as it now would return
-> > ETIMED_OUT by default. Thierry reported this caused problems with
-> > resume on tegra platforms.
-> >
-> > Thus this patch tweaks the pinctrl logic so that it behaves as
-> > before. If modules are enabled, we'll only return EPROBE_DEFERRED
-> > while we're missing drivers linked in the DT.
-> >
-> > Cc: linux-pm@vger.kernel.org
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Thierry Reding <treding@nvidia.com>
-> > Cc: Mark Brown <broonie@kernel.org>
-> > Cc: Liam Girdwood <lgirdwood@gmail.com>
-> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Cc: Saravana Kannan <saravanak@google.com>
-> > Cc: Todd Kjos <tkjos@google.com>
-> > Cc: Len Brown <len.brown@intel.com>
-> > Cc: Pavel Machek <pavel@ucw.cz>
-> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> > Cc: Kevin Hilman <khilman@kernel.org>
-> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > Cc: Rob Herring <robh@kernel.org>
-> > Fixes: bec6c0ecb243 ("pinctrl: Remove use of driver_deferred_probe_check_state_continue()")
-> > Fixes: ce68929f07de ("driver core: Revert default driver_deferred_probe_timeout value to 0")
-> > Reported-by: Thierry Reding <thierry.reding@gmail.com>
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > ---
-> >  drivers/pinctrl/devicetree.c | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-> > index c6fe7d64c913..09ddf567ccb4 100644
-> > --- a/drivers/pinctrl/devicetree.c
-> > +++ b/drivers/pinctrl/devicetree.c
-> > @@ -129,9 +129,8 @@ static int dt_to_map_one_config(struct pinctrl *p,
-> >               if (!np_pctldev || of_node_is_root(np_pctldev)) {
-> >                       of_node_put(np_pctldev);
-> >                       ret = driver_deferred_probe_check_state(p->dev);
-> > -                     /* keep deferring if modules are enabled unless we've timed out */
-> > -                     if (IS_ENABLED(CONFIG_MODULES) && !allow_default &&
-> > -                         (ret == -ENODEV))
-> > +                     /* keep deferring if modules are enabled */
-> > +                     if (IS_ENABLED(CONFIG_MODULES) && !allow_default)
-> >                               ret = -EPROBE_DEFER;
-> >                       return ret;
-> >               }
->
-> I posted almost exactly the same patch a couple of days ago since I
-> hadn't noticed this:
->
->         https://patchwork.ozlabs.org/project/linux-gpio/patch/20200825143348.1358679-1-thierry.reding@gmail.com/
->
-> I like that slightly better because it keeps the "ret < 0" condition,
-> which I think is perhaps a bit more future-proof. Thinking about it, I'm
-> not sure your version above is entirely correct. For example if the call
-> to driver_deferred_probe_check_state() were to ever return 0, we might
-> still be returning -EPROBE_DEFER here.
+On Tue, 25 Aug 2020 13:07:05 +0800, Rahul Tanwar wrote:
+> Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
+> which is only used to control the fan attached to the system. This
+> PWM controller does not have any other consumer other than fan.
+> Add DT bindings documentation for this PWM fan controller.
+> 
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> ---
+>  .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+> 
 
-Yea. I agree that your patch is preferred.
-
-> That's not something that happens currently, but I suspect that these
-> implications will be easy to overlook.
->
-> Actually... I think it might be best to just bring back (albeit perhaps
-> in a modified form) driver_deferred_probe_check_state_continue() because
-> we're now basically doing exactly what that was supposed to do: special-
-> casing the case where we do want to continue returning -EPROBE_DEFER in
-> some special cases.
-
-Is it likely that the special case situation is common?  It seems
-having the driver do the special casing in its code (even better, with
-an explanation for why that driver needs it) will be better then
-having multiple similar hooks that don't have clear explanations that
-drivers are likely to mix up.
-
-thanks
--john
+Reviewed-by: Rob Herring <robh@kernel.org>
