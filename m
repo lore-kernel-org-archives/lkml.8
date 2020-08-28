@@ -2,106 +2,170 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 413DBC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A21C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13EB620757
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:24:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aM1pukEv"
+	by mail.kernel.org (Postfix) with ESMTP id A103C20757
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598595890;
+	bh=PnVOZ3/btnQu+55XKtuBogX6ON1ZvzYWAch/mGvQdhQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BZ31OxvS6uJI/kMD1vgS8WF0t3VOZb3tr72Xw6aayOC63Qqbzas3G7Lpc8Zm4Rlcy
+	 wzGXdE08gefqfy+8gxc/orK1G/pn9qxrVtaS4Waof7KRWj52SJROe9RpySDLKWkeMy
+	 K+EKXXHUqq4t9fzEVnO3J1PIsyEUwxmU4Tut3AXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgH1GYW (ORCPT
+        id S1728354AbgH1GYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 02:24:22 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53491 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725858AbgH1GYS (ORCPT
+        Fri, 28 Aug 2020 02:24:49 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38138 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbgH1GYt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 02:24:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598595857;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TZgOlmN9m49e++aSj4JPimMgy9NjdrTL35m0T++hZyQ=;
-        b=aM1pukEv+frLqm1sbyFKzeg1EoWbysRX8S/zmBAWwJk66sGw/kBgFd5oc8lKQWCMNBgYfC
-        lKRRMdrLR+/e2IH33VRqKiJk/mQP9SwcBVq/HSYyKzifAg71m3WSY60+71wR5EXmdHRnwU
-        ncWWn1k5/RxU4+sgqXd6DzOL5ayINro=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-443-M3H7_1grNueY-FhKFkSSmQ-1; Fri, 28 Aug 2020 02:24:12 -0400
-X-MC-Unique: M3H7_1grNueY-FhKFkSSmQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 501DC1DDFF;
-        Fri, 28 Aug 2020 06:24:08 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-112-37.ams2.redhat.com [10.36.112.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4A6655D9F1;
-        Fri, 28 Aug 2020 06:23:55 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     "H.J. Lu" <hjl.tools@gmail.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Yu\, Yu-cheng" <yu-cheng.yu@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Dave Hansen <dave.hansen@intel.com>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for shadow stack
-References: <a770d45d-b147-a8c5-b7f8-30d668cbed84@intel.com>
-        <4BDFD364-798C-4537-A88E-F94F101F524B@amacapital.net>
-        <CAMe9rOoTjSwRSPuqP6RKkDzPA_VPh5gVYRVFJ-ezAD4Et-FUng@mail.gmail.com>
-        <CALCETrW=-ahC7GUCCyX7nPjCHfG3tiyDespud2Z7UbB6yWWWAA@mail.gmail.com>
-        <CAMe9rOrt5hz6qsNAxPgdKCOhRcKKESv-D3rxdSfraeJ-LFHM4w@mail.gmail.com>
-Date:   Fri, 28 Aug 2020 08:23:54 +0200
-In-Reply-To: <CAMe9rOrt5hz6qsNAxPgdKCOhRcKKESv-D3rxdSfraeJ-LFHM4w@mail.gmail.com>
-        (H. J. Lu's message of "Thu, 27 Aug 2020 18:44:27 -0700")
-Message-ID: <87v9h3thj9.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Fri, 28 Aug 2020 02:24:49 -0400
+Received: by mail-ed1-f68.google.com with SMTP id b2so143178edw.5;
+        Thu, 27 Aug 2020 23:24:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=p5CxlDCkzVcslzoI2Y1jCiSF6kba4WwnH5Gi/cefvyw=;
+        b=A7xZo3sEwDq1/H+BBUomIsJU6WyFanOBQUHo3TMTDGltE2kvlvsXNSPA0QOdqvP83/
+         MimFnYqP80AjRw6Q4twPkuVoW56FbenTNB5lSCcPHpFPtltCDFlHKLSM0rqWP3/f5EzH
+         NSzuugftvm04cHpd+oA84iibgy+kSXWdMCkkBge+gx7o1+EUWd3VBtuVkAF81D2dLYYT
+         fhiKHZ7EHl00p8PZCBvLpsXv9Ueq/ZpWgp9IX9VDv04o9bXMnnDqwpKgTp+qidI9kTMM
+         Jqbc3SxUL+OoE48h382crlhxo73Crpilsn+d9assNp1uvJZaLtMLs1/8MHcWNxshXGAp
+         A+EQ==
+X-Gm-Message-State: AOAM532eBVHFBCmXnm2a5k2doo2qW9pkBNHtHoAczzUJRoy3CqLZJQSq
+        OkbPcEKXENioM2BgkbnMz7g=
+X-Google-Smtp-Source: ABdhPJxeW0KD9hKV2DDa/EdMjU+5aNFXnsb+vG7w/NJJBOIDbbnxf68rltSFEJDK0Zq+nf99uGbtHw==
+X-Received: by 2002:a05:6402:2039:: with SMTP id ay25mr310806edb.87.1598595886637;
+        Thu, 27 Aug 2020 23:24:46 -0700 (PDT)
+Received: from pi3 ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id w20sm3809310ejc.77.2020.08.27.23.24.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 23:24:46 -0700 (PDT)
+Date:   Fri, 28 Aug 2020 08:24:43 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Peter Rosin <peda@axentia.se>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Beniamin Bia <beniamin.bia@analog.com>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2 09/18] iio: afe: iio-rescale: Simplify with
+ dev_err_probe()
+Message-ID: <20200828062443.GA17343@pi3>
+References: <20200827192642.1725-1-krzk@kernel.org>
+ <20200827192642.1725-9-krzk@kernel.org>
+ <f4a5777e-fe85-9f3f-4818-f7539f223adc@axentia.se>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f4a5777e-fe85-9f3f-4818-f7539f223adc@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. J. Lu:
+On Thu, Aug 27, 2020 at 11:46:40PM +0200, Peter Rosin wrote:
+> On 2020-08-27 21:26, Krzysztof Kozlowski wrote:
+> > Common pattern of handling deferred probe can be simplified with
+> > dev_err_probe().  Less code and also it prints the error value.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > 
+> > ---
+> > 
+> > Changes since v1:
+> > 1. Wrap dev_err_probe() lines at 100 character
+> > ---
+> >  drivers/iio/afe/iio-rescale.c | 7 ++-----
+> >  1 file changed, 2 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/iio/afe/iio-rescale.c b/drivers/iio/afe/iio-rescale.c
+> > index 69c0f277ada0..8cd9645c50e8 100644
+> > --- a/drivers/iio/afe/iio-rescale.c
+> > +++ b/drivers/iio/afe/iio-rescale.c
+> > @@ -276,11 +276,8 @@ static int rescale_probe(struct platform_device *pdev)
+> >  	int ret;
+> >  
+> >  	source = devm_iio_channel_get(dev, NULL);
+> > -	if (IS_ERR(source)) {
+> > -		if (PTR_ERR(source) != -EPROBE_DEFER)
+> > -			dev_err(dev, "failed to get source channel\n");
+> > -		return PTR_ERR(source);
+> > -	}
+> > +	if (IS_ERR(source))
+> > +		return dev_err_probe(dev, PTR_ERR(source), "failed to get source channel\n");
+> 
+> Hi!
+> 
+> Sorry to be a pain...but...
+> 
+> I'm not a huge fan of adding *one* odd line breaking the 80 column
+> recommendation to any file. I like to be able to fit multiple
+> windows side by side in a meaningful way. Also, I don't like having
+> a shitload of emptiness on my screen, which is what happens when some
+> lines are longer and you want to see it all. I strongly believe that
+> the 80 column rule/recommendation is still as valid as it ever was.
+> It's just hard to read longish lines; there's a reason newspapers
+> columns are quite narrow...
+> 
+> Same comment for the envelope-detector (3/18).
+> 
+> You will probably never look at these files again, but *I* might have
+> to revisit them for one reason or another, and these long lines will
+> annoy me when that happens.
 
-> Can you think of ANY issues of passing more arguments to arch_prctl?
+Initially I posted it with 80-characters wrap. Then I received a comment
+- better to stick to the new 100, as checkpatch accepts it.
 
-On x32, the glibc arch_prctl system call wrapper only passes two
-arguments to the kernel, and applications have no way of detecting that.
-musl only passes two arguments on all architectures.  It happens to work
-anyway with default compiler flags, but that's an accident.
+Now you write, better to go back to 80.
 
-Thanks,
-Florian
+Maybe then someone else will write to me, better to go to 100.
+
+And another person will reply, no, coding style still mentions 80, so
+keep it at 80.
+
+Sure guys, please first decide which one you prefer, then I will wrap it
+accordingly. :)
+
+Otherwise I will just jump from one to another depending on one person's
+personal preference.
+
+If there is no consensus among discussing people, I find this 100 line
+more readable, already got review, checkpatch accepts it so if subsystem
+maintainer likes it, I prefer to leave it like this.
+
+> You did wrap the lines for dpot-dac (12/18) - which is excellent - but
+> that makes me curious as to what the difference is?
+
+Didn't fit into limit of 100.
+
+Best regards,
+Krzysztof
+
 
