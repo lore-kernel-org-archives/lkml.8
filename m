@@ -2,177 +2,135 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FE7C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15636C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC63520848
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD04C20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:38:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="okKA5t+8"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="B+1QjTXk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgH1Lgk (ORCPT
+        id S1729262AbgH1Lh0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 07:36:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728709AbgH1Lde (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 07:33:34 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36AB1C061234;
-        Fri, 28 Aug 2020 04:33:01 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id q93so443419pjq.0;
-        Fri, 28 Aug 2020 04:33:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LOlDEU1BsYBbFWhmh59xuuWngnqIWmuc5c1z2N5X5iU=;
-        b=okKA5t+819t4aL82S/1lPHpK0etGCZAg+DWAd3Aa+/Kfd0TPjmAiMHRr+BtuzqUrNw
-         FQNIJW6q/u50hqueNTXZJF3fsD7RnkcRFhXLhUuF4mmD8NYK69Gw1D1ZDKMWqg+JvywU
-         Gk/sJ4QZGcvZjNK3CQ76/z2vDWIpvEmDnkU7vJr8agn9cyNHgmgZtb9r67Ap0sh5i3gd
-         nQnktlRbPIG4bQ0a36AnzchmeHGvqCyQa22RtOi5upQ7CwhZc5alUuUWe6DrDfWIo7Fi
-         sxO/vQMTdzTbwOLookZJa0WJxb5rjL97X0f280Si6C281JKHUBFx1UATzKFNpxilEfFW
-         eCgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LOlDEU1BsYBbFWhmh59xuuWngnqIWmuc5c1z2N5X5iU=;
-        b=EjNOMZLg7DUaJMcCEtOj4xIz3EKRo2x2OH0MvixSryfBnfNBrDX4bJ5FHVAjzZ9IAs
-         8RjHvKWGXICDiNagFwNX0gb6DV3P/k12LJptNqJed6f8ZGwLRRu5HpObpP4C3Xx0ii/+
-         lKDhCsMI7A4jX8K2FhJqn8YrD+YaThiV6Fr3O9mEIeatRpJYs5j2/NVhdjfINuJ1ndgF
-         cjaH7Xaz1fZ3+naNdpHDlywIoPrdgnz8hopEL3pvjAHfqYCOPvxfzSy0T5rl9ReRXy4m
-         1Yaxyfs0Jbq+/xzRRkX/HgKbqo89+xNx/SrLCj8M0Crc+bEcz4F4J1qiObdLPwY4FPE7
-         IfiQ==
-X-Gm-Message-State: AOAM532JXC1DipmHolbSbQ2SMeBc1PkVVaHnjJb7aAJswGzsZoM5qO7/
-        /op0zNzccESTevcfS0tmRZJ+L+FIAN1t2AAw7xw=
-X-Google-Smtp-Source: ABdhPJyOnYN0eiYT1oRmZEPiOV986t4tAQMWHu343i5WBAGAYTZAwJTws/nQaqTHDZFMTTSFa9GlXpfA7djOWhFxvnw=
-X-Received: by 2002:a17:902:8208:: with SMTP id x8mr1007047pln.65.1598614380745;
- Fri, 28 Aug 2020 04:33:00 -0700 (PDT)
+        Fri, 28 Aug 2020 07:37:26 -0400
+Received: from mail-eopbgr130073.outbound.protection.outlook.com ([40.107.13.73]:41602
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729161AbgH1Ldr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 07:33:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J9I9UNnassdQhnGx0RNdj2pOtBwPlthPcAd0bfh+kX2u/OuPeQrCiyORsqQPDCLZMX0CW0PmzQqnFnqYBUFG8NT5Yzm+lZuZKwpv44fF6kYtN44cXwh5g8EsL1cEYtpOd9p5Jy5+GX0MqQALi2v9B/xtaQnTGVvoNnU5wt/kOHRFH0YiynDh2uauT+APuF9C/JQ7ckJL8cXIrmcCcxNf9xTZSBUUMhrMusE2/OPg9QLUUw9h+hx5HYJ7Md+6oIlOtHvxmqP+aAxiQhgfVXZLGYS7PJywv0XffPkjtA5xiU/zhmtVoaGxqmbQnQHGoJFC7qMxSD6xK7X4KRoUMDbffA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s+e5aRAvpgWgQElDdpYoNtSgTL96amHcSl7fXGejFiI=;
+ b=J5Oknz0K0tswYVhX84oUS9cDPOTpT41Q5iCqvqDBS22uUJ1El8YJXFHoYQVmK+nsy7ipUg2aH/CWTV6t3mMvkDf5/GJG2HowjHysFt+VLmYyjGTZM0NrUmPaPy4e1QFy1aVS9Whb1L3mU3YqNPH45ZtS7c5addO6n9csSbb4BD0+w9xnLpKfUQCol9AyUhBWH6Wo6RZ0zAI5AGg4wf9V0tDVmFqgnIKqTpIroGNeQH+B8fDgtM8Vj0nMbi+o3/MJvgS4V2XTbMlaD7Y+0ZEFEZ7GhIVGqZtcNUWK1194DsqK8vUh/UukQ4nwYULSkPw/ZYUNUjL3JXsYLdpT3RyMsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s+e5aRAvpgWgQElDdpYoNtSgTL96amHcSl7fXGejFiI=;
+ b=B+1QjTXkw+JLR9V1pghanY1oPfRHZ7HoSHTNiPLjaKK4+qxoHxM7UOOdDEJOG1KOBax9A9S05heqA0AWH4VHe0swDUi/iq6+XfbHnW40qIXefpDfxEIUuGTByIwxDSEuMsuV6ujDmfWPK+n8ZYWYIpjOi/CyMMdMFGuM4dZJ0lg=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=oss.nxp.com;
+Received: from DB6PR0401MB2598.eurprd04.prod.outlook.com (2603:10a6:4:39::7)
+ by DBAPR04MB7413.eurprd04.prod.outlook.com (2603:10a6:10:1a6::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.21; Fri, 28 Aug
+ 2020 11:13:47 +0000
+Received: from DB6PR0401MB2598.eurprd04.prod.outlook.com
+ ([fe80::19ed:520c:8c98:e334]) by DB6PR0401MB2598.eurprd04.prod.outlook.com
+ ([fe80::19ed:520c:8c98:e334%4]) with mapi id 15.20.3326.023; Fri, 28 Aug 2020
+ 11:13:47 +0000
+From:   "Robert Chiras (OSS)" <robert.chiras@oss.nxp.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Ondrej Jirman <megous@megous.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com
+Subject: [PATCH 4/5] dt-bindings: display/bridge: nwl-dsi: Document fsl,clock-drop-level property
+Date:   Fri, 28 Aug 2020 14:13:31 +0300
+Message-Id: <1598613212-1113-5-git-send-email-robert.chiras@oss.nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1598613212-1113-1-git-send-email-robert.chiras@oss.nxp.com>
+References: <1598613212-1113-1-git-send-email-robert.chiras@oss.nxp.com>
+Content-Type: text/plain
+X-ClientProxiedBy: AM3PR07CA0114.eurprd07.prod.outlook.com
+ (2603:10a6:207:7::24) To DB6PR0401MB2598.eurprd04.prod.outlook.com
+ (2603:10a6:4:39::7)
 MIME-Version: 1.0
-References: <20200828110507.22407-1-peter.ujfalusi@ti.com>
-In-Reply-To: <20200828110507.22407-1-peter.ujfalusi@ti.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 28 Aug 2020 14:32:44 +0300
-Message-ID: <CAHp75Vef=C=+Ck8T-TCp56TCjV-YsNGo9MWFsDQ=h6rn3cP-MQ@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: Mark dma_request_slave_channel() deprecated
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1664-120.ea.freescale.net (83.217.231.2) by AM3PR07CA0114.eurprd07.prod.outlook.com (2603:10a6:207:7::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3348.7 via Frontend Transport; Fri, 28 Aug 2020 11:13:46 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [83.217.231.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 4d0e3968-66e6-4504-bfa9-08d84b436f47
+X-MS-TrafficTypeDiagnostic: DBAPR04MB7413:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DBAPR04MB7413AFFAEF33FA327DBA9D41A2520@DBAPR04MB7413.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4CYh85n/LQ/NC1bb8R616oAq8q/cn0G4kbOtvFO1q3xyDY9Cg6Vx9TB8jt6juxxswckg/xVIP6D0OvYJb1c5AJf2HagEweMFuw3n58VuPytqJqHD47Y//PAdJ2Bh48Spjp8rkDmESHI2Ds06GNRKMhep2gii5CRF3WlOqOAo0sI33CAbzHVtYWkwnKoQWujNw4kag0eLlHbuFA6AooKSpxY2bST5unYhIHBl+6cixJzLztZN0x4SoLQHQE8SLSik8m+TJD5gS9a0A5772Fzgxa2SM7W0+QGcUrWnjBUH6IFObAPd7G42lPStsb/YMCN65UuHTEws2kaJC0PnT/fGbtl2cZFn4GQXpl2WH36Gt+OaUP60zc0Owp9a7+viqhTixpSA45NvppHgC22PK/OY4w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0401MB2598.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(396003)(366004)(136003)(39860400002)(16526019)(52116002)(86362001)(26005)(316002)(8676002)(6486002)(66556008)(8936002)(2616005)(54906003)(66946007)(6512007)(6506007)(186003)(4744005)(478600001)(66476007)(7416002)(110136005)(2906002)(83380400001)(6666004)(5660300002)(956004)(4326008)(142933001)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 9P0PZW4BKaZwkMVjTcRGci5fQ+Uz/pJTuuRDbcmeHFHUhQACpw7Fi8TdUXGjaUCSKezE1k6TQorlKOXDp6Y1uUMqbj23DrvREH2KqYwkHWV2noDJz+fxxItlTPG5TrPfNkDWv11udCrHmXtyd/iRJMwYq1oaeUClcbTxFq/K3945hDlIuC27ekYiKy8UELnJBxgAinsVl6syPHFK75gnnbNPfUHsIbqzrBPtoIdjuo1bBuhfbOs7RtSL9vlHTgj2AkpBkmsMVQfqfo2czBb5qmJFnuw9A/hPtAiktXNQeKE3NqrmyNS3ULRDS/+Z7qUEtqN2iJhOflVDpIPeAaI6aLSk6tVKAz5RqkQBLicCSOSH+knt66WFQEbb6isFMF6CkOsjgBOcwdG6Ny7uLvKDnnSjIIEFk3mZe+Im5Q9hGvQpOOq16406Sr1iCIDXSWmeGS9vXeWJcf3UQ51vAMfpVxD2oyX3z3pZ3Jw1H2VdlJKG7rGbhLfABq+PO5ep6Qj6DEOZtHooDUgbr0GRuDfdlcgtoM4il43rw8XC0tWHoNP9SKH9Q8+JTQ6ClVgQi/w499khXZoI3gVvBFaqumkfGJUZpGGrjCAxR7ow8sJQJ28bsT/T8E/hQ70quBDIDnFleYy+DAPbsPJWGq97rzS08w==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4d0e3968-66e6-4504-bfa9-08d84b436f47
+X-MS-Exchange-CrossTenant-AuthSource: DB6PR0401MB2598.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2020 11:13:47.7908
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: F33vtk15u+T1z7PoeUGnH+pPoDDa8Kfl19AwbHQfDjugVbBICDGCo9x4JmcClayOco/hG4+SDbGX+62NaMXG5w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7413
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 2:03 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->
-> New drivers should use dma_request_chan() instead
-> dma_request_slave_channel()
->
-> dma_request_slave_channel() is a simple wrapper for dma_request_chan()
-> eating up the error code for channel request failure and makes deferred
-> probing impossible.
->
-> Move the dma_request_slave_channel() into the header as inline function,
-> mark it as deprecated.
+From: Robert Chiras <robert.chiras@nxp.com>
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Add documentation for a new property: 'fsl,clock-drop-level'.
 
-Thanks for this vector of cleaning!
+Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+---
+ Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/dma/dmaengine.c   | 18 ------------------
->  include/linux/dmaengine.h | 15 +++++++++------
->  2 files changed, 9 insertions(+), 24 deletions(-)
->
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index a53e71d2bbd4..ac8ef6cf7626 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -871,24 +871,6 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
->  }
->  EXPORT_SYMBOL_GPL(dma_request_chan);
->
-> -/**
-> - * dma_request_slave_channel - try to allocate an exclusive slave channel
-> - * @dev:       pointer to client device structure
-> - * @name:      slave channel name
-> - *
-> - * Returns pointer to appropriate DMA channel on success or NULL.
-> - */
-> -struct dma_chan *dma_request_slave_channel(struct device *dev,
-> -                                          const char *name)
-> -{
-> -       struct dma_chan *ch = dma_request_chan(dev, name);
-> -       if (IS_ERR(ch))
-> -               return NULL;
-> -
-> -       return ch;
-> -}
-> -EXPORT_SYMBOL_GPL(dma_request_slave_channel);
-> -
->  /**
->   * dma_request_chan_by_mask - allocate a channel satisfying certain capabilities
->   * @mask:      capabilities that the channel must satisfy
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index 011371b7f081..dd357a747780 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -1472,7 +1472,6 @@ void dma_issue_pending_all(void);
->  struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
->                                        dma_filter_fn fn, void *fn_param,
->                                        struct device_node *np);
-> -struct dma_chan *dma_request_slave_channel(struct device *dev, const char *name);
->
->  struct dma_chan *dma_request_chan(struct device *dev, const char *name);
->  struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
-> @@ -1502,11 +1501,6 @@ static inline struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
->  {
->         return NULL;
->  }
-> -static inline struct dma_chan *dma_request_slave_channel(struct device *dev,
-> -                                                        const char *name)
-> -{
-> -       return NULL;
-> -}
->  static inline struct dma_chan *dma_request_chan(struct device *dev,
->                                                 const char *name)
->  {
-> @@ -1575,6 +1569,15 @@ void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
->  #define dma_request_channel(mask, x, y) \
->         __dma_request_channel(&(mask), x, y, NULL)
->
-> +/* Deprecated, please use dma_request_chan() directly */
-> +static inline struct dma_chan * __deprecated
-> +dma_request_slave_channel(struct device *dev, const char *name)
-> +{
-> +       struct dma_chan *ch = dma_request_chan(dev, name);
-> +
-> +       return IS_ERR(ch) ? NULL : ch;
-> +}
-> +
->  static inline struct dma_chan
->  *dma_request_slave_channel_compat(const dma_cap_mask_t mask,
->                                   dma_filter_fn fn, void *fn_param,
-> --
-> Peter
->
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->
-
-
+diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+index 8b5741b..b415f4e 100644
+--- a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
++++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+@@ -143,6 +143,10 @@ properties:
+ 
+     additionalProperties: false
+ 
++  clock-drop-level:
++    description:
++      Specifies the level at wich the crtc_clock should be dropped
++
+ patternProperties:
+   "^panel@[0-9]+$":
+     type: object
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
+
