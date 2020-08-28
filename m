@@ -2,94 +2,97 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0563C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DDFC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A01E2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:49:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="duPFIWfR"
+	by mail.kernel.org (Postfix) with ESMTP id C67462075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:49:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgH1ItR (ORCPT
+        id S1728707AbgH1Itw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 04:49:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbgH1ItP (ORCPT
+        Fri, 28 Aug 2020 04:49:52 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:45913 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgH1Itt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 04:49:15 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EE31C061264;
-        Fri, 28 Aug 2020 01:49:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=k8aPF73jxQe0xsExpEcThESxr3TxPHZHxMhHZh2teH4=; b=duPFIWfR7dv63evjzP0erJXqD8
-        0eHf+nY8HPAZWqwHPzsnS2DRA/Vo0aEt9AqB7QMok6mgRVohmdBefpOhRWUpzO+cIRYh5JrV59FfU
-        OD+NKllFG4RWjleIQmP/OKtTP4oirxt3UKAqrOKE/3AXqG1cPXJXqva4g6jmO989UNZqZoNaItqHs
-        tMLtt9//vxsothJ3qHss5bTu0AlzXx7t7uTrnD9I74SoLnN/W63UweDdIw/iLefc5iF9vJ0UicBJY
-        hMTzrfa8+IAdwoSnryokEh+dbK5rw9U+HSEhKrTOBfLtldFrJxdSV8MrHmSIxJo2vv0t3mSAi2rTW
-        ws2TEZiw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBa45-0006bO-Ac; Fri, 28 Aug 2020 08:48:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E2392300238;
-        Fri, 28 Aug 2020 10:48:51 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 986532C5F134C; Fri, 28 Aug 2020 10:48:51 +0200 (CEST)
-Date:   Fri, 28 Aug 2020 10:48:51 +0200
-From:   peterz@infradead.org
-To:     linux-kernel@vger.kernel.org, mhiramat@kernel.org
-Cc:     Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
-        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
-        cameron@moodycamel.com, oleg@redhat.com, will@kernel.org,
-        paulmck@kernel.org
-Subject: Re: [RFC][PATCH 7/7] kprobes: Replace rp->free_instance with freelist
-Message-ID: <20200828084851.GQ1362448@hirez.programming.kicks-ass.net>
-References: <20200827161237.889877377@infradead.org>
- <20200827161754.594247581@infradead.org>
+        Fri, 28 Aug 2020 04:49:49 -0400
+Received: by mail-il1-f194.google.com with SMTP id k4so223488ilr.12;
+        Fri, 28 Aug 2020 01:49:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wVemUTC2Juht3FJLPi1gZFhVQOsLxFZk3/oLvErcjXA=;
+        b=WytkgegD6oyGauSz9Yt05JLMxkPJjtqfIIGEVVSgR06CamOAXW1T/RgNFlISUc0Nvn
+         9CftBv9LuLeC+p+ZkVg05MiwmcOfft7VfVfI8KGalMgjNmXYTjcOMwGsg86VCDZ2Xf/i
+         xLAYG66eZX0D2uCm9Yjl06rmdUJf6Zw0rPqKS3DZiiGuicw96vyMjbz8kJddlKzO7w57
+         vZUUUJ/AAjHn1GU29uS5unYBaekOPpMbd2sc3dba9AJmZZr7pTOdzU1qGg5DXWqLnIJz
+         xiAJra8Wofp4470dnI+dN/O9cY0bQ1oQZZsxvgHAYAY/T/yUY6KC0mQmjBixpBRYcZry
+         Zxgw==
+X-Gm-Message-State: AOAM531OOhNsMc3BqFlpHMiZhulkeEIVImgnlEuIpm0otcTZgWpPH6UI
+        GxLbrBpudFCXdzv9NuCRcAdv7s6rKu5US3M8aWZtRur24YQ=
+X-Google-Smtp-Source: ABdhPJxTgXSZZpWlbIhU0t+RtJbv2aKL2oJ6HpkHwgUYaR0njZT0spLiivsB8AoE7WdYuAVcb3M53HRXHP2XWaVzBQY=
+X-Received: by 2002:a05:6e02:cb0:: with SMTP id 16mr604419ilg.147.1598604588656;
+ Fri, 28 Aug 2020 01:49:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827161754.594247581@infradead.org>
+References: <1598515388-3604-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1598515388-3604-1-git-send-email-yangtiezhu@loongson.cn>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Fri, 28 Aug 2020 16:49:37 +0800
+Message-ID: <CAAhV-H4MA7L8uBG3y1R-VgkS74Awa5-Qsp-vQUsYM8jwgtekJg@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: perf: Fix wrong check condition of Loongson event IDs
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Pei Huang <huangpei@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 06:12:44PM +0200, Peter Zijlstra wrote:
->  struct kretprobe_instance {
->  	union {
-> +		/*
-> +		 * Dodgy as heck, this relies on not clobbering freelist::refs.
-> +		 * llist: only clobbers freelist::next.
-> +		 * rcu: clobbers both, but only after rp::freelist is gone.
-> +		 */
-> +		struct freelist_node freelist;
->  		struct llist_node llist;
-> -		struct hlist_node hlist;
->  		struct rcu_head rcu;
->  	};
+Hi, Pei,
 
-Masami, make sure to make this something like:
+On Thu, Aug 27, 2020 at 4:05 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+> According to the user's manual chapter 8.2.1 of Loongson 3A2000 CPU [1]
+> and 3A3000 CPU [2], we should take some event IDs such as 274, 358, 359
+> and 360 as valid in the check condition, otherwise they are recognized
+> as "not supported", fix it.
+I think this patch needs you to confirm.
 
-	union {
-		struct freelist_node freelist;
-		struct rcu_head rcu;
-	};
-	struct llist_node llist;
-
-for v4, because after some sleep I'm fairly sure what I wrote above was
-broken.
-
-We'll only use RCU once the freelist is gone, so sharing that storage
-should still be okay.
+>
+> [1] http://www.loongson.cn/uploadfile/cpu/3A2000/Loongson3A2000_user2.pdf
+> [2] http://www.loongson.cn/uploadfile/cpu/3A3000/Loongson3A3000_3B3000user2.pdf
+>
+> Fixes: e9dfbaaeef1c ("MIPS: perf: Add hardware perf events support for new Loongson-3")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  arch/mips/kernel/perf_event_mipsxx.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/mips/kernel/perf_event_mipsxx.c b/arch/mips/kernel/perf_event_mipsxx.c
+> index efce5de..011eb6bb 100644
+> --- a/arch/mips/kernel/perf_event_mipsxx.c
+> +++ b/arch/mips/kernel/perf_event_mipsxx.c
+> @@ -1898,8 +1898,8 @@ static const struct mips_perf_event *mipsxx_pmu_map_raw_event(u64 config)
+>                                 (base_id >= 64 && base_id < 90) ||
+>                                 (base_id >= 128 && base_id < 164) ||
+>                                 (base_id >= 192 && base_id < 200) ||
+> -                               (base_id >= 256 && base_id < 274) ||
+> -                               (base_id >= 320 && base_id < 358) ||
+> +                               (base_id >= 256 && base_id < 275) ||
+> +                               (base_id >= 320 && base_id < 361) ||
+>                                 (base_id >= 384 && base_id < 574))
+>                                 break;
+>
+> --
+> 2.1.0
+>
