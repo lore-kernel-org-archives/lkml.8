@@ -2,88 +2,244 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C13AEC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BE8C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAA02080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0188B2080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:51:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XE0VIDKy"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="rdyvKu3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgH1BvN (ORCPT
+        id S1728351AbgH1BvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 21:51:13 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51152 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgH1BvK (ORCPT
+        Thu, 27 Aug 2020 21:51:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51286 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgH1BvU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 21:51:10 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07S1idOa027183;
-        Fri, 28 Aug 2020 01:50:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=0vEFas0o4yRWOhG2ENnl7n65xG6A/FN00LeWvkgsczw=;
- b=XE0VIDKyogXdQZ0qzKJ+Wu+i/b6H01FhVfL4/cLGsMMPiz9MWho9/U1pIpgkJa1Rjj19
- sM7oGO8JWZn/t6a3zVIHme05BRziso5hDoiwgxKrWYJSAOgSB2QC1f8qIBYK7iAsTaQi
- kv0oZeyi/GXxIS/bHV0m3n7k1IEJc6dTWa2s9q9CYMR+icrVTO3wCyua3wfjLR6V6c2M
- QrJpqpaAUNI1fesVfiE4z2RPjCVQJmMVs0BmoI2jqhcGJjuOysmPu18GC4rOjInK3nAj
- BGSp0PtHtHwZBJGIfMgSErcTQ1zj5UJ2aXqqdDYnKNciGHxy4nlhCNXS/NgNJ3GfAx+r Ew== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 336ht3hjf7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Aug 2020 01:50:58 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07S1oul0163912;
-        Fri, 28 Aug 2020 01:50:58 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 333r9p44dd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Aug 2020 01:50:57 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07S1ojq9030304;
-        Fri, 28 Aug 2020 01:50:46 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 27 Aug 2020 18:50:45 -0700
-Date:   Thu, 27 Aug 2020 21:59:44 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] padata: add a reviewer
-Message-ID: <20200828015944.tk45hzuyzkabbrs3@ca-dmjordan1.us.oracle.com>
-References: <20200826145923.719126-1-daniel.m.jordan@oracle.com>
- <20200827064409.GA20687@gauss3.secunet.de>
+        Thu, 27 Aug 2020 21:51:20 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 590F1C061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 18:51:20 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id w186so4664306pgb.8
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 18:51:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2OnCbMPvcWuwoz19YUddW2n8/b9GyDqsB9KWF3KdZl8=;
+        b=rdyvKu3oDaFwbPWuVc8QwXrVkPPVkHwGBbQJOm2fFwG5VZxZaHXysfuB2esKXFM9Yx
+         KgPVBk4CwifTiliHxBxSTUk+pwjt7CgTqigstOnIz3jxzIrfoLRS4GiOit7rpdy0rcH2
+         zbohpQSqaoWU74VR3arsqFf1ICZgAbPXQ9A2YipiCIcjh2fRuJkkeuHvxwmKsqT/QM7/
+         S01KRRwdgeLSGpKbdiSHZOU0HOemegDoV3Npb4JNpphni5p5XJg7Ka0Z95qKgPZ2L3QC
+         3ElK5ErBVFd7DH+TZDbwqI4O1wE6EoLQR12muug8kKgSE7MccaYnTXK/8Q78s+FLILG1
+         Nf9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=2OnCbMPvcWuwoz19YUddW2n8/b9GyDqsB9KWF3KdZl8=;
+        b=TopegfGL/VLs2FOhakU4NWPVF2dOon+7NpZqfSupBpMn+PnCAZxXkrEqtq8QF/0AU9
+         B3pLP37F+ABejJU7lgClBu1ZoyAs23aSckdBb7JtDkE+AwXAYwE6QTzOU2DVIdzSJksP
+         6j2Fv+IJxHGHl5RBObMf5x/aFLkSIX1wVszClVABE7vXefJlLTcsUKm0d/JMh0Ut1yCf
+         wFq0BQ+ZN7Ilg5cmZ3ljBlv1Rd7jbZnTEcJUXALR25E+N3iEly5WJbvQQ/IaimabGp9N
+         0JpAAriLlw2XQITPBCOcJ9B9JxCCVY/3PaPw+ah9kv7ZOmsr088AChg0Lw0NtGp5tBfW
+         UB0Q==
+X-Gm-Message-State: AOAM532x//V/Vbpe5TVB8IlZuZVUHOrrmbVhHQPuJDCkQz+3JKO1Oqql
+        59lXA1+4e6fkRJwA1GptGDvb1V0QVp6SZw==
+X-Google-Smtp-Source: ABdhPJzCILn963k1qbdkgClLEZXSwbQCyu06KDve+0i3g7Nh3uxRtZThkKRiyKszzItKHLWvpbyMkA==
+X-Received: by 2002:a05:6a00:1509:: with SMTP id q9mr18667555pfu.24.1598579479290;
+        Thu, 27 Aug 2020 18:51:19 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
+        by smtp.gmail.com with ESMTPSA id s198sm3607567pgc.4.2020.08.27.18.51.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 18:51:18 -0700 (PDT)
+Subject: Re: [PATCH v1 04/10] powerpc/kernel/iommu: Add new
+ iommu_table_in_use() helper
+To:     Leonardo Bras <leobras.c@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Joel Stanley <joel@jms.id.au>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Brian King <brking@linux.vnet.ibm.com>,
+        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
+        David Dai <zdai@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20200817234033.442511-1-leobras.c@gmail.com>
+ <20200817234033.442511-5-leobras.c@gmail.com>
+ <e7d0e85c-c4c4-ad1d-899a-72d4fbd92852@ozlabs.ru>
+ <5f26d433abcde7cd3b4da705742e17ca6c0f0f0b.camel@gmail.com>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <3b7bd273-6ae1-9e7d-a946-fd9380cd2ccc@ozlabs.ru>
+Date:   Fri, 28 Aug 2020 11:51:11 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827064409.GA20687@gauss3.secunet.de>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9726 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- adultscore=0 spamscore=0 mlxlogscore=901 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008280015
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9726 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 malwarescore=0
- phishscore=0 priorityscore=1501 clxscore=1015 suspectscore=0 spamscore=0
- impostorscore=0 mlxscore=0 mlxlogscore=901 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008280014
+In-Reply-To: <5f26d433abcde7cd3b4da705742e17ca6c0f0f0b.camel@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 08:44:09AM +0200, Steffen Klassert wrote:
-> Please also consider to add yourself as one of the maintainers.
 
-Ok, sure!  I'll take you up on that.
+
+On 28/08/2020 04:34, Leonardo Bras wrote:
+> On Sat, 2020-08-22 at 20:34 +1000, Alexey Kardashevskiy wrote:
+>>> +
+>>> +	/*ignore reserved bit0*/
+>>
+>> s/ignore reserved bit0/ ignore reserved bit0 /  (add spaces)
+> 
+> Fixed
+> 
+>>> +	if (tbl->it_offset == 0)
+>>> +		p1_start = 1;
+>>> +
+>>> +	/* Check if reserved memory is valid*/
+>>
+>> A missing space here.
+> 
+> Fixed
+> 
+>>
+>>> +	if (tbl->it_reserved_start >= tbl->it_offset &&
+>>> +	    tbl->it_reserved_start <= (tbl->it_offset + tbl->it_size) &&
+>>> +	    tbl->it_reserved_end   >= tbl->it_offset &&
+>>> +	    tbl->it_reserved_end   <= (tbl->it_offset + tbl->it_size)) {
+>>
+>> Uff. What if tbl->it_reserved_end is bigger than tbl->it_offset +
+>> tbl->it_size?
+>>
+>> The reserved area is to preserve MMIO32 so it is for it_offset==0 only
+>> and the boundaries are checked in the only callsite, and it is unlikely
+>> to change soon or ever.
+>>
+>> Rather that bothering with fixing that, may be just add (did not test):
+>>
+>> if (WARN_ON((
+>> (tbl->it_reserved_start || tbl->it_reserved_end) && (it_offset != 0))
+>> (tbl->it_reserved_start > it_offset && tbl->it_reserved_end < it_offset
+>> + it_size) && (it_offset == 0)) )
+>>  return true;
+>>
+>> Or simply always look for it_offset..it_reserved_start and
+>> it_reserved_end..it_offset+it_size and if there is no reserved area,
+>> initialize it_reserved_start=it_reserved_end=it_offset so the first
+>> it_offset..it_reserved_start becomes a no-op.
+> 
+> The problem here is that the values of it_reserved_{start,end} are not
+> necessarily valid. I mean, on iommu_table_reserve_pages() the values
+> are stored however they are given (bit reserving is done only if they
+> are valid). 
+> 
+> Having a it_reserved_{start,end} value outside the valid ranges would
+> cause find_next_bit() to run over memory outside the bitmap.
+> Even if the those values are < tbl->it_offset, the resulting
+> subtraction on unsigned would cause it to become a big value and run
+> over memory outside the bitmap.
+> 
+> But I think you are right. That is not the place to check if the
+> reserved values are valid. It should just trust them here.
+> I intent to change iommu_table_reserve_pages() to only store the
+> parameters in it_reserved_{start,end} if they are in the range, and or
+> it_offset in both of them if they are not.
+> 
+> What do you think?
+
+This should work, yes.
+
+
+> 
+> Thanks for the feedback!
+> Leonardo Bras
+> 
+> 
+> 
+
+-- 
+Alexey
