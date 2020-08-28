@@ -2,121 +2,112 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E69C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC72C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 417822078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F6D2078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:41:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TzmnR0mT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AlqTF7Mj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729392AbgH1Mjm (ORCPT
+        id S1729304AbgH1Mlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 08:39:42 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:26490 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729388AbgH1MiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 08:38:11 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598618279; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=HcPm6uanbnSQDeODcZhSA9sG6LtPllH/vG6zVc29+Uc=; b=TzmnR0mTWmuigleTfJdpEEP4VonMn7tiHOAAHgA0v3j0xlDEBQ2inP+rVF6jlQoZzVBDkU7z
- uSvi8s5ZAi2W2hwvG+H65Cf1IoLFzhxa64lcMxA6wmNC7JQ9AMjjtKHvA6PQQqwHgW14VAS8
- NX55788M6zILMujOSXeT9ONekH8=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5f48faa563431d11444e8918 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 28 Aug 2020 12:37:57
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 33C4BC433A0; Fri, 28 Aug 2020 12:37:56 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8131BC433CB;
-        Fri, 28 Aug 2020 12:37:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8131BC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Ondrej Zary <linux@zary.sk>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        Benjamin Reed <breed@users.sourceforge.net>,
-        Javier Achirica <achirica@users.sourceforge.net>,
-        Jean Tourrilhes <jt@hpl.hp.com>,
-        Fabrice Bellet <fabrice@bellet.info>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 12/30] net: wireless: cisco: airo: Fix a myriad of coding style issues
-References: <20200814113933.1903438-1-lee.jones@linaro.org>
-        <202008172335.02988.linux@zary.sk> <87v9h4le9z.fsf@codeaurora.org>
-        <202008272223.57461.linux@zary.sk> <87lfhz9mdi.fsf@codeaurora.org>
-        <20200828100834.GG1826686@dell>
-Date:   Fri, 28 Aug 2020 15:37:50 +0300
-In-Reply-To: <20200828100834.GG1826686@dell> (Lee Jones's message of "Fri, 28
-        Aug 2020 11:08:34 +0100")
-Message-ID: <87lfhz7xpd.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Fri, 28 Aug 2020 08:41:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729238AbgH1Mki (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 08:40:38 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46DFC061264;
+        Fri, 28 Aug 2020 05:40:37 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id o196so737899qke.8;
+        Fri, 28 Aug 2020 05:40:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ilEUfQ8pnyC2no166+acqoK2zUhtltonp2ECw8hDVOk=;
+        b=AlqTF7MjmP6weBbmk4l6TzuRcByP7wT7pjUNhwx0i+ZyQBZGPydNkTYiQHLmy0TuLV
+         1vraoNA3D0vlICmvInZ9iJrNVTxldswjGbX/SuyYx5o9pM7trPGAAuiFyEQnA18M0EMv
+         Jt6drr5VPua77d6hCX9AsNKbv+LnU5DZZ+WTEmnaK+YPl+f5BGALgsRvzBIxz2Ttwmex
+         sTVeMRAu9o5GBsGy0L0j9KcnpWcQI1R7fURV2m9xvJO9CBXEMv3CY1svFRy9wBGAv8Av
+         xutB6eyzHQn2knrEb7vblLwiKWdjJsY56zWOoGpKqOvDX5eh6lDbdbG67norw+xlkx5L
+         Y2+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ilEUfQ8pnyC2no166+acqoK2zUhtltonp2ECw8hDVOk=;
+        b=HqHEhWj0GtEP9p1zL17G6uFmX8D/T7kiINTP3WgSYQalmSNT84A/KoR7bP5Tl+t5wA
+         dW64vjtWI/jlfV2nQW0O96NrjNVYFodo8mE0b5BzRxMXpPpUINgNSppAsqGPCAFNZVcH
+         GrgVg3GXIy0cAoM7wM3AGmnwVplHvTXQ23PzNLr9REOg0iT+Eldxa2ytdWOQkn97NhPf
+         RadSlF4FS1RDntlj5PQF0y+V+3mkVrRqIfv6+qa8jihXrx4JmP3ma1W4heZIDwRGnqSG
+         UwGnWv9/ib0ESl/BOzuEpQFhb62DzbYm7o1FA5766xHhDOz5hxFopjQcvq2nG/ZaBpBs
+         Tqfg==
+X-Gm-Message-State: AOAM533Me5060vXZ0munKWe5yRkm0eYc7wJ/Hyam+OD731Ga6WdtBEDV
+        ZDg310epGIe8tVPluwJp3s8=
+X-Google-Smtp-Source: ABdhPJwYHTM7FeYKY9vGUFlp9a2rrK2t3a0Wsk1DA26XuoMbWQlNEsQ+CI9rnuRWeGKNzayY1qdjPQ==
+X-Received: by 2002:a37:4e4d:: with SMTP id c74mr956228qkb.311.1598618436998;
+        Fri, 28 Aug 2020 05:40:36 -0700 (PDT)
+Received: from tong-desktop.local ([2601:5c0:c100:b9d:8cbc:4931:e171:e7fa])
+        by smtp.googlemail.com with ESMTPSA id t11sm832760qtp.32.2020.08.28.05.40.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 05:40:36 -0700 (PDT)
+From:   Tong Zhang <ztong0001@gmail.com>
+To:     gregkh@linuxfoundation.org, jirislaby@kernel.org, robh@kernel.org,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     ztong0001@gmail.com, kernel test robot <lkp@intel.com>
+Subject: [PATCH v5] tty: serial: earlycon dependency
+Date:   Fri, 28 Aug 2020 08:39:50 -0400
+Message-Id: <20200828123949.2642-1-ztong0001@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200828082015.GA1052883@kroah.com>
+References: <20200828082015.GA1052883@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> writes:
+parse_options() in drivers/tty/serial/earlycon.c calls uart_parse_earlycon
+in drivers/tty/serial/serial_core.c therefore selecting SERIAL_EARLYCON
+should automatically select SERIAL_CORE, otherwise will result in symbol
+not found error during linking if SERIAL_CORE is not configured as builtin
 
-> On Fri, 28 Aug 2020, Kalle Valo wrote:
->
->> Ondrej Zary <linux@zary.sk> writes:
->> 
->> > On Thursday 27 August 2020 09:49:12 Kalle Valo wrote:
->> >> Ondrej Zary <linux@zary.sk> writes:
->> >> 
->> >> > On Monday 17 August 2020 20:27:06 Jesse Brandeburg wrote:
->> >> >> On Mon, 17 Aug 2020 16:27:01 +0300
->> >> >> Kalle Valo <kvalo@codeaurora.org> wrote:
->> >> >> 
->> >> >> > I was surprised to see that someone was using this driver in 2015, so
->> >> >> > I'm not sure anymore what to do. Of course we could still just remove
->> >> >> > it and later revert if someone steps up and claims the driver is still
->> >> >> > usable. Hmm. Does anyone any users of this driver?
->> >> >> 
->> >> >> What about moving the driver over into staging, which is generally the
->> >> >> way I understood to move a driver slowly out of the kernel?
->> >> >
->> >> > Please don't remove random drivers.
->> >> 
->> >> We don't want to waste time on obsolete drivers and instead prefer to
->> >> use our time on more productive tasks. For us wireless maintainers it's
->> >> really hard to know if old drivers are still in use or if they are just
->> >> broken.
->> >> 
->> >> > I still have the Aironet PCMCIA card and can test the driver.
->> >> 
->> >> Great. Do you know if the airo driver still works with recent kernels?
->> >
->> > Yes, it does.
->> 
->> Nice, I'm very surprised that so old and unmaintained driver still
->> works. Thanks for testing.
->
-> That's awesome.  Go Linux!
->
-> So where does this leave us from a Maintainership perspective?  Are
-> you still treating the driver as obsolete?  After this revelation, I
-> suggest not.  So let's make it better. :)
+Fixes: 9aac5887595b ("tty/serial: add generic serial earlycon")
+Signed-off-by: Tong Zhang <ztong0001@gmail.com>
+---
 
-Yeah, I can take patches to airo now. I already applied this one.
+v2: I made an attempt to fix the commit log
+v3: I made another attempt to fix the commit log and I also changed
+select to depends according to Jiri's comment
+v4: fixed another stupid error -- should be "depends on" not "depends"
+Reported-by: kernel test robot <lkp@intel.com>
+v5: fix commit log - move Fixes line
 
+ drivers/tty/serial/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 9409be982aa6..54586c1aba60 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -8,6 +8,7 @@ menu "Serial drivers"
+ 
+ config SERIAL_EARLYCON
+ 	bool
++	depends on SERIAL_CORE
+ 	help
+ 	  Support for early consoles with the earlycon parameter. This enables
+ 	  the console before standard serial driver is probed. The console is
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.25.1
+
