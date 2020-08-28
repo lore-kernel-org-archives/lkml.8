@@ -2,84 +2,106 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D53C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71ABFC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3F020E65
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:49:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598600999;
-	bh=NNuyrQlMojjJklrBvWVr2Dpn4uxkjEtV2E5JBA+oGWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F8bYtwDNE5hsjnMYymyDJRr3EhY1W2ioPQ7CsaoT9v5AwH/PcWl4zeBGpx23ECjE4
-	 ki3cpZ92DtHTzrQolCAjxWjjIooFUiR4xQL2IPg2dE2yNWOqZV6kcxyndSnzG3Ros0
-	 BxM7c7JuyniIBd/hkKRz06bCLf5qT9oGjPM8S+9s=
+	by mail.kernel.org (Postfix) with ESMTP id 446602078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:50:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Pv+5ikzl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgH1Ht5 (ORCPT
+        id S1728598AbgH1HuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:49:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42966 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726571AbgH1Ht4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:49:56 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69DFB2078A;
-        Fri, 28 Aug 2020 07:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598600996;
-        bh=NNuyrQlMojjJklrBvWVr2Dpn4uxkjEtV2E5JBA+oGWU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nFQEiSEUytCjWefRFRgUjJQ2NVOhkve6dF106PTG/snvexkpMSDQaVsy1f652YuNP
-         L0Gf7X/f2LeYVV1xscapD0lUYVbMJeiFrmTvi/mvdATGE2eXcP0jRBliufZqV+pCUy
-         B2NEZmjDnXNMSRKLO8Em4aSntiwBewOH/eUSLVnk=
-Date:   Fri, 28 Aug 2020 13:19:52 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, sanyog.r.kale@intel.com,
-        mengdong.lin@intel.com, bard.liao@intel.com
-Subject: Re: [PATCH 09/11] soundwire: intel: add dynamic debug trace for
- clock-stop invalid configs
-Message-ID: <20200828074952.GO2639@vkoul-mobl>
-References: <20200818024120.20721-1-yung-chuan.liao@linux.intel.com>
- <20200818024120.20721-10-yung-chuan.liao@linux.intel.com>
- <20200826094817.GC2639@vkoul-mobl>
- <21038e8d-dbd9-76c7-c758-9933fb45024a@linux.intel.com>
+        Fri, 28 Aug 2020 03:50:03 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:57706 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726571AbgH1HuC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 03:50:02 -0400
+X-UUID: 4121e747aece49eb94cf3bf6556b20e1-20200828
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=3WgwFhaLMdkUWyelN9/5DI31mttcEviLuRyGT0q3ZCc=;
+        b=Pv+5ikzlk4lG+nEzdDOh6JhkrfGTWyyiM3BnFLMhYwQRJo7G3AYronxNHK8PDntyxMDurWZu21a6RlZn8qOa67bdVkLWdPkjwizTqXAxZLU04YWQE5o1POMzb+0tzHQV45xIJNYTMynxqCFJms5L/v6MkoPjAJ7dNxHXVkNESFo=;
+X-UUID: 4121e747aece49eb94cf3bf6556b20e1-20200828
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <freddy.hsin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1015399420; Fri, 28 Aug 2020 15:49:59 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 28 Aug 2020 15:49:56 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 28 Aug 2020 15:49:59 +0800
+From:   Freddy Hsin <freddy.hsin@mediatek.com>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     <wsd_upstream@mediatek.com>, <chang-an.chen@mediatek.com>,
+        <kuohong.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        Freddy Hsin <freddy.hsin@mediatek.com>
+Subject: [PATCH v1 1/1] driver: watchdog: Add mtk_wdt_init for mediatek watchdog hw init
+Date:   Fri, 28 Aug 2020 15:49:28 +0800
+Message-ID: <1598600968-28498-2-git-send-email-freddy.hsin@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1598600968-28498-1-git-send-email-freddy.hsin@mediatek.com>
+References: <1598600968-28498-1-git-send-email-freddy.hsin@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <21038e8d-dbd9-76c7-c758-9933fb45024a@linux.intel.com>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26-08-20, 09:38, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 8/26/20 4:48 AM, Vinod Koul wrote:
-> > On 18-08-20, 10:41, Bard Liao wrote:
-> > > From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> > > 
-> > > Detect cases where the clock is assumed to be stopped but the IP is
-> > > not in the relevant state, and add a dynamic debug trace.
-> > 
-> > you meant a debug print..and it looks like error print below (also in title).
-> 
-> I don't understand the comment. Is the 'trace' confusing and are you asking
-> to e.g. change the commit message to 'add dynamic debug log'?
+MS4gYWRkIGEgaHcgaW5pdGlhbGl6YXRpb24gZnVuY3Rpb24NCjIuIGVuYWJsZS9kaXNhYmxlIHRo
+ZSB3YXRjaGRvZyBkZXBlbmRzIG9uIHRoZSBvcmlnaW5hbCBodyBzZXR0aW5nDQozLiBzZXQgV0RP
+RF9IV19SVU5OSU5HIGluIHN0YXJ0IGZ1bmN0aW9uIGluIG9yZGVyIHRvIHN0YXJ0DQogICBraWNr
+ZXIgYWZ0ZXIgZHJpdmVyIHByb2JlIGFuZCBjbGVhciB0aGUgYml0IGluIHN0b3AgZnVuY3Rpb24N
+Cg0KQ2hhbmdlLUlkOiBJMjVhYTc5N2YzYjg4Mjg4ZjI2OTg0NDU1ZTQ5OWU1OTllMjdmMDlmYQ0K
+U2lnbmVkLW9mZi1ieTogRnJlZGR5IEhzaW4gPGZyZWRkeS5oc2luQG1lZGlhdGVrLmNvbT4NCi0t
+LQ0KIGRyaXZlcnMvd2F0Y2hkb2cvbXRrX3dkdC5jIHwgICAyMiArKysrKysrKysrKysrKysrKysr
+KystDQogMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCg0K
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvd2F0Y2hkb2cvbXRrX3dkdC5jIGIvZHJpdmVycy93YXRjaGRv
+Zy9tdGtfd2R0LmMNCmluZGV4IGQ2YTYzOTMuLjU5YjUwNjEgMTAwNjQ0DQotLS0gYS9kcml2ZXJz
+L3dhdGNoZG9nL210a193ZHQuYw0KKysrIGIvZHJpdmVycy93YXRjaGRvZy9tdGtfd2R0LmMNCkBA
+IC01Nyw2ICs1Nyw5IEBADQogc3RhdGljIGJvb2wgbm93YXlvdXQgPSBXQVRDSERPR19OT1dBWU9V
+VDsNCiBzdGF0aWMgdW5zaWduZWQgaW50IHRpbWVvdXQ7DQogDQorc3RhdGljIGludCBtdGtfd2R0
+X3N0YXJ0KHN0cnVjdCB3YXRjaGRvZ19kZXZpY2UgKndkdF9kZXYpOw0KK3N0YXRpYyBpbnQgbXRr
+X3dkdF9zdG9wKHN0cnVjdCB3YXRjaGRvZ19kZXZpY2UgKndkdF9kZXYpOw0KKw0KIHN0cnVjdCBt
+dGtfd2R0X2RldiB7DQogCXN0cnVjdCB3YXRjaGRvZ19kZXZpY2Ugd2R0X2RldjsNCiAJdm9pZCBf
+X2lvbWVtICp3ZHRfYmFzZTsNCkBAIC0xNDgsNiArMTUxLDE5IEBAIHN0YXRpYyBpbnQgdG9wcmd1
+X3JlZ2lzdGVyX3Jlc2V0X2NvbnRyb2xsZXIoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwN
+CiAJcmV0dXJuIHJldDsNCiB9DQogDQorc3RhdGljIGludCBtdGtfd2R0X2luaXQoc3RydWN0IHdh
+dGNoZG9nX2RldmljZSAqd2R0X2RldikNCit7DQorCXN0cnVjdCBtdGtfd2R0X2RldiAqbXRrX3dk
+dCA9IHdhdGNoZG9nX2dldF9kcnZkYXRhKHdkdF9kZXYpOw0KKwl2b2lkIF9faW9tZW0gKndkdF9i
+YXNlOw0KKw0KKwl3ZHRfYmFzZSA9IG10a193ZHQtPndkdF9iYXNlOw0KKw0KKwlpZiAocmVhZGwo
+d2R0X2Jhc2UgKyBXRFRfTU9ERSkgJiBXRFRfTU9ERV9FTikNCisJCW10a193ZHRfc3RhcnQod2R0
+X2Rldik7DQorCWVsc2UNCisJCW10a193ZHRfc3RvcCh3ZHRfZGV2KTsNCit9DQorDQogc3RhdGlj
+IGludCBtdGtfd2R0X3Jlc3RhcnQoc3RydWN0IHdhdGNoZG9nX2RldmljZSAqd2R0X2RldiwNCiAJ
+CQkgICB1bnNpZ25lZCBsb25nIGFjdGlvbiwgdm9pZCAqZGF0YSkNCiB7DQpAQCAtMjA2LDYgKzIy
+Miw4IEBAIHN0YXRpYyBpbnQgbXRrX3dkdF9zdG9wKHN0cnVjdCB3YXRjaGRvZ19kZXZpY2UgKndk
+dF9kZXYpDQogCXJlZyB8PSBXRFRfTU9ERV9LRVk7DQogCWlvd3JpdGUzMihyZWcsIHdkdF9iYXNl
+ICsgV0RUX01PREUpOw0KIA0KKwljbGVhcl9iaXQoV0RPR19IV19SVU5OSU5HLCAmd2R0X2Rldi0+
+c3RhdHVzKTsNCisNCiAJcmV0dXJuIDA7DQogfQ0KIA0KQEAgLTIyNSw2ICsyNDMsOCBAQCBzdGF0
+aWMgaW50IG10a193ZHRfc3RhcnQoc3RydWN0IHdhdGNoZG9nX2RldmljZSAqd2R0X2RldikNCiAJ
+cmVnIHw9IChXRFRfTU9ERV9FTiB8IFdEVF9NT0RFX0tFWSk7DQogCWlvd3JpdGUzMihyZWcsIHdk
+dF9iYXNlICsgV0RUX01PREUpOw0KIA0KKwlzZXRfYml0KFdET0dfSFdfUlVOTklORywgJndkdF9k
+ZXYtPnN0YXR1cyk7DQorDQogCXJldHVybiAwOw0KIH0NCiANCkBAIC0yNzQsNyArMjk0LDcgQEAg
+c3RhdGljIGludCBtdGtfd2R0X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQog
+DQogCXdhdGNoZG9nX3NldF9kcnZkYXRhKCZtdGtfd2R0LT53ZHRfZGV2LCBtdGtfd2R0KTsNCiAN
+Ci0JbXRrX3dkdF9zdG9wKCZtdGtfd2R0LT53ZHRfZGV2KTsNCisJbXRrX3dkdF9pbml0KCZtdGtf
+d2R0LT53ZHRfZGV2KTsNCiANCiAJd2F0Y2hkb2dfc3RvcF9vbl9yZWJvb3QoJm10a193ZHQtPndk
+dF9kZXYpOw0KIAllcnIgPSBkZXZtX3dhdGNoZG9nX3JlZ2lzdGVyX2RldmljZShkZXYsICZtdGtf
+d2R0LT53ZHRfZGV2KTsNCi0tIA0KMS43LjkuNQ0K
 
-Question is what is dynamic about this?
-
--- 
-~Vinod
