@@ -2,215 +2,169 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3974EC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 04:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EE0C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 04:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 169A820848
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 04:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EC7220C56
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 04:57:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="wzNVuFCj"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="gpMTcbpl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726439AbgH1EyG (ORCPT
+        id S1726584AbgH1E5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 00:54:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51294 "EHLO
+        Fri, 28 Aug 2020 00:57:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbgH1EyG (ORCPT
+        with ESMTP id S1725536AbgH1E5R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 00:54:06 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98ACCC061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 21:54:05 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id z9so46960wmk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 21:54:05 -0700 (PDT)
+        Fri, 28 Aug 2020 00:57:17 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACD25C061264
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 21:57:17 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id q93so42362pjq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 21:57:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xCkPRCKVOyv6UdC08SrLjktcyNyR3bWo2BWIKaXwLIU=;
-        b=wzNVuFCj/YGjuC6NDV1gHwffImireBFCVYVdrHj0WUr+2vvzYZTAgyeaw28x2dUPbd
-         ShRUHS3rP6pBj/FcTwkdikNlfeGx1bWm7WEKfEBmWiEz88ZxRXe1AW8Kh5Xr3w95ZWOL
-         uEhmg2WHxPEEvrNNBPr3SeykviI0capLfcMCr2WBcnYmQ84GYJYfxoWbI6GtvVjSlMpD
-         6xi87zx7+KFN+ckqJiXSKbzlyFqWY0+REM6PQJGxTAifwXNGrlEMz+pdRTl7AGAPKNG/
-         KwjOIJsHc0Opqh3TdvhPlFlqCdC0Dt7M1TzJLiHSACfAwNSWnvbjVieHE0Jndxidt1hH
-         BM6A==
+        bh=3EeBnzl55KhlznFGrhdw4wiCgK95KqATQ83rC/nkZT0=;
+        b=gpMTcbpl4/LN0p/Roic31wTiMY2eUFarLAXop4+im+qllDOfxyjQyOgske9U78MIsz
+         7b5/Z9Plh7i+IUCnuJs3xxHlcQ5Mqmkq3odbq4FQfOGUkYxgzO+G6y48tw4mvJ349sNr
+         W1EATwnMZoXRC94aHfKUHgdFR+18slX19mje7G+6R4yAatxZU4/P4GliSt1ZDO0Vuv0q
+         t4STmH5dVvVnJE8cmQIQWZYAYKIfvr62Ihc9poxPhPOWcTv2CqIB6kvuDZLU0fDUG2PO
+         2noPdsy2ydKpMra9XUm0/A65slQOjYRltyLJCq/uwtJEuf/z+WrpVYDINuTrI+qnNMx0
+         EIrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xCkPRCKVOyv6UdC08SrLjktcyNyR3bWo2BWIKaXwLIU=;
-        b=IW5y9+zQDO3x3G90sH6kuSjJVTTep8CujAvyOTdfx4acVwpp5D/anSDltGK26ClU/Z
-         Xl5s0seZ+zCoCHKBKil4eLne+otid5esxfBIjuNQop9gwubGxNpSLhm9ynRFdnZpnbBf
-         Q6pD0DIBh7qKNRY/cPBHuosiYDuEKC2XitErzycyyKwYHhlhpeAiIeO7DthQsx1EBrwS
-         EzqEmEEL2R73T/IigNFHkEr5VCNMJ4fdXnzkB/tSIdFv+1CEo0uGKYmleDGpudOQ8t4m
-         eX4YnI91aNxBJNz4SUXuI0xptYdEE1LQO9SNvPT9a3Duhy0CzjnWV1/4XRXpYnGR16sR
-         etzg==
-X-Gm-Message-State: AOAM532UHnxUCcqAkuNCDUNhsMkFXs48GU75PWufJUYfdpkeFSXqiHif
-        WiX3jFOtDaCeDHMDjC5rVRLRcy9g8Dks85b1+CBMdQ==
-X-Google-Smtp-Source: ABdhPJz3rZLWV6A3Em0ve8Z6e606P/Ks47lsI+RkOV083HeFssFde+guqsIX7d3OuAhb6RNGeYB7ks4hletdcMQevi4=
-X-Received: by 2002:a1c:1b17:: with SMTP id b23mr101507wmb.152.1598590444059;
- Thu, 27 Aug 2020 21:54:04 -0700 (PDT)
+        bh=3EeBnzl55KhlznFGrhdw4wiCgK95KqATQ83rC/nkZT0=;
+        b=CN2wNaIV9DmtMzMJYq/zvNkrwywkUQrA4t9X+vPns12M1EXL4XavMg08zNAwowDC4v
+         vUzZutzplQvlXAPk6s0eeVSmI/z754k8ZU6dshYJRDZY2Njp9zvqNSLfKioC3dkRepz9
+         hilhEx3URd2woLctqW4M2ktc7WKH0Way89cD2Mglxv3KNsnY1begyfVyjNGwNsq8AiP0
+         GMtCjxTv3SPFPTnQsPjb1gdo37DTrCAIzvGm/5xUZW7JM1T/3ZianTzN0VX1s7y5qmOD
+         hQlEoaaVtOqjH/odolti8iMJPJ3vDD9vYY0zVGeZxQNBYKlDHRfx5uP3TWreSDox/ATj
+         Z5VA==
+X-Gm-Message-State: AOAM5300RJGBrBUrCjujyvJ7OoJeD8DhHD1BkasP+CGLQHAoKVVeekjr
+        jvPQPu+Hpik687z4KGyJvww/1gskIeuGZicn3bGkKA==
+X-Google-Smtp-Source: ABdhPJxLo7vrQLUhTi7CAJ1QiiyZWein+ivOd8qafBnWQxI56Vc3pCvlOZ2oTlRXck0fsNFr8fIGigFt8sJIz/vk4+Y=
+X-Received: by 2002:a17:90a:fc98:: with SMTP id ci24mr84381pjb.101.1598590637116;
+ Thu, 27 Aug 2020 21:57:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200827082251.1591-1-jiangyifei@huawei.com> <20200827082251.1591-3-jiangyifei@huawei.com>
-In-Reply-To: <20200827082251.1591-3-jiangyifei@huawei.com>
+References: <20200724085441.1514-1-jiangyifei@huawei.com>
+In-Reply-To: <20200724085441.1514-1-jiangyifei@huawei.com>
 From:   Anup Patel <anup@brainfault.org>
-Date:   Fri, 28 Aug 2020 10:23:52 +0530
-Message-ID: <CAAhSdy36ZCubU-1+WzjMzBaR+RipgEhvRqd9AT+28=99-EUDaQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 2/2] target/kvm: Add interfaces needed for log dirty
+Date:   Fri, 28 Aug 2020 10:27:04 +0530
+Message-ID: <CAAhSdy2qtr4EpYjFM=REigrC7DK_Fo26P-SGhVC6n21FewtFvw@mail.gmail.com>
+Subject: Re: [RFC 0/2] Add risc-v vhost-net support
 To:     Yifei Jiang <jiangyifei@huawei.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
         Anup Patel <anup.patel@wdc.com>,
-        Alistair Francis <alistair.francis@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>, deepa.kernel@gmail.com,
-        kvm-riscv@lists.infradead.org, KVM General <kvm@vger.kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        KVM General <kvm@vger.kernel.org>,
+        kvm-riscv@lists.infradead.org,
         linux-riscv <linux-riscv@lists.infradead.org>,
         "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
         "Zhangxiaofeng (F)" <victor.zhangxiaofeng@huawei.com>,
         wu.wubin@huawei.com,
         Zhanghailiang <zhang.zhanghailiang@huawei.com>,
-        "dengkai (A)" <dengkai1@huawei.com>,
-        yinyipeng <yinyipeng1@huawei.com>
+        "dengkai (A)" <dengkai1@huawei.com>, limingwang@huawei.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 1:54 PM Yifei Jiang <jiangyifei@huawei.com> wrote:
+On Fri, Jul 24, 2020 at 2:25 PM Yifei Jiang <jiangyifei@huawei.com> wrote:
 >
-> Add two interfaces of log dirty for kvm_main.c, and detele the interface
-> kvm_vm_ioctl_get_dirty_log which is redundantly defined.
+> Hi,
 >
-> CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT is added in defconfig.
+> These two patches enable support for vhost-net on RISC-V architecture. They are developed
+> based on the Linux source in this repo: https://github.com/avpatel/linux,
+> the branch is riscv_kvm_v13.
 >
-> Signed-off-by: Yifei Jiang <jiangyifei@huawei.com>
-> Signed-off-by: Yipeng Yin <yinyipeng1@huawei.com>
-> ---
->  arch/riscv/configs/defconfig |  1 +
->  arch/riscv/kvm/Kconfig       |  1 +
->  arch/riscv/kvm/mmu.c         | 43 ++++++++++++++++++++++++++++++++++++
->  arch/riscv/kvm/vm.c          |  6 -----
->  4 files changed, 45 insertions(+), 6 deletions(-)
+> The accompanying QEMU is from the repo: https://github.com/alistair23/qemu, the branch is
+> hyp-ext-v0.6.next. In order for the QEMU to work with KVM, the patch found here is necessary:
+> https://patchwork.kernel.org/cover/11435965/
 >
-> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> index d36e1000bbd3..857d799672c2 100644
-> --- a/arch/riscv/configs/defconfig
-> +++ b/arch/riscv/configs/defconfig
-> @@ -19,6 +19,7 @@ CONFIG_SOC_VIRT=y
->  CONFIG_SMP=y
->  CONFIG_VIRTUALIZATION=y
->  CONFIG_KVM=y
-> +CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT=y
->  CONFIG_HOTPLUG_CPU=y
->  CONFIG_MODULES=y
->  CONFIG_MODULE_UNLOAD=y
-> diff --git a/arch/riscv/kvm/Kconfig b/arch/riscv/kvm/Kconfig
-> index 2356dc52ebb3..91fcffc70e5d 100644
-> --- a/arch/riscv/kvm/Kconfig
-> +++ b/arch/riscv/kvm/Kconfig
-> @@ -26,6 +26,7 @@ config KVM
->         select KVM_MMIO
->         select HAVE_KVM_VCPU_ASYNC_IOCTL
->         select SRCU
-> +       select KVM_GENERIC_DIRTYLOG_READ_PROTECT
->         help
->           Support hosting virtualized guest machines.
+> Several steps to use this:
 >
-> diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
-> index 88bce80ee983..df2a470c25e4 100644
-> --- a/arch/riscv/kvm/mmu.c
-> +++ b/arch/riscv/kvm/mmu.c
-> @@ -358,6 +358,43 @@ void stage2_wp_memory_region(struct kvm *kvm, int slot)
->         kvm_flush_remote_tlbs(kvm);
->  }
+> 1. create virbr0 on riscv64 emulation
+> $ brctl addbr virbr0
+> $ brctl stp virbr0 on
+> $ ifconfig virbr0 up
+> $ ifconfig virbr0 <virbr0_ip> netmask <virbr0_netmask>
 >
-> +/**
-> + * kvm_mmu_write_protect_pt_masked() - write protect dirty pages
-> + * @kvm:    The KVM pointer
-> + * @slot:   The memory slot associated with mask
-> + * @gfn_offset: The gfn offset in memory slot
-> + * @mask:   The mask of dirty pages at offset 'gfn_offset' in this memory
-> + *      slot to be write protected
-> + *
-> + * Walks bits set in mask write protects the associated pte's. Caller must
-> + * acquire kvm_mmu_lock.
-> + */
-> +static void kvm_mmu_write_protect_pt_masked(struct kvm *kvm,
-> +        struct kvm_memory_slot *slot,
-> +        gfn_t gfn_offset, unsigned long mask)
-> +{
-> +    phys_addr_t base_gfn = slot->base_gfn + gfn_offset;
-> +    phys_addr_t start = (base_gfn +  __ffs(mask)) << PAGE_SHIFT;
-> +    phys_addr_t end = (base_gfn + __fls(mask) + 1) << PAGE_SHIFT;
-> +
-> +    stage2_wp_range(kvm, start, end);
-> +}
-> +
-> +/*
-> + * kvm_arch_mmu_enable_log_dirty_pt_masked - enable dirty logging for selected
-> + * dirty pages.
-> + *
-> + * It calls kvm_mmu_write_protect_pt_masked to write protect selected pages to
-> + * enable dirty logging for them.
-> + */
-> +void kvm_arch_mmu_enable_log_dirty_pt_masked(struct kvm *kvm,
-> +        struct kvm_memory_slot *slot,
-> +        gfn_t gfn_offset, unsigned long mask)
-> +{
-> +    kvm_mmu_write_protect_pt_masked(kvm, slot, gfn_offset, mask);
-> +}
-> +
-> +
->  int stage2_ioremap(struct kvm *kvm, gpa_t gpa, phys_addr_t hpa,
->                    unsigned long size, bool writable)
->  {
-> @@ -433,6 +470,12 @@ void kvm_arch_sync_dirty_log(struct kvm *kvm, struct kvm_memory_slot *memslot)
->  {
->  }
+> 2. boot riscv64 guestOS on riscv64 emulation
+> $ ./qemu-system-riscv64 -M virt,accel=kvm -m 1024M -cpu host -nographic \
+>         -name guest=riscv-guest \
+>         -smp 2 \
+>         -kernel ./Image \
+>         -drive file=./guest.img,format=raw,id=hd0 \
+>         -device virtio-blk,drive=hd0 \
+>         -netdev type=tap,vhost=on,script=./ifup.sh,downscript=./ifdown.sh,id=net0 \
+>         -append "root=/dev/vda rw console=ttyS0 earlycon=sbi"
 >
-> +void kvm_arch_flush_remote_tlbs_memslot(struct kvm *kvm,
-> +                                       struct kvm_memory_slot *memslot)
-> +{
-> +       kvm_flush_remote_tlbs(kvm);
-> +}
-> +
->  void kvm_arch_free_memslot(struct kvm *kvm, struct kvm_memory_slot *free)
->  {
->  }
-> diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
-> index 4f2498198cb5..f7405676903b 100644
-> --- a/arch/riscv/kvm/vm.c
-> +++ b/arch/riscv/kvm/vm.c
-> @@ -12,12 +12,6 @@
->  #include <linux/uaccess.h>
->  #include <linux/kvm_host.h>
+> $ cat ifup.sh
+> #!/bin/sh
+> brctl addif virbr0 $1
+> ifconfig $1 up
 >
-> -int kvm_vm_ioctl_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log)
-> -{
-> -       /* TODO: To be added later. */
-> -       return -ENOTSUPP;
-> -}
-> -
->  int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
->  {
->         int r;
+> $ cat ifdown.sh
+> #!/bin/sh
+> ifconfig $1 down
+> brctl delif virbr0 $1
+>
+> This brenchmark is vhost-net compare with virtio:
+>
+> $ ./netperf -H <virbr0_ip> -l 100 -t TCP_STREAM
+>
+> vhost-net:
+> Recv   Send    Send
+> Socket Socket  Message  Elapsed
+> Size   Size    Size     Time     Throughput
+> bytes  bytes   bytes    secs.    10^6bits/sec
+>
+> 131072  16384  16384    100.07    457.55
+>
+> virtio:
+> Recv   Send    Send
+> Socket Socket  Message  Elapsed
+> Size   Size    Size     Time     Throughput
+> bytes  bytes   bytes    secs.    10^6bits/sec
+>
+> 131072  16384  16384    100.07    227.02
+>
+>
+> The next step is to support irqfd on RISC-V architecture.
+>
+> Yifei Jiang (2):
+>   RISC-V: KVM: enable ioeventfd capability and compile for risc-v
+>   RISC-V: KVM: read\write kernel mmio device support
+>
+>  arch/riscv/kvm/Kconfig     |  2 ++
+>  arch/riscv/kvm/Makefile    |  2 +-
+>  arch/riscv/kvm/vcpu_exit.c | 38 ++++++++++++++++++++++++++++++++------
+>  arch/riscv/kvm/vm.c        |  1 +
+>  4 files changed, 36 insertions(+), 7 deletions(-)
+>
 > --
 > 2.19.1
 >
 >
 
-I already have a similar change as part of v14 KVM RISC-V series.
+I will be squashing these patches into PATCH7 of v14 KVM RISC-V series.
 
-Let us coordinate better. Please let us know in-advance for any
-KVM RISC-V feature you plan to work on. Otherwise, this leads to
-efforts wasted at your end or at our end.
+I will also add your Signed-off-by to PATCH7 of v14 KVM RISC-V to
+acknowledge your efforts.
 
-Regards,
+Thanks,
 Anup
