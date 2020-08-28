@@ -2,122 +2,118 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B33DC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7FAC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC38208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63AA520838
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:24:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LUFgVPrt"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Nq40Lobf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgH1XUw (ORCPT
+        id S1726878AbgH1XYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 19:20:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbgH1XUv (ORCPT
+        Fri, 28 Aug 2020 19:24:10 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:47314 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbgH1XYK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 19:20:51 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBC4EC061264
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 16:20:51 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id h2so370343plr.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 16:20:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vekX/Mq23RWwnDgk+6LdcBexEyHMvoMGcRuZ1SgDRMk=;
-        b=LUFgVPrt2Xx4hKMx9nbPEckkaLhVk6gHlJYu31JIplGtbqqbxXGUs9Ik6zkfNEzONc
-         Fepsz9ipT6OZQsO5sUpYT1lTke6Xc3PnJAMODWEsolbqaXJvBZ7hg8bsyHYf9Vsqqf1m
-         qIT2L2wYuYRca4ABfr2Odlioxk5YGEVymiJNA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vekX/Mq23RWwnDgk+6LdcBexEyHMvoMGcRuZ1SgDRMk=;
-        b=eRZ3e5uNToQj+m9x67DTwHVfRW6dPQfoQAZeFmJSyk820KhZMNlGv/Q9DHYN+K2VQV
-         xLqrx5Li7Gid2soduv+t6Z6/2peTR4bxTRo3YQwtUSSfUwM5enrPt653OfeZC+KqGVNa
-         ndOOGRZmXITvyD9RRbwrFzJgVIA7GvFibCOEl/4UnTUq/MRkQWkVPR1g6AN4dyxgl1Rq
-         DeWatHBWDgvONcMUZBZ0wR84jPY7B9ry/SgrYr9XOKx0xyp6nXIln43FaMWPPo4FM5GS
-         7eutCsRHQgojrgjQkI1Lc+L9inZDQKJN5wjpa/opZN80IPMu7OibWd74pBylcpcRepWl
-         LREA==
-X-Gm-Message-State: AOAM5325qDMHBwl0XpJWjDmIrTF1RG76IX4SdEWnhpbRfmKjFowxuv7H
-        tNYDOoEUFWSQD+QNm03NbaJgz5KxrvBvTA==
-X-Google-Smtp-Source: ABdhPJw5KEwmKeKe8mZkKXkaEnaqU+EpMdmR9lHHNGzs1BSmbnljanSuhsnw5f0EIMVjUuqQ+S6WOA==
-X-Received: by 2002:a17:902:c24b:: with SMTP id 11mr922349plg.64.1598656851274;
-        Fri, 28 Aug 2020 16:20:51 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id h10sm517971pgn.32.2020.08.28.16.20.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 16:20:50 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     cychiang@chromium.org, Douglas Anderson <dianders@chromium.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: rt5682: Prefer async probe
-Date:   Fri, 28 Aug 2020 16:20:27 -0700
-Message-Id: <20200828162005.1.I4f67f494c4f759b0e5c7f487e040dfdcf16e0876@changeid>
-X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
+        Fri, 28 Aug 2020 19:24:10 -0400
+Received: from [192.168.86.25] (c-73-38-52-84.hsd1.vt.comcast.net [73.38.52.84])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 05F5B20B7178;
+        Fri, 28 Aug 2020 16:24:05 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 05F5B20B7178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598657049;
+        bh=crigY9FE2ofzeOz1tW9734Eg4pnIs9fDIQhsBgLWpfU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Nq40LobfRBxb0t44XlhFBy64g16a9hMN38/b5O8vS4jKkFSqmu0ljTJXWxLaROGON
+         E3FgdwtETIe7dwAe9k3KHrMXifJBbeTKjyR7SWFC8EEodtY+xGYsEaVujP7Zoi5xjY
+         n9PQ5brb98/+rvfhxb/ugQFBYOTBfUGEiHz5cdwI=
+Subject: Re: [RFC PATCH v7 09/23] sched/fair: Fix forced idle sibling
+ starvation corner case
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Julien Desfossez <jdesfossez@digitalocean.com>
+Cc:     Joel Fernandes <joelaf@google.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Dhaval Giani <dhaval.giani@oracle.com>,
+        Chris Hyser <chris.hyser@oracle.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        mingo@kernel.org, tglx@linutronix.de, pjt@google.com,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, joel@joelfernandes.org,
+        vineeth@bitbyteword.org, Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Agata Gruza <agata.gruza@intel.com>,
+        Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>,
+        graf@amazon.com, konrad.wilk@oracle.com, dfaggioli@suse.com,
+        rostedt@goodmis.org, derkling@google.com, benbjiang@tencent.com
+References: <cover.1598643276.git.jdesfossez@digitalocean.com>
+ <7d50f038cef452c78213b7c513a98b3286476701.1598643276.git.jdesfossez@digitalocean.com>
+ <20200828212554.GD29142@worktop.programming.kicks-ass.net>
+From:   Vineeth Pillai <viremana@linux.microsoft.com>
+Message-ID: <ea484c79-8606-4817-909c-fe4fd5e085d6@linux.microsoft.com>
+Date:   Fri, 28 Aug 2020 19:24:04 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200828212554.GD29142@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The probe of rt5682 is pretty slow.  A quick measurement shows that it
-takes ~650 ms on at least one board.  There's no reason to block all
-other drivers waiting for this probe to finish.  Set the flag to allow
-other drivers to probe while we're probing.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-NOTE: I haven't done any analysis of the driver to see _why_ it's so
-slow, only that I have measured it to be slow.  Someone could
-certainly take the time to profile / optimize it, but in any case it
-still won't hurt to be async.
 
-This is a very safe flag to turn on since:
+On 8/28/20 5:25 PM, Peter Zijlstra wrote:
+> The only pupose of this loop seem to be to find if we have a forceidle;
+> surely we can avoid that by storing this during the pick.
+The idea was to kick each cpu that was force idle. But now, thinking
+about it, we just need to kick one as it will pick for all the siblings.
+Will optimize this as you suggested.
 
-1. It's not like our probe order was defined by anything anyway.  When
-we probe is at the whim of when our i2c controller probes and that can
-be any time.
+>
+> static void task_tick_core(struct rq *rq)
+> {
+> 	if (sched_core_enabled(rq))
+> 		resched_forceidle_sibling(rq, &rq->curr->se);
+> }
+>
+> #else
+>
+> static void task_tick_core(struct rq *rq) { }
+>
+>> +#endif
+>> +
+>>   /*
+>>    * scheduler tick hitting a task of our scheduling class.
+>>    *
+>> @@ -10654,6 +10688,11 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+>>   
+>>   	update_misfit_status(curr, rq);
+>>   	update_overutilized_status(task_rq(curr));
+>> +
+>> +#ifdef CONFIG_SCHED_CORE
+>> +	if (sched_core_enabled(rq))
+>> +		resched_forceidle_sibling(rq, &curr->se);
+>> +#endif
+> Then you can ditch the #ifdef here
+Makes sense, will do.
 
-2. If some other driver needs us then they have to handle the fact
-that we might not have probed yet anyway.
-
-3. There may be other drivers probing at the same time as us anyway
-because _they_ used async probe.
-
-While I won't say that it's impossible to tickle a bug by turning on
-async probe, I would assert that in almost all cases the bug was
-already there and needed to be fixed anyway.
-
- sound/soc/codecs/rt5682-i2c.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/sound/soc/codecs/rt5682-i2c.c b/sound/soc/codecs/rt5682-i2c.c
-index 85aba311bdc8..6b4e0eb30c89 100644
---- a/sound/soc/codecs/rt5682-i2c.c
-+++ b/sound/soc/codecs/rt5682-i2c.c
-@@ -294,6 +294,7 @@ static struct i2c_driver rt5682_i2c_driver = {
- 		.name = "rt5682",
- 		.of_match_table = rt5682_of_match,
- 		.acpi_match_table = rt5682_acpi_match,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 	},
- 	.probe = rt5682_i2c_probe,
- 	.shutdown = rt5682_i2c_shutdown,
--- 
-2.28.0.402.g5ffc5be6b7-goog
+Thanks,
+Vineeth
 
