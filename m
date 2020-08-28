@@ -2,84 +2,227 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149ECC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFF9C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB1BD205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:15:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598656539;
-	bh=iyf7cavY7WRDPtQqVpmEbIXLW2KxfUTGJWKiWuKdl7I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UGLIzEo1yO/khYVGXxHxxPv12+Vw00X7nGHVMuPtMIfNq6e4y+PH6tBaUJit/P8gY
-	 94As5bWP9qihmh3vtbFppWaKCGDOvItr6qlSSxO3hZE2g3lw88uoL5vgT2veafwJHT
-	 aPU7bKi/HEau5d1LUyPM34D+xJJpk5kX3PpqGrzA=
+	by mail.kernel.org (Postfix) with ESMTP id 2A91820838
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:16:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iI2La+Zv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgH1XPj (ORCPT
+        id S1726981AbgH1XQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 19:15:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726386AbgH1XPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 19:15:38 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8CA0205CB;
-        Fri, 28 Aug 2020 23:15:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598656538;
-        bh=iyf7cavY7WRDPtQqVpmEbIXLW2KxfUTGJWKiWuKdl7I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nRmh7mzqw8myRiDq+jE0VGkCEBjopmS41NUfGb5VmfqunNZM58oLi7HaxIRv2t6Ug
-         ATybOaVm/GR+u/74atyY3z3dbng4Cu+KKU+z/cMzIeg7uWDzBhzIBov9ZEkb4OYGC6
-         sHeLzIzDe5NmYS9xukpXWgH0IiCEoxwMHj7Atfdo=
-Date:   Fri, 28 Aug 2020 19:15:36 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, robh+dt@kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 1/7] sdhci: tegra: Remove
- SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra210
-Message-ID: <20200828231536.GU8670@sasha-vm>
-References: <1598653517-13658-1-git-send-email-skomatineni@nvidia.com>
- <1598653517-13658-2-git-send-email-skomatineni@nvidia.com>
+        Fri, 28 Aug 2020 19:16:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbgH1XQt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 19:16:49 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A2EC061232
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 16:16:49 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id e7so811496qtj.11
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 16:16:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GUiusd1WVdha2EfIkzMSJdUrei8ON9hbpIBb4XxxaCI=;
+        b=iI2La+ZvveBSC07B6Qw6ujjE0TnkENEdYY7iqIdsD9PjSI+El+bFJloTtBL2jzfPBs
+         4w+4yCRpKW4XpccZVIwh8b2/3VeKDrlJEnvSiFUNDbQmSVRopcePppU/9P1w9gZVdWbq
+         Daa2eRMdRUd/NGrrCSsXGIW/EqDw6JefvjlLRtFWMnNUtMHvpiTc1Ny6G73q4GhzysYx
+         BTg7FwpruP/CsWFV5JIvjobvC89LlpKBBvPPLnE7i1GvOPrShO/R0PdZzoAPhQtyOqhr
+         0cb2/CiIgHsTSzyxgjZIjJzRFeRcx0GElwSA9P6mykp8GSE4/C/knH2pXxci7CS1aJxY
+         HfeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GUiusd1WVdha2EfIkzMSJdUrei8ON9hbpIBb4XxxaCI=;
+        b=fI61NWQfm+8OTyZqR0CIwEw+KN+RVVNifJzu1CMYbvIQKax+0Z7qxd+eRM+GbYeXag
+         XTJJ/IXXRbiEv/pYOvKKJezelw4Mtw367GDyaXIkH8oEmf8zSzkdJlpmuyU5C+rc+p7J
+         d2bw2yFHdfn/iR+FfVByblt1r6//OLk4iy25WjHrDSiT8SJEf4ULugyXn7ZUbrTyJE6I
+         lC8ep5TnyjjYK2EDJlRmm33egu8i63vs0wJK6pyCa71heZunQ4832dsVasR1QaAbOSOC
+         ualXSdJHXKCNgTaFjdYHCbEhgmB4WHyZpAs/4Ps0EBpjxbFcEzYucO11rjlir9g3VdNG
+         50jA==
+X-Gm-Message-State: AOAM533X1PmkoNMpaO06IV2hprkfGbNXw8J9QEScV5F1AkvVhRfdkLXL
+        K7uI72E78DkoWy3iVXl8I7iZmMgyWzCFOVzVgJ94sw==
+X-Google-Smtp-Source: ABdhPJzk3HhQJ+PBTgzg+a2kvBqGs9IZusZmReJJbwBL8DCVy5Ia0OqzaniEgfbBrgaqBqaTYzvAEhEnK3ZrPZzhYB0=
+X-Received: by 2002:ac8:7959:: with SMTP id r25mr3570738qtt.85.1598656607627;
+ Fri, 28 Aug 2020 16:16:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1598653517-13658-2-git-send-email-skomatineni@nvidia.com>
+References: <20200729212721.1ee4eef8@canb.auug.org.au> <87ft8lwxes.fsf@turtle.gmx.de>
+ <CAMzD94Rz4NYnhheS8SmuL14MNM4VGxOnAW-WZ9k1JEqrbwyrvw@mail.gmail.com>
+ <87y2m7gq86.fsf@turtle.gmx.de> <87pn7gh3er.fsf@turtle.gmx.de>
+ <CAMzD94Rkq1RTZJG5UsEz9VhaCBbvObD1azqU2gsJzZ6gPYcfag@mail.gmail.com>
+ <878sdyn6xz.fsf@turtle.gmx.de> <49315f94-1ae6-8280-1050-5fc0d1ead984@infradead.org>
+In-Reply-To: <49315f94-1ae6-8280-1050-5fc0d1ead984@infradead.org>
+From:   Brian Vazquez <brianvv@google.com>
+Date:   Fri, 28 Aug 2020 16:16:36 -0700
+Message-ID: <CAMzD94QKnE+1Cmm0RNFUVAYArBRB0S2VUUC5c4jTY9Z4xdZH0w@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the net-next tree
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Sven Joachim <svenjoac@gmx.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 03:25:11PM -0700, Sowjanya Komatineni wrote:
->commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
-
-What does this line above represent?
-
->SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK is set for Tegra210 from the
->beginning of Tegra210 support in the driver.
+On Fri, Aug 28, 2020 at 8:12 AM Randy Dunlap <rdunlap@infradead.org> wrote:
 >
->Tegra210 SDMMC hardware by default uses timeout clock (TMCLK)
->instead of SDCLK and this quirk should not be set.
+> On 8/28/20 8:09 AM, Sven Joachim wrote:
+> > On 2020-08-27 11:12 -0700, Brian Vazquez wrote:
+> >
+> >> I've been trying to reproduce it with your config but I didn't
+> >> succeed. I also looked at the file after the preprocessor and it
+> >> looked good:
+> >>
+> >> ret = ({ __builtin_expect(!!(ops->match == fib6_rule_match), 1) ?
+> >> fib6_rule_match(rule, fl, flags) : ops->match(rule, fl, flags); })
+> >
+> > However, in my configuration I have CONFIG_IPV6=m, and so
+> > fib6_rule_match is not available as a builtin.  I think that's why ld is
+> > complaining about the undefined reference.
 >
->So, this patch remove this quirk for Tegra210.
->
->Fixes: b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
->Cc: stable <stable@vger.kernel.org> # 4.19
->Tested-by: Jon Hunter <jonathanh@nvidia.com>
->Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
->Acked-by: Adrian Hunter <adrian.hunter@intel.com>
->Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> Same here FWIW. CONFIG_IPV6=m.
 
--- 
-Thanks,
-Sasha
+Oh I see,
+I tried this and it seems to work fine for me, does this also fix your
+problem? if so, I'll prepare the patch, and thanks for helping!
+diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
+index 51678a528f85..40dfd1f55899 100644
+--- a/net/core/fib_rules.c
++++ b/net/core/fib_rules.c
+@@ -16,7 +16,7 @@
+ #include <net/ip_tunnels.h>
+ #include <linux/indirect_call_wrapper.h>
+
+-#ifdef CONFIG_IPV6_MULTIPLE_TABLES
++#if defined(CONFIG_IPV6_MULTIPLE_TABLES) && defined(CONFIG_IPV6)
+
+>
+>
+> > Changing the configuration to CONFIG_IPV6=y helps, FWIW.
+> >
+> >> Note that fib4_rule_match doesn't appear as the
+> >> CONFIG_IP_MULTIPLE_TABLES is not there.
+> >>
+> >> Could you share more details on how you're compiling it and what
+> >> compiler you're using??
+> >
+> > Tried with both gcc 9 and gcc 10 under Debian unstable, binutils 2.35.
+> > I usually use "make bindebpkg", but just running "make" is sufficient to
+> > reproduce the problem, as it happens when linking vmlinux.
+> >
+> > Cheers,
+> >        Sven
+> >
+> >
+> >> On Mon, Aug 24, 2020 at 1:08 AM Sven Joachim <svenjoac@gmx.de> wrote:
+> >>>
+> >>> On 2020-08-22 08:16 +0200, Sven Joachim wrote:
+> >>>
+> >>>> On 2020-08-21 09:23 -0700, Brian Vazquez wrote:
+> >>>>
+> >>>>> Hi Sven,
+> >>>>>
+> >>>>> Sorry for the late reply, did you still see this after:
+> >>>>> https://patchwork.ozlabs.org/project/netdev/patch/20200803131948.41736-1-yuehaibing@huawei.com/
+> >>>>> ??
+> >>>>
+> >>>> That patch is apparently already in 5.9-rc1 as commit 80fbbb1672e7, so
+> >>>> yes I'm still seeing it.
+> >>>
+> >>> Still present in 5.9-rc2 as of today, I have attached my .config for
+> >>> reference.  Note that I have CONFIG_IPV6_MULTIPLE_TABLES=y, but
+> >>> CONFIG_IP_MULTIPLE_TABLES is not mentioned at all there.
+> >>>
+> >>> To build the kernel, I have now deselected IPV6_MULTIPLE_TABLES.  Not
+> >>> sure why this was enabled in my .config which has grown organically over
+> >>> many years.
+> >>>
+> >>> Cheers,
+> >>>        Sven
+> >>>
+> >>>
+> >>>>> On Mon, Aug 17, 2020 at 12:21 AM Sven Joachim <svenjoac@gmx.de> wrote:
+> >>>>>
+> >>>>>> On 2020-07-29 21:27 +1000, Stephen Rothwell wrote:
+> >>>>>>
+> >>>>>>> Hi all,
+> >>>>>>>
+> >>>>>>> After merging the net-next tree, today's linux-next build (i386
+> >>>>>> defconfig)
+> >>>>>>> failed like this:
+> >>>>>>>
+> >>>>>>> x86_64-linux-gnu-ld: net/core/fib_rules.o: in function
+> >>>>>> `fib_rules_lookup':
+> >>>>>>> fib_rules.c:(.text+0x5c6): undefined reference to `fib6_rule_match'
+> >>>>>>> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x5d8): undefined reference to
+> >>>>>> `fib6_rule_match'
+> >>>>>>> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x64d): undefined reference to
+> >>>>>> `fib6_rule_action'
+> >>>>>>> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x662): undefined reference to
+> >>>>>> `fib6_rule_action'
+> >>>>>>> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x67a): undefined reference to
+> >>>>>> `fib6_rule_suppress'
+> >>>>>>> x86_64-linux-gnu-ld: fib_rules.c:(.text+0x68d): undefined reference to
+> >>>>>> `fib6_rule_suppress'
+> >>>>>>
+> >>>>>> FWIW, I saw these errors in 5.9-rc1 today, so the fix in commit
+> >>>>>> 41d707b7332f ("fib: fix fib_rules_ops indirect calls wrappers") was
+> >>>>>> apparently not sufficient.
+> >>>>>>
+> >>>>>> ,----
+> >>>>>> | $ grep IPV6 .config
+> >>>>>> | CONFIG_IPV6=m
+> >>>>>> | # CONFIG_IPV6_ROUTER_PREF is not set
+> >>>>>> | # CONFIG_IPV6_OPTIMISTIC_DAD is not set
+> >>>>>> | # CONFIG_IPV6_MIP6 is not set
+> >>>>>> | # CONFIG_IPV6_ILA is not set
+> >>>>>> | # CONFIG_IPV6_VTI is not set
+> >>>>>> | CONFIG_IPV6_SIT=m
+> >>>>>> | # CONFIG_IPV6_SIT_6RD is not set
+> >>>>>> | CONFIG_IPV6_NDISC_NODETYPE=y
+> >>>>>> | CONFIG_IPV6_TUNNEL=m
+> >>>>>> | CONFIG_IPV6_MULTIPLE_TABLES=y
+> >>>>>> | # CONFIG_IPV6_SUBTREES is not set
+> >>>>>> | # CONFIG_IPV6_MROUTE is not set
+> >>>>>> | # CONFIG_IPV6_SEG6_LWTUNNEL is not set
+> >>>>>> | # CONFIG_IPV6_SEG6_HMAC is not set
+> >>>>>> | # CONFIG_IPV6_RPL_LWTUNNEL is not set
+> >>>>>> | # CONFIG_NF_SOCKET_IPV6 is not set
+> >>>>>> | # CONFIG_NF_TPROXY_IPV6 is not set
+> >>>>>> | # CONFIG_NF_DUP_IPV6 is not set
+> >>>>>> | # CONFIG_NF_REJECT_IPV6 is not set
+> >>>>>> | # CONFIG_NF_LOG_IPV6 is not set
+> >>>>>> | CONFIG_NF_DEFRAG_IPV6=m
+> >>>>>> `----
+> >>>>>>
+> >>>>>>> Caused by commit
+> >>>>>>>
+> >>>>>>>   b9aaec8f0be5 ("fib: use indirect call wrappers in the most common
+> >>>>>> fib_rules_ops")
+> >>>>>>>
+> >>>>>>> # CONFIG_IPV6_MULTIPLE_TABLES is not set
+> >>>>>>>
+> >>>>>>> I have reverted that commit for today.
+> >>>>>>
+> >>>>>> Cheers,
+> >>>>>>        Sven
+>
+>
+> --
+> ~Randy
+>
