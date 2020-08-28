@@ -2,159 +2,90 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A33C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38162C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8906D20665
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:14:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V3dqhpzP"
+	by mail.kernel.org (Postfix) with ESMTP id E991F20CC7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:17:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598602677;
+	bh=cdtmtPHYp3CjYJpBnBlTuVx703gKMayPV6/ZC2Y40Fo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JGgQKk+xBPtpdcjMZ13RSXi4LDN5rkIpy49T5RPIqqge5KnrI/VovefVt81tBfJSZ
+	 gmJBvTI5yi6sCoEzZvHqVJlUK8rXIqetYNlMhwNyoQDPb8r4YECitaIs4HLEfKDJqw
+	 42yl//QkyoKCDYfhmicY7NoLbt3JWT3jta80FJ/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgH1IOZ (ORCPT
+        id S1728505AbgH1IR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 04:14:25 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28809 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728502AbgH1IOP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 04:14:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598602453;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eVltF15+grxY0nM9D89n418UBRFi0LUbuLcAjdjJCm0=;
-        b=V3dqhpzP97/gZ6cqW/xF3GLMqoBX085yfOLzHDlFjqReE33V65x4TdEZuJ6dVEc4mZjI2U
-        iJ2W6g8gGKYSnqIJNdGIv0lnSVjU/Yl0wFe2cGM/q9oLNSo58C3RvQsFuLOCcLy3JOEPce
-        M+kTiKQJd+BUUAXGv+FJf3Z8Z9G0KnA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-14-rbeO0EZjMYKEozcGg-8PkA-1; Fri, 28 Aug 2020 04:14:11 -0400
-X-MC-Unique: rbeO0EZjMYKEozcGg-8PkA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 28 Aug 2020 04:17:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726834AbgH1IRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 04:17:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5F17C802B47;
-        Fri, 28 Aug 2020 08:14:09 +0000 (UTC)
-Received: from gondolin (ovpn-113-255.ams2.redhat.com [10.36.113.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 56FCA74E1E;
-        Fri, 28 Aug 2020 08:14:00 +0000 (UTC)
-Date:   Fri, 28 Aug 2020 10:13:57 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v10 02/16] s390/vfio-ap: use new AP bus interface to
- search for queue devices
-Message-ID: <20200828101357.2ccbc39a.cohuck@redhat.com>
-In-Reply-To: <b1c6bad8-3ec6-183c-3e35-9962e9c721c7@linux.ibm.com>
-References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
-        <20200821195616.13554-3-akrowiak@linux.ibm.com>
-        <20200825121334.0ff35d7a.cohuck@redhat.com>
-        <b1c6bad8-3ec6-183c-3e35-9962e9c721c7@linux.ibm.com>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F8CA20776;
+        Fri, 28 Aug 2020 08:17:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598602672;
+        bh=cdtmtPHYp3CjYJpBnBlTuVx703gKMayPV6/ZC2Y40Fo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zOr5x5dQ3VWc307vlfnfgGfQ4Ukqbm0MmUaZnTT+tm++6oFqFGoSg6PxfzogiLZ55
+         1Fea0UxYPqEBsOi8mdC7Ne+VecgN2NmSzmVe5jCi1JOi7sWNhMkE6CB/4Kg2bfgbtx
+         1yjZvCC9Sq/QDN6OJXfGwR169s2HvgPFMvnFvtYA=
+Date:   Fri, 28 Aug 2020 10:18:04 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mateusz Holenko <mholenko@antmicro.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, "Gabriel L. Somlo" <gsomlo@gmail.com>
+Subject: Re: [PATCH v10 5/5] drivers/tty/serial: add LiteUART driver
+Message-ID: <20200828081804.GB1007729@kroah.com>
+References: <20200812143324.2394375-0-mholenko@antmicro.com>
+ <20200812143324.2394375-5-mholenko@antmicro.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200812143324.2394375-5-mholenko@antmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 10:24:07 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On Wed, Aug 12, 2020 at 02:35:00PM +0200, Mateusz Holenko wrote:
+> From: Filip Kokosinski <fkokosinski@antmicro.com>
+> 
+> This commit adds driver for the FPGA-based LiteUART serial controller
+> from LiteX SoC builder.
+> 
+> The current implementation supports LiteUART configured
+> for 32 bit data width and 8 bit CSR bus width.
+> 
+> It does not support IRQ.
+> 
+> Signed-off-by: Filip Kokosinski <fkokosinski@antmicro.com>
+> Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
 
-> On 8/25/20 6:13 AM, Cornelia Huck wrote:
-> > On Fri, 21 Aug 2020 15:56:02 -0400
-> > Tony Krowiak<akrowiak@linux.ibm.com>  wrote:
-
-> >>   /**
-> >> - * vfio_ap_get_queue: Retrieve a queue with a specific APQN from a li=
-st
-> >> - * @matrix_mdev: the associated mediated matrix
-> >> + * vfio_ap_get_queue: Retrieve a queue with a specific APQN.
-> >>    * @apqn: The queue APQN
-> >>    *
-> >> - * Retrieve a queue with a specific APQN from the list of the
-> >> - * devices of the vfio_ap_drv.
-> >> - * Verify that the APID and the APQI are set in the matrix.
-> >> + * Retrieve a queue with a specific APQN from the AP queue devices at=
-tached to
-> >> + * the AP bus.
-> >>    *
-> >> - * Returns the pointer to the associated vfio_ap_queue
-> >> + * Returns the pointer to the vfio_ap_queue with the specified APQN, =
-or NULL.
-> >>    */
-> >> -static struct vfio_ap_queue *vfio_ap_get_queue(
-> >> -					struct ap_matrix_mdev *matrix_mdev,
-> >> -					int apqn)
-> >> +static struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
-> >>   {
-> >> +	struct ap_queue *queue;
-> >>   	struct vfio_ap_queue *q;
-> >> -	struct device *dev;
-> >>  =20
-> >> -	if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
-> >> -		return NULL;
-> >> -	if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm)) =20
-> > I think you should add some explanation to the patch description why
-> > testing the matrix bitmasks is not needed anymore. =20
->=20
-> As a result of this comment, I took a closer look at the code to
-> determine the reason for eliminating the matrix_mdev
-> parameter. The reason is because the code below (i.e., find the device
-> and get the driver data) was also repeated in the vfio_ap_irq_disable_apq=
-n()
-> function, so I replaced it with a call to the function above; however, the
-> vfio_ap_irq_disable_apqn() function=C2=A0 does not have a reference to the
-> matrix_mdev, so I eliminated the matrix_mdev parameter. Note that the
-> vfio_ap_irq_disable_apqn() is called for each APQN assigned to a matrix
-> mdev, so there is no need to test the bitmasks there.
->=20
-> The other place from which the function above is called is
-> the handle_pqap() function which does have a reference to the
-> matrix_mdev. In order to ensure the integrity of the instruction
-> being intercepted - i.e., PQAP(AQIC) enable/disable IRQ for aN
-> AP queue - the testing of the matrix bitmasks probably ought to
-> be performed, so it will be done there instead of in the
-> vfio_ap_get_queue() function above.
-
-Should you add a comment that vfio_ap_get_queue() assumes that the
-caller makes sure that this is only called for APQNs that are assigned
-to a matrix?
-
->=20
->=20
-> > +	queue =3D ap_get_qdev(apqn);
-> > +	if (!queue)
-> >   		return NULL;
-> >  =20
-> > -	dev =3D driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
-> > -				 &apqn, match_apqn);
-> > -	if (!dev)
-> > -		return NULL;
-> > -	q =3D dev_get_drvdata(dev);
-> > -	q->matrix_mdev =3D matrix_mdev;
-> > -	put_device(dev);
-> > +	q =3D dev_get_drvdata(&queue->ap_dev.device);
-> > +	put_device(&queue->ap_dev.device);
-> >  =20
-> >   	return q;
-> >   }
-> > (...)
-> > =20
->=20
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
