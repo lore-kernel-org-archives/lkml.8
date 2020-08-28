@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A46D6C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F44C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CEB320738
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FF920738
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598633431;
-	bh=Cgxn33agiAyp87HeECnZVMhxGfb2+DrRvu3F+O4k4xU=;
+	s=default; t=1598633438;
+	bh=AgWkGLVNMdD2DNKd/wZ2SbCNZ2uFLt8zFJn6wF1Cl4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WAq1pa7indjCvof/bSDFlgKlNheOfzS2nJGZMdP7ZNb2Uggy7KhmF7vWbjxtkEXOJ
-	 DjXFALhimqcyzbHPq+w0T1JayL2QIGHExcxkRLHZPtw2mNMYAMyHsOsGm7FDu3h9F+
-	 c59CXwx04yUxeKx3HkTZeLGXha+Rcl8ghZ8eO8Ec=
+	b=KfvG//1ChR8+IRiPI+bIqhXxU2G/IiMFT7yW4EKm9tzUt+MnVfeqAwB08EU2PQwln
+	 Ha6hCOp2KIZCKvmtFwxhsA1LAqS9mh3PliLs5lw+s+nhunwKlwf2w/JodhjPt7TqyY
+	 KEmZyN6VLmSJH18a1G9Uo8yfP5t8o6MZrICQdRuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgH1Qua (ORCPT
+        id S1728570AbgH1Qug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 12:50:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44590 "EHLO mail.kernel.org"
+        Fri, 28 Aug 2020 12:50:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728282AbgH1QuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 12:50:23 -0400
+        id S1728282AbgH1Qud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 12:50:33 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1DC820C56;
-        Fri, 28 Aug 2020 16:50:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 730B220936;
+        Fri, 28 Aug 2020 16:50:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598633422;
-        bh=Cgxn33agiAyp87HeECnZVMhxGfb2+DrRvu3F+O4k4xU=;
+        s=default; t=1598633433;
+        bh=AgWkGLVNMdD2DNKd/wZ2SbCNZ2uFLt8zFJn6wF1Cl4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XMecWnAgOXRnqFZguFNZP++EQZeOKRRS5Pe+Zk8bSrrUsCjXle74AErcIw7+ZWsoF
-         ervXUHTa8lWgRKeZ7FLmxkSRfE3N+9xeZjqe8jJFQWe4m2Vyjhj0irN8yl5C6TFrFF
-         3KKcfKi81CTMl2bK/i/TBBzarDVDs/FzlFRWjCSY=
+        b=erq93eHHb0ZjFxs1cVvGUSH2Ar511+NaE26svhqrO52AeCjjq4+7Ls70xRRdVN0LI
+         uDpRG4Yl3R9YzoFUE34KZEkr1GzR70KkPLFM57OGwynli5L/JHDrR+JywTu2KfifI+
+         Evz988cluIaOOWGqlzuEWjwgb0X5CkQLohwWNC/o=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -55,9 +55,9 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 15/19] arm64: dts: imx8mq-phanbell: Align pin configuration group names with schema
-Date:   Fri, 28 Aug 2020 18:47:46 +0200
-Message-Id: <20200828164750.10377-16-krzk@kernel.org>
+Subject: [PATCH v2 16/19] arm64: dts: imx8mq-pico-pi: Align pin configuration group names with schema
+Date:   Fri, 28 Aug 2020 18:47:47 +0200
+Message-Id: <20200828164750.10377-17-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200828164750.10377-1-krzk@kernel.org>
 References: <20200828164750.10377-1-krzk@kernel.org>
@@ -73,14 +73,14 @@ suffix, otherwise dtbs_check complain with a warning like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts | 12 ++++++------
+ arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts | 12 ++++++------
  1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-index 3f541ddf0768..d6d3a3d5abc3 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-phanbell.dts
-@@ -365,7 +365,7 @@
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts b/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts
+index 59da96b7143f..f4d5748a7bd6 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dts
+@@ -297,7 +297,7 @@
  		>;
  	};
  
@@ -89,7 +89,7 @@ index 3f541ddf0768..d6d3a3d5abc3 100644
  		fsl,pins = <
  			MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x41
  		>;
-@@ -395,7 +395,7 @@
+@@ -335,7 +335,7 @@
  		>;
  	};
  
@@ -98,7 +98,7 @@ index 3f541ddf0768..d6d3a3d5abc3 100644
  		fsl,pins = <
  			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x85
  			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc5
-@@ -412,7 +412,7 @@
+@@ -351,7 +351,7 @@
  		>;
  	};
  
@@ -107,7 +107,7 @@ index 3f541ddf0768..d6d3a3d5abc3 100644
  		fsl,pins = <
  			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x87
  			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc7
-@@ -429,7 +429,7 @@
+@@ -367,7 +367,7 @@
  		>;
  	};
  
@@ -115,8 +115,8 @@ index 3f541ddf0768..d6d3a3d5abc3 100644
 +	pinctrl_usdhc2_gpio: usdhc2gpiogrp {
  		fsl,pins = <
  			MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12	0x41
- 			MX8MQ_IOMUXC_SD2_RESET_B_GPIO2_IO19	0x41
-@@ -448,7 +448,7 @@
+ 		>;
+@@ -385,7 +385,7 @@
  		>;
  	};
  
@@ -125,7 +125,7 @@ index 3f541ddf0768..d6d3a3d5abc3 100644
  		fsl,pins = <
  			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x85
  			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc5
-@@ -460,7 +460,7 @@
+@@ -397,7 +397,7 @@
  		>;
  	};
  
