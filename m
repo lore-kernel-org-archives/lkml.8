@@ -2,270 +2,241 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A5CC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 22:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601F9C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76D2B208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 22:59:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598655557;
-	bh=+8DLCh2m8pVtSho9V6FVYWHLZooqur4gt6hEsOvRKJ4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=UbntFYkQYzXJ6FckABRNCxTz6OdzV7gk9+KTnltX7ofeQ9hfnFuMetEmCPEuZPVds
-	 kQyT5hi1IG4s4H00REt/K16FOiUhpnJjrDCf4FKFkwtH+KbH4Ntpo5AB836z97pURu
-	 b8HhGgu0Ko/c/kSgedBZUhECjByhuT4QH2SJy+E0=
+	by mail.kernel.org (Postfix) with ESMTP id 219FD208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:05:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lOK+A2CH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgH1W7Q (ORCPT
+        id S1726821AbgH1XFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 18:59:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbgH1W7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 18:59:15 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E9F5207DA;
-        Fri, 28 Aug 2020 22:59:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598655554;
-        bh=+8DLCh2m8pVtSho9V6FVYWHLZooqur4gt6hEsOvRKJ4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=j0h+OBpPassrh1JdJJ513mpi4OKj/g7DyOB8HKyfIiaI3k8HBplHE9KfO+dNJh1hw
-         efwn2lNYc9cf97J2gkgLOO+jCSAd3UPd3KQ2s9PwsZp8arOIiGeDpPw7qdYVhUJGUT
-         RT1uxkW96DiJKsMUT7moOhWRL8u+hK8MNNiKeqbQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 82D1235229F9; Fri, 28 Aug 2020 15:59:14 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 15:59:14 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Tree for Aug 26
-Message-ID: <20200828225914.GQ2855@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200826163330.16e5b0d4@canb.auug.org.au>
- <CADYN=9KQcdLH=BfXZ2riuH0icw7d+2HbfPxvww7fiJG2G=8ALQ@mail.gmail.com>
- <20200826193945.GT2855@paulmck-ThinkPad-P72>
- <CADYN=9+XRhPOkds36JdHU-h2h3va=JJj6aeDHmNUzrpCHWEJ0A@mail.gmail.com>
- <20200828132944.GN2855@paulmck-ThinkPad-P72>
- <CADYN=9JBB6EntswRtVuUezoOzqCai2PkFP-7FDpYmAUU1+SYJA@mail.gmail.com>
+        Fri, 28 Aug 2020 19:05:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23580 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726536AbgH1XFj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 19:05:39 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07SN2XVi006910;
+        Fri, 28 Aug 2020 19:05:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=Wn8w9wu3HdZYhXruMb4USR6xxfiiUTh7SduUQNAtTPg=;
+ b=lOK+A2CH9Fps2TQCWyEPDeG/82/NGeSBUhdiBPIzwZp1f8hcvYXPwBeTUVS6RYni3EQ0
+ jndzj/GrkBKvHW9DDQFI3/nKZWqE1B9wIWZgHFNUeB9UjIYVHAH27Q/03QKugPTeMBw3
+ WasQ9K/O3RNdZn0EfaeprHhv36IB2UKBTpkw+9CVQedmYgnINWEkg4DqVxyMPQslhud4
+ OPmPV7cSfPD5vZ4nddogk3KCZIEoWMx4wERbfu2qteVYsu3Vo9Id/0rT7JsfoHKWQnw5
+ 93gxv3wksDCZ7bTWLgQANUdh+2h5iIAML1Iidnm0ua2mAPYEqWm9V8lXImIq9awPASgM 5w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 337a7dh877-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 19:05:38 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07SN5bvk016511;
+        Fri, 28 Aug 2020 19:05:37 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 337a7dh86x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 19:05:37 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07SMwgiK004884;
+        Fri, 28 Aug 2020 23:05:36 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma02wdc.us.ibm.com with ESMTP id 332ujqwd86-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 23:05:36 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07SN5XcS1507864
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Aug 2020 23:05:33 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 30A837805E;
+        Fri, 28 Aug 2020 23:05:33 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D41777805C;
+        Fri, 28 Aug 2020 23:05:31 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.170.64])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Aug 2020 23:05:31 +0000 (GMT)
+Subject: Re: [PATCH v10 03/16] s390/vfio-ap: manage link between queue struct
+ and matrix mdev
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
+References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+ <20200821195616.13554-4-akrowiak@linux.ibm.com>
+ <20200825122501.624474df.cohuck@redhat.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <88f4061c-e609-38ee-a8c5-1f608d642158@linux.ibm.com>
+Date:   Fri, 28 Aug 2020 19:05:31 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADYN=9JBB6EntswRtVuUezoOzqCai2PkFP-7FDpYmAUU1+SYJA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200825122501.624474df.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-28_18:2020-08-28,2020-08-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ bulkscore=0 lowpriorityscore=0 suspectscore=3 malwarescore=0
+ impostorscore=0 clxscore=1015 mlxscore=0 phishscore=0 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008280165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 09:24:19PM +0200, Anders Roxell wrote:
-> On Fri, 28 Aug 2020 at 15:29, Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Fri, Aug 28, 2020 at 09:37:17AM +0200, Anders Roxell wrote:
-> > > On Wed, 26 Aug 2020 at 21:39, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > >
-> > > > On Wed, Aug 26, 2020 at 08:19:01PM +0200, Anders Roxell wrote:
-> > > > > On Wed, 26 Aug 2020 at 08:33, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > > >
-> > > > [ . . . ]
-> > > >
-> > > > > I've built and run an arm64 allmodconfig kernel where I use the
-> > > > > defconfig as the base, I do this for testing purposes.
-> > > > > I can see the following call trace [1]:
-> > > > >
-> > > > > [ 2595.811453][    T1] Running tests on all trace events:
-> > > > > [ 2595.860933][    T1] Testing all events:
-> > > > > [ 4316.066072][    T8] kworker/dying (8) used greatest stack depth:
-> > > > > 27056 bytes left
-> > > > > [ 8561.924871][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for
-> > > > > 22s! [migration/0:14]
-> > > > > [ 8561.934498][    C0] Modules linked in:
-> > > > > [ 8561.942303][    C0] irq event stamp: 4044
-> > > > > [ 8561.949044][    C0] hardirqs last  enabled at (4043):
-> > > > > [<ffffa000126b530c>] _raw_spin_unlock_irqrestore+0xac/0x138
-> > > > > [ 8561.960848][    C0] hardirqs last disabled at (4044):
-> > > > > [<ffffa000126a89f8>] __schedule+0xf8/0x7e0
-> > > > > [ 8561.971418][    C0] softirqs last  enabled at (3698):
-> > > > > [<ffffa00010001b04>] __do_softirq+0x524/0x5f8
-> > > > > [ 8561.982191][    C0] softirqs last disabled at (3689):
-> > > > > [<ffffa000101216c8>] __irq_exit_rcu+0x128/0x1a0
-> > > > > [ 8561.993068][    C0] CPU: 0 PID: 14 Comm: migration/0 Tainted: G
-> > > > >    W         5.9.0-rc2-next-20200826-00005-g24628bb4c0bf #1
-> > > > > [ 8562.005684][    C0] Hardware name: linux,dummy-virt (DT)
-> > > > > [ 8562.013247][    C0] pstate: 80400005 (Nzcv daif +PAN -UAO BTYPE=--)
-> > > > > [ 8562.021657][    C0] pc : arch_local_irq_enable+0x58/0x80
-> > > > > [ 8562.029323][    C0] lr : _raw_spin_unlock_irq+0x84/0xc0
-> > > > > [ 8562.036739][    C0] sp : ffff0000698efaa0
-> > > > > [ 8562.042984][    C0] x29: ffff0000698efaa0 x28: ffff00006ad0f270
-> > > > > [ 8562.053814][    C0] x27: ffff00006ad0f248 x26: ffff0000698d4718
-> > > > > [ 8562.064687][    C0] x25: ffff00006ad0e798 x24: ffffa000139e3a40
-> > > > > [ 8562.075506][    C0] x23: 0000000000000001 x22: ffffa000154f5000
-> > > > > [ 8562.086425][    C0] x21: ffff00006ad0e798 x20: ffff00006ad0e780
-> > > > > [ 8562.097255][    C0] x19: ffffa000126a905c x18: 00000000000014c0
-> > > > > [ 8562.108071][    C0] x17: 0000000000001500 x16: 0000000000001440
-> > > > > [ 8562.118918][    C0] x15: 00000000f1f1f1f1 x14: 003d090000000000
-> > > > > [ 8562.129739][    C0] x13: 00003d0900000000 x12: ffff80000d31df41
-> > > > > [ 8562.140544][    C0] x11: 1fffe0000d31df40 x10: ffff80000d31df40
-> > > > > [ 8562.151366][    C0] x9 : dfffa00000000000 x8 : ffff0000698efa07
-> > > > > [ 8562.162247][    C0] x7 : 0000000000000001 x6 : 00007ffff2ce20c0
-> > > > > [ 8562.173072][    C0] x5 : ffff0000698d4040 x4 : dfffa00000000000
-> > > > > [ 8562.183954][    C0] x3 : ffffa0001040f904 x2 : 0000000000000007
-> > > > > [ 8562.194811][    C0] x1 : ffffa00014080000 x0 : 00000000000000e0
-> > > > > [ 8562.205858][    C0] Call trace:
-> > > > > [ 8562.211739][    C0]  arch_local_irq_enable+0x58/0x80
-> > > > > [ 8562.219076][    C0]  _raw_spin_unlock_irq+0x84/0xc0
-> > > > > [ 8562.226394][    C0]  __schedule+0x75c/0x7e0
-> > > > > [ 8562.233074][    C0]  preempt_schedule_notrace+0x64/0xc0
-> > > > > [ 8562.268210][    C0]  ftrace_ops_list_func+0x494/0x4e0
-> > > > > [ 8562.275735][    C0]  ftrace_graph_call+0x0/0x4
-> > > > > [ 8562.282647][    C0]  preempt_count_add+0xc/0x240
-> > > > > [ 8562.289686][    C0]  schedule+0xe4/0x160
-> > > > > [ 8562.296187][    C0]  smpboot_thread_fn+0x47c/0x540
-> > > > > [ 8562.303377][    C0]  kthread+0x23c/0x260
-> > > > > [ 8562.309906][    C0]  ret_from_fork+0x10/0x18
-> > > > > [ 8562.316604][    C0] Kernel panic - not syncing: softlockup: hung tasks
-> > > > > [ 8562.325230][    C0] CPU: 0 PID: 14 Comm: migration/0 Tainted: G
-> > > > >    W    L    5.9.0-rc2-next-20200826-00005-g24628bb4c0bf #1
-> > > > > [ 8562.337861][    C0] Hardware name: linux,dummy-virt (DT)
-> > > > > [ 8562.345374][    C0] Call trace:
-> > > > > [ 8562.351228][    C0]  dump_backtrace+0x0/0x320
-> > > > > [ 8562.358070][    C0]  show_stack+0x38/0x60
-> > > > > [ 8562.364728][    C0]  dump_stack+0x1c0/0x280
-> > > > > [ 8562.371447][    C0]  panic+0x32c/0x614
-> > > > > [ 8562.377868][    C0]  watchdog_timer_fn+0x49c/0x560
-> > > > > [ 8562.385076][    C0]  __run_hrtimer+0x1cc/0x360
-> > > > > [ 8562.392021][    C0]  __hrtimer_run_queues+0x1a0/0x220
-> > > > > [ 8562.399500][    C0]  hrtimer_interrupt+0x1f8/0x440
-> > > > > [ 8562.406807][    C0]  arch_timer_handler_virt+0x68/0xa0
-> > > > > [ 8562.414338][    C0]  handle_percpu_devid_irq+0x118/0x2a0
-> > > > > [ 8562.421992][    C0]  __handle_domain_irq+0x150/0x1c0
-> > > > > [ 8562.429315][    C0]  gic_handle_irq+0x98/0x120
-> > > > > [ 8562.436297][    C0]  el1_irq+0xd4/0x1c0
-> > > >
-> > > > We appear to have taken an interrupt here, just after releasing
-> > > > an irq-disabled lock and enabling interrupts.
-> > > >
-> > > > > [ 8562.442748][    C0]  arch_local_irq_enable+0x58/0x80
-> > > > > [ 8562.450116][    C0]  _raw_spin_unlock_irq+0x84/0xc0
-> > > > > [ 8562.457360][    C0]  __schedule+0x75c/0x7e0
-> > > > > [ 8562.464142][    C0]  preempt_schedule_notrace+0x64/0xc0
-> > > > > [ 8562.471745][    C0]  ftrace_ops_list_func+0x494/0x4e0
-> > > > > [ 8562.479195][    C0]  ftrace_graph_call+0x0/0x4
-> > > > > [ 8562.486159][    C0]  preempt_count_add+0xc/0x240
-> > > > > [ 8562.493210][    C0]  schedule+0xe4/0x160
-> > > >
-> > > > We are trying to sleep, so we took a pass through the scheduler and
-> > > > did some tracing.
-> > > >
-> > > > > [ 8562.499737][    C0]  smpboot_thread_fn+0x47c/0x540
-> > > >
-> > > > Here we might be bringing up a CPU?  Except that according to your
-> > > > dmesg, there is only one CPU.  ("RCU restricting CPUs from NR_CPUS=256
-> > > > to nr_cpu_ids=1").  So this seems unlikely.
-> > > >
-> > > > Huh.  The first dmesg in output-next-20200826.log is instead a
-> > > > DEBUG_LOCKS_WARN_ON() from lockdep.  Might this be related?  Or do you
-> > > > also see this warning when boot happens quickly?
-> > > >
-> > > > (I do see the soft lockup later on.)
-> > > >
-> > > > > [ 8562.506960][    C0]  kthread+0x23c/0x260
-> > > > > [ 8562.513496][    C0]  ret_from_fork+0x10/0x18
-> > > > > [ 8562.521052][    C0] Kernel Offset: disabled
-> > > > > [ 8562.527725][    C0] CPU features: 0x0240002,20002004
-> > > > > [ 8562.534950][    C0] Memory Limit: none
-> > > > > [ 8562.543830][    C0] ---[ end Kernel panic - not syncing:
-> > > > > softlockup: hung tasks ]---
-> > > > >
-> > > > > When I tested to checkout and build e6df9766894d ("Merge remote-tracking branch
-> > > > > 'irqchip/irq/irqchip-next' into master") that was merged into today's
-> > > > > tag I was able to
-> > > > > boot [2]. When I checked out 25e6e115dd1d ("Merge remote-tracking
-> > > > > branch 'rcu/rcu/next' into master") and built and tested that I was
-> > > > > able to boot [3] after a
-> > > > > looong time. To clarify, the rcu merge comes after the irqchip merge.
-> > > > >
-> > > > > I also tried to only revert the rcu tree from todays next tag like this:
-> > > > > "git diff e6df9766894d..25e6e115dd1d | patch -Rp1". When I built that
-> > > > > I was able to
-> > > > > boot [4] too.
-> > > > >
-> > > > > Any idea what's going on here?
-> > > >
-> > > > Could you please try bisecting the RCU commits?
-> > >
-> > > I did a bisect and found:
-> > > 3c8e1e3eca23 ("rcu: Always set .need_qs from __rcu_read_lock() for strict GPs")
-> > >
-> > > When I reverted that on next-20200826 and on next-20200827 the
-> > > allmodconfig kernel boots [1], there's other issues that I can see in
-> > > the log but not this one.
-> >
-> > Thank you for bisecting!
-> >
-> > I take it that you have CONFIG_RCU_STRICT_GRACE_PERIOD=y in your .config?
-> 
-> Correct.
-> 
-> > Ah, you do, according to this line in your dmesg:
-> >
-> >         rcu:    RCU strict (and thus non-scalable) grace periods enabled.
-> 
-> Yup.
-> 
-> >
-> > And much else besides, serious debugging enabled!  ;-)
-> 
-> as you can see from the time it takes to boot it is alot =)
-> 
-> >
-> > Does this reproduce with CONFIG_RCU_STRICT_GRACE_PERIOD=n?
-> 
-> I trying that now.
-> 
-> > My guess,
-> > given the commit that your bisection converged on, is that it will not
-> > reproduce in that case.
-> 
-> Your guess was correct, it worked =)
 
-I cannot reproduce this.  I would suggest enabling KASAN, but you have
-already enabled it.  At this point, I suggest clearing up the other
-issues.  If this issue remains, please let me know and I will see what
-additional diagnostics I can provide.
 
-							Thanx, Paul
+On 8/25/20 6:25 AM, Cornelia Huck wrote:
+> On Fri, 21 Aug 2020 15:56:03 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>
+>> Let's create links between each queue device bound to the vfio_ap device
+>> driver and the matrix mdev to which the queue is assigned. The idea is to
+>> facilitate efficient retrieval of the objects representing the queue
+>> devices and matrix mdevs as well as to verify that a queue assigned to
+>> a matrix mdev is bound to the driver.
+>>
+>> The links will be created as follows:
+>>
+>>     * When the queue device is probed, if its APQN is assigned to a matrix
+>>       mdev, the structures representing the queue device and the matrix mdev
+>>       will be linked.
+>>
+>>     * When an adapter or domain is assigned to a matrix mdev, for each new
+>>       APQN assigned that references a queue device bound to the vfio_ap
+>>       device driver, the structures representing the queue device and the
+>>       matrix mdev will be linked.
+>>
+>> The links will be removed as follows:
+>>
+>>     * When the queue device is removed, if its APQN is assigned to a matrix
+>>       mdev, the structures representing the queue device and the matrix mdev
+>>       will be unlinked.
+>>
+>>     * When an adapter or domain is unassigned from a matrix mdev, for each
+>>       APQN unassigned that references a queue device bound to the vfio_ap
+>>       device driver, the structures representing the queue device and the
+>>       matrix mdev will be unlinked.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_ops.c     | 132 +++++++++++++++++++++++++-
+>>   drivers/s390/crypto/vfio_ap_private.h |   2 +
+>>   2 files changed, 129 insertions(+), 5 deletions(-)
+>>
+> (...)
+>
+>> @@ -548,6 +557,87 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
+>>   	return 0;
+>>   }
+>>   
+>> +enum qlink_type {
+> <bikeshed>I think this is less of a type, and more of an action, so
+> maybe call this 'qlink_action' (and the function parameter below
+> 'action'?)</bikeshed>
 
-> Cheers,
-> Anders
-> 
-> >
-> >                                                         Thanx, Paul
-> >
-> > > Cheers,
-> > > Anders
-> > > [1] https://people.linaro.org/~anders.roxell/output-next-20200827-3c8e1e3eca23.log
-> > >
-> > > >  They are linear,
-> > > > extending from 0d23eddbe5d4 ("rcu: Remove KCSAN stubs") to 72cc80705122
-> > > > ("rcu: Remove unused "cpu" parameter from rcu_report_qs_rdp()".
-> > > >
-> > > > I do regularly test single-CPU premptible RCU, but not on ARM.  Nor do
-> > > > I normally enable quite this much debug, so I might have missed something.
-> > > >
-> > > >                                                         Thanx, Paul
-> > > >
-> > > > > Cheers,
-> > > > > Anders
-> > > > > [1] https://people.linaro.org/~anders.roxell/output-next-20200826.log
-> > > > > [2] https://people.linaro.org/~anders.roxell/output-next-20200826-bisect-e6df9766894d.log
-> > > > > [3] https://people.linaro.org/~anders.roxell/output-next-20200826-bisect-25e6e115dd1d.log
-> > > > > [4] https://people.linaro.org/~anders.roxell/output-next-20200826-bisect-revert-e6df9766894d-25e6e115dd1d.log
+Sure, but what is this <bikeshed> tag?
+
+>
+>> +	LINK_APID,
+>> +	LINK_APQI,
+>> +	UNLINK_APID,
+>> +	UNLINK_APQI,
+>> +};
+>> +
+>> +static void vfio_ap_mdev_link_queue(struct ap_matrix_mdev *matrix_mdev,
+>> +				    unsigned long apid, unsigned long apqi)
+>> +{
+>> +	struct vfio_ap_queue *q;
+>> +
+>> +	q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
+>> +	if (q) {
+>> +		q->matrix_mdev = matrix_mdev;
+>> +		hash_add(matrix_mdev->qtable,
+>> +			 &q->mdev_qnode, q->apqn);
+>> +	}
+>> +}
+>> +
+>> +static void vfio_ap_mdev_unlink_queue(unsigned long apid, unsigned long apqi)
+>> +{
+>> +	struct vfio_ap_queue *q;
+>> +
+>> +	q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
+>> +	if (q) {
+>> +		q->matrix_mdev = NULL;
+>> +		hash_del(&q->mdev_qnode);
+>> +	}
+>> +}
+>> +
+>> +/**
+>> + * vfio_ap_mdev_link_queues
+>> + *
+>> + * @matrix_mdev: The matrix mdev to link.
+>> + * @type:	 The type of @qlink_id.
+>> + * @qlink_id:	 The APID or APQI of the queues to link.
+>> + *
+>> + * Sets or clears the links between the queues with the specified @qlink_id
+>> + * and the @matrix_mdev:
+>> + *     @type == LINK_APID: Set the links between the @matrix_mdev and the
+>> + *                         queues with the specified @qlink_id (APID)
+>> + *     @type == LINK_APQI: Set the links between the @matrix_mdev and the
+>> + *                         queues with the specified @qlink_id (APQI)
+>> + *     @type == UNLINK_APID: Clear the links between the @matrix_mdev and the
+>> + *                           queues with the specified @qlink_id (APID)
+>> + *     @type == UNLINK_APQI: Clear the links between the @matrix_mdev and the
+>> + *                           queues with the specified @qlink_id (APQI)
+>> + */
+>> +static void vfio_ap_mdev_link_queues(struct ap_matrix_mdev *matrix_mdev,
+>> +				     enum qlink_type type,
+>> +				     unsigned long qlink_id)
+>> +{
+>> +	unsigned long id;
+>> +
+>> +	switch (type) {
+>> +	case LINK_APID:
+>> +		for_each_set_bit_inv(id, matrix_mdev->matrix.aqm,
+>> +				     matrix_mdev->matrix.aqm_max + 1)
+>> +			vfio_ap_mdev_link_queue(matrix_mdev, qlink_id, id);
+>> +		break;
+>> +	case UNLINK_APID:
+>> +		for_each_set_bit_inv(id, matrix_mdev->matrix.aqm,
+>> +				     matrix_mdev->matrix.aqm_max + 1)
+>> +			vfio_ap_mdev_unlink_queue(qlink_id, id);
+>> +		break;
+>> +	case LINK_APQI:
+>> +		for_each_set_bit_inv(id, matrix_mdev->matrix.apm,
+>> +				     matrix_mdev->matrix.apm_max + 1)
+>> +			vfio_ap_mdev_link_queue(matrix_mdev, id, qlink_id);
+>> +		break;
+>> +	case UNLINK_APQI:
+>> +		for_each_set_bit_inv(id, matrix_mdev->matrix.apm,
+>> +				     matrix_mdev->matrix.apm_max + 1)
+>> +			vfio_ap_mdev_link_queue(matrix_mdev, id, qlink_id);
+>> +		break;
+>> +	default:
+>> +		WARN_ON_ONCE(1);
+>> +	}
+>> +}
+>> +
+> (...)
+>
+> I have not reviewed this deeply, but at a glance, it seems fine.
+>
+
