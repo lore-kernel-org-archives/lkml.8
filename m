@@ -2,108 +2,135 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB7AC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEAEC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 284812080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54F5320848
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:13:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gir4tIU4"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="fYlgrgw7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgH1BMB (ORCPT
+        id S1728498AbgH1BNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 21:12:01 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9882 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgH1BL7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 21:11:59 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4859640000>; Thu, 27 Aug 2020 18:09:56 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 27 Aug 2020 18:11:58 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 27 Aug 2020 18:11:58 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Aug
- 2020 01:11:57 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 28 Aug 2020 01:11:57 +0000
-Received: from jckuo-lt.nvidia.com (Not Verified[10.19.101.4]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f4859db0000>; Thu, 27 Aug 2020 18:11:56 -0700
-From:   JC Kuo <jckuo@nvidia.com>
-To:     <gregkh@linuxfoundation.org>, <thierry.reding@gmail.com>,
-        <robh@kernel.org>, <jonathanh@nvidia.com>, <kishon@ti.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <nkristam@nvidia.com>, JC Kuo <jckuo@nvidia.com>
-Subject: [PATCH 02/12] clk: tegra: don't enable PLLE HW sequencer at init
-Date:   Fri, 28 Aug 2020 09:10:46 +0800
-Message-ID: <20200828011056.1067559-3-jckuo@nvidia.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200828011056.1067559-1-jckuo@nvidia.com>
-References: <20200828011056.1067559-1-jckuo@nvidia.com>
+        Thu, 27 Aug 2020 21:13:48 -0400
+Received: from mail-eopbgr1310112.outbound.protection.outlook.com ([40.107.131.112]:3136
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727784AbgH1BNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 21:13:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Wk1PxVMYZVQ+OZhekVKg0tMC5I9RNHtUbFMaa2bcPMqkDM9bWly1FYVrE3IuPyYhL0pS7VpCWv1VPiIt2rH/Ccuhgn3lBKYvrsw2+cBse4jGSz8pNugczpNl4DykRGePR+1OyE4JHNFyBflDzg0ykrF2dzi6KP0cycqUUn+8E3YgoxzP/sA7+pHHVVXnSBZvKc5b5AAmxBot5Vl9f5SgOyOd3/u0+7viWYSo+pnuzy5bk4BfQvRyxA3Uwa+lmTVJyB8hZu5FNJPxC9q93EBnf4ZiU5GHa8bc+HWYgTuLnY0UWsBl7KABVOlBWWPcnGmpwr5H9L4gz0jJbtwxfKnZwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UYmEGKCVmLNsbbTGMfyfW2oU1G7ZaSu7LmztrSay1M0=;
+ b=E6TzSFiexcW2KuXxJCV4yuTdhV7IOkUe96cZzlPrMK/tTzd/kDeDdvSXiAWDHcilUyTfmQ+nXYJEW8Awp4MgrT7Q7tLV03r+BqGKAqMAWucBMcRqpmxVLNZiMG+TZqQq81AZnFGLY7PHmJD/RfqywPgPlGvEXihtHU8Up3Cd/8PFFsbgBqWOZ/MbfmkzYlrpAflGn0vGrIwjO7FUpb0g6Ffz2oXpCxU3D0y6Bt4A+vCJCwoteXtqVkl1E3qZQ7PbJ3dyZUPCnE7Jd4etVFu0d/ZFYtJe8j27nbxugpY9jwzF5li1cSG61w0LkHBNbVBXp//5HbQsSHk3+1ihUyUd+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UYmEGKCVmLNsbbTGMfyfW2oU1G7ZaSu7LmztrSay1M0=;
+ b=fYlgrgw7tZrgNRiFZVpJ61ZJRcHK3yjHvarMR76yVEPAWaH32qr/1O7eC3ws9Ub6ea6phhXgHg/LF0hH+jnBddufWcExDPzm4LSzbbqjp+zW+D1zoUDDx1NqQhVpA8KYboKwVxLmR4dvZdKhPSCGjcqsR4c/T4mbUxGCnS5jyhU=
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
+ by TY2PR01MB3292.jpnprd01.prod.outlook.com (2603:1096:404:7a::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Fri, 28 Aug
+ 2020 01:13:34 +0000
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::9083:6001:8090:9f3]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::9083:6001:8090:9f3%6]) with mapi id 15.20.3305.032; Fri, 28 Aug 2020
+ 01:13:34 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        alsa-devel <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>
+Subject: RE: [PATCH 01/20] dt-bindings: pci: rcar-pci: Add device tree support
+ for r8a774e1
+Thread-Topic: [PATCH 01/20] dt-bindings: pci: rcar-pci: Add device tree
+ support for r8a774e1
+Thread-Index: AQHWW5UrUbPIlHvQCUyWdxM4+VVmPqlMeWoAgACAI2A=
+Date:   Fri, 28 Aug 2020 01:13:33 +0000
+Message-ID: <TY2PR01MB369299E1EA77E8BF87CA9E0DD8520@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CA+V-a8sn1_fKbHt6cy-27+j2HWFp7Fjt8XBRZPLpvN47C3E3hQ@mail.gmail.com>
+In-Reply-To: <CA+V-a8sn1_fKbHt6cy-27+j2HWFp7Fjt8XBRZPLpvN47C3E3hQ@mail.gmail.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=renesas.com;
+x-originating-ip: [240f:60:5f3e:1:b16e:b7b1:d350:3c9a]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 28242de6-c6ea-42e5-63ed-08d84aef959d
+x-ms-traffictypediagnostic: TY2PR01MB3292:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY2PR01MB3292C20694D4A37C64216936D8520@TY2PR01MB3292.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2LBuLFqe98XEZl4n65+e3rTeZw94cm0vFPZCWvPWQjVj4cq+2cBSliZHbcD/LYdzDpf8MxiRFnZm/SpC9WmS0+6Y87MW22iARYouHJsKsbMQuqP9dZzPhwdb3U5Vmxw8E6iryETCC7BYWqbWyZdwlGI9hMHbMdLiyqEyEDU2VUusCx8l3ZPTjjNdx22FhucccPUIfRz8cyooivq6FiqMFp2bCCSZjP6fUYYGobQLaO2b2IsAXwLGR0+hCd7be6s9DSwzioR7deogYC6whc/hvJDWPq3q6w9J1TSkId3p7dDz1U8bpNHiGIM3W0K9nXWDJ/IW6cxFzWpkOYtOFZP+VZROpEaEhmgACy9xI9nzGjk8RkJj6MVM4gXmE08d/Dp+iD+FWMkjlTj4DVR87XjGJg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(376002)(136003)(346002)(39860400002)(4744005)(7696005)(110136005)(316002)(478600001)(76116006)(2906002)(7416002)(66946007)(66556008)(64756008)(52536014)(54906003)(66476007)(66446008)(8936002)(8676002)(71200400001)(4326008)(186003)(33656002)(6506007)(55016002)(5660300002)(53546011)(9686003)(86362001)(138113003)(98903001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: wkjAElkoPEIGXZx2OZ9Rc8Ze9DhHX3qoBKfdAUIhnQr9rCmTHqlS1l+ur4vuAid2RuHT24WNv9NS+N25tOWLHJHalKTsfw7hkkXIVa+sKToMIStbDYn6W9PHZjyGWlmjrpZe9XQhkUkIGDuc1beTlJPhUcgSm/K+H+7dsFebMu8oAFlOXIyMWivgjV5aIx3GgsD7v8CEIKxkumzKYZyPtN3ogy3z2ja8VLl0zo8zJp+b14ozYtqmEBPp4Cum9XCFUTUoW8Ag4XtrbcqBkRLK6i4visRyawTZU1FsNWNSRFNev64jnUG+tmFr7BR36YVZobabyvcFixYWyMC0oHgDdYGSOnrqktstsaDY4ooIUf9nm84w6nFsaIrsSzqj0D93FV9iHn/fgvUtUkwkBKMElFrCM60ueuHu6YlL19RnpR5obMBTdgIZfze/LjWzaEnazlJKCXggrDCOjI2+au89KxCPTs1RCq9gcLTw/h/y+PNT/66m2CVLM0TgDGiYSWCf1RwyG53ipvothrj4HKGHvcomfzHV8a9B93ZgBaUCgAwUkVsNu9bLJ36eGV8L52aILo6pdjJq+stpg6h8T0ZKGdD/J/lPzgaBUpO2G87oQoCECZB1aYXjD3mUcRU2jLtXssYIw0IqaPYjbeNz8x5MUKTXwqXyMknDE9oyFFLr2ycjTLU1unafQBbxLmOyMacuTZnH8OLT9hnVh6zf28mH+A==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598576996; bh=H0R9Siiu+twi27jJX/Jx8a1i8OSPS6fZLapkwSfwBYg=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=gir4tIU4i7QiR/gjr2bUR54nyhEjRZnO1uhL3csVFY0pYSrFU9zXnOfDc3Be+5is4
-         ubWBUOcJYU35hdkwADyug2Zw+it6sOKdyf8s/hjaipG122vyq2rx09qkYe9/9f2/ib
-         2v2NHpLdIlCszVSXx+c4YgK9p0DRAdgD6Pb0ORfL47AKKh4x4w6pvrO7fbPXu6dOkx
-         b3OWu+0JULuIgBAIUTAbLjyCRlJFO6spDH9hIzVw3BPo/IvXcq07vehsvCkolCiDju
-         7cBLhNY3KpIgooQWJ8LsFOWFSpykALQUynPUCo4KDCyAPWWSsx28HRV5F+r1I5mIKA
-         5XnKsTbu5eljA==
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3692.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28242de6-c6ea-42e5-63ed-08d84aef959d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2020 01:13:33.9005
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KfYgyeSdWI1iU9VbAWztBqehvG1FuMiq6ojU6JAKWekcRiwYdyM0CBYTi8At31xibv+8Na9gaKnXnZ9GTgoYIUX+WiVc8L5CwYMG8kFdMuic74nfozw1dByj+3qRcR47
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB3292
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PLLE hardware power sequencer references PEX/SATA UPHY PLL hardware
-power sequencers' output to enable/disable PLLE. PLLE hardware power
-sequencer has to be enabled only after PEX/SATA UPHY PLL's sequencers
-are enabled.
-
-Signed-off-by: JC Kuo <jckuo@nvidia.com>
----
- drivers/clk/tegra/clk-pll.c | 12 ------------
- 1 file changed, 12 deletions(-)
-
-diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
-index c5cc0a2dac6f..0193cebe8c5a 100644
---- a/drivers/clk/tegra/clk-pll.c
-+++ b/drivers/clk/tegra/clk-pll.c
-@@ -2515,18 +2515,6 @@ static int clk_plle_tegra210_enable(struct clk_hw *h=
-w)
- 	pll_writel(val, PLLE_SS_CTRL, pll);
- 	udelay(1);
-=20
--	val =3D pll_readl_misc(pll);
--	val &=3D ~PLLE_MISC_IDDQ_SW_CTRL;
--	pll_writel_misc(val, pll);
--
--	val =3D pll_readl(pll->params->aux_reg, pll);
--	val |=3D (PLLE_AUX_USE_LOCKDET | PLLE_AUX_SS_SEQ_INCLUDE);
--	val &=3D ~(PLLE_AUX_ENABLE_SWCTL | PLLE_AUX_SS_SWCTL);
--	pll_writel(val, pll->params->aux_reg, pll);
--	udelay(1);
--	val |=3D PLLE_AUX_SEQ_ENABLE;
--	pll_writel(val, pll->params->aux_reg, pll);
--
- out:
- 	if (pll->lock)
- 		spin_unlock_irqrestore(pll->lock, flags);
---=20
-2.25.1
-
+SGkgTGFkLXNhbiwNCg0KPiBGcm9tOiBMYWQsIFByYWJoYWthciwgU2VudDogRnJpZGF5LCBBdWd1
+c3QgMjgsIDIwMjAgMjozNCBBTQ0KPiANCj4gSGkgQmpvcm4sDQo+IA0KPiBPbiBUaHUsIEp1bCAx
+NiwgMjAyMCBhdCA2OjE4IFBNIExhZCBQcmFiaGFrYXINCj4gPHByYWJoYWthci5tYWhhZGV2LWxh
+ZC5yakBicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBBZGQgUENJZSBzdXBwb3J0IGZv
+ciB0aGUgUlovRzJIIChhLmsuYS4gUjhBNzc0RTEpLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
+TGFkIFByYWJoYWthciA8cHJhYmhha2FyLm1haGFkZXYtbGFkLnJqQGJwLnJlbmVzYXMuY29tPg0K
+PiA+IFJldmlld2VkLWJ5OiBNYXJpYW4tQ3Jpc3RpYW4gUm90YXJpdSA8bWFyaWFuLWNyaXN0aWFu
+LnJvdGFyaXUucmJAYnAucmVuZXNhcy5jb20+DQo+ID4gLS0tDQo+ID4gIERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvcmNhci1wY2kudHh0IHwgMSArDQo+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiA+DQo+IEdlbnRsZSBwaW5nLg0KDQpUaGFuayB5b3Ug
+Zm9yIHRoZSBwaW5nLg0KDQpSZXZpZXdlZC1ieTogWW9zaGloaXJvIFNoaW1vZGEgPHlvc2hpaGly
+by5zaGltb2RhLnVoQHJlbmVzYXMuY29tPg0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hp
+bW9kYQ0KDQo=
