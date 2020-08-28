@@ -2,185 +2,129 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFA7C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9718C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 753D3207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598648223;
-	bh=lEYP8HaRK9SA7EpN4C7zVMsqEQ5gVGTnZtMrnAnItJ8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BU6Aw710FG9OjJnodoiHCQOnM5Igf8Dz18hoQdkdvS/WAXbaR+dIrXrIKonf0YM3k
-	 QkDsulKlMlkuJng0OAizquBb3NTqj+bCH1puSy7QGE1MWlgBOktoxIrRCat/RkCJUT
-	 PMk7YC1JNwe9j8osR8O5NorVMlRE3VnlWWZqlrOg=
+	by mail.kernel.org (Postfix) with ESMTP id 8C9E42075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:05:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MsL7kGa1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgH1U5C (ORCPT
+        id S1726858AbgH1VFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 16:57:02 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:42060 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbgH1U41 (ORCPT
+        Fri, 28 Aug 2020 17:05:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgH1VFp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 16:56:27 -0400
-Received: by mail-il1-f194.google.com with SMTP id t13so1810838ile.9
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 13:56:27 -0700 (PDT)
+        Fri, 28 Aug 2020 17:05:45 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A2A5C061264;
+        Fri, 28 Aug 2020 14:05:44 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p37so1018247pgl.3;
+        Fri, 28 Aug 2020 14:05:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5ane8DBc+f3r1w7tC8dfBuPl+fS6X/x6Y++VRwRzwLQ=;
+        b=MsL7kGa1JiTOPBkJ2PoXKt3Fr0+C/uzb9XgehxuRwK7TkBMMoeYquf8/R4btCU+W6/
+         u4BhD+TJOyVEAF0sEEGAfZ0riANm/clvP3zjEp+ZvsdVir4lQPTuJxOHYgdtPkEDC0Pt
+         5H/ArWQK/IhY3gXjFB5VHqvLUxcPkVhAlQXbNHPGIcMD0NiTJJlV450VIC24CLgYspuK
+         Y7BrPgYCcP7Fv1FRKqVi0tAee6xJiXJD6T24fLKiVTjNetC4Dc7bwD2iZG4ePxY+aMZ+
+         bGjINg5PRRtwJBDGH7ACw5kuGsRRN6RuQlrVQgvnIJmJPpPA+H/0VnfUl2/h9tx4sr9K
+         k1jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Mv5bR3+D06zbxqvFs+zuZPo2cV/Tfy8G7nPGXO/hjAU=;
-        b=mlEFjLMn6Ycjq7otWvcjQ0dpFB8yfwwAdy61YGWLhpeyTTIrYTfV1Xr2ELqaT7+sb/
-         OZY99vvMEdG+QlvXNJU3HWgLJTjnjEmk1Uts2XoA2Hi7Job8KDn1XaUncFCdd1Nkk5Gr
-         N53vFydlh2Gjh8+feMJSmd5dm8aM7NMpa6vXT6OCi8SCCH0uFWU6/komNEiKR5jIuRyI
-         AKIuB5dqlC5YlfvtM+VP2NcDuURMgDDQUTLvZehQuh+jUaid/kBCc55r5arjQgL8jw66
-         KBB/aT88sByTsC170VB/6jUtwbLO1K4l37jTNBdzxF+a1RehnR1Yqh5qmi6BCpOcTeUv
-         0yTQ==
-X-Gm-Message-State: AOAM530HQ1PlGsCY7V/LE0VDqNH3clWy1Yit922UDpUncOZPxyV7y43j
-        Otc2SQ5iZBozgxHBJo5K8A==
-X-Google-Smtp-Source: ABdhPJyxOG80OGdnAhzUR9EE/kBXC0gtLzjMiKCfzG/7ihXt64wtyAdyn2CfQE8oPVG2Xhc9SzNmbQ==
-X-Received: by 2002:a92:a1c5:: with SMTP id b66mr596524ill.71.1598648186927;
-        Fri, 28 Aug 2020 13:56:26 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.249])
-        by smtp.googlemail.com with ESMTPSA id l203sm147089ioa.31.2020.08.28.13.56.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 13:56:26 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Raphael Gault <raphael.gault@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Ian Rogers <irogers@google.com>, honnappa.nagarahalli@arm.com
-Subject: [PATCH v2 4/9] tools/include: Add an initial math64.h
-Date:   Fri, 28 Aug 2020 14:56:09 -0600
-Message-Id: <20200828205614.3391252-5-robh@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200828205614.3391252-1-robh@kernel.org>
-References: <20200828205614.3391252-1-robh@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5ane8DBc+f3r1w7tC8dfBuPl+fS6X/x6Y++VRwRzwLQ=;
+        b=e6/xwDnL0Kj3UO/BHsh8NvTx/4YKrX/LtRAPVL5pnNC+uolM6UpO7v9NRxRlO/TfmQ
+         Xsu6MfKPUavyz24La0GKPhTtGRixWcQZHZMy8WOJFCG6xyp/f+ZO/VITNOrU5qamzYe7
+         494koFSKThaMGEGowzR0GLbbp/PkOfB7MO+C6nXPDFpwkTBqEk84GNrOZzVEQQWIJ3+R
+         MWYnBRHIsSzQC9m43Tb5lFtuAb6poWZfkXaidcMGsyRM/tS8ozIBKSKy8M5pZkb1Y/rP
+         JBZBiD2wpVys5KM5klcmsGI9C5ttD0mhDVIITRmX7i9NYOyysRZ243tqwxmtsC5a/IK+
+         DIAw==
+X-Gm-Message-State: AOAM532X/JVMxoxfYQBwqkX7W+AmQ2bNNN6FqV+ZtthWDQSlbS2Hd0ce
+        qn/HZNPGMv4kSWeJNaKCJxxXYfsamS10GAtaE+BRyF9ALlo=
+X-Google-Smtp-Source: ABdhPJzuCr+aNitJffvBCNOF3MiA7pUa312fVi1VhewBnSyhEjpIVPDYBB9N7lJJzeuTL2wOJNm5hINQn/RWXrooM10=
+X-Received: by 2002:aa7:96cf:: with SMTP id h15mr692046pfq.294.1598648743207;
+ Fri, 28 Aug 2020 14:05:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200828070752.54444-1-xie.he.0141@gmail.com> <m3pn7b6opa.fsf@t19.piap.pl>
+In-Reply-To: <m3pn7b6opa.fsf@t19.piap.pl>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Fri, 28 Aug 2020 14:05:32 -0700
+Message-ID: <CAJht_EOk2_L-77KDDEJTcfqhw48X0ZMA2PKdLG4+LXHAAtNtsw@mail.gmail.com>
+Subject: Re: [PATCH net] drivers/net/wan/hdlc_cisco: Add hard_header_len
+To:     =?UTF-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martin Schiller <ms@dev.tdt.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an initial math64.h similar to linux/math64.h with functions
-mul_u64_u64_div64() and mul_u64_u32_shr(). This isn't a direct copy of
-include/linux/math64.h as that doesn't define mul_u64_u64_div64().
+On Fri, Aug 28, 2020 at 3:37 AM Krzysztof Ha=C5=82asa <khalasa@piap.pl> wro=
+te:
+>
+> OTOH hdlc_setup_dev() initializes hard_header_len to 16,
+> but in this case I guess 4 bytes are better.
+>
+> Acked-by: Krzysztof Halasa <khc@pm.waw.pl>
 
-Implementation was written by Peter Zilkstra based on linux/math64.h
-and div64.h[1]. The original implementation was not optimal on arm64 as
-__int128 division is not optimal with a call out to __udivti3, so I
-dropped the __int128 variant of mul_u64_u64_div64().
+Thank you, Krzysztof!
 
-[1] https://lore.kernel.org/lkml/20200322101848.GF2452@worktop.programming.kicks-ass.net/
+Actually I'm thinking about changing the default value of 16 in hdlc.c to 0=
+.
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-I'm not really sure what's desired here. Unlike most of the headers copied
-into tools/, this one is not a copy from include/linux/. Perhaps adding
-mul_u64_u64_div64() to include/linux/math64.h first and then copying it
-over is preferred? Or I could just move this into libperf?
+I think a driver should always keep its hard_header_len consistent
+with its header_ops functions. If a driver doesn't have header_ops,
+its hard_header_len should be set to 0. This makes the driver able to
+be correctly used with AF_PACKET sockets.
 
+In net/packet/af_packet.c, in the function packet_snd, for
+AF_PACKET/DGRAM sockets, it would reserve a headroom of
+hard_header_len for the skb, and call dev_hard_header (which calls the
+header_ops->create function) to fill in the headroom, but for
+AF_PACKET/RAW sockets, it would not reserve the headroom of
+hard_header_len, and will check (in function dev_validate_header)
+whether the user has provided the header of length hard_header_len. So
+I think hard_header_len should be kept consistent with header_ops to
+make the driver able to work correctly with af_packet.c.
 
- tools/include/linux/math64.h | 75 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 tools/include/linux/math64.h
+If the driver really needs to use additional header space outside of
+the header_ops->create function, it should request that header space
+in dev->needed_headroom instead of hard_header_len. This avoids the
+complex header processing in af_packet.c but still gets the header
+space reserved.
 
-diff --git a/tools/include/linux/math64.h b/tools/include/linux/math64.h
-new file mode 100644
-index 000000000000..4ad45d5943dc
---- /dev/null
-+++ b/tools/include/linux/math64.h
-@@ -0,0 +1,75 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_MATH64_H
-+#define _LINUX_MATH64_H
-+
-+#include <linux/types.h>
-+
-+#ifdef __x86_64__
-+static inline u64 mul_u64_u64_div64(u64 a, u64 b, u64 c)
-+{
-+	u64 q;
-+
-+	asm ("mulq %2; divq %3" : "=a" (q)
-+				: "a" (a), "rm" (b), "rm" (c)
-+				: "rdx");
-+
-+	return q;
-+}
-+#define mul_u64_u64_div64 mul_u64_u64_div64
-+#endif
-+
-+#ifdef __SIZEOF_INT128__
-+static inline u64 mul_u64_u32_shr(u64 a, u32 b, unsigned int shift)
-+{
-+	return (u64)(((unsigned __int128)a * b) >> shift);
-+}
-+
-+#else
-+
-+#ifdef __i386__
-+static inline u64 mul_u32_u32(u32 a, u32 b)
-+{
-+	u32 high, low;
-+
-+	asm ("mull %[b]" : "=a" (low), "=d" (high)
-+			 : [a] "a" (a), [b] "rm" (b) );
-+
-+	return low | ((u64)high) << 32;
-+}
-+#else
-+static inline u64 mul_u32_u32(u32 a, u32 b)
-+{
-+	return (u64)a * b;
-+}
-+#endif
-+
-+static inline u64 mul_u64_u32_shr(u64 a, u32 b, unsigned int shift)
-+{
-+	u32 ah, al;
-+	u64 ret;
-+
-+	al = a;
-+	ah = a >> 32;
-+
-+	ret = mul_u32_u32(al, b) >> shift;
-+	if (ah)
-+		ret += mul_u32_u32(ah, b) << (32 - shift);
-+
-+	return ret;
-+}
-+
-+#endif	/* __SIZEOF_INT128__ */
-+
-+#ifndef mul_u64_u64_div64
-+static inline u64 mul_u64_u64_div64(u64 a, u64 b, u64 c)
-+{
-+	u64 quot, rem;
-+
-+	quot = a / c;
-+	rem = a % c;
-+
-+	return quot * b + (rem * b) / c;
-+}
-+#endif
-+
-+#endif /* _LINUX_MATH64_H */
---
-2.25.1
+Currently for the 6 HDLC protocol drivers, hdlc_ppp sets
+hard_header_len and the value is consistent with its header_ops,
+hdlc_raw_eth sets both hard_header_len and header_ops correctly with
+the ether_setup function, hdlc_x25 has been previously changed by me
+to set hard_header_len to 0 because it doesn't have header_ops, and
+this patch would make hdlc_cisco set its hard_header_len to the value
+consistent with its header_ops. This leaves us hdlc_raw and hdlc_fr. I
+see that both of these 2 drivers don't set hard_header_len when
+attaching the protocol, so they will use the default value of 16. But
+because both of these drivers don't have header_ops, I think their
+hard_header_len should be set to 0. So I think maybe it's better to
+change the default value in hdlc.c to 0 and let them take the default
+value of 0.
+
+What do you think?
+
+Thanks!
+
+Xie He
