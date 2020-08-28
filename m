@@ -2,126 +2,132 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D525C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B16C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4429F2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E0002086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:52:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hsnh0uaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbgH1Kus (ORCPT
+        id S1729079AbgH1Kw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 06:50:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50084 "EHLO
+        Fri, 28 Aug 2020 06:52:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728362AbgH1Kur (ORCPT
+        with ESMTP id S1728362AbgH1KwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 06:50:47 -0400
-Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8D36C061264;
-        Fri, 28 Aug 2020 03:50:46 -0700 (PDT)
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 19C78634C87;
-        Fri, 28 Aug 2020 13:50:41 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1kBbxx-0000N6-0o; Fri, 28 Aug 2020 13:50:41 +0300
-Date:   Fri, 28 Aug 2020 13:50:41 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH v10 3/4] media: docs: add glossary.rst with common terms
- used at V4L2 spec
-Message-ID: <20200828105040.GA844@valkosipuli.retiisi.org.uk>
-References: <cover.1598512802.git.mchehab+huawei@kernel.org>
- <a7a4d5ecce953710119e7aa0c5d55f97052a75e8.1598512802.git.mchehab+huawei@kernel.org>
- <20200827110811.GC851@valkosipuli.retiisi.org.uk>
- <20200828111100.669767fa@coco.lan>
+        Fri, 28 Aug 2020 06:52:22 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21D0EC061264;
+        Fri, 28 Aug 2020 03:52:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=NVsLC6w+b0vPj3ocKxPMrHUORIUcuSQwIXmvRtgL1Mg=; b=Hsnh0uaWdwDg7CiUZiC+XRNSSr
+        9+FWzk4luqqDW2WldQfT+xZ1AGDWS49v6tNPBQNhoKe+BX9AS7E5Z0qqgBOrD6F9kzbGVVMYszK6c
+        E0IdOP6uHNZyoAC0Ex6aRwewJFLAofDnlZ3GMssDsyAdANDMOZSyT+U3SE4QUTrU8X1YA3MGexa4f
+        dzchMgs+m4mxxdPw+vUDvvYgPqoaLhfl+EILDevPJCbePT6M5GC+Bw+81rjw5HON4/uHpWwMLD09U
+        vSAP1QswtjIQeBfFPOEWP0Fv7zyCXnvYvIpovkrimkhV4S58j/diluW9va8tdtRrol0bypigERuAG
+        866fIpeA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBbz9-0003pI-Jw; Fri, 28 Aug 2020 10:51:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A60233007CD;
+        Fri, 28 Aug 2020 12:51:53 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8F91E2C56E661; Fri, 28 Aug 2020 12:51:53 +0200 (CEST)
+Date:   Fri, 28 Aug 2020 12:51:53 +0200
+From:   peterz@infradead.org
+To:     Jan Kara <jack@suse.cz>
+Cc:     Xianting Tian <tian.xianting@h3c.com>, viro@zeniv.linux.org.uk,
+        bcrl@kvack.org, mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+        linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        hannes@cmpxchg.org
+Subject: Re: [PATCH] aio: make aio wait path to account iowait time
+Message-ID: <20200828105153.GV1362448@hirez.programming.kicks-ass.net>
+References: <20200828060712.34983-1-tian.xianting@h3c.com>
+ <20200828090729.GT1362448@hirez.programming.kicks-ass.net>
+ <20200828094129.GF7072@quack2.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200828111100.669767fa@coco.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200828094129.GF7072@quack2.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro,
-
-On Fri, Aug 28, 2020 at 11:11:00AM +0200, Mauro Carvalho Chehab wrote:
-> Em Thu, 27 Aug 2020 14:08:11 +0300
-> Sakari Ailus <sakari.ailus@iki.fi> escreveu:
-> 
-> > > +    MC-centric
-> > > +	:term:`V4L2 hardware` that requires a :term:`MC API`.
-> > > +
-> > > +	Such hardware have ``V4L2_CAP_IO_MC`` device_caps field set
-> > > +	(see :ref:`VIDIOC_QUERYCAP`).
-> > > +
-> > > +	See :ref:`v4l2_hardware_control` for more details.  
-> > 	
-> > I think this should be documented as referring to drivers, for it's a
-> > property of a driver, not hardware.
+On Fri, Aug 28, 2020 at 11:41:29AM +0200, Jan Kara wrote:
+> On Fri 28-08-20 11:07:29, peterz@infradead.org wrote:
+> > On Fri, Aug 28, 2020 at 02:07:12PM +0800, Xianting Tian wrote:
+> > > As the normal aio wait path(read_events() ->
+> > > wait_event_interruptible_hrtimeout()) doesn't account iowait time, so use
+> > > this patch to make it to account iowait time, which can truely reflect
+> > > the system io situation when using a tool like 'top'.
 > > 
-> > There is hardware that better fits for MC-enabled drivers but still has
-> > V4L2-centric driver written for it. The matter is further complicated by
-> > e.g. raw camera systems that may consist of several different kinds of
-> > devices, including external ISPs.
-> > 
-> > Say, a simple raw sensor + a CSI-2 receiver would fit for V4L2-centric
-> > model well, but add a more complex sensor or that external ISP and that no
-> > longer is the case. The CSI-2 receiver is still the same in both cases
-> > though.
-> > 
-> > Similar comment on video-node-centric.
+> > Do be aware though that io_schedule() is potentially far more expensive
+> > than regular schedule() and io-wait accounting as a whole is a
+> > trainwreck.
 > 
-> I guess I got what you meant. I'm folding it with the following diff:
+> Hum, I didn't know that io_schedule() is that much more expensive. Thanks
+> for info.
+
+It's all relative, but it can add up under contention. And since these
+storage thingies are getting faster every year, I'm assuming these
+schedule rates are increasing along with it.
+
+> > When in_iowait is set schedule() and ttwu() will have to do additional
+> > atomic ops, and (much) worse, PSI will take additional locks.
+> > 
+> > And all that for a number that, IMO, is mostly useless, see the comment
+> > with nr_iowait().
 > 
-> diff --git a/Documentation/userspace-api/media/glossary.rst b/Documentation/userspace-api/media/glossary.rst
-> index 45f0933e03c0..023bb561c406 100644
-> --- a/Documentation/userspace-api/media/glossary.rst
-> +++ b/Documentation/userspace-api/media/glossary.rst
-> @@ -138,9 +138,9 @@ Glossary
->  	See :ref:`media_controller`.
->  
->      MC-centric
-> -	:term:`V4L2 hardware` that requires a :term:`MC API`.
-> +	:term:`V4L2 hardware` device driver that requires :term:`MC API`.
->  
-> -	Such hardware have ``V4L2_CAP_IO_MC`` device_caps field set
-> +	Such drivers have ``V4L2_CAP_IO_MC`` device_caps field set
->  	(see :ref:`VIDIOC_QUERYCAP`).
->  
->  	See :ref:`v4l2_hardware_control` for more details.
-> @@ -203,9 +203,9 @@ Glossary
->  	:term:`bridge driver`. See :ref:`subdev`.
->  
->      Video-node-centric
-> -	V4L2 hardware that doesn't require a media controller to be used.
-> +	V4L2 device driver that doesn't require a media controller to be used.
->  
-> -	Such hardware have the ``V4L2_CAP_IO_MC`` device_caps field unset
-> +	Such drivers have the ``V4L2_CAP_IO_MC`` device_caps field unset
->  	(see :ref:`VIDIOC_QUERYCAP`).
->  
->      V4L2 Sub-device API
+> Well, I understand the limited usefulness of the system or even per CPU
+> percentage spent in IO wait. However whether a particular task is sleeping
+> waiting for IO or not
 
-Yes, something like that. I also looked at a few more terms such as "V4L2
-hardware" that are a bit of an oxymoron. This isn't in current
-documentation so we should give them a little bit more thought before
-adding them. I'll reply to the latest patch.
+So strict per-task state is not a problem, and we could easily change
+get_task_state() to distinguish between IO-wait or not, basically
+duplicate S/D state into an IO-wait variant of the same. Although even
+this has ABI implications :-(
 
--- 
-Kind regards,
+> is IMO a useful diagnostic information and there are
+> several places in the kernel that take that into account (PSI, hangcheck
+> timer, cpufreq, ...).
 
-Sakari Ailus
+So PSI is the one I hate most. We spend an aweful lot of time to not
+have to take the old rq->lock on wakeup, and PSI reintroduced it for
+accounting purposes -- I hate accounting overhead. :/
+
+There's a number of high frequency scheduling workloads where it really
+adds up, which is the reason we got rid of it in the first place.
+
+OTOH, PSI gives more sensible numbers, although it goes side-ways when
+you introduce affinity masks / cpusets.
+
+The menu-cpufreq gov is known crazy and we're all hard working on
+replacing it.
+
+And the tick-sched usage is, iirc, the nohz case of iowait.
+
+> So I don't see that properly accounting that a task
+> is waiting for IO is just "expensive random number generator" as you
+> mention below :). But I'm open to being educated...
+
+It's the userspace iowait, and in particular the per-cpu iowait numbers
+that I hate. Only on UP does any of that make sense.
+
+But we can't remove them because ABI :-(
+
