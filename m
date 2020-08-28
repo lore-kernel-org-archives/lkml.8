@@ -7,91 +7,98 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B1FC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 257A0C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91F9A20639
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E2720639
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:33:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IXeEjsjD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SXuwPRZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgH1OcY (ORCPT
+        id S1726944AbgH1Odb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:32:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56274 "EHLO
+        Fri, 28 Aug 2020 10:33:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727802AbgH1OcP (ORCPT
+        with ESMTP id S1726579AbgH1Od2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:32:15 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D76C06121B
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:32:15 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id t23so1553058ljc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:32:15 -0700 (PDT)
+        Fri, 28 Aug 2020 10:33:28 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC0D3C061232
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:33:27 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id 185so1543191ljj.7
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:33:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wVomXPK0U4YnUe61pOa0mrtN3m3F0A/CetmINqj4FvQ=;
-        b=IXeEjsjDMU8OHqYlJ0p8rDf4WgvfOfbeZYG1fmksYO7VBPareOmDTBDBpJfLu2f4Mo
-         oc5Qx/kRjst3CdFtvOjdIsdvwAPlR01NAKq2ZLg9Cf9Jcr/yk4fT6QHA2POLXvJjElqK
-         4rlzpaVgAadANBaLSYZqeuj1JdC/A2vnjVb+5nOK8cQN0Sptd2OUBdZK8CHIYtGh+PWj
-         aWYjoQQuUTLUwr2wTHzH8etMU6LEC6XUu414lYInENZPAWDAWJtSMHLUvvwCiBxYDI5L
-         +mJHbZIhZBpuwqrxyq0MBlWEdp+B+UtBmlAR7AAdUpkOXyQTTgO5odt6FNXZhOLQMs1A
-         +Xzw==
+        bh=rpmT8z3vCoI387yR05xFtDPOcMcQ4MSd+QWPcIK213o=;
+        b=SXuwPRZCasKbRTNTD4rBVmpvxw5674fLb7D3nUZanlM12QZHv9w8tybE1ygcVHuyHf
+         oInP73nxqRqG/m924yhoXHEfVfMd8UNcGRHcOgglzIGOvStEqWimRNUmkiNO8lXlxASX
+         CCpDX7fmupyd+Q7PIqp/vvF9e1lBa3Fh+ICv7e70bLR/G0jT4Gkx4E349CQz9h+h21Rd
+         J9n3piyD5XHKRoxk039mI9PtUaLpkGEORrwzNi7gop6r9A58+nzmeDGzRENEZ4/0F3H/
+         ri4qABCfHUAxKq3affmj3xX920jjMz3hnbCzfllSaY6dfAWtXQUtN0eWy5GAs/w/o60R
+         vy8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wVomXPK0U4YnUe61pOa0mrtN3m3F0A/CetmINqj4FvQ=;
-        b=piaxjk6c4KIHn3cElxticyaR51GSpCJ06eWwNSZql7qMP1EucVd/bCEwlDLX2karp0
-         ETmmlolb8rAGkVYhRbdl/wm0n5S+S/MC7btKUV+NDAJvefgIcy9yl9rdNeAOYfwXm4qW
-         /6R8LdIADexPuLhBPFiy5O1fWTZVkf8BWDHvWT/D9ti0RUPzAiFafSIVjqB9VagVjJJm
-         iTnFw6xipLBmO2uI+Prx2+uQuVdkKjUaI4qViS0jhmLcgqJogw0gHJC4URXt/8i0ugUs
-         4odVIyI2nX6ZKuiQlnbJSs76mxRqaV4uHy83dFJaSZVsSEYkNs0D/t4Nw/SpOrrRHBVS
-         4C1g==
-X-Gm-Message-State: AOAM532U6K/TFCHkoV/fXC3JXN04i7bbKxXkg6/t/TuHd9BTkLuQfS6F
-        /KxoeFtj927zeYnWLSx4nmLNNd2iXNO2my8yREE0Ng==
-X-Google-Smtp-Source: ABdhPJxyQbKAxlRRRvc2vRtyWbyMbMoH5z28IQ9c6tGUgZBDV3PTLB/tba5Nu2XqbmrEWhyYyf5fprRmxxYMiT4YEWI=
-X-Received: by 2002:a2e:4e09:: with SMTP id c9mr1062954ljb.283.1598625133997;
- Fri, 28 Aug 2020 07:32:13 -0700 (PDT)
+        bh=rpmT8z3vCoI387yR05xFtDPOcMcQ4MSd+QWPcIK213o=;
+        b=Rwi2BH6u9OZIyKrZQfTgZcKAawptTpEgjQxFKK37Jgpq9nN/+3LYFLtglOTiyOnzzK
+         xfuDB7b18b7cj360/E+3RHz1xPRG3xV6zFbeLzp8f2JkeRPC9C0hf/EJ0f8hSQYcHbSX
+         yqZ2t5906P4nP07ZQtXfCMqE/6ZAbNQyHzw5txtH029znsrEAXq4eP13W0DVfZhBEgiB
+         NOk4geUuKFxgValjnDcCmCo7RVZGehOKT9xmnKocmyiX4zBGStEVNqDNKLVlQvPbsRCM
+         A3J+ZfmSuZvB6PbpPqpYKHzoALaVKveBWI7mGFcRfDWhjbDS0+xZy7Nmve6DXsXSMAAa
+         kG/g==
+X-Gm-Message-State: AOAM5300BAjh5FLHyC1FFD8NOzX4FUafQg1GuHcLp3eQOlY+Ay/+YvyL
+        xfgnRyOv89xe7ZSogm5KLL+BdzLoIbdqeC4RlFhxtg==
+X-Google-Smtp-Source: ABdhPJx50N3WCz+95xej33BT+LFzbgw+YdB2RFlR9a5r50nwxYsPt9Je6m4kpOoXdZYez8d1PPZWYNLG7DhnlToAq/A=
+X-Received: by 2002:a2e:558:: with SMTP id 85mr1056326ljf.293.1598625206108;
+ Fri, 28 Aug 2020 07:33:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200827185829.30096-1-krzk@kernel.org> <20200827185829.30096-27-krzk@kernel.org>
-In-Reply-To: <20200827185829.30096-27-krzk@kernel.org>
+References: <20200827192642.1725-1-krzk@kernel.org> <20200827192642.1725-16-krzk@kernel.org>
+In-Reply-To: <20200827192642.1725-16-krzk@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 16:32:03 +0200
-Message-ID: <CACRpkdZQZ+ANpMmwFUbTxQ9=EZEXZkr7Z3DLbica=Q09bmntBQ@mail.gmail.com>
-Subject: Re: [PATCH v3 26/27] Input: bu21013_ts - Use local 'client->dev'
- variable in probe()
+Date:   Fri, 28 Aug 2020 16:33:15 +0200
+Message-ID: <CACRpkdZTTq=yARxK5uAu6f5rAJy0tH0V5HQU3d6ddEMa_a9KnQ@mail.gmail.com>
+Subject: Re: [PATCH v2 16/18] iio: magnetometer: ak8974: Simplify with dev_err_probe()
 To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Beniamin Bia <beniamin.bia@analog.com>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        platform-driver-x86 <platform-driver-x86@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 9:00 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Thu, Aug 27, 2020 at 9:29 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-> 'dev' is shorter and simpler than '&client->dev' and in few cases it
-> allows to skip line wrapping. Probe function uses '&client->dev' a lot,
-> so this improves readability slightly.
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
 >
-> Andy Shevchenko <andy.shevchenko@gmail.com>
 > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
