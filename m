@@ -2,106 +2,118 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08884C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA62DC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C267F20CC7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:40:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598600424;
-	bh=qEito2XzI2KJ7U8hopKBoe5VU498OUbzHEEhASG9qMc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KZiscAkf7ClY8kXaJtUOg8AW7WB+p2xoXtoCbVcHnS79UHdDIAP/aW067fgbYXOH/
-	 /gonvWfqrL72cgzZRAi6mR4fnvV0XoXY2gtDbm0bnrKnBMnEM9R5AbplhMGKuwguip
-	 v3yHf0/4dKOMXUQf/o2ccuTnY3btyplVENyIcQIA=
+	by mail.kernel.org (Postfix) with ESMTP id A316A20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:41:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tVXPHHRw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgH1HkX (ORCPT
+        id S1728514AbgH1Hlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:40:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39588 "EHLO mail.kernel.org"
+        Fri, 28 Aug 2020 03:41:39 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:37437 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726500AbgH1HkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:40:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726825AbgH1Hli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 03:41:38 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598600497; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=mZd4az/p4FmBgUWML4ZQBopjKpxj4NlCZjT6BNlLexk=; b=tVXPHHRws/FdCJzIflZAqWIZs9Mij1biTv5O67/yL9Xcsu5VTdRUTdQv1t8WYfjpa49p/5R2
+ XA9Zxo5ocTMzVevOQJP+g9VaiJm9vuM/g9l1BsW9dn9DyJqoxDw8xi+IUoUGEufVTjqLva08
+ E7C2D8DANLLDOo5eY6EUUJ9blto=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f48b5304b620c27d30c28ea (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 28 Aug 2020 07:41:36
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AF5E8C433AF; Fri, 28 Aug 2020 07:41:36 +0000 (UTC)
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C59120776;
-        Fri, 28 Aug 2020 07:40:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598600422;
-        bh=qEito2XzI2KJ7U8hopKBoe5VU498OUbzHEEhASG9qMc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YZoFaYECR/MHEhXgjcxv1+6w6Kxteul+dKGI+M4S/iRHp8iwKOljNH0tGp7QhiMgk
-         RLnEGq8hCcPa9Qj4Mk1DMPf0WktlbfHZr8x69QzQTZRfhajNpvO7duQ0WjSEtSEGU6
-         wC0gr6t9hy6giiUoYWdMk+2JBpNTJgZvtsj1tLtw=
-Date:   Fri, 28 Aug 2020 09:40:35 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     madhuparnabhowmik10@gmail.com
-Cc:     jacmet@sunsite.dk, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ldv-project@linuxtesting.org,
-        andrianov@ispras.ru
-Subject: Re: [PATCH] usb/c67x00/c67x00-drv: Fix Data Race bug
-Message-ID: <20200828074035.GB942935@kroah.com>
-References: <20200826144459.8245-1-madhuparnabhowmik10@gmail.com>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E0134C433CA;
+        Fri, 28 Aug 2020 07:41:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E0134C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Steve deRosier <derosier@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        John Stultz <john.stultz@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Maital Hahn <maitalm@ti.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Raz Bouganim <r-bouganim@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Fuqian Huang <huangfq.daxian@gmail.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Revert "wlcore: Adding suppoprt for IGTK key in wlcore driver"
+References: <f0a2cb7ea606f1a284d4c23cbf983da2954ce9b6.1598420968.git.mchehab+huawei@kernel.org>
+        <CALLGbRL+duiHFd3w7hcD=u47k+JM5rLpOkMrRpW0aQm=oTfUnA@mail.gmail.com>
+Date:   Fri, 28 Aug 2020 10:41:29 +0300
+In-Reply-To: <CALLGbRL+duiHFd3w7hcD=u47k+JM5rLpOkMrRpW0aQm=oTfUnA@mail.gmail.com>
+        (Steve deRosier's message of "Thu, 27 Aug 2020 08:48:30 -0700")
+Message-ID: <873647kyja.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826144459.8245-1-madhuparnabhowmik10@gmail.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 08:14:59PM +0530, madhuparnabhowmik10@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> 
-> Currently in c67x00_drv_probe() IRQ is requested before calling
-> c67x00_probe_sie() and hence if interrupt happens the reading of certain
-> variables in the handler can race with initialization of the variables,
-> for e.g. sie->sie_num is written in c67x00_probe_sie() and read in
->  c67x00_hcd_irq().
-> Hence, this patch calls c67x00_probe_sie() before requesting IRQ in
-> probe.
-> 
-> Found by Linux Driver Verification project (linuxtesting.org).
-> 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> ---
->  drivers/usb/c67x00/c67x00-drv.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/usb/c67x00/c67x00-drv.c b/drivers/usb/c67x00/c67x00-drv.c
-> index 53838e7d4eef..2e816d5ca0eb 100644
-> --- a/drivers/usb/c67x00/c67x00-drv.c
-> +++ b/drivers/usb/c67x00/c67x00-drv.c
-> @@ -146,6 +146,9 @@ static int c67x00_drv_probe(struct platform_device *pdev)
->  	c67x00_ll_init(c67x00);
->  	c67x00_ll_hpi_reg_init(c67x00);
->  
-> +	for (i = 0; i < C67X00_SIES; i++)
-> +		c67x00_probe_sie(&c67x00->sie[i], c67x00, i);
-> +
->  	ret = request_irq(res2->start, c67x00_irq, 0, pdev->name, c67x00);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Cannot claim IRQ\n");
-> @@ -158,9 +161,6 @@ static int c67x00_drv_probe(struct platform_device *pdev)
->  		goto reset_failed;
->  	}
->  
-> -	for (i = 0; i < C67X00_SIES; i++)
-> -		c67x00_probe_sie(&c67x00->sie[i], c67x00, i);
-> -
->  	platform_set_drvdata(pdev, c67x00);
->  
->  	return 0;
+Steve deRosier <derosier@gmail.com> writes:
 
-Have you tested this on hardware to verify it works properly?
+> On Tue, Aug 25, 2020 at 10:49 PM Mauro Carvalho Chehab
+> <mchehab+huawei@kernel.org> wrote:
+>>
+>> This patch causes a regression betwen Kernel 5.7 and 5.8 at wlcore:
+>> with it applied, WiFi stops working, and the Kernel starts printing
+>> this message every second:
+>>
+>>    wlcore: PHY firmware version: Rev 8.2.0.0.242
+>>    wlcore: firmware booted (Rev 8.9.0.0.79)
+>>    wlcore: ERROR command execute failure 14
+>
+> Only if NO firmware for the device in question supports the `KEY_IGTK`
+> value, then this revert is appropriate. Otherwise, it likely isn't.
+>  My suspicion is that the feature that `KEY_IGTK` is enabling is
+> specific to a newer firmware that Mauro hasn't upgraded to. What the
+> OP should do is find the updated firmware and give it a try.
+>
+> AND - since there's some firmware the feature doesn't work with, the
+> driver should be fixed to detect the running firmware version and not
+> do things that the firmware doesn't support.  AND the firmware writer
+> should also make it so the firmware doesn't barf on bad input and
+> instead rejects it politely.
+>
+> But I will say I'm making an educated guess; while I have played with
+> the TI devices in the past, it was years ago and I won't claim to be
+> an expert. I also am unable to fix it myself at this time.
+>
+> I'd just rather see it fixed properly instead of a knee-jerk reaction
+> of reverting it simply because the OP doesn't have current firmware.
 
-thanks,
+Yeah, a proper fix for this is of course better but if there's no fix,
+say within the next week or so, let's revert this. A new version of the
+patch implementing IGTK, with proper feature detection, can be always
+added later.
 
-greg k-h
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
