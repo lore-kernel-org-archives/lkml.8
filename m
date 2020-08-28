@@ -2,93 +2,96 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9021BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 18:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4615DC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 18:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60C5420DD4
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 18:15:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RYiNHPwx"
+	by mail.kernel.org (Postfix) with ESMTP id 1880E2074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 18:17:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgH1SPC (ORCPT
+        id S1727996AbgH1SRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 14:15:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgH1SPA (ORCPT
+        Fri, 28 Aug 2020 14:17:32 -0400
+Received: from smtprelay0133.hostedemail.com ([216.40.44.133]:35428 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726677AbgH1SR1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 14:15:00 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1009DC061264;
-        Fri, 28 Aug 2020 11:15:00 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id d18so2308784iop.13;
-        Fri, 28 Aug 2020 11:15:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uei2oX6+R5/bya0knk1RWjU3wT5D0mfsVI+rbrGek1E=;
-        b=RYiNHPwxJXlh7AlH6vgL7jadjJxZAhq4gkMI8otSZ5k3wL/xN236LHimM8GrheJ+y8
-         GyJbk2s+SfRhrLtagmZ9qWDEqzbLUeEPylMIl2i2QzCUFkZ46pTxc0D2I6waHrWJZFBN
-         DYnJr0VWvxzBM7dI6jKw40o3eCYpuZ7IGwlOiO7N+ipbd9SczNCJeVcaLfCZ39NG+dOv
-         QlONB4ou+zLz8EzYVQlunexeX+Iy7z7yWvxnRDBhw16HSrhumzWqJj3Hz0ufcAz/BLI7
-         6NvbJncvYp1eDl0cWDolrb+lIX6+te9KSnpnp/QUK4gFIQsf8m/oPJngkvzxQdnqtdr3
-         T0iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uei2oX6+R5/bya0knk1RWjU3wT5D0mfsVI+rbrGek1E=;
-        b=TjXpsfWilF42J68qvWsJY4XyHHYPTUgnvtNX7BGDbHxblPF3jqVAc+l7WhXwL7qHQO
-         Qz4UuA+VmchFVluuC9lrD3KAvIjdBf6fQcmiE+UXPS0rRuq/H79u58giG6rsmtecL+sT
-         /wjzbRmqnCQw4WNCcFPNB7lVwP+c2T1qsShpr51SpzmTQhllJk3szJN4qT7Txu/cUce1
-         w+U46xQcrhc/8zc89HJmeYmmV6B4Lm/hdyRccN2/2AO6c4ChUurhg1dtDpW3ODDGRWDA
-         dzeRzHtWf3CGZ5eY36Uf+TYXU6fPnMe84XfqW9ewt+WGVnU5LigZZQFbhAu+nPPC/sUU
-         r+Gw==
-X-Gm-Message-State: AOAM532LGYWPPNCnTs+9WaNePo8hhHhAuFtbizMvMN0YVWzDbYkZCfJ8
-        k5Vg39oIcXE3BfUaYRgLrZz+LaYntXRKBtAYgKCvqVXyqZd0jw==
-X-Google-Smtp-Source: ABdhPJxOHnbHhf2/pqdreiBeW/YR33ZJP33je5WQ4cFveTMQTRscKQl4+dYMnhS1+syZPFtIR7g94MaURuA3z9FVnyM=
-X-Received: by 2002:a6b:c953:: with SMTP id z80mr2084073iof.178.1598638499277;
- Fri, 28 Aug 2020 11:14:59 -0700 (PDT)
+        Fri, 28 Aug 2020 14:17:27 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id A8F7B5DC5;
+        Fri, 28 Aug 2020 18:17:25 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: goose22_600e06e27077
+X-Filterd-Recvd-Size: 1995
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf16.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 28 Aug 2020 18:17:24 +0000 (UTC)
+Message-ID: <23029e176062d707bdd5ca1d360f9bedcec3aaa6.camel@perches.com>
+Subject: Re: [PATCH] checkpatch: Allow not using -f with files that are in
+ git
+From:   Joe Perches <joe@perches.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andy Whitcroft <apw@shadowen.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 28 Aug 2020 11:17:23 -0700
+In-Reply-To: <234290e5-b8dc-22c7-d26f-60a02844ce0a@rasmusvillemoes.dk>
+References: <45b81a48e1568bd0126a96f5046eb7aaae9b83c9.camel@perches.com>
+         <234290e5-b8dc-22c7-d26f-60a02844ce0a@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-References: <20200815165030.5849-1-ztong0001@gmail.com> <20200828180742.GA20488@salvia>
-In-Reply-To: <20200828180742.GA20488@salvia>
-From:   Tong Zhang <ztong0001@gmail.com>
-Date:   Fri, 28 Aug 2020 14:14:48 -0400
-Message-ID: <CAA5qM4CUO47EkJ-4wRoi0wkReAXtB5isLbvBEUw045po_TY8Sw@mail.gmail.com>
-Subject: Re: [PATCH] netfilter: nf_conntrack_sip: fix parsing error
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     kadlec@netfilter.org, fw@strlen.de, davem@davemloft.net,
-        kuba@kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pablo,
-I'm not an expert in this networking stuff.
-But from my point of view there's no point in checking if this
-condition is always true.
-There's also no need of returning anything from the
-ct_sip_parse_numerical_param()
-if they are all being ignored like this.
+On Tue, 2020-08-25 at 14:23 +0200, Rasmus Villemoes wrote:
+> On 25/08/2020 02.09, Joe Perches wrote:
+> > If a file exists in git and checkpatch is used without the -f
+> > flag for scanning a file, then checkpatch will scan the file
+> > assuming it's a patch
 
-On Fri, Aug 28, 2020 at 2:07 PM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
-> Is this are real issue in your setup or probably some static analysis
-> tool is reporting?
->
-> You are right that ct_sip_parse_numerical_param() never returns < 0,
-> however, looking at:
->
-> https://tools.ietf.org/html/rfc3261 see Page 161
->
-> expires is optional, my understanding is that your patch is making
-> this option mandatory.
+[]
+
+> > +sub git_is_single_file {
+> > +	my ($filename) = @_;
+> > +
+> > +	return 0 if ((which("git") eq "") || !(-e "$gitroot"));
+> > +
+> > +	my $output = `${git_command} ls-files -- $filename`;
+> > +	my $count = $output =~ tr/\n//;
+> > +	return $count eq 1 && $output =~ m{^${filename}$};
+> > +}
+> 
+> Isn't that somewhat expensive to do for each file?
+
+Just FYI:  Not really.
+
+On my 4 year old laptop git ls-files -- <file> takes
+about .02 seconds.
+
+$ time git ls-files -- 'net/l2tp/l2tp_ip.c'
+net/l2tp/l2tp_ip.c
+
+real	0m0.013s
+user	0m0.009s
+sys	0m0.004s
+
+Even uncached, it's quite quick.
+
+# sync; echo 3 > /proc/sys/vm/drop_caches
+$ time git ls-files -- 'net/l2tp/l2tp_ip.c'
+net/l2tp/l2tp_ip.c
+
+real	0m0.079s
+user	0m0.004s
+sys	0m0.037s
+
+cheers, Joe
+
