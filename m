@@ -2,130 +2,132 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F33C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C234C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A409120776
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:06:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598605615;
-	bh=MPhtp0UtdEZ75rpOuAq7t66CaY460V2FzguTeM/ym6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oYnRLpmUx2Y1/M4f4S69vVUnlrykhgsS1Wv2Hx5tgXuPFO8lvKCI1VwzDp1Pwzcbl
-	 5CYBW3d+y9W81K8IM7trAO2eNTUxiBCNv44Vw28VPyK6uK2hdK9TUdWsYmXWJCzEEu
-	 L4L1ML97bSh3EKMCLN3Uxz6KACD/BEqYAcBUPcmY=
+	by mail.kernel.org (Postfix) with ESMTP id EDCBC2071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:06:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbgH1JGy (ORCPT
+        id S1728803AbgH1JG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:06:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44740 "EHLO mail.kernel.org"
+        Fri, 28 Aug 2020 05:06:58 -0400
+Received: from mga11.intel.com ([192.55.52.93]:26004 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728016AbgH1JGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:06:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DC1D2071B;
-        Fri, 28 Aug 2020 09:06:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598605599;
-        bh=MPhtp0UtdEZ75rpOuAq7t66CaY460V2FzguTeM/ym6U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A0bRjlHrquKlHU4zHVZhrlp9d3Y2By2Ei+MSTE1ZwDh2nnxwrAeNuRNcjYusUPAWs
-         /fr41z6y8Lw1uo6Woec2U/a+1GiY680HU//nN0Uv6Tg48dqe1rWrt3toWDq29pFbSU
-         dw7RWdVwgAn1rYS+M/bDi/PADHv4ERW79Bc2D198=
-Date:   Fri, 28 Aug 2020 11:06:51 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH kernel] serial_core: Check for port state when tty is
- in error state
-Message-ID: <20200828090651.GA1110962@kroah.com>
-References: <20200728124359.980-1-aik@ozlabs.ru>
+        id S1728016AbgH1JGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:06:55 -0400
+IronPort-SDR: GlsDsNMx4xOaIno4HOAZisms88byJCxpXcMkftYrZjND0qrJMr6ZUQtTSRPQtiNlsUboiHOTm2
+ /wXFktquJ81Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="154180503"
+X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
+   d="scan'208";a="154180503"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 02:06:54 -0700
+IronPort-SDR: KYKLewt87hnvbbAjOQkkY8A5iNbs2fJEoSetOBLplhFxK/STXZXql9eTm0JfOxXAqcfCg1adZH
+ a1DpfRsnfGRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
+   d="scan'208";a="444773272"
+Received: from liaoh-mobl1.ccr.corp.intel.com (HELO yhuang-mobile.ccr.corp.intel.com) ([10.254.212.20])
+  by orsmga004.jf.intel.com with ESMTP; 28 Aug 2020 02:06:50 -0700
+From:   Huang Ying <ying.huang@intel.com>
+To:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Huang Ying <ying.huang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dave Jiang <dave.jiang@intel.com>
+Subject: [PATCH] x86, fakenuma: Fix invalid starting node ID
+Date:   Fri, 28 Aug 2020 17:06:37 +0800
+Message-Id: <20200828090637.344320-1-ying.huang@intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728124359.980-1-aik@ozlabs.ru>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 10:43:59PM +1000, Alexey Kardashevskiy wrote:
-> At the moment opening a serial device node (such as /dev/ttyS3)
-> succeeds even if there is no actual serial device behind it.
-> Reading/writing/ioctls (most) expectantly fail as the uart port is not
-> initialized (the type is PORT_UNKNOWN) and the TTY_IO_ERROR error state
-> bit is set fot the tty.
+Commit cc9aec03e58f ("x86/numa_emulation: Introduce uniform split
+capability") uses "-1" as the starting node ID, which causes the
+strange kernel log as following, when "numa=fake=32G" is added to the
+kernel command line.
 
-That is only if there is no ldisc set for the port, right?  I don't
-think that always will be the case if the port is not initialized.
+    Faking node -1 at [mem 0x0000000000000000-0x0000000893ffffff] (35136MB)
+    Faking node 0 at [mem 0x0000001840000000-0x000000203fffffff] (32768MB)
+    Faking node 1 at [mem 0x0000000894000000-0x000000183fffffff] (64192MB)
+    Faking node 2 at [mem 0x0000002040000000-0x000000283fffffff] (32768MB)
+    Faking node 3 at [mem 0x0000002840000000-0x000000303fffffff] (32768MB)
 
-Yes, we do clear this on port open, but we clear it before the
-->activate() callback happens.
+And finally kernel BUG as following,
 
-Why not check for initialized instead?  That would seem to be what you
-want to do here instead of checking for an io error.
+    BUG: Bad page state in process swapper  pfn:00011
+    page:(____ptrval____) refcount:0 mapcount:1 mapping:(____ptrval____) index:0x55cd7e44b270 pfn:0x11
+    failed to read mapping contents, not a valid kernel address?
+    flags: 0x5(locked|uptodate)
+    raw: 0000000000000005 000055cd7e44af30 000055cd7e44af50 0000000100000006
+    raw: 000055cd7e44b270 000055cd7e44b290 0000000000000000 000055cd7e44b510
+    page dumped because: page still charged to cgroup
+    page->mem_cgroup:000055cd7e44b510
+    Modules linked in:
+    CPU: 0 PID: 0 Comm: swapper Not tainted 5.9.0-rc2 #1
+    Hardware name: Intel Corporation S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
+    Call Trace:
+     dump_stack+0x57/0x80
+     bad_page.cold+0x63/0x94
+     __free_pages_ok+0x33f/0x360
+     memblock_free_all+0x127/0x195
+     mem_init+0x23/0x1f5
+     start_kernel+0x219/0x4f5
+     secondary_startup_64+0xb6/0xc0
 
-> However syzkaller (a syscall fuzzer) found that setting line discipline
-> does not have these checks all the way down to io_serial_out() in
-> 8250_port.c (8250 is the default choice made by univ8250_console_init()).
-> As the result of PORT_UNKNOWN, uart_port::iobase is NULL which
-> a platform translates onto some address accessing which produces a crash
-> like below.
-> 
-> This adds tty_io_error() to uart_set_ldisc() to prevent the crash.
-> 
-> The example of crash on PPC64/pseries:
-> 
-> BUG: Unable to handle kernel data access on write at 0xc00a000000000001
-> Faulting instruction address: 0xc000000000c9c9cc
-> cpu 0x0: Vector: 300 (Data Access) at [c00000000c6d7800]
->     pc: c000000000c9c9cc: io_serial_out+0xcc/0xf0
->     lr: c000000000c9c9b4: io_serial_out+0xb4/0xf0
->     sp: c00000000c6d7a90
->    msr: 8000000000009033
->    dar: c00a000000000001
->  dsisr: 42000000
->   current = 0xc00000000cd22500
->   paca    = 0xc0000000035c0000   irqmask: 0x03   irq_happened: 0x01
->     pid   = 1371, comm = syz-executor.0
-> Linux version 5.8.0-rc7-le-guest_syzkaller_a+fstn1 (aik@fstn1-p1) (gcc (Ubunt
-> untu) 2.30) #660 SMP Tue Jul 28 22:29:22 AEST 2020
-> enter ? for help
-> [c00000000c6d7a90] c0000000018a8cc0 _raw_spin_lock_irq+0xb0/0xe0 (unreliable)
-> [c00000000c6d7ad0] c000000000c9bdc0 serial8250_do_set_ldisc+0x140/0x180
-> [c00000000c6d7b10] c000000000c9bea4 serial8250_set_ldisc+0xa4/0xb0
-> [c00000000c6d7b50] c000000000c91138 uart_set_ldisc+0xb8/0x160
-> [c00000000c6d7b90] c000000000c5a22c tty_set_ldisc+0x23c/0x330
-> [c00000000c6d7c20] c000000000c4c220 tty_ioctl+0x990/0x12f0
-> [c00000000c6d7d20] c00000000056357c ksys_ioctl+0x14c/0x180
-> [c00000000c6d7d70] c0000000005635f0 sys_ioctl+0x40/0x60
-> [c00000000c6d7db0] c00000000003b814 system_call_exception+0x1a4/0x330
-> [c00000000c6d7e20] c00000000000d368 system_call_common+0xe8/0x214
-> 
-> Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-> ---
-> 
-> While looking at it, I noticed that a bunch of callbacks are prone to
-> this bug and since I wanted to fix them all with minimum effort,
-> I tried checking for PORT_UNKNOWN in uart_port_check() but it breaks
-> device opening. Another approach could be checking for uart_port::iobase
-> in 8250 (and probably uart_port::membase as well) but this will make
-> the rest of the code to think the device is ok while there is no device
-> at all.
-> 
-> What would the correct approach be and what is the expectation?
+Fixes this bug via using 0 as the starting node ID.  This restores the
+original behavior before the commit cc9aec03e58f ("x86/numa_emulation:
+Introduce uniform split capability").
 
-We should probably check tty_port_initialized() on these code paths
-better, care to fix that up?
+Fixes: cc9aec03e58f ("x86/numa_emulation: Introduce uniform split capability")
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+---
+ arch/x86/mm/numa_emulation.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks,
+diff --git a/arch/x86/mm/numa_emulation.c b/arch/x86/mm/numa_emulation.c
+index c5174b4e318b..683cd12f4793 100644
+--- a/arch/x86/mm/numa_emulation.c
++++ b/arch/x86/mm/numa_emulation.c
+@@ -321,7 +321,7 @@ static int __init split_nodes_size_interleave(struct numa_meminfo *ei,
+ 					      u64 addr, u64 max_addr, u64 size)
+ {
+ 	return split_nodes_size_interleave_uniform(ei, pi, addr, max_addr, size,
+-			0, NULL, NUMA_NO_NODE);
++			0, NULL, 0);
+ }
+ 
+ static int __init setup_emu2phys_nid(int *dfl_phys_nid)
+-- 
+2.28.0
 
-greg k-h
