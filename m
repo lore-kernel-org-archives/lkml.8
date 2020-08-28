@@ -2,201 +2,115 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FBFC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E53C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A38920776
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BE1F20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:48:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgH1Rrp (ORCPT
+        id S1727115AbgH1Rsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 13:47:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58486 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725979AbgH1Rrp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 13:47:45 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9D89C061264;
-        Fri, 28 Aug 2020 10:47:44 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 2C2CB29AF41
-Received: by earth.universe (Postfix, from userid 1000)
-        id C48DE3C0C82; Fri, 28 Aug 2020 19:47:40 +0200 (CEST)
-Date:   Fri, 28 Aug 2020 19:47:40 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Jack Mitchell <ml@embed.me.uk>
-Cc:     linux-pm@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        linux-kernel@vger.kernel.org,
-        Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: Re: [PATCH] drivers: power: axp20x-battery: support setting
- charge_full_design
-Message-ID: <20200828174740.iimgpn7lzjr3cm3f@earth.universe>
-References: <20200729104913.627242-1-ml@embed.me.uk>
+        Fri, 28 Aug 2020 13:48:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54708 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725814AbgH1Rsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 13:48:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id AFEBBAF19;
+        Fri, 28 Aug 2020 17:49:17 +0000 (UTC)
+Date:   Fri, 28 Aug 2020 19:48:39 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Mel Gorman <mgorman@suse.com>
+Subject: Re: [LKP] Re: [x86/mce] 1de08dccd3: will-it-scale.per_process_ops
+ -14.1% regression
+Message-ID: <20200828174839.GD19448@zn.tnic>
+References: <20200425114414.GU26573@shao2-debian>
+ <20200425130136.GA28245@zn.tnic>
+ <20200818082943.GA65567@shbuild999.sh.intel.com>
+ <20200818200654.GA21494@agluck-desk2.amr.corp.intel.com>
+ <20200819020437.GA2605@shbuild999.sh.intel.com>
+ <20200821020259.GA90000@shbuild999.sh.intel.com>
+ <20200824151425.GF4794@zn.tnic>
+ <20200824153300.GA56944@shbuild999.sh.intel.com>
+ <20200824161238.GI4794@zn.tnic>
+ <20200825062305.GA83850@shbuild999.sh.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6auyag4duaqdgbyd"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200729104913.627242-1-ml@embed.me.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200825062305.GA83850@shbuild999.sh.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---6auyag4duaqdgbyd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, Jul 29, 2020 at 11:49:13AM +0100, Jack Mitchell wrote:
-> Signed-off-by: Jack Mitchell <ml@embed.me.uk>
-> ---
-
-^ missing long description
-
-Also the patch does not apply and needs to be rebased.
-
--- Sebastian
-
->  drivers/power/supply/axp20x_battery.c | 39 +++++++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->=20
-> diff --git a/drivers/power/supply/axp20x_battery.c b/drivers/power/supply=
-/axp20x_battery.c
-> index fe96f77bffa7..8ce4ebe7ccd5 100644
-> --- a/drivers/power/supply/axp20x_battery.c
-> +++ b/drivers/power/supply/axp20x_battery.c
-> @@ -60,6 +60,7 @@
-> =20
->  #define AXP20X_V_OFF_MASK		GENMASK(2, 0)
-> =20
-> +#define AXP20X_BAT_MAX_CAP_VALID	BIT(7)
-> =20
->  struct axp20x_batt_ps;
-> =20
-> @@ -86,6 +87,7 @@ struct axp20x_batt_ps {
->  	struct axp20x_thermal_sensor sensor;
->  	/* Maximum constant charge current */
->  	unsigned int max_ccc;
-> +	unsigned int charge_full_design;
->  	const struct axp_data	*data;
+On Tue, Aug 25, 2020 at 02:23:05PM +0800, Feng Tang wrote:
+> Also one good news is, we seem to identify the 2 key percpu variables
+> out of the list mentioned in previous email:  
+> 	'arch_freq_scale'
+> 	'tsc_adjust'
+> 
+> These 2 variables are accessed in 2 hot call stacks (for this 288 CPU
+> Xeon Phi platform):
+> 
+>   - arch_freq_scale is accessed in scheduler tick 
+> 	  arch_scale_freq_tick+0xaf/0xc0
+> 	  scheduler_tick+0x39/0x100
+> 	  update_process_times+0x3c/0x50
+> 	  tick_sched_handle+0x22/0x60
+> 	  tick_sched_timer+0x37/0x70
+> 	  __hrtimer_run_queues+0xfc/0x2a0
+> 	  hrtimer_interrupt+0x122/0x270
+> 	  smp_apic_timer_interrupt+0x6a/0x150
+> 	  apic_timer_interrupt+0xf/0x20
+> 
+>   - tsc_adjust is accessed in idle entrance
+> 	  tsc_verify_tsc_adjust+0xeb/0xf0
+> 	  arch_cpu_idle_enter+0xc/0x20
+> 	  do_idle+0x91/0x280
+> 	  cpu_startup_entry+0x19/0x20
+> 	  start_kernel+0x4f4/0x516
+> 	  secondary_startup_64+0xb6/0xc0
+> 
+> From systemmap file, for bad kernel these 2 sit in one cache line, while
+> for good kernel they sit in 2 separate cache lines.
+> 
+> It also explains why it turns from a regression to an improvement with
+> updated gcc/kconfig, as the cache line sharing situation is reversed.
+> 
+> The direct patch I can think of is to make 'tsc_adjust' cache aligned
+> to separate these 2 'hot' variables. How do you think?
+> 
+> --- a/arch/x86/kernel/tsc_sync.c
+> +++ b/arch/x86/kernel/tsc_sync.c
+> @@ -29,7 +29,7 @@ struct tsc_adjust {
+>  	bool		warned;
 >  };
-> =20
-> @@ -260,6 +262,10 @@ static int axp20x_battery_get_prop(struct power_supp=
-ly *psy,
->  		val->intval =3D POWER_SUPPLY_HEALTH_GOOD;
->  		break;
-> =20
-> +	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
-> +		val->intval =3D axp20x_batt->charge_full_design;
-> +		break;
-> +
+>  
+> -static DEFINE_PER_CPU(struct tsc_adjust, tsc_adjust);
+> +static DEFINE_PER_CPU_ALIGNED(struct tsc_adjust, tsc_adjust);
 
-So it reports 0 instead of the hardware information before
-setting it once when no setup happens through DT?
+So why don't you define both variables with DEFINE_PER_CPU_ALIGNED and
+check if all your bad measurements go away this way?
 
--- Sebastian
+You'd also need to check whether there's no detrimental effect from
+this change on other, i.e., !KNL platforms, and I think there won't
+be because both variables will be in separate cachelines then and all
+should be good.
 
->  	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
->  		ret =3D axp20x_get_constant_charge_current(axp20x_batt,
->  							 &val->intval);
-> @@ -401,6 +407,30 @@ static int axp20x_battery_set_max_voltage(struct axp=
-20x_batt_ps *axp20x_batt,
->  				  AXP20X_CHRG_CTRL1_TGT_VOLT, val);
->  }
-> =20
-> +static int axp20x_set_charge_full_design(struct axp20x_batt_ps *axp_batt,
-> +					      int charge_full_uah)
-> +{
-> +	/* (Unit: 1.456mAh) */
-> +	int max_capacity_units =3D charge_full_uah / 1456;
-> +	int ret;
-> +
-> +	u8 max_capacity_msb =3D (max_capacity_units & 0x7F00) >> 8;
-> +	u8 max_capacity_lsb =3D (max_capacity_units & 0xFF);
-> +
-> +	axp_batt->charge_full_design =3D max_capacity_units * 1456;
-> +
-> +	max_capacity_msb |=3D AXP20X_BAT_MAX_CAP_VALID;
-> +
-> +	ret =3D regmap_write(axp_batt->regmap, AXP288_FG_DES_CAP0_REG,
-> +			   max_capacity_lsb);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_write(axp_batt->regmap, AXP288_FG_DES_CAP1_REG,
-> +			    max_capacity_msb);
-> +}
-> +
->  static int axp20x_set_constant_charge_current(struct axp20x_batt_ps *axp=
-_batt,
->  					      int charge_current)
->  {
-> @@ -492,6 +522,7 @@ static enum power_supply_property axp20x_battery_prop=
-s[] =3D {
->  	POWER_SUPPLY_PROP_STATUS,
->  	POWER_SUPPLY_PROP_VOLTAGE_NOW,
->  	POWER_SUPPLY_PROP_CURRENT_NOW,
-> +	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
->  	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
->  	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX,
->  	POWER_SUPPLY_PROP_HEALTH,
-> @@ -675,6 +706,7 @@ static int axp20x_power_probe(struct platform_device =
-*pdev)
->  	if (!power_supply_get_battery_info(axp20x_batt->batt, &info)) {
->  		int vmin =3D info.voltage_min_design_uv;
->  		int ccc =3D info.constant_charge_current_max_ua;
-> +		int cfd =3D info.charge_full_design_uah;
-> =20
->  		if (vmin > 0 && axp20x_set_voltage_min_design(axp20x_batt,
->  							      vmin))
-> @@ -692,6 +724,13 @@ static int axp20x_power_probe(struct platform_device=
- *pdev)
->  			axp20x_batt->max_ccc =3D ccc;
->  			axp20x_set_constant_charge_current(axp20x_batt, ccc);
->  		}
-> +
-> +		if (cfd > 0 && axp20x_set_charge_full_design(axp20x_batt,
-> +							       cfd)) {
-> +			dev_err(&pdev->dev,
-> +				"couldn't set charge_full_design\n");
-> +			axp20x_batt->charge_full_design =3D 0;
-> +		}
->  	}
-> =20
->  	error =3D axp20x_thermal_register_sensor(pdev, axp20x_batt);
-> --=20
-> 2.28.0
->=20
+Hmm?
 
---6auyag4duaqdgbyd
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+Regards/Gruss,
+    Boris.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9JQzwACgkQ2O7X88g7
-+prXTA//Qa9UDgZshqfY+c4VrYiZSbcx7tDahRBRWF1trTeXBtgfozIhlWCX1UPo
-RnLURYl+n0fTykBdjW42panoCxUWo8+45wyAigmR+mnSDN+pzJgPQsb1GKHipuLN
-gm3pVVEH+346GeJrDJbcAMrB50WEf0KQqQWmweG3lA77l3VcOtCYMJLiMyw5W94A
-23PYpvVZRBSsN6lje6e9XYt/DLeESXorecz3TI8lbUHTMaepXFX7aaWUZR9ey99t
-1075Drpnh/r3eo4tZwwiXhFyh6Yk69mrU62q8O7ePtHzOWJtLVJYO/mt2/yKSAyN
-xjae8qEYUZGfIkf0t8gfwXewRo42yeBkoKAoeWrdHlUIlC5yplPEea2lkfDD73Ig
-DBWBdmoAj1AJGhgdXJo6FYqINoTd6heptTrtu0ednwVhS2cqEFTLUi9u3Jois2fL
-iz/D79tRaeHTovH/f8RVYjJLZ3tKB864C2N08i1NArDy7H0ocapLwvoWrEEvx/sT
-TieBT8qTFes1R7y4QHd3Ni/ZesUIfsf8S7SVraRlvuqpZcyax7GsAfe1nVmmpKtO
-lnpY4YcvLAz7RWasZx7eC/GOXynr0D3k69FaUwtYDyfAWHCM87g7GrjDIt4KEVhk
-NucqgO89JEx+rNYEQYS7ILFZ5e5frBSlxWZ6vFZxLXQJaM1OfpU=
-=Upaq
------END PGP SIGNATURE-----
-
---6auyag4duaqdgbyd--
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
