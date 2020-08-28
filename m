@@ -2,110 +2,78 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8D8C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F7AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5469E2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:32:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=irrelevant.dk header.i=@irrelevant.dk header.b="htl0u7Z3"
+	by mail.kernel.org (Postfix) with ESMTP id 741882071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:32:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbgH1HcG (ORCPT
+        id S1728493AbgH1Hcv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:32:06 -0400
-Received: from charlie.dont.surf ([128.199.63.193]:35360 "EHLO
-        charlie.dont.surf" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbgH1HcE (ORCPT
+        Fri, 28 Aug 2020 03:32:51 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:1155 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbgH1Hcu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:32:04 -0400
-X-Greylist: delayed 544 seconds by postgrey-1.27 at vger.kernel.org; Fri, 28 Aug 2020 03:32:04 EDT
-Received: from apples.localdomain (80-167-98-190-cable.dk.customer.tdc.net [80.167.98.190])
-        by charlie.dont.surf (Postfix) with ESMTPSA id 11AADBF554;
-        Fri, 28 Aug 2020 07:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=irrelevant.dk;
-        s=default; t=1598599379;
-        bh=0hzAo9FTat39DkkPYrYwGvm52R/0SpyDYrV4O9m/u7c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=htl0u7Z35SclLEMyhH4MfeourXPOjtvoZHDyN0JZGfFriXOt+HusIjuIDs54Xsn47
-         nOAoe56SQp0EebyeA3msS0A1AdqKuvm3XaOeo2pL8SlltuQBCt1VNBWmD9OLmeuXjP
-         AKTJ4aPQeEjvQkgTUEGgiafV+uP+rlGJwbqdU9WloM1zN8IaRmKnmG8zRf/BbT0nfS
-         yTwLoSIiIpMxAvbwq0OFoYpqtwMygTn4+k/rLV0zlOuDUf+Ex7NAlZamS7mTLNWDdj
-         INEEONODivSphxl2R6JVW6m3abLeQee6xf70FoJioGHuB+bq2bIsuhfpQCvHZqPSWu
-         Az6aGy7TyXqDA==
-Date:   Fri, 28 Aug 2020 09:22:53 +0200
-From:   Klaus Jensen <its@irrelevant.dk>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     Niklas Cassel <Niklas.Cassel@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] null_blk: add support for max open/active zone limit
- for zoned devices
-Message-ID: <20200828072253.GA1331347@apples.localdomain>
-References: <20200827135018.63644-1-niklas.cassel@wdc.com>
- <CY4PR04MB3751526DC5833902749EBE48E7520@CY4PR04MB3751.namprd04.prod.outlook.com>
+        Fri, 28 Aug 2020 03:32:50 -0400
+X-Originating-IP: 90.89.180.255
+Received: from lhopital-XPS-13-9360 (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
+        (Authenticated sender: kevin.lhopital@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id E938124000A;
+        Fri, 28 Aug 2020 07:32:47 +0000 (UTC)
+Date:   Fri, 28 Aug 2020 09:32:47 +0200
+From:   =?UTF-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        yong.deng@magewell.com, p.zabel@pengutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH 5/7] media: sunxi: sun6i-csi: Add support of MIPI CSI-2
+ for A83T
+Message-ID: <20200828093247.2e10b561@lhopital-XPS-13-9360>
+In-Reply-To: <20200827154119.ljxvjb2fe7xeg2xo@gilmour.lan>
+References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
+        <20200821145935.20346-6-kevin.lhopital@bootlin.com>
+        <20200825143704.qkg2re5bxm2cufnd@gilmour.lan>
+        <20200826111728.21d52c34@lhopital-XPS-13-9360>
+        <20200827154119.ljxvjb2fe7xeg2xo@gilmour.lan>
+Organization: bootlin
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
-Content-Disposition: inline
-In-Reply-To: <CY4PR04MB3751526DC5833902749EBE48E7520@CY4PR04MB3751.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+Le Thu, 27 Aug 2020 17:41:19 +0200,
+Maxime Ripard <maxime@cerno.tech> a écrit :
 
---NzB8fVQJ5HfG6fxh
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Wed, Aug 26, 2020 at 11:17:28AM +0200, Kévin L'hôpital wrote:
+> > > > +	mdelay(10);    
+> > > 
+> > > Why do you need an mdelay here?  
+> > 
+> > yes a msleep could be more correct here.  
+> 
+> My question was more about whether/why you need one in the first place,
+> not necessarily how you would implement that delay.
+> 
+> Maxime
 
-On Aug 28 07:06, Damien Le Moal wrote:
-> On 2020/08/27 22:50, Niklas Cassel wrote:
-> > +static blk_status_t null_finish_zone(struct nullb_device *dev, struct =
-blk_zone *zone)
-> > +{
-> > +	if (zone->type =3D=3D BLK_ZONE_TYPE_CONVENTIONAL)
-> > +		return BLK_STS_IOERR;
-> > +
-> > +	switch (zone->cond) {
-> > +	case BLK_ZONE_COND_FULL:
-> > +		/* finish operation on full is not an error */
-> > +		return BLK_STS_OK;
-> > +	case BLK_ZONE_COND_EMPTY:
-> > +		if (!null_manage_zone_resources(dev, zone))
->=20
-> OK. So you are hitting a fuzzy case here that is not actually well descri=
-bed in
-> the standards. That is, does finishing an empty zone necessarilly imply a
-> temporary transition through imp open ? Which you are assuming is a yes h=
-ere.
-> Personally, I would say that is not necessary, but no strong feeling eith=
-er way.
->=20
+It was a mistake, I have removed it.
+Thanks for the answer.
+Kévin
 
-For ZNS, the spec is pretty clear that ZSE to ZSF is a legal direct
-transition. So I don't think the transition should be allowed to fail
-due to a lack of resources.
-
---NzB8fVQJ5HfG6fxh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEUigzqnXi3OaiR2bATeGvMW1PDekFAl9IsMgACgkQTeGvMW1P
-DekA5Af/SC+I2hGvEBx86dF1Cb0s1pQyVLvhGOADnaCC8Ic1C840NJ/USCBMv7Eo
-8h8/2VmjD/DHttLE/eIAbOWzO2ij7PYJg6Dge4joBEZTg+4yYAt8I+TyfrqRGL5j
-FsNgtIlmnPSOvvjYkzLYrMQ/KHm9mk5q/gZcJIOiu02O7a3TOAI0jXuFWxfjq0s2
-u5v1k936yY01g5Ce4AlR5WSD4cSR4GwkGJNXza9yyu1KjnozCx4ahBVH4acy3xow
-H+tUloNIieacv0u9bAmeqPpKMdRhj+USCZkm9kXEP/SUeF/vPY12QBgSnWVxF9AU
-qd/zt+tcRzfzTzvulSfcpdgm/UtILQ==
-=blqO
------END PGP SIGNATURE-----
-
---NzB8fVQJ5HfG6fxh--
+-- 
+Kevin L'Hopital, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
