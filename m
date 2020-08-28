@@ -2,82 +2,219 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C15FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDBDC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 665BD2086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC14F2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:14:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9FgIFFC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgH1ONS (ORCPT
+        id S1726563AbgH1OOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:13:18 -0400
-Received: from mga04.intel.com ([192.55.52.120]:20238 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbgH1ONP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:13:15 -0400
-IronPort-SDR: n3b2WS4BrVof+fy4+0WE6rB1L80F6lGjb8GZ5oHqhUMY2eBvzQrl38HEfox7s8PIRAUb+PqOyQ
- 0Xemhzjs/UMQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="154082410"
-X-IronPort-AV: E=Sophos;i="5.76,364,1592895600"; 
-   d="scan'208";a="154082410"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 07:13:14 -0700
-IronPort-SDR: VeRSSMCHykQpfxo/L3BXcxPdq9kBqY73nr0AMvWIFwS6X8HMgyYhIC4N1XQGokcnFivLgrm0rh
- /4IYuP855YtA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,364,1592895600"; 
-   d="scan'208";a="403763094"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 28 Aug 2020 07:13:11 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 28 Aug 2020 17:13:11 +0300
-Date:   Fri, 28 Aug 2020 17:13:11 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Badhri Jagan Sridharan <badhri@google.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/14] usb: typec: tcpm: Implement enabling Auto
- Discharge disconnect support
-Message-ID: <20200828141311.GJ174928@kuha.fi.intel.com>
-References: <20200825042210.300632-1-badhri@google.com>
- <20200825042210.300632-13-badhri@google.com>
+        Fri, 28 Aug 2020 10:14:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbgH1OOU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 10:14:20 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F63C061233;
+        Fri, 28 Aug 2020 07:14:18 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id q9so1082821wmj.2;
+        Fri, 28 Aug 2020 07:14:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=sycAbAcK1rdW3N5HoDcjcIO5PVBl/0B4H7zbWTI4nyw=;
+        b=Z9FgIFFCv3YqPY7sQpiIUIYbZehaP6xmxmMsbB8/LjGrS8m1oUcW1R/Ip6E4p9D0wS
+         OLvfpi1MqJiMmDds7uRx8VEcn65CF5SvR9Ik+1YYS+GkrbSjvMCsdiJW8ssQLokCHLDR
+         TA56drkx2DV0uDvtCdkYrzSDLUJEanhNyc5dpza4IZx6OKr+2KMx92bpXBtsronWaJ7y
+         B5w+ZWa5//b6d6+yisi2jMK1dX5XmLYzGuhR4PBWvFulNlESw/YqWCUyXfrdDA1xwaUc
+         dErJWft7b/y44MM2WYc4eKT/hoCbF1nzH0FUKcHFpCfpxtHuOhVaCx5w7luyt9Bhq7Ud
+         o4wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sycAbAcK1rdW3N5HoDcjcIO5PVBl/0B4H7zbWTI4nyw=;
+        b=TvnfR5EFBYncvNIN0QRPr7MAI1sJTh46tC8P4CUNQfrK6XMoVEZneNwfFxJWmk8u6+
+         VzBXuc+asjdf6NmqDsU+VxRIELGrv++fA4QYMSOPwhfmIuqIdQGeGsWc/G0ctPF91NEF
+         O+Y8p+cYjtnvo0VWwQNQ56TM3HpINwE+hiVPYEcFqx87U5Ib0WJweAk6ShLbHpDW+yOl
+         HgAR3FCnfIB41ovnwZknupjUFULqvd3B1oC6alyO5d7R9UVw4DHhrQN7dmXQiYFoxNSt
+         xCIGlTNYM+h7974oecM1+pASh8bzOlzuTP6e6N3d9aM0MCHfx5vN2MvwK3wgExLd2YqT
+         7+Cg==
+X-Gm-Message-State: AOAM5326LwlkfiaOc2AcQLW94JIh816RcsN4gEtdq0qMb5LNbjB6CCMo
+        gLU5HPDgSLW3oBAeLp1eqNY=
+X-Google-Smtp-Source: ABdhPJwp+FcvL5lnhKDafDKCCaabbsOmowgmmteE2IHYeExQ7CTxo9gCSAS2LEXZpnLmHykMj2K0+A==
+X-Received: by 2002:a1c:a746:: with SMTP id q67mr1956344wme.128.1598624057520;
+        Fri, 28 Aug 2020 07:14:17 -0700 (PDT)
+Received: from alinde.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
+        by smtp.gmail.com with ESMTPSA id t4sm2248235wre.30.2020.08.28.07.14.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 07:14:16 -0700 (PDT)
+From:   albert.linde@gmail.com
+X-Google-Original-From: alinde@google.com
+To:     akpm@linux-foundation.org, bp@alien8.de, mingo@redhat.com,
+        corbet@lwn.net, tglx@linutronix.de, arnd@arndb.de
+Cc:     akinobu.mita@gmail.com, hpa@zytor.com, viro@zeniv.linux.org.uk,
+        glider@google.com, andreyknvl@google.com, dvyukov@google.com,
+        elver@google.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        x86@kernel.org, albert.linde@gmail.com,
+        Albert van der Linde <alinde@google.com>
+Subject: [PATCH v2 3/3] x86: add failure injection to get/put/clear_user
+Date:   Fri, 28 Aug 2020 14:13:44 +0000
+Message-Id: <20200828141344.2277088-4-alinde@google.com>
+X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
+In-Reply-To: <20200828141344.2277088-1-alinde@google.com>
+References: <20200828141344.2277088-1-alinde@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825042210.300632-13-badhri@google.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 09:22:08PM -0700, Badhri Jagan Sridharan wrote:
-> TCPCI spec allows TCPC hardware to autonomously discharge the vbus
-> capacitance upon disconnect. The expectation is that the TCPM enables
-> AutoDischargeDisconnect while entering SNK/SRC_ATTACHED states. Hardware
-> then automously discharges vbus when the vbus falls below a certain
-> threshold i.e. VBUS_SINK_DISCONNECT_THRESHOLD.
-> 
-> Apart from enabling the vbus discharge circuit, AutoDischargeDisconnect
-> is also used a flag to move TCPCI based TCPC implementations into
-> Attached.Snk/Attached.Src state as mentioned in
-> Figure 4-15. TCPC State Diagram before a Connection of the
-> USB Type-C Port Controller Interface Specification.
-> In such TCPC implementations, setting AutoDischargeDisconnect would
-> prevent TCPC into entering "Connection_Invalid" state as well.
-> 
-> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
-> Change-Id: I09c407eb228d69eb1259008eeb14c429b0fda765
+From: Albert van der Linde <alinde@google.com>
 
-It looks like this patch is also formated a bit differently compared
-to the others.
+To test fault-tolerance of user memory acceses in x86, add support for
+fault injection.
 
-thanks,
+Make both put_user() and get_user() fail with -EFAULT, and clear_user()
+fail by not clearing any bytes.
 
+Signed-off-by: Albert van der Linde <alinde@google.com>
+---
+v2:
+ - no significant changes
+---
+ arch/x86/include/asm/uaccess.h | 68 +++++++++++++++++++---------------
+ arch/x86/lib/usercopy_64.c     |  3 ++
+ 2 files changed, 42 insertions(+), 29 deletions(-)
+
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index ecefaffd15d4..004eeee2199a 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -5,6 +5,7 @@
+  * User space memory access functions
+  */
+ #include <linux/compiler.h>
++#include <linux/fault-inject-usercopy.h>
+ #include <linux/kasan-checks.h>
+ #include <linux/string.h>
+ #include <asm/asm.h>
+@@ -175,11 +176,16 @@ extern int __get_user_bad(void);
+ 	register __inttype(*(ptr)) __val_gu asm("%"_ASM_DX);		\
+ 	__chk_user_ptr(ptr);						\
+ 	might_fault();							\
+-	asm volatile("call __get_user_%P4"				\
+-		     : "=a" (__ret_gu), "=r" (__val_gu),		\
++	if (should_fail_usercopy()) {					\
++		(x) = 0;						\
++		__ret_gu = -EFAULT;					\
++	} else {							\
++		asm volatile("call __get_user_%P4"			\
++			: "=a" (__ret_gu), "=r" (__val_gu),		\
+ 			ASM_CALL_CONSTRAINT				\
+-		     : "0" (ptr), "i" (sizeof(*(ptr))));		\
+-	(x) = (__force __typeof__(*(ptr))) __val_gu;			\
++			: "0" (ptr), "i" (sizeof(*(ptr))));		\
++		(x) = (__force __typeof__(*(ptr))) __val_gu;		\
++	}								\
+ 	__builtin_expect(__ret_gu, 0);					\
+ })
+ 
+@@ -236,31 +242,35 @@ extern void __put_user_8(void);
+  *
+  * Return: zero on success, or -EFAULT on error.
+  */
+-#define put_user(x, ptr)					\
+-({								\
+-	int __ret_pu;						\
+-	__typeof__(*(ptr)) __pu_val;				\
+-	__chk_user_ptr(ptr);					\
+-	might_fault();						\
+-	__pu_val = x;						\
+-	switch (sizeof(*(ptr))) {				\
+-	case 1:							\
+-		__put_user_x(1, __pu_val, ptr, __ret_pu);	\
+-		break;						\
+-	case 2:							\
+-		__put_user_x(2, __pu_val, ptr, __ret_pu);	\
+-		break;						\
+-	case 4:							\
+-		__put_user_x(4, __pu_val, ptr, __ret_pu);	\
+-		break;						\
+-	case 8:							\
+-		__put_user_x8(__pu_val, ptr, __ret_pu);		\
+-		break;						\
+-	default:						\
+-		__put_user_x(X, __pu_val, ptr, __ret_pu);	\
+-		break;						\
+-	}							\
+-	__builtin_expect(__ret_pu, 0);				\
++#define put_user(x, ptr)						\
++({									\
++	int __ret_pu;							\
++	__typeof__(*(ptr)) __pu_val;					\
++	__chk_user_ptr(ptr);						\
++	might_fault();							\
++	__pu_val = x;							\
++	if (should_fail_usercopy()) {					\
++		__ret_pu = -EFAULT;					\
++	} else {							\
++		switch (sizeof(*(ptr))) {				\
++		case 1:							\
++			__put_user_x(1, __pu_val, ptr, __ret_pu);	\
++			break;						\
++		case 2:							\
++			__put_user_x(2, __pu_val, ptr, __ret_pu);	\
++			break;						\
++		case 4:							\
++			__put_user_x(4, __pu_val, ptr, __ret_pu);	\
++			break;						\
++		case 8:							\
++			__put_user_x8(__pu_val, ptr, __ret_pu);		\
++			break;						\
++		default:						\
++			__put_user_x(X, __pu_val, ptr, __ret_pu);	\
++			break;						\
++		}							\
++	}								\
++	__builtin_expect(__ret_pu, 0);					\
+ })
+ 
+ #define __put_user_size(x, ptr, size, label)				\
+diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
+index b0dfac3d3df7..7747cda5780d 100644
+--- a/arch/x86/lib/usercopy_64.c
++++ b/arch/x86/lib/usercopy_64.c
+@@ -7,6 +7,7 @@
+  * Copyright 2002 Andi Kleen <ak@suse.de>
+  */
+ #include <linux/export.h>
++#include <linux/fault-inject-usercopy.h>
+ #include <linux/uaccess.h>
+ #include <linux/highmem.h>
+ 
+@@ -50,6 +51,8 @@ EXPORT_SYMBOL(__clear_user);
+ 
+ unsigned long clear_user(void __user *to, unsigned long n)
+ {
++	if (should_fail_usercopy())
++		return n;
+ 	if (access_ok(to, n))
+ 		return __clear_user(to, n);
+ 	return n;
 -- 
-heikki
+2.28.0.402.g5ffc5be6b7-goog
+
