@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC164C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B968AC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9A522080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F69A2080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:07:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vZkjjk8J";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aqZrJT3P"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TjFgHUnh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a4TSuQah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgH1BHB (ORCPT
+        id S1728203AbgH1BHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 21:07:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgH1BHA (ORCPT
+        Thu, 27 Aug 2020 21:07:07 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41876 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgH1BHF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 21:07:00 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47923C061264
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 18:07:00 -0700 (PDT)
+        Thu, 27 Aug 2020 21:07:05 -0400
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598576818;
+        s=2020; t=1598576823;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=iNNXSlfXZDxUzeu1VN6dH2yYhBohpnCB4yaxuullQIQ=;
-        b=vZkjjk8JM9xIrW4/dn3cVQFw8P3/zvuoKEAlx+EguFj7HGcYp3gp4PUiBtTuZ+wCdRwZNe
-        gaCxGBiaw/+BSeq064etwl+hCUf/yZ6EEYoLRUsDdTvo+880/AcguvnaGa5YJ99xCVI0rc
-        5/tOQBkPd1FqYmDBIcJ28vPZjiOPLxmhZREidSF9exix6AsrgWBgV42JoO01ZjdncUwPl1
-        cI2pfS6q14zL7sDAEe/JlQVi4WJCmVGKRkH8/GvWQEBCgzrmSxLCyAZjfRc1y3OatuaVjh
-        XJfdbAQmwwJ+ksZzod9JgoJalgNsdFsJbgToNyKkWrW2aGQZTmujs6CzgBmM9A==
+        bh=5IsFEQ2Eog5P+tP1GO7w5qYzNlrjSXGVQKMj3BCXPpI=;
+        b=TjFgHUnh91oXg8QkHtGOBI8E6nRwxWRVh1CeJ1lkf5Tyvio04ULx654s6OROxuobtXVjAM
+        6V90iaHLrYfWfCt6gI5jtcdCK71I5kmr2sut4PZT7++CzqqEyjmqt1n0FTsF3FYK22h5D0
+        iKQZDQAlxINNNeWSbal9IhGYBKcCCqqiRWoV2AhFlnzspHfAEzOofr6wwbnmaC4GxSbWg/
+        S8/L78Rh8fvGxg5aVWjHtstKCKe05Ha17a2gyl2nkK78xwWEJlYr41dljPh43nRgPN/Hhj
+        myAF7VvuHQJWsdlcrAyXOT5YWWhB3N+QnvuD+oX/mwoTZC5OrmtUKTWaiddjIg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598576818;
+        s=2020e; t=1598576823;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=iNNXSlfXZDxUzeu1VN6dH2yYhBohpnCB4yaxuullQIQ=;
-        b=aqZrJT3PWdLpg1FMScIRV7vjbnfmNUJ6f26kSVvDhTWe7hSUtXszGXr7LMsOBTHuYZJx4z
-        BkPOP95psvmYTzDA==
+        bh=5IsFEQ2Eog5P+tP1GO7w5qYzNlrjSXGVQKMj3BCXPpI=;
+        b=a4TSuQahA4c8tb+Y3+kNa+5/7mWU4NSgttfbyqS4LiJDGWsZL3+jpPYX+GWby1f+5Wb7o5
+        LSzeczoTNZMPakDw==
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -57,9 +54,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
         "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Subject: [PATCH v1 2/5] seqlock: Use unique prefix for seqcount_t property accessors
-Date:   Fri, 28 Aug 2020 03:07:07 +0200
-Message-Id: <20200828010710.5407-3-a.darwish@linutronix.de>
+Subject: [PATCH v1 3/5] seqlock: seqcount_t: Implement all read APIs as statement expressions
+Date:   Fri, 28 Aug 2020 03:07:08 +0200
+Message-Id: <20200828010710.5407-4-a.darwish@linutronix.de>
 In-Reply-To: <20200828010710.5407-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
  <20200828010710.5407-1-a.darwish@linutronix.de>
@@ -70,92 +67,185 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At seqlock.h, the following set of functions:
+The sequence counters read APIs are implemented as CPP macros, so they
+can take either seqcount_t or any of the seqcount_LOCKTYPE_t variants.
+Such macros then get *directly* transformed to internal C functions that
+only take plain seqcount_t.
 
-    - __seqcount_ptr()
-    - __seqcount_preemptible()
-    - __seqcount_assert()
+Further commits need access to seqcount_LOCKTYPE_t inside of the actual
+read APIs code. Thus transform all of the seqcount read APIs to pure GCC
+statement expressions instead.
 
-act as plain seqcount_t "property" accessors. Meanwhile, the following
-group:
+This will not break type-safety: all of the transformed APIs resolve to
+a _Generic() selection that does not have a "default" case.
 
-    - __seqcount_ptr()
-    - __seqcount_lock_preemptible()
-    - __seqcount_assert_lock_held()
+This will also not affect the transformed APIs readability: previously
+added kernel-doc above all of seqlock.h functions makes the expectations
+quite clear for call-site developers.
 
-act as the equivalent set, but in the generic form, taking either
-seqcount_t or any of the seqcount_LOCKTYPE_t variants.
-
-This is quite confusing, especially the first member where it is called
-exactly the same in both groups.
-
-Differentiate the first group by using "__seqcount_t_" as prefix. This
-also conforms with the rest of seqlock.h naming conventions.
-
-While at it, also constify the property accessors first parameter where
-appropriate.
-
-References: 55f3560df975 ("seqlock: Extend seqcount API with associated locks")
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 ---
- include/linux/seqlock.h | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ include/linux/seqlock.h | 98 ++++++++++++++++++++---------------------
+ 1 file changed, 49 insertions(+), 49 deletions(-)
 
 diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-index 598af597f74e..5470e9cd52ce 100644
+index 5470e9cd52ce..d114a9f4e9d9 100644
 --- a/include/linux/seqlock.h
 +++ b/include/linux/seqlock.h
-@@ -183,13 +183,13 @@ __seqcount_##locktype##_ptr(seqcount_##locktype##_t *s)			\
+@@ -182,6 +182,12 @@ __seqcount_##locktype##_ptr(seqcount_##locktype##_t *s)			\
+ 	return &s->seqcount;						\
  }									\
  									\
++static __always_inline unsigned						\
++__seqcount_##locktype##_sequence(const seqcount_##locktype##_t *s)	\
++{									\
++	return READ_ONCE(s->seqcount.sequence);				\
++}									\
++									\
  static __always_inline bool						\
--__seqcount_##locktype##_preemptible(seqcount_##locktype##_t *s)		\
-+__seqcount_##locktype##_preemptible(const seqcount_##locktype##_t *s)	\
+ __seqcount_##locktype##_preemptible(const seqcount_##locktype##_t *s)	\
  {									\
- 	return preemptible;						\
- }									\
- 									\
- static __always_inline void						\
--__seqcount_##locktype##_assert(seqcount_##locktype##_t *s)		\
-+__seqcount_##locktype##_assert(const seqcount_##locktype##_t *s)	\
- {									\
- 	__SEQ_LOCK(lockdep_assert_held(lockmember));			\
- }
-@@ -198,17 +198,17 @@ __seqcount_##locktype##_assert(seqcount_##locktype##_t *s)		\
-  * __seqprop() for seqcount_t
-  */
- 
--static inline seqcount_t *__seqcount_ptr(seqcount_t *s)
-+static inline seqcount_t *__seqcount_t_ptr(seqcount_t *s)
- {
+@@ -203,6 +209,11 @@ static inline seqcount_t *__seqcount_t_ptr(seqcount_t *s)
  	return s;
  }
  
--static inline bool __seqcount_preemptible(seqcount_t *s)
-+static inline bool __seqcount_t_preemptible(const seqcount_t *s)
++static inline unsigned __seqcount_t_sequence(const seqcount_t *s)
++{
++	return READ_ONCE(s->sequence);
++}
++
+ static inline bool __seqcount_t_preemptible(const seqcount_t *s)
  {
  	return false;
- }
+@@ -248,6 +259,7 @@ SEQCOUNT_LOCKTYPE(ww_mutex,	struct ww_mutex,	true,	&s->lock->base)
+ 	__seqprop_case((s),	ww_mutex,	prop))
  
--static inline void __seqcount_assert(seqcount_t *s)
-+static inline void __seqcount_t_assert(const seqcount_t *s)
- {
- 	lockdep_assert_preemption_disabled();
- }
-@@ -236,12 +236,11 @@ SEQCOUNT_LOCKTYPE(ww_mutex,	struct ww_mutex,	true,	&s->lock->base)
- #define SEQCNT_MUTEX_ZERO(name, lock)		SEQCOUNT_LOCKTYPE_ZERO(name, lock)
- #define SEQCNT_WW_MUTEX_ZERO(name, lock) 	SEQCOUNT_LOCKTYPE_ZERO(name, lock)
+ #define __seqcount_ptr(s)		__seqprop(s, ptr)
++#define __seqcount_sequence(s)		__seqprop(s, sequence)
+ #define __seqcount_lock_preemptible(s)	__seqprop(s, preemptible)
+ #define __seqcount_assert_lock_held(s)	__seqprop(s, assert)
  
+@@ -266,21 +278,19 @@ SEQCOUNT_LOCKTYPE(ww_mutex,	struct ww_mutex,	true,	&s->lock->base)
+  * Return: count to be passed to read_seqcount_retry()
+  */
+ #define __read_seqcount_begin(s)					\
+-	__read_seqcount_t_begin(__seqcount_ptr(s))
 -
- #define __seqprop_case(s, locktype, prop)				\
- 	seqcount_##locktype##_t: __seqcount_##locktype##_##prop((void *)(s))
+-static inline unsigned __read_seqcount_t_begin(const seqcount_t *s)
+-{
+-	unsigned ret;
+-
+-repeat:
+-	ret = READ_ONCE(s->sequence);
+-	if (unlikely(ret & 1)) {
+-		cpu_relax();
+-		goto repeat;
+-	}
+-	kcsan_atomic_next(KCSAN_SEQLOCK_REGION_MAX);
+-	return ret;
+-}
++({									\
++	unsigned seq;							\
++									\
++	do {								\
++		seq = __seqcount_sequence(s);				\
++		if (likely(! (seq & 1)))				\
++			break;						\
++		cpu_relax();						\
++	} while (true);							\
++									\
++	kcsan_atomic_next(KCSAN_SEQLOCK_REGION_MAX);			\
++	seq;								\
++})
  
- #define __seqprop(s, prop) _Generic(*(s),				\
--	seqcount_t:		__seqcount_##prop((void *)(s)),		\
-+	seqcount_t:		__seqcount_t_##prop((void *)(s)),	\
- 	__seqprop_case((s),	raw_spinlock,	prop),			\
- 	__seqprop_case((s),	spinlock,	prop),			\
- 	__seqprop_case((s),	rwlock,		prop),			\
+ /**
+  * raw_read_seqcount_begin() - begin a seqcount_t read section w/o lockdep
+@@ -289,14 +299,12 @@ static inline unsigned __read_seqcount_t_begin(const seqcount_t *s)
+  * Return: count to be passed to read_seqcount_retry()
+  */
+ #define raw_read_seqcount_begin(s)					\
+-	raw_read_seqcount_t_begin(__seqcount_ptr(s))
+-
+-static inline unsigned raw_read_seqcount_t_begin(const seqcount_t *s)
+-{
+-	unsigned ret = __read_seqcount_t_begin(s);
+-	smp_rmb();
+-	return ret;
+-}
++({									\
++	unsigned seq = __read_seqcount_begin(s);			\
++									\
++	smp_rmb();							\
++	seq;								\
++})
+ 
+ /**
+  * read_seqcount_begin() - begin a seqcount_t read critical section
+@@ -305,13 +313,10 @@ static inline unsigned raw_read_seqcount_t_begin(const seqcount_t *s)
+  * Return: count to be passed to read_seqcount_retry()
+  */
+ #define read_seqcount_begin(s)						\
+-	read_seqcount_t_begin(__seqcount_ptr(s))
+-
+-static inline unsigned read_seqcount_t_begin(const seqcount_t *s)
+-{
+-	seqcount_lockdep_reader_access(s);
+-	return raw_read_seqcount_t_begin(s);
+-}
++({									\
++	seqcount_lockdep_reader_access(__seqcount_ptr(s));		\
++	raw_read_seqcount_begin(s);					\
++})
+ 
+ /**
+  * raw_read_seqcount() - read the raw seqcount_t counter value
+@@ -325,15 +330,13 @@ static inline unsigned read_seqcount_t_begin(const seqcount_t *s)
+  * Return: count to be passed to read_seqcount_retry()
+  */
+ #define raw_read_seqcount(s)						\
+-	raw_read_seqcount_t(__seqcount_ptr(s))
+-
+-static inline unsigned raw_read_seqcount_t(const seqcount_t *s)
+-{
+-	unsigned ret = READ_ONCE(s->sequence);
+-	smp_rmb();
+-	kcsan_atomic_next(KCSAN_SEQLOCK_REGION_MAX);
+-	return ret;
+-}
++({									\
++	unsigned seq = __seqcount_sequence(s);				\
++									\
++	smp_rmb();							\
++	kcsan_atomic_next(KCSAN_SEQLOCK_REGION_MAX);			\
++	seq;								\
++})
+ 
+ /**
+  * raw_seqcount_begin() - begin a seqcount_t read critical section w/o
+@@ -353,16 +356,13 @@ static inline unsigned raw_read_seqcount_t(const seqcount_t *s)
+  * Return: count to be passed to read_seqcount_retry()
+  */
+ #define raw_seqcount_begin(s)						\
+-	raw_seqcount_t_begin(__seqcount_ptr(s))
+-
+-static inline unsigned raw_seqcount_t_begin(const seqcount_t *s)
+-{
+-	/*
+-	 * If the counter is odd, let read_seqcount_retry() fail
+-	 * by decrementing the counter.
+-	 */
+-	return raw_read_seqcount_t(s) & ~1;
+-}
++({									\
++	/*								\
++	 * If the counter is odd, let read_seqcount_retry() fail	\
++	 * by decrementing the counter.					\
++	 */								\
++	raw_read_seqcount(s) & ~1;					\
++})
+ 
+ /**
+  * __read_seqcount_retry() - end a seqcount_t read section w/o barrier
 -- 
 2.28.0
 
