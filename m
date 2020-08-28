@@ -2,142 +2,163 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A3BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D50C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA32207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B49420848
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:47:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="k9iDPY3Z"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K87TVpu0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgH1Oqo (ORCPT
+        id S1728014AbgH1OrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:46:44 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57080 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbgH1Oqm (ORCPT
+        Fri, 28 Aug 2020 10:47:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:31860 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726322AbgH1OrG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:46:42 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07SEe7p0085647;
-        Fri, 28 Aug 2020 14:46:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=TSfkQvlp3RoT0bcBu1bpHKHqwBLRPoFqnZTeU1aBZps=;
- b=k9iDPY3ZkGRyjC5eEQNpeCLgIzRacQor+dAaXNtYpriFIuDgeTbI1Y9hMEiMbuYIg93K
- LE1KKNv5XHdd0fObY/pWcU1V20C43N7TktVqb6Dgp8vFvdXrVbRQPIqTsw9joUgsoAK+
- MmJM5eFhrYwp6aE+4HrfjIK+FiiQAqKR0JND+1/d+lpCWMY6N/yVbINq91u1Mpv+SsOb
- WeVYEz4oXaxoQG9UgnEgJJTy3zUpQMmHD6IlpNHHqNhx8mIaQ8X9bGzjQSqo0KzoWiYu
- ln+r+pESRs+BZD1T+oRFKQ7cBYG05+kH2zbEepWOFiarAfMUvfGcT0JGeC4N8vOjvy/9 Tg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 333w6uaw79-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Aug 2020 14:46:34 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07SEewel008297;
-        Fri, 28 Aug 2020 14:46:33 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 333r9prjfp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Aug 2020 14:46:33 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07SEkVCE008111;
-        Fri, 28 Aug 2020 14:46:32 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 28 Aug 2020 07:46:31 -0700
-Subject: Re: [PATCH v2] mm/hugetlb: Fix a race between hugetlb sysctl handlers
-To:     Muchun Song <songmuchun@bytedance.com>, akpm@linux-foundation.org
-Cc:     ak@linux.intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20200828031146.43035-1-songmuchun@bytedance.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <3841cb84-9d0b-3327-16fe-e3ea45245fb5@oracle.com>
-Date:   Fri, 28 Aug 2020 07:46:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 28 Aug 2020 10:47:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598626025;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yquFv2yqai6ihVfcrAy9lCsY5CSLZWt8RXJdzk2IKIU=;
+        b=K87TVpu0hVkDBPjdZ9Ci9NNUyu0L/BufU2KhRrAy6/Yc4vkIcjD9e5Mw5cuUbzgUx6inTl
+        WwqxlojPSOwgugBOavhG1bcwnfiQsswsvWX/FWC5DkLKDvCwts8g0OYJlq4yYwgCC10Crc
+        z0zMmPIykc8awLcIxkbBYHtOMNHKAXk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-449-W2fevorKPdWPX7Px-cRH0w-1; Fri, 28 Aug 2020 10:47:02 -0400
+X-MC-Unique: W2fevorKPdWPX7Px-cRH0w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D2E2A100CF7D;
+        Fri, 28 Aug 2020 14:47:00 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.194.8])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 4766F6716C;
+        Fri, 28 Aug 2020 14:46:53 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 28 Aug 2020 16:47:00 +0200 (CEST)
+Date:   Fri, 28 Aug 2020 16:46:52 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
+        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
+        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
+        cameron@moodycamel.com, will@kernel.org, paulmck@kernel.org
+Subject: Re: [RFC][PATCH 6/7] freelist: Lock less freelist
+Message-ID: <20200828144650.GF28468@redhat.com>
+References: <20200827161237.889877377@infradead.org>
+ <20200827161754.535381269@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200828031146.43035-1-songmuchun@bytedance.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9726 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- adultscore=0 spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008280113
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9726 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008280113
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827161754.535381269@infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/20 8:11 PM, Muchun Song wrote:
-> There is a race between the assignment of `table->data` and write value
-> to the pointer of `table->data` in the __do_proc_doulongvec_minmax() on
-> the other thread.
-> 
-> CPU0:                                 CPU1:
->                                       proc_sys_write
-> hugetlb_sysctl_handler                  proc_sys_call_handler
-> hugetlb_sysctl_handler_common             hugetlb_sysctl_handler
->   table->data = &tmp;                       hugetlb_sysctl_handler_common
->                                               table->data = &tmp;
->     proc_doulongvec_minmax
->       do_proc_doulongvec_minmax           sysctl_head_finish
->         __do_proc_doulongvec_minmax         unuse_table
->           i = table->data;
->           *i = val;  // corrupt CPU1's stack
-> 
-> Fix this by duplicating the `table`, and only update the duplicate of
-> it. And introduce a helper of proc_hugetlb_doulongvec_minmax() to
-> simplify the code.
-> 
-> The following oops was seen:
-> 
->     BUG: kernel NULL pointer dereference, address: 0000000000000000
->     #PF: supervisor instruction fetch in kernel mode
->     #PF: error_code(0x0010) - not-present page
->     Code: Bad RIP value.
->     ...
->     Call Trace:
->      ? set_max_huge_pages+0x3da/0x4f0
->      ? alloc_pool_huge_page+0x150/0x150
->      ? proc_doulongvec_minmax+0x46/0x60
->      ? hugetlb_sysctl_handler_common+0x1c7/0x200
->      ? nr_hugepages_store+0x20/0x20
->      ? copy_fd_bitmaps+0x170/0x170
->      ? hugetlb_sysctl_handler+0x1e/0x20
->      ? proc_sys_call_handler+0x2f1/0x300
->      ? unregister_sysctl_table+0xb0/0xb0
->      ? __fd_install+0x78/0x100
->      ? proc_sys_write+0x14/0x20
->      ? __vfs_write+0x4d/0x90
->      ? vfs_write+0xef/0x240
->      ? ksys_write+0xc0/0x160
->      ? __ia32_sys_read+0x50/0x50
->      ? __close_fd+0x129/0x150
->      ? __x64_sys_write+0x43/0x50
->      ? do_syscall_64+0x6c/0x200
->      ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Fixes: e5ff215941d5 ("hugetlb: multiple hstates for multiple page sizes")
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+On 08/27, Peter Zijlstra wrote:
+>
+>  1 file changed, 129 insertions(+)
 
-Thank you!
+129 lines! And I spent more than 2 hours trying to understand these
+129 lines ;) looks correct...
 
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+However, I still can't understand the usage of _acquire/release ops
+in this code.
 
--- 
-Mike Kravetz
+> +static inline void __freelist_add(struct freelist_node *node, struct freelist_head *list)
+> +{
+> +	/*
+> +	 * Since the refcount is zero, and nobody can increase it once it's
+> +	 * zero (except us, and we run only one copy of this method per node at
+> +	 * a time, i.e. the single thread case), then we know we can safely
+> +	 * change the next pointer of the node; however, once the refcount is
+> +	 * back above zero, then other threads could increase it (happens under
+> +	 * heavy contention, when the refcount goes to zero in between a load
+> +	 * and a refcount increment of a node in try_get, then back up to
+> +	 * something non-zero, then the refcount increment is done by the other
+> +	 * thread) -- so if the CAS to add the node to the actual list fails,
+> +	 * decrese the refcount and leave the add operation to the next thread
+> +	 * who puts the refcount back to zero (which could be us, hence the
+> +	 * loop).
+> +	 */
+> +	struct freelist_node *head = READ_ONCE(list->head);
+> +
+> +	for (;;) {
+> +		WRITE_ONCE(node->next, head);
+> +		atomic_set_release(&node->refs, 1);
+> +
+> +		if (!try_cmpxchg_release(&list->head, &head, node)) {
+
+OK, these 2 _release above look understandable, they pair with
+atomic_try_cmpxchg_acquire/try_cmpxchg_acquire in freelist_try_get().
+
+> +			/*
+> +			 * Hmm, the add failed, but we can only try again when
+> +			 * the refcount goes back to zero.
+> +			 */
+> +			if (atomic_fetch_add_release(REFS_ON_FREELIST - 1, &node->refs) == 1)
+> +				continue;
+
+Do we really need _release ? Why can't atomic_fetch_add_relaxed() work?
+
+> +static inline struct freelist_node *freelist_try_get(struct freelist_head *list)
+> +{
+> +	struct freelist_node *prev, *next, *head = smp_load_acquire(&list->head);
+> +	unsigned int refs;
+> +
+> +	while (head) {
+> +		prev = head;
+> +		refs = atomic_read(&head->refs);
+> +		if ((refs & REFS_MASK) == 0 ||
+> +		    !atomic_try_cmpxchg_acquire(&head->refs, &refs, refs+1)) {
+> +			head = smp_load_acquire(&list->head);
+> +			continue;
+> +		}
+> +
+> +		/*
+> +		 * Good, reference count has been incremented (it wasn't at
+> +		 * zero), which means we can read the next and not worry about
+> +		 * it changing between now and the time we do the CAS.
+> +		 */
+> +		next = READ_ONCE(head->next);
+> +		if (try_cmpxchg_acquire(&list->head, &head, next)) {
+> +			/*
+> +			 * Yay, got the node. This means it was on the list,
+> +			 * which means should-be-on-freelist must be false no
+> +			 * matter the refcount (because nobody else knows it's
+> +			 * been taken off yet, it can't have been put back on).
+> +			 */
+> +			WARN_ON_ONCE(atomic_read(&head->refs) & REFS_ON_FREELIST);
+> +
+> +			/*
+> +			 * Decrease refcount twice, once for our ref, and once
+> +			 * for the list's ref.
+> +			 */
+> +			atomic_fetch_add(-2, &head->refs);
+
+Do we the barriers implied by _fetch_? Why can't atomic_sub(2, refs) work?
+
+> +		/*
+> +		 * OK, the head must have changed on us, but we still need to decrement
+> +		 * the refcount we increased.
+> +		 */
+> +		refs = atomic_fetch_add(-1, &prev->refs);
+
+Cosmetic, but why not atomic_fetch_dec() ?
+
+Oleg.
+
