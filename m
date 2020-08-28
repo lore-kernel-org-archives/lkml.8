@@ -2,100 +2,139 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947B7C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A98C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6940D2078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B93620848
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:35:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+SjzJaG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729476AbgH1MfH (ORCPT
+        id S1729443AbgH1Mfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 08:35:07 -0400
-Received: from mga04.intel.com ([192.55.52.120]:12447 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729123AbgH1Me6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 08:34:58 -0400
-IronPort-SDR: Mo1GVfPQPC/Y5T5cP0aDd0GVUrA6cCz1H7zNtNYGABaJRQqr8GdjN6a8qEG4hUFOE3rmi9QBqy
- kStZ25+62pDg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="154069923"
-X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
-   d="scan'208";a="154069923"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 05:34:57 -0700
-IronPort-SDR: LsAdrySqa4ZJHrIuWvSuTOi9BQr1x7uyQGuh3GmkbXvlDM53I0PQZaHaeHOY/Fi6c2wRAg8XXv
- X5xoeVVrdmDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
-   d="scan'208";a="337486445"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 Aug 2020 05:34:57 -0700
-Received: from abityuts-desk1.fi.intel.com (abityuts-desk1.fi.intel.com [10.237.72.186])
-        by linux.intel.com (Postfix) with ESMTP id 045F9580628;
-        Fri, 28 Aug 2020 05:34:55 -0700 (PDT)
-Message-ID: <71c9048e530e1b67b6750b1a9eda175d98096ccc.camel@gmail.com>
-Subject: Re: cpu-freq: running the perf increases the data rate?
-From:   Artem Bityutskiy <dedekind1@gmail.com>
-Reply-To: dedekind1@gmail.com
-To:     Subhashini Rao Beerisetty <subhashbeerisetty@gmail.com>,
-        linux-pm@vger.kernel.org,
-        kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Fri, 28 Aug 2020 15:34:54 +0300
-In-Reply-To: <CAPY=qRRekJonX_iX3s4bfietm9D_GM+S4cDGXbj9nMOefJBdTw@mail.gmail.com>
-References: <CAPY=qRRekJonX_iX3s4bfietm9D_GM+S4cDGXbj9nMOefJBdTw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Fri, 28 Aug 2020 08:35:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729123AbgH1Mfb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 08:35:31 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43F76C061264
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 05:35:30 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id l23so1005775edv.11
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 05:35:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=S/FP18GdeEsQIBGpdNuuhDRuibofRXoQRIPNbtt9sRY=;
+        b=a+SjzJaGpDMjLFI4m4bUgdWkdHu18yc5GfL5js7fSMQWXUvk4ovchSKQSVfpyvzLD6
+         0SDxmQiEQ9kVtcsheYiiZKY6taD2YxkRjcEwE0AphlIZMLmLMa/dk64bO48yD3Pc/zLS
+         Ss1WsveDreGhDW30tSFaUkOqsbU4VuzFLHdwX42U3ocu1otvjbqeOMBlwoZaSPR6+hai
+         38Thk1IWapK/hXEe6Q9jxSy2N64dY/APbPpDVmxqLutGChiOE8FH4nBulsyrjEQLVfn1
+         RoOhwfAg8eYJFfl3uVBo9LAlxZA7aBpDF259nwmGTpbKG51bo0NOUusd5EemqUPMXqtl
+         nvrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=S/FP18GdeEsQIBGpdNuuhDRuibofRXoQRIPNbtt9sRY=;
+        b=Ashvmqocz4X2witOJKiCXnRTaoLX5v3RktA0t5+bdxwBlW9f7TxxShQgxaEJHgIn6L
+         u+cRIyAQ9V1Eq9chz8YYsGhGgCa9uXa7wxeMLapimZcfeqNUb5IMDMApUgeYXCfTzuHL
+         904wo4aNEV4bHRw6J3opyxPCooJ9cGByuuhLvg9NFsGJwvLuTjZMh7Tmqbp2suGX0vBB
+         2VALyY/oLoZKhL8DFVVxA0RJc9PAe1seSOIChnWeay18X7I0S6mliMc9xKJA8oV8XI9P
+         WmZkk0xsc425+sKkLR4Z0waHELxL2mBrvDOMe3q9U71qqQvkcNqIcXhFknQSlfNaSGL6
+         +GBw==
+X-Gm-Message-State: AOAM531y7kRqutTCzo76OFzRZSSV7txK22aTmXS0hn2IQh9sHhfsnjlv
+        LKdSsDMYxx8tIM/Y7gKOj08=
+X-Google-Smtp-Source: ABdhPJy6QQInAfaYYn6sA/5SFfqm16o4ELO1cDSV915jWO7sE29ZtFz1Iutso4lgZ0ROGcfIMaDSpQ==
+X-Received: by 2002:a05:6402:2285:: with SMTP id cw5mr1614748edb.242.1598618128648;
+        Fri, 28 Aug 2020 05:35:28 -0700 (PDT)
+Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net. [89.212.178.211])
+        by smtp.gmail.com with ESMTPSA id l23sm760431eje.46.2020.08.28.05.35.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 05:35:27 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     linux-sunxi@googlegroups.com
+Cc:     Ondrej Jirman <megous@megous.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVERS FOR ALLWINNER A10" 
+        <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>, megous@megous.com
+Subject: Re: [linux-sunxi] [PATCH] drm/sun4i: Fix dsi dcs long write function
+Date:   Fri, 28 Aug 2020 14:35:26 +0200
+Message-ID: <1872601.C7yQfbK89F@jernej-laptop>
+In-Reply-To: <20200828112444.916455-1-megous@megous.com>
+References: <20200828112444.916455-1-megous@megous.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-08-27 at 22:25 +0530, Subhashini Rao Beerisetty wrote:
-> I have an application which finds the data rate over the PCIe
-> interface. I’m getting the lesser data rate in one of my Linux X86
-> systems.
+Dne petek, 28. avgust 2020 ob 13:24:44 CEST je Ondrej Jirman napisal(a):
+> It's writing too much data. regmap_bulk_write expects number of
+> register sized chunks to write, not a byte sized length of the
+> bounce buffer. Bounce buffer needs to be padded too, so that
+> regmap_bulk_write will not read past the end of the buffer.
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 
-Some more description, may be? Do you have a PCIe device reading one
-RAM buffer and then writing to another RAM buffer? Or does it generate
-dome data and writes them to a RAM buffer? Presumably it uses DMA? How
-much is the CPU involved into the process? Are we talking about
-transferring few kilobytes or gigabytes?
+Fixes: 133add5b5ad4 ("drm/sun4i: Add Allwinner A31 MIPI-DSI controller 
+support")
 
-> When I change the scaling_governor from "powersave" to "performance"
-> mode for each CPU, then there is slight improvement in the PCIe data
-> rate.
+should be added. Fix will be then automatically picked into stable releases.
 
-Definitely this makes your CPU(s) run at max speed, but depending on
-platform and settings, this may also affect C-states. Are the CPU(s)
-generally idle while you measure, or busy (involved into the test)? You
-could run 'turbostat' while measuring the bandwidth, to get some CPU
-statistics (e.g., do C-states happen during the PCI test, how busy are
-the CPUs).
+Small nit below.
 
-> Parallely I started profiling the workload with perf. Whenever I start
-> running the profile command “perf stat -a -d -p <PID>” surprisingly
-> the application resulted in excellent data rate over PCIe, but when I
-> kill the perf command again PCIe data rate drops. I am really confused
-> about this behavior.Any clues from this behaviour?
+> ---
+>  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c index 7f13f4d715bf..840fad1b68dd
+> 100644
+> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> @@ -889,7 +889,7 @@ static int sun6i_dsi_dcs_write_long(struct sun6i_dsi
+> *dsi, regmap_write(dsi->regs, SUN6I_DSI_CMD_TX_REG(0),
+>  		     sun6i_dsi_dcs_build_pkt_hdr(dsi, msg));
+> 
+> -	bounce = kzalloc(msg->tx_len + sizeof(crc), GFP_KERNEL);
+> +	bounce = kzalloc(msg->tx_len + sizeof(crc) + 3, GFP_KERNEL);
 
-Well, one possible reason that comes to mind - you get rid of C-states
-when you rung perf, and this increases the PCI bandwidth. You can just
-try disabling C-states (there are sysfs knobs) and check it out.
-Turbostat could be useful to check for this (with and without perf, run
-'turbostat sleep 10' or something like this (measure for 10 seconds in
-this example), do this while running your PCI test.
+It would be nicer to use ALIGN() macro, but I'm fine either way.
 
-But I am really just guessing here, I do not know enough about your
-test and the system (e.g., "a Linux x86" system can be so many things,
-like Intel or AMD server or a mobile device)...
+Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
+
+Best regards,
+Jernej
+
+>  	if (!bounce)
+>  		return -ENOMEM;
+> 
+> @@ -900,7 +900,7 @@ static int sun6i_dsi_dcs_write_long(struct sun6i_dsi
+> *dsi, memcpy((u8 *)bounce + msg->tx_len, &crc, sizeof(crc));
+>  	len += sizeof(crc);
+> 
+> -	regmap_bulk_write(dsi->regs, SUN6I_DSI_CMD_TX_REG(1), bounce, 
+len);
+> +	regmap_bulk_write(dsi->regs, SUN6I_DSI_CMD_TX_REG(1), bounce,
+> DIV_ROUND_UP(len, 4)); regmap_write(dsi->regs, SUN6I_DSI_CMD_CTL_REG, len +
+> 4 - 1);
+>  	kfree(bounce);
+
+
 
 
