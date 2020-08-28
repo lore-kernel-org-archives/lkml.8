@@ -2,165 +2,93 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DB7C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D89FC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2B32078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598618054;
-	bh=qOCb8yg++6HPR/APlaC3ZqJPZeT9Qyxcl+5zvzglIEo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TLBeLH1pwW8zOjDSvYyqLq/2lQ6wbmaFjiSjDUBMRaYlkgCdLFITYp59MCqvzrc4k
-	 W0VDdxy8dBngy+RPLqyd8oLjCpksO7dwm8TcnomDYlc0vHr0B7zRJjyf864hUuiuv4
-	 AiyoGPjzi+KQ9pbIzOoMVAgeEF9hCt9N94cvm+jE=
+	by mail.kernel.org (Postfix) with ESMTP id 4E2BB2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbgH1MeM (ORCPT
+        id S1729376AbgH1MeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 08:34:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40212 "EHLO mail.kernel.org"
+        Fri, 28 Aug 2020 08:34:24 -0400
+Received: from 8bytes.org ([81.169.241.247]:39864 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729350AbgH1M2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 08:28:44 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E2972086A;
-        Fri, 28 Aug 2020 12:28:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598617723;
-        bh=qOCb8yg++6HPR/APlaC3ZqJPZeT9Qyxcl+5zvzglIEo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VE9GHbct2HGgGqpXU31fTQNMK4NvHZxtY1e4Ym/vuEbcV1Mbzzq7/JL2qYsmjfBGV
-         jBgKCBLxVo6rcfjjYASgLnE5jytnexMsrI+qCiBAvOg/d42MrxSuIEPrz9xyskd+/D
-         eCJwU8jdfAynGneZwMyVGBP/YkWqF12guTD7Ob6c=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Cc:     Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
-        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
-        cameron@moodycamel.com, oleg@redhat.com, will@kernel.org,
-        paulmck@kernel.org, mhiramat@kernel.org
-Subject: [PATCH v4 11/23] s390: kprobes: Use generic kretprobe trampoline handler
-Date:   Fri, 28 Aug 2020 21:28:38 +0900
-Message-Id: <159861771828.992023.7286108946121402285.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <159861759775.992023.12553306821235086809.stgit@devnote2>
-References: <159861759775.992023.12553306821235086809.stgit@devnote2>
-User-Agent: StGit/0.19
+        id S1729298AbgH1MdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 08:33:08 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 1F45E2E1; Fri, 28 Aug 2020 14:33:07 +0200 (CEST)
+Date:   Fri, 28 Aug 2020 14:33:04 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v6 27/76] x86/sev-es: Add CPUID handling to #VC handler
+Message-ID: <20200828123304.GD13881@8bytes.org>
+References: <20200824085511.7553-1-joro@8bytes.org>
+ <20200824085511.7553-28-joro@8bytes.org>
+ <20200827224810.GA986963@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827224810.GA986963@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- arch/s390/kernel/kprobes.c |   79 +-------------------------------------------
- 1 file changed, 2 insertions(+), 77 deletions(-)
+On Thu, Aug 27, 2020 at 06:48:10PM -0400, Arvind Sankar wrote:
+> On Mon, Aug 24, 2020 at 10:54:22AM +0200, Joerg Roedel wrote:
+> > From: Tom Lendacky <thomas.lendacky@amd.com>
+> > 
+> > Handle #VC exceptions caused by CPUID instructions. These happen in
+> > early boot code when the KASLR code checks for RDTSC.
+> > 
+> > Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> > [ jroedel@suse.de: Adapt to #VC handling framework ]
+> > Co-developed-by: Joerg Roedel <jroedel@suse.de>
+> > Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> > Link: https://lore.kernel.org/r/20200724160336.5435-27-joro@8bytes.org
+> > ---
+> > +
+> > +static enum es_result vc_handle_cpuid(struct ghcb *ghcb,
+> > +				      struct es_em_ctxt *ctxt)
+> > +{
+> > +	struct pt_regs *regs = ctxt->regs;
+> > +	u32 cr4 = native_read_cr4();
+> > +	enum es_result ret;
+> > +
+> > +	ghcb_set_rax(ghcb, regs->ax);
+> > +	ghcb_set_rcx(ghcb, regs->cx);
+> > +
+> > +	if (cr4 & X86_CR4_OSXSAVE)
+> 
+> Will this ever happen? trampoline_32bit_src will clear CR4 except for
+> PAE and possibly LA57, no?
 
-diff --git a/arch/s390/kernel/kprobes.c b/arch/s390/kernel/kprobes.c
-index d2a71d872638..fc30e799bd84 100644
---- a/arch/s390/kernel/kprobes.c
-+++ b/arch/s390/kernel/kprobes.c
-@@ -228,6 +228,7 @@ NOKPROBE_SYMBOL(pop_kprobe);
- void arch_prepare_kretprobe(struct kretprobe_instance *ri, struct pt_regs *regs)
- {
- 	ri->ret_addr = (kprobe_opcode_t *) regs->gprs[14];
-+	ri->fp = NULL;
- 
- 	/* Replace the return addr with trampoline addr */
- 	regs->gprs[14] = (unsigned long) &kretprobe_trampoline;
-@@ -331,83 +332,7 @@ static void __used kretprobe_trampoline_holder(void)
-  */
- static int trampoline_probe_handler(struct kprobe *p, struct pt_regs *regs)
- {
--	struct kretprobe_instance *ri;
--	struct hlist_head *head, empty_rp;
--	struct hlist_node *tmp;
--	unsigned long flags, orig_ret_address;
--	unsigned long trampoline_address;
--	kprobe_opcode_t *correct_ret_addr;
--
--	INIT_HLIST_HEAD(&empty_rp);
--	kretprobe_hash_lock(current, &head, &flags);
--
--	/*
--	 * It is possible to have multiple instances associated with a given
--	 * task either because an multiple functions in the call path
--	 * have a return probe installed on them, and/or more than one return
--	 * return probe was registered for a target function.
--	 *
--	 * We can handle this because:
--	 *     - instances are always inserted at the head of the list
--	 *     - when multiple return probes are registered for the same
--	 *	 function, the first instance's ret_addr will point to the
--	 *	 real return address, and all the rest will point to
--	 *	 kretprobe_trampoline
--	 */
--	ri = NULL;
--	orig_ret_address = 0;
--	correct_ret_addr = NULL;
--	trampoline_address = (unsigned long) &kretprobe_trampoline;
--	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
--		if (ri->task != current)
--			/* another task is sharing our hash bucket */
--			continue;
--
--		orig_ret_address = (unsigned long) ri->ret_addr;
--
--		if (orig_ret_address != trampoline_address)
--			/*
--			 * This is the real return address. Any other
--			 * instances associated with this task are for
--			 * other calls deeper on the call stack
--			 */
--			break;
--	}
--
--	kretprobe_assert(ri, orig_ret_address, trampoline_address);
--
--	correct_ret_addr = ri->ret_addr;
--	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
--		if (ri->task != current)
--			/* another task is sharing our hash bucket */
--			continue;
--
--		orig_ret_address = (unsigned long) ri->ret_addr;
--
--		if (ri->rp && ri->rp->handler) {
--			ri->ret_addr = correct_ret_addr;
--			ri->rp->handler(ri, regs);
--		}
--
--		recycle_rp_inst(ri, &empty_rp);
--
--		if (orig_ret_address != trampoline_address)
--			/*
--			 * This is the real return address. Any other
--			 * instances associated with this task are for
--			 * other calls deeper on the call stack
--			 */
--			break;
--	}
--
--	regs->psw.addr = orig_ret_address;
--
--	kretprobe_hash_unlock(current, &flags);
--
--	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
--		hlist_del(&ri->hlist);
--		kfree(ri);
--	}
-+	regs->psw.addr = __kretprobe_trampoline_handler(regs, &kretprobe_trampoline, NULL);
- 	/*
- 	 * By returning a non-zero value, we are telling
- 	 * kprobe_handler() that we don't want the post_handler
+This same code is later re-used in the runtime handler and there the
+check is needed :)
+
+Regards,
+
+	Joerg
 
