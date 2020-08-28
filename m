@@ -2,75 +2,116 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D74C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF66C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 173052074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C17D20C56
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:33:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598635990;
+	bh=dVXhorCySV7p0XUAWBV8r7NvXycdCFYPc1TRtnibkH0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=196JfDztY/gi7WY4Ntie06EB+zyNCBbiJZAyzE6yQfZJqodz3Qe5Tp45szEfP7wbi
+	 L09NcReANcG0bz8coOHGItR44a3YZQGBqdZEnArxPlFsGHNvQOL4S7z1l8sh1KDZ3F
+	 mH6nCOQNMnfiCbTHLfhO5IsunlZQeUS55FdJlf3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgH1RaO (ORCPT
+        id S1726869AbgH1RdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 13:30:14 -0400
-Received: from imap3.hz.codethink.co.uk ([176.9.8.87]:53622 "EHLO
-        imap3.hz.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbgH1RaN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 13:30:13 -0400
-Received: from [188.210.212.0] (helo=[192.168.0.104])
-        by imap3.hz.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1kBiCU-0005jr-Sz; Fri, 28 Aug 2020 18:30:06 +0100
-Subject: Re: [PATCH 1/3] pinctrl: mcp23s08: Fixup mcp23x17 regmap_config
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     =?UTF-8?Q?Jan_Kundr=c3=a1t?= <jan.kundrat@cesnet.cz>,
-        Phil Reid <preid@electromag.com.au>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200814100357.209340-1-thomas.preston@codethink.co.uk>
- <20200814100357.209340-2-thomas.preston@codethink.co.uk>
- <CACRpkdZj-eAz0yse3OcKLiO0sPVHJMmhVZ_yLWFt1YKPe3hkRg@mail.gmail.com>
- <20200828092833.GP1891694@smile.fi.intel.com>
-From:   Thomas Preston <thomas.preston@codethink.co.uk>
-Message-ID: <2dac46c5-b52b-5670-74ca-615d6429f34e@codethink.co.uk>
-Date:   Fri, 28 Aug 2020 18:30:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 28 Aug 2020 13:33:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726266AbgH1RdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 13:33:08 -0400
+Received: from earth.universe (dyndsl-095-033-159-123.ewe-ip-backbone.de [95.33.159.123])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9E3C2074A;
+        Fri, 28 Aug 2020 17:33:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598635987;
+        bh=dVXhorCySV7p0XUAWBV8r7NvXycdCFYPc1TRtnibkH0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XI8iOVvVyQ9dMHhUCxnfRWh5a5w6FGRz5T1tY1ZvwTXpaL5dMCzERUYBAN2GSvkJo
+         9iq4uXhAW4qtfVnhtZ6em2gZis/BUAURXIJ54KbZCU3CHDaA0+NuF0KAkfQTi+dagy
+         gc9Ig2Trhh8DCnMBHa2V4iNUD755yOOmY/drytY8=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 078BA3C0C82; Fri, 28 Aug 2020 19:33:06 +0200 (CEST)
+Date:   Fri, 28 Aug 2020 19:33:06 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     krzk@kernel.org, jonghwa3.lee@samsung.com, tglx@linutronix.de,
+        kstewart@linuxfoundation.org, baolin.wang7@gmail.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/10] power: supply: Charger-manager improvements
+Message-ID: <20200828173305.u5n66ll57gn2b76s@earth.universe>
+References: <BN6PR04MB06603115D277DF264D9380E8A3BC0@BN6PR04MB0660.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200828092833.GP1891694@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="curnqtretflpgrou"
+Content-Disposition: inline
+In-Reply-To: <BN6PR04MB06603115D277DF264D9380E8A3BC0@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/08/2020 10:28, Andy Shevchenko wrote:
-> On Fri, Aug 28, 2020 at 11:06:21AM +0200, Linus Walleij wrote:
->> On Fri, Aug 14, 2020 at 12:04 PM Thomas Preston
->> <thomas.preston@codethink.co.uk> wrote:
->>
->>> - Fix a typo where mcp23x17 configs are referred to as mcp23x16.
->>> - Fix precious range to include INTCAP{A,B}, which clear on read.
->>> - Fix precious range to include GPIOB, which clears on read.
->>> - Fix volatile range to include GPIOB, to fix debugfs registers
->>>    reporting different values than `gpioget gpiochip2 {0..15}`.
->>>
->>> Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
->>
->> Since the other two patches seem wrong, please resend this one patch,
->> also include the people on TO: here: Andy, Phil and Jan, who all use
->> this chip a lot.
-> 
-> And it seems it combines a lot of stuff in one patch. Can we have a split with
-> appropriate Fixes: tags?
-> 
 
-Yeah no problem, just looking at this now.
+--curnqtretflpgrou
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Thu, May 14, 2020 at 04:04:25PM -0700, Jonathan Bakker wrote:
+> Charger-manager is a virtual driver for unifying chargers, fuel gauges,
+> extcon devices, and a thermal device into a battery management system.
+>=20
+> Unfortunately, it has been broken since commit 830ae442202e ("extcon:
+> Remove the deprecated extcon functions") when the extcon internal API
+> was changed but some drivers were not updated.  Additionally, it had
+> some race conditions and was unnecessarily complex.
+>=20
+> A number of these patches come from a Tizen git tree(1); they have been
+> rebased and the commit messages cleaned up.
+>=20
+> These changes have been tested on a couple of first-gen Galaxy S devices
+> based on s5pv210 with a modified max8998 driver so that a charger
+> regulator is exposed.  In addition to the max8998, this hardware has
+> a max17040 fuel gauge, fsa9480 extcon, and a generic thermal resistor
+> for temperature sensing.
+>=20
+> 1) https://git.tizen.org/cgit/platform/kernel/linux-exynos/log/drivers/po=
+wer/charger-manager.c?h=3Dtizen_5.0
+
+Thanks, queued. I hope this does not trigger more people to use it.
+We really need a proper core feature for this.
+
+-- Sebastian
+
+--curnqtretflpgrou
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9JP8oACgkQ2O7X88g7
++prZ+A/+KIUCbI6mn4h5I1HAy0txA5dSSTOsqLZ2UMCL12zN46q53vgjv69PBHxt
++bBSnmDRPd3rW+EDe693lHBDKoxJ/A7lqQENeFw0lMsDaAHEsW7RKlF/rOIDIPKB
+DdbXJqfw3CQWBGZ35OCnTEGUDdH20EJINATS7B/8yVsbMYwnax6NENSj8iSSQf1B
+9IqW+rg63n+d9TFC85qL0L39bBOx13TxnYiG0BCdKRaZA3HMb2+FyHdMDyvi/nY7
+I577cq6GZb/uD+s2sbl575PwWfZpsn1OBhidmCpXg9lN6+dzPv6RnwaHDlAiM4Cq
+D6Pb/njPdIddJ3uMe7RptQgoh+wAL0gFZ5zHEY5jOMYOYxjMiNYGdvgzPkEYwogy
+EZTLJhGCtMQk6LLPnxrtWWJRztOkkul8BIWJyYLBz+dDL/7AF2gSmT7u+YVhfUj5
+DagDgufuAspY3ZLz16Omz5m/9u0MRe+KDocnTQNNS5NvR+AvxTlmNspqbu+G1yDq
+c6k4ZYuo/zvSU0sbaSICcDCvnQkXAoDLw8la1KvBnjZZM5kOh7sW1I7UI0dATVTn
+BoY41Uxx13wyckHgatpgAZO7NT9okBmY3l18awz01zZAQo4b1w7+/ZS8RkiMB5YQ
+uwG5WFPgdVuooK5LUO0Yew66rQFMgBy0HnEYSHmqX8oLBOLRw5M=
+=2ELG
+-----END PGP SIGNATURE-----
+
+--curnqtretflpgrou--
