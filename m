@@ -2,114 +2,158 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC25C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F29EC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D74D2075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68DC12078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:49:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="WaxiOLCG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="F6T3vOg5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="enF6AvtG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbgH1Jos (ORCPT
+        id S1728805AbgH1Jtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:44:48 -0400
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:38787 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728016AbgH1Joq (ORCPT
+        Fri, 28 Aug 2020 05:49:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728532AbgH1Jtj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:44:46 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id EF2DA8D9;
-        Fri, 28 Aug 2020 05:44:44 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 28 Aug 2020 05:44:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=P
-        tXB5hSLgVKMT2j7Z0Zf6VjUGFj2dGFbBan+VqncaY8=; b=WaxiOLCG1wd63Ab8p
-        nEomIFSHutNxqnOOT0uiTJQjuFRgyeHL3s0CYiCO6ElyoBYIrRDyGfqGxVSLOcam
-        +qaVN9OAPUwle2vIXuw+bJSrda7XxaRHE+S9ljasCf2J8Xe5eh0+DYURyq3cxOOd
-        MPBS7lYgpd0CEXhHyY50tOtZKK0tbRZwlqT4zFBhVCCb8Jd+cX7OI+HZZyJL6AN2
-        5phncL0hhAgZC5RjTtEv1iH4YvaddVO0er2I/RXtOjRKardVzoXmesG9TaQKF525
-        jwfWKfRWGiyG6FfkEAv7rrmceN+DqtVmN2+fZ12nWRNnCnMoxel/xxwHejD2PUQ6
-        ux5iw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=PtXB5hSLgVKMT2j7Z0Zf6VjUGFj2dGFbBan+Vqnca
-        Y8=; b=F6T3vOg5RkD/XnZfWJ6BPo+sYfYwPZQ6XdWeZ1JTC8PGr1+s4y//RPov7
-        OF/EtlUzJ4xzZgNg5pb1QKTAjH2O3E1PgwLlgj5nOFuzuoQ2jjyDC3SP7TIK4h8r
-        PpyELbuiO1ceQj+YWrNRPU1tX/CJFVKHtY0HAPwf7HprU7bVH7DjO86MmCw8N78p
-        ChaqVE53fIE6dMYLP9dxcMPHrSboZP639jgFqC8DPdP2UQu17aG/LhhCvnawVQiK
-        n79C01mXl0wcEPhbUqS51NXSKwFjbtSAK4X1svaP3ZQG4HMrYU7Ykj1AgDTW3Yr+
-        A4JquaiK6cN0B4EFaBUD2Cg9U7ezQ==
-X-ME-Sender: <xms:C9JIX7W03dadeG8PEMoGoVQfbh_sjVanI-guPv-3VbPVr-Oi5EBHlQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvjedgtdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtugfgjgesthhqredttddtvdenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
-    htthgvrhhnpefgjeettdejgffgffdvteeutdehtdehgeehueetkeefgefhtdetjeekledu
-    gedvudenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:C9JIXzmrkoEGwVijS9wdGLeWSJS48ripl0cKVPDQWgVYh2iEL7bEvg>
-    <xmx:C9JIX3Z1NC_o9diyU9cdZgnc4uiDqV49Hs_EHT4shiolZMYtIB42MQ>
-    <xmx:C9JIX2VziRx8voA1cfGPjtE0YegQ1TiWRfZRBVq-WPf1uXwtS--Sjw>
-    <xmx:DNJIX3n7To6TC90qWslSds0yFEFG8Ls9wjHb99y34G1AY1Aqqje_4DLiu6E>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 602503280063;
-        Fri, 28 Aug 2020 05:44:43 -0400 (EDT)
-Date:   Fri, 28 Aug 2020 11:44:41 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc:     nsaenzjulienne@suse.de, eric@anholt.net,
-        devicetree@vger.kernel.org, tim.gover@raspberrypi.com,
-        dave.stevenson@raspberrypi.com, sboyd@kernel.org,
-        mturquette@baylibre.com, kdasu.kdev@gmail.com,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-clk@vger.kernel.org, robh+dt@kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, phil@raspberrypi.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/3] drm/vc4: Support HDMI QHD or higher output
-Message-ID: <20200828094441.6h6siehqbebayffn@gilmour.lan>
-References: <CGME20200821071121epcas1p12225cf2891c2bbe22b90ac65e826dcaa@epcas1p1.samsung.com>
- <20200821071045.24501-1-hoegeun.kwon@samsung.com>
+        Fri, 28 Aug 2020 05:49:39 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86759C061264
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:49:39 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id t189so110813vka.10
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:49:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w9MzcXp7Zv4T4qzmBXRcvcnXSh8rk6DDo3kSFK2/hp4=;
+        b=enF6AvtG5bVBqOHn/jdPVGXAen7fbZALoxZvEjcFqpQ786XitsRhBBZhPP77KI5osv
+         aDKGMRveQ+pP+6ADDUGY+7ToQbl6x8MoPSpwvIWOeAWahQj+GLVlj3yzUwvGrIPzHfuW
+         LPPrHGuZHRcvI9KCRWXb+Hkco1rBTHL7KwThIezI0meM0BUNaZHH0z+5W2OIkwwLZB5k
+         whfTQnmVEz0hGw8oKMDmLgnBDbGp62ix9wx+DnexJUhqxnoN/+xJE/Gvu5eoD1/wWPzi
+         wW7cdy+G2JGMVilyMooTTl46FjdXGm8bauIe2giw0Tx726WUrUpC3/vgV4BFK1f7bRtu
+         bXsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w9MzcXp7Zv4T4qzmBXRcvcnXSh8rk6DDo3kSFK2/hp4=;
+        b=NSP4igHJpBEJcWUCINzQ2DoN60EpabqsndUbL6vvA61tgz/+JQijPjbBBPKHkPG53Z
+         W8rFW9fqMqovMej++zA/eRIY5ZQUqa6KW9Sgb2Baq+0xZOyvhYdaBvPcKqJPaCN2UmHs
+         ++EJDNKKzcIt/NxsmpbH0o7+waJdYF/sCAZSDvSzHs5cgsgHMOLaTILFOEh7w1L2++iC
+         +YDwGxp4YhsABzC3jh9wLlu/K74x2bYSIUa8JK5KthuJDs/reweBf6o7dtCbyikUsU0c
+         gRR7/ytUiKgKlA2Zg8PEFpH8ON9TkKi0PoGOAZ9+a/1uvRPXyx3yPwYNXrfZpLkQQAZ9
+         yKVQ==
+X-Gm-Message-State: AOAM531w7Zxha+a5OfbuCsWcnB6T49A8dQnkdM0JIwuh7bKDmredsYp2
+        hQk+WTfGiB9gx8VgQAOukK1e33GWD3ApNsYDqehILw==
+X-Google-Smtp-Source: ABdhPJxInf4ozm1ow2zl3o3yR14YGHeF+fncV9uzFsoD6t5s0aLYDlhojEDfKGcq0+hIyIEQBVgO4aqHIkrN8C0+TLg=
+X-Received: by 2002:a1f:13c6:: with SMTP id 189mr287585vkt.81.1598608178621;
+ Fri, 28 Aug 2020 02:49:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200821071045.24501-1-hoegeun.kwon@samsung.com>
+References: <20200826093328.88268-1-stephan@gerhold.net> <20200827100104.yuf2nzb6qras7zcw@vireshk-i7>
+ <20200827114422.GA1784@gerhold.net> <20200828063511.y47ofywtu5qo57bq@vireshk-i7>
+In-Reply-To: <20200828063511.y47ofywtu5qo57bq@vireshk-i7>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 28 Aug 2020 11:49:01 +0200
+Message-ID: <CAPDyKFoJrTUEY3a1W+Xf=az_60L=iT_6OUtWmY-JJxLx5HTC6w@mail.gmail.com>
+Subject: Re: [PATCH v2] opp: Power on (virtual) power domains managed by the
+ OPP core
+To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Daniel Baluta <daniel.baluta@oss.nxp.com>,
+        Stephan Gerhold <stephan@gerhold.net>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Niklas Cassel <nks@flawful.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
++ Daniel
 
-On Fri, Aug 21, 2020 at 04:10:42PM +0900, Hoegeun Kwon wrote:
-> Hi everyone,
->=20
-> There is a problem that the output does not work at a resolution
-> exceeding FHD. To solve this, we need to adjust the bvb clock at a
-> resolution exceeding FHD.
->=20
-> Rebased on top of next-20200708 and [1].
->=20
-> [1] : [PATCH v4 00/78] drm/vc4: Support BCM2711 Display Pipeline (Maxime'=
-s patchset)
+> > Commit 17a8f868ae3e ("opp: Return genpd virtual devices from dev_pm_opp_attach_genpd()"):
+> >  "The cpufreq drivers don't need to do runtime PM operations on
+> >   the virtual devices returned by dev_pm_domain_attach_by_name() and so
+> >   the virtual devices weren't shared with the callers of
+> >   dev_pm_opp_attach_genpd() earlier.
+> >
+> >   But the IO device drivers would want to do that. This patch updates
+> >   the prototype of dev_pm_opp_attach_genpd() to accept another argument
+> >   to return the pointer to the array of genpd virtual devices."
+>
+> Not just that I believe. There were also arguments that only the real
+> consumer knows how to handle multiple power domains. For example for a
+> USB or Camera module which can work in multiple modes, we may want to
+> enable only one power domain in say slow mode and another power domain
+> in fast mode. And so these kind of complex behavior/choices better be
+> left for the end consumer and not try to handle this generically in
+> the OPP core.
+>
+> > But the reason why I made this patch is that actually something *should*
+> > enable the power domains even for the cpufreq case.
+>
+> Ulf, what do you think about this ? IIRC from our previous discussions
+> someone asked me not do so.
 
-Thanks a lot for figuring it out
+Yes, that's correct, I recall that now as well.
 
-I have to send a new (and hopefully final) version next week to address som=
-e changes suggested by
-Dave, so I'll squash your patches into the series
+In some cases I have been told that, depending on the running use
+case, one of the PM domains could stay off while the other needed to
+be on. I was trying to find some thread in the archive, but I failed.
+Sorry.
 
-Thanks again!
-Maxime
+>
+> > If every user of dev_pm_opp_attach_genpd() ends up creating these device
+> > links we might as well manage those directly from the OPP core.
+>
+> Sure, I am all in for reducing code duplication, but ...
+>
+> > I cannot think of any use case where you would not want to manage those
+> > power domains using device links. And if there is such a use case,
+> > chances are good that this use case is so special that using the OPP API
+> > to set the performance states would not work either. In either case,
+> > this seems like something that should be discussed once there is such a
+> > use case.
+>
+> The example I gave earlier shows a common case where we need to handle
+> this at the end users which still want to use the OPP API.
+>
+> > At the moment, there are only two users of dev_pm_opp_attach_genpd():
+> >
+> >   - cpufreq (qcom-cpufreq-nvmem)
+> >   - I/O (venus, recently added in linux-next [1])
+> >
+> > [1]: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=9a538b83612c8b5848bf840c2ddcd86dda1c8c76
+> >
+> > In fact, venus adds the device link exactly the same way as in my patch.
+> > So we could move that to the OPP core, simplify the venus code and
+> > remove the virt_devs parameter. That would be my suggestion.
+> >
+> > I can submit a v3 with that if you agree (or we take this patch as-is
+> > and remove the parameter separately - I just checked and creating a
+> > device link twice does not seem to cause any problems...)
+>
+> I normally tend to agree with the logic that lets only focus on what's
+> upstream and not think of virtual cases which may never happen. But I
+> was told that this is too common of a scenario and so it made sense to
+> do it this way.
+>
+> Maybe Ulf can again throw some light here :)
+
+There is another series that is being discussed [1], which could be
+used by the consumer driver to help manage the device links. Maybe
+that is the way we should go, to leave room for flexibility.
+
+[1]
+[PATCH v3 0/2] Introduce multi PM domains helpers
+https://www.spinics.net/lists/kernel/msg3565672.html
