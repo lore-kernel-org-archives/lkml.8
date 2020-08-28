@@ -2,92 +2,62 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 233F2C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9636C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F102E20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:52:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="Gow0qbIe"
+	by mail.kernel.org (Postfix) with ESMTP id BDDB820738
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:53:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgH1QwV (ORCPT
+        id S1726839AbgH1Qxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 12:52:21 -0400
-Received: from relayfre-01.paragon-software.com ([176.12.100.13]:59314 "EHLO
-        relayfre-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725969AbgH1QwK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 12:52:10 -0400
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-        by relayfre-01.paragon-software.com (Postfix) with ESMTPS id 88B4C27E;
-        Fri, 28 Aug 2020 19:52:04 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paragon-software.com; s=mail; t=1598633524;
-        bh=m1pKKjpioRBYOjQrwP54PuAQvD3YzDlEBypI9yp7+XU=;
-        h=From:To:CC:Subject:Date;
-        b=Gow0qbIeJthwM9mEjyHtp2nBwuCuL608qz0bgafuaCQ7HvRuMNQYutmE2sLVaZrTD
-         JdPFLS5NvjTNiP3XzNpJ1U0AdckqWCeBwabSUYBdVsi+KrQgwcAijn1gOMG3nxnoo0
-         mOqPu2I1G5KF13R5C/v5lw4He2iNwuORCrsXwGkg=
-Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 28 Aug 2020 19:52:03 +0300
-Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
- by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
- id 15.01.1847.003; Fri, 28 Aug 2020 19:52:03 +0300
-From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To:     Mark Harmstone <mark@harmstone.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-CC:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>
-Subject: Re: [PATCH v2 05/10] fs/ntfs3: Add attrib operations
-Thread-Topic: [PATCH v2 05/10] fs/ntfs3: Add attrib operations
-Thread-Index: AdZ9WYtoNhpifd4wR/GdSqVgVwVwlw==
-Date:   Fri, 28 Aug 2020 16:52:03 +0000
-Message-ID: <e2decd9632cd4d218fb83e96c0c37174@paragon-software.com>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.30.8.36]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 28 Aug 2020 12:53:52 -0400
+Received: from mga12.intel.com ([192.55.52.136]:42190 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725814AbgH1Qxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 12:53:52 -0400
+IronPort-SDR: Fhj32nmgp7eltoj/q5yOkyoahPTFINM06xPzY4JXZv/YG2ruRTGLJ4dmPbViVENl6aresifVBs
+ dICjXV+HjIjw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="136243215"
+X-IronPort-AV: E=Sophos;i="5.76,364,1592895600"; 
+   d="scan'208";a="136243215"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 09:53:51 -0700
+IronPort-SDR: m37eGOiRVDtLjlEXWPDtSflNmlPbKTZq9zmm5qG3nXhxfb4GLupEcVhRzAT94U3qGkHGwFexVn
+ x8va+e5MHItg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,364,1592895600"; 
+   d="scan'208";a="330006494"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga008.jf.intel.com with ESMTP; 28 Aug 2020 09:53:51 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id DD0ED301C54; Fri, 28 Aug 2020 07:59:50 -0700 (PDT)
+Date:   Fri, 28 Aug 2020 07:59:50 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Muchun Song <songmuchun@bytedance.com>
+Cc:     mike.kravetz@oracle.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mm/hugetlb: Fix a race between hugetlb sysctl handlers
+Message-ID: <20200828145950.GS1509399@tassilo.jf.intel.com>
+References: <20200828031146.43035-1-songmuchun@bytedance.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828031146.43035-1-songmuchun@bytedance.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTWFyayBIYXJtc3RvbmUgPG1hcmsuaGFybXN0b25lQGdtYWlsLmNvbT4gT24gQmVoYWxm
-IE9mIE1hcmsgSGFybXN0b25lDQpTZW50OiBNb25kYXksIEF1Z3VzdCAyNCwgMjAyMCA3OjE0IFBN
-DQo+IA0KPiBIaSBLb25zdGFudGluLA0KPiANCj4gSSBoYXZlIGFuIGludGVyZXN0IGluIHRoaXMg
-LSBJIHdyb3RlIHRoZSBCdHJmcyBkcml2ZXIgZm9yIFdpbmRvd3MsIHdoaWNoIGFsc28gaGFkIHRv
-IGRlYWwgd2l0aCB0aGUgaXNzdWUgb2YgaG93IHRvIG1hcCBOVEZTIGNvbmNlcHQgdG8NCj4gTGlu
-dXggeGF0dHJzLiBVbmxlc3MgdGhlcmUncyBhIGdvb2QgcmVhc29uLCBJIHRoaW5rIGl0J2QgYmUg
-aW4gZXZlcnlvbmUncyBpbnRlcmVzdHMgaWYgd2UgdXNlZCB0aGUgc2FtZSBjb252ZW50aW9ucy4N
-Cj4gDQo+IFlvdSBoYXZlIGZvdXIoISkgZGlmZmVyZW50IHdheXMgb2YgcmVmZXJyaW5nIHRvIHRo
-ZSBhdHRyaWJ1dGVzIHZhbHVlLCB3aGljaCBzZWVtcyBhIGJpdCBleGNlc3NpdmUuIEkgc3VnZ2Vz
-dCB5b3UganVzdCB1c2UNCj4gdXNlci5ET1NBVFRSSUIgLSB0aGlzIHNob3VsZCBiZSBpbiB0aGUg
-dXNlciBuYW1lc3BhY2UgYXMgdXNlcnMgY2FuIHNldCBlLmcuIHRoZSBoaWRkZW4gZmxhZyBvbiBm
-aWxlcyBhdCB3aWxsLiBUaGlzIGFsc28gbWF0Y2hlcyB3aGF0IG15DQo+IGRyaXZlciBkb2VzLCBh
-bmQgd2hhdCBTYW1iYSBkb2VzLg0KPiANCg0KSGkgTWFyayEgVGhhbmtzIGZvciB0aGUgZmVlZGJh
-Y2suIEl0J3MgcmVhc29uYWJsZSBjb25jZXJuLCBidXQgdGhlIG9wZW4gDQpxdWVzdGlvbiBpcyBo
-b3cgdG8gYWNjZXNzIHRob3NlIE5URlMgYXR0cmlidXRlcyB3aGljaCBleHRlbmQgdGhlIERPUyAN
-CmF0dHJpYnV0ZXMuIHVzZXIuRE9TQVRUUklCIG1heSBiZSBnb29kIGZvciBGQVQzMiBhcyBET1Mg
-YXR0cmlidXRlcyBhcmUgc3RvcmVkIGluIDhiaXQuDQpIb3dldmVyLCB0aGlzIGRvZXMgbm90IGFw
-cGx5IHRvIE5URlMgKDMyYml0IGF0dHJpYnV0ZXMpLg0KDQo+IEkgYWxzbyB0aGluayBpdCdzIGEg
-bWlzdGFrZSB0byBvbmx5IGV4cG9zZSB1c2VyLkRPU0FUVFJJQiB0byBTYW1iYSAtIHRoZXJlJ3Mg
-cGF0Y2hlcyBpbiBXaW5lIHN0YWdpbmcgd2hpY2ggd291bGQgYWxzbyBiZW5lZml0IGZyb20NCj4g
-dGhpcy4NCj4gDQoNCkFncmVlZC4gV2lsbCBmaXggdGhpcyBpbiB2NC4gV2UgdGhpbmsgaGlzdG9y
-aWNhbGx5IHRoaXMgY2FtZSBmcm9tIHdyb25nIHJlYWRpbmcgb2YNCiJUaGlzIGV4dGVuZGVkIGF0
-dHJpYnV0ZSBpcyBleHBsaWNpdGx5IGhpZGRlbiBmcm9tIHNtYmQgY2xpZW50cyByZXF1ZXN0aW5n
-IGFuIEVBIGxpc3QuIg0KDQo+IEFsc28sIHVubGVzcyBJJ20gbWlzc2luZyBzb21ldGhpbmcgdGhl
-cmUncyBhIGJ1ZyBpbiBudGZzX3NldHhhdHRyIC0gdGhlIHVzZXIgc2hvdWxkbid0IGJlIGFibGUg
-dG8gY2xlYXIgdGhlIEZJTEVfQVRUUklCVVRFX0RJUkVDVE9SWQ0KPiBmbGFnIG9uIGRpcmVjdG9y
-aWVzIG5vciBzZXQgaXQgb24gZmlsZXMuDQo+IA0KDQpUaGFua3MhIEZpeGVkIGluIHYzLg0KDQo+
-IFRoYW5rcw0KPiANCj4gTWFyaw0KPiANCg0K
+> Fixes: e5ff215941d5 ("hugetlb: multiple hstates for multiple page sizes")
+
+I believe the Fixes line is still not correct. The original patch
+didn't have that problem. Please identify which patch added
+the problematic code.
+
+-Andi
