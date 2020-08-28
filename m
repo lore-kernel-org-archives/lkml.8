@@ -2,177 +2,118 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2E3C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B86C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B12F20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:26:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVl5V6UK"
+	by mail.kernel.org (Postfix) with ESMTP id 3460E20872
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgH1R0o (ORCPT
+        id S1727024AbgH1R1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 13:26:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgH1R0j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 13:26:39 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69699C06121B;
-        Fri, 28 Aug 2020 10:26:38 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id w13so1997365wrk.5;
-        Fri, 28 Aug 2020 10:26:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aI5m0rhpkkZ7NckEYHoD7GvRLNlY5UcLJfSO75qLPWI=;
-        b=nVl5V6UKuaz55MYPnt9XgUMNRyBG/emO+ddzLM/8ChMkYVN4rqBV2/FRmWlwpjSedc
-         SWBgiWdxktsnZ4Y4LvMkhjL87IgdS30n1TTPTpTzmpvSc0sXKMM8mpSnL1NalCujLDw4
-         08LkVQwPzkV0vrgl93a65X+AnQHK5j+y1ROfJ8953kE5tiiIQysF0jKud1fUFnJGyMvu
-         iNHVFIYYWBLs8A8bANum4nmP9o6DDvD91Pvm0yk4GhXbLWrx5xxSQ8hRuScyex4Q3YzY
-         Y4JAmcdfndXlJAnCAB2f/NP1UwczcdjToHNJQiS/vlRl4Y54BupJPoDCFQ6I40eEdDBI
-         g6mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aI5m0rhpkkZ7NckEYHoD7GvRLNlY5UcLJfSO75qLPWI=;
-        b=XA4KDGRwIR2b0ifxOMbnY6JBDBqi8+MnmnyhDvS7qsfzsWuMCzW0TX+fnKs07E8PWg
-         l3+f7a56SALHsTzkAcQHeXC8EIIhjDfgMA6YPIE3UYuCl+MYtFXjJypk2+N1LZzTUUzO
-         dz9vvYGcwANoAKDymb0LT0Nc5vPNxWy02V+Za4445pmnfHVfcM/evoimh5zoViu1OJsM
-         e3OydTCyJBjDnDtlGB+s8Ec9TmaQDpTl4KHmQPNIavpCbDhn14gvm4nGfLJAT4kCKpFX
-         gPgTJup9ntxYA7AQHAKU8i8Ss5Fd1swcftMvjx5l1LUhsiAOcp8t8YaAkIK26vlTispD
-         2TGQ==
-X-Gm-Message-State: AOAM533kU711uQ8ZIwDBOTAwXe05yzPHX5opI7Q0btdP2JbrAYmB5Kq1
-        nK2jlSdcumAqpcT6dhOqhVtwi+NA4WNHjg==
-X-Google-Smtp-Source: ABdhPJyct+GOi/3IdUQHKBhrr7sOcNwgB76XSh27/cmbtdvmBfEvHdokYtpIKxXmBjMexjde0Rzh3Q==
-X-Received: by 2002:adf:f605:: with SMTP id t5mr80267wrp.144.1598635597020;
-        Fri, 28 Aug 2020 10:26:37 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.119.187])
-        by smtp.gmail.com with ESMTPSA id n124sm78581wmn.29.2020.08.28.10.26.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Aug 2020 10:26:36 -0700 (PDT)
-Subject: Re: [PATCH] media: mtk-mdp: Fix Null pointer dereference when calling
- list_add
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-media@vger.kernel.org
-Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, kernel@collabora.com,
-        dafna3@gmail.com, enric.balletbo@collabora.com
-References: <20200828135541.8282-1-dafna.hirschfeld@collabora.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <90836e4f-c3de-32f7-6a23-2093203e124d@gmail.com>
-Date:   Fri, 28 Aug 2020 19:26:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 28 Aug 2020 13:27:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:54000 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725814AbgH1R1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 13:27:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD1011FB;
+        Fri, 28 Aug 2020 10:27:01 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDBFF3F71F;
+        Fri, 28 Aug 2020 10:27:00 -0700 (PDT)
+Date:   Fri, 28 Aug 2020 18:26:58 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     vincent.donnefort@arm.com, mingo@redhat.com, peterz@infradead.org,
+        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org,
+        valentin.schneider@arm.com
+Subject: Re: [PATCH v2] sched/debug: Add new tracepoint to track cpu_capacity
+Message-ID: <20200828172658.dxygk7j672gho4ax@e107158-lin.cambridge.arm.com>
+References: <1598605249-72651-1-git-send-email-vincent.donnefort@arm.com>
+ <20200828102724.wmng7p6je2pkc33n@e107158-lin.cambridge.arm.com>
+ <1e806d48-fd54-fd86-5b3a-372d9876f360@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200828135541.8282-1-dafna.hirschfeld@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1e806d48-fd54-fd86-5b3a-372d9876f360@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 28/08/2020 15:55, Dafna Hirschfeld wrote:
-> In list_add, the first variable is the new node and the second
-> is the list head. The function is called with a wrong order causing
-> NULL dereference:
+On 08/28/20 19:10, Dietmar Eggemann wrote:
+> On 28/08/2020 12:27, Qais Yousef wrote:
+> > On 08/28/20 10:00, vincent.donnefort@arm.com wrote:
+> >> From: Vincent Donnefort <vincent.donnefort@arm.com>
+> >>
+> >> rq->cpu_capacity is a key element in several scheduler parts, such as EAS
+> >> task placement and load balancing. Tracking this value enables testing
+> >> and/or debugging by a toolkit.
+> >>
+> >> Signed-off-by: Vincent Donnefort <vincent.donnefort@arm.com>
+> >>
+> >> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> > 
+> > [...]
+> > 
+> >> +int sched_trace_rq_cpu_capacity(struct rq *rq)
+> >> +{
+> >> +	return rq ?
+> >> +#ifdef CONFIG_SMP
+> >> +		rq->cpu_capacity
+> >> +#else
+> >> +		SCHED_CAPACITY_SCALE
+> >> +#endif
+> >> +		: -1;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(sched_trace_rq_cpu_capacity);
+> >> +
+> > 
+> > The placement of this #ifdef looks odd to me. But FWIW
+> > 
+> > Reviewed-by: Qais Yousef <qais.yousef@arm.com>
 > 
-> [   15.527030] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
-> [   15.542317] Mem abort info:
-> [   15.545152]   ESR = 0x96000044
-> [   15.548248]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [   15.553624]   SET = 0, FnV = 0
-> [   15.556715]   EA = 0, S1PTW = 0
-> [   15.559892] Data abort info:
-> [   15.562799]   ISV = 0, ISS = 0x00000044
-> [   15.566678]   CM = 0, WnR = 1
-> [   15.569683] user pgtable: 4k pages, 48-bit VAs, pgdp=00000001373f0000
-> [   15.576196] [0000000000000008] pgd=0000000000000000, p4d=0000000000000000
-> [   15.583101] Internal error: Oops: 96000044 [#1] PREEMPT SMP
-> [   15.588747] Modules linked in: mtk_mdp(+) cfg80211 v4l2_mem2mem videobuf2_vmalloc videobuf2_dma_contig videobuf2_memops videobuf2_v4l2 videobuf2_common vide
-> odev mt8173_rt5650 smsc95xx usbnet ecdh_generic ecc snd_soc_rt5645 mc mt8173_afe_pcm rfkill cros_ec_sensors snd_soc_mtk_common elan_i2c crct10dif_ce cros_ec_se
-> nsors_core snd_soc_rl6231 elants_i2c industrialio_triggered_buffer kfifo_buf mtk_vpu cros_ec_chardev cros_usbpd_charger cros_usbpd_logger sbs_battery display_c
-> onnector pwm_bl ip_tables x_tables ipv6
-> [   15.634295] CPU: 0 PID: 188 Comm: systemd-udevd Not tainted 5.9.0-rc2+ #69
-> [   15.641242] Hardware name: Google Elm (DT)
-> [   15.645381] pstate: 20000005 (nzCv daif -PAN -UAO BTYPE=--)
-> [   15.651022] pc : mtk_mdp_probe+0x134/0x3a8 [mtk_mdp]
-> [   15.656041] lr : mtk_mdp_probe+0x128/0x3a8 [mtk_mdp]
-> [   15.661055] sp : ffff80001255b910
-> [   15.669548] x29: ffff80001255b910 x28: 0000000000000000
-> [   15.679973] x27: ffff800009089bf8 x26: ffff0000fafde800
-> [   15.690347] x25: ffff0000ff7d2768 x24: ffff800009089010
-> [   15.700670] x23: ffff0000f01a7cd8 x22: ffff0000fafde810
-> [   15.710940] x21: ffff0000f01a7c80 x20: ffff0000f0c3c180
-> [   15.721148] x19: ffff0000ff7f1618 x18: 0000000000000010
-> [   15.731289] x17: 0000000000000000 x16: 0000000000000000
-> [   15.741375] x15: 0000000000aaaaaa x14: 0000000000000020
-> [   15.751399] x13: 00000000ffffffff x12: 0000000000000020
-> [   15.761363] x11: 0000000000000028 x10: 0101010101010101
-> [   15.771279] x9 : 0000000000000004 x8 : 7f7f7f7f7f7f7f7f
-> [   15.781148] x7 : 646bff6171606b2b x6 : 0000000000806d65
-> [   15.790981] x5 : ffff0000ff7f8360 x4 : 0000000000000000
-> [   15.800767] x3 : 0000000000000004 x2 : 0000000000000001
-> [   15.810501] x1 : 0000000000000005 x0 : 0000000000000000
-> [   15.820171] Call trace:
-> [   15.826944]  mtk_mdp_probe+0x134/0x3a8 [mtk_mdp]
-> [   15.835908]  platform_drv_probe+0x54/0xa8
-> [   15.844247]  really_probe+0xe4/0x3b0
-> [   15.852104]  driver_probe_device+0x58/0xb8
-> [   15.860457]  device_driver_attach+0x74/0x80
-> [   15.868854]  __driver_attach+0x58/0xe0
-> [   15.876770]  bus_for_each_dev+0x70/0xc0
-> [   15.884726]  driver_attach+0x24/0x30
-> [   15.892374]  bus_add_driver+0x14c/0x1f0
-> [   15.900295]  driver_register+0x64/0x120
-> [   15.908168]  __platform_driver_register+0x48/0x58
-> [   15.916864]  mtk_mdp_driver_init+0x20/0x1000 [mtk_mdp]
-> [   15.925943]  do_one_initcall+0x54/0x1b4
-> [   15.933662]  do_init_module+0x54/0x200
-> [   15.941246]  load_module+0x1cf8/0x22d0
-> [   15.948798]  __do_sys_finit_module+0xd8/0xf0
-> [   15.956829]  __arm64_sys_finit_module+0x20/0x30
-> [   15.965082]  el0_svc_common.constprop.0+0x6c/0x168
-> [   15.973527]  do_el0_svc+0x24/0x90
-> [   15.980403]  el0_sync_handler+0x90/0x198
-> [   15.987867]  el0_sync+0x158/0x180
-> [   15.994653] Code: 9400014b 2a0003fc 35000920 f9400280 (f9000417)
-> [   16.004299] ---[ end trace 76fee0203f9898e5 ]---
-> 
-> Fixes: 86698b9505bbc ("media: mtk-mdp: convert mtk_mdp_dev.comp array to list")
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> Returning -1 for cpu_capacity? It makes sense for sched_trace_rq_cpu()
+> but for cpu_capacity?
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+If rq is NULL you return -1, an error the way I read it. rq is passed as an
+argument, so better ensure we handle NULL and not blindly dereference rq and
+crash.
 
-> ---
->   drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-> index f96c8b3bf861..976aa1f4829b 100644
-> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-> @@ -94,7 +94,7 @@ static void mtk_mdp_reset_handler(void *priv)
->   void mtk_mdp_register_component(struct mtk_mdp_dev *mdp,
->   				struct mtk_mdp_comp *comp)
->   {
-> -	list_add(&mdp->comp_list, &comp->node);
-> +	list_add(&comp->node, &mdp->comp_list);
->   }
->   
->   void mtk_mdp_unregister_component(struct mtk_mdp_dev *mdp,
+> Can you remind me why we have all these helper functions like
+> sched_trace_rq_cpu_capacity?
+
+struct rq is defined in kernel/sched/sched.h. It's not exported. Exporting
+these helper functions was the agreement to help modules trace internal info.
+By passing generic info you decouple the tracepoint from giving specific info
+and allow the modules to extract all the info they need from the same
+tracepoint. IE: if you need more than just cpu_capacity from this tracepoint,
+you can get that without having to continuously add extra arguments everytime
+you need an extra piece of info. Unless this info is not in the rq of course.
+
 > 
+> In case we would let the extra code (which transforms trace points into
+> trace events) know the internals of struct rq we could handle those
+> things in the TRACE_EVENT and/or the register_trace_##name(void
+> (*probe)(data_proto), void *data) thing.
+> We always said when the internal things will change this extra code will
+> break. So that's not an issue.
+
+The problem is that you need to export struct rq in a public header. Which we
+don't want to do. I have been trying to find out how to use BTF so we can
+remove these functions. Haven't gotten far away yet - but it should be doable
+and it's a question of me finding enough time to understand what was currently
+done and if I can re-use something or need to come up with extra infrastructure
+first.
+
+Thanks
+
+--
+Qais Yousef
