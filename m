@@ -2,117 +2,102 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 866B9C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D0FC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5410D2075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4AC2075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:31:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s9MNUqTE";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+dv1raOR"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iUJdiq08"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgH1JbO (ORCPT
+        id S1728900AbgH1Jbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:31:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44136 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbgH1JbN (ORCPT
+        Fri, 28 Aug 2020 05:31:40 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:57644 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728016AbgH1JbW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:31:13 -0400
-Date:   Fri, 28 Aug 2020 11:31:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598607070;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+363vywbnVCEVxIi8Y5h0DSwiMHbXktW2NcpgL5JfP8=;
-        b=s9MNUqTEahCmCeuJMEVtzQRU/g3Glpee98Btnh7PEzty13itOAmurS7+fpD/Z1l30aso2f
-        W6d4Vj0uZ5oKmRPHFXmkXWdU1Qhrp7gnDGU4PgZex1QHAcCVGiJJmmO/EIspV4GhDykZcs
-        au+r+v4ZWtqnGC+V3rVUG9ViSGvXjo4uMm0LNekJFFPtZmfl7XHrNhUp9xA0x0Mhqotrn+
-        Oyr+p3Pf7g7MFBs2QM4Tf4Ztwe+4WINiudrj+WifQnbDOo9W6Lot5lXscnyIjGcxpD/bH5
-        8uQf4mCqle59J13r5WxHSY9MG6TlptWOD7lcSuNGDllTiO5yUvQ1n7uHq9fY+g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598607070;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+363vywbnVCEVxIi8Y5h0DSwiMHbXktW2NcpgL5JfP8=;
-        b=+dv1raORZNCi2GS/wUIlPR32I0qmrnp4hPVCslKckQvLtABokNGtTYXGyCNDMKZg6b5bAq
-        uvN9EjdXHkqHwwBA==
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-To:     peterz@infradead.org
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 4/5] seqlock: seqcount_LOCKTYPE_t: Introduce
- PREEMPT_RT support
-Message-ID: <20200828093130.GA7672@lx-t490>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200828010710.5407-1-a.darwish@linutronix.de>
- <20200828010710.5407-5-a.darwish@linutronix.de>
- <20200828085938.GS1362448@hirez.programming.kicks-ass.net>
+        Fri, 28 Aug 2020 05:31:22 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07S9RKLH005422;
+        Fri, 28 Aug 2020 11:30:46 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=GZcXYK4IQ/ttyWbgQ2w+8/AUl4mLyk/JntubDt8xpu4=;
+ b=iUJdiq08j1aAdX0H//CuLIvKCyuHq+0qo06HR0veCNKqtfts+9GPogoz7knCy4K6H2Tn
+ rII6qYVUpDXcqmuN2R0T010lAr8/3hIeUNaCs48mgCAMxjSkLcbuhj168DSlabMBrPB8
+ UbzyAqIycsEyWw0NfqB9/v/EohNmJRNe8FH5aK9W+ZOqXrDx0eVzEEcGSxIAiWsM3sB5
+ qtjPsBRjuo2xWipwyiMeUAbrQCZF+usgqdzZFm125aVg5bTXq9sbdTojV/8HiF6vfaDn
+ HNQgrnRPXS4jTFLUciLAAyKgaiHN3j4tm6bvLLXALI28xEY5BaKPfDGmxatcXU+ux7Bz NQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 332t8g5mm2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 11:30:46 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 753D510002A;
+        Fri, 28 Aug 2020 11:30:38 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 547472AD2DE;
+        Fri, 28 Aug 2020 11:30:38 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Aug
+ 2020 11:30:37 +0200
+Subject: Re: [PATCH v7 3/3] ARM: dts: stm32: add initial support for
+ stm32mp157-odyssey board
+To:     Marcin Sloniewski <marcin.sloniewski@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <mani@kernel.org>, <a.fatoum@pengutronix.de>, <sam@ravnborg.org>,
+        <linus.walleij@linaro.org>, <arnd@arndb.de>, <broonie@kernel.org>,
+        <lkundrak@v3.sk>, <daniel@0x0f.com>,
+        <kuninori.morimoto.gx@renesas.com>, <allen.chen@ite.com.tw>,
+        <robh@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>
+References: <20200809164450.289731-1-marcin.sloniewski@gmail.com>
+ <20200809164450.289731-3-marcin.sloniewski@gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <8a95db7e-865a-db34-ae8a-b2fe3533ab8d@st.com>
+Date:   Fri, 28 Aug 2020 11:30:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200828085938.GS1362448@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200809164450.289731-3-marcin.sloniewski@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-28_05:2020-08-28,2020-08-28 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 10:59:38AM +0200, peterz@infradead.org wrote:
-> On Fri, Aug 28, 2020 at 03:07:09AM +0200, Ahmed S. Darwish wrote:
-> > +#define __SEQ_RT	IS_ENABLED(CONFIG_PREEMPT_RT)
-> > +
-> > +SEQCOUNT_LOCKTYPE(raw_spinlock, raw_spinlock_t,  false,    s->lock,        raw_spin, raw_spin_lock(s->lock))
-> > +SEQCOUNT_LOCKTYPE(spinlock,     spinlock_t,      __SEQ_RT, s->lock,        spin,     spin_lock(s->lock))
-> > +SEQCOUNT_LOCKTYPE(rwlock,       rwlock_t,        __SEQ_RT, s->lock,        read,     read_lock(s->lock))
-> > +SEQCOUNT_LOCKTYPE(mutex,        struct mutex,    true,     s->lock,        mutex,    mutex_lock(s->lock))
-> > +SEQCOUNT_LOCKTYPE(ww_mutex,     struct ww_mutex, true,     &s->lock->base, ww_mutex, ww_mutex_lock(s->lock, NULL))
->
-> Ooh, reading is hard, but ^^^^ you already have that.
->
+Hi Marcin,
 
-Haha, I was just answering the other mail :)
+On 8/9/20 6:44 PM, Marcin Sloniewski wrote:
+> Add support for Seeed Studio's stm32mp157c odyssey board.
+> Board consists of SoM with stm32mp157c with 4GB eMMC and 512 MB DDR3 RAM
+> and carrier board with USB and ETH interfaces, SD card connector,
+> wifi and BT chip AP6236.
+> 
+> In this patch only basic kernel boot is supported and interfacing
+> SD card and on-board eMMC.
+> 
+> Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
+> ---
 
-> > +/*
-> > + * Automatically disable preemption for seqcount_LOCKTYPE_t writers, if the
-> > + * associated lock does not implicitly disable preemption.
-> > + *
-> > + * Don't do it for PREEMPT_RT. Check __SEQ_LOCK().
-> > + */
-> > +#define __seq_enforce_preemption_protection(s)				\
-> > +	(!IS_ENABLED(CONFIG_PREEMPT_RT) && __seqcount_lock_preemptible(s))
->
-> Then what is this doing ?!? I'm confused now.
+Series applied on stm32-next.
 
-There were a number of call sites (at DRM mainly) that protected their
-seqcount_t write sections with mutex and ww_mutex. So, they manually
-disabled preemption before entering the seqcount_t write sections.
+Regards
+Alex
 
-Unfortunately these write sections were big, and spinlocks were also
-acquired inside them.  This was all very bad for RT...
-
-So the idea was to relieve call sites from the responsibility of
-disabling/enabling preemption upon entering a seqcount_LOCKNAME_t write
-section, and let seqlock.h automatically handle it if LOCKNAME_t is
-preemptible (the macro's condition, second part).
-
-Having seqlock.h control the preempt disable/enable allows us to never
-disable preemption for RT, which is exactly what is needed since we
-already handle any possible livelock through the mechanisms described at
-__SEQ_LOCK (the macro's condition test, first part).
-
-Thanks,
-
---
-Ahmed S. Darwish
-Linutronix GmbH
