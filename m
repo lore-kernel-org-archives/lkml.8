@@ -2,187 +2,187 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58372C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C47C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F256208C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:10:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598627430;
-	bh=PrP0KZRG1DhLRFzzw3mCFk9aegopKVVxyDcozCLP1kI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=K9UWAYmM2gf6dfPk3VXMkef9xebTRP36LNICTX5CscSKndUpmpwf8ICgXHwYPUjJ4
-	 PT/c9jEVgYFpPLjkPk1vY/cr6xSfHuQ65DikP52mk5/TDkLptBueglEA6L9HU9904n
-	 sq0XH6+tEbVEBR9+y0XkgfX6pOadoSXXbdLezT7E=
+	by mail.kernel.org (Postfix) with ESMTP id D71CE2075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:10:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Kdwrpox8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgH1PKZ (ORCPT
+        id S1728254AbgH1PKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 11:10:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727937AbgH1PKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 11:10:14 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 887672075B;
-        Fri, 28 Aug 2020 15:10:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598627413;
-        bh=PrP0KZRG1DhLRFzzw3mCFk9aegopKVVxyDcozCLP1kI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=G3n2U5YJTocDbjExwq1mwio5Hrb3nbiNDRk68jsl+Z9eAA3bundz55ry2lAZ6+NUz
-         bpfIPU5an5dJFD3mnvUX3JpSkNW+1SEPJbdCITt3zj/KZzvJ+53yI/Up4/Jlag3E+x
-         4ZI1uBgb5zfAyI48//YtXRbfjESqmHv2LohQOhzE=
-Date:   Sat, 29 Aug 2020 00:10:10 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, Eddy_Wu@trendmicro.com,
-        x86@kernel.org, davem@davemloft.net, rostedt@goodmis.org,
-        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        linux-arch@vger.kernel.org, cameron@moodycamel.com,
-        oleg@redhat.com, will@kernel.org, paulmck@kernel.org
-Subject: Re: [PATCH v4 20/23] [RFC] kprobes: Remove task scan for updating
- kretprobe_instance
-Message-Id: <20200829001010.7ec1a183c2294f7bd843b153@kernel.org>
-In-Reply-To: <20200828125236.GA1362448@hirez.programming.kicks-ass.net>
-References: <159861759775.992023.12553306821235086809.stgit@devnote2>
-        <159861781740.992023.4956784710984854658.stgit@devnote2>
-        <20200828125236.GA1362448@hirez.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 28 Aug 2020 11:10:52 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60622 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726321AbgH1PKt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 11:10:49 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07SF2buJ051711;
+        Fri, 28 Aug 2020 11:10:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=3eWNwJ8Wf00T2lz4qt2Y64JTbxe4wIQ4V+HqrirF7o0=;
+ b=Kdwrpox8RZyZLjPsNBQesttHtL561tqh77XdQBROZhEVW7Org3nf5YAUddwcQTx9jw8o
+ H6E6C/CTXLnTu4DFZXizBHFHtdwFQbuDVr4RC2vurylXCr5Im/+G0SJxTopCW5u5lgTJ
+ P1C6FDMRJWW6If0slJO9Lzrbj/6ftYFzCG7/XZSRHZYUq357vAjkZLAdBYtF2WIwwTxT
+ P/3ru8x0k5Z9ZNhPK6ky3AMPM832CKvZUK+ifJ9a3IXtRgSSn1VGsMhm4CDVNJNikKwI
+ YO/aJbAHbhgTkoe/VpDQ/3UhhbtzesNAPNjRGn3lVosJR8cPw/Z4Khoq12hRduUucHmu rQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3372fykrue-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 11:10:47 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07SF2fJZ051904;
+        Fri, 28 Aug 2020 11:10:46 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3372fykrte-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 11:10:46 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07SF2cfP019974;
+        Fri, 28 Aug 2020 15:10:45 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma03wdc.us.ibm.com with ESMTP id 332utrjrmp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 15:10:45 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07SFAgd956819982
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Aug 2020 15:10:42 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E3BA7805C;
+        Fri, 28 Aug 2020 15:10:42 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C013778067;
+        Fri, 28 Aug 2020 15:10:40 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.170.64])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Aug 2020 15:10:40 +0000 (GMT)
+Subject: Re: [PATCH v10 02/16] s390/vfio-ap: use new AP bus interface to
+ search for queue devices
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        kernel test robot <lkp@intel.com>
+References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+ <20200821195616.13554-3-akrowiak@linux.ibm.com>
+ <20200825121334.0ff35d7a.cohuck@redhat.com>
+ <b1c6bad8-3ec6-183c-3e35-9962e9c721c7@linux.ibm.com>
+ <20200828101357.2ccbc39a.cohuck@redhat.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <d4faf910-ea86-bcda-13e1-544243477568@linux.ibm.com>
+Date:   Fri, 28 Aug 2020 11:10:40 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200828101357.2ccbc39a.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-28_08:2020-08-28,2020-08-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1011 bulkscore=0 suspectscore=3 priorityscore=1501 malwarescore=0
+ mlxlogscore=915 impostorscore=0 spamscore=0 adultscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008280112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Aug 2020 14:52:36 +0200
-peterz@infradead.org wrote:
-
-> 
-> If you do this, can you merge this into the previos patch and then
-> delete the sched try_to_invoke..() patch?
-
-Yes, this is just for making code review easy. :)
-
-> 
-> Few comments below.
-> 
-> On Fri, Aug 28, 2020 at 09:30:17PM +0900, Masami Hiramatsu wrote:
-> 
-> 
-> > +static nokprobe_inline struct kretprobe *get_kretprobe(struct kretprobe_instance *ri)
-> > +{
-> > +	/* rph->rp can be updated by unregister_kretprobe() on other cpu */
-> > +	smp_rmb();
-> > +	return ri->rph->rp;
-> > +}
-> 
-> That ordering doesn't really make sense, ordering requires at least two
-> variables, here there is only 1. That said, get functions usually need
-> an ACQUIRE order to make sure subsequent accesses are indeed done later.
-
-So, 
-	return smp_load_acquire(ri->rph->rp);
-will be enough?
-
-> 
-> >  #else /* CONFIG_KRETPROBES */
-> >  static inline void arch_prepare_kretprobe(struct kretprobe *rp,
-> >  					struct pt_regs *regs)
-> 
-> > @@ -1922,6 +1869,7 @@ unsigned long __kretprobe_trampoline_handler(struct pt_regs *regs,
-> >  	kprobe_opcode_t *correct_ret_addr = NULL;
-> >  	struct kretprobe_instance *ri = NULL;
-> >  	struct llist_node *first, *node;
-> > +	struct kretprobe *rp;
-> >  
-> >  	first = node = current->kretprobe_instances.first;
-> >  	while (node) {
-> > @@ -1951,12 +1899,13 @@ unsigned long __kretprobe_trampoline_handler(struct pt_regs *regs,
-> >  	/* Run them..  */
-> >  	while (first) {
-> >  		ri = container_of(first, struct kretprobe_instance, llist);
-> > +		rp = get_kretprobe(ri);
-> >  		node = first->next;
-> 
-> (A)
-> 
-> > -		if (ri->rp && ri->rp->handler) {
-> > -			__this_cpu_write(current_kprobe, &ri->rp->kp);
-> > +		if (rp && rp->handler) {
-> > +			__this_cpu_write(current_kprobe, &rp->kp);
-> >  			ri->ret_addr = correct_ret_addr;
-> > -			ri->rp->handler(ri, regs);
-> > +			rp->handler(ri, regs);
-> >  			__this_cpu_write(current_kprobe, &kprobe_busy);
-> >  		}
-> 
-> So here we're using get_kretprobe(), but what is to stop anybody from
-> doing unregister_kretprobe() right at (A) such that we did observe our
-> rp, but by the time we use it, it's a goner.
-
-In kprobe_busy_begin() we disable preempt, so this block is not preemptive.
-And as you may know, the unregister_kretprobe() is waiting rcu grace period
-after it clear the rp->rph->rp. So, someone does unregister_kretprobe() at
-(A), rph->rp = NULL but rp itself is not released until all running
-trampoline_handlers exit. 
-
-> 
-> 
-> > +	rp->rph = kzalloc(sizeof(struct kretprobe_holder), GFP_KERNEL);
-> > +	rp->rph->rp = rp;
-> 
-> I think you'll need to check the allocation succeeded, no? :-)
-
-Oops, I had found it once but forgot to fix :( 
-
-> 
-> 
-> > @@ -2114,16 +2065,20 @@ void unregister_kretprobes(struct kretprobe **rps, int num)
-> >  	if (num <= 0)
-> >  		return;
-> >  	mutex_lock(&kprobe_mutex);
-> > -	for (i = 0; i < num; i++)
-> > +	for (i = 0; i < num; i++) {
-> >  		if (__unregister_kprobe_top(&rps[i]->kp) < 0)
-> >  			rps[i]->kp.addr = NULL;
-> > +		rps[i]->rph->rp = NULL;
-> > +	}
-> > +	/* Ensure the rph->rp updated after this */
-> > +	smp_wmb();
-> >  	mutex_unlock(&kprobe_mutex);
-> 
-> That ordering is dodgy again, those barriers don't help anything if
-> someone else is at (A) above.
-> 
-> >  
-> >  	synchronize_rcu();
-> 
-> This one might help, this means we can do rcu_read_lock() around
-> get_kretprobe() and it's usage. Can we call rp->handler() under RCU?
-
-Yes, as I said above, the get_kretprobe() (and kretprobe handler) must be
-called under preempt-disabled.
-
-Thank you,
-
-> 
-> >  	for (i = 0; i < num; i++) {
-> >  		if (rps[i]->kp.addr) {
-> >  			__unregister_kprobe_bottom(&rps[i]->kp);
-> > -			cleanup_rp_inst(rps[i]);
-> > +			free_rp_inst(rps[i]);
-> >  		}
-> >  	}
-> >  }
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+On 8/28/20 4:13 AM, Cornelia Huck wrote:
+> On Thu, 27 Aug 2020 10:24:07 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>
+>> On 8/25/20 6:13 AM, Cornelia Huck wrote:
+>>> On Fri, 21 Aug 2020 15:56:02 -0400
+>>> Tony Krowiak<akrowiak@linux.ibm.com>  wrote:
+>>>>    /**
+>>>> - * vfio_ap_get_queue: Retrieve a queue with a specific APQN from a list
+>>>> - * @matrix_mdev: the associated mediated matrix
+>>>> + * vfio_ap_get_queue: Retrieve a queue with a specific APQN.
+>>>>     * @apqn: The queue APQN
+>>>>     *
+>>>> - * Retrieve a queue with a specific APQN from the list of the
+>>>> - * devices of the vfio_ap_drv.
+>>>> - * Verify that the APID and the APQI are set in the matrix.
+>>>> + * Retrieve a queue with a specific APQN from the AP queue devices attached to
+>>>> + * the AP bus.
+>>>>     *
+>>>> - * Returns the pointer to the associated vfio_ap_queue
+>>>> + * Returns the pointer to the vfio_ap_queue with the specified APQN, or NULL.
+>>>>     */
+>>>> -static struct vfio_ap_queue *vfio_ap_get_queue(
+>>>> -					struct ap_matrix_mdev *matrix_mdev,
+>>>> -					int apqn)
+>>>> +static struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
+>>>>    {
+>>>> +	struct ap_queue *queue;
+>>>>    	struct vfio_ap_queue *q;
+>>>> -	struct device *dev;
+>>>>    
+>>>> -	if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
+>>>> -		return NULL;
+>>>> -	if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
+>>> I think you should add some explanation to the patch description why
+>>> testing the matrix bitmasks is not needed anymore.
+>> As a result of this comment, I took a closer look at the code to
+>> determine the reason for eliminating the matrix_mdev
+>> parameter. The reason is because the code below (i.e., find the device
+>> and get the driver data) was also repeated in the vfio_ap_irq_disable_apqn()
+>> function, so I replaced it with a call to the function above; however, the
+>> vfio_ap_irq_disable_apqn() function  does not have a reference to the
+>> matrix_mdev, so I eliminated the matrix_mdev parameter. Note that the
+>> vfio_ap_irq_disable_apqn() is called for each APQN assigned to a matrix
+>> mdev, so there is no need to test the bitmasks there.
+>>
+>> The other place from which the function above is called is
+>> the handle_pqap() function which does have a reference to the
+>> matrix_mdev. In order to ensure the integrity of the instruction
+>> being intercepted - i.e., PQAP(AQIC) enable/disable IRQ for aN
+>> AP queue - the testing of the matrix bitmasks probably ought to
+>> be performed, so it will be done there instead of in the
+>> vfio_ap_get_queue() function above.
+> Should you add a comment that vfio_ap_get_queue() assumes that the
+> caller makes sure that this is only called for APQNs that are assigned
+> to a matrix?
+
+I suppose it wouldn't hurt.
+
+>
+>>
+>>> +	queue = ap_get_qdev(apqn);
+>>> +	if (!queue)
+>>>    		return NULL;
+>>>    
+>>> -	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+>>> -				 &apqn, match_apqn);
+>>> -	if (!dev)
+>>> -		return NULL;
+>>> -	q = dev_get_drvdata(dev);
+>>> -	q->matrix_mdev = matrix_mdev;
+>>> -	put_device(dev);
+>>> +	q = dev_get_drvdata(&queue->ap_dev.device);
+>>> +	put_device(&queue->ap_dev.device);
+>>>    
+>>>    	return q;
+>>>    }
+>>> (...)
+>>>   
+
