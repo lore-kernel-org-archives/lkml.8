@@ -2,198 +2,188 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0E8C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31703C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E96D2208D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0875020825
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:25:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="cVar68i5"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="grW6SQeM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CgyIiWZg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbgH1PVw (ORCPT
+        id S1726141AbgH1PZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 11:21:52 -0400
-Received: from mga14.intel.com ([192.55.52.115]:8233 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728051AbgH1PVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 11:21:38 -0400
-IronPort-SDR: zbeJLlo4MyeFQ23eRZYuN5HtuYzrcxbTX8rqoB2Y+tfIz3F+SW650RYCWvFp4SKfh5RAKuvBni
- oNqL8yl0MYQQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="155942164"
-X-IronPort-AV: E=Sophos;i="5.76,364,1592895600"; 
-   d="scan'208";a="155942164"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 08:21:36 -0700
-IronPort-SDR: 5AzL6bCfU8sqBhH9dnNGMXsnXJwa19INQzEFBtECdoF9s/PVGcNFwYXHmmwgNiQPgANLWAz5ps
- RnbbbhMmxDYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,364,1592895600"; 
-   d="scan'208";a="337521262"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 Aug 2020 08:21:36 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 28 Aug 2020 08:20:24 -0700
-Received: from orsmsx116.amr.corp.intel.com (10.22.240.14) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 28 Aug 2020 08:20:23 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX116.amr.corp.intel.com (10.22.240.14) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 28 Aug 2020 08:20:23 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.109)
- by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 28 Aug 2020 08:20:23 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nIGycc1s9eltW5avtupi8JCyskrlueS8GrbdfJ4NRU3KyOHjR03aiTEX1MTWgvZgsf9M5STAMMqHl7ZsC075tgtyfxkWOuvAIy3fbXal/Gx3wYDiO9t8G7nf4Nwr8HUyvP6cgw4RoaYJ09pvfPGBzCRR+tUYlWCDbvhp23i5QWY9aY7UiaZ0FX+oPj5PzxjHOEpa2n6sZmVfnNXT3kY13nKq7idBeiwHZBGa+T7Ta3r1DAOcdzArO/NYjBRXbM6c77JVuOXUStVLVHz2IuWGIbDcrywFYdsICcW4soilS1hF9JD4bwqZ5sJVGA4XQK2RLd5kEzyWS2hGPJizCSQfeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sMrVeCfoGeTCSazUkkK/czO5DCp0IBrJ0ouSG+3ZqtM=;
- b=YYSnik5hrOPXsZiPyxjjx65LzyOKd0KxHs6A/Vg66x9zxW+lbz2Qzadth3TaMpz1L7Al0qjS37Mtm6T53Pq4xkumSN9M5zOUR2wcHWIjZiteEtOAdQSr25PrOMo3KouS63amaHngKqZ0e2jls8LMMk/vERYB8lL98wiMyWG0fTKyej+bEr+cB+6SzPBaoyJFCSK2P0m5RLAraumiWyqPIMHP0e66WjQb/tCfIKV9q6igIEdZqnqB9soEmjPfA8oLMmiPERfMr4s+WwloyVTT+1IRF0BbVNhF7DI/AfEZoPFa4kn0F0x1Pt7iLSOtNZFBdEPaOmOX9QhgNg/rC6bIdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sMrVeCfoGeTCSazUkkK/czO5DCp0IBrJ0ouSG+3ZqtM=;
- b=cVar68i53T+yMC0U/XcWUtbpghayTPzSYvUZWVxGVK17GlFA5bT74reVLcZQAlhd1t5SZ2Wp3zJFIpNoS+Yx79Ynmx6gwHStGkLWwt6+htI4CZl125l8DmmxxMIugSp2jMg0enkBen4s7IEnhvFxUaJK0R6jWcBL5/N3vmj96tc=
-Received: from DM6PR11MB3963.namprd11.prod.outlook.com (2603:10b6:5:19b::16)
- by DM6PR11MB4754.namprd11.prod.outlook.com (2603:10b6:5:2ad::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Fri, 28 Aug
- 2020 15:20:22 +0000
-Received: from DM6PR11MB3963.namprd11.prod.outlook.com
- ([fe80::5ca6:6956:d7f6:2c55]) by DM6PR11MB3963.namprd11.prod.outlook.com
- ([fe80::5ca6:6956:d7f6:2c55%7]) with mapi id 15.20.3283.028; Fri, 28 Aug 2020
- 15:20:22 +0000
-From:   "Mani, Rajmohan" <rajmohan.mani@intel.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>,
-        =?iso-8859-2?Q?Bla=BE_Hrastnik?= <blaz@mxxn.io>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "pmalani@chromium.org" <pmalani@chromium.org>,
-        "bleung@chromium.org" <bleung@chromium.org>
-Subject: RE: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager (IOM)
- driver
-Thread-Topic: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager
- (IOM) driver
-Thread-Index: AQHWeD6ZmieVJ7ILtEmVT73DLNf2fqlNLX2AgAAXoACAAGapYA==
-Date:   Fri, 28 Aug 2020 15:20:22 +0000
-Message-ID: <DM6PR11MB3963228D43B50604AE4D0F3AF6520@DM6PR11MB3963.namprd11.prod.outlook.com>
-References: <20200822040508.23510-1-rajmohan.mani@intel.com>
- <20200822040508.23510-2-rajmohan.mani@intel.com>
- <20200828074359.GC942935@kroah.com>
- <20200828090832.GB174928@kuha.fi.intel.com>
-In-Reply-To: <20200828090832.GB174928@kuha.fi.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [76.126.121.82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9c5a30c3-7cf5-4903-075f-08d84b65e1cd
-x-ms-traffictypediagnostic: DM6PR11MB4754:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB47547092C33802363E106E83F6520@DM6PR11MB4754.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kYoI7wZqTJCKQr2lg/U9ir7WMAhe+ByPjVieiYovycC/UheOlvRzLl9LGVO4BMhk63GF1uhho7tTw93V7Y/SX/GKRc8w4rf5DVgfS36/Uh+JrTe1OWZXFTVxNGT3TqWaQ/9crNKFYDnSA8+6DKQisgjLWtBKlw76DfuYgzYxAT9Rs84uvo6/oz9FCnqKC6fQB3VkjMpclE5aQSEd0xKM75GEC/cBR+4mG7Vpvp5VokCDfZr4Cf//jFgK1QvbCtTzTn1yoFXlde3uFEg6HYCU7XpfNl1CZ5kV96l9dX8TVx7IL1Zr2jcDLpwj7fSaFHF8ke66KZhkX2zMbLcoowLwow==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(39860400002)(376002)(366004)(346002)(7696005)(83380400001)(5660300002)(52536014)(7416002)(6506007)(54906003)(110136005)(26005)(186003)(316002)(8676002)(66476007)(33656002)(9686003)(64756008)(66446008)(4326008)(66946007)(66556008)(55016002)(478600001)(76116006)(86362001)(8936002)(71200400001)(2906002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: vC9tmnyQcPI06JJnbejlzsILwIii+dEicl9A/cnl0SQX2xn1DEklvatUnwlPQWKriMxGC2TDDccbZZk4fKjqv0wxwfZYlf+EfwtSbT/bHofy0HSEvz6qQM1joFgD6ENMgt/ix/gjgYjagzIU/mV1wi7HQKriUiLyLevVh3gshe0XWgWu0bqIsGysnA7NkFOYovu1xjQ1Gx50qh2j5iFMuflNIUkwxEhtAkptzV5K5A9qRh7NpR1fcGxu/CCs8RljpW1vxmChZZLjCT3B2p7jkm0+q4S0knNcRz4KEnM7gA4uK1ZMLI3pCIQvG3IphjMCbsQxVtG2IN6pmU8fGuTVJbbJ41hhfx8JU3+X7xhMwpPNtWwYW1qfrMDufqWgmYkeC5fDVN5plHAXKRKcHrgpNmm5PrtSgFj17Kih2wQAsEebbJzyl6WRoDR6n295+5ajKy7CZk49mthTFewjjhn73e34Ihggoua+FKTSnncmLl7XaC7dKOLCDWknVBHQE5RmAsTKkMNWWaTQZ46kiHjz3huLF5XSpA14YKMiZJDUuXJi0Sq3pXdTJ+OahyJ2UrkvXExFXV2/uW6F0y3tQfmsUdUYkC387mCqY+BbpUs6sTOIOR3apQIyIkqyurBpuR1klFLCOlL0qKxIVxfv4AnwOw==
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 28 Aug 2020 11:25:29 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:51345 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726321AbgH1PZT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 11:25:19 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 8B4075805D7;
+        Fri, 28 Aug 2020 11:25:16 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 28 Aug 2020 11:25:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=RqoAt0RuSE5IFRqbcpkPtQM/Iij
+        1LwOiF/6zqK5n/V4=; b=grW6SQeML44qSyhis9PDrPnAgY0BosM51+qqBluKJkg
+        4hJdkFWyY8ROrnQtrzlBaVX8vYaZ3PAsVWDZLAjinbVJYHaocwAsEzONs++z9qra
+        pL9BO5UqwQ0qXyhKiyrIKSvzk/qNEVC6FDI5OEcpMfsMVaCgfz+tnnT+qRi6tXvy
+        es475fouKEHevXZDmYVnM1vJLhiGXkti84i9IwpqsXjRJXJz2LtWoQBHT6Hq7jt7
+        z2uvy6mHrfDDbYZAHrMZ690YqoVUHO5cj+RNQAi5Rcvg10X5SSMWPKOPiUB/VFqO
+        YnJJHYnnlpXeYugCN/xutDZgk2UtZcJBCUFJMx0Hhog==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=RqoAt0
+        RuSE5IFRqbcpkPtQM/Iij1LwOiF/6zqK5n/V4=; b=CgyIiWZgzOuuXVB7crnSc8
+        DybFnI+rNTJtoh5O0IVfLV0q/R71u1bd3M/2W4QP65cWJ7YenWAOJvPR+RSwfFBO
+        cw9lBctzKeK0FCBMH4OMZI7duwGwltoQKGxTrtB4fA28dfYY+RCppO2Brnh1yh7D
+        OIkR7ymyF28V4G2uS6Gfa/B+TgaAqA23/PajBmCJXW4ZkeByRAox1hqr++Gghufi
+        wWLRpHsJ6gw/3niZasAvy/JYVyzApt4n7toZ/aWL2g/8XElF4TYcfq04SbdHNYZY
+        QYp9iW8LbpCUVmPF6y+cbNFTOlQQlBS+dX9pMNNqTfVPSRzVk2LynPiTlPoq8fBQ
+        ==
+X-ME-Sender: <xms:2SFJX7ig3Pqndk1fkGnOPVrNFAT9PWjYWKvBP8ZzhQrlr8OCthdQdw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvkedgtdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepudefgffhkedvheelhfejjeffffefgffhgfeggeegudfgvdfhkeefgeejtdel
+    fedtnecuffhomhgrihhnpeihrghmlhdrhihouhdphigrmhhlrdhmhienucfkphepledtrd
+    ekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:2SFJX4Da6wkHr1JyMXJ3-jMAigO-s7brWa0CK-Pg9ZUCh1OdIxj2Uw>
+    <xmx:2SFJX7FgG4VXLlPZFHUukVdpGWMHHKfZdEM4rTiX_CBofCqg5oEX7g>
+    <xmx:2SFJX4SdliuCeyFUb8gtOks3ff7JZ66dHf1-dKjlDM8t6r-mT9Ayng>
+    <xmx:3CFJX9KxT-d2pGhe4ZIJwNRkEta63rk4cfGQclJ_NDaxn49drWm2jg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1B50A3280059;
+        Fri, 28 Aug 2020 11:25:13 -0400 (EDT)
+Date:   Fri, 28 Aug 2020 17:25:10 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Hoegeun Kwon <hoegeun.kwon@samsung.com>, nsaenzjulienne@suse.de,
+        eric@anholt.net, devicetree@vger.kernel.org,
+        tim.gover@raspberrypi.com, kdasu.kdev@gmail.com, sboyd@kernel.org,
+        mturquette@baylibre.com, dave.stevenson@raspberrypi.com,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        phil@raspberrypi.com, robh+dt@kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/3] drm/vc4: hdmi: Add pixel bvb clock control
+Message-ID: <20200828152510.jhhqvka6fmouozff@gilmour.lan>
+References: <20200821071045.24501-1-hoegeun.kwon@samsung.com>
+ <CGME20200821071122epcas1p3d00dda4665f94192ac5e9ee829d0557d@epcas1p3.samsung.com>
+ <20200821071045.24501-4-hoegeun.kwon@samsung.com>
+ <61c199bf-852f-82d3-089a-a0a435343acf@i2se.com>
+ <80749dcd-d4b2-68a1-f3ca-c19a120f6f7b@samsung.com>
+ <84c423e8-25a6-8f23-cc80-7a17ce03fd1d@i2se.com>
+ <a19de8d5-2b01-cb62-38a2-b0732068025c@samsung.com>
+ <a3231281-3bd0-e7c9-1bb0-f05848621e82@i2se.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3963.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c5a30c3-7cf5-4903-075f-08d84b65e1cd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2020 15:20:22.3416
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FBWU2IK7Ep/zkL/dpdkxilABbN9RfNhTEY00KPbBrACsc76fktAN/P93Oalp0dwb13tv6XzN7otqsdn93gXZsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4754
-X-OriginatorOrg: intel.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ix4evhq5byu57ys6"
+Content-Disposition: inline
+In-Reply-To: <a3231281-3bd0-e7c9-1bb0-f05848621e82@i2se.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
 
-> Subject: Re: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager
-> (IOM) driver
->=20
-> Hi Greg,
->=20
-> On Fri, Aug 28, 2020 at 09:43:59AM +0200, Greg Kroah-Hartman wrote:
-> > I still find this crazy that a whole separate driver is created just
-> > to read a single 32bit value.
+--ix4evhq5byu57ys6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Fri, Aug 28, 2020 at 02:45:49PM +0200, Stefan Wahren wrote:
+> Am 28.08.20 um 08:30 schrieb Hoegeun Kwon:
+> > On 8/27/20 6:49 PM, Stefan Wahren wrote:
+> >> Am 27.08.20 um 06:35 schrieb Hoegeun Kwon:
+> >>> Hi Stefan,
+> >>>
+> >>> Thank you for your review.
+> >>>
+> >>>
+> >>> On 8/26/20 7:04 PM, Stefan Wahren wrote:
+> >>>> Hi Hoeguen,
+> >>>>
+> >>>> Am 21.08.20 um 09:10 schrieb Hoegeun Kwon:
+> >>>>> There is a problem that the output does not work at a resolution
+> >>>>> exceeding FHD. To solve this, we need to adjust the bvb clock at a
+> >>>>> resolution exceeding FHD.
+> >>>> this patch introduces a mandatory clock, please update
+> >>>> brcm,bcm2835-hdmi.yaml first.
+> >>>>
+> >>>> Is this clock physically available on BCM283x or only on BCM2711?
+> >>> As far as I know, BCM2711 raspberry pi 4 supports 4k,
+> >>>
+> >>> don't supported on pi 3 and pi 3+.
+> >>>
+> >>> Since 4k is not supported in versions prior to Raspberry Pi 4,
+> >>>
+> >>> I don't think we need to modify the bvb clock.
+> >>>
+> >>>
+> >>> So I think it is better to update 'brcm,bcm2711-hdmi.yaml'
+> >>>
+> >>> instead of 'brcm,bcm2835-hdmi.yaml'.
+> >> You are correct please update only brcm,bcm2711-hdmi.yaml.
+> >>
+> >> My concern was that the function vc4_hdmi_encoder_pre_crtc_configure()
+> >> is called on a non-bcm2711 platform or on a Raspberry Pi 4 with an old=
+er
+> >> DTB. So making the BVB clock optional might be better?
+> > You are right, if use old dtb, we have a problem with the hdmi driver.
 > >
-> > Why not put this logic in the driver that wants to read that value?
-> > That would be much simpler, smaller, and more obvious.
+> > So how about modifying it like this?
+> >
+> > @@ -1614,8 +1614,8 @@ static int vc5_hdmi_init_resources(struct vc4_hdm=
+i=20
+> > *vc4_hdmi)
+> >
+> >  =A0=A0=A0=A0=A0=A0=A0 vc4_hdmi->pixel_bvb_clock =3D devm_clk_get(dev, =
+"bvb");
+> >  =A0=A0=A0=A0=A0=A0=A0 if (IS_ERR(vc4_hdmi->pixel_bvb_clock)) {
+> > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 DRM_ERROR("Failed to get pi=
+xel bvb clock\n");
+> > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 return PTR_ERR(vc4_hdmi->pi=
+xel_bvb_clock);
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 DRM_WARN("Failed to get pix=
+el bvb clock\n");
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 vc4_hdmi->pixel_bvb_clock =
+=3D NULL;
+> >  =A0=A0=A0=A0=A0=A0=A0 }
 >=20
-> That would mean that we start maintaining something like DMI quirk table =
-in
-> those drivers. Unfortunately the IOM device is not available on every pla=
-tform.
-> Also, even on platforms that do have it, there is no guarantee that the d=
-evice is
-> always going to be mapped to the same address.
->=20
-> Nevertheless, I was originally hoping that we could hide the handling of =
-IOM
-> somehow in ACPI without the need for an actual device object, but it now
-> turns out that the other features of the IOM chip have created interest. =
-At
-> least our i915 guys probable have some use for it (I don't know exactly w=
-hat
-> they are planning to use it for).
->=20
-> So the fact that we may later need the device for something else, on top =
-of the
-> clumsiness and most importantly risks involved with using ACPI to take ca=
-re of
-> extra tasks (ASL tends to have bugs - bugs that may never ever get fixed)=
-, I
-> think the IOM device object, and the driver that binds to it, do have a v=
-alid
-> reason for existing.
->=20
+> i think the better solution would be devm_clk_get_optional(), which
+> return NULL in case the clock doesn't exist.
 
-Intel PMC USB mux device is part of the PCH, while IOM is part of the SoC.
-This was another reason we had to have a separate ACPI device.
+It's not really optional though. BCM2711 will require it in order to run
+properly (as Hoegeun experienced), and the previous SoCs won't.
 
->=20
-> thanks,
->=20
-> --
-> heikki
+If we use clk_get_optional and that the DT is missing the clock on the
+BCM2711, we will silently ignore it which doesn't sound great.
+
+Maxime
+
+--ix4evhq5byu57ys6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0kh1gAKCRDj7w1vZxhR
+xazQAQCSvVaDf3qmDFvhw1r1oJ8a32YED7NWtNS1A3o11Be4HAEAkpKQVp8yK7ux
+G+EKAf+v6chTEQybgsmOJD6baC36/Qs=
+=1z+V
+-----END PGP SIGNATURE-----
+
+--ix4evhq5byu57ys6--
