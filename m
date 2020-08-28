@@ -2,100 +2,106 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF47C2BB56
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5AAC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 749B0208C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D374A208C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:08:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="mlsMiFL5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oEsScVLb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgH1HHd (ORCPT
+        id S1728310AbgH1HIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:07:33 -0400
-Received: from www.zeus03.de ([194.117.254.33]:56424 "EHLO mail.zeus03.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727971AbgH1HH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:07:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=Az1Sk4hkwbQABBKARFwOvsdniom9
-        41JaYW/JGUCYwxs=; b=mlsMiFL5Cc9N/xPC5xAFNmDg3WJp3Gd6GkqozaSv3Jmc
-        jS1XuZ7g1Zpzgi0qtxXZ+cWUCnLphjKJ/xOi0vfI/MDOkMvyaFWVj3gHo8gh1Kay
-        ut7MA0JcdoUsI56xkwXZqJI1KYBeSI2Jh8FcledpF7P3AQtzCqXJMOY41b/oXJo=
-Received: (qmail 1185780 invoked from network); 28 Aug 2020 09:07:25 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 28 Aug 2020 09:07:25 +0200
-X-UD-Smtp-Session: l3s3148p1@NcB8tOqtFI8gAwDPXwV9AGQXyOmO3Ynm
-Date:   Fri, 28 Aug 2020 09:07:25 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Dirk Behme <dirk.behme@de.bosch.com>,
-        Andy Lowe <andy_lowe@mentor.com>
-Subject: Re: [PATCH v2] i2c: i2c-rcar: Auto select RESET_CONTROLLER
-Message-ID: <20200828070725.GD1343@ninjato>
-References: <20200827092330.16435-1-erosca@de.adit-jv.com>
+        Fri, 28 Aug 2020 03:08:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgH1HIN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 03:08:13 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5932C061264;
+        Fri, 28 Aug 2020 00:08:12 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id s2so111425pjr.4;
+        Fri, 28 Aug 2020 00:08:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QKDUbYPcPEh8IBd+SIHE5bvSSUow+Zho8PuNcnzF93Q=;
+        b=oEsScVLblMKfSEP1QEYR9B1R6dZSAtZAbml7BDMDCoTnWnSyNFtCGBgqKMjF88CEGX
+         G1FtgKUHMZfM1L3sjghPQXJ5WFFqBXjx9HIQoht/Dw+CL4vDyJNddadzkScAJLKIhHX+
+         5h8qxdXVjEx2gYOLZtDEQ9Wr89boL8zXto4DFFVsBhAbpu2zrkdm4a7FY9RV09lJl1+O
+         LydZLXT1Z1ZGuMXvS/uhWs1oqtTZ43muGe3vn8NWYi8VdrZloKnlK/qKf7/TX4/h5N/+
+         YkYG0hhWGobNv+UTexKHNpOODDcCZqUCdbQOBoOmaQvkqclWP+9tfODYuiVCRDWlfwZM
+         qASQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QKDUbYPcPEh8IBd+SIHE5bvSSUow+Zho8PuNcnzF93Q=;
+        b=fUtrceJimXtMigglEynuSf+Y4ZoQ0G9wl7XhX4TnVDrqXofcpk0QC0Nb+SrUW/jxQn
+         3xktsnnefhbyEeM67e/+rrnkD41zyiQT/IrIXAKL/mk/pIjfpL2qYwmX1YYMcYl3iiV/
+         RpH5Wa9VwYkPOjGk+YdfUzeh54Om3CrAzEEofYCghnlKMrkE6xA7BiI4HDhABdD00Slp
+         q+JuSJ4XqY10gb+YxYQFcvmJoxzpWzNz0OJqDgtJegpIwp3q2vtqF4/79nlMhKG+gEFm
+         VOzTfWsZVyPDxgotg2rwYwXVS0cDGbv2Q6qhAIWCj47G1xBDDrW+WfIG9Zbeebnf/hz0
+         rVeA==
+X-Gm-Message-State: AOAM531TZqE0T7qb2n6QW0gpFRwxpFR/KFzuCGPxwtZ/DyhRM93FnJfN
+        1MyHzpGjLL/aiS6J771TB70=
+X-Google-Smtp-Source: ABdhPJycyDfw8uZMHIfKVJw+n62ExArLbwu/fPa6q0T9K+JFC5wpBeyzT7hhgGdJrVE1mF1p5FOdlw==
+X-Received: by 2002:a17:90b:1b12:: with SMTP id nu18mr72152pjb.126.1598598492452;
+        Fri, 28 Aug 2020 00:08:12 -0700 (PDT)
+Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8880:9ae0:b81a:ad7:9450:beeb])
+        by smtp.gmail.com with ESMTPSA id i1sm473447pgq.41.2020.08.28.00.08.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 00:08:11 -0700 (PDT)
+From:   Xie He <xie.he.0141@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Krzysztof Halasa <khc@pm.waw.pl>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Xie He <xie.he.0141@gmail.com>, Martin Schiller <ms@dev.tdt.de>
+Subject: [PATCH net] drivers/net/wan/hdlc_cisco: Add hard_header_len
+Date:   Fri, 28 Aug 2020 00:07:52 -0700
+Message-Id: <20200828070752.54444-1-xie.he.0141@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="q9KOos5vDmpwPx9o"
-Content-Disposition: inline
-In-Reply-To: <20200827092330.16435-1-erosca@de.adit-jv.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This driver didn't set hard_header_len. This patch sets hard_header_len
+for it according to its header_ops->create function.
 
---q9KOos5vDmpwPx9o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This driver's header_ops->create function (cisco_hard_header) creates
+a header of (struct hdlc_header), so hard_header_len should be set to
+sizeof(struct hdlc_header).
 
-On Thu, Aug 27, 2020 at 11:23:30AM +0200, Eugeniu Rosca wrote:
-> From: Dirk Behme <dirk.behme@de.bosch.com>
->=20
-> The i2c-rcar driver utilizes the Generic Reset Controller kernel
-> feature, so select the RESET_CONTROLLER option when the I2C_RCAR
-> option is selected.
->=20
-> Fixes: 2b16fd63059ab9 ("i2c: rcar: handle RXDMA HW behaviour on Gen3")
-> Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
-> Signed-off-by: Andy Lowe <andy_lowe@mentor.com>
-> [erosca: Add "if ARCH_RCAR_GEN3" on Wolfram's request]
-> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+---
+ drivers/net/wan/hdlc_cisco.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Applied to for-next, thanks!
+diff --git a/drivers/net/wan/hdlc_cisco.c b/drivers/net/wan/hdlc_cisco.c
+index d8cba3625c18..444130655d8e 100644
+--- a/drivers/net/wan/hdlc_cisco.c
++++ b/drivers/net/wan/hdlc_cisco.c
+@@ -370,6 +370,7 @@ static int cisco_ioctl(struct net_device *dev, struct ifreq *ifr)
+ 		memcpy(&state(hdlc)->settings, &new_settings, size);
+ 		spin_lock_init(&state(hdlc)->lock);
+ 		dev->header_ops = &cisco_header_ops;
++		dev->hard_header_len = sizeof(struct hdlc_header);
+ 		dev->type = ARPHRD_CISCO;
+ 		call_netdevice_notifiers(NETDEV_POST_TYPE_CHANGE, dev);
+ 		netif_dormant_on(dev);
+-- 
+2.25.1
 
-
---q9KOos5vDmpwPx9o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9IrSwACgkQFA3kzBSg
-KbZXZg//VIRSaaFqXdc/btBi/FKFe3CQTJF5rr83q7zDXmNCPwmlW5W75nTtYpNa
-bEMF+mKziIgs1yELPIzUoitOYPHPjtgGUiwsfjAQ6XotcRk6RWsDi2PRNAnYOVsA
-tg+qNv96YZ++t+u7tVEtPVrbj5YwZaKz7W4EvVrPAaIxjF4xtvpXb9sHE9BVbwqC
-u2kDFtywya+IHHgT5mP+uqRf73jSpZncuA1KhcTR3o1FFyMV1U9wO5WadJLzsbSy
-bjDTrHNDpOBNchFb+0d7BPmHzu6CHq8twpQOqXEdazsqHVAplnElfj5/E0sP3BTy
-DKV+KqNzvqOO5Z37Q/+xMx2XGHbd2jCio2jeYXDKQGhgf8zrB7eI30plB6n2F29r
-+bK74WgakaT2BBhcLe74iZaxTqIhjTml1zLFVbxxXFm5/FnbXT6U1Ze5bTB05k1G
-S6EUa6gaXqZOIwN0g0pSflBop/MWD30sNt4M2bDZN5RxjcWLEAE3KhuRDHQPONmC
-kH0fYFbjSjb/U2EnYVrpH9viDl5Xo4EidyzMDZANAHg8u58yJme7Z6ycLscRuuuI
-i/cNhDCRGeqzg1Kvg8qBIm6LfzB03yxa3jcYeiVElMriIjo7/xMxHCYEyA7gmNEH
-vJYhuv5RXEI/BmZEYmQJIkRR+r+a8oLrxOaO6/dhBXn5EgW/bkU=
-=Lp0u
------END PGP SIGNATURE-----
-
---q9KOos5vDmpwPx9o--
