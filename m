@@ -2,276 +2,111 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB20FC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B891C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBD32071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387232071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:58:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bhk52EPR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbgH1I4u (ORCPT
+        id S1728731AbgH1I6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 04:56:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59130 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728444AbgH1I4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 04:56:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 1A09BB649;
-        Fri, 28 Aug 2020 08:57:08 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id BD8021E12C0; Fri, 28 Aug 2020 10:56:34 +0200 (CEST)
-Date:   Fri, 28 Aug 2020 10:56:34 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Xianting Tian <tian.xianting@h3c.com>
-Cc:     viro@zeniv.linux.org.uk, bcrl@kvack.org, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        jack@suse.cz, linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] aio: make aio wait path to account iowait time
-Message-ID: <20200828085634.GC7072@quack2.suse.cz>
-References: <20200828060712.34983-1-tian.xianting@h3c.com>
+        Fri, 28 Aug 2020 04:58:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728501AbgH1I56 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 04:57:58 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3634C061264
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 01:57:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=jh+K2Qasy0dQnK1uvT/EeMP7bA1n+DIGMgJY0Q/GdaY=; b=bhk52EPRlRQtj4hjNqp2dQAUpT
+        p3wGac0Y0OZ6DzlywXgXj41nddyy8whMv5LL9btkjpdv3axErC6Ln0H0WLitbTwDOJZw6QsMTZdeI
+        GsH0FhxdW8rby/mg6NsiufBuiBVahRG14moyK+Zn3NNForrenMJPrm2D6Io6pWbqSzaJtN7qjIzmE
+        nVE6hfqk7je4xJhdqgN1VfePSI6Mu283M6DIz6hFcgFmuBm54NaIMIbqdLZhGaHd2LEwxIAgAECrw
+        Pv9i2Cg17VqlYPM2x71q7ifb/r2KkjjCpdMPaQm9u5OEhHdOuIh3XH4AHDu6e8nSJNDVvBAHLT5hE
+        YC4c+lGQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBaCl-0005ds-D5; Fri, 28 Aug 2020 08:57:51 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D96733003E5;
+        Fri, 28 Aug 2020 10:57:50 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C5F242C56E648; Fri, 28 Aug 2020 10:57:50 +0200 (CEST)
+Date:   Fri, 28 Aug 2020 10:57:50 +0200
+From:   peterz@infradead.org
+To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 4/5] seqlock: seqcount_LOCKTYPE_t: Introduce
+ PREEMPT_RT support
+Message-ID: <20200828085750.GR1362448@hirez.programming.kicks-ass.net>
+References: <20200519214547.352050-1-a.darwish@linutronix.de>
+ <20200828010710.5407-1-a.darwish@linutronix.de>
+ <20200828010710.5407-5-a.darwish@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200828060712.34983-1-tian.xianting@h3c.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200828010710.5407-5-a.darwish@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 28-08-20 14:07:12, Xianting Tian wrote:
-> As the normal aio wait path(read_events() ->
-> wait_event_interruptible_hrtimeout()) doesn't account iowait time, so use
-> this patch to make it to account iowait time, which can truely reflect
-> the system io situation when using a tool like 'top'.
-> 
-> The test result as below.
-> 
-> Test environment：
-> 	Architecture:          x86_64
-> 	CPU op-mode(s):        32-bit, 64-bit
-> 	Byte Order:            Little Endian
-> 	CPU(s):                32
-> 	On-line CPU(s) list:   0-31
-> 	Thread(s) per core:    2
-> 	Core(s) per socket:    8
-> 	Socket(s):             2
-> 	NUMA node(s):          2
-> 	Vendor ID:             GenuineIntel
-> 	CPU family:            6
-> 	Model:                 85
-> 	Model name:            Intel(R) Xeon(R) Silver 4108 CPU @ 1.80GHz
-> 	Stepping:              4
-> 	CPU MHz:               801.660
-> 
-> AIO test command:
-> 	fio -ioengine=libaio -bs=8k -direct=1 -numjobs 32 -rw=read -size=10G
->           -filename=/dev/sda3 -name="Max throughput" -iodepth=128 -runtime=60
-> 
-> Before test, set nr_requests to 512(default is 256), aim to to make the backend
-> device busy to handle io request, and make io_getevents() have more chances to
-> wait for io completion:
-> 	echo 512 >  /sys/block/sda/queue/nr_requests
-> 
-> Fio test result with the AIO iowait time accounting patch showed as below,
-> almost all fio threads are in 'D' state to waiting for io completion, and the
-> iowait time is accounted as 48.0%:
-> 	top - 19:19:23 up 29 min,  2 users,  load average: 14.60, 9.45, 9.45
-> 	Tasks: 456 total,   4 running, 247 sleeping,   0 stopped,   0 zombie
-> 	%Cpu(s):  0.4 us,  1.0 sy,  0.0 ni, 50.6 id, 48.0 wa,  0.0 hi,  0.0 si,  0.0 st
-> 	KiB Mem : 19668915+total, 19515264+free,   866476 used,   670028 buff/cache
-> 	KiB Swap:  4194300 total,  4194300 free,        0 used. 19449948+avail Mem
-> 
-> 	  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
-> 	16135 root      20   0  294092  63724  63060 S   1.7  0.0   0:03.31 fio
-> 	16173 root      20   0  272352   3540   1792 D   1.7  0.0   0:03.85 fio
-> 	16175 root      20   0  272360   3544   1796 D   1.7  0.0   0:03.85 fio
-> 	16185 root      20   0  272400   3556   1808 D   1.7  0.0   0:03.84 fio
-> 	16187 root      20   0  272408   3552   1804 D   1.7  0.0   0:03.82 fio
-> 	16190 root      20   0  272420   3500   1804 R   1.7  0.0   0:03.88 fio
-> 	16169 root      20   0  272336   3444   1740 D   1.3  0.0   0:03.75 fio
-> 	16170 root      20   0  272340   3504   1804 R   1.3  0.0   0:03.80 fio
-> 	16172 root      20   0  272348   3500   1800 D   1.3  0.0   0:03.86 fio
-> 	16174 root      20   0  272356   3544   1796 D   1.3  0.0   0:03.77 fio
-> 	16179 root      20   0  272376   3528   1780 D   1.3  0.0   0:03.79 fio
-> 	16180 root      20   0  272380   3500   1800 D   1.3  0.0   0:03.85 fio
-> 	16181 root      20   0  272384   3552   1804 D   1.3  0.0   0:03.87 fio
-> 	16182 root      20   0  272388   3520   1772 D   1.3  0.0   0:03.80 fio
-> 	16183 root      20   0  272392   3552   1804 D   1.3  0.0   0:03.77 fio
-> 	16186 root      20   0  272404   3500   1804 D   1.3  0.0   0:03.88 fio
-> 	16188 root      20   0  272412   3500   1800 D   1.3  0.0   0:03.89 fio
-> 	16191 root      20   0  272424   3500   1800 D   1.3  0.0   0:03.92 fio
-> 	16192 root      20   0  272428   3500   1800 D   1.3  0.0   0:03.87 fio
-> 	16194 root      20   0  272436   3500   1804 D   1.3  0.0   0:03.82 fio
-> 	16195 root      20   0  272440   3500   1800 R   1.3  0.0   0:03.82 fio
-> 	16196 root      20   0  272444   3552   1804 D   1.3  0.0   0:03.84 fio
-> 	16198 root      20   0  272452   3500   1804 D   1.3  0.0   0:03.89 fio
-> 	16199 root      20   0  272456   3504   1800 D   1.3  0.0   0:03.84 fio
-> 	16200 root      20   0  272460   3552   1804 D   1.3  0.0   0:03.85 fio
-> 	16171 root      20   0  272344   3504   1800 D   1.0  0.0   0:03.84 fio
-> 	16176 root      20   0  272364   3520   1772 D   1.0  0.0   0:03.76 fio
-> 	16177 root      20   0  272368   3556   1808 D   1.0  0.0   0:03.74 fio
-> 	16178 root      20   0  272372   3500   1804 D   1.0  0.0   0:03.90 fio
-> 	16184 root      20   0  272396   3500   1800 D   1.0  0.0   0:03.83 fio
-> 	16189 root      20   0  272416   3500   1804 D   1.0  0.0   0:03.86 fio
-> 	16193 root      20   0  272432   3500   1804 D   1.0  0.0   0:03.85 fio
-> 	16197 root      20   0  272448   3556   1808 D   1.0  0.0   0:03.75 fio
-> 
-> Fio test result without the AIO iowait time accounting patch showed as below,
-> almost all fio threads are in 'S' state to waiting for io completion, and the
-> iowait time is not accounted, iowait is 0.0%.
-> 	top - 19:20:44 up 31 min,  2 users,  load average: 12.50, 10.15, 9.72
-> 	Tasks: 458 total,   2 running, 249 sleeping,   0 stopped,   0 zombie
-> 	%Cpu(s):  0.4 us,  0.9 sy,  0.0 ni, 98.6 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
-> 	KiB Mem : 19668915+total, 19513945+free,   879652 used,   670040 buff/cache
-> 	KiB Swap:  4194300 total,  4194300 free,        0 used. 19448636+avail Mem
-> 
-> 	  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
-> 	16243 root      20   0  294092  63736  63068 S   1.7  0.0   0:03.06 fio
-> 	16277 root      20   0  272336   3568   1868 S   1.7  0.0   0:03.59 fio
-> 	16287 root      20   0  272376   3564   1864 S   1.7  0.0   0:03.64 fio
-> 	16291 root      20   0  272392   3620   1868 S   1.7  0.0   0:03.63 fio
-> 	16298 root      20   0  272420   3564   1868 S   1.7  0.0   0:03.61 fio
-> 	16302 root      20   0  272436   3560   1868 S   1.7  0.0   0:03.61 fio
-> 	16303 root      20   0  272440   3552   1800 S   1.7  0.0   0:03.62 fio
-> 	16308 root      20   0  272460   3568   1864 S   1.7  0.0   0:03.60 fio
-> 	16278 root      20   0  272340   3568   1868 S   1.3  0.0   0:03.59 fio
-> 	16279 root      20   0  272344   3508   1800 S   1.3  0.0   0:03.60 fio
-> 	16280 root      20   0  272348   3564   1864 S   1.3  0.0   0:03.60 fio
-> 	16281 root      20   0  272352   3624   1872 S   1.3  0.0   0:03.57 fio
-> 	16283 root      20   0  272360   3612   1860 S   1.3  0.0   0:03.60 fio
-> 	16285 root      20   0  272368   3592   1840 S   1.3  0.0   0:03.62 fio
-> 	16286 root      20   0  272372   3580   1828 S   1.3  0.0   0:03.61 fio
-> 	16288 root      20   0  272380   3620   1868 S   1.3  0.0   0:03.55 fio
-> 	16289 root      20   0  272384   3564   1868 S   1.3  0.0   0:03.59 fio
-> 	16292 root      20   0  272396   3536   1836 S   1.3  0.0   0:03.62 fio
-> 	16293 root      20   0  272400   3624   1872 S   1.3  0.0   0:03.63 fio
-> 	16295 root      20   0  272408   3620   1868 S   1.3  0.0   0:03.61 fio
-> 	16297 root      20   0  272416   3568   1868 S   1.3  0.0   0:03.62 fio
-> 	16300 root      20   0  272428   3564   1864 R   1.3  0.0   0:03.61 fio
-> 	16304 root      20   0  272444   3564   1864 S   1.3  0.0   0:03.59 fio
-> 	16305 root      20   0  272448   3456   1760 S   1.3  0.0   0:03.65 fio
-> 	16307 root      20   0  272456   3568   1864 S   1.3  0.0   0:03.64 fio
-> 	16282 root      20   0  272356   3556   1860 S   1.0  0.0   0:03.55 fio
-> 	16284 root      20   0  272364   3612   1860 S   1.0  0.0   0:03.57 fio
-> 	16290 root      20   0  272388   3616   1864 S   1.0  0.0   0:03.54 fio
-> 	16294 root      20   0  272404   3624   1872 S   1.0  0.0   0:03.60 fio
-> 	16296 root      20   0  272412   3564   1864 S   1.0  0.0   0:03.60 fio
-> 	16299 root      20   0  272424   3540   1840 S   1.0  0.0   0:03.62 fio
-> 	16301 root      20   0  272432   3568   1868 S   1.0  0.0   0:03.63 fio
-> 	16306 root      20   0  272452   3624   1872 S   1.0  0.0   0:03.60 fio
-> 
-> Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
+On Fri, Aug 28, 2020 at 03:07:09AM +0200, Ahmed S. Darwish wrote:
+> +/*
+> + * Automatically disable preemption for seqcount_LOCKTYPE_t writers, if the
+> + * associated lock does not implicitly disable preemption.
+> + *
+> + * Don't do it for PREEMPT_RT. Check __SEQ_LOCK().
+> + */
+> +#define __seq_enforce_preemption_protection(s)				\
+> +	(!IS_ENABLED(CONFIG_PREEMPT_RT) && __seqcount_lock_preemptible(s))
 
-Nice! The patch looks good to me. You can add:
+Hurph, so basically you want to make __seqcount_lock_preemptible()
+return true PREEMPT_RT ? Should we then not muck about with the propery
+instead of this?
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+ISTR I had something like the below, would that not be the same but much
+clearer ?
 
-								Honza
+diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
+index 300cbf312546..3b5ad026ddfb 100644
+--- a/include/linux/seqlock.h
++++ b/include/linux/seqlock.h
+@@ -211,11 +211,13 @@ static inline void __seqcount_assert(seqcount_t *s)
+ 	lockdep_assert_preemption_disabled();
+ }
+ 
+-SEQCOUNT_LOCKTYPE(raw_spinlock_t,	raw_spinlock,	false,	s->lock)
+-SEQCOUNT_LOCKTYPE(spinlock_t,		spinlock,	false,	s->lock)
+-SEQCOUNT_LOCKTYPE(rwlock_t,		rwlock,		false,	s->lock)
+-SEQCOUNT_LOCKTYPE(struct mutex,		mutex,		true,	s->lock)
+-SEQCOUNT_LOCKTYPE(struct ww_mutex,	ww_mutex,	true,	&s->lock->base)
++#define __PREEMPT_RT	IS_BUILTIN(CONFIG_PREEMPT_RT)
++
++SEQCOUNT_LOCKTYPE(raw_spinlock_t,	raw_spinlock,	false,		s->lock)
++SEQCOUNT_LOCKTYPE(spinlock_t,		spinlock,	__PREEMPT_RT,	s->lock)
++SEQCOUNT_LOCKTYPE(rwlock_t,		rwlock,		__PREEMPT_RT,	s->lock)
++SEQCOUNT_LOCKTYPE(struct mutex,		mutex,		true,		s->lock)
++SEQCOUNT_LOCKTYPE(struct ww_mutex,	ww_mutex,	true,		&s->lock->base)
+ 
+ /*
+  * SEQCNT_LOCKNAME_ZERO - static initializer for seqcount_LOCKNAME_t
 
-> ---
->  fs/aio.c             |  2 +-
->  include/linux/wait.h | 26 ++++++++++++++++++++++----
->  2 files changed, 23 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/aio.c b/fs/aio.c
-> index 5736bff48..8d00548e0 100644
-> --- a/fs/aio.c
-> +++ b/fs/aio.c
-> @@ -1290,7 +1290,7 @@ static long read_events(struct kioctx *ctx, long min_nr, long nr,
->  	if (until == 0)
->  		aio_read_events(ctx, min_nr, nr, event, &ret);
->  	else
-> -		wait_event_interruptible_hrtimeout(ctx->wait,
-> +		io_wait_event_hrtimeout(ctx->wait,
->  				aio_read_events(ctx, min_nr, nr, event, &ret),
->  				until);
->  	return ret;
-> diff --git a/include/linux/wait.h b/include/linux/wait.h
-> index 898c890fc..fb5902a25 100644
-> --- a/include/linux/wait.h
-> +++ b/include/linux/wait.h
-> @@ -312,6 +312,13 @@ do {										\
->  	(void)___wait_event(wq_head, condition, TASK_UNINTERRUPTIBLE, 0, 0,	\
->  			    io_schedule())
->  
-> +#define __io_wait_event_hrtimeout(wq_head, condition, timeout)			\
-> +({										\
-> +	int __ret = 0;								\
-> +	__ret = __wait_event_hrtimeout(wq_head, condition, timeout,		\
-> +			    TASK_UNINTERRUPTIBLE, io_schedule());		\
-> +})
-> +
->  /*
->   * io_wait_event() -- like wait_event() but with io_schedule()
->   */
-> @@ -323,6 +330,15 @@ do {										\
->  	__io_wait_event(wq_head, condition);					\
->  } while (0)
->  
-> +
-> +#define io_wait_event_hrtimeout(wq_head, condition, timeout)			\
-> +do {										\
-> +	might_sleep();								\
-> +	if (condition)								\
-> +		break;								\
-> +	__io_wait_event_hrtimeout(wq_head, condition, timeout);			\
-> +} while (0)
-> +
->  #define __wait_event_freezable(wq_head, condition)				\
->  	___wait_event(wq_head, condition, TASK_INTERRUPTIBLE, 0, 0,		\
->  			    freezable_schedule())
-> @@ -500,7 +516,7 @@ do {										\
->  	__ret;									\
->  })
->  
-> -#define __wait_event_hrtimeout(wq_head, condition, timeout, state)		\
-> +#define __wait_event_hrtimeout(wq_head, condition, timeout, state, cmd) 	\
->  ({										\
->  	int __ret = 0;								\
->  	struct hrtimer_sleeper __t;						\
-> @@ -517,7 +533,7 @@ do {										\
->  			__ret = -ETIME;						\
->  			break;							\
->  		}								\
-> -		schedule());							\
-> +		cmd);								\
->  										\
->  	hrtimer_cancel(&__t.timer);						\
->  	destroy_hrtimer_on_stack(&__t.timer);					\
-> @@ -546,7 +562,8 @@ do {										\
->  	might_sleep();								\
->  	if (!(condition))							\
->  		__ret = __wait_event_hrtimeout(wq_head, condition, timeout,	\
-> -					       TASK_UNINTERRUPTIBLE);		\
-> +					       TASK_UNINTERRUPTIBLE,		\
-> +					       schedule());			\
->  	__ret;									\
->  })
->  
-> @@ -572,7 +589,8 @@ do {										\
->  	might_sleep();								\
->  	if (!(condition))							\
->  		__ret = __wait_event_hrtimeout(wq, condition, timeout,		\
-> -					       TASK_INTERRUPTIBLE);		\
-> +					       TASK_INTERRUPTIBLE,		\
-> +						schedule());			\
->  	__ret;									\
->  })
->  
-> -- 
-> 2.17.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
