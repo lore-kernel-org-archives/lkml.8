@@ -2,112 +2,114 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA90EC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6395C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACAD020825
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B90BE20665
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:09:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598620180;
+	bh=Jz1R7zl/5TWZ/3q3OHGpTZ7g+KdahLSUuNkMZ/xqGJo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LMItbL8+URrjLeK/bQQrr5tDWnYsQqhoxwi7sb4wLAbKTGCwuB8d45fEatGgQDl5M
+	 GHiMCfar6WgiqxVijt1lW25+mb0kyEtyI3h/shOpv9K0dpfoHAmEnqqfisZJB7Qm/G
+	 fALVJ/W4EToGGjuOES7tz68CSYC/iVhfYZWehPdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbgH1NJO (ORCPT
+        id S1729532AbgH1NJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 09:09:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:48666 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729172AbgH1NGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 09:06:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4216B1FB;
-        Fri, 28 Aug 2020 06:06:11 -0700 (PDT)
-Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.195.35])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0ADB3F66B;
-        Fri, 28 Aug 2020 06:06:08 -0700 (PDT)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chanho Min <chanho.min@lge.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Wei Xu <xuwei5@hisilicon.com>
-Subject: [PATCH 00/10] dt-bindings: Convert SP805 to Json-schema (and fix users)
-Date:   Fri, 28 Aug 2020 14:05:52 +0100
-Message-Id: <20200828130602.42203-1-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 28 Aug 2020 09:09:37 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35284 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729397AbgH1NIo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 09:08:44 -0400
+Received: by mail-ed1-f65.google.com with SMTP id ba12so1120747edb.2;
+        Fri, 28 Aug 2020 06:08:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E+aHZUYr4/xAk5Vx/I2zH6eSvAeQy3DL/RIU7rMycss=;
+        b=E6cZZR0YEuayjCgtPIhKLaUIm015EoxA1zp2DQ3mJjPxd8e8zcjzbcRiES2lP5KKil
+         ZHyxfWyVrPmfud2YWtfm3unM/emunX0V+iZXtBUG9oHa3pw3fCHCAbTTZmfYdIQKHH0U
+         rJT5GRgunJKmH1PyhbcYYS7Btq7HCcNhg5y1FuZZB0Qfo7Sl+fo9v6AMaXS4ztoHCxsR
+         avp1g1C8naIobLfPK0qRzrne94ZuHbkeyJEBl9xZv+olRpo2HmP0MBQXX53WZqcOO/JZ
+         tITcVbeNrmkmMhjjJ2jjzt85u1WmVXTJw2IxcJdBQ6duH9npieWavBV6l1Yrx3NgSErr
+         J7zw==
+X-Gm-Message-State: AOAM531Cr0WRLpsOxHehy9OwhcqbaIGYQtMpX3hNg6pX13RJ2Z2JcA4o
+        /IQpt6b6ooKDnE9aSm6JNU4=
+X-Google-Smtp-Source: ABdhPJw2sUyi5oI180j1s6a0iPM15L1BAjci1fZItmg5NmiUYVf2976kX7V0+smnXtOdifVljCX0Xg==
+X-Received: by 2002:a50:bf08:: with SMTP id f8mr1717050edk.207.1598620121241;
+        Fri, 28 Aug 2020 06:08:41 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id j21sm849059eja.109.2020.08.28.06.08.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 28 Aug 2020 06:08:40 -0700 (PDT)
+Date:   Fri, 28 Aug 2020 15:08:37 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+Subject: Re: [PATCH v3 00/19] dt-bindings / arm64: Cleanup of i.MX 8 bindings
+Message-ID: <20200828130837.GA14163@kozik-lap>
+References: <20200825193536.7332-1-krzk@kernel.org>
+ <CACRpkdb4j2kJvpY23G-os9gTktZW5HT287MsvMZxC=ovgn_9LQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACRpkdb4j2kJvpY23G-os9gTktZW5HT287MsvMZxC=ovgn_9LQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an attempt to convert the SP805 watchdog DT binding to yaml.
-This is done in the first patch, the remaining nine fix some DT users.
+On Fri, Aug 28, 2020 at 02:51:20PM +0200, Linus Walleij wrote:
+> On Tue, Aug 25, 2020 at 9:35 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> 
+> > This is a v3 of cleanup of i.XM 8 bindings and DTSes.
+> 
+> If you are going to be working a lot on Freescale SoC code going forward
+> I wouldn't mind if you could add yourself as maintainer for the
+> Freescale pin controller and GPIO at least, I already have high trust
+> in you in general so if the Freescale maintainers also have that I think you
+> should just sign up as maintainer. This makes it easier to do pull requests
+> and things like that.
 
-I couldn't test any of those DT files on actual machines, but tried
-to make the changes in a way that would be transparent to at least the
-Linux driver. The only other SP805 DT user I could find is U-Boot, which
-seems to only use a very minimal subset of the binding (just the first
-clock).
-I only tried to fix those DTs that were easily and reliably fixable.
-AFAICT, a missing primecell compatible string, for instance, would
-prevent the Linux driver from probing the device at all, so I didn't
-dare to touch those DTs at all. Missing clocks are equally fatal.
+Thanks for encouragement.  Indeed I am planning to do more work around
+i.MX 8M platforms from NXP/Freescale. However there are already four
+maintainers for Freescale pin controller drivers so I doubt there is
+need for fifth entry :).
 
-Cheers,
-Andre
+Different question is the GPIO driver which apparently lacks entry in
+Maintainers file.
 
-Andre Przywara (10):
-  dt-bindings: watchdog: sp-805: Convert to Json-schema
-  arm64: dts: arm: Fix SP805 clock-names
-  arm64: dts: broadcom: Fix SP805 clock-names
-  arm64: dts: freescale: Fix SP805 clock-names
-  arm64: dts: hisilicon: Fix SP805 clocks
-  arm64: dts: lg: Fix SP805 clocks
-  ARM: dts: arm: Fix SP805 clocks
-  ARM: dts: Cygnus: Fix SP805 clocks
-  ARM: dts: NSP: Fix SP805 clock-names
-  ARM: dts: hisilicon: Fix SP805 clocks
-
- .../bindings/watchdog/arm,sp805.txt           | 32 ---------
- .../bindings/watchdog/arm,sp805.yaml          | 72 +++++++++++++++++++
- arch/arm/boot/dts/arm-realview-eb.dtsi        |  2 +-
- arch/arm/boot/dts/arm-realview-pb11mp.dts     |  4 +-
- arch/arm/boot/dts/arm-realview-pbx.dtsi       |  4 +-
- arch/arm/boot/dts/bcm-cygnus.dtsi             |  4 +-
- arch/arm/boot/dts/bcm-nsp.dtsi                |  2 +-
- arch/arm/boot/dts/hisi-x5hd2.dtsi             |  5 +-
- arch/arm/boot/dts/mps2.dtsi                   |  4 +-
- arch/arm/boot/dts/vexpress-v2m-rs1.dtsi       |  2 +-
- arch/arm/boot/dts/vexpress-v2m.dtsi           |  2 +-
- arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts   |  4 +-
- arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts    |  2 +-
- arch/arm/boot/dts/vexpress-v2p-ca9.dts        |  2 +-
- arch/arm64/boot/dts/arm/juno-motherboard.dtsi |  2 +-
- .../boot/dts/arm/rtsm_ve-motherboard.dtsi     |  2 +-
- .../boot/dts/broadcom/northstar2/ns2.dtsi     |  2 +-
- .../boot/dts/broadcom/stingray/stingray.dtsi  |  2 +-
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  4 +-
- .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 16 ++---
- .../arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 16 ++---
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi     | 10 +--
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi     |  5 +-
- arch/arm64/boot/dts/lg/lg1312.dtsi            |  4 +-
- arch/arm64/boot/dts/lg/lg1313.dtsi            |  4 +-
- 25 files changed, 126 insertions(+), 82 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/watchdog/arm,sp805.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
-
--- 
-2.17.1
+Best regards,
+Krzysztof
 
