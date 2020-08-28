@@ -5,188 +5,195 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9FDC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A71C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF3620825
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E5B20825
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:54:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="riF79nmx"
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="V6KMxLhb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgH1Typ (ORCPT
+        id S1727981AbgH1Ty5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 15:54:45 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:37968 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbgH1Twv (ORCPT
+        Fri, 28 Aug 2020 15:54:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726924AbgH1Twu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 15:52:51 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07SJqlqV117055;
-        Fri, 28 Aug 2020 14:52:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598644367;
-        bh=xW/eKDwXLSUcmCtRnUArAT9yo4KK05CmMu14FrBl43k=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=riF79nmx/Xp8o6aQ0hU2qjsH16iiRSZTs0aLKUHsoZCEx9SM05rQUzFQf7ao22Jl6
-         jliJTwZPxPpsc0krDdussmld8d+fsczYGQUGbLgDc79JxhN7HDKA7z0TfAr8pAsdpJ
-         0nj+vQw0YlQ6KegIYVJON3SdX2IzBZMTp+U8wepI=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07SJqlT7064851
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Aug 2020 14:52:47 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 28
- Aug 2020 14:52:47 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 28 Aug 2020 14:52:47 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07SJqkPQ063955;
-        Fri, 28 Aug 2020 14:52:46 -0500
-From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-To:     <sre@kernel.org>, <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <dmurphy@ti.com>, Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Subject: [PATCH v2 1/2] dt-bindings: power: Add the bq256xx dt bindings
-Date:   Fri, 28 Aug 2020 14:52:18 -0500
-Message-ID: <20200828195219.15560-2-r-rivera-matos@ti.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200828195219.15560-1-r-rivera-matos@ti.com>
-References: <20200828195219.15560-1-r-rivera-matos@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 28 Aug 2020 15:52:50 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E578C061232
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 12:52:50 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id s16so436071qtn.7
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 12:52:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digitalocean.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=oIb65ASfbKXg/SMNVuqzS+vdYF4f56w1EFWwackJJ1s=;
+        b=V6KMxLhbmNVvZH1km0YNIrK4NeqQThXbp97ov7AdrGsm4A3B077a80GFDsgieUjddN
+         k5Ge1NANBBfalKd0Ka33Xgq5k5fWTuzqjxs4hsTD1zXAKBhg2uqPelw3nDpwkkdguO7v
+         o3RQNWUew32RW80sGqBIXfLpNdlu9BgAT18Lk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=oIb65ASfbKXg/SMNVuqzS+vdYF4f56w1EFWwackJJ1s=;
+        b=crURPAlldLYh939cYwT1PcLhC3uDh+5Q5Xb/bQeE2mNr54imkYnFPQCELFh02QT8+h
+         dZWSPsLEfSe2ygzUMwpLHnex2paGp6j6xVQMXB2b7rbwvrgeqZQtkV4iTSu1an2U2eIn
+         /InQG1wAMiWCHXFpPSTuLf+3fXRqXYIHv25Wwc3t54DkXq/HiJAOj4mVRRwD8fTSBJ7D
+         4Y0FYBYrNVQGCXmG5bXKGdEhCrARghoA5bgMxRujSYlE2Wgi1kuPK+s3wuQdaAFCSQH2
+         vbYTAUNLWmSVnzDoXE7Tt4+l96wAWexIxucF9Z/i9WS9j2a/Aa3vm4e8JV1Qw/AaCX2Q
+         URXA==
+X-Gm-Message-State: AOAM533AIZfOtMST4t8m6fk0xjY+pbbJNsJgQxp9xwnyjYycPH0XOyd+
+        vv3ukA/hvkY9w6zuS7CFM7NtVQ==
+X-Google-Smtp-Source: ABdhPJzutjgRHCg8nucSqXLpiE92co/BCk0sTb1azyxg8LQV6CKwoAhW4O01hYFldehEXEzdOG2PyA==
+X-Received: by 2002:aed:2f02:: with SMTP id l2mr3199217qtd.48.1598644369352;
+        Fri, 28 Aug 2020 12:52:49 -0700 (PDT)
+Received: from [192.168.1.240] (192-222-189-155.qc.cable.ebox.net. [192.222.189.155])
+        by smtp.gmail.com with ESMTPSA id r34sm150885qtr.18.2020.08.28.12.52.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 12:52:48 -0700 (PDT)
+From:   Julien Desfossez <jdesfossez@digitalocean.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Vineeth Pillai <viremana@linux.microsoft.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Dhaval Giani <dhaval.giani@oracle.com>,
+        Chris Hyser <chris.hyser@oracle.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        mingo@kernel.org, tglx@linutronix.de, pjt@google.com,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, vineeth@bitbyteword.org,
+        Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Agata Gruza <agata.gruza@intel.com>,
+        Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>,
+        graf@amazon.com, konrad.wilk@oracle.com, dfaggioli@suse.com,
+        rostedt@goodmis.org, derkling@google.com, benbjiang@tencent.com,
+        paulmck@kernel.org
+Subject: [RFC PATCH v7 14/23] irq_work: Add support to detect if work is pending
+Date:   Fri, 28 Aug 2020 15:51:15 -0400
+Message-Id: <c283856632af132e32b87a7ba0fc8b71f01c8508.1598643276.git.jdesfossez@digitalocean.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1598643276.git.jdesfossez@digitalocean.com>
+References: <cover.1598643276.git.jdesfossez@digitalocean.com>
+In-Reply-To: <cover.1598643276.git.jdesfossez@digitalocean.com>
+References: <cover.1598643276.git.jdesfossez@digitalocean.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the bindings for the bq256xx series of battery charging ICs.
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
 
-Datasheets:
-- https://www.ti.com/lit/ds/symlink/bq25600.pdf
-- https://www.ti.com/lit/ds/symlink/bq25601.pdf
-- https://www.ti.com/lit/ds/symlink/bq25600d.pdf
-- https://www.ti.com/lit/ds/symlink/bq25601d.pdf
-- https://www.ti.com/lit/ds/symlink/bq25611d.pdf
-- https://www.ti.com/lit/ds/symlink/bq25618.pdf
-- https://www.ti.com/lit/ds/symlink/bq25619.pdf
+When an unsafe region is entered on an HT, an IPI needs to be sent to
+siblings to ensure they enter the kernel.
 
-Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Following are the reasons why we would like to use irq_work to implement
+forcing of sibling into kernel mode:
+
+1. Existing smp_call infrastructure cannot be used easily since we could
+   end up waiting on CSD lock if previously an smp_call was not yet
+   serviced.
+
+2. I'd like to use generic code, such that there is no need to add an
+   arch-specific IPI.
+
+3. IRQ work already has support to detect that previous work was not yet
+   executed through the IRQ_WORK_PENDING bit.
+
+4. We need to know if the destination of the IPI is not sending more
+   IPIs due to that IPI itself causing an entry into unsafe region.
+
+Support for 4. requires us to be able to detect that irq_work is
+pending.
+
+This commit therefore adds a way for irq_work users to know if a
+previous per-HT irq_work is pending. If it is, we need not send new
+IPIs.
+
+Memory ordering:
+
+I was trying to handle the MP-pattern below. Consider the flag to be the
+pending bit. P0() is the IRQ work handler. P1() is the code calling
+irq_work_pending(). P0() already implicitly adds a memory barrier as a
+part of the atomic_fetch_andnot() before calling work->func(). For P1(),
+this patch adds the memory barrier as the atomic_read() in this patch's
+irq_work_pending() is not sufficient.
+
+        P0()
+        {
+                WRITE_ONCE(buf, 1);
+                WRITE_ONCE(flag, 1);
+        }
+
+        P1()
+        {
+                int r1;
+                int r2 = 0;
+
+                r1 = READ_ONCE(flag);
+                if (r1)
+                        r2 = READ_ONCE(buf);
+        }
+
+Note: This patch is included in the following:
+https://lore.kernel.org/lkml/20200722153017.024407984@infradead.org/
+
+This could be removed when the above patch gets merged.
+
+Cc: paulmck@kernel.org
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- .../bindings/power/supply/bq256xx.yaml        | 97 +++++++++++++++++++
- 1 file changed, 97 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/bq256xx.yaml
+ include/linux/irq_work.h |  1 +
+ kernel/irq_work.c        | 11 +++++++++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/bq256xx.yaml b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
-new file mode 100644
-index 000000000000..9c6989581f9c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
-@@ -0,0 +1,97 @@
-+# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
-+# Copyright (C) 2020 Texas Instruments Incorporated
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/power/supply/bq256xx.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+diff --git a/include/linux/irq_work.h b/include/linux/irq_work.h
+index 30823780c192..b26466f95d04 100644
+--- a/include/linux/irq_work.h
++++ b/include/linux/irq_work.h
+@@ -42,6 +42,7 @@ bool irq_work_queue_on(struct irq_work *work, int cpu);
+ 
+ void irq_work_tick(void);
+ void irq_work_sync(struct irq_work *work);
++bool irq_work_pending(struct irq_work *work);
+ 
+ #ifdef CONFIG_IRQ_WORK
+ #include <asm/irq_work.h>
+diff --git a/kernel/irq_work.c b/kernel/irq_work.c
+index eca83965b631..2d206d511aa0 100644
+--- a/kernel/irq_work.c
++++ b/kernel/irq_work.c
+@@ -24,6 +24,17 @@
+ static DEFINE_PER_CPU(struct llist_head, raised_list);
+ static DEFINE_PER_CPU(struct llist_head, lazy_list);
+ 
++bool irq_work_pending(struct irq_work *work)
++{
++	/*
++	 * Provide ordering to callers who may read other stuff
++	 * after the atomic read (MP-pattern).
++	 */
++	bool ret = atomic_read_acquire(&work->flags) & IRQ_WORK_PENDING;
 +
-+title: TI bq256xx Switch Mode Buck Charger
++	return ret;
++}
 +
-+maintainers:
-+  - Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-+
-+description: |
-+  The bq256xx devices are a family of highly-integrated battery charge
-+  management and system power management ICs for single cell Li-ion and Li-
-+  polymer batteries.
-+
-+  Datasheets:
-+    - https://www.ti.com/lit/ds/symlink/bq25600.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25601.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25600d.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25601d.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25611d.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25618.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25619.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,bq25600
-+      - ti,bq25601
-+      - ti,bq25600d
-+      - ti,bq25601d
-+      - ti,bq25611d
-+      - ti,bq25618
-+      - ti,bq25619
-+
-+  reg:
-+    maxItems: 1
-+
-+  ti,watchdog-timer:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Watchdog timer in ms. 0 (default) disables the watchdog
-+    minimum: 0
-+    maximum: 160000
-+    enum: [ 0, 40000, 80000, 160000]
-+
-+  input-voltage-limit-microvolt:
-+    description: |
-+       Minimum input voltage limit in µV with a 100000 µV step
-+    minimum: 3900000
-+    maximum: 5400000
-+
-+  input-current-limit-microamp:
-+    description: |
-+       Maximum input current limit in µA with a 100000 µA step
-+    minimum: 100000
-+    maximum: 3200000
-+
-+required:
-+  - compatible
-+  - reg
-+  - monitored-battery
-+
-+examples:
-+  - |
-+    bat: battery {
-+      compatible = "simple-battery";
-+      constant-charge-current-max-microamp = <2040000>;
-+      constant-charge-voltage-max-microvolt = <4352000>;
-+      precharge-current-microamp = <180000>;
-+      termination-current-microamp = <180000>;
-+    };
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+
-+      clock-frequency = <400000>;
-+
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      charger@6b {
-+        compatible = "ti,bq25601";
-+        reg = <0x6b>;
-+        monitored-battery = <&bat>;
-+
-+        interrupt-parent = <&gpio1>;
-+        interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
-+        watchdog-timer = <40000>;
-+
-+        input-voltage-limit-microvolt = <4500000>;
-+        input-current-limit-microamp = <2400000>;
-+       };
-+    };
-+...
+ /*
+  * Claim the entry so that no one else will poke at it.
+  */
 -- 
-2.28.0
+2.17.1
 
