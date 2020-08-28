@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90ABDC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE30C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5790520825
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FA3C20825
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:53:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="M/jqj5Bt"
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="HuRwy781"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgH1TxG (ORCPT
+        id S1727061AbgH1TxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 15:53:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49718 "EHLO
+        Fri, 28 Aug 2020 15:53:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgH1TwY (ORCPT
+        with ESMTP id S1726771AbgH1Twd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 15:52:24 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69451C061232
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 12:52:23 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id k18so415818qtm.10
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 12:52:23 -0700 (PDT)
+        Fri, 28 Aug 2020 15:52:33 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A21BC06121B
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 12:52:33 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id b14so678329qkn.4
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 12:52:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=digitalocean.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=qQEgrFqEQg+FMyavhZ7lEgAlqECDYI2WWsESA1MqUxQ=;
-        b=M/jqj5Bt/m8E1sn/1BVijrZo8j+gFpaCbtWFGNUd6l3vG6Rqq6c4EZUjG8gPRDGQcX
-         AfylGb/8bpaF6HvoG9XsfFP9lmmPwYU+jS44qLvsI+vkUVKcURn8PUoqes9UjGwR/sRd
-         Azwd0kG7dCBa5L+mibJw0NY7IOD2yolq1hPFY=
+        bh=G60hQ4nTgEWlrRqvOh+leiUPnjtniQs2oiZi5U5DhNA=;
+        b=HuRwy781r1wSLNlzvsFzAilSQODOhOdQDo+iHaz3XU659kfEqlTna+tB2XbgxkaDr6
+         VPPj8zweCF1MO81XHESgci9at4zBZoEJk/7hnjpM+h2tyUoefCLyuJXiRSfccQbYw7hq
+         zXbPlDZpfvk7gTo/HmMaT/+WICrRu5qYlzq3w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=qQEgrFqEQg+FMyavhZ7lEgAlqECDYI2WWsESA1MqUxQ=;
-        b=rat1ArWG9kq7inaK23zNfLuk/hS5Z8tRK4CWh9Zdv6zxhYo0cJ1z3lV4vJcXU3OxKy
-         lSGhv+W1XVfnPzS4+fHCLZwKn61MSmPSHxyNq3ynwcDd6ypizIwtTrk+crv2aYUwXDHQ
-         aOrtXJc90Jno7hFXjYTFRZf+/wjpTs5+zfmb2TWVZsh5l9wRnfCn47USje+bYkUL3MeW
-         iBKBXb+6V6a2zkHnbacWPzO2BzruuLF8OGiraMx0HgD6pwKmm7Lefq+hB7IvDqihOjce
-         33f2QI/xp+ZBrvKcj3ea79TfmTPaA5WqRwcgeIht0HoaOf+MtJCxIWRx/UtRJKXgeXml
-         OXpQ==
-X-Gm-Message-State: AOAM533xg04+e6R6JA9kqUuP9x8jRKC53vJNbg0PeoWuGiMKpP8+HPzN
-        lXSJh57Y/YKNuqkN6cDXGZmJOQ==
-X-Google-Smtp-Source: ABdhPJx36mCR+ChKHmdhzefkgrU4d1nnoqfWwGphu5oT5lnGpM7wQJcTM310IrAsNNoyiuYjKq4y+w==
-X-Received: by 2002:aed:21da:: with SMTP id m26mr3127103qtc.197.1598644342592;
-        Fri, 28 Aug 2020 12:52:22 -0700 (PDT)
+        bh=G60hQ4nTgEWlrRqvOh+leiUPnjtniQs2oiZi5U5DhNA=;
+        b=fpurwTBwpihGNCp3Rp4+cWEz8hGVneozplyK9lctXdvABHSa/IS8PH9gXPLAaKz+H6
+         R7GgEUgZEyWjpkr2qoC7hM//KvCr3cLLND+JEv+B1M6sTx+ByROIEu3MShHYIBpXODX4
+         R/tMUSRixvgFSDtxfF4+u2XTDI1B5a6dPIEVB493D5iWwOgQDj9bbIpsmn08WNm1xywK
+         LkL74Gw3/SMYPV5sZBrG9S++2frR7Ni47dVNNTfbZ8oD66hxXgWz796vOIUVCgCmCjbG
+         VzJG2MBhwnG6ROv7/34dafC2pJG7YgN6mNZFTUBhjbpnUP7UCKPWoA6khG+dr5lxgbvA
+         DLLA==
+X-Gm-Message-State: AOAM532jJfXhVaFFmi8EEk7ED68Ey48NGecL1tGpjZcCX0sKkSsQX3PW
+        DSY5Lbxjeh08OdL3fUXVK3aeJw==
+X-Google-Smtp-Source: ABdhPJy1Dh/h9fepXsaK+sJcvSPCCpSNwABel9a2snAY1bq7pdYNECbpPXIy2vw3q+cgt7CrQu7wNA==
+X-Received: by 2002:a37:9801:: with SMTP id a1mr772340qke.112.1598644352228;
+        Fri, 28 Aug 2020 12:52:32 -0700 (PDT)
 Received: from [192.168.1.240] (192-222-189-155.qc.cable.ebox.net. [192.222.189.155])
-        by smtp.gmail.com with ESMTPSA id r34sm150885qtr.18.2020.08.28.12.52.20
+        by smtp.gmail.com with ESMTPSA id r34sm150885qtr.18.2020.08.28.12.52.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 12:52:21 -0700 (PDT)
+        Fri, 28 Aug 2020 12:52:31 -0700 (PDT)
 From:   Julien Desfossez <jdesfossez@digitalocean.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Vineeth Pillai <viremana@linux.microsoft.com>,
@@ -79,12 +79,10 @@ Cc:     mingo@kernel.org, tglx@linutronix.de, pjt@google.com,
         Agata Gruza <agata.gruza@intel.com>,
         Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>,
         graf@amazon.com, konrad.wilk@oracle.com, dfaggioli@suse.com,
-        rostedt@goodmis.org, derkling@google.com, benbjiang@tencent.com,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Subject: [RFC PATCH v7 03/23] sched: Core-wide rq->lock
-Date:   Fri, 28 Aug 2020 15:51:04 -0400
-Message-Id: <43b48aca21d97c00abf763f59489f1b6582ab410.1598643276.git.jdesfossez@digitalocean.com>
+        rostedt@goodmis.org, derkling@google.com, benbjiang@tencent.com
+Subject: [RFC PATCH v7 07/23] cpumask: Introduce a new iterator for_each_cpu_wrap_or
+Date:   Fri, 28 Aug 2020 15:51:08 -0400
+Message-Id: <b32e11c67051bc60f78dc0b84cf46e6d6034d62c.1598643276.git.jdesfossez@digitalocean.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1598643276.git.jdesfossez@digitalocean.com>
 References: <cover.1598643276.git.jdesfossez@digitalocean.com>
@@ -95,207 +93,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Vineeth Pillai <viremana@linux.microsoft.com>
 
-Introduce the basic infrastructure to have a core wide rq->lock.
+Hotplug fixes to core-scheduling require a new cpumask iterator
+which iterates through all online cpus in both the given cpumasks.
+This patch introduces it.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Julien Desfossez <jdesfossez@digitalocean.com>
-Signed-off-by: Vineeth Remanan Pillai <vpillai@digitalocean.com>
+Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- kernel/Kconfig.preempt |  6 +++
- kernel/sched/core.c    | 95 ++++++++++++++++++++++++++++++++++++++++++
- kernel/sched/sched.h   | 31 ++++++++++++++
- 3 files changed, 132 insertions(+)
+ include/linux/cpumask.h | 42 ++++++++++++++++++++++++++++++++
+ lib/cpumask.c           | 53 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 95 insertions(+)
 
-diff --git a/kernel/Kconfig.preempt b/kernel/Kconfig.preempt
-index bf82259cff96..4488fbf4d3a8 100644
---- a/kernel/Kconfig.preempt
-+++ b/kernel/Kconfig.preempt
-@@ -80,3 +80,9 @@ config PREEMPT_COUNT
- config PREEMPTION
-        bool
-        select PREEMPT_COUNT
-+
-+config SCHED_CORE
-+	bool "Core Scheduling for SMT"
-+	default y
-+	depends on SCHED_SMT
-+
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index b85d5e56d5fe..e2642c5dbd61 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -73,6 +73,70 @@ unsigned int sysctl_sched_rt_period = 1000000;
+diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+index f0d895d6ac39..27e7e019237b 100644
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -207,6 +207,10 @@ static inline int cpumask_any_and_distribute(const struct cpumask *src1p,
+ 	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask, (void)(start))
+ #define for_each_cpu_and(cpu, mask1, mask2)	\
+ 	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask1, (void)mask2)
++#define for_each_cpu_or(cpu, mask1, mask2)	\
++	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask1, (void)mask2)
++#define for_each_cpu_wrap_or(cpu, mask1, mask2, start)	\
++	for ((cpu) = 0; (cpu) < 1; (cpu)++, (void)mask1, (void)mask2, (void)(start))
+ #else
+ /**
+  * cpumask_first - get the first cpu in a cpumask
+@@ -248,6 +252,7 @@ static inline unsigned int cpumask_next_zero(int n, const struct cpumask *srcp)
+ }
  
- __read_mostly int scheduler_running;
+ int cpumask_next_and(int n, const struct cpumask *, const struct cpumask *);
++int cpumask_next_or(int n, const struct cpumask *, const struct cpumask *);
+ int cpumask_any_but(const struct cpumask *mask, unsigned int cpu);
+ unsigned int cpumask_local_spread(unsigned int i, int node);
+ int cpumask_any_and_distribute(const struct cpumask *src1p,
+@@ -278,6 +283,8 @@ int cpumask_any_and_distribute(const struct cpumask *src1p,
+ 		(cpu) < nr_cpu_ids;)
  
-+#ifdef CONFIG_SCHED_CORE
-+
-+DEFINE_STATIC_KEY_FALSE(__sched_core_enabled);
-+
-+/*
-+ * The static-key + stop-machine variable are needed such that:
+ extern int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool wrap);
++extern int cpumask_next_wrap_or(int n, const struct cpumask *mask1,
++				 const struct cpumask *mask2, int start, bool wrap);
+ 
+ /**
+  * for_each_cpu_wrap - iterate over every cpu in a mask, starting at a specified location
+@@ -294,6 +301,22 @@ extern int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool
+ 	     (cpu) < nr_cpumask_bits;						\
+ 	     (cpu) = cpumask_next_wrap((cpu), (mask), (start), true))
+ 
++/**
++ * for_each_cpu_wrap_or - iterate over every cpu in both masks, starting at a specified location
++ * @cpu: the (optionally unsigned) integer iterator
++ * @mask1: the first cpumask pointer
++ * @mask2: the second cpumask pointer
++ * @start: the start location
 + *
-+ *	spin_lock(rq_lockp(rq));
-+ *	...
-+ *	spin_unlock(rq_lockp(rq));
++ * The implementation does not assume any bit both masks are set (including @start).
 + *
-+ * ends up locking and unlocking the _same_ lock, and all CPUs
-+ * always agree on what rq has what lock.
-+ *
-+ * XXX entirely possible to selectively enable cores, don't bother for now.
++ * After the loop, cpu is >= nr_cpu_ids.
 + */
-+static int __sched_core_stopper(void *data)
-+{
-+	bool enabled = !!(unsigned long)data;
-+	int cpu;
++#define for_each_cpu_wrap_or(cpu, mask1, mask2, start)					\
++	for ((cpu) = cpumask_next_wrap_or((start)-1, (mask1), (mask2), (start), false);	\
++	     (cpu) < nr_cpumask_bits;						\
++	     (cpu) = cpumask_next_wrap_or((cpu), (mask1), (mask2), (start), true))
 +
-+	for_each_possible_cpu(cpu)
-+		cpu_rq(cpu)->core_enabled = enabled;
+ /**
+  * for_each_cpu_and - iterate over every cpu in both masks
+  * @cpu: the (optionally unsigned) integer iterator
+@@ -312,6 +335,25 @@ extern int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool
+ 	for ((cpu) = -1;						\
+ 		(cpu) = cpumask_next_and((cpu), (mask1), (mask2)),	\
+ 		(cpu) < nr_cpu_ids;)
 +
-+	return 0;
-+}
-+
-+static DEFINE_MUTEX(sched_core_mutex);
-+static int sched_core_count;
-+
-+static void __sched_core_enable(void)
-+{
-+	// XXX verify there are no cookie tasks (yet)
-+
-+	static_branch_enable(&__sched_core_enabled);
-+	stop_machine(__sched_core_stopper, (void *)true, NULL);
-+}
-+
-+static void __sched_core_disable(void)
-+{
-+	// XXX verify there are no cookie tasks (left)
-+
-+	stop_machine(__sched_core_stopper, (void *)false, NULL);
-+	static_branch_disable(&__sched_core_enabled);
-+}
-+
-+void sched_core_get(void)
-+{
-+	mutex_lock(&sched_core_mutex);
-+	if (!sched_core_count++)
-+		__sched_core_enable();
-+	mutex_unlock(&sched_core_mutex);
-+}
-+
-+void sched_core_put(void)
-+{
-+	mutex_lock(&sched_core_mutex);
-+	if (!--sched_core_count)
-+		__sched_core_disable();
-+	mutex_unlock(&sched_core_mutex);
-+}
-+
-+#endif /* CONFIG_SCHED_CORE */
-+
- /*
-  * part of the period that we allow rt tasks to run in us.
-  * default: 0.95s
-@@ -6964,6 +7028,32 @@ static void sched_rq_cpu_starting(unsigned int cpu)
++/**
++ * for_each_cpu_or - iterate over every cpu in (mask1 | mask2)
++ * @cpu: the (optionally unsigned) integer iterator
++ * @mask1: the first cpumask pointer
++ * @mask2: the second cpumask pointer
++ *
++ * This saves a temporary CPU mask in many places.  It is equivalent to:
++ *	struct cpumask tmp;
++ *	cpumask_or(&tmp, &mask1, &mask2);
++ *	for_each_cpu(cpu, &tmp)
++ *		...
++ *
++ * After the loop, cpu is >= nr_cpu_ids.
++ */
++#define for_each_cpu_or(cpu, mask1, mask2)				\
++	for ((cpu) = -1;						\
++		(cpu) = cpumask_next_or((cpu), (mask1), (mask2)),	\
++		(cpu) < nr_cpu_ids;)
+ #endif /* SMP */
  
- int sched_cpu_starting(unsigned int cpu)
- {
-+#ifdef CONFIG_SCHED_CORE
-+	const struct cpumask *smt_mask = cpu_smt_mask(cpu);
-+	struct rq *rq, *core_rq = NULL;
-+	int i;
+ #define CPU_BITS_NONE						\
+diff --git a/lib/cpumask.c b/lib/cpumask.c
+index 85da6ab4fbb5..351c56de4632 100644
+--- a/lib/cpumask.c
++++ b/lib/cpumask.c
+@@ -43,6 +43,25 @@ int cpumask_next_and(int n, const struct cpumask *src1p,
+ }
+ EXPORT_SYMBOL(cpumask_next_and);
+ 
++/**
++ * cpumask_next_or - get the next cpu in *src1p | *src2p
++ * @n: the cpu prior to the place to search (ie. return will be > @n)
++ * @src1p: the first cpumask pointer
++ * @src2p: the second cpumask pointer
++ *
++ * Returns >= nr_cpu_ids if no further cpus set in both.
++ */
++int cpumask_next_or(int n, const struct cpumask *src1p,
++		    const struct cpumask *src2p)
++{
++	/* -1 is a legal arg here. */
++	if (n != -1)
++		cpumask_check(n);
++	return find_next_or_bit(cpumask_bits(src1p), cpumask_bits(src2p),
++		nr_cpumask_bits, n + 1);
++}
++EXPORT_SYMBOL(cpumask_next_or);
 +
-+	core_rq = cpu_rq(cpu)->core;
+ /**
+  * cpumask_any_but - return a "random" in a cpumask, but not this one.
+  * @mask: the cpumask to search
+@@ -95,6 +114,40 @@ int cpumask_next_wrap(int n, const struct cpumask *mask, int start, bool wrap)
+ }
+ EXPORT_SYMBOL(cpumask_next_wrap);
+ 
++/**
++ * cpumask_next_wrap_or - helper to implement for_each_cpu_wrap_or
++ * @n: the cpu prior to the place to search
++ * @mask1: first cpumask pointer
++ * @mask2: second cpumask pointer
++ * @start: the start point of the iteration
++ * @wrap: assume @n crossing @start terminates the iteration
++ *
++ * Returns >= nr_cpu_ids on completion
++ *
++ * Note: the @wrap argument is required for the start condition when
++ * we cannot assume @start is set in @mask.
++ */
++int cpumask_next_wrap_or(int n, const struct cpumask *mask1, const struct cpumask *mask2,
++			   int start, bool wrap)
++{
++	int next;
 +
-+	if (!core_rq) {
-+		for_each_cpu(i, smt_mask) {
-+			rq = cpu_rq(i);
-+			if (rq->core && rq->core == rq)
-+				core_rq = rq;
-+		}
++again:
++	next = cpumask_next_or(n, mask1, mask2);
 +
-+		if (!core_rq)
-+			core_rq = cpu_rq(cpu);
++	if (wrap && n < start && next >= start) {
++		return nr_cpumask_bits;
 +
-+		for_each_cpu(i, smt_mask) {
-+			rq = cpu_rq(i);
-+
-+			WARN_ON_ONCE(rq->core && rq->core != core_rq);
-+			rq->core = core_rq;
-+		}
++	} else if (next >= nr_cpumask_bits) {
++		wrap = true;
++		n = -1;
++		goto again;
 +	}
-+#endif /* CONFIG_SCHED_CORE */
 +
- 	sched_rq_cpu_starting(cpu);
- 	sched_tick_start(cpu);
- 	return 0;
-@@ -7194,6 +7284,11 @@ void __init sched_init(void)
- #endif /* CONFIG_SMP */
- 		hrtick_rq_init(rq);
- 		atomic_set(&rq->nr_iowait, 0);
-+
-+#ifdef CONFIG_SCHED_CORE
-+		rq->core = NULL;
-+		rq->core_enabled = 0;
-+#endif
- 	}
- 
- 	set_load_weight(&init_task, false);
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 293d031480d8..6ab8adff169b 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1048,6 +1048,12 @@ struct rq {
- 	/* Must be inspected within a rcu lock section */
- 	struct cpuidle_state	*idle_state;
- #endif
-+
-+#ifdef CONFIG_SCHED_CORE
-+	/* per rq */
-+	struct rq		*core;
-+	unsigned int		core_enabled;
-+#endif
- };
- 
- #ifdef CONFIG_FAIR_GROUP_SCHED
-@@ -1075,11 +1081,36 @@ static inline int cpu_of(struct rq *rq)
- #endif
- }
- 
-+#ifdef CONFIG_SCHED_CORE
-+DECLARE_STATIC_KEY_FALSE(__sched_core_enabled);
-+
-+static inline bool sched_core_enabled(struct rq *rq)
-+{
-+	return static_branch_unlikely(&__sched_core_enabled) && rq->core_enabled;
++	return next;
 +}
++EXPORT_SYMBOL(cpumask_next_wrap_or);
 +
-+static inline raw_spinlock_t *rq_lockp(struct rq *rq)
-+{
-+	if (sched_core_enabled(rq))
-+		return &rq->core->__lock;
-+
-+	return &rq->__lock;
-+}
-+
-+#else /* !CONFIG_SCHED_CORE */
-+
-+static inline bool sched_core_enabled(struct rq *rq)
-+{
-+	return false;
-+}
-+
- static inline raw_spinlock_t *rq_lockp(struct rq *rq)
- {
- 	return &rq->__lock;
- }
- 
-+#endif /* CONFIG_SCHED_CORE */
-+
- #ifdef CONFIG_SCHED_SMT
- extern void __update_idle_core(struct rq *rq);
- 
+ /* These are not inline because of header tangles. */
+ #ifdef CONFIG_CPUMASK_OFFSTACK
+ /**
 -- 
 2.17.1
 
