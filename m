@@ -2,177 +2,192 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91879C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00168C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 658A42086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF2DF2086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:55:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="H3QonVVq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zs6v88Ch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729448AbgH1Myo (ORCPT
+        id S1729457AbgH1Mzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 08:54:44 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12042 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729417AbgH1Myd (ORCPT
+        Fri, 28 Aug 2020 08:55:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729426AbgH1Mzm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 08:54:33 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f48fe4f0000>; Fri, 28 Aug 2020 05:53:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 28 Aug 2020 05:54:19 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 28 Aug 2020 05:54:19 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Aug
- 2020 12:54:06 +0000
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.47) by
- HQMAIL101.nvidia.com (172.20.187.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Fri, 28 Aug 2020 12:54:06 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dIxyLcwohxDqu0MxMWLcbxcZb7VW4eYE2xXcH6s4ni2VIyyKj6TkIH7f2wCcrQoeM3xmFeiZ53WR2pGYgsBJWGzPpZGEvrQBc/iiaEc2pUkWda/lXxUb7Ogp6372ggFoWGp3bdHWZahwdzWSuMSsPY/FCFWw0xLOw5cddZMsiCkyNNLUeAEjfHqY0XMvY+nBwrSLqsqfevfdx+743Y78iaBecHiV4OoFyNEZ6itlgI7EakUVfESnWk9evGcNUkOB1qclzdRTlTyXif6uN5tH16nqomuWrgUdG7IUgngdR1OVGh8702pCSWI0KNNraEZ6ze3z35hkPiX8Ueitwy6YcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qV68vSrNC9se5jzAxDi47xoA7ucOBEGcpYcUqXTypis=;
- b=OI/QeSDEjnfShrAMrIr9+ZIgKToGlF/BMSuyjYpmx/AbVYapqNPQXjR2+QZ6t8bVO9p+LVWHB4x2BpH0kyvg6wdLCm5B2/7T0w5m7tr4lnbUPC9H7MbB8GuMuQKGi3D+vBRpINXxMcWU53LpDMGzT2BXDZpz3i/fka/df/ZbmD0fhiz1Ry1PUDQZEZ7lYb1L0xXEA7mZ9B4SbDi3tJS9pmdN/G5UPs7uMzTQgmatJWDmjXKPxjzZY+3gMYUQVutdA88RhlNaPCCyf53CfEHWWbUcXMMGW7rNIolsoJORrCfKKV5HI/8nqxwfVONGpTq/8SsMB3bhonazHaNzPXScsw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR1201MB0203.namprd12.prod.outlook.com (2603:10b6:4:56::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Fri, 28 Aug
- 2020 12:54:05 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3305.032; Fri, 28 Aug 2020
- 12:54:05 +0000
-Date:   Fri, 28 Aug 2020 09:54:03 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        <iommu@lists.linux-foundation.org>, <linux-hyperv@vger.kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "Jon Derrick" <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        "Stephen Hemminger" <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        "Dimitri Sivanich" <sivanich@hpe.com>, Russ Anderson <rja@hpe.com>,
-        <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
-        <xen-devel@lists.xenproject.org>, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Jacob Pan" <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [patch V2 34/46] PCI/MSI: Make arch_.*_msi_irq[s] fallbacks
- selectable
-Message-ID: <20200828125403.GR1152540@nvidia.com>
-References: <20200826112333.992429909@linutronix.de>
- <20200827182040.GA2049623@bjorn-Precision-5520>
- <20200828112142.GA14208@e121166-lin.cambridge.arm.com>
- <20200828121944.GQ1152540@nvidia.com>
- <0cc8bfd9258dfc507585fd0f19a945e3@kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <0cc8bfd9258dfc507585fd0f19a945e3@kernel.org>
-X-ClientProxiedBy: MN2PR19CA0057.namprd19.prod.outlook.com
- (2603:10b6:208:19b::34) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Fri, 28 Aug 2020 08:55:42 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C8DC061264
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 05:55:42 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id x77so660318lfa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 05:55:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hnhroHrclp1KWVwvSy8+50HO8y/Hv9mEvg3yQSs6BZQ=;
+        b=zs6v88ChrAviT6VBNCODyfhX1USiLfRecZGF5bErEDMijIR1ZPxIjWHeXmZgqlomzb
+         wmrRNXaxABCtDxl6SbXQh8Tx95Z64ThwSmcI7vhgTvayFyr6TVYAtPI0pMDc9mov3AQY
+         tdLvQjIVCweNldNjw7dZwcvHhEIXHyx/fCCj5ZpPsORNHiX45Us1DaFQUauxx6Y+i+eQ
+         QJEVLyaLMTUrSyjR72GwGj0jmZd5Sc4+hwAmF9YfKRdyZosfpBoUURzbgqclPvJk+xPx
+         eef6bV14HNBMhNiLdTF2sq233VukosXgPtxmnI6k7g/gvFIod//9rrZT4TJJbNRD4+CU
+         blYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hnhroHrclp1KWVwvSy8+50HO8y/Hv9mEvg3yQSs6BZQ=;
+        b=MLCQFcQJINCAK7qqvpJrB8i3sUmz4fc3ou4tdb8X/5ANSQldwUfgUVxD0TR5IZQRy0
+         +ebX7bmVJ/zhz9vZd4e4DyjS/pNEJpYiky53I59cBzlTM5KerbfmkfZk1ZMA+LtIC5nI
+         dxGRu3o9pylhB/nY8+n2stuj6inLZ06qQDPKOuVQ1HQTX8F2G7MCbX+aZVtZ7iETKg3A
+         ViUNCBLF9NJbL1UL3Kzl7AamaG/kGmSiSPjzaHlgS7YTqW7WXQq0C+2SSWxsZt3qyXPz
+         R6E5xEq42DblORa4xbSp/MXpqxc8XVuDE368QvhHbfwsT9texjsnyoB3ya0vyfz9qWEJ
+         i78g==
+X-Gm-Message-State: AOAM533QelxZojcUbvU/tVUKhS8KIpAFbdfYH4A9b88VbH81PYzEP3uI
+        /esTkeufLhaYAtxaFg1zB7if0HKUZhA0gvmASzsQEA==
+X-Google-Smtp-Source: ABdhPJxGzBSi6hCyvQFxeWzyBnpsAhIJfkADeUstGjqtZcnC4MvtVL7PkoFtMO5VslppKBMHqBfsLD3EHi0dSBKR76U=
+X-Received: by 2002:a05:6512:36cf:: with SMTP id e15mr744001lfs.149.1598619340813;
+ Fri, 28 Aug 2020 05:55:40 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by MN2PR19CA0057.namprd19.prod.outlook.com (2603:10b6:208:19b::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Fri, 28 Aug 2020 12:54:04 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kBdtL-000S41-Nn; Fri, 28 Aug 2020 09:54:03 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d581baf4-370b-4be9-e186-08d84b5171d1
-X-MS-TrafficTypeDiagnostic: DM5PR1201MB0203:
-X-LD-Processed: 43083d15-7273-40c1-b7db-39efd9ccc17a,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM5PR1201MB0203C10F9A0026FA765135F7C2520@DM5PR1201MB0203.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 99qg/bsIPqkeKS7ryrP4eqAxd56hw+Ylq/tweF+dab3EBvIkaLviTgN6iglzJ5OsZOKlo/5c9DaBYyV3FconsXmq0HJDTBNVszdqgHaLxrdx80gVV9RaQUC6rOvi8aXBbMUezdePcc2NOvqkjZODagPSVaMzbDVHpMx/AxOa1x6V5Ag9Wq5BpZeH6ZdFZJIWHhsbpyomPgWmdQL63/XWJR8ctcmOzF3cdkdY/Mn2uNTauTK45CE3QKDZ63adUKXhMAmpdhlCuia5v1F3OX6StyQcqf0ismuqOg40S48W5nzx9AKkZWmNCMg3bLb4TOlgo4y8r3vlH6K/5T4QIA8kQg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(39860400002)(396003)(366004)(136003)(346002)(8676002)(66556008)(66476007)(426003)(186003)(478600001)(6916009)(7416002)(5660300002)(7406005)(9786002)(36756003)(9746002)(316002)(26005)(2616005)(4744005)(1076003)(86362001)(54906003)(66946007)(2906002)(8936002)(33656002)(4326008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: VsJyEC5KTaLbmpkQg6kW5X/Yid3P8Z9gSpq5BWGR/iGVLiAUD8Vso0j+6CPHoi2G+j3rV0OaO+vnv4E4AAijDXuONSZMdFkOtWoZfOEzKZwhHmetBaxh3WKUNSIfBUSEJaazsWLGXbdwqwGZP+kxwUbGsLKR025LJi4hOCRHS0hXcIFuDGhClMxryTChldEQ6WPzyt91cFKwXvS51dEvGUGpSBo/8rgyyrItvlFyWuHtwenaAQDhetEltotg2/gZtR9D+IX6SAR50x4iZGI5vwCMqRNsAtAD2rDAKIwoxYA3I2SoEp5cLF0UCsEu5TJn6ET4NEkwT/PH9b7oXYcEqna+76UbmYuu2ninY0zrv62dyWldESfiYmf9MPu5+DuFGxvlTs7sUFR4s1HHDzDJ+dpfJc4fdLbexNihzZE13gEq8f9bIkHG85ovNxfNluwc4N3YRYW5WBcyWjQ7nKNK8mvEgiD8IsZ/eIDwFQPWYpffAOLo0Ui3KBs1JavnmhK1zB1GZAIFci56uDtWFj4HYomHjatYnsFFV6dKSeo4qJVlgD8hilOjSnEJowdgxw/Y/a4rjkbC91lb7M+JTFVMgBXVoozZkJDXLhAwP+8exjh0kgQ3wKJsa2nZL5dyuKgBnQ3Vhcrck7Z94OaSF9FJ1Q==
-X-MS-Exchange-CrossTenant-Network-Message-Id: d581baf4-370b-4be9-e186-08d84b5171d1
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2020 12:54:04.8508
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HnNGus0RZDrUE5Se7xNKVvFs7SideYLF5oKLxSj7NaTAVEaFKVdLLcsoZRrqebIj
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1201MB0203
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598619215; bh=qV68vSrNC9se5jzAxDi47xoA7ucOBEGcpYcUqXTypis=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-LD-Processed:
-         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
-         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
-         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-         X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=H3QonVVqVNaGYeE6xB/Wi1aG2QYbpmwGQd11p/xq8ciXwvdVmAQ85KXYflMU90x2Y
-         uyXEIPduLJj6Sn80HH0S31oPsjAHLoNvpcI5jFUteresOmLY2GqTZHHGZEqfmGorOG
-         j7odn6teWF4uj1bTGdQblWF60gBfmSrdAASdgs15hS76HaPOpCRr5ABFYPYmJR9Eu9
-         x/rahSsbA4iIOfsN3gdaaFxRPNwxt3ABWvAMyNIv3gaB/SnqUNiaZEiGorgqT2cG2/
-         LDL75Y767C0MJW+Fe8JriW5eMmlDKdw2pTz+Gua4UG1jxt7KfkSHNibXNa/7VCPUyz
-         xJDY5yrlyCg/Q==
+References: <20200820120025.74460-1-benbjiang@tencent.com> <CAKfTPtABCbEuYf3uup5ZODyPXpUqBjgM8A5gBQqM0cQGxWk5zw@mail.gmail.com>
+ <20200820125829.GT2674@hirez.programming.kicks-ass.net> <CAKfTPtBuZOb9-W5sS=DqxcuMFa8Lw=7XqMJ_YrXEgd5zvufYjA@mail.gmail.com>
+ <20200820134341.GW2674@hirez.programming.kicks-ass.net> <CAKfTPtC203mVB6QB1APbZ5igavdcwbJsCQH_8K__rhGxi+KXoQ@mail.gmail.com>
+ <CAPJCdBmbTULFE=tS0-VM9aqKmC0b0PFfny6=UiuVZB=hVW996Q@mail.gmail.com>
+In-Reply-To: <CAPJCdBmbTULFE=tS0-VM9aqKmC0b0PFfny6=UiuVZB=hVW996Q@mail.gmail.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Fri, 28 Aug 2020 14:55:29 +0200
+Message-ID: <CAKfTPtCTd5eihtcg=B0Gu3RUydbSgjurD1uHD3rEvbTV61nf6Q@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: avoid vruntime compensation for SCHED_IDLE task
+To:     Jiang Biao <benbjiang@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jiang Biao <benbjiang@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 01:47:59PM +0100, Marc Zyngier wrote:
+On Sun, 23 Aug 2020 at 09:33, Jiang Biao <benbjiang@gmail.com> wrote:
+>
+> Hi, Vincent and Peter
+>
+> On Thu, 20 Aug 2020 at 22:09, Vincent Guittot
+> <vincent.guittot@linaro.org> wrote:
+> >
+> > On Thu, 20 Aug 2020 at 15:44, <peterz@infradead.org> wrote:
+> > >
+> > > > That's been said, not compensating the vruntime for a sched_idle task
+> > > > makes sense for me. Even if that will only help for others task in the
+> > > > same cfs_rq
+> > >
+> > > Yeah, but it is worth the extra pointer chasing and branches?
+> >
+> > For that I let Jiang provides figures to show the worthful
+> Using the following configuration for rt-app,
+> {
+>         "tasks" : {
+>                 "task_other" : {
+>                         "instance" : 1, //only 1 instance to be easy to observe
+>                         "cpus" : [2],
+>                         "loop" : 2000,
+>                         "policy" : "SCHED_OTHER",
+>                         "run" : -1,  //make normal task 100% running
+>                         "priority" : 0,
+>                         "sleep" : 0
+>                 },
+>                 "task_idle" : {
+>                         "instance" : 1,
+>                         "cpus" : [2],
+>                         "loop" : 2000,
+>                         "policy" : "SCHED_IDLE",
+>                         "run" : 1, //only run 1us to avoid
+> blocking(always waiting for running), making check_preempt_wakeup
+> work(S->R switching)
+>                         "timer" : { "ref" : "unique2" , "period" :
+> 16000, "mode" : "absolute" }
+>                 }
+>         },
+>         "global" : {
+>                 "calibration" : "CPU0",
+>                 "default_policy" : "SCHED_OTHER",
+>                 "duration" : -1
+>         }
+> }
+> without the patch,
+>           <...>-39771 [002] d.h. 42478.177771: sched_wakeup:
+> comm=task_idle-1 pid=39772 prio=120 target_cpu=002
+>            <...>-39771 [002] d... 42478.190437: sched_switch:
+> prev_comm=task_other-0 prev_pid=39771 prev_prio=120 prev_state=R ==>
+> next_comm=task_idle-1 next_pid=39772 next_prio=120
+>            <...>-39771 [002] d.h. 42478.193771: sched_wakeup:
+> comm=task_idle-1 pid=39772 prio=120 target_cpu=002
+>            <...>-39771 [002] d... 42478.206438: sched_switch:
+> prev_comm=task_other-0 prev_pid=39771 prev_prio=120 prev_state=R ==>
+> next_comm=task_idle-1 next_pid=39772 next_prio=120
+>            <...>-39771 [002] d.h. 42478.209771: sched_wakeup:
+> comm=task_idle-1 pid=39772 prio=120 target_cpu=002
+>            <...>-39771 [002] d... 42478.222438: sched_switch:
+> prev_comm=task_other-0 prev_pid=39771 prev_prio=120 prev_state=R ==>
+> next_comm=task_idle-1 next_pid=39772 next_prio=120
+>            <...>-39771 [002] d.h. 42478.225771: sched_wakeup:
+> comm=task_idle-1 pid=39772 prio=120 target_cpu=002
+>            <...>-39771 [002] d... 42478.238438: sched_switch:
+> prev_comm=task_other-0 prev_pid=39771 prev_prio=120 prev_state=R ==>
+> next_comm=task_idle-1 next_pid=39772 next_prio=120
+> *task_idle*  preempts every 12ms because of the compensation.
+>
+> with the patch,
+>    task_other-0-27670 [002] d.h. 136785.278059: sched_wakeup:
+> comm=task_idle-1 pid=27671 prio=120 target_cpu=002
+>     task_other-0-27670 [002] d... 136785.293623: sched_switch:
+> prev_comm=task_other-0 prev_pid=27670 prev_prio=120 prev_state=R ==>
+> next_comm=task_idle-1 next_pid=27671 next_prio=120
+>     task_other-0-27670 [002] d.h. 136785.294059: sched_wakeup:
+> comm=task_idle-1 pid=27671 prio=120 target_cpu=002
+>     task_other-0-27670 [002] d... 136785.317624: sched_switch:
+> prev_comm=task_other-0 prev_pid=27670 prev_prio=120 prev_state=R ==>
+> next_comm=task_idle-1 next_pid=27671 next_prio=120
+>     task_other-0-27670 [002] d.h. 136785.326059: sched_wakeup:
+> comm=task_idle-1 pid=27671 prio=120 target_cpu=002
+>     task_other-0-27670 [002] d... 136785.341622: sched_switch:
+> prev_comm=task_other-0 prev_pid=27670 prev_prio=120 prev_state=R ==>
+> next_comm=task_idle-1 next_pid=27671 next_prio=120
+>     task_other-0-27670 [002] d.h. 136785.342059: sched_wakeup:
+> comm=task_idle-1 pid=27671 prio=120 target_cpu=002
+>     task_other-0-27670 [002] d... 136785.365623: sched_switch:
+> prev_comm=task_other-0 prev_pid=27670 prev_prio=120 prev_state=R ==>
+> next_comm=task_idle-1 next_pid=27671 next_prio=120
+> *task_idle* preempts every 24 or 16 ms.
+>
+> This patch could reduce the preempting frequency of task_idle, and
+> reduce the interference from SCHED_IDLE task.
 
-> > So the arch_setup_msi_irq/etc is not really an arch hook, but some
-> > infrastructure to support those 4 PCI root port drivers.
-> 
-> I happen to have a *really old* patch addressing Tegra [1], which
-> I was never able to test (no HW). Rebasing it shouldn't be too hard,
-> and maybe you can find someone internally willing to give it a spin?
+For this use case, the preemption is only 1us long. Is it a realistic
+problem use case ? your normal threads might be more impacted by tick,
+interrupt, timer and others things than this 1us idle thread every
+16ms. I mean, the patch moves the impact from 1us every 12ms (0.01%)
+to 1us every 24ms (0.005%). Then, If the idle thread starts to run a
+bit longer, the period before preempting the normal thread quickly
+increases
 
-Sure, that helps a bunch, I will ask internally if someone in that BU
-can take a look.
+What is the improvement for an idle thread trying to run 1ms every
+16ms as an example ?
 
-Thanks,
-Jason
+Regards,
+Vincent
+>
+> Thx.
+> Regards,
+> Jiang
