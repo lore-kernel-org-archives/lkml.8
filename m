@@ -2,147 +2,218 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CD7C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B77CFC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9E62080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87FEF2080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:47:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFoPl1OX"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="HEOoN74n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgH1BqG (ORCPT
+        id S1728289AbgH1BrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 21:46:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50482 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgH1BqF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 21:46:05 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07A22C061264;
-        Thu, 27 Aug 2020 18:46:05 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id m7so8022575qki.12;
-        Thu, 27 Aug 2020 18:46:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XfUyu9N5xVHQjkPICmmZmHi0bGAWPkVtW1TYQOpXMTc=;
-        b=fFoPl1OXxLfnVTMwzSgA7bx4vGhMhtHz9ITkK25UCvdCspHdpzWFYsmrFcss3p7QdW
-         7OhHtyvfxCGpzbdZQxAQLV6JWJKPl84aOc1uwsj+Bble7uOSiQIqUQJzBQbBovuVtg0o
-         tgSRq5bf3QeWHnF1iMYhCKIxhv8BohUZiyVOvOUbUxeIWTNiRqDQ/BLCoVIVexSsSb8c
-         SECzPiivkOHi8YYNOSHXkLCtY7bBX06QRy7hoyouu6tcgSffv7kGhqTGK68OUOJsdn5p
-         vQ6IDhjaLKipX1SWY02UjD7H6pzaDho1iKaiSOXiYuSAVErTkZ9/VX7bDkPV4ZdlqkMN
-         IFdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XfUyu9N5xVHQjkPICmmZmHi0bGAWPkVtW1TYQOpXMTc=;
-        b=XZv/N/eEh2TgFU8U3h3d609rK8EVR1vdfayaF1spLG8U95z/R5Jiz3T/UnKQxTfi4c
-         yIhHWW/CUH6KhJmvmNysHv3Qm4wgqV2C0A+bAJoCrJ+aAVxM8Pfz2WqqwNQeLfUtimwV
-         Hoo+1RBPPAm24RBQF33dEU7pSOKJG4jIKREkOrNfMXovxF1vGg+5GvSuVvIIJ4W/WfHo
-         nOCd4cFBvCCbGX6r/lbxpBOYlKJq1AW8c0ohiWwirzahq7TB64lUfkaOohnP5OdrSPFO
-         SUEv3jCl11n+XXdFOl9WLk2r8cJK9bavPtmnAZaYiIKcUT1qdMpTIQX3w/gEwr53zgD+
-         DJFQ==
-X-Gm-Message-State: AOAM531O1auXv3MAX2C/S5cJulphZKoC8gBn6dKqF2OBGQtUHxWwzZly
-        FJtD55waFKMaBYMI+9NzhhnTwZgmtxwdGWo3Mcb08U/arSw=
-X-Google-Smtp-Source: ABdhPJzRioaXKpEXuHH+xgnaqM9TLTGuOtkw/XlnCNWyXDFt5pV8TJx33baphVEwD/Much68yksmX9cv4L3iyLkS6w4=
-X-Received: by 2002:a37:b482:: with SMTP id d124mr20753891qkf.98.1598579164268;
- Thu, 27 Aug 2020 18:46:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
- <20200623134259.8197-1-mzhivich@akamai.com> <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
- <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
- <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
- <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com> <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
- <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com> <CANE52Ki8rZGDPLZkxY--RPeEG+0=wFeyCD6KKkeG1WREUwramw@mail.gmail.com>
- <20200822032800.16296-1-hdanton@sina.com> <CACS=qqKhsu6waaXndO5tQL_gC9TztuUQpqQigJA2Ac0y12czMQ@mail.gmail.com>
- <20200825032312.11776-1-hdanton@sina.com> <CACS=qqK-5g-QM_vczjY+A=3fi3gChei4cAkKweZ4Sn2L537DQA@mail.gmail.com>
- <20200825162329.11292-1-hdanton@sina.com> <CACS=qqKgiwdCR_5+z-vkZ0X8DfzOPD7_ooJ_imeBnx+X1zw2qg@mail.gmail.com>
- <CACS=qqKptAQQGiMoCs1Zgs9S4ZppHhasy1AK4df2NxnCDR+vCw@mail.gmail.com>
- <5f46032e.1c69fb81.9880c.7a6cSMTPIN_ADDED_MISSING@mx.google.com>
- <CACS=qq+Yw734DWhETNAULyBZiy_zyjuzzOL-NO30AB7fd2vUOQ@mail.gmail.com> <20200827125747.5816-1-hdanton@sina.com>
-In-Reply-To: <20200827125747.5816-1-hdanton@sina.com>
-From:   Kehuan Feng <kehuan.feng@gmail.com>
-Date:   Fri, 28 Aug 2020 09:45:52 +0800
-Message-ID: <CACS=qq+a0H=e8yLFu95aE7Hr0bQ9ytCBBn2rFx82oJnPpkBpvg@mail.gmail.com>
-Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Jike Song <albcamus@gmail.com>, Josh Hunt <johunt@akamai.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jonas Bonn <jonas.bonn@netrounds.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Michael Zhivich <mzhivich@akamai.com>,
-        David Miller <davem@davemloft.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 27 Aug 2020 21:47:25 -0400
+Received: from mga04.intel.com ([192.55.52.120]:39953 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726197AbgH1BrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 21:47:24 -0400
+IronPort-SDR: o23Xd0gDw8aMRSccT05P6DcSlMDqK7X/uLGjOavsRpdavUrJkahusTixcBwjFMYc8uQW9jdKuU
+ 7sLzn6w2y7KA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="154008194"
+X-IronPort-AV: E=Sophos;i="5.76,361,1592895600"; 
+   d="scan'208";a="154008194"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 18:47:22 -0700
+IronPort-SDR: VYCSw9dqJQd0W/QvpW4Mo+y/0VzFQK9PkUJG8MusNTPtunCU6kToz9LAFPx6U/qg4NkV/IRZyc
+ aVLB8WJO+1JA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,361,1592895600"; 
+   d="scan'208";a="332392179"
+Received: from fmsmsx606.amr.corp.intel.com ([10.18.126.86])
+  by fmsmga002.fm.intel.com with ESMTP; 27 Aug 2020 18:47:22 -0700
+Received: from fmsmsx606.amr.corp.intel.com (10.18.126.86) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 27 Aug 2020 18:47:17 -0700
+Received: from fmsmsx124.amr.corp.intel.com (10.18.125.39) by
+ fmsmsx606.amr.corp.intel.com (10.18.126.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 27 Aug 2020 18:47:17 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ fmsmsx124.amr.corp.intel.com (10.18.125.39) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 27 Aug 2020 18:47:17 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.48) by
+ edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 27 Aug 2020 18:47:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LXneScp7a1fof8rS/23y4zz8Y1menTNPAgho/j9gYPT2zojknLtU1Sdrt7RA73Qyn6pMl70kjTEJE8dw7oMmpd2vqcDlb7J37MFDGVd2Il3zfeJ/B+JdHqdLIU6rRoSDumzDuXaIpv8tyteYnIGXwdzz9vj4UgS4TWZ13sernH9ciBox42Y3Gaj773FVOMSg3JERA7zQvSchGBLR8AHhmdYjzWxlhvrcGObgd4KhLy6poeK5jcZHeXZYZ4eNEezlFMQGBys4ZEq48HKTiJDLGUobRoAD5TbhwLAWzSUPqxqGMNMfGUowoTATyjVNipmAaCzaNPfAnSi7+Bn9/pZX7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a58rFFQ9cD77hFtgEYaW4+ObA3XRqFfAwquv5WtvHP0=;
+ b=QvGNsf/4h+GTYYgQ6JYF9t0ERrWwjA/i/d2t4oLM1k/FvZCO/us/+qizdDLgJdBAi9hRTTCNnP/wSmb3x7pFGgUMWqT+bK2xGa43ZzhYNVtXKWXlVXgSx0NXLFY20m+EZ7PJTpf4c+wHwcRrvtl2pOUmxcVMgiwTQVbIscGllxkYKwaaX5dW5D8GZzXeL9jpnQ0D7Kk+JNpcDqvUqH/o5n3Y024C9epxUPzgk7aHxWXdrVic2vpKA403Lsf6hCX0sYP8mgsYIj5YYG4ze+UuwnKr8/UbvPuAxLyAUySxyGUvAPn5V7uToSp71L2fo2XdktzK93y5CkBzzSD7bvy3OQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a58rFFQ9cD77hFtgEYaW4+ObA3XRqFfAwquv5WtvHP0=;
+ b=HEOoN74nSRdE1Be8kkr59npw8XeSJqN/P/yL776E1Pz6/FUb9PT47xBdlyZCtPutgP+bSL9oHvYFx/dvpM0vLylpeXOfS58ICrzLh33XhdE9DqzRaDky7qWVhKAKFG6KF1aSxLLTKu7rgubAbgFHYs01z6m/McXwuaY7a6OKmdY=
+Received: from DM6PR11MB4074.namprd11.prod.outlook.com (2603:10b6:5:5::11) by
+ DM5PR11MB1787.namprd11.prod.outlook.com (2603:10b6:3:112::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3305.24; Fri, 28 Aug 2020 01:47:15 +0000
+Received: from DM6PR11MB4074.namprd11.prod.outlook.com
+ ([fe80::a061:bd5e:c46a:fa40]) by DM6PR11MB4074.namprd11.prod.outlook.com
+ ([fe80::a061:bd5e:c46a:fa40%3]) with mapi id 15.20.3305.032; Fri, 28 Aug 2020
+ 01:47:15 +0000
+From:   "Liao, Bard" <bard.liao@intel.com>
+To:     Vinod Koul <vkoul@kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>
+CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tiwai@suse.de" <tiwai@suse.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jank@cadence.com" <jank@cadence.com>,
+        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
+        "rander.wang@linux.intel.com" <rander.wang@linux.intel.com>,
+        "ranjani.sridharan@linux.intel.com" 
+        <ranjani.sridharan@linux.intel.com>,
+        "hui.wang@canonical.com" <hui.wang@canonical.com>,
+        "pierre-louis.bossart@linux.intel.com" 
+        <pierre-louis.bossart@linux.intel.com>,
+        "Kale, Sanyog R" <sanyog.r.kale@intel.com>,
+        "Lin, Mengdong" <mengdong.lin@intel.com>
+Subject: RE: [PATCH 07/11] soundwire: intel: Only call sdw stream APIs for the
+ first cpu_dai
+Thread-Topic: [PATCH 07/11] soundwire: intel: Only call sdw stream APIs for
+ the first cpu_dai
+Thread-Index: AQHWdWzjed4H7siPVEC/M4NN62YhKalKMLkAgAKcpAA=
+Date:   Fri, 28 Aug 2020 01:47:14 +0000
+Message-ID: <DM6PR11MB407494AEF6D05EFF627CFAFBFF520@DM6PR11MB4074.namprd11.prod.outlook.com>
+References: <20200818024120.20721-1-yung-chuan.liao@linux.intel.com>
+ <20200818024120.20721-8-yung-chuan.liao@linux.intel.com>
+ <20200826094636.GB2639@vkoul-mobl>
+In-Reply-To: <20200826094636.GB2639@vkoul-mobl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-reaction: no-action
+dlp-product: dlpe-windows
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [220.133.4.96]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cc3de138-b36c-45c5-eb23-08d84af44a3a
+x-ms-traffictypediagnostic: DM5PR11MB1787:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR11MB17873C1F1E52208AB5F6084EFF520@DM5PR11MB1787.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YzvWGBQg5R326JeGIhv9bpeD2fBuNNzDabfm/elgEhsOq85J/OGj9Y5fnXty1g1xIE2RlF6fCg8x8ONk8qDU3lP95vo6fw9RhbIUtC6MSNm0BaYke7B5GaH90ygkEu0davxMDMNi3X2dl1A/VHf1VAvQewHNQsE0Z2enKNqskNleiZ4WhOooRL26WZJywQVkt/YTNf7pNM78KepKczbcmDe3AVtJ7GqEmIuv6rjv+dXzrSBcE54AW6T37dhtibhK6BaOnmzzJImOk9kMOopcOp3cIJosOYTr8u2NzAYARy1/9xidgk3j36lpuFFiYw6vSjHoCK7CSqummaXqkZYd3g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4074.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(136003)(39860400002)(396003)(346002)(53546011)(8676002)(6506007)(110136005)(7696005)(316002)(478600001)(54906003)(55016002)(52536014)(9686003)(5660300002)(8936002)(2906002)(7416002)(71200400001)(66946007)(186003)(33656002)(4326008)(26005)(86362001)(83380400001)(76116006)(64756008)(66476007)(66556008)(66446008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: z9aaQikUMUHwOoW059L8avh/Cp7CeLXstl5OueEo1nuNaxeXLmba52Ug9RMdtti5apatM2KbbbIhxyLozQT1FjGpf3ApdF+7rNECqaNIVP5WtR2VB1wPywLiVszT8x99JHYU2RZGNguLRb5+B/xTwSYi9+ayV3zUpkIP18wy5ab4Ip5qTwKYzuRz1o75+fimDrBM7WSgyP69z5fS6N4aCmUrvjLUqMYtOo85UIZEjeP0FTINEy83F0B9G5fDCJkpkYo/QNIqWltcDcdTsrz9AgFsQDk4PzI2UBRZyACYS+FWatPP2mGDfwlaRuOjHiOlxsnCWiMyAI2D2jzwZbdxWv/h4xdLDoyZ6WlFgg95PtrKTZuds8tb87QuVP/sTfsxprAtHGrL6dKsGs7sDVQAKV1S5ltmWnd5cq8YP3IGPqDZcrX9gI4mHseyQKyJpjJCrloaLRSUeu7tM5vCM0+X6gQsyWOmqo/WZ0fJazCY6lSRzIx6Ouw0JInJcsYWQKx/dMxYpvY3Y9WFPQeH8FVZ+mo9RcPck9OPQI5X9gL2WRqOBDcFjrxW5fN3ovN7jEQe9jCcCYzF+KwmO3Gafwz6sXtvmShLPoo6Ms+clc8WaZJk4Um0/Lo6/zdkftJYraCAvDzPO5kKbnvusDSjjg97ZQ==
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4074.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc3de138-b36c-45c5-eb23-08d84af44a3a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2020 01:47:14.9406
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fUcCTMgnXmj6qXhuXPbSRvU9+R5i0A/JliW5CT2zDRgB7aYU6R5KIueTU0LhK5qpufh1EGkowNYKUsiZR1brmw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1787
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hillf,
+> -----Original Message-----
+> From: Vinod Koul <vkoul@kernel.org>
+> Sent: Wednesday, August 26, 2020 5:47 PM
+> To: Bard Liao <yung-chuan.liao@linux.intel.com>
+> Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; tiwai@suse=
+.de;
+> broonie@kernel.org; gregkh@linuxfoundation.org; jank@cadence.com;
+> srinivas.kandagatla@linaro.org; rander.wang@linux.intel.com;
+> ranjani.sridharan@linux.intel.com; hui.wang@canonical.com; pierre-
+> louis.bossart@linux.intel.com; Kale, Sanyog R <sanyog.r.kale@intel.com>; =
+Lin,
+> Mengdong <mengdong.lin@intel.com>; Liao, Bard <bard.liao@intel.com>
+> Subject: Re: [PATCH 07/11] soundwire: intel: Only call sdw stream APIs fo=
+r
+> the first cpu_dai
+>=20
+> On 18-08-20, 10:41, Bard Liao wrote:
+> > We should call these APIs once per stream. So we can only call it when
+> > the dai ops is invoked for the first cpu dai.
+> >
+> > Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+> > Reviewed-by: Pierre-Louis Bossart
+> > <pierre-louis.bossart@linux.intel.com>
+> > Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+> > ---
+> >  drivers/soundwire/intel.c | 45
+> > +++++++++++++++++++++++++++++++++------
+> >  1 file changed, 39 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+> > index 89a8ad1f80e8..7c63581270fd 100644
+> > --- a/drivers/soundwire/intel.c
+> > +++ b/drivers/soundwire/intel.c
+> > @@ -941,11 +941,13 @@ static int intel_hw_params(struct
+> > snd_pcm_substream *substream,  static int intel_prepare(struct
+> snd_pcm_substream *substream,
+> >  			 struct snd_soc_dai *dai)
+> >  {
+> > +	struct snd_soc_pcm_runtime *rtd =3D substream->private_data;
+> > +	struct snd_soc_dai *first_cpu_dai =3D asoc_rtd_to_cpu(rtd, 0);
+> >  	struct sdw_cdns *cdns =3D snd_soc_dai_get_drvdata(dai);
+> >  	struct sdw_intel *sdw =3D cdns_to_intel(cdns);
+> >  	struct sdw_cdns_dma_data *dma;
+> >  	int ch, dir;
+> > -	int ret;
+> > +	int ret =3D 0;
+> >
+> >  	dma =3D snd_soc_dai_get_dma_data(dai, substream);
+> >  	if (!dma) {
+> > @@ -985,7 +987,13 @@ static int intel_prepare(struct
+> snd_pcm_substream *substream,
+> >  			goto err;
+> >  	}
+> >
+> > -	ret =3D sdw_prepare_stream(dma->stream);
+> > +	/*
+> > +	 * All cpu dais belong to a stream. To ensure sdw_prepare_stream
+> > +	 * is called once per stream, we should call it only when
+> > +	 * dai =3D first_cpu_dai.
+> > +	 */
+> > +	if (first_cpu_dai =3D=3D dai)
+> > +		ret =3D sdw_prepare_stream(dma->stream);
+>=20
+> Hmmm why not use the one place which is unique in the card to call this,
+> hint machine dais are only called once.
 
-Unfortunately, above mem barriers don't help. The issue shows up
-within 1 minute ...
+Yes, we can call it in machine driver. But, shouldn't it belong to platform
+level? The point is that if we move the stuff to machine driver, it will
+force people to implement these stuff on their own Intel machine driver.
 
-Hillf Danton <hdanton@sina.com> =E4=BA=8E2020=E5=B9=B48=E6=9C=8827=E6=97=A5=
-=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=888:58=E5=86=99=E9=81=93=EF=BC=9A
-
->
->
-> On Thu, 27 Aug 2020 14:56:31 +0800 Kehuan Feng wrote:
-> >
-> > > Lets see if TCQ_F_NOLOC is making fq_codel different in your testing.
-> >
-> > I assume you meant disabling NOLOCK for pfifo_fast.
-> >
-> > Here is the modification,
-> >
-> > --- ./net/sched/sch_generic.c.orig      2020-08-24 22:02:04.589830751 +=
-0800
-> > +++ ./net/sched/sch_generic.c   2020-08-27 10:17:10.148977195 +0800
-> > @@ -792,7 +792,7 @@
-> >         .dump           =3D3D       pfifo_fast_dump,
-> >         .change_tx_queue_len =3D3D  pfifo_fast_change_tx_queue_len,
-> >         .owner          =3D3D       THIS_MODULE,
-> > -       .static_flags   =3D3D       TCQ_F_NOLOCK | TCQ_F_CPUSTATS,
-> > +       .static_flags   =3D3D       TCQ_F_CPUSTATS,
-> >
-> > The issue never happen again with it for over 3 hours stressing. And I
-> > restarted the test for two times. No any surprising. Quite stable...
->
-> Jaw off. That is great news and I'm failing again to explain the test
-> result wrt the difference TCQ_F_NOLOCK can make in running qdisc.
->
-> Nothing comes into mind other than two mem barriers though only one is
-> needed...
->
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -3040,6 +3040,7 @@ static void __netif_reschedule(struct Qd
->
->  void __netif_schedule(struct Qdisc *q)
->  {
-> +       smp_mb__before_atomic();
->         if (!test_and_set_bit(__QDISC_STATE_SCHED, &q->state))
->                 __netif_reschedule(q);
->  }
-> @@ -4899,6 +4900,7 @@ static __latent_entropy void net_tx_acti
->                          */
->                         smp_mb__before_atomic();
->                         clear_bit(__QDISC_STATE_SCHED, &q->state);
-> +                       smp_mb__after_atomic();
->                         qdisc_run(q);
->                         if (root_lock)
->                                 spin_unlock(root_lock);
->
+>=20
+> ~Vinod
