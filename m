@@ -2,124 +2,112 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF74C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 325C3C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9853207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B727207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:52:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m3SH83Jh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ASiPmnut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgH1Ovp (ORCPT
+        id S1728067AbgH1OwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:51:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59296 "EHLO
+        Fri, 28 Aug 2020 10:52:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727979AbgH1Ovi (ORCPT
+        with ESMTP id S1727963AbgH1OwF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:51:38 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58C70C061235
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:51:35 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id m22so1623620ljj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:51:34 -0700 (PDT)
+        Fri, 28 Aug 2020 10:52:05 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7FF8C06121B
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:52:05 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id e14so704472vsa.9
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:52:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ImiWhFwiMiRaDILGK2vYxwtK6H1QbPrDWNEB8Fo5yp0=;
-        b=m3SH83JhPp5zysOZ8UGaOASaGvHwyBdy+dMZYhDz9IjeZrOUNDL7DGC2IYkYpae6UT
-         FpGAiEisi2hdICi2QBwVlxCRBlQYajQ6kIl3apwv6Zd5zwaMsm+woTJe0VxhXsJCBmVB
-         /Krz+up/rlea+pltJEx57NrY0mSwXBmgaoM8eBGVocnnO/EabniaNW7LYGT8om9EynVv
-         CIC9WHLTJ4TqH3GGF/DLZDlPvjr7OZ+u5Gmua0OvS7bbxfJ/KVP9l6u2f80iB9oWA4S5
-         XcREjqO8mQbwzNglMH6NjTAUpG2SBhzd1ox2KvfQMgaZMf3Rcty3gxm60W7RrjIkgx2T
-         DCMQ==
+        bh=ZmW/UzfIpiqxIVOvn5t5U7Hz6pKUYnMVNjjF5Y3VXtc=;
+        b=ASiPmnut8ciHDn1eSNZN++Q0EY9sH3AlBER8f194LxUx7jFUhiZzA+dHhYDJe9W8Au
+         A6ww7IdEnLBpDyW+d1rISSIosnSHvUGxstDL8aY4ECfWCKliS/yftWa+Z1Wh+qDLcS44
+         PNLPuzuGVLk1e/7BL/tLO4+bGfz6TWrbQZre2HTRo/wJTXOml58huo5DUJIaiXwx9wEv
+         vOBD2caU600iGI5oR6r0Jz+TPCcpek7SzfwI2LmIl/3cutVX7uqCFbn6NvS/rWCjOoE4
+         6T+OPEShQMiP/pEhX4QitVQpQEqgFjPUSkjmJ4aJA2V0+SsLpIDUKxxPIYKwqoxMCBDS
+         BJxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ImiWhFwiMiRaDILGK2vYxwtK6H1QbPrDWNEB8Fo5yp0=;
-        b=OEWooE3MV7ESZGpPC9qOwbGv0Mmd9aGdwYKdVlu3yAHHM1EmlyLPT3aAoNpZbz9Kds
-         njflGjEASXw61DFFyLqD0LyvxFMwAmsmuHcCKIdT+q950/FdweT+TOr6Uy3WE9HBW1/Y
-         sBcRIArJ6s98+OUFvCQzcsodbeyWrgSS2onHvEL15IC3ihACSPvaHZ6NhKL0f8obpxhj
-         I48A58F2yi+FCOu7Ofs9qnv6KjSehNNIZudyYq0iLIO9VpuqJ6QcfpOClCRCzlwczeqs
-         rLUzD3FEkM2uIDYLM1iNATVP2kFTTPw/bmUQBD0Ps76hSno6Zd7z1deGV48qdjm/cxuc
-         sYzA==
-X-Gm-Message-State: AOAM531Hx9GP9hIEy6OrYJo1HF7rH/460ywCMINgydkeoTunhIkADKUU
-        EbuGBNIYECs+6+ovZHtLjKlxixo3rb160SqOYc8vlg==
-X-Google-Smtp-Source: ABdhPJz7nqwPZB2YVbmFth99db1dEuQGwLTN+Hy4/7RmCxHXULzHeBqpJLldBTh4ZZ0VSRoDavwoeUh9uKGkK6yVJPw=
-X-Received: by 2002:a2e:9dd0:: with SMTP id x16mr1026817ljj.144.1598626291535;
- Fri, 28 Aug 2020 07:51:31 -0700 (PDT)
+        bh=ZmW/UzfIpiqxIVOvn5t5U7Hz6pKUYnMVNjjF5Y3VXtc=;
+        b=JWcWuDPfs6/wcnn8+yJ1wIML6syuC8Oh1CTV4NYtB+aUusSwsUz3CLw9pI1IWtGZnO
+         8XFq6N5lwf0GVjNhlMXGgveDgVY8cBwXNrHxZbYbf4PfPUB998FSoQfl34JBbRAS1ylB
+         eloswQWZZnUc2NI1YugBNTmRIcL2yL567P78fdBODIUJ1AmqAo6Rl2A5FeSTgXv3q5IU
+         bDxbsxw4minhs/4ixZpM6wp+cKwwGM5/GCKZP8bKmBf8+2ovvUMKDTz+XaUpWWCzmvNQ
+         nJ+3eqNME/WPZgmsGV/dT+xVGqecRUnecp+JbqCpx7J01anfvKlUZLYQyM/6ibC1XNY0
+         d5Bg==
+X-Gm-Message-State: AOAM531zootcgETJR2VtHNB2Af5UliIatE+u8l+E1HKHKcxIcy5Hf0HU
+        h63kLJelWjhthzEnDJB2inLJczUiFQSN72XdEzGvpA==
+X-Google-Smtp-Source: ABdhPJxPLcaFKo8fXT9ratgxwY2hdZT7QpICZojESZhKVTSgGJCpiS5lrKCfG4YYue2Q/mEVwjb/FVS4d0AGzNdzj5Q=
+X-Received: by 2002:a67:e449:: with SMTP id n9mr1036754vsm.118.1598626324771;
+ Fri, 28 Aug 2020 07:52:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200825193536.7332-1-krzk@kernel.org> <CACRpkdb4j2kJvpY23G-os9gTktZW5HT287MsvMZxC=ovgn_9LQ@mail.gmail.com>
- <20200828130837.GA14163@kozik-lap>
-In-Reply-To: <20200828130837.GA14163@kozik-lap>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 16:51:20 +0200
-Message-ID: <CACRpkdaWAzJQz_Z1zsRbyVQNPO2wUogH8U_mDNV2fSkW22zmtQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/19] dt-bindings / arm64: Cleanup of i.MX 8 bindings
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
-        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+References: <20200825042210.300632-1-badhri@google.com> <20200825042210.300632-8-badhri@google.com>
+ <fb1a7030-2649-c0cf-dd2a-651516333da7@infradead.org>
+In-Reply-To: <fb1a7030-2649-c0cf-dd2a-651516333da7@infradead.org>
+From:   Badhri Jagan Sridharan <badhri@google.com>
+Date:   Fri, 28 Aug 2020 07:51:28 -0700
+Message-ID: <CAPTae5KiP7DGJ8V0xtt3k0GUD6VtTBqCJzm6G1NGD+JrOexmXQ@mail.gmail.com>
+Subject: Re: [PATCH 07/14 v1] usb: typec: tcpci_maxim: Chip level TCPC driver
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 3:08 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Fri, Aug 28, 2020 at 02:51:20PM +0200, Linus Walleij wrote:
-> > On Tue, Aug 25, 2020 at 9:35 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > > This is a v3 of cleanup of i.XM 8 bindings and DTSes.
-> >
-> > If you are going to be working a lot on Freescale SoC code going forward
-> > I wouldn't mind if you could add yourself as maintainer for the
-> > Freescale pin controller and GPIO at least, I already have high trust
-> > in you in general so if the Freescale maintainers also have that I think you
-> > should just sign up as maintainer. This makes it easier to do pull requests
-> > and things like that.
+On Mon, Aug 24, 2020 at 10:16 PM Randy Dunlap <rdunlap@infradead.org> wrote:
 >
-> Thanks for encouragement.  Indeed I am planning to do more work around
-> i.MX 8M platforms from NXP/Freescale. However there are already four
-> maintainers for Freescale pin controller drivers so I doubt there is
-> need for fifth entry :).
+> On 8/24/20 9:22 PM, Badhri Jagan Sridharan wrote:
+> > diff --git a/drivers/usb/typec/tcpm/Kconfig b/drivers/usb/typec/tcpm/Kconfig
+> > index fa3f39336246..7c9722b02afe 100644
+> > --- a/drivers/usb/typec/tcpm/Kconfig
+> > +++ b/drivers/usb/typec/tcpm/Kconfig
+> > @@ -27,6 +27,12 @@ config TYPEC_RT1711H
+> >         Type-C Port Controller Manager to provide USB PD and USB
+> >         Type-C functionalities.
+> >
+> > +config TYPEC_TCPCI_MAXIM
+> > +     tristate "Maxim TCPCI based Type-C chip driver"
+> > +     select USB_PSY
+>
+> is that        USB_PHY
+> ?
+Yes and not a dependency here. Will remove. Thanks for catching this !
 
-I beg to differ. As subsystem maintainer it has happened to me more
-than once that the i.MX pin control patches went unreviewed for weeks.
-Everyone listed for this driver is a kitchen sink maintainer that get
-way too much traffic and things fall over the edge.
+>
+> > +     help
+> > +       MAXIM TCPCI based Type-C chip driver
+>
+> end that with '.' please.
+Ack ! will fix it in the next version.
 
-> Different question is the GPIO driver which apparently lacks entry in
-> Maintainers file.
-
-That's probably just an oversight. Feel free to add it!
-
-Yours,
-Linus Walleij
+>
+> > +
+> >  endif # TYPEC_TCPCI
+> >
+> >  config TYPEC_FUSB302
+>
+>
+> --
+> ~Randy
+>
