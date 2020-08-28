@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156FAC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6342AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9EAA20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F73F20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgH1R4h (ORCPT
+        id S1727895AbgH1R61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 13:56:37 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:46838 "EHLO
+        Fri, 28 Aug 2020 13:58:27 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:47008 "EHLO
         asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbgH1R4g (ORCPT
+        with ESMTP id S1726010AbgH1R61 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 13:56:36 -0400
+        Fri, 28 Aug 2020 13:58:27 -0400
 Received: from ravnborg.org (unknown [188.228.123.71])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id A12C6201C5;
-        Fri, 28 Aug 2020 19:55:50 +0200 (CEST)
-Date:   Fri, 28 Aug 2020 19:55:48 +0200
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 10DFE201BD;
+        Fri, 28 Aug 2020 19:58:00 +0200 (CEST)
+Date:   Fri, 28 Aug 2020 19:57:59 +0200
 From:   Sam Ravnborg <sam@ravnborg.org>
 To:     Kevin Tang <kevin3.tang@gmail.com>
 Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -38,66 +38,45 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
         ML dri-devel <dri-devel@lists.freedesktop.org>,
         Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH RFC v6 2/6] drm/sprd: add Unisoc's drm kms master
-Message-ID: <20200828175548.GA660103@ravnborg.org>
+Subject: Re: [PATCH RFC v6 1/6] dt-bindings: display: add Unisoc's drm master
+ bindings
+Message-ID: <20200828175759.GB660103@ravnborg.org>
 References: <1595930879-2478-1-git-send-email-kevin3.tang@gmail.com>
- <1595930879-2478-3-git-send-email-kevin3.tang@gmail.com>
- <20200728204532.GC1277651@ravnborg.org>
- <CAFPSGXaXxr+Du0ptbBHguEPgoHULozSUb-rS3-61pef1fF6b-g@mail.gmail.com>
+ <1595930879-2478-2-git-send-email-kevin3.tang@gmail.com>
+ <20200728202732.GB1277651@ravnborg.org>
+ <CAFPSGXahb7KzsM3iZFjW=JjZAYr0h1vwMx2ROrwR=x8MCchn1Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFPSGXaXxr+Du0ptbBHguEPgoHULozSUb-rS3-61pef1fF6b-g@mail.gmail.com>
+In-Reply-To: <CAFPSGXahb7KzsM3iZFjW=JjZAYr0h1vwMx2ROrwR=x8MCchn1Q@mail.gmail.com>
 X-CMAE-Score: 0
 X-CMAE-Analysis: v=2.3 cv=CaYmGojl c=1 sm=1 tr=0
         a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=Gh0u76Fc2OF9ojEVt64A:9 a=CjuIK1q_8ugA:10
+        a=kj9zAlcOel0A:10 a=eyGgB6SCGB90EZ01wQQA:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin
+Hi Kevin.
 
 > >
-> > > +
-> > > +     drm->dev_private = sprd;
-> > dev_private is deprecated. Alwyas use upclassing.
-> dev_private is deprecated ? I see everyone is still using it, so it
-> will be deprecated in the future?
-It is deprecated - and a lot of drivers is in need up an update to get
-away from using it.
+> > Any specific reason why this is not a ports node like used by many other
+> > display bindings?
+> > In other words - I think this is too simple.
+> We only support one display pipeline now, other interface, like
+> DP(DisplayPort), HDMI...will be add later...
+> 
+>   ports:
+>     $ref: /schemas/types.yaml#/definitions/phandle-array
+>     description: |
+>       Should contain a list of phandles pointing to display interface port
+>       of dpu devices.. dpu definitions as defined in
+>       Documentation/devicetree/bindings/display/sprd/sprd,dpu.yaml
 
-From the kernel-doc:
-
-        /**
-         * @dev_private:
-         *
-         * DRM driver private data. This is deprecated and should be left set to
-         * NULL.
-         *
-         * Instead of using this pointer it is recommended that drivers use
-         * drm_dev_init() and embed struct &drm_device in their larger
-         * per-device structure.
-         */
-        void *dev_private;
-
-> > > +     }
-> > > +     /* with irq_enabled = true, we can use the vblank feature. */
-> > > +     drm->irq_enabled = true;
-> > Can drm_irq_install() be used?
-> > Then this flag shall not be set by the driver, And the interrupt numbers on different Soc are not necessarily the same
-> >
-> We need to set "IRQ_NOAUTOEN" flag for CRTC IRQ, you can see that we
-> manually turn the interrupt on and off by crtc
-> atomic_enable/atomic_disable
-> and the interrupt number on different Soc are not necessarily the
-> same. So intall interrupt in kms maybe is not suitable for us...
-
-Maybe drm_irq_install() does not fit the need here. But please take an
-extra look as what is does is quite basic. And no need to roll your
-own if there is available infrstructure that can be used.
-
-But there is nothing wrong rolloing your own if needed.
+There is nothing wrong having a ports node that is limited to a single
+port node. But please remember the binding describes the HW - so if the
+HW supports more than one port the binding should describe this.
+What the driver supports is not relevant for the binding.
 
 	Sam
