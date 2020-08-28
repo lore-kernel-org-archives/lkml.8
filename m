@@ -2,153 +2,137 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D435AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65858C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9E102075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D03F2075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:06:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZmFcI8pU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G8e1hSdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgH1PDB (ORCPT
+        id S1727017AbgH1PGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 11:03:01 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16162 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726197AbgH1PC4 (ORCPT
+        Fri, 28 Aug 2020 11:06:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbgH1PGS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 11:02:56 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07SF2iO6091018;
-        Fri, 28 Aug 2020 11:02:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : reply-to : to : cc : date : in-reply-to : references : content-type
- : mime-version : content-transfer-encoding; s=pp1;
- bh=u3GT3t+mVGFoG2/sqsKNjy5riCz5nFHuHpPP2z4ZR3I=;
- b=ZmFcI8pUgFx1JLHvnT4qA0k/I3dnkZLrRBdyGVLnat88gzCweVLFRWFfpm2KKn+zo8k1
- WQdlNn8/tOOkeQB7tmAYcQzaEirJpzHNdW8hk4OWhNE6Oj6OdmtJMrYRKbCToFuwlPaK
- 19t1NW+sonoI+rBseMAIf5DpiCik0qPS6muwa3Re2vfcx26L+TQEQNx6kPW7TMHVE6uC
- DggHTQzfg0sarlYvqRu0/bKxoqN3iQtaXB0m2jmXyEVFjHf+GkXszTX32DJ10DiSBcsy
- Y6ytBSdUk+Hfu/9RHY8aAkXF95YoCRK9ZUFwpGR29eGQRh/yykFojlGn6sLFYzRseOe1 Fg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33703xykvm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 11:02:49 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07SF2l2g091351;
-        Fri, 28 Aug 2020 11:02:47 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33703xykrh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 11:02:47 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07SEvpbt022587;
-        Fri, 28 Aug 2020 15:02:41 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma03dal.us.ibm.com with ESMTP id 332utufcyy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 15:02:41 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07SF2eU757016640
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Aug 2020 15:02:40 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 512AF78060;
-        Fri, 28 Aug 2020 15:02:40 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4D67D7805C;
-        Fri, 28 Aug 2020 15:02:38 +0000 (GMT)
-Received: from [153.66.254.174] (unknown [9.80.230.238])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 28 Aug 2020 15:02:38 +0000 (GMT)
-Message-ID: <1598626957.3883.17.camel@linux.ibm.com>
-Subject: Re: [PATCH] MAINTAINERS: orphan sections with qlogic.com group alias
-From:   James Bottomley <jejb@linux.ibm.com>
-Reply-To: jejb@linux.ibm.com
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Roman Bolshakov <r.bolshakov@yadro.com>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
-        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
-        linux-spdx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        GR-QLogic-Storage-Upstream@marvell.com,
-        Arun Easi <aeasi@marvell.com>
-Date:   Fri, 28 Aug 2020 08:02:37 -0700
-In-Reply-To: <alpine.DEB.2.21.2008281524360.11562@felia>
-References: <20200828070824.8032-1-lukas.bulwahn@gmail.com>
-         <20200828091758.GF54274@SPB-NB-133.local>
-         <alpine.DEB.2.21.2008281524360.11562@felia>
+        Fri, 28 Aug 2020 11:06:18 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ED24C061232
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 08:06:18 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id p185so731582vsp.8
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 08:06:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XP81KhbFfFMLjt/9HZBr2wWZSwrB3/aa9mKjEXE/AKE=;
+        b=G8e1hSdWLuYEJPV3B0RaF3rvGxxGkCTIF80d31pPr9iF136sww25RkRnSUV+j1AcVv
+         H9OJX1KXsDnaVLCtVvW7DPjEh69HZSR8Wupn9bRJ83yTG9C9qa0dn2v0dqy+eonTsPmp
+         MohmqV0MA4Mfl9vG7cBkhQAXWLoMyULgQUxkw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XP81KhbFfFMLjt/9HZBr2wWZSwrB3/aa9mKjEXE/AKE=;
+        b=NRe8vDCIKw9P5JchqPnvUMsZnB6YQ6zkscXLYx1BcXizsSeOvJCJZMK7145nygT3dA
+         i3wIdK99/hgm1iUchnHJXKZ9cmnTy1UsQwi3zbXkdicLGwUnFBvek/Fn9q9OLSOUM0Yy
+         Mh2uDifkX1F52gPCW92aItKDYa0eQNCWIasCy4N/N8BPmQmMIxOtW2He3a/710umUSlY
+         DeZIMEllynV4zeDXotDiD9chrLjdsd6qS0PlkkuVt90zubm5TSEN64hgjoTR1LADNinx
+         a2IABv+nqnsTYvujGZM1SXUom7ctfO9xhtyU8iBojr4P9FJmBBGHW7tyXYPK/mqYbfxt
+         7klA==
+X-Gm-Message-State: AOAM532Euq5g418kJOU6Y0GhkkqaGXL1snLajYEc+6hNKzpAs5obFxN4
+        y+VlO6fqMvWFSEGKiMccF9utAK4wNMcREg==
+X-Google-Smtp-Source: ABdhPJz5V121IWhTnjQIpLOCZxyFB3y8zMopfp6f8EpoJ3lD992EQHBUDFLXdo4D+ttlgLozFJhd0A==
+X-Received: by 2002:a05:6102:5e:: with SMTP id k30mr1421429vsp.170.1598627176920;
+        Fri, 28 Aug 2020 08:06:16 -0700 (PDT)
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com. [209.85.217.42])
+        by smtp.gmail.com with ESMTPSA id x23sm208515vkd.0.2020.08.28.08.06.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Aug 2020 08:06:15 -0700 (PDT)
+Received: by mail-vs1-f42.google.com with SMTP id p3so740141vsr.4
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 08:06:15 -0700 (PDT)
+X-Received: by 2002:a05:6102:10de:: with SMTP id t30mr1312397vsr.13.1598627175058;
+ Fri, 28 Aug 2020 08:06:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1598594714.git.viresh.kumar@linaro.org> <1d7c97524b9e1fbc60271d9c246c5461ca8a106c.1598594714.git.viresh.kumar@linaro.org>
+ <CAPDyKFpdZhzXQv3hpTzf3UkJDhFqBhgMXCqVfAfE6PejLCxvfg@mail.gmail.com>
+In-Reply-To: <CAPDyKFpdZhzXQv3hpTzf3UkJDhFqBhgMXCqVfAfE6PejLCxvfg@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 28 Aug 2020 08:06:03 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UP2ZA_GB8nzrpFNP3VzB6AZtEZaagVO5qggW+8EQ0THQ@mail.gmail.com>
+Message-ID: <CAD=FV=UP2ZA_GB8nzrpFNP3VzB6AZtEZaagVO5qggW+8EQ0THQ@mail.gmail.com>
+Subject: Re: [PATCH V2 4/8] mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-28_09:2020-08-28,2020-08-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- bulkscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
- malwarescore=0 clxscore=1011 phishscore=0 mlxscore=0 mlxlogscore=999
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008280112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-08-28 at 15:30 +0200, Lukas Bulwahn wrote:
-> 
-> On Fri, 28 Aug 2020, Roman Bolshakov wrote:
-> 
-> > On Fri, Aug 28, 2020 at 09:08:24AM +0200, Lukas Bulwahn wrote:
-> > > Previous attempts of getting an answer from the qlogic.com group
-> > > alias, i.e., QLogic-Storage-Upstream@qlogic.com, have remained
-> > > unanswered; see links below.
-> > > 
-> > > Mark those sections Orphan to prepare their deletion or give an
-> > > actual person a chance to step up to maintain those drivers.
-> > > 
-> > > Link: https://lore.kernel.org/linux-spdx/20190606205526.447558989
-> > > @linutronix.de
-> > > Link: https://lore.kernel.org/linux-spdx/alpine.DEB.2.21.20063006
-> > > 44130.4919@felia
-> > > Link: https://lore.kernel.org/linux-spdx/alpine.DEB.2.21.20082707
-> > > 40140.31123@felia
-> > > 
-> > 
-> > CC'd Arun,
-> > 
-> > I think it's worth to update the alias to:
-> > 
-> > GR-QLogic-Storage-Upstream@marvell.com
-> > 
-> 
-> So, if these drivers are not orphans, you can answer Thomas
-> Gleixner's original email from 2019. If you can quickly ack that
-> patch set, I am happy to do the donkey work to get this apply nicely
-> on the current master (please CC me on that response).
+Hi,
 
-I have to wonder what the object is here: to get the problem fixed or
-to make a public spectacle?
+On Fri, Aug 28, 2020 at 1:44 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Fri, 28 Aug 2020 at 08:08, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > dev_pm_opp_of_remove_table() doesn't report any errors when it fails to
+> > find the OPP table with error -ENODEV (i.e. OPP table not present for
+> > the device). And we can call dev_pm_opp_of_remove_table()
+> > unconditionally here.
+> >
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+>
+> Replaced v1 with v2 on my next branch, thanks!
 
-Because if the object had been to get the issue fixed, waiting a year
-before escalating to the SCSI list isn't the best way to achieve
-outcomes, nor is now demanding that the drivers be orphaned for lack of
-response to you ... particularly as you've seen the drivers updated
-over that time if you actually follow kernel releases.
+Actually, I don't see it on there yet, but at least the old broken v1
+isn't there anymore.  ;-)
 
-Qlogic or now Marvell tends to rely somewhat heavily on outsourcing for
-driver maintenance and support.  Outsourcers, fairly obviously, aren't
-going to respond to legal issues like this which are outside of their
-remit.  What needs to happen is that someone needs to find a person
-within the Qlogic org who can get this fixed ... possibly involving
-explaining the actual issue along the way.  Would you like us to use
-our contacts to do that?
+I picked v2 and tried it on my sc7180-based device (which does have
+OPP tables).  It worked fine.  Thus:
 
-James
+Tested-by: Douglas Anderson <dianders@chromium.org>
 
+I looked at the code and it looks right to me.  Thus:
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+
+
+> Just to be sure, this patch doesn't depend on any changes for the opp
+> core that are queued for v5.10?
+
+Running atop mmc-next, I see the check for -ENODEV, so I'm gonna
+assume that the required change is there.
+
+$ git grep -A10 'void _dev_pm_opp_find_and_remove_table' -- drivers/opp/core.c
+drivers/opp/core.c:void _dev_pm_opp_find_and_remove_table(struct device *dev)
+drivers/opp/core.c-{
+drivers/opp/core.c-     struct opp_table *opp_table;
+drivers/opp/core.c-
+drivers/opp/core.c-     /* Check for existing table for 'dev' */
+drivers/opp/core.c-     opp_table = _find_opp_table(dev);
+drivers/opp/core.c-     if (IS_ERR(opp_table)) {
+drivers/opp/core.c-             int error = PTR_ERR(opp_table);
+drivers/opp/core.c-
+drivers/opp/core.c-             if (error != -ENODEV)
+drivers/opp/core.c-                     WARN(1, "%s: opp_table: %d\n",
