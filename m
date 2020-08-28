@@ -2,92 +2,138 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9514BC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D953C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62C3A20C56
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CE0520776
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:21:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/VF9fDf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JP+5CFC9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728623AbgH1IUp (ORCPT
+        id S1728693AbgH1IVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 04:20:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54954 "EHLO
+        Fri, 28 Aug 2020 04:21:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbgH1IUl (ORCPT
+        with ESMTP id S1726834AbgH1IVP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 04:20:41 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF22C061264
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 01:20:41 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id a26so420277ejc.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 01:20:41 -0700 (PDT)
+        Fri, 28 Aug 2020 04:21:15 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43A2AC061264;
+        Fri, 28 Aug 2020 01:21:15 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id q3so123706pls.11;
+        Fri, 28 Aug 2020 01:21:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XoNbJpm4P1EPH7VszYEAVkALAmWg4i39Cb3QU+BohCY=;
-        b=T/VF9fDfNkSFCnL6sbsWLW8HUZ2AcZ5W+HrL8aZZG4KsMOlaHgyDrvbrn9DbYW6bOJ
-         jGcbvDviF5ABD+rvj4Tcj8gmHa4YmfpZWWwg9mDJvluLfMNIIkT69lGUd20yieI5WUHI
-         BT1RMs2aE15ZKLoCokqIUzSDWX8WuWHmX9MkOIdZUz7UMDm7ZNYxpJENKUm933a1VoXY
-         9gbJzu3e5fe6RF3J2Cb6agOS9l21dAZAg/18Vd+qZurKiMnYaRdlbUWnVwICesF1WgZA
-         5zaYMZ1y/HqQADwr95adiYT4f6qNIzIgEvjeP1+WNKNkK7GTUIotwAk3z8i2dAv1V+2C
-         Jqog==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hPzPMvRrv77BBmOrhLeE1sCRQ/ZQAnsF0J3gEikAgzA=;
+        b=JP+5CFC9J4zq+DPdRvPxJJc+hikHsnoHs89nPFz/04jCXNkslIAMbMoToQN57/KLsZ
+         /cah+/0X2sR5OZ0TrcoQlm2zOakwNHdBaVl738kt1YY2/eVMTHAmgKLuaQqkVeIeF3bl
+         OkwClLK24jfP3+h6t3go3mAEFyItEyRo7ddm9uLwTBqDJoBYh8XVISaeHVa82xMjzvFU
+         VQpoDIvhWGXuAXuO6GDDlP401utltHFI1x73Lg32xy1bLxVTTOVpwbzNwW2oBzAT9tuN
+         SeuxrUY/YdzYifBIB70YeLzmv2aghAgXQ6D8K7KuefSrlQ13CjCmv1gzLvlVn6dOHP8M
+         0q3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XoNbJpm4P1EPH7VszYEAVkALAmWg4i39Cb3QU+BohCY=;
-        b=EbOQUQVWMWRkZHKZR3VMWuHhZN5nFtda1xhskZLtCvtlSolE4EaBcE0Isp7vHNJdT2
-         yqHBlDfvwparPqKyN1ZdTv2BHK7thnC4y4q9nkgmWzvzNXNjVkqYujnyPqLD1JDUdF8F
-         Lqzpr5f6MfzWh6qdIkwzf60QFTnV5mk+EsNANdkqi7LryK9KBP9dZrgEa0a/9/hNaULG
-         NZhzq2sB0HbkZT6h6CmzS1OtcQ1X5kXEx946XxwC/r7Vg9wLvEVRDSFw9VwFc4zpa5ry
-         b7O2S+dUq7OwUl1cWjKhqRetEbWatkOvGwl5s52y/eoT7B145TggG4mLf86r4uZl5ONH
-         lvNQ==
-X-Gm-Message-State: AOAM530eBxdQswOM/Jy9nhUUG5XL2JdIZBU7lsw9+ufOvZWufIFFb6TD
-        Ppe3SWJB4+hxoBxjKpXx2lQ=
-X-Google-Smtp-Source: ABdhPJy1Zitv5SVLDCtK2T/DmII7wh/VbeMDbB6CTAjleFOgzvdz9EYQdgKNM0dVPBAgbiHGN0WIeg==
-X-Received: by 2002:a17:906:1106:: with SMTP id h6mr634641eja.200.1598602840061;
-        Fri, 28 Aug 2020 01:20:40 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:a7fb:e200:4d0:302a:c6fb:6068])
-        by smtp.gmail.com with ESMTPSA id qc25sm290708ejb.42.2020.08.28.01.20.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 01:20:39 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 10:20:37 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] fix comment concerning GCC 4.6
-Message-ID: <20200828082037.5xpibd7etkvm7nsx@ltop.local>
-References: <20200824232526.16534-1-luc.vanoostenryck@gmail.com>
- <CANiq72nSSrxTJBt4Mpm6uUEJMVEwe6rYedZQe6EtF1jnYqJDbw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hPzPMvRrv77BBmOrhLeE1sCRQ/ZQAnsF0J3gEikAgzA=;
+        b=f5mUANTeVDaClbo00dNGKFrqJqg3HyButKbiwHLiXE9r/00vIMfkfDXXF67tcpODgV
+         T2RzEVRD8eDOqcTJdecL0u48IvW15DQRkB1nz4AYU6YYJb0o2smnmS1V/BwVLQIxrq85
+         tlYDha7CLC4AdMWkeavgharu27ZOCoBVhQGxCG9Jao6XmNAH+NIfC8LRS+QGFB26qj69
+         uL6lfuHznpKlrUwLr/HjeHKhpdt6qJgbwJbl9seEYNfZoaxKE2LAPyQ1Yka7U4Vhup96
+         Ke7QsgvQpdAYvD4a0dpQKmov9je+/QcPSO+NmYLGrDsNfizEiiNVfGTfug5hG3bf6ml7
+         mBVQ==
+X-Gm-Message-State: AOAM532HIP/VwBbiMBh/do8ubyuIDq079zSRpGW6HbjFv86wZceBySum
+        nUKbf1GbL7R3CeYt6hu/HA5uIP0ctoFawsuWIe443rGcofDDHQ==
+X-Google-Smtp-Source: ABdhPJxJexwvDTwE95+piicUKMhxJHBzj01cyOipRmXIaFbQ8CNvt5Lnf/6mEn6Dg7nr1qekqsoS7CojU5ctLQwD83w=
+X-Received: by 2002:a17:90a:2c06:: with SMTP id m6mr262760pjd.129.1598602874866;
+ Fri, 28 Aug 2020 01:21:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANiq72nSSrxTJBt4Mpm6uUEJMVEwe6rYedZQe6EtF1jnYqJDbw@mail.gmail.com>
+References: <20200827202452.27714-1-krzk@kernel.org>
+In-Reply-To: <20200827202452.27714-1-krzk@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 28 Aug 2020 11:20:58 +0300
+Message-ID: <CAHp75VdE-Nxr7yDPPyRjG2vJZs-nkZowi+daUJTKK348Su_Pow@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Move Hartmut Knaack to Credits
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 09:50:45AM +0200, Miguel Ojeda wrote:
-> Hi Luc,
-> 
-> On Tue, Aug 25, 2020 at 1:25 AM Luc Van Oostenryck
-> <luc.vanoostenryck@gmail.com> wrote:
-> >
-> > GCC 4.6 is not supported anymore, so remove a reference to it,
-> > leaving just the part about version prior GCC 5.
-> >
-> > Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-> 
-> Queueing this one too, thanks.
+On Thu, Aug 27, 2020 at 11:25 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Hartmut Knaack was an active reviewer and contributor to the IIO
+> subsystem and drivers.  However last message on LKML from him was sent
+> in October 2015.
 
-Thanks,
--- Luc
+But this is not a problem we solve here. His address is invalid for a
+long time...
+
+> In thanks for Hartmut's effort, move him name to the Credits.
+>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: linux-iio <linux-iio@vger.kernel.org>
+
+> Cc: Hartmut Knaack <knaack.h@gmx.de>
+
+...and this?!
+
+Reported-by: ?
+
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  CREDITS     | 4 ++++
+>  MAINTAINERS | 1 -
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/CREDITS b/CREDITS
+> index 32ee70a7562e..edb81e3159b1 100644
+> --- a/CREDITS
+> +++ b/CREDITS
+> @@ -1953,6 +1953,10 @@ S: Am Bergfried 10
+>  S: 63225 Langen
+>  S: Germany
+>
+> +N: Hartmut Knaack
+> +E: knaack.h@gmx.de
+> +D: IIO subsystem and drivers
+> +
+>  N: Alain L. Knaff
+>  E: Alain.Knaff@lll.lu
+>  D: floppy driver
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 523ac1602b62..1276833532c4 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8532,7 +8532,6 @@ F:        drivers/iio/multiplexer/iio-mux.c
+>
+>  IIO SUBSYSTEM AND DRIVERS
+>  M:     Jonathan Cameron <jic23@kernel.org>
+> -R:     Hartmut Knaack <knaack.h@gmx.de>
+>  R:     Lars-Peter Clausen <lars@metafoo.de>
+>  R:     Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+>  L:     linux-iio@vger.kernel.org
+> --
+> 2.17.1
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
