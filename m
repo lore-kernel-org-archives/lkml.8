@@ -2,78 +2,96 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D865EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 18:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668EDC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 18:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2C0A2098B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 18:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FBB72074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 18:21:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="arunfWFI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgH1STd (ORCPT
+        id S1727932AbgH1SV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 14:19:33 -0400
-Received: from correo.us.es ([193.147.175.20]:40486 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbgH1STc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 14:19:32 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 360F12A2BB4
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 20:19:31 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 2838FDA730
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 20:19:31 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 16134DA78E; Fri, 28 Aug 2020 20:19:31 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id EFC0BDA730;
-        Fri, 28 Aug 2020 20:19:28 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Fri, 28 Aug 2020 20:19:28 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [90.77.255.23])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id CB44942EF4E1;
-        Fri, 28 Aug 2020 20:19:28 +0200 (CEST)
-Date:   Fri, 28 Aug 2020 20:19:28 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Tong Zhang <ztong0001@gmail.com>
-Cc:     kadlec@netfilter.org, fw@strlen.de, davem@davemloft.net,
-        kuba@kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] netfilter: nf_conntrack_sip: fix parsing error
-Message-ID: <20200828181928.GA14349@salvia>
-References: <20200815165030.5849-1-ztong0001@gmail.com>
- <20200828180742.GA20488@salvia>
- <CAA5qM4CUO47EkJ-4wRoi0wkReAXtB5isLbvBEUw045po_TY8Sw@mail.gmail.com>
+        Fri, 28 Aug 2020 14:21:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgH1SVx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 14:21:53 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2E66C061264
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 11:21:52 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id j25so344928ejk.9
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 11:21:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NitsUGoWpHEi7JACdZqk2bJfVv+nYWQfxXZQZAJftR8=;
+        b=arunfWFIhdXuMWwizjSFeS5fQKjHaDoEcN7Vc2TTlQA+/bZqLiX0sjb7NF38Todkxf
+         WDtoh+BOFrYjgn9k5nrrbYbcWhYHgPwfmEjw6UmYepfk52nRi/CPxN0dV/VALThCz9gr
+         RHwnRMhqX4ARUcABIYCv6R6tU9W7/vQIBkFx1zB+W7KDJQGhv5/q9yWIXCtRpGIzv68D
+         IxBcautBeHTvdOGh3F7OVRPge7IU0AH5Jo9DHy5mKWfOXsXLXrAswzJAhL2UkPf8JBaT
+         gKSOcg8KaVsreqwJQiknwS2Mn6xjL89qfGDAhBKuUOWZ/4v0diJ4ufsgl1FDfZKuNyI9
+         Uz9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NitsUGoWpHEi7JACdZqk2bJfVv+nYWQfxXZQZAJftR8=;
+        b=Pf3Ib/LeWEvkU09ClWID4AR706G+nH3tu8aiaKI7xk9ExKg2b09FifOITiBHw6peA/
+         ypA4uGXd8BCe+b9XWbpMn/hai5DWIYpdEiOhtW9cyqPqZamax6xGIB6YiXe6AaBcC0xF
+         PAtLktky9abXO7S6vyJkXhQ6yYgZvrT5xyvHYBWTVyydozlGHPSWq67HTq2R4plt6SJP
+         toi0lfyljStPvLEXIBPn8frK6hrBWkmPRFrjdU/5p4gLrqss5BsynsMped4cZmT4SuGz
+         0aftB3FQ7/kvTCmiYaZkROxPYHe6HoMkdrKMofTljl/sUNpiomPe3yHyXkRvXQ98uPyw
+         l9mQ==
+X-Gm-Message-State: AOAM531jrlRyhFnKsAFYNRD1i76yh2Fqilc5KWtqkVwrjLH2DmZbHfPW
+        9O/Hg7DzdbGNdqB4qLSVafzYE9CF83TuyzVCS4AgvA==
+X-Google-Smtp-Source: ABdhPJx9jq3Dqxs4D2XtzVZrYv4qnQpE7IQTqeRaY34szwPLGLrI1OI2zYvc4zladcGFqXFNLjYnyxvqAckASdsW51E=
+X-Received: by 2002:a17:906:4d10:: with SMTP id r16mr3212844eju.420.1598638911015;
+ Fri, 28 Aug 2020 11:21:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAA5qM4CUO47EkJ-4wRoi0wkReAXtB5isLbvBEUw045po_TY8Sw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Virus-Scanned: ClamAV using ClamSMTP
+References: <1598070473-46624-1-git-send-email-dingtianhong@huawei.com>
+ <20200825095726.yvg34q74xy57qhrx@mobilestation> <CAHp75VfnCRFPQ19tdQb46PvnBV3RActKn4+hSivPN8e122Q1Aw@mail.gmail.com>
+In-Reply-To: <CAHp75VfnCRFPQ19tdQb46PvnBV3RActKn4+hSivPN8e122Q1Aw@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 28 Aug 2020 20:21:40 +0200
+Message-ID: <CAMpxmJUEvaW82V8s8Tw2MVGVb4Tgkg6T9-NfFJye7zF+j2a-ig@mail.gmail.com>
+Subject: Re: [PATCH] gpio: dwapb: add support for new hisilicon ascend soc
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Ding Tianhong <dingtianhong@huawei.com>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel.openeuler@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 02:14:48PM -0400, Tong Zhang wrote:
-> Hi Pablo,
-> I'm not an expert in this networking stuff.
-> But from my point of view there's no point in checking if this
-> condition is always true.
+On Thu, Aug 27, 2020 at 10:20 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Tue, Aug 25, 2020 at 12:58 PM Serge Semin <fancer.lancer@gmail.com> wrote:
+> > On Sat, Aug 22, 2020 at 12:27:53PM +0800, Ding Tianhong wrote:
+>
+> > BTW Linus, could you take a look at my series? Andy and Rob have finished reviewing
+> > it almost a month ago.
+>
+> I was wondering the same, but in normal cases (not closer to the merge
+> window) Bart is taking care of drivers/gpio (AFAIU).
+>
+>
 
-Understood.
+Yeah, normally I'd have queued it by now but I'm only coming back to
+100% activity on Tuesday - I was on a leave since July so I was rather
+inactive lately.
 
-> There's also no need of returning anything from the
-> ct_sip_parse_numerical_param()
-> if they are all being ignored like this.
-
-Then probably update this code to ignore the return value?
+Bartosz
