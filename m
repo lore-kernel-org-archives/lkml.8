@@ -2,99 +2,60 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71378C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6BDC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5289920872
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA73220848
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:00:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729496AbgH1M44 (ORCPT
+        id S1729379AbgH1NAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 08:56:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:48520 "EHLO foss.arm.com"
+        Fri, 28 Aug 2020 09:00:55 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:57956 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729471AbgH1M4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 08:56:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4186D6E;
-        Fri, 28 Aug 2020 05:56:33 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89E183F66B;
-        Fri, 28 Aug 2020 05:56:32 -0700 (PDT)
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Qais Yousef <qais.yousef@arm.com>
-Subject: [PATCH 2/2] sched/uclamp: Fix a deadlock when enabling uclamp static key
-Date:   Fri, 28 Aug 2020 13:56:10 +0100
-Message-Id: <20200828125610.30943-3-qais.yousef@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200828125610.30943-1-qais.yousef@arm.com>
-References: <20200828125610.30943-1-qais.yousef@arm.com>
+        id S1729306AbgH1NAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 09:00:37 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kBdze-00CHCw-7p; Fri, 28 Aug 2020 15:00:34 +0200
+Date:   Fri, 28 Aug 2020 15:00:34 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] of: of_match_node: Make stub an inline function to avoid
+ W=1 warnings
+Message-ID: <20200828130034.GA2912863@lunn.ch>
+References: <20200828021939.2912798-1-andrew@lunn.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828021939.2912798-1-andrew@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following splat was caught when setting uclamp value of a task:
+On Fri, Aug 28, 2020 at 04:19:39AM +0200, Andrew Lunn wrote:
+> When building without CONFIG_OF and W=1, errors are given about unused
+> arrays of match data, because of_match_node is stubbed as a macro. The
+> compile does not see it takes parameters when not astub, so it
+> generates warnings about unused variables. Replace the stub with an
+> inline function to avoid these false warnings.
 
-  BUG: sleeping function called from invalid context at ./include/linux/percpu-rwsem.h:49
+Hi Rob
 
-   cpus_read_lock+0x68/0x130
-   static_key_enable+0x1c/0x38
-   __sched_setscheduler+0x900/0xad8
+So 0-day shows some people have worked around this with #ifdef
+CONFIG_OF around the match table.
 
-Fix by ensuring we enable the key outside of the critical section in
-__sched_setscheduler()
+I checked the object code for the file i'm interested in.  The
+optimiser has correctly throw away the match table and all code around
+it with the inline stub.
 
-Fixes: 46609ce22703 ("sched/uclamp: Protect uclamp fast path code with static key")
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200716110347.19553-4-qais.yousef@arm.com
-(cherry picked from commit e65855a52b479f98674998cb23b21ef5a8144b04)
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
----
- kernel/sched/core.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+Which do you prefer? This patch and i remove the #ifdef, or the old
+stub and if add #ifdef around the driver i'm getting warnings from?
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index a8ab68aa189a..352239c411a4 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1249,6 +1249,15 @@ static int uclamp_validate(struct task_struct *p,
- 	if (upper_bound > SCHED_CAPACITY_SCALE)
- 		return -EINVAL;
- 
-+	/*
-+	 * We have valid uclamp attributes; make sure uclamp is enabled.
-+	 *
-+	 * We need to do that here, because enabling static branches is a
-+	 * blocking operation which obviously cannot be done while holding
-+	 * scheduler locks.
-+	 */
-+	static_branch_enable(&sched_uclamp_used);
-+
- 	return 0;
- }
- 
-@@ -1279,8 +1288,6 @@ static void __setscheduler_uclamp(struct task_struct *p,
- 	if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)))
- 		return;
- 
--	static_branch_enable(&sched_uclamp_used);
--
- 	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN) {
- 		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
- 			      attr->sched_util_min, true);
--- 
-2.17.1
-
+     Andrew
