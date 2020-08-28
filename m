@@ -2,172 +2,247 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B742C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39856C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7FF20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECD1B208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:19:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598624341;
+	bh=HfZz+xtTrt5QVush0A2tAYGofQihbn5nJWHYOS6GXZk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Vn7iyLdoEAdUOwTnO0xSaxFk/babJyTSHkn+svSenzYKERrpz6huYUOoiud1xhY6n
+	 FTchbugcXrLQN9cqK32L0bG2K8dnsnR/vHnSXoCe8bUIZlJZxn4y6+kasad76JXgZT
+	 sP5v4R2RCuEVJh1dB9dD0h2d9GEoYigJyTcf4rz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgH1OS1 (ORCPT
+        id S1727036AbgH1OS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:18:27 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35862 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbgH1OSV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:18:21 -0400
-Received: by mail-oi1-f193.google.com with SMTP id b9so928413oiy.3;
-        Fri, 28 Aug 2020 07:18:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lBq+rTLiIUXKTOPJ3t+Pb18logS9N5SHMSukF4dmdzo=;
-        b=Suof/KMb7s0f3S7I2G8CtJqW8DY6+YS/sCimDdaZKdKStLneHAfzDAPpKWpLQk7CN9
-         H0Pb5ZqKZ9zRMDeSP+tjI+k3NGh/9QhUAd1lhdVeqU/MaZ/S8nXp4DI9cZ7HSMqds3dt
-         Yb/j8ofw88GowRQmQGbdTUwK+Swn/gxsdhM2v/WhHHAkb1TrqQjjx8e7lQJxCJYjcHEI
-         DmcKIqWL9SgOuylaGMNENFqg3ZWTfU9YF5bhArXB8Ko3oaoi3tmq2hs2W6z6hioyEuwM
-         SNU5bsS4OF/bhM/9IQHAzl4L+/GwC6A4qkYxEBkFYblGfMsOvR6fawrv3HdbaDkKwYwq
-         NaSg==
-X-Gm-Message-State: AOAM5337hXSFvLZKqyCmb6GWj65vr9KE9YSKvnV3sWUh/2a7M3ZjiZMy
-        gYM4RhI4j21h38ZnBWTrfpe2EAxK374l5KzVR7I=
-X-Google-Smtp-Source: ABdhPJzvoxPJuI8QBit61+jdNdzDe8hVbMe5fQAfx6sohY8OeIOX9NyqfufCvv6rprCk1eFhaiWbtxVIauRyrxVFkX0=
-X-Received: by 2002:a05:6808:575:: with SMTP id j21mr1096847oig.54.1598624300147;
- Fri, 28 Aug 2020 07:18:20 -0700 (PDT)
+        Fri, 28 Aug 2020 10:18:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbgH1OS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 10:18:57 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2952B20872;
+        Fri, 28 Aug 2020 14:18:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598624336;
+        bh=HfZz+xtTrt5QVush0A2tAYGofQihbn5nJWHYOS6GXZk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=arfN5bhon4muxjyRb65RwWzeffZvpmP2r/NuNWnOZipcH+G7xRtTpzcAAqgnluSya
+         XIkfuEPH1w/DaA97Zx/BwWfoJl+VwarnWI30b+TzwNaVKv1d6uAx6TRq3L6P5FkCWv
+         oSsbLr5i9tzG/H+OKt9VBG9o5b2EhXK1GZqLvMRc=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id ED0373522679; Fri, 28 Aug 2020 07:18:55 -0700 (PDT)
+Date:   Fri, 28 Aug 2020 07:18:55 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
+        dave@stgolabs.net, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neeraj.iitr10@gmail.com, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>, vineethrp@gmail.com
+Subject: Re: [PATCH v4 -rcu 1/4] rcu/segcblist: Do not depend on rcl->len to
+ store the segcb len during merge
+Message-ID: <20200828141855.GO2855@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200825024842.3408659-1-joel@joelfernandes.org>
+ <20200825024842.3408659-2-joel@joelfernandes.org>
+ <20200825200809.GW2855@paulmck-ThinkPad-P72>
+ <20200825224723.GB579506@google.com>
+ <20200826142028.GN2855@paulmck-ThinkPad-P72>
+ <20200827225518.GB3821640@google.com>
 MIME-Version: 1.0
-References: <20200812202018.49046-1-alcooperx@gmail.com> <20200812202018.49046-2-alcooperx@gmail.com>
- <CACRpkdZVde024_CCwmKBY_zVzfcq7=A1+t=8nEe1ei8+_Le51A@mail.gmail.com>
-In-Reply-To: <CACRpkdZVde024_CCwmKBY_zVzfcq7=A1+t=8nEe1ei8+_Le51A@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 28 Aug 2020 16:18:09 +0200
-Message-ID: <CAMuHMdUToD9C+KUm8r1EqGpjj7ztmWJJZON+Gn7XfFgybb-9NQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: Add support for Broadcom USB pin map driver
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Al Cooper <alcooperx@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827225518.GB3821640@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus et al,
+On Thu, Aug 27, 2020 at 06:55:18PM -0400, Joel Fernandes wrote:
+> On Wed, Aug 26, 2020 at 07:20:28AM -0700, Paul E. McKenney wrote:
+> [...]
+> > > > Or better yet, please see below, which should allow getting rid of both
+> > > > of them.
+> > > > 
+> > > > >  	rcu_segcblist_extract_done_cbs(src_rsclp, &donecbs);
+> > > > >  	rcu_segcblist_extract_pend_cbs(src_rsclp, &pendcbs);
+> > > > > -	rcu_segcblist_insert_count(dst_rsclp, &donecbs);
+> > > > > +
+> > > > > +	rcu_segcblist_add_len(dst_rsclp, src_len);
+> > > > >  	rcu_segcblist_insert_done_cbs(dst_rsclp, &donecbs);
+> > > > >  	rcu_segcblist_insert_pend_cbs(dst_rsclp, &pendcbs);
+> > > > 
+> > > > Rather than adding the blank lines, why not have the rcu_cblist structures
+> > > > carry the lengths?  You are already adjusting one of the two call sites
+> > > > that care (rcu_do_batch()), and the other is srcu_invoke_callbacks().
+> > > > That should shorten this function a bit more.  And make callback handling
+> > > > much more approachable, I suspect.
+> > > 
+> > > Sorry, I did not understand. The rcu_cblist structure already has a length
+> > > field. I do modify rcu_segcblist_extract_done_cbs() and
+> > > rcu_segcblist_extract_pend_cbs() to carry the length already, in a later
+> > > patch.
+> > > 
+> > > Just to emphasize, this patch is just a small refactor to avoid an issue in
+> > > later patches. It aims to keep current functionality unchanged.
+> > 
+> > True enough.  I am just suggesting that an equally small refactor in
+> > a slightly different direction should get to a better place.  The key
+> > point enabling this slightly different direction is that this code is
+> > an exception to the "preserve ->cblist.len" rule because it is invoked
+> > only from the CPU hotplug code.
+> > 
+> > So you could use the rcu_cblist .len field to update the ->cblist.len
+> > field, thus combining the _cbs and _count updates.  One thing that helps
+> > is that setting th e rcu_cblist .len field doesn't hurt the other use
+> > cases that require careful handling of ->cblist.len.
+> 
+> Thank you for the ideas. I am trying something like this on top of this
+> series based on the ideas. One thing I concerned a bit is if getting rid of
+> the rcu_segcblist_xchg_len() function (which has memory barriers in them)
+> causes issues in the hotplug path. I am now directly updating the length
+> without additional memory barriers. I will test it more and try to reason
+> more about it as well.
 
-On Fri, Aug 28, 2020 at 4:00 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Aug 12, 2020 at 10:20 PM Al Cooper <alcooperx@gmail.com> wrote:
-> > Add DT bindings for the Broadcom USB pin map driver. This driver allows
-> > some USB input and output signals to be mapped to any GPIO instead
-> > of the normal dedicated pins to/from the XHCI controller.
-> >
-> > Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> (...)
-> > +title: Broadcom USB pin map Controller Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Al Cooper <alcooperx@gmail.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +      items:
-> > +          - const: brcm,usb-pinmap
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +    description: Must be defined if any out-gpios are specified.
-> > +
-> > +  in-gpios:
-> > +    description: Array of one or more GPIO pins used for input signals.
-> > +
-> > +  in-names:
-> > +    description: Array of input signal names, one per gpio in in-gpios.
-> > +
-> > +  in-masks:
-> > +    description: Array of enable and mask pairs, one per gpio in-gpios.
-> > +
-> > +  out-gpios:
-> > +    description: Array of one or more GPIO pins used for output signals.
-> > +
-> > +  out-names:
-> > +    description: Array of output signal names, one per gpio in out-gpios.
-> > +
-> > +  out-masks:
-> > +    description: Array of enable, value, changed and clear masks, one
-> > +      per gpio in out-gpios.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    usb_pinmap: usb-pinmap@22000d0 {
-> > +        compatible = "brcm,usb-pinmap";
-> > +        reg = <0x22000d0 0x4>;
-> > +        in-gpios = <&gpio 18 0>, <&gpio 19 0>;
-> > +        in-names = "VBUS", "PWRFLT";
-> > +        in-masks = <0x8000 0x40000 0x10000 0x80000>;
-> > +        out-gpios = <&gpio 20 0>;
-> > +        out-names = "PWRON";
-> > +        out-masks = <0x20000 0x800000 0x400000 0x200000>;
-> > +        interrupts = <0x0 0xb2 0x4>;
-> > +    };
->
-> Wow look at that.
->
-> This looks very much like Geert's just invented GPIO aggregator.
-> But in hardware!
->
-> See:
-> drivers/gpio/gpio-aggregator.c
->
-> I think Geert is intending to add bindings to the aggregator, and
-> while I do think this should be its own driver (in drivers/usb) these
-> bindings and whatever Geert want to use for the aggregator
-> should certainly be the same.
+In this particular case, the CPU-hotplug locks prevent rcu_barrier()
+from running concurrently, so it should be OK.  Is there an easy way
+to make lockdep help us check this?  Does lockdep_assert_cpus_held()
+suffice, or is it too easily satisfied?
 
-I don't intend to add any DT bindings to the GPIO Aggregator, as it's
-meant to be an "abstract base" driver.  Actual hardware blocks for which
-the GPIO Aggregator could be a suitable driver should have their own DT
-bindings, and their compatible values added to the GPIO Aggregator
-driver's match table.
+> ---8<-----------------------
+> 
+> From: Joel Fernandes <joelaf@google.com>
+> Date: Thu, 27 Aug 2020 18:30:25 -0400
+> Subject: [PATCH] fixup! rcu/segcblist: Do not depend on donecbs ->len to store
+>  the segcb len during merge
+> 
+> Signed-off-by: Joel Fernandes <joelaf@google.com>
+> ---
+>  kernel/rcu/rcu_segcblist.c | 38 ++++----------------------------------
+>  1 file changed, 4 insertions(+), 34 deletions(-)
+> 
+> diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
+> index 79c2cbe388c5..c33abbc97a07 100644
+> --- a/kernel/rcu/rcu_segcblist.c
+> +++ b/kernel/rcu/rcu_segcblist.c
+> @@ -175,26 +175,6 @@ void rcu_segcblist_inc_len(struct rcu_segcblist *rsclp)
+>  	rcu_segcblist_add_len(rsclp, 1);
+>  }
+>  
+> -/*
+> - * Exchange the numeric length of the specified rcu_segcblist structure
+> - * with the specified value.  This can cause the ->len field to disagree
+> - * with the actual number of callbacks on the structure.  This exchange is
+> - * fully ordered with respect to the callers accesses both before and after.
+> - */
+> -static long rcu_segcblist_xchg_len(struct rcu_segcblist *rsclp, long v)
+> -{
+> -#ifdef CONFIG_RCU_NOCB_CPU
+> -	return atomic_long_xchg(&rsclp->len, v);
+> -#else
+> -	long ret = rsclp->len;
+> -
+> -	smp_mb(); /* Up to the caller! */
+> -	WRITE_ONCE(rsclp->len, v);
+> -	smp_mb(); /* Up to the caller! */
+> -	return ret;
+> -#endif
+> -}
+> -
 
-Anyway, DT bindings would just be a compatible value, and a gpios
-property.
+This looks nice!
 
-> Geert what do you think?
+>  /*
+>   * Initialize an rcu_segcblist structure.
+>   */
+> @@ -361,6 +341,7 @@ void rcu_segcblist_extract_done_cbs(struct rcu_segcblist *rsclp,
+>  		if (rsclp->tails[i] == rsclp->tails[RCU_DONE_TAIL])
+>  			WRITE_ONCE(rsclp->tails[i], &rsclp->head);
+>  	rcu_segcblist_set_seglen(rsclp, RCU_DONE_TAIL, 0);
+> +	rcu_segcblist_add_len(rsclp, -(rclp->len));
+>  }
+>  
+>  /*
+> @@ -414,17 +395,7 @@ void rcu_segcblist_extract_pend_cbs(struct rcu_segcblist *rsclp,
+>  		WRITE_ONCE(rsclp->tails[i], rsclp->tails[RCU_DONE_TAIL]);
+>  		rcu_segcblist_set_seglen(rsclp, i, 0);
+>  	}
+> -}
+> -
+> -/*
+> - * Insert counts from the specified rcu_cblist structure in the
+> - * specified rcu_segcblist structure.
+> - */
+> -void rcu_segcblist_insert_count(struct rcu_segcblist *rsclp,
+> -				struct rcu_cblist *rclp)
+> -{
+> -	rcu_segcblist_add_len(rsclp, rclp->len);
+> -	rclp->len = 0;
+> +	rcu_segcblist_add_len(rsclp, -(rclp->len));
 
-This USB pin map driver seems to map GPIO pins to USB pins, not other
-GPIO pins, so to me it looks like something different than the GPIO
-Aggregator: a hardware mux instead of a software mux.
+As does this.  ;-)
 
-BTW, at least on most Renesas SoCs, you can usually mux output functions
-to multiple pins at the same time, which could be considered mirroring,
-too.
+>  }
+>  
+>  /*
+> @@ -448,6 +419,7 @@ void rcu_segcblist_insert_done_cbs(struct rcu_segcblist *rsclp,
+>  			break;
+>  	rclp->head = NULL;
+>  	rclp->tail = &rclp->head;
+> +	rcu_segcblist_add_len(rsclp, rclp->len);
 
-Gr{oetje,eeting}s,
+Does there need to be a compensating action in rcu_do_batch(), or is
+this the point of the "rcu_segcblist_add_len(rsclp, -(rclp->len));"
+added to rcu_segcblist_extract_done_cbs() above?
 
-                        Geert
+If so, a comment would be good.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>  }
+>  
+>  /*
+> @@ -463,6 +435,7 @@ void rcu_segcblist_insert_pend_cbs(struct rcu_segcblist *rsclp,
+>  	rcu_segcblist_add_seglen(rsclp, RCU_NEXT_TAIL, rclp->len);
+>  	WRITE_ONCE(*rsclp->tails[RCU_NEXT_TAIL], rclp->head);
+>  	WRITE_ONCE(rsclp->tails[RCU_NEXT_TAIL], rclp->tail);
+> +	rcu_segcblist_add_len(rsclp, rclp->len);
+>  }
+>  
+>  /*
+> @@ -601,16 +574,13 @@ void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
+>  {
+>  	struct rcu_cblist donecbs;
+>  	struct rcu_cblist pendcbs;
+> -	long src_len;
+>  
+>  	rcu_cblist_init(&donecbs);
+>  	rcu_cblist_init(&pendcbs);
+>  
+> -	src_len = rcu_segcblist_xchg_len(src_rsclp, 0);
+>  	rcu_segcblist_extract_done_cbs(src_rsclp, &donecbs);
+>  	rcu_segcblist_extract_pend_cbs(src_rsclp, &pendcbs);
+>  
+> -	rcu_segcblist_add_len(dst_rsclp, src_len);
+>  	rcu_segcblist_insert_done_cbs(dst_rsclp, &donecbs);
+>  	rcu_segcblist_insert_pend_cbs(dst_rsclp, &pendcbs);
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Can we now pair the corresponding _extract_ and _insert_ calls, thus
+requiring only one rcu_cblist structure?  This would drop two more lines
+of code.  Or would that break something?
+
+							Thanx, Paul
