@@ -7,128 +7,128 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 968DFC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6595C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6492080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D3220838
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598650740;
-	bh=xQv5Tdp0ELrwAB92vt6+SmRAky13xSOm/tUEevUuoAI=;
+	s=default; t=1598650797;
+	bh=IR4WDtW2/OkVSyiQsZ6WhEHrxdhOoak04384QwA7UMY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ni6edEOkQnb4CanzIY2SLrpz5QPNOoqZRsLIVkrVyedOWuEs4dgqY1EHn7u80eYmh
-	 czk+MWPyOjKT7Xv/rZJL6xtW20NrdcU+L56UK7f/gMIkdTANsdwJG51INaoqrxxd9+
-	 /d/wSNA43txsjmYbbShlTYF4IEtY6ZZEd64PIi8o=
+	b=n0MCF71c/wb1lOEFSHaa1xUTiPYoEjfg/j2nwf7WjUzIn39awbE/9eak8vFQwgukd
+	 kyKfWQ3DHF5NyK2H9a3FcuD+m96iY4MZr/cGxZIimjbZSnYBoxOw8wzEPuCIybpphO
+	 7ogx0VZeSwE88lrcsPTSMYIFxlljH2bKzZeOghOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgH1Vi6 (ORCPT
+        id S1726924AbgH1Vj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 17:38:58 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:40618 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgH1Viz (ORCPT
+        Fri, 28 Aug 2020 17:39:57 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:41862 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbgH1Vjz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 17:38:55 -0400
-Received: by mail-il1-f196.google.com with SMTP id y2so1905101ilp.7;
-        Fri, 28 Aug 2020 14:38:54 -0700 (PDT)
+        Fri, 28 Aug 2020 17:39:55 -0400
+Received: by mail-il1-f195.google.com with SMTP id q14so1900416ilj.8;
+        Fri, 28 Aug 2020 14:39:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Z9aNuFEY8MHLzwmbgIdHHAKZXLe3aQgkptJsyFL+HWw=;
-        b=mI8y56Vyety6L8Vk+sh058Im4xbh3izhfaoT6GLfZDM3AdOy2ZST0dwUBlrTg4KMuK
-         EJ3FMpw1J/jb3cR6ru5oQ63hebgS4w/rYL1qqHx/de36z/9M0zPXk2Wh9C2OjUyWkzyZ
-         mH/zUPvDhe3q+PK4wX5jAvFkROTCzBj9Zq0zTp6YI6HRLuV8nwsRkWEW0P5eQmCaEFV3
-         pZzK+Ro5bq+EGubseHbdB1JRpw311ZitRQJTHDoak8pEryJunDPCqGt6QG6Lcu/TT0gx
-         PyA3VeWNePfKFU7tfyFURiFwuuzK6pVSwY8m7+OI+Z2zS7km3m7GP6Z9ZbEJvK9LRmUK
-         g9LA==
-X-Gm-Message-State: AOAM53032OGGthGk8GkKi4defUO/af1YhPXZ4VkL4xt7smWkqhc4X7cf
-        lh/XoRqi1y5SWpkcBs8Pcg==
-X-Google-Smtp-Source: ABdhPJzS3P2Iz0zwjThn5mGNinrojy9M8UeF8yi+ZuR6dvHqFhATIGtKUGFyG79NQ/sI23b+DIN6qw==
-X-Received: by 2002:a92:79ca:: with SMTP id u193mr669859ilc.185.1598650734133;
-        Fri, 28 Aug 2020 14:38:54 -0700 (PDT)
+        bh=hpynqnZEuUQCDjBKqrBhNXRhw+ex7Y91WlsqiePfppI=;
+        b=T4HGutD7jpYukUL0smkRxTPCFXNjs1OjJmi8A1hSL+gajHR64TgTR/2n/nO+La9WYr
+         dNYPA0Fjf1a50VJacmwkBBvMDmI4DQ70crnvGsuipxXeMQxZGo6bVzc4K/roxUbLq1DH
+         qpcKy6/WHj9p/XdSYaVcO5T78pn9dKxj8IDy/jx06ojBsuSGR+4GQAcp5AobGBg8akmN
+         Y2vLzLF561QN4ZhgvBxLS59rn2dGTwOZxmzkcxUZu5TSH+NZPApR/Pax0L8V02HksrU/
+         lnPnTJ2Yq2PA6dXCowgCZVjyBYKcdZzNAdowgpYoAJtRKvZ9r1xrwU7MY/tGbjchniNo
+         CiHw==
+X-Gm-Message-State: AOAM531g7QqA3QoPRpdm+pIvvlsxEdgYcPfrzOWux9Az8EmteQMhIvpg
+        ZN5c2YfAthh1P91j5jb/rQ==
+X-Google-Smtp-Source: ABdhPJwt99vjGRnRgcDgoAzCfFQCTv14APVj4E34acqvwgMUzURnYI2MZZvsBJbOBW0vsi5rz3fOjQ==
+X-Received: by 2002:a92:d089:: with SMTP id h9mr697311ilh.60.1598650794388;
+        Fri, 28 Aug 2020 14:39:54 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id a9sm224951iol.9.2020.08.28.14.38.51
+        by smtp.gmail.com with ESMTPSA id p3sm280356ilq.59.2020.08.28.14.39.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 14:38:53 -0700 (PDT)
-Received: (nullmailer pid 3445893 invoked by uid 1000);
-        Fri, 28 Aug 2020 21:38:50 -0000
-Date:   Fri, 28 Aug 2020 15:38:50 -0600
+        Fri, 28 Aug 2020 14:39:53 -0700 (PDT)
+Received: (nullmailer pid 3447391 invoked by uid 1000);
+        Fri, 28 Aug 2020 21:39:51 -0000
+Date:   Fri, 28 Aug 2020 15:39:51 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Fugang Duan <fugang.duan@nxp.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>, Han Xu <han.xu@nxp.com>,
-        linux-serial@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Shawn Guo <shawnguo@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Frank Li <frank.li@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v3 12/19] dt-bindings: mmc: fsl-imx-esdhc: Fix i.MX 8
- compatible matching
-Message-ID: <20200828213850.GA3444012@bogus>
-References: <20200825193536.7332-1-krzk@kernel.org>
- <20200825193536.7332-13-krzk@kernel.org>
+To:     Ben Levinsky <ben.levinsky@xilinx.com>
+Cc:     mathieu.poirier@linaro.org, jliang@xilinx.com, michals@xilinx.com,
+        emooring@xilinx.com, stefano.stabellini@xilinx.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        michael.auchter@ni.com, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org
+Subject: Re: [PATCH v10 4/5] dt-bindings: remoteproc: Add documentation for
+ ZynqMP R5 rproc bindings
+Message-ID: <20200828213951.GA3446772@bogus>
+References: <20200827015810.11157-1-ben.levinsky@xilinx.com>
+ <20200827015810.11157-5-ben.levinsky@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200825193536.7332-13-krzk@kernel.org>
+In-Reply-To: <20200827015810.11157-5-ben.levinsky@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020 21:35:29 +0200, Krzysztof Kozlowski wrote:
-> The i.MX 8 DTSes use two compatibles so update the binding to fix
-> dtbs_check warnings like:
+On Wed, 26 Aug 2020 18:58:09 -0700, Ben Levinsky wrote:
+> Add binding for ZynqMP R5 OpenAMP.
 > 
->   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: mmc@30b40000:
->     compatible: ['fsl,imx8mn-usdhc', 'fsl,imx7d-usdhc'] is too long
->     From schema: Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+> Represent the RPU domain resources in one device node. Each RPU
+> processor is a subnode of the top RPU domain node.
 > 
->   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: mmc@30b40000:
->     compatible: Additional items are not allowed ('fsl,imx7d-usdhc' was unexpected)
-> 
->   arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: mmc@30b40000:
->     compatible: ['fsl,imx8mn-usdhc', 'fsl,imx7d-usdhc'] is too long
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
+> Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
+> Signed-off-by: Jason Wu <j.wu@xilinx.com>
+> Signed-off-by: Wendy Liang <jliang@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > ---
-> 
-> Changes since v2:
-> 1. Remove moved compatibles.
-> 
-> Changes since v1:
-> 1. Handle also fsl,imx8mm-usdhc and fsl,imx8qxp-usdhc
+> v3:
+> - update zynqmp_r5 yaml parsing to not raise warnings for extra
+>   information in children of R5 node. The warning "node has a unit
+>   name, but no reg or ranges property" will still be raised though
+>   as this particular node is needed to describe the
+>   '#address-cells' and '#size-cells' information.
+> v4::
+> - remove warning '/example-0/rpu@ff9a0000/r5@0:
+>   node has a unit name, but no reg or ranges property'
+>   by adding reg to r5 node.
+> v5:
+> - update device tree sample and yaml parsing to not raise any warnings
+> - description for memory-region in yaml parsing
+> - compatible string in yaml parsing for TCM
+> v6:
+> - remove coupling TCM nodes with remoteproc
+> - remove mailbox as it is optional not needed
+> v7:
+> - change lockstep-mode to xlnx,cluster-mode
+> v9:
+> - show example IPC nodes and tcm bank nodes
 > ---
->  .../bindings/mmc/fsl-imx-esdhc.yaml           | 37 ++++++++++---------
->  1 file changed, 20 insertions(+), 17 deletions(-)
+>  .../xilinx,zynqmp-r5-remoteproc.yaml          | 113 ++++++++++++++++++
+>  1 file changed, 113 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.example.dt.yaml: mmc@5b010000: compatible: ['fsl,imx8qxp-usdhc'] is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.example.dt.yaml: mmc@5b010000: compatible: ['fsl,imx8qxp-usdhc'] is too short
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.example.dt.yaml: mmc@5b010000: compatible:0: 'fsl,imx8qxp-usdhc' is not one of ['fsl,imx25-esdhc', 'fsl,imx35-esdhc', 'fsl,imx51-esdhc', 'fsl,imx53-esdhc', 'fsl,imx6q-usdhc', 'fsl,imx6sl-usdhc', 'fsl,imx6sx-usdhc', 'fsl,imx6ull-usdhc', 'fsl,imx7d-usdhc', 'fsl,imx7ulp-usdhc']
+Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dts:48.18-53.11: Warning (unique_unit_address): /example-0/tcm_0a@0: duplicate unit-address (also used in node /example-0/tcm_1a@0)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dt.yaml: example-0: tcm_0a@0:reg:0: [0, 4292870144, 0, 65536] is too long
+	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dt.yaml: example-0: tcm_1a@0:reg:0: [0, 4293001216, 0, 65536] is too long
+	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dt.yaml: example-0: rpu0vdev0vring0@3ed40000:reg:0: [0, 1054081024, 0, 16384] is too long
+	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dt.yaml: example-0: rpu0vdev0vring1@3ed44000:reg:0: [0, 1054097408, 0, 16384] is too long
+	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.example.dt.yaml: example-0: rpu0vdev0buffer@3ed48000:reg:0: [0, 1054113792, 0, 1048576] is too long
+	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
 
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
 
-
-See https://patchwork.ozlabs.org/patch/1351360
+See https://patchwork.ozlabs.org/patch/1352197
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
