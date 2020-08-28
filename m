@@ -2,120 +2,133 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6431C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94805C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE97205CB
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A1D208D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:25:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598610350;
+	bh=FXmXXck2z15ZKaC3fZIXJqQddJxZir7/9JxIbEn85RE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EhOTRKsWd1kLHM1XsPfThN9UyPpK8vrbu/UuwMbHd1buQOKMD0WRMxkTwoCZkCmD7
+	 hDLGzf3jjT2l87H5IOff3hVtvmdGflv19Bd05bA6VjeBswJwmH7CcsDRAooVe/w7Iq
+	 HWfeKVcTi/u38KK/EEOwY+zrC8q+0hZdrs9xUGlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbgH1KWm (ORCPT
+        id S1728922AbgH1KZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 06:22:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55376 "EHLO mx2.suse.de"
+        Fri, 28 Aug 2020 06:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728362AbgH1KVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 06:21:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C40A7B071;
-        Fri, 28 Aug 2020 10:21:46 +0000 (UTC)
-Date:   Fri, 28 Aug 2020 12:21:13 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Kristen Carlson Accardi <kristen@linux.intel.com>
-cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@chromium.org>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, arjan@linux.intel.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com,
-        live-patching@vger.kernel.org, Hongjiu Lu <hongjiu.lu@intel.com>,
-        joe.lawrence@redhat.com
-Subject: Re: [PATCH v4 00/10] Function Granular KASLR
-In-Reply-To: <46c49dec078cb8625a9c3a3cd1310a4de7ec760b.camel@linux.intel.com>
-Message-ID: <alpine.LSU.2.21.2008281216031.29208@pobox.suse.cz>
-References: <20200717170008.5949-1-kristen@linux.intel.com>  <alpine.LSU.2.21.2007221122110.10163@pobox.suse.cz>  <202007220738.72F26D2480@keescook> <20200722160730.cfhcj4eisglnzolr@treble>  <202007221241.EBC2215A@keescook> 
- <301c7fb7d22ad6ef97856b421873e32c2239d412.camel@linux.intel.com>  <20200722213313.aetl3h5rkub6ktmw@treble> <46c49dec078cb8625a9c3a3cd1310a4de7ec760b.camel@linux.intel.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1728016AbgH1KZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 06:25:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDEB820737;
+        Fri, 28 Aug 2020 10:25:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598610347;
+        bh=FXmXXck2z15ZKaC3fZIXJqQddJxZir7/9JxIbEn85RE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZOzQ2+vfPGmYNywVHZFXuVXJPsNXKC6s1CFJHnm2f9rXDnTGxBwIuNFceOzfRCZC7
+         6slmLz52hdEAZz07PrSMqCCG+FEVEhbXulOx7I1mKRcc2po5rSk9GGASV1iyCY2Jl+
+         dtfcwo1xveClMwljJ88I5Dxa4IjNcKCMt+EwpoyM=
+Date:   Fri, 28 Aug 2020 12:25:59 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuo.a.liu@intel.com
+Cc:     linux-kernel@vger.kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yu Wang <yu1.wang@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: Re: [PATCH 05/17] virt: acrn: Introduce ACRN HSM basic driver
+Message-ID: <20200828102559.GA1470435@kroah.com>
+References: <20200825024516.16766-1-shuo.a.liu@intel.com>
+ <20200825024516.16766-6-shuo.a.liu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825024516.16766-6-shuo.a.liu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Leaving Josh's proposals here for reference...
+On Tue, Aug 25, 2020 at 10:45:05AM +0800, shuo.a.liu@intel.com wrote:
+> +static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+> +			   unsigned long ioctl_param)
+> +{
+> +	if (cmd == ACRN_IOCTL_GET_API_VERSION) {
+> +		if (copy_to_user((void __user *)ioctl_param,
+> +				 &api_version, sizeof(api_version)))
+> +			return -EFAULT;
 
-> > I'm not sure how LTO does it, but a few more (half-brained) ideas
-> > that
-> > could work:
-> > 
-> > 1) Add a field in kallsyms to keep track of a symbol's original
-> > offset
-> >    before randomization/re-sorting.  Livepatch could use that field
-> > to
-> >    determine the original sympos.
-> > 
-> > 2) In fgkaslr code, go through all the sections and mark the ones
-> > which
-> >    have duplicates (i.e. same name).  Then when shuffling the
-> > sections,
-> >    skip a shuffle if it involves a duplicate section.  That way all
-> > the
-> >    duplicates would retain their original sympos.
-> > 
-> > 3) Livepatch could uniquely identify symbols by some feature other
-> > than
-> >    sympos.  For example:
-> > 
-> >    Symbol/function size - obviously this would only work if
-> > duplicately
-> >    named symbols have different sizes.
-> > 
-> >    Checksum - as part of a separate feature we're also looking at
-> > giving
-> >    each function its own checksum, calculated based on its
-> > instruction
-> >    opcodes.  Though calculating checksums at runtime could be
-> >    complicated by IP-relative addressing.
-> > 
-> > I'm thinking #1 or #2 wouldn't be too bad.  #3 might be harder.
-> > 
-> 
-> Hi there! I was trying to find a super easy way to address this, so I
-> thought the best thing would be if there were a compiler or linker
-> switch to just eliminate any duplicate symbols at compile time for
-> vmlinux. I filed this question on the binutils bugzilla looking to see
-> if there were existing flags that might do this, but H.J. Lu went ahead
-> and created a new one "-z unique", that seems to do what we would need
-> it to do. 
-> 
-> https://sourceware.org/bugzilla/show_bug.cgi?id=26391
-> 
-> When I use this option, it renames any duplicate symbols with an
-> extension - for example duplicatefunc.1 or duplicatefunc.2. You could
-> either match on the full unique name of the specific binary you are
-> trying to patch, or you match the base name and use the extension to
-> determine original position. Do you think this solution would work?
+Why are you versioning your api?  Shouldn't that not be a thing and you
+either support an ioctl or you do not?
 
-Yes, I think so (thanks, Joe, for testing!).
 
-It looks cleaner to me than the options above, but it may just be a matter 
-of taste. Anyway, I'd go with full name matching, because -z unique-symbol 
-would allow us to remove sympos altogether, which is appealing.
 
-> If
-> so, I can modify livepatch to refuse to patch on duplicated symbols if
-> CONFIG_FG_KASLR and when this option is merged into the tool chain I
-> can add it to KBUILD_LDFLAGS when CONFIG_FG_KASLR and livepatching
-> should work in all cases. 
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int acrn_dev_release(struct inode *inode, struct file *filp)
+> +{
+> +	struct acrn_vm *vm = filp->private_data;
+> +
+> +	kfree(vm);
+> +	return 0;
+> +}
+> +
+> +static const struct file_operations acrn_fops = {
+> +	.owner		= THIS_MODULE,
+> +	.open		= acrn_dev_open,
+> +	.release	= acrn_dev_release,
+> +	.unlocked_ioctl	= acrn_dev_ioctl,
+> +};
+> +
+> +static struct miscdevice acrn_dev = {
+> +	.minor	= MISC_DYNAMIC_MINOR,
+> +	.name	= "acrn_hsm",
+> +	.fops	= &acrn_fops,
+> +};
+> +
+> +static int __init hsm_init(void)
+> +{
+> +	int ret;
+> +
+> +	if (x86_hyper_type != X86_HYPER_ACRN)
+> +		return -ENODEV;
+> +
+> +	if (!acrn_is_privileged_vm())
+> +		return -EPERM;
+> +
+> +	ret = hcall_get_api_version(slow_virt_to_phys(&api_version));
+> +	if (ret < 0) {
+> +		pr_err("Failed to get API version from hypervisor!\n");
+> +		return ret;
+> +	}
+> +
+> +	pr_info("API version is %u.%u\n",
+> +		api_version.major_version, api_version.minor_version);
 
-Ok.
+Shouldn't drivers be quiet when they load and all goes well?  pr_dbg()?
 
-Josh, Petr, would this work for you too?
+And can't you defer the "read the version" call until open happens?
+Does it have to happen at module load time, increasing boot time for no
+good reason if there is not a user?
 
-Thanks
-Miroslav
+thanks,
 
+greg k-h
