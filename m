@@ -2,120 +2,124 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4D8C2BB84
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5EFC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97C17208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:12:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598605932;
-	bh=dl/oE2dXqQqYmllFe32d/zeg/9DKqx8jd7V9ebuQ6Ws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=toToCZQLYl+onIbRecM6rwhlc9XPuvJDBDHW3uXXZI5Qge3awXtq/A89eOKVPe7qF
-	 Xx/wOmDnZ7gYIcQCExOI1TeoxvcAd2ieE/ym4UHlBY/FmzW1jcJiszVB2PCg7vpezz
-	 xA1HPhBnglptOvqvlRNR5FVB1BqMh1F5Un/xVVzE=
+	by mail.kernel.org (Postfix) with ESMTP id 054272071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:13:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="04QPLnNq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbgH1JML (ORCPT
+        id S1728733AbgH1JNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:12:11 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:45208 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728548AbgH1JMH (ORCPT
+        Fri, 28 Aug 2020 05:13:20 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:52182 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726010AbgH1JNN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:12:07 -0400
-Received: by mail-ej1-f67.google.com with SMTP id si26so542424ejb.12;
-        Fri, 28 Aug 2020 02:12:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RBT1OCzQ02U3NCjA6vShk0xXCvUozK7o2xDuaQszpRk=;
-        b=TvccGzRkZO9Yu3GfGDi1oKDH4qFZFKxMRBEdwfVkquCmWvKCkG7e06KvfjXecSYVIP
-         Q6wBJ0hBgzoWEtfpA4XSSZXv664ycTZGw3a3AGtWCZA1hNSkkhsABVt8DSMoSVcKg6FP
-         h3TAVWlCn6/iXyohxSXashNrfUyjVggDMGm4izCGmjCo1Su54I1ciHg9FOyjnHvRLMro
-         +8tDFh4i+mBrZWBW049+RKLTyF+Wg3y8YaaEsMyPMJZD87W8ymdkQURQmLACx6+ZyRo4
-         DD0fiV0h1eDibzWigRmLrnQ2MvmDYwkgvqHsF2tFYA4KzJmmatzEjyzMuajDwaa0g3zv
-         /abQ==
-X-Gm-Message-State: AOAM531lwtRcruNZKFAK71vx3i7fmR28GzdVF6syUsjbWr8Mhv8ppbQ2
-        vTdudhnnvKNvcpkgxW4RqXk=
-X-Google-Smtp-Source: ABdhPJw3xCQnxyK7qlNke96fwa8aWRja8fL7fhhy3QWYB7wgkOEFUlEEvMzYUPI2MkBVhFAa2/goAg==
-X-Received: by 2002:a17:906:40e:: with SMTP id d14mr762072eja.455.1598605924082;
-        Fri, 28 Aug 2020 02:12:04 -0700 (PDT)
-Received: from pi3 ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id bn14sm334810ejb.115.2020.08.28.02.12.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 02:12:03 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 11:12:00 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
-        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-serial@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v3 12/19] dt-bindings: mmc: fsl-imx-esdhc: Fix i.MX 8
- compatible matching
-Message-ID: <20200828091200.GB17786@pi3>
-References: <20200825193536.7332-1-krzk@kernel.org>
- <20200825193536.7332-13-krzk@kernel.org>
- <CAPDyKFp9m6xBJMGn2TgwD8VEUZ0JwzgowU32qUbL1qgEPua-GA@mail.gmail.com>
+        Fri, 28 Aug 2020 05:13:13 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07S97JVx008936;
+        Fri, 28 Aug 2020 11:13:01 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=iLG15dhrsfK3a5qnX3uOMQK8LyuA+bMvi9d+/C/JDPE=;
+ b=04QPLnNqYVtj07QzTGrKWKT46oXeoi1GxGgAMRs+pzFR/OgzajhbFu1C5Mr28e8FcDZ7
+ Jq0INYTTa+mrhZWbbN6VfrCE2euLb9duoP0rRHhgjz90wXaAoO6yre/QFXSABxaqgjHu
+ hSAaJZmOELgTx9mECjI/eTov+SUB3MYAHzZog2bGOS2NPkGLPzgawtpa0g19QWXATZUu
+ vkgecfJ+6Nu5jkeLgZrqQp8fPqSRljVq/YA5EruKXGOvZ6O3zkOlzIHG04CN6QvLIA8p
+ dhGsgVRwem1UDBKo3NNix1dSLdb0N1y0QM+jIwBgpOsiYrzBkqJ7OIAXbc86dqGlyC3V vQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 332t8g5hhc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 11:13:01 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8CEF4100038;
+        Fri, 28 Aug 2020 11:13:00 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 785522A76E6;
+        Fri, 28 Aug 2020 11:13:00 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Aug
+ 2020 11:12:59 +0200
+Subject: Re: [PATCH] ARM: dts: stm32: lxa-mc1: Fix kernel warning about PHY
+ delays
+To:     Holger Assmann <h.assmann@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200807150355.6116-1-h.assmann@pengutronix.de>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <1a3291ca-daa4-32fc-d4da-15bb9faf73f9@st.com>
+Date:   Fri, 28 Aug 2020 11:12:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFp9m6xBJMGn2TgwD8VEUZ0JwzgowU32qUbL1qgEPua-GA@mail.gmail.com>
+In-Reply-To: <20200807150355.6116-1-h.assmann@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-28_05:2020-08-28,2020-08-28 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 10:45:40AM +0200, Ulf Hansson wrote:
-> On Tue, 25 Aug 2020 at 21:37, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > The i.MX 8 DTSes use two compatibles so update the binding to fix
-> > dtbs_check warnings like:
-> >
-> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: mmc@30b40000:
-> >     compatible: ['fsl,imx8mn-usdhc', 'fsl,imx7d-usdhc'] is too long
-> >     From schema: Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-> >
-> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: mmc@30b40000:
-> >     compatible: Additional items are not allowed ('fsl,imx7d-usdhc' was unexpected)
-> >
-> >   arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: mmc@30b40000:
-> >     compatible: ['fsl,imx8mn-usdhc', 'fsl,imx7d-usdhc'] is too long
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Hi Holger
+
+On 8/7/20 5:03 PM, Holger Assmann wrote:
+> The KSZ9031 PHY skew timings for rxc/txc, originally set to achieve
+> the desired phase shift between clock- and data-signal, now trigger a
+> kernel warning when used in rgmii-id mode:
 > 
-> Rob, Krzysztof - do you want me to pick this one?
+>   *-skew-ps values should be used only with phy-mode = "rgmii"
+> 
+> This is because commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode
+> support for the KSZ9031 PHY") now configures own timings when
+> phy-mode = "rgmii-id". Device trees wanting to set their own delays
+> should use phy-mode "rgmii" instead as the warning prescribes.
+> 
+> The "standard" timings now used with "rgmii-id" work fine on this
+> board, so drop the explicit timings in the device tree and thereby
+> silence the warning.
+> 
+> Fixes: 666b5ca85cd3 ("ARM: dts: stm32: add STM32MP1-based Linux Automation MC-1 board")
+> Signed-off-by: Holger Assmann <h.assmann@pengutronix.de>
+> ---
+>   arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts b/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts
+> index 5700e6b700d3..b85025d00943 100644
+> --- a/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts
+> +++ b/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts
+> @@ -121,8 +121,6 @@
+>   			reset-gpios = <&gpiog 0 GPIO_ACTIVE_LOW>; /* ETH_RST# */
+>   			interrupt-parent = <&gpioa>;
+>   			interrupts = <6 IRQ_TYPE_EDGE_FALLING>; /* ETH_MDINT# */
+> -			rxc-skew-ps = <1860>;
+> -			txc-skew-ps = <1860>;
+>   			reset-assert-us = <10000>;
+>   			reset-deassert-us = <300>;
+>   			micrel,force-master;
+> 
 
-dt-bindings are independent so they can be applied individually.
+Applied on stm32-next.
 
-I don't mind you taking it but still Rob's ack/review would be needed.
-
-Other choice is that entire dt-bindings series go through Rob's tree.
-
-Rob, what's your preference?
-
-Best regards,
-Krzysztof
+Thanks.
+Alex
