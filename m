@@ -2,113 +2,205 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B45CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDB6C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22DFE2075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46352075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:39:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="GBX+IFTz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgH1JjC (ORCPT
+        id S1728943AbgH1JjW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:39:02 -0400
-Received: from mga04.intel.com ([192.55.52.120]:65292 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728016AbgH1JjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:39:00 -0400
-IronPort-SDR: qtmir07ZuYXfhR2xrHhT+oRpKnc7KftWeY1R92TV3I25LyWN25J0cCoHvMY203VdA2KidGo+tj
- NNqM+vgRrhvg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="154053288"
-X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
-   d="scan'208";a="154053288"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 02:38:59 -0700
-IronPort-SDR: Ut9KRfr4SGf5laRD8mXE62p6pqgQNERWE+yGTMCfW8KYu4yXQeHj+qtfoFsXkYjybPwXWFLHXe
- 7KTlR1hVvZmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
-   d="scan'208";a="403704515"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 28 Aug 2020 02:38:56 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 28 Aug 2020 12:38:35 +0300
-Date:   Fri, 28 Aug 2020 12:38:35 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     ChiYuan Huang <u0084500@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
-        matthias.bgg@gmail.com, Guenter Roeck <linux@roeck-us.net>,
-        cy_huang <cy_huang@richtek.com>, gene_chen@richtek.com,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        Fri, 28 Aug 2020 05:39:22 -0400
+Received: from mail-eopbgr10102.outbound.protection.outlook.com ([40.107.1.102]:47469
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728897AbgH1JjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:39:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ckU0kA8bUDg25cavNqpstsPFCKvm938xSPUbaoq79ySV9C6Vh/sKOfe5MEmfUkFlgPdqPDn9YfgfbIM71CahF6Lur6rq6ldzxJ0LM+OTPWL6E1qHxYfDseaWGnxq2IBk8cqNPV11ajqF9HDTdIGIIsjMKuHFb4/2UDU3SCn/mrAAJcHRcQc0JMFurAtSbohF8FdxhdsSo8/5CK9DGSwSQgwZEGx5oob9BThLe6wIVQ4xpbD03PHxq3KpZWhQVMPuopAdPlnuGhS4M7woiUDky65RuCD81i9dAMMueyfEjsNUF5ygeLHJJPUDOCom/eKWJeXxiPUFr4KTAG7SMxqYmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EER4D2xVJD6DObDGorq4b4FhD/JtHZlKesJ19VEQNzQ=;
+ b=eEjWFiUiKADZIHXduQY6evxoK+Ty/JjZLn8hz0vvTk2k99uaTpncOleMiLAH6dg/woqyzHAypz5xO9a3MXhQGBUxgH2y+GzdnHqIiHMvzGWryuMzi8mQffmkUl9cJ613Vg2xY6FspFvgIrbnyQu22u5RoxhLDx6nYle6uCvluGRzcWj9n8i0PK51gIhAnQYuSPj5CTgWaoyVxzrBW3qu0AFIEL7IyPyQgynzmvte9ws8ABr+qz6ZrjV1W0chKCbagVyAx9T3Qmf0l809CiFwYIMkjBknJgGzhFus+KSmW5l3W3LUNs8l+eaFrHBJPapvNbFkj/dMasUefIIVoQnfOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EER4D2xVJD6DObDGorq4b4FhD/JtHZlKesJ19VEQNzQ=;
+ b=GBX+IFTzIi6hk9LR/Pas/SDdHImdNm95dpMf+fUtqQs6zPmt0O7XmpNTlPhuFDk0wAf0m9KkIk85A+Ww72xBf2CNhPOFRbLKn6nEw9HQVsqwChfhd63JerULlZ+Vt6PxmZfnFwvFyWEaHStzUzytk6vxp+3Y3xZ4SsX+H3+pb7U=
+Authentication-Results: st-md-mailman.stormreply.com; dkim=none (message not
+ signed) header.d=none;st-md-mailman.stormreply.com; dmarc=none action=none
+ header.from=axentia.se;
+Received: from DB8PR02MB5482.eurprd02.prod.outlook.com (2603:10a6:10:eb::29)
+ by DB8PR02MB5963.eurprd02.prod.outlook.com (2603:10a6:10:fa::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.21; Fri, 28 Aug
+ 2020 09:39:12 +0000
+Received: from DB8PR02MB5482.eurprd02.prod.outlook.com
+ ([fe80::3890:7b1:97a6:1e47]) by DB8PR02MB5482.eurprd02.prod.outlook.com
+ ([fe80::3890:7b1:97a6:1e47%7]) with mapi id 15.20.3326.021; Fri, 28 Aug 2020
+ 09:39:12 +0000
+Subject: Re: [PATCH v2 09/18] iio: afe: iio-rescale: Simplify with
+ dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Beniamin Bia <beniamin.bia@analog.com>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-iio@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] usb typec: mt6360: Add support for mt6360 Type-C
- driver
-Message-ID: <20200828093835.GC174928@kuha.fi.intel.com>
-References: <1598527137-6915-1-git-send-email-u0084500@gmail.com>
- <20200827140001.GE813478@kuha.fi.intel.com>
- <CADiBU393V_iQw_8Hx2braL=8QpvQuTY0059C-XkqmjO9W=aBgQ@mail.gmail.com>
-MIME-Version: 1.0
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-amlogic@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+References: <20200827192642.1725-1-krzk@kernel.org>
+ <20200827192642.1725-9-krzk@kernel.org>
+ <f4a5777e-fe85-9f3f-4818-f7539f223adc@axentia.se>
+ <20200828062443.GA17343@pi3>
+ <3a5cb59b-454e-2c3f-9f31-43147e843c66@axentia.se>
+ <CAJKOXPcqNE5U82UThzBTPCvucCf2LsCVSfAHE1vnecJGCKCaig@mail.gmail.com>
+From:   Peter Rosin <peda@axentia.se>
+Organization: Axentia Technologies AB
+Message-ID: <b7a5a441-cda1-ad02-b723-255231f2bd94@axentia.se>
+Date:   Fri, 28 Aug 2020 11:39:06 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+In-Reply-To: <CAJKOXPcqNE5U82UThzBTPCvucCf2LsCVSfAHE1vnecJGCKCaig@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADiBU393V_iQw_8Hx2braL=8QpvQuTY0059C-XkqmjO9W=aBgQ@mail.gmail.com>
+Content-Language: sv-SE
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: HE1PR0402CA0001.eurprd04.prod.outlook.com
+ (2603:10a6:3:d0::11) To DB8PR02MB5482.eurprd02.prod.outlook.com
+ (2603:10a6:10:eb::29)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.13.3] (85.226.217.78) by HE1PR0402CA0001.eurprd04.prod.outlook.com (2603:10a6:3:d0::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Fri, 28 Aug 2020 09:39:09 +0000
+X-Originating-IP: [85.226.217.78]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9ed3dfb1-6a22-4589-f0dc-08d84b363831
+X-MS-TrafficTypeDiagnostic: DB8PR02MB5963:
+X-Microsoft-Antispam-PRVS: <DB8PR02MB5963383356CD6038E2B0F274BC520@DB8PR02MB5963.eurprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1148;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XTd8DqynySNqAAJtw9purTjVqgkJCArFCtgGBUXJPWMk4oUMl22DbfgaMdz5y6tHRu+Z34Y9mg+lHQ+G3+AZJnB+RJxDMLH0QKV5c2Vy8zQpbi+ZIbd10rvAZoW11x7uYq7a9Wgu6iUVPQ16N6+K+XW8G7eedtSgJMpHFkH+h6Ms2Y8SnQ3vGtbsZOitZjWCf9yehqxtbj2fUHwLsWYXDdYLvS2WlmBrjGmiiQYx2AXhS9uIYlTiWE2uTq1hV/N1Y64sznyM3wNti/nkNfW6jjit2n05p/1zI6HGenOPH8UEtJ7bLkLPwLpYDn94/OdEjd/ptmMzQLHxnzKjb6qHhrv1DuaSHs7kURHPfcashNbGDVbI0petAlQePLhtyaGc
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5482.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(136003)(396003)(39830400003)(376002)(366004)(186003)(53546011)(26005)(86362001)(66946007)(36756003)(16526019)(36916002)(66476007)(52116002)(54906003)(8936002)(31686004)(6486002)(2906002)(7416002)(316002)(66556008)(83380400001)(5660300002)(8676002)(956004)(478600001)(31696002)(6666004)(2616005)(6916009)(16576012)(4326008)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: fFuW0aTocJSI0TX8mop6Rz+LPrSFQwV5pft/ycIR+awA/qrXD84qSDfE1oMfWvKH9x8ittxiOCH3vH2+Jh1zJfq5WrhEmwPu7AyW/nYk5rfhmbbphRa1V7U6Zkh9M4RvkTiiDIP+oNc4M+10BVos9aTUOQc3AstG1iz3tpBpJn9isperibXmQXJzM1/6VggYiyiBeuUbAewQLC+/jsZC66lSgbYqSwdElVqXucMFW8oF/B3xpd3pjEsrxx5dspgjXEeFAgeHEjXcWm+4bv1f/bpYAMTLJGigDhbLpcSk6UoD8JhbMOBoHXBzyzSzYYKEL7MtbuFY2EENuKud7d4ewopZQ11+JKGUbLwfBKiPjvcMn5sGNtNI6oTxCWnQc5fppRuahJOSQiHE62TtcV3ak3q3NlBv66elMk5jEz6lz4zirGutOr2463VRIo1QqNiuF2zA6+AHEgnuiRHZOVc/C95eEiAlr9VC9B/q9V3fyCkpqUG2hna0kYPkC/1CKgM/ZP7nnCcRI3EDRP0KpvWGofPkZUHCQeM526d1pxl0Tg42jIWt2q8Vh535akpsAFnUgKyMruliC3k+cqRtP91TaR4a9ENrrL/ekxnloRlJGmzKXV2kOpF84YyE0zsoEBhzq8UQcmyBcBK+hnrJ0gOz3A==
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ed3dfb1-6a22-4589-f0dc-08d84b363831
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR02MB5482.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2020 09:39:11.9207
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BXh13lGNev0aiotYE+QTZLXyzYRvdCwLAtJqH/a/ess20cFCKz3nyHzYhEQXS3GM
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR02MB5963
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 10:51:43PM +0800, ChiYuan Huang wrote:
-> Heikki Krogerus <heikki.krogerus@linux.intel.com> 於 2020年8月27日 週四 下午10:00寫道：
-> >
-> > On Thu, Aug 27, 2020 at 07:18:55PM +0800, cy_huang wrote:
-> > > From: ChiYuan Huang <cy_huang@richtek.com>
-> > >
-> > > Mediatek MT6360 is a multi-functional IC that includes USB Type-C.
-> > > It works with Type-C Port Controller Manager to provide USB PD
-> > > and USB Type-C functionalities.
-> > >
-> > > v1 to v2
-> > > 1. Add fix to Prevent the race condition from interrupt and tcpci port
-> > > unregister during module remove.
-> > >
-> > > v2 to v3
-> > > 1. Change comment style for the head of source code.
-> > > 2. No need to print error for platform_get_irq_byname.
-> > > 3. Fix tcpci_register_port check from IS_ERR_OR_NULL to IS_ERR.
-> > > 4. Rename driver/Kconfig/Makefile form mt6360 to mt636x.
-> > > 5. Rename DT binding documents from mt6360 to mt636x.
-> >
-> > You don't place additional changelog here...
-> >
-> > > Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
-> > > ---
-> >
-> > You put it here, after that '---' marker:
-> > https://www.kernel.org/doc/html/latest/process/submitting-patches.html#the-canonical-patch-format
-> >
-> HI Hekki:
->      after reading the document, I have a little bit confused how to
-> use diffstat for the changelog.
->       Is there any example that make me know to write a clear
-> description for the changelog?
-
-Picking the latest patch from linux-usb ml. with version history:
-https://lore.kernel.org/linux-usb/1598083553-31896-11-git-send-email-chunfeng.yun@mediatek.com/
-
-See how the last tag line "Signed-off-by: Chunfeng Yun..." is followed
-by marker "---", which then is followed by the version history (the
-version history is then also ended with the marker "---", a step that
-I don't think is mandatory, but commonly used and often recommended).
-
-That way that patch version history does not contaminate the actual
-commit message.
 
 
-thanks,
+On 2020-08-28 09:03, Krzysztof Kozlowski wrote:
+> On Fri, 28 Aug 2020 at 08:58, Peter Rosin <peda@axentia.se> wrote:
+>>>> I'm not a huge fan of adding *one* odd line breaking the 80 column
+>>>> recommendation to any file. I like to be able to fit multiple
+>>>> windows side by side in a meaningful way. Also, I don't like having
+>>>> a shitload of emptiness on my screen, which is what happens when some
+>>>> lines are longer and you want to see it all. I strongly believe that
+>>>> the 80 column rule/recommendation is still as valid as it ever was.
+>>>> It's just hard to read longish lines; there's a reason newspapers
+>>>> columns are quite narrow...
+>>>>
+>>>> Same comment for the envelope-detector (3/18).
+>>>>
+>>>> You will probably never look at these files again, but *I* might have
+>>>> to revisit them for one reason or another, and these long lines will
+>>>> annoy me when that happens.
+>>>
+>>> Initially I posted it with 80-characters wrap. Then I received a comment
+>>> - better to stick to the new 100, as checkpatch accepts it.
+>>>
+>>> Now you write, better to go back to 80.
+>>>
+>>> Maybe then someone else will write to me, better to go to 100.
+>>>
+>>> And another person will reply, no, coding style still mentions 80, so
+>>> keep it at 80.
+>>>
+>>> Sure guys, please first decide which one you prefer, then I will wrap it
+>>> accordingly. :)
+>>>
+>>> Otherwise I will just jump from one to another depending on one person's
+>>> personal preference.
+>>>
+>>> If there is no consensus among discussing people, I find this 100 line
+>>> more readable, already got review, checkpatch accepts it so if subsystem
+>>> maintainer likes it, I prefer to leave it like this.
+>>
+>> I'm not impressed by that argument. For the files I have mentioned, it
+>> does not matter very much to me if you and some random person think that
+>> 100 columns might *slightly* improve readability.
+>>
+>> Quoting coding-style
+>>
+>>   Statements longer than 80 columns should be broken into sensible chunks,
+>>   unless exceeding 80 columns significantly increases readability and does
+>>   not hide information.
+>>
+>> Notice that word? *significantly*
+> 
+> Notice also checkpatch change...
 
--- 
-heikki
+How is that relevant? checkpatch has *never* had the final say and its
+heuristics can never be perfect. Meanwhile, coding style is talking about
+exactly the case under discussion, and agrees with me perfectly.
+
+> First of all, I don't have a preference over wrapping here. As I said,
+> I sent v1 with 80 and got a response to change it to 100. You want me
+> basically to bounce from A to B to A to B.
+> 
+>> Why do I even have to speak up about this? WTF?
+> 
+> Because we all share here our ideas...
+> 
+>> For the patches that touch files that I originally wrote [1], my
+>> preference should be clear by now.
+> 
+> I understood your preference. There is nothing unclear here. Other
+> person had different preference. I told you my arguments that it is
+> not reasonable to jump A->B->A->B just because each person has a
+> different view. At the end it's the subsystem maintainer's decision as
+> he wants to keep his subsystem clean.
+
+Yeah, I bet he is thrilled about it.
+
+Cheers,
+Peter
