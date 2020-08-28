@@ -2,104 +2,128 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB9EC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD399C43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0ADC20C56
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9973E20C56
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:30:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dOOiQwAc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sdCwCAI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbgH1I2a (ORCPT
+        id S1728609AbgH1Iab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 04:28:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56086 "EHLO
+        Fri, 28 Aug 2020 04:30:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728759AbgH1I2D (ORCPT
+        with ESMTP id S1728269AbgH1Ia3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 04:28:03 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B084EC061264
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 01:28:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=zDJCSRQqxmuBzOdim0ZpsVxleqNgwLrnL8/KvPnBAls=; b=dOOiQwAcq3nJ3bgpPCwenUa8f1
-        YpLTHHYkj1LeEyI4SnmRJD6I4ujdK6hL0IDc/HKiP5Y8RfHhlVpiJ3urGYbc8qVx+ExCJTfGmAOrh
-        akplHkQb6bgwHIbNLkVs9/XR24D1pSHHIBLQt0yPdtoBLsT2pXvG6fM4YiJap2QjZubrrS0Dx7YL0
-        dQ+4xFOtoH0Inkj/ZFqnNRB6k68vPA3PCGs2rH7fHSCBGYBJi+uKNKFzqxbQn5HyLYaAf3gOXSsJc
-        G9avJRKDplvU1MZKVgAq0R3vEMhmxbnwcrKtCJXJWslLZ9tXz/MSA4s1TfuDU24shiXaqGeRFzLOP
-        XSokx2oA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBZjo-0003QP-Ac; Fri, 28 Aug 2020 08:27:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8F22D30015A;
-        Fri, 28 Aug 2020 10:27:54 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 40F022C5F134A; Fri, 28 Aug 2020 10:27:54 +0200 (CEST)
-Date:   Fri, 28 Aug 2020 10:27:54 +0200
-From:   peterz@infradead.org
-To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 2/5] seqlock: Use unique prefix for seqcount_t
- property accessors
-Message-ID: <20200828082754.GN1362448@hirez.programming.kicks-ass.net>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200828010710.5407-1-a.darwish@linutronix.de>
- <20200828010710.5407-3-a.darwish@linutronix.de>
+        Fri, 28 Aug 2020 04:30:29 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4BB5C061264;
+        Fri, 28 Aug 2020 01:30:28 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id j15so276766lfg.7;
+        Fri, 28 Aug 2020 01:30:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LflMgJmibSpFeOHc4WL2YJ+POCyG0pEvbGVH5SBOv0E=;
+        b=sdCwCAI9GltezF0rEB2fLfVxKx/8qRdfoKbbiRoFKxvVCYIkR3/N1t+zeTEEbig46m
+         +Kyj/BDTYw6OGVtSPlqNjGOO+fv9AYhJPWBogZ4zZlmC2yxHp+dH2Ko7FVvt1wfQtAEJ
+         C3EGMetrjmTC/sV3gobl9IyF5UkoeKSYqq3m2hVHVbaEPYOGuzFFd5jgWMxslMdgQGer
+         9+UFDbyhkm+yhdM7yCy9ywuHycOSmJv+CRYhHhUfXf/FoN7mgRZ9eqL8dvW5VmgrW/Oe
+         mvL9YOYm9HUrthueMnVNdX9U8x9oc0gEqLz7mTAFACitArMxyd1dGhLSQEfC89ew0Qql
+         tX3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LflMgJmibSpFeOHc4WL2YJ+POCyG0pEvbGVH5SBOv0E=;
+        b=gCsHhKqohe0/MSCkH+0iFeWo2ANHY2pdneE5uK8GqO9Tbsr3R8wef5psDc4g5nwfjw
+         iWBRHA0dxxQ1wJjYX+iQ6MTPpz767pDdzSQJ5D6FA3wteboI8Y6GCoPQ8BRuLBmG0q1J
+         XEZABPxA14rT9Hx9lYY4EmV8HTtIyRd586HXQ+xv9FvGe46S7m6e8SPPXUsmAnJBKIXt
+         9bXGSt5Xxqu1oevArpUghSGEPU6lL1a5iq3sepx3G4bnsDEjzD6klEcpDjkPziULV1MC
+         /743Z72sx6etFDifID3tr4yBCdhkfFn2zTLxMLhjBbRDXYv0sOr84aD9nWSMXx0VyCku
+         Wyzw==
+X-Gm-Message-State: AOAM532+vJoP3yOfEk5DfzLdFC45gD4DMO8c6Xhh2QkH5Az26l5Qfts9
+        P/cM65bHlEosFoK17lVAsoKjO+Z91co=
+X-Google-Smtp-Source: ABdhPJzLnvqVFe/sNW/j+lmpEBM4x5/CZ5x6tV+zcsDznlhemeqh60v+eDDBRVDdroYZaI53iNUCkA==
+X-Received: by 2002:a19:24c2:: with SMTP id k185mr276673lfk.120.1598603426636;
+        Fri, 28 Aug 2020 01:30:26 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id h6sm130676lfc.84.2020.08.28.01.30.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Aug 2020 01:30:25 -0700 (PDT)
+Subject: Re: [PATCH v5 13/36] PM / devfreq: tegra30: Use MC timings for
+ building OPP table
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+References: <20200814000621.8415-1-digetx@gmail.com>
+ <CGME20200814000944epcas1p3dfd0104c5fa640695dfcd4949f6b1818@epcas1p3.samsung.com>
+ <20200814000621.8415-14-digetx@gmail.com>
+ <1b0d75fe-79af-70eb-8450-999a3bc72bac@samsung.com>
+ <1de8aa41-8001-cf46-026c-b00f8df0b9a3@gmail.com>
+ <2a255211-5426-d78f-d266-cdb958f4c658@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <a11d60af-3a67-6a76-57ae-7cb9bad13bed@gmail.com>
+Date:   Fri, 28 Aug 2020 11:30:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200828010710.5407-3-a.darwish@linutronix.de>
+In-Reply-To: <2a255211-5426-d78f-d266-cdb958f4c658@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 03:07:07AM +0200, Ahmed S. Darwish wrote:
-> Differentiate the first group by using "__seqcount_t_" as prefix. This
-> also conforms with the rest of seqlock.h naming conventions.
+28.08.2020 04:47, Chanwoo Choi пишет:
+> Hi,
+...
+>> Hence the NULL-checking is unnecessary.
+>>
+>> When I first encountered the of_device_get_match_data(), I was also
+>> thinking that adding the NULL-checks is a good idea, but later on
+>> somebody pointed out to me (maybe Thierry) that it's unnecessary to do.
+> 
+> OK. Thanks.
+> 
+>>
+>>>> +
+>>>> +	mc = tegra_get_memory_controller(soc_data->mc_compatible);
+>>>> +	if (IS_ERR(mc))
+>>>> +		return PTR_ERR(mc);
+>>>
+>>> You better to add error log.
+>>
+>> In practice we should get only -EPROBE_DEFER here ever. I'll consider
+>> adding the message in the next revision, at least just for consistency.
+> 
+> In order to handle -EPROBE_DEFER, recommend the using of dev_err_probe().
 
->  #define __seqprop_case(s, locktype, prop)				\
->  	seqcount_##locktype##_t: __seqcount_##locktype##_##prop((void *)(s))
->  
->  #define __seqprop(s, prop) _Generic(*(s),				\
-> -	seqcount_t:		__seqcount_##prop((void *)(s)),		\
-> +	seqcount_t:		__seqcount_t_##prop((void *)(s)),	\
->  	__seqprop_case((s),	raw_spinlock,	prop),			\
->  	__seqprop_case((s),	spinlock,	prop),			\
->  	__seqprop_case((s),	rwlock,		prop),			\
+Hello, Chanwoo!
 
-If instead you do:
+Thank you for the suggestion! I wasn't aware about the dev_err_probe()
+until recently and will use this new helper in the v6!
 
-#define __seqprop_case(s, _lockname, prop) \
-	seqcount##_lockname##_t: __seqcount##_lockname##_##prop((void *)(s))
-
-You can have:
-
-	__seqprop_case((s),	,		prop),
-	__seqprop_case((s),	_raw_spinlock,	prop),
-	__seqprop_case((s),	_spinlock,	prop),
-	__seqprop_case((s),	_rwlock,	prop),
-	__seqprop_case((s),	_mutex,		prop),
-	__seqprop_case((s),	_ww_mutex,	prop),
-
-And it's all good again.
-
-Although arguably we should do something like s/__seqcount/__seqprop/
-over this lot.
-
-
+Thanks!
