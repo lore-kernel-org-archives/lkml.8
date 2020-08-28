@@ -2,140 +2,115 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3598C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4842C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B57F20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8006920872
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:27:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rlpHppJo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgH1UVy (ORCPT
+        id S1726579AbgH1U1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 16:21:54 -0400
-Received: from mga06.intel.com ([134.134.136.31]:20557 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726033AbgH1UVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 16:21:52 -0400
-IronPort-SDR: dcJWC4OC/h6or2j7jOyZJgyQV28of0IqVBA5YjOxxFKCayBuuy1D5lg3qYrQm1l4CkdTOBFlf0
- CdqFBdhm2mfw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="218296666"
-X-IronPort-AV: E=Sophos;i="5.76,365,1592895600"; 
-   d="scan'208";a="218296666"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 13:21:52 -0700
-IronPort-SDR: kdb6aqXSAlyd2ELvUl+q+/AVHnlwLgMtbNHRH/UPuIcxPTDvhEeYa927E8s5xmqV6Kg6eGxg88
- RVE5FAR7zr0Q==
-X-IronPort-AV: E=Sophos;i="5.76,365,1592895600"; 
-   d="scan'208";a="444950476"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 13:21:51 -0700
-Date:   Fri, 28 Aug 2020 13:21:50 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "Song, Youquan" <youquan.song@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/mce: Add Skylake quirk for patrol scrub reported
- errors
-Message-ID: <20200828202150.GA11854@agluck-desk2.amr.corp.intel.com>
-References: <20200615184056.26531-1-tony.luck@intel.com>
- <20200616192952.GO13515@zn.tnic>
- <3908561D78D1C84285E8C5FCA982C28F7F670974@ORSMSX115.amr.corp.intel.com>
- <20200617074158.GB10118@zn.tnic>
- <20200617184901.GA387@agluck-desk2.amr.corp.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617184901.GA387@agluck-desk2.amr.corp.intel.com>
+        Fri, 28 Aug 2020 16:27:13 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:54118 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbgH1U1M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 16:27:12 -0400
+Received: from tusharsu-Ubuntu.lan (c-71-197-163-6.hsd1.wa.comcast.net [71.197.163.6])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 5C72520B7178;
+        Fri, 28 Aug 2020 13:27:11 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5C72520B7178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598646431;
+        bh=hECU4hLDw1zrGv3GfjNuIh/mSziIh4QvSgAMdiAuocc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rlpHppJoOsNgQysh2heDlPmyXkCalc1TzY4YsrLcm5nRnP5W05VB4piwkQZsZzjeo
+         R/mEVpe+ye1Jn+LIkfUUsMvpk8xrmQxL0mbCG1vGT+iCFVZDuADZxh9gvUl6x0RYev
+         FAkLjqCBrMMsXgiracmLQS27EV0bu+npJZySmU28=
+From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
+To:     zohar@linux.ibm.com, agk@redhat.com, snitzer@redhat.com,
+        gmazyland@gmail.com
+Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
+        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com
+Subject: [PATCH v3 0/2] dm-devel:dm-crypt: infrastructure for measurement of DM target data using IMA
+Date:   Fri, 28 Aug 2020 13:26:58 -0700
+Message-Id: <20200828202700.23086-1-tusharsu@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Youquan Song <youquan.song@intel.com>
+There are several device-mapper targets which contribute to verify
+the integrity of the mapped devices e.g. dm-integrity, dm-verity,
+dm-crypt etc.
 
-Skylake has a mode where the system administrator can use a BIOS setup
-option to request that the memory controller report uncorrected errors
-found by the patrol scrubber as corrected.  This results in them being
-signalled using CMCI, which is less disruptive than a machine check.
+But they do not use the capabilities provided by kernel integrity
+subsystem (IMA). For instance, the IMA capability that measures several
+in-memory constructs and files to detect if they have been accidentally
+or maliciously altered. IMA also has the capability to include these
+measurements in the IMA measurement list and use them to extend a TPM
+PCR so that they can be quoted. These TPM PCR extend operations ensure
+that the tampering with the order of constructs being measured, and
+tampering with the measured constructs themselves - doesn't go
+undetected. In general, this capability is used for remote attestation
+of in-memory constructs and files of interest. As of today,device-mapper
+targets don't use the benefits of extended TPM PCR quotes and ultimately
+the benefits of remote attestation.
 
-Add a quirk to detect that a "corrected" error is actually a downgraded
-uncorrected error with model specific checks for the "MSCOD" signature in
-MCi_STATUS and that the error was reported from a memory controller bank.
+This series bridges this gap, so that all device-mapper targets
+could take advantage of IMA's measuring and quoting abilities - thus
+ultimately enabling remote attestation for device-mapper targets.
 
-Adjust the severity to MCE_AO_SEVERITY so that Linux will try to take
-the affected page offline.
+This series is based on the following repo/branch:
+ repo: https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
+ branch: next-integrity
+ commit d012a7190fc1 ("Linux 5.9-rc2") 
 
-[Tony: Wordsmith commit comment]
+This series also has a dependency on the following patch series and
+should be applied in the following order:
+ 1. https://patchwork.kernel.org/patch/11709527/
+ 2. https://patchwork.kernel.org/patch/11742047/
+ 3. https://patchwork.kernel.org/patch/11743265/
 
-Signed-off-by: Youquan Song <youquan.song@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
+Change Log v3:
+ - add dm-crypt as a supported data source to measure in ima.h.
+ - Taken dependency on the updated base series v3 (2. above)
+ - Taken dependency on the updated early boot measurement series v2
+   (3. above).
 
----
-This updated patch slipped through some cracks. Sorry for the delay.
+Change Log v2:
+ - Removed the references to "local" measurement from the description -
+   as this series only support remote attestation, and not local
+   integrity enforcement.
+ - Taken dependency on the updated base series (2. above), which 
+   introduced a boolean parameter measure_buf_hash as per community
+   feedback to support measuring hash of the buffer, instead of the
+   buffer itself.
+ - Taken dependency on the updated early boot measurement series
+   (3. above).
 
-V2:
-Boris:	Don't optimize with pointer to quirk function. Just do
- 	the vendor/family/model check in the adjust_mce_log()
-	function
-Tony:	Add check for stepping >= 4
----
- arch/x86/kernel/cpu/mce/core.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+Tushar Sugandhi (2):
+  dm-devel: collect target data and submit to IMA to measure
+  dm-crypt: collect data and submit to DM to measure
 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index e9265e2f28c9..2d5fe23adf29 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -673,6 +673,35 @@ static void mce_read_aux(struct mce *m, int i)
- 	}
- }
- 
-+/*
-+ * Skylake family CPUs have a mode where the user can request that
-+ * the memory controller report uncorrected errors found by the patrol
-+ * scrubber as corrected (MCI_STATUS_UC == 0). This results in them being
-+ * signalled using CMCI, which is less disruptive that a machine check.
-+ * The following quirk detects such errors and adjusts the severity.
-+ */
-+
-+#define MSCOD_UCE_SCRUB	(0x0010 << 16) /* UnCorrected Patrol Scrub Error */
-+#define MSCOD_MASK	GENMASK_ULL(31, 16)
-+
-+static void adjust_mce_log(struct mce *m)
-+{
-+	struct cpuinfo_x86 *c = &boot_cpu_data;
-+
-+	if (c->x86_vendor == X86_VENDOR_INTEL && c->x86 == 6 &&
-+	    c->x86_model == INTEL_FAM6_SKYLAKE_X && c->x86_stepping >= 4) {
-+		/*
-+		 * Check the error code to see if this is an uncorrected patrol
-+		 * scrub error from one of the memory controller banks. If so,
-+		 * then adjust the severity level to MCE_AO_SEVERITY
-+		 */
-+		if (((m->status & MCACOD_SCRUBMSK) == MCACOD_SCRUB) &&
-+		    ((m->status & MSCOD_MASK) == MSCOD_UCE_SCRUB) &&
-+		    m->bank >= 13 && m->bank <= 18)
-+			m->severity = MCE_AO_SEVERITY;
-+	}
-+}
-+
- DEFINE_PER_CPU(unsigned, mce_poll_count);
- 
- /*
-@@ -772,6 +801,7 @@ bool machine_check_poll(enum mcp_flags flags, mce_banks_t *b)
- 		if (mca_cfg.dont_log_ce && !mce_usable_address(&m))
- 			goto clear_it;
- 
-+		adjust_mce_log(&m);
- 		mce_log(&m);
- 
- clear_it:
+ drivers/md/Makefile            |   1 +
+ drivers/md/dm-crypt.c          | 171 +++++++++++++++++++
+ drivers/md/dm-ima.c            | 298 +++++++++++++++++++++++++++++++++
+ include/linux/device-mapper.h  |  60 +++++++
+ security/integrity/ima/Kconfig |   3 +-
+ security/integrity/ima/ima.h   |   1 +
+ 6 files changed, 532 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/md/dm-ima.c
+
 -- 
-2.21.1
+2.17.1
 
