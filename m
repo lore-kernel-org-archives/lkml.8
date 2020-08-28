@@ -2,105 +2,109 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3108CC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39318C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0950120776
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:38:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AD6+hlPG"
+	by mail.kernel.org (Postfix) with ESMTP id F3A0720776
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbgH1HiV (ORCPT
+        id S1728397AbgH1Hjb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:38:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48366 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbgH1HiS (ORCPT
+        Fri, 28 Aug 2020 03:39:31 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:28996 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726500AbgH1Hj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:38:18 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87F81C061264;
-        Fri, 28 Aug 2020 00:38:17 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id c15so209917lfi.3;
-        Fri, 28 Aug 2020 00:38:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=N3NLGVgqy7BKUy5QHEuQDQ+XUZ5L+RsFhhmOMWnxRlw=;
-        b=AD6+hlPGZlRejaZMwyX32LZwofbV7Zf7//rodRwr/19Y/litIUt8jDAj+U+itQ8DNf
-         0U/QHiayrS8U1+UQJKPh3/bz/3lmaaaelVDVB8EfbD5PULkyWMUEm3KZ81bLXwhgeZjq
-         avig/ZfEIXwOUkJuLhp2YVGaGYmnpy42JeSLAOOgiQlzdWxGlGmeH9depL7rlkzRjhZ4
-         UQ4Xm66vSHcL/fEpPfmKR+y2JmL7t0p4I/HntzA3R+OdDKUzqnj6Fpoa+GNq1Z60kxh6
-         cJ5rLvILc+PMFSshL9gjOKd4GFXi1tEmcTLtwoib54znuy7Qmwp8NJnua+79a2We30W8
-         VlNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=N3NLGVgqy7BKUy5QHEuQDQ+XUZ5L+RsFhhmOMWnxRlw=;
-        b=QUL5OVH0mt4U3vQEDLYk4n+c0c6T3JAJuvE6MgNPAn3WHX+S7x7tiDH3bJLeN3LMA9
-         9CGmrkjCtVpWuVy0W2ToeIoe+vKCYM3QcRj6ULddO24mNfm8OgAQcyG4b8hoeW3CpMFG
-         glAI+CAvB2mbL+vbUlpRrd3lQdjtETsU72nlaSKqwQbNgXKVY2qycyRE5J/i3Ca31WO7
-         yemMMBKlhsZwEG7QaJGVJxZjLw+RMJUgHj8nfpwLUxECIYwVByFvruRSNgBMWPjEwUN8
-         0T4VjCaWx2Nzd5frEo32fPgHzLJu8EI48zywpGXfJhd9e7AH8XkbShwyVAIMI3PdEzkL
-         qIsA==
-X-Gm-Message-State: AOAM532oN28zMwAlkOl9fAlo8wmMlRELlOi3ih9bqXlP3r6Jnw0LYKaO
-        CGCeA54xjnwThbwga5FuVrMXjNyJcbI=
-X-Google-Smtp-Source: ABdhPJz3GQE0MhPpOO33+v6UNBtGCoAU/sQ3hPL6ibPfROIHpcNmNEXFvGUqYxXD2j6It9YkZ+wqSw==
-X-Received: by 2002:a19:c3d7:: with SMTP id t206mr163809lff.177.1598600295404;
-        Fri, 28 Aug 2020 00:38:15 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id a26sm37302ljm.63.2020.08.28.00.38.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Aug 2020 00:38:14 -0700 (PDT)
-Subject: Re: [PATCH 2/3] opp: Allow opp-supported-hw to contain multiple
- versions
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        linux-kernel@vger.kernel.org
-References: <cover.1598442485.git.viresh.kumar@linaro.org>
- <c4d59ad206394e4f73ab7547c6cd99d95c032128.1598442485.git.viresh.kumar@linaro.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <d7d9bb48-a4ee-30ab-96f2-844d12b709f1@gmail.com>
-Date:   Fri, 28 Aug 2020 10:38:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 28 Aug 2020 03:39:29 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-266-Gqqjngt5NDyRwtlGJI5Pew-1; Fri, 28 Aug 2020 08:39:26 +0100
+X-MC-Unique: Gqqjngt5NDyRwtlGJI5Pew-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 28 Aug 2020 08:39:25 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 28 Aug 2020 08:39:25 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Kees Cook' <keescook@chromium.org>,
+        Denis Efremov <efremov@linux.com>
+CC:     Julia Lawall <julia.lawall@inria.fr>,
+        Joe Perches <joe@perches.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        cocci <cocci@systeme.lip6.fr>,
+        "accessrunner-general@lists.sourceforge.net" 
+        <accessrunner-general@lists.sourceforge.net>,
+        Alex Dewar <alex.dewar90@gmail.com>
+Subject: RE: [Cocci] [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+Thread-Topic: [Cocci] [PATCH] usb: atm: don't use snprintf() for sysfs attrs
+Thread-Index: AQHWfMBUatYqQRMSW0+Lm7S5UM8VU6lNInTw
+Date:   Fri, 28 Aug 2020 07:39:25 +0000
+Message-ID: <24d45f0868b74a3ba4924f031e968c55@AcuMS.aculab.com>
+References: <20200824222322.22962-1-alex.dewar90@gmail.com>
+ <48f2dc90-7852-eaf1-55d7-2c85cf954688@rasmusvillemoes.dk>
+ <20200827071537.GA168593@kroah.com>
+ <20200827131819.7rcl2f5js3hkoqj2@lenovo-laptop>
+ <def24e9e-018c-9712-0d07-d4cbc84f07d9@rasmusvillemoes.dk>
+ <20200827144846.yauuttjaqtxaldxg@lenovo-laptop>
+ <5d1dfb9b031130d4d20763ec621233a19d6a88a2.camel@perches.com>
+ <alpine.DEB.2.22.394.2008272141220.2482@hadrien>
+ <5853c58e-7d26-2cf9-6cbf-698ecd93cbf9@linux.com>
+ <202008271517.ECC1F1F8F@keescook>
+In-Reply-To: <202008271517.ECC1F1F8F@keescook>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-In-Reply-To: <c4d59ad206394e4f73ab7547c6cd99d95c032128.1598442485.git.viresh.kumar@linaro.org>
-Content-Type: text/plain; charset=utf-8
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-26.08.2020 14:50, Viresh Kumar пишет:
-> The bindings allow multiple versions to be passed to "opp-supported-hw"
-> property, either of which can result in enabling of the OPP.
+From: Kees Cook
+> Sent: 27 August 2020 23:21
+...
 > 
-> Update code to allow that.
+> Agreed. This just makes me cringe. If the API design declares that when
+> a show() callback starts, buf has been allocated with PAGE_SIZE bytes,
+> then that's how the logic should proceed, and it should be using
+> scnprintf...
 > 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/opp/of.c | 47 +++++++++++++++++++++++++++++++++--------------
->  1 file changed, 33 insertions(+), 14 deletions(-)
+> show(...) {
+> 	size_t remaining = PAGE_SIZE;
+> 
+> 	...
+> 	remaining -= scnprintf(buf, remaining, "fmt", var args ...);
+> 	remaining -= scnprintf(buf, remaining, "fmt", var args ...);
+> 	remaining -= scnprintf(buf, remaining, "fmt", var args ...);
 
-I checked that CPU DVFS works on Nexus 7 after applying this series just
-like it worked before. Thanks!
+Not quite what you had in mind, maybe:
+	char *end = buf + PAGE_SIZE;
 
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
+	buf += scnprintf(buf, end - buf, ...);
+
+	return PAGE_SIZE - (end - buf);
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
