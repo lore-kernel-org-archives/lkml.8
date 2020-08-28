@@ -2,114 +2,115 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 797C2C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC24C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42C3B207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:23:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="shriYB3p"
+	by mail.kernel.org (Postfix) with ESMTP id BC3FC207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:24:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbgH1LXf (ORCPT
+        id S1729223AbgH1LXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 07:23:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729173AbgH1LWs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 07:23:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:46836 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729178AbgH1LWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 28 Aug 2020 07:22:48 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BAFDC061236;
-        Fri, 28 Aug 2020 04:20:42 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id ba12so830095edb.2;
-        Fri, 28 Aug 2020 04:20:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KGEywKnAVd/7RJTemAGpNeUCwMzvl8U0yMAeNAGkB+A=;
-        b=shriYB3pW6Ji3P2tXtVXq6xzGJe0LNr+8mfFOiPUVkx57QPmVvXTOTGFb0htkFze7Y
-         2v0c4EIBb0oav/RbMcJLGQfuDgwPgu/qEJ+y1gpi6I5Dgk5D+XaZCjt0xOoJCGBA+8Qm
-         kAj3XodzB19CoWxvyawj2FxA4aPoH65gSPyq5tlDNym9wpcp6z/HpD/4vP6yWl4Yn6gg
-         sdciGTkwW7IzjbqxQ/YpIOle8YleayqpeTzTziEusYe88ucETWUk7Czxll4vKhd12hPy
-         UK7O9s2hd7YszqsIdXG+/zZh5LWqQgBl3EyEKFXuAFQy6ZXhkOiy9wFdfJvMhUWZE2ca
-         ACkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KGEywKnAVd/7RJTemAGpNeUCwMzvl8U0yMAeNAGkB+A=;
-        b=XGXwtVloXQvb/0VRzVHnV8kLNX6Hb/OBGUoD9fTy2UQBolB4PsSupiKQav397kOl4v
-         ynfmVIVsFv/0DbM0NB6ZgtkTtEWJ1YC8fqxiQXI4bWvgTcAE0ZvC+gaBdHxYH2mIjVy4
-         q83xr+CyjwmVIsrhB2FwpMNbjh4DH442Wcrs9tXoRFcf6vIIopeyb8J1cHV/qaIC0HAm
-         YPHdvKzx16GzvgPLfdifHa1/wtKNSQcesW5h1Fh7OR6sgH/Tf43Zvc+wQdELbp3VQJSk
-         iu3Cbuan/lweI3eAf0iZsABDExwHG1QDprRBTmP8Dtyrrpy78BY7/b6D19LvfGu0lPso
-         H/Ow==
-X-Gm-Message-State: AOAM5301wL8NOwEUPirWNIylCifOtSoEghHJMHM5BbByvpujxd+ZHW3n
-        AszEwOJdY1dSWnbYappVzKhmc2ZKbJIpVHeL9m8=
-X-Google-Smtp-Source: ABdhPJxHU6efi6VP56oGN/Gh8MTTFv9XTrFYMw2OHFqrv85P8OtpsB8qpJMUBIjJbVCGFYF+pUj1wj0YES8n8n5LRp0=
-X-Received: by 2002:a05:6402:1a46:: with SMTP id bf6mr1307131edb.284.1598613640690;
- Fri, 28 Aug 2020 04:20:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1595572867.git.frank@allwinnertech.com> <CACRpkdYOKOj4r-9U2iHCkdB74fWkm2J0xHqsnH_sE81SV5g1=w@mail.gmail.com>
-In-Reply-To: <CACRpkdYOKOj4r-9U2iHCkdB74fWkm2J0xHqsnH_sE81SV5g1=w@mail.gmail.com>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Fri, 28 Aug 2020 19:20:29 +0800
-Message-ID: <CAEExFWuO06yBY+_Z33FHvi5B_y=haX5Q_LSH8zN8Sr3FUqkwKw@mail.gmail.com>
-Subject: Re: [PATCH v5 00/16] Allwinner A100 Initial support
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Frank Lee <frank@allwinnertech.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 10BC931B;
+        Fri, 28 Aug 2020 04:21:52 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03F763F66B;
+        Fri, 28 Aug 2020 04:21:47 -0700 (PDT)
+Date:   Fri, 28 Aug 2020 12:21:42 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
         Marc Zyngier <maz@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Ondrej Jirman <megous@megous.com>,
-        Corentin Labbe <clabbe@baylibre.com>, bage@linutronix.de,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [patch V2 34/46] PCI/MSI: Make arch_.*_msi_irq[s] fallbacks
+ selectable
+Message-ID: <20200828112142.GA14208@e121166-lin.cambridge.arm.com>
+References: <20200826112333.992429909@linutronix.de>
+ <20200827182040.GA2049623@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827182040.GA2049623@bjorn-Precision-5520>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Linus,
+On Thu, Aug 27, 2020 at 01:20:40PM -0500, Bjorn Helgaas wrote:
 
-On Fri, Aug 28, 2020 at 6:02 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Fri, Jul 24, 2020 at 8:53 AM Frank Lee <frank@allwinnertech.com> wrote:
->
-> > This patch set adds initial support for allwinner a100 soc,
-> > which is a 64-bit tablet chip.
->
-> Shall I commit the pinctrl patches (if Maxime ACKed) separately
-> or not? Once Maxime is happy, I am usually happy too.
+[...]
 
-Maxime told me he wanted you to commit the pinctrl patches.
+> And I can't figure out what's special about tegra, rcar, and xilinx
+> that makes them need it as well.  Is there something I could grep for
+> to identify them?  Is there a way to convert them so they don't need
+> it?
 
-Thx,
-Yangtao
+I think DT binding and related firmware support are needed to setup the
+MSI IRQ domains correctly, there is nothing special about tegra, rcar
+and xilinx AFAIK (well, all native host controllers MSI handling is
+*special* just to be polite but let's gloss over this for the time
+being).
+
+struct msi_controller, to answer the first question.
+
+I have doubts about pci_mvebu too, they do allocate an msi_controller
+but without methods so it looks pretty much useless.
+
+Hyper-V code too seems questionable, maybe there is room for more
+clean-ups.
+
+Lorenzo
+
+> > --- a/include/linux/msi.h
+> > +++ b/include/linux/msi.h
+> > @@ -193,17 +193,38 @@ void pci_msi_mask_irq(struct irq_data *d
+> >  void pci_msi_unmask_irq(struct irq_data *data);
+> >  
+> >  /*
+> > - * The arch hooks to setup up msi irqs. Those functions are
+> > - * implemented as weak symbols so that they /can/ be overriden by
+> > - * architecture specific code if needed.
+> > + * The arch hooks to setup up msi irqs. Default functions are implemented
+> 
+> s/msi/MSI/ to match the one below.
+> 
+> > + * as weak symbols so that they /can/ be overriden by architecture specific
+> > + * code if needed. These hooks must be enabled by the architecture or by
+> > + * drivers which depend on them via msi_controller based MSI handling.
