@@ -2,129 +2,93 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE446C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2BCC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC4B62086A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:11:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=trendmicro.com header.i=@trendmicro.com header.b="RnKiz1Ky"
+	by mail.kernel.org (Postfix) with ESMTP id 03A3220872
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgH1OLp (ORCPT
+        id S1727088AbgH1OMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:11:45 -0400
-Received: from sjdcvmout02.udc.trendmicro.com ([66.180.82.11]:53936 "EHLO
-        sjdcvmout02.udc.trendmicro.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726236AbgH1OLX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:11:23 -0400
-Received: from sjdcvmout02.udc.trendmicro.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E3CCC64140;
-        Fri, 28 Aug 2020 07:11:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=trendmicro.com;
-        s=tmoutbound; t=1598623882;
-        bh=2leu51Oaz0HVcR63NYO/kzJM+SKH1GIG9M5l3ekm8rE=; h=From:To:Date;
-        b=RnKiz1KyiZ7Mb7msAj6t+JbAwynBOxYPGFkVZQbYIzfIHLOmvv7E9xwNOOLnF9/qu
-         ob0p8FsVTKVPWkyfyv74yJwtYy+9G3EAQ5O5Wpi0Iw44zCeSXOFpvq5FcbJ+SbB2Bd
-         Y99FfSQwxoYIye6cZdNAhD5O7eo1G3kNyMYLz/q0=
-Received: from sjdcvmout02.udc.trendmicro.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D4DA46413E;
-        Fri, 28 Aug 2020 07:11:21 -0700 (PDT)
-Received: from SJDC-EXNABU02.us.trendnet.org (unknown [10.45.175.98])
-        by sjdcvmout02.udc.trendmicro.com (Postfix) with ESMTPS;
-        Fri, 28 Aug 2020 07:11:21 -0700 (PDT)
-Received: from ADC-EXAPAC12.tw.trendnet.org (10.28.2.229) by
- SJDC-EXNABU02.us.trendnet.org (10.45.175.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1979.3; Fri, 28 Aug 2020 07:11:21 -0700
-Received: from ADC-EXAPAC11.tw.trendnet.org (10.28.2.228) by
- ADC-EXAPAC12.tw.trendnet.org (10.28.2.229) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1979.3; Fri, 28 Aug 2020 14:11:18 +0000
-Received: from ADC-EXAPAC11.tw.trendnet.org ([fe80::35d2:8fa6:df0c:6aae]) by
- ADC-EXAPAC11.tw.trendnet.org ([fe80::35d2:8fa6:df0c:6aae%18]) with mapi id
- 15.01.1979.003; Fri, 28 Aug 2020 14:11:18 +0000
-From:   "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-CC:     "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
-        "anil.s.keshavamurthy@intel.com" <anil.s.keshavamurthy@intel.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "cameron@moodycamel.com" <cameron@moodycamel.com>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "paulmck@kernel.org" <paulmck@kernel.org>
-Subject: RE: [RFC][PATCH 3/7] kprobes: Remove kretprobe hash
-Thread-Topic: [RFC][PATCH 3/7] kprobes: Remove kretprobe hash
-Thread-Index: AQHWfI4t/nsBli3py0KTZQaFFkmSRalNd/2QgAATfICAAAMrMA==
-Date:   Fri, 28 Aug 2020 14:11:18 +0000
-Message-ID: <23d43cfb12c54a1fbc766ea313ecb5a6@trendmicro.com>
-References: <20200827161237.889877377@infradead.org>
-        <20200827161754.359432340@infradead.org>
-        <7df0a1af432040d9908517661c32dc34@trendmicro.com>
- <20200828225113.9541a5f67a3bcb17c4ce930c@kernel.org>
-In-Reply-To: <20200828225113.9541a5f67a3bcb17c4ce930c@kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.28.4.6]
-X-TM-AS-Product-Ver: IMSVA-9.1.0.1960-8.6.0.1013-25630.007
-X-TM-AS-Result: No--15.421-5.0-31-10
-X-TMASE-MatchedRID: SIg5fOCPFH/UL3YCMmnG4vHkpkyUphL9AQ8mtiWx//puOTbkZwMFPMAS
-        M1FbRaAi6cwIJjeKGkyxpjy1K0tDfrotpw4iUQe/nMQdNQ64xffvYEK+8qVVeyVT1SRkUxgNy5M
-        gwQconH7maxj3gZnVdLj6+m60PQeTfrUrtN2hvziprpImTnz4toBOBQVQ0d5DPKi9LCfAVUAhIX
-        hZYzDXgRT+Wo2YXV/HWh0AAsriQA5jc+aKf+OtsZcSOzDC4nqrrMQfIfGe10YWtW/EiS01n6goI
-        qR4kS6O3o52a+i4d4shqqvfYyVVpUKPluOEKT3/N19PjPJahlJq7v1YYMsJ6Qzvg1/q1MH2WHq1
-        bpSh5eILlAT8wIANSWcMD7m4XaqJOC4YD94VucDvVbHa5Rs8twVyeo9hM9SH6wwa/hhtmlajxYy
-        RBa/qJR8AKgKWeNGh5MIx11wv+COQZS2ujCtcuA==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--15.421400-10.000000
-X-TMASE-Version: IMSVA-9.1.0.1960-8.6.1013-25630.007
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 28 Aug 2020 10:12:07 -0400
+Received: from mga11.intel.com ([192.55.52.93]:48032 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726236AbgH1OMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 10:12:01 -0400
+IronPort-SDR: mTzOzLK+uCAQ4Tthpled8QY+7whBJ7Orj3oukqj28taGHvdLVDnkArYjSUXtacQ3ZXAxI2OQS2
+ pDtH5JbXIhYw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="154211819"
+X-IronPort-AV: E=Sophos;i="5.76,364,1592895600"; 
+   d="scan'208";a="154211819"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 07:12:01 -0700
+IronPort-SDR: ojdwmhxED06K7XC2t1Pg2Fm3LMskUfddgFyUdMUMliOGez68uXqo7zZMNBAar+PD6V5Y2tfEZh
+ J2QzbXFiiANg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,364,1592895600"; 
+   d="scan'208";a="403762847"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 28 Aug 2020 07:11:58 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 28 Aug 2020 17:11:58 +0300
+Date:   Fri, 28 Aug 2020 17:11:58 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Badhri Jagan Sridharan <badhri@google.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/14 v1] usb: typec: tcpci: Add a getter method to
+ retrieve tcpm_port reference
+Message-ID: <20200828141158.GI174928@kuha.fi.intel.com>
+References: <20200825042210.300632-1-badhri@google.com>
+ <20200825042210.300632-5-badhri@google.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: BD6DD143CF0EB167BA3D0FDE2E9BB2C86D21459032A1C785F2EC4FB8BD90EFB12000:8
-X-TM-AS-GCONF: 00
-X-imss-scan-details: No--15.421-5.0-31-10
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-12:0,22:0,33:0,34:0-0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825042210.300632-5-badhri@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Masami Hiramatsu <mhiramat@kernel.org>
->
-> OK, schedule function will be the key. I guess the senario is..
->
-> 1) kretporbe replace the return address with kretprobe_trampoline on task=
-1's kernel stack
-> 2) the task1 forks task2 before returning to the kretprobe_trampoline
-> 3) while copying the process with the kernel stack, task2->kretprobe_inst=
-ances.first =3D NULL
+On Mon, Aug 24, 2020 at 09:22:00PM -0700, Badhri Jagan Sridharan wrote:
+> Allow chip level drivers to retrieve reference to tcpm_port.
+> 
+> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+> ---
+>  drivers/usb/typec/tcpm/tcpci.c | 6 ++++++
+>  drivers/usb/typec/tcpm/tcpci.h | 2 ++
+>  2 files changed, 8 insertions(+)
+> 
+> diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
+> index 9e814d454d14..7b7991c8ac87 100644
+> --- a/drivers/usb/typec/tcpm/tcpci.c
+> +++ b/drivers/usb/typec/tcpm/tcpci.c
+> @@ -38,6 +38,12 @@ struct tcpci_chip {
+>  	struct tcpci_data data;
+>  };
+>  
+> +struct tcpm_port *tcpci_get_tcpm_port(struct tcpci *tcpci)
+> +{
+> +	return tcpci->port;
+> +}
+> +EXPORT_SYMBOL_GPL(tcpci_get_tcpm_port);
 
-I think new process created by fork/clone uses a brand new kernel stack? I =
-thought only user stack are copied.
-Otherwise any process launch should crash in the same way
+I wonder if it would be better if there were tpci callbacks, or
+wrappers, for the tcpm functions that the glue drivers could then use
+instead of directly calling the tcpm_*() functions?  That would allow
+tcpci.c to keep tabs on what is going on.
 
-By the way, I can reproduce this on the latest branch(v4)
-TREND MICRO EMAIL NOTICE
+That would somehow feel like a better approach to me, but maybe it
+would only complicate things. Guenter, what do you think?
 
-The information contained in this email and any attachments is confidential=
- and may be subject to copyright or other intellectual property protection.=
- If you are not the intended recipient, you are not authorized to use or di=
-sclose this information, and we request that you notify us by reply mail or=
- telephone and delete the original message from your mail system.
 
-For details about what personal information we collect and why, please see =
-our Privacy Notice on our website at: Read privacy policy<http://www.trendm=
-icro.com/privacy>
+thanks,
+
+-- 
+heikki
