@@ -2,142 +2,183 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAA6C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D85C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE1E4208D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:35:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xrmlci1X"
+	by mail.kernel.org (Postfix) with ESMTP id 2D4C62075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:37:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbgH1Jfi (ORCPT
+        id S1728867AbgH1Jhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:35:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728532AbgH1JfZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:35:25 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 606DFC061232
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:35:25 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id v24so175336uaj.7
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:35:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/mdittT6+6EzCIerCsP+eMrYewGCwnIzPurZ3euQ7cw=;
-        b=xrmlci1XQklPdv8VwdCziv8Ar/UxceOi05ImtRTPFIMg7t76W0VOXgbBWgcSxJjQkG
-         7OJJGmztUHDLhPlStrGS21cIy5G6Pdq52sx8L7JibwmnsKieNyqGFvCapPJ8yi2BDPDJ
-         CgTRJM8yNZAoZXqD+jmroylm/y1t+0HhlTzN1rbouTe7W23Peslwhhfnh4ywe1FFVZic
-         O/JgK5vKgaqEaa9wlPsvOpPgYkM9103S/GERZ5qOGtuZhDMhq6PMFsYao4NsTuvl/BK4
-         lSouNSllEvVZ6zGY0cl/i5I6yOn8sKy4YCKbn5aOCd8rM+cQQDHY1BfGR/48IyyGYfg5
-         QugA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/mdittT6+6EzCIerCsP+eMrYewGCwnIzPurZ3euQ7cw=;
-        b=Co5OXjVI7DEw2w38eBxc9MzattPdQQVbm3SPL9CMJvqBhCDg/ATwbEfQEiuD1DCVp1
-         mcYaNIYRny4Ejd/eB0n5LD8LtrxLEg/xrlISGpG4oxOsSLscBmVkKLIVkrH53V5AIOeL
-         iJMnh8LLYzlYA1wtqqg1Z4ReXrhcRKlIrH81jK+6+s5gremrzvGi2DNAc73+Clwch2PX
-         de9UIk4BK+SXvDjbzta/vLwe7D+RjTEI8jVx1rCtYpyFRB06ePSJs4EbA2jIlHKxKFbt
-         E3CKzWZAJuoorcEkTn/KywAimgO7nItGWn4SJTEmip14HzhQyUuzVZG+ZNqeVFHSQHDX
-         kHww==
-X-Gm-Message-State: AOAM533AyFUHQSCHqP/9zx5n0Ezqq1MULATyu+fJZT4EKgKS4gaf3iLf
-        fzLla9kzCW3Wr3edzDl6MtZKd4LPW686/7ZovZtZ8Q==
-X-Google-Smtp-Source: ABdhPJzxNEeZfoY+k3gp0uBoTm4yCYE5kPlcV9PGhfGkgvhiqDyqVKsddEc6lWq8Z8xFJlOpwC9vsbIVbRpsPgjPmsM=
-X-Received: by 2002:ab0:3114:: with SMTP id e20mr380470ual.104.1598607324469;
- Fri, 28 Aug 2020 02:35:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <CA+G9fYvUwH2FA9GOeA_7GYpLA31uOmEpg32VKnJ8-d5QSK4PdQ@mail.gmail.com>
- <20200827090813.fjugeqbb47fachy7@vireshk-i7> <CAK8P3a2zxybiMDzHXkTsT=VpHJOLkwd1=YTtCNU04vuMjZLkxA@mail.gmail.com>
- <20200827101231.smqrhqu5da6jlz6i@vireshk-i7> <CA+G9fYv=XLtsuD=tVR1HHotwpKLkbwZVyPr4UhY-jD+6-duTmw@mail.gmail.com>
- <CA+G9fYvSEHua0EpW64rASucWuS-U2STAZxufrfN75UDspGt2cA@mail.gmail.com>
-In-Reply-To: <CA+G9fYvSEHua0EpW64rASucWuS-U2STAZxufrfN75UDspGt2cA@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 28 Aug 2020 11:34:47 +0200
-Message-ID: <CAPDyKFrpOqpBiSvkvO7sXHiQDOwdXYmx-80Ji5wW79QF-MrOuQ@mail.gmail.com>
-Subject: Re: Kernel panic : Unable to handle kernel paging request at virtual
- address - dead address between user and kernel address ranges
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Fri, 28 Aug 2020 05:37:32 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2707 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728016AbgH1Jha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:37:30 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 5F54AB1A2183795D36F8;
+        Fri, 28 Aug 2020 10:37:28 +0100 (IST)
+Received: from localhost (10.52.127.106) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 28 Aug
+ 2020 10:37:27 +0100
+Date:   Fri, 28 Aug 2020 10:35:52 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Atish Patra <atish.patra@wdc.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Zong Li <zong.li@sifive.com>,
+        <linux-riscv@lists.infradead.org>, Will Deacon <will@kernel.org>,
+        <linux-arch@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+        Ganapatrao Kulkarni <gkulkarni@cavium.com>,
+        Steven Price <steven.price@arm.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
         Arnd Bergmann <arnd@arndb.de>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        madhuparnabhowmik10@gmail.com,
-        Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        "Paul Walmsley" <paul.walmsley@sifive.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Nick Hu <nickhu@andestech.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: Re: [RFC/RFT PATCH 2/6] arm64, numa: Change the numa init function
+ name to be generic
+Message-ID: <20200828103552.000033e3@Huawei.com>
+In-Reply-To: <20200814214725.28818-3-atish.patra@wdc.com>
+References: <20200814214725.28818-1-atish.patra@wdc.com>
+        <20200814214725.28818-3-atish.patra@wdc.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.127.106]
+X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Aug 2020 at 11:22, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> On Thu, 27 Aug 2020 at 17:06, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >
-> > On Thu, 27 Aug 2020 at 15:42, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >
-> > > On 27-08-20, 11:48, Arnd Bergmann wrote:
-> > > > > > [    3.680477]  dev_pm_opp_put_clkname+0x30/0x58
-> > > > > > [    3.683431]  sdhci_msm_probe+0x284/0x9a0
-> > > >
-> > > > dev_pm_opp_put_clkname() is part of the error handling in the
-> > > > probe function, so I would deduct there are two problems:
-> > > >
-> > > > - something failed during the probe and the driver is trying
-> > > >   to unwind
-> > > > - the error handling it self is buggy and tries to undo something
-> > > >   again that has already been undone.
-> > >
-> > > Right.
-> > >
-> > > > This points to Viresh's
-> > > > d05a7238fe1c mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()
-> > >
-> > > I completely forgot that Ulf already pushed this patch and I was
-> > > wondering on which of the OPP core changes I wrote have done this :(
-> > >
-> > > > Most likely this is not the entire problem but it uncovered a preexisting
-> > > > bug.
-> > >
-> > > I think this is.
-> > >
-> > > Naresh: Can you please test with this diff ?
-> >
-> > I have applied your patch and tested but still see the reported problem.
->
-> The git bisect shows that the first bad commit is,
-> d05a7238fe1c mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()
->
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Reported-by: Anders Roxell <anders.roxell@linaro.org>
+On Fri, 14 Aug 2020 14:47:21 -0700
+Atish Patra <atish.patra@wdc.com> wrote:
 
-I am not sure what version of the patch you tested. However, I have
-dropped Viresh's v1 and replaced it with v2 [1]. It's available for
-testing at:
+> As we are using generic numa implementation code, modify the init function
+> name to indicate that generic implementation.
+> 
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/arm64/mm/init.c       | 4 ++--
+>  drivers/base/arch_numa.c   | 8 ++++++--
+>  include/asm-generic/numa.h | 4 ++--
+>  3 files changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 481d22c32a2e..93b660229e1d 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -418,10 +418,10 @@ void __init bootmem_init(void)
+>  	max_pfn = max_low_pfn = max;
+>  	min_low_pfn = min;
+>  
+> -	arm64_numa_init();
+> +	arch_numa_init();
+>  
+>  	/*
+> -	 * must be done after arm64_numa_init() which calls numa_init() to
+> +	 * must be done after arch_numa_init() which calls numa_init() to
+>  	 * initialize node_online_map that gets used in hugetlb_cma_reserve()
+>  	 * while allocating required CMA size across online nodes.
+>  	 */
+> diff --git a/drivers/base/arch_numa.c b/drivers/base/arch_numa.c
+> index 73f8b49d485c..83341c807240 100644
+> --- a/drivers/base/arch_numa.c
+> +++ b/drivers/base/arch_numa.c
+> @@ -13,7 +13,9 @@
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  
+> +#ifdef CONFIG_ARM64
+>  #include <asm/acpi.h>
+> +#endif
 
-https://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git next
+This highlights an issue.  We really don't want to define 'generic' arch
+code then match on individual architectures if at all possible.
 
-Can you please check if it still causes problems, then I will drop it, again.
+I'm also not sure we need to. 
 
-Kind regards
-Uffe
+The arm64_acpi_numa_init() code is just a light wrapper around the
+standard acpi_init() call so should work fine on riscv (once ACPI
+support is ready).
 
-[1] https://lkml.org/lkml/2020/8/28/43
+Can we pull that function into here or perhaps a generic
+arch_numa_acpi.c?
+
+There is probably a bit of a dance needed around acpi_disabled
+though as that can be defined in entirely different places
+depending on whether acpi is enabled or not.
+Possibly just adding an
+
+extern int acpi_disabled to include/linux/acpi.h when acpi is enabled
+will be sufficient (if ugly)?
+
+
+>  #include <asm/sections.h>
+>  
+>  struct pglist_data *node_data[MAX_NUMNODES] __read_mostly;
+> @@ -445,16 +447,18 @@ static int __init dummy_numa_init(void)
+>  }
+>  
+>  /**
+> - * arm64_numa_init() - Initialize NUMA
+> + * arch_numa_init() - Initialize NUMA
+>   *
+>   * Try each configured NUMA initialization method until one succeeds. The
+>   * last fallback is dummy single node config encomapssing whole memory.
+>   */
+> -void __init arm64_numa_init(void)
+> +void __init arch_numa_init(void)
+>  {
+>  	if (!numa_off) {
+> +#ifdef CONFIG_ARM64
+>  		if (!acpi_disabled && !numa_init(arm64_acpi_numa_init))
+>  			return;
+> +#endif
+>  		if (acpi_disabled && !numa_init(of_numa_init))
+>  			return;
+>  	}
+> diff --git a/include/asm-generic/numa.h b/include/asm-generic/numa.h
+> index 0635c0724b7c..309eca8c0b5d 100644
+> --- a/include/asm-generic/numa.h
+> +++ b/include/asm-generic/numa.h
+> @@ -27,7 +27,7 @@ static inline const struct cpumask *cpumask_of_node(int node)
+>  }
+>  #endif
+>  
+> -void __init arm64_numa_init(void);
+> +void __init arch_numa_init(void);
+>  int __init numa_add_memblk(int nodeid, u64 start, u64 end);
+>  void __init numa_set_distance(int from, int to, int distance);
+>  void __init numa_free_distance(void);
+> @@ -41,7 +41,7 @@ void numa_remove_cpu(unsigned int cpu);
+>  static inline void numa_store_cpu_info(unsigned int cpu) { }
+>  static inline void numa_add_cpu(unsigned int cpu) { }
+>  static inline void numa_remove_cpu(unsigned int cpu) { }
+> -static inline void arm64_numa_init(void) { }
+> +static inline void arch_numa_init(void) { }
+>  static inline void early_map_cpu_to_node(unsigned int cpu, int nid) { }
+>  
+>  #endif	/* CONFIG_NUMA */
+
+
