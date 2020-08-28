@@ -2,67 +2,102 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B022EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156FAC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 920E321527
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9EAA20776
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgH1R4H (ORCPT
+        id S1727989AbgH1R4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 13:56:07 -0400
-Received: from correo.us.es ([193.147.175.20]:35980 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726677AbgH1R4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 13:56:07 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 56ED520A52E
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 19:56:06 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 487DDDA704
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 19:56:06 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 3CD64DA78C; Fri, 28 Aug 2020 19:56:06 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 0A9D3DA7E1;
-        Fri, 28 Aug 2020 19:56:04 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Fri, 28 Aug 2020 19:56:04 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [90.77.255.23])
+        Fri, 28 Aug 2020 13:56:37 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:46838 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbgH1R4g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 13:56:36 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id CB39542EF4E1;
-        Fri, 28 Aug 2020 19:56:03 +0200 (CEST)
-Date:   Fri, 28 Aug 2020 19:56:03 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     kadlec@netfilter.org, fw@strlen.de, davem@davemloft.net,
-        kuba@kernel.org, mcroce@redhat.com,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] netfilter: xt_HMARK: Use ip_is_fragment() helper
-Message-ID: <20200828175603.GA756@salvia>
-References: <20200827140813.28624-1-yuehaibing@huawei.com>
+        by asavdk3.altibox.net (Postfix) with ESMTPS id A12C6201C5;
+        Fri, 28 Aug 2020 19:55:50 +0200 (CEST)
+Date:   Fri, 28 Aug 2020 19:55:48 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Kevin Tang <kevin3.tang@gmail.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH RFC v6 2/6] drm/sprd: add Unisoc's drm kms master
+Message-ID: <20200828175548.GA660103@ravnborg.org>
+References: <1595930879-2478-1-git-send-email-kevin3.tang@gmail.com>
+ <1595930879-2478-3-git-send-email-kevin3.tang@gmail.com>
+ <20200728204532.GC1277651@ravnborg.org>
+ <CAFPSGXaXxr+Du0ptbBHguEPgoHULozSUb-rS3-61pef1fF6b-g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200827140813.28624-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <CAFPSGXaXxr+Du0ptbBHguEPgoHULozSUb-rS3-61pef1fF6b-g@mail.gmail.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=CaYmGojl c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=Gh0u76Fc2OF9ojEVt64A:9 a=CjuIK1q_8ugA:10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 10:08:13PM +0800, YueHaibing wrote:
-> Use ip_is_fragment() to simpify code.
+Hi Kevin
 
-Applied.
+> >
+> > > +
+> > > +     drm->dev_private = sprd;
+> > dev_private is deprecated. Alwyas use upclassing.
+> dev_private is deprecated ? I see everyone is still using it, so it
+> will be deprecated in the future?
+It is deprecated - and a lot of drivers is in need up an update to get
+away from using it.
+
+From the kernel-doc:
+
+        /**
+         * @dev_private:
+         *
+         * DRM driver private data. This is deprecated and should be left set to
+         * NULL.
+         *
+         * Instead of using this pointer it is recommended that drivers use
+         * drm_dev_init() and embed struct &drm_device in their larger
+         * per-device structure.
+         */
+        void *dev_private;
+
+> > > +     }
+> > > +     /* with irq_enabled = true, we can use the vblank feature. */
+> > > +     drm->irq_enabled = true;
+> > Can drm_irq_install() be used?
+> > Then this flag shall not be set by the driver, And the interrupt numbers on different Soc are not necessarily the same
+> >
+> We need to set "IRQ_NOAUTOEN" flag for CRTC IRQ, you can see that we
+> manually turn the interrupt on and off by crtc
+> atomic_enable/atomic_disable
+> and the interrupt number on different Soc are not necessarily the
+> same. So intall interrupt in kms maybe is not suitable for us...
+
+Maybe drm_irq_install() does not fit the need here. But please take an
+extra look as what is does is quite basic. And no need to roll your
+own if there is available infrstructure that can be used.
+
+But there is nothing wrong rolloing your own if needed.
+
+	Sam
