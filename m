@@ -2,114 +2,101 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2117C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194CBC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD95420897
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9321207E8
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 23:57:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cl2YYh2X"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pehB+AZU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgH1XmW (ORCPT
+        id S1726881AbgH1X5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 19:42:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726649AbgH1XmT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 19:42:19 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F70DC061264;
-        Fri, 28 Aug 2020 16:42:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=sJO6zPU113docaHLc9V1IgRkQ/8ndDDRf6lClTOXy8A=; b=cl2YYh2XhhyHrjF6cjPtHRfL4w
-        a9bZacq5X4pQT+e4sw3dJFFnG372xlZsICmZ3p5dDFKy0QtC9kHNdG1fUYIEWH+VE1w/UiiAAohoJ
-        Y3yI8R7JM69uD0/MA7NQZc3ffuX2+Cept29LMA8KM1Tkg62ho9z1aghXS+5wQr4KVns+QM1rIVmbH
-        P3GyTSx6Pema1BWPF0PpNUWP+YLeW1eGwWjsypc+Pi1vZpeE8xLKVz2RolUlBDlLW18qyMxFJDzoA
-        SfuxqBKym0IrDb+Bbo1vIv9ykplJwEpy4+FhkgFrvahE+97odJF6MxeyyckAwZJ29PqQ7pLJBSOm8
-        bIGUbw9g==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBo0T-0001Bv-OP; Fri, 28 Aug 2020 23:42:06 +0000
-Subject: Re: linux-next: build failure after merge of the net-next tree
-To:     Brian Vazquez <brianvv@google.com>
-Cc:     Sven Joachim <svenjoac@gmx.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200729212721.1ee4eef8@canb.auug.org.au>
- <87ft8lwxes.fsf@turtle.gmx.de>
- <CAMzD94Rz4NYnhheS8SmuL14MNM4VGxOnAW-WZ9k1JEqrbwyrvw@mail.gmail.com>
- <87y2m7gq86.fsf@turtle.gmx.de> <87pn7gh3er.fsf@turtle.gmx.de>
- <CAMzD94Rkq1RTZJG5UsEz9VhaCBbvObD1azqU2gsJzZ6gPYcfag@mail.gmail.com>
- <878sdyn6xz.fsf@turtle.gmx.de>
- <49315f94-1ae6-8280-1050-5fc0d1ead984@infradead.org>
- <CAMzD94QKnE+1Cmm0RNFUVAYArBRB0S2VUUC5c4jTY9Z4xdZH0w@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4dce5976-d4a1-1fbf-8824-a92adfc542b5@infradead.org>
-Date:   Fri, 28 Aug 2020 16:42:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <CAMzD94QKnE+1Cmm0RNFUVAYArBRB0S2VUUC5c4jTY9Z4xdZH0w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 28 Aug 2020 19:57:08 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:13814 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726775AbgH1X5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 19:57:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598659026; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=rM/B9BakHyUJZNVQSwabD9JaPVxM+jNpDiVkIVk/tQk=; b=pehB+AZUoUyTIp6h0h5Lai01JTNYvKfbG8zWYxiTaHvq9/YpIFrD4MB02gaXYbjGzfmxwyGM
+ kBLCWiNPP1Fl+6DyYYpiQ5+ceZiJa2010LcIQSKnb8DixPense8AzGy8Qr7gaYunsH8DC2V+
+ t3Or7d4ItpZtexP7osk/G+7lelI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5f4999cbae54fd8e987d49d7 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 28 Aug 2020 23:56:59
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7D4A9C43387; Fri, 28 Aug 2020 23:56:59 +0000 (UTC)
+Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: collinsd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C7A40C433CA;
+        Fri, 28 Aug 2020 23:56:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C7A40C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=collinsd@codeaurora.org
+From:   David Collins <collinsd@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     David Collins <collinsd@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] spmi: prefix spmi bus device names with "spmi"
+Date:   Fri, 28 Aug 2020 16:55:59 -0700
+Message-Id: <1598658959-31307-1-git-send-email-collinsd@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/28/20 4:16 PM, Brian Vazquez wrote:
-> On Fri, Aug 28, 2020 at 8:12 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->> On 8/28/20 8:09 AM, Sven Joachim wrote:
->>> On 2020-08-27 11:12 -0700, Brian Vazquez wrote:
->>>
->>>> I've been trying to reproduce it with your config but I didn't
->>>> succeed. I also looked at the file after the preprocessor and it
->>>> looked good:
->>>>
->>>> ret = ({ __builtin_expect(!!(ops->match == fib6_rule_match), 1) ?
->>>> fib6_rule_match(rule, fl, flags) : ops->match(rule, fl, flags); })
->>>
->>> However, in my configuration I have CONFIG_IPV6=m, and so
->>> fib6_rule_match is not available as a builtin.  I think that's why ld is
->>> complaining about the undefined reference.
->>
->> Same here FWIW. CONFIG_IPV6=m.
-> 
-> Oh I see,
-> I tried this and it seems to work fine for me, does this also fix your
-> problem? if so, I'll prepare the patch, and thanks for helping!
-> diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
-> index 51678a528f85..40dfd1f55899 100644
-> --- a/net/core/fib_rules.c
-> +++ b/net/core/fib_rules.c
-> @@ -16,7 +16,7 @@
->  #include <net/ip_tunnels.h>
->  #include <linux/indirect_call_wrapper.h>
-> 
-> -#ifdef CONFIG_IPV6_MULTIPLE_TABLES
-> +#if defined(CONFIG_IPV6_MULTIPLE_TABLES) && defined(CONFIG_IPV6)
+Change the format of spmi bus device names from:
+  <spmi_bus_number>-<spmi_device_sid>
+  Example: 0-01
+to this:
+  spmi<spmi_bus_number>-<spmi_device_sid>
+  Example: spmi0-01
 
+This helps to disambiguate SPMI device regmaps from I2C ones
+at /sys/kernel/debug/regmap since I2C devices use a very
+similar naming scheme: 0-0000.
 
-Yes, that works for me.
-You can add this to your patch:
+Signed-off-by: David Collins <collinsd@codeaurora.org>
+---
+ drivers/spmi/spmi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-
-thanks.
+diff --git a/drivers/spmi/spmi.c b/drivers/spmi/spmi.c
+index c16b60f..ec94439 100644
+--- a/drivers/spmi/spmi.c
++++ b/drivers/spmi/spmi.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (c) 2012-2015, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2012-2015, 2020, The Linux Foundation. All rights reserved.
+  */
+ #include <linux/kernel.h>
+ #include <linux/errno.h>
+@@ -62,7 +62,7 @@ int spmi_device_add(struct spmi_device *sdev)
+ 	struct spmi_controller *ctrl = sdev->ctrl;
+ 	int err;
+ 
+-	dev_set_name(&sdev->dev, "%d-%02x", ctrl->nr, sdev->usid);
++	dev_set_name(&sdev->dev, "spmi%d-%02x", ctrl->nr, sdev->usid);
+ 
+ 	err = device_add(&sdev->dev);
+ 	if (err < 0) {
 -- 
-~Randy
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
