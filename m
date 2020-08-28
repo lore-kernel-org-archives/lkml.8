@@ -2,118 +2,85 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D40C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ECEC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E66F208C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:09:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HSnWUujv"
+	by mail.kernel.org (Postfix) with ESMTP id 76C8B2075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:10:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgH1PJy (ORCPT
+        id S1728251AbgH1PJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 11:09:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgH1PJf (ORCPT
+        Fri, 28 Aug 2020 11:09:59 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:47644 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728202AbgH1PJq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 11:09:35 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9A7DC061264;
-        Fri, 28 Aug 2020 08:09:34 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id o12so1205822qki.13;
-        Fri, 28 Aug 2020 08:09:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=W7kRTit/NoWCrV6s0X1OousX0dNQ2oe81sw0mMzwiVI=;
-        b=HSnWUujveg28vCj8uX2R+iiQq4k/5RDX/XgGqrmN9R/zNCTuyrRG1J0ms852pLywu8
-         lFqJ/BPTgfN0uGT9yMjeui+9d0az0yQ/8GBSYXbgXFjRAESD4TgKm/TWozU3jZhx0VV6
-         14LAQjW2igCplnEnQxePMQh3A0HyYqMMVOZ0cSReYqtKaPQMFMVMkQopL/BLOrCthcOM
-         MUG/vdrbZnbSR2JPm/mSTli0wwQ5RW1Rnb2QkBdSQFn5eWM+AraW9W6WPnhzkJDMyTEZ
-         +E8leqfNv+TU/gPyFFo7vQjDxadNKQDIxSpEgzgT45xPgDxiiHiR1ZXFXoVLt2FA+mn4
-         ubuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=W7kRTit/NoWCrV6s0X1OousX0dNQ2oe81sw0mMzwiVI=;
-        b=lHLcqgyZLQ4kiCkjyD6jwcs+Kgw5miXpwkr7LNTTzKCJRxu6lta7mZVkLA2qiG+pGD
-         wxf2obMdQR4lwA+V3t+FRLIH2nrA8ewFCIRIYaw65nid5l3XZMxPNf6C8MsFb8dO5Jlx
-         lR2VZi04HAFyW4ndC9KP0Wf+/7/O2tHDvBMw3PozCnN56Ke75f5Z5X5bd8uKbyY9XbGd
-         5Dc5ILC2dICM7e/9ree2GTq+WzxZYcgTaNHyEZW6v2aBGupBLqrIgrxLlCLFfyrJhORH
-         KBT9ozfKOE+JrLpvn63Er8uEKLBFVXTcvxu2f0yPymxXFsNcKZArbhEskXWhilTAyTys
-         WR5Q==
-X-Gm-Message-State: AOAM531kmvKPKOhqTq9eh3IMuKdJpRkvnt1C5Ad7bg/qFJAfnRbe7BLF
-        fp8M/nKD1yiDztEbbsNtnjk=
-X-Google-Smtp-Source: ABdhPJzaqcYvGe3mmd+w2AvU76ady8UcKUmdn3DKwbjE+FvWDr6fLzH7sMY//enSc5x5fZp+ZMBmSQ==
-X-Received: by 2002:a37:ec6:: with SMTP id 189mr1686250qko.38.1598627371481;
-        Fri, 28 Aug 2020 08:09:31 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id x31sm1276971qtx.97.2020.08.28.08.09.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 08:09:30 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 28 Aug 2020 11:09:28 -0400
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>, x86@kernel.org,
-        Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v6 13/76] x86/boot/compressed/64: Add IDT Infrastructure
-Message-ID: <20200828150928.GA1203097@rani.riverdale.lan>
-References: <20200824085511.7553-1-joro@8bytes.org>
- <20200824085511.7553-14-joro@8bytes.org>
- <20200827152657.GA669574@rani.riverdale.lan>
- <20200828121226.GC13881@8bytes.org>
+        Fri, 28 Aug 2020 11:09:46 -0400
+Date:   Fri, 28 Aug 2020 11:09:43 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH 09/10] sh: don't allow non-coherent DMA for NOMMU
+Message-ID: <20200828150942.GV3265@brightrain.aerifal.cx>
+References: <20200714121856.955680-1-hch@lst.de>
+ <20200714121856.955680-10-hch@lst.de>
+ <20200828020045.GT3265@brightrain.aerifal.cx>
+ <20200828021152.GU3265@brightrain.aerifal.cx>
+ <20200828042422.GA29734@lst.de>
+ <CAPDyKFrKJrUN8mJ94g0+0Vs3aT1uq9MmHWfvzcVaoA5efaYPmQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200828121226.GC13881@8bytes.org>
+In-Reply-To: <CAPDyKFrKJrUN8mJ94g0+0Vs3aT1uq9MmHWfvzcVaoA5efaYPmQ@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 02:12:26PM +0200, Joerg Roedel wrote:
-> Hi Arvind,
+On Fri, Aug 28, 2020 at 11:26:57AM +0200, Ulf Hansson wrote:
+> On Fri, 28 Aug 2020 at 06:24, Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > On Thu, Aug 27, 2020 at 10:11:53PM -0400, Rich Felker wrote:
+> > > > This change broke SD card support on J2 because MMC_SPI spuriously
+> > > > depends on HAS_DMA. It looks like it can be fixed just by removing
+> > > > that dependency from drivers/mmc/host/Kconfig.
+> > >
+> > > It can't. mmp_spi_probe fails with ENOMEM, probably due to trying to
+> > > do some DMA setup thing that's not going to be needed if the
+> > > underlying SPI device doesn't support/use DMA.
+> >
+> > Adding the linux-mmc and linux-spi lists, as that seems pretty odd.
 > 
-> On Thu, Aug 27, 2020 at 11:26:57AM -0400, Arvind Sankar wrote:
-> > On Mon, Aug 24, 2020 at 10:54:08AM +0200, Joerg Roedel wrote:
-> > > +	pushq	%rsi
-> > > +	call	load_stage1_idt
-> > > +	popq	%rsi
-> > > +
-> > 
-> > Do we need the functions later in the series or could this just use lidt
-> > directly?
+> The mmc_spi driver needs modernizations, so I am not surprised to see
+> odd things.
 > 
-> The function also sets up the actual IDT entries in the table before
-> doing the lidt, so this needs to be a call to a C function. Setting up
-> IDT entries in assembly does not result in readable code.
+> My guess is that in ->probe() we check "if
+> (spi->master->dev.parent->dma_mask)" - > and runs dma_map*()
+> operations, which fails and leads to bailing out of ->probe() to
+> return an error code.
 > 
+> However, by looking at the code, one get the feeling that the DMA
+> support is somewhat prepared to be made optional. I guess it has never
+> been really tested, as the Kconfig option has "depends on HAS_DMA"  -
+> and it's been like that as long as I can remember.
 
-Ah ok, I missed that in the later patches.
+It always worked on our "byte-banged" SPI controller, with no DMA
+controller present, before Christoph's changes in this patch series,
+and seems to be working now (although I have some other, hopefully
+unrelated regressions to debug) with #ifdef CONFIG_HAS_DMA around the
+if (spi->master->dev.parent->dma_mask) block in mmc_spi_probe. That's
+probably not the right fix though -- why isn't it checking
+host->dma_dev instead and only attempting DMA setup if dma_dev is
+non-null?
 
-Thanks.
+Rich
