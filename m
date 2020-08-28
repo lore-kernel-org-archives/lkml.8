@@ -2,119 +2,133 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88731C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1BEC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57BF320791
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598594494;
-	bh=BUfH8WfAunZhF8fDtPUaM+v2rLlSiXdp/dFdKzj/AuE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q01Qm/eOK95jB943EYvQTj8nwo43eS5UWKXaMKBqwjA2S2qtMAOasVguTU6/lf9SB
-	 ADlzlJeaQrMCGa6LSLvO4VUoKaax7n3xte+h6WXm1NHDiR5Ol5fRCZqLL8liM47koC
-	 hafg/P807lTmyjM+YFbayD3rv4iAFZc7Sr/FEfn0=
+	by mail.kernel.org (Postfix) with ESMTP id 56DD320791
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:04:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="l1eXHvkR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgH1GBc (ORCPT
+        id S1727853AbgH1GE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 02:01:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54226 "EHLO mail.kernel.org"
+        Fri, 28 Aug 2020 02:04:27 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:42913 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725849AbgH1GBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 02:01:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725858AbgH1GEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 02:04:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598594665; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=PzasY8aBi8ICt0gY/gfh81GdbIsnm4LD6K/tXeMd5+Y=; b=l1eXHvkR+3mHudCkh3sqBJBKifxrmW6w74egIKT/RRGq8kLDGHamzxcuTcv7boMbP5KjneWo
+ nvl3XW2RlA0H5QvKkU0nmhbB6vFyISK2Jl+dDvgpjNoy6TrQnkAFPI/MS/8amId/kx7hxQ45
+ t+VCk4xSfwB6knhb6Wv2QllU6JY=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5f489ddf630b177c47f19936 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 28 Aug 2020 06:02:07
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2357BC433CB; Fri, 28 Aug 2020 06:02:07 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C44220791;
-        Fri, 28 Aug 2020 06:01:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598594491;
-        bh=BUfH8WfAunZhF8fDtPUaM+v2rLlSiXdp/dFdKzj/AuE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Lzwddw+QutyLPhpntRMPv0eTIEG3GvvQomBWL+4KVVVkJatqq3srm5gw3MpqJMDWt
-         AZ9AssC4WQqVePCrOZ//hxANF6oGy0bAYqZubQyUMvSOMcA0XKuFsLm+VJbmb3Af4w
-         HNiN6edWKP91sRb1YaAJIn5y8UoylQQFJrXLC21E=
-Date:   Fri, 28 Aug 2020 08:01:27 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Iouri Tarassov <iourit@linux.microsoft.com>
-Cc:     Sasha Levin <sashal@kernel.org>, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com, wei.liu@kernel.org,
-        iourit@microsoft.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH 1/4] drivers: hv: dxgkrnl: core code
-Message-ID: <20200828060127.GA56396@kroah.com>
-References: <20200814123856.3880009-1-sashal@kernel.org>
- <20200814123856.3880009-2-sashal@kernel.org>
- <20200814125528.GA56456@kroah.com>
- <58011269-e910-b3e4-2a3c-552b08c90574@linux.microsoft.com>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 754EEC433CA;
+        Fri, 28 Aug 2020 06:01:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 754EEC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Tony Chuang <yhchuang@realtek.com>
+Cc:     kernel test robot <lkp@intel.com>,
+        Kevin Yang <kevin_yang@realtek.com>,
+        "kbuild-all\@lists.01.org" <kbuild-all@lists.01.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-wireless\@vger.kernel.org" <linux-wireless@vger.kernel.org>
+Subject: Re: drivers/net/wireless/realtek/rtw88/pci.c:1477:5: warning: no previous prototype for 'rtw_pci_probe'
+References: <202007251817.x5EF2Aoc%lkp@intel.com>
+        <87eensbc31.fsf@codeaurora.org>
+        <a3a708a0d8094b7895065d17e5396b82@realtek.com>
+Date:   Fri, 28 Aug 2020 09:01:44 +0300
+In-Reply-To: <a3a708a0d8094b7895065d17e5396b82@realtek.com> (Tony Chuang's
+        message of "Fri, 28 Aug 2020 02:25:46 +0000")
+Message-ID: <87pn7b9ulz.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <58011269-e910-b3e4-2a3c-552b08c90574@linux.microsoft.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 04:29:59PM -0700, Iouri Tarassov wrote:
-> On 8/14/2020 5:55 AM, Greg KH wrote:
-> > On Fri, Aug 14, 2020 at 08:38:53AM -0400, Sasha Levin wrote:
-> > > Add support for a Hyper-V based vGPU implementation that exposes the
-> > > DirectX API to Linux userspace.
-> > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > 
-> > Better, but what is this mess:
-> > 
-> > > +#define ISERROR(ret)					(ret < 0)
-> 
-> The VM bus messages return the NTSTATUS error code from the host. NTSTATUS
-> is integer and the positive values indicate success.
-> The success error code needs to be returned by IOCTLs to the DxCore
-> applications. The ISERROR() macro is used in places where the NTSTATUS
-> success code could be returned from a function. "if (ret)" cannot be used. I
-> will add a comment to the macro in the next patch.
+Tony Chuang <yhchuang@realtek.com> writes:
 
-No, please just "open code" this, there is no need for a macro that is
-actually more characters than the original test.
+>> + linux-wireless
+>> 
+>> kernel test robot <lkp@intel.com> writes:
+>> 
+>> > Hi Zong-Zhe,
+>> >
+>> > FYI, the error/warning still remains.
+>> >
+>> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+>> master
+>> > head:   23ee3e4e5bd27bdbc0f1785eef7209ce872794c7
+>> > commit: 72f256c2b948622cc45ff8bc0456dd6039d8fe36 rtw88: extract:
+>> > export symbols about pci interface
+>> > date:   10 weeks ago
+>> > config: arc-randconfig-r026-20200725 (attached as .config)
+>> > compiler: arc-elf-gcc (GCC) 9.3.0
+>> > reproduce (this is a W=1 build):
+>> >         wget
+>> > https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross
+>> > -O ~/bin/make.cross
+>> >         chmod +x ~/bin/make.cross
+>> >         git checkout 72f256c2b948622cc45ff8bc0456dd6039d8fe36
+>> >         # save the attached .config to linux build tree
+>> >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0
+>> make.cross ARCH=arc
+>> >
+>> > If you fix the issue, kindly add following tag as appropriate
+>> > Reported-by: kernel test robot <lkp@intel.com>
+>> >
+>> > All warnings (new ones prefixed by >>):
+>> >
+>> >>> drivers/net/wireless/realtek/rtw88/pci.c:1477:5: warning: no
+>> >>> previous prototype for 'rtw_pci_probe' [-Wmissing-prototypes]
+>> >     1477 | int rtw_pci_probe(struct pci_dev *pdev,
+>> >          |     ^~~~~~~~~~~~~
+>> >>> drivers/net/wireless/realtek/rtw88/pci.c:1557:6: warning: no
+>> >>> previous prototype for 'rtw_pci_remove' [-Wmissing-prototypes]
+>> >     1557 | void rtw_pci_remove(struct pci_dev *pdev)
+>> >          |      ^~~~~~~~~~~~~~
+>> >>> drivers/net/wireless/realtek/rtw88/pci.c:1579:6: warning: no
+>> >>> previous prototype for 'rtw_pci_shutdown' [-Wmissing-prototypes]
+>> >     1579 | void rtw_pci_shutdown(struct pci_dev *pdev)
+>> >          |      ^~~~~~~~~~~~~~~~
+>> 
+>> Tony, these are older warnings but please also check these.
+>> 
+>
+> I think this warning can be ignored, as the commit was going to export
+> pci symbols for the follow-up patches to use, such as:
+>
+> f56f08636dda rtw88: extract: make 8723d an individual kernel module
+> 416e87fcc780 rtw88: extract: make 8822b an individual kernel module
+> ba0fbe236fb8 rtw88: extract: make 8822c an individual kernel module
+>
+> And these patches were submitted and applied together.
 
-> > > +#define DXGKDEBUG 1
-> > > +/* #define USEPRINTK 1 */
-> > > +
-> > > +#ifndef DXGKDEBUG
-> > > +#define TRACE_DEBUG(...)
-> > > +#define TRACE_DEFINE(...)
-> > > +#define TRACE_FUNC_ENTER(...)
-> > > +#define TRACE_FUNC_EXIT(...)
-> > 
-> > No, please do not to custom "trace" printk messages, that is what ftrace
-> > is for, no individual driver should ever need to do that.
-> > 
-> > Just use the normal dev_*() calls for error messages and the like, do
-> > not try to come up with a custom tracing framework for one tiny
-> > individual driver.  If every driver in kernel did that, we would have a
-> > nightmare...
-> I understand the concern. This will be fixed later when we learn and pick
-> the final tracing technology for the driver.
+Good, thanks for checking.
 
-When is "later"?  We don't want to review something that you do not
-think is ready to be merged, do it now so we don't trip over things that
-you know you want to fix up.
-
-> The current implementation
-> allows the hardware vendors to quickly identify issues without learning
-> about ftrace. They just need to enable the WSL debug console and mount
-> debugfs.
-
-Hardware vendors who know Linux already know about ftrace, don't make
-people have to read up and learn about custom ways to debug
-just-your-tiny-individual-driver.  Instead follow the customs and ways
-the _WHOLE_ kernel works, that is just polite, don't you think?
-
-thanks,
-
-greg k-h
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
