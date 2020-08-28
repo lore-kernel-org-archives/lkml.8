@@ -2,152 +2,67 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFCDC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 476FEC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4F8720825
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19FEB20825
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 19:58:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598644720;
+	bh=pLb6YgNF7r3bbleGDfeo95EUv/ZD6PP1am1Rc1qaHEw=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=rcUz3o75nl9wArYystZFTMtokE3GcPLp/vFLUVG+mrN9PHmLTuRlWck6U51j7QTBj
+	 w9vcQgPBO1E0+BG6FGUCmcOIcC4IxIpfbXDup8f/JMlIdmPuLvmPGXvkQBVDjG8YII
+	 pqGVECL7BV8FxgdNPEVGcP+yiJQ/Nk6pWbMzocqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgH1T6d (ORCPT
+        id S1726236AbgH1T6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 15:58:33 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:39759 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726338AbgH1T6W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 15:58:22 -0400
-Received: from [78.134.86.56] (port=54992 helo=melee.dev.aim)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1kBkVw-0008I1-Qo; Fri, 28 Aug 2020 21:58:20 +0200
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     linux-fpga@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Moritz Fischer <mdf@kernel.org>, Tom Rix <trix@redhat.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anatolij Gustschin <agust@denx.de>
-Subject: [PATCH v3 4/5] fpga manager: xilinx-spi: add error checking after gpiod_get_value()
-Date:   Fri, 28 Aug 2020 21:58:07 +0200
-Message-Id: <20200828195808.27975-4-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200828195808.27975-1-luca@lucaceresoli.net>
-References: <20200828195808.27975-1-luca@lucaceresoli.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+        Fri, 28 Aug 2020 15:58:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726828AbgH1T61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 15:58:27 -0400
+Subject: Re: [GIT PULL] Ceph fixes for 5.9-rc3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598644706;
+        bh=pLb6YgNF7r3bbleGDfeo95EUv/ZD6PP1am1Rc1qaHEw=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=WNvieWsCHkjhFMxOAq++arN8DhylzssYhW26Fj96bVvW26MLd245Oz5UK02GI6/3Q
+         zKRoP9cnjWUoT7IjZFzj235T+B1sZ6DavFmGS76K3wgwL2X90vI+xq4+dcfKSWTKgP
+         DjY9dGLd6gE69OGLrJDNvuhRHNsi5wTDDTKZxETo=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200828122000.1422-1-idryomov@gmail.com>
+References: <20200828122000.1422-1-idryomov@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200828122000.1422-1-idryomov@gmail.com>
+X-PR-Tracked-Remote: https://github.com/ceph/ceph-client.git tags/ceph-for-5.9-rc3
+X-PR-Tracked-Commit-Id: 496ceaf12432b3d136dcdec48424312e71359ea7
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b0bfd5eca956c498b8f9c7ec4a25f355f793f24e
+Message-Id: <159864470692.31636.7304735457148606684.pr-tracker-bot@kernel.org>
+Date:   Fri, 28 Aug 2020 19:58:26 +0000
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current code calls gpiod_get_value() without error checking. Should the
-GPIO controller fail, execution would continue without any error message.
+The pull request you sent on Fri, 28 Aug 2020 14:20:00 +0200:
 
-Fix by checking for negative error values.
+> https://github.com/ceph/ceph-client.git tags/ceph-for-5.9-rc3
 
-Reported-by: Tom Rix <trix@redhat.com>
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b0bfd5eca956c498b8f9c7ec4a25f355f793f24e
 
----
+Thank you!
 
-Changes in v3:
- - rebase on previous patches
-
-This patch is new in v2
----
- drivers/fpga/xilinx-spi.c | 35 +++++++++++++++++++++++++++--------
- 1 file changed, 27 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
-index a7b919eb0b2a..9488c8fbaefd 100644
---- a/drivers/fpga/xilinx-spi.c
-+++ b/drivers/fpga/xilinx-spi.c
-@@ -27,11 +27,22 @@ struct xilinx_spi_conf {
- 	struct gpio_desc *done;
- };
- 
--static enum fpga_mgr_states xilinx_spi_state(struct fpga_manager *mgr)
-+static int get_done_gpio(struct fpga_manager *mgr)
- {
- 	struct xilinx_spi_conf *conf = mgr->priv;
-+	int ret;
-+
-+	ret = gpiod_get_value(conf->done);
-+
-+	if (ret < 0)
-+		dev_err(&mgr->dev, "Error reading DONE (%d)\n", ret);
- 
--	if (!gpiod_get_value(conf->done))
-+	return ret;
-+}
-+
-+static enum fpga_mgr_states xilinx_spi_state(struct fpga_manager *mgr)
-+{
-+	if (!get_done_gpio(mgr))
- 		return FPGA_MGR_STATE_RESET;
- 
- 	return FPGA_MGR_STATE_UNKNOWN;
-@@ -57,10 +68,21 @@ static int wait_for_init_b(struct fpga_manager *mgr, int value,
- 
- 	if (conf->init_b) {
- 		while (time_before(jiffies, timeout)) {
--			if (gpiod_get_value(conf->init_b) == value)
-+			int ret = gpiod_get_value(conf->init_b);
-+
-+			if (ret == value)
- 				return 0;
-+
-+			if (ret < 0) {
-+				dev_err(&mgr->dev, "Error reading INIT_B (%d)\n", ret);
-+				return ret;
-+			}
-+
- 			usleep_range(100, 400);
- 		}
-+
-+		dev_err(&mgr->dev, "Timeout waiting for INIT_B to %s\n",
-+			value ? "assert" : "deassert");
- 		return -ETIMEDOUT;
- 	}
- 
-@@ -85,7 +107,6 @@ static int xilinx_spi_write_init(struct fpga_manager *mgr,
- 
- 	err = wait_for_init_b(mgr, 1, 1); /* min is 500 ns */
- 	if (err) {
--		dev_err(&mgr->dev, "INIT_B pin did not go low\n");
- 		gpiod_set_value(conf->prog_b, 0);
- 		return err;
- 	}
-@@ -93,12 +114,10 @@ static int xilinx_spi_write_init(struct fpga_manager *mgr,
- 	gpiod_set_value(conf->prog_b, 0);
- 
- 	err = wait_for_init_b(mgr, 0, 0);
--	if (err) {
--		dev_err(&mgr->dev, "INIT_B pin did not go high\n");
-+	if (err)
- 		return err;
--	}
- 
--	if (gpiod_get_value(conf->done)) {
-+	if (get_done_gpio(mgr)) {
- 		dev_err(&mgr->dev, "Unexpected DONE pin state...\n");
- 		return -EIO;
- 	}
 -- 
-2.28.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
