@@ -2,238 +2,224 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC6DC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F26C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F73B2078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 107722078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:27:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nA+oGgFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgH1O0t (ORCPT
+        id S1727040AbgH1O1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:26:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:50630 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbgH1O0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:26:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B216A1FB;
-        Fri, 28 Aug 2020 07:26:47 -0700 (PDT)
-Received: from [192.168.1.190] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8210B3F71F;
-        Fri, 28 Aug 2020 07:26:46 -0700 (PDT)
-Subject: Re: [PATCH 1/4] kselftests/arm64: add a basic Pointer Authentication
- test
-To:     Boyan Karatotev <boyan.karatotev@arm.com>,
+        Fri, 28 Aug 2020 10:27:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55420 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbgH1O0y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 10:26:54 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB5B2C061264;
+        Fri, 28 Aug 2020 07:26:53 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id z18so570007pjr.2;
+        Fri, 28 Aug 2020 07:26:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Njx4yGGdSjtlv4/kUFdctE8YgPuI0pFS31rZi946uIQ=;
+        b=nA+oGgFEUKP7HuALh5OPPl9Z0m9rOwmP1CZHygF6jpe9k/E76nEAwYWVneVkXFBvL2
+         zx2vSaknMZ7Wrhidd/xVhRCoMxQhkYvxCqbV0gbMQxG7CXO2U/DxOYfW9QbTNVJs0tsf
+         RU0vmGrag5gZdm3XB21qMfD+hRUImzpvbw6uTb88awkUFlSIHPlfL+sn2292SJuy1U9o
+         jTsC78H/YD1ZUjRzbH8uKdFcZzlfTsI2fb6dXI4L86vJ7zjB/j8Us/X/6ZsQJMOg81JH
+         o5XoUandHSC+4TB2Lnownu3zMIWqTb9QaVWjTn77z4Pl1xBlHKnyQsKXOsY3EsKhF5aZ
+         Ez6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Njx4yGGdSjtlv4/kUFdctE8YgPuI0pFS31rZi946uIQ=;
+        b=nZy3wYjgZ+4Jogp3qF0RVXO9QdIP8jdJTkMIXEGj6HcNydA8t028sxCkXYoVC3GN1Q
+         XEuZpKA89Fqd1Dwtc3Sj908u4QHz7t9mCh017EwzpI/VkihZsELElvmLaeWb80G47eeq
+         e6MgBsYXV7J8TQDZMRF44UXDPYEtxYWq6ikrtXURZJislj3waYa9ALSOMhEe5r+lzaON
+         fvB7SgCigXywLRcYGO0M2xbeTinhTDjn1D69b2eG9Pney45zDeVaqbhplDO9lpTb7P/8
+         gBCbxVbQHdZZZQ5nJsI9sKeH3xgMYROFsOlmkFJ5WOH2uTJAhc84HgFhKCwjDFXO1KI9
+         PYUg==
+X-Gm-Message-State: AOAM531mq7KjmEQvZJTLP21E5RAl7T71kwh5TwuSim4kvwgzTge7q/eT
+        NJOvdGERyxxe1zIF3yvoDt/cEx+8CT0=
+X-Google-Smtp-Source: ABdhPJxoosLROmWIIrrYR/FJQR390fu7JN0qXevCw6ceRYDRQ2GyCKRF3czbcTsGLkPuMfS0dExw9w==
+X-Received: by 2002:a17:90b:4ad1:: with SMTP id mh17mr1475021pjb.54.1598624811264;
+        Fri, 28 Aug 2020 07:26:51 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w82sm1938404pfc.183.2020.08.28.07.26.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Aug 2020 07:26:50 -0700 (PDT)
+Subject: Re: [PATCH v1 1/1] driver: watchdog: Add mtk_wdt_init for mediatek
+ watchdog hw init
+To:     Freddy Hsin <freddy.hsin@mediatek.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     amit.kachhap@arm.com, boian4o1@gmail.com,
-        Shuah Khan <shuah@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-References: <20200828131606.7946-1-boyan.karatotev@arm.com>
- <20200828131606.7946-2-boyan.karatotev@arm.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <9a975ad4-802a-2f94-0555-94a03dac1343@arm.com>
-Date:   Fri, 28 Aug 2020 15:28:56 +0100
+        linux-mediatek@lists.infradead.org
+Cc:     wsd_upstream@mediatek.com, chang-an.chen@mediatek.com,
+        kuohong.wang@mediatek.com, chun-hung.wu@mediatek.com
+References: <1598600968-28498-1-git-send-email-freddy.hsin@mediatek.com>
+ <1598600968-28498-2-git-send-email-freddy.hsin@mediatek.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <a63e9613-d448-d784-0c60-0fd8d1b9b937@roeck-us.net>
+Date:   Fri, 28 Aug 2020 07:26:48 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200828131606.7946-2-boyan.karatotev@arm.com>
+In-Reply-To: <1598600968-28498-2-git-send-email-freddy.hsin@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/28/20 2:16 PM, Boyan Karatotev wrote:
-> PAuth signs and verifies return addresses on the stack. It does so by
-> inserting a Pointer Authentication code (PAC) into some of the unused top
-> bits of an address. This is achieved by adding paciasp/autiasp instructions
-> at the beginning and end of a function.
+On 8/28/20 12:49 AM, Freddy Hsin wrote:
+> 1. add a hw initialization function
+> 2. enable/disable the watchdog depends on the original hw setting
+> 3. set WDOD_HW_RUNNING in start function in order to start
+>    kicker after driver probe and clear the bit in stop function
 > 
-> This feature is partially backwards compatible with earlier versions of the
-> ARM architecture. To coerce the compiler into emitting fully backwards
-> compatible code the main file is compiled to target an earlier ARM version.
-> This allows the tests to check for the feature and print meaningful error
-> messages instead of crashing.
-> 
-> Add a test to verify that corrupting the return address results in a
-> SIGSEGV on return.
-> 
+> Change-Id: I25aa797f3b88288f26984455e499e599e27f09fa
+> Signed-off-by: Freddy Hsin <freddy.hsin@mediatek.com>
 
-Reviewed-by: Vincenzo Frascino <Vincenzo.Frascino@arm.com>
+The subject is misleading - what this really does it to honor
+that/if a watchdog is already running. However, WDOG_HW_RUNNING
+should not generally be set/cleared in the start/stop function.
+Also, calling mtk_wdt_stop is pointless if WDT_MODE_EN is not set,
+since clearing WDT_MODE_EN is all it does. On top of that,
+setting WDOG_HW_RUNNING in the probe function requires that
+max_hw_heartbeat_ms is set (instead of max_timeout).
 
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Signed-off-by: Boyan Karatotev <boyan.karatotev@arm.com>
+So if you really want to honor that the watchdog is already running
+at boot, you would have to initialize max_hw_heartbeat_ms, set
+WDOG_HW_RUNNING explicitly, and possibly call the ping function
+before changing the timeout.
+
+Thanks,
+Guenter
+
 > ---
->  tools/testing/selftests/arm64/Makefile        |  2 +-
->  .../testing/selftests/arm64/pauth/.gitignore  |  1 +
->  tools/testing/selftests/arm64/pauth/Makefile  | 22 ++++++++++++
->  tools/testing/selftests/arm64/pauth/helper.h  | 10 ++++++
->  tools/testing/selftests/arm64/pauth/pac.c     | 32 +++++++++++++++++
->  .../selftests/arm64/pauth/pac_corruptor.S     | 36 +++++++++++++++++++
->  6 files changed, 102 insertions(+), 1 deletion(-)
->  create mode 100644 tools/testing/selftests/arm64/pauth/.gitignore
->  create mode 100644 tools/testing/selftests/arm64/pauth/Makefile
->  create mode 100644 tools/testing/selftests/arm64/pauth/helper.h
->  create mode 100644 tools/testing/selftests/arm64/pauth/pac.c
->  create mode 100644 tools/testing/selftests/arm64/pauth/pac_corruptor.S
+>  drivers/watchdog/mtk_wdt.c |   22 +++++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/testing/selftests/arm64/Makefile b/tools/testing/selftests/arm64/Makefile
-> index 93b567d23c8b..525506fd97b9 100644
-> --- a/tools/testing/selftests/arm64/Makefile
-> +++ b/tools/testing/selftests/arm64/Makefile
-> @@ -4,7 +4,7 @@
->  ARCH ?= $(shell uname -m 2>/dev/null || echo not)
+> diff --git a/drivers/watchdog/mtk_wdt.c b/drivers/watchdog/mtk_wdt.c
+> index d6a6393..59b5061 100644
+> --- a/drivers/watchdog/mtk_wdt.c
+> +++ b/drivers/watchdog/mtk_wdt.c
+> @@ -57,6 +57,9 @@
+>  static bool nowayout = WATCHDOG_NOWAYOUT;
+>  static unsigned int timeout;
 >  
->  ifneq (,$(filter $(ARCH),aarch64 arm64))
-> -ARM64_SUBTARGETS ?= tags signal
-> +ARM64_SUBTARGETS ?= tags signal pauth
->  else
->  ARM64_SUBTARGETS :=
->  endif
-> diff --git a/tools/testing/selftests/arm64/pauth/.gitignore b/tools/testing/selftests/arm64/pauth/.gitignore
-> new file mode 100644
-> index 000000000000..b557c916720a
-> --- /dev/null
-> +++ b/tools/testing/selftests/arm64/pauth/.gitignore
-> @@ -0,0 +1 @@
-> +pac
-> diff --git a/tools/testing/selftests/arm64/pauth/Makefile b/tools/testing/selftests/arm64/pauth/Makefile
-> new file mode 100644
-> index 000000000000..785c775e5e41
-> --- /dev/null
-> +++ b/tools/testing/selftests/arm64/pauth/Makefile
-> @@ -0,0 +1,22 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (C) 2020 ARM Limited
+> +static int mtk_wdt_start(struct watchdog_device *wdt_dev);
+> +static int mtk_wdt_stop(struct watchdog_device *wdt_dev);
 > +
-> +CFLAGS += -mbranch-protection=pac-ret
-> +
-> +TEST_GEN_PROGS := pac
-> +TEST_GEN_FILES := pac_corruptor.o
-> +
-> +include ../../lib.mk
-> +
-> +# pac* and aut* instructions are not available on architectures berfore
-> +# ARMv8.3. Therefore target ARMv8.3 wherever they are used directly
-> +$(OUTPUT)/pac_corruptor.o: pac_corruptor.S
-> +	$(CC) -c $^ -o $@ $(CFLAGS) -march=armv8.3-a
-> +
-> +# when -mbranch-protection is enabled and the target architecture is ARMv8.3 or
-> +# greater, gcc emits pac* instructions which are not in HINT NOP space,
-> +# preventing the tests from occurring at all. Compile for ARMv8.2 so tests can
-> +# run on earlier targets and print a meaningful error messages
-> +$(OUTPUT)/pac: pac.c $(OUTPUT)/pac_corruptor.o
-> +	$(CC) $^ -o $@ $(CFLAGS) -march=armv8.2-a
-> +
-> diff --git a/tools/testing/selftests/arm64/pauth/helper.h b/tools/testing/selftests/arm64/pauth/helper.h
-> new file mode 100644
-> index 000000000000..f777f88acf0a
-> --- /dev/null
-> +++ b/tools/testing/selftests/arm64/pauth/helper.h
-> @@ -0,0 +1,10 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* Copyright (C) 2020 ARM Limited */
-> +
-> +#ifndef _HELPER_H_
-> +#define _HELPER_H_
-> +
-> +void pac_corruptor(void);
-> +
-> +#endif
-> +
-> diff --git a/tools/testing/selftests/arm64/pauth/pac.c b/tools/testing/selftests/arm64/pauth/pac.c
-> new file mode 100644
-> index 000000000000..ed445050f621
-> --- /dev/null
-> +++ b/tools/testing/selftests/arm64/pauth/pac.c
-> @@ -0,0 +1,32 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2020 ARM Limited
-> +
-> +#include <sys/auxv.h>
-> +#include <signal.h>
-> +
-> +#include "../../kselftest_harness.h"
-> +#include "helper.h"
-> +
-> +/*
-> + * Tests are ARMv8.3 compliant. They make no provisions for features present in
-> + * future version of the arm architecture
-> + */
-> +
-> +#define ASSERT_PAUTH_ENABLED() \
-> +do { \
-> +	unsigned long hwcaps = getauxval(AT_HWCAP); \
-> +	/* data key instructions are not in NOP space. This prevents a SIGILL */ \
-> +	ASSERT_NE(0, hwcaps & HWCAP_PACA) TH_LOG("PAUTH not enabled"); \
-> +} while (0)
-> +
-> +
-> +/* check that a corrupted PAC results in SIGSEGV */
-> +TEST_SIGNAL(corrupt_pac, SIGSEGV)
+>  struct mtk_wdt_dev {
+>  	struct watchdog_device wdt_dev;
+>  	void __iomem *wdt_base;
+> @@ -148,6 +151,19 @@ static int toprgu_register_reset_controller(struct platform_device *pdev,
+>  	return ret;
+>  }
+>  
+> +static int mtk_wdt_init(struct watchdog_device *wdt_dev)
 > +{
-> +	ASSERT_PAUTH_ENABLED();
+> +	struct mtk_wdt_dev *mtk_wdt = watchdog_get_drvdata(wdt_dev);
+> +	void __iomem *wdt_base;
 > +
-> +	pac_corruptor();
+> +	wdt_base = mtk_wdt->wdt_base;
+> +
+> +	if (readl(wdt_base + WDT_MODE) & WDT_MODE_EN)
+> +		mtk_wdt_start(wdt_dev);
+> +	else
+> +		mtk_wdt_stop(wdt_dev);
 > +}
 > +
-> +TEST_HARNESS_MAIN
+>  static int mtk_wdt_restart(struct watchdog_device *wdt_dev,
+>  			   unsigned long action, void *data)
+>  {
+> @@ -206,6 +222,8 @@ static int mtk_wdt_stop(struct watchdog_device *wdt_dev)
+>  	reg |= WDT_MODE_KEY;
+>  	iowrite32(reg, wdt_base + WDT_MODE);
+>  
+> +	clear_bit(WDOG_HW_RUNNING, &wdt_dev->status);
 > +
-> diff --git a/tools/testing/selftests/arm64/pauth/pac_corruptor.S b/tools/testing/selftests/arm64/pauth/pac_corruptor.S
-> new file mode 100644
-> index 000000000000..6a34ec23a034
-> --- /dev/null
-> +++ b/tools/testing/selftests/arm64/pauth/pac_corruptor.S
-> @@ -0,0 +1,36 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* Copyright (C) 2020 ARM Limited */
+>  	return 0;
+>  }
+>  
+> @@ -225,6 +243,8 @@ static int mtk_wdt_start(struct watchdog_device *wdt_dev)
+>  	reg |= (WDT_MODE_EN | WDT_MODE_KEY);
+>  	iowrite32(reg, wdt_base + WDT_MODE);
+>  
+> +	set_bit(WDOG_HW_RUNNING, &wdt_dev->status);
 > +
-> +.global pac_corruptor
-> +
-> +.text
-> +/*
-> + * Corrupting a single bit of the PAC ensures the authentication will fail.  It
-> + * also guarantees no possible collision. TCR_EL1.TBI0 is set by default so no
-> + * top byte PAC is tested
-> + */
-> + pac_corruptor:
-> +	paciasp
-> +
-> +	/* make stack frame */
-> +	sub sp, sp, #16
-> +	stp x29, lr, [sp]
-> +	mov x29, sp
-> +
-> +	/* prepare mask for bit to be corrupted (bit 54) */
-> +	mov x1, xzr
-> +	add x1, x1, #1
-> +	lsl x1, x1, #54
-> +
-> +	/* get saved lr, corrupt selected bit, put it back */
-> +	ldr x0, [sp, #8]
-> +	eor x0, x0, x1
-> +	str x0, [sp, #8]
-> +
-> +	/* remove stack frame */
-> +	ldp x29, lr, [sp]
-> +	add sp, sp, #16
-> +
-> +	autiasp
-> +	ret
-> +
+>  	return 0;
+>  }
+>  
+> @@ -274,7 +294,7 @@ static int mtk_wdt_probe(struct platform_device *pdev)
+>  
+>  	watchdog_set_drvdata(&mtk_wdt->wdt_dev, mtk_wdt);
+>  
+> -	mtk_wdt_stop(&mtk_wdt->wdt_dev);
+> +	mtk_wdt_init(&mtk_wdt->wdt_dev);
+>  
+>  	watchdog_stop_on_reboot(&mtk_wdt->wdt_dev);
+>  	err = devm_watchdog_register_device(dev, &mtk_wdt->wdt_dev);
 > 
 
--- 
-Regards,
-Vincenzo
