@@ -2,71 +2,132 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B43DC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 02:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5529FC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 02:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3A120786
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 02:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2A320786
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 02:20:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J8v9qS61"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgH1CUE (ORCPT
+        id S1728367AbgH1CUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 22:20:04 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:57288 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727124AbgH1CUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 27 Aug 2020 22:20:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728270AbgH1CUC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 27 Aug 2020 22:20:02 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1kBTzk-00CDlN-DK; Fri, 28 Aug 2020 04:20:00 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH] of: of_match_node: Make stub an inline function to avoid W=1 warnings
-Date:   Fri, 28 Aug 2020 04:19:39 +0200
-Message-Id: <20200828021939.2912798-1-andrew@lunn.ch>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2B67C061264;
+        Thu, 27 Aug 2020 19:20:02 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id q93so3477609pjq.0;
+        Thu, 27 Aug 2020 19:20:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=WDsU53ggUOIO8hY0xz6zuIn+yi29IL9YgTObODIlPzE=;
+        b=J8v9qS61pcOAelCZNvP7NAULS7YDQPCXpQ7ns6LCgNd4u9gxMwiymUM+Hp9gsN+KBt
+         LGiuQJpGHFrw0e+rImSvccGBIDljpSQ0BqX0EAfLaqqrOSiXKbbJJJ1zFi6Fwdf+X9Yl
+         SzvRy+SbL96o/hmGJMNPCPdXMxYP9Jj0eBvH3rffynSWTF1WTYTJfrf1bzGS82q+Urmi
+         t5GEpGMHlLYBTfTvUKntkayfiM3yaSD8p+IHhmzBZufAjGw1uARPda1DqjKONUv2q0s0
+         ND29NB0wip4mx8Ux/PBu67ytdRoyG1GHuBac4jK666PamRA0wLXWB3n9IaUP++w6chs8
+         pdQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WDsU53ggUOIO8hY0xz6zuIn+yi29IL9YgTObODIlPzE=;
+        b=h8g7TLQB6wLy6EzSyyCb4ueWqIFPKh580dv7ff13kSk1/RJlAfy3I3ZJ59YPxnTZOC
+         AIXMxREOSsSRS3VLZQi8+KgmahQD/8tI8y4ZrR200w+AC9+G+bGu/qixbYhyzpjaOPFq
+         kCkNe+b5e+BzuMgDnbzMn7x8u2AEyBiLQerRXFvgogKhH9uvx4u0gdP9VQjfoKMtR0aJ
+         iIZn/ItZwmF4ICJ305Wf3N1ZTPMqZQWtfUzQGFRnqfekHqVzuQySmnC5+Q3r0yx66y+J
+         CCdfZnHPF0m1gHNLX28irwJUFi9lRb7UeKW6lJQ6YQvfT0m/5w3pN/nAZU8mWd2yxQFy
+         DfTQ==
+X-Gm-Message-State: AOAM530kYkNe016bkbgPYnDs3ftKu9c05ab0NlBHHrtGANE6ehYxWsjQ
+        Z8/9ipRjlKODEOcfnxLEpVA=
+X-Google-Smtp-Source: ABdhPJzJoEc7mvAiqaNUpfYyibeySDd/byEvyhehC3HM8+KaaE5kxRq+kCIRWXgI33S2mbM01jRr3g==
+X-Received: by 2002:a17:90a:ead1:: with SMTP id ev17mr455763pjb.147.1598581202186;
+        Thu, 27 Aug 2020 19:20:02 -0700 (PDT)
+Received: from localhost.localdomain ([2401:e180:8861:9155:4578:9e9b:6ebc:aff1])
+        by smtp.gmail.com with ESMTPSA id g17sm3388553pjl.37.2020.08.27.19.19.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Aug 2020 19:20:01 -0700 (PDT)
+From:   Johnny Chuang <johnny.chuang.emc@gmail.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Peter Hutterer <peter.hutterer@who-t.net>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        Harry Cutts <hcutts@chromium.org>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>
+Cc:     James Chen <james.chen@emc.com.tw>,
+        Jennifer Tsai <jennifer.tsai@emc.com.tw>,
+        Paul Liang <paul.liang@emc.com.tw>,
+        Jeff Chuang <jeff.chuang@emc.com.tw>
+Subject: [PATCH v3] Input: elants_i2c - Report resolution of ABS_MT_TOUCH_MAJOR by FW information.
+Date:   Fri, 28 Aug 2020 10:19:55 +0800
+Message-Id: <1598581195-9874-1-git-send-email-johnny.chuang.emc@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building without CONFIG_OF and W=1, errors are given about unused
-arrays of match data, because of_match_node is stubbed as a macro. The
-compile does not see it takes parameters when not astub, so it
-generates warnings about unused variables. Replace the stub with an
-inline function to avoid these false warnings.
+This patch adds a new behavior to report touch major resolution
+based on information provided by firmware.
 
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+In initial process, driver acquires touch information from touch ic.
+It contains one byte about the resolution value of ABS_MT_TOUCH_MAJOR.
+Touch driver will report touch major resolution by this information.
+
+Signed-off-by: Johnny Chuang <johnny.chuang.emc@gmail.com>
 ---
- include/linux/of.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Changes in v2:
+  - register a real resolution value from firmware,
+	instead of hardcoding resolution value as 1 by flag.
+Changes in v3:
+  - modify git log message from flag to real value.
+  - modify driver comment from flag to real value.
+---
+ drivers/input/touchscreen/elants_i2c.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 5cf7ae0465d1..e9838387e7d9 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -991,7 +991,12 @@ static inline int of_map_id(struct device_node *np, u32 id,
- }
+diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+index b0bd5bb..661a3ee 100644
+--- a/drivers/input/touchscreen/elants_i2c.c
++++ b/drivers/input/touchscreen/elants_i2c.c
+@@ -151,6 +151,7 @@ struct elants_data {
  
- #define of_match_ptr(_ptr)	NULL
--#define of_match_node(_matches, _node)	NULL
+ 	bool wake_irq_enabled;
+ 	bool keep_power_in_suspend;
++	u8 report_major_resolution;
+ 
+ 	/* Must be last to be used for DMA operations */
+ 	u8 buf[MAX_PACKET_SIZE] ____cacheline_aligned;
+@@ -459,6 +460,9 @@ static int elants_i2c_query_ts_info(struct elants_data *ts)
+ 	rows = resp[2] + resp[6] + resp[10];
+ 	cols = resp[3] + resp[7] + resp[11];
+ 
++	/* get report resolution value of ABS_MT_TOUCH_MAJOR */
++	ts->report_major_resolution = resp[16];
 +
-+static inline const struct of_device_id *of_match_node(
-+	const struct of_device_id *matches, const struct device_node *node)
-+{
-+	return NULL;
-+}
- #endif /* CONFIG_OF */
+ 	/* Process mm_to_pixel information */
+ 	error = elants_i2c_execute_command(client,
+ 					   get_osr_cmd, sizeof(get_osr_cmd),
+@@ -1325,6 +1329,8 @@ static int elants_i2c_probe(struct i2c_client *client,
+ 			     0, MT_TOOL_PALM, 0, 0);
+ 	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
+ 	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
++	if (ts->report_major_resolution > 0)
++		input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR, ts->report_major_resolution);
  
- /* Default string compare functions, Allow arch asm/prom.h to override */
+ 	touchscreen_parse_properties(ts->input, true, &ts->prop);
+ 
 -- 
-2.28.0
+2.7.4
 
