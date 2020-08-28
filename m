@@ -2,103 +2,124 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13ABBC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF93C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D46E22075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983352075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:07:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgH1PGa (ORCPT
+        id S1727997AbgH1PHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 11:06:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgH1PGZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 11:06:25 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D85E5C061264;
-        Fri, 28 Aug 2020 08:06:24 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 3ED9E297C3E
-Received: by earth.universe (Postfix, from userid 1000)
-        id 725F23C0C82; Fri, 28 Aug 2020 17:06:21 +0200 (CEST)
-Date:   Fri, 28 Aug 2020 17:06:21 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-Subject: Re: [PATCHv1 0/2] power: supply: smb347-charger: Cleanups
-Message-ID: <20200828150621.3jnljnmv6vfcjxxa@earth.universe>
-References: <20200826144159.353837-1-sebastian.reichel@collabora.com>
- <4d02de0e-7345-a937-7fce-66f4438a8144@gmail.com>
+        Fri, 28 Aug 2020 11:07:43 -0400
+Received: from mga05.intel.com ([192.55.52.43]:57782 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726141AbgH1PHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 11:07:42 -0400
+IronPort-SDR: UDMcF1IBjSbeVvBlcSTVrP0XEhstyDZgsrRnJxbv68wp9UEYViKAH+Fi+PKi+zRd17AneCZWEO
+ lSmgM+bvW2iQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="241493878"
+X-IronPort-AV: E=Sophos;i="5.76,364,1592895600"; 
+   d="scan'208";a="241493878"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 08:07:41 -0700
+IronPort-SDR: 3221SinK08aDM3DBF4iZ1zeOb2Dw1HuzNYvFcqfiP5278XKel9wUEhTOKsl79dqCj69wLyapBb
+ TRFE+iC8pR/w==
+X-IronPort-AV: E=Sophos;i="5.76,364,1592895600"; 
+   d="scan'208";a="300263904"
+Received: from lilymao-mobl.amr.corp.intel.com (HELO [10.209.185.175]) ([10.209.185.175])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 08:07:39 -0700
+Subject: Re: [PATCH 07/11] soundwire: intel: Only call sdw stream APIs for the
+ first cpu_dai
+To:     Vinod Koul <vkoul@kernel.org>, "Liao, Bard" <bard.liao@intel.com>
+Cc:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "tiwai@suse.de" <tiwai@suse.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ranjani.sridharan@linux.intel.com" 
+        <ranjani.sridharan@linux.intel.com>,
+        "hui.wang@canonical.com" <hui.wang@canonical.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>,
+        "jank@cadence.com" <jank@cadence.com>,
+        "Lin, Mengdong" <mengdong.lin@intel.com>,
+        "Kale, Sanyog R" <sanyog.r.kale@intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        "rander.wang@linux.intel.com" <rander.wang@linux.intel.com>
+References: <20200818024120.20721-1-yung-chuan.liao@linux.intel.com>
+ <20200818024120.20721-8-yung-chuan.liao@linux.intel.com>
+ <20200826094636.GB2639@vkoul-mobl>
+ <DM6PR11MB407494AEF6D05EFF627CFAFBFF520@DM6PR11MB4074.namprd11.prod.outlook.com>
+ <20200828074544.GM2639@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <9eac0f85-1b0f-d2c2-6d1b-15b77707c9b7@linux.intel.com>
+Date:   Fri, 28 Aug 2020 10:07:38 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="thufmqsn3dey2koy"
-Content-Disposition: inline
-In-Reply-To: <4d02de0e-7345-a937-7fce-66f4438a8144@gmail.com>
+In-Reply-To: <20200828074544.GM2639@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---thufmqsn3dey2koy
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On 8/28/20 2:45 AM, Vinod Koul wrote:
+> On 28-08-20, 01:47, Liao, Bard wrote:
+>>> snd_pcm_substream *substream,
+>>>>   			goto err;
+>>>>   	}
+>>>>
+>>>> -	ret = sdw_prepare_stream(dma->stream);
+>>>> +	/*
+>>>> +	 * All cpu dais belong to a stream. To ensure sdw_prepare_stream
+>>>> +	 * is called once per stream, we should call it only when
+>>>> +	 * dai = first_cpu_dai.
+>>>> +	 */
+>>>> +	if (first_cpu_dai == dai)
+>>>> +		ret = sdw_prepare_stream(dma->stream);
+>>>
+>>> Hmmm why not use the one place which is unique in the card to call this,
+>>> hint machine dais are only called once.
+>>
+>> Yes, we can call it in machine driver. But, shouldn't it belong to platform
+>> level? The point is that if we move the stuff to machine driver, it will
+>> force people to implement these stuff on their own Intel machine driver.
+> 
+> nothing stops anyone from doing that right! machine driver is another
+> component so it can be moved there as well
 
-On Fri, Aug 28, 2020 at 10:47:21AM +0300, Dmitry Osipenko wrote:
-> 26.08.2020 17:41, Sebastian Reichel =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > Please check the following cleanup patches for smb347 driver
-> > do not break functionality on your Nexus 7.
-> >=20
-> > -- Sebastian
-> >=20
-> > Sebastian Reichel (2):
-> >   power: supply: smb347-charger: Drop pdata support
-> >   power: supply: smb347-charger: Use generic property framework
-> >=20
-> >  drivers/power/supply/smb347-charger.c | 305 ++++++++++++++------------
-> >  include/linux/power/smb347-charger.h  | 114 ----------
-> >  2 files changed, 167 insertions(+), 252 deletions(-)
-> >  delete mode 100644 include/linux/power/smb347-charger.h
-> >=20
->=20
-> Thank you very much, very nice cleanup! I checked that the DT properties
-> are applied correctly and everything works properly on Nexus 7 after
-> applying this series just like it worked before, no problems spotted,
-> charger does its job and battery is charging up fine!
+What Bard is saying is that there is nothing board-specific here. This 
+is platform-driver code that is independent of the actual machine 
+configuration.
 
-Thanks for reviewing and testing them. I merged both patches.
+Machine drivers can be board-specific, so we would have to add the code 
+for prepare/deprepare/trigger to every machine driver.
 
--- Sebastian
+Today it's true that we worked to have a single machine driver for all 
+SoundWire-based devices, so the change is a 1:1 move, but we can't 
+guarantee that this would be the case moving forward. In fact, we *know* 
+we will need a different machine driver when we parse platform firmware 
+to create the card for SDCA support. So in the end there would be 
+duplication of code.
 
---thufmqsn3dey2koy
-Content-Type: application/pgp-signature; name="signature.asc"
+See the code we worked on at 
+https://github.com/thesofproject/linux/commit/7322e1d25ce2ec9bb78c6e861919f61e0be7cc0b.patch
 
------BEGIN PGP SIGNATURE-----
+it'd really a bit silly to have this generic code in the machine driver.
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9JHWQACgkQ2O7X88g7
-+prfpQ/+IRDWBY6Q3aUAFu8tNkU3d7poLNMq2wGkXrfcwGBb0PG0ynUUK146V7Q9
-n32wbxTV3tuTWU6PRXNtZXymTYZmcKyRIQvd79qCOKX44JfuhVy4j+Bqey01BtcG
-VBXfWqGMgSvCZpB4BeqeqOodenzlc4Vy8TGMY5qmFeyk9lXjZ3HdHZmpGGGzWN1Y
-OuBXnE9Ez7TQJjVJXhyvSsTzcKGzHxUwkEPi43vQrtsHipDligFHV/8Y9lRFgpzp
-wwSQHMxy8DHZq2FVQhqYSzPKW23ajhMR31T9CG6aopPBhG9U9ok7elmQfzRkytHb
-VJLHTii8hYuIy3+4avjaFBoCqRte1r1K9ObdJPaP7u/dYHCdS7rH/BRObOo5K9na
-EbAC/fl0llVCPcjwYeIfYJLQ8wh56YmZFRiU51efwfGgvueUfON1LM8S6Il4S4cx
-R/xooNrfo2vqyNT3gbEacoQ2jhWEEeWy9B/UQlAjdnaIj7qbvajfibmTDbUF/LKB
-RuSK/vrYYU+LNKfVCK7etBIHvo51KR0OcQVnyPOvkwYeO5WhSIjDIcVgDQdOLveo
-RRIEBKoL1iFoPuFW/vxD9KqOru5rovLjy1Ms/tmSS/kt3t+NZiy5jm3I4pUcVhBY
-z7+xdOnT7hHNAFoL86bAx+C4Pr3T9TrnMzYGp8E3uIyS99bkWdU=
-=VC3e
------END PGP SIGNATURE-----
+it would be fine to call a set of helpers called from the machine driver 
+dailink, but where would we put these helpers? on the ASoC or SoundWire 
+sides?
 
---thufmqsn3dey2koy--
+
