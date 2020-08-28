@@ -2,165 +2,291 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D3AC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 03:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08310C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 03:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E54620848
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 03:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB7B720848
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 03:28:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gw03Ya3L"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="MKucOnW4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728041AbgH1D0h (ORCPT
+        id S1728173AbgH1D2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 23:26:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37790 "EHLO
+        Thu, 27 Aug 2020 23:28:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgH1D0g (ORCPT
+        with ESMTP id S1728050AbgH1D2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 23:26:36 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F0BEC061264;
-        Thu, 27 Aug 2020 20:26:36 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u128so5100867pfb.6;
-        Thu, 27 Aug 2020 20:26:36 -0700 (PDT)
+        Thu, 27 Aug 2020 23:28:08 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C78A7C06121B
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 20:28:07 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id 1so6670790qki.22
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 20:28:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=iBQhZHSuHwT2I3fZ7mC/MttQdOOhPQb2HUpxN0OEuwE=;
-        b=Gw03Ya3LWIjg/S6j49TxS1k3q1026Pk4BNLPwKO26SSWjE34vMZizuprKVLBay9uzz
-         wwo/8aeJGTNoCjFRBRQ8zRhq03IsFKZ0NyuKmMqXky6p+6pL9yDXOVwtpsnurjtk0rF1
-         6pJXsptIhO013w3iLwhmEO/sFrFVliupbYVeEgvwGi4uFb8Va7qC2tl4egXrrGj5rri1
-         cvzf9XTosoWpIQsQDJIjFKC8tUGED3nFcKpj+x4VqNXn4vBYg5zZDWkCNdMfewIpjHwq
-         exlmDyE+n7zFp00ZNHuaToSJC3u3CDsDQodgGERqq97yvEXsJdUFe0S86QVq9YGjLS9r
-         CqmQ==
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=ORQQrai+waNrrhwhsAme/r1PAJEP7BzReK5WVukrvc4=;
+        b=MKucOnW4E2cMTEWSth1rsh5E44okHVLgOeygOdrXfMUk2pi46PEF0+AN56uDVk/xh/
+         y1EAnkUilPyj5044al8/ccs5/5iDCD7acEQLGxXtH36hJhjVKkHugR/Zx1f6rXmYGnoc
+         vYZVRiuQGFB7FxeKnQACelrP/UMNEFYaBET/vHBmL1KxDEIg3sY4xP74/S96L1bZ5Yv2
+         E8UXtwSKhku72DYppMMKBVoouzvG0m3lESSYvSI46iroKaU2vIMnk/ReX3JPI/eu6V/g
+         WlQ1u3iqXghbepQxIAbAbq2/S1C28UqWX3tDEdfxTa5DcWh2b0x4V5Bat149uEPIe2gJ
+         jy9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=iBQhZHSuHwT2I3fZ7mC/MttQdOOhPQb2HUpxN0OEuwE=;
-        b=B3m/mKs0EQ7zqs/X+z37sHNhzPYFhTF6H9G5NPf1+9MWC3FF32VfkMmIq9DhWpCOMp
-         Rlq75tbSo8NCAxZTAxIxRDoDRuJpgJ9d2nnNxrMoiNLcAAQwBXJkr4y8WqG4+iN+qbtR
-         osBYTLYUfmyyOE1Aq+mS0BFKt51XgXYmDCNZF4QfeLMBQKQJmEwfoRIzEUwO0e8UiCCB
-         gPqVf5zbxa/kn9TyguiqruRMN00Av1nA1Cdr0mf5BUE1PHxs/nRiCnSR11GEVRd41taQ
-         PoGNzcxjfau2J1piVyTiYfwZyZXsTBA0zG94ZoSjFE7WDHJ5Gh6DBToHyk160qsO9yth
-         LNSg==
-X-Gm-Message-State: AOAM530/KC0//qpY4NmYHoEPyZ9QkKy3JB3w5olrODTIxDlVLdTaQCN9
-        VNHcOrXkeCCS+h5JMKTToBc=
-X-Google-Smtp-Source: ABdhPJyIan9x/B9Rk3wk3F8CelTdZ9oXTLM1WR4tobWEXkcK+Ab2CYk+omSEesgRS98XsZ4j+mL2qA==
-X-Received: by 2002:a65:6545:: with SMTP id a5mr17344497pgw.43.1598585195581;
-        Thu, 27 Aug 2020 20:26:35 -0700 (PDT)
-Received: from localhost (61-68-212-105.tpgi.com.au. [61.68.212.105])
-        by smtp.gmail.com with ESMTPSA id b20sm4585699pfp.140.2020.08.27.20.26.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 20:26:34 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 13:26:28 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v3] mm: Fix kthread_use_mm() vs TLB invalidate
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        peterz@infradead.org, linux-arch@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>, axboe@kernel.dk,
-        hch@lst.de, jannh@google.com, keescook@chromium.org,
-        linux-kernel@vger.kernel.org, luto@amacapital.net,
-        mathieu.desnoyers@efficios.com, torvalds@linux-foundation.org,
-        will@kernel.org
-References: <20200721154106.GE10769@hirez.programming.kicks-ass.net>
-        <87y2m8muag.fsf@linux.ibm.com>
-        <20200821130445.GP1362448@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200821130445.GP1362448@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Message-Id: <1598583976.kyraed50wg.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=ORQQrai+waNrrhwhsAme/r1PAJEP7BzReK5WVukrvc4=;
+        b=LwUbU5zTTfdyaKBXJN9LnJzDKQY5nvN3F7HjGCbxK4o9Z3v3f613la2gGMtvNle5FQ
+         h/qIaK43Np6dyATMx3XV5fvIyITxuzGOqn/et0qOgNCb/K5YWJEZjjt16lbgXWSeidcq
+         iJ3w6Gjr1u7HoogtqMggyYSjdzfNVKD+OmZnG+kMf7Qzk6fiHGoJjpJBxnzIiUsqu6In
+         iixd9+vBHiWRi4KAvKVGzR1BkEHGw2nSU90h17lezLd0yLNxjv6C8K/stBUmYx3LvP9L
+         wDsZGLBi3x8kUzrMKAGqsJ3tkq2uVU+KyGX6l/WrttBLmQCRl3RoNd36aoPd7aJwjWO4
+         G0xA==
+X-Gm-Message-State: AOAM530yfkd9lSFnWC3Lfon9+qMcJ5G7c//Aoln38/uzS48TCxGVNmtb
+        e0rcmdyNUqGC+uVbiTe013YioFwut1s=
+X-Google-Smtp-Source: ABdhPJzxycN9WDHCwsMz4KUISb6Vr2Sv9xAC9aAerSx4C4mchcNu3UPZFiX8KYTRKhQkfdgMlfOjbqG/z4Q=
+X-Received: from christoph.c.googlers.com ([fda3:e722:ac3:10:14:4d90:c0a8:1fe1])
+ (user=agoode job=sendgmr) by 2002:ad4:4bc5:: with SMTP id l5mr21386132qvw.95.1598585286457;
+ Thu, 27 Aug 2020 20:28:06 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 23:27:52 -0400
+Message-Id: <20200828032752.3229698-1-agoode@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
+Subject: [PATCH v2] media: uvcvideo: Convey full colorspace information to V4L2
+From:   Adam Goode <agoode@google.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Adam Goode <agoode@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from peterz@infradead.org's message of August 21, 2020 11:04 pm:
-> On Fri, Aug 21, 2020 at 11:09:51AM +0530, Aneesh Kumar K.V wrote:
->> Peter Zijlstra <peterz@infradead.org> writes:
->>=20
->> > For SMP systems using IPI based TLB invalidation, looking at
->> > current->active_mm is entirely reasonable. This then presents the
->> > following race condition:
->> >
->> >
->> >   CPU0			CPU1
->> >
->> >   flush_tlb_mm(mm)	use_mm(mm)
->> >     <send-IPI>
->> > 			  tsk->active_mm =3D mm;
->> > 			  <IPI>
->> > 			    if (tsk->active_mm =3D=3D mm)
->> > 			      // flush TLBs
->> > 			  </IPI>
->> > 			  switch_mm(old_mm,mm,tsk);
->> >
->> >
->> > Where it is possible the IPI flushed the TLBs for @old_mm, not @mm,
->> > because the IPI lands before we actually switched.
->> >
->> > Avoid this by disabling IRQs across changing ->active_mm and
->> > switch_mm().
->> >
->> > [ There are all sorts of reasons this might be harmless for various
->> > architecture specific reasons, but best not leave the door open at
->> > all. ]
->>=20
->>=20
->> Do we have similar race with exec_mmap()? I am looking at exec_mmap()
->> runnning parallel to do_exit_flush_lazy_tlb(). We can get
->>=20
->> 	if (current->active_mm =3D=3D mm) {
->>=20
->> true and if we don't disable irq around updating tsk->mm/active_mm we
->> can end up doing mmdrop on wrong mm?
->=20
-> exec_mmap() is called after de_thread(), there should not be any mm
-> specific invalidations around I think.
->=20
-> Then again, CLONE_VM without CLONE_THREAD might still be possible, so
-> yeah, we probably want IRQs disabled there too, just for consistency and
-> general paranoia if nothing else.
+The Color Matching Descriptor has been present in USB cameras since
+the original version of UVC, but it has never been fully exposed
+in Linux.
 
-The problem is probably not this TLB flushing race, but I think there
-is a lazy tlb race.
+This change informs V4L2 of all of the UVC colorspace parameters:
+color primaries, transfer characteristics, and YCbCr encoding.
+videodev2.h doesn't have values for all the possible UVC color settings,
+so it is mapped as closely as possible.
 
-  call_usermodehelper()
-    kernel_execve()
-      old_mm =3D current->mm;
-      active_mm =3D current->active_mm;
-      *** preempt *** ---------------------->schedule()
-                                               prev->active_mm =3D NULL;
-					       mmdrop(prev active mm)
-					     ...=20
-                      <----------------------schedule()
-      current->mm =3D mm;
-      current->active_mm =3D mm;
-      if (!old_mm)
-          mmdrop(active_mm); /* double free! */
+Additionally, this patch overrides the default setting for quantization
+for UVC MJPEG. By default, V4L2 assumes that MJPEG is full range encoded,
+which is not correct for UVC.
 
-There's possibly other problematic interleavings. powerpc also has an
-issue with switching away a lazy tlb mm via IPI which is basically the
-same problem so I just illustrate the more general issue.
+JPEG itself does not specify YCbCr encoding information, this is
+left to some other metadata. For typical JPEG images (those that conform to
+JFIF, see https://www.w3.org/Graphics/JPEG/jfif3.pdf), the colorspace is
+specified as YCbCr CCIR 601 with full range. The use of this variant
+on the 601 standard in JFIF is the reason that V4L2 defaults to full range
+for JPEG.
 
-I think we just make it a rule that these always get updated under
-local_irq_disable, to be safe.
+A JPEG image isn't a JFIF unless it contains an APP0 tag with 'JFIF', and
+the UVC standard is clear that APP0 is optional for its MJPEG payload.
+It does not mention JFIF at all. Moreover, it provides color metadata
+in the Color Matching Descriptor, all using limited range as of UVC 1.5.
 
-Trouble is we can't just do it, because some architectures can't do
-activate_mm with irqs disabled. ARM and UM, at least. UM can't even
-do preempt_disabled. We can probably change them to make them work,
-I'm not sure what the best way to go is, my first attempt is to require
-activate_mm to do the mm switching and the irq disable as well, but
-I'll need some help from the archs
+Note that web browsers such as Chrome and Firefox already ignore V4L2's
+quantization for USB devices and use the correct limited range, but
+other programs such as qv4l2 will incorrectly interpret the encoding of
+MJPEG from USB cameras without this change.
 
-I'll send out rfcs in a minute.
+Since there are many YUV and non-YUV formats supported by UVC cameras (but
+not mentioned in the official specifications), and the quantization is
+also not specified for these formats, I am not changing that behavior: all
+formats besides MJPEG will stay at V4L2_QUANTIZATION_DEFAULT as before.
 
-Thanks,
-Nick
+Signed-off-by: Adam Goode <agoode@google.com>
+---
+
+Changes in v2:
+ - Apply quantization override only for MJPEG.
+ - Provide more comments and background information about JPEG vs JFIF.
+ - Explain the substitutions for xfer func and ycbcr encoding.
+
+ drivers/media/usb/uvc/uvc_driver.c | 87 ++++++++++++++++++++++++++++--
+ drivers/media/usb/uvc/uvc_v4l2.c   |  6 +++
+ drivers/media/usb/uvc/uvcvideo.h   |  6 ++-
+ 3 files changed, 94 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+index 431d86e1c94b..4e530a4bf976 100644
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -248,10 +248,10 @@ static struct uvc_format_desc *uvc_format_by_guid(const u8 guid[16])
+ 	return NULL;
+ }
+ 
+-static u32 uvc_colorspace(const u8 primaries)
++static enum v4l2_colorspace uvc_colorspace(const u8 primaries)
+ {
+-	static const u8 colorprimaries[] = {
+-		0,
++	static const enum v4l2_colorspace colorprimaries[] = {
++		V4L2_COLORSPACE_DEFAULT,  /* Unspecified */
+ 		V4L2_COLORSPACE_SRGB,
+ 		V4L2_COLORSPACE_470_SYSTEM_M,
+ 		V4L2_COLORSPACE_470_SYSTEM_BG,
+@@ -262,7 +262,61 @@ static u32 uvc_colorspace(const u8 primaries)
+ 	if (primaries < ARRAY_SIZE(colorprimaries))
+ 		return colorprimaries[primaries];
+ 
+-	return 0;
++	return V4L2_COLORSPACE_DEFAULT;  /* Reserved */
++}
++
++static enum v4l2_xfer_func uvc_xfer_func(const u8 transfer_characteristics)
++{
++	/* V4L2 currently does not currently have definitions for all
++	 * possible values of UVC transfer characteristics. If
++	 * v4l2_xfer_func is extended with new values, the mapping
++	 * below should be updated.
++	 *
++	 * Substitutions are taken from the mapping given for
++	 * V4L2_XFER_FUNC_DEFAULT documented in videodev2.h.
++	 */
++	static const enum v4l2_xfer_func xfer_funcs[] = {
++		V4L2_XFER_FUNC_DEFAULT,    /* Unspecified */
++		V4L2_XFER_FUNC_709,
++		V4L2_XFER_FUNC_709,        /* Substitution for BT.470-2 M */
++		V4L2_XFER_FUNC_709,        /* Substitution for BT.470-2 B, G */
++		V4L2_XFER_FUNC_709,        /* Substitution for SMPTE 170M */
++		V4L2_XFER_FUNC_SMPTE240M,
++		V4L2_XFER_FUNC_NONE,
++		V4L2_XFER_FUNC_SRGB,
++	};
++
++	if (transfer_characteristics < ARRAY_SIZE(xfer_funcs))
++		return xfer_funcs[transfer_characteristics];
++
++	return V4L2_XFER_FUNC_DEFAULT;  /* Reserved */
++}
++
++static enum v4l2_ycbcr_encoding uvc_ycbcr_enc(const u8 matrix_coefficients)
++{
++	/* V4L2 currently does not currently have definitions for all
++	 * possible values of UVC matrix coefficients. If
++	 * v4l2_ycbcr_encoding is extended with new values, the
++	 * mapping below should be updated.
++	 *
++	 * Substitutions are taken from the mapping given for
++	 * V4L2_YCBCR_ENC_DEFAULT documented in videodev2.h.
++	 *
++	 * FCC is assumed to be close enough to 601.
++	 */
++	static const enum v4l2_ycbcr_encoding ycbcr_encs[] = {
++		V4L2_YCBCR_ENC_DEFAULT,  /* Unspecified */
++		V4L2_YCBCR_ENC_709,
++		V4L2_YCBCR_ENC_601,      /* Substitution for FCC */
++		V4L2_YCBCR_ENC_601,      /* Substitution for BT.470-2 B, G */
++		V4L2_YCBCR_ENC_601,
++		V4L2_YCBCR_ENC_SMPTE240M,
++	};
++
++	if (matrix_coefficients < ARRAY_SIZE(ycbcr_encs))
++		return ycbcr_encs[matrix_coefficients];
++
++	return V4L2_YCBCR_ENC_DEFAULT;  /* Reserved */
+ }
+ 
+ /* Simplify a fraction using a simple continued fraction decomposition. The
+@@ -533,6 +587,29 @@ static int uvc_parse_format(struct uvc_device *dev,
+ 
+ 		strscpy(format->name, "MJPEG", sizeof(format->name));
+ 		format->fcc = V4L2_PIX_FMT_MJPEG;
++		/*
++		 * JPEG does not define a color encoding and relies on
++		 * external metadata for this purpose. The most common
++		 * metadata for this in JPEG is the JFIF
++		 * specification, which defines a full-range variant
++		 * of CCIR 601. Because of this, the default
++		 * quantization for JPEG images in V4L2 is full range.
++		 *
++		 * But while most JPEG files are JFIF (identified by
++		 * the presence of an APP0 tag starting with 'JFIF'),
++		 * MJPEG frames from UVC are typically not. The MJPEG
++		 * UVC standard declares APP0 tags as optional and
++		 * makes no mention of JFIF.
++		 *
++		 * For UVC MJPEG, the color encoding metadata comes
++		 * from the Color Matching descriptor, which uses the
++		 * standard limited range YCbCr encodings and not the
++		 * variant JFIF full range encoding.
++		 *
++		 * The default for JPEG in V4L2 is full range, so we need
++		 * to override the default here.
++		 */
++		format->quantization = V4L2_QUANTIZATION_LIM_RANGE;
+ 		format->flags = UVC_FMT_FLAG_COMPRESSED;
+ 		format->bpp = 0;
+ 		ftype = UVC_VS_FRAME_MJPEG;
+@@ -704,6 +781,8 @@ static int uvc_parse_format(struct uvc_device *dev,
+ 		}
+ 
+ 		format->colorspace = uvc_colorspace(buffer[3]);
++		format->xfer_func = uvc_xfer_func(buffer[4]);
++		format->ycbcr_enc = uvc_ycbcr_enc(buffer[5]);
+ 
+ 		buflen -= buffer[0];
+ 		buffer += buffer[0];
+diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+index 0335e69b70ab..8795f53a6306 100644
+--- a/drivers/media/usb/uvc/uvc_v4l2.c
++++ b/drivers/media/usb/uvc/uvc_v4l2.c
+@@ -253,6 +253,9 @@ static int uvc_v4l2_try_format(struct uvc_streaming *stream,
+ 	fmt->fmt.pix.bytesperline = uvc_v4l2_get_bytesperline(format, frame);
+ 	fmt->fmt.pix.sizeimage = probe->dwMaxVideoFrameSize;
+ 	fmt->fmt.pix.colorspace = format->colorspace;
++	fmt->fmt.pix.xfer_func = format->xfer_func;
++	fmt->fmt.pix.ycbcr_enc = format->ycbcr_enc;
++	fmt->fmt.pix.quantization = format->quantization;
+ 
+ 	if (uvc_format != NULL)
+ 		*uvc_format = format;
+@@ -289,6 +292,9 @@ static int uvc_v4l2_get_format(struct uvc_streaming *stream,
+ 	fmt->fmt.pix.bytesperline = uvc_v4l2_get_bytesperline(format, frame);
+ 	fmt->fmt.pix.sizeimage = stream->ctrl.dwMaxVideoFrameSize;
+ 	fmt->fmt.pix.colorspace = format->colorspace;
++	fmt->fmt.pix.xfer_func = format->xfer_func;
++	fmt->fmt.pix.ycbcr_enc = format->ycbcr_enc;
++	fmt->fmt.pix.quantization = format->quantization;
+ 
+ done:
+ 	mutex_unlock(&stream->mutex);
+diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+index 6ab972c643e3..e49cc671b0d3 100644
+--- a/drivers/media/usb/uvc/uvcvideo.h
++++ b/drivers/media/usb/uvc/uvcvideo.h
+@@ -272,6 +272,7 @@ struct uvc_format_desc {
+ 	char *name;
+ 	u8 guid[16];
+ 	u32 fcc;
++	enum v4l2_quantization quantization;
+ };
+ 
+ /* The term 'entity' refers to both UVC units and UVC terminals.
+@@ -370,7 +371,10 @@ struct uvc_format {
+ 	u8 type;
+ 	u8 index;
+ 	u8 bpp;
+-	u8 colorspace;
++	enum v4l2_colorspace colorspace;
++	enum v4l2_xfer_func xfer_func;
++	enum v4l2_ycbcr_encoding ycbcr_enc;
++	enum v4l2_quantization quantization;
+ 	u32 fcc;
+ 	u32 flags;
+ 
+-- 
+2.26.2
+
