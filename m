@@ -2,104 +2,69 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C4FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB09C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02A9720C56
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:49:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598600967;
-	bh=0tjlBtvKkul42khLrBsQqQgWErMtE09glUlRUTYCCew=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ngES9/5R46DkWbKllSgjY8wFJEQxIoh9tyWjD+OdOAw7eR8TlhBAn9l7nO9uaTgc1
-	 DzaYMbEmq6Z3EKd413Jwh2MiLB4J4WVnrO9hcIi1sqz871PWXJwPenG7nx4gEmHbhS
-	 CLTd/exYNT5oSmqNS0fiUOdKoZJ59erSlsD0DDBY=
+	by mail.kernel.org (Postfix) with ESMTP id EA70920DD4
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:49:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="a8d/peyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgH1HtZ (ORCPT
+        id S1728533AbgH1Htu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:49:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbgH1HtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:49:23 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4AAE2078A;
-        Fri, 28 Aug 2020 07:49:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598600962;
-        bh=0tjlBtvKkul42khLrBsQqQgWErMtE09glUlRUTYCCew=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VqrnaPtRoobZq9TXSgog8vE3JTy6fqzJTUpBC6OTs01lYX4RtXxLE3RLFokwkcx7t
-         HbNkkNEIJdvesNgWMu5FZf0MPvc1VJuiuBb9QjGXZjtuO/Ajk9lU909es7h794cIdy
-         JNdJAw3OxZihqgPqeCUO4lbm69gUq9DsCAXNSV5s=
-Date:   Fri, 28 Aug 2020 13:19:18 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, sanyog.r.kale@intel.com,
-        mengdong.lin@intel.com, bard.liao@intel.com
-Subject: Re: [PATCH 07/11] soundwire: intel: Only call sdw stream APIs for
- the first cpu_dai
-Message-ID: <20200828074918.GN2639@vkoul-mobl>
-References: <20200818024120.20721-1-yung-chuan.liao@linux.intel.com>
- <20200818024120.20721-8-yung-chuan.liao@linux.intel.com>
- <20200826094636.GB2639@vkoul-mobl>
- <5a7b75e5-4d64-9927-df81-68164ef2662a@linux.intel.com>
+        Fri, 28 Aug 2020 03:49:50 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:20893 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726571AbgH1Htt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 03:49:49 -0400
+X-UUID: 552b9658b9b740db87259b1cbdace8cb-20200828
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=0EKafp0Drld7nVRG3II9HXY8sizTyEYsQ0QqqSX3Mxw=;
+        b=a8d/peyy+GFrYEF9CYvnWm8+9kIJPVnJqhyXSuwUP9asBnqEA9mtfcOABJMTCUnXTfzAqnhVdk2TUlP1GKOQ62vq2e+iNmlToJalzwBREXamkeh7buqxW+5svNfoGo5So3eEWkgR4pjro6OAnQwnqScw/FO9QvIioUoYMXXY1QY=;
+X-UUID: 552b9658b9b740db87259b1cbdace8cb-20200828
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <freddy.hsin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2003930412; Fri, 28 Aug 2020 15:49:47 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 28 Aug 2020 15:49:43 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 28 Aug 2020 15:49:46 +0800
+From:   Freddy Hsin <freddy.hsin@mediatek.com>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     <wsd_upstream@mediatek.com>, <chang-an.chen@mediatek.com>,
+        <kuohong.wang@mediatek.com>, <chun-hung.wu@mediatek.com>
+Subject: [PATCH 0/1] Refine mtk wdt driver init flow
+Date:   Fri, 28 Aug 2020 15:49:27 +0800
+Message-ID: <1598600968-28498-1-git-send-email-freddy.hsin@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5a7b75e5-4d64-9927-df81-68164ef2662a@linux.intel.com>
+Content-Type: text/plain
+X-TM-SNTS-SMTP: F61C1D996371B3870C761BAAAB54EFE1717CDD80FFDF00FED470060D87C340982000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26-08-20, 09:35, Pierre-Louis Bossart wrote:
-> 
-> > > -	ret = sdw_prepare_stream(dma->stream);
-> > > +	/*
-> > > +	 * All cpu dais belong to a stream. To ensure sdw_prepare_stream
-> > > +	 * is called once per stream, we should call it only when
-> > > +	 * dai = first_cpu_dai.
-> > > +	 */
-> > > +	if (first_cpu_dai == dai)
-> > > +		ret = sdw_prepare_stream(dma->stream);
-> > 
-> > Hmmm why not use the one place which is unique in the card to call this,
-> > hint machine dais are only called once.
-> 
-> we are already calling directly sdw_startup_stream() and
-> sdw_shutdown_stream() from the machine driver.
-> 
-> We could call sdw_stream_enable() in the dailink .trigger as well, since it
-> only calls the stream API.
+QWRkIG10a193ZHRfaW5pdCgpIGZ1bmN0aW4gaW4gcHJvYmUgZmxvdyB0byBkZXRlcm1pbmUNCmVu
+YWJsZS9kaXNhYmxlIHRoZSBodyB3YXRjaGRvZyBieSBpdHMgb3JpZ2luYWwgc2V0dGluZw0KDQpG
+cmVkZHkgSHNpbiAoMSk6DQogIGRyaXZlcjogd2F0Y2hkb2c6IEFkZCBtdGtfd2R0X2luaXQgZm9y
+IG1lZGlhdGVrIHdhdGNoZG9nIGh3IGluaXQNCg0KIGRyaXZlcnMvd2F0Y2hkb2cvbXRrX3dkdC5j
+IHwgICAyMiArKysrKysrKysrKysrKysrKysrKystDQogMSBmaWxlIGNoYW5nZWQsIDIxIGluc2Vy
+dGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCg==
 
-Correct :)
-
-> However for both .prepare() and .hw_free() there are a set of dai-level
-> configurations using static functions defined only in intel.c, and I don't
-> think we can move the code to the machine driver, or split the
-> prepare/hw_free in two (dailink and dai operations).
-
-Cant they be exported and continue to call those apis
-
-> I am not against your idea, I am not sure if it can be done.
-> 
-> Would you be ok to merge this as a first step and let us work on an
-> optimization later (which would require ASoC/SoundWire synchronization)?
-
-The problem is that we add one flag then another and it does become an
-issue eventually, better to do the right thing now than later.
-
--- 
-~Vinod
