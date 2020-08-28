@@ -2,86 +2,119 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF62DC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE372C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4A3D208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C57A52137B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:57:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WCKrcph+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YrriV/Zp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbgH1KxA (ORCPT
+        id S1729179AbgH1K5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 06:53:00 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:46331 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728362AbgH1Kww (ORCPT
+        Fri, 28 Aug 2020 06:57:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729123AbgH1Kx3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 06:52:52 -0400
-X-UUID: 9b16ef4c94214323863de48c3da9b76b-20200828
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=FZ0PPk8gVzEhQ1IFGUZY31/TpdulCQ+QsyJk9Jc/ChY=;
-        b=WCKrcph+tb8D24tBlts4SXbaR4ff+/OYPgQj43iu1m8ha6oLVsWDeC8lPNe77WH/WAQfqIcJMN/3SyvCBIFqTNXxoU8vgNZs3F6ot2bYoegHrweVLaCSRgiwGpKq7t2AhbsaF1hry3YlX6iDE9A8NfNiOheXF6SMOqfs1Kt5jt0=;
-X-UUID: 9b16ef4c94214323863de48c3da9b76b-20200828
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
-        (envelope-from <landen.chao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1714428886; Fri, 28 Aug 2020 18:52:48 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 28 Aug 2020 18:52:44 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 28 Aug 2020 18:52:45 +0800
-From:   Landen Chao <landen.chao@mediatek.com>
-To:     Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Russell King <linux@armlinux.org.uk>
-CC:     <opensource@vdorst.com>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <frank-w@public-files.de>,
-        <dqfext@gmail.com>, Landen Chao <landen.chao@mediatek.com>
-Subject: [PATCH net v2] net: dsa: mt7530: fix advertising unsupported 1000baseT_Half
-Date:   Fri, 28 Aug 2020 18:52:44 +0800
-Message-ID: <20200828105244.9839-1-landen.chao@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Fri, 28 Aug 2020 06:53:29 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE51FC061232
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:53:08 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id k20so484885wmi.5
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:53:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=e6iXM6C5sJ3FBz3LIMthXRBWXK9iTp3RhCVsBFe2ot4=;
+        b=YrriV/ZpxSVeR1zNRjbVh0hZsksEyHhLgrOl31e0w2SDO/H8Bjh/dcb34Qq3dSVt8h
+         uiOhYVGDo6GywbGQ453rFe6xo1Yo4hMj+KVM1hv/A6Wm1QY6rBkeJ7BrYrrj4p7aUjn1
+         BO/Cn7KyMnoVy5Ka6E+TfXreZM2tII4pyNxLPM2QKyIQ8+xV541NqaHAPOYwePYBuTbX
+         sD+tbJf0KJvFjKoikZg7/vVmIdZQctlcrnzpPzhWe0x0ApPVnwsSuTwYgFVJHE8MmpBy
+         M12aXSVVQjbNuvEwKf2gUCy7mVf7wXrDAaKk7Tp/hz3zPA7ndKo2EXfLC3QcA+wayEfv
+         utTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=e6iXM6C5sJ3FBz3LIMthXRBWXK9iTp3RhCVsBFe2ot4=;
+        b=TEsO7R4qCRNcAKRjlPXxsDsrlW6ZMBl+l+olxDbULbM0nxwB9GMBeWotIwAeeQwKyh
+         R4EiBgpCWYVlZHu6vseIGmjC5OBJ1A7wUTjUlEwx491AgS5kJ0drDG5SihY6LWSlSa9q
+         d96XtYrhZ4a//TRxH0L8WNTqZ6kJNwx1SbSEgNjKzSAsWMDnQ/v68apD8LftGnFqv3ob
+         VRvXkYgLtIpEHE9qlv6F/7PUwqFq8xmT2WR/eslqZm32PQqPIe+on1xaBDLLh76xOkBF
+         zfTKhGyENzA3xKGuvlxjFYc56Tx5cm6Gqmc1e5/erUgDc0an1LY8B0fScbQggJ5jUguj
+         vvjg==
+X-Gm-Message-State: AOAM531DMhBu6Fe1oXSB5lgR9sR6p4tvukNngQJ0Ry/2GgH0A5PqjCXW
+        bfXMESPAhCQLXhnaCELeJEJteQ==
+X-Google-Smtp-Source: ABdhPJzQxd25rKg5eLhiITlNvNOcRWPIr5L602jIp3qY0aHNYmrx4NqgdS61UJZebGJa7RWwd6OJsA==
+X-Received: by 2002:a1c:a506:: with SMTP id o6mr1019921wme.3.1598611987242;
+        Fri, 28 Aug 2020 03:53:07 -0700 (PDT)
+Received: from dell ([91.110.221.141])
+        by smtp.gmail.com with ESMTPSA id r129sm1531390wmr.40.2020.08.28.03.53.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 03:53:06 -0700 (PDT)
+Date:   Fri, 28 Aug 2020 11:53:04 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
+        alexander.h.duyck@linux.intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH V5 2/3] mfd: Intel Platform Monitoring Technology support
+Message-ID: <20200828105304.GS1826686@dell>
+References: <20200819180255.11770-1-david.e.box@linux.intel.com>
+ <20200819180255.11770-3-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200819180255.11770-3-david.e.box@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UmVtb3ZlIDEwMDBiYXNlVF9IYWxmIHRvIGFkdmVydGlzZSBjb3JyZWN0IGhhcmR3YXJlIGNhcGFi
-aWxpdHkgaW4NCnBoeWxpbmtfdmFsaWRhdGUoKSBjYWxsYmFjayBmdW5jdGlvbi4NCg0KRml4ZXM6
-IDM4Zjc5MGE4MDU2MCAoIm5ldDogZHNhOiBtdDc1MzA6IEFkZCBzdXBwb3J0IGZvciBwb3J0IDUi
-KQ0KU2lnbmVkLW9mZi1ieTogTGFuZGVuIENoYW8gPGxhbmRlbi5jaGFvQG1lZGlhdGVrLmNvbT4N
-ClJldmlld2VkLWJ5OiBBbmRyZXcgTHVubiA8YW5kcmV3QGx1bm4uY2g+DQpSZXZpZXdlZC1ieTog
-RmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+DQotLS0NCnYxLT52Mg0KICAt
-IGZpeCB0aGUgY29tbWl0IHN1YmplY3Qgc3BpbGxlZCBpbnRvIHRoZSBjb21taXQgbWVzc2FnZQ0K
-LS0tDQogZHJpdmVycy9uZXQvZHNhL210NzUzMC5jIHwgMiArLQ0KIDEgZmlsZSBjaGFuZ2VkLCAx
-IGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQv
-ZHNhL210NzUzMC5jIGIvZHJpdmVycy9uZXQvZHNhL210NzUzMC5jDQppbmRleCA4ZGNiOGE0OWFi
-NjcuLjIzODQxN2RiMjZmOSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAuYw0K
-KysrIGIvZHJpdmVycy9uZXQvZHNhL210NzUzMC5jDQpAQCAtMTUwMSw3ICsxNTAxLDcgQEAgc3Rh
-dGljIHZvaWQgbXQ3NTMwX3BoeWxpbmtfdmFsaWRhdGUoc3RydWN0IGRzYV9zd2l0Y2ggKmRzLCBp
-bnQgcG9ydCwNCiAJCXBoeWxpbmtfc2V0KG1hc2ssIDEwMGJhc2VUX0Z1bGwpOw0KIA0KIAkJaWYg
-KHN0YXRlLT5pbnRlcmZhY2UgIT0gUEhZX0lOVEVSRkFDRV9NT0RFX01JSSkgew0KLQkJCXBoeWxp
-bmtfc2V0KG1hc2ssIDEwMDBiYXNlVF9IYWxmKTsNCisJCQkvKiBUaGlzIHN3aXRjaCBvbmx5IHN1
-cHBvcnRzIDFHIGZ1bGwtZHVwbGV4LiAqLw0KIAkJCXBoeWxpbmtfc2V0KG1hc2ssIDEwMDBiYXNl
-VF9GdWxsKTsNCiAJCQlpZiAocG9ydCA9PSA1KQ0KIAkJCQlwaHlsaW5rX3NldChtYXNrLCAxMDAw
-YmFzZVhfRnVsbCk7DQotLSANCjIuMTcuMQ0K
+On Wed, 19 Aug 2020, David E. Box wrote:
 
+> Intel Platform Monitoring Technology (PMT) is an architecture for
+> enumerating and accessing hardware monitoring facilities. PMT supports
+> multiple types of monitoring capabilities. This driver creates platform
+> devices for each type so that they may be managed by capability specific
+> drivers (to be introduced). Capabilities are discovered using PCIe DVSEC
+> ids. Support is included for the 3 current capability types, Telemetry,
+> Watcher, and Crashlog. The features are available on new Intel platforms
+> starting from Tiger Lake for which support is added.
+> 
+> Also add a quirk mechanism for several early hardware differences and bugs.
+> For Tiger Lake, do not support Watcher and Crashlog capabilities since they
+> will not be compatible with future product. Also, fix use a quirk to fix
+> the discovery table offset.
+> 
+> Co-developed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> ---
+>  MAINTAINERS             |   5 +
+>  drivers/mfd/Kconfig     |  10 ++
+>  drivers/mfd/Makefile    |   1 +
+>  drivers/mfd/intel_pmt.c | 220 ++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 236 insertions(+)
+>  create mode 100644 drivers/mfd/intel_pmt.c
+
+For my own reference (apply this as-is to your sign-off block):
+
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
