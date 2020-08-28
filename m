@@ -2,129 +2,148 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A75C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD488C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B28C1208FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:23:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yw5Y94hL"
+	by mail.kernel.org (Postfix) with ESMTP id 9A457208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbgH1JXB (ORCPT
+        id S1728916AbgH1JXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:23:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbgH1JWu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:22:50 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3247C061233
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:22:49 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id e41so166848uad.6
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:22:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+h9ZmfHl6gD6OPpN/SlVWioXyrTiMAhgaOR2eUM9lrs=;
-        b=Yw5Y94hLnxuDQc0xMuJ3wJ0zdgZ5TprcSHRASqRPnFiahEe7Jsrt1CJdobZrJZZuVu
-         pKBbKeRpUXw5iAK+LJuHCKgKNyb9VYPWO+O2N9iyV+R7ZnBZQyfgmeo5pOWKWzuIwVl+
-         fGx4lWMXvwCfhSKDJ/Y5BzMivxP0K4t1RbiqXmsncmXuWJrllCE1gs8deO3ML2EUaPjE
-         tj5Ab5rOzBDdvxSxqEE0uNP/KfRRugqhQawuXjH2/BrKM+tfPomu3Vuo+xls34YG4128
-         MR98sjAjeqAL5LSR1wPQT6djpvD3rN6T888qiuFx30am718+PJsJefUh+1ZRx8PQFYgO
-         D0+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+h9ZmfHl6gD6OPpN/SlVWioXyrTiMAhgaOR2eUM9lrs=;
-        b=FvX5qb/yheWBfWiahKo/Opz+NEZy5VZUhhzYKenfoM9nMaZTUpq8WRGQdbo6C2+D4x
-         /mfItFuEO0enO83NpzWgnaPMOqW13iogU+GhjledXiwNhbknhlxMT821AMBWYcvdozmw
-         y5IvbX+UwzEQ42V6uMyUSzY4/cfTuZnWZnueEGwdzsOS7j1b0etlX4xs5xKThPOzSgna
-         ZOR6hWP6/wivtbFgdSGB3lDlm3Nqsw7fQPWszYo5g9FG2MIteaLfLjlfeC8Xl2E8Ul37
-         usHq8UPxQH5BhIPhnB5vCYssuCf9z72w2cNPPnX9JixGO17xsrQ44jMklFDTmNfBPdC9
-         X+6Q==
-X-Gm-Message-State: AOAM5324oJ+bUt4erfkPdo2SeVFRMXedgVX85J0tZlFjTNGwPiOmpO2m
-        ooeoKhxMHiAjDYML4QUjMwtAw04OW2MlCh4xKjW0EQ==
-X-Google-Smtp-Source: ABdhPJxy4rF0dUrJQq4+r6O19pPIHqxVxrAFH3xWa3DmfMA4EagdwmwABlFGcsGn23M3lc2uXFNy1Q0PgUxY25Tr2zA=
-X-Received: by 2002:ab0:3443:: with SMTP id a3mr372138uaq.6.1598606568733;
- Fri, 28 Aug 2020 02:22:48 -0700 (PDT)
+        Fri, 28 Aug 2020 05:23:22 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:42210 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728016AbgH1JXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:23:20 -0400
+Received: from DGGEML403-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 09FA52622758182B89DD;
+        Fri, 28 Aug 2020 17:23:17 +0800 (CST)
+Received: from DGGEML524-MBX.china.huawei.com ([169.254.1.71]) by
+ DGGEML403-HUB.china.huawei.com ([fe80::74d9:c659:fbec:21fa%31]) with mapi id
+ 14.03.0487.000; Fri, 28 Aug 2020 17:23:09 +0800
+From:   "Maoming (maoming, Cloud Infrastructure Service Product Dept.)" 
+        <maoming.maoming@huawei.com>
+To:     Peter Xu <peterx@redhat.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "Zhoujian (jay)" <jianjay.zhou@huawei.com>,
+        "Huangweidong (C)" <weidong.huang@huawei.com>,
+        "aarcange@redhat.com" <aarcange@redhat.com>,
+        wangyunjian <wangyunjian@huawei.com>
+Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IFtQQVRDSCBWMl0gdmZpbyBkbWFfbWFwL3VubWFw?=
+ =?utf-8?Q?:_optimized_for_hugetlbfs_pages?=
+Thread-Topic: =?utf-8?B?562U5aSNOiBbUEFUQ0ggVjJdIHZmaW8gZG1hX21hcC91bm1hcDogb3B0aW1p?=
+ =?utf-8?Q?zed_for_hugetlbfs_pages?=
+Thread-Index: AQHWcePn246e6Z2xQkKwoyKqsTP1MqlI20CAgAGejeD//5OugIADObaQ
+Date:   Fri, 28 Aug 2020 09:23:08 +0000
+Message-ID: <8B561EC9A4D13649A62CF60D3A8E8CB28C2DBE7A@dggeml524-mbx.china.huawei.com>
+References: <20200814023729.2270-1-maoming.maoming@huawei.com>
+ <20200825205907.GB8235@xz-x1>
+ <8B561EC9A4D13649A62CF60D3A8E8CB28C2D9ABB@dggeml524-mbx.china.huawei.com>
+ <20200826151509.GD8235@xz-x1>
+In-Reply-To: <20200826151509.GD8235@xz-x1>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.174.151.129]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <CA+G9fYvUwH2FA9GOeA_7GYpLA31uOmEpg32VKnJ8-d5QSK4PdQ@mail.gmail.com>
- <20200827090813.fjugeqbb47fachy7@vireshk-i7> <CAK8P3a2zxybiMDzHXkTsT=VpHJOLkwd1=YTtCNU04vuMjZLkxA@mail.gmail.com>
- <20200827101231.smqrhqu5da6jlz6i@vireshk-i7> <CA+G9fYv=XLtsuD=tVR1HHotwpKLkbwZVyPr4UhY-jD+6-duTmw@mail.gmail.com>
-In-Reply-To: <CA+G9fYv=XLtsuD=tVR1HHotwpKLkbwZVyPr4UhY-jD+6-duTmw@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 28 Aug 2020 14:52:37 +0530
-Message-ID: <CA+G9fYvSEHua0EpW64rASucWuS-U2STAZxufrfN75UDspGt2cA@mail.gmail.com>
-Subject: Re: Kernel panic : Unable to handle kernel paging request at virtual
- address - dead address between user and kernel address ranges
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        madhuparnabhowmik10@gmail.com,
-        Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 at 17:06, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> On Thu, 27 Aug 2020 at 15:42, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 27-08-20, 11:48, Arnd Bergmann wrote:
-> > > > > [    3.680477]  dev_pm_opp_put_clkname+0x30/0x58
-> > > > > [    3.683431]  sdhci_msm_probe+0x284/0x9a0
-> > >
-> > > dev_pm_opp_put_clkname() is part of the error handling in the
-> > > probe function, so I would deduct there are two problems:
-> > >
-> > > - something failed during the probe and the driver is trying
-> > >   to unwind
-> > > - the error handling it self is buggy and tries to undo something
-> > >   again that has already been undone.
-> >
-> > Right.
-> >
-> > > This points to Viresh's
-> > > d05a7238fe1c mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()
-> >
-> > I completely forgot that Ulf already pushed this patch and I was
-> > wondering on which of the OPP core changes I wrote have done this :(
-> >
-> > > Most likely this is not the entire problem but it uncovered a preexisting
-> > > bug.
-> >
-> > I think this is.
-> >
-> > Naresh: Can you please test with this diff ?
->
-> I have applied your patch and tested but still see the reported problem.
-
-The git bisect shows that the first bad commit is,
-d05a7238fe1c mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()
-
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-
->
-> - Naresh
+DQpPbiBXZWQsIEF1ZyAyNiwgMjAyMCBhdCAwMTo1Njo0M1BNICswMDAwLCBNYW9taW5nIChtYW9t
+aW5nLCBDbG91ZCBJbmZyYXN0cnVjdHVyZSBTZXJ2aWNlIFByb2R1Y3QgRGVwdC4pIHdyb3RlOg0K
+PiA+ICsJLyoNCj4gPiArCSAqIFVubGlrZSBUSFAsIHRoZSBzcGxpdHRpbmcgc2hvdWxkIG5vdCBo
+YXBwZW4gZm9yIGh1Z2V0bGIgcGFnZXMuDQo+ID4gKwkgKiBTaW5jZSBQR19yZXNlcnZlZCBpcyBu
+b3QgcmVsZXZhbnQgZm9yIGNvbXBvdW5kIHBhZ2VzLCBhbmQgdGhlIHBmbiBvZg0KPiA+ICsJICog
+UEFHRV9TSVpFIHBhZ2Ugd2hpY2ggaW4gaHVnZXRsYiBwYWdlcyBpcyB2YWxpZCwNCj4gPiArCSAq
+IGl0IGlzIG5vdCBuZWNlc3NhcnkgdG8gY2hlY2sgcnN2ZCBmb3IgaHVnZXRsYiBwYWdlcy4NCj4g
+PiArCSAqIFdlIGRvIG5vdCBuZWVkIHRvIGFsbG9jIHBhZ2VzIGJlY2F1c2Ugb2YgdmFkZHIgYW5k
+IHdlIGNhbiBmaW5pc2ggYWxsDQo+ID4gKwkgKiB3b3JrIGJ5IGEgc2luZ2xlIG9wZXJhdGlvbiB0
+byB0aGUgaGVhZCBwYWdlLg0KPiA+ICsJICovDQo+ID4gKwlhdG9taWNfYWRkKGNvbnRpZ3VvdXNf
+bnBhZ2UsIGNvbXBvdW5kX3BpbmNvdW50X3B0cihoZWFkKSk7DQo+ID4gKwlwYWdlX3JlZl9hZGQo
+aGVhZCwgY29udGlndW91c19ucGFnZSk7DQo+ID4gKwltb2Rfbm9kZV9wYWdlX3N0YXRlKHBhZ2Vf
+cGdkYXQoaGVhZCksIE5SX0ZPTExfUElOX0FDUVVJUkVELCANCj4gPiArY29udGlndW91c19ucGFn
+ZSk7DQo+IA0KPiBJIHRoaW5rIEkgYXNrZWQgdGhpcyBxdWVzdGlvbiBpbiB2MSwgYnV0IEkgZGlk
+bid0IGdldCBhbnkgYW5zd2VyLi4uIFNvIEknbSB0cnlpbmcgYWdhaW4uLi4NCj4gDQo+IENvdWxk
+IEkgYXNrIHdoeSBtYW51YWwgcmVmZXJlbmNpbmcgb2YgcGFnZXMgaXMgZG9uZSBoZXJlIHJhdGhl
+ciB0aGFuIA0KPiB1c2luZw0KPiBwaW5fdXNlcl9wYWdlc19yZW1vdGUoKSBqdXN0IGxpa2Ugd2hh
+dCB3ZSd2ZSBkb25lIHdpdGggDQo+IHZhZGRyX2dldF9wZm4oKSwgYW5kIGxldA0KPiB0cnlfZ3Jh
+Yl9wYWdlKCkgdG8gZG8gdGhlIHBhZ2UgcmVmZXJlbmNlIGFuZCBhY2NvdW50aW5ncz8NCj4gDQo+
+IEkgZmVlbCBsaWtlIHRoaXMgYXQgbGVhc3QgaXMgYWdhaW5zdCB0aGUgRk9MTF9QSU4gd29ya2Zs
+b3cgb2YgZ3VwLCBiZWNhdXNlIHRob3NlIEZPTExfUElOIHBhdGhzIHdlcmUgYnlwYXNzZWQsIGFm
+YWljdC4NCj4gDQo+IA0KPiBIaSwNCj4gTXkgYXBvbG9naWVzIGZvciBub3QgYW5zd2VyaW5nIHlv
+dXIgcXVlc3Rpb24uDQo+IEFzIEkgdW5kZXJzdGFuZCwgcGluX3VzZXJfcGFnZXNfcmVtb3RlKCkg
+bWlnaHQgc3BlbmQgbXVjaCB0aW1lLg0KPiBCZWNhdXNlIGFsbCBQQUdFX1NJWkUtcGFnZXMgaW4g
+YSBodWdldGxiIHBhZ2UgYXJlIHBpbm5lZCBvbmUgYnkgb25lIGluIHBpbl91c2VyX3BhZ2VzX3Jl
+bW90ZSgpIGFuZCB0cnlfZ3JhYl9wYWdlKCkuDQo+IFNvIEkgdGhpbmsgbWF5YmUgd2UgY2FuIHVz
+ZSB0aGVzZSBzaW1wbGUgY29kZSB0byBkbyBhbGwgd29yay4NCj4gQW0gSSB3cm9uZz8gQW5kIGlz
+IHRoZXJlIHNvbWV0aGluZyBlbHNlIHdlIGNhbiB1c2U/IEZvciBleGFtcGxlIA0KPiA6cGluX3Vz
+ZXJfcGFnZXNfZmFzdCgpDQoNClllYWggSSBjYW4gdW5kZXJzdGFuZCB5b3VyIGNvbmNlcm4sIGhv
+d2V2ZXIgc28gZmFyIGl0J3Mgbm90IGFib3V0IHRoZSBwZXJmIGJ1dCBjb3JyZWN0bmVzcy4gIERv
+Y3VtZW50YXRpb24vY29yZS1hcGkvcGluX3VzZXJfcGFnZXMucnN0IHRlbGxzIHVzIHRoYXQgd2Ug
+c2hvdWxkIGFsd2F5cyB1c2UgcGluX3VzZXJfcGFnZSooKSBBUElzIHRvIHBpbiBETUEgcGFnZXMg
+KHdpdGggRk9MTF9MT05HVEVSTSkuICBUaGF0J3Mgc29tZXRoaW5nIHdlIHNob3VsZCBmb2xsb3cg
+Zm9yIG5vdywgb3RoZXJ3aXNlIHRoZSBtYWpvciBsb2dpYyBvZiBlaXRoZXIgRk9MTF9QSU4gb3Ig
+RlVMTF9MT05HVEVSTSBjb3VsZCBiZSBieXBhc3NlZCB3aXRob3V0IGJlaW5nIG5vdGljZWQuDQoN
+CkknbSBub3Qgc3VyZSB3aGV0aGVyIHRoZSBwZXJmIGlzc3VlIGlzIGEgYmlnIG9uZS4gIFNvIGhh
+dmUgeW91IHRyaWVkIHRoZSBwaW4gcGFnZSBBUElzIGZpcnN0IGFuZCBkaWQgc29tZSBtZWFzdXJl
+bWVudD8gIFRoZXJlIGlzIGluZGVlZCBhIHRpZ2h0IGxvb3AgaW4NCmZvbGxvd19odWdldGxiX3Bh
+Z2UoKSBob3dldmVyIG5vdCBzdXJlIGhvdyBtdWNoIGl0J2xsIGFmZmVjdCBWRklPX0lPTU1VX01B
+UF9ETUEgaW4gZ2VuZXJhbC4gIEV2ZW4gaWYgd2Ugd2FudCB0byBkbyBzb21ldGhpbmcsIGl0IHNl
+ZW1zIHRvIGJlIG1vcmUgc3VpdGFibGUgdG8gYmUgZG9uZSBpbnNpZGUgZm9sbG93X2h1Z2V0bGJf
+cGFnZSgpIHJhdGhlciB0aGFuIGluIHZmaW8sIGltaG8uDQoNCkFub3RoZXIgY29tbWVudCBpcyBh
+Ym91dCB0aGUgZGVzaWduIG9mIHRoZSB3aG9sZSBwYXRjaCAtIEkgdGhpbmsgQWxleCBjb21tZW50
+ZWQgb24gdGhhdCB0b28gb24gdGhlIGF3a3dhcmRuZXNzIG9uIGFwcGVuZGluZyB0aGUgaHVnZXRs
+YmZzIGxvZ2ljIHRvIHRoZSBlbmQgb2YgdGhlIGV4aXN0aW5nIGxvZ2ljLiAgQ29uc2lkZXJpbmcg
+dGhhdCBjdXJyZW50IGxvZ2ljIG9mIHZmaW9fcGluX3BhZ2VzX3JlbW90ZSgpIGlzICJsZXQncyBw
+aW4gc29tZSBwYWdlcyBhcyBsb25nIGFzIGNvbnRpbnVvdXMiLCBub3Qgc3VyZSB3aGV0aGVyIHdl
+IGNhbiBtYWtlIGl0IGludG86DQoNCnZmaW9fcGluX3BhZ2VzX3JlbW90ZSgpDQp7DQogIGlmIChQ
+YWdlSHVnZShmaXJzdF9wYWdlKSkNCiAgICB2ZmlvX3Bpbl9wYWdlc19odWdldGxiZnMoKTsNCiAg
+ZWxzZQ0KICAgIHZmaW9fcGluX3BhZ2VzX25vcm1hbCgpOw0KfQ0KDQpUaGUgdGhpbmcgaXMsIGlm
+IHRoZSAxc3QgcGFnZSBpcyBub3JtYWwgcGFnZSwgdGhlbiB0aGUgZm9sbG93LXVwIHBhZ2VzIHNo
+b3VsZG4ndCBub3JtYWxseSBiZSBodWdldGxiZnMgcGFnZXMgc28gdGhleSB3b24ndCBiZSBwaHlz
+aWNhbGx5IGNvbnRpbnVvdXMuDQpWaWNlIHZlcnNhLiAgSW4gb3RoZXIgd29yZHMsIGVhY2ggY2Fs
+bCB0byB2ZmlvX3Bpbl9wYWdlc19yZW1vdGUoKSBzaG91bGQgb25seSBoYW5kbGUgb25seSBvbmUg
+dHlwZSBvZiBwYWdlIGFmdGVyIGFsbC4gIFNvIG1heWJlIHdlIGNhbiBkaXZlcmdlIHRoZW0gYXQg
+dGhlIGJlZ2lubmluZyBvZiB0aGUgY2FsbCBkaXJlY3RseS4NCg0KLS0NClBldGVyIFh1DQoNCg0K
+DQoNCg0KVGhhbmtzIGZvciB5b3VyIHN1Z2dlc3Rpb25zLiBJIHdpbGwgZml4IGl0Lg0KQW5kIEkg
+aGF2ZSBhbm90aGVyIHF1ZXN0aW9uLg0KSW4gaHVnZXRsYl9wdXRfcGZuKCksIEkgZGVsZXRlIHVu
+cGluX3VzZXJfcGFnZXNfZGlydHlfbG9jaygpIGFuZCB1c2Ugc29tZSBzaW1wbGUgY29kZSB0byBw
+dXQgaHVnZXRsYiBwYWdlcy4NCklzIHRoaXMgcmlnaHQ/DQoNCg0KLyoNCiAqIHB1dCBwZm5zIGZv
+ciBhIGh1Z2V0bGIgcGFnZQ0KICogQHN0YXJ0OnRoZSBQQUdFX1NJWkUtcGFnZSB3ZSBzdGFydCB0
+byBwdXQsY2FuIGJlIGFueSBwYWdlIGluIHRoaXMgaHVnZXRsYiBwYWdlDQogKiBAbnBhZ2U6dGhl
+IG51bWJlciBvZiBQQUdFX1NJWkUtcGFnZXMgbmVlZCB0byBwdXQNCiAqIEBwcm90OklPTU1VX1JF
+QUQvV1JJVEUNCiAqLw0Kc3RhdGljIGludCBodWdldGxiX3B1dF9wZm4odW5zaWduZWQgbG9uZyBz
+dGFydCwgdW5zaWduZWQgaW50IG5wYWdlLCBpbnQgcHJvdCkNCnsNCiAgICAgICAgc3RydWN0IHBh
+Z2UgKnBhZ2U7DQogICAgICAgIHN0cnVjdCBwYWdlICpoZWFkOw0KDQogICAgICAgIGlmICghbnBh
+Z2UgfHwgIXBmbl92YWxpZChzdGFydCkpDQogICAgICAgICAgICAgICAgcmV0dXJuIDA7DQoNCiAg
+ICAgICAgcGFnZSA9IHBmbl90b19wYWdlKHN0YXJ0KTsNCiAgICAgICAgaWYgKCFwYWdlIHx8ICFQ
+YWdlSHVnZShwYWdlKSkNCiAgICAgICAgICAgICAgICByZXR1cm4gMDsNCiAgICAgICAgaGVhZCA9
+IGNvbXBvdW5kX2hlYWQocGFnZSk7DQogICAgICAgIC8qDQogICAgICAgICAqIFRoZSBsYXN0IHBh
+Z2Ugc2hvdWxkIGJlIGluIHRoaXMgaHVnZXRsYiBwYWdlLg0KICAgICAgICAgKiBUaGUgbnVtYmVy
+IG9mIHB1dHRpbmcgcGFnZXMgc2hvdWxkIGJlIGVxdWFsIHRvIHRoZSBudW1iZXINCiAgICAgICAg
+ICogb2YgZ2V0dGluZyBwYWdlcy5TbyB0aGUgaHVnZXBhZ2UgcGlubmVkIHJlZmNvdW50IGFuZCB0
+aGUgbm9ybWFsDQogICAgICAgICAqIHBhZ2UgcmVmY291bnQgY2FuIG5vdCBiZSBzbWFsbGVyIHRo
+YW4gbnBhZ2UuDQogICAgICAgICAqLw0KICAgICAgICBpZiAoKGhlYWQgIT0gY29tcG91bmRfaGVh
+ZChwZm5fdG9fcGFnZShzdGFydCArIG5wYWdlIC0gMSkpKQ0KICAgICAgICAgICAgICAgIHx8IChw
+YWdlX3JlZl9jb3VudChoZWFkKSA8IG5wYWdlKQ0KICAgICAgICAgICAgICAgIHx8IChjb21wb3Vu
+ZF9waW5jb3VudChwYWdlKSA8IG5wYWdlKSkNCiAgICAgICAgICAgICAgICByZXR1cm4gMDsNCg0K
+ICAgICAgICBpZiAoKHByb3QgJiBJT01NVV9XUklURSkgJiYgIVBhZ2VEaXJ0eShwYWdlKSkNCiAg
+ICAgICAgICAgICAgICBzZXRfcGFnZV9kaXJ0eV9sb2NrKHBhZ2UpOw0KDQogICAgICAgIGF0b21p
+Y19zdWIobnBhZ2UsIGNvbXBvdW5kX3BpbmNvdW50X3B0cihoZWFkKSk7DQogICAgICAgIGlmIChw
+YWdlX3JlZl9zdWJfYW5kX3Rlc3QoaGVhZCwgbnBhZ2UpKQ0KICAgICAgICAgICAgICAgIF9fcHV0
+X3BhZ2UoaGVhZCk7DQoNCiAgICAgICAgbW9kX25vZGVfcGFnZV9zdGF0ZShwYWdlX3BnZGF0KGhl
+YWQpLCBOUl9GT0xMX1BJTl9SRUxFQVNFRCwgbnBhZ2UpOw0KICAgICAgICByZXR1cm4gMTsNCn0N
+Cg==
