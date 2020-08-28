@@ -2,141 +2,292 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD15C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CF4C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC9622074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:34:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="CqTeAfA6"
+	by mail.kernel.org (Postfix) with ESMTP id 0AB362074A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:37:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbgH1UeV (ORCPT
+        id S1726464AbgH1UhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 16:34:21 -0400
-Received: from mail-dm6nam10on2055.outbound.protection.outlook.com ([40.107.93.55]:27873
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726797AbgH1UeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 16:34:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SZJQ9iJHZiYuW7m5e8gbhdpTQS2zUZS5P/ZaODH6VuPe8TlbEhURayYSmdx1pY9dHKpHIwHtH/Q/oqANXTX55U+kmFaiJtZo/lGIbXpw3Xfo5gD9AJgmjLzjJfoFNkqMoB6Y6dArrnNGYojP7Hzcd+EYfjK2KaT2fyPXo4qG8Z3mT0Qr3++NQYxMdRec4wAKME2PDDarOP7dqzqFk0KFqyUCnllXKFbP5qf4nmYQoYuCebrBt5iIFxY+gHeMMhPswB5u7vC2bfemcd0nrH15yZif4bZzCHG6KuPdylmrLn4qydUjLgcBsJodi6mlt1BVh1P9vPz2rZ17hsihtQjwtw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p19DD4AlfjlaKQ/B6lMTKHLNGQAO319keFtPMDiG+SQ=;
- b=iwStTC5Pe++xvWvoU84DsknsH+bac6V/zWKwejMz5RFLLO7o7RJzLm/slhh3Br3CbIUxJgFzbULN/HjnHq1MfadoHSYvvtlIX/pzSH05bCMSmvnE5tViqlp/6aUB9u0mDE8r4rfciK733BODXCx9lispc2sqUoxwCWed7ImAme9dheUJEu4Juuh+JMBoanYqlU+ZGPfVcpRo6ozLQNzq77YpEpuKqt5xrI7FmcN3HyI0vSoiVlkf2HW5xKvSNK+B7I7yCv1TyeapC65lg11totBUrUrNISKc1rGm194r9O9Wgytmw5HVHK5glH+v/b8MlsxzB25pMfYmEI4EB8hGzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p19DD4AlfjlaKQ/B6lMTKHLNGQAO319keFtPMDiG+SQ=;
- b=CqTeAfA6UDNf9ik3VzkVEjdowTmsfDVZt8VQJC9JGcgKfrDAPWju1aBe0YTyv/iQtT6QrK6vj2vrvKar6Zx4mKD4wHvlBlUlvdy1gtFsOcfR24G1wykYKB9Utnv+VcyFjfNAmZoGei+4ul4xVsFz4xkCfKkobyM4CnwH572E0CI=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2685.namprd12.prod.outlook.com (2603:10b6:805:67::33)
- by SA0PR12MB4511.namprd12.prod.outlook.com (2603:10b6:806:95::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Fri, 28 Aug
- 2020 20:33:59 +0000
-Received: from SN6PR12MB2685.namprd12.prod.outlook.com
- ([fe80::48e9:c9c:7cd7:de86]) by SN6PR12MB2685.namprd12.prod.outlook.com
- ([fe80::48e9:c9c:7cd7:de86%5]) with mapi id 15.20.3326.019; Fri, 28 Aug 2020
- 20:33:59 +0000
-From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-To:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-acpi@vger.kernel.org,
-        devel@acpica.org
-Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Subject: [PATCH v2 2/2] x86/mce/dev-mcelog: Fix updating kflags in AMD systems
-Date:   Fri, 28 Aug 2020 15:33:32 -0500
-Message-Id: <20200828203332.11129-3-Smita.KoralahalliChannabasappa@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200828203332.11129-1-Smita.KoralahalliChannabasappa@amd.com>
-References: <20200828203332.11129-1-Smita.KoralahalliChannabasappa@amd.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SN4PR0501CA0143.namprd05.prod.outlook.com
- (2603:10b6:803:2c::21) To SN6PR12MB2685.namprd12.prod.outlook.com
- (2603:10b6:805:67::33)
+        Fri, 28 Aug 2020 16:37:21 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:44596 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgH1UhU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 16:37:20 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: dafna)
+        with ESMTPSA id 4B8B529ABA9
+Subject: Re: [PATCH v3 4/9] media: vimc: Separate starting stream from
+ pipeline initialisation
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Cc:     Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+References: <20200819180442.11630-1-kgupta@es.iitr.ac.in>
+ <20200819180442.11630-5-kgupta@es.iitr.ac.in>
+ <eb5d4259-fe77-b4f2-1e62-0f846420b7c2@collabora.com>
+ <20200821210123.GA28410@kaaira-HP-Pavilion-Notebook>
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Message-ID: <b3e20f32-64b9-778b-fa2f-f17b0c1bcc72@collabora.com>
+Date:   Fri, 28 Aug 2020 22:37:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by SN4PR0501CA0143.namprd05.prod.outlook.com (2603:10b6:803:2c::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.5 via Frontend Transport; Fri, 28 Aug 2020 20:33:58 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [165.204.78.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 287fd341-5c60-46b9-b8b8-08d84b91b185
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4511:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA0PR12MB451160E6AF1CED559F70E5F290520@SA0PR12MB4511.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: SxlCE4EY+cGEA9MyDo7mpAv4rV2TIrbHTplPncE3hY3tsaeKc2sVhCG0wec1q2YR78PxtbZmVu55QCcbGAt3M1WRTTclXpjM3aRdLyfEOCzlB0IfBcE+KeoBI53jsaDAu9l3fkdS/RjPTmdYjmVPWT5b3BqVzOe6zaNifmGok6H1v4nRAj5ZxHQAmeHbCiBKVnvLavS+zpHOCCVGuwMeIazmqR2sQRd+ej1IIL5uNvy85V0sA/JjhAtVjPi5DYqnq/1i12opF8YiXFfewFIwlkHdYu9t1ls4kpYUpR/v5yysYfhZ6zApEhMx/MxFBjzIm/k6vEP5RUzuK7gmyF3dVA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(376002)(136003)(366004)(346002)(396003)(5660300002)(8936002)(8676002)(6486002)(956004)(6666004)(2616005)(66556008)(1076003)(4326008)(7416002)(66946007)(66476007)(86362001)(83380400001)(26005)(36756003)(2906002)(186003)(52116002)(54906003)(478600001)(316002)(16576012);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: XTTWkPNXZXfe9bQVlzQU5pj7OEa75q+XQuTI+i6SFrr5+YeEZk06qi8TSIzZVfsU5a2700E2QWKdmWwaYdBE0vK64FuHtZlRJuwbmPFoIDYVIdu4bmT4K/ZARMaCfFZMikAP7vp72+Sg3qfur1V7uTZ4bZuZahBWV3VA8sE1+QBPcb2zroqfbdAgfFWPDo3vm8W1FM/ju87eg6xf0Wgam2yfHHq7ox49cov2DpzawuiOoxLKCigAYwIpMABUKBcZhCk2nMBThgrWjkL8+/BcYf4s9ygLvOUeC62wWN9UmV7oCH6q9jSFAdhHPg3P8Ay9DUm+NlPzO/TTTUu8OjWnNhP8yZuLLt8PBIv5XGFEsepWH8R8FlJMbJzEBEtyMkj/1h6HKOAQvIsoe6wHxJ3urBLbk0S4DkUcjgQIf0zD9LlPEYux4LB+mxUHx+d/0KQZRA3x4C4Qb81BWYdd2DGw0Jfx/5/G4TGPCGWMTUVYU+AsvwvN1M8P+19cYVfC+xGZBP55O+MK3+OxtmhKwlpNqbn7BsHlh2cuFhEKVG/PDdjdpCRbi8hcdeFGxY0YAU2zbwC+OSqxu+zpho0/opAahF61FO5iMpCxYytPdbXQcAlI/Z1ZfAveuLdnHzb3+OdtDDqWbaCMnbRholQ5qhSWAg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 287fd341-5c60-46b9-b8b8-08d84b91b185
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2020 20:33:59.6035
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JM/d5Vwlfes0nSAmeGntqCybX8VWC17agw2O2axsJWE7yWtxQOW0zFn0+PMTLq6ILTVUWmbPduN319Gh8J9BtQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4511
+In-Reply-To: <20200821210123.GA28410@kaaira-HP-Pavilion-Notebook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mcelog utility is not commonly used on AMD systems. Therefore, errors
-logged only by the dev_mce_log() notifier will be missed. This may occur
-if the EDAC modules are not loaded in which case it's preferable to print
-the error record by the default notifier.
+Hi,
 
-However, the mce->kflags set by dev_mce_log() notifier makes the default
-notifier to skip over the errors assuming they are processed by
-dev_mce_log().
+Am 21.08.20 um 23:01 schrieb Kaaira Gupta:
+> Hi,
+> 
+> On Fri, Aug 21, 2020 at 05:11:23PM +0200, Dafna Hirschfeld wrote:
+>>
+>>
+>> Am 19.08.20 um 20:04 schrieb Kaaira Gupta:
+>>> Separate the process of initialising pipeline array from starting
+>>> streaming for all entities in path of a stream. This is needed because
+>>> multiple streams can stream, but only one pipeline object is needed.
+>>>
+>>> Process frames only for those entities in a pipeline which are
+>>> streaming. This is known through their use counts.
+>>>
+>>> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+>>> ---
+>>>    .../media/test-drivers/vimc/vimc-streamer.c   | 95 ++++++++++++++++---
+>>>    1 file changed, 83 insertions(+), 12 deletions(-)
+>>>
+>>> diff --git a/drivers/media/test-drivers/vimc/vimc-streamer.c b/drivers/media/test-drivers/vimc/vimc-streamer.c
+>>> index c1644d69686d..cc40ecabe95a 100644
+>>> --- a/drivers/media/test-drivers/vimc/vimc-streamer.c
+>>> +++ b/drivers/media/test-drivers/vimc/vimc-streamer.c
+>>> @@ -40,33 +40,30 @@ static void vimc_streamer_pipeline_terminate(struct vimc_stream *stream)
+>>>    }
+>>>    /**
+>>> - * vimc_streamer_pipeline_init - Initializes the stream structure
+>>> + * vimc_streamer_stream_start - Starts streaming for all entities
+>>> + * in a stream
+>>>     *
+>>> - * @stream: the pointer to the stream structure to be initialized
+>>>     * @ved:    the pointer to the vimc entity initializing the stream
+>>>     *
+>>> - * Initializes the stream structure. Walks through the entity graph to
+>>> - * construct the pipeline used later on the streamer thread.
+>>> - * Calls vimc_streamer_s_stream() to enable stream in all entities of
+>>> - * the pipeline.
+>>> + * Walks through the entity graph to call vimc_streamer_s_stream()
+>>> + * to enable stream in all entities in path of a stream.
+>>>     *
+>>>     * Return: 0 if success, error code otherwise.
+>>>     */
+>>> -static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+>>> -				       struct vimc_ent_device *ved)
+>>> +static int vimc_streamer_stream_start(struct vimc_stream *stream,
+>>> +				      struct vimc_ent_device *ved)
+>>>    {
+>>>    	struct media_entity *entity;
+>>>    	struct video_device *vdev;
+>>>    	struct v4l2_subdev *sd;
+>>> +	int stream_size = 0;
+>>>    	int ret = 0;
+>>> -	stream->pipe_size = 0;
+>>> -	while (stream->pipe_size < VIMC_STREAMER_PIPELINE_MAX_SIZE) {
+>>> +	while (stream_size < VIMC_STREAMER_PIPELINE_MAX_SIZE) {
+>>>    		if (!ved) {
+>>>    			vimc_streamer_pipeline_terminate(stream);
+>>>    			return -EINVAL;
+>>>    		}
+>>> -		stream->ved_pipeline[stream->pipe_size++] = ved;
+>>>    		if (is_media_entity_v4l2_subdev(ved->ent)) {
+>>>    			sd = media_entity_to_v4l2_subdev(ved->ent);
+>>> @@ -104,6 +101,73 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+>>>    					    entity);
+>>>    			ved = video_get_drvdata(vdev);
+>>>    		}
+>>> +		stream_size++;
+>>> +	}
+>>> +
+>>> +	vimc_streamer_pipeline_terminate(stream);
+>>> +	return -EINVAL;
+>>> +}
+>>> +
+>>> +/**
+>>> + * vimc_streamer_pipeline_init - Initialises pipeline and pipe size
+>>> + *
+>>> + * @stream: the pointer to the stream structure
+>>> + * @ved:    the pointer to the vimc entity initializing the stream pipeline
+>>> + *
+>>> + * Walks through the entity graph to initialise ved_pipeline and updates
+>>> + * pipe_size too.
+>>> + *
+>>> + * Return: 0 if success, error code otherwise.
+>>> + */
+>>> +static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+>>> +				       struct vimc_ent_device *ved)
+>>> +{
+>>> +	struct media_entity *entity;
+>>> +	struct media_device *mdev;
+>>> +	struct media_graph graph;
+>>> +	struct video_device *vdev;
+>>> +	struct v4l2_subdev *sd;
+>>> +	int ret;
+>>> +
+>>> +	entity = ved->ent;
+>>> +	mdev = entity->graph_obj.mdev;
+>>> +
+>>> +	ret = media_graph_walk_init(&graph, mdev);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	media_graph_walk_start(&graph, entity);
+>>> +
+>>> +	/*
+>>> +	 * Start pipeline array initialisation from RAW Capture only to get
+>>> +	 * entities in the correct order of their frame processing.
+>>> +	 */
+>>> +	if (!strncmp(entity->name, "RGB", 3)) {
+>>
+>> I don't understand this condition, way is it good for?
+> 
+> I have explained that later in the reply
+> 
+>>
+>> I think the function should be generic and not assume names of entities
+>> or specific topology.
+> 
+> It doesn't assume the topology, rather it is in place just to make sure
+> that the entities in ved_pipeline are in correct order.
+> 
+>>
+>>
+>>> +		entity = media_graph_walk_next(&graph);
+>>> +		mdev = entity->graph_obj.mdev;
+>>> +		media_graph_walk_cleanup(&graph);
+>>> +
+>>> +		ret = media_graph_walk_init(&graph, mdev);
+>>> +		if (ret)
+>>> +			return ret;
+>>> +		media_graph_walk_start(&graph, entity);
 
-Do not update kflags in the dev_mce_log() notifier on AMD systems.
+Hi, can you explain what this code does?
+Why does it start the search in the next entity?
 
-Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
----
-v2:
-	No change
+>>> +	}
+>>> +
+>>> +	while (stream->pipe_size < VIMC_STREAMER_PIPELINE_MAX_SIZE) {
+>>> +		if (is_media_entity_v4l2_subdev(entity)) {
+>>> +			sd = media_entity_to_v4l2_subdev(entity);
+>>> +			ved = v4l2_get_subdevdata(sd);
+>>> +		} else {
+>>> +			vdev = container_of(entity, struct video_device, entity);
+>>> +			ved = video_get_drvdata(vdev);
+>>> +		}
+>>> +		stream->ved_pipeline[stream->pipe_size++] = ved;
+>>> +		entity = media_graph_walk_next(&graph);
+>>> +
+>>> +		if (!strcmp(entity->name, stream->ved_pipeline[0]->ent->name)) {
+>>
+>> I also don't understand this condition
+>>
+>>> +			media_graph_walk_cleanup(&graph);
+>>> +			return 0;
+>>> +		}
+>>>    	}
+>>
+>> It is not clear what this function does, it looks like it adds to 'ved_pipeline'
+>> all entities that are connected to the video node, in addition to the entities
+>> that where there from previous calls, so some entities appear several times.
+> 
+> This function returns all the entities in a pipe, weather they are
+> streaming or not. For example, if only the RAW Capture 1 streams, or
+> RGB/YUB capture streams, or both stream..in all three cases ved_pipeline
+> will have the same entities, in exactly same order, and all will occur just once.
+> Since media_graph_walk goes to each node of the graph, it returns back
+> to the first one (as its a graph), hence the last condition, ie,
+> 
+> 	if (!strcmp(entity->name, stream->ved_pipeline[0]->ent->name)) {
+> 
+> makes sure that the first entity is not added again to the array.
+> 
+> First condition, ie
+> 
+> 	if (!strncmp(entity->name, "RGB", 3)) {
+> 
+> Just makes sure that the search starts at RGB capture only. This is
+> because, in case of any other video node, the order of entities, as you
+> have mentioned later in the mail, will not be desirable, ie it won't
+> start at sensor and end at captures. So this condition just takes care
+> that all the entities in ved_pipeline array are in correct order
+> (starting at sensor, ending at captures).
 
- arch/x86/kernel/cpu/mce/dev-mcelog.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+It is better to compare to the whole name of the entity to make it more clear.
+Also I think it is better to document that this function is called only upon the
+first streaming node.
 
-diff --git a/arch/x86/kernel/cpu/mce/dev-mcelog.c b/arch/x86/kernel/cpu/mce/dev-mcelog.c
-index 03e51053592a..100fbeebdc72 100644
---- a/arch/x86/kernel/cpu/mce/dev-mcelog.c
-+++ b/arch/x86/kernel/cpu/mce/dev-mcelog.c
-@@ -67,7 +67,9 @@ static int dev_mce_log(struct notifier_block *nb, unsigned long val,
- unlock:
- 	mutex_unlock(&mce_chrdev_read_mutex);
- 
--	mce->kflags |= MCE_HANDLED_MCELOG;
-+	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD)
-+		mce->kflags |= MCE_HANDLED_MCELOG;
-+
- 	return NOTIFY_OK;
- }
- 
--- 
-2.17.1
+I still think this function should be independent of the topology.
+Maybe you can use Helen's patch that allow walking a graph only opposite to the link direction: https://patchwork.kernel.org/patch/11564899/
+This ensures that the Sensor will be first in the graph walk. Then the streaming thread
+iterates the ved_pipeline from 0 upwards and not from 'pipe_size' downwards.
 
+Thanks,
+Dafna
+
+
+
+> 
+> Thanks,
+> Kaaira
+> 
+>>
+>> I think there is no need to use the graph walk here but to access the source entity
+>> in each iteration, the way done in vimc_streamer_stream_start
+>> also.
+>> I think the code should iterate here until it reaches an entity that is already streaming,
+>> this means that the entity is already in the `ved_pipeline`, also you should make sure
+>> that the sensor is the first entity that process a frame, therefore the sensor should be
+>> at the end/start of the list of entities. Generally each entity should appear exactly once
+>> in the 'ved_pipeline' array and the entities should be ordered such that when calling 'process_frame'
+>> on one entity should be after calling 'process_frame' on its source entity.
+>> maybe it is easyer to implement if 'ved_pipeline' is a linked list.
+>>
+>> Thanks,
+>> Dafna
+>>
+>>>    	vimc_streamer_pipeline_terminate(stream);
+>>> @@ -138,8 +202,11 @@ static int vimc_streamer_thread(void *data)
+>>>    		for (i = stream->pipe_size - 1; i >= 0; i--) {
+>>>    			ved = stream->ved_pipeline[i];
+>>> -			ret = ved->process_frame(ved);
+>>> +			if (atomic_read(&ved->use_count) == 0)
+>>> +				continue;
+>>> +
+>>> +			ret = ved->process_frame(ved);
+>>>    			if (ret)
+>>>    				break;
+>>>    		}
+>>> @@ -179,6 +246,10 @@ int vimc_streamer_s_stream(struct vimc_stream *stream,
+>>>    		if (stream->kthread)
+>>>    			return 0;
+>>> +		ret = vimc_streamer_stream_start(stream, ved);
+>>> +		if (ret)
+>>> +			return ret;
+>>> +
+>>>    		ret = vimc_streamer_pipeline_init(stream, ved);
+>>>    		if (ret)
+>>>    			return ret;
+>>>
