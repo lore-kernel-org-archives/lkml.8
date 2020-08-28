@@ -2,98 +2,124 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8B6C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C942C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:40:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD4720872
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04E0020872
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:40:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="PioKAFn8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pjn/h9gD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbgH1LkR (ORCPT
+        id S1729282AbgH1Lkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 07:40:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57222 "EHLO
+        Fri, 28 Aug 2020 07:40:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729257AbgH1Lgl (ORCPT
+        with ESMTP id S1729268AbgH1LiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 07:36:41 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E561BC06121B
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 04:13:26 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id y65so415702qtd.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 04:13:26 -0700 (PDT)
+        Fri, 28 Aug 2020 07:38:12 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74D0EC061232;
+        Fri, 28 Aug 2020 04:38:05 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id t4so578325iln.1;
+        Fri, 28 Aug 2020 04:38:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7gQIGUiMIeeIo12Il7bUrjYk58mhEZJndN/EWd9XYIE=;
-        b=PioKAFn8fdNLwzxhcOWCr/lhW22EBcVyqYD2T6CTGQZkstnAaUdV1g6cmo/nDhzkFv
-         8ivLGloms6Xx44/b/6rT4bCjJUK9+S0HHoMjMfHKpd9eyjbJ3KeKeiPMfDPweuUxJA4U
-         N88wCwKGRIP24st+U/LnJWxvhuHvfLGiYqCrmiSaZJAmQZMxoTvUg4h5I9fNFX1Ta3pH
-         QkfARA7GGBGCUF9YijF7xzszb2J62whoTNOleglB/edmTYLCnvEV2NtlX9JRvXrOEXsM
-         H516mXmB8M2kkvhVWOZLpShcQV3/oUrbrp4eLw3zvTIDO7jL0TPtW8zA/y2UGZZjwRg/
-         LUQw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YkhG0d/qOT3/PWJBg69FZnqsmWy5PRGz7aCU+rLDXxM=;
+        b=pjn/h9gD/HjPLZEqJAJsF2uf24PYQdDAWmiD1wPfNvudgPxGPyd4OzHlALIT+VSh5Y
+         T1zcvcf/2OMybRQ2gT7gBjFIjjRInfx9UkYnnINep6/pptBICO/GXDmFxw0v7PeiW4wu
+         XDkRvqRvF6dHqX/VMJ7Qse/4QKYNFSQJSGuTljEs4hS0CsaRzZHiJRn515VXp64VUyHo
+         mUROMmrauEJmNQQXeTDOGVVV/4ge7l3vFWlkNU5rIlNJrK6Y2W9Lp4B2rTeyXqaieX2Y
+         nXNYq1z4Vsdd0w5W3dTDzbIzp/Y2343ZT6F4T5GYEDa/0jKrQnYPkFGbTDr0W4yLGmCr
+         XMHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7gQIGUiMIeeIo12Il7bUrjYk58mhEZJndN/EWd9XYIE=;
-        b=B+4EwUgJJ34YQ+GUIm62tlx+L6YHGdryMDxbiT5PNFarqazNxUOb9Yjwbql+C9N+GW
-         c+QtAJKoRiMZtq1EfJHp4cvMuSCm+nU0q0/mApVCN4GXwk91hwY3LablJ/xcEpJuwGHU
-         Isz2KNIsYPWt5ZVVYq30PqujDPm9bTyTeFoQQgm0R4M2wbkVzM+W7zHC9ZRr8Tcv6pLh
-         9uofTiEiyoEUkz/0pchoI3sbxyqB8aEniUTkwq2XyBjUs0yBRvZr/TnN2f0ZuYLBFmeS
-         eMIVoUrzmIRPFg5TOZjOtngsWTy6TNxjm9qxN6r6GdxM9eqbmyOZ/4B9udxwNbUVzqFl
-         6MIw==
-X-Gm-Message-State: AOAM530imw/K3wH6kNjAjDnrrWEDodZKpSFvrGMiDzDePwoHUK3vwaWD
-        x4V3SLY7aVwXUIWAJAU+6X7YYg==
-X-Google-Smtp-Source: ABdhPJzGPBju0yAnoEhn5EAXcBFDqYwo7FFOY5QZTG0TPwuwKj933CaIS8c3I9oJh+7hCv3p9iYf+A==
-X-Received: by 2002:ac8:6052:: with SMTP id k18mr1060677qtm.60.1598613206205;
-        Fri, 28 Aug 2020 04:13:26 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id i1sm447103qkd.58.2020.08.28.04.13.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 04:13:25 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kBcJw-000OQc-IU; Fri, 28 Aug 2020 08:13:24 -0300
-Date:   Fri, 28 Aug 2020 08:13:24 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] mm/test: use the new SKIP() macro
-Message-ID: <20200828111324.GU24045@ziepe.ca>
-References: <20200827190400.12608-1-rcampbell@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YkhG0d/qOT3/PWJBg69FZnqsmWy5PRGz7aCU+rLDXxM=;
+        b=qobOkPolgRwz6XBHweJZq2qYVObyAJizRjhB0srUoh08mGQ6mw6XjhawUF23MAYjs5
+         2ciKvZHkw0KAx3QEhUVpXDLBkN2TnPi8SiJF3fEzpnddEB/76DwmqPI3HEpRNeT2GwYh
+         G/ng4c1WqlJXJl81bxAjp0d+Qc7Tu/qiPrUpSyn8QuufkpBkjjs2FsCzUOsCFLuJ2eWV
+         Sw4LfBvEjtsu4Q9Eku/ajvNk8TvhB1McGb9f8NKrfDKPUmfMW9ptfjLZzySFaMwJxSVm
+         n6bjgLQx6Q/Q2xm2oe7HsxxnulIE3FRU+PJEMhaj8ouebE2yUw5JY/j1Iyi09rR3CWJd
+         3OeQ==
+X-Gm-Message-State: AOAM5301TYOwcegUa9vpG9udVlQ0j0FCyjE4GHzfdRMcnYSCJMplzXro
+        lA6EFoYg2kvoK1qyq+2P5huZi+kARj0MuxDyTLM=
+X-Google-Smtp-Source: ABdhPJwHi2iqfV/mS52ggNLcex3m9VMBQ2/QGNsUdS0LRP4Op+NbUqXOoljtmaRM1TqvP73cHCEfd4beFso+xHIV+0Y=
+X-Received: by 2002:a05:6e02:586:: with SMTP id c6mr1122698ils.13.1598614684703;
+ Fri, 28 Aug 2020 04:38:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827190400.12608-1-rcampbell@nvidia.com>
+References: <a770d45d-b147-a8c5-b7f8-30d668cbed84@intel.com>
+ <4BDFD364-798C-4537-A88E-F94F101F524B@amacapital.net> <CAMe9rOoTjSwRSPuqP6RKkDzPA_VPh5gVYRVFJ-ezAD4Et-FUng@mail.gmail.com>
+ <CALCETrW=-ahC7GUCCyX7nPjCHfG3tiyDespud2Z7UbB6yWWWAA@mail.gmail.com>
+ <CAMe9rOrt5hz6qsNAxPgdKCOhRcKKESv-D3rxdSfraeJ-LFHM4w@mail.gmail.com> <87v9h3thj9.fsf@oldenburg2.str.redhat.com>
+In-Reply-To: <87v9h3thj9.fsf@oldenburg2.str.redhat.com>
+From:   "H.J. Lu" <hjl.tools@gmail.com>
+Date:   Fri, 28 Aug 2020 04:37:28 -0700
+Message-ID: <CAMe9rOr=BZw3GyXf0g6tAZnfa8NbamoyBoU9KqoxtHg9c2yZhw@mail.gmail.com>
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Yu, Yu-cheng" <yu-cheng.yu@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Dave Hansen <dave.hansen@intel.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 12:04:00PM -0700, Ralph Campbell wrote:
-> Some tests might not be able to be run if resources like huge pages are
-> not available. Mark these tests as skipped instead of simply passing.
-> 
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> ---
-> 
-> This applies to linux-mm and is for Andrew Morton's tree.
-> 
->  tools/testing/selftests/vm/hmm-tests.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On Thu, Aug 27, 2020 at 11:24 PM Florian Weimer <fweimer@redhat.com> wrote:
+>
+> * H. J. Lu:
+>
+> > Can you think of ANY issues of passing more arguments to arch_prctl?
+>
+> On x32, the glibc arch_prctl system call wrapper only passes two
+> arguments to the kernel, and applications have no way of detecting that.
+> musl only passes two arguments on all architectures.  It happens to work
+> anyway with default compiler flags, but that's an accident.
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+In the current glibc, there is no arch_prctl wrapper for i386.  There are
+arch_prctl wrappers with 2 arguments for x86-64 and x32.  But this isn't an
+issue for glibc since glibc is both the provider and the user of the new
+arch_prctl extension.  Besides,
 
-Jason
+long syscall(long number, ...);
+
+is always available.
+
+-- 
+H.J.
