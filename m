@@ -2,133 +2,131 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDF7C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AB9C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF5322080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71EF720848
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:57:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="auHHUx3z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgH1Byx (ORCPT
+        id S1728329AbgH1B5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 21:54:53 -0400
-Received: from emcscan.emc.com.tw ([192.72.220.5]:45003 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728257AbgH1Byw (ORCPT
+        Thu, 27 Aug 2020 21:57:19 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:38412 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgH1B5S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 21:54:52 -0400
-X-Greylist: delayed 587 seconds by postgrey-1.27 at vger.kernel.org; Thu, 27 Aug 2020 21:54:51 EDT
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="37064319"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 28 Aug 2020 09:45:03 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(167078:0:AUTH_RELAY)
-        (envelope-from <johnny.chuang@emc.com.tw>); Fri, 28 Aug 2020 09:45:00 +0800 (CST)
-Received: from 192.168.55.71
-        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(2481:0:AUTH_LOGIN)
-        (envelope-from <johnny.chuang@emc.com.tw>); Fri, 28 Aug 2020 09:44:58 +0800 (CST)
-From:   "Johnny.Chuang" <johnny.chuang@emc.com.tw>
-To:     "'Harry Cutts'" <hcutts@chromium.org>,
-        "'Johnny Chuang'" <johnny.chuang.emc@gmail.com>
-Cc:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>,
-        "'Benjamin Tissoires'" <benjamin.tissoires@redhat.com>,
-        "'Peter Hutterer'" <peter.hutterer@who-t.net>,
-        "'lkml'" <linux-kernel@vger.kernel.org>,
-        "'linux-input'" <linux-input@vger.kernel.org>,
-        "'James Chen'" <james.chen@emc.com.tw>,
-        "'Jennifer Tsai'" <jennifer.tsai@emc.com.tw>,
-        "'Paul Liang'" <paul.liang@emc.com.tw>,
-        "'Jeff Chuang'" <jeff.chuang@emc.com.tw>
-References: <1598492651-9072-1-git-send-email-johnny.chuang.emc@gmail.com> <CA+jURctrQcKsGwxZriX8bD3AQr-yh_J_Z7kkP+6HtD72Gt5DUw@mail.gmail.com>
-In-Reply-To: <CA+jURctrQcKsGwxZriX8bD3AQr-yh_J_Z7kkP+6HtD72Gt5DUw@mail.gmail.com>
-Subject: RE: [PATCH v2] Input: elants_i2c - Report resolution of ABS_MT_TOUCH_MAJOR by FW information.
-Date:   Fri, 28 Aug 2020 09:44:58 +0800
-Message-ID: <005b01d67cdc$d6b9abb0$842d0310$@emc.com.tw>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQFRGjtInX7OpHFNBLKqABUOrfrToAHhntm3qkh3FuA=
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDUwMTBcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy0xM2M4MjJhMC1lOGQwLTExZWEtODc2YS03YzVjZjg3NDk0NzhcYW1lLXRlc3RcMTNjODIyYTItZThkMC0xMWVhLTg3NmEtN2M1Y2Y4NzQ5NDc4Ym9keS50eHQiIHN6PSIyNzE2IiB0PSIxMzI0MzA1MjY5ODIyNTYyMjIiIGg9IlJaWkh1ZjZwa29WZEVKcGMyTDVId3hYdis0OD0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: true
+        Thu, 27 Aug 2020 21:57:18 -0400
+Received: from tusharsu-Ubuntu.lan (c-71-197-163-6.hsd1.wa.comcast.net [71.197.163.6])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 144F720B7178;
+        Thu, 27 Aug 2020 18:57:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 144F720B7178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598579837;
+        bh=xcLyoCG73RULVdbULRTyICyaCH1/+89JRVwjrVGQQYk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=auHHUx3zzRaZqF2Q4uil4Xmb8tLHAUDUJEujc7H8AwWfF1cjlY6ItPMOwkN0NRma2
+         22TYlVQEhEKk5FtO3MSm8qJhQNIO9G/h5E8tO/Tt5qbEsLeGJOr18e9REC2gPa3GeD
+         cWp/mFEwXt7v150PHt3uMz+16nU3GgdiE9ya1nL0=
+From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
+To:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com, agk@redhat.com, snitzer@redhat.com,
+        gmazyland@gmail.com
+Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
+        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com
+Subject: [PATCH v3 0/6] IMA: Infrastructure for measurement of critical kernel data
+Date:   Thu, 27 Aug 2020 18:56:58 -0700
+Message-Id: <20200828015704.6629-1-tusharsu@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Wed, 26 Aug 2020 at 18:44, Johnny Chuang
-> <johnny.chuang.emc@gmail.com> wrote:
-> >
-> > This patch adds a new behavior to report touch major resolution based
-> > on information provided by firmware.
-> >
-> > In initial process, driver acquires touch information from touch ic.
-> > This information contains of one flag about reporting resolution of
-> > ABS_MT_TOUCH_MAJOR is needed, or not.
-> > Touch driver will report touch major resolution after geting this flag.
-> 
-> I think this paragraph needs updating now that the firmware's reporting the
-> actual resolution instead of a flag.
+There are several kernel components that contain critical data which if
+accidentally or maliciously altered, can compromise the security of the
+kernel. Example of such components would include LSMs like SELinux, or
+AppArmor; or device-mapper targets like dm-crypt, dm-verity etc.
 
-Thanks Harry, I will update patch v3 for this.
+Many of these components do not use the capabilities provided by kernel
+integrity subsystem (IMA), and thus they don't use the benefits of
+extended TPM PCR quotes and ultimately the benefits of remote attestation.
 
-> 
-> >
-> > Signed-off-by: Johnny Chuang <johnny.chuang.emc@gmail.com>
-> > ---
-> > Changes in v2:
-> >   - register real resolution instead of true/false.
-> > ---
-> >  drivers/input/touchscreen/elants_i2c.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/drivers/input/touchscreen/elants_i2c.c
-> > b/drivers/input/touchscreen/elants_i2c.c
-> > index b0bd5bb..dc7f4a5 100644
-> > --- a/drivers/input/touchscreen/elants_i2c.c
-> > +++ b/drivers/input/touchscreen/elants_i2c.c
-> > @@ -151,6 +151,7 @@ struct elants_data {
-> >
-> >         bool wake_irq_enabled;
-> >         bool keep_power_in_suspend;
-> > +       u8 report_major_resolution;
-> >
-> >         /* Must be last to be used for DMA operations */
-> >         u8 buf[MAX_PACKET_SIZE] ____cacheline_aligned; @@ -459,6
-> > +460,9 @@ static int elants_i2c_query_ts_info(struct elants_data *ts)
-> >         rows = resp[2] + resp[6] + resp[10];
-> >         cols = resp[3] + resp[7] + resp[11];
-> >
-> > +       /* Decide if report resolution of ABS_MT_TOUCH_MAJOR */
-> > +       ts->report_major_resolution = resp[16];
-> > +
-> >         /* Process mm_to_pixel information */
-> >         error = elants_i2c_execute_command(client,
-> >                                            get_osr_cmd,
-> > sizeof(get_osr_cmd), @@ -1325,6 +1329,8 @@ static int
-> elants_i2c_probe(struct i2c_client *client,
-> >                              0, MT_TOOL_PALM, 0, 0);
-> >         input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->x_res);
-> >         input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->y_res);
-> > +       if (ts->report_major_resolution > 0)
-> > +               input_abs_set_res(ts->input, ABS_MT_TOUCH_MAJOR,
-> > + ts->report_major_resolution);
-> >
-> >         touchscreen_parse_properties(ts->input, true, &ts->prop);
-> >
-> > --
-> > 2.7.4
-> >
-> 
-> Harry Cutts
-> Chrome OS Touch/Input team
+This series bridges this gap, so that potential kernel components that
+contain data critical to the security of the kernel could take advantage
+of IMA's measuring and quoting abilities - thus ultimately enabling
+remote attestation for their specific data.
 
---
-Johnny
+System administrators may want to pick and choose which kernel
+components they would want to enable for measurements, quoting, and
+remote attestation. To enable that, a new IMA policy is introduced.
+
+And lastly, the functionality is exposed through a function
+ima_measure_critical_data(). The functionality is generic enough to
+measure the data of any kernel component at run-time. To ensure that only
+data from supported sources are measured, the kernel component needs to
+be added to a compile-time list of supported sources (an "allowed list
+of components"). IMA validates the source passed to
+ima_measure_critical_data() against this allowed list at run-time. 
+
+This series is based on the following repo/branch:
+
+ repo: https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
+ branch: next-integrity
+ commit d012a7190fc1 ("Linux 5.9-rc2")
+
+This series also has a dependency on the following patch series:
+ https://patchwork.kernel.org/patch/11709527/
+
+Change Log v3:
+Incorporated feedback from Mimi on v2.
+ - Renamed the policy "data_sources" to
+   "critical_kernel_data_sources".
+ - Added "critical_kernel_data_sources" description in
+   Documentation/ima-policy.
+ - Split CRITICAL_DATA + critical_kernel_data_sources into two separate
+   patches.
+ - Merged hook ima_measure_critical_data() + CRITICAL_DATA into a single
+   patch.
+ - Added functionality to validate data sources before measurement.
+
+Change Log v2:
+ - Reverted the unnecessary indentations in existing #define.
+ - Updated the description to replace the word 'enlightened' with
+   'supported'.
+ - Reverted the unnecessary rename of attribute size to buf_len.
+ - Introduced a boolean parameter measure_buf_hash as per community
+   feedback to support measuring hash of the buffer, instead of the
+   buffer itself.
+
+
+Tushar Sugandhi (6):
+  IMA: generalize keyring specific measurement constructs
+  IMA: change process_buffer_measurement return type from void to int
+  IMA: update process_buffer_measurement to measure buffer hash
+  IMA: add policy to measure critical data from kernel components
+  IMA: add hook to measure critical data from kernel components
+  IMA: validate supported kernel data sources before measurement
+
+ Documentation/ABI/testing/ima_policy         |  11 +-
+ include/linux/ima.h                          |  11 ++
+ security/integrity/ima/ima.h                 |  41 +++++++-
+ security/integrity/ima/ima_api.c             |   8 +-
+ security/integrity/ima/ima_appraise.c        |   2 +-
+ security/integrity/ima/ima_asymmetric_keys.c |   2 +-
+ security/integrity/ima/ima_main.c            |  72 +++++++++++--
+ security/integrity/ima/ima_policy.c          | 101 +++++++++++++++----
+ security/integrity/ima/ima_queue_keys.c      |   3 +-
+ 9 files changed, 205 insertions(+), 46 deletions(-)
+
+-- 
+2.17.1
 
