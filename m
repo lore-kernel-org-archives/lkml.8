@@ -2,74 +2,91 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94772C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19017C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75E7F2087D
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E39172075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 20:56:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NHA4dY32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgH1Ux4 (ORCPT
+        id S1726649AbgH1U4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 16:53:56 -0400
-Received: from mga18.intel.com ([134.134.136.126]:11098 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725979AbgH1Uxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 16:53:54 -0400
-IronPort-SDR: wSvcNr0FwoSG2zCc7unEEvrJ3qZGByctjsLP3yQR96fc4QjW+nV4axF25hW8gT+hpp2idiBiCq
- Es3z1Q02n43A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="144423368"
-X-IronPort-AV: E=Sophos;i="5.76,365,1592895600"; 
-   d="scan'208";a="144423368"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 13:53:54 -0700
-IronPort-SDR: /OCPrcZkRiHahOLjQ8MnMDVN9cT2EI/iOS5XT0iMuitLHFQIcMIfg4Ju0VrihGCnZq0S65Jl+S
- pW8RKe4vlt2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,365,1592895600"; 
-   d="scan'208";a="330060605"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga008.jf.intel.com with ESMTP; 28 Aug 2020 13:53:54 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 096E3301C54; Fri, 28 Aug 2020 13:30:34 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 13:30:33 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Muchun Song <songmuchun@bytedance.com>, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm/hugetlb: Fix a race between hugetlb sysctl handlers
-Message-ID: <20200828203033.GT1509399@tassilo.jf.intel.com>
-References: <20200828031146.43035-1-songmuchun@bytedance.com>
- <20200828145950.GS1509399@tassilo.jf.intel.com>
- <fee0c3a6-af68-5971-1959-a66d41ea16a3@oracle.com>
+        Fri, 28 Aug 2020 16:56:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725979AbgH1U4I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 16:56:08 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91138C061264
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 13:56:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=7J1O6k6tR7A5+V7f8slNjLba3lybqtmnEjLaRhAAaas=; b=NHA4dY32oqry9fBpFXAnG1HCYE
+        +4KQHv7KlXrMaJgxMc8eojReRGyhg18wwlMS/f2p/6WRMHIjJ3cOKfNWzyDBT0L9TXMSwTPcBp/Zn
+        2R1k/z+EEWoriFYn/zIHaiLiJxmmL859CzgYBU09vdkKqeFCofRWbWr02Ap3xrSiEmNG757l6vqtg
+        znV8mleBIeKnYgb4nPjsRgwnVVKv6zjQ7yuaYAbCwIsujx6CvNaQ8pSlanUUXmsrFttbQKyxScPaC
+        fc9x8roP0C91KbsMuucBuAsRO2YEojeEwSdQveo7kfTuOsIG0SyY3pH0vCssH4RLfA5wBmpsWpalD
+        2k68iWxA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBlPD-0000Ov-0b; Fri, 28 Aug 2020 20:55:27 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 996C9980DC7; Fri, 28 Aug 2020 22:55:26 +0200 (CEST)
+Date:   Fri, 28 Aug 2020 22:55:26 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Julien Desfossez <jdesfossez@digitalocean.com>
+Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Dhaval Giani <dhaval.giani@oracle.com>,
+        Chris Hyser <chris.hyser@oracle.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        mingo@kernel.org, tglx@linutronix.de, pjt@google.com,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, joel@joelfernandes.org,
+        vineeth@bitbyteword.org, Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Agata Gruza <agata.gruza@intel.com>,
+        Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>,
+        graf@amazon.com, konrad.wilk@oracle.com, dfaggioli@suse.com,
+        rostedt@goodmis.org, derkling@google.com, benbjiang@tencent.com,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Aaron Lu <aaron.lu@linux.alibaba.com>
+Subject: Re: [RFC PATCH v7 08/23] sched: Add core wide task selection and
+ scheduling.
+Message-ID: <20200828205526.GC29142@worktop.programming.kicks-ass.net>
+References: <cover.1598643276.git.jdesfossez@digitalocean.com>
+ <df3af13cc820a3c2397b85cb7de08cb6a0780e1d.1598643276.git.jdesfossez@digitalocean.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fee0c3a6-af68-5971-1959-a66d41ea16a3@oracle.com>
+In-Reply-To: <df3af13cc820a3c2397b85cb7de08cb6a0780e1d.1598643276.git.jdesfossez@digitalocean.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 10:14:16AM -0700, Mike Kravetz wrote:
-> On 8/28/20 7:59 AM, Andi Kleen wrote:
-> >> Fixes: e5ff215941d5 ("hugetlb: multiple hstates for multiple page sizes")
-> > 
-> > I believe the Fixes line is still not correct. The original patch
-> > didn't have that problem. Please identify which patch added
-> > the problematic code.
-> 
-> Hi Andi,
-> 
-> I agree with Muchun's assessment that the issue was caused by e5ff215941d5.
-> Why?
+On Fri, Aug 28, 2020 at 03:51:09PM -0400, Julien Desfossez wrote:
+> +		if (is_idle_task(rq_i->core_pick) && rq_i->nr_running)
+> +			rq_i->core_forceidle = true;
 
-Yes when checking the code again I agree. It was introduced with that
-patch. Patches look ok to me now.
+Did you mean: rq_i->core_pick == rq_i->idle ?
 
--Andi
+is_idle_task() will also match idle-injection threads, which I'm not
+sure we want here.
