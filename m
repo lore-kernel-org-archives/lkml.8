@@ -2,180 +2,131 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8411CC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78070C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5629A207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 548292071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:32:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPj+EbW1"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KaSLqjJz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbgH1B3E (ORCPT
+        id S1728236AbgH1BcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 21:29:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgH1B3C (ORCPT
+        Thu, 27 Aug 2020 21:32:02 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38240 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727929AbgH1BcB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 21:29:02 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449A1C061264;
-        Thu, 27 Aug 2020 18:29:02 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id o68so1067432pfg.2;
-        Thu, 27 Aug 2020 18:29:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Rnno2/T7wXNQk8LQzZCrOzlnI6hdthPrV/zV4qtrmt8=;
-        b=MPj+EbW1lhUSca2A5cNXiwKkMgiFGKouf0AYN6Mrq3tqOJPsenpfSYALWqEQ2N3a/E
-         IZkW0t5bTDDxdBmxTaXBFbdw2ETaKWh5/N6RBRot107qPV4rMqMNNnJiJZdlvkjkGh+0
-         EMrWR14frsWLJYNX5MWODFeT04pWq3kpBbK0BPdh4urOgBtBc6P+SNNlWRN9nStYOF9c
-         xcAEw6vZLSFgnk//ScMeb8z1DbXAvuaD4Kr7O7EY0yggkvGtHAtRNcd+XI1InE1LU4DP
-         VnahHGU1egrOogI1NL/j4X5097LTX636BKfcHvDU9w3Gqi4/efdn///hgCZFClUvkcZD
-         NXUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Rnno2/T7wXNQk8LQzZCrOzlnI6hdthPrV/zV4qtrmt8=;
-        b=PQwlWLQsLVBv/4MSn/1N6lg8xpi2Q+S2DuuHHKN5mabaZSdZAlL07AneJ2kRBEshYl
-         +iOdoMwx7YwpxGR+g75aXDhMrMIaxwKovvIL86NJsS8iNARuFipL4MLvDf3peelKfC7L
-         SHYCudzUQ/EoYNPZyzQ/pg0STxWaV75B346I50+2qEG9QR7Dl+K2gubF8/DLCImFOg2w
-         FNX8nzY5qSHP3O2ER/ON8QBPSjZrW69O5r9fcpB+99oIqAsinKWNvsQ0xW0wCptS0c9s
-         NA7Hd3scx4cirNKZZ2+xodMj9UPEhJxffdwcRYd4FxY4IPz/WyuKBSRjP8q1JRahTNQ3
-         9xaA==
-X-Gm-Message-State: AOAM532BLu5SwTa8DeHv4EzigOfaJA6A4KB7xZnkMQQ3Yxey4ZUAsILt
-        VJHaHtzPkzlAuFXwpVhDMn1k6nouF43gpQ==
-X-Google-Smtp-Source: ABdhPJwLIO8/F4+zfjENIhbPR96oB4UTud2Dx8+j1bEmApg/0JQ2VOJYQuRHxEKCK5fCH04WrprYyw==
-X-Received: by 2002:a17:902:b282:: with SMTP id u2mr12741468plr.47.1598578141662;
-        Thu, 27 Aug 2020 18:29:01 -0700 (PDT)
-Received: from localhost.localdomain ([122.224.153.227])
-        by smtp.gmail.com with ESMTPSA id i11sm3730715pjg.50.2020.08.27.18.28.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Aug 2020 18:29:00 -0700 (PDT)
-From:   Yanhu Cao <gmayyyha@gmail.com>
-To:     jlayton@kernel.org
-Cc:     idryomov@gmail.com, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yanhu Cao <gmayyyha@gmail.com>
-Subject: [v2] ceph: support getting ceph.dir.rsnaps vxattr
-Date:   Fri, 28 Aug 2020 09:28:44 +0800
-Message-Id: <20200828012844.18937-1-gmayyyha@gmail.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+        Thu, 27 Aug 2020 21:32:01 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07S1TNrG195014;
+        Fri, 28 Aug 2020 01:31:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=EE+MmSN3lbKnbvXBOhbYoQLeslJjSSgBP3XNEkQXgRQ=;
+ b=KaSLqjJzENC36uaJMTkyhzgDkJ2KfQYLgzCz13xV15ZAZNT3+Y0xu9qgW9r6Uaf/gAhP
+ p/lDkVi37vjz1X3j21WaOz3VEhVh+uLP7I5oV7vvRDXfw/0shmbpmn74a0y+4tP4xjqU
+ x3aRGOIZW84msVY3kmzWTdP6c+eog5WiX3mRnth7Bd2ounWU/NfOFYXYmevJ5GQm0nWt
+ ddMGf7ZSwZU52zu6MbpKxP5wvtfEqQl+OK/U3aaOvsGYwAPWZyczKh+77vwYt67QWAO1
+ TObjUYzMQoddfUC8VNxwIAWvWeZzTcpoza+wl4TrPOCUu9X/cC/mcl+RtAUKi2r372IV eA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 333w6u80tn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Aug 2020 01:31:31 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07S1OkL1149469;
+        Fri, 28 Aug 2020 01:31:31 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 333ru26er1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Aug 2020 01:31:30 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07S1VNnd020001;
+        Fri, 28 Aug 2020 01:31:25 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 27 Aug 2020 18:31:23 -0700
+Date:   Thu, 27 Aug 2020 21:40:22 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        mgorman@techsingularity.net, tj@kernel.org,
+        khlebnikov@yandex-team.ru, willy@infradead.org, hannes@cmpxchg.org,
+        lkp@intel.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
+        kirill@shutemov.name, alexander.duyck@gmail.com,
+        rong.a.chen@intel.com, mhocko@suse.com, vdavydov.dev@gmail.com,
+        shy828301@gmail.com
+Subject: Re: [PATCH v18 00/32] per memcg lru_lock
+Message-ID: <20200828014022.y5xju6weysqpzxd2@ca-dmjordan1.us.oracle.com>
+References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200824114204.cc796ca182db95809dd70a47@linux-foundation.org>
+ <alpine.LSU.2.11.2008241231460.1065@eggly.anvils>
+ <20200825015627.3c3pnwauqznnp3gc@ca-dmjordan1.us.oracle.com>
+ <ec62a835-f79d-2b8c-99c7-120834703b42@linux.alibaba.com>
+ <20200826011946.spknwjt44d2szrdo@ca-dmjordan1.us.oracle.com>
+ <01ed6e45-3853-dcba-61cb-b429a49a7572@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01ed6e45-3853-dcba-61cb-b429a49a7572@linux.alibaba.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9726 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ phishscore=0 spamscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008280011
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9726 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
+ priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008280011
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's easy to know how many snapshots have been created.
+On Wed, Aug 26, 2020 at 04:59:28PM +0800, Alex Shi wrote:
+> I clean up my testing and make it reproducable by a Dockerfile and a case patch which
+> attached. 
 
-Link: https://tracker.ceph.com/issues/47168
-Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
----
- fs/ceph/inode.c      | 1 +
- fs/ceph/mds_client.c | 9 ++++++++-
- fs/ceph/mds_client.h | 1 +
- fs/ceph/super.h      | 2 +-
- fs/ceph/xattr.c      | 7 +++++++
- 5 files changed, 18 insertions(+), 2 deletions(-)
+Ok, I'll give that a shot once I've taken care of sysbench.
 
-diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
-index 357c937699d5..650cad4b3ecb 100644
---- a/fs/ceph/inode.c
-+++ b/fs/ceph/inode.c
-@@ -891,6 +891,7 @@ int ceph_fill_inode(struct inode *inode, struct page *locked_page,
- 			ci->i_rfiles = le64_to_cpu(info->rfiles);
- 			ci->i_rsubdirs = le64_to_cpu(info->rsubdirs);
- 			ci->i_dir_pin = iinfo->dir_pin;
-+			ci->i_rsnaps = iinfo->rsnaps;
- 			ceph_decode_timespec64(&ci->i_rctime, &info->rctime);
- 		}
- 	}
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index 4a26862d7667..3466845c0179 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -176,6 +176,13 @@ static int parse_reply_info_in(void **p, void *end,
- 			memset(&info->snap_btime, 0, sizeof(info->snap_btime));
- 		}
- 
-+		/* snapshot count, remains zero for v<=3 */
-+		if (struct_v >= 4) {
-+			ceph_decode_64_safe(p, end, info->rsnaps, bad);
-+		} else {
-+			info->rsnaps = 0;
-+		}
-+
- 		*p = end;
- 	} else {
- 		if (features & CEPH_FEATURE_MDS_INLINE_DATA) {
-@@ -214,7 +221,7 @@ static int parse_reply_info_in(void **p, void *end,
- 		}
- 
- 		info->dir_pin = -ENODATA;
--		/* info->snap_btime remains zero */
-+		/* info->snap_btime and info->rsnaps remain zero */
- 	}
- 	return 0;
- bad:
-diff --git a/fs/ceph/mds_client.h b/fs/ceph/mds_client.h
-index bc9e95937d7c..76f2ed1a7cbf 100644
---- a/fs/ceph/mds_client.h
-+++ b/fs/ceph/mds_client.h
-@@ -88,6 +88,7 @@ struct ceph_mds_reply_info_in {
- 	s32 dir_pin;
- 	struct ceph_timespec btime;
- 	struct ceph_timespec snap_btime;
-+	u64 rsnaps;
- 	u64 change_attr;
- };
- 
-diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-index 4c3c964b1c54..eb108b69da71 100644
---- a/fs/ceph/super.h
-+++ b/fs/ceph/super.h
-@@ -332,7 +332,7 @@ struct ceph_inode_info {
- 
- 	/* for dirs */
- 	struct timespec64 i_rctime;
--	u64 i_rbytes, i_rfiles, i_rsubdirs;
-+	u64 i_rbytes, i_rfiles, i_rsubdirs, i_rsnaps;
- 	u64 i_files, i_subdirs;
- 
- 	/* quotas */
-diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
-index 3a733ac33d9b..c7d8ecc3d04b 100644
---- a/fs/ceph/xattr.c
-+++ b/fs/ceph/xattr.c
-@@ -231,6 +231,12 @@ static ssize_t ceph_vxattrcb_dir_rsubdirs(struct ceph_inode_info *ci, char *val,
- 	return ceph_fmt_xattr(val, size, "%lld", ci->i_rsubdirs);
- }
- 
-+static ssize_t ceph_vxattrcb_dir_rsnaps(struct ceph_inode_info *ci, char *val,
-+					  size_t size)
-+{
-+	return ceph_fmt_xattr(val, size, "%lld", ci->i_rsnaps);
-+}
-+
- static ssize_t ceph_vxattrcb_dir_rbytes(struct ceph_inode_info *ci, char *val,
- 					size_t size)
- {
-@@ -352,6 +358,7 @@ static struct ceph_vxattr ceph_dir_vxattrs[] = {
- 	XATTR_RSTAT_FIELD(dir, rentries),
- 	XATTR_RSTAT_FIELD(dir, rfiles),
- 	XATTR_RSTAT_FIELD(dir, rsubdirs),
-+	XATTR_RSTAT_FIELD(dir, rsnaps),
- 	XATTR_RSTAT_FIELD(dir, rbytes),
- 	XATTR_RSTAT_FIELD(dir, rctime),
- 	{
--- 
-2.24.3 (Apple Git-128)
+> >>> Even better would be a description of the problem you're having in production
+> >>> with lru_lock.  We might be able to create at least a simulation of it to show
+> >>> what the expected improvement of your real workload is.
+> >>
+> >> we are using thousands memcgs in a machine, but as a simulation, I guess above case
+> >> could be helpful to show the problem.
+> > 
+> > Using thousands of memcgs to do what?  Any particulars about the type of
+> > workload?  Surely it's more complicated than page cache reads :)
+> 
+> Yes, the workload are quit different on different business, some use cpu a
+> lot, some use memory a lot, and some are may mixed.
 
+That's pretty vague, but I don't suppose I could do much better describing what
+all runs on our systems  :-/
+
+I went back to your v1 post to see what motivated you originally, and you had
+some results from aim9 but nothing about where this reared its head in the
+first place.  How did you discover the bottleneck?  I'm just curious about how
+lru_lock hurts in practice.
+
+> > Neither kernel compile nor git checkout in the root cgroup changed much, just
+> > 0.31% slower on elapsed time for the compile, so no significant regressions
+> > there.  Now for sysbench again.
+
+Still working on getting repeatable sysbench runs, no luck so far.  The numbers
+have stayed fairly consistent with your series but vary a lot on the base
+kernel, not sure why yet.
