@@ -2,122 +2,114 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D3EC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 22:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47FEC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 22:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0626E20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 22:24:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="axUzghXF"
+	by mail.kernel.org (Postfix) with ESMTP id ACC2D2080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 22:24:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598653486;
+	bh=lpbriGmNKqe+BkRxy6ycta2iozKfHc/U6+pheTSCSDY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wAxCyW3bfg83GggF9pyoJy2JbZ92/YM9g3tSArNsNpVL/KEQMWopqM9s/i4x34doS
+	 jA6U3Nn10K+IU4UIkGkRakUo6A+PYOSrYG4pD2Xzrid4cs9yXTkC6YtjuoueAv252i
+	 gaE4xg+GUyy2hJc/MkYH/RZ34BBpBBgBf9vigIQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgH1WX6 (ORCPT
+        id S1726858AbgH1WYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 18:23:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726386AbgH1WX5 (ORCPT
+        Fri, 28 Aug 2020 18:24:45 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42522 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726386AbgH1WYm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 18:23:57 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 554FAC061264
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 15:23:57 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id p2so1071514qkj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 15:23:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IAjW6p98DNeSLIu10vGW7p3vepoeZgY1KmTJgTOG/bU=;
-        b=axUzghXFm+xtirUUyDR9WlbhXuIYKprTJMsQLoQqRSEkh0siU5+oWwq0MIPK4O+MlR
-         QmTR4lZTgT7XhT7AdBtLHHuGySxCS29ydpriP6XIgGknrjZUOfhSn6PHhfm3XcUoXEvM
-         q82gT+ukYcR1iFJ2kFcdZROMRfxv92uEaApdY=
+        Fri, 28 Aug 2020 18:24:42 -0400
+Received: by mail-io1-f67.google.com with SMTP id g13so588350ioo.9;
+        Fri, 28 Aug 2020 15:24:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=IAjW6p98DNeSLIu10vGW7p3vepoeZgY1KmTJgTOG/bU=;
-        b=OMNorYejZ0B3eI85XS6Y08DTUCh1zfHqFizCbQUnDqhmRC/Ojbx7gnLJor5Fe1D5NI
-         v7kuy3mLpePZxhgRvZSOfT4BcSps1FC/4UQfvodmowrLPY5lsgLrT+GZIdFjYC27Qoar
-         8VpzvOj0YnbAiXuHwawAOPnlqpG6Qop+z92568GKcUFhNih7IWgQkTu4fI7PHYm422LC
-         jhIcID3kAIvn1pxGJ/rWOlCUgHLo2SW0zdtI5R+1xVCjdG9SPyI2OGDyHSXgTynDp9Ja
-         i14mhdKqM8o/qUvhjdBx2iYLIgE7+G5NUqcc5JQdx1WsZ/YkvRJELv/X8JL11qUPi2O1
-         +S5A==
-X-Gm-Message-State: AOAM533GRM2AfyfBQRB9YG3qQE64cMf43GvfuFawtR8vZgS/rhtaCEt4
-        zdNaGMrvfkDg0tx5J508+4djwA==
-X-Google-Smtp-Source: ABdhPJxiWF+lxDu6RZ7StydqoCsefevRLn+NO0dALc8ZYTREodTF0cq/w2SJ9XH3GL7l6OXyYVbYmA==
-X-Received: by 2002:a05:620a:15e7:: with SMTP id p7mr1252025qkm.56.1598653436492;
-        Fri, 28 Aug 2020 15:23:56 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id n85sm435095qkn.80.2020.08.28.15.23.55
+        bh=cIScKR8zsbzqHbIy7s24xoivHGWUPIZ8GH20k6+Rx6Y=;
+        b=XJgY5v+cWjhGhSiEzqfy+NwP/GqEHptNYXvgfBlzms7Jguiq/9b7Z6pHOGrIzXhlob
+         nJXMg1eiYpJHbWzQX0GzXInlIeAL35TeTF/GWLhGUz2GgznTuSrNy1KStfPWqqyu/6M6
+         5BMp0ffbItqLuglg0ndedXPyZ6uYtwpfnOSqrYG8XG620GpKEsbOoO2iOTmBxlZQZGfP
+         rbRLJAJwPpYNHrv8HpjWGWLP8+HN9UwlYu9iFcCrdsqH8hafL1Xm7249lA5bLRICcAuq
+         GZ4f5RS4nqA3gi5AwUl2PJ+FmzG1iUUaQd+kXJ+mfDF4mUtb6UfB1CRLmgM/scf83bkP
+         dQfA==
+X-Gm-Message-State: AOAM532DMr4HzyCHEYKQxK2p40LSF+LGDU6sYru5p+8lZ/FB6ZAHaraS
+        h3GaG3mrp6qwe5X2XdPq6A==
+X-Google-Smtp-Source: ABdhPJxIlMnntSPRoVEw2ciZDRXR6pWk08c+7w6ub4GAsfRLFVKrB5WuoiBkyoaKa0yKmzOv/6WA6g==
+X-Received: by 2002:a6b:e609:: with SMTP id g9mr771981ioh.26.1598653481722;
+        Fri, 28 Aug 2020 15:24:41 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id d19sm268186iop.14.2020.08.28.15.24.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 15:23:56 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 18:23:55 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Vineeth Pillai <viremana@linux.microsoft.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Dhaval Giani <dhaval.giani@oracle.com>,
-        Chris Hyser <chris.hyser@oracle.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        mingo@kernel.org, tglx@linutronix.de, pjt@google.com,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, vineeth@bitbyteword.org,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Agata Gruza <agata.gruza@intel.com>,
-        Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>,
-        graf@amazon.com, konrad.wilk@oracle.com, dfaggioli@suse.com,
-        rostedt@goodmis.org, derkling@google.com, benbjiang@tencent.com,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Aaron Lu <aaron.lu@linux.alibaba.com>
-Subject: Re: [RFC PATCH v7 08/23] sched: Add core wide task selection and
- scheduling.
-Message-ID: <20200828222355.GA1874461@google.com>
-References: <cover.1598643276.git.jdesfossez@digitalocean.com>
- <df3af13cc820a3c2397b85cb7de08cb6a0780e1d.1598643276.git.jdesfossez@digitalocean.com>
- <20200828205154.GB29142@worktop.programming.kicks-ass.net>
- <381e6ea5-a48c-9882-4c0d-49cfa92d21cc@linux.microsoft.com>
+        Fri, 28 Aug 2020 15:24:41 -0700 (PDT)
+Received: (nullmailer pid 3512595 invoked by uid 1000);
+        Fri, 28 Aug 2020 22:24:40 -0000
+Date:   Fri, 28 Aug 2020 16:24:40 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH mmc-next v3 1/2] dt-bindings: mmc: add alias example
+Message-ID: <20200828222440.GA3507259@bogus>
+References: <20200825134441.17537-1-matthias.schiffer@ew.tq-group.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <381e6ea5-a48c-9882-4c0d-49cfa92d21cc@linux.microsoft.com>
+In-Reply-To: <20200825134441.17537-1-matthias.schiffer@ew.tq-group.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 06:02:25PM -0400, Vineeth Pillai wrote:
-[...] 
-> > Can we please split out this hotplug 'fix' into a separate patch with a
-> > coherent changelog.
-> Sorry about this. I had posted this as separate patches in v6 list,
-> but merged it for v7. Will split it and have details about the fix in
-> next iteration.
+On Tue, Aug 25, 2020 at 03:44:40PM +0200, Matthias Schiffer wrote:
+> As for I2C and SPI, it now is possible to reserve a fixed index for
+> mmc/mmcblk devices.
+> 
+> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> ---
+> 
+> v3: new patch
+> 
+>  Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> index b96da0c7f819..22ed4a36c65d 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> @@ -367,6 +367,14 @@ examples:
+>      };
+>  
+>    - |
+> +    /*
+> +     * Optionally define an alias to reserve a fixed index for the
+> +     * mmc and mmcblk devices
+> +     */
+> +    aliases {
+> +        mmc0 = &mmc3;
+> +    };
 
-Thanks Vineeth. Peter, also the "v6+" series (which were some addons on v6)
-detail the individual hotplug changes squashed into this patch:
-https://lore.kernel.org/lkml/20200815031908.1015049-9-joel@joelfernandes.org/
-https://lore.kernel.org/lkml/20200815031908.1015049-11-joel@joelfernandes.org/
-https://lore.kernel.org/lkml/20200815031908.1015049-12-joel@joelfernandes.org/
-https://lore.kernel.org/lkml/20200815031908.1015049-13-joel@joelfernandes.org/
+This will break if we improve schemas because this node is actually 
+/example-1/aliases.
 
-Agreed we can split the patches for the next series, however for final
-upstream merge, I suggest we fix hotplug issues in this patch itself so that
-we don't break bisectability.
+So please drop. If you want, I'd really like to have a defined set (i.e. 
+a schema) of alias names. This would require deleting a bunch on some 
+platforms that just made up a bunch of them.
 
-thanks,
-
- - Joel
-
+> +
+>      mmc3: mmc@1c12000 {
+>          #address-cells = <1>;
+>          #size-cells = <0>;
+> -- 
+> 2.17.1
+> 
