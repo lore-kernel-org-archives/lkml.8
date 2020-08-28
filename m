@@ -2,102 +2,115 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1286BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31158C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D02A0208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:43:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=piap.pl header.i=@piap.pl header.b="OoDPMwtJ"
+	by mail.kernel.org (Postfix) with ESMTP id E9BC92098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:45:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598611502;
+	bh=hgX2QECXy5MlJkQZXxuPE3ywxUra609CbNlUd8fZrWM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FbWu/opuJRVPU20YyHK4O9hlYPC18eDlPLhmuvtoRRaep0KX3gKzu9aEfu9lKR1J+
+	 lPo5t17A4XmCZBgDOTyH9Xz/6jpJZo4AIgFxCms35P/LlWeO122Eo8EvMwyBOPaOoI
+	 wKJsLKgPFO94IbU4YXAnDLK9LiECu/40wuVv4FJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbgH1KnU (ORCPT
+        id S1729039AbgH1KpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 06:43:20 -0400
-Received: from ni.piap.pl ([195.187.100.5]:41266 "EHLO ni.piap.pl"
+        Fri, 28 Aug 2020 06:45:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728218AbgH1KnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 06:43:14 -0400
-X-Greylist: delayed 330 seconds by postgrey-1.27 at vger.kernel.org; Fri, 28 Aug 2020 06:43:12 EDT
-Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        id S1728362AbgH1Koz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 06:44:55 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ni.piap.pl (Postfix) with ESMTPSA id 0E631442480;
-        Fri, 28 Aug 2020 12:37:37 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 0E631442480
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=piap.pl; s=mail;
-        t=1598611058; bh=mX0r45ob5AWEtdzdyfUiUKYeTekKi7l1NPoWWKilQlM=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=OoDPMwtJFpQc2LrfhaaKDD+q447F4tx4ZJIgcWgin8MXQFyoe/ma+LcEzzIaf0pkR
-         bFoLkUIoCJ9LpCjRDDPiALP5H+B6obenk7u2NHdYrUemrqSsxY8lkWIXacpxh55Vyo
-         KTRPVV7xsjc2BjcBmM/h+1+HMgxj81wqtrNwFIw8=
-From:   =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
-To:     Xie He <xie.he.0141@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>
-Subject: Re: [PATCH net] drivers/net/wan/hdlc_cisco: Add hard_header_len
-References: <20200828070752.54444-1-xie.he.0141@gmail.com>
-Date:   Fri, 28 Aug 2020 12:37:37 +0200
-In-Reply-To: <20200828070752.54444-1-xie.he.0141@gmail.com> (Xie He's message
-        of "Fri, 28 Aug 2020 00:07:52 -0700")
-Message-ID: <m3pn7b6opa.fsf@t19.piap.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-KLMS-Rule-ID: 4
-X-KLMS-Message-Action: skipped
-X-KLMS-AntiSpam-Status: not scanned, whitelist
-X-KLMS-AntiPhishing: not scanned, whitelist
-X-KLMS-AntiVirus: Kaspersky Security 8.0 for Linux Mail Server, version 8.0.1.721, not scanned, whitelist
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D2C8208CA;
+        Fri, 28 Aug 2020 10:44:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598611494;
+        bh=hgX2QECXy5MlJkQZXxuPE3ywxUra609CbNlUd8fZrWM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qIpikyXykAX/Foacgzl2TatAVyOBf2/rpacIrW1noBixkk8bSTQ145gR6NQekKcmq
+         sRVR+WQSjCPRFJvp96+dZtOlXVBHT7ntxUVlYLzgQQCLbhNZUy0HM9qHlWgO4ueKRp
+         4jyN5L9UeeE26xGexDd/hRKL7EqH9tGHvF5veQrk=
+Date:   Fri, 28 Aug 2020 19:44:49 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, Eddy_Wu@trendmicro.com,
+        x86@kernel.org, davem@davemloft.net, rostedt@goodmis.org,
+        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        linux-arch@vger.kernel.org, cameron@moodycamel.com,
+        oleg@redhat.com, will@kernel.org, paulmck@kernel.org
+Subject: Re: [RFC][PATCH 7/7] kprobes: Replace rp->free_instance with
+ freelist
+Message-Id: <20200828194449.deaae48c36211a61822a1943@kernel.org>
+In-Reply-To: <20200828091813.GU1362448@hirez.programming.kicks-ass.net>
+References: <20200827161237.889877377@infradead.org>
+        <20200827161754.594247581@infradead.org>
+        <20200828084851.GQ1362448@hirez.programming.kicks-ass.net>
+        <20200828181341.c1da066360c6085d48850e22@kernel.org>
+        <20200828091813.GU1362448@hirez.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Xie,
+On Fri, 28 Aug 2020 11:18:13 +0200
+peterz@infradead.org wrote:
 
-Xie He <xie.he.0141@gmail.com> writes:
+> On Fri, Aug 28, 2020 at 06:13:41PM +0900, Masami Hiramatsu wrote:
+> > On Fri, 28 Aug 2020 10:48:51 +0200
+> > peterz@infradead.org wrote:
+> > 
+> > > On Thu, Aug 27, 2020 at 06:12:44PM +0200, Peter Zijlstra wrote:
+> > > >  struct kretprobe_instance {
+> > > >  	union {
+> > > > +		/*
+> > > > +		 * Dodgy as heck, this relies on not clobbering freelist::refs.
+> > > > +		 * llist: only clobbers freelist::next.
+> > > > +		 * rcu: clobbers both, but only after rp::freelist is gone.
+> > > > +		 */
+> > > > +		struct freelist_node freelist;
+> > > >  		struct llist_node llist;
+> > > > -		struct hlist_node hlist;
+> > > >  		struct rcu_head rcu;
+> > > >  	};
+> > > 
+> > > Masami, make sure to make this something like:
+> > > 
+> > > 	union {
+> > > 		struct freelist_node freelist;
+> > > 		struct rcu_head rcu;
+> > > 	};
+> > > 	struct llist_node llist;
+> > > 
+> > > for v4, because after some sleep I'm fairly sure what I wrote above was
+> > > broken.
+> > > 
+> > > We'll only use RCU once the freelist is gone, so sharing that storage
+> > > should still be okay.
+> > 
+> > Hmm, would you mean there is a chance that an instance belongs to
+> > both freelist and llist?
+> 
+> So the freelist->refs thing is supposed to pin freelist->next for
+> concurrent usage, but if we instantly stick it on the
+> current->kretprobe_instances llist while it's still elevated, we'll
+> overwrite ->next, which would be bad.
 
-> This driver didn't set hard_header_len. This patch sets hard_header_len
-> for it according to its header_ops->create function.
+OK, I'll pick these up for my v4 series with that fix.
 
-BTW it's 4 bytes long:
+Thank you,
 
-struct hdlc_header {
-        u8 address;
-        u8 control;
-        __be16 protocol;
-}__packed;
-
-OTOH hdlc_setup_dev() initializes hard_header_len to 16,
-but in this case I guess 4 bytes are better.
-
-Acked-by: Krzysztof Halasa <khc@pm.waw.pl>
-
-> Cc: Martin Schiller <ms@dev.tdt.de>
-> Signed-off-by: Xie He <xie.he.0141@gmail.com>
-> ---
-
-> --- a/drivers/net/wan/hdlc_cisco.c
-> +++ b/drivers/net/wan/hdlc_cisco.c
-> @@ -370,6 +370,7 @@ static int cisco_ioctl(struct net_device *dev, struct=
- ifreq *ifr)
->  		memcpy(&state(hdlc)->settings, &new_settings, size);
->  		spin_lock_init(&state(hdlc)->lock);
->  		dev->header_ops =3D &cisco_header_ops;
-> +		dev->hard_header_len =3D sizeof(struct hdlc_header);
->  		dev->type =3D ARPHRD_CISCO;
->  		call_netdevice_notifiers(NETDEV_POST_TYPE_CHANGE, dev);
->  		netif_dormant_on(dev);
-
---=20
-Krzysztof Halasa
-
-Sie=C4=87 Badawcza =C5=81ukasiewicz
-Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
-Al. Jerozolimskie 202, 02-486 Warszawa
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
