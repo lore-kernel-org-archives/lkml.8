@@ -2,109 +2,120 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB908C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 02:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62943C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 02:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A43792080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 02:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A61B2080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 02:54:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbgH1Cxw (ORCPT
+        id S1728249AbgH1CyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 22:53:52 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:47738 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726854AbgH1Cxv (ORCPT
+        Thu, 27 Aug 2020 22:54:14 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:57789 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726854AbgH1CyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 22:53:51 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U73igQg_1598583227;
-Received: from xunleideMacBook-Pro.local(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0U73igQg_1598583227)
+        Thu, 27 Aug 2020 22:54:13 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U73Jfo7_1598583197;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U73Jfo7_1598583197)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 28 Aug 2020 10:53:48 +0800
-Subject: Re: [PATCH] sched/fair: Fix wrong cpu selecting from isolated domain
-From:   Xunlei Pang <xlpang@linux.alibaba.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Wetp Zhang <wetp.zy@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org
-References: <1598272219-43040-1-git-send-email-xlpang@linux.alibaba.com>
-Message-ID: <9bfaa095-2074-e0bb-da0b-81e00c7ca490@linux.alibaba.com>
-Date:   Fri, 28 Aug 2020 10:53:49 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <1598272219-43040-1-git-send-email-xlpang@linux.alibaba.com>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 7bit
+          Fri, 28 Aug 2020 10:53:17 +0800
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+To:     axboe@kernel.dk
+Cc:     ming.lei@redhat.com, hch@lst.de, baolin.wang@linux.alibaba.com,
+        baolin.wang7@gmail.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 4/4] block: Remove blk_mq_attempt_merge() function
+Date:   Fri, 28 Aug 2020 10:52:57 +0800
+Message-Id: <a85628c8d00bfa7ae53732234aa7b623b3b94583.1598580324.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <cover.1598580324.git.baolin.wang@linux.alibaba.com>
+References: <cover.1598580324.git.baolin.wang@linux.alibaba.com>
+In-Reply-To: <cover.1598580324.git.baolin.wang@linux.alibaba.com>
+References: <cover.1598580324.git.baolin.wang@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/24 PM8:30, Xunlei Pang wrote:
-> We've met problems that occasionally tasks with full cpumask
-> (e.g. by putting it into a cpuset or setting to full affinity)
-> were migrated to our isolated cpus in production environment.
-> 
-> After some analysis, we found that it is due to the current
-> select_idle_smt() not considering the sched_domain mask.
-> 
-> Fix it by checking the valid domain mask in select_idle_smt().
-> 
-> Fixes: 10e2f1acd010 ("sched/core: Rewrite and improve select_idle_siblings())
-> Reported-by: Wetp Zhang <wetp.zy@linux.alibaba.com>
-> Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
-> ---
->  kernel/sched/fair.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 1a68a05..fa942c4 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -6075,7 +6075,7 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
->  /*
->   * Scan the local SMT mask for idle CPUs.
->   */
-> -static int select_idle_smt(struct task_struct *p, int target)
-> +static int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
->  {
->  	int cpu;
->  
-> @@ -6083,7 +6083,8 @@ static int select_idle_smt(struct task_struct *p, int target)
->  		return -1;
->  
->  	for_each_cpu(cpu, cpu_smt_mask(target)) {
-> -		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
-> +		if (!cpumask_test_cpu(cpu, p->cpus_ptr) ||
-> +		    !cpumask_test_cpu(cpu, sched_domain_span(sd)))
->  			continue;
->  		if (available_idle_cpu(cpu) || sched_idle_cpu(cpu))
->  			return cpu;
-> @@ -6099,7 +6100,7 @@ static inline int select_idle_core(struct task_struct *p, struct sched_domain *s
->  	return -1;
->  }
->  
-> -static inline int select_idle_smt(struct task_struct *p, int target)
-> +static inline int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
->  {
->  	return -1;
->  }
-> @@ -6274,7 +6275,7 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
->  	if ((unsigned)i < nr_cpumask_bits)
->  		return i;
->  
-> -	i = select_idle_smt(p, target);
-> +	i = select_idle_smt(p, sd, target);
->  	if ((unsigned)i < nr_cpumask_bits)
->  		return i;
->  
-> 
+The small blk_mq_attempt_merge() function is only called by
+__blk_mq_sched_bio_merge(), just open code it.
 
-Hi Peter, any other comments?
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+---
+ block/blk-mq-sched.c | 44 ++++++++++++++++----------------------------
+ 1 file changed, 16 insertions(+), 28 deletions(-)
+
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index 94db0c9..205d971 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -391,28 +391,6 @@ bool blk_mq_sched_try_merge(struct request_queue *q, struct bio *bio,
+ }
+ EXPORT_SYMBOL_GPL(blk_mq_sched_try_merge);
+ 
+-/*
+- * Reverse check our software queue for entries that we could potentially
+- * merge with. Currently includes a hand-wavy stop count of 8, to not spend
+- * too much time checking for merges.
+- */
+-static bool blk_mq_attempt_merge(struct request_queue *q,
+-				 struct blk_mq_hw_ctx *hctx,
+-				 struct blk_mq_ctx *ctx, struct bio *bio,
+-				 unsigned int nr_segs)
+-{
+-	enum hctx_type type = hctx->type;
+-
+-	lockdep_assert_held(&ctx->lock);
+-
+-	if (blk_bio_list_merge(q, &ctx->rq_lists[type], bio, nr_segs)) {
+-		ctx->rq_merged++;
+-		return true;
+-	}
+-
+-	return false;
+-}
+-
+ bool __blk_mq_sched_bio_merge(struct request_queue *q, struct bio *bio,
+ 		unsigned int nr_segs)
+ {
+@@ -426,14 +404,24 @@ bool __blk_mq_sched_bio_merge(struct request_queue *q, struct bio *bio,
+ 		return e->type->ops.bio_merge(hctx, bio, nr_segs);
+ 
+ 	type = hctx->type;
+-	if ((hctx->flags & BLK_MQ_F_SHOULD_MERGE) &&
+-			!list_empty_careful(&ctx->rq_lists[type])) {
+-		/* default per sw-queue merge */
+-		spin_lock(&ctx->lock);
+-		ret = blk_mq_attempt_merge(q, hctx, ctx, bio, nr_segs);
+-		spin_unlock(&ctx->lock);
++	if (!(hctx->flags & BLK_MQ_F_SHOULD_MERGE) ||
++	    list_empty_careful(&ctx->rq_lists[type]))
++		return false;
++
++	/* default per sw-queue merge */
++	spin_lock(&ctx->lock);
++	/*
++	 * Reverse check our software queue for entries that we could
++	 * potentially merge with. Currently includes a hand-wavy stop
++	 * count of 8, to not spend too much time checking for merges.
++	 */
++	if (blk_bio_list_merge(q, &ctx->rq_lists[type], bio, nr_segs)) {
++		ctx->rq_merged++;
++		ret = true;
+ 	}
+ 
++	spin_unlock(&ctx->lock);
++
+ 	return ret;
+ }
+ 
+-- 
+1.8.3.1
+
