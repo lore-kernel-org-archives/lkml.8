@@ -2,149 +2,226 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C20FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965ACC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A703208D5
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61926208D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:57:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="j2cMfp8G"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="JifL3p9V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbgH1J52 (ORCPT
+        id S1728999AbgH1J5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:57:28 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:38254 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbgH1J5V (ORCPT
+        Fri, 28 Aug 2020 05:57:38 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:15036 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728016AbgH1J5e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:57:21 -0400
-Received: from [192.168.0.20] (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1C592303;
-        Fri, 28 Aug 2020 11:57:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1598608634;
-        bh=17sggzD4Csunw8iPasN+Bvms9x56ZRZyOQNKzM8BRr8=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=j2cMfp8GlXwb0PFhnvkM8vhOA41r7KWuAlnG3XFhQbvp1O2qUDhhwut7rGpHo+nwe
-         IqoEcUYNN1ytj77YczjGO/mT6wbHgpfvxbYBhV5/9dnkwFGwrw+9Vd058EqgJ+QlKD
-         KdGxuxpZK7nHymhj9dS+MQqG1wOdqEF74CF+zL88=
-Reply-To: kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH] MAINTAINERS: Fix sort order for RDACM20
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        sakari.ailus@iki.fi
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>
-References: <20200716102552.1390223-1-kieran.bingham+renesas@ideasonboard.com>
-From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
-Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
- 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
- WZw01QYHU/GUV/zHJSFk
-Organization: Ideas on Board
-Message-ID: <bc0882a9-0479-acd9-1a3f-af286b9c8314@ideasonboard.com>
-Date:   Fri, 28 Aug 2020 10:57:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 28 Aug 2020 05:57:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598608649;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=YjfH7QyaKxTYIsFfzlcBW5COp7oPU6UK9fex8RvP2Uc=;
+        b=JifL3p9VfENJUY6+0ZbNprSl5/tpmrnjLIUJl/plHyghMcffooxBN76wqxtRXCpUNz
+        eMsg0neOXlFHy42PuZSxASjq172wsucE1cezWXJYlMRjpERj3ylqa7i9UhxysrtgjyoE
+        dukQo4UDQQE31e1DRI4F9oXSRtExsh6ipFhJCbBRsqSps77DUAW9NgDOMX8vNFkiWAwU
+        i2b422+joZL36ZqRw+M1CqbFh1oCtU38gJnGfPjGR7rknamtqBNKSShbtQ9diF8hJYf1
+        oPqZxEHCjTrueKCKFemKMI+zwWB35pf8wxDFsaSs3x3RPwN+yV88KpFv+7Acza65PZ8N
+        Rhdw==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7IczHboo="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
+        with ESMTPSA id g0b6c1w7S9vSzAy
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 28 Aug 2020 11:57:28 +0200 (CEST)
+Date:   Fri, 28 Aug 2020 11:57:17 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Niklas Cassel <nks@flawful.org>
+Subject: Re: [PATCH v2] opp: Power on (virtual) power domains managed by the
+ OPP core
+Message-ID: <20200828095706.GA1865@gerhold.net>
+References: <20200826093328.88268-1-stephan@gerhold.net>
+ <20200827100104.yuf2nzb6qras7zcw@vireshk-i7>
+ <20200827114422.GA1784@gerhold.net>
+ <20200828063511.y47ofywtu5qo57bq@vireshk-i7>
 MIME-Version: 1.0
-In-Reply-To: <20200716102552.1390223-1-kieran.bingham+renesas@ideasonboard.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828063511.y47ofywtu5qo57bq@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro,
-
-I see the fixes branch is open now ... could you pick this one up
-please? Or do I need to send a pull request?
-
---
-Regards
-
-Kieran
-
-On 16/07/2020 11:25, Kieran Bingham wrote:
-> The files maintained as part of the RDACM20 were incorrectly sorted
-> while they were added.
+On Fri, Aug 28, 2020 at 12:05:11PM +0530, Viresh Kumar wrote:
+> On 27-08-20, 13:44, Stephan Gerhold wrote:
+> > Hmm. Actually I was using this parameter for initial testing, and forced
+> > on the power domains from the qcom-cpufreq-nvmem driver. For my v1 patch
+> > I wanted to enable the power domains in dev_pm_opp_set_rate(), so there
+> > using the virt_devs parameter was not possible.
 > 
-> Correct the sort-order.
+> Right, as we really do not want to enable it there and leave it for
+> the real consumers to handle.
 > 
-> Fixes: 874a93adf972 ("media: i2c: Add RDACM20 driver")
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > On the other hand, creating the device links would be possible from the
+> > platform driver by using the parameter.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 373e4198d2b1..8bd8d4ab8b5f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14412,9 +14412,9 @@ M:	Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
->  L:	linux-media@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
-> -F:	drivers/media/i2c/rdacm20.c
->  F:	drivers/media/i2c/max9271.c
->  F:	drivers/media/i2c/max9271.h
-> +F:	drivers/media/i2c/rdacm20.c
->  
->  RDC R-321X SoC
->  M:	Florian Fainelli <florian@openwrt.org>
+> Right.
+> 
+> > > And so I think again if this patch should be picked instead of letting
+> > > the platform handle this ?
+> > 
+> > It seems like originally the motivation for the parameter was that
+> > cpufreq consumers do *not* need to power on the power domains:
+> > 
+> > Commit 17a8f868ae3e ("opp: Return genpd virtual devices from dev_pm_opp_attach_genpd()"):
+> >  "The cpufreq drivers don't need to do runtime PM operations on
+> >   the virtual devices returned by dev_pm_domain_attach_by_name() and so
+> >   the virtual devices weren't shared with the callers of
+> >   dev_pm_opp_attach_genpd() earlier.
+> > 
+> >   But the IO device drivers would want to do that. This patch updates
+> >   the prototype of dev_pm_opp_attach_genpd() to accept another argument
+> >   to return the pointer to the array of genpd virtual devices."
+> 
+> Not just that I believe. There were also arguments that only the real
+> consumer knows how to handle multiple power domains. For example for a
+> USB or Camera module which can work in multiple modes, we may want to
+> enable only one power domain in say slow mode and another power domain
+> in fast mode. And so these kind of complex behavior/choices better be
+> left for the end consumer and not try to handle this generically in
+> the OPP core.
 > 
 
--- 
-Regards
---
-Kieran
+I was thinking about something like that, but can you actually drop
+your performance state vote for one of the power domains using
+"required-opps"?
+
+At the moment it does not seem possible. I tried adding a special OPP
+using opp-level = <0> to reference that from required-opps, but the OPP
+core does not allow this:
+
+	vddcx: Not all nodes have performance state set (7: 6)
+	vddcx: Failed to add OPP table for index 0: -2
+
+So the "virt_devs" parameter would allow you to disable the power
+domain, but not to drop your performance state vote (you could only vote
+for the lowest OPP, not 0...)
+
+This is why I said: "And if there is such a use case, chances are good
+that this use case is so special that using the OPP API to set the
+performance states would not work either."
+
+It seems to me that there is more work needed to make such a use case
+really work, but it's hard to speculate without a real example.
+
+> > But the reason why I made this patch is that actually something *should*
+> > enable the power domains even for the cpufreq case.
+> 
+> Ulf, what do you think about this ? IIRC from our previous discussions
+> someone asked me not do so.
+> 
+> > If every user of dev_pm_opp_attach_genpd() ends up creating these device
+> > links we might as well manage those directly from the OPP core.
+> 
+> Sure, I am all in for reducing code duplication, but ...
+> 
+> > I cannot think of any use case where you would not want to manage those
+> > power domains using device links. And if there is such a use case,
+> > chances are good that this use case is so special that using the OPP API
+> > to set the performance states would not work either. In either case,
+> > this seems like something that should be discussed once there is such a
+> > use case.
+> 
+> The example I gave earlier shows a common case where we need to handle
+> this at the end users which still want to use the OPP API.
+> 
+> > At the moment, there are only two users of dev_pm_opp_attach_genpd():
+> > 
+> >   - cpufreq (qcom-cpufreq-nvmem)
+> >   - I/O (venus, recently added in linux-next [1])
+> > 
+> > [1]: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=9a538b83612c8b5848bf840c2ddcd86dda1c8c76
+> > 
+> > In fact, venus adds the device link exactly the same way as in my patch.
+> > So we could move that to the OPP core, simplify the venus code and
+> > remove the virt_devs parameter. That would be my suggestion.
+> > 
+> > I can submit a v3 with that if you agree (or we take this patch as-is
+> > and remove the parameter separately - I just checked and creating a
+> > device link twice does not seem to cause any problems...)
+> 
+> I normally tend to agree with the logic that lets only focus on what's
+> upstream and not think of virtual cases which may never happen. But I
+> was told that this is too common of a scenario and so it made sense to
+> do it this way.
+> 
+
+Well, if we're talking about theoretical use cases it's even hard to
+make assumptions for the CPUFreq use case.
+
+Theoretically speaking you would assume that you can disable or at least
+reduce the performance votes for a power domain used by a CPU if it is
+turned off (hotplug / idle). In practice this is probably hard because
+the CPU will need these resources until it's actually off, so if the CPU
+enters the idle state itself we don't really have a chance to do that
+from Linux.
+
+On qcom this is handled by voting for resources controlled by a remote
+processor (which knows when we go to idle), so having the power domains
+always on is just what I need.
+But who knows what you would need on other platforms...
+
+Honestly, I don't know what would be best in this case. I suppose if in
+doubt we should rather duplicate some code for now and de-duplicate later
+when we (might) know more about other use cases.
+
+FWIW, I think my original motivation to enable the power domains from
+the OPP core was that I wanted to suggest making it possible for the OPP
+core to manage power domains without involving the consumer driver.
+
+For example, a device tree property like "required-power-domains":
+
+	cpu-opp-table {
+		compatible = "operating-points-v2";
+		required-power-domains = "mx";
+
+		opp-998400000 {
+			opp-hz = /bits/ 64 <998400000>;
+			required-opps = <&rpmpd_opp_super_turbo>;
+		};
+	};
+
+Main motivation for this change is something I mentioned a while ago [1]:
+Since the order and names of the power domains is currently hardcoded
+in the consumer driver, the device tree does not give any hint
+which power domain we are actually controlling with the "required-opps".
+
+Plus, with the current approach it would be quite hard to add new power
+domains to an OPP table, or even to change their order. Not sure if this
+would really happen that often, though.
+
+But with all the discussions about whether it's a good idea to let the
+OPP core enable the power domains or not, I'm not sure if this is really
+something that would work properly...
+
+Well, I wanted to mention it :)
+
+Thanks!
+Stephan
+
+[1]: https://lore.kernel.org/linux-arm-msm/20200526205403.GA7256@gerhold.net/
