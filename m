@@ -7,98 +7,97 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32756C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1286BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB002098B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02A0208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:43:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ojF+jQJ5"
+	dkim=pass (1024-bit key) header.d=piap.pl header.i=@piap.pl header.b="OoDPMwtJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgH1Km6 (ORCPT
+        id S1729132AbgH1KnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 06:42:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728218AbgH1Kmq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 06:42:46 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEA15C061264
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:42:45 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a5so845790wrm.6
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:42:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=DRZf113ZOPSokfkPQfpN6cX86yO1qy7+w+jLp2LHhj4=;
-        b=ojF+jQJ50xVA734g2UIGnE9GD+/gqRjFexRajwJ42MU7N6d6lsppEKCS64yelJkraQ
-         QE9pm9RnsFcA9723W+FnYkiYnF8QxqM9ZUTfHutvz/b/jGmSjBRqAPZVXFmp+YfrNcCf
-         yt2tWuF5THVnmAR21yzyKnUx1bhJJkLHdUCKG2XjrFjVckx8ZmVBwk688J2//l2u0tT9
-         3ChZElmNyGnUu1I6WThyv3T7eBAmIEX2NN+xF3tMjGxZV2O8v1+4So0G6hbxyBYR25ye
-         +iWMY2x4INzQ8TAcNTwzQ/u6byTYSVYFiSYD/fcKFk6DiARZu1YjaEKqpgjbuiR85w3o
-         pVSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=DRZf113ZOPSokfkPQfpN6cX86yO1qy7+w+jLp2LHhj4=;
-        b=RUpqBpwReaOYT9FgdBZopubi4bRGLACkRWFAnFdO32V2+rMWkeKhKyZek4kQs3+Ol3
-         pvdwE3hFjQvQT2kyTlpJ1Xsb1McsaVHtAqJ1woJxA+5CXoV7LZiuPSmzPWl0DEGL245X
-         alaoT/rBPKbmv8EP8/uavyb7VTylEaNFn1PoxWCEE/7M0KgfCfWctTaY9vDTWdFioxsZ
-         vouNmblLsAJdu6UT3+zYwA0wq7JdOoRosoRxA+BmmZDn47qqW7ZYq3KwYxROsBF3TYVC
-         e0QLglWmqTg/1IiFN635tCO4U5z5hW1d+mScVwexuoyaz5HjwA2TMBrvcfstUq4cPFDt
-         57lQ==
-X-Gm-Message-State: AOAM530zIR3JLIzwgDyjYzaj1gsF5ur+8VGarCUmuL+6Nbr4u+SjHQYJ
-        BAp0MPniPdcucNK3sxzETMa0ZYFc246s3g==
-X-Google-Smtp-Source: ABdhPJwXKM7gAVNPjFu41r6eWDa2BfHJT+MKVDUtz1ZI/3piRfiQgGO7rLs73zcjbSReityE775HWA==
-X-Received: by 2002:adf:f7cd:: with SMTP id a13mr999283wrq.296.1598611364472;
-        Fri, 28 Aug 2020 03:42:44 -0700 (PDT)
-Received: from dell ([91.110.221.141])
-        by smtp.gmail.com with ESMTPSA id f2sm1373291wrj.54.2020.08.28.03.42.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 03:42:43 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 11:42:42 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2] mfd: dm355evm_msp: Convert LEDs to GPIO descriptor
- table
-Message-ID: <20200828104242.GN1826686@dell>
-References: <20200826202149.174815-1-linus.walleij@linaro.org>
+        Fri, 28 Aug 2020 06:43:20 -0400
+Received: from ni.piap.pl ([195.187.100.5]:41266 "EHLO ni.piap.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728218AbgH1KnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 06:43:14 -0400
+X-Greylist: delayed 330 seconds by postgrey-1.27 at vger.kernel.org; Fri, 28 Aug 2020 06:43:12 EDT
+Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ni.piap.pl (Postfix) with ESMTPSA id 0E631442480;
+        Fri, 28 Aug 2020 12:37:37 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 0E631442480
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=piap.pl; s=mail;
+        t=1598611058; bh=mX0r45ob5AWEtdzdyfUiUKYeTekKi7l1NPoWWKilQlM=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=OoDPMwtJFpQc2LrfhaaKDD+q447F4tx4ZJIgcWgin8MXQFyoe/ma+LcEzzIaf0pkR
+         bFoLkUIoCJ9LpCjRDDPiALP5H+B6obenk7u2NHdYrUemrqSsxY8lkWIXacpxh55Vyo
+         KTRPVV7xsjc2BjcBmM/h+1+HMgxj81wqtrNwFIw8=
+From:   =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
+To:     Xie He <xie.he.0141@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>
+Subject: Re: [PATCH net] drivers/net/wan/hdlc_cisco: Add hard_header_len
+References: <20200828070752.54444-1-xie.he.0141@gmail.com>
+Date:   Fri, 28 Aug 2020 12:37:37 +0200
+In-Reply-To: <20200828070752.54444-1-xie.he.0141@gmail.com> (Xie He's message
+        of "Fri, 28 Aug 2020 00:07:52 -0700")
+Message-ID: <m3pn7b6opa.fsf@t19.piap.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200826202149.174815-1-linus.walleij@linaro.org>
+Content-Transfer-Encoding: quoted-printable
+X-KLMS-Rule-ID: 4
+X-KLMS-Message-Action: skipped
+X-KLMS-AntiSpam-Status: not scanned, whitelist
+X-KLMS-AntiPhishing: not scanned, whitelist
+X-KLMS-AntiVirus: Kaspersky Security 8.0 for Linux Mail Server, version 8.0.1.721, not scanned, whitelist
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020, Linus Walleij wrote:
+Hello Xie,
 
-> This converts the DaVinci DM355EVM LEDs to use GPIO
-> descriptor look-ups.
-> 
-> Cc: Sekhar Nori <nsekhar@ti.com>
-> Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Xie He <xie.he.0141@gmail.com> writes:
+
+> This driver didn't set hard_header_len. This patch sets hard_header_len
+> for it according to its header_ops->create function.
+
+BTW it's 4 bytes long:
+
+struct hdlc_header {
+        u8 address;
+        u8 control;
+        __be16 protocol;
+}__packed;
+
+OTOH hdlc_setup_dev() initializes hard_header_len to 16,
+but in this case I guess 4 bytes are better.
+
+Acked-by: Krzysztof Halasa <khc@pm.waw.pl>
+
+> Cc: Martin Schiller <ms@dev.tdt.de>
+> Signed-off-by: Xie He <xie.he.0141@gmail.com>
 > ---
-> ChangeLog v1->v2:
-> - Moved out all the tables and device definition to the top
->   of the file to not have static locals inside the function.
-> ---
->  drivers/mfd/dm355evm_msp.c | 76 +++++++++++++++++++++++++-------------
->  1 file changed, 50 insertions(+), 26 deletions(-)
 
-Applied, thanks.
+> --- a/drivers/net/wan/hdlc_cisco.c
+> +++ b/drivers/net/wan/hdlc_cisco.c
+> @@ -370,6 +370,7 @@ static int cisco_ioctl(struct net_device *dev, struct=
+ ifreq *ifr)
+>  		memcpy(&state(hdlc)->settings, &new_settings, size);
+>  		spin_lock_init(&state(hdlc)->lock);
+>  		dev->header_ops =3D &cisco_header_ops;
+> +		dev->hard_header_len =3D sizeof(struct hdlc_header);
+>  		dev->type =3D ARPHRD_CISCO;
+>  		call_netdevice_notifiers(NETDEV_POST_TYPE_CHANGE, dev);
+>  		netif_dormant_on(dev);
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--=20
+Krzysztof Halasa
+
+Sie=C4=87 Badawcza =C5=81ukasiewicz
+Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
+Al. Jerozolimskie 202, 02-486 Warszawa
