@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 302F9C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD64C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 012D72078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 851222078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:01:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CQod5hZ8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVMi9H9M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbgH1KAv (ORCPT
+        id S1729020AbgH1KBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 06:00:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42300 "EHLO
+        Fri, 28 Aug 2020 06:01:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbgH1KAi (ORCPT
+        with ESMTP id S1728997AbgH1KAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 06:00:38 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80E2C061264;
-        Fri, 28 Aug 2020 03:00:37 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id t9so402026pfq.8;
-        Fri, 28 Aug 2020 03:00:37 -0700 (PDT)
+        Fri, 28 Aug 2020 06:00:47 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B48A0C06121B;
+        Fri, 28 Aug 2020 03:00:47 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id bh1so228177plb.12;
+        Fri, 28 Aug 2020 03:00:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PMGQxaBKPbON3ssZWMqrEm63rTUeWUDOhP6COLqPYSc=;
-        b=CQod5hZ8nMSXxmoYAACVHF/qI22QxGeFSjZUjfpoMAoBOV9QseFdRM4mT4eXynXUTC
-         Srct4/znp2udP6D2fWV0bzQ+pU+XXOtJaMi2g+drMUXj2K60C7ryDET6zClkdldor8i/
-         E7b0vIa8R3BWPgXPD+PJJc+AOPD+vqs7DgiqbTvdaT+K3ptqwzdJmNc9JYAun+j0QBae
-         7AboNgbfU8v9VPxj5nmgHoLhu4gnUy6QW/u+UtbhElPKKl+uWSB8sno/j9ZONdogYAlc
-         aQLufAMyCIBONhDco8RGsYXEqd6c77U8MUJIv054R9Y1Pl38buDYzYUONBBZjC6y1qyg
-         Lk4g==
+        bh=t1XpS/HyClfw6pT/eMXqAbIXlcXWXqL02aliRjQU+Do=;
+        b=SVMi9H9MJSwkxZS4sgc+XDPQgZVOYrHw/JEZlNn2qzPuodctA5rT7WpDP8xuiTQjly
+         X0D2OJjTMOoqbxFDG/g8DkoZpjgu7jIBQFJ80Slq1BkwHqZaWF9oyKtnqCKmYKd61nxI
+         Yp5xE8WBYoOmHck6mFx5BQ7Y+Dcivra0zWhSwoIGE69lPX5uSwulVVD6ttCYihuretrf
+         ZPbBHnedxpLGc/cTg26SzEDCf6l6FZ7x5uZlMwGyF0Hk1fu/TVbYwGppEsB3dsB5H0gk
+         4T9dQC8KAAD6JEJi8n5bGxKTB/C3tGLdvMJ0k7fy9HPp2irNvVgYsbIih8sf9HtKzHOO
+         jM5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PMGQxaBKPbON3ssZWMqrEm63rTUeWUDOhP6COLqPYSc=;
-        b=kkFNfYxkc6fYFiM7bJgn4hPl+s6/Ln/nhIEa1nwtXrXRpRsVBaajWJwyLe2UctivQL
-         KJELRC+YGsaj+020ey3sJlKnMqu74VedKn8ZsvRgYC/Ynn7KezDI1SSR+f6C8NfO61kB
-         /+pOhULZtw+CRINBfLYIuADKD39/EkZ42Fqmq1C6HQnWbdq4Ha4SDF3RQuZcYuvg7NbR
-         mRaF48aeX3vBPmGD6O3LY37mvEQiPzisPX0q6USz0zmjkL9dwP9ddAbigtkHmWNrXhm4
-         8LHGRIDZArNJNFdmbJorUQzrQD1mrkLoruSBLLOlwcCYXSKzPW3hJRt93LpajOdNNTIj
-         wbOQ==
-X-Gm-Message-State: AOAM533bXJluDloFoWJkAm4XpPSZgeod8zybwHPk0SOE5IMbEl3qjrDX
-        gc3KO2z1yu3zqjyE1Y8hfVc81hl97Zw=
-X-Google-Smtp-Source: ABdhPJzJadmdcr+E5dPdAeWoEtRrezvpoEws2ofoV8cHCzMpxKfGsMWs/5DPALVlJiaUIB6ACL7lKA==
-X-Received: by 2002:aa7:96f4:: with SMTP id i20mr619172pfq.312.1598608837398;
-        Fri, 28 Aug 2020 03:00:37 -0700 (PDT)
+        bh=t1XpS/HyClfw6pT/eMXqAbIXlcXWXqL02aliRjQU+Do=;
+        b=Ux8mOGZ1MZ9wnnXQJQOowDNe/3cQHLXv6Fx503Td2XgM2C4XlhQR7tLSxQ0Dd/ZsLj
+         llq7+9r+DixIyjHfxOdRninUW2jU6RxKy8b1flebs/97a0Oeh3QNLy6FHoL5p+dlHeGb
+         48Hc9TbISn2Ol4lRRkT/01EAVNERbC0Ewsc+lIhttK+roqyWx91Cmlurs1N9iezzdxsw
+         t6+cy6VWcZknEteaAtmrBwXU8vuM+pLd0YiY4AuULjev8jdnGNWhh+S1yZ2EHJef4/rg
+         DWTF1QAvWn7+nBP0UV6TYM9Ogw8CtX/+iCindMiAzXLOYFSB969+5650BqLHZ/zkGqT6
+         AI1A==
+X-Gm-Message-State: AOAM533NCEOpXRV2M8nfnGInlcT7DjIZcVwtLXkRew6atZMFjSF0pypo
+        9PJ/KxbJOBA54BLEWqNZSxI=
+X-Google-Smtp-Source: ABdhPJy4OYhts/oK1ycV+d0OGCx/rtyS/ekQliVuUahTMGfIyFq0gV8RJk/8jgwzJpUyRd+KfS/ZuQ==
+X-Received: by 2002:a17:902:a503:: with SMTP id s3mr722211plq.190.1598608847187;
+        Fri, 28 Aug 2020 03:00:47 -0700 (PDT)
 Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
-        by smtp.gmail.com with ESMTPSA id 78sm1068608pfv.200.2020.08.28.03.00.33
+        by smtp.gmail.com with ESMTPSA id 78sm1068608pfv.200.2020.08.28.03.00.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 03:00:37 -0700 (PDT)
+        Fri, 28 Aug 2020 03:00:46 -0700 (PDT)
 From:   Nicholas Piggin <npiggin@gmail.com>
 To:     linux-mm@kvack.org
 Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
@@ -68,10 +68,10 @@ Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         Jens Axboe <axboe@kernel.dk>,
         Peter Zijlstra <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 1/4] mm: fix exec activate_mm vs TLB shootdown and lazy tlb switching race
-Date:   Fri, 28 Aug 2020 20:00:19 +1000
-Message-Id: <20200828100022.1099682-2-npiggin@gmail.com>
+        "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
+Subject: [PATCH 3/4] sparc64: remove mm_cpumask clearing to fix kthread_use_mm race
+Date:   Fri, 28 Aug 2020 20:00:21 +1000
+Message-Id: <20200828100022.1099682-4-npiggin@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20200828100022.1099682-1-npiggin@gmail.com>
 References: <20200828100022.1099682-1-npiggin@gmail.com>
@@ -82,106 +82,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reading and modifying current->mm and current->active_mm and switching
-mm should be done with irqs off, to prevent races seeing an intermediate
-state.
+The de facto (and apparently uncommented) standard for using an mm had,
+thanks to this code in sparc if nothing else, been that you must have a
+reference on mm_users *and that reference must have been obtained with
+mmget()*, i.e., from a thread with a reference to mm_users that had used
+the mm.
 
-This is similar to commit 38cf307c1f20 ("mm: fix kthread_use_mm() vs TLB
-invalidate"). At exec-time when the new mm is activated, the old one
-should usually be single-threaded and no longer used, unless something
-else is holding an mm_users reference (which may be possible).
+The introduction of mmget_not_zero() in commit d2005e3f41d4
+("userfaultfd: don't pin the user memory in userfaultfd_file_create()")
+allowed mm_count holders to aoperate on user mappings asynchronously
+from the actual threads using the mm, but they were not to load those
+mappings into their TLB (i.e., walking vmas and page tables is okay,
+kthread_use_mm() is not).
 
-Absent other mm_users, there is also a race with preemption and lazy tlb
-switching. Consider the kernel_execve case where the current thread is
-using a lazy tlb active mm:
+io_uring 2b188cc1bb857 ("Add io_uring IO interface") added code which
+does a kthread_use_mm() from a mmget_not_zero() refcount.
 
-  call_usermodehelper()
-    kernel_execve()
-      old_mm = current->mm;
-      active_mm = current->active_mm;
-      *** preempt *** -------------------->  schedule()
-                                               prev->active_mm = NULL;
-                                               mmdrop(prev active_mm);
-                                             ...
-                      <--------------------  schedule()
-      current->mm = mm;
-      current->active_mm = mm;
-      if (!old_mm)
-          mmdrop(active_mm);
+The problem with this is code which previously assumed mm == current->mm
+and mm->mm_users == 1 implies the mm will remain single-threaded at
+least until this thread creates another mm_users reference, has now
+broken.
 
-If we switch back to the kernel thread from a different mm, there is a
-double free of the old active_mm, and a missing free of the new one.
+arch/sparc/kernel/smp_64.c:
 
-Closing this race only requires interrupts to be disabled while ->mm
-and ->active_mm are being switched, but the TLB problem requires also
-holding interrupts off over activate_mm. Unfortunately not all archs
-can do that yet, e.g., arm defers the switch if irqs are disabled and
-expects finish_arch_post_lock_switch() to be called to complete the
-flush; um takes a blocking lock in activate_mm().
+    if (atomic_read(&mm->mm_users) == 1) {
+        cpumask_copy(mm_cpumask(mm), cpumask_of(cpu));
+        goto local_flush_and_out;
+    }
 
-So as a first step, disable interrupts across the mm/active_mm updates
-to close the lazy tlb preempt race, and provide an arch option to
-extend that to activate_mm which allows architectures doing IPI based
-TLB shootdowns to close the second race.
+vs fs/io_uring.c
 
-This is a bit ugly, but in the interest of fixing the bug and backporting
-before all architectures are converted this is a compromise.
+    if (unlikely(!(ctx->flags & IORING_SETUP_SQPOLL) ||
+                 !mmget_not_zero(ctx->sqo_mm)))
+        return -EFAULT;
+    kthread_use_mm(ctx->sqo_mm);
 
+mmget_not_zero() could come in right after the mm_users == 1 test, then
+kthread_use_mm() which sets its CPU in the mm_cpumask. That update could
+be lost if cpumask_copy() occurs afterward.
+
+I propose we fix this by allowing mmget_not_zero() to be a first-class
+reference, and not have this obscure undocumented and unchecked
+restriction.
+
+The basic fix for sparc64 is to remove its mm_cpumask clearing code. The
+optimisation could be effectively restored by sending IPIs to mm_cpumask
+members and having them remove themselves from mm_cpumask. This is more
+tricky so I leave it as an exercise for someone with a sparc64 SMP.
+powerpc has a (currently similarly broken) example.
+
+Cc: sparclinux@vger.kernel.org
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- arch/Kconfig |  7 +++++++
- fs/exec.c    | 17 +++++++++++++++--
- 2 files changed, 22 insertions(+), 2 deletions(-)
+ arch/sparc/kernel/smp_64.c | 65 ++++++++------------------------------
+ 1 file changed, 14 insertions(+), 51 deletions(-)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index af14a567b493..94821e3f94d1 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -414,6 +414,13 @@ config MMU_GATHER_NO_GATHER
- 	bool
- 	depends on MMU_GATHER_TABLE_FREE
+diff --git a/arch/sparc/kernel/smp_64.c b/arch/sparc/kernel/smp_64.c
+index e286e2badc8a..e38d8bf454e8 100644
+--- a/arch/sparc/kernel/smp_64.c
++++ b/arch/sparc/kernel/smp_64.c
+@@ -1039,38 +1039,9 @@ void smp_fetch_global_pmu(void)
+  * are flush_tlb_*() routines, and these run after flush_cache_*()
+  * which performs the flushw.
+  *
+- * The SMP TLB coherency scheme we use works as follows:
+- *
+- * 1) mm->cpu_vm_mask is a bit mask of which cpus an address
+- *    space has (potentially) executed on, this is the heuristic
+- *    we use to avoid doing cross calls.
+- *
+- *    Also, for flushing from kswapd and also for clones, we
+- *    use cpu_vm_mask as the list of cpus to make run the TLB.
+- *
+- * 2) TLB context numbers are shared globally across all processors
+- *    in the system, this allows us to play several games to avoid
+- *    cross calls.
+- *
+- *    One invariant is that when a cpu switches to a process, and
+- *    that processes tsk->active_mm->cpu_vm_mask does not have the
+- *    current cpu's bit set, that tlb context is flushed locally.
+- *
+- *    If the address space is non-shared (ie. mm->count == 1) we avoid
+- *    cross calls when we want to flush the currently running process's
+- *    tlb state.  This is done by clearing all cpu bits except the current
+- *    processor's in current->mm->cpu_vm_mask and performing the
+- *    flush locally only.  This will force any subsequent cpus which run
+- *    this task to flush the context from the local tlb if the process
+- *    migrates to another cpu (again).
+- *
+- * 3) For shared address spaces (threads) and swapping we bite the
+- *    bullet for most cases and perform the cross call (but only to
+- *    the cpus listed in cpu_vm_mask).
+- *
+- *    The performance gain from "optimizing" away the cross call for threads is
+- *    questionable (in theory the big win for threads is the massive sharing of
+- *    address space state across processors).
++ * mm->cpu_vm_mask is a bit mask of which cpus an address
++ * space has (potentially) executed on, this is the heuristic
++ * we use to limit cross calls.
+  */
  
-+config ARCH_WANT_IRQS_OFF_ACTIVATE_MM
-+	bool
-+	help
-+	  Temporary select until all architectures can be converted to have
-+	  irqs disabled over activate_mm. Architectures that do IPI based TLB
-+	  shootdowns should enable this.
+ /* This currently is only used by the hugetlb arch pre-fault
+@@ -1080,18 +1051,13 @@ void smp_fetch_global_pmu(void)
+ void smp_flush_tlb_mm(struct mm_struct *mm)
+ {
+ 	u32 ctx = CTX_HWBITS(mm->context);
+-	int cpu = get_cpu();
+ 
+-	if (atomic_read(&mm->mm_users) == 1) {
+-		cpumask_copy(mm_cpumask(mm), cpumask_of(cpu));
+-		goto local_flush_and_out;
+-	}
++	get_cpu();
+ 
+ 	smp_cross_call_masked(&xcall_flush_tlb_mm,
+ 			      ctx, 0, 0,
+ 			      mm_cpumask(mm));
+ 
+-local_flush_and_out:
+ 	__flush_tlb_mm(ctx, SECONDARY_CONTEXT);
+ 
+ 	put_cpu();
+@@ -1114,17 +1080,15 @@ void smp_flush_tlb_pending(struct mm_struct *mm, unsigned long nr, unsigned long
+ {
+ 	u32 ctx = CTX_HWBITS(mm->context);
+ 	struct tlb_pending_info info;
+-	int cpu = get_cpu();
 +
- config ARCH_HAVE_NMI_SAFE_CMPXCHG
- 	bool
++	get_cpu();
  
-diff --git a/fs/exec.c b/fs/exec.c
-index a91003e28eaa..d4fb18baf1fb 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1130,11 +1130,24 @@ static int exec_mmap(struct mm_struct *mm)
- 	}
+ 	info.ctx = ctx;
+ 	info.nr = nr;
+ 	info.vaddrs = vaddrs;
  
- 	task_lock(tsk);
--	active_mm = tsk->active_mm;
- 	membarrier_exec_mmap(mm);
--	tsk->mm = mm;
+-	if (mm == current->mm && atomic_read(&mm->mm_users) == 1)
+-		cpumask_copy(mm_cpumask(mm), cpumask_of(cpu));
+-	else
+-		smp_call_function_many(mm_cpumask(mm), tlb_pending_func,
+-				       &info, 1);
++	smp_call_function_many(mm_cpumask(mm), tlb_pending_func,
++			       &info, 1);
+ 
+ 	__flush_tlb_pending(ctx, nr, vaddrs);
+ 
+@@ -1134,14 +1098,13 @@ void smp_flush_tlb_pending(struct mm_struct *mm, unsigned long nr, unsigned long
+ void smp_flush_tlb_page(struct mm_struct *mm, unsigned long vaddr)
+ {
+ 	unsigned long context = CTX_HWBITS(mm->context);
+-	int cpu = get_cpu();
+ 
+-	if (mm == current->mm && atomic_read(&mm->mm_users) == 1)
+-		cpumask_copy(mm_cpumask(mm), cpumask_of(cpu));
+-	else
+-		smp_cross_call_masked(&xcall_flush_tlb_page,
+-				      context, vaddr, 0,
+-				      mm_cpumask(mm));
++	get_cpu();
 +
-+	local_irq_disable();
-+	active_mm = tsk->active_mm;
- 	tsk->active_mm = mm;
-+	tsk->mm = mm;
-+	/*
-+	 * This prevents preemption while active_mm is being loaded and
-+	 * it and mm are being updated, which could cause problems for
-+	 * lazy tlb mm refcounting when these are updated by context
-+	 * switches. Not all architectures can handle irqs off over
-+	 * activate_mm yet.
-+	 */
-+	if (!IS_ENABLED(CONFIG_ARCH_WANT_IRQS_OFF_ACTIVATE_MM))
-+		local_irq_enable();
- 	activate_mm(active_mm, mm);
-+	if (IS_ENABLED(CONFIG_ARCH_WANT_IRQS_OFF_ACTIVATE_MM))
-+		local_irq_enable();
- 	tsk->mm->vmacache_seqnum = 0;
- 	vmacache_flush(tsk);
- 	task_unlock(tsk);
++	smp_cross_call_masked(&xcall_flush_tlb_page,
++			      context, vaddr, 0,
++			      mm_cpumask(mm));
++
+ 	__flush_tlb_page(context, vaddr);
+ 
+ 	put_cpu();
 -- 
 2.23.0
 
