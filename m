@@ -2,143 +2,86 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB19DC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 18:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D28C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 18:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86EC42074A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 18:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1388F2080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 18:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aCTaFZU+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vXG0XUsJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u5ZZ+sOo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgH1SaC (ORCPT
+        id S1728107AbgH1SbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 14:30:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36810 "EHLO
+        Fri, 28 Aug 2020 14:31:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727940AbgH1SaA (ORCPT
+        with ESMTP id S1726010AbgH1Sa5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 14:30:00 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0764DC061264;
-        Fri, 28 Aug 2020 11:29:59 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598639398;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HQQ3PgkKo2hS5HQKNaJ3P1IptF/ClXfBwAd1n3Worn0=;
-        b=aCTaFZU+e8x0x58wJ1oeYUMPHmUAbdjR6qrLnzUL2j3Joo6UWr9US/cCwRlh/cn/Dvl3Ea
-        AvjuuOBWjpzVXAXBQyGeg3gInDAiqfY9sH0WgQWHi3NyPKyTXpj7zFsze/QeG7xMPEXKCT
-        iIrXwbhXKciDtYdzmRP42PwSOTAibh/Ci9iyIDxL9JGAZZDFCWmomrS+tkBweJNjmV2kjb
-        BbgDTKvuYwHkEpQDeFwqMNmNeXfaqNVEON0+suObP1Oa+wJK8Ot+NeM4+0tLDCDC/otdSb
-        sRbMsWVyem66C8lTMSZznkBMUmQrRkEU4Yxl7AH+oxxHZ72nlgzHwSoX1gI+cQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598639398;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HQQ3PgkKo2hS5HQKNaJ3P1IptF/ClXfBwAd1n3Worn0=;
-        b=vXG0XUsJMIi3DkkPAd4hFW5NyIUjTPD3/KRNdL6hTZ3E1uRKkBApmbjwrrLTXyfG5+s5Mw
-        6hQo8a2K/hj9JbDA==
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [patch V2 34/46] PCI/MSI: Make arch_.*_msi_irq[s] fallbacks selectable
-In-Reply-To: <20200827182040.GA2049623@bjorn-Precision-5520>
-References: <20200827182040.GA2049623@bjorn-Precision-5520>
-Date:   Fri, 28 Aug 2020 20:29:57 +0200
-Message-ID: <873646lj2y.fsf@nanos.tec.linutronix.de>
+        Fri, 28 Aug 2020 14:30:57 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB838C061264;
+        Fri, 28 Aug 2020 11:30:56 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id l8so22905ios.2;
+        Fri, 28 Aug 2020 11:30:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WtlD/YX0ISFkWguzbH4vW7Oxt2gP0SItAMBJ51jlhgA=;
+        b=u5ZZ+sOob/NWIylD3FsfSRO2o52LyPkjnkvg6BJJxLxSFcoY7xVzCeX4o5AGNyENgh
+         I0Mtklx0pRK3QUFdILooXaJLmJSj3Zur8vtXO0BEWiBRvQtlY0JKXlNT4jlCOrhFcnh1
+         1a+KUhcq6JxCCvZRlGHL2USpA9248WhAKkf261bFTE/QE+9+b+qGpsJjA2G1/hq9YJea
+         2xJpQ0Znplfsa8P4kG9U326heJw15KaQ2fmJxtG0t371dOMMZojXjDsMupXG4O0shg6S
+         ps8DwCx2MwUEbulW0xnuo1CB5WK7kUJT4sPD+0c5+8pQ7AezyP4AOp/tZahCkw7gtGuf
+         tkJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WtlD/YX0ISFkWguzbH4vW7Oxt2gP0SItAMBJ51jlhgA=;
+        b=oFX7RbgpZQV8KdiTdcYXqvwHzLsqthzyC11O1X+oFUM4gIXRPfq5bSLv1kBMJ5xab/
+         XYtGttlKc1YEk6a/cSB3cZyxnFWAXYmRLlFSVLc3zkY1QuolV6/4NXz1UUx7lxT0cXIX
+         JVF6/dKWnkPCGWldqZnh94ONenqBN9bl/zBmrXKN0X1+qUaI2CD26xT+ej8t+icavnbV
+         F7whKLz9bMDD+W0rKmPbO3HrKrnUmcK3VeG9pkydEJR3/57qsuew2HJzRaFYfZ8MoLr4
+         c2fhcWu32+7uebxDU3sFurx0ohl5ZG/zOhH79vYtCKTBgb5NfSJhmdV6v7uCbTDcQfvy
+         gWeQ==
+X-Gm-Message-State: AOAM533IQz2Buxby9NdVj4o4Clpv0I+ckMzbBSmhIwAVVnwVkMIiJcXn
+        41brg19dhxkeuAiVU87aV4X1IPR8+DUpoALuyHta29gl2wA7y+wh
+X-Google-Smtp-Source: ABdhPJxUhh6t9XVY7PhXWTL6ZE6/DqCdX1N3g+eC6XgS+va1XX9sfw3FnM26dG5G4eZephV45h3TK5YQcgAKRGahT/w=
+X-Received: by 2002:a02:e4a:: with SMTP id 71mr2317041jae.133.1598639456198;
+ Fri, 28 Aug 2020 11:30:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200815165030.5849-1-ztong0001@gmail.com> <20200828180742.GA20488@salvia>
+ <CAA5qM4CUO47EkJ-4wRoi0wkReAXtB5isLbvBEUw045po_TY8Sw@mail.gmail.com> <20200828181928.GA14349@salvia>
+In-Reply-To: <20200828181928.GA14349@salvia>
+From:   Tong Zhang <ztong0001@gmail.com>
+Date:   Fri, 28 Aug 2020 14:30:45 -0400
+Message-ID: <CAA5qM4ACaYfdj+MwACyS1oC+GT7KoD1T73DsAMPrpO9rqbxWkw@mail.gmail.com>
+Subject: Re: [PATCH] netfilter: nf_conntrack_sip: fix parsing error
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     kadlec@netfilter.org, fw@strlen.de, davem@davemloft.net,
+        kuba@kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27 2020 at 13:20, Bjorn Helgaas wrote:
-> On Wed, Aug 26, 2020 at 01:17:02PM +0200, Thomas Gleixner wrote:
->> Make the architectures and drivers which rely on them select them in Kconfig
->> and if not selected replace them by stub functions which emit a warning and
->> fail the PCI/MSI interrupt allocation.
+I think the original code complaining parsing error is there for a reason,
+A better way is to modify ct_sip_parse_numerical_param() and let it return
+a real parsing error code instead of returning FOUND(1) and NOT FOUND(0)
+if deemed necessary
+Once again I'm not an expert and I'm may suggest something stupid,
+please pardon my ignorance --
+- Tong
+
+On Fri, Aug 28, 2020 at 2:19 PM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
 >
-> Sorry, I really don't understand this, so these are probably stupid
-> questions.
->
-> If CONFIG_PCI_MSI_ARCH_FALLBACKS is defined, we will supply
-> implementations of:
->
->   arch_setup_msi_irq
->   arch_teardown_msi_irq
->   arch_setup_msi_irqs
->   arch_teardown_msi_irqs
->   default_teardown_msi_irqs    # non-weak
->
-> You select CONFIG_PCI_MSI_ARCH_FALLBACKS for ia64, mips, powerpc,
-> s390, sparc, and x86.  I see that all of those arches implement at
-> least one of the functions above.  But x86 doesn't and I can't figure
-> out why it needs to select CONFIG_PCI_MSI_ARCH_FALLBACKS.
-
-X86 still has them at that point in the series and the next patch
-removes them. I wanted to have the warnings in place before doing so.
-
-> I assume there's a way to convert these arches to hierarchical irq
-> domains so they wouldn't need this at all?  Is there a sample
-> conversion to look at?
-
-For a quick and dirty step it's pretty much the wrapper I used for XEN
-and then make sure that the msi_domain pointer is populated is
-pci_device::device.
-
-> And I can't figure out what's special about tegra, rcar, and xilinx
-> that makes them need it as well.
-
-Those are old drivers from the time where ARM did not use hierarchical
-irq domains and nobody cared to fix them up.
-
-> Is there something I could grep for
-> to identify them?
-
-git grep arch_setup_msi_irq
-git grep arch_teardown_msi_irq
-
-> Is there a way to convert them so they don't need it?
-
-Sure, it just needs some work and probably hardware to test.
-
-Thanks,
-
-        tglx
+> Then probably update this code to ignore the return value?
