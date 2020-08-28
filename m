@@ -2,121 +2,171 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8D2C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E49C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6481C207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:42:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vpjhziZV"
+	by mail.kernel.org (Postfix) with ESMTP id AD541207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598622196;
+	bh=y2Pe5DDj56X0YfjYS3fZLGp59nAG1uWqRiVFnrm5DRg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=laYV9Bfhp/90fE6oUunPal6exElvWFfr/n97OoSnoCP9T7ccfFbqCDfBM7422KbMQ
+	 MPPGoZKDvox5XRXFYfiFxzsxitNpNJ+Vl7NLmX8hF4MhA19/Tz62WEuJLz32ADV2AQ
+	 434xEHm18ncp7AVBSPr9tps//TW66IFuugK8+Pvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbgH1Nmv (ORCPT
+        id S1729606AbgH1NnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 09:42:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729526AbgH1NjB (ORCPT
+        Fri, 28 Aug 2020 09:43:15 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:47536 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729547AbgH1NkN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 09:39:01 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C18FC061232;
-        Fri, 28 Aug 2020 06:39:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=LOexncqInd9UhATcu9VDk+sYlfrOpuGRHHk9ZHPPG40=; b=vpjhziZVX2mDZ0xUL0b3jpksFR
-        o++pJAu7Utjlj/ITds01XQp3jeXjmGgW5q7Ufe2TCqKr9ksQbY8JZLdfpAv8WTeJtGUMS7uGLgnJ+
-        L2sCHjbzFYYAx02JkKcyUn1ysEgVvouyI+EyEOTFgyFbpZYKJce3GxgvsNYf1iWxYBkhvQ37wh6rT
-        1yUG0aZg06B6ClVsluxih9/HkOAP7XDh/76TTv+bYOXdIOF2GvDFv+PEndl21CZqz0EhCp+Yb6VyT
-        6lx4i+0j2dU9HXC9Xa4HbYtkiB9CciZ9FVafDMxz4OljL5aZEtO3UcsN6Y8N1sJ+82xprKCgovL8V
-        u4hRcEJQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBeab-0008K0-Gp; Fri, 28 Aug 2020 13:38:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 23F393003E5;
-        Fri, 28 Aug 2020 15:38:43 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D3B6F2C5F933F; Fri, 28 Aug 2020 15:38:43 +0200 (CEST)
-Date:   Fri, 28 Aug 2020 15:38:43 +0200
-From:   peterz@infradead.org
-To:     "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
-        "anil.s.keshavamurthy@intel.com" <anil.s.keshavamurthy@intel.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "cameron@moodycamel.com" <cameron@moodycamel.com>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "paulmck@kernel.org" <paulmck@kernel.org>
-Subject: Re: [RFC][PATCH 3/7] kprobes: Remove kretprobe hash
-Message-ID: <20200828133843.GC1362448@hirez.programming.kicks-ass.net>
-References: <20200827161237.889877377@infradead.org>
- <20200827161754.359432340@infradead.org>
- <7df0a1af432040d9908517661c32dc34@trendmicro.com>
+        Fri, 28 Aug 2020 09:40:13 -0400
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 07SDd3xi014164;
+        Fri, 28 Aug 2020 22:39:03 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 07SDd3xi014164
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1598621943;
+        bh=YdLnD8kilQi6Qu8wKPy3myXSTQRUVPOWLWxsi5X2Fak=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=t9eyrQX+d1ulLL0/TMY60sXye5M1I5wDkQq4Df+A0o1cVrBXmJg6t11tbOQl2mUrh
+         bySrf/sl+Z3WUBCsgDnvSd/nicXj7DNFkjISU/YuXvYESsbbtJvYUMhLtaP5JsLD1H
+         Xm2uLN3kbNXLXS2nrVVwHCLH6ubI9bsktK7gGi9Dlf0DRGgEoQnhfcdN4p8XL6rU0n
+         fcJlmhTV2TDeewsIKMj2tlsRl279nrD3um9T415MU564pvecCQQZon+BV6w0h04ns5
+         /wUomgE7AxMb+J2GXLw98WdbelePJs7m5kYMgaFrIuBH72AQUIG1Igs0PuMik+5Lqq
+         rpfazqrkpYEZw==
+X-Nifty-SrcIP: [209.85.216.48]
+Received: by mail-pj1-f48.google.com with SMTP id ls14so516930pjb.3;
+        Fri, 28 Aug 2020 06:39:03 -0700 (PDT)
+X-Gm-Message-State: AOAM530GGv1Ex5/MFVZKRHBGjJkK6db6eT0EOFcInEMJs/SSKAW4Jvpf
+        jpmmG5Z7Gw7lxyZ/m7ZVKkvDlJElPXtqdSUI06w=
+X-Google-Smtp-Source: ABdhPJzV51qhMJH/ItksiorasK1D6Z26aPHW40w0GVHpyueJGVudjSIjLrMTzzNHC/usgQ90ukPvmXif6Ac3NwjOCdE=
+X-Received: by 2002:a17:90a:fb53:: with SMTP id iq19mr1274061pjb.153.1598621942482;
+ Fri, 28 Aug 2020 06:39:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7df0a1af432040d9908517661c32dc34@trendmicro.com>
+References: <20200825231438.15682-1-natechancellor@gmail.com> <CAKwvOdnCGoRHxgoV+qZNZQx04jwcttckCoxTpFKp9C=jRHw5+w@mail.gmail.com>
+In-Reply-To: <CAKwvOdnCGoRHxgoV+qZNZQx04jwcttckCoxTpFKp9C=jRHw5+w@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 28 Aug 2020 22:38:25 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR=Nr+kRoObN_FaGoHEBig404Ax3VU3=Qjt_o_yPR45OA@mail.gmail.com>
+Message-ID: <CAK7LNAR=Nr+kRoObN_FaGoHEBig404Ax3VU3=Qjt_o_yPR45OA@mail.gmail.com>
+Subject: Re: [PATCH] Documentation/llvm: Improve formatting of commands,
+ variables, and arguments
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 01:11:15PM +0000, Eddy_Wu@trendmicro.com wrote:
-> > -----Original Message-----
-> > From: Peter Zijlstra <peterz@infradead.org>
-> > Sent: Friday, August 28, 2020 12:13 AM
-> > To: linux-kernel@vger.kernel.org; mhiramat@kernel.org
-> > Cc: Eddy Wu (RD-TW) <Eddy_Wu@trendmicro.com>; x86@kernel.org; davem@davemloft.net; rostedt@goodmis.org;
-> > naveen.n.rao@linux.ibm.com; anil.s.keshavamurthy@intel.com; linux-arch@vger.kernel.org; cameron@moodycamel.com;
-> > oleg@redhat.com; will@kernel.org; paulmck@kernel.org; peterz@infradead.org
-> > Subject: [RFC][PATCH 3/7] kprobes: Remove kretprobe hash
+On Wed, Aug 26, 2020 at 10:36 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Tue, Aug 25, 2020 at 4:14 PM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
 > >
-> > @@ -1935,71 +1932,45 @@ unsigned long __kretprobe_trampoline_han
-> >                                         unsigned long trampoline_address,
-> >                                         void *frame_pointer)
-> >  {
-> > // ... removed
-> > // NULL here
-> > +       first = node = current->kretprobe_instances.first;
-> > +       while (node) {
-> > +               ri = container_of(node, struct kretprobe_instance, llist);
+> > While reviewing a separate patch, I noticed that the formatting of the
+> > commands, variables, and arguments was not in a monospaced font like the
+> > rest of the Kbuild documentation (see kbuild/kconfig.rst for an
+> > example). This is due to a lack of "::" before indented command blocks
+> > and single backticks instead of double backticks for inline formatting.
 > >
-> > -               orig_ret_address = (unsigned long)ri->ret_addr;
-> > -               if (skipped)
-> > -                       pr_warn("%ps must be blacklisted because of incorrect kretprobe order\n",
-> > -                               ri->rp->kp.addr);
-> > +               BUG_ON(ri->fp != frame_pointer);
+> > Add those so that the document looks nicer in an HTML format, while not
+> > ruining the look in plain text.
 > >
-> > -               if (orig_ret_address != trampoline_address)
-> > +               orig_ret_address = (unsigned long)ri->ret_addr;
-> > +               if (orig_ret_address != trampoline_address) {
-> >                         /*
-> >                          * This is the real return address. Any other
-> >                          * instances associated with this task are for
-> >                          * other calls deeper on the call stack
-> >                          */
-> >                         break;
-> > +               }
-> > +
-> > +               node = node->next;
-> >         }
+> > As a result of this, we can remove the escaped backslashes in the last
+> > code block and move them to single backslashes.
 > >
-> 
-> Hi, I found a NULL pointer dereference here, where
-> current->kretprobe_instances.first == NULL in these two scenario:
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+>
+> Ah, yeah, I saw that. Thanks for the fix!
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+>
+> > ---
+> >  Documentation/kbuild/llvm.rst | 26 +++++++++++++-------------
+> >  1 file changed, 13 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
+> > index 2aac50b97921..334df758dce3 100644
+> > --- a/Documentation/kbuild/llvm.rst
+> > +++ b/Documentation/kbuild/llvm.rst
+> > @@ -23,8 +23,8 @@ supports C and the GNU C extensions required by the kernel, and is pronounced
+> >  Clang
+> >  -----
+> >
+> > -The compiler used can be swapped out via `CC=` command line argument to `make`.
+> > -`CC=` should be set when selecting a config and during a build.
+> > +The compiler used can be swapped out via ``CC=`` command line argument to ``make``.
+> > +``CC=`` should be set when selecting a config and during a build. ::
+> >
+> >         make CC=clang defconfig
+> >
+> > @@ -34,33 +34,33 @@ Cross Compiling
+> >  ---------------
+> >
+> >  A single Clang compiler binary will typically contain all supported backends,
+> > -which can help simplify cross compiling.
+> > +which can help simplify cross compiling. ::
+> >
+> >         ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make CC=clang
+> >
+> > -`CROSS_COMPILE` is not used to prefix the Clang compiler binary, instead
+> > -`CROSS_COMPILE` is used to set a command line flag: `--target <triple>`. For
+> > -example:
+> > +``CROSS_COMPILE`` is not used to prefix the Clang compiler binary, instead
+> > +``CROSS_COMPILE`` is used to set a command line flag: ``--target <triple>``. For
+> > +example: ::
+> >
+> >         clang --target aarch64-linux-gnu foo.c
+> >
+> >  LLVM Utilities
+> >  --------------
+> >
+> > -LLVM has substitutes for GNU binutils utilities. Kbuild supports `LLVM=1`
+> > -to enable them.
+> > +LLVM has substitutes for GNU binutils utilities. Kbuild supports ``LLVM=1``
+> > +to enable them. ::
+> >
+> >         make LLVM=1
+> >
+> > -They can be enabled individually. The full list of the parameters:
+> > +They can be enabled individually. The full list of the parameters: ::
+> >
+> > -       make CC=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \\
+> > -         OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-size \\
+> > -         READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \\
+> > +       make CC=clang LD=ld.lld AR=llvm-ar NM=llvm-nm STRIP=llvm-strip \
+> > +         OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump OBJSIZE=llvm-size \
+> > +         READELF=llvm-readelf HOSTCC=clang HOSTCXX=clang++ HOSTAR=llvm-ar \
+> >           HOSTLD=ld.lld
+> >
+> >  Currently, the integrated assembler is disabled by default. You can pass
+> > -`LLVM_IAS=1` to enable it.
+> > +``LLVM_IAS=1`` to enable it.
+> >
+> >  Getting Help
+> >  ------------
+> >
+> > base-commit: abb3438d69fb6dd5baa4ae23eafbf5b87945eff1
+> > --
 
-Hurmph, that would mean hitting the trampoline and not having a
-kretprobe_instance, weird. Let me try and reproduce.
+
+Applied to linux-kbuild/fixes.
+Thanks.
+
+-- 
+Best Regards
+Masahiro Yamada
