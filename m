@@ -2,232 +2,96 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08511C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 04:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ABDC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 04:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7A1E20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 04:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 536CA20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 04:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgH1E50 (ORCPT
+        id S1726774AbgH1E62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 00:57:26 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:38841 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgH1E5Y (ORCPT
+        Fri, 28 Aug 2020 00:58:28 -0400
+Received: from smtprelay0006.hostedemail.com ([216.40.44.6]:56974 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725894AbgH1E61 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 00:57:24 -0400
-Received: by mail-il1-f198.google.com with SMTP id m10so5985609ild.5
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Aug 2020 21:57:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=LgE6lJVanO3aGKaU5BWBpevjqiZZr3WyVWUmT2Inr0A=;
-        b=TM2Z0zqscsV/GaZ4Dt9V7d/hqV9FhyUKlDO+nIvFmtKLOVO3wi4nspoKcWyY5YraRJ
-         Neho9TfWid8luIRtHNqWu4G05ozsjXZrHS/jF9sPIsTqgtgGysH6BZptw/p7QGnknyN0
-         erg2WI+o9vG04565GGl28n5Y5iWMH5xvOCMA5VJ+5L91hbCkpd/NWIVErBsZ5Nq1bO6B
-         qqtVlB7JOqXTs13fkpKRrmL6C26h47Pqi65sy6/Sl0XjB2kKSHNwkb7aExQvEdQ85eWf
-         wSW7GXS8VUC6qKI9bWf+dtHl8hTqUiz+FFif329cMEiS6mr68/6LsXQGl1ypAO2HSFk9
-         z9eg==
-X-Gm-Message-State: AOAM531k6uESkk1GjAioNiHeDwxjwOlFskdPc5XrE6RgpUX/Ec+EsyRU
-        jBCzN7yg//+sD4nr+BVZZuEvIuUONowAgOAoCfllMp5goSsc
-X-Google-Smtp-Source: ABdhPJwKGzJ7FC5EKbQvsE+s6PZQaLMlOkbNO8nAsujnHSQAjsejY52S4LjLBvgweGEUdjRBw22KfUgimGzK/DJ+P2Mk7VFhXuCJ
+        Fri, 28 Aug 2020 00:58:27 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id E8D7F18018051;
+        Fri, 28 Aug 2020 04:58:25 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: ink23_410c29327073
+X-Filterd-Recvd-Size: 1886
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Fri, 28 Aug 2020 04:58:24 +0000 (UTC)
+Message-ID: <1fd895d12c756478ebfb92de1252b772b6fd417a.camel@perches.com>
+Subject: Re: Printing bitfields in the kernel (Re: [PATCH] drm: Parse
+ Colorimetry data block from EDID)
+From:   Joe Perches <joe@perches.com>
+To:     Pekka Paalanen <ppaalanen@gmail.com>,
+        Algea Cao <algea.cao@rock-chips.com>
+Cc:     mripard@kernel.org, tzimmermann@suse.de,
+        linux-kernel@vger.kernel.org, airlied@linux.ie,
+        dri-devel@lists.freedesktop.org, maarten.lankhorst@linux.intel.com,
+        daniel@ffwll.ch, linux-rockchip@lists.infradead.org
+Date:   Thu, 27 Aug 2020 21:58:22 -0700
+In-Reply-To: <20200827103456.57edaf59@eldfell>
+References: <20200826142328.131144-1-algea.cao@rock-chips.com>
+         <20200827103456.57edaf59@eldfell>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-X-Received: by 2002:a5e:a512:: with SMTP id 18mr10756972iog.128.1598590642511;
- Thu, 27 Aug 2020 21:57:22 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 21:57:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000063640c05ade8e3de@google.com>
-Subject: possible deadlock in proc_pid_syscall (2)
-From:   syzbot <syzbot+db9cdf3dd1f64252c6ef@syzkaller.appspotmail.com>
-To:     adobriyan@gmail.com, akpm@linux-foundation.org, avagin@gmail.com,
-        christian@brauner.io, ebiederm@xmission.com,
-        gladkov.alexey@gmail.com, keescook@chromium.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, walken@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, 2020-08-27 at 10:34 +0300, Pekka Paalanen wrote:
+> On Wed, 26 Aug 2020 22:23:28 +0800
+> Algea Cao <algea.cao@rock-chips.com> wrote:
+> 
+> > CEA 861.3 spec adds colorimetry data block for HDMI.
+> > Parsing the block to get the colorimetry data from
+> > panel.
 
-syzbot found the following issue on:
+If flags are int, I could imagine another %p<foo> extension
+where %*p<foo> is used like:
 
-HEAD commit:    15bc20c6 Merge tag 'tty-5.9-rc3' of git://git.kernel.org/p..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15349f96900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=978db74cb30aa994
-dashboard link: https://syzkaller.appspot.com/bug?extid=db9cdf3dd1f64252c6ef
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+	printk("flags: %*p<foo>n", flags, bitstrings)
 
-Unfortunately, I don't have any reproducer for this issue yet.
+where flags is:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+db9cdf3dd1f64252c6ef@syzkaller.appspotmail.com
+	BIT(0)
+	BIT(1)
+	...
+	BIT(last)
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.9.0-rc2-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor.0/18445 is trying to acquire lock:
-ffff88809f2e0dc8 (&sig->exec_update_mutex){+.+.}-{3:3}, at: lock_trace fs/proc/base.c:408 [inline]
-ffff88809f2e0dc8 (&sig->exec_update_mutex){+.+.}-{3:3}, at: proc_pid_syscall+0xaa/0x2b0 fs/proc/base.c:646
+and
 
-but task is already holding lock:
-ffff88808e9a3c30 (&p->lock){+.+.}-{3:3}, at: seq_read+0x61/0x1070 fs/seq_file.c:155
+	char *bitstrings[] = {
+		"bit 0 description",
+		"bit 1 description",
+		...
+		"last bit description"
+	};
 
-which lock already depends on the new lock.
+Or define YA struct with 2 entries as the struct members
+and use that.
 
+struct foo {
+	unsigned long flags,
+	char ** descriptions,
+};
 
-the existing dependency chain (in reverse order) is:
+	struct foo bar = {.flags = <flags> .descriptions = bitstrings};
 
--> #3 (&p->lock){+.+.}-{3:3}:
-       __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-       __mutex_lock+0x134/0x10e0 kernel/locking/mutex.c:1103
-       seq_read+0x61/0x1070 fs/seq_file.c:155
-       pde_read fs/proc/inode.c:306 [inline]
-       proc_reg_read+0x221/0x300 fs/proc/inode.c:318
-       do_loop_readv_writev fs/read_write.c:734 [inline]
-       do_loop_readv_writev fs/read_write.c:721 [inline]
-       do_iter_read+0x48e/0x6e0 fs/read_write.c:955
-       vfs_readv+0xe5/0x150 fs/read_write.c:1073
-       kernel_readv fs/splice.c:355 [inline]
-       default_file_splice_read.constprop.0+0x4e6/0x9e0 fs/splice.c:412
-       do_splice_to+0x137/0x170 fs/splice.c:871
-       splice_direct_to_actor+0x307/0x980 fs/splice.c:950
-       do_splice_direct+0x1b3/0x280 fs/splice.c:1059
-       do_sendfile+0x55f/0xd40 fs/read_write.c:1540
-       __do_sys_sendfile64 fs/read_write.c:1601 [inline]
-       __se_sys_sendfile64 fs/read_write.c:1587 [inline]
-       __x64_sys_sendfile64+0x1cc/0x210 fs/read_write.c:1587
-       do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-       entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
--> #2 (sb_writers#4){.+.+}-{0:0}:
-       percpu_down_read include/linux/percpu-rwsem.h:51 [inline]
-       __sb_start_write+0x234/0x470 fs/super.c:1672
-       sb_start_write include/linux/fs.h:1643 [inline]
-       mnt_want_write+0x3a/0xb0 fs/namespace.c:354
-       ovl_setattr+0x5c/0x850 fs/overlayfs/inode.c:28
-       notify_change+0xb60/0x10a0 fs/attr.c:336
-       chown_common+0x4a9/0x550 fs/open.c:674
-       do_fchownat+0x126/0x1e0 fs/open.c:704
-       __do_sys_lchown fs/open.c:729 [inline]
-       __se_sys_lchown fs/open.c:727 [inline]
-       __x64_sys_lchown+0x7a/0xc0 fs/open.c:727
-       do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-       entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
--> #1 (&ovl_i_mutex_dir_key[depth]){++++}-{3:3}:
-       down_read+0x96/0x420 kernel/locking/rwsem.c:1492
-       inode_lock_shared include/linux/fs.h:789 [inline]
-       lookup_slow fs/namei.c:1560 [inline]
-       walk_component+0x409/0x6a0 fs/namei.c:1860
-       lookup_last fs/namei.c:2309 [inline]
-       path_lookupat+0x1ba/0x830 fs/namei.c:2333
-       filename_lookup+0x19f/0x560 fs/namei.c:2366
-       create_local_trace_uprobe+0x87/0x4e0 kernel/trace/trace_uprobe.c:1574
-       perf_uprobe_init+0x132/0x210 kernel/trace/trace_event_perf.c:323
-       perf_uprobe_event_init+0xff/0x1c0 kernel/events/core.c:9580
-       perf_try_init_event+0x12a/0x560 kernel/events/core.c:10899
-       perf_init_event kernel/events/core.c:10951 [inline]
-       perf_event_alloc.part.0+0xdee/0x3770 kernel/events/core.c:11229
-       perf_event_alloc kernel/events/core.c:11608 [inline]
-       __do_sys_perf_event_open+0x72c/0x2cb0 kernel/events/core.c:11724
-       do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-       entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
--> #0 (&sig->exec_update_mutex){+.+.}-{3:3}:
-       check_prev_add kernel/locking/lockdep.c:2496 [inline]
-       check_prevs_add kernel/locking/lockdep.c:2601 [inline]
-       validate_chain kernel/locking/lockdep.c:3218 [inline]
-       __lock_acquire+0x2a6b/0x5640 kernel/locking/lockdep.c:4426
-       lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:5005
-       __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-       __mutex_lock+0x134/0x10e0 kernel/locking/mutex.c:1103
-       lock_trace fs/proc/base.c:408 [inline]
-       proc_pid_syscall+0xaa/0x2b0 fs/proc/base.c:646
-       proc_single_show+0x116/0x1e0 fs/proc/base.c:775
-       seq_read+0x432/0x1070 fs/seq_file.c:208
-       do_loop_readv_writev fs/read_write.c:734 [inline]
-       do_loop_readv_writev fs/read_write.c:721 [inline]
-       do_iter_read+0x48e/0x6e0 fs/read_write.c:955
-       vfs_readv+0xe5/0x150 fs/read_write.c:1073
-       do_preadv fs/read_write.c:1165 [inline]
-       __do_sys_preadv fs/read_write.c:1215 [inline]
-       __se_sys_preadv fs/read_write.c:1210 [inline]
-       __x64_sys_preadv+0x231/0x310 fs/read_write.c:1210
-       do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-       entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-other info that might help us debug this:
-
-Chain exists of:
-  &sig->exec_update_mutex --> sb_writers#4 --> &p->lock
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&p->lock);
-                               lock(sb_writers#4);
-                               lock(&p->lock);
-  lock(&sig->exec_update_mutex);
-
- *** DEADLOCK ***
-
-1 lock held by syz-executor.0/18445:
- #0: ffff88808e9a3c30 (&p->lock){+.+.}-{3:3}, at: seq_read+0x61/0x1070 fs/seq_file.c:155
-
-stack backtrace:
-CPU: 0 PID: 18445 Comm: syz-executor.0 Not tainted 5.9.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_noncircular+0x324/0x3e0 kernel/locking/lockdep.c:1827
- check_prev_add kernel/locking/lockdep.c:2496 [inline]
- check_prevs_add kernel/locking/lockdep.c:2601 [inline]
- validate_chain kernel/locking/lockdep.c:3218 [inline]
- __lock_acquire+0x2a6b/0x5640 kernel/locking/lockdep.c:4426
- lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:5005
- __mutex_lock_common kernel/locking/mutex.c:956 [inline]
- __mutex_lock+0x134/0x10e0 kernel/locking/mutex.c:1103
- lock_trace fs/proc/base.c:408 [inline]
- proc_pid_syscall+0xaa/0x2b0 fs/proc/base.c:646
- proc_single_show+0x116/0x1e0 fs/proc/base.c:775
- seq_read+0x432/0x1070 fs/seq_file.c:208
- do_loop_readv_writev fs/read_write.c:734 [inline]
- do_loop_readv_writev fs/read_write.c:721 [inline]
- do_iter_read+0x48e/0x6e0 fs/read_write.c:955
- vfs_readv+0xe5/0x150 fs/read_write.c:1073
- do_preadv fs/read_write.c:1165 [inline]
- __do_sys_preadv fs/read_write.c:1215 [inline]
- __se_sys_preadv fs/read_write.c:1210 [inline]
- __x64_sys_preadv+0x231/0x310 fs/read_write.c:1210
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45d5b9
-Code: 5d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fb613f9ec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000127
-RAX: ffffffffffffffda RBX: 0000000000025740 RCX: 000000000045d5b9
-RDX: 0000000000000333 RSI: 00000000200017c0 RDI: 0000000000000006
-RBP: 000000000118cf90 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118cf4c
-R13: 00007ffe2a82bbbf R14: 00007fb613f9f9c0 R15: 000000000118cf4c
+	printk("flags: %p<foo>\n, &bar);
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
