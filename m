@@ -2,128 +2,123 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4094BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 00:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F2CC433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 00:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 237B7212CC
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 00:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC3B12087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 00:25:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="a/Vp8fmt"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JQignyW3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbgH1AZZ (ORCPT
+        id S1728184AbgH1AZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 20:25:25 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:55768 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbgH1AZY (ORCPT
+        Thu, 27 Aug 2020 20:25:59 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29560 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727008AbgH1AZ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 20:25:24 -0400
-Received: from [192.168.1.17] (50-47-107-221.evrt.wa.frontiernet.net [50.47.107.221])
-        by linux.microsoft.com (Postfix) with ESMTPSA id D6B1E20B7178;
-        Thu, 27 Aug 2020 17:25:23 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D6B1E20B7178
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1598574324;
-        bh=ZuPP2sDGF4DA7iI6cuuRyzGh+0z8ccGr3KwC1RdsDF0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=a/Vp8fmtmRgXvQfOIFkxmif6CUiNyoI2EybhMM2JJ+SIzOfPKxL7F8yQzAapN7bLe
-         Jx1Z2EfOXctZUoVcGEsh3C5vGxJebIOZ6oeWDqxSC1xRGTQG0Ks/vk1MG7V+POxHkN
-         3ngUR8au2AkcutNEnbgQr10kpYT+Wngic5uzSyE8=
-Subject: Re: [PATCH 1/4] drivers: hv: dxgkrnl: core code
-To:     Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, gregkh@linuxfoundation.org,
-        iourit@microsoft.com, linux-kernel@vger.kernel.org,
-        linux-hyperv@vger.kernel.org
-References: <20200814123856.3880009-1-sashal@kernel.org>
- <20200814123856.3880009-2-sashal@kernel.org> <20200821135340.GA4067@bug>
-From:   Iouri Tarassov <iourit@linux.microsoft.com>
-Message-ID: <054abab3-748e-c56b-526a-1b1734a9eaf7@linux.microsoft.com>
-Date:   Thu, 27 Aug 2020 17:25:23 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 27 Aug 2020 20:25:58 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07S02UdG071522;
+        Thu, 27 Aug 2020 20:25:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=references : from : to :
+ cc : subject : in-reply-to : date : message-id : mime-version :
+ content-type; s=pp1; bh=AKRlr9yzrlMX+oXYj4rWdBKCf/H4fqUfPXhXc7Hb7N0=;
+ b=JQignyW3X0z1tE7o9coxmE26UND2CnEkeDsVm3SBrrrNxqaDCrjcJ/0ACPJjDaAt3B3o
+ hQdggaz1tyxhH5e36+wtCdlrO0YB4jpN5u2/xIlcCL+qRxFh3EOsMC13Fgnzcmhrvz0K
+ 6+gT/gUWSTBxsKE3l+ClQNTb/lrqVVGJswsovH+6bEx0P0Ljmh6xPnnLPOCuBlWeEUgp
+ KT9K/M7BsTshTE5zevVRbrKWx1vpDSQZlDvwEJngcDpAl/wJX8opRPywTIVX199yW5Nt
+ PbId+SS32DJ9r/X/MOWcKCXXcCU5EPZOOLV/Tan1W+ccMfXXF3ODQcPtEmnPJb9+UoVg BQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 336nv9hxps-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 20:25:23 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07S0ONet142875;
+        Thu, 27 Aug 2020 20:25:22 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 336nv9hxpj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 20:25:22 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07S0LmgR026137;
+        Fri, 28 Aug 2020 00:25:21 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma03dal.us.ibm.com with ESMTP id 332utu9hrs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 00:25:21 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07S0PHrs63439142
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Aug 2020 00:25:17 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 361C3BE04F;
+        Fri, 28 Aug 2020 00:25:20 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D069BBE053;
+        Fri, 28 Aug 2020 00:25:12 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.211.80.51])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Fri, 28 Aug 2020 00:25:12 +0000 (GMT)
+References: <20200819172134.11243-1-nramas@linux.microsoft.com>
+ <20200819172134.11243-4-nramas@linux.microsoft.com>
+User-agent: mu4e 1.4.10; emacs 27.1
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
+        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
+        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
+        vincenzo.frascino@arm.com, mark.rutland@arm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
+        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
+        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
+Subject: Re: [PATCH v4 3/5] IMA: Refactor do_get_kexec_buffer() to call of_
+ functions directly
+In-reply-to: <20200819172134.11243-4-nramas@linux.microsoft.com>
+Date:   Thu, 27 Aug 2020 21:25:10 -0300
+Message-ID: <87zh6f7h21.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20200821135340.GA4067@bug>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-27_14:2020-08-27,2020-08-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ impostorscore=0 phishscore=0 mlxlogscore=676 priorityscore=1501
+ adultscore=0 malwarescore=0 bulkscore=0 clxscore=1015 suspectscore=0
+ mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008270183
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
 
-Thanks for your time reviewing the driver.
+Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
 
-On 8/21/2020 6:53 AM, Pavel Machek wrote:
-> On Fri 2020-08-14 08:38:53, Sasha Levin wrote:
-> > Add support for a Hyper-V based vGPU implementation that exposes the
-> > DirectX API to Linux userspace.
+> do_get_kexec_buffer() calls another local function get_addr_size_cells()
+> to get the address and size of the IMA measurement log buffer stored in
+> the device tree. get_addr_size_cells() is small enough that it can be
+> merged into do_get_kexec_buffer() and a function call can be avoided.
 >
-> NAK.
+> Refactor do_get_kexec_buffer() to call of_ functions directly instead
+> of calling get_addr_size_cells() and remove get_addr_size_cells().
 >
-> Kernel APIs should be documented. ... in tree and with suitable license.
-We are considering to add required documentation. The design is that the 
-driver IOCTLs will not be called directly by user mode drivers or 
-applications. They will instead link with libdxcore.so and use the 
-D3DKMT* interface to send requests to the driver.  libdxcore will 
-translate the request to driver IOCTLs and do some additional work. For 
-example, it will translate the path of the user mode driver name to the 
-Linux namespace. The D3DKMTinterface is documented on MSDN. Do you 
-suggest that the IOCTL interface needs to be documented or the D3DKMT 
-interface?
-> 	
-> > +int dxgadapter_init(struct dxgadapter *adapter, struct hv_device *hdev)
-> > +{
-> > +	int ret = 0;
-> > +	char s[80];
-> > +
-> > +	UNUSED(s);
->
-> What is going on here?
-This is a mistake, which will be fixed.
->
-> > +{
-> > +	struct dxgprocess_adapter *adapter_info = dxgmem_alloc(process,
-> > +							       DXGMEM_PROCESS_ADAPTER,
-> > +							       sizeof
-> > +							       (*adapter_info));
->
-> We normally use kernel functions in kernel code.
-Using a custom memory allocation function allows us to track memory 
-allocations per DXGPROCESS and catch memory leaks when a DXGPROCESS is 
-destroyed or when the driver is unloaded. It also allows to easily 
-change the memory allocation implementation if needed.
->
-> > +	dxgmutex_unlock(&device->adapter_info->device_list_mutex);
->
-> And you should not have private locking primitives, either.
-This is done to allow the implementation of custom lock order 
-verification. We learnt recently about lock dependency checking in 
-kernel and will evaluate if it can replace the custom lock order 
-verification.
->
-> > +bool dxghwqueue_acquire_reference(struct dxghwqueue *hwqueue)
-> > +{
-> > +	return refcount_inc_not_zero(&hwqueue->refcount);
-> > +}
->
-> Midlayers are evil.
-I strongly agree in general, but think that in our case the layers are 
-very small. It allows to quickly find all places where a 
-reference/dereference on an object is done and addition of debug tracing 
-to catch errors.
->
-> Best regards,
-> 									Pavel
+> Co-developed-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
-Thank you
-Iouri
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
