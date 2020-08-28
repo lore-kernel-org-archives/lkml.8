@@ -2,209 +2,217 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF33C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8BFC43461
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18F292078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:34:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598618088;
-	bh=+Q2qs+5oSv+DDSatfvwe0sYEk5sx3ecNkoK1/NfZIcU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nzam17MvULH6yW85EgyNvsv/8cX7htvFVif38aG0ARLfplAMJUJxsZtNz+QHVlXg3
-	 ksC2EFp3Ret7nADTdsPJJ6XDcBlNhVo4xPiRGICfe8ZN4P7UXQq4DLxVdz0be8S2ir
-	 N99xzg7vVpUIcTUHYuerdar/pu/tX/USd++vpTfg=
+	by mail.kernel.org (Postfix) with ESMTP id 4C4BD2078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 12:34:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QPItl0Qu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgH1MdA (ORCPT
+        id S1729407AbgH1Mes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 08:33:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729417AbgH1Map (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 08:30:45 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19CD9208CA;
-        Fri, 28 Aug 2020 12:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598617844;
-        bh=+Q2qs+5oSv+DDSatfvwe0sYEk5sx3ecNkoK1/NfZIcU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gybdkboo0nskR4nxTpS3xfKAb7IgticLu1ih7OFemobMBTGWQY/pwuR34101XhM44
-         LYe0Aluzg8baqQwj+Fd/hkXi/mBqLBUDR4Uni7psMApHrxSqUI/EaPwYojMRQAh7ZN
-         LnUFpsFyl7k9vxjmuITRiYSB09wI2rT8uGNOrSLc=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Cc:     Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
-        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
-        cameron@moodycamel.com, oleg@redhat.com, will@kernel.org,
-        paulmck@kernel.org, mhiramat@kernel.org
-Subject: [PATCH v4 22/23] freelist: Lock less freelist
-Date:   Fri, 28 Aug 2020 21:30:39 +0900
-Message-Id: <159861783901.992023.12163347531003713154.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <159861759775.992023.12553306821235086809.stgit@devnote2>
-References: <159861759775.992023.12553306821235086809.stgit@devnote2>
-User-Agent: StGit/0.19
+        Fri, 28 Aug 2020 08:34:48 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48635 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729339AbgH1MeN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 08:34:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598618047;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ct8xDJYJ89VJvANRUmU/6ISWosO9og6URdO8Jpm3Dgs=;
+        b=QPItl0QufkDiI5tP8i1eR0IZG1hR95sUgc9KIRRKnw5WKXxb6l+gymbrxSVGrEit3l4TLp
+        OjEQN1LZZLM8d2yBnUZp27x53o/XEHPGRpo7qZ7Lm+if9eLx3cYIZhekdb5RWipIjpB20V
+        ZI9hGV6+r8fj5PgsSPcF5R5uRBSa68Q=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-503-iDBrdmfEPwmPblsOIXyKDA-1; Fri, 28 Aug 2020 08:34:05 -0400
+X-MC-Unique: iDBrdmfEPwmPblsOIXyKDA-1
+Received: by mail-qv1-f71.google.com with SMTP id y12so652279qva.8
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 05:34:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Ct8xDJYJ89VJvANRUmU/6ISWosO9og6URdO8Jpm3Dgs=;
+        b=PNCcNcE4sdtwWIaA2Fv4t1u7VahegWMUE7mhXebKTzcOLLuyTf+iADQzEtDUgtT5J8
+         Z0ZPG9zDdAwNyfUrBvaO94bDgu36N5JeNRy4RUFlwKywD5dHtqL/LD0uJfy5wmBtprce
+         ZzcfOVE3WHcqij3XcYE4zK41cbK06Qs0FyYXPinAWhxK1afh4HClH8BuPDDZxis35P3a
+         vyX8232JuE/pGGmSAKgRt/QGODCtgCAsnPKEfIdM0Y0LEU+FtlgZno7jdlluZGLg4g6C
+         95ErbbwHqV9oRZDAkaU5QNCakHUWAzmDuh1Rnsh2bdLrp3/QiOBhAkFsKj1y05+UEP6p
+         a7mA==
+X-Gm-Message-State: AOAM531t8BZUm7+ggXLi8cTjPCIbonDc8uQegQqegPsBDUb5vNp/0CYZ
+        rPr7bjwPPQ94FT4BSb7P51ic5ApyHiLOjqXgn2pzzFU94CxJm9FfXqbZBwU+B83inrzHVFlHCtI
+        wynAyoOlZBPQ1TQH3ViIvegKB
+X-Received: by 2002:ac8:4d0c:: with SMTP id w12mr1305101qtv.194.1598618044769;
+        Fri, 28 Aug 2020 05:34:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzipaTL/51rdxeovoXzoqbx0fNREecI8K0Uri/QfP4khzDvEJeVpIYkEaXnKNUdJNfZML0kDA==
+X-Received: by 2002:ac8:4d0c:: with SMTP id w12mr1305080qtv.194.1598618044469;
+        Fri, 28 Aug 2020 05:34:04 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id 201sm611014qkf.103.2020.08.28.05.34.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Aug 2020 05:34:03 -0700 (PDT)
+Subject: Re: [PATCH v2 3/5] fpga manager: xilinx-spi: rework write_complete
+ loop implementation
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anatolij Gustschin <agust@denx.de>
+References: <20200827143249.10973-1-luca@lucaceresoli.net>
+ <20200827143249.10973-3-luca@lucaceresoli.net>
+ <2b8d9ed7-0468-9001-2f8e-386312aae6cb@redhat.com>
+ <bc35f12e-6ff2-94a7-d519-94616f6dfc6c@lucaceresoli.net>
+ <27bbb896-fedf-6a3a-7220-5c57239a3b87@redhat.com>
+ <913cb7ea-3502-b3cd-3ec9-af60d63129c9@lucaceresoli.net>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <67ad9e7e-b07a-52e7-f82d-b7f8fac28d8f@redhat.com>
+Date:   Fri, 28 Aug 2020 05:34:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <913cb7ea-3502-b3cd-3ec9-af60d63129c9@lucaceresoli.net>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
 
-Cc: cameron@moodycamel.com
-Cc: oleg@redhat.com
-Cc: will@kernel.org
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- include/linux/freelist.h |  129 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 129 insertions(+)
- create mode 100644 include/linux/freelist.h
+On 8/27/20 11:38 PM, Luca Ceresoli wrote:
+> Hi Tom,
+>
+> On 27/08/20 21:34, Tom Rix wrote:
+>> On 8/27/20 12:26 PM, Luca Ceresoli wrote:
+>>> Hi Tom,
+>>>
+>>> thanks for the prompt feedback!
+>>>
+>>> On 27/08/20 20:59, Tom Rix wrote:
+>>>> On 8/27/20 7:32 AM, Luca Ceresoli wrote:
+>>>>> In preparation to add error checking for gpiod_get_value(), rework
+>>>>> the loop to avoid the duplication of these lines:
+>>>>>
+>>>>> 	if (gpiod_get_value(conf->done))
+>>>>> 		return xilinx_spi_apply_cclk_cycles(conf);
+>>>>>
+>>>>> There is little advantage in this rework with current code. However
+>>>>> error checking will expand these two lines to five, making code
+>>>>> duplication more annoying.
+>>>>>
+>>>>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>>>>>
+>>>>> ---
+>>>>>
+>>>>> This patch is new in v2
+>>>>> ---
+>>>>>  drivers/fpga/xilinx-spi.c | 15 ++++++---------
+>>>>>  1 file changed, 6 insertions(+), 9 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
+>>>>> index 01f494172379..cfc933d70f52 100644
+>>>>> --- a/drivers/fpga/xilinx-spi.c
+>>>>> +++ b/drivers/fpga/xilinx-spi.c
+>>>>> @@ -151,22 +151,19 @@ static int xilinx_spi_write_complete(struct fpga_manager *mgr,
+>>>>>  				     struct fpga_image_info *info)
+>>>>>  {
+>>>>>  	struct xilinx_spi_conf *conf = mgr->priv;
+>>>>> -	unsigned long timeout;
+>>>>> +	unsigned long timeout = jiffies + usecs_to_jiffies(info->config_complete_timeout_us);
+>>>>>  	int ret;
+>>>>>  
+>>>>> -	if (gpiod_get_value(conf->done))
+>>>>> -		return xilinx_spi_apply_cclk_cycles(conf);
+>>>>> -
+>>>>> -	timeout = jiffies + usecs_to_jiffies(info->config_complete_timeout_us);
+>>>>> +	while (true) {
+>>>>> +		if (gpiod_get_value(conf->done))
+>>>>> +			return xilinx_spi_apply_cclk_cycles(conf);
+>>>>>  
+>>>>> -	while (time_before(jiffies, timeout)) {
+>>>>> +		if (time_after(jiffies, timeout))
+>>>>> +			break;
+>>>>>  
+>>>>>  		ret = xilinx_spi_apply_cclk_cycles(conf);
+>>>>>  		if (ret)
+>>>>>  			return ret;
+>>>>> -
+>>>>> -		if (gpiod_get_value(conf->done))
+>>>>> -			return xilinx_spi_apply_cclk_cycles(conf);
+>>>>>  	} 
+>>>> Do you need another
+>>>>
+>>>> 	if (gpiod_get_value(conf->done))
+>>>> 		return xilinx_spi_apply_cclk_cycles(conf);
+>>>>
+>>>> here to cover the chance of sleeping in the loop ?
+>>> If I got your question correctly: if we get here it's because of a
+>>> timeout, thus programming has failed (DONE didn't come up after some
+>>> time), and checking it one more here seems pointless.
+>> It may not be pointless, if this routine sleeps because it was scheduled out, when it wakes up a lot of time  happened. You will see this as a timeout but the state may be good.  Another, final check at the end will cover this case.
+> Oh, now I got your point! Yes, there is this risk, and it exists in
+> current code as well but with a smaller risk window. Unrolling the
+> current and new loop code they behave the same except for the position
+> of the timeout computation (after vs before the first 'if (done) return'
+> group).
+>
+> I think this reimplementation is sleep-safe, check for GPIO errors and
+> also avoid code duplication:
+>
+> static int xilinx_spi_write_complete(struct fpga_manager *mgr,
+> 				     struct fpga_image_info *info)
+> {
+> 	struct xilinx_spi_conf *conf = mgr->priv;
+> 	unsigned long timeout = jiffies +
+> 		usecs_to_jiffies(info->config_complete_timeout_us);
+> 	bool expired;
+> 	int done;
+> 	int ret;
+>
+> 	while (!expired) {
+> 		expired = time_after(jiffies, timeout);
+>
+> 		done = get_done_gpio(mgr);
+> 		if (done < 0)
+> 			return done;
+>
+> 		ret = xilinx_spi_apply_cclk_cycles(conf);
+> 		if (ret)
+> 			return ret;
+>
+> 		if (done)
+> 			return 0;
+> 	}
+>
+> 	dev_err(&mgr->dev, "Timeout after config data transfer\n");
+>
+> 	return -ETIMEDOUT;
+> }
+>
+> A key point is to assess all the status (expired and done variables)
+> before taking any action based on it. Then we can unconditionally apply
+> 8 cclk cycles before even checking the actual DONE value, so that we
+> always do that after DONE has been seen asserted.
+>
+> Does it look good?
 
-diff --git a/include/linux/freelist.h b/include/linux/freelist.h
-new file mode 100644
-index 000000000000..fc1842b96469
---- /dev/null
-+++ b/include/linux/freelist.h
-@@ -0,0 +1,129 @@
-+/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-+#ifndef FREELIST_H
-+#define FREELIST_H
-+
-+#include <linux/atomic.h>
-+
-+/*
-+ * Copyright: cameron@moodycamel.com
-+ *
-+ * A simple CAS-based lock-free free list. Not the fastest thing in the world
-+ * under heavy contention, but simple and correct (assuming nodes are never
-+ * freed until after the free list is destroyed), and fairly speedy under low
-+ * contention.
-+ *
-+ * Adapted from: https://moodycamel.com/blog/2014/solving-the-aba-problem-for-lock-free-free-lists
-+ */
-+
-+struct freelist_node {
-+	atomic_t		refs;
-+	struct freelist_node	*next;
-+};
-+
-+struct freelist_head {
-+	struct freelist_node	*head;
-+};
-+
-+#define REFS_ON_FREELIST 0x80000000
-+#define REFS_MASK	 0x7FFFFFFF
-+
-+static inline void __freelist_add(struct freelist_node *node, struct freelist_head *list)
-+{
-+	/*
-+	 * Since the refcount is zero, and nobody can increase it once it's
-+	 * zero (except us, and we run only one copy of this method per node at
-+	 * a time, i.e. the single thread case), then we know we can safely
-+	 * change the next pointer of the node; however, once the refcount is
-+	 * back above zero, then other threads could increase it (happens under
-+	 * heavy contention, when the refcount goes to zero in between a load
-+	 * and a refcount increment of a node in try_get, then back up to
-+	 * something non-zero, then the refcount increment is done by the other
-+	 * thread) -- so if the CAS to add the node to the actual list fails,
-+	 * decrese the refcount and leave the add operation to the next thread
-+	 * who puts the refcount back to zero (which could be us, hence the
-+	 * loop).
-+	 */
-+	struct freelist_node *head = READ_ONCE(list->head);
-+
-+	for (;;) {
-+		WRITE_ONCE(node->next, head);
-+		atomic_set_release(&node->refs, 1);
-+
-+		if (!try_cmpxchg_release(&list->head, &head, node)) {
-+			/*
-+			 * Hmm, the add failed, but we can only try again when
-+			 * the refcount goes back to zero.
-+			 */
-+			if (atomic_fetch_add_release(REFS_ON_FREELIST - 1, &node->refs) == 1)
-+				continue;
-+		}
-+		return;
-+	}
-+}
-+
-+static inline void freelist_add(struct freelist_node *node, struct freelist_head *list)
-+{
-+	/*
-+	 * We know that the should-be-on-freelist bit is 0 at this point, so
-+	 * it's safe to set it using a fetch_add.
-+	 */
-+	if (!atomic_fetch_add_release(REFS_ON_FREELIST, &node->refs)) {
-+		/*
-+		 * Oh look! We were the last ones referencing this node, and we
-+		 * know we want to add it to the free list, so let's do it!
-+		 */
-+		__freelist_add(node, list);
-+	}
-+}
-+
-+static inline struct freelist_node *freelist_try_get(struct freelist_head *list)
-+{
-+	struct freelist_node *prev, *next, *head = smp_load_acquire(&list->head);
-+	unsigned int refs;
-+
-+	while (head) {
-+		prev = head;
-+		refs = atomic_read(&head->refs);
-+		if ((refs & REFS_MASK) == 0 ||
-+		    !atomic_try_cmpxchg_acquire(&head->refs, &refs, refs+1)) {
-+			head = smp_load_acquire(&list->head);
-+			continue;
-+		}
-+
-+		/*
-+		 * Good, reference count has been incremented (it wasn't at
-+		 * zero), which means we can read the next and not worry about
-+		 * it changing between now and the time we do the CAS.
-+		 */
-+		next = READ_ONCE(head->next);
-+		if (try_cmpxchg_acquire(&list->head, &head, next)) {
-+			/*
-+			 * Yay, got the node. This means it was on the list,
-+			 * which means should-be-on-freelist must be false no
-+			 * matter the refcount (because nobody else knows it's
-+			 * been taken off yet, it can't have been put back on).
-+			 */
-+			WARN_ON_ONCE(atomic_read(&head->refs) & REFS_ON_FREELIST);
-+
-+			/*
-+			 * Decrease refcount twice, once for our ref, and once
-+			 * for the list's ref.
-+			 */
-+			atomic_fetch_add(-2, &head->refs);
-+
-+			return head;
-+		}
-+
-+		/*
-+		 * OK, the head must have changed on us, but we still need to decrement
-+		 * the refcount we increased.
-+		 */
-+		refs = atomic_fetch_add(-1, &prev->refs);
-+		if (refs == REFS_ON_FREELIST + 1)
-+			__freelist_add(prev, list);
-+	}
-+
-+	return NULL;
-+}
-+
-+#endif /* FREELIST_H */
+Yes. Thanks for the extra work.
+
+Tom
+
+>
 
