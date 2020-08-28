@@ -2,114 +2,88 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3554BC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C13AEC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 107402080C
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DAA02080C
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:51:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PN9yYyL4"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XE0VIDKy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbgH1Bt1 (ORCPT
+        id S1728053AbgH1BvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 21:49:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgH1Bt0 (ORCPT
+        Thu, 27 Aug 2020 21:51:13 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:51152 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbgH1BvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 21:49:26 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 345EDC061264;
-        Thu, 27 Aug 2020 18:49:25 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id l8so14003ios.2;
-        Thu, 27 Aug 2020 18:49:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AuxkTqVq7yF2cLR6HeqahnZopzaHgO8OPP4mjEB1p/k=;
-        b=PN9yYyL4U/3wo7e66qiK4b+DxYiIE2tNSdJ1QM6y6NdGvVhy7cMLmg3Rz72+yJ48W+
-         iXITBxJq7GTKuxRnhJAEICDM8RtusSpCWOqlSf82SEW0QUGwqX4jxZz+xKWpZ1aQNGS3
-         daDj3FQEk4wT1/V82TdGadwCJl9OzsvMcq+wpcOwZJc9rzhJ96IQYjXBJWYsJ5pqM7vg
-         Tio7S4cZuz0jySy/qtstaV/t8GW5vbknrSvcMPh+813krFMDZiPqQhqbKxMc0zcFM0VJ
-         ShD2xJLTVebdKMwJOHZiPFqBAdkPq5b585X3uA5wYjxcqQElpi4RcGKHh4oPEqO+kFvo
-         65Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AuxkTqVq7yF2cLR6HeqahnZopzaHgO8OPP4mjEB1p/k=;
-        b=lSUgKQaQ6pM/uKZhUrWFGFscIzpePFzqwht5BwQjF5hVucymwB/Zl9h7NTdHiR8Qew
-         CHQB0OXovPh/Fig7jk/eR16s2AsOBVLoA0WGFA6Re7j9PtRMqIqUi1WL/FbhjfrQTBsK
-         fSveIsHHK9+pCCJZ3YnGkGBYL1uWLhvkLXR331IqWOxrKKs5U58VQvKzkc+IikrRbr1J
-         jOtD9GKqvE5MvZoYxh7AAqOTZVVIbioD2nVXI3Jylx5aTWQ9rS6UQyLKSabQE4y9GDmZ
-         xJeq3KYwQ2gMRl7gazkffBD3FjJP9ZfAeQTjEDIAhR8wuzHkGEXMZ9zAtvvBEHgJ4j8+
-         LMqQ==
-X-Gm-Message-State: AOAM533ZEJxeRxomZXjY0gFVtt+LLYHxNdbyXa/VWFeBVGKWNS2lwiLo
-        y9tY6bbb2iecn6aZ59ywoB0GcM9QLma1Nvz0L2jZ6b5XS/V7nQ==
-X-Google-Smtp-Source: ABdhPJwx/DIu4zJ07VCu6FiVgahDko/FpmdmTd7xlfYVxx8Un8UKZNh/GZWHLRZjPDLEg7i+ACD8EDmZ1JsVkGd3H+o=
-X-Received: by 2002:a05:6638:24cf:: with SMTP id y15mr22673544jat.137.1598579364071;
- Thu, 27 Aug 2020 18:49:24 -0700 (PDT)
+        Thu, 27 Aug 2020 21:51:10 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07S1idOa027183;
+        Fri, 28 Aug 2020 01:50:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=0vEFas0o4yRWOhG2ENnl7n65xG6A/FN00LeWvkgsczw=;
+ b=XE0VIDKyogXdQZ0qzKJ+Wu+i/b6H01FhVfL4/cLGsMMPiz9MWho9/U1pIpgkJa1Rjj19
+ sM7oGO8JWZn/t6a3zVIHme05BRziso5hDoiwgxKrWYJSAOgSB2QC1f8qIBYK7iAsTaQi
+ kv0oZeyi/GXxIS/bHV0m3n7k1IEJc6dTWa2s9q9CYMR+icrVTO3wCyua3wfjLR6V6c2M
+ QrJpqpaAUNI1fesVfiE4z2RPjCVQJmMVs0BmoI2jqhcGJjuOysmPu18GC4rOjInK3nAj
+ BGSp0PtHtHwZBJGIfMgSErcTQ1zj5UJ2aXqqdDYnKNciGHxy4nlhCNXS/NgNJ3GfAx+r Ew== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 336ht3hjf7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Aug 2020 01:50:58 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07S1oul0163912;
+        Fri, 28 Aug 2020 01:50:58 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 333r9p44dd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Aug 2020 01:50:57 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07S1ojq9030304;
+        Fri, 28 Aug 2020 01:50:46 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 27 Aug 2020 18:50:45 -0700
+Date:   Thu, 27 Aug 2020 21:59:44 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] padata: add a reviewer
+Message-ID: <20200828015944.tk45hzuyzkabbrs3@ca-dmjordan1.us.oracle.com>
+References: <20200826145923.719126-1-daniel.m.jordan@oracle.com>
+ <20200827064409.GA20687@gauss3.secunet.de>
 MIME-Version: 1.0
-References: <20200824101825.4106-1-jiangshanlai@gmail.com>
-In-Reply-To: <20200824101825.4106-1-jiangshanlai@gmail.com>
-From:   Lai Jiangshan <jiangshanlai@gmail.com>
-Date:   Fri, 28 Aug 2020 09:49:13 +0800
-Message-ID: <CAJhGHyC1Ykq5V_2nFPLRz9JmtAiQu6aw4fCKo1LO7Qwzjvfg2g@mail.gmail.com>
-Subject: Re: [PATCH] kvm x86/mmu: use KVM_REQ_MMU_SYNC to sync when needed
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827064409.GA20687@gauss3.secunet.de>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9726 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
+ adultscore=0 spamscore=0 mlxlogscore=901 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008280015
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9726 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 malwarescore=0
+ phishscore=0 priorityscore=1501 clxscore=1015 suspectscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 mlxlogscore=901 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008280014
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping @Sean Christopherson
+On Thu, Aug 27, 2020 at 08:44:09AM +0200, Steffen Klassert wrote:
+> Please also consider to add yourself as one of the maintainers.
 
-On Mon, Aug 24, 2020 at 5:18 PM Lai Jiangshan <jiangshanlai@gmail.com> wrote:
->
-> From: Lai Jiangshan <laijs@linux.alibaba.com>
->
-> 8c8560b83390("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for MMU specific flushes)
-> changed it without giving any reason in the changelog.
->
-> In theory, the syncing is needed, and need to be fixed by reverting
-> this part of change.
->
-> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
-> ---
->  arch/x86/kvm/mmu/mmu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 4e03841f053d..9a93de921f2b 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -2468,7 +2468,7 @@ static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
->                 }
->
->                 if (sp->unsync_children)
-> -                       kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
-> +                       kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
->
->                 __clear_sp_write_flooding_count(sp);
->
-> --
-> 2.19.1.6.gb485710b
->
+Ok, sure!  I'll take you up on that.
