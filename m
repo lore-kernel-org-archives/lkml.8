@@ -2,129 +2,81 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9718C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D355FC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C9E42075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:05:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MsL7kGa1"
+	by mail.kernel.org (Postfix) with ESMTP id B03672078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 21:09:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgH1VFq (ORCPT
+        id S1726851AbgH1VJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 17:05:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgH1VFp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 17:05:45 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A2A5C061264;
-        Fri, 28 Aug 2020 14:05:44 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p37so1018247pgl.3;
-        Fri, 28 Aug 2020 14:05:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5ane8DBc+f3r1w7tC8dfBuPl+fS6X/x6Y++VRwRzwLQ=;
-        b=MsL7kGa1JiTOPBkJ2PoXKt3Fr0+C/uzb9XgehxuRwK7TkBMMoeYquf8/R4btCU+W6/
-         u4BhD+TJOyVEAF0sEEGAfZ0riANm/clvP3zjEp+ZvsdVir4lQPTuJxOHYgdtPkEDC0Pt
-         5H/ArWQK/IhY3gXjFB5VHqvLUxcPkVhAlQXbNHPGIcMD0NiTJJlV450VIC24CLgYspuK
-         Y7BrPgYCcP7Fv1FRKqVi0tAee6xJiXJD6T24fLKiVTjNetC4Dc7bwD2iZG4ePxY+aMZ+
-         bGjINg5PRRtwJBDGH7ACw5kuGsRRN6RuQlrVQgvnIJmJPpPA+H/0VnfUl2/h9tx4sr9K
-         k1jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5ane8DBc+f3r1w7tC8dfBuPl+fS6X/x6Y++VRwRzwLQ=;
-        b=e6/xwDnL0Kj3UO/BHsh8NvTx/4YKrX/LtRAPVL5pnNC+uolM6UpO7v9NRxRlO/TfmQ
-         Xsu6MfKPUavyz24La0GKPhTtGRixWcQZHZMy8WOJFCG6xyp/f+ZO/VITNOrU5qamzYe7
-         494koFSKThaMGEGowzR0GLbbp/PkOfB7MO+C6nXPDFpwkTBqEk84GNrOZzVEQQWIJ3+R
-         MWYnBRHIsSzQC9m43Tb5lFtuAb6poWZfkXaidcMGsyRM/tS8ozIBKSKy8M5pZkb1Y/rP
-         JBZBiD2wpVys5KM5klcmsGI9C5ttD0mhDVIITRmX7i9NYOyysRZ243tqwxmtsC5a/IK+
-         DIAw==
-X-Gm-Message-State: AOAM532X/JVMxoxfYQBwqkX7W+AmQ2bNNN6FqV+ZtthWDQSlbS2Hd0ce
-        qn/HZNPGMv4kSWeJNaKCJxxXYfsamS10GAtaE+BRyF9ALlo=
-X-Google-Smtp-Source: ABdhPJzuCr+aNitJffvBCNOF3MiA7pUa312fVi1VhewBnSyhEjpIVPDYBB9N7lJJzeuTL2wOJNm5hINQn/RWXrooM10=
-X-Received: by 2002:aa7:96cf:: with SMTP id h15mr692046pfq.294.1598648743207;
- Fri, 28 Aug 2020 14:05:43 -0700 (PDT)
+        Fri, 28 Aug 2020 17:09:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726379AbgH1VJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 17:09:18 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B0262075B;
+        Fri, 28 Aug 2020 21:09:17 +0000 (UTC)
+Date:   Fri, 28 Aug 2020 17:09:15 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
+Subject: [ANNOUNCE] 5.4.61-rt37
+Message-ID: <20200828170915.2fc36b97@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200828070752.54444-1-xie.he.0141@gmail.com> <m3pn7b6opa.fsf@t19.piap.pl>
-In-Reply-To: <m3pn7b6opa.fsf@t19.piap.pl>
-From:   Xie He <xie.he.0141@gmail.com>
-Date:   Fri, 28 Aug 2020 14:05:32 -0700
-Message-ID: <CAJht_EOk2_L-77KDDEJTcfqhw48X0ZMA2PKdLG4+LXHAAtNtsw@mail.gmail.com>
-Subject: Re: [PATCH net] drivers/net/wan/hdlc_cisco: Add hard_header_len
-To:     =?UTF-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin Schiller <ms@dev.tdt.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 3:37 AM Krzysztof Ha=C5=82asa <khalasa@piap.pl> wro=
-te:
->
-> OTOH hdlc_setup_dev() initializes hard_header_len to 16,
-> but in this case I guess 4 bytes are better.
->
-> Acked-by: Krzysztof Halasa <khc@pm.waw.pl>
 
-Thank you, Krzysztof!
+Dear RT Folks,
 
-Actually I'm thinking about changing the default value of 16 in hdlc.c to 0=
-.
+I'm pleased to announce the 5.4.61-rt37 stable release.
 
-I think a driver should always keep its hard_header_len consistent
-with its header_ops functions. If a driver doesn't have header_ops,
-its hard_header_len should be set to 0. This makes the driver able to
-be correctly used with AF_PACKET sockets.
 
-In net/packet/af_packet.c, in the function packet_snd, for
-AF_PACKET/DGRAM sockets, it would reserve a headroom of
-hard_header_len for the skb, and call dev_hard_header (which calls the
-header_ops->create function) to fill in the headroom, but for
-AF_PACKET/RAW sockets, it would not reserve the headroom of
-hard_header_len, and will check (in function dev_validate_header)
-whether the user has provided the header of length hard_header_len. So
-I think hard_header_len should be kept consistent with header_ops to
-make the driver able to work correctly with af_packet.c.
+This release is just an update to the new stable 5.4.61 version
+and no RT specific changes have been made.
 
-If the driver really needs to use additional header space outside of
-the header_ops->create function, it should request that header space
-in dev->needed_headroom instead of hard_header_len. This avoids the
-complex header processing in af_packet.c but still gets the header
-space reserved.
 
-Currently for the 6 HDLC protocol drivers, hdlc_ppp sets
-hard_header_len and the value is consistent with its header_ops,
-hdlc_raw_eth sets both hard_header_len and header_ops correctly with
-the ether_setup function, hdlc_x25 has been previously changed by me
-to set hard_header_len to 0 because it doesn't have header_ops, and
-this patch would make hdlc_cisco set its hard_header_len to the value
-consistent with its header_ops. This leaves us hdlc_raw and hdlc_fr. I
-see that both of these 2 drivers don't set hard_header_len when
-attaching the protocol, so they will use the default value of 16. But
-because both of these drivers don't have header_ops, I think their
-hard_header_len should be set to 0. So I think maybe it's better to
-change the default value in hdlc.c to 0 and let them take the default
-value of 0.
+You can get this release via the git tree at:
 
-What do you think?
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
 
-Thanks!
+  branch: v5.4-rt
+  Head SHA1: 2612d394901859e4ba83e278e9b0112efbab04e0
 
-Xie He
+
+Or to build 5.4.61-rt37 directly, the following patches should be applied:
+
+  http://www.kernel.org/pub/linux/kernel/v5.x/linux-5.4.tar.xz
+
+  http://www.kernel.org/pub/linux/kernel/v5.x/patch-5.4.61.xz
+
+  http://www.kernel.org/pub/linux/kernel/projects/rt/5.4/patch-5.4.61-rt37.patch.xz
+
+
+
+
+Enjoy,
+
+-- Steve
+
