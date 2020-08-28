@@ -2,247 +2,97 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39856C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BFFC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECD1B208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:19:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C43208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:19:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598624341;
-	bh=HfZz+xtTrt5QVush0A2tAYGofQihbn5nJWHYOS6GXZk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Vn7iyLdoEAdUOwTnO0xSaxFk/babJyTSHkn+svSenzYKERrpz6huYUOoiud1xhY6n
-	 FTchbugcXrLQN9cqK32L0bG2K8dnsnR/vHnSXoCe8bUIZlJZxn4y6+kasad76JXgZT
-	 sP5v4R2RCuEVJh1dB9dD0h2d9GEoYigJyTcf4rz8=
+	s=default; t=1598624372;
+	bh=TdetsC/IwhbsAgTlgvX2TtgjuiEy6W6tBp2ZWqLO+JM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YWw68X+dO9ihc9RJtmYEXqqNYRIJHQ+Lh356TYGRhFIsSaAzSH3Sz9u52ekxTB43x
+	 79EqyKkWQtrxyAbHuD7CwpsC984VeVc5ntnamADD3EqhzAGxypQr1OY54wv/m1mk1Z
+	 CzoylfZXUXV+Ofl4bx+uRvCgXBsI0PC5+LXKJzmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgH1OS7 (ORCPT
+        id S1727088AbgH1OT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:18:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39720 "EHLO mail.kernel.org"
+        Fri, 28 Aug 2020 10:19:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbgH1OS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:18:57 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        id S1725857AbgH1OTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 10:19:24 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2952B20872;
-        Fri, 28 Aug 2020 14:18:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F8C7208C9;
+        Fri, 28 Aug 2020 14:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598624336;
-        bh=HfZz+xtTrt5QVush0A2tAYGofQihbn5nJWHYOS6GXZk=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=arfN5bhon4muxjyRb65RwWzeffZvpmP2r/NuNWnOZipcH+G7xRtTpzcAAqgnluSya
-         XIkfuEPH1w/DaA97Zx/BwWfoJl+VwarnWI30b+TzwNaVKv1d6uAx6TRq3L6P5FkCWv
-         oSsbLr5i9tzG/H+OKt9VBG9o5b2EhXK1GZqLvMRc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id ED0373522679; Fri, 28 Aug 2020 07:18:55 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 07:18:55 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
-        dave@stgolabs.net, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neeraj.iitr10@gmail.com, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>, vineethrp@gmail.com
-Subject: Re: [PATCH v4 -rcu 1/4] rcu/segcblist: Do not depend on rcl->len to
- store the segcb len during merge
-Message-ID: <20200828141855.GO2855@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200825024842.3408659-1-joel@joelfernandes.org>
- <20200825024842.3408659-2-joel@joelfernandes.org>
- <20200825200809.GW2855@paulmck-ThinkPad-P72>
- <20200825224723.GB579506@google.com>
- <20200826142028.GN2855@paulmck-ThinkPad-P72>
- <20200827225518.GB3821640@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827225518.GB3821640@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        s=default; t=1598624364;
+        bh=TdetsC/IwhbsAgTlgvX2TtgjuiEy6W6tBp2ZWqLO+JM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qtDWadleCxTR0PpV04LVMcmFE6CLPUIAXMPQ01N15drNu1lbMIvXC65zqFQ4kp6WG
+         Gih9hip23BkPOqD3sY/i9NgFZUnQ4gf7g6v8tnpXSS6aADVP/GRRdhKXlEEGBEWqzg
+         NL6VQLuwsWmPZ96IL+h1DpTYX02OGeYN7drBGqkk=
+Date:   Fri, 28 Aug 2020 23:19:20 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     peterz@infradead.org
+Cc:     "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
+        "anil.s.keshavamurthy@intel.com" <anil.s.keshavamurthy@intel.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "cameron@moodycamel.com" <cameron@moodycamel.com>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "paulmck@kernel.org" <paulmck@kernel.org>
+Subject: Re: [RFC][PATCH 3/7] kprobes: Remove kretprobe hash
+Message-Id: <20200828231920.4cb817dd9c624703ecfedc5d@kernel.org>
+In-Reply-To: <20200828135824.GD1362448@hirez.programming.kicks-ass.net>
+References: <20200827161237.889877377@infradead.org>
+        <20200827161754.359432340@infradead.org>
+        <7df0a1af432040d9908517661c32dc34@trendmicro.com>
+        <20200828225113.9541a5f67a3bcb17c4ce930c@kernel.org>
+        <20200828135824.GD1362448@hirez.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 06:55:18PM -0400, Joel Fernandes wrote:
-> On Wed, Aug 26, 2020 at 07:20:28AM -0700, Paul E. McKenney wrote:
-> [...]
-> > > > Or better yet, please see below, which should allow getting rid of both
-> > > > of them.
-> > > > 
-> > > > >  	rcu_segcblist_extract_done_cbs(src_rsclp, &donecbs);
-> > > > >  	rcu_segcblist_extract_pend_cbs(src_rsclp, &pendcbs);
-> > > > > -	rcu_segcblist_insert_count(dst_rsclp, &donecbs);
-> > > > > +
-> > > > > +	rcu_segcblist_add_len(dst_rsclp, src_len);
-> > > > >  	rcu_segcblist_insert_done_cbs(dst_rsclp, &donecbs);
-> > > > >  	rcu_segcblist_insert_pend_cbs(dst_rsclp, &pendcbs);
-> > > > 
-> > > > Rather than adding the blank lines, why not have the rcu_cblist structures
-> > > > carry the lengths?  You are already adjusting one of the two call sites
-> > > > that care (rcu_do_batch()), and the other is srcu_invoke_callbacks().
-> > > > That should shorten this function a bit more.  And make callback handling
-> > > > much more approachable, I suspect.
-> > > 
-> > > Sorry, I did not understand. The rcu_cblist structure already has a length
-> > > field. I do modify rcu_segcblist_extract_done_cbs() and
-> > > rcu_segcblist_extract_pend_cbs() to carry the length already, in a later
-> > > patch.
-> > > 
-> > > Just to emphasize, this patch is just a small refactor to avoid an issue in
-> > > later patches. It aims to keep current functionality unchanged.
+On Fri, 28 Aug 2020 15:58:24 +0200
+peterz@infradead.org wrote:
+
+> On Fri, Aug 28, 2020 at 10:51:13PM +0900, Masami Hiramatsu wrote:
+>  
+> > OK, schedule function will be the key. I guess the senario is..
 > > 
-> > True enough.  I am just suggesting that an equally small refactor in
-> > a slightly different direction should get to a better place.  The key
-> > point enabling this slightly different direction is that this code is
-> > an exception to the "preserve ->cblist.len" rule because it is invoked
-> > only from the CPU hotplug code.
+> > 1) kretporbe replace the return address with kretprobe_trampoline on task1's kernel stack
+> > 2) the task1 forks task2 before returning to the kretprobe_trampoline
+> > 3) while copying the process with the kernel stack, task2->kretprobe_instances.first = NULL
+> > 4) task2 returns to the kretprobe_trampoline
+> > 5) Bomb!
 > > 
-> > So you could use the rcu_cblist .len field to update the ->cblist.len
-> > field, thus combining the _cbs and _count updates.  One thing that helps
-> > is that setting th e rcu_cblist .len field doesn't hurt the other use
-> > cases that require careful handling of ->cblist.len.
+> > Hmm, we need to fixup the kernel stack when copying process. 
 > 
-> Thank you for the ideas. I am trying something like this on top of this
-> series based on the ideas. One thing I concerned a bit is if getting rid of
-> the rcu_segcblist_xchg_len() function (which has memory barriers in them)
-> causes issues in the hotplug path. I am now directly updating the length
-> without additional memory barriers. I will test it more and try to reason
-> more about it as well.
+> How would that scenario have been avoided in the old code? Because there
+> task2 would have a different has and not have found a kretprobe_instance
+> either.
 
-In this particular case, the CPU-hotplug locks prevent rcu_barrier()
-from running concurrently, so it should be OK.  Is there an easy way
-to make lockdep help us check this?  Does lockdep_assert_cpus_held()
-suffice, or is it too easily satisfied?
+Good question, I think this bug has not been solved in old code too.
+Let me check.
 
-> ---8<-----------------------
-> 
-> From: Joel Fernandes <joelaf@google.com>
-> Date: Thu, 27 Aug 2020 18:30:25 -0400
-> Subject: [PATCH] fixup! rcu/segcblist: Do not depend on donecbs ->len to store
->  the segcb len during merge
-> 
-> Signed-off-by: Joel Fernandes <joelaf@google.com>
-> ---
->  kernel/rcu/rcu_segcblist.c | 38 ++++----------------------------------
->  1 file changed, 4 insertions(+), 34 deletions(-)
-> 
-> diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-> index 79c2cbe388c5..c33abbc97a07 100644
-> --- a/kernel/rcu/rcu_segcblist.c
-> +++ b/kernel/rcu/rcu_segcblist.c
-> @@ -175,26 +175,6 @@ void rcu_segcblist_inc_len(struct rcu_segcblist *rsclp)
->  	rcu_segcblist_add_len(rsclp, 1);
->  }
->  
-> -/*
-> - * Exchange the numeric length of the specified rcu_segcblist structure
-> - * with the specified value.  This can cause the ->len field to disagree
-> - * with the actual number of callbacks on the structure.  This exchange is
-> - * fully ordered with respect to the callers accesses both before and after.
-> - */
-> -static long rcu_segcblist_xchg_len(struct rcu_segcblist *rsclp, long v)
-> -{
-> -#ifdef CONFIG_RCU_NOCB_CPU
-> -	return atomic_long_xchg(&rsclp->len, v);
-> -#else
-> -	long ret = rsclp->len;
-> -
-> -	smp_mb(); /* Up to the caller! */
-> -	WRITE_ONCE(rsclp->len, v);
-> -	smp_mb(); /* Up to the caller! */
-> -	return ret;
-> -#endif
-> -}
-> -
+Thanks,
 
-This looks nice!
-
->  /*
->   * Initialize an rcu_segcblist structure.
->   */
-> @@ -361,6 +341,7 @@ void rcu_segcblist_extract_done_cbs(struct rcu_segcblist *rsclp,
->  		if (rsclp->tails[i] == rsclp->tails[RCU_DONE_TAIL])
->  			WRITE_ONCE(rsclp->tails[i], &rsclp->head);
->  	rcu_segcblist_set_seglen(rsclp, RCU_DONE_TAIL, 0);
-> +	rcu_segcblist_add_len(rsclp, -(rclp->len));
->  }
->  
->  /*
-> @@ -414,17 +395,7 @@ void rcu_segcblist_extract_pend_cbs(struct rcu_segcblist *rsclp,
->  		WRITE_ONCE(rsclp->tails[i], rsclp->tails[RCU_DONE_TAIL]);
->  		rcu_segcblist_set_seglen(rsclp, i, 0);
->  	}
-> -}
-> -
-> -/*
-> - * Insert counts from the specified rcu_cblist structure in the
-> - * specified rcu_segcblist structure.
-> - */
-> -void rcu_segcblist_insert_count(struct rcu_segcblist *rsclp,
-> -				struct rcu_cblist *rclp)
-> -{
-> -	rcu_segcblist_add_len(rsclp, rclp->len);
-> -	rclp->len = 0;
-> +	rcu_segcblist_add_len(rsclp, -(rclp->len));
-
-As does this.  ;-)
-
->  }
->  
->  /*
-> @@ -448,6 +419,7 @@ void rcu_segcblist_insert_done_cbs(struct rcu_segcblist *rsclp,
->  			break;
->  	rclp->head = NULL;
->  	rclp->tail = &rclp->head;
-> +	rcu_segcblist_add_len(rsclp, rclp->len);
-
-Does there need to be a compensating action in rcu_do_batch(), or is
-this the point of the "rcu_segcblist_add_len(rsclp, -(rclp->len));"
-added to rcu_segcblist_extract_done_cbs() above?
-
-If so, a comment would be good.
-
->  }
->  
->  /*
-> @@ -463,6 +435,7 @@ void rcu_segcblist_insert_pend_cbs(struct rcu_segcblist *rsclp,
->  	rcu_segcblist_add_seglen(rsclp, RCU_NEXT_TAIL, rclp->len);
->  	WRITE_ONCE(*rsclp->tails[RCU_NEXT_TAIL], rclp->head);
->  	WRITE_ONCE(rsclp->tails[RCU_NEXT_TAIL], rclp->tail);
-> +	rcu_segcblist_add_len(rsclp, rclp->len);
->  }
->  
->  /*
-> @@ -601,16 +574,13 @@ void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
->  {
->  	struct rcu_cblist donecbs;
->  	struct rcu_cblist pendcbs;
-> -	long src_len;
->  
->  	rcu_cblist_init(&donecbs);
->  	rcu_cblist_init(&pendcbs);
->  
-> -	src_len = rcu_segcblist_xchg_len(src_rsclp, 0);
->  	rcu_segcblist_extract_done_cbs(src_rsclp, &donecbs);
->  	rcu_segcblist_extract_pend_cbs(src_rsclp, &pendcbs);
->  
-> -	rcu_segcblist_add_len(dst_rsclp, src_len);
->  	rcu_segcblist_insert_done_cbs(dst_rsclp, &donecbs);
->  	rcu_segcblist_insert_pend_cbs(dst_rsclp, &pendcbs);
-
-Can we now pair the corresponding _extract_ and _insert_ calls, thus
-requiring only one rcu_cblist structure?  This would drop two more lines
-of code.  Or would that break something?
-
-							Thanx, Paul
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
