@@ -2,106 +2,238 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E161AC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC6DC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1BEE2054F
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:24:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C7j6jrIt"
+	by mail.kernel.org (Postfix) with ESMTP id 4F73B2078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:26:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgH1OYK (ORCPT
+        id S1726876AbgH1O0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:24:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34166 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725857AbgH1OYG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:24:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598624645;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qm4yw14oZW1kOamiCPd98+q7tZwl+c/TO08c6jDr94k=;
-        b=C7j6jrItVMCieRNx3cbjEcKhJ1tODwxO2T/xYEhc1D6su05L+vrzTH0toqCEIdS4844INV
-        /gZOyYDW0JL9rRhyrUVeEjaekPpV12roYLzHNpJ4MqI1wd1IVTrybU0SilQ9svlfFnmNkt
-        7nnGiUCKlWwZI097KDfKzBwOe/YnBdE=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-253-3D6blhN6NKW2-YOSRy6utg-1; Fri, 28 Aug 2020 10:24:04 -0400
-X-MC-Unique: 3D6blhN6NKW2-YOSRy6utg-1
-Received: by mail-qt1-f200.google.com with SMTP id p43so127951qtb.23
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:24:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qm4yw14oZW1kOamiCPd98+q7tZwl+c/TO08c6jDr94k=;
-        b=LZK/p0LXPnCYnv1wA0BWqUkH+3lCKLWEvVW7PusnzweQCalFZ3ybIvZivU9FrYqyjL
-         tmg5bBSnBemXelRUWvR4mMilvA2utIhkvq2DMrxPHj40106TIq9mOgG44LdQ8DrpfYzR
-         hlJ84H6htcb7LtQhiAsXatOzXR46a82Rgsox3aLJ+G4gP6pWRzj3hiiUj+PuNdQ/zZ/b
-         sAZwkdZzeLgSJagUPfAfKxBZHKw1nT8PfnJ3l4OcrIwtGZda4dRvQrWnnmF3QI1j/3OH
-         eAm0PeGO7g1S1TdcqMQWuWzCHsvnC9JAsrKrpCRK+05Hcxr/mlQVFQdXHeMmw77LYglX
-         Krxw==
-X-Gm-Message-State: AOAM532TRZk8/+yLqXtqUGt0PUvalAlcbYglSf2nta0HNVLweCHF+Xky
-        2G/ZrW+NeNXa3Csijj48Qfaon9F/wIcxJG6Nw+NaJdi+xYPgGCnQOiUG/iOAryubo/yDIU3rfRC
-        s/XCRx5/lCawtroM/mvh9f2as
-X-Received: by 2002:a0c:dd05:: with SMTP id u5mr1964733qvk.143.1598624643646;
-        Fri, 28 Aug 2020 07:24:03 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyS2SFjk0+xV0FK90qlNWVxFACNOzmy1EjYy0Kne2/gImeDcKsxIYjVyoXkR34UqhH/MeqiCg==
-X-Received: by 2002:a0c:dd05:: with SMTP id u5mr1964698qvk.143.1598624643273;
-        Fri, 28 Aug 2020 07:24:03 -0700 (PDT)
-Received: from xz-x1 (bras-vprn-toroon474qw-lp130-11-70-53-122-15.dsl.bell.ca. [70.53.122.15])
-        by smtp.gmail.com with ESMTPSA id w3sm886056qkc.10.2020.08.28.07.24.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 07:24:02 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 10:24:00 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     "Maoming (maoming, Cloud Infrastructure Service Product Dept.)" 
-        <maoming.maoming@huawei.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "Zhoujian (jay)" <jianjay.zhou@huawei.com>,
-        "Huangweidong (C)" <weidong.huang@huawei.com>,
-        "aarcange@redhat.com" <aarcange@redhat.com>,
-        wangyunjian <wangyunjian@huawei.com>
-Subject: Re: =?utf-8?B?562U5aSNOiDnrZTlpI06IFtQQVRD?= =?utf-8?Q?H?= V2] vfio
- dma_map/unmap: optimized for hugetlbfs pages
-Message-ID: <20200828142400.GA3197@xz-x1>
-References: <20200814023729.2270-1-maoming.maoming@huawei.com>
- <20200825205907.GB8235@xz-x1>
- <8B561EC9A4D13649A62CF60D3A8E8CB28C2D9ABB@dggeml524-mbx.china.huawei.com>
- <20200826151509.GD8235@xz-x1>
- <8B561EC9A4D13649A62CF60D3A8E8CB28C2DBE7A@dggeml524-mbx.china.huawei.com>
+        Fri, 28 Aug 2020 10:26:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:50630 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725985AbgH1O0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 10:26:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B216A1FB;
+        Fri, 28 Aug 2020 07:26:47 -0700 (PDT)
+Received: from [192.168.1.190] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8210B3F71F;
+        Fri, 28 Aug 2020 07:26:46 -0700 (PDT)
+Subject: Re: [PATCH 1/4] kselftests/arm64: add a basic Pointer Authentication
+ test
+To:     Boyan Karatotev <boyan.karatotev@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     amit.kachhap@arm.com, boian4o1@gmail.com,
+        Shuah Khan <shuah@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+References: <20200828131606.7946-1-boyan.karatotev@arm.com>
+ <20200828131606.7946-2-boyan.karatotev@arm.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <9a975ad4-802a-2f94-0555-94a03dac1343@arm.com>
+Date:   Fri, 28 Aug 2020 15:28:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200828131606.7946-2-boyan.karatotev@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <8B561EC9A4D13649A62CF60D3A8E8CB28C2DBE7A@dggeml524-mbx.china.huawei.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 09:23:08AM +0000, Maoming (maoming, Cloud Infrastructure Service Product Dept.) wrote:
-> In hugetlb_put_pfn(), I delete unpin_user_pages_dirty_lock() and use some simple code to put hugetlb pages.
-> Is this right?
+On 8/28/20 2:16 PM, Boyan Karatotev wrote:
+> PAuth signs and verifies return addresses on the stack. It does so by
+> inserting a Pointer Authentication code (PAC) into some of the unused top
+> bits of an address. This is achieved by adding paciasp/autiasp instructions
+> at the beginning and end of a function.
+> 
+> This feature is partially backwards compatible with earlier versions of the
+> ARM architecture. To coerce the compiler into emitting fully backwards
+> compatible code the main file is compiled to target an earlier ARM version.
+> This allows the tests to check for the feature and print meaningful error
+> messages instead of crashing.
+> 
+> Add a test to verify that corrupting the return address results in a
+> SIGSEGV on return.
+> 
 
-I think we should still use the APIs because of the the same reason.  However
-again I don't know the performance impact of that to your patch, but I still
-think that could be done inside gup itself when needed (e.g., a special path
-for hugetlbfs for [un]pinning continuous pages; though if that's the case that
-could be something to be discussed on -mm then as a separate patch, imho).
+Reviewed-by: Vincenzo Frascino <Vincenzo.Frascino@arm.com>
 
-Thanks,
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Signed-off-by: Boyan Karatotev <boyan.karatotev@arm.com>
+> ---
+>  tools/testing/selftests/arm64/Makefile        |  2 +-
+>  .../testing/selftests/arm64/pauth/.gitignore  |  1 +
+>  tools/testing/selftests/arm64/pauth/Makefile  | 22 ++++++++++++
+>  tools/testing/selftests/arm64/pauth/helper.h  | 10 ++++++
+>  tools/testing/selftests/arm64/pauth/pac.c     | 32 +++++++++++++++++
+>  .../selftests/arm64/pauth/pac_corruptor.S     | 36 +++++++++++++++++++
+>  6 files changed, 102 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/testing/selftests/arm64/pauth/.gitignore
+>  create mode 100644 tools/testing/selftests/arm64/pauth/Makefile
+>  create mode 100644 tools/testing/selftests/arm64/pauth/helper.h
+>  create mode 100644 tools/testing/selftests/arm64/pauth/pac.c
+>  create mode 100644 tools/testing/selftests/arm64/pauth/pac_corruptor.S
+> 
+> diff --git a/tools/testing/selftests/arm64/Makefile b/tools/testing/selftests/arm64/Makefile
+> index 93b567d23c8b..525506fd97b9 100644
+> --- a/tools/testing/selftests/arm64/Makefile
+> +++ b/tools/testing/selftests/arm64/Makefile
+> @@ -4,7 +4,7 @@
+>  ARCH ?= $(shell uname -m 2>/dev/null || echo not)
+>  
+>  ifneq (,$(filter $(ARCH),aarch64 arm64))
+> -ARM64_SUBTARGETS ?= tags signal
+> +ARM64_SUBTARGETS ?= tags signal pauth
+>  else
+>  ARM64_SUBTARGETS :=
+>  endif
+> diff --git a/tools/testing/selftests/arm64/pauth/.gitignore b/tools/testing/selftests/arm64/pauth/.gitignore
+> new file mode 100644
+> index 000000000000..b557c916720a
+> --- /dev/null
+> +++ b/tools/testing/selftests/arm64/pauth/.gitignore
+> @@ -0,0 +1 @@
+> +pac
+> diff --git a/tools/testing/selftests/arm64/pauth/Makefile b/tools/testing/selftests/arm64/pauth/Makefile
+> new file mode 100644
+> index 000000000000..785c775e5e41
+> --- /dev/null
+> +++ b/tools/testing/selftests/arm64/pauth/Makefile
+> @@ -0,0 +1,22 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2020 ARM Limited
+> +
+> +CFLAGS += -mbranch-protection=pac-ret
+> +
+> +TEST_GEN_PROGS := pac
+> +TEST_GEN_FILES := pac_corruptor.o
+> +
+> +include ../../lib.mk
+> +
+> +# pac* and aut* instructions are not available on architectures berfore
+> +# ARMv8.3. Therefore target ARMv8.3 wherever they are used directly
+> +$(OUTPUT)/pac_corruptor.o: pac_corruptor.S
+> +	$(CC) -c $^ -o $@ $(CFLAGS) -march=armv8.3-a
+> +
+> +# when -mbranch-protection is enabled and the target architecture is ARMv8.3 or
+> +# greater, gcc emits pac* instructions which are not in HINT NOP space,
+> +# preventing the tests from occurring at all. Compile for ARMv8.2 so tests can
+> +# run on earlier targets and print a meaningful error messages
+> +$(OUTPUT)/pac: pac.c $(OUTPUT)/pac_corruptor.o
+> +	$(CC) $^ -o $@ $(CFLAGS) -march=armv8.2-a
+> +
+> diff --git a/tools/testing/selftests/arm64/pauth/helper.h b/tools/testing/selftests/arm64/pauth/helper.h
+> new file mode 100644
+> index 000000000000..f777f88acf0a
+> --- /dev/null
+> +++ b/tools/testing/selftests/arm64/pauth/helper.h
+> @@ -0,0 +1,10 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* Copyright (C) 2020 ARM Limited */
+> +
+> +#ifndef _HELPER_H_
+> +#define _HELPER_H_
+> +
+> +void pac_corruptor(void);
+> +
+> +#endif
+> +
+> diff --git a/tools/testing/selftests/arm64/pauth/pac.c b/tools/testing/selftests/arm64/pauth/pac.c
+> new file mode 100644
+> index 000000000000..ed445050f621
+> --- /dev/null
+> +++ b/tools/testing/selftests/arm64/pauth/pac.c
+> @@ -0,0 +1,32 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2020 ARM Limited
+> +
+> +#include <sys/auxv.h>
+> +#include <signal.h>
+> +
+> +#include "../../kselftest_harness.h"
+> +#include "helper.h"
+> +
+> +/*
+> + * Tests are ARMv8.3 compliant. They make no provisions for features present in
+> + * future version of the arm architecture
+> + */
+> +
+> +#define ASSERT_PAUTH_ENABLED() \
+> +do { \
+> +	unsigned long hwcaps = getauxval(AT_HWCAP); \
+> +	/* data key instructions are not in NOP space. This prevents a SIGILL */ \
+> +	ASSERT_NE(0, hwcaps & HWCAP_PACA) TH_LOG("PAUTH not enabled"); \
+> +} while (0)
+> +
+> +
+> +/* check that a corrupted PAC results in SIGSEGV */
+> +TEST_SIGNAL(corrupt_pac, SIGSEGV)
+> +{
+> +	ASSERT_PAUTH_ENABLED();
+> +
+> +	pac_corruptor();
+> +}
+> +
+> +TEST_HARNESS_MAIN
+> +
+> diff --git a/tools/testing/selftests/arm64/pauth/pac_corruptor.S b/tools/testing/selftests/arm64/pauth/pac_corruptor.S
+> new file mode 100644
+> index 000000000000..6a34ec23a034
+> --- /dev/null
+> +++ b/tools/testing/selftests/arm64/pauth/pac_corruptor.S
+> @@ -0,0 +1,36 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* Copyright (C) 2020 ARM Limited */
+> +
+> +.global pac_corruptor
+> +
+> +.text
+> +/*
+> + * Corrupting a single bit of the PAC ensures the authentication will fail.  It
+> + * also guarantees no possible collision. TCR_EL1.TBI0 is set by default so no
+> + * top byte PAC is tested
+> + */
+> + pac_corruptor:
+> +	paciasp
+> +
+> +	/* make stack frame */
+> +	sub sp, sp, #16
+> +	stp x29, lr, [sp]
+> +	mov x29, sp
+> +
+> +	/* prepare mask for bit to be corrupted (bit 54) */
+> +	mov x1, xzr
+> +	add x1, x1, #1
+> +	lsl x1, x1, #54
+> +
+> +	/* get saved lr, corrupt selected bit, put it back */
+> +	ldr x0, [sp, #8]
+> +	eor x0, x0, x1
+> +	str x0, [sp, #8]
+> +
+> +	/* remove stack frame */
+> +	ldp x29, lr, [sp]
+> +	add sp, sp, #16
+> +
+> +	autiasp
+> +	ret
+> +
+> 
 
 -- 
-Peter Xu
-
+Regards,
+Vincenzo
