@@ -2,93 +2,262 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4B7C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B50C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6E592078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE712078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:28:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgH1O1Y (ORCPT
+        id S1727863AbgH1O2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:27:24 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:61075 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbgH1O1W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:27:22 -0400
-X-Originating-IP: 93.34.118.233
-Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 8FD584000D;
-        Fri, 28 Aug 2020 14:27:17 +0000 (UTC)
-Date:   Fri, 28 Aug 2020 16:31:03 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        kernel-list@raspberrypi.com, linux-kernel@vger.kernel.org,
-        laurent.pinchart@ideasonboard.com,
+        Fri, 28 Aug 2020 10:28:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:50684 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726614AbgH1O2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 10:28:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32F8D1FB;
+        Fri, 28 Aug 2020 07:28:47 -0700 (PDT)
+Received: from [192.168.1.190] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE1133F71F;
+        Fri, 28 Aug 2020 07:28:45 -0700 (PDT)
+Subject: Re: [PATCH 2/4] kselftests/arm64: add nop checks for PAuth tests
+To:     Boyan Karatotev <boyan.karatotev@arm.com>,
         linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
-        dave.stevenson@raspberrypi.com, naush@raspberrypi.com
-Subject: Re: [PATCH v2 28/47] staging: vchi: Get rid of vchiq_shim's message
- callback
-Message-ID: <20200828143103.2ljdrxk4py35ecu6@uno.localdomain>
-References: <20200629150945.10720-1-nsaenzjulienne@suse.de>
- <20200629150945.10720-29-nsaenzjulienne@suse.de>
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     amit.kachhap@arm.com, boian4o1@gmail.com,
+        Shuah Khan <shuah@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+References: <20200828131606.7946-1-boyan.karatotev@arm.com>
+ <20200828131606.7946-3-boyan.karatotev@arm.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <96f6009c-9f61-ebd2-9a2f-7d54486e85eb@arm.com>
+Date:   Fri, 28 Aug 2020 15:30:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200828131606.7946-3-boyan.karatotev@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200629150945.10720-29-nsaenzjulienne@suse.de>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
-
-   I'm working on a v2 of the bcm2835-isp support which was sent along
-with UNICAM v4l2 driver and some misc changes you have collected in
-this series. Reference to v1:
-https://lore.kernel.org/linux-media/20200504092611.9798-1-laurent.pinchart@ideasonboard.com/
-
-On Mon, Jun 29, 2020 at 05:09:26PM +0200, Nicolas Saenz Julienne wrote:
-> As vchiq_shim's callback does nothing aside from pushing messages into
-> the service's queue, let's bypass it and jump directly to the service's
-> callbacks, letting them choose whether to use the message queue.
-
-I admit this patch caused me some pain, as after a few days chasing
-why the ISP got stuck in importing buffers into the VPU through the vc-sm-cma
-driver I realized that this patch removed a significant part of the
-process..
-
+On 8/28/20 2:16 PM, Boyan Karatotev wrote:
+> PAuth adds sign/verify controls to enable and disable groups of
+> instructions in hardware for compatibility with libraries that do not
+> implement PAuth. The kernel always enables them if it detects PAuth.
+> 
+> Add a test that checks that each group of instructions is enabled, if the
+> kernel reports PAuth as detected.
+> 
+> Note: For groups, for the purpose of this patch, we intend instructions
+> that use a certain key.
 >
-> It turns out most services don't need to use the message queue, which
-> makes for simpler code in the end.
->
-> -
-> -	if (reason == VCHIQ_MESSAGE_AVAILABLE)
-> -		vchiq_msg_queue_push(service->handle, header);
 
-This one '-.-
+Reviewed-by: Vincenzo Frascino <Vincenzo.Frascino@arm.com>
 
-I wonder if this was intentional and it is expected all services now
-handle the message queue (it seems so according to your commit
-message).
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Signed-off-by: Boyan Karatotev <boyan.karatotev@arm.com>
+> ---
+>  .../testing/selftests/arm64/pauth/.gitignore  |  1 +
+>  tools/testing/selftests/arm64/pauth/Makefile  |  7 ++-
+>  tools/testing/selftests/arm64/pauth/helper.c  | 41 +++++++++++++++
+>  tools/testing/selftests/arm64/pauth/helper.h  | 10 ++++
+>  tools/testing/selftests/arm64/pauth/pac.c     | 51 +++++++++++++++++++
+>  5 files changed, 108 insertions(+), 2 deletions(-)
+>  create mode 100644 tools/testing/selftests/arm64/pauth/helper.c
+> 
+> diff --git a/tools/testing/selftests/arm64/pauth/.gitignore b/tools/testing/selftests/arm64/pauth/.gitignore
+> index b557c916720a..155137d92722 100644
+> --- a/tools/testing/selftests/arm64/pauth/.gitignore
+> +++ b/tools/testing/selftests/arm64/pauth/.gitignore
+> @@ -1 +1,2 @@
+> +exec_target
+>  pac
+> diff --git a/tools/testing/selftests/arm64/pauth/Makefile b/tools/testing/selftests/arm64/pauth/Makefile
+> index 785c775e5e41..a017d1c8dd58 100644
+> --- a/tools/testing/selftests/arm64/pauth/Makefile
+> +++ b/tools/testing/selftests/arm64/pauth/Makefile
+> @@ -4,7 +4,7 @@
+>  CFLAGS += -mbranch-protection=pac-ret
+>  
+>  TEST_GEN_PROGS := pac
+> -TEST_GEN_FILES := pac_corruptor.o
+> +TEST_GEN_FILES := pac_corruptor.o helper.o
+>  
+>  include ../../lib.mk
+>  
+> @@ -13,10 +13,13 @@ include ../../lib.mk
+>  $(OUTPUT)/pac_corruptor.o: pac_corruptor.S
+>  	$(CC) -c $^ -o $@ $(CFLAGS) -march=armv8.3-a
+>  
+> +$(OUTPUT)/helper.o: helper.c
+> +	$(CC) -c $^ -o $@ $(CFLAGS) -march=armv8.3-a
+> +
+>  # when -mbranch-protection is enabled and the target architecture is ARMv8.3 or
+>  # greater, gcc emits pac* instructions which are not in HINT NOP space,
+>  # preventing the tests from occurring at all. Compile for ARMv8.2 so tests can
+>  # run on earlier targets and print a meaningful error messages
+> -$(OUTPUT)/pac: pac.c $(OUTPUT)/pac_corruptor.o
+> +$(OUTPUT)/pac: pac.c $(OUTPUT)/pac_corruptor.o $(OUTPUT)/helper.o
+>  	$(CC) $^ -o $@ $(CFLAGS) -march=armv8.2-a
+>  
+> diff --git a/tools/testing/selftests/arm64/pauth/helper.c b/tools/testing/selftests/arm64/pauth/helper.c
+> new file mode 100644
+> index 000000000000..8619afb16124
+> --- /dev/null
+> +++ b/tools/testing/selftests/arm64/pauth/helper.c
+> @@ -0,0 +1,41 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2020 ARM Limited
+> +
+> +#include "helper.h"
+> +
+> +
+> +size_t keyia_sign(size_t ptr)
+> +{
+> +	asm volatile("paciza %0" : "+r" (ptr));
+> +	return ptr;
+> +}
+> +
+> +size_t keyib_sign(size_t ptr)
+> +{
+> +	asm volatile("pacizb %0" : "+r" (ptr));
+> +	return ptr;
+> +}
+> +
+> +size_t keyda_sign(size_t ptr)
+> +{
+> +	asm volatile("pacdza %0" : "+r" (ptr));
+> +	return ptr;
+> +}
+> +
+> +size_t keydb_sign(size_t ptr)
+> +{
+> +	asm volatile("pacdzb %0" : "+r" (ptr));
+> +	return ptr;
+> +}
+> +
+> +size_t keyg_sign(size_t ptr)
+> +{
+> +	/* output is encoded in the upper 32 bits */
+> +	size_t dest = 0;
+> +	size_t modifier = 0;
+> +
+> +	asm volatile("pacga %0, %1, %2" : "=r" (dest) : "r" (ptr), "r" (modifier));
+> +
+> +	return dest;
+> +}
+> +
+> diff --git a/tools/testing/selftests/arm64/pauth/helper.h b/tools/testing/selftests/arm64/pauth/helper.h
+> index f777f88acf0a..b3cf709e249d 100644
+> --- a/tools/testing/selftests/arm64/pauth/helper.h
+> +++ b/tools/testing/selftests/arm64/pauth/helper.h
+> @@ -4,7 +4,17 @@
+>  #ifndef _HELPER_H_
+>  #define _HELPER_H_
+>  
+> +#include <stdlib.h>
+> +
+> +
+>  void pac_corruptor(void);
+>  
+> +/* PAuth sign a value with key ia and modifier value 0 */
+> +size_t keyia_sign(size_t val);
+> +size_t keyib_sign(size_t val);
+> +size_t keyda_sign(size_t val);
+> +size_t keydb_sign(size_t val);
+> +size_t keyg_sign(size_t val);
+> +
+>  #endif
+>  
+> diff --git a/tools/testing/selftests/arm64/pauth/pac.c b/tools/testing/selftests/arm64/pauth/pac.c
+> index ed445050f621..cdbffa8bf61e 100644
+> --- a/tools/testing/selftests/arm64/pauth/pac.c
+> +++ b/tools/testing/selftests/arm64/pauth/pac.c
+> @@ -12,12 +12,25 @@
+>   * future version of the arm architecture
+>   */
+>  
+> +#define PAC_COLLISION_ATTEMPTS 10
+> +/*
+> + * The kernel sets TBID by default. So bits 55 and above should remain
+> + * untouched no matter what.
+> + * The VA space size is 48 bits. Bigger is opt-in.
+> + */
+> +#define PAC_MASK (~0xff80ffffffffffff)
+>  #define ASSERT_PAUTH_ENABLED() \
+>  do { \
+>  	unsigned long hwcaps = getauxval(AT_HWCAP); \
+>  	/* data key instructions are not in NOP space. This prevents a SIGILL */ \
+>  	ASSERT_NE(0, hwcaps & HWCAP_PACA) TH_LOG("PAUTH not enabled"); \
+>  } while (0)
+> +#define ASSERT_GENERIC_PAUTH_ENABLED() \
+> +do { \
+> +	unsigned long hwcaps = getauxval(AT_HWCAP); \
+> +	/* generic key instructions are not in NOP space. This prevents a SIGILL */ \
+> +	ASSERT_NE(0, hwcaps & HWCAP_PACG) TH_LOG("Generic PAUTH not enabled"); \
+> +} while (0)
+>  
+>  
+>  /* check that a corrupted PAC results in SIGSEGV */
+> @@ -28,5 +41,43 @@ TEST_SIGNAL(corrupt_pac, SIGSEGV)
+>  	pac_corruptor();
+>  }
+>  
+> +/*
+> + * There are no separate pac* and aut* controls so checking only the pac*
+> + * instructions is sufficient
+> + */
+> +TEST(pac_instructions_not_nop)
+> +{
+> +	size_t keyia = 0;
+> +	size_t keyib = 0;
+> +	size_t keyda = 0;
+> +	size_t keydb = 0;
+> +
+> +	ASSERT_PAUTH_ENABLED();
+> +
+> +	for (int i = 0; i < PAC_COLLISION_ATTEMPTS; i++) {
+> +		keyia |= keyia_sign(i) & PAC_MASK;
+> +		keyib |= keyib_sign(i) & PAC_MASK;
+> +		keyda |= keyda_sign(i) & PAC_MASK;
+> +		keydb |= keydb_sign(i) & PAC_MASK;
+> +	}
+> +
+> +	ASSERT_NE(0, keyia) TH_LOG("keyia instructions did nothing");
+> +	ASSERT_NE(0, keyib) TH_LOG("keyib instructions did nothing");
+> +	ASSERT_NE(0, keyda) TH_LOG("keyda instructions did nothing");
+> +	ASSERT_NE(0, keydb) TH_LOG("keydb instructions did nothing");
+> +}
+> +
+> +TEST(pac_instructions_not_nop_generic)
+> +{
+> +	size_t keyg = 0;
+> +
+> +	ASSERT_GENERIC_PAUTH_ENABLED();
+> +
+> +	for (int i = 0; i < PAC_COLLISION_ATTEMPTS; i++)
+> +		keyg |= keyg_sign(i) & PAC_MASK;
+> +
+> +	ASSERT_NE(0, keyg)  TH_LOG("keyg instructions did nothing");
+> +}
+> +
+>  TEST_HARNESS_MAIN
+>  
+> 
 
-Fair enough, I could add in the vc-sma-cma callback a call to
-vchiq_msg_queue_push() but I wonder if it wouldn't be better to do so
-in vchiq_core.c:parse_rx_slots(), just before calling the service's
-callback, so that this has not to be re-implemented in all services.
-
-What would you suggest ?
-
-And by the way I see mmal-vchiq.c:service_callback() releasing
-messages but never pushing them to the queue. Is this intended as well ?
-
-Thanks
-  j
-
+-- 
+Regards,
+Vincenzo
