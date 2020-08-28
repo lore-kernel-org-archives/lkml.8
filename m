@@ -2,203 +2,276 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B246FC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB20FC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BACA2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EBD32071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:56:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728875AbgH1IzN (ORCPT
+        id S1728716AbgH1I4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 04:55:13 -0400
-Received: from mga17.intel.com ([192.55.52.151]:49191 "EHLO mga17.intel.com"
+        Fri, 28 Aug 2020 04:56:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59130 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728751AbgH1IyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 04:54:21 -0400
-IronPort-SDR: XJjZ/IAD0YSSErSMaVHvXfuKY5L+Qrok7171A1nJvolnFX+Zk5KcdUpPf2NxJUrur13qtya8Ke
- Sp/zcK2dnLGw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="136697508"
-X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
-   d="scan'208";a="136697508"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 01:54:20 -0700
-IronPort-SDR: dj1I0Fccu511nN12IEgtnl2d/YmRfCVGonFWeUxYx2KUfgzOAKNgFLoHUwDEt9PI+PdpctKBHX
- P0o9RQvJSvZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
-   d="scan'208";a="332483501"
-Received: from chenyi-pc.sh.intel.com ([10.239.159.72])
-  by fmsmga002.fm.intel.com with ESMTP; 28 Aug 2020 01:54:17 -0700
-From:   Chenyi Qiang <chenyi.qiang@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/5] KVM: nVMX: Verify the VMX controls MSRs with the global capability when setting VMX MSRs
-Date:   Fri, 28 Aug 2020 16:56:19 +0800
-Message-Id: <20200828085622.8365-3-chenyi.qiang@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200828085622.8365-1-chenyi.qiang@intel.com>
-References: <20200828085622.8365-1-chenyi.qiang@intel.com>
+        id S1728444AbgH1I4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 04:56:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 1A09BB649;
+        Fri, 28 Aug 2020 08:57:08 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id BD8021E12C0; Fri, 28 Aug 2020 10:56:34 +0200 (CEST)
+Date:   Fri, 28 Aug 2020 10:56:34 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Xianting Tian <tian.xianting@h3c.com>
+Cc:     viro@zeniv.linux.org.uk, bcrl@kvack.org, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        jack@suse.cz, linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] aio: make aio wait path to account iowait time
+Message-ID: <20200828085634.GC7072@quack2.suse.cz>
+References: <20200828060712.34983-1-tian.xianting@h3c.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200828060712.34983-1-tian.xianting@h3c.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When setting the nested VMX MSRs, verify it with the values in
-vmcs_config.nested_vmx_msrs, which reflects the global capability of
-VMX controls MSRs.
+On Fri 28-08-20 14:07:12, Xianting Tian wrote:
+> As the normal aio wait path(read_events() ->
+> wait_event_interruptible_hrtimeout()) doesn't account iowait time, so use
+> this patch to make it to account iowait time, which can truely reflect
+> the system io situation when using a tool like 'top'.
+> 
+> The test result as below.
+> 
+> Test environment：
+> 	Architecture:          x86_64
+> 	CPU op-mode(s):        32-bit, 64-bit
+> 	Byte Order:            Little Endian
+> 	CPU(s):                32
+> 	On-line CPU(s) list:   0-31
+> 	Thread(s) per core:    2
+> 	Core(s) per socket:    8
+> 	Socket(s):             2
+> 	NUMA node(s):          2
+> 	Vendor ID:             GenuineIntel
+> 	CPU family:            6
+> 	Model:                 85
+> 	Model name:            Intel(R) Xeon(R) Silver 4108 CPU @ 1.80GHz
+> 	Stepping:              4
+> 	CPU MHz:               801.660
+> 
+> AIO test command:
+> 	fio -ioengine=libaio -bs=8k -direct=1 -numjobs 32 -rw=read -size=10G
+>           -filename=/dev/sda3 -name="Max throughput" -iodepth=128 -runtime=60
+> 
+> Before test, set nr_requests to 512(default is 256), aim to to make the backend
+> device busy to handle io request, and make io_getevents() have more chances to
+> wait for io completion:
+> 	echo 512 >  /sys/block/sda/queue/nr_requests
+> 
+> Fio test result with the AIO iowait time accounting patch showed as below,
+> almost all fio threads are in 'D' state to waiting for io completion, and the
+> iowait time is accounted as 48.0%:
+> 	top - 19:19:23 up 29 min,  2 users,  load average: 14.60, 9.45, 9.45
+> 	Tasks: 456 total,   4 running, 247 sleeping,   0 stopped,   0 zombie
+> 	%Cpu(s):  0.4 us,  1.0 sy,  0.0 ni, 50.6 id, 48.0 wa,  0.0 hi,  0.0 si,  0.0 st
+> 	KiB Mem : 19668915+total, 19515264+free,   866476 used,   670028 buff/cache
+> 	KiB Swap:  4194300 total,  4194300 free,        0 used. 19449948+avail Mem
+> 
+> 	  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+> 	16135 root      20   0  294092  63724  63060 S   1.7  0.0   0:03.31 fio
+> 	16173 root      20   0  272352   3540   1792 D   1.7  0.0   0:03.85 fio
+> 	16175 root      20   0  272360   3544   1796 D   1.7  0.0   0:03.85 fio
+> 	16185 root      20   0  272400   3556   1808 D   1.7  0.0   0:03.84 fio
+> 	16187 root      20   0  272408   3552   1804 D   1.7  0.0   0:03.82 fio
+> 	16190 root      20   0  272420   3500   1804 R   1.7  0.0   0:03.88 fio
+> 	16169 root      20   0  272336   3444   1740 D   1.3  0.0   0:03.75 fio
+> 	16170 root      20   0  272340   3504   1804 R   1.3  0.0   0:03.80 fio
+> 	16172 root      20   0  272348   3500   1800 D   1.3  0.0   0:03.86 fio
+> 	16174 root      20   0  272356   3544   1796 D   1.3  0.0   0:03.77 fio
+> 	16179 root      20   0  272376   3528   1780 D   1.3  0.0   0:03.79 fio
+> 	16180 root      20   0  272380   3500   1800 D   1.3  0.0   0:03.85 fio
+> 	16181 root      20   0  272384   3552   1804 D   1.3  0.0   0:03.87 fio
+> 	16182 root      20   0  272388   3520   1772 D   1.3  0.0   0:03.80 fio
+> 	16183 root      20   0  272392   3552   1804 D   1.3  0.0   0:03.77 fio
+> 	16186 root      20   0  272404   3500   1804 D   1.3  0.0   0:03.88 fio
+> 	16188 root      20   0  272412   3500   1800 D   1.3  0.0   0:03.89 fio
+> 	16191 root      20   0  272424   3500   1800 D   1.3  0.0   0:03.92 fio
+> 	16192 root      20   0  272428   3500   1800 D   1.3  0.0   0:03.87 fio
+> 	16194 root      20   0  272436   3500   1804 D   1.3  0.0   0:03.82 fio
+> 	16195 root      20   0  272440   3500   1800 R   1.3  0.0   0:03.82 fio
+> 	16196 root      20   0  272444   3552   1804 D   1.3  0.0   0:03.84 fio
+> 	16198 root      20   0  272452   3500   1804 D   1.3  0.0   0:03.89 fio
+> 	16199 root      20   0  272456   3504   1800 D   1.3  0.0   0:03.84 fio
+> 	16200 root      20   0  272460   3552   1804 D   1.3  0.0   0:03.85 fio
+> 	16171 root      20   0  272344   3504   1800 D   1.0  0.0   0:03.84 fio
+> 	16176 root      20   0  272364   3520   1772 D   1.0  0.0   0:03.76 fio
+> 	16177 root      20   0  272368   3556   1808 D   1.0  0.0   0:03.74 fio
+> 	16178 root      20   0  272372   3500   1804 D   1.0  0.0   0:03.90 fio
+> 	16184 root      20   0  272396   3500   1800 D   1.0  0.0   0:03.83 fio
+> 	16189 root      20   0  272416   3500   1804 D   1.0  0.0   0:03.86 fio
+> 	16193 root      20   0  272432   3500   1804 D   1.0  0.0   0:03.85 fio
+> 	16197 root      20   0  272448   3556   1808 D   1.0  0.0   0:03.75 fio
+> 
+> Fio test result without the AIO iowait time accounting patch showed as below,
+> almost all fio threads are in 'S' state to waiting for io completion, and the
+> iowait time is not accounted, iowait is 0.0%.
+> 	top - 19:20:44 up 31 min,  2 users,  load average: 12.50, 10.15, 9.72
+> 	Tasks: 458 total,   2 running, 249 sleeping,   0 stopped,   0 zombie
+> 	%Cpu(s):  0.4 us,  0.9 sy,  0.0 ni, 98.6 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+> 	KiB Mem : 19668915+total, 19513945+free,   879652 used,   670040 buff/cache
+> 	KiB Swap:  4194300 total,  4194300 free,        0 used. 19448636+avail Mem
+> 
+> 	  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+> 	16243 root      20   0  294092  63736  63068 S   1.7  0.0   0:03.06 fio
+> 	16277 root      20   0  272336   3568   1868 S   1.7  0.0   0:03.59 fio
+> 	16287 root      20   0  272376   3564   1864 S   1.7  0.0   0:03.64 fio
+> 	16291 root      20   0  272392   3620   1868 S   1.7  0.0   0:03.63 fio
+> 	16298 root      20   0  272420   3564   1868 S   1.7  0.0   0:03.61 fio
+> 	16302 root      20   0  272436   3560   1868 S   1.7  0.0   0:03.61 fio
+> 	16303 root      20   0  272440   3552   1800 S   1.7  0.0   0:03.62 fio
+> 	16308 root      20   0  272460   3568   1864 S   1.7  0.0   0:03.60 fio
+> 	16278 root      20   0  272340   3568   1868 S   1.3  0.0   0:03.59 fio
+> 	16279 root      20   0  272344   3508   1800 S   1.3  0.0   0:03.60 fio
+> 	16280 root      20   0  272348   3564   1864 S   1.3  0.0   0:03.60 fio
+> 	16281 root      20   0  272352   3624   1872 S   1.3  0.0   0:03.57 fio
+> 	16283 root      20   0  272360   3612   1860 S   1.3  0.0   0:03.60 fio
+> 	16285 root      20   0  272368   3592   1840 S   1.3  0.0   0:03.62 fio
+> 	16286 root      20   0  272372   3580   1828 S   1.3  0.0   0:03.61 fio
+> 	16288 root      20   0  272380   3620   1868 S   1.3  0.0   0:03.55 fio
+> 	16289 root      20   0  272384   3564   1868 S   1.3  0.0   0:03.59 fio
+> 	16292 root      20   0  272396   3536   1836 S   1.3  0.0   0:03.62 fio
+> 	16293 root      20   0  272400   3624   1872 S   1.3  0.0   0:03.63 fio
+> 	16295 root      20   0  272408   3620   1868 S   1.3  0.0   0:03.61 fio
+> 	16297 root      20   0  272416   3568   1868 S   1.3  0.0   0:03.62 fio
+> 	16300 root      20   0  272428   3564   1864 R   1.3  0.0   0:03.61 fio
+> 	16304 root      20   0  272444   3564   1864 S   1.3  0.0   0:03.59 fio
+> 	16305 root      20   0  272448   3456   1760 S   1.3  0.0   0:03.65 fio
+> 	16307 root      20   0  272456   3568   1864 S   1.3  0.0   0:03.64 fio
+> 	16282 root      20   0  272356   3556   1860 S   1.0  0.0   0:03.55 fio
+> 	16284 root      20   0  272364   3612   1860 S   1.0  0.0   0:03.57 fio
+> 	16290 root      20   0  272388   3616   1864 S   1.0  0.0   0:03.54 fio
+> 	16294 root      20   0  272404   3624   1872 S   1.0  0.0   0:03.60 fio
+> 	16296 root      20   0  272412   3564   1864 S   1.0  0.0   0:03.60 fio
+> 	16299 root      20   0  272424   3540   1840 S   1.0  0.0   0:03.62 fio
+> 	16301 root      20   0  272432   3568   1868 S   1.0  0.0   0:03.63 fio
+> 	16306 root      20   0  272452   3624   1872 S   1.0  0.0   0:03.60 fio
+> 
+> Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
 
-Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
----
- arch/x86/kvm/vmx/nested.c | 71 ++++++++++++++++++++++++++++-----------
- 1 file changed, 51 insertions(+), 20 deletions(-)
+Nice! The patch looks good to me. You can add:
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 6e0e71f4d45f..47bee53e235a 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -1234,7 +1234,7 @@ static int vmx_restore_vmx_basic(struct vcpu_vmx *vmx, u64 data)
- 		BIT_ULL(49) | BIT_ULL(54) | BIT_ULL(55) |
- 		/* reserved */
- 		BIT_ULL(31) | GENMASK_ULL(47, 45) | GENMASK_ULL(63, 56);
--	u64 vmx_basic = vmx->nested.msrs.basic;
-+	u64 vmx_basic = vmcs_config.nested.basic;
- 
- 	if (!is_bitwise_subset(vmx_basic, data, feature_and_reserved))
- 		return -EINVAL;
-@@ -1265,24 +1265,24 @@ vmx_restore_control_msr(struct vcpu_vmx *vmx, u32 msr_index, u64 data)
- 
- 	switch (msr_index) {
- 	case MSR_IA32_VMX_TRUE_PINBASED_CTLS:
--		lowp = &vmx->nested.msrs.pinbased_ctls_low;
--		highp = &vmx->nested.msrs.pinbased_ctls_high;
-+		lowp = &vmcs_config.nested.pinbased_ctls_low;
-+		highp = &vmcs_config.nested.pinbased_ctls_high;
- 		break;
- 	case MSR_IA32_VMX_TRUE_PROCBASED_CTLS:
--		lowp = &vmx->nested.msrs.procbased_ctls_low;
--		highp = &vmx->nested.msrs.procbased_ctls_high;
-+		lowp = &vmcs_config.nested.procbased_ctls_low;
-+		highp = &vmcs_config.nested.procbased_ctls_high;
- 		break;
- 	case MSR_IA32_VMX_TRUE_EXIT_CTLS:
--		lowp = &vmx->nested.msrs.exit_ctls_low;
--		highp = &vmx->nested.msrs.exit_ctls_high;
-+		lowp = &vmcs_config.nested.exit_ctls_low;
-+		highp = &vmcs_config.nested.exit_ctls_high;
- 		break;
- 	case MSR_IA32_VMX_TRUE_ENTRY_CTLS:
--		lowp = &vmx->nested.msrs.entry_ctls_low;
--		highp = &vmx->nested.msrs.entry_ctls_high;
-+		lowp = &vmcs_config.nested.entry_ctls_low;
-+		highp = &vmcs_config.nested.entry_ctls_high;
- 		break;
- 	case MSR_IA32_VMX_PROCBASED_CTLS2:
--		lowp = &vmx->nested.msrs.secondary_ctls_low;
--		highp = &vmx->nested.msrs.secondary_ctls_high;
-+		lowp = &vmcs_config.nested.secondary_ctls_low;
-+		highp = &vmcs_config.nested.secondary_ctls_high;
- 		break;
- 	default:
- 		BUG();
-@@ -1298,8 +1298,30 @@ vmx_restore_control_msr(struct vcpu_vmx *vmx, u32 msr_index, u64 data)
- 	if (!is_bitwise_subset(supported, data, GENMASK_ULL(63, 32)))
- 		return -EINVAL;
- 
--	*lowp = data;
--	*highp = data >> 32;
-+	switch (msr_index) {
-+	case MSR_IA32_VMX_TRUE_PINBASED_CTLS:
-+		vmx->nested.msrs.pinbased_ctls_low = data;
-+		vmx->nested.msrs.pinbased_ctls_high = data >> 32;
-+		break;
-+	case MSR_IA32_VMX_TRUE_PROCBASED_CTLS:
-+		vmx->nested.msrs.procbased_ctls_low = data;
-+		vmx->nested.msrs.procbased_ctls_high = data >> 32;
-+		break;
-+	case MSR_IA32_VMX_TRUE_EXIT_CTLS:
-+		vmx->nested.msrs.exit_ctls_low = data;
-+		vmx->nested.msrs.exit_ctls_high = data >> 32;
-+		break;
-+	case MSR_IA32_VMX_TRUE_ENTRY_CTLS:
-+		vmx->nested.msrs.entry_ctls_low = data;
-+		vmx->nested.msrs.entry_ctls_high = data >> 32;
-+		break;
-+	case MSR_IA32_VMX_PROCBASED_CTLS2:
-+		vmx->nested.msrs.secondary_ctls_low = data;
-+		vmx->nested.msrs.secondary_ctls_high = data >> 32;
-+		break;
-+	default:
-+		BUG();
-+	}
- 	return 0;
- }
- 
-@@ -1313,8 +1335,8 @@ static int vmx_restore_vmx_misc(struct vcpu_vmx *vmx, u64 data)
- 		GENMASK_ULL(13, 9) | BIT_ULL(31);
- 	u64 vmx_misc;
- 
--	vmx_misc = vmx_control_msr(vmx->nested.msrs.misc_low,
--				   vmx->nested.msrs.misc_high);
-+	vmx_misc = vmx_control_msr(vmcs_config.nested.misc_low,
-+				   vmcs_config.nested.misc_high);
- 
- 	if (!is_bitwise_subset(vmx_misc, data, feature_and_reserved_bits))
- 		return -EINVAL;
-@@ -1344,8 +1366,8 @@ static int vmx_restore_vmx_ept_vpid_cap(struct vcpu_vmx *vmx, u64 data)
- {
- 	u64 vmx_ept_vpid_cap;
- 
--	vmx_ept_vpid_cap = vmx_control_msr(vmx->nested.msrs.ept_caps,
--					   vmx->nested.msrs.vpid_caps);
-+	vmx_ept_vpid_cap = vmx_control_msr(vmcs_config.nested.ept_caps,
-+					   vmcs_config.nested.vpid_caps);
- 
- 	/* Every bit is either reserved or a feature bit. */
- 	if (!is_bitwise_subset(vmx_ept_vpid_cap, data, -1ULL))
-@@ -1362,10 +1384,10 @@ static int vmx_restore_fixed0_msr(struct vcpu_vmx *vmx, u32 msr_index, u64 data)
- 
- 	switch (msr_index) {
- 	case MSR_IA32_VMX_CR0_FIXED0:
--		msr = &vmx->nested.msrs.cr0_fixed0;
-+		msr = &vmcs_config.nested.cr0_fixed0;
- 		break;
- 	case MSR_IA32_VMX_CR4_FIXED0:
--		msr = &vmx->nested.msrs.cr4_fixed0;
-+		msr = &vmcs_config.nested.cr4_fixed0;
- 		break;
- 	default:
- 		BUG();
-@@ -1378,7 +1400,16 @@ static int vmx_restore_fixed0_msr(struct vcpu_vmx *vmx, u32 msr_index, u64 data)
- 	if (!is_bitwise_subset(data, *msr, -1ULL))
- 		return -EINVAL;
- 
--	*msr = data;
-+	switch (msr_index) {
-+	case MSR_IA32_VMX_CR0_FIXED0:
-+		vmx->nested.msrs.cr0_fixed0 = data;
-+		break;
-+	case MSR_IA32_VMX_CR4_FIXED0:
-+		vmx->nested.msrs.cr4_fixed0 = data;
-+		break;
-+	default:
-+		BUG();
-+	}
- 	return 0;
- }
- 
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/aio.c             |  2 +-
+>  include/linux/wait.h | 26 ++++++++++++++++++++++----
+>  2 files changed, 23 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/aio.c b/fs/aio.c
+> index 5736bff48..8d00548e0 100644
+> --- a/fs/aio.c
+> +++ b/fs/aio.c
+> @@ -1290,7 +1290,7 @@ static long read_events(struct kioctx *ctx, long min_nr, long nr,
+>  	if (until == 0)
+>  		aio_read_events(ctx, min_nr, nr, event, &ret);
+>  	else
+> -		wait_event_interruptible_hrtimeout(ctx->wait,
+> +		io_wait_event_hrtimeout(ctx->wait,
+>  				aio_read_events(ctx, min_nr, nr, event, &ret),
+>  				until);
+>  	return ret;
+> diff --git a/include/linux/wait.h b/include/linux/wait.h
+> index 898c890fc..fb5902a25 100644
+> --- a/include/linux/wait.h
+> +++ b/include/linux/wait.h
+> @@ -312,6 +312,13 @@ do {										\
+>  	(void)___wait_event(wq_head, condition, TASK_UNINTERRUPTIBLE, 0, 0,	\
+>  			    io_schedule())
+>  
+> +#define __io_wait_event_hrtimeout(wq_head, condition, timeout)			\
+> +({										\
+> +	int __ret = 0;								\
+> +	__ret = __wait_event_hrtimeout(wq_head, condition, timeout,		\
+> +			    TASK_UNINTERRUPTIBLE, io_schedule());		\
+> +})
+> +
+>  /*
+>   * io_wait_event() -- like wait_event() but with io_schedule()
+>   */
+> @@ -323,6 +330,15 @@ do {										\
+>  	__io_wait_event(wq_head, condition);					\
+>  } while (0)
+>  
+> +
+> +#define io_wait_event_hrtimeout(wq_head, condition, timeout)			\
+> +do {										\
+> +	might_sleep();								\
+> +	if (condition)								\
+> +		break;								\
+> +	__io_wait_event_hrtimeout(wq_head, condition, timeout);			\
+> +} while (0)
+> +
+>  #define __wait_event_freezable(wq_head, condition)				\
+>  	___wait_event(wq_head, condition, TASK_INTERRUPTIBLE, 0, 0,		\
+>  			    freezable_schedule())
+> @@ -500,7 +516,7 @@ do {										\
+>  	__ret;									\
+>  })
+>  
+> -#define __wait_event_hrtimeout(wq_head, condition, timeout, state)		\
+> +#define __wait_event_hrtimeout(wq_head, condition, timeout, state, cmd) 	\
+>  ({										\
+>  	int __ret = 0;								\
+>  	struct hrtimer_sleeper __t;						\
+> @@ -517,7 +533,7 @@ do {										\
+>  			__ret = -ETIME;						\
+>  			break;							\
+>  		}								\
+> -		schedule());							\
+> +		cmd);								\
+>  										\
+>  	hrtimer_cancel(&__t.timer);						\
+>  	destroy_hrtimer_on_stack(&__t.timer);					\
+> @@ -546,7 +562,8 @@ do {										\
+>  	might_sleep();								\
+>  	if (!(condition))							\
+>  		__ret = __wait_event_hrtimeout(wq_head, condition, timeout,	\
+> -					       TASK_UNINTERRUPTIBLE);		\
+> +					       TASK_UNINTERRUPTIBLE,		\
+> +					       schedule());			\
+>  	__ret;									\
+>  })
+>  
+> @@ -572,7 +589,8 @@ do {										\
+>  	might_sleep();								\
+>  	if (!(condition))							\
+>  		__ret = __wait_event_hrtimeout(wq, condition, timeout,		\
+> -					       TASK_INTERRUPTIBLE);		\
+> +					       TASK_INTERRUPTIBLE,		\
+> +						schedule());			\
+>  	__ret;									\
+>  })
+>  
+> -- 
+> 2.17.1
+> 
 -- 
-2.17.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
