@@ -2,148 +2,122 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E17C433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D13C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D26F2098B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:43:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Eb1mFosa"
+	by mail.kernel.org (Postfix) with ESMTP id 744F72098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:43:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbgH1RnF (ORCPT
+        id S1727814AbgH1Rno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 13:43:05 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:57268 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbgH1RnE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 13:43:04 -0400
-Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id D77FF20B7178;
-        Fri, 28 Aug 2020 10:43:02 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D77FF20B7178
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1598636583;
-        bh=R1teKYMBu8vqBarNApY+0V5H5gqlUpnadI+DlmuIfsE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Eb1mFosaUNV1b7GJ+N7ycdSRcKkXRNZk2TPFWumkuIBTMLHmYXvUsakCrI/APb6NE
-         1BQJx48cUzUhwM1mYG3IbKLdRaHjhSTU/JppL9Gzg4Q14y9xprUO3hD+u8blF6P7QG
-         5yyVKJuMIRIxHE848wVLyijPOwOmJHyyNfxRENWU=
-Subject: Re: [PATCH v4 1/5] powerpc: Refactor kexec functions to move arch
- independent code to IMA
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
-        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        vincenzo.frascino@arm.com, mark.rutland@arm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
-References: <20200819172134.11243-1-nramas@linux.microsoft.com>
- <20200819172134.11243-2-nramas@linux.microsoft.com>
- <87wo1j7ed0.fsf@morokweng.localdomain>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <80c4ee1b-6bab-237e-503d-556f344f7df9@linux.microsoft.com>
-Date:   Fri, 28 Aug 2020 10:43:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 28 Aug 2020 13:43:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725814AbgH1Rnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 13:43:43 -0400
+Received: from gaia (unknown [46.69.195.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDB422074A;
+        Fri, 28 Aug 2020 17:43:41 +0000 (UTC)
+Date:   Fri, 28 Aug 2020 18:43:39 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux-kernel@vger.kernel.org, f.fainelli@gmail.com, hch@lst.de,
+        linux-rpi-kernel@lists.infradead.org,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, robh@kernel.org
+Subject: Re: [RFC] arm64: mm: Do not use both DMA zones when 30-bit address
+ space unavailable
+Message-ID: <20200828174338.GK3169@gaia>
+References: <20200819182434.28196-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <87wo1j7ed0.fsf@morokweng.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819182434.28196-1-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/20 6:23 PM, Thiago Jung Bauermann wrote:
-> 
-> Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
-> 
->> +/**
->> + * ima_get_kexec_buffer - get IMA buffer from the previous kernel
->> + * @addr:	On successful return, set to point to the buffer contents.
->> + * @size:	On successful return, set to the buffer size.
->> + *
->> + * Return: 0 on success, negative errno on error.
->> + */
->> +int ima_get_kexec_buffer(void **addr, size_t *size)
-> 
-> I just noticed that this function is only called from within
-> ima_kexec.c, so it can be made static.
+Hi Nicolas,
 
-Will do.
-
+On Wed, Aug 19, 2020 at 08:24:33PM +0200, Nicolas Saenz Julienne wrote:
+> There is no benefit in splitting the 32-bit address space into two
+> distinct DMA zones when the 30-bit address space isn't even available on
+> a device. If that is the case, default to one big ZONE_DMA spanning the
+> whole 32-bit address space.
 > 
->> +{
->> +	int ret, len;
->> +	unsigned long tmp_addr;
->> +	size_t tmp_size;
->> +	const void *prop;
->> +
->> +	prop = of_get_property(of_chosen, FDT_PROP_IMA_KEXEC_BUFFER, &len);
->> +	if (!prop)
->> +		return -ENOENT;
->> +
->> +	ret = do_get_kexec_buffer(prop, len, &tmp_addr, &tmp_size);
->> +	if (ret)
->> +		return ret;
->> +
->> +	*addr = __va(tmp_addr);
->> +	*size = tmp_size;
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * ima_free_kexec_buffer - free memory used by the IMA buffer
->> + */
->> +int ima_free_kexec_buffer(void)
+> This will help reduce some of the issues we've seen with big crash
+> kernel allocations.
 > 
-> This one can be static as well.
-
-Will do.
-
-  -lakshmi
-
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
 > 
->> +{
->> +	int ret;
->> +	unsigned long addr;
->> +	size_t size;
->> +	struct property *prop;
->> +
->> +	prop = of_find_property(of_chosen, FDT_PROP_IMA_KEXEC_BUFFER, NULL);
->> +	if (!prop)
->> +		return -ENOENT;
->> +
->> +	ret = do_get_kexec_buffer(prop->value, prop->length, &addr, &size);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = of_remove_property(of_chosen, prop);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return memblock_free(addr, size);
->> +
->> +}
->> +
->>   #ifdef CONFIG_IMA_KEXEC
->>   static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
->>   				     unsigned long segment_size)
+> Whith this patch, on a 8GB RPi4 the setup looks like this:
 > 
+> 	DMA      [mem 0x0000000000000000-0x000000003fffffff]
+> 	DMA32    [mem 0x0000000040000000-0x00000000ffffffff]
+> 	Normal   [mem 0x0000000100000000-0x00000001ffffffff]
 > 
+> And stock 8GB virtme/qemu:
+> 
+> 	DMA      [mem 0x0000000040000000-0x00000000ffffffff]
+> 	DMA32    empty
+> 	Normal   [mem 0x0000000100000000-0x000000023fffffff]
+> 
+>  arch/arm64/mm/init.c | 29 +++++++++++++++++++++++++----
+>  1 file changed, 25 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index b6881d61b818..857a62611d7a 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -183,13 +183,20 @@ static void __init reserve_elfcorehdr(void)
+>  
+>  /*
+>   * Return the maximum physical address for a zone with a given address size
+> - * limit. It currently assumes that for memory starting above 4G, 32-bit
+> - * devices will use a DMA offset.
+> + * limit or zero if memory starts from an address higher than the zone targeted.
+> + * It currently assumes that for memory starting above 4G, 32-bit devices will
+> + * use a DMA offset.
+>   */
+>  static phys_addr_t __init max_zone_phys(unsigned int zone_bits)
+>  {
+> -	phys_addr_t offset = memblock_start_of_DRAM() & GENMASK_ULL(63, zone_bits);
+> -	return min(offset + (1ULL << zone_bits), memblock_end_of_DRAM());
+> +	phys_addr_t base = memblock_start_of_DRAM();
+> +	phys_addr_t offset = base & GENMASK_ULL(63, 32);
+> +	s64 zone_size = (1ULL << zone_bits) - (base & DMA_BIT_MASK(32));
+> +
+> +	if (zone_size <= 0)
+> +		return 0;
+> +
+> +	return min(base + zone_size + offset, memblock_end_of_DRAM());
+>  }
 
+OK, so we can still get some ZONE_DMA if DRAM starts in the first GB.
+
+I don't think it entirely solves the problem. It just happens that the
+other affected SoCs don't have memory in the first GB. With this patch,
+we go by the assumption that ZONE_DMA/DMA32 split is only needed if
+there is memory in the low 1GB and such <32-bit devices don't have a DMA
+offset.
+
+Adding Rob H (it's easier to ask him than grep'ing the DT files ;)), we
+may be ok with this assumption on current SoCs.
+
+An alternative (and I think we had a patch at some point) is to make it
+generic and parse the dma-range in the DT to identify the minimum mask
+and set ZONE_DMA accordingly. But this doesn't solve ACPI, so if Linux
+can boot with ACPI on RPi4 it would still be broken.
+
+-- 
+Catalin
