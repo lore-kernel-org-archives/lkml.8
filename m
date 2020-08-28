@@ -2,129 +2,149 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E5CC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C20FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E40F9208FE
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A703208D5
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:57:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="j2cMfp8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbgH1J4t (ORCPT
+        id S1728974AbgH1J52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:56:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36244 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728016AbgH1J4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:56:47 -0400
-Received: from gaia (unknown [46.69.195.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CAEB208D5;
-        Fri, 28 Aug 2020 09:56:44 +0000 (UTC)
-Date:   Fri, 28 Aug 2020 10:56:41 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Evgenii Stepanov <eugenis@google.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 21/35] arm64: mte: Add in-kernel tag fault handler
-Message-ID: <20200828095641.GD3169@gaia>
-References: <cover.1597425745.git.andreyknvl@google.com>
- <f173aacd755e4644485c551198549ac52d1eb650.1597425745.git.andreyknvl@google.com>
- <20200827095429.GC29264@gaia>
- <CAAeHK+xHQDMsTehppknjNTEMFh18ufWB1XLUGdVFoc-QZ-mVrw@mail.gmail.com>
- <20200827131045.GM29264@gaia>
- <CAAeHK+xraz7E41b4LW6VW9xOH51UoZ+odNEDrDGtaJ71n=bQ3A@mail.gmail.com>
- <20200827145642.GO29264@gaia>
- <CAFKCwrhAPrognS7WtKXV-nJN-9k6BW+RWmM56z-urvbWepTAKg@mail.gmail.com>
+        Fri, 28 Aug 2020 05:57:28 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:38254 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728016AbgH1J5V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:57:21 -0400
+Received: from [192.168.0.20] (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1C592303;
+        Fri, 28 Aug 2020 11:57:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1598608634;
+        bh=17sggzD4Csunw8iPasN+Bvms9x56ZRZyOQNKzM8BRr8=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=j2cMfp8GlXwb0PFhnvkM8vhOA41r7KWuAlnG3XFhQbvp1O2qUDhhwut7rGpHo+nwe
+         IqoEcUYNN1ytj77YczjGO/mT6wbHgpfvxbYBhV5/9dnkwFGwrw+9Vd058EqgJ+QlKD
+         KdGxuxpZK7nHymhj9dS+MQqG1wOdqEF74CF+zL88=
+Reply-To: kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH] MAINTAINERS: Fix sort order for RDACM20
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        sakari.ailus@iki.fi
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>
+References: <20200716102552.1390223-1-kieran.bingham+renesas@ideasonboard.com>
+From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
+Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
+ 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
+ WZw01QYHU/GUV/zHJSFk
+Organization: Ideas on Board
+Message-ID: <bc0882a9-0479-acd9-1a3f-af286b9c8314@ideasonboard.com>
+Date:   Fri, 28 Aug 2020 10:57:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFKCwrhAPrognS7WtKXV-nJN-9k6BW+RWmM56z-urvbWepTAKg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200716102552.1390223-1-kieran.bingham+renesas@ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 12:14:26PM -0700, Evgenii Stepanov wrote:
-> On Thu, Aug 27, 2020 at 7:56 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > On Thu, Aug 27, 2020 at 03:34:42PM +0200, Andrey Konovalov wrote:
-> > > On Thu, Aug 27, 2020 at 3:10 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > > > On Thu, Aug 27, 2020 at 02:31:23PM +0200, Andrey Konovalov wrote:
-> > > > > On Thu, Aug 27, 2020 at 11:54 AM Catalin Marinas
-> > > > > <catalin.marinas@arm.com> wrote:
-> > > > > > On Fri, Aug 14, 2020 at 07:27:03PM +0200, Andrey Konovalov wrote:
-> > > > > > > +static int do_tag_recovery(unsigned long addr, unsigned int esr,
-> > > > > > > +                        struct pt_regs *regs)
-> > > > > > > +{
-> > > > > > > +     report_tag_fault(addr, esr, regs);
-> > > > > > > +
-> > > > > > > +     /* Skip over the faulting instruction and continue: */
-> > > > > > > +     arm64_skip_faulting_instruction(regs, AARCH64_INSN_SIZE);
-> > > > > >
-> > > > > > Ooooh, do we expect the kernel to still behave correctly after this? I
-> > > > > > thought the recovery means disabling tag checking altogether and
-> > > > > > restarting the instruction rather than skipping over it.
-> > [...]
-> > > > > Can we disable MTE, reexecute the instruction, and then reenable MTE,
-> > > > > or something like that?
-> > > >
-> > > > If you want to preserve the MTE enabled, you could single-step the
-> > > > instruction or execute it out of line, though it's a bit more convoluted
-> > > > (we have a similar mechanism for kprobes/uprobes).
-> > > >
-> > > > Another option would be to attempt to set the matching tag in memory,
-> > > > under the assumption that it is writable (if it's not, maybe it's fine
-> > > > to panic). Not sure how this interacts with the slub allocator since,
-> > > > presumably, the logical tag in the pointer is wrong rather than the
-> > > > allocation one.
-> > > >
-> > > > Yet another option would be to change the tag in the register and
-> > > > re-execute but this may confuse the compiler.
-> > >
-> > > Which one of these would be simpler to implement?
-> >
-> > Either 2 or 3 would be simpler (re-tag the memory location or the
-> > pointer) with the caveats I mentioned. Also, does the slab allocator
-> > need to touch the memory on free with a tagged pointer? Otherwise slab
-> > may hit an MTE fault itself.
+Hi Mauro,
+
+I see the fixes branch is open now ... could you pick this one up
+please? Or do I need to send a pull request?
+
+--
+Regards
+
+Kieran
+
+On 16/07/2020 11:25, Kieran Bingham wrote:
+> The files maintained as part of the RDACM20 were incorrectly sorted
+> while they were added.
 > 
-> Changing the memory tag can cause faults in other threads, and that
-> could be very confusing.
-
-It could indeed trigger a chain of faults. It's not even other threads,
-it could be the same thread in a different function.
-
-> Probably the safest thing is to retag the register, single step and
-> then retag it back, but be careful with the instructions that change
-> the address register (like ldr x0, [x0]).
-
-This gets complicated if you have to parse the opcode. If you can
-single-step, just set PSTATE.TCO for the instruction. But the
-single-step machinery gets more complicated, probably interacts badly
-with kprobes.
-
-I think the best option is to disable the MTE checks in TCF on an
-_unhandled_ kernel fault, report and continue. For the KASAN tests, add
-accessors similar to get_user/put_user which are able to handle the
-fault and return an error. Such accessors, since they have a fixup
-handler, would not lead to the MTE checks being disabled.
+> Correct the sort-order.
+> 
+> Fixes: 874a93adf972 ("media: i2c: Add RDACM20 driver")
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 373e4198d2b1..8bd8d4ab8b5f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14412,9 +14412,9 @@ M:	Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/media/i2c/imi,rdacm2x-gmsl.yaml
+> -F:	drivers/media/i2c/rdacm20.c
+>  F:	drivers/media/i2c/max9271.c
+>  F:	drivers/media/i2c/max9271.h
+> +F:	drivers/media/i2c/rdacm20.c
+>  
+>  RDC R-321X SoC
+>  M:	Florian Fainelli <florian@openwrt.org>
+> 
 
 -- 
-Catalin
+Regards
+--
+Kieran
