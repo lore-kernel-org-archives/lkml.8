@@ -2,107 +2,122 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD27C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBE2C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F68D2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 588C62071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598605811;
-	bh=Q6lzh15EtIDgKW4H3rKBBLyCxSNmFOKGiUTZcN/8FFM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QZ46Kf4lbV2e7yojqat4tOEQToeOrYIYU0btaR67OmV3AzZS86efx5l7tUN0vn2Eh
-	 dqj5lM+d/ZGe1Mgr29+uk3xnGXgzpYm8oYYVq138crplJm94FY5OOyjP3+rJ5+SaDw
-	 r91RnJCLv9apYhoQ3NgTxPle+AsWTOjsYu5K6lwY=
+	s=default; t=1598605867;
+	bh=oKT/2svB4V5RCSSf/IhBWh7gWH9c49rsuRrm68MCF/c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=P5j5ApcWkM4/3UyrAZM4A3mp5DoqFcHkYNELsNO5fYtI7ckxuAdDIkiwVx3iszGM1
+	 v9JzeCQvxRwc6gW+hldd1Iox+fE5yHeBvNS/72gcj63HqrMHOg3F5j7qs4tg0sxavi
+	 JkRaTTC9+sdq05wBcrNDpq+zX8mmkaJ1EJwuLmvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbgH1JKK (ORCPT
+        id S1728864AbgH1JLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:10:10 -0400
-Received: from mail-ej1-f68.google.com ([209.85.218.68]:34842 "EHLO
-        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728722AbgH1JKJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:10:09 -0400
-Received: by mail-ej1-f68.google.com with SMTP id a26so588955ejc.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 02:10:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mJubNjqa+XudkEa895Ask1EqV4yYrNAcnoAT4Dsx/b8=;
-        b=E1iAKIwbDTTxiyC9enxoi9QX88rw+hLXErVd7x4zXjy42y/cmkPeq/e/ADC7bHmJvI
-         6ljF1XS5UdK1boRQEBDf3mYM4IevYs3uw1mLDenvSyy6eWZKCKBxCIR++vF321XsPNYI
-         uwZCTMkG/AhC7dsQlct0UF6dCi9VvZzUqJJ10iljwIqPmsUpJht5f8eoND1lOvdGtV/U
-         +PLSnzJsX9gYGfwgQCRu7Wl3swDRk9/cFFL0kkX3uvV8qwcnQSpOCLCieoGi2ADtIpHa
-         WYIeI1bigwwtMWgAcp3wDngE4lci4tol072jfqY0G9kdqmB2T4gESG+3yj+0sW8mo3HS
-         F9Jg==
-X-Gm-Message-State: AOAM533JJNiPrj+SvDigZzKK+/FhDMPDNFfqvaQ3VvVVcVK0epEmwAdK
-        9NgsuaquFpPLZNoM62XhYHm1F42ggJV+SXjq
-X-Google-Smtp-Source: ABdhPJyooERpw0LvwmLPaTV9qsPD6VFRMiJ7F0Sb8CfrTLmnOOtarEgEd5+QSZafBe3+gniR2X8RMw==
-X-Received: by 2002:a17:906:7c82:: with SMTP id w2mr755460ejo.87.1598605807481;
-        Fri, 28 Aug 2020 02:10:07 -0700 (PDT)
-Received: from pi3 ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id q14sm448658edv.54.2020.08.28.02.10.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 02:10:06 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 11:10:04 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     broonie@kernel.org, lgirdwood@gmail.com,
-        ckeepax@opensource.cirrus.com, patches@opensource.cirrus.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
-Subject: Re: [PATCH 2/2] ASoC: wm8994: Ensure the device is resumed in
- wm89xx_mic_detect functions
-Message-ID: <20200828091004.GA17786@pi3>
-References: <20200827173357.31891-1-s.nawrocki@samsung.com>
- <CGME20200827173426eucas1p13f9f7d358dfcc440db160de3dc658ddf@eucas1p1.samsung.com>
- <20200827173357.31891-2-s.nawrocki@samsung.com>
- <20200828064812.GE17406@pi3>
- <28723053-c305-d359-3862-656ade11bf74@samsung.com>
+        Fri, 28 Aug 2020 05:11:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728548AbgH1JLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:11:04 -0400
+Received: from coco.lan (unknown [95.90.213.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB8412071B;
+        Fri, 28 Aug 2020 09:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598605864;
+        bh=oKT/2svB4V5RCSSf/IhBWh7gWH9c49rsuRrm68MCF/c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=v2TKMF0FrQi1Mr6zXOxsLr8xXRGvLxZVKoed4jhkGhRVBTUBqDUgq5D7vv2XkuUVQ
+         ZFslYFeaPfbxAlS7yuQ6LgXlIJPBC2yCdtsdOvaRcwcF1oYqSrwzGD6Zvi1D9cYcG8
+         Mlxb66mdfU0NzakVvnLbFVoKyY2W0K6BBGa4OjUc=
+Date:   Fri, 28 Aug 2020 11:11:00 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v10 3/4] media: docs: add glossary.rst with common terms
+ used at V4L2 spec
+Message-ID: <20200828111100.669767fa@coco.lan>
+In-Reply-To: <20200827110811.GC851@valkosipuli.retiisi.org.uk>
+References: <cover.1598512802.git.mchehab+huawei@kernel.org>
+        <a7a4d5ecce953710119e7aa0c5d55f97052a75e8.1598512802.git.mchehab+huawei@kernel.org>
+        <20200827110811.GC851@valkosipuli.retiisi.org.uk>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <28723053-c305-d359-3862-656ade11bf74@samsung.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 10:50:33AM +0200, Sylwester Nawrocki wrote:
-> On 28.08.2020 08:48, Krzysztof Kozlowski wrote:
-> >> diff --git a/sound/soc/codecs/wm8994.c b/sound/soc/codecs/wm8994.c
-> >> index b3ba053..fc9ea19 100644
-> >> --- a/sound/soc/codecs/wm8994.c
-> >> +++ b/sound/soc/codecs/wm8994.c
-> >> @@ -3514,6 +3514,8 @@ int wm8994_mic_detect(struct snd_soc_component *component, struct snd_soc_jack *
-> >>  		return -EINVAL;
-> >>  	}
-> >>  
-> >> +	pm_runtime_get_sync(component->dev);
+Em Thu, 27 Aug 2020 14:08:11 +0300
+Sakari Ailus <sakari.ailus@iki.fi> escreveu:
+
+> > +    MC-centric
+> > +	:term:`V4L2 hardware` that requires a :term:`MC API`.
+> > +
+> > +	Such hardware have ``V4L2_CAP_IO_MC`` device_caps field set
+> > +	(see :ref:`VIDIOC_QUERYCAP`).
+> > +
+> > +	See :ref:`v4l2_hardware_control` for more details.  
+> 	
+> I think this should be documented as referring to drivers, for it's a
+> property of a driver, not hardware.
 > 
-> > The driver enables PM runtime unconditionally so you should probably
-> > handle the error code here. I know that driver does not do it in other
-> > cases but it should not be a reason to multiple this pattern... unless
-> > it really does not matter as there are no runtime PM ops?
+> There is hardware that better fits for MC-enabled drivers but still has
+> V4L2-centric driver written for it. The matter is further complicated by
+> e.g. raw camera systems that may consist of several different kinds of
+> devices, including external ISPs.
 > 
-> The regmap is provided by the parent MFD device (drivers/mfd/wm8994-core.c)
-> and that is where those runtime PM calls get propagated, we could possibly
-> get en error if there is something wrong with resuming the parent device.
+> Say, a simple raw sensor + a CSI-2 receiver would fit for V4L2-centric
+> model well, but add a more complex sensor or that external ISP and that no
+> longer is the case. The CSI-2 receiver is still the same in both cases
+> though.
 > 
-> If you don't mind I would prefer to omit the return value tests in that
-> fix patch. Existing callers of the wm89*_mic_detect() functions are 
-> ignoring the return value anyway. Probably the checks could be added 
-> in a separate patch. 
+> Similar comment on video-node-centric.
 
-I don't mind.
+I guess I got what you meant. I'm folding it with the following diff:
 
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+diff --git a/Documentation/userspace-api/media/glossary.rst b/Documentation/userspace-api/media/glossary.rst
+index 45f0933e03c0..023bb561c406 100644
+--- a/Documentation/userspace-api/media/glossary.rst
++++ b/Documentation/userspace-api/media/glossary.rst
+@@ -138,9 +138,9 @@ Glossary
+ 	See :ref:`media_controller`.
+ 
+     MC-centric
+-	:term:`V4L2 hardware` that requires a :term:`MC API`.
++	:term:`V4L2 hardware` device driver that requires :term:`MC API`.
+ 
+-	Such hardware have ``V4L2_CAP_IO_MC`` device_caps field set
++	Such drivers have ``V4L2_CAP_IO_MC`` device_caps field set
+ 	(see :ref:`VIDIOC_QUERYCAP`).
+ 
+ 	See :ref:`v4l2_hardware_control` for more details.
+@@ -203,9 +203,9 @@ Glossary
+ 	:term:`bridge driver`. See :ref:`subdev`.
+ 
+     Video-node-centric
+-	V4L2 hardware that doesn't require a media controller to be used.
++	V4L2 device driver that doesn't require a media controller to be used.
+ 
+-	Such hardware have the ``V4L2_CAP_IO_MC`` device_caps field unset
++	Such drivers have the ``V4L2_CAP_IO_MC`` device_caps field unset
+ 	(see :ref:`VIDIOC_QUERYCAP`).
+ 
+     V4L2 Sub-device API
 
-Best regards,
-Krzysztof
 
+Thanks,
+Mauro
