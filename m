@@ -2,88 +2,66 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC50CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 748F0C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 804CB20872
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:06:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598630807;
-	bh=/3gSV9ysNOhKu5Rxr8hZn78+P9f8wdHrqqKnVUJ8rQo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=b/K23YWFh2RkFV2QsMefSit4mueaHQjU9QRgN32H178qGJZVNbbgGBmrQo+oHzvt5
-	 qM4ThYsTpH31arMJ7fZ5VepdUzy7IjrY4bNCpXebOSdJxZVwmmMao9CihI45x5VUCj
-	 1mOIaHQM6bKfkojZWUADx9yIdiPSrufew420zQps=
+	by mail.kernel.org (Postfix) with ESMTP id 5065A207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 16:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgH1QGp (ORCPT
+        id S1728227AbgH1QJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 12:06:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgH1QGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 12:06:42 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CDA4207DF;
-        Fri, 28 Aug 2020 16:06:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598630802;
-        bh=/3gSV9ysNOhKu5Rxr8hZn78+P9f8wdHrqqKnVUJ8rQo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=BxgKXgQy0/CCb1+zCcf/H2VMOLP+Xy6cJet12cMAVLgo2drpj1JCUMKs2sA4bxtKM
-         K06M3C46MHUAfH/ivv/HWSOo9tp/IoVNhhaEhuyJj/5wPn4Lybfe9sEsM7+tDRWHlb
-         fbwS6TieKh1AYzyb/F62bIvdG0Fknn7UOjbBBkrs=
-Date:   Fri, 28 Aug 2020 11:06:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yang Yingliang <yangyingliang@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, guohanjun@huawei.com,
-        George Cherian <george.cherian@marvell.com>
-Subject: Re: [PATCH 0/2] fix memleak when using pci_iounmap()
-Message-ID: <20200828160640.GA2157785@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200828063403.3995421-1-yangyingliang@huawei.com>
+        Fri, 28 Aug 2020 12:09:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbgH1QJO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 12:09:14 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E63CC061264;
+        Fri, 28 Aug 2020 09:09:14 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7FE321287C095;
+        Fri, 28 Aug 2020 08:52:26 -0700 (PDT)
+Date:   Fri, 28 Aug 2020 09:09:12 -0700 (PDT)
+Message-Id: <20200828.090912.720183995781297697.davem@davemloft.net>
+To:     alex.dewar90@gmail.com
+Cc:     paul@paul-moore.com, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] netlabel: remove unused param from
+ audit_log_format()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200828135523.12867-1-alex.dewar90@gmail.com>
+References: <CAHC9VhRtTykJVze_93ed+n+v14Ai9J5Mbre9nGEc2rkqbqKc_g@mail.gmail.com>
+        <20200828135523.12867-1-alex.dewar90@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 28 Aug 2020 08:52:26 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc George]
+From: Alex Dewar <alex.dewar90@gmail.com>
+Date: Fri, 28 Aug 2020 14:55:23 +0100
 
-On Fri, Aug 28, 2020 at 02:34:01PM +0800, Yang Yingliang wrote:
-> config GENERIC_IOMAP is not selected on some arch, pci_iounmap()
-> don't implement, when we using pci_iomap/pci_iounmap, it will
-> lead to memory leak.
-> This patch set moves the implemention of pci_iounmap() to
-> lib/pci_iomap.c to fix this.
+> Commit d3b990b7f327 ("netlabel: fix problems with mapping removal")
+> added a check to return an error if ret_val != 0, before ret_val is
+> later used in a log message. Now it will unconditionally print "...
+> res=1". So just drop the check.
 > 
-> Yang Yingliang (2):
->   iomap: move some definitions to include/linux/io.h
->   pci: fix memleak when calling pci_iomap/unmap()
-> 
->  include/asm-generic/pci_iomap.h |  2 ++
->  include/linux/io.h              | 36 ++++++++++++++++++++++++++
->  lib/iomap.c                     | 46 ---------------------------------
->  lib/pci_iomap.c                 |  8 ++++++
->  4 files changed, 46 insertions(+), 46 deletions(-)
+> Addresses-Coverity: ("Dead code")
+> Fixes: d3b990b7f327 ("netlabel: fix problems with mapping removal")
+> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+> ---
+> v2: Still print the res field, because it's useful (Paul)
 
-I haven't looked at this yet (and won't because of the build issues),
-but please note George's previous similar work:
-
-https://lore.kernel.org/linux-pci/20200824132046.3114383-1-george.cherian@marvell.com/
-
-I haven't compared them, so just FYI that we'll have to integrate them
-somehow.
-
-If/when you repost this, please run "git log --oneline" and match the
-subject styles.  And add blank lines between paragraphs.  Use "()"
-consistently after function names.  And please cc: George, of course.
-
-Bjorn
+Applied to net-next, thank you.
