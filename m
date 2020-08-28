@@ -6,87 +6,105 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C954FC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFF1C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 993FE2071B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 08:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 921952071B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 09:00:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="z9wEYcR8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QOHtPyva"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728814AbgH1I7t (ORCPT
+        id S1728833AbgH1JAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 04:59:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgH1I7q (ORCPT
+        Fri, 28 Aug 2020 05:00:05 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:32285 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728754AbgH1I76 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 04:59:46 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F08B0C06121B
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 01:59:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4eqhOxy9cHFi0VijKDUn9S8u6mI/BeSMcijpmCfnCcg=; b=z9wEYcR8mtnpcP4B+bLEpsPrXS
-        P5a/nHnhKUSPzy9w/s/ZaMGfvktkmv1+iKxGyKWSIxhYdsjojtO7p1FfZPMRdr6cGBEjbSQtNEPr+
-        Sg8OAa5q+0RLtg09Poimi2ZemkjTz+eehOYYz8PDhtUKV7CbaT2ujTS0yZmWJg7r3TyFkRcdDVz+U
-        y30foQNrtqoiZZN7vknePofxRyLorr3xkjzaFy75C+9ZlOu6eDpy79qHLkMdgce+KvROqaz9EGDW7
-        7MdZOC9rJRfX1NKXrZRP0Y/RIUcI07cVNexY6bHk8K9qPMEOR+Uf+EvEdN9YWJ9BcPiYhjqxVrB3R
-        9LTYUIPg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBaEV-0007t9-TI; Fri, 28 Aug 2020 08:59:40 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 97670300238;
-        Fri, 28 Aug 2020 10:59:38 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 503782C56E64B; Fri, 28 Aug 2020 10:59:38 +0200 (CEST)
-Date:   Fri, 28 Aug 2020 10:59:38 +0200
-From:   peterz@infradead.org
-To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 4/5] seqlock: seqcount_LOCKTYPE_t: Introduce
- PREEMPT_RT support
-Message-ID: <20200828085938.GS1362448@hirez.programming.kicks-ass.net>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200828010710.5407-1-a.darwish@linutronix.de>
- <20200828010710.5407-5-a.darwish@linutronix.de>
+        Fri, 28 Aug 2020 04:59:58 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598605198; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=fotnpsF0EYIr+SiKtcUih+0Uan6DLmURDNPjSJ8hGBA=; b=QOHtPyva4sAaE1tLEW3Xpr8zBasIuBJ6Uh1YQ3j/MGPR/brNG/vvvwI+8bC0hJqlMs3wu1zc
+ JNsm6D97uYec+C/m32PBBxeCplEItJHjjCQVAgUakwjLLa31n4NIzIzZScFKih8y3vGtXja+
+ meu32aUCLe6NzUnEpNYnDL36/P8=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5f48c78112acec35e2f3fbc4 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 28 Aug 2020 08:59:45
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EEEC5C433C6; Fri, 28 Aug 2020 08:59:44 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 101C9C433CB;
+        Fri, 28 Aug 2020 08:59:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 101C9C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Ondrej Zary <linux@zary.sk>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Lee Jones <lee.jones@linaro.org>, davem@davemloft.net,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        Benjamin Reed <breed@users.sourceforge.net>,
+        Javier Achirica <achirica@users.sourceforge.net>,
+        Jean Tourrilhes <jt@hpl.hp.com>,
+        "Fabrice Bellet" <fabrice@bellet.info>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 12/30] net: wireless: cisco: airo: Fix a myriad of coding style issues
+References: <20200814113933.1903438-1-lee.jones@linaro.org>
+        <202008172335.02988.linux@zary.sk> <87v9h4le9z.fsf@codeaurora.org>
+        <202008272223.57461.linux@zary.sk>
+Date:   Fri, 28 Aug 2020 11:59:37 +0300
+In-Reply-To: <202008272223.57461.linux@zary.sk> (Ondrej Zary's message of
+        "Thu, 27 Aug 2020 22:23:57 +0200")
+Message-ID: <87lfhz9mdi.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200828010710.5407-5-a.darwish@linutronix.de>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 03:07:09AM +0200, Ahmed S. Darwish wrote:
-> +#define __SEQ_RT	IS_ENABLED(CONFIG_PREEMPT_RT)
-> +
-> +SEQCOUNT_LOCKTYPE(raw_spinlock, raw_spinlock_t,  false,    s->lock,        raw_spin, raw_spin_lock(s->lock))
-> +SEQCOUNT_LOCKTYPE(spinlock,     spinlock_t,      __SEQ_RT, s->lock,        spin,     spin_lock(s->lock))
-> +SEQCOUNT_LOCKTYPE(rwlock,       rwlock_t,        __SEQ_RT, s->lock,        read,     read_lock(s->lock))
-> +SEQCOUNT_LOCKTYPE(mutex,        struct mutex,    true,     s->lock,        mutex,    mutex_lock(s->lock))
-> +SEQCOUNT_LOCKTYPE(ww_mutex,     struct ww_mutex, true,     &s->lock->base, ww_mutex, ww_mutex_lock(s->lock, NULL))
+Ondrej Zary <linux@zary.sk> writes:
 
-Ooh, reading is hard, but ^^^^ you already have that.
+> On Thursday 27 August 2020 09:49:12 Kalle Valo wrote:
+>> Ondrej Zary <linux@zary.sk> writes:
+>> 
+>> > On Monday 17 August 2020 20:27:06 Jesse Brandeburg wrote:
+>> >> On Mon, 17 Aug 2020 16:27:01 +0300
+>> >> Kalle Valo <kvalo@codeaurora.org> wrote:
+>> >> 
+>> >> > I was surprised to see that someone was using this driver in 2015, so
+>> >> > I'm not sure anymore what to do. Of course we could still just remove
+>> >> > it and later revert if someone steps up and claims the driver is still
+>> >> > usable. Hmm. Does anyone any users of this driver?
+>> >> 
+>> >> What about moving the driver over into staging, which is generally the
+>> >> way I understood to move a driver slowly out of the kernel?
+>> >
+>> > Please don't remove random drivers.
+>> 
+>> We don't want to waste time on obsolete drivers and instead prefer to
+>> use our time on more productive tasks. For us wireless maintainers it's
+>> really hard to know if old drivers are still in use or if they are just
+>> broken.
+>> 
+>> > I still have the Aironet PCMCIA card and can test the driver.
+>> 
+>> Great. Do you know if the airo driver still works with recent kernels?
+>
+> Yes, it does.
 
-> +/*
-> + * Automatically disable preemption for seqcount_LOCKTYPE_t writers, if the
-> + * associated lock does not implicitly disable preemption.
-> + *
-> + * Don't do it for PREEMPT_RT. Check __SEQ_LOCK().
-> + */
-> +#define __seq_enforce_preemption_protection(s)				\
-> +	(!IS_ENABLED(CONFIG_PREEMPT_RT) && __seqcount_lock_preemptible(s))
+Nice, I'm very surprised that so old and unmaintained driver still
+works. Thanks for testing.
 
-Then what is this doing ?!? I'm confused now.
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
