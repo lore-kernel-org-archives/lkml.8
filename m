@@ -2,132 +2,142 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E76DCC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCD8C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1ECF20776
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7527F2098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 17:46:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUV0KW2e"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="DxLnbNzw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgH1RqE (ORCPT
+        id S1727111AbgH1RqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 13:46:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725979AbgH1RqC (ORCPT
+        Fri, 28 Aug 2020 13:46:16 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:57694 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725979AbgH1RqO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 13:46:02 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 099B1C061264
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 10:46:02 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id a65so3462wme.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 10:46:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Wt5rjtBjiQXgsiZyccrqBuCchJi/28V2VtauT80eDG0=;
-        b=WUV0KW2evFF4RrkIwdzw/atzBtpCx0Bb/Fq48JIv2No29U8b+B8ccBfp7w6DgBRFcW
-         R0kj0dc51Ov33t56Z0lM55A5yekGZfTASbVHE5yJzr0QVQ5l2qAZtYlaEfJiuQuFHTQa
-         ZPdEVxkHyfz06FKxIS00G1nbTIVP6zTO/i7vu84+X007oGv2upzyt9bqrokOTNq2ppN0
-         FXrPuKy4dAjZ9o4ESEF0Dx+oNTHQFNEFR2TPNt86iv/dT3cHhXD4Obew2zGKX2aAz28Y
-         G1HCcV9cVAW4H9mxlJydkrRMlFNCI/+9wUxj5h9KSX4xfRuIsLHtLLai7V9dD2XakUvj
-         DPLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Wt5rjtBjiQXgsiZyccrqBuCchJi/28V2VtauT80eDG0=;
-        b=pNQ9MjuPVzHdkYhFc5IJvWwhgyIgX82+dsJqUHS9Vl1+leDHmeJbv05JCkvurZX5S8
-         4s98Ahk/VjmyFHdYezBUlM1CT8wDNYZGtDomYi+6IrIlx1aM6A7l7KKZwQHEzw2PLhFi
-         FPvDEVkuy/tsR8i77UzxY+x7AM8P3Dj72H6RIZatDx9u/+7EfVf3jOrVmr31psRVDCpu
-         dvH4p6AWCGMSA9HACZVSDlx1fKz4UKwpy6Rq0TPAFbp3QfUGsH8eDlqGLmD58vRUFD9u
-         Bm4qaEBJlrLpAu0L5M8vIoGuVSpWAz7FVS9boP79Zfu9pu9FdSXmkVowbc1vsWsH/5tU
-         R7ZA==
-X-Gm-Message-State: AOAM530XFle7k+t/ddHQoUpHtN054zgx4JPgtSQiewNGZ9PWhX1MJTq9
-        6tcDo3SHTuh4G26xGAiVphp91B+XT0MnmA==
-X-Google-Smtp-Source: ABdhPJxw6H5OJA+8lnePhRZO+ExFbEMYE/vZGK7hd2gMbDXj2PKzlQ4ucdnQp3HFtU69OXUrx/mNxg==
-X-Received: by 2002:a1c:3285:: with SMTP id y127mr240362wmy.104.1598636760666;
-        Fri, 28 Aug 2020 10:46:00 -0700 (PDT)
-Received: from ziggy.stardust ([213.195.119.187])
-        by smtp.gmail.com with ESMTPSA id f17sm309312wru.13.2020.08.28.10.45.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Aug 2020 10:45:59 -0700 (PDT)
-Subject: Re: Aw: Re: [PATCH v5 3/7] drm/mediatek: disable tmds on mt2701
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Frank Wunderlich <linux@fw-web.de>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        chunhui dai <chunhui.dai@mediatek.com>
-References: <20200819081752.4805-1-linux@fw-web.de>
- <20200819081752.4805-4-linux@fw-web.de>
- <trinity-14a1b182-38ab-4f84-bb72-94d448b05fd5-1597994235320@3c-app-gmx-bs37>
- <81276d4c-8883-8bfd-d7d0-9b9ac025ed97@gmail.com>
- <trinity-ddd51146-41eb-49ae-9456-4588450d31aa-1598535710011@3c-app-gmx-bap26>
- <e0edfd9f-5916-80ee-3bef-92d7050f97db@gmail.com>
- <CAAOTY_9R24-tcAMSfDhxLEXDFPAbMd5fYm8EwGODDMpULq-UZA@mail.gmail.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <4c929eb9-23da-3797-12e7-ffd2a9a14048@gmail.com>
-Date:   Fri, 28 Aug 2020 19:45:58 +0200
+        Fri, 28 Aug 2020 13:46:14 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 9706920B7178;
+        Fri, 28 Aug 2020 10:46:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9706920B7178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598636773;
+        bh=m37BaxWxUXh3A97LPLILcR9FmKnNZX9n5ZLW8ZhgKzA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=DxLnbNzw0LBuLnBudQJkFay0TVSMAkA5Yfunem0PmWAqYVz3/cqwFwnhU3nC7DRpo
+         z/f4oaZ4BZcwekMW5SNIARBu3FkcG/5NgHAS6kjA2roHwpV8XreNzuXEJixg7i7nE3
+         4pThmLJOor1xMgZ1Ul0ziOdPp2z/vn4B4lu9KPG8=
+Subject: Re: [PATCH v4 2/5] powerpc: Use libfdt functions to fetch IMA buffer
+ properties
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
+        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
+        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
+        vincenzo.frascino@arm.com, mark.rutland@arm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
+        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
+        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
+References: <20200819172134.11243-1-nramas@linux.microsoft.com>
+ <20200819172134.11243-3-nramas@linux.microsoft.com>
+ <8736478x7l.fsf@morokweng.localdomain>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <53685243-60b6-b21b-7f48-827bb296aa72@linux.microsoft.com>
+Date:   Fri, 28 Aug 2020 10:46:12 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CAAOTY_9R24-tcAMSfDhxLEXDFPAbMd5fYm8EwGODDMpULq-UZA@mail.gmail.com>
+In-Reply-To: <8736478x7l.fsf@morokweng.localdomain>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 28/08/2020 01:46, Chun-Kuang Hu wrote:
-> Hi, Frank:
+On 8/27/20 4:50 PM, Thiago Jung Bauermann wrote:
 > 
-> Matthias Brugger <matthias.bgg@gmail.com> 於 2020年8月27日 週四 下午10:28寫道：
->>
->>
->>
->> On 27/08/2020 15:41, Frank Wunderlich wrote:
->>> Hi Matthias,
->>>
->>> any opinions about the dts-changes?
->>>
->>
->> they look good to me.
->>
->>> maybe series except the tmds-Patch get merged...so i add it only to my own repo till we find a better way?
->>> currently mainline does not support hdmi at all for the board. the tmds-patch is only a fix for specific resolutions which have a "flickering" without this Patch.
->>>
->>
->> Well let's see what CK's opinion.
->>
+> Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
 > 
-> Because no one has comment on this patch, I could apply this patch but
-> I need you to add more experiment information so if someone meets
-> another bug, he could fix his bug and consider your problem.
+>> @@ -63,7 +29,22 @@ void remove_ima_buffer(void *fdt, int chosen_node)
+>>   	if (!prop)
+>>   		return;
+>>   
+>> -	ret = do_get_kexec_buffer(prop, len, &addr, &size);
+>> +	ret = fdt_address_cells(fdt, chosen_node);
+> 
+> This change was already present in the previous version of the patch but
+> it was just today that I noticed a problem: there's no #address-cells
+> property in /chosen. This code will still work though because if there's
+> no property this function returns 2 which is the correct value for
+> ppc64. But it's conceptually wrong. You need to pass the node offset for
+> / so that it gets the #address-cells property from there.
+
+Thanks for the info.
+Will fix this.
+
+> 
+>> +	if (ret < 0)
+>> +		return;
+>> +	addr_cells = ret;
+>> +
+>> +	ret = fdt_size_cells(fdt, chosen_node);
+> 
+> Here we're not so lucky. The default value returned when no #size-cells
+> property is present is 1, which is wrong for ppc64 so this change
+> introduces a bug. You also need to pass the node offset for / here.
+
+Will fix this.
+
+> 
+>> +	if (ret < 0)
+>> +		return;
+>> +	size_cells = ret;
+>> +
+>> +	if (len < 4 * (addr_cells + size_cells))
+>> +		return;
+>> +
+>> +	addr = of_read_number(prop, addr_cells);
+>> +	size = of_read_number(prop + 4 * addr_cells, size_cells);
+>> +
+>>   	fdt_delprop(fdt, chosen_node, FDT_PROP_IMA_KEXEC_BUFFER);
+>>   	if (ret)
+>>   		return;
+>> @@ -129,9 +110,15 @@ int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node)
+>>   	if (!image->arch.ima_buffer_size)
+>>   		return 0;
+>>   
+>> -	ret = get_addr_size_cells(&addr_cells, &size_cells);
+>> -	if (ret)
+>> +	ret = fdt_address_cells(fdt, chosen_node);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +	addr_cells = ret;
+>> +
+>> +	ret = fdt_size_cells(fdt, chosen_node);
+>> +	if (ret < 0)
+>>   		return ret;
+>> +	size_cells = ret;
+>>   
+>>   	entry_size = 4 * (addr_cells + size_cells);
+> 
+> Ditto here.
 > 
 
-I'm adding Chunhui Dai as he got dropped in the discussion.
+Will fix this.
 
-Chunhui can you as the first patch author provide some more technical background 
-why the distortion happens and why this patch fixes it?
-
-Thanks a lot,
-Matthias
+thanks,
+  -lakshmi
