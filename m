@@ -6,123 +6,84 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DCEC433E7
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D88C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8A4A207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 766BB20757
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 14:37:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pt0kC2B6";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bQnestss"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UJNfiaDz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgH1Ogc (ORCPT
+        id S1727946AbgH1Ohf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:36:32 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45624 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726814AbgH1OgM (ORCPT
+        Fri, 28 Aug 2020 10:37:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbgH1Ohc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:36:12 -0400
-Date:   Fri, 28 Aug 2020 16:36:23 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598625364;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BSovyqDfmPCPEib/KWIWlJ0IAJg/5IQArvXAUs+2PUY=;
-        b=pt0kC2B6nyFbu8RDsQ6n4PquGn0T4ZoO8QQ61dO/ffkQgkCmGmsJB5rY9xbvkPln/ptxoY
-        I5Dk+CqLkNa9NILFD4sBF9QNUopSeQOBIJdZDNJN+I0mGYb5G5J8eZP9LYwH2h9J7KqGZS
-        thEuF+WeE5GJ56taBRgalvT7+/tl+WfBY1BsBg771+HfT2ajIAKEF+y/0ip5uTpaTXhlI/
-        TAUI1qpr5UXadHhFeUWWuwkCYb9A2ZZkAqJFr0zQgLhSRR+qX0pe/8/2HmaosK7nar4ciu
-        KydrdM0vQW8+NPOg8MNye8pwEqhmXoxphv37SNnbwhDZKWPzIHyVLOHOPBQB/A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598625364;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BSovyqDfmPCPEib/KWIWlJ0IAJg/5IQArvXAUs+2PUY=;
-        b=bQnestssn8lajILGdoZtMd7gyV1QUAV8D5cb3JQ1Pslw1lKGjk/FwixMQvoW4ahN7Hr8O0
-        XhjxlQP7eyWvNPAA==
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-To:     peterz@infradead.org
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 4/5] seqlock: seqcount_LOCKTYPE_t: Introduce
- PREEMPT_RT support
-Message-ID: <20200828143623.GA10273@lx-t490>
-References: <20200519214547.352050-1-a.darwish@linutronix.de>
- <20200828010710.5407-1-a.darwish@linutronix.de>
- <20200828010710.5407-5-a.darwish@linutronix.de>
- <20200828085938.GS1362448@hirez.programming.kicks-ass.net>
- <20200828093130.GA7672@lx-t490>
+        Fri, 28 Aug 2020 10:37:32 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD08BC06121B
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:37:31 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id m22so1571399ljj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 07:37:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4mU7k790HuWLIpNETwnz7Qzfl109PAxDhdZuzU9xKJQ=;
+        b=UJNfiaDzdbzf5ty9QvZhyk7ZCWmYoGqsdmjASmP7eTi9cKLQeuopls1a5lNFUBiiD4
+         tbg9XnZc0fkbNQ4QIdwJf6V9sLu/nuLmygZPU3mxuHYBVqNTDJ1qF2xIampR2yzGbdX2
+         UITbKOG5KIB5poCrDMUHFjBXCQDjgnYQ4eB0K68KyrCAkdGPw+CYsQ7TG5DvY6BvrPwX
+         bzpyanzBxhLqulrClklfkTkTynK9KX3UJCMbRShHzvJV8SI6hca4pKpCezGkX2MKvR0N
+         hHGem4BZITKd0S1zadSg/qZG/ac6vwbo2C+BN1l5CKXrT3pE8H+ThQzYolLv4sYF+/Y8
+         9yzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4mU7k790HuWLIpNETwnz7Qzfl109PAxDhdZuzU9xKJQ=;
+        b=EaZmo9E7rrcKzpAOArdgTYJWRJ6DhQ8onv8jQrCLdpnW0M24S8RG2yIGr9pwR0i8lY
+         kr9z4h9jEZmXIfUHYR3GW1fVKmZ+boeMoNskXjdRaIHKCIoyiuhyXSkLP64jnHlibGd1
+         PjD5aTCPV+kf7wiK3wNWSfynyHf7NpfAfV0J9z0FZyK1wd11QE43xC7YUolfJf2B1AvI
+         nKgGBkBuoBGq21uBslgisV06xkv8bl89dBXfb3MucT4nrXlYHTp/9obtTJ4jgt1ZuiVC
+         5j4tdyiONTwmfnrZqUUT0i4ClG+BFCd1SlhxFH7kbbftBuzJNc96G0t007U1rC02e39J
+         y4xQ==
+X-Gm-Message-State: AOAM532sOGtXcTD+KrTBP1+0RScxCvkJMbdVTZYIKkZ2G5gNJyTxq8Z+
+        BLie/5QTdju8wtubUiPQuoonhUasKdXKkrcv5CQzHA==
+X-Google-Smtp-Source: ABdhPJwBaJfqMTHl4gS94f7uT2FW6lkcdrgQLQnL1S8tsLSV8XSM4cZOnybzOcN13V3S4EZHTiST1oz2Juyk/AZAgh8=
+X-Received: by 2002:a2e:8144:: with SMTP id t4mr1139879ljg.100.1598625450137;
+ Fri, 28 Aug 2020 07:37:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200828093130.GA7672@lx-t490>
+References: <20200827140020.159627-1-warthog618@gmail.com> <CACRpkdZZMbfpKy4gcfAzNq53LkYLcL9wm3Qtzyj_K8vkUW9RfQ@mail.gmail.com>
+ <CAMpxmJXRY2wqqN3SzfJN+QTWAHYSYz4vEjLKWU82Y=PAmcm=5w@mail.gmail.com> <20200827224742.GA3714@sol>
+In-Reply-To: <20200827224742.GA3714@sol>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Aug 2020 16:37:19 +0200
+Message-ID: <CACRpkdZroNFFsHoBHUFTUUQij7nOcPQiXP-567+fH-Xerv=L4w@mail.gmail.com>
+Subject: Re: [PATCH v5 00/20] gpio: cdev: add uAPI v2
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 11:31:32AM +0200, Ahmed S. Darwish wrote:
-> On Fri, Aug 28, 2020 at 10:59:38AM +0200, peterz@infradead.org wrote:
-> > On Fri, Aug 28, 2020 at 03:07:09AM +0200, Ahmed S. Darwish wrote:
-> > > +#define __SEQ_RT	IS_ENABLED(CONFIG_PREEMPT_RT)
-> > > +
-> > > +SEQCOUNT_LOCKTYPE(raw_spinlock, raw_spinlock_t,  false,    s->lock,        raw_spin, raw_spin_lock(s->lock))
-> > > +SEQCOUNT_LOCKTYPE(spinlock,     spinlock_t,      __SEQ_RT, s->lock,        spin,     spin_lock(s->lock))
-> > > +SEQCOUNT_LOCKTYPE(rwlock,       rwlock_t,        __SEQ_RT, s->lock,        read,     read_lock(s->lock))
-> > > +SEQCOUNT_LOCKTYPE(mutex,        struct mutex,    true,     s->lock,        mutex,    mutex_lock(s->lock))
-> > > +SEQCOUNT_LOCKTYPE(ww_mutex,     struct ww_mutex, true,     &s->lock->base, ww_mutex, ww_mutex_lock(s->lock, NULL))
-> >
-> > Ooh, reading is hard, but ^^^^ you already have that.
-> >
->
-> Haha, I was just answering the other mail :)
->
-> > > +/*
-> > > + * Automatically disable preemption for seqcount_LOCKTYPE_t writers, if the
-> > > + * associated lock does not implicitly disable preemption.
-> > > + *
-> > > + * Don't do it for PREEMPT_RT. Check __SEQ_LOCK().
-> > > + */
-> > > +#define __seq_enforce_preemption_protection(s)				\
-> > > +	(!IS_ENABLED(CONFIG_PREEMPT_RT) && __seqcount_lock_preemptible(s))
-> >
-> > Then what is this doing ?!? I'm confused now.
->
-> There were a number of call sites (at DRM mainly) that protected their
-> seqcount_t write sections with mutex and ww_mutex. So, they manually
-> disabled preemption before entering the seqcount_t write sections.
->
-> Unfortunately these write sections were big, and spinlocks were also
-> acquired inside them.  This was all very bad for RT...
->
-> So the idea was to relieve call sites from the responsibility of
-> disabling/enabling preemption upon entering a seqcount_LOCKNAME_t write
-> section, and let seqlock.h automatically handle it if LOCKNAME_t is
-> preemptible (the macro's condition, second part).
->
-> Having seqlock.h control the preempt disable/enable allows us to never
-> disable preemption for RT, which is exactly what is needed since we
-> already handle any possible livelock through the mechanisms described at
-> __SEQ_LOCK (the macro's condition test, first part).
->
+On Fri, Aug 28, 2020 at 12:47 AM Kent Gibson <warthog618@gmail.com> wrote:
 
-So to summarize, __seqcount_lock_preemptible() has two use cases:
+> The particular use case I am considering is one I had been asked about -
+> changing a requested line from input with edge detection to output, and
+> vice versa. Losing interrupts isn't really an issue for this use case -
+> it is expected.  Yet the current implementation requires a re-request.
 
-    1. For !PREEMPT_RT, to automatically disable preemption on the write
-       side when the seqcount associated lock is preemptible.
+This is possible to do for in-kernel users, but I don't know if that makes
+sense for userspace. It is for one-offs and prototyping after all, there
+is no need (IMO) to make it overly convenient for users to implement
+all kind of weirdness in userspace unless there is a very real use case.
 
-    2. For PREEMPT_RT, to lock/unlock the seqcount associated lock on
-       the read side if it is RT-preemptible (sleeping lock).
-
-Thanks,
-
---
-Ahmed S. Darwish
-Linutronix GmbH
+Yours,
+Linus Walleij
