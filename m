@@ -2,150 +2,156 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB073C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A470C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAE242078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 680AD2078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:03:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598598201;
+	bh=4faSGkxwde2dUgjoJLxEPngM/PNDuiR7AsduftolHIs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=B3t5bFnfIdFLptuOaAGYWauEbw55nrSaUZg/8+cX+sZ5L7yY+J0APrRNwjGo996Ba
+	 h5g9KAFxTtXbqbgtpVp1LnJ60bwb8VeMg60Fk5dbuS+b/QOWUIXOW7WgXU3uARpkmf
+	 Ph19eEsDgD7XZCRaDpb2h/BbEmVRQjvjwUe3Uuus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgH1HBN (ORCPT
+        id S1728068AbgH1HDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:01:13 -0400
-Received: from mail.thorsis.com ([92.198.35.195]:37491 "EHLO mail.thorsis.com"
+        Fri, 28 Aug 2020 03:03:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725858AbgH1HBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:01:04 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.thorsis.com (Postfix) with ESMTP id C04F9412D;
-        Fri, 28 Aug 2020 09:00:59 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
-Received: from mail.thorsis.com ([127.0.0.1])
-        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id GemdL7l_63G6; Fri, 28 Aug 2020 09:00:59 +0200 (CEST)
-Received: by mail.thorsis.com (Postfix, from userid 109)
-        id DCEB335D1; Fri, 28 Aug 2020 09:00:57 +0200 (CEST)
-From:   Alexander Dahl <ada@thorsis.com>
-To:     linux-leds@vger.kernel.org
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-kernel@vger.kernel.org, Alexander Dahl <post@lespocky.de>
-Subject: Re: [PATCH] leds: pwm: Allow automatic labels for DT based devices
-Date:   Fri, 28 Aug 2020 09:00:52 +0200
-Message-ID: <7920560.iacgkFlgr8@ada>
-In-Reply-To: <d6f69d4a-3e46-cad4-5756-4d15e5ef95ba@gmail.com>
-References: <20200826093737.29008-1-ada@thorsis.com> <d6f69d4a-3e46-cad4-5756-4d15e5ef95ba@gmail.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1725858AbgH1HDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 03:03:19 -0400
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A10D8214DB;
+        Fri, 28 Aug 2020 07:03:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598598198;
+        bh=4faSGkxwde2dUgjoJLxEPngM/PNDuiR7AsduftolHIs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=sx7QHngCjfwrj5EpTWFj8h72BUzgxBMBKywR+k595Wk3fByAORr3jVBGDZLwGksw0
+         PYNKYbUpEnueECWfETWbOSoHpehiGjPGGdGrQ1xkURBaro59NTzuZqovK+ftZZdWmw
+         BIoHuIn6C7rK8aWGwpap/DKCec5A9wvC81kDbajc=
+Received: by mail-ej1-f41.google.com with SMTP id d11so108999ejt.13;
+        Fri, 28 Aug 2020 00:03:18 -0700 (PDT)
+X-Gm-Message-State: AOAM530xspcHh02fOCnYcpu+pEaZfgTuO3YftEMnW6YqSQJLP8coGynN
+        FfZwslcwId8hf8v6/WuJ3pMAsgVOo+ma1icz9NA=
+X-Google-Smtp-Source: ABdhPJxeqj21bGrdAgawvMqE4DUECkHszI8hRw0tB+YmvQTkV+0igeB3UuUCefttjGSqXjyZ8z82C9AEfK2QoACQnCo=
+X-Received: by 2002:a17:906:3e0a:: with SMTP id k10mr409528eji.148.1598598197045;
+ Fri, 28 Aug 2020 00:03:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200827192642.1725-1-krzk@kernel.org> <20200827192642.1725-9-krzk@kernel.org>
+ <f4a5777e-fe85-9f3f-4818-f7539f223adc@axentia.se> <20200828062443.GA17343@pi3>
+ <3a5cb59b-454e-2c3f-9f31-43147e843c66@axentia.se>
+In-Reply-To: <3a5cb59b-454e-2c3f-9f31-43147e843c66@axentia.se>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 28 Aug 2020 09:03:06 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPcqNE5U82UThzBTPCvucCf2LsCVSfAHE1vnecJGCKCaig@mail.gmail.com>
+Message-ID: <CAJKOXPcqNE5U82UThzBTPCvucCf2LsCVSfAHE1vnecJGCKCaig@mail.gmail.com>
+Subject: Re: [PATCH v2 09/18] iio: afe: iio-rescale: Simplify with dev_err_probe()
+To:     Peter Rosin <peda@axentia.se>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Beniamin Bia <beniamin.bia@analog.com>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-iio@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-amlogic@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jacek,
+On Fri, 28 Aug 2020 at 08:58, Peter Rosin <peda@axentia.se> wrote:
+> >> I'm not a huge fan of adding *one* odd line breaking the 80 column
+> >> recommendation to any file. I like to be able to fit multiple
+> >> windows side by side in a meaningful way. Also, I don't like having
+> >> a shitload of emptiness on my screen, which is what happens when some
+> >> lines are longer and you want to see it all. I strongly believe that
+> >> the 80 column rule/recommendation is still as valid as it ever was.
+> >> It's just hard to read longish lines; there's a reason newspapers
+> >> columns are quite narrow...
+> >>
+> >> Same comment for the envelope-detector (3/18).
+> >>
+> >> You will probably never look at these files again, but *I* might have
+> >> to revisit them for one reason or another, and these long lines will
+> >> annoy me when that happens.
+> >
+> > Initially I posted it with 80-characters wrap. Then I received a comment
+> > - better to stick to the new 100, as checkpatch accepts it.
+> >
+> > Now you write, better to go back to 80.
+> >
+> > Maybe then someone else will write to me, better to go to 100.
+> >
+> > And another person will reply, no, coding style still mentions 80, so
+> > keep it at 80.
+> >
+> > Sure guys, please first decide which one you prefer, then I will wrap it
+> > accordingly. :)
+> >
+> > Otherwise I will just jump from one to another depending on one person's
+> > personal preference.
+> >
+> > If there is no consensus among discussing people, I find this 100 line
+> > more readable, already got review, checkpatch accepts it so if subsystem
+> > maintainer likes it, I prefer to leave it like this.
+>
+> I'm not impressed by that argument. For the files I have mentioned, it
+> does not matter very much to me if you and some random person think that
+> 100 columns might *slightly* improve readability.
+>
+> Quoting coding-style
+>
+>   Statements longer than 80 columns should be broken into sensible chunks,
+>   unless exceeding 80 columns significantly increases readability and does
+>   not hide information.
+>
+> Notice that word? *significantly*
 
-Am Donnerstag, 27. August 2020, 23:28:45 CEST schrieb Jacek Anaszewski:
-> On 8/26/20 11:37 AM, Alexander Dahl wrote:
-> > From: Alexander Dahl <post@lespocky.de>
-> >=20
-> > If LEDs are configured through device tree and the property 'label' is
-> > omitted, the label is supposed to be generated from the properties
-> > 'function' and 'color' if present.  While this works fine for e.g. the
-> > 'leds-gpio' driver, it did not for 'leds-pwm'.
-> >=20
-> > The reason is, you get this label naming magic only if you add a LED
-> > device through 'devm_led_classdev_register_ext()' and pass a pointer to
-> > the current device tree node.  The approach to fix this was adopted from
-> > the 'leds-gpio' driver.
-> >=20
-> > For the following node from dts the LED appeared as 'led5' in sysfs
-> > before and as 'red:debug' after this change.
-> >=20
-> >          pwm_leds {
-> >         =20
-> >                  compatible =3D "pwm-leds";
-> >                 =20
-> >                  led5 {
-> >                 =20
-> >                          function =3D LED_FUNCTION_DEBUG;
-> >                          color =3D <LED_COLOR_ID_RED>;
-> >                          pwms =3D <&pwm0 2 10000000 0>;
-> >                          max-brightness =3D <127>;
-> >                         =20
-> >                          linux,default-trigger =3D "heartbeat";
-> >                          panic-indicator;
-> >                 =20
-> >                  };
-> >         =20
-> >          };
-> >=20
-> > Signed-off-by: Alexander Dahl <post@lespocky.de>
-> > ---
-> >=20
-> > Notes:
-> >      v1: based on v5.9-rc2, backport on v5.4.59 also works
-> >  =20
-> >   drivers/leds/leds-pwm.c | 9 ++++++++-
-> >   1 file changed, 8 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-> > index ef7b91bd2064..a27a1d75a3e9 100644
-> > --- a/drivers/leds/leds-pwm.c
-> > +++ b/drivers/leds/leds-pwm.c
-> > @@ -65,6 +65,7 @@ static int led_pwm_add(struct device *dev, struct
-> > led_pwm_priv *priv,>=20
-> >   		       struct led_pwm *led, struct fwnode_handle *fwnode)
-> >  =20
-> >   {
-> >  =20
-> >   	struct led_pwm_data *led_data =3D &priv->leds[priv->num_leds];
-> >=20
-> > +	struct led_init_data init_data =3D {};
-> >=20
-> >   	int ret;
-> >   =09
-> >   	led_data->active_low =3D led->active_low;
-> >=20
-> > @@ -90,7 +91,13 @@ static int led_pwm_add(struct device *dev, struct
-> > led_pwm_priv *priv,>=20
-> >   	pwm_init_state(led_data->pwm, &led_data->pwmstate);
-> >=20
-> > -	ret =3D devm_led_classdev_register(dev, &led_data->cdev);
-> > +	if (fwnode) {
-> > +		init_data.fwnode =3D fwnode;
-> > +		ret =3D devm_led_classdev_register_ext(dev, &led_data->cdev,
-> > +						     &init_data);
-> > +	} else {
-> > +		ret =3D devm_led_classdev_register(dev, &led_data->cdev);
-> > +	}
-> >=20
-> >   	if (ret) {
-> >   =09
-> >   		dev_err(dev, "failed to register PWM led for %s: %d\n",
-> >   	=09
-> >   			led->name, ret);
->=20
-> This part looks good, but corresponding update of
-> Documentation/devicetree/bindings/leds/leds-pwm.txt is needed as well.
+Notice also checkpatch change...
 
-I'm not sure, what needs updating. The properties 'function' and 'color' ar=
-e=20
-already documented in Documentation/devicetree/bindings/leds/common.yaml =
-=E2=80=A6 the=20
-only thing I can think of here is updating the examples? That would be nice=
-,=20
-as would be updating to yaml, but I don't see the strong relation, yet.
+First of all, I don't have a preference over wrapping here. As I said,
+I sent v1 with 80 and got a response to change it to 100. You want me
+basically to bounce from A to B to A to B.
 
-> It would be good to switch to yaml by this occassion.
+> Why do I even have to speak up about this? WTF?
 
-Is there some guidance on that in general?
+Because we all share here our ideas...
 
-Greets
-Alex
+> For the patches that touch files that I originally wrote [1], my
+> preference should be clear by now.
 
+I understood your preference. There is nothing unclear here. Other
+person had different preference. I told you my arguments that it is
+not reasonable to jump A->B->A->B just because each person has a
+different view. At the end it's the subsystem maintainer's decision as
+he wants to keep his subsystem clean.
 
-
+Best regards,
+Krzysztof
