@@ -2,145 +2,120 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E80E9C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF020C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE2BE2078A
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2462078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 07:47:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=irrelevant.dk header.i=@irrelevant.dk header.b="Pc+M+Jf8"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="t1OJeGrU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728564AbgH1Hrn (ORCPT
+        id S1728579AbgH1Hrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:47:43 -0400
-Received: from charlie.dont.surf ([128.199.63.193]:35382 "EHLO
-        charlie.dont.surf" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbgH1Hrf (ORCPT
+        Fri, 28 Aug 2020 03:47:49 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59684 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbgH1Hrs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:47:35 -0400
-Received: from apples.localdomain (80-167-98-190-cable.dk.customer.tdc.net [80.167.98.190])
-        by charlie.dont.surf (Postfix) with ESMTPSA id 4856BBF554;
-        Fri, 28 Aug 2020 07:47:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=irrelevant.dk;
-        s=default; t=1598600852;
-        bh=tBI8Q0spIHPr7fUks65vQIU+W7ZPCNmh06qQz3L0JC4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Pc+M+Jf8lB6jtFPZ+N9B6j5qFEorOUIsUpRKHm0Lly9uniOs6ZBhyATZ5tBJV1HDC
-         ufiVov1jsoHa3RiDDQJf7oarDnKKdv1v0vT0OXF2GAJoukMCSi+uQV7mwsaIUQGIfJ
-         /CzZ5aY1t8obZm3zLQMjxpI6QeRLT32964Rpj4T83IFJOWnECaO0zo0W5O53RGi0Sp
-         mhg7Ui7PSJrR0IHw6hUR+KF8Zt32sk28GGDJqQY7ShdBAD61t/pGB32CAlTOo2p54D
-         Y7KEuOF1YVAdPxGmU3M9VQGbvs6SVe7JX3qdBJTuqsxc5l4UwyjW7BnCTQrkwI4aG5
-         FKoKmZqSzEm/Q==
-Date:   Fri, 28 Aug 2020 09:47:28 +0200
-From:   Klaus Jensen <its@irrelevant.dk>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     Niklas Cassel <Niklas.Cassel@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] null_blk: add support for max open/active zone limit
- for zoned devices
-Message-ID: <20200828074728.GA1343822@apples.localdomain>
-References: <20200827135018.63644-1-niklas.cassel@wdc.com>
- <CY4PR04MB3751526DC5833902749EBE48E7520@CY4PR04MB3751.namprd04.prod.outlook.com>
- <20200828072253.GA1331347@apples.localdomain>
- <CY4PR04MB37514386D6A94A04F66EFF1DE7520@CY4PR04MB3751.namprd04.prod.outlook.com>
+        Fri, 28 Aug 2020 03:47:48 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07S7ldLN055379;
+        Fri, 28 Aug 2020 02:47:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598600859;
+        bh=asKcJDTQmbkVWh1oo047VzwZ6hi/mmdOx2VzMsErg/c=;
+        h=From:To:CC:Subject:Date;
+        b=t1OJeGrU7ULaU9AE5wjKvdKprxBqGE3tCrQYMGXhKGOn8D6BPD6aDil8cIFQsfkYD
+         KLYkXLY8OwOW0yMvf8p97+jt2TfVHqzfHhobCCfGEzh9gn0kn1pRn7Fo+LoJzRqzCw
+         b6JiQl41xQjIYiT3bVcPUdT7xPkTvwBXrOk5Atc0=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07S7ldQY024943
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 28 Aug 2020 02:47:39 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 28
+ Aug 2020 02:47:38 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 28 Aug 2020 02:47:38 -0500
+Received: from ula0132425.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07S7lZ8H012237;
+        Fri, 28 Aug 2020 02:47:36 -0500
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Pratyush Yadav <p.yadav@ti.com>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] spi: spi-cadence-quadspi: Fix mapping of buffers for DMA reads
+Date:   Fri, 28 Aug 2020 13:17:26 +0530
+Message-ID: <20200828074726.24546-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
-Content-Disposition: inline
-In-Reply-To: <CY4PR04MB37514386D6A94A04F66EFF1DE7520@CY4PR04MB3751.namprd04.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Buffers need to mapped to DMA channel's device pointer instead of SPI
+controller's device pointer as its system DMA that actually does data
+transfer.
+Data inconsistencies have been reported when reading from flash
+without this fix.
 
---tThc/1wpZn/ma/RB
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: 31fb632b5d43c ("spi: Move cadence-quadspi driver to drivers/spi/")
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+---
 
-On Aug 28 07:36, Damien Le Moal wrote:
-> On 2020/08/28 16:23, Klaus Jensen wrote:
-> > On Aug 28 07:06, Damien Le Moal wrote:
-> >> On 2020/08/27 22:50, Niklas Cassel wrote:
-> >>> +static blk_status_t null_finish_zone(struct nullb_device *dev, struc=
-t blk_zone *zone)
-> >>> +{
-> >>> +	if (zone->type =3D=3D BLK_ZONE_TYPE_CONVENTIONAL)
-> >>> +		return BLK_STS_IOERR;
-> >>> +
-> >>> +	switch (zone->cond) {
-> >>> +	case BLK_ZONE_COND_FULL:
-> >>> +		/* finish operation on full is not an error */
-> >>> +		return BLK_STS_OK;
-> >>> +	case BLK_ZONE_COND_EMPTY:
-> >>> +		if (!null_manage_zone_resources(dev, zone))
-> >>
-> >> OK. So you are hitting a fuzzy case here that is not actually well des=
-cribed in
-> >> the standards. That is, does finishing an empty zone necessarilly impl=
-y a
-> >> temporary transition through imp open ? Which you are assuming is a ye=
-s here.
-> >> Personally, I would say that is not necessary, but no strong feeling e=
-ither way.
-> >>
-> >=20
-> > For ZNS, the spec is pretty clear that ZSE to ZSF is a legal direct
-> > transition. So I don't think the transition should be allowed to fail
-> > due to a lack of resources.
->=20
-> I had a doubt and checked again ZBC & ZAC. I section 4.4.3.2.4 it says:
->=20
-> The Zone Condition state machine (see 4.4.3.5) requires the specified zon=
-e to
-> have a Zone Condition of EXPLICITLY OPENED or IMPLICITLY OPENED before a =
-finish
-> zone operation is performed. If a zone with a Zone Condition of EMPTY or =
-CLOSED
-> is specified for a finish zone operation, prior to processing the finish =
-zone
-> operation, then the Zone Condition state machine requires that:
-> a) a manage open zone resources operation (see 4.4.3.2.6) be performed; a=
-nd
-> b) the Zone Condition becomes IMPLICITLY OPENED.
->=20
-> And section 5.3 describing the zone finish command points to this section.
-> So this is not the same as ZNS.
->=20
-> As Niklas mentioned, nullblk tends to follow more ZBC than ZNS, so the co=
-de is
-> correct in this respect. We could also lean toward ZNS on this one. I per=
-sonally
->  have no strong opinion either way since there is not real good reasons f=
-or
-> finishing an empty zone that I can think of.
->=20
->=20
+This issue was present in the original driver under SPI NOR framework as well.
+But only got exposed as driver started handling probe deferral for DMA channel
+request and thus uses DMA almost always unlike before.
 
-Alrighty then; thanks for looking it up! I won't fight for the ZNS
-behavior then :)
+ drivers/spi/spi-cadence-quadspi.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---tThc/1wpZn/ma/RB
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
+index 508b219eabf8..c6795c684b16 100644
+--- a/drivers/spi/spi-cadence-quadspi.c
++++ b/drivers/spi/spi-cadence-quadspi.c
+@@ -907,14 +907,16 @@ static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
+ 	struct dma_async_tx_descriptor *tx;
+ 	dma_cookie_t cookie;
+ 	dma_addr_t dma_dst;
++	struct device *ddev;
+ 
+ 	if (!cqspi->rx_chan || !virt_addr_valid(buf)) {
+ 		memcpy_fromio(buf, cqspi->ahb_base + from, len);
+ 		return 0;
+ 	}
+ 
+-	dma_dst = dma_map_single(dev, buf, len, DMA_FROM_DEVICE);
+-	if (dma_mapping_error(dev, dma_dst)) {
++	ddev = cqspi->rx_chan->device->dev;
++	dma_dst = dma_map_single(ddev, buf, len, DMA_FROM_DEVICE);
++	if (dma_mapping_error(ddev, dma_dst)) {
+ 		dev_err(dev, "dma mapping failed\n");
+ 		return -ENOMEM;
+ 	}
+@@ -948,7 +950,7 @@ static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
+ 	}
+ 
+ err_unmap:
+-	dma_unmap_single(dev, dma_dst, len, DMA_FROM_DEVICE);
++	dma_unmap_single(ddev, dma_dst, len, DMA_FROM_DEVICE);
+ 
+ 	return ret;
+ }
+-- 
+2.28.0
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEUigzqnXi3OaiR2bATeGvMW1PDekFAl9ItowACgkQTeGvMW1P
-Delr5AgAp9np/sJUFZpai+i7J4D/YZghj9cy3HB0x+/fHfiozmdY0jfozu/KaQn3
-wP+dh0Up/mBUSRtsHLl0kqy09kxaQsisIUgZYPRLFIvtTdNUhaEui6xzaewicfO9
-2kJFrFO/CFgJFQQFZ7Cszf6cgJjb/oBXn7Phj0o2f9pEgUfD4xfDric2M3/uAQ2B
-N4oFb3d89q8FDWd0r1MehqzDrBjW2qzt5N9B0DLXVdkWmEXD5ofEAmxrSRLYejde
-YC/8aBvwtd/xSifcGd2O7ywQPiDFWCg5kTC610AdcZ4EzoEV96HqnhTXluP02/s8
-HsiVJxqZJ4ULosvo1dZ2UQg78P+H2g==
-=9bE6
------END PGP SIGNATURE-----
-
---tThc/1wpZn/ma/RB--
