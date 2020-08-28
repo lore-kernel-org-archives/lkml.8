@@ -2,66 +2,95 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1915FC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 640DAC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD1A520714
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B0020714
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 13:48:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgH1Nrc (ORCPT
+        id S1726871AbgH1Nsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 09:47:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39834 "EHLO mx2.suse.de"
+        Fri, 28 Aug 2020 09:48:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:49736 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726321AbgH1Nqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 09:46:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 97B2DADA2;
-        Fri, 28 Aug 2020 13:47:14 +0000 (UTC)
-Date:   Fri, 28 Aug 2020 15:46:39 +0200
-From:   "jroedel@suse.de" <jroedel@suse.de>
-To:     "Deucher, Alexander" <Alexander.Deucher@amd.com>
-Cc:     "Kuehling, Felix" <Felix.Kuehling@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "Huang, Ray" <Ray.Huang@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/2] iommu/amd: Fix IOMMUv2 devices when SME is active
-Message-ID: <20200828134639.GW3354@suse.de>
-References: <20200824105415.21000-1-joro@8bytes.org>
- <MN2PR12MB4488D6B7BBF98845DF796E0BF7540@MN2PR12MB4488.namprd12.prod.outlook.com>
- <34db343f-cd23-09af-3bc5-29b9d385f85d@amd.com>
- <MN2PR12MB4488BF7DDE700378F7B2776CF7540@MN2PR12MB4488.namprd12.prod.outlook.com>
+        id S1726322AbgH1Nsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 09:48:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C24321FB;
+        Fri, 28 Aug 2020 06:48:34 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD1EF3F71F;
+        Fri, 28 Aug 2020 06:48:31 -0700 (PDT)
+Date:   Fri, 28 Aug 2020 14:48:25 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     peterz@infradead.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, Eddy_Wu@trendmicro.com,
+        x86@kernel.org, davem@davemloft.net, rostedt@goodmis.org,
+        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        linux-arch@vger.kernel.org, cameron@moodycamel.com,
+        oleg@redhat.com, will@kernel.org, paulmck@kernel.org
+Subject: Re: [PATCH v4 04/23] arm64: kprobes: Use generic kretprobe
+ trampoline handler
+Message-ID: <20200828134825.GB71981@C02TD0UTHF1T.local>
+References: <159861759775.992023.12553306821235086809.stgit@devnote2>
+ <159861764221.992023.10214437014901668680.stgit@devnote2>
+ <20200828133131.GA71981@C02TD0UTHF1T.local>
+ <20200828133718.GB1362448@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <MN2PR12MB4488BF7DDE700378F7B2776CF7540@MN2PR12MB4488.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200828133718.GB1362448@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 03:25:58PM +0000, Deucher, Alexander wrote:
-> > Alex, do you know if anyone has tested amdgpu on an APU with SME
-> > enabled? Is this considered something we support?
+On Fri, Aug 28, 2020 at 03:37:18PM +0200, peterz@infradead.org wrote:
+> On Fri, Aug 28, 2020 at 02:31:31PM +0100, Mark Rutland wrote:
+> > Hi,
+> > 
+> > On Fri, Aug 28, 2020 at 09:27:22PM +0900, Masami Hiramatsu wrote:
+> > > Use the generic kretprobe trampoline handler, and use the
+> > > kernel_stack_pointer(regs) for framepointer verification.
+> > > 
+> > > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > > ---
+> > >  arch/arm64/kernel/probes/kprobes.c |   78 +-----------------------------------
+> > >  1 file changed, 3 insertions(+), 75 deletions(-)
+> > 
+> > > +	return (void *)kretprobe_trampoline_handler(regs, &kretprobe_trampoline,
+> > > +					(void *)kernel_stack_pointer(regs));
+> > >  }
+> > >  
+> > >  void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
+> > >  				      struct pt_regs *regs)
+> > >  {
+> > >  	ri->ret_addr = (kprobe_opcode_t *)regs->regs[30];
+> > > +	ri->fp = (void *)kernel_stack_pointer(regs);
+> > 
+> > This is probably a nomenclature problem, but what exactly is
+> > kretprobe_instance::fp used for?
+> > 
+> > I ask because arm64's frame pointer lives in x29 (and is not necessarily
+> > the same as the stack pointer at function boundaries), so the naming
+> > is potentially misleading and possibly worth a comment or rename.
 > 
-> It's not something we've tested.  I'm not even sure the GPU portion of
-> APUs will work properly without an identity mapping.  SME should work
-> properly with dGPUs however, so this is a proper fix for them.  We
-> don't use the IOMMUv2 path on dGPUs at all.
+> IIUC ri->rp is used for matching up the frame between the moment we
+> install the return trampoline on the stack and actually hitting that
+> trampoline.
 
-Is it possible to make the IOMMUv2 paths optional on iGPUs as well when
-SME is active (or better, when the GPU is not identity mapped)?
+Hmm, I see (and this is not a new problem with this series, just
+existing weirdness).
 
-Regards,
+It looks like that's inconsistently an arch's stack pointer (e.g. x86,
+arm64) or frame pointer (e.g. arm). IMO it'd be nicer if we could make
+that the stack pointer consistently, but that's a separate cleanup, and
+apparently not a big deal.
 
-	Joerg
+Thanks,
+Mark.
