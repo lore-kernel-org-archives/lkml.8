@@ -2,140 +2,186 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B773DC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302F9C433E7
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2DF20C56
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:00:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598608846;
-	bh=sqJqYmGsrcZElJ0eIt1DDvGzLzBOscBm1LDUda7F5RM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mlLRy6Yiq/rpWXSlcb5e0pOcsJ/75BkoWpiOsgGiGeeF33lxFhlipuKtifhCh5kHx
-	 Y9pMiCyqOPRrCLSnePpXi+Y13HGRtBWxqVx3AirkMjdT+7JD8ub5H3MfcYUfwxQKnN
-	 rVLajNQYYOEe5u4KxDUaGjDCIwjHpY/ThMJi7fYI=
+	by mail.kernel.org (Postfix) with ESMTP id 012D72078A
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:00:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CQod5hZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbgH1KAo (ORCPT
+        id S1728990AbgH1KAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 06:00:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728218AbgH1KAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 06:00:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84FA42078A;
-        Fri, 28 Aug 2020 10:00:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598608836;
-        bh=sqJqYmGsrcZElJ0eIt1DDvGzLzBOscBm1LDUda7F5RM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i31hSp8bPrdNGQNpJQZSoFNam+AFIlE7FvuXcZYibC9fo602ow06v4rMVY6EGkeP1
-         iyxDeKCu79LIBm/3hceUgb0KbtjAZsXD4sTsA1oC9NyuyVKEHXJc2jkEd0rt+lsFpO
-         YwUexOu8ydV13OE4YzmS9q3gz0Lt/7aAWnVq5Xoo=
-Date:   Fri, 28 Aug 2020 12:00:48 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Roman Bolshakov <r.bolshakov@yadro.com>
-Cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org,
-        Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
-        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
-        linux-spdx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        GR-QLogic-Storage-Upstream@marvell.com,
-        Arun Easi <aeasi@marvell.com>
-Subject: Re: [PATCH] MAINTAINERS: orphan sections with qlogic.com group alias
-Message-ID: <20200828100048.GA1229122@kroah.com>
-References: <20200828070824.8032-1-lukas.bulwahn@gmail.com>
- <20200828091758.GF54274@SPB-NB-133.local>
+        Fri, 28 Aug 2020 06:00:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728016AbgH1KAi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 06:00:38 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80E2C061264;
+        Fri, 28 Aug 2020 03:00:37 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id t9so402026pfq.8;
+        Fri, 28 Aug 2020 03:00:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=PMGQxaBKPbON3ssZWMqrEm63rTUeWUDOhP6COLqPYSc=;
+        b=CQod5hZ8nMSXxmoYAACVHF/qI22QxGeFSjZUjfpoMAoBOV9QseFdRM4mT4eXynXUTC
+         Srct4/znp2udP6D2fWV0bzQ+pU+XXOtJaMi2g+drMUXj2K60C7ryDET6zClkdldor8i/
+         E7b0vIa8R3BWPgXPD+PJJc+AOPD+vqs7DgiqbTvdaT+K3ptqwzdJmNc9JYAun+j0QBae
+         7AboNgbfU8v9VPxj5nmgHoLhu4gnUy6QW/u+UtbhElPKKl+uWSB8sno/j9ZONdogYAlc
+         aQLufAMyCIBONhDco8RGsYXEqd6c77U8MUJIv054R9Y1Pl38buDYzYUONBBZjC6y1qyg
+         Lk4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=PMGQxaBKPbON3ssZWMqrEm63rTUeWUDOhP6COLqPYSc=;
+        b=kkFNfYxkc6fYFiM7bJgn4hPl+s6/Ln/nhIEa1nwtXrXRpRsVBaajWJwyLe2UctivQL
+         KJELRC+YGsaj+020ey3sJlKnMqu74VedKn8ZsvRgYC/Ynn7KezDI1SSR+f6C8NfO61kB
+         /+pOhULZtw+CRINBfLYIuADKD39/EkZ42Fqmq1C6HQnWbdq4Ha4SDF3RQuZcYuvg7NbR
+         mRaF48aeX3vBPmGD6O3LY37mvEQiPzisPX0q6USz0zmjkL9dwP9ddAbigtkHmWNrXhm4
+         8LHGRIDZArNJNFdmbJorUQzrQD1mrkLoruSBLLOlwcCYXSKzPW3hJRt93LpajOdNNTIj
+         wbOQ==
+X-Gm-Message-State: AOAM533bXJluDloFoWJkAm4XpPSZgeod8zybwHPk0SOE5IMbEl3qjrDX
+        gc3KO2z1yu3zqjyE1Y8hfVc81hl97Zw=
+X-Google-Smtp-Source: ABdhPJzJadmdcr+E5dPdAeWoEtRrezvpoEws2ofoV8cHCzMpxKfGsMWs/5DPALVlJiaUIB6ACL7lKA==
+X-Received: by 2002:aa7:96f4:: with SMTP id i20mr619172pfq.312.1598608837398;
+        Fri, 28 Aug 2020 03:00:37 -0700 (PDT)
+Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id 78sm1068608pfv.200.2020.08.28.03.00.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 03:00:37 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-mm@kvack.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 1/4] mm: fix exec activate_mm vs TLB shootdown and lazy tlb switching race
+Date:   Fri, 28 Aug 2020 20:00:19 +1000
+Message-Id: <20200828100022.1099682-2-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200828100022.1099682-1-npiggin@gmail.com>
+References: <20200828100022.1099682-1-npiggin@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200828091758.GF54274@SPB-NB-133.local>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 12:17:58PM +0300, Roman Bolshakov wrote:
-> On Fri, Aug 28, 2020 at 09:08:24AM +0200, Lukas Bulwahn wrote:
-> > Previous attempts of getting an answer from the qlogic.com group alias,
-> > i.e., QLogic-Storage-Upstream@qlogic.com, have remained unanswered; see
-> > links below.
-> > 
-> > Mark those sections Orphan to prepare their deletion or give an actual
-> > person a chance to step up to maintain those drivers.
-> > 
-> > Link: https://lore.kernel.org/linux-spdx/20190606205526.447558989@linutronix.de
-> > Link: https://lore.kernel.org/linux-spdx/alpine.DEB.2.21.2006300644130.4919@felia
-> > Link: https://lore.kernel.org/linux-spdx/alpine.DEB.2.21.2008270740140.31123@felia
-> > 
-> > Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> > ---
-> > applies cleanly on current master and next-20200828
-> > 
-> > James, Martin, please pick this minor non-urgent patch.
-> > 
-> > Anil, Sudarsana, if these drivers are still maintained by qlogic, please
-> > provide actual names of people that maintain these drivers.
-> > 
-> >  MAINTAINERS | 9 +++------
-> >  1 file changed, 3 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 3b186ade3597..415058b48a2e 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -3507,15 +3507,13 @@ F:	drivers/net/ethernet/broadcom/bnx2.*
-> >  F:	drivers/net/ethernet/broadcom/bnx2_*
-> >  
-> >  BROADCOM BNX2FC 10 GIGABIT FCOE DRIVER
-> > -M:	QLogic-Storage-Upstream@qlogic.com
-> >  L:	linux-scsi@vger.kernel.org
-> > -S:	Supported
-> > +S:	Orphan
-> >  F:	drivers/scsi/bnx2fc/
-> >  
-> >  BROADCOM BNX2I 1/10 GIGABIT iSCSI DRIVER
-> > -M:	QLogic-Storage-Upstream@qlogic.com
-> >  L:	linux-scsi@vger.kernel.org
-> > -S:	Supported
-> > +S:	Orphan
-> >  F:	drivers/scsi/bnx2i/
-> >  
-> >  BROADCOM BNX2X 10 GIGABIT ETHERNET DRIVER
-> > @@ -14212,9 +14210,8 @@ F:	Documentation/networking/device_drivers/ethernet/qlogic/LICENSE.qla3xxx
-> >  F:	drivers/net/ethernet/qlogic/qla3xxx.*
-> >  
-> >  QLOGIC QLA4XXX iSCSI DRIVER
-> > -M:	QLogic-Storage-Upstream@qlogic.com
-> >  L:	linux-scsi@vger.kernel.org
-> > -S:	Supported
-> > +S:	Orphan
-> >  F:	Documentation/scsi/LICENSE.qla4xxx
-> >  F:	drivers/scsi/qla4xxx/
-> >  
-> > -- 
-> > 2.17.1
-> > 
-> 
-> CC'd Arun,
-> 
-> I think it's worth to update the alias to:
-> 
-> GR-QLogic-Storage-Upstream@marvell.com
+Reading and modifying current->mm and current->active_mm and switching
+mm should be done with irqs off, to prevent races seeing an intermediate
+state.
 
-Again, no, please remove aliases and use real names and email addresses,
-otherwise accountability is lost over time, as we have seen constantly.
+This is similar to commit 38cf307c1f20 ("mm: fix kthread_use_mm() vs TLB
+invalidate"). At exec-time when the new mm is activated, the old one
+should usually be single-threaded and no longer used, unless something
+else is holding an mm_users reference (which may be possible).
 
-thanks,
+Absent other mm_users, there is also a race with preemption and lazy tlb
+switching. Consider the kernel_execve case where the current thread is
+using a lazy tlb active mm:
 
-greg k-h
+  call_usermodehelper()
+    kernel_execve()
+      old_mm = current->mm;
+      active_mm = current->active_mm;
+      *** preempt *** -------------------->  schedule()
+                                               prev->active_mm = NULL;
+                                               mmdrop(prev active_mm);
+                                             ...
+                      <--------------------  schedule()
+      current->mm = mm;
+      current->active_mm = mm;
+      if (!old_mm)
+          mmdrop(active_mm);
+
+If we switch back to the kernel thread from a different mm, there is a
+double free of the old active_mm, and a missing free of the new one.
+
+Closing this race only requires interrupts to be disabled while ->mm
+and ->active_mm are being switched, but the TLB problem requires also
+holding interrupts off over activate_mm. Unfortunately not all archs
+can do that yet, e.g., arm defers the switch if irqs are disabled and
+expects finish_arch_post_lock_switch() to be called to complete the
+flush; um takes a blocking lock in activate_mm().
+
+So as a first step, disable interrupts across the mm/active_mm updates
+to close the lazy tlb preempt race, and provide an arch option to
+extend that to activate_mm which allows architectures doing IPI based
+TLB shootdowns to close the second race.
+
+This is a bit ugly, but in the interest of fixing the bug and backporting
+before all architectures are converted this is a compromise.
+
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
+ arch/Kconfig |  7 +++++++
+ fs/exec.c    | 17 +++++++++++++++--
+ 2 files changed, 22 insertions(+), 2 deletions(-)
+
+diff --git a/arch/Kconfig b/arch/Kconfig
+index af14a567b493..94821e3f94d1 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -414,6 +414,13 @@ config MMU_GATHER_NO_GATHER
+ 	bool
+ 	depends on MMU_GATHER_TABLE_FREE
+ 
++config ARCH_WANT_IRQS_OFF_ACTIVATE_MM
++	bool
++	help
++	  Temporary select until all architectures can be converted to have
++	  irqs disabled over activate_mm. Architectures that do IPI based TLB
++	  shootdowns should enable this.
++
+ config ARCH_HAVE_NMI_SAFE_CMPXCHG
+ 	bool
+ 
+diff --git a/fs/exec.c b/fs/exec.c
+index a91003e28eaa..d4fb18baf1fb 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1130,11 +1130,24 @@ static int exec_mmap(struct mm_struct *mm)
+ 	}
+ 
+ 	task_lock(tsk);
+-	active_mm = tsk->active_mm;
+ 	membarrier_exec_mmap(mm);
+-	tsk->mm = mm;
++
++	local_irq_disable();
++	active_mm = tsk->active_mm;
+ 	tsk->active_mm = mm;
++	tsk->mm = mm;
++	/*
++	 * This prevents preemption while active_mm is being loaded and
++	 * it and mm are being updated, which could cause problems for
++	 * lazy tlb mm refcounting when these are updated by context
++	 * switches. Not all architectures can handle irqs off over
++	 * activate_mm yet.
++	 */
++	if (!IS_ENABLED(CONFIG_ARCH_WANT_IRQS_OFF_ACTIVATE_MM))
++		local_irq_enable();
+ 	activate_mm(active_mm, mm);
++	if (IS_ENABLED(CONFIG_ARCH_WANT_IRQS_OFF_ACTIVATE_MM))
++		local_irq_enable();
+ 	tsk->mm->vmacache_seqnum = 0;
+ 	vmacache_flush(tsk);
+ 	task_unlock(tsk);
+-- 
+2.23.0
+
