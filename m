@@ -2,175 +2,180 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2CEC43461
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8411CC433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC652087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5629A207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 01:29:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="erDzSgH9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MPj+EbW1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgH1BYP (ORCPT
+        id S1728148AbgH1B3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 27 Aug 2020 21:24:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4876 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726147AbgH1BYP (ORCPT
+        Thu, 27 Aug 2020 21:29:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgH1B3C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 27 Aug 2020 21:24:15 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07S12TYY034870;
-        Thu, 27 Aug 2020 21:23:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=references : from : to :
- cc : subject : in-reply-to : date : message-id : mime-version :
- content-type; s=pp1; bh=UI+j1uCJG7Wb83I1l3QGtcqSgXZaotktXn+rOHxEvok=;
- b=erDzSgH9xjB8ntUIuY7IGqF/cF38kn/Sd/nK9KkvNZiDx2aQx1SwB7MV2mS1esJyM3D9
- FuRwTwfNurd9kWJC46QHw0TIaEPSgolbvEBhvp8dRDyFnkjmRQE6DwtWoFo5i1/rmD7t
- C/LLE2Ql1nr4swRVGiW+UGHAX7KJVKXG949NDbeoGgIiulVg17w5171hTObXJuKNL5uu
- RA2P8EfwKQmxvhzB4p0UPcA1ogxnALhVOERKkiayxBhkN8gBvmmqaxjOzrW1zhLSm+qU
- ESK19zh6j112RK3hqlWc04ZdvN2KgIlP2yf+Njm/Obc4BoMbSwbzqwkL953rU24Ju8uH 2A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 336qb616r1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 21:23:35 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07S13JDW042310;
-        Thu, 27 Aug 2020 21:23:35 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 336qb616qt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 21:23:34 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07S1N83E007861;
-        Fri, 28 Aug 2020 01:23:34 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma01wdc.us.ibm.com with ESMTP id 332uwaxbwb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 01:23:34 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07S1NXtU36045270
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Aug 2020 01:23:33 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0E8337805F;
-        Fri, 28 Aug 2020 01:23:33 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C72997805C;
-        Fri, 28 Aug 2020 01:23:25 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.211.80.51])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Fri, 28 Aug 2020 01:23:25 +0000 (GMT)
-References: <20200819172134.11243-1-nramas@linux.microsoft.com>
- <20200819172134.11243-2-nramas@linux.microsoft.com>
-User-agent: mu4e 1.4.10; emacs 27.1
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
-        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        vincenzo.frascino@arm.com, mark.rutland@arm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
-Subject: Re: [PATCH v4 1/5] powerpc: Refactor kexec functions to move arch
- independent code to IMA
-In-reply-to: <20200819172134.11243-2-nramas@linux.microsoft.com>
-Date:   Thu, 27 Aug 2020 22:23:23 -0300
-Message-ID: <87wo1j7ed0.fsf@morokweng.localdomain>
+        Thu, 27 Aug 2020 21:29:02 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449A1C061264;
+        Thu, 27 Aug 2020 18:29:02 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id o68so1067432pfg.2;
+        Thu, 27 Aug 2020 18:29:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Rnno2/T7wXNQk8LQzZCrOzlnI6hdthPrV/zV4qtrmt8=;
+        b=MPj+EbW1lhUSca2A5cNXiwKkMgiFGKouf0AYN6Mrq3tqOJPsenpfSYALWqEQ2N3a/E
+         IZkW0t5bTDDxdBmxTaXBFbdw2ETaKWh5/N6RBRot107qPV4rMqMNNnJiJZdlvkjkGh+0
+         EMrWR14frsWLJYNX5MWODFeT04pWq3kpBbK0BPdh4urOgBtBc6P+SNNlWRN9nStYOF9c
+         xcAEw6vZLSFgnk//ScMeb8z1DbXAvuaD4Kr7O7EY0yggkvGtHAtRNcd+XI1InE1LU4DP
+         VnahHGU1egrOogI1NL/j4X5097LTX636BKfcHvDU9w3Gqi4/efdn///hgCZFClUvkcZD
+         NXUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Rnno2/T7wXNQk8LQzZCrOzlnI6hdthPrV/zV4qtrmt8=;
+        b=PQwlWLQsLVBv/4MSn/1N6lg8xpi2Q+S2DuuHHKN5mabaZSdZAlL07AneJ2kRBEshYl
+         +iOdoMwx7YwpxGR+g75aXDhMrMIaxwKovvIL86NJsS8iNARuFipL4MLvDf3peelKfC7L
+         SHYCudzUQ/EoYNPZyzQ/pg0STxWaV75B346I50+2qEG9QR7Dl+K2gubF8/DLCImFOg2w
+         FNX8nzY5qSHP3O2ER/ON8QBPSjZrW69O5r9fcpB+99oIqAsinKWNvsQ0xW0wCptS0c9s
+         NA7Hd3scx4cirNKZZ2+xodMj9UPEhJxffdwcRYd4FxY4IPz/WyuKBSRjP8q1JRahTNQ3
+         9xaA==
+X-Gm-Message-State: AOAM532BLu5SwTa8DeHv4EzigOfaJA6A4KB7xZnkMQQ3Yxey4ZUAsILt
+        VJHaHtzPkzlAuFXwpVhDMn1k6nouF43gpQ==
+X-Google-Smtp-Source: ABdhPJwLIO8/F4+zfjENIhbPR96oB4UTud2Dx8+j1bEmApg/0JQ2VOJYQuRHxEKCK5fCH04WrprYyw==
+X-Received: by 2002:a17:902:b282:: with SMTP id u2mr12741468plr.47.1598578141662;
+        Thu, 27 Aug 2020 18:29:01 -0700 (PDT)
+Received: from localhost.localdomain ([122.224.153.227])
+        by smtp.gmail.com with ESMTPSA id i11sm3730715pjg.50.2020.08.27.18.28.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 27 Aug 2020 18:29:00 -0700 (PDT)
+From:   Yanhu Cao <gmayyyha@gmail.com>
+To:     jlayton@kernel.org
+Cc:     idryomov@gmail.com, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yanhu Cao <gmayyyha@gmail.com>
+Subject: [v2] ceph: support getting ceph.dir.rsnaps vxattr
+Date:   Fri, 28 Aug 2020 09:28:44 +0800
+Message-Id: <20200828012844.18937-1-gmayyyha@gmail.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-27_14:2020-08-27,2020-08-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 suspectscore=2
- mlxlogscore=999 bulkscore=0 phishscore=0 adultscore=0 impostorscore=0
- malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008280003
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It's easy to know how many snapshots have been created.
 
-Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
+Link: https://tracker.ceph.com/issues/47168
+Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
+---
+ fs/ceph/inode.c      | 1 +
+ fs/ceph/mds_client.c | 9 ++++++++-
+ fs/ceph/mds_client.h | 1 +
+ fs/ceph/super.h      | 2 +-
+ fs/ceph/xattr.c      | 7 +++++++
+ 5 files changed, 18 insertions(+), 2 deletions(-)
 
-> +/**
-> + * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-> + * @addr:	On successful return, set to point to the buffer contents.
-> + * @size:	On successful return, set to the buffer size.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int ima_get_kexec_buffer(void **addr, size_t *size)
-
-I just noticed that this function is only called from within
-ima_kexec.c, so it can be made static.
-
-> +{
-> +	int ret, len;
-> +	unsigned long tmp_addr;
-> +	size_t tmp_size;
-> +	const void *prop;
-> +
-> +	prop = of_get_property(of_chosen, FDT_PROP_IMA_KEXEC_BUFFER, &len);
-> +	if (!prop)
-> +		return -ENOENT;
-> +
-> +	ret = do_get_kexec_buffer(prop, len, &tmp_addr, &tmp_size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*addr = __va(tmp_addr);
-> +	*size = tmp_size;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * ima_free_kexec_buffer - free memory used by the IMA buffer
-> + */
-> +int ima_free_kexec_buffer(void)
-
-This one can be static as well.
-
-> +{
-> +	int ret;
-> +	unsigned long addr;
-> +	size_t size;
-> +	struct property *prop;
-> +
-> +	prop = of_find_property(of_chosen, FDT_PROP_IMA_KEXEC_BUFFER, NULL);
-> +	if (!prop)
-> +		return -ENOENT;
-> +
-> +	ret = do_get_kexec_buffer(prop->value, prop->length, &addr, &size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = of_remove_property(of_chosen, prop);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return memblock_free(addr, size);
-> +
-> +}
-> +
->  #ifdef CONFIG_IMA_KEXEC
->  static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
->  				     unsigned long segment_size)
-
-
+diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+index 357c937699d5..650cad4b3ecb 100644
+--- a/fs/ceph/inode.c
++++ b/fs/ceph/inode.c
+@@ -891,6 +891,7 @@ int ceph_fill_inode(struct inode *inode, struct page *locked_page,
+ 			ci->i_rfiles = le64_to_cpu(info->rfiles);
+ 			ci->i_rsubdirs = le64_to_cpu(info->rsubdirs);
+ 			ci->i_dir_pin = iinfo->dir_pin;
++			ci->i_rsnaps = iinfo->rsnaps;
+ 			ceph_decode_timespec64(&ci->i_rctime, &info->rctime);
+ 		}
+ 	}
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index 4a26862d7667..3466845c0179 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -176,6 +176,13 @@ static int parse_reply_info_in(void **p, void *end,
+ 			memset(&info->snap_btime, 0, sizeof(info->snap_btime));
+ 		}
+ 
++		/* snapshot count, remains zero for v<=3 */
++		if (struct_v >= 4) {
++			ceph_decode_64_safe(p, end, info->rsnaps, bad);
++		} else {
++			info->rsnaps = 0;
++		}
++
+ 		*p = end;
+ 	} else {
+ 		if (features & CEPH_FEATURE_MDS_INLINE_DATA) {
+@@ -214,7 +221,7 @@ static int parse_reply_info_in(void **p, void *end,
+ 		}
+ 
+ 		info->dir_pin = -ENODATA;
+-		/* info->snap_btime remains zero */
++		/* info->snap_btime and info->rsnaps remain zero */
+ 	}
+ 	return 0;
+ bad:
+diff --git a/fs/ceph/mds_client.h b/fs/ceph/mds_client.h
+index bc9e95937d7c..76f2ed1a7cbf 100644
+--- a/fs/ceph/mds_client.h
++++ b/fs/ceph/mds_client.h
+@@ -88,6 +88,7 @@ struct ceph_mds_reply_info_in {
+ 	s32 dir_pin;
+ 	struct ceph_timespec btime;
+ 	struct ceph_timespec snap_btime;
++	u64 rsnaps;
+ 	u64 change_attr;
+ };
+ 
+diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+index 4c3c964b1c54..eb108b69da71 100644
+--- a/fs/ceph/super.h
++++ b/fs/ceph/super.h
+@@ -332,7 +332,7 @@ struct ceph_inode_info {
+ 
+ 	/* for dirs */
+ 	struct timespec64 i_rctime;
+-	u64 i_rbytes, i_rfiles, i_rsubdirs;
++	u64 i_rbytes, i_rfiles, i_rsubdirs, i_rsnaps;
+ 	u64 i_files, i_subdirs;
+ 
+ 	/* quotas */
+diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
+index 3a733ac33d9b..c7d8ecc3d04b 100644
+--- a/fs/ceph/xattr.c
++++ b/fs/ceph/xattr.c
+@@ -231,6 +231,12 @@ static ssize_t ceph_vxattrcb_dir_rsubdirs(struct ceph_inode_info *ci, char *val,
+ 	return ceph_fmt_xattr(val, size, "%lld", ci->i_rsubdirs);
+ }
+ 
++static ssize_t ceph_vxattrcb_dir_rsnaps(struct ceph_inode_info *ci, char *val,
++					  size_t size)
++{
++	return ceph_fmt_xattr(val, size, "%lld", ci->i_rsnaps);
++}
++
+ static ssize_t ceph_vxattrcb_dir_rbytes(struct ceph_inode_info *ci, char *val,
+ 					size_t size)
+ {
+@@ -352,6 +358,7 @@ static struct ceph_vxattr ceph_dir_vxattrs[] = {
+ 	XATTR_RSTAT_FIELD(dir, rentries),
+ 	XATTR_RSTAT_FIELD(dir, rfiles),
+ 	XATTR_RSTAT_FIELD(dir, rsubdirs),
++	XATTR_RSTAT_FIELD(dir, rsnaps),
+ 	XATTR_RSTAT_FIELD(dir, rbytes),
+ 	XATTR_RSTAT_FIELD(dir, rctime),
+ 	{
 -- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+2.24.3 (Apple Git-128)
+
