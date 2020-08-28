@@ -2,99 +2,186 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC6DC433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99930C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1F3C208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:38:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RduLXisF"
+	by mail.kernel.org (Postfix) with ESMTP id 7735B2098B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 06:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgH1Gii (ORCPT
+        id S1727813AbgH1Gi5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 02:38:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgH1Gif (ORCPT
+        Fri, 28 Aug 2020 02:38:57 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:58161 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726010AbgH1Gi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 02:38:35 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F296C061264;
-        Thu, 27 Aug 2020 23:38:35 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id nv17so79997pjb.3;
-        Thu, 27 Aug 2020 23:38:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=p9NrqtGA0lEAyvaWExHEOIkVPg1Ur6ql2DVuQwYEcRI=;
-        b=RduLXisFsEQzUmokLu8gVohrbfs3Yi3mSW+4TbL7YZgQQ3/aZcpnYnHLScI4+UuzBU
-         N2IUrrW6FAZXVM/n+n+7rPCfBl85j+538sRO8uiGBbNnwDtNuWUypt09X9zeiHgMii0v
-         8pkPrCvPARwQA1bHqL4fiT+aNdkPy4tEEwKe0myb2VUYdnCT+aUepjGePG8GY87HdJ+O
-         oW60geGXTK0i0hd8sLTzK/T1cnlrxbliSLulJHmsQtZTcDmQUSaUQkoEin2fPPsIpVNg
-         s5594T/jV37+xUcucPEl3rZHbc7KAU7iIucna9FHVQplpemsHea4Sah4OvIXGlnRgnac
-         byGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=p9NrqtGA0lEAyvaWExHEOIkVPg1Ur6ql2DVuQwYEcRI=;
-        b=alcupNMIAoqe+FuP1fwRJxTglZ24/4gLfrRQJAF0oFO5V2jKu1v24qPfR2IGZG9MWs
-         masM1HDRenLa/7GwmNYQe1kDKyd2WqTOmS0MUeK/lSGfUmsJeRjhdWvt275O6JZDhvKm
-         bSUIYVuJsd5M+e6MVTLSbxEsna0VGICyyX2h62E8I0V+iolT76UcDJf/1Ecq24Es7Csp
-         LtvlzvEJ8SaSjwOWHGgEczcujexn+e46JCMF9tTImT2zveXc+vGn8BJpI8Aa5M95WqYq
-         YC8BUuql7CFkkW2fymwT+tNYjCByGHpDsDsPuzdY9JLA4NDf0ZnbQJhO9IeTSvr0w2zf
-         +yaA==
-X-Gm-Message-State: AOAM530qJDSBs3+Dg4VyDgLkufyKw9tlW0hhelIFdqVAHQw6SfG30NVx
-        qY6xm17B+LriAguv9xwM6f4=
-X-Google-Smtp-Source: ABdhPJxJugxcrisQy51S+DhhH5XVTik2EScUjH+nlVz9HSkLZd+WEAfljrs/0p3kTdhlACFzl0pafg==
-X-Received: by 2002:a17:902:b40b:: with SMTP id x11mr187530plr.196.1598596714863;
-        Thu, 27 Aug 2020 23:38:34 -0700 (PDT)
-Received: from kun-vb-ubnt64.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id b8sm304757pfp.48.2020.08.27.23.38.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 23:38:33 -0700 (PDT)
-From:   Kun Zhao <zk.zkxz@gmail.com>
-Cc:     zkxz@hotmail.com, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] In the device tree file openbmc-flash-layout.dtsi, rofs partition offset is defined as 0x4c0000, while its node name is "rofs@c0000" which is a typo. It should be "rofs@4c0000".
-Date:   Thu, 27 Aug 2020 23:38:31 -0700
-Message-Id: <20200828063831.12578-1-zk.zkxz@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Fri, 28 Aug 2020 02:38:57 -0400
+Received: from [78.134.86.56] (port=44498 helo=[192.168.77.62])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1kBY2H-000EXc-0n; Fri, 28 Aug 2020 08:38:53 +0200
+Subject: Re: [PATCH v2 3/5] fpga manager: xilinx-spi: rework write_complete
+ loop implementation
+To:     Tom Rix <trix@redhat.com>
+References: <20200827143249.10973-1-luca@lucaceresoli.net>
+ <20200827143249.10973-3-luca@lucaceresoli.net>
+ <2b8d9ed7-0468-9001-2f8e-386312aae6cb@redhat.com>
+ <bc35f12e-6ff2-94a7-d519-94616f6dfc6c@lucaceresoli.net>
+ <27bbb896-fedf-6a3a-7220-5c57239a3b87@redhat.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anatolij Gustschin <agust@denx.de>
+Message-ID: <913cb7ea-3502-b3cd-3ec9-af60d63129c9@lucaceresoli.net>
+Date:   Fri, 28 Aug 2020 08:38:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <27bbb896-fedf-6a3a-7220-5c57239a3b87@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ARM: dts: openbmc-flash-layout: Fix a typo of rofs offset
+Hi Tom,
 
-Signed-off-by: Kun Zhao <zk.zkxz@gmail.com>
----
- arch/arm/boot/dts/openbmc-flash-layout.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 27/08/20 21:34, Tom Rix wrote:
+> 
+> On 8/27/20 12:26 PM, Luca Ceresoli wrote:
+>> Hi Tom,
+>>
+>> thanks for the prompt feedback!
+>>
+>> On 27/08/20 20:59, Tom Rix wrote:
+>>> On 8/27/20 7:32 AM, Luca Ceresoli wrote:
+>>>> In preparation to add error checking for gpiod_get_value(), rework
+>>>> the loop to avoid the duplication of these lines:
+>>>>
+>>>> 	if (gpiod_get_value(conf->done))
+>>>> 		return xilinx_spi_apply_cclk_cycles(conf);
+>>>>
+>>>> There is little advantage in this rework with current code. However
+>>>> error checking will expand these two lines to five, making code
+>>>> duplication more annoying.
+>>>>
+>>>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>>>>
+>>>> ---
+>>>>
+>>>> This patch is new in v2
+>>>> ---
+>>>>  drivers/fpga/xilinx-spi.c | 15 ++++++---------
+>>>>  1 file changed, 6 insertions(+), 9 deletions(-)
+>>>>
+>>>> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
+>>>> index 01f494172379..cfc933d70f52 100644
+>>>> --- a/drivers/fpga/xilinx-spi.c
+>>>> +++ b/drivers/fpga/xilinx-spi.c
+>>>> @@ -151,22 +151,19 @@ static int xilinx_spi_write_complete(struct fpga_manager *mgr,
+>>>>  				     struct fpga_image_info *info)
+>>>>  {
+>>>>  	struct xilinx_spi_conf *conf = mgr->priv;
+>>>> -	unsigned long timeout;
+>>>> +	unsigned long timeout = jiffies + usecs_to_jiffies(info->config_complete_timeout_us);
+>>>>  	int ret;
+>>>>  
+>>>> -	if (gpiod_get_value(conf->done))
+>>>> -		return xilinx_spi_apply_cclk_cycles(conf);
+>>>> -
+>>>> -	timeout = jiffies + usecs_to_jiffies(info->config_complete_timeout_us);
+>>>> +	while (true) {
+>>>> +		if (gpiod_get_value(conf->done))
+>>>> +			return xilinx_spi_apply_cclk_cycles(conf);
+>>>>  
+>>>> -	while (time_before(jiffies, timeout)) {
+>>>> +		if (time_after(jiffies, timeout))
+>>>> +			break;
+>>>>  
+>>>>  		ret = xilinx_spi_apply_cclk_cycles(conf);
+>>>>  		if (ret)
+>>>>  			return ret;
+>>>> -
+>>>> -		if (gpiod_get_value(conf->done))
+>>>> -			return xilinx_spi_apply_cclk_cycles(conf);
+>>>>  	} 
+>>> Do you need another
+>>>
+>>> 	if (gpiod_get_value(conf->done))
+>>> 		return xilinx_spi_apply_cclk_cycles(conf);
+>>>
+>>> here to cover the chance of sleeping in the loop ?
+>> If I got your question correctly: if we get here it's because of a
+>> timeout, thus programming has failed (DONE didn't come up after some
+>> time), and checking it one more here seems pointless.
+> 
+> It may not be pointless, if this routine sleeps because it was scheduled out, when it wakes up a lot of time  happened. You will see this as a timeout but the state may be good.  Another, final check at the end will cover this case.
 
-diff --git a/arch/arm/boot/dts/openbmc-flash-layout.dtsi b/arch/arm/boot/dts/openbmc-flash-layout.dtsi
-index 6c26524e93e1..b47e14063c38 100644
---- a/arch/arm/boot/dts/openbmc-flash-layout.dtsi
-+++ b/arch/arm/boot/dts/openbmc-flash-layout.dtsi
-@@ -20,7 +20,7 @@ kernel@80000 {
- 		label = "kernel";
- 	};
- 
--	rofs@c0000 {
-+	rofs@4c0000 {
- 		reg = <0x4c0000 0x1740000>;
- 		label = "rofs";
- 	};
+Oh, now I got your point! Yes, there is this risk, and it exists in
+current code as well but with a smaller risk window. Unrolling the
+current and new loop code they behave the same except for the position
+of the timeout computation (after vs before the first 'if (done) return'
+group).
+
+I think this reimplementation is sleep-safe, check for GPIO errors and
+also avoid code duplication:
+
+static int xilinx_spi_write_complete(struct fpga_manager *mgr,
+				     struct fpga_image_info *info)
+{
+	struct xilinx_spi_conf *conf = mgr->priv;
+	unsigned long timeout = jiffies +
+		usecs_to_jiffies(info->config_complete_timeout_us);
+	bool expired;
+	int done;
+	int ret;
+
+	while (!expired) {
+		expired = time_after(jiffies, timeout);
+
+		done = get_done_gpio(mgr);
+		if (done < 0)
+			return done;
+
+		ret = xilinx_spi_apply_cclk_cycles(conf);
+		if (ret)
+			return ret;
+
+		if (done)
+			return 0;
+	}
+
+	dev_err(&mgr->dev, "Timeout after config data transfer\n");
+
+	return -ETIMEDOUT;
+}
+
+A key point is to assess all the status (expired and done variables)
+before taking any action based on it. Then we can unconditionally apply
+8 cclk cycles before even checking the actual DONE value, so that we
+always do that after DONE has been seen asserted.
+
+Does it look good?
+
 -- 
-2.28.0
+Luca
 
