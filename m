@@ -2,157 +2,116 @@ Return-Path: <SRS0=aBbL=CG=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B45C433E6
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9C0C433E6
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99E3F207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:04:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lJklyuEm"
+	by mail.kernel.org (Postfix) with ESMTP id 48AD3207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 11:04:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598612678;
+	bh=c7c25Ad7ytC5Nvm3HpoIhR0Ip8Ni9wwASMQD/vt/XEg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X6jYiN3DxpjQlMIcF+O7DqiSAsvZP3TsCh4yxp2VRaVzLqIJn3HutrADTWmb5FBJ6
+	 qa0AEeBnLVO8IBI9sVy10/UDoEP4hTW5HpQuKlVbx3LJ/eM2PsCXMGlVnvWRIHs0/A
+	 zICFh4nrXyBVLERiCEUk1A6QGd0gwL2g1rp/2ZWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgH1LDz (ORCPT
+        id S1729214AbgH1LEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 07:03:55 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52338 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729150AbgH1LDd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 07:03:33 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07SB3SHf010025;
-        Fri, 28 Aug 2020 06:03:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598612608;
-        bh=Ht/kpmfFKKAmBLtxYmnb3a0fKfLy/bJ2ohoyyGN62fI=;
-        h=From:To:CC:Subject:Date;
-        b=lJklyuEmEg0ftZAPvTCVT7ipc+wvIBXH4IJghDVOomz5BdvT0w4ic7Swno4kTYFY5
-         GsO32P4IFyA/VIE1o2vx7K0OuIFbEgEjcaBGFnpevNcmhliFQMbUrmKzz4F0wnOKMk
-         4E1JHK/pe6pbsqWfeVcUDputRhLnV/vKTkv+KtXo=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07SB3S3t055872
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 28 Aug 2020 06:03:28 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 28
- Aug 2020 06:03:27 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 28 Aug 2020 06:03:27 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07SB3Po4020682;
-        Fri, 28 Aug 2020 06:03:26 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <linux-kernel@vger.kernel.org>, <andy.shevchenko@gmail.com>
-Subject: [PATCH] dmaengine: Mark dma_request_slave_channel() deprecated
-Date:   Fri, 28 Aug 2020 14:05:07 +0300
-Message-ID: <20200828110507.22407-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.28.0
+        Fri, 28 Aug 2020 07:04:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729156AbgH1LEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 07:04:13 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EEED207DF;
+        Fri, 28 Aug 2020 11:04:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598612653;
+        bh=c7c25Ad7ytC5Nvm3HpoIhR0Ip8Ni9wwASMQD/vt/XEg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OdkPbxH3//2B1lmlRwK/7kEk7/mQ+9ro8Jd3YUEfOEhH19iqvfDxISyROvjy2/glP
+         bm3gJ7K8TB6Taob/SGu4njdFkrNda4Oa1jnzEwmVX53RM1O5zTfCmUo21Tir9tX866
+         BjxQc4iICM4k4NWVGLOh5kJ64l7n4KbOiXjemdRY=
+Date:   Fri, 28 Aug 2020 12:04:08 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yuqi Jin <jinyuqi@huawei.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [NAK] Re: [PATCH] fs: Optimized fget to improve performance
+Message-ID: <20200828110408.GA30722@willie-the-truck>
+References: <1598523584-25601-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20200827142848.GZ1236603@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827142848.GZ1236603@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New drivers should use dma_request_chan() instead
-dma_request_slave_channel()
+On Thu, Aug 27, 2020 at 03:28:48PM +0100, Al Viro wrote:
+> On Thu, Aug 27, 2020 at 06:19:44PM +0800, Shaokun Zhang wrote:
+> > From: Yuqi Jin <jinyuqi@huawei.com>
+> > 
+> > It is well known that the performance of atomic_add is better than that of
+> > atomic_cmpxchg.
+> > The initial value of @f_count is 1. While @f_count is increased by 1 in
+> > __fget_files, it will go through three phases: > 0, < 0, and = 0. When the
+> > fixed value 0 is used as the condition for terminating the increase of 1,
+> > only atomic_cmpxchg can be used. When we use < 0 as the condition for
+> > stopping plus 1, we can use atomic_add to obtain better performance.
+> 
+> Suppose another thread has just removed it from the descriptor table.
+> 
+> > +static inline bool get_file_unless_negative(atomic_long_t *v, long a)
+> > +{
+> > +	long c = atomic_long_read(v);
+> > +
+> > +	if (c <= 0)
+> > +		return 0;
+> 
+> Still 1.  Now the other thread has gotten to dropping the last reference,
+> decremented counter to zero and committed to freeing the struct file.
+> 
+> > +
+> > +	return atomic_long_add_return(a, v) - 1;
+> 
+> ... and you increment that sucker back to 1.  Sure, you return 0, so the
+> caller does nothing to that struct file.  Which includes undoing the
+> changes to its refecount.
+> 
+> In the meanwhile, the third thread does fget on the same descriptor,
+> and there we end up bumping the refcount to 2 and succeeding.  Which
+> leaves the caller with reference to already doomed struct file...
+> 
+> 	IOW, NAK - this is completely broken.  The whole point of
+> atomic_long_add_unless() is that the check and conditional increment
+> are atomic.  Together.  That's what your optimization takes out.
 
-dma_request_slave_channel() is a simple wrapper for dma_request_chan()
-eating up the error code for channel request failure and makes deferred
-probing impossible.
+Cheers Al, yes, this is fscked.
 
-Move the dma_request_slave_channel() into the header as inline function,
-mark it as deprecated.
+As an aside, I've previously toyed with the idea of implementing a form
+of cmpxchg() using a pair of xchg() operations and a smp_cond_load_relaxed(),
+where the thing would transition through a "reserved value", which might
+perform better with the current trend of building hardware that doesn't
+handle CAS failure so well.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/dma/dmaengine.c   | 18 ------------------
- include/linux/dmaengine.h | 15 +++++++++------
- 2 files changed, 9 insertions(+), 24 deletions(-)
+But I've never had the time/motivation to hack it up, and it relies on that
+reserved value which obviously doesn't always work (so it would have to be a
+separate API).
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index a53e71d2bbd4..ac8ef6cf7626 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -871,24 +871,6 @@ struct dma_chan *dma_request_chan(struct device *dev, const char *name)
- }
- EXPORT_SYMBOL_GPL(dma_request_chan);
- 
--/**
-- * dma_request_slave_channel - try to allocate an exclusive slave channel
-- * @dev:	pointer to client device structure
-- * @name:	slave channel name
-- *
-- * Returns pointer to appropriate DMA channel on success or NULL.
-- */
--struct dma_chan *dma_request_slave_channel(struct device *dev,
--					   const char *name)
--{
--	struct dma_chan *ch = dma_request_chan(dev, name);
--	if (IS_ERR(ch))
--		return NULL;
--
--	return ch;
--}
--EXPORT_SYMBOL_GPL(dma_request_slave_channel);
--
- /**
-  * dma_request_chan_by_mask - allocate a channel satisfying certain capabilities
-  * @mask:	capabilities that the channel must satisfy
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 011371b7f081..dd357a747780 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -1472,7 +1472,6 @@ void dma_issue_pending_all(void);
- struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
- 				       dma_filter_fn fn, void *fn_param,
- 				       struct device_node *np);
--struct dma_chan *dma_request_slave_channel(struct device *dev, const char *name);
- 
- struct dma_chan *dma_request_chan(struct device *dev, const char *name);
- struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
-@@ -1502,11 +1501,6 @@ static inline struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
- {
- 	return NULL;
- }
--static inline struct dma_chan *dma_request_slave_channel(struct device *dev,
--							 const char *name)
--{
--	return NULL;
--}
- static inline struct dma_chan *dma_request_chan(struct device *dev,
- 						const char *name)
- {
-@@ -1575,6 +1569,15 @@ void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
- #define dma_request_channel(mask, x, y) \
- 	__dma_request_channel(&(mask), x, y, NULL)
- 
-+/* Deprecated, please use dma_request_chan() directly */
-+static inline struct dma_chan * __deprecated
-+dma_request_slave_channel(struct device *dev, const char *name)
-+{
-+	struct dma_chan *ch = dma_request_chan(dev, name);
-+
-+	return IS_ERR(ch) ? NULL : ch;
-+}
-+
- static inline struct dma_chan
- *dma_request_slave_channel_compat(const dma_cap_mask_t mask,
- 				  dma_filter_fn fn, void *fn_param,
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Will
