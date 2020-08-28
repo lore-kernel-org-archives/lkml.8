@@ -7,111 +7,104 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE372C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF32C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C57A52137B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E86BA20B80
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 10:57:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YrriV/Zp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OawI+57Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbgH1K5B (ORCPT
+        id S1729186AbgH1K54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 06:57:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50472 "EHLO
+        Fri, 28 Aug 2020 06:57:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729123AbgH1Kx3 (ORCPT
+        with ESMTP id S1728556AbgH1K4J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 06:53:29 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE51FC061232
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:53:08 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id k20so484885wmi.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:53:08 -0700 (PDT)
+        Fri, 28 Aug 2020 06:56:09 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6840CC061235
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:54:34 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id w5so85052wrp.8
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 03:54:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=e6iXM6C5sJ3FBz3LIMthXRBWXK9iTp3RhCVsBFe2ot4=;
-        b=YrriV/ZpxSVeR1zNRjbVh0hZsksEyHhLgrOl31e0w2SDO/H8Bjh/dcb34Qq3dSVt8h
-         uiOhYVGDo6GywbGQ453rFe6xo1Yo4hMj+KVM1hv/A6Wm1QY6rBkeJ7BrYrrj4p7aUjn1
-         BO/Cn7KyMnoVy5Ka6E+TfXreZM2tII4pyNxLPM2QKyIQ8+xV541NqaHAPOYwePYBuTbX
-         sD+tbJf0KJvFjKoikZg7/vVmIdZQctlcrnzpPzhWe0x0ApPVnwsSuTwYgFVJHE8MmpBy
-         M12aXSVVQjbNuvEwKf2gUCy7mVf7wXrDAaKk7Tp/hz3zPA7ndKo2EXfLC3QcA+wayEfv
-         utTg==
+        bh=lXtF9bbCATgKOcQQrLawl15aRDCqn7csOAK/tInxTck=;
+        b=OawI+57Qp29KR7NQ10qS2S7D5MsB7PEAoqQA42/bCYhW77FiXwXbJ85u81nWbx4lG4
+         QX73cCMmKknFGKyHz4Dl5mV6UYC720ElmlqK5EsZA0hUPHjDgooCkFj/hkLQOxYFqYjV
+         hA1ToSuIwToPCGFK9FRLncszchC9FoR2FasPyCL4NwzsqtMqah12Nbrcyvt2iC+lwAN8
+         gSgy/TCLPX+1/O6DKxIG3f2cO/H7foWjSLxpFV0OLlCmMEjokR9yeePmi58kblQneXa7
+         nYBwQHAIUmhrXGtnuaokDJwO/CL8RihqfTJKUhT+i1lVRJTi5z70WJIdTEbQFLN61QqV
+         9ILQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=e6iXM6C5sJ3FBz3LIMthXRBWXK9iTp3RhCVsBFe2ot4=;
-        b=TEsO7R4qCRNcAKRjlPXxsDsrlW6ZMBl+l+olxDbULbM0nxwB9GMBeWotIwAeeQwKyh
-         R4EiBgpCWYVlZHu6vseIGmjC5OBJ1A7wUTjUlEwx491AgS5kJ0drDG5SihY6LWSlSa9q
-         d96XtYrhZ4a//TRxH0L8WNTqZ6kJNwx1SbSEgNjKzSAsWMDnQ/v68apD8LftGnFqv3ob
-         VRvXkYgLtIpEHE9qlv6F/7PUwqFq8xmT2WR/eslqZm32PQqPIe+on1xaBDLLh76xOkBF
-         zfTKhGyENzA3xKGuvlxjFYc56Tx5cm6Gqmc1e5/erUgDc0an1LY8B0fScbQggJ5jUguj
-         vvjg==
-X-Gm-Message-State: AOAM531DMhBu6Fe1oXSB5lgR9sR6p4tvukNngQJ0Ry/2GgH0A5PqjCXW
-        bfXMESPAhCQLXhnaCELeJEJteQ==
-X-Google-Smtp-Source: ABdhPJzQxd25rKg5eLhiITlNvNOcRWPIr5L602jIp3qY0aHNYmrx4NqgdS61UJZebGJa7RWwd6OJsA==
-X-Received: by 2002:a1c:a506:: with SMTP id o6mr1019921wme.3.1598611987242;
-        Fri, 28 Aug 2020 03:53:07 -0700 (PDT)
+        bh=lXtF9bbCATgKOcQQrLawl15aRDCqn7csOAK/tInxTck=;
+        b=KACwUkoq9JRmvwpmDs5LYgfSY2LklR2k6AfrjRPjSw9SVPBCduEoWLzEKV3WsjN+r6
+         WaQLEVdFWSAyuIS5nbcJfbhdq83AMsoV24/j0JbJEb7vJIJYus19oGaFfcfRWwZfkIqY
+         qlH3xZuDiqBN4S6xUPpFbwJcAE/g98GxAeQf8VioeG+DDkf5VnW289DQVaW7I2gj+Pug
+         VG1c0nzjvyrld1jECsl4k+o07s73mTTowhugcyUcC4TxxX7gWSAG3y3pcCzSReKuHCBf
+         GDqgogseopb0dMkLp9x+h7EnKo/I4Ci7SiBf7EMSYRaUZjeRQyeN71b/B7fZxbe09bzY
+         tkyQ==
+X-Gm-Message-State: AOAM530mfZdsl70eOZnQuIj/vbQVHXWKm+A1P9PUWlCX0nOKtocI26Aa
+        OmcLIj6WU0/8fSb2Lt3gR02gzA==
+X-Google-Smtp-Source: ABdhPJx9GGnD6owZ14uJV+jsVBABWaMPcIPeZyv6FfCVmNTKFDjPRE5yQEOh34lyF1kQDxKMTxy1pQ==
+X-Received: by 2002:adf:ed05:: with SMTP id a5mr422004wro.364.1598612073121;
+        Fri, 28 Aug 2020 03:54:33 -0700 (PDT)
 Received: from dell ([91.110.221.141])
-        by smtp.gmail.com with ESMTPSA id r129sm1531390wmr.40.2020.08.28.03.53.06
+        by smtp.gmail.com with ESMTPSA id y3sm1377779wrs.36.2020.08.28.03.54.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 03:53:06 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 11:53:04 +0100
+        Fri, 28 Aug 2020 03:54:32 -0700 (PDT)
+Date:   Fri, 28 Aug 2020 11:54:30 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
-        alexander.h.duyck@linux.intel.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pci@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH V5 2/3] mfd: Intel Platform Monitoring Technology support
-Message-ID: <20200828105304.GS1826686@dell>
-References: <20200819180255.11770-1-david.e.box@linux.intel.com>
- <20200819180255.11770-3-david.e.box@linux.intel.com>
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: Re: [PATCH v3] mfd: sprd: Add wakeup capability for PMIC irq
+Message-ID: <20200828105430.GT1826686@dell>
+References: <20200818034158.28667-1-zhang.lyra@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200819180255.11770-3-david.e.box@linux.intel.com>
+In-Reply-To: <20200818034158.28667-1-zhang.lyra@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Aug 2020, David E. Box wrote:
+On Tue, 18 Aug 2020, Chunyan Zhang wrote:
 
-> Intel Platform Monitoring Technology (PMT) is an architecture for
-> enumerating and accessing hardware monitoring facilities. PMT supports
-> multiple types of monitoring capabilities. This driver creates platform
-> devices for each type so that they may be managed by capability specific
-> drivers (to be introduced). Capabilities are discovered using PCIe DVSEC
-> ids. Support is included for the 3 current capability types, Telemetry,
-> Watcher, and Crashlog. The features are available on new Intel platforms
-> starting from Tiger Lake for which support is added.
+> From: Baolin Wang <baolin.wang7@gmail.com>
 > 
-> Also add a quirk mechanism for several early hardware differences and bugs.
-> For Tiger Lake, do not support Watcher and Crashlog capabilities since they
-> will not be compatible with future product. Also, fix use a quirk to fix
-> the discovery table offset.
+> When changing to use suspend-to-idle to save power, the PMIC irq can not
+> wakeup the system due to lack of wakeup capability, which will cause
+> the sub-irqs (such as power key) of the PMIC can not wake up the system.
+> Thus we can add the wakeup capability for PMIC irq to solve this issue,
+> as well as removing the IRQF_NO_SUSPEND flag to allow PMIC irq to be
+> a wakeup source.
 > 
-> Co-developed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reported-by: Chunyan Zhang <zhang.lyra@gmail.com>
+> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+> Tested-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > ---
->  MAINTAINERS             |   5 +
->  drivers/mfd/Kconfig     |  10 ++
->  drivers/mfd/Makefile    |   1 +
->  drivers/mfd/intel_pmt.c | 220 ++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 236 insertions(+)
->  create mode 100644 drivers/mfd/intel_pmt.c
+> Changes from v2:
+> * rebased on v5.9-rc1;
+> 
+> Changes from v1:
+> * addressed comments from Lee;
+> * added tested-by from Chunyan.
+> ---
+>  drivers/mfd/sprd-sc27xx-spi.c | 28 +++++++++++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
 
-For my own reference (apply this as-is to your sign-off block):
-
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Applied, thanks.
 
 -- 
 Lee Jones [李琼斯]
