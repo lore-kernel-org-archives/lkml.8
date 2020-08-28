@@ -6,128 +6,149 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7027C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D435AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A95652075B
-	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E102075B
+	for <linux-kernel@archiver.kernel.org>; Fri, 28 Aug 2020 15:03:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tOnfqc4q"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZmFcI8pU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgH1PB3 (ORCPT
+        id S1727780AbgH1PDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 11:01:29 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43052 "EHLO
+        Fri, 28 Aug 2020 11:03:01 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16162 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726400AbgH1PBZ (ORCPT
+        by vger.kernel.org with ESMTP id S1726197AbgH1PC4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 11:01:25 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07SEWS0R080188;
-        Fri, 28 Aug 2020 11:01:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=whWwP11nLkwAhTzmvg3pxCC7eFCxf/dZHtL4Lprb/U4=;
- b=tOnfqc4q6loVCIUljkUdZ3pqhjUVorJH7t74xWinwP5HsHDqw4fQQDLSCD7J04zYEfqp
- tJrAfFhIvGJZFHJtAugYY3HOCRZbbLSGykjkNyu9C2PfWJkkLCptTuEY/vTqLkk4eq1F
- gKJh4QYxHsMR1zSjFSVbLOIxFwV3xAnKoNpaudlgTFP9UttApq6hc/7MK6e43jWOxRpE
- b5weWm/n+DKsVtUAi/epMC+CiXGnqIqsLWwoUQsCa+xcimw5dcwxWQm1ycjoaat3aTSG
- BZokYd3s0jKlFOOgbwLfGRqdhYP/4zQbuifA6u8KiNBeoQZCJCMa1K+T+CXTvd+aYWP+ FQ== 
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3370k56se9-1
+        Fri, 28 Aug 2020 11:02:56 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07SF2iO6091018;
+        Fri, 28 Aug 2020 11:02:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : reply-to : to : cc : date : in-reply-to : references : content-type
+ : mime-version : content-transfer-encoding; s=pp1;
+ bh=u3GT3t+mVGFoG2/sqsKNjy5riCz5nFHuHpPP2z4ZR3I=;
+ b=ZmFcI8pUgFx1JLHvnT4qA0k/I3dnkZLrRBdyGVLnat88gzCweVLFRWFfpm2KKn+zo8k1
+ WQdlNn8/tOOkeQB7tmAYcQzaEirJpzHNdW8hk4OWhNE6Oj6OdmtJMrYRKbCToFuwlPaK
+ 19t1NW+sonoI+rBseMAIf5DpiCik0qPS6muwa3Re2vfcx26L+TQEQNx6kPW7TMHVE6uC
+ DggHTQzfg0sarlYvqRu0/bKxoqN3iQtaXB0m2jmXyEVFjHf+GkXszTX32DJ10DiSBcsy
+ Y6ytBSdUk+Hfu/9RHY8aAkXF95YoCRK9ZUFwpGR29eGQRh/yykFojlGn6sLFYzRseOe1 Fg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33703xykvm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 11:01:10 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07SEvF04009069;
-        Fri, 28 Aug 2020 15:01:08 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 336124sv9f-1
+        Fri, 28 Aug 2020 11:02:49 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07SF2l2g091351;
+        Fri, 28 Aug 2020 11:02:47 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33703xykrh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 15:01:07 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07SF15jS30015968
+        Fri, 28 Aug 2020 11:02:47 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07SEvpbt022587;
+        Fri, 28 Aug 2020 15:02:41 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma03dal.us.ibm.com with ESMTP id 332utufcyy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 15:02:41 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07SF2eU757016640
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Aug 2020 15:01:05 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0EDFBAE057;
-        Fri, 28 Aug 2020 15:01:05 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 866C5AE065;
-        Fri, 28 Aug 2020 15:01:04 +0000 (GMT)
-Received: from thinkpad (unknown [9.171.56.70])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Fri, 28 Aug 2020 15:01:04 +0000 (GMT)
-Date:   Fri, 28 Aug 2020 17:01:03 +0200
-From:   Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [RFC PATCH 0/2] mm/gup: fix gup_fast with dynamic page table
- folding
-Message-ID: <20200828170103.6d954d95@thinkpad>
-In-Reply-To: <20200828142137.GX24045@ziepe.ca>
-References: <20200828140314.8556-1-gerald.schaefer@linux.ibm.com>
-        <20200828142137.GX24045@ziepe.ca>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 28 Aug 2020 15:02:40 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 512AF78060;
+        Fri, 28 Aug 2020 15:02:40 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4D67D7805C;
+        Fri, 28 Aug 2020 15:02:38 +0000 (GMT)
+Received: from [153.66.254.174] (unknown [9.80.230.238])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Aug 2020 15:02:38 +0000 (GMT)
+Message-ID: <1598626957.3883.17.camel@linux.ibm.com>
+Subject: Re: [PATCH] MAINTAINERS: orphan sections with qlogic.com group alias
+From:   James Bottomley <jejb@linux.ibm.com>
+Reply-To: jejb@linux.ibm.com
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Roman Bolshakov <r.bolshakov@yadro.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+        linux-spdx@vger.kernel.org, linux-kernel@vger.kernel.org,
+        GR-QLogic-Storage-Upstream@marvell.com,
+        Arun Easi <aeasi@marvell.com>
+Date:   Fri, 28 Aug 2020 08:02:37 -0700
+In-Reply-To: <alpine.DEB.2.21.2008281524360.11562@felia>
+References: <20200828070824.8032-1-lukas.bulwahn@gmail.com>
+         <20200828091758.GF54274@SPB-NB-133.local>
+         <alpine.DEB.2.21.2008281524360.11562@felia>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-28_08:2020-08-28,2020-08-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 adultscore=0 impostorscore=0 bulkscore=0 mlxlogscore=999
- spamscore=0 lowpriorityscore=0 mlxscore=0 malwarescore=0 phishscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008280108
+ definitions=2020-08-28_09:2020-08-28,2020-08-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 spamscore=0
+ malwarescore=0 clxscore=1011 phishscore=0 mlxscore=0 mlxlogscore=999
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008280112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Aug 2020 11:21:37 -0300
-Jason Gunthorpe <jgg@ziepe.ca> wrote:
-
-> On Fri, Aug 28, 2020 at 04:03:12PM +0200, Gerald Schaefer wrote:
-> > Commit 1a42010cdc26 ("s390/mm: convert to the generic get_user_pages_fast
-> > code") introduced a subtle but severe bug on s390 with gup_fast, due to
-> > dynamic page table folding.
+On Fri, 2020-08-28 at 15:30 +0200, Lukas Bulwahn wrote:
 > 
-> I think the page walk code in mm/pagewalk.c has similar issues to
-> GUP. I've been noodling on some patches to add the missing stack
-> copies to pagewalk.c as they are clearly missing..
+> On Fri, 28 Aug 2020, Roman Bolshakov wrote:
 > 
-> It would be good if this could be less GUP specific?
+> > On Fri, Aug 28, 2020 at 09:08:24AM +0200, Lukas Bulwahn wrote:
+> > > Previous attempts of getting an answer from the qlogic.com group
+> > > alias, i.e., QLogic-Storage-Upstream@qlogic.com, have remained
+> > > unanswered; see links below.
+> > > 
+> > > Mark those sections Orphan to prepare their deletion or give an
+> > > actual person a chance to step up to maintain those drivers.
+> > > 
+> > > Link: https://lore.kernel.org/linux-spdx/20190606205526.447558989
+> > > @linutronix.de
+> > > Link: https://lore.kernel.org/linux-spdx/alpine.DEB.2.21.20063006
+> > > 44130.4919@felia
+> > > Link: https://lore.kernel.org/linux-spdx/alpine.DEB.2.21.20082707
+> > > 40140.31123@felia
+> > > 
+> > 
+> > CC'd Arun,
+> > 
+> > I think it's worth to update the alias to:
+> > 
+> > GR-QLogic-Storage-Upstream@marvell.com
+> > 
 > 
-> Generically this is about walking the page table without holding the
-> page table spinlocks using READ_ONCE.
+> So, if these drivers are not orphans, you can answer Thomas
+> Gleixner's original email from 2019. If you can quickly ack that
+> patch set, I am happy to do the donkey work to get this apply nicely
+> on the current master (please CC me on that response).
 
-Indeed, if there were other code paths doing that, they would most
-likely also be broken (at least) for s390. Alexander was already
-looking into generalizing the new gup-specific helpers, but so
-far we assumed that would only be "nice to have" for the future,
-and not fix any real issues at the moment. So we wanted to
-focus on first fixing the very real gup_fast issue.
+I have to wonder what the object is here: to get the problem fixed or
+to make a public spectacle?
 
-Both approaches here probably could be generalized, by either
-changing pXd_address_end() or pXd_offset(), but I guess it makes
-sense to already take into account that we might need such
-generalization sooner than expected.
+Because if the object had been to get the issue fixed, waiting a year
+before escalating to the SCSI list isn't the best way to achieve
+outcomes, nor is now demanding that the drivers be orphaned for lack of
+response to you ... particularly as you've seen the drivers updated
+over that time if you actually follow kernel releases.
 
-Just to make sure, you are referring to some future / planned
-changes to mm/pagewalk.c, and not some currently existing
-pagetable walkers already using the READ_ONCE logic w/o
-spinlocks? If those would exist already, I guess we would
-already have issues on s390, independent from our conversion
-to common code gup_fast.
+Qlogic or now Marvell tends to rely somewhat heavily on outsourcing for
+driver maintenance and support.  Outsourcers, fairly obviously, aren't
+going to respond to legal issues like this which are outside of their
+remit.  What needs to happen is that someone needs to find a person
+within the Qlogic org who can get this fixed ... possibly involving
+explaining the actual issue along the way.  Would you like us to use
+our contacts to do that?
 
-Regards,
-Gerald
+James
+
