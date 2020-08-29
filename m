@@ -2,151 +2,128 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD732C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 12:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B366CC433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 12:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CEC9207BB
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 12:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 900A020CC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 12:41:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imNiGgPS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgH2Mde (ORCPT
+        id S1728039AbgH2Mlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 08:33:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:41476 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726876AbgH2Md3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 08:33:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12420101E;
-        Sat, 29 Aug 2020 05:33:28 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E818C3F71F;
-        Sat, 29 Aug 2020 05:33:26 -0700 (PDT)
-References: <6a5f06ff4ecb4f34bd7e9890dc07fb99@hisilicon.com> <422fb2cfe1d24fca8efa74ba23d8754b@hisilicon.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     "Song Bao Hua \(Barry Song\)" <song.bao.hua@hisilicon.com>
-Cc:     "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "vincent.guittot\@linaro.org" <vincent.guittot@linaro.org>,
-        "dietmar.eggemann\@arm.com" <dietmar.eggemann@arm.com>,
-        "morten.rasmussen\@arm.com" <morten.rasmussen@arm.com>,
-        Linuxarm <linuxarm@huawei.com>
-Subject: Re: [RFC] sched/topology: NUMA topology limitations
-In-reply-to: <422fb2cfe1d24fca8efa74ba23d8754b@hisilicon.com>
-Date:   Sat, 29 Aug 2020 13:33:22 +0100
-Message-ID: <jhjpn79ocml.mognet@arm.com>
+        Sat, 29 Aug 2020 08:41:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgH2MlY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 08:41:24 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BB74C061236;
+        Sat, 29 Aug 2020 05:41:24 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id v16so921565plo.1;
+        Sat, 29 Aug 2020 05:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=inoIGbEpmdL0eBcL/eTYO9DUL34BzxMhEi+RCO4Fy4w=;
+        b=imNiGgPSNVHTgkyR65Ye2n6UFzxVcj5PC00bxL6M6q+QkbrDpme8p5sIT/vyPhC0Rq
+         0dxinnsMKJVrNE1SjLHFTOoDLbD1QJAJZgdZ3q7qrbzNPv7wsToS3KpU7tXAgXsx6d1E
+         oGa7IGk95kJJO22t/7UEbQd4W/4bxQnhJ7C4gFsmzsBXs12xF+b81gdBj12E5pj/pevH
+         LESYfR8XTlIGXcMgStlwbMpa9g4bRSFoRk6K96cbLnXn/LPyt0WVKA3l57KQszLvmq8g
+         8oqjDCEIMWiNb/uix5TTs2dt3S9LwISoMi/yF4JWed9HPyN3HW3zdWEttVexG7zGeSiM
+         4gVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=inoIGbEpmdL0eBcL/eTYO9DUL34BzxMhEi+RCO4Fy4w=;
+        b=eBsBXJc3FnOGspXnb1aNGlbTjXf2C+LFqlfDNNg4YjTwdsIaIx+yo6lk/d3PHVWGDt
+         tJcrE2YppeCkdzP6L1ksVrW6y+v1t1pmqu8YQgHfgLCMkutns9u6ebvPI+MT6brd6e4q
+         kGV7s+IBEl5/xuT7VxRfs1hh/IXF1rRhD5edMQIOtiYr7NKKScdqWMbeiW44gmfj8gCv
+         VA6F8cxQ19KcM+t99hzjh5vBNPmbuIX5UAJ/6IUTBQDuf3yFst2emSe/DRzkysqjPNff
+         7o9J6dClx3/7PWSHCvq0pmDOFD+JYgbRnxcgfaDU4vTFuA+mFv4O5OBjJumsBUQaWbbb
+         MIvA==
+X-Gm-Message-State: AOAM533lZQVyqgV18/JJRC7yx89E8p4Ik3Hz2tvV9oKDS9msQwtBp56R
+        7G6D+7b5mY4dOG6rd8riqTA=
+X-Google-Smtp-Source: ABdhPJz+NLb7HIW5P9DPG54Uwcs3btCpwTqxKPO7aqvpyIgUfuoteTuwfpl4q5WoZwqSBATciOhjNw==
+X-Received: by 2002:a17:902:123:: with SMTP id 32mr2619323plb.143.1598704883743;
+        Sat, 29 Aug 2020 05:41:23 -0700 (PDT)
+Received: from localhost.localdomain ([45.118.165.148])
+        by smtp.googlemail.com with ESMTPSA id t25sm2496901pfe.76.2020.08.29.05.41.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Aug 2020 05:41:22 -0700 (PDT)
+From:   Anmol Karn <anmol.karan123@gmail.com>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        kuba@kernel.org, davem@davemloft.net, anmol.karan123@gmail.com,
+        syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+Subject: [Linux-kernel-mentees] [PATCH] net: bluetooth: Fix null pointer deref in hci_phy_link_complete_evt
+Date:   Sat, 29 Aug 2020 18:11:12 +0530
+Message-Id: <20200829124112.227133-1-anmol.karan123@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix null pointer deref in hci_phy_link_complete_evt, there was no checking there for
+the hcon->amp_mgr->l2cap_conn->hconn, and also in hci_cmd_work, for
+hdev->sent_cmd. 
 
-Hi Barry,
+To fix this issue Add pointer checking in hci_cmd_work and
+hci_phy_link_complete_evt.
+[Linux-next-20200827]
 
-Thanks for having a look!
+Reported-by: syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?id=0d93140da5a82305a66a136af99b088b75177b99
+Signed-off-by: Anmol Karn <anmol.karan123@gmail.com>
+---
+ net/bluetooth/hci_core.c  | 4 ++++
+ net/bluetooth/hci_event.c | 4 ++++
+ 2 files changed, 8 insertions(+)
 
-On 29/08/20 06:32, Barry Song wrote:
->> If you boot the above with CONFIG_SCHED_DEBUG, you'll get:
->>
->> [    0.245896] CPU0 attaching sched-domain(s):
->> [    0.246133]  domain-0: span=0-1 level=NUMA
->> [    0.246592]   groups: 0:{ span=0 cap=1011 }, 1:{ span=1 cap=1008 }
->> [    0.246998]   domain-1: span=0-2 level=NUMA
->> [    0.247145]    groups: 0:{ span=0-1 mask=0 cap=2019 }, 2:{ span=1-3
->> mask=2 cap=3025 }
->> [    0.247454] ERROR: groups don't span domain->span
->
-> Hi Valtentin,
-> Thanks for your email. It seems it is quite clear. May I ask what is the real harm
-> when group 2 is actually out of the span of diameter 2 here? What will happen when group2
-> doesn't span cpu0_domain1->span?
-> In domain-1, will scheduler fail to do load balance between group0 and group2?
->
->> [    0.247654]    domain-2: span=0-3 level=NUMA
->> [    0.247892]     groups: 0:{ span=0-2 mask=0 cap=3021 }, 3:{ span=1-3
->> mask=3 cap=3047 }
->
-> Here domain-2 includes all span from 0 to 3, so that means we should still be able to do
-> load balance in domain-2 between cpu0 and cpu3 even we fail in domain-1?
->
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 68bfe57b6625..533048d2a624 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -4922,6 +4922,10 @@ static void hci_cmd_work(struct work_struct *work)
+ 
+ 		kfree_skb(hdev->sent_cmd);
+ 
++		if(hdev->sent_cmd) {
++			hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
++		}
++
+ 		hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
+ 		if (hdev->sent_cmd) {
+ 			if (hci_req_status_pend(hdev))
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 4b7fc430793c..c621c8a20ea4 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -4941,6 +4941,10 @@ static void hci_phy_link_complete_evt(struct hci_dev *hdev,
+ 		hci_dev_unlock(hdev);
+ 		return;
+ 	}
++	if(!(hcon->amp_mgr->l2cap_conn->hcon)) {
++		hci_dev_unlock(hdev);
++		return;
++	}
+ 
+ 	bredr_hcon = hcon->amp_mgr->l2cap_conn->hcon;
+ 
+-- 
+2.28.0
 
-[...]
-
->> Implications of fixing this
->> ---------------------------
->>
->> Clearly the current sched_group setup for such topologies is not what we
->> want: this disturbs load balancing on the 'corrupted' domains.
->>
->> If we *do* want to support systems like this, then we have other problems to
->> solve. Currently, on the aforementioned QEMU setup, we have:
->>
->>   CPU0-domain1
->>     group0: span=0-2, mask=0
->>     group2: span=1-3, mask=2
->
-> Your kernel log is:
-> [    0.246998]   domain-1: span=0-2 level=NUMA
-> [    0.247145]    groups: 0:{ span=0-1 mask=0 cap=2019 }, 2:{ span=1-3
-> mask=2 cap=3025 }
->
-> it seems group0 should be:
-> group0: span=0-1, mask=0
->
-> but not
-> group0: span=0-2, mask=0 ?
->
-> is it a typo here?
->
-
-It is indeed, well spotted.
-
-[...]
-
->
-> What is the real harm you have seen in load balance? Have you even tried
-> to make cpu0,cpu1,cpu2 busy and wake-up more tasks in cpu0? Will cpu3
-> join to share the loading in your qemu topology?
->
-
-(pasting the comment from your other email here)
-
-> After second thought, would the harm be that scheduler should do load balance
-> among cpu0, cpu1 and cpu2 in domain1, but it is actually doing load balance
-> among all of cpu0, cpu1, cpu2 and cpu3 since cpu3 is incorrectly put in group2?
-> So it is possible that scheduler will make wrong decision to put tasks in cpu3 while
-> it actually should only begin to do that in domain2?
-
-Ignoring corner cases where task affinity gets in the way, load balance
-will always pull tasks to the local CPU (i.e. the CPU who's sched_domain we
-are working on).
-
-If we're balancing load for CPU0-domain1, we would be looking at which CPUs
-in [0-2] (i.e. the domain's span) we could (if we should) pull tasks from
-to migrate them over to CPU0.
-
-We'll first try to figure out which sched_group has the more load (see
-find_busiest_group() & friends), and that's where we may hit issues.
-
-Consider a scenario where CPU3 is noticeably busier than the other
-CPUs. We'll end up marking CPU0-domain1-group2 (1-3) as the busiest group,
-and compute an imbalance (i.e. amount of load to pull) mostly based on the
-status of CPU3.
-
-We'll then go to find_busiest_queue(); the mask of CPUs we iterate over is
-restricted by the sched_domain_span (i.e. doesn't include CPU3 here), so
-we'll pull things from either CPU1 or CPU2 based on stats we built looking
-at CPU3, which is bound to be pretty bogus.
-
-To summarise: we won't pull from the "outsider" node(s) (i.e., nodes
-included in the sched_groups but not covered by the sched_domain), but they
-will influence the stats and heuristics of the load balance.
-
-HTH
