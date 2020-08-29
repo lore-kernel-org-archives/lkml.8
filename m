@@ -2,114 +2,112 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B35B1C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 18:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C4CC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 18:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A03320757
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 18:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5666C20757
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 18:23:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BcLH4wp5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vc4KGL09"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbgH2SWZ (ORCPT
+        id S1728470AbgH2SXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 14:22:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728333AbgH2SWU (ORCPT
+        Sat, 29 Aug 2020 14:23:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45908 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728265AbgH2SXE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 14:22:20 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C757C061236;
-        Sat, 29 Aug 2020 11:22:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=jOWSL7YMNppSparAg77dbZ6fJiWHneGJnmZYvPY6oW0=; b=BcLH4wp5wsdb1A6/+fcAVfpZx3
-        BQzmir9XB7NRPzzoGTRZeMbEQJZBCD5JoUKrKoX4ckwoUWmelPR7km55DXMRDZgA5KzcypRgg+Gyi
-        cz3otssgJBigGdFtVNa/LxVnVVs6tL0FAKcQcYTmg6zlm/CpplhLs3punUejhv/Leu9677ygpb2Vv
-        GKL0lbe+MszCipmGofBLmA7mIYHWJpsblnJgzNiKw0VvTZu0OnY16zYXhsctPsdTsLdlFCgmrb+um
-        kjOye1CvKCWiNt1CnjdXgJAcW/qHVZipGIL9DqlIuI465/2wRMqIDUwQtkccdxmt40OHz/vxMjJxj
-        KC8alnAQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kC5UL-0007cU-0c; Sat, 29 Aug 2020 18:22:05 +0000
-Subject: Re: [PATCH 3/3] ia64: remove generated/nr-irqs.h generation to fix
- build warning
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200829051524.706585-1-masahiroy@kernel.org>
- <20200829051524.706585-4-masahiroy@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d98592ec-d74b-27c6-f7d2-9d304b1d9eda@infradead.org>
-Date:   Sat, 29 Aug 2020 11:22:01 -0700
+        Sat, 29 Aug 2020 14:23:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598725382;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=N69O3JqyfpO6Q53TakcsJx0INILeQLhb/WtKXvbJ2/M=;
+        b=Vc4KGL09Kh2h/Rk+/7nCg9tUU6rgQHz82PJtZbjnDtcFGzPNA4jFxbp2x/oKQUU1ddY/3O
+        yo6FUyp2BNk0a1afGECgHbNn98goiejFGVrctb6twNN45An+biakhDKHQZXl4pLOBz84vr
+        O37pJvZdOjgIf40QnnJR7S0RAhpVyhk=
+Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com
+ [209.85.167.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-479-fc1_9Yf6OGamUUdgL48m0Q-1; Sat, 29 Aug 2020 14:23:00 -0400
+X-MC-Unique: fc1_9Yf6OGamUUdgL48m0Q-1
+Received: by mail-oi1-f198.google.com with SMTP id k8so507660oig.14
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 11:23:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=N69O3JqyfpO6Q53TakcsJx0INILeQLhb/WtKXvbJ2/M=;
+        b=mvlNV9GRyHP9FOo5VEEZ+FgFLeZ5+75PN3q4+Y3jWy932jpnyFOjGMThDXe4+hg3Uq
+         2M88XWUvxRCOPWqx/MvYFvr82r3McQ0OVWNfwF3hWazd9RPkUVO1m8VaVnh6tMXBFT4y
+         PkhwASx0K7uJPK5YQXfJmJkjvPc6GZlh7+wRS/ArxQ0tZRKBAbPRo+wviWq5Dts1INvf
+         Td7yVt2Y3HbIU3Y9N9A+Z8hr5BpALxNEHOSHfVWU9+YEXFrt8hjudj1n4FOvg+MoHiMx
+         sgRVgrXXbCh8FpxmqeNbBAuVjjVFhxak26VVmSsFkZQd1XvHVVvb0ZNh1yVlFlT266H7
+         Gtgg==
+X-Gm-Message-State: AOAM531hkiut2aKFFeZ8hgIZYjeCGjSqiphPHXIEJ17JvFCdBPaue4OM
+        mRWBp2TV4tigObmjnqaGFojoFCv3TSqbi59gnLcCywfbBDRUY5Qjg+K2yrNIXKngoCLvZW/W2kQ
+        TROgLZOIeBjZvdGozQMt6Vf/2
+X-Received: by 2002:a9d:639a:: with SMTP id w26mr2826532otk.140.1598725379845;
+        Sat, 29 Aug 2020 11:22:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzfvqvnO7qYG7NhZTrLentt/UvP0D6ejA0xcVnGUrQPxMb7j+hwr/GXqLIEun2PD7UmeYZmxA==
+X-Received: by 2002:a9d:639a:: with SMTP id w26mr2826528otk.140.1598725379640;
+        Sat, 29 Aug 2020 11:22:59 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id t5sm453405oic.20.2020.08.29.11.22.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Aug 2020 11:22:59 -0700 (PDT)
+Subject: Re: [PATCH] regmap: soundwire: remove unsed header mod_devicetable.h
+To:     Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+References: <20200829103939.4007097-1-vkoul@kernel.org>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <fabb9c26-febc-1767-54b1-7a71a643517f@redhat.com>
+Date:   Sat, 29 Aug 2020 11:22:57 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200829051524.706585-4-masahiroy@kernel.org>
+In-Reply-To: <20200829103939.4007097-1-vkoul@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/28/20 10:15 PM, Masahiro Yamada wrote:
-> Randy reports the following warning when building ARCH=ia64 with
-> CONFIG_IA64_PALINFO=m:
-> 
-> ../scripts/Makefile.build:68: 'arch/ia64/kernel/palinfo.ko' will not be built even though obj-m is specified.
-> ../scripts/Makefile.build:69: You cannot use subdir-y/m to visit a module Makefile. Use obj-y/m instead.
-> 
-> This message is actually false-positive, and you can get palinfo.ko
-> correctly built. It is emitted in the archprepare stage, where Kbuild
-> descends into arch/ia64/kernel to generate include/generated/nr-irqs.h
-> instead of any kind of kernel objects.
-> 
-> arch/ia64/kernel/nr-irqs.c was introduced by commit 213060a4d699
-> ("[IA64] pvops: paravirtualize NR_IRQS") to pre-calculate:
-> 
->    NR_IRQS = max(IA64_NATIVE_NR_IRQS, XEN_NR_IRQS, FOO_NR_IRQS...)
-> 
-> Since commit d52eefb47d4e ("ia64/xen: Remove Xen support for ia64"), this
-> union contains just one field, making NR_IRQS and IA64_NATIVE_NR_IRQS
-> always match.
-> 
-> So, the following hard-coding now works:
-> 
->   #define NR_IRQS                IA64_NATIVE_NR_IRQS
-> 
-> If you need to re-introduce NR_IRQS = max(...) gimmick in the future,
-> please try to implement it in asm-offsets.c instead of a separate file.
-> It will be possible because the header inclusion has been consolidated
-> to make asm-offsets.c independent of <asm/irqs.h>.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-
+On 8/29/20 3:39 AM, Vinod Koul wrote:
+> mod_devicetable.h does not seem to be required for this file, so
+> remove it.
+>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 > ---
-> 
->  arch/ia64/Makefile          |  6 ------
->  arch/ia64/include/asm/irq.h |  4 +++-
->  arch/ia64/kernel/Makefile   |  5 -----
->  arch/ia64/kernel/nr-irqs.c  | 22 ----------------------
->  4 files changed, 3 insertions(+), 34 deletions(-)
->  delete mode 100644 arch/ia64/kernel/nr-irqs.c
-> 
+>  drivers/base/regmap/regmap-sdw.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/base/regmap/regmap-sdw.c b/drivers/base/regmap/regmap-sdw.c
+> index 50a66382d87d..c92d614b4943 100644
+> --- a/drivers/base/regmap/regmap-sdw.c
+> +++ b/drivers/base/regmap/regmap-sdw.c
+> @@ -2,7 +2,6 @@
+>  // Copyright(c) 2015-17 Intel Corporation.
+>  
+>  #include <linux/device.h>
+> -#include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+>  #include <linux/soundwire/sdw.h>
 
+This looks ok because mod_devicetable.h is #include-ed in soundwire/sdw.h
 
-thanks.
--- 
-~Randy
+Tom
+
+>  #include "internal.h"
 
