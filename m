@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47582C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB38EC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F58A2071B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82909206B5
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598721945;
-	bh=PAx0+OydMEHzBmwG79GAR/AQlFPKngcxVB7RdipQB8U=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=zGysPQIq3J2tSLhSlY5bmOrSV6Wg8OAJx/Ub95zQSuvRTjT0pWZq0B4C64rgb4ate
-	 oPn4YQk+poxllOHNCy8PQf83BUpJTBLFAT4A56M4d1X8lpPuHxU429WTM5BJ3m0vg3
-	 EyrcXR50ixbJL+Uzl32LOdRwMNH24e40fCnbAKsE=
+	s=default; t=1598721952;
+	bh=jlnlsBMlKXrkOdFQa9f0gqcbNKcSuLQh0Ah9oW8TIcg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hEY9ZXh66WW/vOHHy3bN+EoHE3yxXMlX5aVQgFOvVSmcV9nCKXHVLk5EBLoPTWrbt
+	 WvOMdb+WCWGB0PeD5NdJr/7w53EHT8z43xv4cXCFhG2h5MN7NECbA9JZ4g+1/2LIS7
+	 j96jYm9M+OA/hxxFrdVeplZ04WKrF0b9Z1rp9pT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgH2RZo (ORCPT
+        id S1728333AbgH2RZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 13:25:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59416 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 13:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728105AbgH2RZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 13:25:41 -0400
+        id S1728105AbgH2RZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 13:25:46 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05E3C206B5;
-        Sat, 29 Aug 2020 17:25:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 069A320714;
+        Sat, 29 Aug 2020 17:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598721941;
-        bh=PAx0+OydMEHzBmwG79GAR/AQlFPKngcxVB7RdipQB8U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=mpVIoQzZ1YogEx+PTRt9DNFtpizI+iHqcH2vQ0HCPr3Z0xt8nXIsITo8Tqev8lHWe
-         hRBTzSyL8qlibl8km/etPH1INIyTg/pc1Tp4kCMIDUCjPb8TMscX2savhm+xrbexf9
-         AldGn8F/Boqsl/lGA6rS4BP59EV6BR/as8YHhtQY=
+        s=default; t=1598721945;
+        bh=jlnlsBMlKXrkOdFQa9f0gqcbNKcSuLQh0Ah9oW8TIcg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IY9GkRDpdokU8Qw4KBE/GAtPw4sE/H/PPR3ZQMN3aPBpNxpQgBrUT/DuSIT1eLQZM
+         p5NKkaNGW0sm7BiFSpqsl3TKJ3KqE8H+Xn1NVmJzwXO5qVnTNhS5Va1qj1iQA7e4pW
+         E3QJGS4vKyIfYS2Jme3pp7wLDSxDwE60kBaSWEVg=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -54,55 +54,83 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
 Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: [PATCH 1/4] dt-bindings: display: samsung,amoled-mipi-dsi: Do not require enable-gpios on samsung,s6e63j0x03
-Date:   Sat, 29 Aug 2020 19:25:29 +0200
-Message-Id: <20200829172532.29358-1-krzk@kernel.org>
+Subject: [RFT 2/4] ARM: dts: exynos: Move fixed clocks under root node in Exynos3250
+Date:   Sat, 29 Aug 2020 19:25:30 +0200
+Message-Id: <20200829172532.29358-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200829172532.29358-1-krzk@kernel.org>
+References: <20200829172532.29358-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The samsung,s6e63j0x03 does not have enable GPIO, so do not require it.
-This fixes dtbs_check warning:
+The fixed clocks are kept under dedicated node fixed-rate-clocks, thus a
+fake "reg" was added.  This is not correct with dtschema as fixed-clock
+binding does not have a "reg" property:
 
-  arch/arm/boot/dts/exynos3250-rinato.dt.yaml: panel@0: 'enable-gpios' is a required property
+  arch/arm/boot/dts/exynos3250-artik5-eval.dt.yaml: clock@0: 'reg' does not match any of the regexes: 'pinctrl-[0-9]+'
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- .../display/panel/samsung,amoled-mipi-dsi.yaml       | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/exynos3250.dtsi | 42 +++++++++++++------------------
+ 1 file changed, 17 insertions(+), 25 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/samsung,amoled-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/panel/samsung,amoled-mipi-dsi.yaml
-index 96bdde9298e0..ccc482570d6a 100644
---- a/Documentation/devicetree/bindings/display/panel/samsung,amoled-mipi-dsi.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/samsung,amoled-mipi-dsi.yaml
-@@ -12,6 +12,17 @@ maintainers:
- allOf:
-   - $ref: panel-common.yaml#
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index d3fb45a56527..c67c70e46794 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -97,33 +97,25 @@
+ 		};
+ 	};
  
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - samsung,s6e3ha2
-+              - samsung,s6e3hf2
-+    then:
-+      required:
-+        - enable-gpios
-+
- properties:
-   compatible:
-     enum:
-@@ -39,7 +50,6 @@ required:
-   - vdd3-supply
-   - vci-supply
-   - reset-gpios
--  - enable-gpios
+-	fixed-rate-clocks {
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		xusbxti: clock@0 {
+-			compatible = "fixed-clock";
+-			reg = <0>;
+-			clock-frequency = <0>;
+-			#clock-cells = <0>;
+-			clock-output-names = "xusbxti";
+-		};
++	xusbxti: clock-0 {
++		compatible = "fixed-clock";
++		clock-frequency = <0>;
++		#clock-cells = <0>;
++		clock-output-names = "xusbxti";
++	};
  
- additionalProperties: false
+-		xxti: clock@1 {
+-			compatible = "fixed-clock";
+-			reg = <1>;
+-			clock-frequency = <0>;
+-			#clock-cells = <0>;
+-			clock-output-names = "xxti";
+-		};
++	xxti: clock-1 {
++		compatible = "fixed-clock";
++		clock-frequency = <0>;
++		#clock-cells = <0>;
++		clock-output-names = "xxti";
++	};
  
+-		xtcxo: clock@2 {
+-			compatible = "fixed-clock";
+-			reg = <2>;
+-			clock-frequency = <0>;
+-			#clock-cells = <0>;
+-			clock-output-names = "xtcxo";
+-		};
++	xtcxo: clock-2 {
++		compatible = "fixed-clock";
++		clock-frequency = <0>;
++		#clock-cells = <0>;
++		clock-output-names = "xtcxo";
+ 	};
+ 
+ 	pmu {
 -- 
 2.17.1
 
