@@ -2,147 +2,181 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6443C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 22:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43154C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 22:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99A3E208CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 22:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2186320776
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 22:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbgH2Wnz (ORCPT
+        id S1728567AbgH2W6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 18:43:55 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:55716 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728246AbgH2Wny (ORCPT
+        Sat, 29 Aug 2020 18:58:23 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38667 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727987AbgH2W6W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 18:43:54 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id AD3B31C0B80; Sun, 30 Aug 2020 00:43:52 +0200 (CEST)
-Date:   Sun, 30 Aug 2020 00:43:51 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next v4 0/2] Add support for LEDs on
- Marvell PHYs
-Message-ID: <20200829224351.GA29564@duo.ucw.cz>
-References: <20200728150530.28827-1-marek.behun@nic.cz>
- <20200807090653.ihnt2arywqtpdzjg@duo.ucw.cz>
- <20200807132920.GB2028541@lunn.ch>
+        Sat, 29 Aug 2020 18:58:22 -0400
+Received: by mail-pg1-f193.google.com with SMTP id l191so2238563pgd.5;
+        Sat, 29 Aug 2020 15:58:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=5kDI73MBKU4UNIZcJDLdLNHA3UpS5PxH/adyOdviNXA=;
+        b=qu0OoIY42UPXXcqgKnGUOv35hwM6SMgg5cIOUErxNaj2RsJO/20g+qIpmh6O9ng5B+
+         GK4Dw/cytyMOeGurf9YMXNHUwTwVtRGChK3RxDziH8lSY3SSiB4TEmDXqkOssYtwMLeD
+         k0LonUsZPFOizcZv9jDsY+iD2gpc6jWmV1+Lo3Vqdown+Ez7TCzvv0O3GVJVps1ZoLYv
+         yET3NZ5jf4Vsq0GMQIN/7Df6peYCNmlNmC0cLR/mhYyhArJVF11MexsUxim+MxUJIJG9
+         R9O5V20IR7g+ERy1IZnmjcd4RWkYwuZdSOcFCHjJNn589o5QyOIbH//z0OB980mJ+Ap9
+         AUTw==
+X-Gm-Message-State: AOAM530JExlJGj9z4W52DMMYRRIdBIf9AVMyvN0VvRj0g3dOgKciriP6
+        BX8idoZ+ssRpcRBRdg5HLJMYhdEHbTw=
+X-Google-Smtp-Source: ABdhPJxGrGbZ/c4NO0wLU0ypl8ZkvfxI/D2WeKg3D6BFh66411AaO/MWQS9Zo+TYW8Pd3wy/MC4KKg==
+X-Received: by 2002:aa7:924b:: with SMTP id 11mr4286576pfp.185.1598741900658;
+        Sat, 29 Aug 2020 15:58:20 -0700 (PDT)
+Received: from [192.168.3.217] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id y29sm3388963pfp.141.2020.08.29.15.58.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Aug 2020 15:58:19 -0700 (PDT)
+Subject: Re: [PATCH v9 2/4] scsi: ufs: Introduce HPB feature
+To:     daejun7.park@samsung.com,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+References: <963815509.21598598782155.JavaMail.epsvc@epcpadp2>
+ <CGME20200828070950epcms2p5470bd43374be18d184dd802da09e73c8@epcms2p2>
+ <231786897.01598601302183.JavaMail.epsvc@epcpadp1>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <93f1cf18-30da-4482-9a0d-c46d2f70bd15@acm.org>
+Date:   Sat, 29 Aug 2020 15:58:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
-Content-Disposition: inline
-In-Reply-To: <20200807132920.GB2028541@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <231786897.01598601302183.JavaMail.epsvc@epcpadp1>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-08-28 00:18, Daejun Park wrote:
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> index 618b253e5ec8..df30622a2b67 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -588,6 +588,24 @@ struct ufs_hba_variant_params {
+>  	u16 hba_enable_delay_us;
+>  	u32 wb_flush_threshold;
+>  };
+> +#ifdef CONFIG_SCSI_UFS_HPB
+> +/**
+> + * struct ufshpb_dev_info - UFSHPB device related info
+> + * @num_lu: the number of user logical unit to check whether all lu finished
+> + *          initialization
+> + * @rgn_size: device reported HPB region size
+> + * @srgn_size: device reported HPB sub-region size
+> + * @slave_conf_cnt: counter to check all lu finished initialization
+> + * @hpb_disabled: flag to check if HPB is disabled
+> + */
+> +struct ufshpb_dev_info {
+> +	int num_lu;
+> +	int rgn_size;
+> +	int srgn_size;
+> +	atomic_t slave_conf_cnt;
+> +	bool hpb_disabled;
+> +};
+> +#endif
 
---XsQoSWH+UP9D9v3l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please insert a blank line above "#ifdef CONFIG_SCSI_UFS_HPB"
 
-Hi!
+> +/* HPB enabled lu list */
+> +static LIST_HEAD(lh_hpb_lu);
 
-> > > And no, I don't want phydev name there.
-> >=20
-> > Ummm. Can we get little more explanation on that? I fear that LED
-> > device renaming will be tricky and phydev would work around that
-> > nicely.
->=20
-> Hi Pavel
->=20
-> The phydev name is not particularly nice:
->=20
-> !mdio-mux!mdio@1!switch@0!mdio:00
-> !mdio-mux!mdio@1!switch@0!mdio:01
-> !mdio-mux!mdio@1!switch@0!mdio:02
-> !mdio-mux!mdio@2!switch@0!mdio:00
-> !mdio-mux!mdio@2!switch@0!mdio:01
-> !mdio-mux!mdio@2!switch@0!mdio:02
-> !mdio-mux!mdio@4!switch@0!mdio:00
-> !mdio-mux!mdio@4!switch@0!mdio:01
-> !mdio-mux!mdio@4!switch@0!mdio:02
-> 400d0000.ethernet-1:00
-> 400d0000.ethernet-1:01
-> fixed-0:00
+Is it necessary to maintain this list? Or in other words, is it possible to
+change all list_for_each_entry(hpb, &lh_hpb_lu, list_hpb_lu) calls into
+shost_for_each_device() calls?
 
-Not nice, I see. In particular, it contains ":"... which would be a
-problem.
+> +/* SYSFS functions */
+> +#define ufshpb_sysfs_attr_show_func(__name)				\
+> +static ssize_t __name##_show(struct device *dev,			\
+> +	struct device_attribute *attr, char *buf)			\
+> +{									\
+> +	struct scsi_device *sdev = to_scsi_device(dev);			\
+> +	struct ufshpb_lu *hpb = sdev->hostdata;				\
+> +	if (!hpb)							\
+> +		return -ENOENT;						\
+> +	return snprintf(buf, PAGE_SIZE, "%d\n",				\
+> +			atomic_read(&hpb->stats.__name));		\
+> +}									\
+> +static DEVICE_ATTR_RO(__name)
 
-> The interface name are:
->=20
-> 1: lo:
-> 2: eth0:
-> 3: eth1:
-> 4: lan0@eth1:
-> 5: lan1@eth1:
-> 6: lan2@eth1:
-> 7: lan3@eth1:
-> 8: lan4@eth1:
-> 9: lan5@eth1:
-> 10: lan6@eth1:
-> 11: lan7@eth1:
-> 12: lan8@eth1:
-> 13: optical3@eth1:
-> 14: optical4@eth1:
+Please leave a blank line after declarations (between the "hpb" declaration
+and "if (!hpb)").
 
-OTOH... renaming LEDs when interface is renamed... sounds like a
-disaster, too.
+> +#ifndef CONFIG_SCSI_UFS_HPB
+> +[...]
+> +static struct attribute *hpb_dev_attrs[] = { NULL,};
+> +static struct attribute_group ufs_sysfs_hpb_stat_group = {.attrs = hpb_dev_attrs,};
+> +#else
+> +[...]
+> +extern struct attribute_group ufs_sysfs_hpb_stat_group;
+> +#endif
 
-> You could make a good guess at matching to two together, but it is
-> error prone. Phys are low level things which the user is not really
-> involved in. They interact with interface names. ethtool, ip, etc, all
-> use interface names. In fact, i don't know of any tool which uses
-> phydev names.
+Defining static variables or arrays in header files is questionable because
+the definition of these variables will be duplicated in each source file that
+header file is included in. Although the general rule for kernel code is to
+confine #ifdefs to header files, for ufs_sysfs_hpb_stat_group I think that
+it is better to surround its use with #ifndef CONFIG_SCSI_UFS_HPB / #endif
+instead of defining a dummy structure as static variable in a header file if
+HPB support is disabled.
 
-So... proposal:
+Otherwise this patch looks good to me.
 
-Users should not be dealing with sysfs interface directly, anyway. We
-should have a tool for that. It can live in kernel/tools somewhere, I
-guess.
+Thanks,
 
-Would we name leds phy0:... (with simple incrementing number), and
-expose either interface name or phydev name as a attribute?
-
-So user could do
-
-cat /sys/class/leds/phy14:green:foobar/netdev
-lan5@eth1:
-
-and we'd have tool hiding that complexity...
-
-Best regards,
-
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---XsQoSWH+UP9D9v3l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX0raJwAKCRAw5/Bqldv6
-8sfUAJ0cqJ5B527YHsG7UuRjZhoR1Ld+FQCaAm2iDmKu/TBPUAV8G0hFspvDSEY=
-=/Jnn
------END PGP SIGNATURE-----
-
---XsQoSWH+UP9D9v3l--
+Bart.
