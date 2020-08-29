@@ -2,131 +2,176 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C88C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 03:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABEDC433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 05:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB4720809
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 03:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B3F120838
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 05:16:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598678191;
+	bh=nriQ105te2l67FwsUduPQFL1byR9bDKMl/Mz9Mlj/KA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hYkYaZbDViO9mU6acxEnihGUSgud4WrPJmkxMgj97uY+2wTE/lm0hC9xC93iYz4O0
+	 2fPsoWd55Hu77c6uIdxGSLDhUr5Vg6r9Ja/3SkrWdBq/ssqM9E31p+P/VUBEo1ZD0C
+	 C2Dj14PpfZ/ekgCaZMj3CCXTGs7hAH5FfB5lH/ss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgH2DaJ (ORCPT
+        id S1726143AbgH2FQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 23:30:09 -0400
-Received: from mga04.intel.com ([192.55.52.120]:46101 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbgH2DaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 23:30:08 -0400
-IronPort-SDR: yUfN54haXNcU2uv6OKEffEk82kUtqsNyObZ+oKI5AgG7AiWOJ/UXEPVVGY77cE/pVpwVCIapVY
- PNJxFC/N26SQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="154184703"
-X-IronPort-AV: E=Sophos;i="5.76,366,1592895600"; 
-   d="scan'208";a="154184703"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 20:30:07 -0700
-IronPort-SDR: /NaORErbG5OE7WGwIEjsHitI+XZaJ9ejrGEnp47v0lC+BpGYzF34ugosEg3SHBlzlKczy3dsf7
- bzbfa1szMDEg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,366,1592895600"; 
-   d="scan'208";a="300441888"
-Received: from lkp-server02.sh.intel.com (HELO 301dc1beeb51) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 28 Aug 2020 20:30:05 -0700
-Received: from kbuild by 301dc1beeb51 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kBrZ6-0000Ky-CV; Sat, 29 Aug 2020 03:30:04 +0000
-Date:   Sat, 29 Aug 2020 11:30:00 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Luca Ceresoli <luca@lucaceresoli.net>, linux-fpga@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, Luca Ceresoli <luca@lucaceresoli.net>,
-        Moritz Fischer <mdf@kernel.org>, Tom Rix <trix@redhat.com>,
-        Michal Simek <monstr@monstr.eu>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH v3 4/5] fpga manager: xilinx-spi: add error checking
- after gpiod_get_value()
-Message-ID: <202008291117.tPETSgId%lkp@intel.com>
-References: <20200828195808.27975-4-luca@lucaceresoli.net>
+        Sat, 29 Aug 2020 01:16:27 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:34619 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbgH2FQ0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 01:16:26 -0400
+Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 07T5FRBA012582;
+        Sat, 29 Aug 2020 14:15:31 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 07T5FRBA012582
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1598678131;
+        bh=UpWzyGtnastAPoHDlH8oDyzAcCCJ1dW9lC89fSAz9Xg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uhLs3MZAZ1Rv6AE0eYXFmWt9YQpnmXP5sIwXfCx6W8cnVeCNxwtxPMVZKEkBTyQPx
+         Oa64x2VbzFBPkJ5i4B0Z9Sv21sNTSHgpZ9ih4v+TbxZYGjxjVjRFB2yZGRHi7KR3cb
+         HkwyRsJEI3tWByjEX7Ms4EVoaoruUvS5nSGRKupkAOzR2pql88kBYiaiySyUDdKrng
+         eJH27ywaBIZlZv/08YzjufdiElmwHa8qFPSpTomgkyNmWeGsBDgZdEXlULOkxylml7
+         eQp+2Cw2gv82PkkTbOX1MRcEKXeZn6FbBVMkC5Ow071z0+tTnQeQK6IiKM2JlOAgKs
+         dKWYkDi5qBeqQ==
+X-Nifty-SrcIP: [126.90.211.135]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+        linux-ia64@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kbuild@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] ia64: remove generated/nr-irqs.h generation to fix build warning
+Date:   Sat, 29 Aug 2020 14:15:24 +0900
+Message-Id: <20200829051524.706585-4-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200829051524.706585-1-masahiroy@kernel.org>
+References: <20200829051524.706585-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200828195808.27975-4-luca@lucaceresoli.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luca,
+Randy reports the following warning when building ARCH=ia64 with
+CONFIG_IA64_PALINFO=m:
 
-I love your patch! Perhaps something to improve:
+../scripts/Makefile.build:68: 'arch/ia64/kernel/palinfo.ko' will not be built even though obj-m is specified.
+../scripts/Makefile.build:69: You cannot use subdir-y/m to visit a module Makefile. Use obj-y/m instead.
 
-[auto build test WARNING on v5.9-rc2]
-[also build test WARNING on next-20200828]
-[cannot apply to xlnx/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+This message is actually false-positive, and you can get palinfo.ko
+correctly built. It is emitted in the archprepare stage, where Kbuild
+descends into arch/ia64/kernel to generate include/generated/nr-irqs.h
+instead of any kind of kernel objects.
 
-url:    https://github.com/0day-ci/linux/commits/Luca-Ceresoli/fpga-manager-xilinx-spi-remove-stray-comment/20200829-040041
-base:    d012a7190fc1fd72ed48911e77ca97ba4521bccd
-compiler: nds32le-linux-gcc (GCC) 9.3.0
+arch/ia64/kernel/nr-irqs.c was introduced by commit 213060a4d699
+("[IA64] pvops: paravirtualize NR_IRQS") to pre-calculate:
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+   NR_IRQS = max(IA64_NATIVE_NR_IRQS, XEN_NR_IRQS, FOO_NR_IRQS...)
 
+Since commit d52eefb47d4e ("ia64/xen: Remove Xen support for ia64"), this
+union contains just one field, making NR_IRQS and IA64_NATIVE_NR_IRQS
+always match.
 
-cppcheck warnings: (new ones prefixed by >>)
+So, the following hard-coding now works:
 
->> drivers/fpga/xilinx-spi.c:183:10: warning: Uninitialized variable: expired [uninitvar]
-    while (!expired) {
-            ^
+  #define NR_IRQS                IA64_NATIVE_NR_IRQS
 
-# https://github.com/0day-ci/linux/commit/5ae295c0b82631de73665c58df85ec3ed8567a8e
-git remote add linux-review https://github.com/0day-ci/linux
-git fetch --no-tags linux-review Luca-Ceresoli/fpga-manager-xilinx-spi-remove-stray-comment/20200829-040041
-git checkout 5ae295c0b82631de73665c58df85ec3ed8567a8e
-vim +183 drivers/fpga/xilinx-spi.c
+If you need to re-introduce NR_IRQS = max(...) gimmick in the future,
+please try to implement it in asm-offsets.c instead of a separate file.
+It will be possible because the header inclusion has been consolidated
+to make asm-offsets.c independent of <asm/irqs.h>.
 
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  168  
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  169  static int xilinx_spi_write_complete(struct fpga_manager *mgr,
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  170  				     struct fpga_image_info *info)
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  171  {
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  172  	struct xilinx_spi_conf *conf = mgr->priv;
-629463d1acc532 Luca Ceresoli      2020-08-28  173  	unsigned long timeout = jiffies + usecs_to_jiffies(info->config_complete_timeout_us);
-629463d1acc532 Luca Ceresoli      2020-08-28  174  	bool expired;
-629463d1acc532 Luca Ceresoli      2020-08-28  175  	int done;
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  176  	int ret;
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  177  
-629463d1acc532 Luca Ceresoli      2020-08-28  178  	/*
-629463d1acc532 Luca Ceresoli      2020-08-28  179  	 * This loop is carefully written such that if the driver is
-629463d1acc532 Luca Ceresoli      2020-08-28  180  	 * scheduled out for more than 'timeout', we still check for DONE
-629463d1acc532 Luca Ceresoli      2020-08-28  181  	 * before giving up and we apply 8 extra CCLK cycles in all cases.
-629463d1acc532 Luca Ceresoli      2020-08-28  182  	 */
-629463d1acc532 Luca Ceresoli      2020-08-28 @183  	while (!expired) {
-629463d1acc532 Luca Ceresoli      2020-08-28  184  		expired = time_after(jiffies, timeout);
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  185  
-629463d1acc532 Luca Ceresoli      2020-08-28  186  		done = get_done_gpio(mgr);
-629463d1acc532 Luca Ceresoli      2020-08-28  187  		if (done < 0)
-629463d1acc532 Luca Ceresoli      2020-08-28  188  			return done;
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  189  
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  190  		ret = xilinx_spi_apply_cclk_cycles(conf);
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  191  		if (ret)
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  192  			return ret;
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  193  
-629463d1acc532 Luca Ceresoli      2020-08-28  194  		if (done)
-629463d1acc532 Luca Ceresoli      2020-08-28  195  			return 0;
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  196  	}
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  197  
-70cac0e8c9ec83 Luca Ceresoli      2020-08-28  198  	dev_err(&mgr->dev, "Timeout after config data transfer\n");
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  199  	return -ETIMEDOUT;
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  200  }
-061c97d13f1a69 Anatolij Gustschin 2017-03-23  201  
-
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+ arch/ia64/Makefile          |  6 ------
+ arch/ia64/include/asm/irq.h |  4 +++-
+ arch/ia64/kernel/Makefile   |  5 -----
+ arch/ia64/kernel/nr-irqs.c  | 22 ----------------------
+ 4 files changed, 3 insertions(+), 34 deletions(-)
+ delete mode 100644 arch/ia64/kernel/nr-irqs.c
+
+diff --git a/arch/ia64/Makefile b/arch/ia64/Makefile
+index 2876a7df1b0a..3d54d411fcc4 100644
+--- a/arch/ia64/Makefile
++++ b/arch/ia64/Makefile
+@@ -87,9 +87,3 @@ define archhelp
+   echo '  install	- Install compressed kernel image'
+   echo '* unwcheck	- Check vmlinux for invalid unwind info'
+ endef
+-
+-archprepare: make_nr_irqs_h
+-PHONY += make_nr_irqs_h
+-
+-make_nr_irqs_h:
+-	$(Q)$(MAKE) $(build)=arch/ia64/kernel include/generated/nr-irqs.h
+diff --git a/arch/ia64/include/asm/irq.h b/arch/ia64/include/asm/irq.h
+index 5acf52e90872..0eccf33dfe8b 100644
+--- a/arch/ia64/include/asm/irq.h
++++ b/arch/ia64/include/asm/irq.h
+@@ -14,7 +14,9 @@
+ 
+ #include <linux/types.h>
+ #include <linux/cpumask.h>
+-#include <generated/nr-irqs.h>
++#include <asm/native/irq.h>
++
++#define NR_IRQS		IA64_NATIVE_NR_IRQS
+ 
+ static __inline__ int
+ irq_canonicalize (int irq)
+diff --git a/arch/ia64/kernel/Makefile b/arch/ia64/kernel/Makefile
+index 1a8df6669eee..7c9354ee4b3e 100644
+--- a/arch/ia64/kernel/Makefile
++++ b/arch/ia64/kernel/Makefile
+@@ -48,8 +48,3 @@ CFLAGS_traps.o  += -mfixed-range=f2-f5,f16-f31
+ 
+ # The gate DSO image is built using a special linker script.
+ include $(src)/Makefile.gate
+-
+-include/generated/nr-irqs.h: arch/$(SRCARCH)/kernel/nr-irqs.s FORCE
+-	$(call filechk,offsets,__ASM_NR_IRQS_H__)
+-
+-targets += nr-irqs.s
+diff --git a/arch/ia64/kernel/nr-irqs.c b/arch/ia64/kernel/nr-irqs.c
+deleted file mode 100644
+index f2633b22d3be..000000000000
+--- a/arch/ia64/kernel/nr-irqs.c
++++ /dev/null
+@@ -1,22 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * calculate
+- * NR_IRQS = max(IA64_NATIVE_NR_IRQS, XEN_NR_IRQS, FOO_NR_IRQS...)
+- * depending on config.
+- * This must be calculated before processing asm-offset.c.
+- */
+-
+-#define ASM_OFFSETS_C 1
+-
+-#include <linux/kbuild.h>
+-#include <linux/threads.h>
+-#include <asm/native/irq.h>
+-
+-void foo(void)
+-{
+-	union paravirt_nr_irqs_max {
+-		char ia64_native_nr_irqs[IA64_NATIVE_NR_IRQS];
+-	};
+-
+-	DEFINE(NR_IRQS, sizeof (union paravirt_nr_irqs_max));
+-}
+-- 
+2.25.1
+
