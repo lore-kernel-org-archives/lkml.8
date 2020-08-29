@@ -2,85 +2,105 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FEBC433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51806C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0E05207DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:13:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598699597;
-	bh=VnNc7+uZcxG8XMiLRL43M8aRpdv+zundAbqmloq3LDg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=1OF4C8mcKEmMVYRi2kB5RpuvaN2Yx9sW5JkziHJBr+moWU/pC4HoFvP+a36Bi3bdf
-	 qS7o353UaMIaDog4xiPxhAqnw/CrrK1irgHQHi2+PJV4tM0YsQLf3b05k3zBc4/ApU
-	 RJi3pxxQ4Dkbt4pYrTNQVGxDtN9N5WwozQq53t24=
+	by mail.kernel.org (Postfix) with ESMTP id 28A55207DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:14:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgH2LNN (ORCPT
+        id S1728052AbgH2LOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 07:13:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39114 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 07:14:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49538 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726876AbgH2LMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 07:12:54 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD174207DF;
-        Sat, 29 Aug 2020 11:12:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598699574;
-        bh=VnNc7+uZcxG8XMiLRL43M8aRpdv+zundAbqmloq3LDg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=W+liGVS9wxeji6GF3xckVmzm30iqWbvrah6E/uw8bvbfQVF7G6hv38z5D6h4q4W+u
-         sLB8Ap139V+UFTHoKuER2j9D7Kx6IuZABUMyo+41nl5NAeG3WhiLAcb6EHO1ZWVlVV
-         UROVmQtnaKc9PA+3Wj0tH2dJnylgBmkH3DGKGGes=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] arm64: dts: imx8mq: Fix TMU interrupt property
-Date:   Sat, 29 Aug 2020 13:12:48 +0200
-Message-Id: <20200829111248.321-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        id S1726876AbgH2LOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 07:14:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 36306B167;
+        Sat, 29 Aug 2020 11:15:19 +0000 (UTC)
+From:   Qu Wenruo <wqu@suse.com>
+To:     linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org
+Subject: [PATCH] module: Add more error message for failed kernel module loading
+Date:   Sat, 29 Aug 2020 19:14:37 +0800
+Message-Id: <20200829111437.96334-1-wqu@suse.com>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"interrupt" is not a valid property.  Using proper name fixes dtbs_check
-warning:
+When kernel module loading failed, user space only get one of the
+following error messages:
+- -ENOEXEC
+  This is the most confusing one. From corrupted ELF header to bad
+  WRITE|EXEC flags check introduced by in module_enforce_rwx_sections()
+  all returns this error number.
 
-  arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-zest.dt.yaml: tmu@30260000: 'interrupts' is a required property
+- -EPERM
+  This is for blacklisted modules. But mod doesn't do extra explain
+  on this error either.
 
-Fixes: e464fd2ba4d4 ("arm64: dts: imx8mq: enable the multi sensor TMU")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+- -ENOMEM
+  The only error which needs no explain.
+
+This means, if a user got "Exec format error" from modprobe, it provides
+no meaningful way for the user to debug, and will take extra time
+communicating to get extra info.
+
+So this patch will add extra error messages for -ENOEXEC and -EPERM
+errors, allowing user to do better debugging and reporting.
+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/module.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index f70435cf9ad5..561fa792fe5a 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -423,7 +423,7 @@
- 			tmu: tmu@30260000 {
- 				compatible = "fsl,imx8mq-tmu";
- 				reg = <0x30260000 0x10000>;
--				interrupt = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk IMX8MQ_CLK_TMU_ROOT>;
- 				little-endian;
- 				fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
+diff --git a/kernel/module.c b/kernel/module.c
+index 1c5cff34d9f2..9f748c6eeb48 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -2096,8 +2096,12 @@ static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+ 	int i;
+ 
+ 	for (i = 0; i < hdr->e_shnum; i++) {
+-		if ((sechdrs[i].sh_flags & shf_wx) == shf_wx)
++		if ((sechdrs[i].sh_flags & shf_wx) == shf_wx) {
++			pr_err(
++			"Module %s section %d has invalid WRITE|EXEC flags\n",
++				mod->name, i);
+ 			return -ENOEXEC;
++		}
+ 	}
+ 
+ 	return 0;
+@@ -3825,8 +3829,10 @@ static int load_module(struct load_info *info, const char __user *uargs,
+ 	char *after_dashes;
+ 
+ 	err = elf_header_check(info);
+-	if (err)
++	if (err) {
++		pr_err("Module has invalid ELF header\n");
+ 		goto free_copy;
++	}
+ 
+ 	err = setup_load_info(info, flags);
+ 	if (err)
+@@ -3834,6 +3840,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
+ 
+ 	if (blacklisted(info->name)) {
+ 		err = -EPERM;
++		pr_err("Module %s is blacklisted\n", info->name);
+ 		goto free_copy;
+ 	}
+ 
 -- 
-2.17.1
+2.27.0
 
