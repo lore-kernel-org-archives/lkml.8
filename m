@@ -2,92 +2,76 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7E3C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 12:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09083C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 12:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFBD8207DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 12:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D2A20776
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 12:26:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgH2MLn (ORCPT
+        id S1727962AbgH2M0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 08:11:43 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:55388 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgH2ML1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 08:11:27 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 56B501C0B82; Sat, 29 Aug 2020 14:11:24 +0200 (CEST)
-Date:   Sat, 29 Aug 2020 14:11:23 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Qu Wenruo <wqu@suse.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 34/38] btrfs: file: reserve qgroup space
- after the hole punch range is locked
-Message-ID: <20200829121123.GB20944@duo.ucw.cz>
-References: <20200821161807.348600-1-sashal@kernel.org>
- <20200821161807.348600-34-sashal@kernel.org>
+        Sat, 29 Aug 2020 08:26:12 -0400
+Received: from a.mx.secunet.com ([62.96.220.36]:46786 "EHLO a.mx.secunet.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726876AbgH2M0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 08:26:01 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id 4BC36205DB;
+        Sat, 29 Aug 2020 14:25:58 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 2kjml7kb9nq9; Sat, 29 Aug 2020 14:25:57 +0200 (CEST)
+Received: from mail-essen-02.secunet.de (mail-essen-02.secunet.de [10.53.40.205])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by a.mx.secunet.com (Postfix) with ESMTPS id E0377205B4;
+        Sat, 29 Aug 2020 14:25:57 +0200 (CEST)
+Received: from mbx-essen-01.secunet.de (10.53.40.197) by
+ mail-essen-02.secunet.de (10.53.40.205) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Sat, 29 Aug 2020 14:25:57 +0200
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-01.secunet.de
+ (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Sat, 29 Aug
+ 2020 14:25:57 +0200
+Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 42D9031812CF;
+ Sat, 29 Aug 2020 14:25:57 +0200 (CEST)
+Date:   Sat, 29 Aug 2020 14:25:57 +0200
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+CC:     Herbert Xu <herbert@gondor.apana.org.au>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] padata: add another maintainer and another list
+Message-ID: <20200829122557.GS13121@gauss3.secunet.de>
+References: <20200828015944.tk45hzuyzkabbrs3@ca-dmjordan1.us.oracle.com>
+ <20200828015328.86800-1-daniel.m.jordan@oracle.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="MfFXiAuoTsnnDAfZ"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200821161807.348600-34-sashal@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200828015328.86800-1-daniel.m.jordan@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: cas-essen-02.secunet.de (10.53.40.202) To
+ mbx-essen-01.secunet.de (10.53.40.197)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 27, 2020 at 09:53:28PM -0400, Daniel Jordan wrote:
+> At Steffen's request, I'll help maintain padata for the foreseeable
+> future.
+> 
+> While at it, let's have patches go to lkml too since the code is now
+> used outside of crypto.
+> 
+> Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
 
---MfFXiAuoTsnnDAfZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Great, thanks a lot Daniel!
 
-Hi!
-
-> [ Upstream commit a7f8b1c2ac21bf081b41264c9cfd6260dffa6246 ]
->=20
-> The incoming qgroup reserved space timing will move the data reservation
-> to ordered extent completely.
->=20
-> However in btrfs_punch_hole_lock_range() will call
-> btrfs_invalidate_page(), which will clear QGROUP_RESERVED bit for the
-> range.
->=20
-> In current stage it's OK, but if we're making ordered extents handle the
-> reserved space, then btrfs_punch_hole_lock_range() can clear the
-> QGROUP_RESERVED bit before we submit ordered extent, leading to qgroup
-> reserved space leakage.
->=20
-> So here change the timing to make reserve data space after
-> btrfs_punch_hole_lock_range().
-> The new timing is fine for either current code or the new code.
-
-I'm not sure why this is queued for -stable. It is preparation for
-future work, and that work is not queued for -stable.
-
-Best regards,
-							Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---MfFXiAuoTsnnDAfZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX0pF6wAKCRAw5/Bqldv6
-8gWFAJwMY2fXbYqjDPGxslXicjB1hyFf/QCfTQMnBCPMjdI1Q5ow9sOchhLKP7g=
-=IhAi
------END PGP SIGNATURE-----
-
---MfFXiAuoTsnnDAfZ--
+Acked-by: Steffen Klassert <steffen.klassert@secunet.com>
