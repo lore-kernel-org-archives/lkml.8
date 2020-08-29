@@ -2,98 +2,87 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F53C433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CEFC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6363920791
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:47:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="m+jv6bJZ"
+	by mail.kernel.org (Postfix) with ESMTP id B7D9020791
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:48:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598719736;
+	bh=nX+JQR9DpT/+z2PqkacX5gzHhZ3MRE2mzN0FA/mMxYM=;
+	h=From:Date:Subject:To:List-ID:From;
+	b=yVc6izHdED4/YGBTyyZD3QrEDVa8VG+tB9MoGHNG/ghpLu/MGokm7WLzDrHccbUH7
+	 sINuydxpctVchuo+KUzaWsFYF4zmSC0z+FJj8+9cAMGsCPnKhQUbfQSwXxjot5VRir
+	 ZAnFkDNlLUFs9TV/ZqUCsZzKdnYgUssavkOn0yFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgH2QrU (ORCPT
+        id S1728487AbgH2Qsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 12:47:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728442AbgH2QrS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 12:47:18 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 386E7C06123A
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 09:47:17 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id nv17so969857pjb.3
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 09:47:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5Rt5+Gjo0UGdPCISf5CydG1I/Z+wq56+kU1eC124qs0=;
-        b=m+jv6bJZRhsllEVJr5l4EY9W/YKC3BAZMM01kcSyMJjFYDecSRzG/FmZTuCJs/t2ny
-         OTZ9rLbXL2RR9XafeWT8qZMVX3EveS6Y24+PU4GHbshyYp9ee+dMK+C0YDAdbf9aKVfG
-         jFqCByaqPcul+XLJJeoNuBseGgzPL/FnONYDc4Cu2YlXVbpi+Vb87s5ho1nAAniIHKh2
-         KXR7ViPjwNUAJWYxoNcQWgVEZejYo15uNzb3F2nN2WGlqbFQbig7tdJIWt883ZSPHmjM
-         5IySceO5HRVeWhmNoEcv3uAu5gm6m3KKHdwRHSbGF0wVoZVgzPve+VtbuXjvG8XJZ7Uy
-         as5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5Rt5+Gjo0UGdPCISf5CydG1I/Z+wq56+kU1eC124qs0=;
-        b=uGAlNm5qMHib0X7Yr/FT1OB5i21N9rCQFdFlo14sdquyHdMBeevBM1mo90QFVXGYev
-         XqnhU6Bw5XWyvL9UQ0H545fOK0zIVmePmxF5wdBFqTKyPI4zxDS6vAdNFKEH60i1oMQB
-         Q2+V6TtoWSQubuG65BT6E9qh1dhccHsg8nh8CUdq7Srl4nYUue/9WjKgwuzpHfmhffJO
-         gXxhtRwssP8Uqbn9FjceqcWmdF+PvhOKNHjeC2DkekP4NlmW+8MPdXEyD1nPGC35dBXj
-         P2k3ml7CltO7CBCD+LsygBQXU4Z4bLMya2qUMsb50faU9ofQzvaujjGzuNsVpPoq4dI8
-         LLwA==
-X-Gm-Message-State: AOAM5308kPDUG2SaFoSarzel9CHgo44ILwTknkf4Afpwrg918ElZvQrr
-        kGLeD6j6AXlmZBJ9CprNQmh2nQ==
-X-Google-Smtp-Source: ABdhPJwh/IaT8sjJze0JR0UOlWwMhEHIvT0ikyEXE/ycXPb0JRTnRL4uDSst200BKNS1envrwdz+3g==
-X-Received: by 2002:a17:90a:c917:: with SMTP id v23mr3622499pjt.97.1598719634004;
-        Sat, 29 Aug 2020 09:47:14 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id w82sm3114901pfc.183.2020.08.29.09.47.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Aug 2020 09:47:13 -0700 (PDT)
-Subject: Re: fix block device size update serialization v2
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Justin Sanders <justin@coraid.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Xianting Tian <xianting_tian@126.com>,
-        linux-block@vger.kernel.org, dm-devel@redhat.com,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, nbd@other.debian.org,
-        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org
-References: <20200823091043.2600261-1-hch@lst.de>
- <20200827074758.GA8009@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b1960016-c265-1e1d-cfd7-de2330bc5eac@kernel.dk>
-Date:   Sat, 29 Aug 2020 10:47:11 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 29 Aug 2020 12:48:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728374AbgH2Qsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 12:48:50 -0400
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 327CA2098B
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 16:48:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598719730;
+        bh=nX+JQR9DpT/+z2PqkacX5gzHhZ3MRE2mzN0FA/mMxYM=;
+        h=From:Date:Subject:To:From;
+        b=gjj2VOKgmlou8/oRMJraCUn0ECUW/RD46ePvRU5zoT0HzzdRwMcuuNOw4diRamBCW
+         /FcVsnaoAGdh2ydjqEAL6nBmf0w5YpQe+J+CY9Eb6wa3u8Da9nQnxO6ChAMl6tQbZQ
+         RNKOiXOOnzFshtVGLqIxDJh2ggXHwvSAEdF1CbXU=
+Received: by mail-wm1-f49.google.com with SMTP id w2so1853155wmi.1
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 09:48:50 -0700 (PDT)
+X-Gm-Message-State: AOAM530ZcLreIKx+1Zlo5lvIJlkri3WbVrsXKsJxAij0998SDP/fQt5v
+        QuF+089sMxm7mwhfMne3PVUpe1yju1VdfVlP7eKRfg==
+X-Google-Smtp-Source: ABdhPJzCYIE2nWwadzkl6zgOl19uRGQl4a1pbYN2Z6IYBBYHhTkXGUAt5TUZr1XVZ7s0UiZWCw5L8nB+tJPG4aBf5a8=
+X-Received: by 2002:a05:600c:2183:: with SMTP id e3mr4015900wme.49.1598719728834;
+ Sat, 29 Aug 2020 09:48:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200827074758.GA8009@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sat, 29 Aug 2020 09:48:37 -0700
+X-Gmail-Original-Message-ID: <CALCETrWXvAMA7tQ3XZdAk2FixKfzQ_0fBmyNVyyPHVAomLvrWQ@mail.gmail.com>
+Message-ID: <CALCETrWXvAMA7tQ3XZdAk2FixKfzQ_0fBmyNVyyPHVAomLvrWQ@mail.gmail.com>
+Subject: ptrace_syscall_32 is failing
+To:     Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/20 1:47 AM, Christoph Hellwig wrote:
-> Jens, can you consider this for 5.9?  It reliably fixes the reported
-> hangs with nvme hotremoval that we've had for a few releases.
+Seems to be a recent regression, maybe related to entry/exit work changes.
 
-I've queued this up for 5.10. I think it's too late for 5.9 at this
-point, and it's not a regression in this release.
-
--- 
-Jens Axboe
-
+# ./tools/testing/selftests/x86/ptrace_syscall_32
+[RUN]    Check int80 return regs
+[OK]    getpid() preserves regs
+[OK]    kill(getpid(), SIGUSR1) preserves regs
+[RUN]    Check AT_SYSINFO return regs
+[OK]    getpid() preserves regs
+[OK]    kill(getpid(), SIGUSR1) preserves regs
+[RUN]    ptrace-induced syscall restart
+    Child will make one syscall
+[RUN]    SYSEMU
+[FAIL]    Initial args are wrong (nr=224, args=10 11 12 13 14 4289172732)
+[RUN]    Restart the syscall (ip = 0xf7f3b549)
+[OK]    Restarted nr and args are correct
+[RUN]    Change nr and args and restart the syscall (ip = 0xf7f3b549)
+[OK]    Replacement nr and args are correct
+[OK]    Child exited cleanly
+[RUN]    kernel syscall restart under ptrace
+    Child will take a nap until signaled
+[RUN]    SYSCALL
+[FAIL]    Initial args are wrong (nr=29, args=0 0 0 0 0 4289172732)
+[RUN]    SYSCALL
+[OK]    Args after SIGUSR1 are correct (ax = -514)
+[OK]    Child got SIGUSR1
+[RUN]    Step again
+[OK]    pause(2) restarted correctly
