@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E548C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F37C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFC7420791
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA5A721556
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598711191;
-	bh=E1hVAd3lBjehhCh0G784FFWukEKouWeGXwdRL4oXW8s=;
+	s=default; t=1598711197;
+	bh=y1v3WRBl4MbrDweIobQQZydmN+yvc1LWyMEcpKKt2S0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ioJ99LEZH1DyEJbe8P33k/s1tazgurqW6ROpHWbacxnyFBVmJ2nYO6qH/MAgNdfvv
-	 VdV62RCjTxRPAdryXXwM8Mc01gT4XSsSUXnvuadNzXSnO0mf3+qfr44iLLb2yNp4Rv
-	 GWMPM6LNAq9t61gdQtyd/CKjipgfTWbSL/YmsRjE=
+	b=R0lF5FGL5edpWGdgvFpgtglo8J82wEoip94Iat8yfFNfqUrYVcdmVcjqL9IOs9J0T
+	 yXhEspGH3v2NfQe8njuPrUujbZITSH2wZEzXLdE0csCk03dLUHbJ99LAT0yGG3vTrR
+	 h+amzVVGnMJWK/T1e2bamwBp0IGKWwv3ptnGM6gE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbgH2O0b (ORCPT
+        id S1728335AbgH2O0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 10:26:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53934 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 10:26:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728268AbgH2OZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 10:25:59 -0400
+        id S1728273AbgH2O0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 10:26:04 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C0B120C56;
-        Sat, 29 Aug 2020 14:25:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69282206C0;
+        Sat, 29 Aug 2020 14:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598711158;
-        bh=E1hVAd3lBjehhCh0G784FFWukEKouWeGXwdRL4oXW8s=;
+        s=default; t=1598711164;
+        bh=y1v3WRBl4MbrDweIobQQZydmN+yvc1LWyMEcpKKt2S0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cr7yPnmX9yXVCWjvWHUOp+ejxR44jkEQyY9aMINktokMsSu/4DwnEwjMCRLZlaZFO
-         fXGE90a1K6Vfo1IOeauMfcjbYBAcVHFtknsboKDm3U8sYTRtNVlPDlCzgYhzItH0Fw
-         6eb20eRaUV3JnU5yvHoy9DHW6KrvvOvaM5SksL6w=
+        b=m5w7LxE8HNSicErTpW8YDPTUUtPUsRWL7SQc/QbDSiDVxqoVASBqrg0+jxIZS4ALy
+         tayAMnlVVsztFempHudHlZ41F71RVa90Nvek6O+r21yXFwjuuw1ogWzkUU28jXC/Hk
+         Iyz8IABk+dYmIfBRH3GAHMC+bliFq0mp4oPruUyQ=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -61,9 +61,9 @@ Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Sylwester Nawrocki <snawrocki@kernel.org>,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Inki Dae <inki.dae@samsung.com>
-Subject: [RFT 09/10] arm64: dts: exynos: Correct port of USB-C connector node on Exynos5433 TM2
-Date:   Sat, 29 Aug 2020 16:25:00 +0200
-Message-Id: <20200829142501.31478-9-krzk@kernel.org>
+Subject: [RFT 10/10] arm64: dts: exynos: Enable Arizona interrupt controller in Exynos5433 TM2
+Date:   Sat, 29 Aug 2020 16:25:01 +0200
+Message-Id: <20200829142501.31478-10-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200829142501.31478-1-krzk@kernel.org>
 References: <20200829142501.31478-1-krzk@kernel.org>
@@ -72,11 +72,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The USB-C connector bindings require port@0.  Such port was already
-described in DTS but outside of the connector itself.  Put it into
-proper place to fix dtbs_check warnings like:
+The Wolfson Arizona codec is interrupt controller which is required by
+bindings.  This fixes dtbs_check warnings like:
 
-  arch/arm64/boot/dts/exynos/exynos5433-tm2.dt.yaml: musb_connector: ports: 'port@0' is a required property
+  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dt.yaml: wm5110-codec@0: 'interrupt-controller' is a required property
+  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dt.yaml: wm5110-codec@0: '#interrupt-cells' is a required property
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
@@ -87,42 +87,22 @@ Not tested on HQ. Please kindly review and test.
 Best regards,
 Krzysztof
 ---
- .../boot/dts/exynos/exynos5433-tm2-common.dtsi    | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-index 6246cce2a15e..bab6c1addd5f 100644
+index bab6c1addd5f..49cd55d6891c 100644
 --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
 +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-@@ -871,6 +871,13 @@
- 					#address-cells = <1>;
- 					#size-cells = <0>;
+@@ -1242,6 +1242,8 @@
  
-+					port@0 {
-+						reg = <0>;
-+						muic_to_usb: endpoint {
-+							remote-endpoint = <&usb_to_muic>;
-+						};
-+					};
-+
- 					port@3 {
- 						reg = <3>;
- 						musb_con_to_mhl: endpoint {
-@@ -879,14 +886,6 @@
- 					};
- 				};
- 			};
--
--			ports {
--				port {
--					muic_to_usb: endpoint {
--						remote-endpoint = <&usb_to_muic>;
--					};
--				};
--			};
- 		};
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
  
- 		regulators {
+ 		wlf,micd-detect-debounce = <300>;
+ 		wlf,micd-bias-start-time = <0x1>;
 -- 
 2.17.1
 
