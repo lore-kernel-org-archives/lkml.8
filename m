@@ -2,133 +2,93 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F115C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 21:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7598DC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 21:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB792076D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 21:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA562076D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 21:08:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbgH2VIc (ORCPT
+        id S1728576AbgH2VIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 17:08:32 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:51722 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728273AbgH2VIb (ORCPT
+        Sat, 29 Aug 2020 17:08:47 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:50688 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728273AbgH2VIp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 17:08:31 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 8C421804A4;
-        Sat, 29 Aug 2020 23:08:28 +0200 (CEST)
-Date:   Sat, 29 Aug 2020 23:08:27 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        od@zcrc.me
-Subject: Re: [PATCH v2 2/2] drm/ingenic: Fix driver not probing when IPU port
- is missing
-Message-ID: <20200829210827.GF796939@ravnborg.org>
-References: <20200827114404.36748-1-paul@crapouillou.net>
- <20200827114404.36748-2-paul@crapouillou.net>
+        Sat, 29 Aug 2020 17:08:45 -0400
+Received: from [78.134.86.56] (port=59664 helo=[192.168.77.66])
+        by hostingweb31.netsons.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1kC85Z-0008dc-VF; Sat, 29 Aug 2020 23:08:42 +0200
+Subject: Re: [PATCH v3 4/5] fpga manager: xilinx-spi: add error checking after
+ gpiod_get_value()
+To:     kernel test robot <lkp@intel.com>, linux-fpga@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, Moritz Fischer <mdf@kernel.org>,
+        Tom Rix <trix@redhat.com>, Michal Simek <monstr@monstr.eu>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anatolij Gustschin <agust@denx.de>
+References: <20200828195808.27975-4-luca@lucaceresoli.net>
+ <202008291117.tPETSgId%lkp@intel.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <d7478021-33cd-4477-8fa5-3336048d8afe@lucaceresoli.net>
+Date:   Sat, 29 Aug 2020 23:08:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827114404.36748-2-paul@crapouillou.net>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=A5ZCwZeG c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=7gkXJVJtAAAA:8
-        a=8Y5p9mnmN_Fc2c6ofskA:9 a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
-        a=E9Po1WZjFZOl8hwRPBS3:22
+In-Reply-To: <202008291117.tPETSgId%lkp@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca@lucaceresoli.net
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 01:44:04PM +0200, Paul Cercueil wrote:
-> Even if support for the IPU was compiled in, we may run on a device
-> (e.g. the Qi LB60) where the IPU is not available, or simply with an old
-> devicetree without the IPU node. In that case the ingenic-drm refused to
-> probe.
+Hi,
+
+On 29/08/20 05:30, kernel test robot wrote:
+> Hi Luca,
 > 
-> Fix the driver so that it will probe even if the IPU node is not present
-> in devicetree (but then IPU support is disabled of course).
+> I love your patch! Perhaps something to improve:
 > 
-> v2: Take a different approach
+> [auto build test WARNING on v5.9-rc2]
+> [also build test WARNING on next-20200828]
+> [cannot apply to xlnx/master]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch]
 > 
-> Fixes: fc1acf317b01 ("drm/ingenic: Add support for the IPU")
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> ---
->  drivers/gpu/drm/ingenic/ingenic-drm-drv.c | 19 +++++++++++--------
->  1 file changed, 11 insertions(+), 8 deletions(-)
+> url:    https://github.com/0day-ci/linux/commits/Luca-Ceresoli/fpga-manager-xilinx-spi-remove-stray-comment/20200829-040041
+> base:    d012a7190fc1fd72ed48911e77ca97ba4521bccd
+> compiler: nds32le-linux-gcc (GCC) 9.3.0
 > 
-> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> index c1bcb93aed2d..b7074161ccf0 100644
-> --- a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> +++ b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> @@ -673,7 +673,7 @@ static void ingenic_drm_unbind_all(void *d)
->  	component_unbind_all(priv->dev, &priv->drm);
->  }
->  
-> -static int ingenic_drm_bind(struct device *dev)
-> +static int ingenic_drm_bind(struct device *dev, bool has_components)
->  {
->  	struct platform_device *pdev = to_platform_device(dev);
->  	const struct jz_soc_info *soc_info;
-> @@ -808,7 +808,7 @@ static int ingenic_drm_bind(struct device *dev)
->  			return ret;
->  		}
->  
-> -		if (IS_ENABLED(CONFIG_DRM_INGENIC_IPU)) {
-> +		if (IS_ENABLED(CONFIG_DRM_INGENIC_IPU) && has_components) {
->  			ret = component_bind_all(dev, drm);
->  			if (ret) {
->  				if (ret != -EPROBE_DEFER)
-> @@ -939,6 +939,11 @@ static int ingenic_drm_bind(struct device *dev)
->  	return ret;
->  }
->  
-> +static int ingenic_drm_bind_with_components(struct device *dev)
-> +{
-> +	return ingenic_drm_bind(dev, true);
-> +}
-> +
->  static int compare_of(struct device *dev, void *data)
->  {
->  	return dev->of_node == data;
-> @@ -957,7 +962,7 @@ static void ingenic_drm_unbind(struct device *dev)
->  }
->  
->  static const struct component_master_ops ingenic_master_ops = {
-> -	.bind = ingenic_drm_bind,
-> +	.bind = ingenic_drm_bind_with_components,
->  	.unbind = ingenic_drm_unbind,
->  };
->  
-> @@ -968,14 +973,12 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  	struct device_node *np;
->  
->  	if (!IS_ENABLED(CONFIG_DRM_INGENIC_IPU))
-> -		return ingenic_drm_bind(dev);
-> +		return ingenic_drm_bind(dev, false);
->  
->  	/* IPU is at port address 8 */
->  	np = of_graph_get_remote_node(dev->of_node, 8, 0);
-> -	if (!np) {
-> -		dev_err(dev, "Unable to get IPU node\n");
-> -		return -EINVAL;
-> -	}
-> +	if (!np)
-> +		return ingenic_drm_bind(dev, false);
->  
->  	drm_of_component_match_add(dev, &match, compare_of, np);
->  	of_node_put(np);
-> -- 
-> 2.28.0
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> 
+> cppcheck warnings: (new ones prefixed by >>)
+> 
+>>> drivers/fpga/xilinx-spi.c:183:10: warning: Uninitialized variable: expired [uninitvar]
+>     while (!expired) {
+>             ^
+
+Oh dear, Please ignore this patch, v4 will be coming with this fixed.
+
+-- 
+Luca
