@@ -2,115 +2,96 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF916C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03174C433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9571F206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:15:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598688953;
-	bh=2xBQwpYW3C+U+EZAmz9aUgrw1B10SLVziDjYrMH3QBM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=XK4oNo7/oJk3MjHIDTy2aNFpTtJJc/VM4e9eJza0ks429NTCETxyz/HnG1lMm1yq1
-	 aIlvqsg4X7Ms6Khttg6cINXUCnmxEaFD1SSDxAog/Vm6N7BYCUTL8ruR72msAkjx3f
-	 mRFIuIvFix7EqyqxEfKPNnn0xB5FAbRnCKFS/r30=
+	by mail.kernel.org (Postfix) with ESMTP id C25512075B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:18:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RXTf/vAH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgH2IPu (ORCPT
+        id S1727793AbgH2ISv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 04:15:50 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:47525 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbgH2IOz (ORCPT
+        Sat, 29 Aug 2020 04:18:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbgH2ISs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 04:14:55 -0400
-Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 07T8ELfh014307;
-        Sat, 29 Aug 2020 17:14:21 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 07T8ELfh014307
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1598688861;
-        bh=rnMeFxtUozgRoWaZOL+eXZBgvS1kKsvPqvmSLOem0ZM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=D8kMxkhPZnYAOPqqTCXoj2ogevhLJAt4RKNqt9a++veTajLxSbTL+PRKQfuXG/SjU
-         RWDP8EOoFdIqg5c81atNI0kO+h0WBnAxfLO/AUV5nSgcagvKxYAIj3mKYP+TR6szEo
-         J5kG5569QItVGN0vxuozLCACK/2Mwrj4NPVn0qoFRB6hmpzU0+i7Mb1SkYrtIR9u9M
-         y2G5JkVje/an3rusIUBE4/cX+e+dgRkdAtDwE0YEjzDiJd+/Fp8R0HLWnNvr0zf9DA
-         OZkx1nOxDbLZ1WlpwRAgulxnQv2pIfzZcBwjT5I5trxjJC7PvwLT3HxSzall05QmTR
-         xke13ZVWkWNXA==
-X-Nifty-SrcIP: [126.90.211.135]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 01/11] kconfig: qconf: reformat the intro message
-Date:   Sat, 29 Aug 2020 17:14:07 +0900
-Message-Id: <20200829081417.725978-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 29 Aug 2020 04:18:48 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A08C061236;
+        Sat, 29 Aug 2020 01:18:47 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id ba12so1152581edb.2;
+        Sat, 29 Aug 2020 01:18:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=wRFsH65qEKlAb6hncYTia/pYv8Gyz6fqeLSzzlTd088=;
+        b=RXTf/vAH7+1eg3sPtJR3mUZhFp/HjFxZOBqzv1oAEN/XHPPyXVcyDQogjXth44xzrx
+         bo9s+DXL0CtR7jecoHyFbdrmhxgk4YpngS+55eUTcjTjSAGEEYdgc0Luy/dkl7ZYhvFE
+         gjzS8ewUc/UY+dHO8gJxgq5B+ZI3lshpNmC3Q529NlA3mV/gwkL49/kPvWoccGgNHtdD
+         rLg4C0RnBZwWvmMDp+zJmdKwxUDgCdzWtl/GGWPw/Q/1P+K8Sv4TMuIsQASA5MPCwPNg
+         mzEUn9rBEASqsDcpeOYZD3zL5vQIFSIDTEyFwhP3l/UCjJOhGoHcynqiOX/JrXx+2fsy
+         0xMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=wRFsH65qEKlAb6hncYTia/pYv8Gyz6fqeLSzzlTd088=;
+        b=cQBaLL05WLlqFIuy+v5lT3tWrv8LBHmXvPBvX8ArFOdbtl3FXsFJyyhjjAQbS9wvjm
+         NqD179EyYp2Uycbz+SWGYxgtAW9IMl55t7+tRolY48WMKCAdBg5hF1jcn3TIiDxN+azN
+         2h8ZPMI5z6xtWM3i4aBu3bap6YrqSDIFusGCys7rGZBP50E4idKRMgA36P29q6sAB067
+         dqqYR6y3Zu6CkjNQE8/qodoX5LxCtB+NjNCQPi305cQArDZd6eyEIO61ZNG3cOP5UYfj
+         0hTNrniUo1K8vgf2NB4uJZXOU3rZpPPgOiEmoUvKeeWkDRrpFZHYFk3PBSvGfE/NZxlH
+         iODw==
+X-Gm-Message-State: AOAM531IzqlOmuyiXRKwwdnoKTtD/IQ4dV1IfnU1nplqryZDI/H4b/UZ
+        kn3f5J5pjo1o7U0TCyUZiI2CO8o+J2Y=
+X-Google-Smtp-Source: ABdhPJyt1i8CCPsON1BaSsP8z4tlI7mtDz7h02HFK6FEHAXm5g8qXOiKvjzUgXC9BYBUXUulAsVOPQ==
+X-Received: by 2002:a05:6402:2:: with SMTP id d2mr2519849edu.221.1598689126406;
+        Sat, 29 Aug 2020 01:18:46 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:2450:10d2:194d:f90b:b3a9:1300:5b1a])
+        by smtp.gmail.com with ESMTPSA id q15sm1500297edc.74.2020.08.29.01.18.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Aug 2020 01:18:45 -0700 (PDT)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     SeongJae Park <sj38.park@gmail.com>
+Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, SeongJae Park <sjpark@amazon.de>
+Subject: Re: [PATCH 0/2] howto.rst: Sync with original
+Date:   Sat, 29 Aug 2020 10:18:39 +0200
+Message-Id: <20200829081839.2546-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200829080428.1219-1-sjpark@amazon.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The introduction message displayed by 'Help -> Introduction' does not
-look nice due to excessive new lines.
+Oops, I forgot adding 'From:' line in the body.  This will make author and
+signed-off-by mismatch.  Sorry, I will send v2 soon.
 
-Reformat the message.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+Thanks,
+SeongJae Park
 
- scripts/kconfig/qconf.cc | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+On Sat, 29 Aug 2020 10:04:26 +0200 SeongJae Park <sj38.park@gmail.com> wrote:
 
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 8638785328a7..c40e37656f3f 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -1831,17 +1831,24 @@ void ConfigMainWindow::closeEvent(QCloseEvent* e)
- 
- void ConfigMainWindow::showIntro(void)
- {
--	static const QString str = "Welcome to the qconf graphical configuration tool.\n\n"
--		"For each option, a blank box indicates the feature is disabled, a check\n"
--		"indicates it is enabled, and a dot indicates that it is to be compiled\n"
--		"as a module.  Clicking on the box will cycle through the three states.\n\n"
--		"If you do not see an option (e.g., a device driver) that you believe\n"
--		"should be present, try turning on Show All Options under the Options menu.\n"
--		"Although there is no cross reference yet to help you figure out what other\n"
--		"options must be enabled to support the option you are interested in, you can\n"
--		"still view the help of a grayed-out option.\n\n"
--		"Toggling Show Debug Info under the Options menu will show the dependencies,\n"
--		"which you can then match by examining other options.\n\n";
-+	static const QString str =
-+		"Welcome to the qconf graphical configuration tool.\n\n"
-+
-+		"For each option, a blank box indicates the feature is "
-+		"disabled, a check indicates it is enabled, and a dot "
-+		"indicates that it is to be compiled as a module. Clicking on "
-+		"the box will cycle through the three states.\n\n"
-+
-+		"If you do not see an option (e.g., a device driver) that you "
-+		"believe should be present, try turning on Show All Options "
-+		"under the Options menu. Although there is no cross reference "
-+		"yet to help you figure out what other options must be enabled "
-+		"to support the option you are interested in, you can still "
-+		"view the help of a grayed-out option.\n\n"
-+
-+		"Toggling Show Debug Info under the Options menu will show the "
-+		"dependencies, which you can then match by examining other "
-+		"options.\n\n";
- 
- 	QMessageBox::information(this, "qconf", str);
- }
--- 
-2.25.1
-
+> This patchset syncs howto.rst for recent changes to the original doc and
+> fix some trivial nits in the translation itself.
+> 
+> The patches are based on v5.9-rc2.
+> 
+> SeongJae Park (2):
+>   Documentation/kokr: bring process docs up to date
+>   Documentation/kokr/howto: Wordsmith
+> 
+>  Documentation/translations/ko_KR/howto.rst | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
