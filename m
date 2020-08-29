@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA4EC433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5FFC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD202137B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FA9B2137B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598683749;
-	bh=4Lu3EJuJBkPkkhNm8cEkffiFcH6Q42bc9rp03XpBrfM=;
+	s=default; t=1598683754;
+	bh=NdE0qL8/9TQ4ofdmnRN532/vnFt98MJgcnCVFwewxjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o2Dz05kb4NhVplDP2JTxWDxnc6bvE5ws6jmMdJBxF9gvKTNWhXe0mj/9xABb14VEK
-	 U2clJU4n2VlOfyHeTcOrUioi+1Xt9HCOixovgWrhFC11OB2CRFuZClZ1HQ9iKtePMp
-	 psBcdxrCmiuuO+Ot+GlBx840DwCQhGa1Pa6la6KU=
+	b=SQavMkm56hDT1cQtFGskb9F5MOLF/t3g3YkdlketrWELt41UrGUK0CuIFzamxk0xx
+	 hepsTSL9VmO2BWNcso3os4LzZpfuNgpBGYeSIBmrv+jB9Zj46kcAEotNHl9WeL/Hkb
+	 SsPjeFVKLQHg4Qwozfowzq/iQiDAorXb9NbC6LRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgH2GtJ (ORCPT
+        id S1727882AbgH2Gs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 02:49:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42904 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 02:48:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727935AbgH2GtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 02:49:05 -0400
+        id S1727839AbgH2Gsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 02:48:51 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3B3820E65;
-        Sat, 29 Aug 2020 06:49:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E72942151B;
+        Sat, 29 Aug 2020 06:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598683744;
-        bh=4Lu3EJuJBkPkkhNm8cEkffiFcH6Q42bc9rp03XpBrfM=;
+        s=default; t=1598683731;
+        bh=NdE0qL8/9TQ4ofdmnRN532/vnFt98MJgcnCVFwewxjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2q5UJCJTz4MbOA8HJ/KI2YbH8ixBYNWTU5cscPWHOwBazmyqOMEXvAJA/TxjhKgCc
-         dcJSIcEFEFv2wOtJLH1DrUOpfmGGfdCCzR7rTAP/4bqEVf4iq8xpZCegelD2iVSsM7
-         wejsuCcOP7LOR8iIyXVxYXrH/DNE/16YWdxioG8c=
+        b=tQ+mYctyziyAIhdjRXZ+tpWU2GXq+jUCvq0rJfQp54a53yr+/3v+RdW1Z3JKk3gdZ
+         UCfdsW9sbzvEEBFR4MFSsFLmph2+zWy+BxEiOwy8OXCLDrgR/4hCRR/Z5/XjKPGcQN
+         Fy8GFEaunbF23avS3ip9Bbwc+3WKu5b31DnDCpE8=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Jonathan Cameron <jic23@kernel.org>,
         Lars-Peter Clausen <lars@metafoo.de>,
@@ -54,9 +54,9 @@ To:     Jonathan Cameron <jic23@kernel.org>,
         linux-stm32@st-md-mailman.stormreply.com
 Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 18/18] iio: multiplexer: iio-mux: Simplify with dev_err_probe()
-Date:   Sat, 29 Aug 2020 08:47:26 +0200
-Message-Id: <20200829064726.26268-18-krzk@kernel.org>
+Subject: [PATCH v3 14/18] iio: light: isl29018: Simplify with dev_err_probe()
+Date:   Sat, 29 Aug 2020 08:47:22 +0200
+Message-Id: <20200829064726.26268-14-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200829064726.26268-1-krzk@kernel.org>
 References: <20200829064726.26268-1-krzk@kernel.org>
@@ -70,34 +70,30 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
 ---
+ drivers/iio/light/isl29018.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-Changes since v2:
-1. Wrap dev_err_probe() lines at 80 character
----
- drivers/iio/multiplexer/iio-mux.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/iio/multiplexer/iio-mux.c b/drivers/iio/multiplexer/iio-mux.c
-index 6910218fdb00..d54ae5cbe51b 100644
---- a/drivers/iio/multiplexer/iio-mux.c
-+++ b/drivers/iio/multiplexer/iio-mux.c
-@@ -354,11 +354,9 @@ static int mux_probe(struct platform_device *pdev)
- 		return -ENODEV;
+diff --git a/drivers/iio/light/isl29018.c b/drivers/iio/light/isl29018.c
+index ac8ad0f32689..2689867467a8 100644
+--- a/drivers/iio/light/isl29018.c
++++ b/drivers/iio/light/isl29018.c
+@@ -746,12 +746,9 @@ static int isl29018_probe(struct i2c_client *client,
+ 	chip->suspended = false;
  
- 	parent = devm_iio_channel_get(dev, "parent");
--	if (IS_ERR(parent)) {
--		if (PTR_ERR(parent) != -EPROBE_DEFER)
--			dev_err(dev, "failed to get parent channel\n");
--		return PTR_ERR(parent);
+ 	chip->vcc_reg = devm_regulator_get(&client->dev, "vcc");
+-	if (IS_ERR(chip->vcc_reg)) {
+-		err = PTR_ERR(chip->vcc_reg);
+-		if (err != -EPROBE_DEFER)
+-			dev_err(&client->dev, "failed to get VCC regulator!\n");
+-		return err;
 -	}
-+	if (IS_ERR(parent))
-+		return dev_err_probe(dev, PTR_ERR(parent),
-+				     "failed to get parent channel\n");
++	if (IS_ERR(chip->vcc_reg))
++		return dev_err_probe(&client->dev, PTR_ERR(chip->vcc_reg),
++				     "failed to get VCC regulator!\n");
  
- 	sizeof_ext_info = iio_get_channel_ext_info_count(parent);
- 	if (sizeof_ext_info) {
+ 	err = regulator_enable(chip->vcc_reg);
+ 	if (err) {
 -- 
 2.17.1
 
