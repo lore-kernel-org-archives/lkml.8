@@ -2,96 +2,102 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C644AC433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 18:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBA2C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 18:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8C9D208CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 18:38:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oaIeN6WK"
+	by mail.kernel.org (Postfix) with ESMTP id 586E9208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 18:40:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598726440;
+	bh=JSJZCigk4E08VMIg4Hun3LtWiY2xMjZqNLjT154Yth8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aHKGGyTClr5Qb8K2CFPb0CthZ2YLVLCZYhN9/RWyxO8otjGDn7qnLWHad9De9/Svc
+	 X6NF27w6GY4kHaUT0fgPQSoUV2uPwjKuXjjx2J7oVTpOfXaMPWcsCE133ts2lcttPy
+	 +/aGhq4gtoh0izhEM0/4Lj1jeWfxgUKJQFlHzWh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbgH2Siw (ORCPT
+        id S1728442AbgH2Skh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 14:38:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34670 "EHLO
+        Sat, 29 Aug 2020 14:40:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728265AbgH2Siv (ORCPT
+        with ESMTP id S1728370AbgH2Skg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 14:38:51 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27228C061236;
-        Sat, 29 Aug 2020 11:38:51 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id c19so1762723wmd.1;
-        Sat, 29 Aug 2020 11:38:51 -0700 (PDT)
+        Sat, 29 Aug 2020 14:40:36 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 053EBC061236
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 11:40:35 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id c15so1410967lfi.3
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 11:40:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=AgHtPh7HVKajATPSPCiZDeKl34/5NzQSjixpKDrOaBQ=;
-        b=oaIeN6WKx3TMB4D1rbj4g/hNn0bgGvVMErZn+iSgtVwy91nXxTwDK4I8uxB4IE34dI
-         IVg2fP3yt5tfVIqMYaeDeaTeR9v1ole2Wybi7lIqCzUoOUpaiM7Y+yG57+cPKzO09LUB
-         LNA+A8hUwqZi629QZwFyGL/iZ7sTygWKVso+tVg286WZ/c1XFBRezZe7w/yT+tNLo64F
-         vZQjOI3fUuNA1yOqqKFdWRxzpsbFSXTMegApGDVJP6IkzAKg3SHJebjxhsjnbu7Ly/8B
-         BRI7BdLZ7N9dhsQ90e82i8JZ/SNWg8qGWcIUvLuPKmb0dMs9HmWXrT9fT1238Mc5Nppi
-         OkfQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+bS3/ZAsJehAuh2OYGlyfD2Lwdw96EndWMQRFR9DTGM=;
+        b=SwJ9R5Wz54BJCRFB5kIJHnx20MYlTokmP+L4EVQeClI13aHwe8h4KvW1MdMcB3Gu3J
+         aRtlpjIHU5dTaSfiZ28QgnmgFA0JQC5E8yJmQI70bZoaERm1b9EuihErL1xMGIzXaq4Q
+         nRgQWO3aoEWgvJzzXa0zFe3fqE1N5sJhcWpag=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=AgHtPh7HVKajATPSPCiZDeKl34/5NzQSjixpKDrOaBQ=;
-        b=X65Wxl66k+OAC+iRWpTpqUv7/VDxFFcsunzeMeMawG6bAI6IQKdeOLZyeoYveG765d
-         bLRO0m/MutTRRZ0KH5cPAX+iJAsddqwIxxJW5mYCZ8RVCRDwlmX7kw/4iBISGYN58iiZ
-         ubXVzDGbDaoon+Pdpiq8yG3aliK1Gg+D6C1VLBuKJEQ9dPbNnQR+vN2jFlh9J8yznMHq
-         Qn8KZvtDAoMapXEIZqi3UT2BlSLbfMxCqdrzAAi0LkKPR6iyDY18AfOMRDl33cuQPI8H
-         mC5NT1LlILNEpwrA+Nyc0yIW/L0/gSnWYGtYV3m1FFi9D2T0yCvkxgD7AndhxrRf0BBZ
-         XAxw==
-X-Gm-Message-State: AOAM530xQ1+xa8uzLfSXZ/ZR78QoKvsu/vyH1L2yq3DC6iRA753Hhg9b
-        VhSEr4RrR/QPUG5JRAgcbeQ=
-X-Google-Smtp-Source: ABdhPJw6jlZVnMgVljS1Ufr9VbYYMfKfZKDzTpzFqDh5f9TAGgPGd1ywxEzlmZJOY8iZyi8BDDRWtw==
-X-Received: by 2002:a1c:6607:: with SMTP id a7mr2118309wmc.142.1598726329832;
-        Sat, 29 Aug 2020 11:38:49 -0700 (PDT)
-Received: from localhost.localdomain ([85.132.73.2])
-        by smtp.gmail.com with ESMTPSA id r7sm3119986wrr.9.2020.08.29.11.38.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Aug 2020 11:38:49 -0700 (PDT)
-From:   Emin Ghuliev <eminusgh@gmail.com>
-To:     ysato@users.sourceforge.jp
-Cc:     dalias@libc.org, eminusgh@gmail.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, linux-sh@vger.kernel.org
-Subject: [PATCH] sh: use kmem_cache_zalloc instead of kmem_cache_alloc with GFP_ZERO flag
-Date:   Sat, 29 Aug 2020 18:38:38 +0000
-Message-Id: <20200829183838.10166-1-eminusgh@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+bS3/ZAsJehAuh2OYGlyfD2Lwdw96EndWMQRFR9DTGM=;
+        b=MtZtpwvCkn8C7Obo2TUfob4DzFoKWhvMvx8t/Yfqzp4nQUJwUufz81Ccl1b/IpfTsA
+         0h8LgukJhQEXMFQL587f22bVeP5986wvS3/yA+jPko1RhO/HgGG4ho8wZYCXL3DbUSOp
+         wDbtbc2Qwr/nqzC+e1ZyHUyh5p5wDMXLUQo3NSxAfN2gVfgEEmDbhg5obLRnidoso2ed
+         jXP6OJxYrtLy3eI6/OVNOmxQVajhq1cFFyZkbeVQUu/KTJj61FdBiyvFC26h6/Ylgbmi
+         /r77l9IVsUOhq/bfpee86q/cg4zZBhmVKn2YYsfwcZnAOEbrcufag1SLQb0p0u75yO8f
+         fXgw==
+X-Gm-Message-State: AOAM531wCXMhtKtrH5WMuqy5id6tSxzinqhDI+rFNoCs4z6EePNMMMLn
+        yRXbBKSKRUWU9bo2cd5YoMVnFiKYMLUBLg==
+X-Google-Smtp-Source: ABdhPJyJwbWVobBrdNbShjl4rivFSNqVBdWynAIJW+0tEDLV3ZhVGOS4gIGQr1A5l+KzIqA1ADXfCA==
+X-Received: by 2002:a19:40c8:: with SMTP id n191mr2150173lfa.29.1598726434122;
+        Sat, 29 Aug 2020 11:40:34 -0700 (PDT)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
+        by smtp.gmail.com with ESMTPSA id h18sm777293lfk.86.2020.08.29.11.40.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Aug 2020 11:40:32 -0700 (PDT)
+Received: by mail-lj1-f181.google.com with SMTP id t23so2421203ljc.3
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 11:40:32 -0700 (PDT)
+X-Received: by 2002:a2e:b008:: with SMTP id y8mr1719908ljk.421.1598726432098;
+ Sat, 29 Aug 2020 11:40:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <f7328aad-ce1d-dd3f-577b-20b3d2efbabc@dragonslave.de>
+ <CAHk-=whuO3U90x_i6nq+xmVymwqcc=kkb5=gv4vyLScQn7ZwBw@mail.gmail.com>
+ <20200829175735.GA16416@lst.de> <CAEJqkgjz2wHAOVfHTw0V1fU8nOR70WZtuY9vJKywrUkJetC=TQ@mail.gmail.com>
+In-Reply-To: <CAEJqkgjz2wHAOVfHTw0V1fU8nOR70WZtuY9vJKywrUkJetC=TQ@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 29 Aug 2020 11:40:16 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgMJGVqiKnmL+mJ=mrHkc3JsABLrmuaxJ1T=xTrnDCqag@mail.gmail.com>
+Message-ID: <CAHk-=wgMJGVqiKnmL+mJ=mrHkc3JsABLrmuaxJ1T=xTrnDCqag@mail.gmail.com>
+Subject: Re: Kernel 5.9-rc Regression: Boot failure with nvme
+To:     Gabriel C <nix.or.die@googlemail.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Daniel Exner <dex@dragonslave.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gabriel C <crazy@frugalware.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-use kmem_cache_zalloc function which does kmem_cache_alloc and zero out
-instead of manually setting kmem_cache_alloc with GFP_ZERO flag.
+On Sat, Aug 29, 2020 at 11:36 AM Gabriel C <nix.or.die@googlemail.com> wrote:
+>
+> > This kinda looks like the sqsize regression we had in earlier 5.9-rc,
+> > but that should have been fixed in -rc2 with
+>
+> git tag --contains 7442ddcedc344b6fa073692f165dffdd1889e780
+> returns nothing, that commit only exits in master, so probably in -rc3.
 
-Signed-off-by: Emin Ghuliev <eminusgh@gmail.com>
----
- arch/sh/mm/pgtable.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Right you are - that commit is not in rc2.
 
-diff --git a/arch/sh/mm/pgtable.c b/arch/sh/mm/pgtable.c
-index cf7ce4b57359..6e17d921f5f5 100644
---- a/arch/sh/mm/pgtable.c
-+++ b/arch/sh/mm/pgtable.c
-@@ -47,7 +47,7 @@ void pud_populate(struct mm_struct *mm, pud_t *pud, pmd_t *pmd)
- 
- pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long address)
- {
--	return kmem_cache_alloc(pmd_cachep, GFP_KERNEL | __GFP_ZERO);
-+	return kmem_cache_zalloc(pmd_cachep, GFP_KERNEL);
- }
- 
- void pmd_free(struct mm_struct *mm, pmd_t *pmd)
--- 
-2.17.1
+Daniel - that commit will be in rc3 when I cut that tomorrow, but if
+you are willing to check current -git to verify that yes, it's fixed,
+that would be lovely.
 
+                  Linus
