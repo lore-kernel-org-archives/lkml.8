@@ -2,106 +2,123 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EB2C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DD9C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1CBF20738
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:13:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hONZkQDP"
+	by mail.kernel.org (Postfix) with ESMTP id C96EF20825
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbgH2HNc (ORCPT
+        id S1726952AbgH2HNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 03:13:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgH2HNa (ORCPT
+        Sat, 29 Aug 2020 03:13:35 -0400
+Received: from smtprelay0066.hostedemail.com ([216.40.44.66]:50738 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726115AbgH2HNd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 03:13:30 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E78BDC061236
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 00:13:29 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k13so677405plk.13
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 00:13:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Rh4ud5jTmfL5cS/C7dCchIDO5q1+ZBSwil0mqRzvrBQ=;
-        b=hONZkQDPIqwXG3s/MO8aVRxkuNaIEvDvSn0quqaxTt1WEC9e1x7VwhTDkUfhxOdpUs
-         WV1ddj41BrENjiR1ebhsoYjt7JUICzh0FYipgC7VzKVMhY3V+Wd5s9dxsgLvzFFWW/c2
-         tV5xoudkHa54lS++0fZABmcYWWIIVYea8lH8B+BC1A1gWOiKNY0bNcURbOQMpPEp/PrC
-         UckO52T1ffr0zZqkFVo5RKDMXR3AIESxFwTMcwqTAtofDIC6JlygguoyL7y9vg/3fcL2
-         49aRSWMvX4fhLzHGxiwa8KgcB/mjYUr8caI53fuNBEsPBIUtS7ARm3TDYBYiXKMM/vHt
-         ZFaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Rh4ud5jTmfL5cS/C7dCchIDO5q1+ZBSwil0mqRzvrBQ=;
-        b=FzjF2wo0kCaQMjruB84xNeLCmjpLYQ7agYqdyG7HsYCJbCdOgxmPIU1/TNkFrsLhS0
-         GWRmXh1XDn4VrzkVNrOsYjvvZnvrFkTR4amaa++3JS+U6L5NtyceCUgxFA08E+gsg09S
-         9v05L3Et5DiSyXS4SK7+wCMOFvKmq8LYZ6zao/5Aj30/J74qwAuuIP5DZqSGE8PeXAgX
-         q/kg/EVQ24dnzetFuD2Ty1MY4qqFtUZt1DPrDqFrVR8A2i8e3ctQTkr4/Rc7dmgmnscb
-         iGHlP/gdOReK83D9dglxbPvyrPHjIgHqeW1oR54r5tJ0oFYTGfmqM2vbz3J1Q0kHb6jL
-         wQtQ==
-X-Gm-Message-State: AOAM533+Cd8N5WAEykUr7qn5MPOS6t8UwZBuSt/CCiG9OqHXtAGDgSn5
-        EfxCksVs4CYxQfuU4XtfEg==
-X-Google-Smtp-Source: ABdhPJx7g+ttIXoZnc1jLfVygP5yd+wFwv5JzWPQ50sx8JWo0jvLSBv4yxRHDuN6TPlGqndF42L+cw==
-X-Received: by 2002:a17:902:6f01:: with SMTP id w1mr1906429plk.49.1598685208899;
-        Sat, 29 Aug 2020 00:13:28 -0700 (PDT)
-Received: from localhost.localdomain ([103.85.228.104])
-        by smtp.gmail.com with ESMTPSA id e1sm866102pjv.17.2020.08.29.00.13.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Aug 2020 00:13:28 -0700 (PDT)
-From:   milan.opensource@gmail.com
-To:     mtk.manpages@gmail.com
-Cc:     linux-kernel@vger.kernel.org,
-        Milan Shah <milan.opensource@gmail.com>
-Subject: [PATCH] fsync.2: ERRORS: add EIO and ENOSPC
-Date:   Sat, 29 Aug 2020 12:43:06 +0530
-Message-Id: <1598685186-27499-1-git-send-email-milan.opensource@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Sat, 29 Aug 2020 03:13:33 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 7755018029138;
+        Sat, 29 Aug 2020 07:13:31 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: beds82_040d8132707c
+X-Filterd-Recvd-Size: 3330
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf17.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 29 Aug 2020 07:13:29 +0000 (UTC)
+Message-ID: <fe4de2e9f0a492e66b870cddbadb820e3459cc7a.camel@perches.com>
+Subject: Re: [PATCH] sysfs: Add sysfs_emit to replace sprintf to PAGE_SIZE
+ buffers.
+From:   Joe Perches <joe@perches.com>
+To:     Denis Efremov <efremov@linux.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Alex Dewar <alex.dewar90@gmail.com>,
+        linux-kernel@vger.kernel.org
+Date:   Sat, 29 Aug 2020 00:13:28 -0700
+In-Reply-To: <c77e83a0-7587-3e07-81cb-6b185d1ce6aa@linux.com>
+References: <a96cdf07cd136d06c3cc1e10eb884caa7498ba72.1598654887.git.joe@perches.com>
+         <c77e83a0-7587-3e07-81cb-6b185d1ce6aa@linux.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Milan Shah <milan.opensource@gmail.com>
+On Sat, 2020-08-29 at 09:59 +0300, Denis Efremov wrote:
+> Hi,
+> 
+> On 8/29/20 1:52 AM, Joe Perches wrote:
+> > sprintf does not know the PAGE_SIZE maximum of the temporary buffer
+> > used for outputting sysfs content requests and it's possible to
+> > overrun the buffer length.
+> > 
+> > Add a generic sysfs_emit mechanism that knows that the size of the
+> > temporary buffer and ensures that no overrun is done.
+> > 
+> > Signed-off-by: Joe Perches <joe@perches.com>
+> > --- rK
+> 
+> It could be a good idea to update the docs to, i.e.:
+> https://www.kernel.org/doc/html/latest/filesystems/sysfs.html
 
-This Fix addresses Bug 194757.
-Ref: https://bugzilla.kernel.org/show_bug.cgi?id=194757
+Yes, thanks.
+
+I have the below already, but Greg makes a sensible point
+about the generic use of sysfs_emit for single values
+which is ~95% of the actual uses, so likely there will be
+two functions.  Given the multiple thousand instances,
+using 2 functions would be smaller overall object code
+as well.
+
+Perhaps:
+
+sysfs_emit (for single value output)
+sysfs_emit_at (or sysfs_emit_pos ? or some better name?)
+
+	int sysfs_emit(char *buf, const char *fmt, ...)
+	int sysfs_emit_at(char *buf, int pos, const char *fmt, ...)
+
+or maybe use
+
+	int sysfs_emit_pos(char *buf, char *pos, const char *fmt, ...)
+
+The multiple use emit_at with int as the 2nd parameter would
+make the direct return easier than the char * which needs a
+subtraction.
+
+six of this/half dozen of that...
+
+cheers...
+
 ---
- man2/fsync.2 | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
 
-diff --git a/man2/fsync.2 b/man2/fsync.2
-index 96401cd..f38b3e4 100644
---- a/man2/fsync.2
-+++ b/man2/fsync.2
-@@ -186,6 +186,19 @@ In these cases disk caches need to be disabled using
- or
- .BR sdparm (8)
- to guarantee safe operation.
-+
-+When
-+.BR fsync ()
-+or
-+.BR fdatasync ()
-+returns
-+.B EIO
-+or
-+.B ENOSPC
-+any error flags on pages in the file mapping are cleared, so subsequent synchronisation attempts
-+will return without error. It is
-+.I not
-+safe to retry synchronisation and assume that a non-error return means prior writes are now on disk.
- .SH SEE ALSO
- .BR sync (1),
- .BR bdflush (2),
--- 
-2.7.4
+Anyway, this will need updating, likely with better examples.
+
+diff --git a/Documentation/filesystems/sysfs.rst b/Documentation/filesystems/sysfs.rst
+index ab0f7795792b..13c7a86fa6c8 100644
+--- a/Documentation/filesystems/sysfs.rst
++++ b/Documentation/filesystems/sysfs.rst
+@@ -242,12 +242,9 @@ Other notes:
+   is 4096.
+ 
+ - show() methods should return the number of bytes printed into the
+-  buffer. This is the return value of scnprintf().
++  buffer. This is the return value of sysfs_emit().
+ 
+-- show() must not use snprintf() when formatting the value to be
+-  returned to user space. If you can guarantee that an overflow
+-  will never happen you can use sprintf() otherwise you must use
+-  scnprintf().
++- show() methods should only use sysfs_emit to format output.
 
