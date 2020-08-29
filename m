@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B7BC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D60CDC433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76DA820838
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA3DF212CC
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598683723;
-	bh=q8HI6Zm7rrRPqVe1eb6PzsXiCtitXv9sgq9WQhNoADo=;
+	s=default; t=1598683726;
+	bh=ZelpFQ0282/QvKyDJRVrg0JcM6UJUGrhhAA87ejo8k8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QS9kW9buH1jHzPGe9gwtNe930ETfIyjFjQ9xWiLA9UK+6llBbSEg9L2xr4VZbkMxl
-	 Kn4BkXcu8ma3/2LpUqAZ7o7/7WYhu1Hc3bknIAtb40FQIjs28D+l82rOcn6art5eF3
-	 ytm+kJiYERiAgzpOn5lZ/ugW70xFnzRwjsz8UpDs=
+	b=KR8BCtMm7u1xk+p9JqW/rVDUHiVgGXOKDBzjon8v8Q8FSrBp6c3auvjo1rL7bcfkz
+	 X6FEGBktc2G6G4YnZ1pT8greSsCI56txS4VVpsqsxN8XQ1ZRbvqZ2DIJ77g0wB6RIB
+	 p+iNaEJT8Un6mp+eh8unUFrRhD1E1II8thGxVzZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgH2Gsl (ORCPT
+        id S1727802AbgH2Gso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 02:48:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41366 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 02:48:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727024AbgH2Gsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 02:48:33 -0400
+        id S1727116AbgH2Gsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 02:48:41 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 635092137B;
-        Sat, 29 Aug 2020 06:48:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DBCF214D8;
+        Sat, 29 Aug 2020 06:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598683713;
-        bh=q8HI6Zm7rrRPqVe1eb6PzsXiCtitXv9sgq9WQhNoADo=;
+        s=default; t=1598683720;
+        bh=ZelpFQ0282/QvKyDJRVrg0JcM6UJUGrhhAA87ejo8k8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FlJiwlmJ/eHlpJIJJ9BSxU4PqYPRgC3cKYkPTHh9d/+Dr0YvNtCy1juaWK4MMAtnF
-         8fUFw+f+34uf7wphW0zsJk1jSYOwaaSQOwQgqSCr4L4Pl6ZFxu2FZMmL/l/7mUB1fn
-         1gKGAHQhVbDCxwsjBFe2HDqSHZ8MAl+DJ1UJU2tc=
+        b=CYy1Zk1iYCDKzFrBSi2C3ND3V1n6vGPXAg7QK3taHdYEchQmiQU+vbsGs1kVqphQE
+         zEEEyvQBpdQB9NdoY20HEaHc6MvVk7FNVQcANMxwDHSJbMsZpDtwOgifakZJuv/Ctj
+         6ohXnR3ClgeEw0PjuYD3JQp/PlB5HF2AvPaXEUGg=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Jonathan Cameron <jic23@kernel.org>,
         Lars-Peter Clausen <lars@metafoo.de>,
@@ -54,9 +54,9 @@ To:     Jonathan Cameron <jic23@kernel.org>,
         linux-stm32@st-md-mailman.stormreply.com
 Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 09/18] iio: afe: iio-rescale: Simplify with dev_err_probe()
-Date:   Sat, 29 Aug 2020 08:47:17 +0200
-Message-Id: <20200829064726.26268-9-krzk@kernel.org>
+Subject: [PATCH v3 11/18] iio: chemical: scd30: Simplify with dev_err_probe()
+Date:   Sat, 29 Aug 2020 08:47:19 +0200
+Message-Id: <20200829064726.26268-11-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200829064726.26268-1-krzk@kernel.org>
 References: <20200829064726.26268-1-krzk@kernel.org>
@@ -69,38 +69,38 @@ Common pattern of handling deferred probe can be simplified with
 dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 ---
 
-Changes since v2:
-1. Wrap dev_err_probe() lines at 80 character
-
 Changes since v1:
 1. Wrap dev_err_probe() lines at 100 character
+2. Add Ack
 ---
- drivers/iio/afe/iio-rescale.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/iio/chemical/scd30_core.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/iio/afe/iio-rescale.c b/drivers/iio/afe/iio-rescale.c
-index 69c0f277ada0..e42ea2b1707d 100644
---- a/drivers/iio/afe/iio-rescale.c
-+++ b/drivers/iio/afe/iio-rescale.c
-@@ -276,11 +276,9 @@ static int rescale_probe(struct platform_device *pdev)
- 	int ret;
+diff --git a/drivers/iio/chemical/scd30_core.c b/drivers/iio/chemical/scd30_core.c
+index eac76972f83e..4d0d798c7cd3 100644
+--- a/drivers/iio/chemical/scd30_core.c
++++ b/drivers/iio/chemical/scd30_core.c
+@@ -705,13 +705,8 @@ int scd30_probe(struct device *dev, int irq, const char *name, void *priv,
+ 	indio_dev->available_scan_masks = scd30_scan_masks;
  
- 	source = devm_iio_channel_get(dev, NULL);
--	if (IS_ERR(source)) {
--		if (PTR_ERR(source) != -EPROBE_DEFER)
--			dev_err(dev, "failed to get source channel\n");
--		return PTR_ERR(source);
+ 	state->vdd = devm_regulator_get(dev, "vdd");
+-	if (IS_ERR(state->vdd)) {
+-		if (PTR_ERR(state->vdd) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
+-
+-		dev_err(dev, "failed to get regulator\n");
+-		return PTR_ERR(state->vdd);
 -	}
-+	if (IS_ERR(source))
-+		return dev_err_probe(dev, PTR_ERR(source),
-+				     "failed to get source channel\n");
++	if (IS_ERR(state->vdd))
++		return dev_err_probe(dev, PTR_ERR(state->vdd), "failed to get regulator\n");
  
- 	sizeof_ext_info = iio_get_channel_ext_info_count(source);
- 	if (sizeof_ext_info) {
+ 	ret = regulator_enable(state->vdd);
+ 	if (ret)
 -- 
 2.17.1
 
