@@ -2,70 +2,92 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B35C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 02:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C813EC433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 02:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BFAB20791
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 02:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9DDD20791
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 02:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgH2Cbf (ORCPT
+        id S1726940AbgH2Ccz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 22:31:35 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:44775 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbgH2Cbe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 22:31:34 -0400
-Received: by mail-il1-f193.google.com with SMTP id j9so2272051ilc.11;
-        Fri, 28 Aug 2020 19:31:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vzn0G0FGdCJWuCIIWPA/ls8zYbx96IZfjwnp4qZytiM=;
-        b=s5/Mdj9h0lo1rw/FQJPbu9ZMPP0mSin2r2Sd1CEi3wgYwrOPt7DN4Z0WzzkXR/OBYf
-         Mv3nZiu+31QtkfqL312cqZvcVBWxaZAnhYWMWzTyHGE5WK8TVJFExcsG6/GidEDKs8oN
-         HmVhNqxc8PlcT1++8QHT/g2++xdPhj/WUC3Sr6U4d/gEn+wBsdw42jK7gv94HqPWJpns
-         VC0wLgFnclxnA5rYvD/0rVFKK3C8HdnVmfz3scb3Ma+Jy/b2RtKHpP163z7OEgiKM/MO
-         O+J996aToE3cFGFANlLew64S7YA0L9OWUVkHIMA2Mfk4345lwtY5H1bRPmQEzIPoySlU
-         selg==
-X-Gm-Message-State: AOAM533DhrtOo7IdnPjhhaUHhmmxhGqzLPmB1SNP6lhfRNYs17v0nide
-        1ybiw2aPbXX90+wGFgk6rhBMDWHmQLxJs16fOO4=
-X-Google-Smtp-Source: ABdhPJz/VF9WXjkpJvJJU5x52nJawUOXGtjYny3gjvFyKd/Nf0m+fGjv+VL4pXvYyOEcojZyiPtt0b2YX1vSC2QuEPE=
-X-Received: by 2002:a92:8954:: with SMTP id n81mr1451292ild.164.1598668293465;
- Fri, 28 Aug 2020 19:31:33 -0700 (PDT)
+        Fri, 28 Aug 2020 22:32:55 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:18890 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726900AbgH2Ccy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 22:32:54 -0400
+Received: by ajax-webmail-mail-app3 (Coremail) ; Sat, 29 Aug 2020 10:32:42
+ +0800 (GMT+08:00)
+X-Originating-IP: [10.192.85.18]
+Date:   Sat, 29 Aug 2020 10:32:42 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Jan Kara" <jack@suse.cz>
+Cc:     kjlu@umn.edu, "Theodore Ts'o" <tytso@mit.edu>,
+        "Andreas Dilger" <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] ext4: Fix memleak in add_new_gdb
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.12 build 20200616(0f5d8152)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <20200828092119.GE7072@quack2.suse.cz>
+References: <20200827062843.10188-1-dinghao.liu@zju.edu.cn>
+ <20200828092119.GE7072@quack2.suse.cz>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-References: <20200827161237.889877377@infradead.org> <20200827161754.594247581@infradead.org>
- <20200828084851.GQ1362448@hirez.programming.kicks-ass.net>
- <20200828181341.c1da066360c6085d48850e22@kernel.org> <20200828091813.GU1362448@hirez.programming.kicks-ass.net>
- <CAFCw3dqhd35mdFE_SjUYtLrxNUYwdO-iFAonZ1OXu9CGBsyGrw@mail.gmail.com>
-In-Reply-To: <CAFCw3dqhd35mdFE_SjUYtLrxNUYwdO-iFAonZ1OXu9CGBsyGrw@mail.gmail.com>
-From:   Cameron <cameron@moodycamel.com>
-Date:   Fri, 28 Aug 2020 22:31:17 -0400
-Message-ID: <CAFCw3dqDwP-RM20M7Uv=RS7aBHe=DLr3akhDY_XM8W0foiAEeQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 7/7] kprobes: Replace rp->free_instance with freelist
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, Eddy_Wu@trendmicro.com,
-        x86@kernel.org, davem@davemloft.net, rostedt@goodmis.org,
-        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        linux-arch@vger.kernel.org, oleg@redhat.com, will@kernel.org,
-        paulmck@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <7a9ab18.fd42.174380f51de.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cC_KCgAH0t5KvklfqjxkAw--.50524W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0EBlZdtPrBDAAvsq
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUblCS07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
+        6r4UMIAIbVCjxxvEw4WlV2xY6xkI7II2jI8vz4vEwIxGrwCS07vE42xK82IY6x8ErcxFaV
+        Av8VW8uw4UJr1UMIAIbVCF72vE77IF4wCS07vE4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lV2xY
+        6I8I3I0E5I8CrVAFwI0_Jr0_Jr4lV2xY6I8I3I0E7480Y4vE14v26r106r1rMIAIbVC2zV
+        AF1VAY17CE14v26r126r1DMIAIbVCI42IY6xIIjxv20xvE14v26r1j6r1xMIAIbVCI42IY
+        6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lV2xY6IIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s
+        0DMIAIbVCI42IY6I8E87Iv67AKxVWUJVW8JwCS07vEIxAIcVC2z280aVCY1x0267AKxVWU
+        JVW8JbIYCTnIWIevJa73U
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 10:29 PM Cameron <cameron@moodycamel.com> wrote:
-> I thought about this some more, and actually, it should be safe.
-
-Although I should note that it's important that the flags/refcount are
-not overwritten
-even after the node is taken off the freelist.
-
-Cameron
+PiBPbiBUaHUgMjctMDgtMjAgMTQ6Mjg6NDMsIERpbmdoYW8gTGl1IHdyb3RlOgo+ID4gV2hlbiBl
+eHQ0X2pvdXJuYWxfZ2V0X3dyaXRlX2FjY2VzcygpIGZhaWxzLCB3ZSBzaG91bGQgcmVsZWFzZQo+
+ID4gbl9ncm91cF9kZXNjLCBpbG9jLmJoLCBkaW5kIGFuZCBnZGJfYmggdG8gcHJldmVudCBtZW1s
+ZWFrLgo+ID4gSXQncyB0aGUgc2FtZSB3aGVuIGV4dDRfaGFuZGxlX2RpcnR5X3N1cGVyKCkgZmFp
+bHMsIGJ1dCB3ZQo+ID4gZG9uJ3QgbmVlZCB0byByZWxlYXNlIGRpbmQgaGVyZSBiZWNhdXNlIGl0
+IGhhcyBiZWVuIHJlbGVhc2VkCj4gPiBiZWZvcmUuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IERp
+bmdoYW8gTGl1IDxkaW5naGFvLmxpdUB6anUuZWR1LmNuPgo+IAo+IFRoYW5rcyBmb3IgdGhlIHBh
+dGNoISBTb21lIGNvbW1lbnRzIGJlbG93Ogo+IAo+ID4gZGlmZiAtLWdpdCBhL2ZzL2V4dDQvcmVz
+aXplLmMgYi9mcy9leHQ0L3Jlc2l6ZS5jCj4gPiBpbmRleCBhNTBiNTEyNzBlYTkuLmVmYzBhMDIy
+Y2E4ZSAxMDA2NDQKPiA+IC0tLSBhL2ZzL2V4dDQvcmVzaXplLmMKPiA+ICsrKyBiL2ZzL2V4dDQv
+cmVzaXplLmMKPiA+IEBAIC04NDMsOCArODQzLDEwIEBAIHN0YXRpYyBpbnQgYWRkX25ld19nZGIo
+aGFuZGxlX3QgKmhhbmRsZSwgc3RydWN0IGlub2RlICppbm9kZSwKPiA+ICAKPiA+ICAJQlVGRkVS
+X1RSQUNFKGRpbmQsICJnZXRfd3JpdGVfYWNjZXNzIik7Cj4gPiAgCWVyciA9IGV4dDRfam91cm5h
+bF9nZXRfd3JpdGVfYWNjZXNzKGhhbmRsZSwgZGluZCk7Cj4gPiAtCWlmICh1bmxpa2VseShlcnIp
+KQo+ID4gKwlpZiAodW5saWtlbHkoZXJyKSkgewo+ID4gIAkJZXh0NF9zdGRfZXJyb3Ioc2IsIGVy
+cik7Cj4gPiArCQlnb3RvIGVycm91dDsKPiA+ICsJfQo+IAo+IFRoaXMgaHVuayBsb29rcyBnb29k
+Lgo+IAo+ID4gQEAgLTg5OSwxMyArOTAxLDE3IEBAIHN0YXRpYyBpbnQgYWRkX25ld19nZGIoaGFu
+ZGxlX3QgKmhhbmRsZSwgc3RydWN0IGlub2RlICppbm9kZSwKPiA+ICAKPiA+ICAJbGUxNl9hZGRf
+Y3B1KCZlcy0+c19yZXNlcnZlZF9nZHRfYmxvY2tzLCAtMSk7Cj4gPiAgCWVyciA9IGV4dDRfaGFu
+ZGxlX2RpcnR5X3N1cGVyKGhhbmRsZSwgc2IpOwo+ID4gLQlpZiAoZXJyKQo+ID4gKwlpZiAoZXJy
+KSB7Cj4gPiAgCQlleHQ0X3N0ZF9lcnJvcihzYiwgZXJyKTsKPiA+ICsJCWdvdG8gZXJyc3VwZXI7
+Cj4gPiArCX0KPiA+ICsKPiA+ICAJcmV0dXJuIGVycjsKPiA+ICBlcnJvdXQ6Cj4gPiArCWJyZWxz
+ZShkaW5kKTsKPiA+ICtlcnJzdXBlcjoKPiAKPiBCdXQgdGhpcyBpcyBkZWZpbml0ZWx5IHdyb25n
+LiBMb29rLCBuX2dyb3VwX2Rlc2MgYW5kIGdkYl9iaCBhcmUgYWxyZWFkeQo+IHJlZmVyZW5jZWQg
+ZnJvbSB0aGUgc3VwZXJibG9jayBzbyB5b3UgY2Fubm90IGZyZWUgdGhlbSwgaWxvYy5iaCBoYXMg
+YmVlbgo+IHJlbGVhc2VkIGluIGV4dDRfbWFya19pbG9jX2RpcnR5KCkuCj4gCgpUaGFuayB5b3Ug
+Zm9yIHlvdXIgYWR2aWNlISBJdCdzIGNsZWFyIHRvIG1lIGFuZCBJIHdpbGwgZml4IHRoaXMgc29v
+bi4KClJlZ2FyZHMsCkRpbmdoYW8K
