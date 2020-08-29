@@ -2,134 +2,135 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F36B0C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 12:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47477C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 12:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFAA52076D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 12:46:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hew/ODMp"
+	by mail.kernel.org (Postfix) with ESMTP id 2407A2076D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 12:47:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598705236;
+	bh=oUo/HmRGIjaVQ1eyTUpvy8/RjDz639TH7CrJfdDF/BI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=A6XF77qfmMXUfgTn+Tu/ktgdl3F2x0zcoZPU/pjdJyLi5OMayn9ITej+Ke2kn4u8B
+	 szmudT+0jPiGl7Bp4s3nEaKmamPFacfEHABZ3iym5BQgGNfwKggZKTS0CtQcEfjNv9
+	 AQeuN3jr1+c0uqOoFIIPuTeFSjZQXn6u+RS6SbeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgH2Mqj (ORCPT
+        id S1728155AbgH2MrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 08:46:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727772AbgH2Mq2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 08:46:28 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28F57C061236;
-        Sat, 29 Aug 2020 05:46:20 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id u1so1498277edi.4;
-        Sat, 29 Aug 2020 05:46:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=e52rc4zDcLwYIKS8oi+duVhjBLUdNkpPNyhl018nj50=;
-        b=Hew/ODMpbqiuT9ygl7dWUZSpQZgywitQhWoLluFmNui8dQaHgiK/bLImqDIrgVgAQ5
-         PjRIH9yQC8MLwQP4HNuy6fJVJ3XVryhg96DmdtzoH6ZxSSNHpqFp3V+s+EOFkwunED2x
-         kt2Yt1RHfXzxHedJakqGsX5XYPoiIf4okPs5x8wGGd8+VqKBzd4njqmVYIvA6g9J5fFq
-         xTLWqaOOwU3VW1//s34T1bR0hSQqu9FGRT9ZftBUnN1nxtA0tjPBWywms2S4HPQFdzzn
-         /ADSzcrhdFDm7mfsxvuxkN2qEdKnYTAMIuJI5i5jyLweW8HTZnmHWo56owUWOsvr3zMs
-         qTNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=e52rc4zDcLwYIKS8oi+duVhjBLUdNkpPNyhl018nj50=;
-        b=qv6Pd+7BBY4MF788c1YpQJnj5rrVzZxp+GGmGbIDSvMYPasI4HL7jtQGssqQwYoqoY
-         BK7BkpaLeRciU7aj47O6yUnhgPusjIEyMXsWPxH1DiY++VGA1uqpmME0gy0hhje1xYk6
-         RQLPhLifclZe9EzeEXGuAF8tZDIR6QTy+pdOJ+5RrX54Gt6WcplXDRFXIeEjIpAVh8Zt
-         OXzzKXDJsiJIjQHB3kRDny+UZa5P7CyjGztqlv9sFSYED+4UjVXrs2l3Yy4FsNd6gZ7y
-         YDigKhV17ZsnuSvFgIHkP/FANpaEI06FQyDnFwyvZhyIKQRdfaIh8NasVrUukP+4+VQ3
-         /17Q==
-X-Gm-Message-State: AOAM531IrIbDwSAUWva9hOMSXO37Eg08CuQKUx4RuAfgq8gcbt+KnH7i
-        2Lyr/hXfAd4zFV5Bju8SxZA=
-X-Google-Smtp-Source: ABdhPJzcjxxnjokV5mGXr56iS0uOolltS1jUKTNzwMECcvPSzNJ1LTFu8Bh5mASuKnhQx67V/u4hGg==
-X-Received: by 2002:a50:b946:: with SMTP id m64mr3374913ede.92.1598705179494;
-        Sat, 29 Aug 2020 05:46:19 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a03f:a7fb:e200:414a:8107:3def:ee41])
-        by smtp.gmail.com with ESMTPSA id h2sm2054664edz.60.2020.08.29.05.46.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Aug 2020 05:46:18 -0700 (PDT)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joerg Roedel <joerg.roedel@amd.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Li Yang <leoyang.li@nxp.com>, Zhang Wei <zw@zh-kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fsldma: fsl_ioread64*() do not need lower_32_bits()
-Date:   Sat, 29 Aug 2020 14:45:38 +0200
-Message-Id: <20200829124538.7475-1-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200829105116.GA246533@roeck-us.net>
-References: <20200829105116.GA246533@roeck-us.net>
+        Sat, 29 Aug 2020 08:47:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727772AbgH2MrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 08:47:09 -0400
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1C11207DA;
+        Sat, 29 Aug 2020 12:47:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598705228;
+        bh=oUo/HmRGIjaVQ1eyTUpvy8/RjDz639TH7CrJfdDF/BI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Ihjt3o12At8Ekp1TS74TIWJsMdHHkp254RtPSrcEM4YmUmr6aG5hr9TS4TwdHbOXs
+         hTr0ZaVnZ0N6yWv//eFcXcCP0Fts7/Rri8pLI8CcojH+Qo5LVHV/2D2+BZYEBgnU9L
+         CTVWlMxCKmC9pg8fGp1gntcqwciewCFt/8q3Yjq8=
+Received: by mail-lf1-f44.google.com with SMTP id k10so1107239lfm.5;
+        Sat, 29 Aug 2020 05:47:07 -0700 (PDT)
+X-Gm-Message-State: AOAM531NjSXIO0PpxeUzLWitczuMXynJfSTpPzXubbCE74JTj7R17WqI
+        cSOosvUm3NpydmNmOWeP5/7UpFFGqAKPtCqFoVM=
+X-Google-Smtp-Source: ABdhPJxgGgIqqL+z8yejEctXevu1FZNCnfuqdpf64nAPg35qWMWW0LskVaaTWC4Rbirzia4fRj+fCXLscd+uF9R/Qp4=
+X-Received: by 2002:ac2:55bb:: with SMTP id y27mr1558371lfg.107.1598705226106;
+ Sat, 29 Aug 2020 05:47:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CGME20200826171539eucas1p2e999972d3e7dd6dd701e312548933e87@eucas1p2.samsung.com>
+ <20200826171529.23618-1-s.nawrocki@samsung.com>
+In-Reply-To: <20200826171529.23618-1-s.nawrocki@samsung.com>
+From:   Chanwoo Choi <chanwoo@kernel.org>
+Date:   Sat, 29 Aug 2020 21:46:28 +0900
+X-Gmail-Original-Message-ID: <CAGTfZH1Pzs3W4d-3+wNFw4PZVa4KD-2qEdD=oXTHyPRLPeUwBg@mail.gmail.com>
+Message-ID: <CAGTfZH1Pzs3W4d-3+wNFw4PZVa4KD-2qEdD=oXTHyPRLPeUwBg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] clk: samsung: Add clk ID definitions for the CPU
+ parent clocks
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     linux-clk@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For ppc32, the functions fsl_ioread64() & fsl_ioread64be()
-use lower_32_bits() as a fancy way to cast the pointer to u32
-in order to do non-atomic 64-bit IO.
+Hi Sylwester,
 
-But the pointer is already 32-bit, so simply cast the pointer to u32.
+On Thu, Aug 27, 2020 at 2:16 AM Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
+>
+> Add clock ID definitions for the CPU parent clocks for SoCs
+> which don't have such definitions yet. This will allow us to
+> reference the parent clocks directly by cached struct clk_hw
+> pointers in the clock provider, rather than doing clk lookup
+> by name.
+>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  include/dt-bindings/clock/exynos5250.h | 4 +++-
+>  include/dt-bindings/clock/exynos5420.h | 5 +++++
+>  2 files changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/dt-bindings/clock/exynos5250.h b/include/dt-bindings/clock/exynos5250.h
+> index bc8a3c5..e259cc0 100644
+> --- a/include/dt-bindings/clock/exynos5250.h
+> +++ b/include/dt-bindings/clock/exynos5250.h
+> @@ -172,8 +172,10 @@
+>  #define CLK_MOUT_GPLL          1025
+>  #define CLK_MOUT_ACLK200_DISP1_SUB     1026
+>  #define CLK_MOUT_ACLK300_DISP1_SUB     1027
+> +#define CLK_MOUT_APLL          1028
+> +#define CLK_MOUT_MPLL          1029
+>
+>  /* must be greater than maximal clock id */
+> -#define CLK_NR_CLKS            1028
+> +#define CLK_NR_CLKS            1030
+>
+>  #endif /* _DT_BINDINGS_CLOCK_EXYNOS_5250_H */
+> diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
+> index ff917c8..9fffc6c 100644
+> --- a/include/dt-bindings/clock/exynos5420.h
+> +++ b/include/dt-bindings/clock/exynos5420.h
+> @@ -231,6 +231,11 @@
+>  #define CLK_MOUT_SCLK_SPLL     660
+>  #define CLK_MOUT_MX_MSPLL_CCORE_PHY    661
+>  #define CLK_MOUT_SW_ACLK_G3D   662
+> +#define CLK_MOUT_APLL          663
+> +#define CLK_MOUT_MSPLL_CPU     664
+> +#define CLK_MOUT_KPLL          665
+> +#define CLK_MOUT_MSPLL_KFC     666
+> +
+>
+>  /* divider clocks */
+>  #define CLK_DOUT_PIXEL         768
+> --
+> 2.7.4
+>
 
-This fixes a compile error introduced by
-   ef91bb196b0d ("kernel.h: Silence sparse warning in lower_32_bits")
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-Fixes: ef91bb196b0db1013ef8705367bc2d7944ef696b
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Cc: Li Yang <leoyang.li@nxp.com>
-Cc: Zhang Wei <zw@zh-kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: dmaengine@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
----
- drivers/dma/fsldma.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
-index 56f18ae99233..6f6fa7641fa2 100644
---- a/drivers/dma/fsldma.h
-+++ b/drivers/dma/fsldma.h
-@@ -205,7 +205,7 @@ struct fsldma_chan {
- #else
- static u64 fsl_ioread64(const u64 __iomem *addr)
- {
--	u32 fsl_addr = lower_32_bits(addr);
-+	u32 fsl_addr = (u32) addr;
- 	u64 fsl_addr_hi = (u64)in_le32((u32 *)(fsl_addr + 1)) << 32;
- 
- 	return fsl_addr_hi | in_le32((u32 *)fsl_addr);
-@@ -219,7 +219,7 @@ static void fsl_iowrite64(u64 val, u64 __iomem *addr)
- 
- static u64 fsl_ioread64be(const u64 __iomem *addr)
- {
--	u32 fsl_addr = lower_32_bits(addr);
-+	u32 fsl_addr = (u32) addr;
- 	u64 fsl_addr_hi = (u64)in_be32((u32 *)fsl_addr) << 32;
- 
- 	return fsl_addr_hi | in_be32((u32 *)(fsl_addr + 1));
 -- 
-2.28.0
-
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
