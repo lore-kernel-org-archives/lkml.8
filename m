@@ -2,131 +2,137 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC500C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EE6C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1665207BB
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A38C3207BB
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598683465;
+	bh=Fa3ytPwbtjOSb9eP8IVzHuFxn+Gz74zrip68UY+4Fxg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1Y9rucB8xS9vNCMZB3eM60RtlN4jF/uRI9w4iYJdh1JNU4vQKpQntWoEuOZhEG+bY
+	 9/JIbr8A7AG+qwIjP+RI1VvB1ib45xqrbH3Z5IC6B5Qr8bcsqr+iIos+e7NGpl+xX0
+	 hguSk/+A7Rez0Tm2djKjrI5UjUHzAz5YTrUKCkEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726258AbgH2GlF (ORCPT
+        id S1726462AbgH2GoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 02:41:05 -0400
-Received: from smtprelay0081.hostedemail.com ([216.40.44.81]:51024 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725886AbgH2GlE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 02:41:04 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id C5A11100E7B44;
-        Sat, 29 Aug 2020 06:41:02 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: debt34_33114042707c
-X-Filterd-Recvd-Size: 3722
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 29 Aug 2020 06:41:01 +0000 (UTC)
-Message-ID: <2acf2dc0945bc7f1ec2617b616808ab3c514067b.camel@perches.com>
-Subject: Re: [PATCH] sysfs: Add sysfs_emit to replace sprintf to PAGE_SIZE
- buffers.
-From:   Joe Perches <joe@perches.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Denis Efremov <efremov@linux.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Alex Dewar <alex.dewar90@gmail.com>,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 28 Aug 2020 23:41:00 -0700
-In-Reply-To: <20200829062254.GA79296@kroah.com>
-References: <a96cdf07cd136d06c3cc1e10eb884caa7498ba72.1598654887.git.joe@perches.com>
-         <20200829062254.GA79296@kroah.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Sat, 29 Aug 2020 02:44:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725886AbgH2GoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 02:44:23 -0400
+Received: from coco.lan (ip5f5ad5bb.dynamic.kabel-deutschland.de [95.90.213.187])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2985F207BB;
+        Sat, 29 Aug 2020 06:44:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598683463;
+        bh=Fa3ytPwbtjOSb9eP8IVzHuFxn+Gz74zrip68UY+4Fxg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=es0I5+/9eLX8edVzmtQgOmM0PI59vy+RLhrSDZRaqoB7vIvcsKNdoUgZ6ZyKYRJmE
+         AbZ3mqNDwHYSrC7goKrjZ1ZRxGv3IUxMPYPfq/mIKvBfbQ8xgcEfLjAI1LNrk8raRH
+         pFnOOnpklrCy/AvJ/0exohxFuwdjfI0b3c90gmL0=
+Date:   Sat, 29 Aug 2020 08:44:14 +0200
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH 08/20] media: pci: saa7164.c: Replace if(cond) BUG with
+ BUG_ON
+Message-ID: <20200829084414.701a02b8@coco.lan>
+In-Reply-To: <20200807083548.204360-8-dwlsalmeida@gmail.com>
+References: <20200807083548.204360-8-dwlsalmeida@gmail.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-08-29 at 08:22 +0200, Greg Kroah-Hartman wrote:
-> On Fri, Aug 28, 2020 at 03:52:13PM -0700, Joe Perches wrote:
-> > sprintf does not know the PAGE_SIZE maximum of the temporary buffer
-> > used for outputting sysfs content requests and it's possible to
-> > overrun the buffer length.
-> > 
-> > Add a generic sysfs_emit mechanism that knows that the size of the
-> > temporary buffer and ensures that no overrun is done.
-> > 
-> > Signed-off-by: Joe Perches <joe@perches.com>
-> > ---
-> >  fs/sysfs/file.c       | 30 ++++++++++++++++++++++++++++++
-> >  include/linux/sysfs.h |  8 ++++++++
-> >  2 files changed, 38 insertions(+)
-> > 
-> > diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-> > index eb6897ab78e7..06a13bbd7080 100644
-> > --- a/fs/sysfs/file.c
-> > +++ b/fs/sysfs/file.c
-> > @@ -707,3 +707,33 @@ int sysfs_change_owner(struct kobject *kobj, kuid_t kuid, kgid_t kgid)
-> >  	return 0;
-> >  }
-> >  EXPORT_SYMBOL_GPL(sysfs_change_owner);
-> > +
-> > +/**
-> > + *	sysfs_emit - scnprintf equivalent, aware of PAGE_SIZE buffer.
-> > + *	@buf:	start of PAGE_SIZE buffer.
-> > + *	@pos:	current position in buffer
-> > + *              (pos - buf) must always be < PAGE_SIZE
+Hi Daniel,
+
+Em Fri,  7 Aug 2020 05:35:35 -0300
+"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> escreveu:
+
+> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 > 
-> sysfs files are always supposed to be "one value per file", so why would
-> you ever need a 'pos' variable to show the location in the buffer?
+> Fix the following coccinelle reports:
+> 
+> drivers/media/pci/saa7164/saa7164-buffer.c:254:3-6: WARNING: Use BUG_ON
+> instead of if condition followed by BUG.
+> 
+> drivers/media/pci/saa7164/saa7164-buffer.c:261:3-6: WARNING: Use BUG_ON
+> instead of if condition followed by BUG.
+> 
+> Found using - Coccinelle (http://coccinelle.lip6.fr)
 
-I've done treewide conversions using cocci.
-It's used all over the place.
-Especially in loops with arrays.
+I ended accepting those patches, but IMO, this doesn't make
+the code any better.
 
-Sometimes the output is single line.
-Sometimes multiple lines.
+The thing is that very few parts of the Kernel should panic if
+things go sideways. I don't think that any media driver would
+apply on such cases.
 
-Look at the sample conversion of mem_sleep_show I posted earlier.
+As pointed at:
 
-#ifdef CONFIG_SUSPEND
- static ssize_t mem_sleep_show(struct kobject *kobj, struct kobj_attribute *attr,
-                              char *buf)
- {
--       char *s = buf;
-+       char *pos = buf;
-        suspend_state_t i;
- 
-        for (i = PM_SUSPEND_MIN; i < PM_SUSPEND_MAX; i++)
-                if (mem_sleep_states[i]) {
-                        const char *label = mem_sleep_states[i];
- 
-                        if (mem_sleep_current == i)
--                               s += sprintf(s, "[%s] ", label);
-+                               pos += sysfs_emit(buf, pos, "[%s] ", label);
-                        else
--                               s += sprintf(s, "%s ", label);
-+                               pos += sysfs_emit(buf, pos, "%s ", label);
-                }
- 
-        /* Convert the last space to a newline if needed. */
--       if (s != buf)
--               *(s-1) = '\n';
-+       if (pos != buf)
-+               *(pos - 1) = '\n';
- 
--       return (s - buf);
-+       return pos - buf;
- }
- 
+	https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+
+The real fix is to use WARN_ON(), probably with something like:
+
+	if (WARN_ON(something))
+		return;
+
+as probably the code after BUG() would be assuming that the
+condition was asserted.
+
+Regards,
+Mauro
+
+> 
+> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+> ---
+>  drivers/media/pci/saa7164/saa7164-buffer.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/media/pci/saa7164/saa7164-buffer.c b/drivers/media/pci/saa7164/saa7164-buffer.c
+> index 289cb901985b..245d9db280aa 100644
+> --- a/drivers/media/pci/saa7164/saa7164-buffer.c
+> +++ b/drivers/media/pci/saa7164/saa7164-buffer.c
+> @@ -250,15 +250,14 @@ int saa7164_buffer_cfg_port(struct saa7164_port *port)
+>  	list_for_each_safe(c, n, &port->dmaqueue.list) {
+>  		buf = list_entry(c, struct saa7164_buffer, list);
+>  
+> -		if (buf->flags != SAA7164_BUFFER_FREE)
+> -			BUG();
+> +		BUG_ON(buf->flags != SAA7164_BUFFER_FREE);
+>  
+>  		/* Place the buffer in the h/w queue */
+>  		saa7164_buffer_activate(buf, i);
+>  
+>  		/* Don't exceed the device maximum # bufs */
+> -		if (i++ > port->hwcfg.buffercount)
+> -			BUG();
+> +		BUG_ON(i > port->hwcfg.buffercount);
+> +		i++;
+>  
+>  	}
+>  	mutex_unlock(&port->dmaqueue_lock);
+> @@ -302,4 +301,3 @@ void saa7164_buffer_dealloc_user(struct saa7164_user_buffer *buf)
+>  
+>  	kfree(buf);
+>  }
+> -
 
 
 
+Thanks,
+Mauro
