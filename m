@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B38BFC433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D40C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 917B62145D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B79C2206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598711400;
-	bh=+r594Mll/9YuTOqi3UrI/hCezf7xrKr/GY6GKpDqTCw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=BUposF3mDxvBLbmbxqOwVe8XcvgVZCc+iCbC2SwvkCrw7sJX+xBj63dbKy29ChEvD
-	 vDgVesNzon7/Qo7mXd8ya7wfuI6YlRC72PepWCKiKYPTtA+oOqaqENobuvGjCN8JqI
-	 fVIqIoXigoFVVfzF5R+x3ds+njqWEofNc0GtvOrs=
+	s=default; t=1598711412;
+	bh=hqxOstCnIoNKDrJ+bAx6KqDpcFo8rUnfZrqeID5wT9s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=T3SswvRg5OKumzoYK57H+rN+e45zJcZe9HkAg8Uamjb3/3wiG5LYoV4xIpdikmAOY
+	 OIEj+gNNqv/9ZDC0GNNhQSmWPLr5B06/a1CN89sHPwNhUpFHpCXSPOqgOYRSX46E9K
+	 kEY4Z9wFtV7keEpVm8oGT7kN76SXZKNTYnMG7UP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbgH2O37 (ORCPT
+        id S1728289AbgH2OaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 10:29:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56194 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 10:30:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728012AbgH2O35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 10:29:57 -0400
+        id S1728234AbgH2OaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 10:30:05 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1125206C0;
-        Sat, 29 Aug 2020 14:29:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15CEA2145D;
+        Sat, 29 Aug 2020 14:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598711396;
-        bh=+r594Mll/9YuTOqi3UrI/hCezf7xrKr/GY6GKpDqTCw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Rc7P51Xbp8wfp1EbyQwhCBLsD74s5v2H17QUdDJFuMJVOJtjDXKiGtSwcXVkAhwYH
-         7tMAEQiutEDfnBU455F7+7IpXTWSkfPkAsLl5EOp7S9cXhY3mDAiEKUZCFpuPQziHl
-         SP5vbQ3isjClTnmaZgEeDHbMFzvaqI3eswUXJbCE=
+        s=default; t=1598711404;
+        bh=hqxOstCnIoNKDrJ+bAx6KqDpcFo8rUnfZrqeID5wT9s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iWFH41dwQbo4aGO8QE8tMY3Lx+UEYhq+gPPZdyRLMwJqzjuu0SHeXVEmf2/ni7sYm
+         0dlk3hJLGoaw19UVDhv7tqiQrnNvlkWeGaFzfCV5ArszmQSC5bdV+moMhnQdtOFQIG
+         JLFhpV5zsMJzpFKp2WLTVOXk/eA3vEf0NZjDKPh8=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -54,136 +54,60 @@ Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Sylwester Nawrocki <snawrocki@kernel.org>,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Inki Dae <inki.dae@samsung.com>
-Subject: [PATCH 1/4] dt-bindings: net: nfc: s3fwrn5: Convert to dtschema
-Date:   Sat, 29 Aug 2020 16:29:45 +0200
-Message-Id: <20200829142948.32365-1-krzk@kernel.org>
+Subject: [RFT 3/4] nfc: s3fwrn5: Remove wrong vendor prefix from GPIOs
+Date:   Sat, 29 Aug 2020 16:29:47 +0200
+Message-Id: <20200829142948.32365-3-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200829142948.32365-1-krzk@kernel.org>
+References: <20200829142948.32365-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Samsung S3FWRN5 NCI NFC controller bindings to dtschema.
-This is conversion only so it includes properties with invalid prefixes
-(s3fwrn5,en-gpios) which should be addressed later.
+The device tree property prefix describes the vendor, which in case of
+S3FWRN5 chip is Samsung.  Therefore the "s3fwrn5" prefix for "en-gpios"
+and "fw-gpios" is not correct and should be deprecated.  Introduce
+properly named properties for these GPIOs but still support deprecated
+ones.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- .../devicetree/bindings/net/nfc/s3fwrn5.txt   | 25 --------
- .../devicetree/bindings/net/nfc/s3fwrn5.yaml  | 59 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 3 files changed, 60 insertions(+), 25 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt
- create mode 100644 Documentation/devicetree/bindings/net/nfc/s3fwrn5.yaml
+ drivers/nfc/s3fwrn5/i2c.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt b/Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt
-deleted file mode 100644
-index f02f6fb7f81c..000000000000
---- a/Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt
-+++ /dev/null
-@@ -1,25 +0,0 @@
--* Samsung S3FWRN5 NCI NFC Controller
--
--Required properties:
--- compatible: Should be "samsung,s3fwrn5-i2c".
--- reg: address on the bus
--- interrupts: GPIO interrupt to which the chip is connected
--- s3fwrn5,en-gpios: Output GPIO pin used for enabling/disabling the chip
--- s3fwrn5,fw-gpios: Output GPIO pin used to enter firmware mode and
--  sleep/wakeup control
--
--Example:
--
--&hsi2c_4 {
--	s3fwrn5@27 {
--		compatible = "samsung,s3fwrn5-i2c";
--
--		reg = <0x27>;
--
--		interrupt-parent = <&gpa1>;
--		interrupts = <3 0 0>;
--
--		s3fwrn5,en-gpios = <&gpf1 4 0>;
--		s3fwrn5,fw-gpios = <&gpj0 2 0>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/net/nfc/s3fwrn5.yaml b/Documentation/devicetree/bindings/net/nfc/s3fwrn5.yaml
-new file mode 100644
-index 000000000000..c22451dea350
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/nfc/s3fwrn5.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/nfc/s3fwrn5.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung S3FWRN5 NCI NFC Controller
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+  - Krzysztof Opasiak <k.opasiak@samsung.com>
-+
-+properties:
-+  compatible:
-+    const: samsung,s3fwrn5-i2c
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+  s3fwrn5,en-gpios:
-+    maxItems: 1
-+    description:
-+      Output GPIO pin used for enabling/disabling the chip
-+
-+  s3fwrn5,fw-gpios:
-+    maxItems: 1
-+    description:
-+      Output GPIO pin used to enter firmware mode and sleep/wakeup control
-+
-+required:
-+  - compatible
-+  - interrupts
-+  - reg
-+  - s3fwrn5,en-gpios
-+  - s3fwrn5,fw-gpios
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c4 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        s3fwrn5@27 {
-+            compatible = "samsung,s3fwrn5-i2c";
-+            reg = <0x27>;
-+
-+            interrupt-parent = <&gpa1>;
-+            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
-+
-+            s3fwrn5,en-gpios = <&gpf1 4 GPIO_ACTIVE_HIGH>;
-+            s3fwrn5,fw-gpios = <&gpj0 2 GPIO_ACTIVE_HIGH>;
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ac79fdbdf8d0..91b3d5c349d8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15273,6 +15273,7 @@ M:	Robert Baldyga <r.baldyga@samsung.com>
- M:	Krzysztof Opasiak <k.opasiak@samsung.com>
- L:	linux-nfc@lists.01.org (moderated for non-subscribers)
- S:	Supported
-+F:	Documentation/devicetree/bindings/net/nfc/s3fwrn5.yaml
- F:	drivers/nfc/s3fwrn5
+diff --git a/drivers/nfc/s3fwrn5/i2c.c b/drivers/nfc/s3fwrn5/i2c.c
+index b4eb926d220a..557279492503 100644
+--- a/drivers/nfc/s3fwrn5/i2c.c
++++ b/drivers/nfc/s3fwrn5/i2c.c
+@@ -200,13 +200,21 @@ static int s3fwrn5_i2c_parse_dt(struct i2c_client *client)
+ 	if (!np)
+ 		return -ENODEV;
  
- SAMSUNG S5C73M3 CAMERA DRIVER
+-	phy->gpio_en = of_get_named_gpio(np, "s3fwrn5,en-gpios", 0);
+-	if (!gpio_is_valid(phy->gpio_en))
+-		return -ENODEV;
++	phy->gpio_en = of_get_named_gpio(np, "en-gpios", 0);
++	if (!gpio_is_valid(phy->gpio_en)) {
++		/* Support also deprecated property */
++		phy->gpio_en = of_get_named_gpio(np, "s3fwrn5,en-gpios", 0);
++		if (!gpio_is_valid(phy->gpio_en))
++			return -ENODEV;
++	}
+ 
+-	phy->gpio_fw_wake = of_get_named_gpio(np, "s3fwrn5,fw-gpios", 0);
+-	if (!gpio_is_valid(phy->gpio_fw_wake))
+-		return -ENODEV;
++	phy->gpio_fw_wake = of_get_named_gpio(np, "wake-gpios", 0);
++	if (!gpio_is_valid(phy->gpio_fw_wake)) {
++		/* Support also deprecated property */
++		phy->gpio_fw_wake = of_get_named_gpio(np, "s3fwrn5,fw-gpios", 0);
++		if (!gpio_is_valid(phy->gpio_fw_wake))
++			return -ENODEV;
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.17.1
 
