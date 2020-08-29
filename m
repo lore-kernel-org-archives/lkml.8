@@ -2,93 +2,154 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA10EC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 10:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19084C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 10:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD51D20720
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 10:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9633207DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 10:26:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cemrkeOy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CAvkIgqp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgH2KYK (ORCPT
+        id S1727950AbgH2K0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 06:24:10 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:44544 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbgH2KYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 06:24:09 -0400
-Received: from zn.tnic (p200300ec2f204500b1cc6302500d80e4.dip0.t-ipconnect.de [IPv6:2003:ec:2f20:4500:b1cc:6302:500d:80e4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 349451EC037C;
-        Sat, 29 Aug 2020 12:24:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1598696648;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=0e5Zbp/QkxjL0piLwdEzEuIspUR8YR+mw+xt+CuGFbo=;
-        b=cemrkeOyYLobGkpBpqH7LcdLGijcZM4qMxp+8Y6iPmt4RQgrJ+w3QjurTadaKt4T5PAHpr
-        AbBGZpfJ7E8D4qmUFDX4fvOJwOCBbarzWB3DpSUuIsgZKFjF8xQI+8k1TTHdvwPm0DdpfY
-        KCpf/sXGQEtE7nPpk4DEzijdYUnvtvM=
-Date:   Sat, 29 Aug 2020 12:24:05 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v6 36/76] x86/head/64: Load IDT earlier
-Message-ID: <20200829102405.GA29091@zn.tnic>
-References: <20200824085511.7553-1-joro@8bytes.org>
- <20200824085511.7553-37-joro@8bytes.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200824085511.7553-37-joro@8bytes.org>
+        Sat, 29 Aug 2020 06:26:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727884AbgH2K0E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 06:26:04 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ACA2C061236
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 03:26:04 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a17so563923wrn.6
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 03:26:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=ltTUbIuRZsrIRmnfDl4oOGfDwCUW3HnUfo8Gx3vlIWk=;
+        b=CAvkIgqp4jrvXnLmabDfE4e6P4hkIk818P+wegv/a8jArglH2exYGoVOoWhaKYepez
+         TGHFsnmP4dID9ifg0Kw9Yo3Bx5nurIHhXFvWuys79je32yVSZ/82j72Z5NUsf0sC2X4A
+         /Tk0Kp8Kx4TRc2Y+999gq2USeiXH7XZQOjSJO0p/825BykEPbMHza74/441FCgyjAfC2
+         F/GOc77csiXcxREHu/3ZyPgE6nu1GITuOJaF8U+thfzEr4N2rE0rkepxgc8AWFLJESZH
+         imOKUlBIBg/3v+LngFIsosfxvysxExdchdP9SZ8AAUgwd2SGGnlyRwU/8IRIlw+G2njl
+         TQpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=ltTUbIuRZsrIRmnfDl4oOGfDwCUW3HnUfo8Gx3vlIWk=;
+        b=oc8X5MlMhqf/dGRQW0Qms/6//Yrob6kidqwFS2/IegY9MPmJ+CALicYweCNcnngpfu
+         ZBCZRvB8XvVl35T2bQXS+bHJNJM74cRyho8n6YIk783UWoLhu3mK6YJ3vUkGi2HGseDM
+         D/JNIh8AK2QxFlqUIMEMBbxaf92WKRXA+iZ8thTI6wGIGvuId28RnCZ3nvpPvjWnSDH0
+         1vyuZwd/kkawoth9HBpffauvNGfwjqa1sJsezlLcdgS7V3GhUDipcYOrQvp5ahIbotQR
+         tZdLM5urXUY/ToEa0Em2/7IlffhVlls0c+N2piJXnuVE5aShMigVWKd9QyQhdJ5amlyC
+         53jA==
+X-Gm-Message-State: AOAM530jvrhRx9H2zcyHCYQdeSWjAufIxhpTklX3/noTbI0DEs10k7Qw
+        oTkXnze1Lr6VmLbcjR77Kp0djYaoqag=
+X-Google-Smtp-Source: ABdhPJxjsWVCZmOoi22HO+6DBGtOz3Tvh9Qlrt9CC42NHW3VYy+DMIi/Yd+L21Zy78yxe5VfYDsjEQ==
+X-Received: by 2002:adf:e6c2:: with SMTP id y2mr3184023wrm.117.1598696762132;
+        Sat, 29 Aug 2020 03:26:02 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
+        by smtp.gmail.com with ESMTPSA id l9sm2796162wmh.1.2020.08.29.03.26.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Aug 2020 03:26:01 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
+Subject: [PATCH 2/2] habanalabs: cast to u64 before shift > 31 bits
+Date:   Sat, 29 Aug 2020 13:25:56 +0300
+Message-Id: <20200829102556.21895-2-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200829102556.21895-1-oded.gabbay@gmail.com>
+References: <20200829102556.21895-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:54:31AM +0200, Joerg Roedel wrote:
-> @@ -385,3 +386,25 @@ void __init alloc_intr_gate(unsigned int n, const void *addr)
->  	if (!WARN_ON(test_and_set_bit(n, system_vectors)))
->  		set_intr_gate(n, addr);
->  }
-> +
-> +void __init early_idt_setup_early_handler(unsigned long physaddr)
+When shifting a boolean variable by more than 31 bits and putting the
+result into a u64 variable, we need to cast the boolean into unsigned 64
+bits to prevent possible overflow.
 
-I wonder if you could drop one of the "early"es:
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/gaudi/gaudi.c | 8 +++++---
+ drivers/misc/habanalabs/goya/goya.c   | 8 +++++---
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
-idt_setup_early_handler()
-
-for example looks ok to me. Or
-
-early_setup_idt_handler()
-
-if you wanna have "early" as prefix...
-
+diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
+index 076a7697f85d..084019788e11 100644
+--- a/drivers/misc/habanalabs/gaudi/gaudi.c
++++ b/drivers/misc/habanalabs/gaudi/gaudi.c
+@@ -6114,7 +6114,7 @@ static bool gaudi_is_device_idle(struct hl_device *hdev, u64 *mask,
+ 		is_idle &= is_eng_idle;
+ 
+ 		if (mask)
+-			*mask |= !is_eng_idle <<
++			*mask |= ((u64) !is_eng_idle) <<
+ 					(GAUDI_ENGINE_ID_DMA_0 + dma_id);
+ 		if (s)
+ 			seq_printf(s, fmt, dma_id,
+@@ -6137,7 +6137,8 @@ static bool gaudi_is_device_idle(struct hl_device *hdev, u64 *mask,
+ 		is_idle &= is_eng_idle;
+ 
+ 		if (mask)
+-			*mask |= !is_eng_idle << (GAUDI_ENGINE_ID_TPC_0 + i);
++			*mask |= ((u64) !is_eng_idle) <<
++						(GAUDI_ENGINE_ID_TPC_0 + i);
+ 		if (s)
+ 			seq_printf(s, fmt, i,
+ 				is_eng_idle ? "Y" : "N",
+@@ -6165,7 +6166,8 @@ static bool gaudi_is_device_idle(struct hl_device *hdev, u64 *mask,
+ 		is_idle &= is_eng_idle;
+ 
+ 		if (mask)
+-			*mask |= !is_eng_idle << (GAUDI_ENGINE_ID_MME_0 + i);
++			*mask |= ((u64) !is_eng_idle) <<
++						(GAUDI_ENGINE_ID_MME_0 + i);
+ 		if (s) {
+ 			if (!is_slave)
+ 				seq_printf(s, fmt, i,
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index c41f2917863b..88847eb1b472 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -5173,7 +5173,8 @@ static bool goya_is_device_idle(struct hl_device *hdev, u64 *mask,
+ 		is_idle &= is_eng_idle;
+ 
+ 		if (mask)
+-			*mask |= !is_eng_idle << (GOYA_ENGINE_ID_DMA_0 + i);
++			*mask |= ((u64) !is_eng_idle) <<
++						(GOYA_ENGINE_ID_DMA_0 + i);
+ 		if (s)
+ 			seq_printf(s, dma_fmt, i, is_eng_idle ? "Y" : "N",
+ 					qm_glbl_sts0, dma_core_sts0);
+@@ -5196,7 +5197,8 @@ static bool goya_is_device_idle(struct hl_device *hdev, u64 *mask,
+ 		is_idle &= is_eng_idle;
+ 
+ 		if (mask)
+-			*mask |= !is_eng_idle << (GOYA_ENGINE_ID_TPC_0 + i);
++			*mask |= ((u64) !is_eng_idle) <<
++						(GOYA_ENGINE_ID_TPC_0 + i);
+ 		if (s)
+ 			seq_printf(s, fmt, i, is_eng_idle ? "Y" : "N",
+ 				qm_glbl_sts0, cmdq_glbl_sts0, tpc_cfg_sts);
+@@ -5216,7 +5218,7 @@ static bool goya_is_device_idle(struct hl_device *hdev, u64 *mask,
+ 	is_idle &= is_eng_idle;
+ 
+ 	if (mask)
+-		*mask |= !is_eng_idle << GOYA_ENGINE_ID_MME_0;
++		*mask |= ((u64) !is_eng_idle) << GOYA_ENGINE_ID_MME_0;
+ 	if (s) {
+ 		seq_printf(s, fmt, 0, is_eng_idle ? "Y" : "N", qm_glbl_sts0,
+ 				cmdq_glbl_sts0, mme_arch_sts);
 -- 
-Regards/Gruss,
-    Boris.
+2.17.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
