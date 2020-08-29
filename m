@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F37C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E32AC433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA5A721556
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C41920791
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598711197;
-	bh=y1v3WRBl4MbrDweIobQQZydmN+yvc1LWyMEcpKKt2S0=;
+	s=default; t=1598711204;
+	bh=E9thMYeMHfyw6+b2VsGPYrGNBKia9yaCy7sNBsZe7r8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R0lF5FGL5edpWGdgvFpgtglo8J82wEoip94Iat8yfFNfqUrYVcdmVcjqL9IOs9J0T
-	 yXhEspGH3v2NfQe8njuPrUujbZITSH2wZEzXLdE0csCk03dLUHbJ99LAT0yGG3vTrR
-	 h+amzVVGnMJWK/T1e2bamwBp0IGKWwv3ptnGM6gE=
+	b=Ey0xtGWnHR+MiQlvRCQGVJbh2Zv08pfH9d4tgT1mLTGggQLnaNMZnbJ8X7DLHQDtw
+	 VIa/K8LZ0ca9+IdHmbgGHHzZ3QwJMOd21F5FtX3cZmjE9ai0Wcnx16968+5CqJGPwy
+	 EqLcnhCO+j6HWXDDrfphpr7IRkNaHMmdo2HhQtkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgH2O0e (ORCPT
+        id S1728353AbgH2O0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 10:26:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54012 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 10:26:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728273AbgH2O0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 10:26:04 -0400
+        id S1728233AbgH2OZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 10:25:39 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69282206C0;
-        Sat, 29 Aug 2020 14:25:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 952B220BED;
+        Sat, 29 Aug 2020 14:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598711164;
-        bh=y1v3WRBl4MbrDweIobQQZydmN+yvc1LWyMEcpKKt2S0=;
+        s=default; t=1598711138;
+        bh=E9thMYeMHfyw6+b2VsGPYrGNBKia9yaCy7sNBsZe7r8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m5w7LxE8HNSicErTpW8YDPTUUtPUsRWL7SQc/QbDSiDVxqoVASBqrg0+jxIZS4ALy
-         tayAMnlVVsztFempHudHlZ41F71RVa90Nvek6O+r21yXFwjuuw1ogWzkUU28jXC/Hk
-         Iyz8IABk+dYmIfBRH3GAHMC+bliFq0mp4oPruUyQ=
+        b=OrsmhwRShcIabXLwV8as2jDAx/r/uAy17Lq/fbtBG8LkRsAg8kvuZzbZKULZ7lB/I
+         nNJSWhl/tA2gxK/yuCsIQTte2i8RMSLUfdboo8zOpj5LnlKqfzvQk0wxWY356MkSpo
+         Pw4epVgwVo1EY5mT54nPSXg6YQsYCVOgHumLKa9A=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -61,9 +61,9 @@ Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Sylwester Nawrocki <snawrocki@kernel.org>,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Inki Dae <inki.dae@samsung.com>
-Subject: [RFT 10/10] arm64: dts: exynos: Enable Arizona interrupt controller in Exynos5433 TM2
-Date:   Sat, 29 Aug 2020 16:25:01 +0200
-Message-Id: <20200829142501.31478-10-krzk@kernel.org>
+Subject: [PATCH 05/10] dt-bindings: connector: Convert Samsung 11-pin USB bindings to dtschema
+Date:   Sat, 29 Aug 2020 16:24:56 +0200
+Message-Id: <20200829142501.31478-5-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200829142501.31478-1-krzk@kernel.org>
 References: <20200829142501.31478-1-krzk@kernel.org>
@@ -72,37 +72,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Wolfson Arizona codec is interrupt controller which is required by
-bindings.  This fixes dtbs_check warnings like:
-
-  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dt.yaml: wm5110-codec@0: 'interrupt-controller' is a required property
-  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dt.yaml: wm5110-codec@0: '#interrupt-cells' is a required property
+Add Samsung 11-pin USB-C connector into standard dtschema bindings file.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
 ---
+ .../connector/samsung,usb-connector-11pin.txt | 49 -------------------
+ .../bindings/connector/usb-connector.yaml     | 44 +++++++++++++++++
+ 2 files changed, 44 insertions(+), 49 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/connector/samsung,usb-connector-11pin.txt
 
-Not tested on HQ. Please kindly review and test.
-
-Best regards,
-Krzysztof
----
- arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-index bab6c1addd5f..49cd55d6891c 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-@@ -1242,6 +1242,8 @@
+diff --git a/Documentation/devicetree/bindings/connector/samsung,usb-connector-11pin.txt b/Documentation/devicetree/bindings/connector/samsung,usb-connector-11pin.txt
+deleted file mode 100644
+index 3dd8961154ab..000000000000
+--- a/Documentation/devicetree/bindings/connector/samsung,usb-connector-11pin.txt
++++ /dev/null
+@@ -1,49 +0,0 @@
+-Samsung micro-USB 11-pin connector
+-==================================
+-
+-Samsung micro-USB 11-pin connector is an extension of micro-USB connector.
+-It is present in multiple Samsung mobile devices.
+-It has additional pins to route MHL traffic simultanously with USB.
+-
+-The bindings are superset of usb-connector bindings for micro-USB connector[1].
+-
+-Required properties:
+-- compatible: must be: "samsung,usb-connector-11pin", "usb-b-connector",
+-- type: must be "micro".
+-
+-Required nodes:
+-- any data bus to the connector should be modeled using the OF graph bindings
+-  specified in bindings/graph.txt, unless the bus is between parent node and
+-  the connector. Since single connector can have multpile data buses every bus
+-  has assigned OF graph port number as follows:
+-    0: High Speed (HS),
+-    3: Mobile High-Definition Link (MHL), specific to 11-pin Samsung micro-USB.
+-
+-[1]: bindings/connector/usb-connector.yaml
+-
+-Example
+--------
+-
+-Micro-USB connector with HS lines routed via controller (MUIC) and MHL lines
+-connected to HDMI-MHL bridge (sii8620):
+-
+-muic-max77843@66 {
+-	...
+-	usb_con: connector {
+-		compatible = "samsung,usb-connector-11pin", "usb-b-connector";
+-		label = "micro-USB";
+-		type = "micro";
+-
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			port@3 {
+-				reg = <3>;
+-				usb_con_mhl: endpoint {
+-					remote-endpoint = <&sii8620_mhl>;
+-				};
+-			};
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+index 9bd52e63c935..dc6ff64422d4 100644
+--- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
++++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+@@ -25,6 +25,10 @@ properties:
+           - const: gpio-usb-b-connector
+           - const: usb-b-connector
  
- 		gpio-controller;
- 		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
++      - items:
++          - const: samsung,usb-connector-11pin
++          - const: usb-b-connector
++
+   label:
+     description: Symbolic name for the connector.
  
- 		wlf,micd-detect-debounce = <300>;
- 		wlf,micd-bias-start-time = <0x1>;
+@@ -158,6 +162,16 @@ allOf:
+         - required:
+             - id-gpios
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: samsung,usb-connector-11pin
++    then:
++      properties:
++        type:
++          const: micro
++
+ examples:
+   # Micro-USB connector with HS lines routed via controller (MUIC).
+   - |
+@@ -233,3 +247,33 @@ examples:
+         vbus-supply = <&usb_p0_vbus>;
+       };
+     };
++
++  # Micro-USB connector with HS lines routed via controller (MUIC) and MHL
++  # lines connected to HDMI-MHL bridge (sii8620) on Samsung Exynos5433-based
++  # mobile phone
++  - |
++    muic-max77843 {
++      usb_con4: connector {
++        compatible = "samsung,usb-connector-11pin", "usb-b-connector";
++        label = "micro-USB";
++        type = "micro";
++
++        ports {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          port@0 {
++            reg = <0>;
++            muic_to_usb: endpoint {
++              remote-endpoint = <&usb_to_muic>;
++            };
++          };
++          port@3 {
++            reg = <3>;
++            usb_con_mhl: endpoint {
++              remote-endpoint = <&sii8620_mhl>;
++            };
++          };
++        };
++      };
++    };
 -- 
 2.17.1
 
