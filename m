@@ -2,139 +2,141 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1444CC433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA79C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1B4E20791
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:35:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="grA9sBId"
+	by mail.kernel.org (Postfix) with ESMTP id 6AA3120791
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:35:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598715341;
+	bh=j6jFQQI+S+Zc7jamxDk6P8xUa9APlinfotS8wBG/sfk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gyfv1NF66TDk49MaNUkqNmkU3ceoZlJE0sJBKO4kQsHAkxe5StVPIUIWEZoCEGfMh
+	 CvdbVMdkM3+Mjd+eU+41p8gE0rzXGyG9sus6viGx4kJzhSuidTtIvABtZ9eiQwVPNg
+	 f94HOsrcLqH+arvWNShRjjyxke+vRf4BYzAiExlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbgH2Pf2 (ORCPT
+        id S1728380AbgH2Pfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 11:35:28 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:24042 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728196AbgH2PfY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 11:35:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598715323;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=qmmPLRQSTKQjwJoLTLyS2w23N792Fkd1ROx5b2pWcYU=;
-        b=grA9sBIdr9GxAxhbJRllkEvqs9sUMhiUBYzMWUUFspuuTjwByPQSQnld6qg9UUF2Ouf2cr
-        Hhe5BhZ/oX1G0wxMLg6Be3xk70VnumfS4bqv+lBAvHtPiRUC1YMUvOygXWjpO7flXVHbgu
-        dZB2AmkH/8C8p1cNGiBiNKtXYzPCA58=
-Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
- [209.85.210.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-20-oe7KsWbTMyWGwslYcs_uTg-1; Sat, 29 Aug 2020 11:35:21 -0400
-X-MC-Unique: oe7KsWbTMyWGwslYcs_uTg-1
-Received: by mail-ot1-f71.google.com with SMTP id q26so1313558otf.8
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 08:35:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=qmmPLRQSTKQjwJoLTLyS2w23N792Fkd1ROx5b2pWcYU=;
-        b=JiZvU/m84HUW0P3lfw+4MHLJJzuLuk82OiEyBYbGMuawzYevmkxKUw+BjkOJweP05F
-         4No2Up66+ALl4ijUwZDXDSU3FFG5G6n8uBFBlTD/wGa5azxtQ2dUBdl25pafoODnBngV
-         aELlmu0dcrdanZ0nj4KTer+o7+MyOgwPMqOtHb1rIR6rt0FK3cfpfiIM3V1+LUHciGeC
-         M9aSBMCkIQMZSC1Xt0fmLALW2VlEi4x0KXmMI9aEtR+qLFex/JvwXgRBOiYJ4CwNx2Rl
-         ny8WonzaF4l5nTclI1/JMaElkyB5Qq3LcSP98DfGXbjMbZh0cpRaIUc9AWddyV+U1Osp
-         tvrQ==
-X-Gm-Message-State: AOAM532xbm6RkUd7MGcH1KVh6EXWor7v0J5OoFBA9n3owvkmgQlr7OAu
-        JtwNDosUO/CbrB3OXmNuk6kn40oAlaOW/wwjlvMx0xj3QrAIJh48XDuna/2Xt+9K3L9gHk78qX8
-        2U9B8n1t2wmkrPguVqikY0mex
-X-Received: by 2002:a9d:c64:: with SMTP id 91mr2355425otr.59.1598715320888;
-        Sat, 29 Aug 2020 08:35:20 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzvYyZNzj2QwclEeBTiTUzzukf5QXLtgqUFvURZjHxxRdmyDGTyXa8nonkQGGQ/TLdoaTTojg==
-X-Received: by 2002:a9d:c64:: with SMTP id 91mr2355412otr.59.1598715320674;
-        Sat, 29 Aug 2020 08:35:20 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id t22sm226211otq.44.2020.08.29.08.35.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Aug 2020 08:35:20 -0700 (PDT)
-From:   trix@redhat.com
-To:     vkoul@kernel.org, yung-chuan.liao@linux.intel.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        natechancellor@gmail.com, ndesaulniers@google.com,
-        shreyas.nc@intel.com
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH] soundwire: fix error handling
-Date:   Sat, 29 Aug 2020 08:35:15 -0700
-Message-Id: <20200829153515.3840-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        Sat, 29 Aug 2020 11:35:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48492 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728196AbgH2Pfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 11:35:37 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E78A20791;
+        Sat, 29 Aug 2020 15:35:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598715336;
+        bh=j6jFQQI+S+Zc7jamxDk6P8xUa9APlinfotS8wBG/sfk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=wpIg/pDqJxnbPmrrbN1zZncs991Ja7La9/uqYE+vERNp9t2NTt8pGZ1kOyR83X74u
+         78rmSPTS+Db4laeDkbSXUDcWd80n93w8Mb05gl4x62qhu9RxeGbK7T6mXJi6mV45mO
+         tJCv208M99yZI6Rb3BB2ec6O+l/LCRH+hzPGYLTk=
+Date:   Sat, 29 Aug 2020 16:35:32 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kgene@kernel.org>, <krzk@kernel.org>,
+        "Sergiu Cuciurean" <sergiu.cuciurean@analog.com>
+Subject: Re: [PATCH] iio: adc: exynos_adc: Replace indio_dev->mlock with own
+ device lock
+Message-ID: <20200829163532.4d38d591@archlinux>
+In-Reply-To: <20200826132203.236748-1-alexandru.ardelean@analog.com>
+References: <20200826132203.236748-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+On Wed, 26 Aug 2020 16:22:03 +0300
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-clang static analysis flags this problem
+> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> 
+> As part of the general cleanup of indio_dev->mlock, this change replaces
+> it with a local lock, to protect potential concurrent access to the
+> completion callback during a conversion.
+> 
+> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Same comment as the other one about needing lock scope to be documented.
 
-stream.c:844:9: warning: Use of memory after
-  it is freed
-        kfree(bus->defer_msg.msg->buf);
-              ^~~~~~~~~~~~~~~~~~~~~~~
+Otherwise looks good.  I thought we only had complicated uses of this
+left, but clearly not :)
 
-This happens in an error handler cleaning up memory
-allocated for elements in a list.
+Jonathan
 
-	list_for_each_entry(m_rt, &stream->master_list, stream_node) {
-		bus = m_rt->bus;
-
-		kfree(bus->defer_msg.msg->buf);
-		kfree(bus->defer_msg.msg);
-	}
-
-And is triggered when the call to sdw_bank_switch() fails.
-There are a two problems.
-
-First, when sdw_bank_switch() fails, though it frees memory it
-does not clear bus's reference 'defer_msg.msg' to that memory.
-
-The second problem is the freeing msg->buf. In some cases
-msg will be NULL so this will dereference a null pointer.
-Need to check before freeing.
-
-Fixes: 99b8a5d608a6 ("soundwire: Add bank switch routine")
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- drivers/soundwire/stream.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-index 37290a799023..6e36deb505b1 100644
---- a/drivers/soundwire/stream.c
-+++ b/drivers/soundwire/stream.c
-@@ -717,6 +717,7 @@ static int sdw_bank_switch(struct sdw_bus *bus, int m_rt_count)
- 	kfree(wbuf);
- error_1:
- 	kfree(wr_msg);
-+	bus->defer_msg.msg = NULL;
- 	return ret;
- }
- 
-@@ -840,9 +841,10 @@ static int do_bank_switch(struct sdw_stream_runtime *stream)
- error:
- 	list_for_each_entry(m_rt, &stream->master_list, stream_node) {
- 		bus = m_rt->bus;
--
--		kfree(bus->defer_msg.msg->buf);
--		kfree(bus->defer_msg.msg);
-+		if (bus->defer_msg.msg) {
-+			kfree(bus->defer_msg.msg->buf);
-+			kfree(bus->defer_msg.msg);
-+		}
- 	}
- 
- msg_unlock:
--- 
-2.18.1
+> ---
+>  drivers/iio/adc/exynos_adc.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
+> index 7d23b6c33284..6a49f8dfab22 100644
+> --- a/drivers/iio/adc/exynos_adc.c
+> +++ b/drivers/iio/adc/exynos_adc.c
+> @@ -132,6 +132,8 @@ struct exynos_adc {
+>  
+>  	struct completion	completion;
+>  
+> +	struct mutex		lock;
+> +
+>  	u32			value;
+>  	unsigned int            version;
+>  
+> @@ -542,7 +544,7 @@ static int exynos_read_raw(struct iio_dev *indio_dev,
+>  		return -EINVAL;
+>  	}
+>  
+> -	mutex_lock(&indio_dev->mlock);
+> +	mutex_lock(&info->lock);
+>  	reinit_completion(&info->completion);
+>  
+>  	/* Select the channel to be used and Trigger conversion */
+> @@ -562,7 +564,7 @@ static int exynos_read_raw(struct iio_dev *indio_dev,
+>  		ret = IIO_VAL_INT;
+>  	}
+>  
+> -	mutex_unlock(&indio_dev->mlock);
+> +	mutex_unlock(&info->lock);
+>  
+>  	return ret;
+>  }
+> @@ -573,7 +575,7 @@ static int exynos_read_s3c64xx_ts(struct iio_dev *indio_dev, int *x, int *y)
+>  	unsigned long timeout;
+>  	int ret;
+>  
+> -	mutex_lock(&indio_dev->mlock);
+> +	mutex_lock(&info->lock);
+>  	info->read_ts = true;
+>  
+>  	reinit_completion(&info->completion);
+> @@ -598,7 +600,7 @@ static int exynos_read_s3c64xx_ts(struct iio_dev *indio_dev, int *x, int *y)
+>  	}
+>  
+>  	info->read_ts = false;
+> -	mutex_unlock(&indio_dev->mlock);
+> +	mutex_unlock(&info->lock);
+>  
+>  	return ret;
+>  }
+> @@ -872,6 +874,8 @@ static int exynos_adc_probe(struct platform_device *pdev)
+>  	indio_dev->channels = exynos_adc_iio_channels;
+>  	indio_dev->num_channels = info->data->num_channels;
+>  
+> +	mutex_init(&info->lock);
+> +
+>  	ret = request_irq(info->irq, exynos_adc_isr,
+>  					0, dev_name(&pdev->dev), info);
+>  	if (ret < 0) {
 
