@@ -2,117 +2,180 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E426BC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2D1C433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8450206B5
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BFDF20757
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598722087;
-	bh=qY7x57AGtsUkeHbRnNlDUQfIhyRS0g6JReGDi0RPd94=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0DD8PK2ZfkiCKRkPjknWJ9ssRGdqBFhyMrgmtouBuZbL55ey9tmiYSORzOpjdjs86
-	 3PJYx9A6zHaw7ZvusHFH+MlYPp4bjIhl6JdPFnV9VNCPnL6jp5JKC00EBu77Z9Ts9i
-	 KppwR+DQpnG5sI4mRBUxCOAt6ergziE0mA9B4oxo=
+	s=default; t=1598722222;
+	bh=dGx5NTRYdvcgFWUnpTmfWkyTqmN3E0P8dtfTmx4wvWQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tSK3h81YwkS0ZSAYAbIASdQTUgTxWXYAdQyhXQvzMbM4jUw1RrSdlHjQgppz4L0qU
+	 08yZ2kHhSirI4zsXzpNncmuhnWpFX3D51ff5YohmtO8LJSD8rZrP+5AQdL9bgdTBq2
+	 MQKs7tiboOIIBKzSC5wEIxVxOGXjPowz3Ekb2Hns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgH2R2G (ORCPT
+        id S1728320AbgH2RaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 13:28:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728105AbgH2R2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 13:28:06 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD57B206B5;
-        Sat, 29 Aug 2020 17:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598722085;
-        bh=qY7x57AGtsUkeHbRnNlDUQfIhyRS0g6JReGDi0RPd94=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sqillNnVlaj1WTu3OaIzsuJDY0nq3eOaFhPRFbuifV6adDgYasJiObOTqdPYJyAU5
-         SyIK04VwkNP/YTKIduPBRw0TfF8Xq4KjxzLkX5EzO/kvN5xyqDUImSf4i3gq4KZCbw
-         q2wzuRgYtoj4tHa7ares9vlJHx9IaMMUPV/yMHnM=
-Date:   Sat, 29 Aug 2020 18:28:01 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Crt Mori <cmo@melexis.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v6 0/5] iio: temperature: mlx90632: Add extended
- calibration calculations
-Message-ID: <20200829182801.19f028ef@archlinux>
-In-Reply-To: <20200818213737.140613-1-cmo@melexis.com>
-References: <20200818213737.140613-1-cmo@melexis.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 29 Aug 2020 13:30:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728139AbgH2RaU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 13:30:20 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 959A1C061236
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 10:30:19 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w14so2296876ljj.4
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 10:30:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tcoa+YjQiCXzGdpiXTdeu40vvjnErZlPnbw45C2h1Hg=;
+        b=YhUjtZ6UWDO6ICBxyUejNtYoojZ1/MzasHc6HRhV1QQG0ZTdq1nBIaLOW2DmRHE1RK
+         8sokc72j0PovTAfxw6ZBkZRQnzWFlOSdsut22Y5F3m8DXx3aZaYvcaysiimrlXYjmvVQ
+         fx718s8yIazse/haX/97e3zZOvICf6iGBWCFE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tcoa+YjQiCXzGdpiXTdeu40vvjnErZlPnbw45C2h1Hg=;
+        b=nV6Jdhe2N0N7Z2a8QtqmcGT6pAS5EcLlGt7nmAO6jBvB2wfrh+Yu1fQhjexVVEQ3rX
+         Sb2uC2njqBI8WzPdoI3UbvwhTRtABrmNJqpy9YZpH4XKGrkr3QTqbbBPwdScNJUWcRYn
+         Faka/rin2qN7p8YCis89yiiN/ZJBW2B+AAE41z3BmfkHOIkXc5DAACbMNS4TuUzn2g0E
+         UrRl77xHpBhWVj5ZgBs1a0vBwAk2XHbcUsX85P7IlhzF5jWXlY5rvWOtub9csPpHKC3q
+         cGRHlH18Hr98aGi6v6fzhgky45xwWkYmJlrJ57HZji8csMcslGg8yUUoMkXt9swiBSPE
+         U0pQ==
+X-Gm-Message-State: AOAM531JzI3WkMhFQQsCs4L3gcQMC/tynODv7iFtpviOSQmdWi1yctJq
+        MWvCTyPiYpfKJc2jj5XgHj+eGrObh/DkLg==
+X-Google-Smtp-Source: ABdhPJyVybST233gDo9rXkxO9dv1Z7lyU/McUpacGaU+90Fc7a7g3UHSIGaAx4CBxLLo8j2ND/Kbxg==
+X-Received: by 2002:a2e:2c17:: with SMTP id s23mr2000405ljs.265.1598722215878;
+        Sat, 29 Aug 2020 10:30:15 -0700 (PDT)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id x14sm584874ljd.1.2020.08.29.10.30.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Aug 2020 10:30:12 -0700 (PDT)
+Received: by mail-lf1-f44.google.com with SMTP id c15so1356510lfi.3
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 10:30:12 -0700 (PDT)
+X-Received: by 2002:ac2:58db:: with SMTP id u27mr2019987lfo.142.1598722211766;
+ Sat, 29 Aug 2020 10:30:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200829105116.GA246533@roeck-us.net> <20200829124538.7475-1-luc.vanoostenryck@gmail.com>
+In-Reply-To: <20200829124538.7475-1-luc.vanoostenryck@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 29 Aug 2020 10:29:55 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whH0ApHy0evN0q6AwQ+-a5RK56oMkYkkCJtTMnaq4FrNQ@mail.gmail.com>
+Message-ID: <CAHk-=whH0ApHy0evN0q6AwQ+-a5RK56oMkYkkCJtTMnaq4FrNQ@mail.gmail.com>
+Subject: Re: [PATCH] fsldma: fsl_ioread64*() do not need lower_32_bits()
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joerg Roedel <joerg.roedel@amd.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Li Yang <leoyang.li@nxp.com>, Zhang Wei <zw@zh-kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        dma <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="0000000000008765a305ae078552"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Aug 2020 23:37:32 +0200
-Crt Mori <cmo@melexis.com> wrote:
+--0000000000008765a305ae078552
+Content-Type: text/plain; charset="UTF-8"
 
-> Add extended calibration calculations for the new subversion of DSP5.
-> 
-> V6 review comments from Andy Shevchenko <andy.shevchenko@gmail.com:
-> 	 - Covert all while loops to regmap_read_poll_timeout or
-> 	   read_poll_timeout even though udelay of more than 20ms is used
-> 	   in the second. Problem was, that timeout needs to be 800ms,
-> 	   while polling frequency could be 20ms, but we konw that that
-> 	   will generate more noise on line than needed. Did some tests and
-> 	   current number combination seems best. This also caused that
-> 	   commit messages were adjusted.
-> V5 review comments from Andy Shevchenko <andy.shevchenko@gmail.com:
-> 	 -  Swap order of patches to avoid re-doing the calculations
-> 	 - Add fixed name defines for Ambient and Object RAM temperature
-> 	   channels as per suggestion of the Jonathan Cameron <jic23@kernel.org>
-> V5:
-> 	 - Add style changes patch along with current series.
-> 
-> V4 review comments from Andy Shevchenko <andy.shevchenko@gmail.com>:
-> 	 - Move the function creation for Ta4 to first patch
-> 	 - Add kernel doc patch for documenting internal struct
-> 	 - Add patch to convert while loops to do-while loops for
-> 	   polling
-> 
-> V3 review comments from Andy Shevchenko <andy.shevchenko@gmail.com>:
-> 	 - Change commit message text to more proper English as per suggestions
-> 	 - Drop unneeded brackets and parentheses
-> 	 - Use defines from limits.h
-> 	 - Remove userspace typedefs as leftovers from porting
-> 	 - Testing of timeout loops with iopoll.h was no successful,
-> 	   because delay between measurements is 10ms, but we need to
-> 	   fill at least 3 channels, so final timeout should be 40ms
-> 	   which is out of scope of usleep function
-> 	 - Fixing some typos in comments
-> 
-> V2 review comments from Andy Shevchenko <andy.shevchenko@gmail.com>:
-> 	 - Convert divison back to shifts to make it more readable
-> 
-> Crt Mori (5):
->   iio:temperature:mlx90632: Reduce number of equal calulcations
->   iio:temperature:mlx90632: Add kerneldoc to the internal struct
->   iio:temperature:mlx90632: Convert polling while loop to regmap
->   iio:temperature:mlx90632: Adding extended calibration option
->   iio:temperature:mlx90632: Some stylefixing leftovers
-> 
->  drivers/iio/temperature/mlx90632.c | 274 ++++++++++++++++++++++++++---
->  1 file changed, 247 insertions(+), 27 deletions(-)
-> 
+On Sat, Aug 29, 2020 at 5:46 AM Luc Van Oostenryck
+<luc.vanoostenryck@gmail.com> wrote:
+>
+> But the pointer is already 32-bit, so simply cast the pointer to u32.
 
-Thanks.  Also thanks to Andy for all his review work on these!
+Yeah, that code was completely pointless. If the pointer had actually
+been 64-bit, the old code would have warned too.
 
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to try and break it.
+The odd thing is that the fsl_iowrite64() functions make sense. It's
+only the fsl_ioread64() functions that seem to be written by somebody
+who is really confused.
 
-Thanks,
+That said, this patch only humors the confusion. The cast to 'u32' is
+completely pointless. In fact, it seems to be actively wrong, because
+it means that the later "fsl_addr + 1" is done entirely incorrectly -
+it now literally adds "1" to an integer value, while the iowrite()
+functions will add one to a "u32 __iomem *" pointer (so will do
+pointer arithmetic, and add 4).
 
-Jonathan
+So this code has never ever worked correctly to begin with, but the
+patches to fix the warning miss the point. The problem isn't the
+warning, the problem is that the code is broken and completely wrong
+to begin with.
+
+And the "lower_32_bits()" thing has always been pure and utter
+confusion and complete garbage.
+
+I *think* the right patch is the one attached, but since this code is
+clearly utterly broken, I'd want somebody to test it.
+
+It has probably never ever worked on 32-bit powerpc, or did so purely
+by mistake (perhaps because nobody really cares - the only 64-bit use
+is this:
+
+    static dma_addr_t get_cdar(struct fsldma_chan *chan)
+    {
+        return FSL_DMA_IN(chan, &chan->regs->cdar, 64) & ~FSL_DMA_SNEN;
+    }
+
+and there are two users of that: one which ignores the return value,
+and one that looks like it might end up half-way working even if the
+value read was garbage (it's used only to compare against a "current
+descriptor" value).
+
+Anyway, the fix is definitely not to just shut up the warning. The
+warning is only a sign of utter confusion in that driver.
+
+Can somebody with the hardware test this on 32-bit ppc?
+
+And if not (judging by just how broken those functions are, maybe it
+never did work), can somebody with a ppc32 setup at least compile-test
+this patch and look at whether it makes sense, in ways the old code
+did not.
+
+                Linus
+
+--0000000000008765a305ae078552
+Content-Type: application/octet-stream; name=patch
+Content-Disposition: attachment; filename=patch
+Content-Transfer-Encoding: base64
+Content-ID: <f_kefxvfs30>
+X-Attachment-Id: f_kefxvfs30
+
+IGRyaXZlcnMvZG1hL2ZzbGRtYS5oIHwgMTIgKysrKysrLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwg
+NiBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZG1h
+L2ZzbGRtYS5oIGIvZHJpdmVycy9kbWEvZnNsZG1hLmgKaW5kZXggNTZmMThhZTk5MjMzLi5jNTc0
+ZDIyM2Q1MmUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZG1hL2ZzbGRtYS5oCisrKyBiL2RyaXZlcnMv
+ZG1hL2ZzbGRtYS5oCkBAIC0yMDUsMTAgKzIwNSwxMCBAQCBzdHJ1Y3QgZnNsZG1hX2NoYW4gewog
+I2Vsc2UKIHN0YXRpYyB1NjQgZnNsX2lvcmVhZDY0KGNvbnN0IHU2NCBfX2lvbWVtICphZGRyKQog
+ewotCXUzMiBmc2xfYWRkciA9IGxvd2VyXzMyX2JpdHMoYWRkcik7Ci0JdTY0IGZzbF9hZGRyX2hp
+ID0gKHU2NClpbl9sZTMyKCh1MzIgKikoZnNsX2FkZHIgKyAxKSkgPDwgMzI7CisJdTMyIHZhbF9s
+byA9IGluX2xlMzIoKHUzMiBfX2lvbWVtICopYWRkcik7CisJdTMyIHZhbF9oaSA9IGluX2xlMzIo
+KHUzMiBfX2lvbWVtICopYWRkciArIDEpOwogCi0JcmV0dXJuIGZzbF9hZGRyX2hpIHwgaW5fbGUz
+MigodTMyICopZnNsX2FkZHIpOworCXJldHVybiAoKHU2NCl2YWxfaGkgPDwgMzIpICsgdmFsX2xv
+OwogfQogCiBzdGF0aWMgdm9pZCBmc2xfaW93cml0ZTY0KHU2NCB2YWwsIHU2NCBfX2lvbWVtICph
+ZGRyKQpAQCAtMjE5LDEwICsyMTksMTAgQEAgc3RhdGljIHZvaWQgZnNsX2lvd3JpdGU2NCh1NjQg
+dmFsLCB1NjQgX19pb21lbSAqYWRkcikKIAogc3RhdGljIHU2NCBmc2xfaW9yZWFkNjRiZShjb25z
+dCB1NjQgX19pb21lbSAqYWRkcikKIHsKLQl1MzIgZnNsX2FkZHIgPSBsb3dlcl8zMl9iaXRzKGFk
+ZHIpOwotCXU2NCBmc2xfYWRkcl9oaSA9ICh1NjQpaW5fYmUzMigodTMyICopZnNsX2FkZHIpIDw8
+IDMyOworCXUzMiB2YWxfaGkgPSBpbl9iZTMyKCh1MzIgX19pb21lbSAqKWFkZHIpOworCXUzMiB2
+YWxfbG8gPSBpbl9iZTMyKCh1MzIgX19pb21lbSAqKWFkZHIrMSk7CiAKLQlyZXR1cm4gZnNsX2Fk
+ZHJfaGkgfCBpbl9iZTMyKCh1MzIgKikoZnNsX2FkZHIgKyAxKSk7CisJcmV0dXJuICgodTY0KXZh
+bF9oaSA8PCAzMikgKyB2YWxfbG87CiB9CiAKIHN0YXRpYyB2b2lkIGZzbF9pb3dyaXRlNjRiZSh1
+NjQgdmFsLCB1NjQgX19pb21lbSAqYWRkcikK
+--0000000000008765a305ae078552--
