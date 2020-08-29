@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CE5C43461
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 05:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB0BC433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 05:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8338B20BED
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 05:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D928920BED
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 05:59:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="U0k5AAdn"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Lgb1ANpj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgH2F71 (ORCPT
+        id S1727003AbgH2F7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 01:59:27 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:44694 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726333AbgH2F7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 01:59:23 -0400
+        Sat, 29 Aug 2020 01:59:37 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:29516 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726845AbgH2F7b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 01:59:31 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598680763; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1598680770; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=JBxLm8OMFKHoxpqehjgR8wTIrJyvPsHzMv6BSVJcvNw=; b=U0k5AAdn+ASN1OML5umnBHbizB2d8ZrkQx/8Mj2tq6vxHj3URB3GklLmujjl9Y/oeD7tB1qb
- KUPKxGSS7bXdoCUQ/OJEht3abyzgqork6Ue5kOIehRn6R3ASx73Kmc7jCiPdA6fZAzeCD+Uw
- PzKp7OfpCItfpeZNitGFZYLA7y0=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ Sender; bh=zbtKWEe/ycA4XfAazELEies/9m6qkiUjWQM6OfnRcUs=; b=Lgb1ANpj9qt6DaLQ4qCwum795GqRvyrZBRXJCEyXSh1XvSf5ZZHVbGSzrBzFi0QcPc4sXr4W
+ 3Es6HDFZkZc/jJaw449wepa9+4WfgfmxQ5PSFm07ev8Tg4vcMyk7QJhED10fHoL0H3c4iLQX
+ NIAcUaJra8F/8IdfxCT+KKrnOaU=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5f49ee9d6a801be9b26ca30f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 29 Aug 2020 05:58:53
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f49eea0d70e1f492d204327 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 29 Aug 2020 05:58:56
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9780EC43391; Sat, 29 Aug 2020 05:58:53 +0000 (UTC)
+        id 6FA3EC433C6; Sat, 29 Aug 2020 05:58:56 +0000 (UTC)
 Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D17CBC43387;
-        Sat, 29 Aug 2020 05:58:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D17CBC43387
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 20BE8C43391;
+        Sat, 29 Aug 2020 05:58:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 20BE8C43391
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
 From:   Wesley Cheng <wcheng@codeaurora.org>
@@ -53,9 +54,9 @@ To:     robh+dt@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
         jackp@codeaurora.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: [RFC v5 4/6] usb: gadget: configfs: Check USB configuration before adding
-Date:   Fri, 28 Aug 2020 22:58:44 -0700
-Message-Id: <20200829055846.19034-5-wcheng@codeaurora.org>
+Subject: [RFC v5 6/6] usb: dwc3: gadget: Ensure enough TXFIFO space for USB configuration
+Date:   Fri, 28 Aug 2020 22:58:46 -0700
+Message-Id: <20200829055846.19034-7-wcheng@codeaurora.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200829055846.19034-1-wcheng@codeaurora.org>
 References: <20200829055846.19034-1-wcheng@codeaurora.org>
@@ -66,56 +67,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ensure that the USB gadget is able to support the configuration being
-added based on the number of endpoints required from all interfaces.  This
-is for accounting for any bandwidth or space limitations.
+If TXFIFO resizing is enabled, then based on if endpoint bursting is
+required or not, a larger amount of FIFO space is benefical.  Sometimes
+a particular interface can take all the available FIFO space, leading
+to other interfaces not functioning properly.  This callback ensures that
+the minimum fifo requirements, a single fifo per endpoint, can be met,
+otherwise the configuration binding will fail.  This will be based on the
+maximum number of eps existing in all configurations.
 
 Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
 ---
- drivers/usb/gadget/configfs.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/usb/dwc3/core.h   |  1 +
+ drivers/usb/dwc3/gadget.c | 35 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
 
-diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
-index 56051bb97349..7c74c04b1d8c 100644
---- a/drivers/usb/gadget/configfs.c
-+++ b/drivers/usb/gadget/configfs.c
-@@ -1361,6 +1361,7 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
- 		struct usb_function *f;
- 		struct usb_function *tmp;
- 		struct gadget_config_name *cn;
-+		unsigned long ep_map = 0;
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index e85c1ec70cc3..0559b0a82c4d 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -1249,6 +1249,7 @@ struct dwc3 {
+ 	u16			imod_interval;
+ 	int			last_fifo_depth;
+ 	int			num_ep_resized;
++	int			max_cfg_eps;
+ };
  
- 		if (gadget_is_otg(gadget))
- 			c->descriptors = otg_desc;
-@@ -1390,7 +1391,28 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
- 				list_add(&f->list, &cfg->func_list);
- 				goto err_purge_funcs;
- 			}
-+			if (f->ss_descriptors) {
-+				struct usb_descriptor_header **d;
+ #define INCRX_BURST_MODE 0
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 53e5220f9893..e8f7ea560920 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2411,6 +2411,7 @@ static int dwc3_gadget_stop(struct usb_gadget *g)
+ 
+ out:
+ 	dwc->gadget_driver	= NULL;
++	dwc->max_cfg_eps = 0;
+ 	spin_unlock_irqrestore(&dwc->lock, flags);
+ 
+ 	free_irq(dwc->irq_gadget, dwc->ev_buf);
+@@ -2518,6 +2519,39 @@ static void dwc3_gadget_set_speed(struct usb_gadget *g,
+ 	spin_unlock_irqrestore(&dwc->lock, flags);
+ }
+ 
++static int dwc3_gadget_check_config(struct usb_gadget *g, unsigned long ep_map)
++{
++	struct dwc3 *dwc = gadget_to_dwc(g);
++	unsigned long in_ep_map;
++	int fifo_size = 0;
++	int ram1_depth;
++	int ep_num;
 +
-+				d = f->ss_descriptors;
-+				for (; *d; ++d) {
-+					struct usb_endpoint_descriptor *ep;
-+					int addr;
++	if (!dwc->needs_fifo_resize)
++		return 0;
 +
-+					if ((*d)->bDescriptorType != USB_DT_ENDPOINT)
-+						continue;
++	/* Only interested in the IN endpoints */
++	in_ep_map = ep_map >> 16;
++	ep_num = hweight_long(in_ep_map);
 +
-+					ep = (struct usb_endpoint_descriptor *)*d;
-+					addr = ((ep->bEndpointAddress & 0x80) >> 3) |
-+						(ep->bEndpointAddress & 0x0f);
-+					set_bit(addr, &ep_map);
-+				}
-+			}
- 		}
-+		ret = usb_gadget_check_config(cdev->gadget, ep_map);
-+		if (ret)
-+			goto err_purge_funcs;
++	if (ep_num <= dwc->max_cfg_eps)
++		return 0;
 +
- 		usb_ep_autoconfig_reset(cdev->gadget);
- 	}
- 	if (cdev->use_os_string) {
++	/* Update the max number of eps in the composition */
++	dwc->max_cfg_eps = ep_num;
++
++	fifo_size = dwc3_gadget_calc_tx_fifo_size(dwc, dwc->max_cfg_eps);
++	/* Based on the equation, increment by one for every ep */
++	fifo_size += dwc->max_cfg_eps;
++
++	/* Check if we can fit a single fifo per endpoint */
++	ram1_depth = DWC3_RAM1_DEPTH(dwc->hwparams.hwparams7);
++	if (fifo_size > ram1_depth)
++		return -ENOMEM;
++
++	return 0;
++}
++
+ static const struct usb_gadget_ops dwc3_gadget_ops = {
+ 	.get_frame		= dwc3_gadget_get_frame,
+ 	.wakeup			= dwc3_gadget_wakeup,
+@@ -2527,6 +2561,7 @@ static const struct usb_gadget_ops dwc3_gadget_ops = {
+ 	.udc_stop		= dwc3_gadget_stop,
+ 	.udc_set_speed		= dwc3_gadget_set_speed,
+ 	.get_config_params	= dwc3_gadget_config_params,
++	.check_config		= dwc3_gadget_check_config,
+ };
+ 
+ /* -------------------------------------------------------------------------- */
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
