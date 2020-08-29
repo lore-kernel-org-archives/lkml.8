@@ -2,92 +2,179 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78FAC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 05:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3324C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94DB020BED
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 05:59:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vVNYUwtH"
+	by mail.kernel.org (Postfix) with ESMTP id 8621120838
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:09:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgH2F7p (ORCPT
+        id S1726170AbgH2GJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 01:59:45 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:46010 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbgH2F7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 01:59:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598680772; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=oacjS+8nW5DDPS+H6t/D36miAAICLdql0i6Q5+uJLhw=; b=vVNYUwtHFIfwb7SzIAo71NotrqfrCEh+QybNUBTX4IIZ5HPOINgc4Mjp/C4XQbsHqKCfpwWT
- eJSO7s9LoYfboyIFUM5qXeyUH+R6PG1ES+Z2PJrjr4cO6Ue7Q/++wpZCHQ9d+BvAL4dOTLFb
- lfBvLF9J63KxGDbwmA+FVuTG2QM=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5f49ee9c03d128697e4131cf (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 29 Aug 2020 05:58:52
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 59F3DC43391; Sat, 29 Aug 2020 05:58:52 +0000 (UTC)
-Received: from wcheng-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 81A16C433CB;
-        Sat, 29 Aug 2020 05:58:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 81A16C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     robh+dt@kernel.org, bjorn.andersson@linaro.org, balbi@kernel.org,
-        gregkh@linuxfoundation.org, agross@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
-        jackp@codeaurora.org, Wesley Cheng <wcheng@codeaurora.org>
-Subject: [RFC v5 2/6] arm64: boot: dts: qcom: sm8150: Enable dynamic TX FIFO resize logic
-Date:   Fri, 28 Aug 2020 22:58:42 -0700
-Message-Id: <20200829055846.19034-3-wcheng@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200829055846.19034-1-wcheng@codeaurora.org>
-References: <20200829055846.19034-1-wcheng@codeaurora.org>
+        Sat, 29 Aug 2020 02:09:22 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:43207 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbgH2GJU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 02:09:20 -0400
+Received: by mail-io1-f70.google.com with SMTP id f19so1095600iol.10
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 23:09:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=/7VXp0tP8F9WGxY+yGGRP+vowS31sIWVt3YL5Y7ETAA=;
+        b=VrQH5AqSMidwnnVBXdw13/cEExoBhDKQ4VST9XSenFTBo97qRZhqxs8eesZPpIxHBp
+         Q5NOVndCaJESYpAzcYNlKMwkyUogglxEMSN866c6XkwTwIP4b2mMrocm/uuxDqC0nZaA
+         xbZ9GBg1z22e0DqRIXItySP4k+88XG3y6lq021BhK/xTShBPDPF38wR81Cqb8VISDTOi
+         HIg7GYmvb91tpn/1AyyUhnBLBL5OBPGklD/rgA2v9xPuvaADNPRGo+dubmsAfPHJXGTj
+         NeSWBnYprKgCjoOVoUqbsLLyGHsmLlFdg1G7K2cWFP5j5d9j08pScFQGZhzHuwJ8HYdM
+         1AMA==
+X-Gm-Message-State: AOAM530uOmzc7GQM4De8cBcAbKgCJzxVDNwq54GuNa3DrBP98BGA30P1
+        qW8dnY2snVQgVEadPzPDC7PixhoI/d5ien+CZGffeI5f799z
+X-Google-Smtp-Source: ABdhPJyemNPQ0VuZjfRt+FM355hDuF5VxMjHNSnkDS43XBOdma7xzgDy6dRiSseq2OH0IXVoLhyWuDVYWYcXP0SBcJNCADpqPkC6
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:ce07:: with SMTP id b7mr1803689ilo.270.1598681360107;
+ Fri, 28 Aug 2020 23:09:20 -0700 (PDT)
+Date:   Fri, 28 Aug 2020 23:09:20 -0700
+In-Reply-To: <000000000000d3d67f05a20d2027@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000940fbe05adfe0208@google.com>
+Subject: Re: INFO: task hung in tls_sk_proto_close
+From:   syzbot <syzbot+ca1345cca66556f3d79b@syzkaller.appspotmail.com>
+To:     aviadye@mellanox.com, aviadye@nvidia.com, borisp@mellanox.com,
+        borisp@nvidia.com, daniel@iogearbox.net, davem@davemloft.net,
+        john.fastabend@gmail.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the flexible TX FIFO resize logic on SM8150.  Using a larger TX FIFO
-SZ can help account for situations when system latency is greater than the
-USB bus transmission latency.
+syzbot has found a reproducer for the following issue on:
 
-Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+HEAD commit:    b36c9697 Add linux-next specific files for 20200828
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=11ae3d61900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5e3cf99580b5542c
+dashboard link: https://syzkaller.appspot.com/bug?extid=ca1345cca66556f3d79b
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=170cdfe5900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=139a768e900000
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 7a0c5b419ff0..169ac4c8e298 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -717,6 +717,7 @@ usb_1_dwc3: dwc3@a600000 {
- 				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
- 				snps,dis_u2_susphy_quirk;
- 				snps,dis_enblslpm_quirk;
-+				tx-fifo-resize;
- 				phys = <&usb_1_hsphy>, <&usb_1_ssphy>;
- 				phy-names = "usb2-phy", "usb3-phy";
- 			};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ca1345cca66556f3d79b@syzkaller.appspotmail.com
+
+INFO: task syz-executor014:6815 blocked for more than 143 seconds.
+      Not tainted 5.9.0-rc2-next-20200828-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor014 state:D stack:23536 pid: 6815 ppid:  6814 flags:0x00004000
+Call Trace:
+ context_switch kernel/sched/core.c:3778 [inline]
+ __schedule+0x8e5/0x21e0 kernel/sched/core.c:4527
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4602
+ schedule_timeout+0x1d8/0x250 kernel/time/timer.c:1855
+ do_wait_for_common kernel/sched/completion.c:85 [inline]
+ __wait_for_common kernel/sched/completion.c:106 [inline]
+ wait_for_common kernel/sched/completion.c:117 [inline]
+ wait_for_completion+0x163/0x260 kernel/sched/completion.c:138
+ __flush_work+0x51f/0xab0 kernel/workqueue.c:3046
+ __cancel_work_timer+0x5de/0x700 kernel/workqueue.c:3133
+ tls_sk_proto_close+0x4a7/0xaf0 net/tls/tls_main.c:305
+ inet_release+0x12e/0x280 net/ipv4/af_inet.c:431
+ inet6_release+0x4c/0x70 net/ipv6/af_inet6.c:475
+ __sock_release+0xcd/0x280 net/socket.c:596
+ sock_close+0x18/0x20 net/socket.c:1277
+ __fput+0x285/0x920 fs/file_table.c:281
+ task_work_run+0xdd/0x190 kernel/task_work.c:141
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
+ exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:167
+ syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:242
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x403950
+Code: Bad RIP value.
+RSP: 002b:00007fff6bd1cf98 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000403950
+RDX: 00000000000000d8 RSI: 00000000200005c0 RDI: 0000000000000004
+RBP: 00007fff6bd1cfa0 R08: 0000000000000000 R09: 00000000000000d8
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fff6bd1cfb0
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Showing all locks held in the system:
+4 locks held by kworker/u4:0/7:
+1 lock held by khungtaskd/1167:
+ #0: ffffffff89c67640 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5825
+1 lock held by in:imklog/6517:
+ #0: ffff8880a8b1c930 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:930
+1 lock held by syz-executor014/6815:
+ #0: ffff888085128750 (&sb->s_type->i_mutex_key#13){+.+.}-{3:3}, at: inode_lock include/linux/fs.h:779 [inline]
+ #0: ffff888085128750 (&sb->s_type->i_mutex_key#13){+.+.}-{3:3}, at: __sock_release+0x86/0x280 net/socket.c:595
+3 locks held by kworker/0:3/7021:
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
+ #1: ffffc90006137da8 ((work_completion)(&(&sw_ctx_tx->tx_work.work)->work)){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
+ #2: ffff88809dc300d8 (&ctx->tx_lock){+.+.}-{3:3}, at: tx_work_handler+0x127/0x190 net/tls/tls_sw.c:2251
+
+=============================================
+
+NMI backtrace for cpu 0
+CPU: 0 PID: 1167 Comm: khungtaskd Not tainted 5.9.0-rc2-next-20200828-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ nmi_cpu_backtrace.cold+0x44/0xd7 lib/nmi_backtrace.c:105
+ nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:147 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:253 [inline]
+ watchdog+0xd89/0xf30 kernel/hung_task.c:339
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1
+CPU: 1 PID: 3893 Comm: systemd-journal Not tainted 5.9.0-rc2-next-20200828-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__read_seqcount_t_begin include/linux/seqlock.h:276 [inline]
+RIP: 0010:path_init+0x1d1/0x13c0 fs/namei.c:2218
+Code: 24 40 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 0f b6 04 02 84 c0 74 08 3c 03 0f 8e 73 0e 00 00 44 8b 2d cf 44 de 07 <31> ff 45 89 ef 41 83 e7 01 44 89 fe e8 4e 87 b1 ff 45 84 ff 0f 85
+RSP: 0018:ffffc900052f7a48 EFLAGS: 00000246
+RAX: 0000000000000000 RBX: 0000000000000040 RCX: ffffffff81c2f109
+RDX: 1ffffffff13426c8 RSI: ffffffff81c2f117 RDI: ffffc900052f7c98
+RBP: ffffc900052f7ae8 R08: 0000000000000000 R09: ffffffff8c6a59e7
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffc900052f7c58
+R13: 0000000000001444 R14: ffffffff89a13640 R15: 0000000000000000
+FS:  00007fcc879848c0(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fcc84d25000 CR3: 0000000094282000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ path_openat+0x185/0x2730 fs/namei.c:3363
+ do_filp_open+0x17e/0x3c0 fs/namei.c:3395
+ do_sys_openat2+0x16d/0x420 fs/open.c:1168
+ do_sys_open fs/open.c:1184 [inline]
+ __do_sys_open fs/open.c:1192 [inline]
+ __se_sys_open fs/open.c:1188 [inline]
+ __x64_sys_open+0x119/0x1c0 fs/open.c:1188
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fcc86f14840
+Code: 73 01 c3 48 8b 0d 68 77 20 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 89 bb 20 00 00 75 10 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 1e f6 ff ff 48 89 04 24
+RSP: 002b:00007ffe226b7b58 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 00007ffe226b7e60 RCX: 00007fcc86f14840
+RDX: 00000000000001a0 RSI: 0000000000080042 RDI: 0000563cfc995a50
+RBP: 000000000000000d R08: 000000000000c0ff R09: 00000000ffffffff
+R10: 0000000000000069 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000563cfc989040 R14: 00007ffe226b7e20 R15: 0000563cfc995820
 
