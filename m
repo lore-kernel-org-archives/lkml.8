@@ -2,951 +2,225 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D141EC433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 21:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7846C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 21:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAFBF20774
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 21:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B2420774
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 21:35:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="H4SkDsH/";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="rTGgHAW7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgH2VcG (ORCPT
+        id S1728187AbgH2Vf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 17:32:06 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:53382 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbgH2VcE (ORCPT
+        Sat, 29 Aug 2020 17:35:29 -0400
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:41854 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726748AbgH2Vf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 17:32:04 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sat, 29 Aug 2020 17:35:26 -0400
+Received: from mailhost.synopsys.com (badc-mailhost4.synopsys.com [10.192.0.82])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 7ED66804B4;
-        Sat, 29 Aug 2020 23:31:54 +0200 (CEST)
-Date:   Sat, 29 Aug 2020 23:31:53 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Benni Steini <bennisteinir@gmail.com>
-Subject: Re: [PATCH v5 2/2] drm: panel: Add novatek nt36672a panel driver
-Message-ID: <20200829213153.GH796939@ravnborg.org>
-References: <20200826160308.18911-1-sumit.semwal@linaro.org>
- <20200826160308.18911-3-sumit.semwal@linaro.org>
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6C2E44035B;
+        Sat, 29 Aug 2020 21:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1598736925; bh=FH0Eyd4F3ZbIVfUoHKAW0yhbuiFz448ohF0qS3xzIMA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=H4SkDsH/DM5pyWj3F50R3q+BcI06fbsRLneIvDeE4WUJYzdzwEiBmjfLpc6u4+MS7
+         lNux2y+hdmngPSalvzUrv9XU63m5tS0jxRZKdk4KGVhigznLfhHZQBjP0fZYCk8yKZ
+         vvEH2v5Pv510ettjOIKMqLcHhPIyKa9B9dywMkPjeyoDsZ+ZsIspiRmPvyYiFWMspg
+         ZTp4KEdnHDIZ7zUGz4kkine0bXTNAb1ikrWiTq2CbmdzOWXVADrEGdXI6k6AX8oKWs
+         JEG/u74jcKH252/W/6/s1Srp0DWZd0LOG2Ckv3Tls/QBKP0neoJOZcMJuglFdSdWMb
+         30xlBXazWbmLw==
+Received: from o365relay-in.synopsys.com (sv2-o365relay1.synopsys.com [10.202.1.137])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id B3F45A0060;
+        Sat, 29 Aug 2020 21:35:24 +0000 (UTC)
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2107.outbound.protection.outlook.com [104.47.55.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
+        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 1872240046;
+        Sat, 29 Aug 2020 21:35:23 +0000 (UTC)
+Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
+Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=thinhn@synopsys.com
+Authentication-Results: o365relay-in.synopsys.com;
+        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="rTGgHAW7";
+        dkim-atps=neutral
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RV5PgGHdp8YOAgZ1NdZZeitjKxklN9eriPUPNr9KTDiNmv8m2hVUp0rPIT/sTj5PmOG4cY6rZCWG0XkUrSvZwWuJ6RVJT+hFTar8BcMOXeBIqxrcI2++LxcIuSUVupn0tOoeAPw3n4h3OU8Vc8wPON3UjuEwGsBrn6E/jN4HmCnmUMe+pDY+u5S4J5QjWDRdpzfUtIf/SexDJNsZCM4e56bfEFN4nuS+blMcwiWOMDM06K/JFmYDEEEogvmsLfEfUi052Ijs/vNy1QgyLd8Ag98Sp6A9IppImKbmu/zy2D6PeSig/lLbNYdj2y+lZ7Vgwcq7tQiukwMd5lILjTd3Ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FH0Eyd4F3ZbIVfUoHKAW0yhbuiFz448ohF0qS3xzIMA=;
+ b=io312ZNbQt9EQp03ZtzaGNA306ww+JD5jTu+EDi57BuLIAxCAWmF2qlKL3vRSw1NBUaYjxWPBkIXsELX0jn0Npyt9T/TNmGlsUzYOZqsv0TjYHpYLPl3zXLO2Nc0g5dfIK+t0Dpc4V63666e7qkB0roU5YWvevgckrMJcoihv6Oq3hB9JM+yM36eKVXp8C7qjiTlhsdU6LzcYJOypDhO5W+7O7ABi7ZCKxdz4QTkNa1LXfCDDzzJo1imhZ8u0uqcVHSY1XId1H6zUbUzNEPdnWcDMAz0eizUeXCkvKeyzRbnwouC504j5jbNqp++xcxSa2PRVhDyBK7/mKR68n8YEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FH0Eyd4F3ZbIVfUoHKAW0yhbuiFz448ohF0qS3xzIMA=;
+ b=rTGgHAW7YpTVC0gHW89HWecHYuHJXnSNyNSygu9oJ/Zn94gj9M4gPsX7zM2UfbVK+HJysIOuPXKSA16pmLaOAuS9DqiLQDl7OiGZsWJSUViNA+4JWSiw8AgyU2FkVXy3ObgjvcLit5jbjrMvHObpOaY3YBhPtei9BlALjSKmA/4=
+Received: from BYAPR12MB2917.namprd12.prod.outlook.com (20.179.91.142) by
+ BY5PR12MB4306.namprd12.prod.outlook.com (52.135.53.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3326.19; Sat, 29 Aug 2020 21:35:22 +0000
+Received: from BYAPR12MB2917.namprd12.prod.outlook.com
+ ([fe80::c98f:a13f:fd88:c209]) by BYAPR12MB2917.namprd12.prod.outlook.com
+ ([fe80::c98f:a13f:fd88:c209%7]) with mapi id 15.20.3326.025; Sat, 29 Aug 2020
+ 21:35:22 +0000
+X-SNPS-Relay: synopsys.com
+From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+To:     Wesley Cheng <wcheng@codeaurora.org>,
+        "balbi@kernel.org" <balbi@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "jackp@codeaurora.org" <jackp@codeaurora.org>
+Subject: Re: [PATCH v2] usb: dwc3: Stop active transfers before halting the
+ controller
+Thread-Topic: [PATCH v2] usb: dwc3: Stop active transfers before halting the
+ controller
+Thread-Index: AQHWfYzfOHRuk9qxlUy/aHCACERYqalPnX6A
+Date:   Sat, 29 Aug 2020 21:35:22 +0000
+Message-ID: <e7e0cac8-b0f1-3173-a54a-ccf061807c0c@synopsys.com>
+References: <20200828224440.22091-1-wcheng@codeaurora.org>
+In-Reply-To: <20200828224440.22091-1-wcheng@codeaurora.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+authentication-results: codeaurora.org; dkim=none (message not signed)
+ header.d=none;codeaurora.org; dmarc=none action=none
+ header.from=synopsys.com;
+x-originating-ip: [98.248.94.126]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 94618727-3139-4b24-6b23-08d84c636f17
+x-ms-traffictypediagnostic: BY5PR12MB4306:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR12MB4306D78CE48E86E8C9F6A798AA530@BY5PR12MB4306.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1013;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uVKJxwF6iqYOTtJVqT56bKpeVnKR1LejPvBSuY0DeC+yP0IR8oxjUsJQaD4VBJaAzxDYWWtT9CK+2Mxi2Z1mGlmqWVkGvq0hAyzx46eU6bBuH5BW4ih+0IF/HNirhET8P7LozH3A3TTEy1yNG8hRNFthfM25TM9NLubh1rTQVpm3ankB9ZKH7/cW4U/l+dPrhVJ/A24tJwlEC9iU2B69iMm0P/l5m53slzYSVelqw8PAfyprZsr3Cz+X5n7lQyR3HObWZMDLJZX1VVHCyesS4lULS8Y2K4PtAhvN3VDqLfy/ScQOgDglnACjbZ7erMBYk7HrWBKujzwdCICqsevXxl3pDRfLTXH04mWhacmo9jDtCgPOMAmT650AdADHAis8
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2917.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(366004)(39850400004)(136003)(396003)(376002)(8936002)(31696002)(26005)(54906003)(83380400001)(76116006)(110136005)(6506007)(5660300002)(2906002)(36756003)(71200400001)(2616005)(66946007)(478600001)(186003)(66476007)(66556008)(6486002)(64756008)(6512007)(31686004)(316002)(66446008)(8676002)(86362001)(4326008)(43740500002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: DVbkPcbUvE5Y0iYBY2EIgsILjsWzHaLld6mZ5BvJq7IdpmfR990/vnKQp+QpLslWxdA+GLuPt92mUcco3V4GlWp90VMexb5yWyUKZEt9HpGiXIRcZs5eHiCYqz6dmhGgK4dxMYnl3kQgnrFbMaDZthK1f7+drwaVGNzRuVktGSZMEQb8O+WYBh0vtiyBBgpjL1n1mSUcPCisfb8hAY1he2/k0tY+c5Wn0+pjEjvsjYZxmNkTVqZotuUZvlP34JjqQnZawNTyeJO/wWNoCm86tacy+fwUfx4AG3jn+6nyhZhzerKttBPOGrcRx9ec+n6kdPm6lRM1odPDdmhxyG+LiPlZI5wiGFEi6oL4s75T9puitnHrlvzzPNy71LlXQORCmKAZaUBUDOkhZKzT4cghIanz9DbPryMlPIIlNIdAuxyl8GrS1roMsaL77cZuEuMIdjH82V/dlUpo8Km7WtNHVHuks6Wau2qdsOkTTDiGEx6gJWEAP672T4j/lhg0WxIZO0v9qtxhs+v2QVuepfEN/OSB84B3TaAB+0nFGMyr8PFkqPpcG2Q7VYf0ln0yVyxjltyhiVmD9skEIsoh4exwIcO2k3rcdhhvR6bGn2YYflBMKFp35ykTRQxSEKbCj8JptalfnsqN5os6isY0M3hvbQ==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3CEE11B536700440B5469B6838E374F6@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826160308.18911-3-sumit.semwal@linaro.org>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=A5ZCwZeG c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=pGLkceISAAAA:8 a=KKAkSRfTAAAA:8 a=e5mUnYsNAAAA:8
-        a=4s07V9R_2yPV4anZ1vsA:9 a=mx5yXQR9xqoTy8XM:21 a=ZD_CDY6wjQ3vxspH:21
-        a=CjuIK1q_8ugA:10 a=cvBusfyB2V15izCimMoJ:22 a=Vxmtnl_E_bksehYqCbjh:22
+X-OriginatorOrg: synopsys.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2917.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94618727-3139-4b24-6b23-08d84c636f17
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2020 21:35:22.1354
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DqfV/EJpj4ZSSK+tUtCif8bre1HC4Irf7rQOJ+Rya8GE6/ijnxHETt60kr4Xyq/rMeb04vE6hqVJZ3/BVAcFFA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4306
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sumit.
-
-On Wed, Aug 26, 2020 at 09:33:08PM +0530, Sumit Semwal wrote:
-> Novatek NT36672a is a generic DSI IC that drives command and video mode
-> panels. Add the driver for it.
-> 
-> Right now adding support for some Poco F1 phones that have an LCD panel
-> from Tianma connected with this IC, with a resolution of 1080x2246 that
-> operates in DSI video mode.
-> 
-> During testing, Benni Steini <bennisteinir@gmail.com> helped us fix
-> the reset sequence timing (from 10ms to 20ms), to get the bootanimation
-> to work on Android.
-> 
-> With current AOSP, we need to increase it to 200ms - this seems to be a
-> safe high value to avoid a white screen occasionally.
-> 
-> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-> Cc: Benni Steini <bennisteinir@gmail.com>
-> 
-> ---
-> v2: increase reset sequence timing to a safe 200ms
-> v4: Since "0425662fdf05: drm: Nuke mode->vrefresh", we have to calculate
->     vrefresh on demand. Update for it.
-> v5: Fixed review comments from Sam:
->       - rebased on top of drm-misc-next
->            remove return of drm_panel_add()
->            remove drm_panel_detach()
->       - renamed the panel driver file to reflect that this is a novatek
->            nt36672a display driver and not only for tianma panels.
->            Adjusted some internal names also to reflect the same.
->       - corrected changelog to add info about the generic Novatek DSI IC
->       - corrected compatible string accordingly
->       - removed pinctrl
->       - used drm_panel* API for prepare/unprepare/disable/remove
-Thanks for the detailed follow-up - very nice.
-
-A few things slipped thought last review and we have gained support for
-dv_err_probe() now. Also dev_err() and friends are now the right choice
-for panel drivers.
-
-	Sam
-
-> ---
->  MAINTAINERS                                   |   7 +
->  drivers/gpu/drm/panel/Kconfig                 |  10 +
->  drivers/gpu/drm/panel/Makefile                |   1 +
->  .../gpu/drm/panel/panel-novatek-nt36672a.c    | 767 ++++++++++++++++++
->  4 files changed, 785 insertions(+)
->  create mode 100644 drivers/gpu/drm/panel/panel-novatek-nt36672a.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 01fb9ee6b951..aeecade2d65f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5619,6 +5619,13 @@ T:	git git://anongit.freedesktop.org/drm/drm-misc
->  F:	Documentation/devicetree/bindings/display/ste,mcde.txt
->  F:	drivers/gpu/drm/mcde/
->  
-> +DRM DRIVER FOR TIANMA NT36672A PANELS
-> +M:	Sumit Semwal <sumit.semwal@linaro.org>
-> +S:	Maintained
-> +T:	git git://anongit.freedesktop.org/drm/drm-misc
-> +F:	Documentation/devicetree/bindings/display/panel/tianma,nt36672a-panel.yaml
-> +F:	drivers/gpu/drm/panel/panel-tianma-nt36672a.c
-> +
->  DRM DRIVER FOR TDFX VIDEO CARDS
->  S:	Orphan / Obsolete
->  F:	drivers/gpu/drm/tdfx/
-> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-> index 8d97d07c5871..02600f12a063 100644
-> --- a/drivers/gpu/drm/panel/Kconfig
-> +++ b/drivers/gpu/drm/panel/Kconfig
-> @@ -208,6 +208,16 @@ config DRM_PANEL_NOVATEK_NT35510
->  	  around the Novatek NT35510 display controller, such as some
->  	  Hydis panels.
->  
-> +config DRM_PANEL_NOVATEK_NT36672A
-> +	tristate "Novatek NT36672A DSI panel"
-> +	depends on OF
-> +	depends on DRM_MIPI_DSI
-> +	depends on BACKLIGHT_CLASS_DEVICE
-> +	help
-> +	  Say Y here if you want to enable support for the panels built
-> +	  around the Novatek NT36672A display controller, such as some
-> +	  Tianma panels used in a few Xiaomi Poco F1 mobile phone.
-> +
->  config DRM_PANEL_NOVATEK_NT39016
->  	tristate "Novatek NT39016 RGB/SPI panel"
->  	depends on OF && SPI
-> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-> index 15a4e7752951..4a36eb45f670 100644
-> --- a/drivers/gpu/drm/panel/Makefile
-> +++ b/drivers/gpu/drm/panel/Makefile
-> @@ -19,6 +19,7 @@ obj-$(CONFIG_DRM_PANEL_LG_LB035Q02) += panel-lg-lb035q02.o
->  obj-$(CONFIG_DRM_PANEL_LG_LG4573) += panel-lg-lg4573.o
->  obj-$(CONFIG_DRM_PANEL_NEC_NL8048HL11) += panel-nec-nl8048hl11.o
->  obj-$(CONFIG_DRM_PANEL_NOVATEK_NT35510) += panel-novatek-nt35510.o
-> +obj-$(CONFIG_DRM_PANEL_NOVATEK_NT36672A) += panel-novatek-nt36672a.o
->  obj-$(CONFIG_DRM_PANEL_NOVATEK_NT39016) += panel-novatek-nt39016.o
->  obj-$(CONFIG_DRM_PANEL_MANTIX_MLAF057WE51) += panel-mantix-mlaf057we51.o
->  obj-$(CONFIG_DRM_PANEL_OLIMEX_LCD_OLINUXINO) += panel-olimex-lcd-olinuxino.o
-> diff --git a/drivers/gpu/drm/panel/panel-novatek-nt36672a.c b/drivers/gpu/drm/panel/panel-novatek-nt36672a.c
-> new file mode 100644
-> index 000000000000..3f0c18e46818
-> --- /dev/null
-> +++ b/drivers/gpu/drm/panel/panel-novatek-nt36672a.c
-> @@ -0,0 +1,767 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (C) 2020 Linaro Ltd
-> + * Author: Sumit Semwal <sumit.semwal@linaro.org>
-> + *
-> + * This driver is for the DSI interface to panels using the NT36672A display driver IC
-> + * from Novatek.
-> + * Currently supported are the Tianma FHD+ panels found in some Xiaomi phones, including
-> + * some variants of the Poco F1 phone.
-> + *
-> + * Panels using the Novatek NT37762A IC should add appropriate configuration per-panel and
-> + * use this driver.
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/pinctrl/consumer.h>
-> +#include <linux/regulator/consumer.h>
-> +
-> +#include <drm/drm_device.h>
-> +#include <drm/drm_mipi_dsi.h>
-> +#include <drm/drm_modes.h>
-> +#include <drm/drm_panel.h>
-> +#include <drm/drm_print.h>
-panels no longer use DRM_* for error print - use dev_err() and friends.
-And then this include can go as well.
-
-> +
-> +#include <video/mipi_display.h>
-> +
-> +struct panel_cmd {
-> +	size_t len;
-> +	const char *data;
-> +};
-> +
-> +#define _INIT_CMD(...) { \
-> +	.len = sizeof((char[]){__VA_ARGS__}), \
-> +	.data = (char[]){__VA_ARGS__} }
-> +
-> +static const char * const regulator_names[] = {
-> +	"vddio",
-> +	"vddpos",
-> +	"vddneg",
-> +};
-> +
-> +static unsigned long const regulator_enable_loads[] = {
-> +	62000,
-> +	100000,
-> +	100000
-> +};
-> +
-> +static unsigned long const regulator_disable_loads[] = {
-> +	80,
-> +	100,
-> +	100
-> +};
-> +
-> +struct panel_desc {
-> +	const struct drm_display_mode *display_mode;
-> +	const char *panel_name;
-> +
-> +	unsigned int width_mm;
-> +	unsigned int height_mm;
-> +
-> +	unsigned long mode_flags;
-> +	enum mipi_dsi_pixel_format format;
-> +	unsigned int lanes;
-> +
-> +	const struct panel_cmd *on_cmds_1;
-> +	const struct panel_cmd *on_cmds_2;
-> +
-> +	const struct panel_cmd *off_cmds;
-> +};
-> +
-> +struct panel_info {
-> +	struct drm_panel base;
-> +	struct mipi_dsi_device *link;
-> +	const struct panel_desc *desc;
-> +
-> +	struct regulator_bulk_data supplies[ARRAY_SIZE(regulator_names)];
-> +
-> +	struct gpio_desc *reset_gpio;
-> +
-> +	bool prepared;
-> +	bool enabled;
-There is no need for the enabled flag.
-
-> +};
-> +
-> +static inline struct panel_info *to_panel_info(struct drm_panel *panel)
-> +{
-> +	return container_of(panel, struct panel_info, base);
-> +}
-> +
-> +static int send_mipi_cmds(struct drm_panel *panel, const struct panel_cmd *cmds)
-> +{
-> +	struct panel_info *pinfo = to_panel_info(panel);
-> +	unsigned int i = 0;
-> +	int err;
-> +
-> +	if (!cmds)
-> +		return -EFAULT;
-> +
-> +	for (i = 0; cmds[i].len != 0; i++) {
-> +		const struct panel_cmd *cmd = &cmds[i];
-> +
-> +		if (cmd->len == 2)
-> +			err = mipi_dsi_dcs_write(pinfo->link,
-> +						 cmd->data[1], NULL, 0);
-> +		else
-> +			err = mipi_dsi_dcs_write(pinfo->link,
-> +						 cmd->data[1], cmd->data + 2,
-> +						 cmd->len - 2);
-> +
-> +		if (err < 0)
-> +			return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int nt36672a_panel_disable(struct drm_panel *panel)
-> +{
-> +	struct panel_info *pinfo = to_panel_info(panel);
-> +
-> +	pinfo->enabled = false;
-> +
-> +	return 0;
-> +}
-The nt36672a_panel_disable() does not do anything - delete it.
-
-> +
-> +static int novatek_panel_power_off(struct drm_panel *panel)
-> +{
-> +	struct panel_info *pinfo = to_panel_info(panel);
-> +	int i, ret = 0;
-> +
-> +	gpiod_set_value(pinfo->reset_gpio, 0);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(pinfo->supplies); i++) {
-> +		ret = regulator_set_load(pinfo->supplies[i].consumer,
-> +					 regulator_disable_loads[i]);
-> +		if (ret) {
-> +			DRM_DEV_ERROR(panel->dev, "regulator_set_load failed %d\n", ret);
-USe dev_err(...) here, likewise for other similar uses.
-
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	ret = regulator_bulk_disable(ARRAY_SIZE(pinfo->supplies), pinfo->supplies);
-> +	if (ret)
-> +		DRM_DEV_ERROR(panel->dev, "regulator_bulk_disable failed %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static int nt36672a_panel_unprepare(struct drm_panel *panel)
-> +{
-> +	struct panel_info *pinfo = to_panel_info(panel);
-> +	int ret;
-> +
-> +	if (!pinfo->prepared)
-> +		return 0;
-> +
-> +	/* send off cmds */
-> +	ret = send_mipi_cmds(panel, pinfo->desc->off_cmds);
-> +
-> +	if (ret < 0)
-> +		DRM_DEV_ERROR(panel->dev, "failed to send DCS off cmds: %d\n", ret);
-> +
-> +	ret = mipi_dsi_dcs_set_display_off(pinfo->link);
-> +	if (ret < 0)
-> +		DRM_DEV_ERROR(panel->dev, "set_display_off cmd failed ret = %d\n", ret);
-> +
-> +	/* 120ms delay required here as per DCS spec */
-> +	msleep(120);
-> +
-> +	ret = mipi_dsi_dcs_enter_sleep_mode(pinfo->link);
-> +	if (ret < 0)
-> +		DRM_DEV_ERROR(panel->dev, "enter_sleep cmd failed ret = %d\n", ret);
-> +
-> +	/* 0x3C = 60ms delay */
-> +	msleep(60);
-> +
-> +	ret = novatek_panel_power_off(panel);
-> +	if (ret < 0)
-> +		DRM_DEV_ERROR(panel->dev, "power_off failed ret = %d\n", ret);
-> +
-> +	pinfo->prepared = false;
-> +
-> +	return ret;
-> +}
-> +
-> +static int novatek_panel_power_on(struct panel_info *pinfo)
-> +{
-> +	int ret, i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(pinfo->supplies); i++) {
-> +		ret = regulator_set_load(pinfo->supplies[i].consumer,
-> +					 regulator_enable_loads[i]);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(pinfo->supplies), pinfo->supplies);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/*
-> +	 * As per downstream kernel, Reset sequence of Tianma FHD panel requires the panel to
-> +	 * be out of reset for 10ms, followed by being held in reset for 10ms. But for Android
-> +	 * AOSP, we needed to bump it upto 200ms otherwise we get white screen sometimes.
-> +	 * FIXME: Try to reduce this 200ms to a lesser value.
-> +	 */
-> +	gpiod_set_value(pinfo->reset_gpio, 0);
-> +	msleep(200);
-> +	gpiod_set_value(pinfo->reset_gpio, 1);
-> +	msleep(200);
-> +
-> +	return 0;
-> +}
-> +
-> +static int nt36672a_panel_prepare(struct drm_panel *panel)
-> +{
-> +	struct panel_info *pinfo = to_panel_info(panel);
-> +	int err;
-> +
-> +	if (pinfo->prepared)
-> +		return 0;
-> +
-> +	err = novatek_panel_power_on(pinfo);
-> +	if (err < 0)
-> +		goto poweroff;
-> +
-> +	/* send first part of init cmds */
-> +	err = send_mipi_cmds(panel, pinfo->desc->on_cmds_1);
-> +
-> +	if (err < 0) {
-> +		DRM_DEV_ERROR(panel->dev, "failed to send DCS Init 1st Code: %d\n", err);
-> +		goto poweroff;
-> +	}
-> +
-> +	err = mipi_dsi_dcs_exit_sleep_mode(pinfo->link);
-> +	if (err < 0) {
-> +		DRM_DEV_ERROR(panel->dev, "failed to exit sleep mode: %d\n", err);
-> +		goto poweroff;
-> +	}
-> +
-> +	/* 0x46 = 70 ms delay */
-> +	msleep(70);
-> +
-> +	err = mipi_dsi_dcs_set_display_on(pinfo->link);
-> +	if (err < 0) {
-> +		DRM_DEV_ERROR(panel->dev, "failed to Set Display ON: %d\n", err);
-> +		goto poweroff;
-> +	}
-> +
-> +	/* Send rest of the init cmds */
-> +	err = send_mipi_cmds(panel, pinfo->desc->on_cmds_2);
-> +
-> +	if (err < 0) {
-> +		DRM_DEV_ERROR(panel->dev, "failed to send DCS Init 2nd Code: %d\n", err);
-> +		goto poweroff;
-> +	}
-> +
-> +	msleep(120);
-> +
-> +	pinfo->prepared = true;
-> +
-> +	return 0;
-> +
-> +poweroff:
-> +	gpiod_set_value(pinfo->reset_gpio, 1);
-> +	return err;
-> +}
-> +
-> +static int nt36672a_panel_enable(struct drm_panel *panel)
-> +{
-> +	struct panel_info *pinfo = to_panel_info(panel);
-> +
-> +	pinfo->enabled = true;
-> +
-> +	return 0;
-> +}
-This function do not do anything - drop it.
-> +
-> +static int nt36672a_panel_get_modes(struct drm_panel *panel,
-> +				    struct drm_connector *connector)
-> +{
-> +	struct panel_info *pinfo = to_panel_info(panel);
-> +	const struct drm_display_mode *m = pinfo->desc->display_mode;
-> +	struct drm_display_mode *mode;
-> +
-> +	mode = drm_mode_duplicate(connector->dev, m);
-> +	if (!mode) {
-> +		DRM_DEV_ERROR(panel->dev, "failed to add mode %ux%u@%u\n",
-> +			      m->hdisplay, m->vdisplay, drm_mode_vrefresh(m));
-> +		return -ENOMEM;
-> +	}
-> +
-> +	connector->display_info.width_mm = pinfo->desc->width_mm;
-> +	connector->display_info.height_mm = pinfo->desc->height_mm;
-> +
-> +	drm_mode_set_name(mode);
-> +	drm_mode_probed_add(connector, mode);
-> +
-> +	return 1;
-> +}
-> +
-> +static const struct drm_panel_funcs panel_funcs = {
-> +	.disable = nt36672a_panel_disable,
-> +	.unprepare = nt36672a_panel_unprepare,
-> +	.prepare = nt36672a_panel_prepare,
-> +	.enable = nt36672a_panel_enable,
-> +	.get_modes = nt36672a_panel_get_modes,
-> +};
-> +
-> +static const struct panel_cmd tianma_fhd_video_on_cmds_1[] = {
-> +	/* skin enhancement mode */
-> +	_INIT_CMD(0x00, 0xFF, 0x22),
-> +	_INIT_CMD(0x00, 0x00, 0x40),
-> +	_INIT_CMD(0x00, 0x01, 0xC0),
-> +	_INIT_CMD(0x00, 0x02, 0x40),
-> +	_INIT_CMD(0x00, 0x03, 0x40),
-> +	_INIT_CMD(0x00, 0x04, 0x40),
-> +	_INIT_CMD(0x00, 0x05, 0x40),
-> +	_INIT_CMD(0x00, 0x06, 0x40),
-> +	_INIT_CMD(0x00, 0x07, 0x40),
-> +	_INIT_CMD(0x00, 0x08, 0x40),
-> +	_INIT_CMD(0x00, 0x09, 0x40),
-> +	_INIT_CMD(0x00, 0x0A, 0x40),
-> +	_INIT_CMD(0x00, 0x0B, 0x40),
-> +	_INIT_CMD(0x00, 0x0C, 0x40),
-> +	_INIT_CMD(0x00, 0x0D, 0x40),
-> +	_INIT_CMD(0x00, 0x0E, 0x40),
-> +	_INIT_CMD(0x00, 0x0F, 0x40),
-> +	_INIT_CMD(0x00, 0x10, 0x40),
-> +	_INIT_CMD(0x00, 0x11, 0x50),
-> +	_INIT_CMD(0x00, 0x12, 0x60),
-> +	_INIT_CMD(0x00, 0x13, 0x70),
-> +	_INIT_CMD(0x00, 0x14, 0x58),
-> +	_INIT_CMD(0x00, 0x15, 0x68),
-> +	_INIT_CMD(0x00, 0x16, 0x78),
-> +	_INIT_CMD(0x00, 0x17, 0x77),
-> +	_INIT_CMD(0x00, 0x18, 0x39),
-> +	_INIT_CMD(0x00, 0x19, 0x2D),
-> +	_INIT_CMD(0x00, 0x1A, 0x2E),
-> +	_INIT_CMD(0x00, 0x1B, 0x32),
-> +	_INIT_CMD(0x00, 0x1C, 0x37),
-> +	_INIT_CMD(0x00, 0x1D, 0x3A),
-> +	_INIT_CMD(0x00, 0x1E, 0x40),
-> +	_INIT_CMD(0x00, 0x1F, 0x40),
-> +	_INIT_CMD(0x00, 0x20, 0x40),
-> +	_INIT_CMD(0x00, 0x21, 0x40),
-> +	_INIT_CMD(0x00, 0x22, 0x40),
-> +	_INIT_CMD(0x00, 0x23, 0x40),
-> +	_INIT_CMD(0x00, 0x24, 0x40),
-> +	_INIT_CMD(0x00, 0x25, 0x40),
-> +	_INIT_CMD(0x00, 0x26, 0x40),
-> +	_INIT_CMD(0x00, 0x27, 0x40),
-> +	_INIT_CMD(0x00, 0x28, 0x40),
-> +	_INIT_CMD(0x00, 0x2D, 0x00),
-> +	_INIT_CMD(0x00, 0x2F, 0x40),
-> +	_INIT_CMD(0x00, 0x30, 0x40),
-> +	_INIT_CMD(0x00, 0x31, 0x40),
-> +	_INIT_CMD(0x00, 0x32, 0x40),
-> +	_INIT_CMD(0x00, 0x33, 0x40),
-> +	_INIT_CMD(0x00, 0x34, 0x40),
-> +	_INIT_CMD(0x00, 0x35, 0x40),
-> +	_INIT_CMD(0x00, 0x36, 0x40),
-> +	_INIT_CMD(0x00, 0x37, 0x40),
-> +	_INIT_CMD(0x00, 0x38, 0x40),
-> +	_INIT_CMD(0x00, 0x39, 0x40),
-> +	_INIT_CMD(0x00, 0x3A, 0x40),
-> +	_INIT_CMD(0x00, 0x3B, 0x40),
-> +	_INIT_CMD(0x00, 0x3D, 0x40),
-> +	_INIT_CMD(0x00, 0x3F, 0x40),
-> +	_INIT_CMD(0x00, 0x40, 0x40),
-> +	_INIT_CMD(0x00, 0x41, 0x40),
-> +	_INIT_CMD(0x00, 0x42, 0x40),
-> +	_INIT_CMD(0x00, 0x43, 0x40),
-> +	_INIT_CMD(0x00, 0x44, 0x40),
-> +	_INIT_CMD(0x00, 0x45, 0x40),
-> +	_INIT_CMD(0x00, 0x46, 0x40),
-> +	_INIT_CMD(0x00, 0x47, 0x40),
-> +	_INIT_CMD(0x00, 0x48, 0x40),
-> +	_INIT_CMD(0x00, 0x49, 0x40),
-> +	_INIT_CMD(0x00, 0x4A, 0x40),
-> +	_INIT_CMD(0x00, 0x4B, 0x40),
-> +	_INIT_CMD(0x00, 0x4C, 0x40),
-> +	_INIT_CMD(0x00, 0x4D, 0x40),
-> +	_INIT_CMD(0x00, 0x4E, 0x40),
-> +	_INIT_CMD(0x00, 0x4F, 0x40),
-> +	_INIT_CMD(0x00, 0x50, 0x40),
-> +	_INIT_CMD(0x00, 0x51, 0x40),
-> +	_INIT_CMD(0x00, 0x52, 0x40),
-> +	_INIT_CMD(0x00, 0x53, 0x01),
-> +	_INIT_CMD(0x00, 0x54, 0x01),
-> +	_INIT_CMD(0x00, 0x55, 0xFE),
-> +	_INIT_CMD(0x00, 0x56, 0x77),
-> +	_INIT_CMD(0x00, 0x58, 0xCD),
-> +	_INIT_CMD(0x00, 0x59, 0xD0),
-> +	_INIT_CMD(0x00, 0x5A, 0xD0),
-> +	_INIT_CMD(0x00, 0x5B, 0x50),
-> +	_INIT_CMD(0x00, 0x5C, 0x50),
-> +	_INIT_CMD(0x00, 0x5D, 0x50),
-> +	_INIT_CMD(0x00, 0x5E, 0x50),
-> +	_INIT_CMD(0x00, 0x5F, 0x50),
-> +	_INIT_CMD(0x00, 0x60, 0x50),
-> +	_INIT_CMD(0x00, 0x61, 0x50),
-> +	_INIT_CMD(0x00, 0x62, 0x50),
-> +	_INIT_CMD(0x00, 0x63, 0x50),
-> +	_INIT_CMD(0x00, 0x64, 0x50),
-> +	_INIT_CMD(0x00, 0x65, 0x50),
-> +	_INIT_CMD(0x00, 0x66, 0x50),
-> +	_INIT_CMD(0x00, 0x67, 0x50),
-> +	_INIT_CMD(0x00, 0x68, 0x50),
-> +	_INIT_CMD(0x00, 0x69, 0x50),
-> +	_INIT_CMD(0x00, 0x6A, 0x50),
-> +	_INIT_CMD(0x00, 0x6B, 0x50),
-> +	_INIT_CMD(0x00, 0x6C, 0x50),
-> +	_INIT_CMD(0x00, 0x6D, 0x50),
-> +	_INIT_CMD(0x00, 0x6E, 0x50),
-> +	_INIT_CMD(0x00, 0x6F, 0x50),
-> +	_INIT_CMD(0x00, 0x70, 0x07),
-> +	_INIT_CMD(0x00, 0x71, 0x00),
-> +	_INIT_CMD(0x00, 0x72, 0x00),
-> +	_INIT_CMD(0x00, 0x73, 0x00),
-> +	_INIT_CMD(0x00, 0x74, 0x06),
-> +	_INIT_CMD(0x00, 0x75, 0x0C),
-> +	_INIT_CMD(0x00, 0x76, 0x03),
-> +	_INIT_CMD(0x00, 0x77, 0x09),
-> +	_INIT_CMD(0x00, 0x78, 0x0F),
-> +	_INIT_CMD(0x00, 0x79, 0x68),
-> +	_INIT_CMD(0x00, 0x7A, 0x88),
-> +	_INIT_CMD(0x00, 0x7C, 0x80),
-> +	_INIT_CMD(0x00, 0x7D, 0x80),
-> +	_INIT_CMD(0x00, 0x7E, 0x80),
-> +	_INIT_CMD(0x00, 0x7F, 0x00),
-> +	_INIT_CMD(0x00, 0x80, 0x00),
-> +	_INIT_CMD(0x00, 0x81, 0x00),
-> +	_INIT_CMD(0x00, 0x83, 0x01),
-> +	_INIT_CMD(0x00, 0x84, 0x00),
-> +	_INIT_CMD(0x00, 0x85, 0x80),
-> +	_INIT_CMD(0x00, 0x86, 0x80),
-> +	_INIT_CMD(0x00, 0x87, 0x80),
-> +	_INIT_CMD(0x00, 0x88, 0x40),
-> +	_INIT_CMD(0x00, 0x89, 0x91),
-> +	_INIT_CMD(0x00, 0x8A, 0x98),
-> +	_INIT_CMD(0x00, 0x8B, 0x80),
-> +	_INIT_CMD(0x00, 0x8C, 0x80),
-> +	_INIT_CMD(0x00, 0x8D, 0x80),
-> +	_INIT_CMD(0x00, 0x8E, 0x80),
-> +	_INIT_CMD(0x00, 0x8F, 0x80),
-> +	_INIT_CMD(0x00, 0x90, 0x80),
-> +	_INIT_CMD(0x00, 0x91, 0x80),
-> +	_INIT_CMD(0x00, 0x92, 0x80),
-> +	_INIT_CMD(0x00, 0x93, 0x80),
-> +	_INIT_CMD(0x00, 0x94, 0x80),
-> +	_INIT_CMD(0x00, 0x95, 0x80),
-> +	_INIT_CMD(0x00, 0x96, 0x80),
-> +	_INIT_CMD(0x00, 0x97, 0x80),
-> +	_INIT_CMD(0x00, 0x98, 0x80),
-> +	_INIT_CMD(0x00, 0x99, 0x80),
-> +	_INIT_CMD(0x00, 0x9A, 0x80),
-> +	_INIT_CMD(0x00, 0x9B, 0x80),
-> +	_INIT_CMD(0x00, 0x9C, 0x80),
-> +	_INIT_CMD(0x00, 0x9D, 0x80),
-> +	_INIT_CMD(0x00, 0x9E, 0x80),
-> +	_INIT_CMD(0x00, 0x9F, 0x80),
-> +	_INIT_CMD(0x00, 0xA0, 0x8A),
-> +	_INIT_CMD(0x00, 0xA2, 0x80),
-> +	_INIT_CMD(0x00, 0xA6, 0x80),
-> +	_INIT_CMD(0x00, 0xA7, 0x80),
-> +	_INIT_CMD(0x00, 0xA9, 0x80),
-> +	_INIT_CMD(0x00, 0xAA, 0x80),
-> +	_INIT_CMD(0x00, 0xAB, 0x80),
-> +	_INIT_CMD(0x00, 0xAC, 0x80),
-> +	_INIT_CMD(0x00, 0xAD, 0x80),
-> +	_INIT_CMD(0x00, 0xAE, 0x80),
-> +	_INIT_CMD(0x00, 0xAF, 0x80),
-> +	_INIT_CMD(0x00, 0xB7, 0x76),
-> +	_INIT_CMD(0x00, 0xB8, 0x76),
-> +	_INIT_CMD(0x00, 0xB9, 0x05),
-> +	_INIT_CMD(0x00, 0xBA, 0x0D),
-> +	_INIT_CMD(0x00, 0xBB, 0x14),
-> +	_INIT_CMD(0x00, 0xBC, 0x0F),
-> +	_INIT_CMD(0x00, 0xBD, 0x18),
-> +	_INIT_CMD(0x00, 0xBE, 0x1F),
-> +	_INIT_CMD(0x00, 0xBF, 0x05),
-> +	_INIT_CMD(0x00, 0xC0, 0x0D),
-> +	_INIT_CMD(0x00, 0xC1, 0x14),
-> +	_INIT_CMD(0x00, 0xC2, 0x03),
-> +	_INIT_CMD(0x00, 0xC3, 0x07),
-> +	_INIT_CMD(0x00, 0xC4, 0x0A),
-> +	_INIT_CMD(0x00, 0xC5, 0xA0),
-> +	_INIT_CMD(0x00, 0xC6, 0x55),
-> +	_INIT_CMD(0x00, 0xC7, 0xFF),
-> +	_INIT_CMD(0x00, 0xC8, 0x39),
-> +	_INIT_CMD(0x00, 0xC9, 0x44),
-> +	_INIT_CMD(0x00, 0xCA, 0x12),
-> +	_INIT_CMD(0x00, 0xCD, 0x80),
-> +	_INIT_CMD(0x00, 0xDB, 0x80),
-> +	_INIT_CMD(0x00, 0xDC, 0x80),
-> +	_INIT_CMD(0x00, 0xDD, 0x80),
-> +	_INIT_CMD(0x00, 0xE0, 0x80),
-> +	_INIT_CMD(0x00, 0xE1, 0x80),
-> +	_INIT_CMD(0x00, 0xE2, 0x80),
-> +	_INIT_CMD(0x00, 0xE3, 0x80),
-> +	_INIT_CMD(0x00, 0xE4, 0x80),
-> +	_INIT_CMD(0x00, 0xE5, 0x40),
-> +	_INIT_CMD(0x00, 0xE6, 0x40),
-> +	_INIT_CMD(0x00, 0xE7, 0x40),
-> +	_INIT_CMD(0x00, 0xE8, 0x40),
-> +	_INIT_CMD(0x00, 0xE9, 0x40),
-> +	_INIT_CMD(0x00, 0xEA, 0x40),
-> +	_INIT_CMD(0x00, 0xEB, 0x40),
-> +	_INIT_CMD(0x00, 0xEC, 0x40),
-> +	_INIT_CMD(0x00, 0xED, 0x40),
-> +	_INIT_CMD(0x00, 0xEE, 0x40),
-> +	_INIT_CMD(0x00, 0xEF, 0x40),
-> +	_INIT_CMD(0x00, 0xF0, 0x40),
-> +	_INIT_CMD(0x00, 0xF1, 0x40),
-> +	_INIT_CMD(0x00, 0xF2, 0x40),
-> +	_INIT_CMD(0x00, 0xF3, 0x40),
-> +	_INIT_CMD(0x00, 0xF4, 0x40),
-> +	_INIT_CMD(0x00, 0xF5, 0x40),
-> +	_INIT_CMD(0x00, 0xF6, 0x40),
-> +	_INIT_CMD(0x00, 0xFB, 0x1),
-> +	_INIT_CMD(0x00, 0xFF, 0x23),
-> +	_INIT_CMD(0x00, 0xFB, 0x01),
-> +	/* dimming enable */
-> +	_INIT_CMD(0x00, 0x01, 0x84),
-> +	_INIT_CMD(0x00, 0x05, 0x2D),
-> +	_INIT_CMD(0x00, 0x06, 0x00),
-> +	 /* resolution 1080*2246 */
-> +	_INIT_CMD(0x00, 0x11, 0x01),
-> +	_INIT_CMD(0x00, 0x12, 0x7B),
-> +	_INIT_CMD(0x00, 0x15, 0x6F),
-> +	_INIT_CMD(0x00, 0x16, 0x0B),
-> +	 /* UI mode */
-> +	_INIT_CMD(0x00, 0x29, 0x0A),
-> +	_INIT_CMD(0x00, 0x30, 0xFF),
-> +	_INIT_CMD(0x00, 0x31, 0xFF),
-> +	_INIT_CMD(0x00, 0x32, 0xFF),
-> +	_INIT_CMD(0x00, 0x33, 0xFF),
-> +	_INIT_CMD(0x00, 0x34, 0xFF),
-> +	_INIT_CMD(0x00, 0x35, 0xFF),
-> +	_INIT_CMD(0x00, 0x36, 0xFF),
-> +	_INIT_CMD(0x00, 0x37, 0xFF),
-> +	_INIT_CMD(0x00, 0x38, 0xFC),
-> +	_INIT_CMD(0x00, 0x39, 0xF8),
-> +	_INIT_CMD(0x00, 0x3A, 0xF4),
-> +	_INIT_CMD(0x00, 0x3B, 0xF1),
-> +	_INIT_CMD(0x00, 0x3D, 0xEE),
-> +	_INIT_CMD(0x00, 0x3F, 0xEB),
-> +	_INIT_CMD(0x00, 0x40, 0xE8),
-> +	_INIT_CMD(0x00, 0x41, 0xE5),
-> +	 /* STILL mode */
-> +	_INIT_CMD(0x00, 0x2A, 0x13),
-> +	_INIT_CMD(0x00, 0x45, 0xFF),
-> +	_INIT_CMD(0x00, 0x46, 0xFF),
-> +	_INIT_CMD(0x00, 0x47, 0xFF),
-> +	_INIT_CMD(0x00, 0x48, 0xFF),
-> +	_INIT_CMD(0x00, 0x49, 0xFF),
-> +	_INIT_CMD(0x00, 0x4A, 0xFF),
-> +	_INIT_CMD(0x00, 0x4B, 0xFF),
-> +	_INIT_CMD(0x00, 0x4C, 0xFF),
-> +	_INIT_CMD(0x00, 0x4D, 0xED),
-> +	_INIT_CMD(0x00, 0x4E, 0xD5),
-> +	_INIT_CMD(0x00, 0x4F, 0xBF),
-> +	_INIT_CMD(0x00, 0x50, 0xA6),
-> +	_INIT_CMD(0x00, 0x51, 0x96),
-> +	_INIT_CMD(0x00, 0x52, 0x86),
-> +	_INIT_CMD(0x00, 0x53, 0x76),
-> +	_INIT_CMD(0x00, 0x54, 0x66),
-> +	 /* MOVING mode */
-> +	_INIT_CMD(0x00, 0x2B, 0x0E),
-> +	_INIT_CMD(0x00, 0x58, 0xFF),
-> +	_INIT_CMD(0x00, 0x59, 0xFF),
-> +	_INIT_CMD(0x00, 0x5A, 0xFF),
-> +	_INIT_CMD(0x00, 0x5B, 0xFF),
-> +	_INIT_CMD(0x00, 0x5C, 0xFF),
-> +	_INIT_CMD(0x00, 0x5D, 0xFF),
-> +	_INIT_CMD(0x00, 0x5E, 0xFF),
-> +	_INIT_CMD(0x00, 0x5F, 0xFF),
-> +	_INIT_CMD(0x00, 0x60, 0xF6),
-> +	_INIT_CMD(0x00, 0x61, 0xEA),
-> +	_INIT_CMD(0x00, 0x62, 0xE1),
-> +	_INIT_CMD(0x00, 0x63, 0xD8),
-> +	_INIT_CMD(0x00, 0x64, 0xCE),
-> +	_INIT_CMD(0x00, 0x65, 0xC3),
-> +	_INIT_CMD(0x00, 0x66, 0xBA),
-> +	_INIT_CMD(0x00, 0x67, 0xB3),
-> +	_INIT_CMD(0x00, 0xFF, 0x25),
-> +	_INIT_CMD(0x00, 0xFB, 0x01),
-> +	_INIT_CMD(0x00, 0x05, 0x04),
-> +	_INIT_CMD(0x00, 0xFF, 0x26),
-> +	_INIT_CMD(0x00, 0xFB, 0x01),
-> +	_INIT_CMD(0x00, 0x1C, 0xAF),
-> +	_INIT_CMD(0x00, 0xFF, 0x10),
-> +	_INIT_CMD(0x00, 0xFB, 0x01),
-> +	_INIT_CMD(0x00, 0x51, 0xFF),
-> +	_INIT_CMD(0x00, 0x53, 0x24),
-> +	_INIT_CMD(0x00, 0x55, 0x00),
-> +
-> +	{},
-> +};
-> +
-> +static const struct panel_cmd tianma_fhd_video_on_cmds_2[] = {
-> +	_INIT_CMD(0x00, 0xFF, 0x24),
-> +	_INIT_CMD(0x00, 0xFB, 0x01),
-> +	_INIT_CMD(0x00, 0xC3, 0x01),
-> +	_INIT_CMD(0x00, 0xC4, 0x54),
-> +	_INIT_CMD(0x00, 0xFF, 0x10),
-> +
-> +	{},
-> +};
-> +
-> +static const struct panel_cmd tianma_fhd_video_off_cmds[] = {
-> +	_INIT_CMD(0x00, 0xFF, 0x24),
-> +	_INIT_CMD(0x00, 0xFB, 0x01),
-> +	_INIT_CMD(0x00, 0xC3, 0x01),
-> +	_INIT_CMD(0x00, 0xFF, 0x10),
-> +
-> +	{},
-> +};
-> +
-> +static const struct drm_display_mode tianma_fhd_video_panel_default_mode = {
-> +	.clock		= 161331,
-> +
-> +	.hdisplay	= 1080,
-> +	.hsync_start	= 1080 + 40,
-> +	.hsync_end	= 1080 + 40 + 20,
-> +	.htotal		= 1080 + 40 + 20 + 44,
-> +
-> +	.vdisplay	= 2246,
-> +	.vsync_start	= 2246 + 15,
-> +	.vsync_end	= 2246 + 15 + 2,
-> +	.vtotal		= 2246 + 15 + 2 + 8,
-> +
-> +	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-> +};
-> +
-> +static const struct panel_desc tianma_fhd_video_panel_desc = {
-> +	.display_mode = &tianma_fhd_video_panel_default_mode,
-> +
-> +	.width_mm = 68,
-> +	.height_mm = 136,
-> +
-> +	.mode_flags = MIPI_DSI_MODE_LPM | MIPI_DSI_MODE_VIDEO
-> +			| MIPI_DSI_MODE_VIDEO_HSE
-> +			| MIPI_DSI_CLOCK_NON_CONTINUOUS
-> +			| MIPI_DSI_MODE_VIDEO_BURST,
-> +	.format = MIPI_DSI_FMT_RGB888,
-> +	.lanes = 4,
-> +	.on_cmds_1 = tianma_fhd_video_on_cmds_1,
-> +	.on_cmds_2 = tianma_fhd_video_on_cmds_2,
-> +	.off_cmds = tianma_fhd_video_off_cmds
-> +};
-> +
-> +static int panel_add(struct panel_info *pinfo)
-> +{
-> +	struct device *dev = &pinfo->link->dev;
-> +	int i, ret;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(pinfo->supplies); i++)
-> +		pinfo->supplies[i].supply = regulator_names[i];
-> +
-> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(pinfo->supplies),
-> +				      pinfo->supplies);
-> +	if (ret < 0)
-> +		return ret;
-Use dev_err_probe() here - so the driver then also support -EPROBE_DEFER
-correct in this case.
-
-> +
-> +	pinfo->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(pinfo->reset_gpio)) {
-> +		DRM_DEV_ERROR(dev, "cannot get reset gpio %ld\n",
-> +			      PTR_ERR(pinfo->reset_gpio));
-> +		return PTR_ERR(pinfo->reset_gpio);
-> +	}
-Use dev_Err_probe() here, thus also fixing that the driver then supports
--EPROBE_DEFER.
-
-> +
-> +	drm_panel_init(&pinfo->base, dev, &panel_funcs,
-> +		       DRM_MODE_CONNECTOR_DSI);
-> +
-> +	drm_panel_add(&pinfo->base);
-> +
-> +	return 0;
-> +}
-> +
-> +static int panel_probe(struct mipi_dsi_device *dsi)
-> +{
-> +	struct panel_info *pinfo;
-> +	const struct panel_desc *desc;
-> +	int err;
-> +
-> +	pinfo = devm_kzalloc(&dsi->dev, sizeof(*pinfo), GFP_KERNEL);
-> +	if (!pinfo)
-> +		return -ENOMEM;
-> +
-> +	desc = of_device_get_match_data(&dsi->dev);
-> +	dsi->mode_flags = desc->mode_flags;
-> +	dsi->format = desc->format;
-> +	dsi->lanes = desc->lanes;
-> +	pinfo->desc = desc;
-> +	pinfo->link = dsi;
-> +
-> +	mipi_dsi_set_drvdata(dsi, pinfo);
-> +
-> +	err = panel_add(pinfo);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	return mipi_dsi_attach(dsi);
-> +}
-> +
-> +static int panel_remove(struct mipi_dsi_device *dsi)
-> +{
-> +	struct panel_info *pinfo = mipi_dsi_get_drvdata(dsi);
-> +	int err;
-> +
-> +	err = drm_panel_unprepare(&pinfo->base);
-> +	if (err < 0)
-> +		DRM_DEV_ERROR(&dsi->dev, "failed to unprepare panel: %d\n",
-> +			      err);
-> +
-> +	err = drm_panel_disable(&pinfo->base);
-> +	if (err < 0)
-> +		DRM_DEV_ERROR(&dsi->dev, "failed to disable panel: %d\n", err);
-> +
-> +	err = mipi_dsi_detach(dsi);
-> +	if (err < 0)
-> +		DRM_DEV_ERROR(&dsi->dev, "failed to detach from DSI host: %d\n",
-> +			      err);
-> +
-> +	drm_panel_remove(&pinfo->base);
-> +
-> +	return 0;
-> +}
-> +
-> +static void panel_shutdown(struct mipi_dsi_device *dsi)
-> +{
-> +	struct panel_info *pinfo = mipi_dsi_get_drvdata(dsi);
-> +
-> +	drm_panel_disable(&pinfo->base);
-> +	drm_panel_unprepare(&pinfo->base);
-> +}
-> +
-> +static const struct of_device_id tianma_fhd_video_of_match[] = {
-> +	{ .compatible = "tianma,fhd-video",
-> +	  .data = &tianma_fhd_video_panel_desc
-> +	},
-> +	{
-> +		/* sentinel */
-> +	}
-> +};
-> +MODULE_DEVICE_TABLE(of, tianma_fhd_video_of_match);
-> +
-> +static struct mipi_dsi_driver panel_driver = {
-> +	.driver = {
-> +		.name = "panel-tianma-nt36672a",
-> +		.of_match_table = tianma_fhd_video_of_match,
-> +	},
-> +	.probe = panel_probe,
-> +	.remove = panel_remove,
-> +	.shutdown = panel_shutdown,
-> +};
-> +module_mipi_dsi_driver(panel_driver);
-> +
-> +MODULE_AUTHOR("Sumit Semwal <sumit.semwal@linaro.org>");
-> +MODULE_DESCRIPTION("NOVATEK NT36672A based MIPI-DSI LCD panel driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.28.0
+V2VzbGV5IENoZW5nIHdyb3RlOg0KPiBJbiB0aGUgRFdDMyBkYXRhYm9vaywgZm9yIGEgZGV2aWNl
+IGluaXRpYXRlZCBkaXNjb25uZWN0IG9yIGJ1cyByZXNldCwgdGhlDQo+IGRyaXZlciBpcyByZXF1
+aXJlZCB0byBzZW5kIGRlcGVuZHhmZXIgY29tbWFuZHMgZm9yIGFueSBwZW5kaW5nIHRyYW5zZmVy
+cy4NCj4gSW4gYWRkaXRpb24sIGJlZm9yZSB0aGUgY29udHJvbGxlciBjYW4gbW92ZSB0byB0aGUg
+aGFsdGVkIHN0YXRlLCB0aGUgU1cNCj4gbmVlZHMgdG8gYWNrbm93bGVkZ2UgYW55IHBlbmRpbmcg
+ZXZlbnRzLiAgSWYgdGhlIGNvbnRyb2xsZXIgaXMgbm90IGhhbHRlZA0KPiBwcm9wZXJseSwgdGhl
+cmUgaXMgYSBjaGFuY2UgdGhlIGNvbnRyb2xsZXIgd2lsbCBjb250aW51ZSBhY2Nlc3Npbmcgc3Rh
+bGUgb3INCj4gZnJlZWQgVFJCcyBhbmQgYnVmZmVycy4NCj4NCj4gU2lnbmVkLW9mZi1ieTogV2Vz
+bGV5IENoZW5nIDx3Y2hlbmdAY29kZWF1cm9yYS5vcmc+DQo+DQo+IC0tLQ0KPiBDaGFuZ2VzIGlu
+IHYyOg0KPiAgLSBNb3ZlZCBjbGVhbnVwIGNvZGUgdG8gdGhlIHB1bGx1cCgpIEFQSSB0byBkaWZm
+ZXJlbnRpYXRlIGJldHdlZW4gZGV2aWNlDQo+ICAgIGRpc2Nvbm5lY3QgYW5kIGhpYmVybmF0aW9u
+Lg0KPiAgLSBBZGRlZCBjbGVhbnVwIGNvZGUgdG8gdGhlIGJ1cyByZXNldCBjYXNlIGFzIHdlbGwu
+DQo+ICAtIFZlcmlmaWVkIHRoZSBtb3ZlIHRvIHB1bGx1cCgpIGRpZCBub3QgcmVwcm9kdWNlIHRo
+ZSBwcm9ibGVuIHVzaW5nIHRoZQ0KPiAgICBzYW1lIHRlc3Qgc2VxdWVuY2UuDQo+DQo+IFZlcmlm
+aWVkIGZpeCBieSBhZGRpbmcgYSBjaGVjayBmb3IgRVRJTUVET1VUIGR1cmluZyB0aGUgcnVuIHN0
+b3AgY2FsbC4NCj4gU2hlbGwgc2NyaXB0IHdyaXRpbmcgdG8gdGhlIGNvbmZpZ2ZzIFVEQyBmaWxl
+IHRvIHRyaWdnZXIgZGlzY29ubmVjdCBhbmQNCj4gY29ubmVjdC4gIEJhdGNoIHNjcmlwdCB0byBo
+YXZlIFBDIGV4ZWN1dGUgZGF0YSB0cmFuc2ZlcnMgb3ZlciBhZGIgKGllIGFkYg0KPiBwdXNoKSAg
+QWZ0ZXIgYSBmZXcgaXRlcmF0aW9ucywgd2UnZCBydW4gaW50byBhIHNjZW5hcmlvIHdoZXJlIHRo
+ZQ0KPiBjb250cm9sbGVyIHdhc24ndCBoYWx0ZWQuICBXaXRoIHRoZSBmb2xsb3dpbmcgY2hhbmdl
+LCBubyBmYWlsZWQgaGFsdHMgYWZ0ZXINCj4gbWFueSBpdGVyYXRpb25zLg0KPiAtLS0NCj4gIGRy
+aXZlcnMvdXNiL2R3YzMvZXAwLmMgICAgfCAgMiArLQ0KPiAgZHJpdmVycy91c2IvZHdjMy9nYWRn
+ZXQuYyB8IDUyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLQ0KPiAgMiBm
+aWxlcyBjaGFuZ2VkLCA1MiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPg0KPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy91c2IvZHdjMy9lcDAuYyBiL2RyaXZlcnMvdXNiL2R3YzMvZXAwLmMN
+Cj4gaW5kZXggNTlmMmU4YzMxYmQxLi40NTZhYTg3ZTg3NzggMTAwNjQ0DQo+IC0tLSBhL2RyaXZl
+cnMvdXNiL2R3YzMvZXAwLmMNCj4gKysrIGIvZHJpdmVycy91c2IvZHdjMy9lcDAuYw0KPiBAQCAt
+MTk3LDcgKzE5Nyw3IEBAIGludCBkd2MzX2dhZGdldF9lcDBfcXVldWUoc3RydWN0IHVzYl9lcCAq
+ZXAsIHN0cnVjdCB1c2JfcmVxdWVzdCAqcmVxdWVzdCwNCj4gIAlpbnQJCQkJcmV0Ow0KPiAgDQo+
+ICAJc3Bpbl9sb2NrX2lycXNhdmUoJmR3Yy0+bG9jaywgZmxhZ3MpOw0KPiAtCWlmICghZGVwLT5l
+bmRwb2ludC5kZXNjKSB7DQo+ICsJaWYgKCFkZXAtPmVuZHBvaW50LmRlc2MgfHwgIWR3Yy0+cHVs
+bHVwc19jb25uZWN0ZWQpIHsNCj4gIAkJZGV2X2Vycihkd2MtPmRldiwgIiVzOiBjYW4ndCBxdWV1
+ZSB0byBkaXNhYmxlZCBlbmRwb2ludFxuIiwNCj4gIAkJCQlkZXAtPm5hbWUpOw0KPiAgCQlyZXQg
+PSAtRVNIVVRET1dOOw0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZHdjMy9nYWRnZXQuYyBi
+L2RyaXZlcnMvdXNiL2R3YzMvZ2FkZ2V0LmMNCj4gaW5kZXggM2FiNmYxMThjNTA4Li5kZjhkODlk
+NmJkYzkgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvdXNiL2R3YzMvZ2FkZ2V0LmMNCj4gKysrIGIv
+ZHJpdmVycy91c2IvZHdjMy9nYWRnZXQuYw0KPiBAQCAtMTUxNiw3ICsxNTE2LDcgQEAgc3RhdGlj
+IGludCBfX2R3YzNfZ2FkZ2V0X2VwX3F1ZXVlKHN0cnVjdCBkd2MzX2VwICpkZXAsIHN0cnVjdCBk
+d2MzX3JlcXVlc3QgKnJlcSkNCj4gIHsNCj4gIAlzdHJ1Y3QgZHdjMwkJKmR3YyA9IGRlcC0+ZHdj
+Ow0KPiAgDQo+IC0JaWYgKCFkZXAtPmVuZHBvaW50LmRlc2MpIHsNCj4gKwlpZiAoIWRlcC0+ZW5k
+cG9pbnQuZGVzYyB8fCAhZHdjLT5wdWxsdXBzX2Nvbm5lY3RlZCkgew0KPiAgCQlkZXZfZXJyKGR3
+Yy0+ZGV2LCAiJXM6IGNhbid0IHF1ZXVlIHRvIGRpc2FibGVkIGVuZHBvaW50XG4iLA0KPiAgCQkJ
+CWRlcC0+bmFtZSk7DQo+ICAJCXJldHVybiAtRVNIVVRET1dOOw0KPiBAQCAtMTkyNiw2ICsxOTI2
+LDI0IEBAIHN0YXRpYyBpbnQgZHdjM19nYWRnZXRfc2V0X3NlbGZwb3dlcmVkKHN0cnVjdCB1c2Jf
+Z2FkZ2V0ICpnLA0KPiAgCXJldHVybiAwOw0KPiAgfQ0KPiAgDQo+ICtzdGF0aWMgdm9pZCBkd2Mz
+X3N0b3BfYWN0aXZlX3RyYW5zZmVycyhzdHJ1Y3QgZHdjMyAqZHdjKQ0KPiArew0KPiArCXUzMiBl
+cG51bTsNCj4gKw0KPiArCWZvciAoZXBudW0gPSAyOyBlcG51bSA8IERXQzNfRU5EUE9JTlRTX05V
+TTsgZXBudW0rKykgew0KPiArCQlzdHJ1Y3QgZHdjM19lcCAqZGVwOw0KPiArDQo+ICsJCWRlcCA9
+IGR3Yy0+ZXBzW2VwbnVtXTsNCj4gKwkJaWYgKCFkZXApDQo+ICsJCQljb250aW51ZTsNCj4gKw0K
+PiArCQlpZiAoIShkZXAtPmZsYWdzICYgRFdDM19FUF9FTkFCTEVEKSkNCj4gKwkJCWNvbnRpbnVl
+Ow0KDQpEb24ndCBkbyB0aGUgZW5hYmxlZCBjaGVjayBoZXJlLiBMZXQgdGhlIGR3YzNfc3RvcF9h
+Y3RpdmVfdHJhbnNmZXIoKSBkbw0KdGhhdCBjaGVja2luZy4NCg0KPiArDQo+ICsJCWR3YzNfcmVt
+b3ZlX3JlcXVlc3RzKGR3YywgZGVwKTsNCj4gKwl9DQo+ICt9DQo+ICsNCj4gIHN0YXRpYyBpbnQg
+ZHdjM19nYWRnZXRfcnVuX3N0b3Aoc3RydWN0IGR3YzMgKmR3YywgaW50IGlzX29uLCBpbnQgc3Vz
+cGVuZCkNCj4gIHsNCj4gIAl1MzIJCQlyZWc7DQo+IEBAIC0xOTk0LDkgKzIwMTIsMzkgQEAgc3Rh
+dGljIGludCBkd2MzX2dhZGdldF9wdWxsdXAoc3RydWN0IHVzYl9nYWRnZXQgKmcsIGludCBpc19v
+bikNCj4gIAkJfQ0KPiAgCX0NCj4gIA0KPiArCS8qDQo+ICsJICogU3luY2hyb25pemUgYW5kIGRp
+c2FibGUgYW55IGZ1cnRoZXIgZXZlbnQgaGFuZGxpbmcgd2hpbGUgY29udHJvbGxlcg0KPiArCSAq
+IGlzIGJlaW5nIGVuYWJsZWQvZGlzYWJsZWQuDQo+ICsJICovDQo+ICsJZGlzYWJsZV9pcnEoZHdj
+LT5pcnFfZ2FkZ2V0KTsNCg0KSSB0aGluayBpdCdzIGJldHRlciB0byBkbyBkd2MzX2dhZGdldF9k
+aXNhYmxlX2lycSgpLiBUaGlzIG9ubHkgc3RvcHMNCmhhbmRsaW5nIGV2ZW50cy4gQWx0aG91Z2gg
+aXQncyB1bmxpa2VseSwgdGhlIGNvbnRyb2xsZXIgbWF5IHN0aWxsDQpnZW5lcmF0ZSBldmVudHMg
+YmVmb3JlIGl0J3MgaGFsdGVkLg0KDQo+ICAJc3Bpbl9sb2NrX2lycXNhdmUoJmR3Yy0+bG9jaywg
+ZmxhZ3MpOw0KPiArDQo+ICsJLyogQ29udHJvbGxlciBpcyBub3QgaGFsdGVkIHVudGlsIHBlbmRp
+bmcgZXZlbnRzIGFyZSBhY2tub3dsZWRnZWQgKi8NCj4gKwlpZiAoIWlzX29uKSB7DQo+ICsJCXUz
+MiByZWc7DQo+ICsNCj4gKwkJX19kd2MzX2dhZGdldF9lcF9kaXNhYmxlKGR3Yy0+ZXBzWzBdKTsN
+Cj4gKwkJX19kd2MzX2dhZGdldF9lcF9kaXNhYmxlKGR3Yy0+ZXBzWzFdKTsNCg0KWW91IGNhbiBq
+dXN0IGRvIF9fZHdjM19nYWRnZXRfc3RvcCgpLCBhbmQgZG8gdGhhdCBhZnRlcg0KZHdjM19zdG9w
+X2FjdGl2ZV90cmFuc2ZlcnMoKS4NCg0KPiArDQo+ICsJCS8qDQo+ICsJCSAqIFRoZSBkYXRhYm9v
+ayBleHBsaWNpdGx5IG1lbnRpb25zIGZvciBhIGRldmljZS1pbml0aWF0ZWQNCj4gKwkJICogZGlz
+Y29ubmVjdCBzZXF1ZW5jZSwgdGhlIFNXIG5lZWRzIHRvIGVuc3VyZSB0aGF0IGl0IGVuZHMgYW55
+DQo+ICsJCSAqIGFjdGl2ZSB0cmFuc2ZlcnMuDQo+ICsJCSAqLw0KPiArCQlkd2MzX3N0b3BfYWN0
+aXZlX3RyYW5zZmVycyhkd2MpOw0KPiArDQo+ICsJCXJlZyA9IGR3YzNfcmVhZGwoZHdjLT5yZWdz
+LCBEV0MzX0dFVk5UQ09VTlQoMCkpOw0KPiArCQlyZWcgJj0gRFdDM19HRVZOVENPVU5UX01BU0s7
+DQoNCkNhbiB3ZSB1c2UgYW5vdGhlciB2YXJpYWJsZSAiY291bnQiIGluc3RlYWQgb2YgcmV1c2lu
+ZyByZWcgdG8gbWFrZSBpdCBhDQpsaXR0bGUgY2xlYXJlcj8NCg0KPiArCQlpZiAocmVnID4gMCkg
+ew0KPiArCQkJZHdjM193cml0ZWwoZHdjLT5yZWdzLCBEV0MzX0dFVk5UQ09VTlQoMCksIHJlZyk7
+DQo+ICsJCQlkd2MtPmV2X2J1Zi0+bHBvcyA9IChkd2MtPmV2X2J1Zi0+bHBvcyArIHJlZykgJQ0K
+PiArCQkJCQkJZHdjLT5ldl9idWYtPmxlbmd0aDsNCj4gKwkJfQ0KPiArCX0NCj4gKw0KPiAgCXJl
+dCA9IGR3YzNfZ2FkZ2V0X3J1bl9zdG9wKGR3YywgaXNfb24sIGZhbHNlKTsNCj4gIAlzcGluX3Vu
+bG9ja19pcnFyZXN0b3JlKCZkd2MtPmxvY2ssIGZsYWdzKTsNCj4gKwllbmFibGVfaXJxKGR3Yy0+
+aXJxX2dhZGdldCk7DQo+ICANCj4gIAlyZXR1cm4gcmV0Ow0KPiAgfQ0KPiBAQCAtMzEwMCw2ICsz
+MTQ4LDggQEAgc3RhdGljIHZvaWQgZHdjM19nYWRnZXRfcmVzZXRfaW50ZXJydXB0KHN0cnVjdCBk
+d2MzICpkd2MpDQo+ICAJfQ0KPiAgDQo+ICAJZHdjM19yZXNldF9nYWRnZXQoZHdjKTsNCj4gKwkv
+KiBTdG9wIGFueSBhY3RpdmUvcGVuZGluZyB0cmFuc2ZlcnMgd2hlbiByZWNlaXZpbmcgYnVzIHJl
+c2V0ICovDQo+ICsJZHdjM19zdG9wX2FjdGl2ZV90cmFuc2ZlcnMoZHdjKTsNCj4gIA0KPiAgCXJl
+ZyA9IGR3YzNfcmVhZGwoZHdjLT5yZWdzLCBEV0MzX0RDVEwpOw0KPiAgCXJlZyAmPSB+RFdDM19E
+Q1RMX1RTVENUUkxfTUFTSzsNCg0KTG9va3MgZ29vZCB0byBtZS4NCg0KVGhhbmtzLA0KVGhpbmgN
+Cg==
