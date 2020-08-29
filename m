@@ -2,96 +2,106 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD466C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EB2C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C9C820738
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1CBF20738
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:13:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YfaX1TJf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hONZkQDP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbgH2HCh (ORCPT
+        id S1726869AbgH2HNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 03:02:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40238 "EHLO
+        Sat, 29 Aug 2020 03:13:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbgH2HCg (ORCPT
+        with ESMTP id S1726083AbgH2HNa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 03:02:36 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F73BC061236;
-        Sat, 29 Aug 2020 00:02:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=9U9dGK0bqJLSVOUuBWXaxoDilhxzVYEaDPKgn3CAclI=; b=YfaX1TJf7HA6uhNhJQiWhVOa96
-        f0ehNVUSyn/j0g/TXrjTt2eoL7mJwEB4PB/JJiVMi5LP9i0Al6Caf4Lm0tnG4qPm+56zU1QgHO5KD
-        zRUe6vhjo0W4XXSUuEeI/I+YhnlDlJDIpE0Vz0B3crHHkxS+LD7Ce5nKBERAGV3SrwNdc5jXEkH+L
-        TT9HMk6Idvnye6juI2mrnxGfJz/Y9+Bftdi20lxWcnnRC5XMrPf7C8x6ilSfuCiEiXoBdRoCP3Rv1
-        ADtVbrtSOnk1GeYxMvqzbU/Yz18EpXB8qaJ0Olsk4Ci3SFrP0SCj75p0juusf5HA04sAnypvPh5mq
-        hT3wh4Ww==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBusg-0000WP-5C; Sat, 29 Aug 2020 07:02:30 +0000
-Date:   Sat, 29 Aug 2020 08:02:30 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com,
-        SeongJae Park <sj38.park@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Arjun Roy <arjunroy@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christian Brauner <christian@brauner.io>,
-        Daniel Colascione <dancol@google.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        SeongJae Park <sjpark@amazon.de>,
-        linux-man <linux-man@vger.kernel.org>
-Subject: Re: [PATCH v8 3/4] mm/madvise: introduce process_madvise() syscall:
- an external memory hinting API
-Message-ID: <20200829070230.GA1099@infradead.org>
-References: <20200622192900.22757-1-minchan@kernel.org>
- <20200622192900.22757-4-minchan@kernel.org>
- <CAK8P3a0Mnp2ekmX-BX9yr+N8fy2=gBtASELLXoa9uGSpSS9aOA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0Mnp2ekmX-BX9yr+N8fy2=gBtASELLXoa9uGSpSS9aOA@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+        Sat, 29 Aug 2020 03:13:30 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E78BDC061236
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 00:13:29 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k13so677405plk.13
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 00:13:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Rh4ud5jTmfL5cS/C7dCchIDO5q1+ZBSwil0mqRzvrBQ=;
+        b=hONZkQDPIqwXG3s/MO8aVRxkuNaIEvDvSn0quqaxTt1WEC9e1x7VwhTDkUfhxOdpUs
+         WV1ddj41BrENjiR1ebhsoYjt7JUICzh0FYipgC7VzKVMhY3V+Wd5s9dxsgLvzFFWW/c2
+         tV5xoudkHa54lS++0fZABmcYWWIIVYea8lH8B+BC1A1gWOiKNY0bNcURbOQMpPEp/PrC
+         UckO52T1ffr0zZqkFVo5RKDMXR3AIESxFwTMcwqTAtofDIC6JlygguoyL7y9vg/3fcL2
+         49aRSWMvX4fhLzHGxiwa8KgcB/mjYUr8caI53fuNBEsPBIUtS7ARm3TDYBYiXKMM/vHt
+         ZFaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Rh4ud5jTmfL5cS/C7dCchIDO5q1+ZBSwil0mqRzvrBQ=;
+        b=FzjF2wo0kCaQMjruB84xNeLCmjpLYQ7agYqdyG7HsYCJbCdOgxmPIU1/TNkFrsLhS0
+         GWRmXh1XDn4VrzkVNrOsYjvvZnvrFkTR4amaa++3JS+U6L5NtyceCUgxFA08E+gsg09S
+         9v05L3Et5DiSyXS4SK7+wCMOFvKmq8LYZ6zao/5Aj30/J74qwAuuIP5DZqSGE8PeXAgX
+         q/kg/EVQ24dnzetFuD2Ty1MY4qqFtUZt1DPrDqFrVR8A2i8e3ctQTkr4/Rc7dmgmnscb
+         iGHlP/gdOReK83D9dglxbPvyrPHjIgHqeW1oR54r5tJ0oFYTGfmqM2vbz3J1Q0kHb6jL
+         wQtQ==
+X-Gm-Message-State: AOAM533+Cd8N5WAEykUr7qn5MPOS6t8UwZBuSt/CCiG9OqHXtAGDgSn5
+        EfxCksVs4CYxQfuU4XtfEg==
+X-Google-Smtp-Source: ABdhPJx7g+ttIXoZnc1jLfVygP5yd+wFwv5JzWPQ50sx8JWo0jvLSBv4yxRHDuN6TPlGqndF42L+cw==
+X-Received: by 2002:a17:902:6f01:: with SMTP id w1mr1906429plk.49.1598685208899;
+        Sat, 29 Aug 2020 00:13:28 -0700 (PDT)
+Received: from localhost.localdomain ([103.85.228.104])
+        by smtp.gmail.com with ESMTPSA id e1sm866102pjv.17.2020.08.29.00.13.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 29 Aug 2020 00:13:28 -0700 (PDT)
+From:   milan.opensource@gmail.com
+To:     mtk.manpages@gmail.com
+Cc:     linux-kernel@vger.kernel.org,
+        Milan Shah <milan.opensource@gmail.com>
+Subject: [PATCH] fsync.2: ERRORS: add EIO and ENOSPC
+Date:   Sat, 29 Aug 2020 12:43:06 +0530
+Message-Id: <1598685186-27499-1-git-send-email-milan.opensource@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 07:40:08PM +0200, Arnd Bergmann wrote:
-> Every syscall that passes an iovec seems to do this. If we make import_iovec()
-> handle both cases directly, this syscall and a number of others can
-> be simplified, and you avoid the x32 entry point I mentioned above
+From: Milan Shah <milan.opensource@gmail.com>
 
-FYI, I do have a series that does this (even tested) and kills tons of
-compat syscalls by that.  But by doing that I found the problem that
-compat syscalls issued by io_uring don't trigger in_compat_syscall().
-I need to go back to fixing the io_uring vs in_compat_syscall() issue
-(probably for 5.9) and then submit the whole thing.
+This Fix addresses Bug 194757.
+Ref: https://bugzilla.kernel.org/show_bug.cgi?id=194757
+---
+ man2/fsync.2 | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/man2/fsync.2 b/man2/fsync.2
+index 96401cd..f38b3e4 100644
+--- a/man2/fsync.2
++++ b/man2/fsync.2
+@@ -186,6 +186,19 @@ In these cases disk caches need to be disabled using
+ or
+ .BR sdparm (8)
+ to guarantee safe operation.
++
++When
++.BR fsync ()
++or
++.BR fdatasync ()
++returns
++.B EIO
++or
++.B ENOSPC
++any error flags on pages in the file mapping are cleared, so subsequent synchronisation attempts
++will return without error. It is
++.I not
++safe to retry synchronisation and assume that a non-error return means prior writes are now on disk.
+ .SH SEE ALSO
+ .BR sync (1),
+ .BR bdflush (2),
+-- 
+2.7.4
+
