@@ -2,148 +2,118 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D29CC433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457B2C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AB8420E65
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:51:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598683892;
-	bh=n7VC1uvUjKUVDq2UMbjFErf50gQRUMVporBtRadUTTY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bsZTjeIo3GJT2QSkkOrh/yIJFOQr15SnNGIK7yOR4juyfXII7Gj8LeNi3WL70DMMb
-	 f8gUoftf9UvxjaJyLXhtHpNwyaHhUYxb2dMfJkXqEARF86wXMljcR3VZBBr71k/+H4
-	 /IVr0IYrar+4ASQrOjO5NsnCs9LugkFALI3EtrlA=
+	by mail.kernel.org (Postfix) with ESMTP id 1F2B820738
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:56:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="INFWHtf/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgH2Gva (ORCPT
+        id S1726405AbgH2G4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 02:51:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47376 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbgH2Gva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 02:51:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C91B320E65;
-        Sat, 29 Aug 2020 06:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598683889;
-        bh=n7VC1uvUjKUVDq2UMbjFErf50gQRUMVporBtRadUTTY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ON9S5JchC5JCj3pHo/S/cKsHxfWRHRK6OowmWc+3rALYSI5bmiRnfdqqdQgwvmvUl
-         praVjMcgKjnr56LxTsCLcWyVudLJekVct+AWWIR5UWhoW30wgIKNIjayTyt8DlK4HY
-         rYoxszfZLUAeLPa52db4qzfy1zz/7XMxCQU4t8gI=
-Date:   Sat, 29 Aug 2020 08:51:25 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Denis Efremov <efremov@linux.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Alex Dewar <alex.dewar90@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sysfs: Add sysfs_emit to replace sprintf to PAGE_SIZE
- buffers.
-Message-ID: <20200829065125.GA94642@kroah.com>
-References: <a96cdf07cd136d06c3cc1e10eb884caa7498ba72.1598654887.git.joe@perches.com>
- <20200829062254.GA79296@kroah.com>
- <2acf2dc0945bc7f1ec2617b616808ab3c514067b.camel@perches.com>
+        Sat, 29 Aug 2020 02:56:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbgH2G4P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 02:56:15 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D339C061236
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 23:56:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description;
+        bh=bxHexHiPlyNdhHAodxRi7MUtYBNji9c53gJAu6KWNtQ=; b=INFWHtf/ST9bM/wqLyCq+I4nnI
+        F4b671LD+l1YSBsv1gZnvvd4H1xMhASDhUaHF2JlirM+jNfRNhWB+6PmeQrfXkVEzgkM9LSc3NXAm
+        YSDjs3dwZVf/VHlGJfh+isJqdWgBekAnuNhRZInjQB309Shq/A+lzRjvxDHE7ltufeld1e7vAfg+/
+        XOZTzYrrCpx8FPN4urGv2At6v0QMfFSAa9WYlV+qEYRaSSk2KTm90OZrSwAotGHCMEYLEw4CCsPfI
+        DXMHTB6eGeQ4sK5ymoVrINolpP7b8DN2yTcHmv69FSVtPKC7go0KXcwZaT7/AC7xXJGUOIhP3Y289
+        1CPj79hQ==;
+Received: from [2601:1c0:6280:3f0::96df]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBuma-0007Bw-Hr; Sat, 29 Aug 2020 06:56:12 +0000
+Subject: Re: aarch64 iio build error [PATCH]
+To:     Dave Airlie <airlied@gmail.com>, jonathan.cameron@huawei.com,
+        LKML <linux-kernel@vger.kernel.org>
+References: <CAPM=9txbCfEB0x+uxw9qWH24-ziY5BK25r-S-HWYhe+UCW_rKQ@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <380f1b70-6575-5869-edf4-28842e818732@infradead.org>
+Date:   Fri, 28 Aug 2020 23:56:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2acf2dc0945bc7f1ec2617b616808ab3c514067b.camel@perches.com>
+In-Reply-To: <CAPM=9txbCfEB0x+uxw9qWH24-ziY5BK25r-S-HWYhe+UCW_rKQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 11:41:00PM -0700, Joe Perches wrote:
-> On Sat, 2020-08-29 at 08:22 +0200, Greg Kroah-Hartman wrote:
-> > On Fri, Aug 28, 2020 at 03:52:13PM -0700, Joe Perches wrote:
-> > > sprintf does not know the PAGE_SIZE maximum of the temporary buffer
-> > > used for outputting sysfs content requests and it's possible to
-> > > overrun the buffer length.
-> > > 
-> > > Add a generic sysfs_emit mechanism that knows that the size of the
-> > > temporary buffer and ensures that no overrun is done.
-> > > 
-> > > Signed-off-by: Joe Perches <joe@perches.com>
-> > > ---
-> > >  fs/sysfs/file.c       | 30 ++++++++++++++++++++++++++++++
-> > >  include/linux/sysfs.h |  8 ++++++++
-> > >  2 files changed, 38 insertions(+)
-> > > 
-> > > diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-> > > index eb6897ab78e7..06a13bbd7080 100644
-> > > --- a/fs/sysfs/file.c
-> > > +++ b/fs/sysfs/file.c
-> > > @@ -707,3 +707,33 @@ int sysfs_change_owner(struct kobject *kobj, kuid_t kuid, kgid_t kgid)
-> > >  	return 0;
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(sysfs_change_owner);
-> > > +
-> > > +/**
-> > > + *	sysfs_emit - scnprintf equivalent, aware of PAGE_SIZE buffer.
-> > > + *	@buf:	start of PAGE_SIZE buffer.
-> > > + *	@pos:	current position in buffer
-> > > + *              (pos - buf) must always be < PAGE_SIZE
-> > 
-> > sysfs files are always supposed to be "one value per file", so why would
-> > you ever need a 'pos' variable to show the location in the buffer?
+On 8/24/20 12:39 PM, Dave Airlie wrote:
+> Hi Jonahtan,
 > 
-> I've done treewide conversions using cocci.
-> It's used all over the place.
-> Especially in loops with arrays.
+> Since rc1 my aarch64 builds have been failing
 > 
-> Sometimes the output is single line.
-> Sometimes multiple lines.
+>   MODPOST Module.symvers
+> ERROR: modpost: "devm_iio_triggered_buffer_setup"
+> [drivers/iio/adc/rockchip_saradc.ko] undefined!
+> ERROR: modpost: "iio_trigger_notify_done"
+> [drivers/iio/adc/rockchip_saradc.ko] undefined!
+> ERROR: modpost: "iio_push_to_buffers"
+> [drivers/iio/adc/rockchip_saradc.ko] undefined!
+> make[2]: *** [/home/airlied/devel/kernel/dim/src/scripts/Makefile.modpost:111:
+> Module.symvers] Error
 > 
-> Look at the sample conversion of mem_sleep_show I posted earlier.
+> Attached config.
 > 
-> #ifdef CONFIG_SUSPEND
->  static ssize_t mem_sleep_show(struct kobject *kobj, struct kobj_attribute *attr,
->                               char *buf)
->  {
-> -       char *s = buf;
-> +       char *pos = buf;
->         suspend_state_t i;
->  
->         for (i = PM_SUSPEND_MIN; i < PM_SUSPEND_MAX; i++)
->                 if (mem_sleep_states[i]) {
->                         const char *label = mem_sleep_states[i];
->  
->                         if (mem_sleep_current == i)
-> -                               s += sprintf(s, "[%s] ", label);
-> +                               pos += sysfs_emit(buf, pos, "[%s] ", label);
->                         else
-> -                               s += sprintf(s, "%s ", label);
-> +                               pos += sysfs_emit(buf, pos, "%s ", label);
->                 }
->  
->         /* Convert the last space to a newline if needed. */
-> -       if (s != buf)
-> -               *(s-1) = '\n';
-> +       if (pos != buf)
-> +               *(pos - 1) = '\n';
->  
-> -       return (s - buf);
-> +       return pos - buf;
->  }
+> Dave.
 
-And again, this is the rare exception, not the rule, please do not make
-a generic helper function "easy" to do crazy things like this in sysfs.
+I haven't see any fixes for this, although I could have easily
+missed a patch.
 
-Heck, make it explicit, call this function sysfs_emit_pos() and the
-non-pos version sysfs_emit().  That way I can easily search for the
-"offending" users of the sysfs api.
+The patch below should fix these build errors.
 
-thanks,
+---
+From: Randy Dunlap <rdunlap@infradead.org>
 
-greg k-h
+Fix build errors in iio/rockchip_saradc by adding selects
+to drivers/iio/adc/Kconfig.
+
+Fixes these build errors:
+
+ERROR: modpost: "devm_iio_triggered_buffer_setup"
+[drivers/iio/adc/rockchip_saradc.ko] undefined!
+ERROR: modpost: "iio_trigger_notify_done"
+[drivers/iio/adc/rockchip_saradc.ko] undefined!
+ERROR: modpost: "iio_push_to_buffers"
+[drivers/iio/adc/rockchip_saradc.ko] undefined!
+
+Reported-by: Dave Airlie <airlied@gmail.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: jonathan.cameron@huawei.com
+---
+ drivers/iio/adc/Kconfig |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- linux-next-20200825.orig/drivers/iio/adc/Kconfig
++++ linux-next-20200825/drivers/iio/adc/Kconfig
+@@ -865,6 +865,10 @@ config ROCKCHIP_SARADC
+ 	tristate "Rockchip SARADC driver"
+ 	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
+ 	depends on RESET_CONTROLLER
++	select IIO_BUFFER
++	select IIO_TRIGGER
++	select IIO_TRIGGERED_BUFFER
++	select IIO_TRIGGERED_EVENT
+ 	help
+ 	  Say yes here to build support for the SARADC found in SoCs from
+ 	  Rockchip.
