@@ -2,97 +2,150 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4510EC433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDCBC433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA3C20838
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F8920838
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598722262;
-	bh=/SI0obcZq9bkPaoP0Z619Tex4rORpqWPy8a2rewpEh8=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=JEgc3lEOj1iPIXOpk3QO2/ftEhcw1ACnIxSBPjeXMKurFz+7PNZYP09eX5QjA6Hsw
-	 TaGycxEByaRy9cytXRFNQ5ZPRvptRT/uAkJ2VENpfTHRoK1lvmgmYyiJYrH1L40nxg
-	 YvSspr2F44m+N4D+H33Wb69M1YU1ywL//+HFDaDk=
+	s=default; t=1598722265;
+	bh=MIejLqCcrs1VRg7ixEsu20TKbHNfmfOmpymgis+xDAs=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=fFsNyO27gQp7BrPy01ByudvZiPUNgeEyNY9R08gJ0MsHP2tLjKlHjDSwfYYeQBC7U
+	 HjRVXz9QTkpk351xcZWa0kpBiu9ROEg2/9ARxLIT8TY4P78yr8+P/nRbNhrBEqnWgx
+	 RWEHPK89hfCh3/ev8Y8X25wHkIP5xzE0S4I+i2sE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbgH2Ra7 (ORCPT
+        id S1728370AbgH2RbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 13:30:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36194 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 13:31:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728139AbgH2Ra5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 13:30:57 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        id S1728139AbgH2RbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 13:31:03 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00F3B20757;
-        Sat, 29 Aug 2020 17:30:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9C4220757;
+        Sat, 29 Aug 2020 17:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598722257;
-        bh=/SI0obcZq9bkPaoP0Z619Tex4rORpqWPy8a2rewpEh8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MyOcuZX6DM3iSiz1YXtse4HetaQK/fsw5AAhnLAijmEewifPAWgxXW6RSKcrZDSbE
-         XaSBFhqI2N3uHpQBcdypL4kR0IVXSwI8mQw+oxBvJTLaW9FtpMU8Sc1mvNa+kPptRt
-         m5g9FwRKi4prerZ7nFbkLnDoapr+pRvtq1w89SyA=
-Date:   Sat, 29 Aug 2020 12:37:02 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [GIT PULL] fallthrough fixes for 5.9-rc3
-Message-ID: <20200829173702.GA22301@embeddedor>
+        s=default; t=1598722261;
+        bh=MIejLqCcrs1VRg7ixEsu20TKbHNfmfOmpymgis+xDAs=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=vrnNntjzOiZFvoYkZ0iQ4dzR5oKfwpzgI5nJ9G/vAV5m+TX0viJULfFgV2x2xy5eG
+         BWafutq7HG2YAtPUbP0YhJHJ4arzKJwJ618fzvyM9TCQelSoSebEZuN62wGRbT5mYb
+         BMgwyoEcP9NZBzr46+AUyX1/I854yqP3uc4f8TwQ=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id BD3773523112; Sat, 29 Aug 2020 10:31:00 -0700 (PDT)
+Date:   Sat, 29 Aug 2020 10:31:00 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     peterz@infradead.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, Eddy_Wu@trendmicro.com,
+        x86@kernel.org, davem@davemloft.net, rostedt@goodmis.org,
+        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        linux-arch@vger.kernel.org, cameron@moodycamel.com,
+        oleg@redhat.com, will@kernel.org
+Subject: Re: [PATCH v4 18/23] sched: Fix try_invoke_on_locked_down_task()
+ semantics
+Message-ID: <20200829173100.GS2855@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <159861759775.992023.12553306821235086809.stgit@devnote2>
+ <159861779482.992023.8503137488052381952.stgit@devnote2>
+ <20200829110155.70c676520ad2cfef8374171d@kernel.org>
+ <20200829073049.GC2674@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200829073049.GC2674@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit df561f6688fef775baa341a0f5d960becd248b11:
+On Sat, Aug 29, 2020 at 09:30:49AM +0200, peterz@infradead.org wrote:
+> On Sat, Aug 29, 2020 at 11:01:55AM +0900, Masami Hiramatsu wrote:
+> > On Fri, 28 Aug 2020 21:29:55 +0900
+> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > 
+> > > From: Peter Zijlstra <peterz@infradead.org>
+> > 
+> > In the next version I will drop this since I will merge the kretprobe_holder
+> > things into removing kretporbe hash patch.
+> > 
+> > However, this patch itself seems fixing a bug of commit 2beaf3280e57
+> > ("sched/core: Add function to sample state of locked-down task").
+> > Peter, could you push this separately?
+> 
+> Yeah, Paul and me have a slightly different version for that, this also
+> changes semantics we're still bickering over ;-)
+> 
+> But yes, I'll take care of it.
 
-  treewide: Use fallthrough pseudo-keyword (2020-08-23 17:36:59 -0500)
+For whatever it is worth, I ended up back at your original patch with
+one change to the header comment, as shown below.  Does this work for you?
 
-are available in the Git repository at:
+							Thanx, Paul
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/fallthrough-fixes-5.9-rc3
+------------------------------------------------------------------------
 
-for you to fetch changes up to c165a08d2b2857c91c627039c4881f9d7ad1a3bd:
+commit 3f73a1137f8e999a606357064ebd914cf5f2c897
+Author: Peter Zijlstra <peterz@infradead.org>
+Date:   Sat Aug 29 10:22:24 2020 -0700
 
-  arm64/cpuinfo: Remove unnecessary fallthrough annotation (2020-08-27 15:44:32 -0500)
+    sched/core: Allow try_invoke_on_locked_down_task() with irqs disabled
+    
+    The try_invoke_on_locked_down_task() function currently requires
+    that interrupts be enabled, but it is called with interrupts
+    disabled from rcu_print_task_stall(), resulting in an "IRQs not
+    enabled as expected" diagnostic.  This commit therefore updates
+    try_invoke_on_locked_down_task() to use raw_spin_lock_irqsave() instead
+    of raw_spin_lock_irq(), thus allowing use from either context.
+    
+    Link: https://lore.kernel.org/lkml/000000000000903d5805ab908fc4@google.com/
+    Reported-by: syzbot+cb3b69ae80afd6535b0e@syzkaller.appspotmail.com
+    Not-signed-off-by: Peter Zijlstra <peterz@infradead.org>
 
-----------------------------------------------------------------
-fallthrough fixes for 5.9-rc3
-
-Hi Linus,
-
-Please, pull the following patches that fix some minor issues introduced
-by the recent treewide fallthrough conversions:
-
-- Fix identation issue.
-- Fix erroneous fallthrough annotation.
-- Remove unnecessary fallthrough annotation.
-- Fix code comment changed by fallthrough conversion.
-
-Thanks
-
-----------------------------------------------------------------
-Dan Carpenter (1):
-      afs: Remove erroneous fallthough annotation
-
-Gustavo A. R. Silva (3):
-      iio: dpot-dac: fix code comment in dpot_dac_read_raw()
-      media: dib0700: Fix identation issue in dib8096_set_param_override()
-      arm64/cpuinfo: Remove unnecessary fallthrough annotation
-
- arch/arm64/kernel/cpuinfo.c                 |  1 -
- drivers/iio/dac/dpot-dac.c                  |  3 ++-
- drivers/media/usb/dvb-usb/dib0700_devices.c | 10 +++++-----
- fs/afs/flock.c                              |  1 -
- 4 files changed, 7 insertions(+), 8 deletions(-)
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8471a0f..a814028 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -2988,7 +2988,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+ 
+ /**
+  * try_invoke_on_locked_down_task - Invoke a function on task in fixed state
+- * @p: Process for which the function is to be invoked.
++ * @p: Process for which the function is to be invoked, can be @current.
+  * @func: Function to invoke.
+  * @arg: Argument to function.
+  *
+@@ -3006,12 +3006,11 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+  */
+ bool try_invoke_on_locked_down_task(struct task_struct *p, bool (*func)(struct task_struct *t, void *arg), void *arg)
+ {
+-	bool ret = false;
+ 	struct rq_flags rf;
++	bool ret = false;
+ 	struct rq *rq;
+ 
+-	lockdep_assert_irqs_enabled();
+-	raw_spin_lock_irq(&p->pi_lock);
++	raw_spin_lock_irqsave(&p->pi_lock, rf.flags);
+ 	if (p->on_rq) {
+ 		rq = __task_rq_lock(p, &rf);
+ 		if (task_rq(p) == rq)
+@@ -3028,7 +3027,7 @@ bool try_invoke_on_locked_down_task(struct task_struct *p, bool (*func)(struct t
+ 				ret = func(p, arg);
+ 		}
+ 	}
+-	raw_spin_unlock_irq(&p->pi_lock);
++	raw_spin_unlock_irqrestore(&p->pi_lock, rf.flags);
+ 	return ret;
+ }
+ 
