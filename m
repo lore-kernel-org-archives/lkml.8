@@ -2,128 +2,68 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B366CC433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 12:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8865EC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 12:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 900A020CC7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 12:41:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="imNiGgPS"
+	by mail.kernel.org (Postfix) with ESMTP id 70ADE20CC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 12:43:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgH2Mlc (ORCPT
+        id S1728062AbgH2MnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 08:41:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgH2MlY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 08:41:24 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BB74C061236;
-        Sat, 29 Aug 2020 05:41:24 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id v16so921565plo.1;
-        Sat, 29 Aug 2020 05:41:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=inoIGbEpmdL0eBcL/eTYO9DUL34BzxMhEi+RCO4Fy4w=;
-        b=imNiGgPSNVHTgkyR65Ye2n6UFzxVcj5PC00bxL6M6q+QkbrDpme8p5sIT/vyPhC0Rq
-         0dxinnsMKJVrNE1SjLHFTOoDLbD1QJAJZgdZ3q7qrbzNPv7wsToS3KpU7tXAgXsx6d1E
-         oGa7IGk95kJJO22t/7UEbQd4W/4bxQnhJ7C4gFsmzsBXs12xF+b81gdBj12E5pj/pevH
-         LESYfR8XTlIGXcMgStlwbMpa9g4bRSFoRk6K96cbLnXn/LPyt0WVKA3l57KQszLvmq8g
-         8oqjDCEIMWiNb/uix5TTs2dt3S9LwISoMi/yF4JWed9HPyN3HW3zdWEttVexG7zGeSiM
-         4gVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=inoIGbEpmdL0eBcL/eTYO9DUL34BzxMhEi+RCO4Fy4w=;
-        b=eBsBXJc3FnOGspXnb1aNGlbTjXf2C+LFqlfDNNg4YjTwdsIaIx+yo6lk/d3PHVWGDt
-         tJcrE2YppeCkdzP6L1ksVrW6y+v1t1pmqu8YQgHfgLCMkutns9u6ebvPI+MT6brd6e4q
-         kGV7s+IBEl5/xuT7VxRfs1hh/IXF1rRhD5edMQIOtiYr7NKKScdqWMbeiW44gmfj8gCv
-         VA6F8cxQ19KcM+t99hzjh5vBNPmbuIX5UAJ/6IUTBQDuf3yFst2emSe/DRzkysqjPNff
-         7o9J6dClx3/7PWSHCvq0pmDOFD+JYgbRnxcgfaDU4vTFuA+mFv4O5OBjJumsBUQaWbbb
-         MIvA==
-X-Gm-Message-State: AOAM533lZQVyqgV18/JJRC7yx89E8p4Ik3Hz2tvV9oKDS9msQwtBp56R
-        7G6D+7b5mY4dOG6rd8riqTA=
-X-Google-Smtp-Source: ABdhPJz+NLb7HIW5P9DPG54Uwcs3btCpwTqxKPO7aqvpyIgUfuoteTuwfpl4q5WoZwqSBATciOhjNw==
-X-Received: by 2002:a17:902:123:: with SMTP id 32mr2619323plb.143.1598704883743;
-        Sat, 29 Aug 2020 05:41:23 -0700 (PDT)
-Received: from localhost.localdomain ([45.118.165.148])
-        by smtp.googlemail.com with ESMTPSA id t25sm2496901pfe.76.2020.08.29.05.41.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Aug 2020 05:41:22 -0700 (PDT)
-From:   Anmol Karn <anmol.karan123@gmail.com>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        kuba@kernel.org, davem@davemloft.net, anmol.karan123@gmail.com,
-        syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
-Subject: [Linux-kernel-mentees] [PATCH] net: bluetooth: Fix null pointer deref in hci_phy_link_complete_evt
-Date:   Sat, 29 Aug 2020 18:11:12 +0530
-Message-Id: <20200829124112.227133-1-anmol.karan123@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Sat, 29 Aug 2020 08:43:22 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33096 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726876AbgH2MnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 08:43:07 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 3DBCBD0D34329A674F3A;
+        Sat, 29 Aug 2020 20:43:06 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Sat, 29 Aug 2020
+ 20:42:59 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <gregkh@linuxfoundation.org>
+CC:     <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] staging: rtl8723bs: os_dep: return errcode in cfg80211_rtw_leave_ibss()
+Date:   Sat, 29 Aug 2020 20:41:14 +0800
+Message-ID: <20200829124114.5792-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix null pointer deref in hci_phy_link_complete_evt, there was no checking there for
-the hcon->amp_mgr->l2cap_conn->hconn, and also in hci_cmd_work, for
-hdev->sent_cmd. 
+We should return error to caller in cfg80211_rtw_leave_ibss().
 
-To fix this issue Add pointer checking in hci_cmd_work and
-hci_phy_link_complete_evt.
-[Linux-next-20200827]
-
-Reported-by: syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?id=0d93140da5a82305a66a136af99b088b75177b99
-Signed-off-by: Anmol Karn <anmol.karan123@gmail.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- net/bluetooth/hci_core.c  | 4 ++++
- net/bluetooth/hci_event.c | 4 ++++
- 2 files changed, 8 insertions(+)
+ drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 68bfe57b6625..533048d2a624 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -4922,6 +4922,10 @@ static void hci_cmd_work(struct work_struct *work)
- 
- 		kfree_skb(hdev->sent_cmd);
- 
-+		if(hdev->sent_cmd) {
-+			hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
-+		}
-+
- 		hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
- 		if (hdev->sent_cmd) {
- 			if (hci_req_status_pend(hdev))
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 4b7fc430793c..c621c8a20ea4 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -4941,6 +4941,10 @@ static void hci_phy_link_complete_evt(struct hci_dev *hdev,
- 		hci_dev_unlock(hdev);
- 		return;
+diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
+index 2fb80b6eb51d..ea3ae3d38337 100644
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
+@@ -2021,7 +2021,7 @@ static int cfg80211_rtw_leave_ibss(struct wiphy *wiphy, struct net_device *ndev)
  	}
-+	if(!(hcon->amp_mgr->l2cap_conn->hcon)) {
-+		hci_dev_unlock(hdev);
-+		return;
-+	}
  
- 	bredr_hcon = hcon->amp_mgr->l2cap_conn->hcon;
+ leave_ibss:
+-	return 0;
++	return ret;
+ }
  
+ static int cfg80211_rtw_connect(struct wiphy *wiphy, struct net_device *ndev,
 -- 
-2.28.0
+2.17.1
+
 
