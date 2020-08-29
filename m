@@ -2,178 +2,133 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB2EC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A43AC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1C9920791
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4864A207DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:57:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Cj8IjmMw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MNYxsNt6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbgH2Q4k (ORCPT
+        id S1728498AbgH2Q50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 12:56:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47148 "EHLO
+        Sat, 29 Aug 2020 12:57:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728418AbgH2Q4g (ORCPT
+        with ESMTP id S1728403AbgH2Q5X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 12:56:36 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 848D6C061239
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 09:56:36 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id n12so454649vkk.11
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 09:56:36 -0700 (PDT)
+        Sat, 29 Aug 2020 12:57:23 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F9D1C061236;
+        Sat, 29 Aug 2020 09:57:23 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id z18so979728pjr.2;
+        Sat, 29 Aug 2020 09:57:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7pl7qQnWrPptXiF3yjs+XH+IkHtabV/XWURgR7SO1Is=;
-        b=Cj8IjmMw3DIOR1s9zIW08aC8jlgO1KSG7gdKyG/JAfErgThgMtdWKiCBuel8bmL8aN
-         pkYJnMlJEKXcwoGVdabePZTXNVEDgmehjEqA2GdpL5N1mqjauz9oCpVD44sZsCdAwR8l
-         76UjA+2MyqlnDxXMhVa3LFHxBYp4EYqO7I1Qw=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JNi5HVcJ7yBT6DVF4xqHEm9pH1OJge9gkwZUJEYG2kc=;
+        b=MNYxsNt6X9itvJUV8tku0XRaO2RkCQBN/mLZewjUf+5xA4M+6/yPPdjtQMeC03rKJ9
+         /vBExQZIZEJ/8mNV+ATN2E3odhetvXRn7l9QyHP8+42rI56Lfe/pZyP7hzOJcp7nviGZ
+         eV2wAYm2MIa0odEJKZOwYx5+dWqyhYy7c7gfzZvpF+6sArgdZWX43/5Td5xSSdadBQAI
+         UqLS7vU+WQBQB33Y+fG73wRdTYAzCwZC6P+Cw3zj6uciFZgLsWtKw3pLiKGDy0tPj18t
+         HZYa8ri3GqKOo9xgNfDTnVzZPj5A3ouYyVOBecWIQ3cHMy6md3gCkWSEW7fZ2M+731WJ
+         st0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7pl7qQnWrPptXiF3yjs+XH+IkHtabV/XWURgR7SO1Is=;
-        b=TnQVxqi6WsPmF6Dpq1Nvt3WCWGI6+ZfRRv3ZmR91f1XNyzMHvlrm7gP+9vdhgy+yLA
-         y9SK+8W6WKBEINJF/72HEKhHPrRxI04v+HYS5FfhPhH42c29xEU9j0/G6l+psStIbI7e
-         pqZxGNJvMbw+5T7C7jH0gIACtly8Ra5HUd154lvWLp4O4Fg2PpUBifB/GrFfaFv48SGS
-         t73XD9xHDYQ+oUHa7tO4S9nqQKkQQod1eITDBlAl51Rct9CT0bRGjv15arowKKcvaBUP
-         TVIW/Rkw94cHZRliAxr0ZTmoHBdk4MwIPtsUumAzC1E5zTiPKsvXf8L1ySj7aY5Y1a+r
-         hxsQ==
-X-Gm-Message-State: AOAM530ra/OFO3elO2Fss3soP3nOB31Uka5peHZkMSD7Mb7OdAQKCVQf
-        czIH/xnb988e2ZUt0VvwLA+rTjZt+wWpOA==
-X-Google-Smtp-Source: ABdhPJx7rXKJZvntQxT5pgY0CEdQIDPP0h8ebUwLGsqBEvXd4iHUBz5ILD0S+Q1lGAjvNeWj9H22nA==
-X-Received: by 2002:a1f:9b8f:: with SMTP id d137mr2294315vke.97.1598720194523;
-        Sat, 29 Aug 2020 09:56:34 -0700 (PDT)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id n8sm519690vkk.13.2020.08.29.09.56.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Aug 2020 09:56:33 -0700 (PDT)
-Received: by mail-ua1-f50.google.com with SMTP id v24so734558uaj.7
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 09:56:33 -0700 (PDT)
-X-Received: by 2002:ab0:37d3:: with SMTP id e19mr2181153uav.64.1598720192750;
- Sat, 29 Aug 2020 09:56:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JNi5HVcJ7yBT6DVF4xqHEm9pH1OJge9gkwZUJEYG2kc=;
+        b=sl77v/v24McA3OEHQ6zgmMf5MX129/FsSNPVqKA4Gr52DpC3LfjDW8pod+uTiJOnqz
+         SQG3qFm7xQle4AblQBmpChp3udSmJqQ6EIZjOkEJFKS9t3JfKwsgjQK+E/NRovbpHlaY
+         8uHly7JKBWdvFNOd2zQUhpUhVuou58XJ/njk2wmmqvHBzW8aSqgtUXS41a94SsSuN+ZG
+         5uI3VX/H3fMD2Gg3rkI1UesxgVP1+BpCXgSGNLCst2NG7X0In5pz0I4sD/rs3GRxbksg
+         yyid59ryZfsMfn4xpciAIrIVvOViT8X9djF1rPNlUtnIDbX5SXrdw5xzkIGDmc56lxkG
+         iibQ==
+X-Gm-Message-State: AOAM533FNGIS35fsr/iBp4dEGdc+bGS7WD8HcelcGOC/ZI2UgxlBYDx/
+        GpwkADH+Kjrr/mBrD18y8Lw=
+X-Google-Smtp-Source: ABdhPJyJ2xh7VLE9WxChS1XpbZ+c5kNddCKSHHWbjfZPxZl64QPAKow+8XMyVaErBkNl9etlMM2aog==
+X-Received: by 2002:a17:90b:238d:: with SMTP id mr13mr3474738pjb.132.1598720242628;
+        Sat, 29 Aug 2020 09:57:22 -0700 (PDT)
+Received: from localhost.localdomain ([45.118.165.144])
+        by smtp.googlemail.com with ESMTPSA id a200sm3217970pfd.182.2020.08.29.09.57.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Aug 2020 09:57:21 -0700 (PDT)
+From:   Anmol Karn <anmol.karan123@gmail.com>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        kuba@kernel.org, davem@davemloft.net, anmol.karan123@gmail.com,
+        syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+Subject: [Linux-kernel-mentees] [PATCH] net: bluetooth: Fix null pointer deref in hci_phy_link_complete_evt
+Date:   Sat, 29 Aug 2020 22:27:12 +0530
+Message-Id: <20200829165712.229437-1-anmol.karan123@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200829124112.227133-1-anmol.karan123@gmail.com>
+References: <20200829124112.227133-1-anmol.karan123@gmail.com>
 MIME-Version: 1.0
-References: <20200828170052.1.Id02b2f451b3eed71ddd580f4b8b44b3e33e84970@changeid>
- <20200829161230.398e0051@archlinux>
-In-Reply-To: <20200829161230.398e0051@archlinux>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Sat, 29 Aug 2020 09:56:41 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W3=kRFH0TzEAX0DWS7jb113LuWUJqVS686EyRzexvoRA@mail.gmail.com>
-Message-ID: <CAD=FV=W3=kRFH0TzEAX0DWS7jb113LuWUJqVS686EyRzexvoRA@mail.gmail.com>
-Subject: Re: [PATCH] iio: sx9310: Prefer async probe
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Daniel Campello <campello@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Torokhov <dtor@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Fix null pointer deref in hci_phy_link_complete_evt, there was no 
+checking there for the hcon->amp_mgr->l2cap_conn->hconn, and also 
+in hci_cmd_work, for hdev->sent_cmd.
 
-On Sat, Aug 29, 2020 at 8:12 AM Jonathan Cameron <jic23@kernel.org> wrote:
->
-> On Fri, 28 Aug 2020 17:01:18 -0700
-> Douglas Anderson <dianders@chromium.org> wrote:
->
-> > On one board I found that:
-> >   probe of 5-0028 returned 1 after 259547 usecs
-> >
-> > There's no reason to block probe of all other devices on our probe.
-> > Turn on async probe.
-> >
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> > NOTE: I haven't done any analysis of the driver to see _why_ it's so
-> > slow, only that I have measured it to be slow.  Someone could
-> > certainly take the time to profile / optimize it, but in any case it
-> > still won't hurt to be async.
->
-> Hmm. It is vanishingly rare to use that flag
+To fix this issue Add pointer checking in hci_cmd_work and
+hci_phy_link_complete_evt.
+[Linux-next-20200827]
 
-My guess is that people just haven't been spending as much time
-optimizing boot performance recently.  I've been trying to do this and
-finding that there are quite a few drivers that could benefit from
-this flag.
+This patch corrected some mistakes from previous patch.
 
-In theory this flag should probably be on by default and it looks like
-that was Dmitry's original intention but the state of the world 5
-years ago was that it wasn't quite ready for this.  I think, in
-particular, drivers that are more core to the system (IOMMUs, clocks,
-regulators, etc) may not have been ready, but misc peripherals should
-be no problem.
+Reported-by: syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?id=0d93140da5a82305a66a136af99b088b75177b99
+Signed-off-by: Anmol Karn <anmol.karan123@gmail.com>
+---
+ net/bluetooth/hci_core.c  | 5 ++++-
+ net/bluetooth/hci_event.c | 4 ++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 68bfe57b6625..996efd654e7a 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -4922,7 +4922,10 @@ static void hci_cmd_work(struct work_struct *work)
+ 
+ 		kfree_skb(hdev->sent_cmd);
+ 
+-		hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
++		if (hdev->sent_cmd) {
++			hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
++		}
++
+ 		if (hdev->sent_cmd) {
+ 			if (hci_req_status_pend(hdev))
+ 				hci_dev_set_flag(hdev, HCI_CMD_PENDING);
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 4b7fc430793c..1e7d9bee9111 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -4941,6 +4941,10 @@ static void hci_phy_link_complete_evt(struct hci_dev *hdev,
+ 		hci_dev_unlock(hdev);
+ 		return;
+ 	}
++	if (!(hcon->amp_mgr->l2cap_conn->hcon)) {
++		hci_dev_unlock(hdev);
++		return;
++	}
+ 
+ 	bredr_hcon = hcon->amp_mgr->l2cap_conn->hcon;
+ 
+-- 
+2.28.0
 
-> so I'm not particularly
-> keen on starting to deploy it when we don't know why a particular
-> driver is taking so long.  I agree it should be safe but I don't
-> like oddities I don't understand!
->
-> There are some sleeps in there but they are all of the order of a few
-> msecs.
->
-> Could it be there is a regulator that is coming up very slowly?
->
-> Any other ideas?
-
-I can do a little bit of profiling next week, but even if we get this
-down from 250 ms to 10 ms I'd still like to see async probe turned on.
-There's no reason for it to be off and every little bit counts.
-
-
-> Jonathan
->
-> >
-> > This is a very safe flag to turn on since:
-> >
-> > 1. It's not like our probe order was defined by anything anyway.  When
-> > we probe is at the whim of when our i2c controller probes and that can
-> > be any time.
-> >
-> > 2. If some other driver needs us then they have to handle the fact
-> > that we might not have probed yet anyway.
-> >
-> > 3. There may be other drivers probing at the same time as us anyway
-> > because _they_ used async probe.
-> >
-> > While I won't say that it's impossible to tickle a bug by turning on
-> > async probe, I would assert that in almost all cases the bug was
-> > already there and needed to be fixed anyway.
-> >
-> > ALSO NOTE: measurement / testing was done on the downstream Chrome OS
-> > 5.4 tree.  I confirmed compiling on mainline.
-> >
-> >  drivers/iio/proximity/sx9310.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> > index dc2e11b43431..444cafc53408 100644
-> > --- a/drivers/iio/proximity/sx9310.c
-> > +++ b/drivers/iio/proximity/sx9310.c
-> > @@ -1054,6 +1054,7 @@ static struct i2c_driver sx9310_driver = {
-> >               .acpi_match_table = ACPI_PTR(sx9310_acpi_match),
-> >               .of_match_table = of_match_ptr(sx9310_of_match),
-> >               .pm = &sx9310_pm_ops,
-> > +             .probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> >       },
-> >       .probe          = sx9310_probe,
-> >       .id_table       = sx9310_id,
->
