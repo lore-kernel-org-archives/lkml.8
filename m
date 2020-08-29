@@ -2,186 +2,235 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC760C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 18:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A884C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 18:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5F420757
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 18:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F97206F0
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 18:28:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgH2SX4 (ORCPT
+        id S1728416AbgH2S2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 14:23:56 -0400
-Received: from smtprelay0164.hostedemail.com ([216.40.44.164]:53888 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728265AbgH2SXx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 14:23:53 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 1D990182CED5B;
-        Sat, 29 Aug 2020 18:23:51 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: humor54_0f10f2427080
-X-Filterd-Recvd-Size: 6548
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 29 Aug 2020 18:23:44 +0000 (UTC)
-Message-ID: <0f837bfb394ac632241eaac3e349b2ba806bce09.camel@perches.com>
-Subject: sysfs output without newlines
-From:   Joe Perches <joe@perches.com>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Denis Efremov <efremov@linux.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Alex Dewar <alex.dewar90@gmail.com>
-Cc:     York Sun <york.sun@nxp.com>, Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Alex Dubov <oakad@yahoo.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Douglas Miller <dougmill@linux.ibm.com>,
-        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Kai =?ISO-8859-1?Q?M=E4kisara?= <Kai.Makisara@kolumbus.fi>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Mark Brown <broonie@kernel.org>,
-        Oliver Neukum <oneukum@suse.com>,
-        Pete Zaitcev <zaitcev@redhat.com>, linux-edac@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-i3c@lists.infradead.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
-Date:   Sat, 29 Aug 2020 11:23:43 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Sat, 29 Aug 2020 14:28:10 -0400
+Received: from mga17.intel.com ([192.55.52.151]:31036 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728265AbgH2S2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 14:28:09 -0400
+IronPort-SDR: WcDrpoMHtCI4q8gekK8PGC3jF6+8WGhXMZ9R3iZnmGgaRUmezgg0NV86mrUDs/Pcr1872bQbLy
+ /sPKevw2c0Qw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9728"; a="136869677"
+X-IronPort-AV: E=Sophos;i="5.76,368,1592895600"; 
+   d="scan'208";a="136869677"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2020 11:28:08 -0700
+IronPort-SDR: ZOEeWUBHKSNtHlgpsFggnAEf5zpyr/ROlykY7zKoIEJXO13uS8SZO9PCiKmb/IwOqfbU31dcHX
+ YvDrhWCvAwEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,368,1592895600"; 
+   d="scan'208";a="300591706"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by orsmga006.jf.intel.com with ESMTP; 29 Aug 2020 11:28:05 -0700
+Date:   Sun, 30 Aug 2020 02:24:05 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org, trix@redhat.com,
+        matthew.gerlach@linux.intel.com, russell.h.weight@intel.com,
+        lgoncalv@redhat.com, hao.wu@intel.com, yilun.xu@intel.com
+Subject: Re: [PATCH v4 2/2] mfd: intel-m10-bmc: add Max10 BMC chip support
+  for Intel FPGA PAC
+Message-ID: <20200829182405.GA27132@yilunxu-OptiPlex-7050>
+References: <1597822497-25107-1-git-send-email-yilun.xu@intel.com>
+ <1597822497-25107-3-git-send-email-yilun.xu@intel.com>
+ <20200828100236.GF1826686@dell>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200828100236.GF1826686@dell>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While doing an investigation for a possible treewide conversion of
-sysfs output using sprintf/snprintf/scnprintf, I discovered
-several instances of sysfs output without terminating newlines.
+Thanks for your comments, I'll fix them. Some comments inline.
 
-It seems likely all of these should have newline terminations
-or have the \n\r termination changed to a single newline.
+On Fri, Aug 28, 2020 at 11:02:36AM +0100, Lee Jones wrote:
+> On Wed, 19 Aug 2020, Xu Yilun wrote:
+> 
+> 
+> > +enum m10bmc_type {
+> > +	M10_N3000,
+> > +};
+> 
+> Seems over-kill.  Will there be others?
 
-Anyone have any objection to patches adding newlines to these
-in their original forms using sprintf/snprintf/scnprintf?
+There will be another version of the BMC which support the Intel PAC
+D5005. The functionalities are similar with N3000. So I defined the
+device type enum here.
 
-A few of these might be false positives as
-	"%s", string
-might already have string with a newline termination.
+> > +static ssize_t bmc_version_show(struct device *dev,
+> > +				struct device_attribute *attr, char *buf)
+> > +{
+> 
+> Does this line up to the '(' in code?
 
-+++ drivers/edac/fsl_ddr_edac.c
-+	return sysfs_emit(data, "0x%08x",
-+	return sysfs_emit(data, "0x%08x",
-+	return sysfs_emit(data, "0x%08x",
-+++ drivers/edac/synopsys_edac.c
-+	return sysfs_emit(data, "Data Poisoning: %s\n\r",
-+		return sysfs_emit(buf, "1");
-+		return sysfs_emit(buf, "0");
-+		return sysfs_emit(buf, "1");
-+		return sysfs_emit(buf, "0");
-+		return sysfs_emit(buf, "0");
-+		return sysfs_emit(buf, "1");
-+		return sysfs_emit(buf, "0");
-+	return sysfs_emit(buf, "%u", !!(data->status & mask));
-+	return sysfs_emit(buf, "%u", data->tcrit2[index] * 1000);
-+	return sysfs_emit(buf, "%d",
-+	return sysfs_emit(buf, "%u", data->tcrit1[index] * 1000);
-+	return sysfs_emit(buf, "%d",
-+	return sysfs_emit(buf, "%d", data->toffset[index] * 500);
-+++ drivers/i3c/master.c
-+		return sysfs_emit(buf, "i3c:dcr%02Xmanuf%04X", devinfo.dcr,
-+	return sysfs_emit(buf, "i3c:dcr%02Xmanuf%04Xpart%04Xext%04X",
-+	return sysfs_emit(buf, "%s", dd->boardversion);
-+	return sysfs_emit(buf, "%s", dd->serial);
-+	return sysfs_emit(buf, "%s", (char *)ib_qib_version);
-+	return sysfs_emit(buf, "%s", dd->boardversion);
-+	return sysfs_emit(buf, "%s", dd->lbus_info);
-+	return sysfs_emit(buf, "ipac:f%02Xv%08Xd%08X", idev->id_format,
-+++ drivers/memstick/core/mspro_block.c
-+	return sysfs_emit(buffer, "%s", (char *)s_attr->data);
-+	return sysfs_emit(buf, "%s",
-+	return sysfs_emit(buf, "%s",
-+++ drivers/misc/mei/bus.c
-+	return sysfs_emit(buf, "%s", cldev->name);
-+	return sysfs_emit(buf, "%pUl", uuid);
-+	return sysfs_emit(buf, "%02X", version);
-+	return sysfs_emit(buf, "mei:%s:%pUl:%02X:",
-+	return sysfs_emit(buf, "%d", maxconn);
-+	return sysfs_emit(buf, "%d", fixed);
-+	return sysfs_emit(buf, "%d", vt);
-+	return sysfs_emit(buf, "%u", maxlen);
-+	return sysfs_emit(buf, "%s", mei_dev_state_str(dev_state));
-+++ drivers/misc/tifm_core.c
-+	return sysfs_emit(buf, "%x", sock->type);
-+			return sysfs_emit(buf, "%s",
-+	return sysfs_emit(buf, "%d", dev->net_count);
-+++ drivers/net/ethernet/freescale/dpaa/dpaa_eth_sysfs.c
-+		return sysfs_emit(buf, "%llx",
-+		return sysfs_emit(buf, "none");
-+++ drivers/net/ethernet/ibm/ehea/ehea_main.c
-+	return sysfs_emit(buf, "%d", port->logical_port_id);
-+++ drivers/net/wireless/intel/ipw2x00/ipw2200.c
-+		return sysfs_emit(buf, "%s", priv->prom_net_dev->name);
-+	return sysfs_emit(buf, "0x%04X",
-+	return sysfs_emit(buf, "%d", il->retry_rate);
-+	return sysfs_emit(buf, "%pOF", np);
-+	return sysfs_emit(buf, "pcmcia:m%04Xc%04Xf%02Xfn%02Xpfn%02X"
-+++ drivers/platform/x86/dell-smbios-base.c
-+		return sysfs_emit(buf, "%08x", da_tokens[i].location);
-+		return sysfs_emit(buf, "%08x", da_tokens[i].value);
-+	return sysfs_emit(buf, "%08x",
-+++ drivers/scsi/st.c
-+	return sysfs_emit(buf, "%lld",
-+	return sysfs_emit(buf, "%lld",
-+	return sysfs_emit(buf, "%lld",
-+	return sysfs_emit(buf, "%lld",
-+	return sysfs_emit(buf, "%lld",
-+	return sysfs_emit(buf, "%lld",
-+	return sysfs_emit(buf, "%lld",
-+	return sysfs_emit(buf, "%lld",
-+	return sysfs_emit(buf, "%lld",
-+	return sysfs_emit(buf, "%lld",
-+++ drivers/spi/spi-tle62x0.c
-+	return sysfs_emit(buf, "%d", value);
-+++ drivers/usb/class/cdc-acm.c
-+	return sysfs_emit(buf, "%d", acm->ctrl_caps);
-+	return sysfs_emit(buf, "%d", acm->country_rel_date);
-+++ drivers/usb/class/usblp.c
-+	return sysfs_emit(buf, "%s", usblp->device_id_string+2);
-+	return sysfs_emit(buf, "usb:v%04Xp%04Xd%04Xdc%02Xdsc%02Xdp%02X"
-+++ drivers/usb/misc/cytherm.c
-+	return sysfs_emit(buf, "%i", cytherm->brightness);
-+	return sysfs_emit(buf, "%c%i.%i", sign ? '-' : '+', temp >> 1,
-+		return sysfs_emit(buf, "1");
-+		return sysfs_emit(buf, "0");
-+	return sysfs_emit(buf, "%d", retval);
-+	return sysfs_emit(buf, "%d", retval);
+Yes, It does.
+
+> 
+> > +	struct intel_m10bmc *m10bmc = dev_get_drvdata(dev);
+> > +	unsigned int val;
+> > +	int ret;
+> > +
+> > +	ret = m10bmc_sys_read(m10bmc, M10BMC_BUILD_VER, &val);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return sprintf(buf, "0x%x\n", val);
+> 
+> Is this safe?  Have you considered snprintf()?
+
+It formats a 32 bits value to string, so the strlen should be 8 chars at
+most. So I think it should be safe here.
+
+I see in Documentation/filesystems/sysfs.rst:
+- show() must not use snprintf() when formatting the value to be
+  returned to user space. If you can guarantee that an overflow
+  will never happen you can use sprintf() otherwise you must use
+  scnprintf().
+
+And seeing from this mail https://lkml.org/lkml/2019/4/25/1050
+Greg is discouraging use of scnprintf for sysfs attributes where it's not
+needed.
+
+> > +}
+> > +static DEVICE_ATTR_RO(bmcfw_version);
+> > +
+> > +static struct attribute *m10bmc_attrs[] = {
+> > +	&dev_attr_bmc_version.attr,
+> > +	&dev_attr_bmcfw_version.attr,
+> > +	NULL,
+> > +};
+> 
+> Can this be const?
+
+Seems we can not const this pointer or this array.
+
+If we const the array, static const struct attribute *m10bmc_attrs[],
+then:
+	error: initialization from incompatible pointer type
+
+If we const the pointer, static struct attribute * const m10bmc_attrs[],
+then:
+	warning: initialization discards ‘const’ qualifier from pointer
+		 target type
+
+> 
+> > +static struct attribute_group m10bmc_attr_group = {
+> > +	.attrs = m10bmc_attrs,
+> > +};
+> 
+> Can this be const?
+
+Yes, we can const it.
+
+> 
+> > +static const struct attribute_group *m10bmc_dev_groups[] = {
+> > +	&m10bmc_attr_group,
+> > +	NULL
+> 
+> > +static int check_m10bmc_version(struct intel_m10bmc *m10bmc)
+> > +{
+> > +	unsigned int v;
+> > +
+> > +	if (m10bmc_raw_read(m10bmc, M10BMC_LEGACY_SYS_BASE + M10BMC_BUILD_VER,
+> > +			    &v))
+> > +		return -ENODEV;
+> 
+> Please break functions out of if statements.
+> 
+> Does m10bmc_raw_read() return 0 on success?
+
+Yes, this function just wrappered the regmap_read()
+
+> 
+> Seems odd for a read function.
+> 
+> > +	if (v != 0xffffffff) {
+> > +		dev_err(m10bmc->dev, "bad version M10BMC detected\n");
+> > +		return -ENODEV;
+> > +	}
+> 
+> The only acceptable version is -1?
+
+As mentioned by Tom, this is a check if the board is using a very old legacy
+bmc version, the driver doesn't mean to support this old legacy bmc
+version.
 
 
+> > +	case M10_N3000:
+> > +		cells = m10bmc_pacn3000_subdevs;
+> > +		n_cell = ARRAY_SIZE(m10bmc_pacn3000_subdevs);
+> > +		break;
+> > +	default:
+> > +		return -ENODEV;
+> > +	}
+> 
+> Will there be other versions?
+
+There will be a M10_D5005, we haven't fully prepared the code yet, but I
+mean to reserve the place for it.
+
+> > + * m10bmc_raw_read - read m10bmc register per addr
+> > + * m10bmc_sys_read - read m10bmc system register per offset
+> > + */
+> > +static inline int
+> > +m10bmc_raw_read(struct intel_m10bmc *m10bmc, unsigned int addr,
+> > +		unsigned int *val)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = regmap_read(m10bmc->regmap, addr, val);
+> > +	if (ret)
+> > +		dev_err(m10bmc->dev, "fail to read raw reg %x: %d\n",
+> > +			addr, ret);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +#define m10bmc_sys_read(m10bmc, offset, val) \
+> > +	m10bmc_raw_read(m10bmc, M10BMC_SYS_BASE + (offset), val)
+> 
+> No unnecessary abstractions.
+> 
+> Just use the Regmap API directly please.
+
+Could we keep the 2 definition?
+
+For m10bmc_raw_read(), we make it to help print some error info if
+regmap RW fail. So we don't have to write "if (ret) dev_err" every time
+we use regmap.
+
+For m10bmc_sys_read(), the offset of BMC system registers could be
+configured by HW developers (The MAX 10 is an CPLD, it could be easily
+reprogrammed). And the HW SPEC will not add the offset when describing
+the addresses of system registers. So:
+1. It makes the definition of system registers in code align with HW SPEC.
+2. It makes developers easier to make changes when the offset is adjusted
+   in HW (I've been told by HW guys, it is sometimes necessary to adjust
+   the offset when changing RTL, required by Altera EDA tool - Quartus).
+
+Thanks,
+Yilun
+
+> 
+> -- 
+> Lee Jones [李琼斯]
+> Senior Technical Lead - Developer Services
+> Linaro.org │ Open source software for Arm SoCs
+> Follow Linaro: Facebook | Twitter | Blog
