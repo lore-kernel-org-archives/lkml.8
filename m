@@ -2,109 +2,89 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5362DC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 18:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 850C2C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 19:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3786D207DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 18:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 669B420774
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 19:28:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uWi6GKrc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BbnK7wCa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbgH2SmQ (ORCPT
+        id S1728461AbgH2T1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 14:42:16 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44530 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728442AbgH2SmN (ORCPT
+        Sat, 29 Aug 2020 15:27:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728335AbgH2T1x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 14:42:13 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07TIg8kK048450;
-        Sat, 29 Aug 2020 13:42:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598726528;
-        bh=CvLfEDBP1cV+XJ98X1HPprMDsVRKMQGtAYqZfAsenXI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=uWi6GKrcTazD/ZFHQrF3V08YZ25iCz9odOa0AGVNARdzr0IRjOgSS/EpgBwBXui9+
-         flO8FJKIfaH/btwjZ5SudCNsWpWh16bRjCGd3Os6RSUM+6axYvDxH38UBenMScOowp
-         0EXVp5lHKJssXtzQ3pj86Pd+tMt1YEKX5VAg0ShU=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07TIg8wU028214
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 29 Aug 2020 13:42:08 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Sat, 29
- Aug 2020 13:42:08 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Sat, 29 Aug 2020 13:42:08 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07TIg6EZ055968;
-        Sat, 29 Aug 2020 13:42:06 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        <santosh.shilimkar@oracle.com>, Tero Kristo <t-kristo@ti.com>,
-        Nishanth Menon <nm@ti.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH next v2 3/3] arm64: dts: ti: k3-am65: ringacc: drop ti,dma-ring-reset-quirk
-Date:   Sat, 29 Aug 2020 21:41:39 +0300
-Message-ID: <20200829184139.15547-4-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200829184139.15547-1-grygorii.strashko@ti.com>
-References: <20200829184139.15547-1-grygorii.strashko@ti.com>
+        Sat, 29 Aug 2020 15:27:53 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F365CC061236;
+        Sat, 29 Aug 2020 12:27:52 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id t4so3457663iln.1;
+        Sat, 29 Aug 2020 12:27:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jlsNy+dwE1MBR5TBIEJpV1N/vsndwqO8gJ1RtyIu2VY=;
+        b=BbnK7wCaya4I9Usd//PcEjZN7YjQpXkdXnOU9yp6uie79BkSjtJoKXvZv0lq5qLZOH
+         8++Kq6V2VnPxrAF0/JBOUcvtba+UB95DCAEwnII5mRMReaxNOuvFZFCXemDRSSLmgQbI
+         cvx9Jpn0PfiICvZvUibc9MFNK/oqjZnS0+m+l8PHty/VzbhqvMvbO9m45nSU5Vv2JZS5
+         75x6Yxv9cDOeaS24wf4cNjMGEn+rkeAYUMmJoBPZVL4/FZHxM+69J1zcBrEPZ4c+m6ub
+         OmeTJvAsXCKLNeu4DjTfeiJjYuv/ysW4Rh5sCTL0uRh8LzdfFxm/Glk65TWU4qyxY0sS
+         MwTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jlsNy+dwE1MBR5TBIEJpV1N/vsndwqO8gJ1RtyIu2VY=;
+        b=pA7/MJCC/3+Ftw/AGyUaxzn4Dl/do+9KM3jSF41eO4Ut3J20SYt0AJF6xAr55o0lSE
+         GgSzNPLDLl0pMEQsEAoiiuEfVF/STVbxIEGVKzmHxBRZ8Raab3nyjYmYVw6a6qPWCXgv
+         HqpnIcoUHX22BmdTzlRYYU+JAKhod9qTUC26GzysgX6OwY/ZneZypUM+G1W6mWa1Ibx1
+         4FA/k7AfkuIWCUfRt9JlH/xDGhoPYryJs8wRvIY3YgoNIiwx9mO06/E1o9vfA+zTg9GE
+         6hx+HdBh2xRelCsVC9DCi9K1njR4uELBS1RPpAsvBt6PheUvMdVpHuQegat4Y8pmymbi
+         ZHRg==
+X-Gm-Message-State: AOAM530s+b6cKhSGJRnwoFkYvHdMSdfOVjU3tb7rgCOz53wtt4mik3Mn
+        LmJ3HjIwzDmOs0LKNuK6QpMQj+tVmsxgQA==
+X-Google-Smtp-Source: ABdhPJzeavam2avH8hjrKCcLPwcUVvweRtrKaUaYSgFdmo2zgbky0bGzhAZsTEhb/HcEwrH1MLP/2Q==
+X-Received: by 2002:a92:d1cd:: with SMTP id u13mr3509546ilg.120.1598729272066;
+        Sat, 29 Aug 2020 12:27:52 -0700 (PDT)
+Received: from Davids-MacBook-Pro.local ([2601:282:803:7700:21a5:5fc5:213b:a337])
+        by smtp.googlemail.com with ESMTPSA id l144sm1800444ill.6.2020.08.29.12.27.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Aug 2020 12:27:51 -0700 (PDT)
+Subject: Re: [PATCH] net: ipv4: remove unused arg exact_dif in compute_score
+To:     Miaohe Lin <linmiaohe@huawei.com>, davem@davemloft.net,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200829090151.61891-1-linmiaohe@huawei.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <a17afcff-deba-90ea-7a6c-f29798d0f771@gmail.com>
+Date:   Sat, 29 Aug 2020 13:27:50 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200829090151.61891-1-linmiaohe@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove obsolete "ti,dma-ring-reset-quirk" Ringacc DT property.
+On 8/29/20 3:01 AM, Miaohe Lin wrote:
+> @@ -277,15 +277,13 @@ static struct sock *inet_lhash2_lookup(struct net *net,
+>  				const __be32 daddr, const unsigned short hnum,
+>  				const int dif, const int sdif)
+>  {
+> -	bool exact_dif = inet_exact_dif_match(net, skb);
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 1 -
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi  | 1 -
- 2 files changed, 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 24ef18fe77df..245c0d534ff1 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -590,7 +590,6 @@
- 			reg-names = "rt", "fifos", "proxy_gcfg", "proxy_target";
- 			ti,num-rings = <818>;
- 			ti,sci-rm-range-gp-rings = <0x1>; /* GP ring range */
--			ti,dma-ring-reset-quirk;
- 			ti,sci = <&dmsc>;
- 			ti,sci-dev-id = <187>;
- 			msi-parent = <&inta_main_udmass>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-index 51ca4b4d4c21..64c5192796c7 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-@@ -135,7 +135,6 @@
- 			reg-names = "rt", "fifos", "proxy_gcfg", "proxy_target";
- 			ti,num-rings = <286>;
- 			ti,sci-rm-range-gp-rings = <0x1>; /* GP ring range */
--			ti,dma-ring-reset-quirk;
- 			ti,sci = <&dmsc>;
- 			ti,sci-dev-id = <195>;
- 			msi-parent = <&inta_main_udmass>;
--- 
-2.17.1
-
+inet_exact_dif_match is no longer needed after the above is removed.
