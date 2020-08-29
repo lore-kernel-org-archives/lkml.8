@@ -2,96 +2,86 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EBFC433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF8EC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7806208A9
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A16EF206B5
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:41:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fieldses.org header.i=@fieldses.org header.b="BykLjcYC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NvYz6Vfw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbgH2Pgu (ORCPT
+        id S1728365AbgH2PlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 11:36:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34714 "EHLO
+        Sat, 29 Aug 2020 11:41:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728196AbgH2Pgu (ORCPT
+        with ESMTP id S1728196AbgH2PlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 11:36:50 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1AC8C061236;
-        Sat, 29 Aug 2020 08:36:49 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id CC5BB2012; Sat, 29 Aug 2020 11:36:48 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org CC5BB2012
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1598715408;
-        bh=HoxjoWKowd57pYE4VNh/VDpZ9rlhexlsY3h8n+CNiFk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BykLjcYCG5uqv3qjo3r9Knn4dTzZWZzkMBx3C4yef/gVTZs4f2yTcvB4qqbUhZuh1
-         //Ef5iMZdn0xKZ1IQsPZAZo+ErDc7++qisotGIGO/zqCAY0RbBURsP22XOwk2IlwOB
-         4pBtDGTgzMYjVH4SNHxzod83PjdtzJciH1oL+Udo=
-Date:   Sat, 29 Aug 2020 11:36:48 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Scott Mayhew <smayhew@redhat.com>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH] gss_krb5: Fix memleak in krb5_make_rc4_seq_num
-Message-ID: <20200829153648.GB20499@fieldses.org>
-References: <20200827080252.26396-1-dinghao.liu@zju.edu.cn>
+        Sat, 29 Aug 2020 11:41:02 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10D79C061236;
+        Sat, 29 Aug 2020 08:41:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=93vPl4ISVwqsT/rzN0zFT8sEJycYYCjRF7JumF/z/7A=; b=NvYz6VfwpyD+r3/mz8kVTJNDWh
+        oDcq20Px1L3OdYCXwdOTRowfxBe6Jgun2w/lOWw5H+CXzIMgFULh5o3BJdzMLMuhND59XX8x38tpW
+        hCRZK+G1byqOABRJiqOMG2g56vu60fb7ObDIYg9bL5fTf7Tja9a5Ej9PoCff5agINSDREwe0pXMa3
+        qQXc3ggYYnkjpFiHLKbUDkzDSS4LlshQ/AiA1tLITGOQ5ollyJbVMP6RNOG+vNotSQuG4BADxICEW
+        4nLPsmTgilYClQbOoYaM/RjadHGFCCZZm6R79XhRmLmBHek5NbY1qpFuVFgv40DFOPLx8mxlb7Tc2
+        BW1f9NVw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kC2yQ-0002UI-Bu; Sat, 29 Aug 2020 15:40:58 +0000
+Subject: Re: [ALTERNATE PATCH] memblock: fix min_low_pfn/max_low_pfn build
+ errors
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org
+References: <20200829000139.2513-1-rdunlap@infradead.org>
+ <20200829130429.GG167163@linux.ibm.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a0665bb7-3389-1178-0a79-2155fb88255d@infradead.org>
+Date:   Sat, 29 Aug 2020 08:40:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827080252.26396-1-dinghao.liu@zju.edu.cn>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200829130429.GG167163@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code is rarely if ever used, and there are pending patches to
-remove it completely, so I don't think it's worth trying to fix a rare
-memory leak at this point.
-
---b.
-
-On Thu, Aug 27, 2020 at 04:02:50PM +0800, Dinghao Liu wrote:
-> When kmalloc() fails, cipher should be freed
-> just like when krb5_rc4_setup_seq_key() fails.
+On 8/29/20 6:04 AM, Mike Rapoport wrote:
+> On Fri, Aug 28, 2020 at 05:01:39PM -0700, Randy Dunlap wrote:
+>> Export min_low_pfn & max_low_pfn in mm/memblock.c to fix build errors
+>> on arch/microblaze/ and arch/ia64/: (e.g.)
 > 
-> Fixes: e7afe6c1d486b ("sunrpc: fix 4 more call sites that were using stack memory with a scatterlist")
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  net/sunrpc/auth_gss/gss_krb5_seqnum.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+> Please don't. This would give driver developers a wrong impression that
+> these variables can be used to query memory boundaries, but this is not
+> the case, at least not on all architectures.
 > 
-> diff --git a/net/sunrpc/auth_gss/gss_krb5_seqnum.c b/net/sunrpc/auth_gss/gss_krb5_seqnum.c
-> index 507105127095..88ca58d11082 100644
-> --- a/net/sunrpc/auth_gss/gss_krb5_seqnum.c
-> +++ b/net/sunrpc/auth_gss/gss_krb5_seqnum.c
-> @@ -53,8 +53,10 @@ krb5_make_rc4_seq_num(struct krb5_ctx *kctx, int direction, s32 seqnum,
->  		return PTR_ERR(cipher);
->  
->  	plain = kmalloc(8, GFP_NOFS);
-> -	if (!plain)
-> -		return -ENOMEM;
-> +	if (!plain) {
-> +		code = -ENOMEM;
-> +		goto out;
-> +	}
->  
->  	plain[0] = (unsigned char) ((seqnum >> 24) & 0xff);
->  	plain[1] = (unsigned char) ((seqnum >> 16) & 0xff);
-> -- 
-> 2.17.1
+> I would prefer fixing it up locally for microblaze and ia64.
+
+I did that.
+and that's why this is labeled as an ALTERNATE PATCH.
+
+
+thanks.
+-- 
+~Randy
+
