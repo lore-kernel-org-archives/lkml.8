@@ -7,92 +7,116 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07979C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7507C433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D58AE21527
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB2ED21527
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598700547;
-	bh=jpPjWh6NvjNnA8Jn0CmFtKO+pYti8+XJbh59IY3ALEE=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BL69/04kEsh+remadMgpA4skFuktBbYgJfr2i8WKQfRnQqLIjAN3ezgIMgEb3yZpY
-	 carYDL/9NzpVBF2CR8bq7oJdXWThdHN/x6mx0mLuPYKA1/ShXYuM+9kGekHSQSJ5K/
-	 5TCL1hLUOH7pG5w+DBNOj+lNZLdLheVMI8D9VLHQ=
+	s=default; t=1598700592;
+	bh=B9VCR1gc3mVExEe2V499pC1prwSxp/+jhKu43FvTLNU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=yFIoDwDnaJKDmCyRDSALb13jkeydo15zENaTEnYR321kC7wn0cZARQQPZa+NcC+qy
+	 bJx/+AeAbgcXB/nRDgncx8SsVbVGk/6ZNe22gRXRYfcvym58LI0ycS+rPVeC3hqh7n
+	 PuktoVOGnfEbmH9hGVWN3vSqKIL56txH6fU0+tYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgH2L27 (ORCPT
+        id S1727913AbgH2L3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 07:28:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44802 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 07:29:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727930AbgH2LXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 07:23:44 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727999AbgH2L2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 07:28:06 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27C2F20CC7;
-        Sat, 29 Aug 2020 11:18:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D427F214DB;
+        Sat, 29 Aug 2020 11:26:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598699912;
-        bh=jpPjWh6NvjNnA8Jn0CmFtKO+pYti8+XJbh59IY3ALEE=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=u/iBHlfCQMbcoJGw+hNYUjYe6HpcATuliCE+mdP/1pjDbyBePKFiRRo6CbPrUBtrG
-         +z7UavNPTgyiA3XEyQCp8pCz7X18g1hcII+N02RC0YoMllqVy/2/Ec0zsQ6yCxnOIo
-         0bfFBtVJvgRxV5wESQAL+466Plxc02TsTTqWM6fg=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Wolfram Sang <wolfram@the-dreams.de>,
-        Dong Aisheng <aisheng.dong@nxp.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: [PATCH 7/7] dt-bindings: i2c: imx: Fix i.MX 7 compatible matching
-Date:   Sat, 29 Aug 2020 13:18:00 +0200
-Message-Id: <20200829111800.2786-7-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200829111800.2786-1-krzk@kernel.org>
-References: <20200829111800.2786-1-krzk@kernel.org>
+        s=default; t=1598700369;
+        bh=B9VCR1gc3mVExEe2V499pC1prwSxp/+jhKu43FvTLNU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=zYwTfmnLzGYjYC7cBwL7UWSG8ImGKC3qfcDFucsRDuTTUP+MyQbSwuPojkS94jtBk
+         mQsz9/czKDf45ZLMs/uyQ42zTe3k7muKVy41rHIhwzRi3k+fA6irRUjjL6fJKHwhLH
+         v2NToLsTGTK2FN1AB+sRkSDYJA/BnetkQhQIJRPc=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kByzm-007dRY-Ra; Sat, 29 Aug 2020 12:26:07 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, kernel-team@android.com
+Subject: [PATCH] HID: core: Correctly handle ReportSize being zero
+Date:   Sat, 29 Aug 2020 12:26:01 +0100
+Message-Id: <20200829112601.1060527-1-maz@kernel.org>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: jikos@kernel.org, benjamin.tissoires@redhat.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i.MX 7 DTSes use two compatibles so update the binding to fix
-dtbs_check warnings like:
+It appears that a ReportSize value of zero is legal, even if a bit
+non-sensical. Most of the HID code seems to handle that gracefully,
+except when computing the total size in bytes. When fed as input to
+memset, this leads to some funky outcomes.
 
-  arch/arm/boot/dts/imx7d-cl-som-imx7.dt.yaml: i2c@30a20000:
-    compatible: ['fsl,imx7d-i2c', 'fsl,imx21-i2c'] is not valid under any of the given schemas (Possible causes of the failure):
+Detect the corner case and correctly compute the size.
 
-  arch/arm/boot/dts/imx7d-cl-som-imx7.dt.yaml: i2c@30a20000:
-    compatible: ['fsl,imx7d-i2c', 'fsl,imx21-i2c'] is too long
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- Documentation/devicetree/bindings/i2c/i2c-imx.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hid/hid-core.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx.yaml b/Documentation/devicetree/bindings/i2c/i2c-imx.yaml
-index 73b4e628802c..2d555d5bacc5 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-imx.yaml
-+++ b/Documentation/devicetree/bindings/i2c/i2c-imx.yaml
-@@ -18,6 +18,9 @@ properties:
-       - items:
-           - const: fsl,imx35-i2c
-           - const: fsl,imx1-i2c
-+      - items:
-+          - const: fsl,imx7d-i2c
-+          - const: fsl,imx21-i2c
-       - items:
-           - enum:
-               - fsl,imx25-i2c
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index 359616e3efbb..d2ecc9c45255 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -1597,6 +1597,17 @@ static void hid_output_field(const struct hid_device *hid,
+ 	}
+ }
+ 
++/*
++ * Compute the size of a report.
++ */
++static size_t hid_compute_report_size(struct hid_report *report)
++{
++	if (report->size)
++		return ((report->size - 1) >> 3) + 1;
++
++	return 0;
++}
++
+ /*
+  * Create a report. 'data' has to be allocated using
+  * hid_alloc_report_buf() so that it has proper size.
+@@ -1609,7 +1620,7 @@ void hid_output_report(struct hid_report *report, __u8 *data)
+ 	if (report->id > 0)
+ 		*data++ = report->id;
+ 
+-	memset(data, 0, ((report->size - 1) >> 3) + 1);
++	memset(data, 0, hid_compute_report_size(report));
+ 	for (n = 0; n < report->maxfield; n++)
+ 		hid_output_field(report->device, report->field[n], data);
+ }
+@@ -1739,7 +1750,7 @@ int hid_report_raw_event(struct hid_device *hid, int type, u8 *data, u32 size,
+ 		csize--;
+ 	}
+ 
+-	rsize = ((report->size - 1) >> 3) + 1;
++	rsize = hid_compute_report_size(report);
+ 
+ 	if (report_enum->numbered && rsize >= HID_MAX_BUFFER_SIZE)
+ 		rsize = HID_MAX_BUFFER_SIZE - 1;
 -- 
-2.17.1
+2.27.0
 
