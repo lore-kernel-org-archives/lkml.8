@@ -2,69 +2,98 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6E1C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 21:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECAFC433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 21:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4981C20776
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 21:24:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598736275;
-	bh=oJohxNXjU/ybdfp9MpGbdBopnsE/npgE+8Tv6Uy+ahM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=H00aqQIwlsgsJdrsBuC3wJ3SxPPjEKz1L+M6kbIpAXaSA+RLXkD4zJxtX8VTDgzRo
-	 Kkbpxvi4L0LPzxU7JA9qFKWWU1GoyY1tz5oX+CENm+AjZioHSiSXuKLNc3lqIVl9dJ
-	 jW/2beR9aZr59xkEnSlfBjfMHWAFfmAIz3wDB4NU=
+	by mail.kernel.org (Postfix) with ESMTP id E641E20776
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 21:24:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgH2VYd (ORCPT
+        id S1728525AbgH2VYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 17:24:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726938AbgH2VYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 17:24:32 -0400
-Subject: Re: [GIT PULL] fallthrough fixes for 5.9-rc3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598736272;
-        bh=oJohxNXjU/ybdfp9MpGbdBopnsE/npgE+8Tv6Uy+ahM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=B17d9enzJF2k8pBXmYq9XTaHDfXhTwS681H+LW5EzeD4PEp1gYXYvGFu1mN39nmLO
-         qt9SACC1xR6oPX4U5t/ttII+Y/NR39UP5wufP6QL3e9OLA0YMbPEQXJsVN7RkvLN/N
-         QZH6h/9ZVSBCMahyHLBPdNKuds7nrfcY0J2u6nbE=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200829173702.GA22301@embeddedor>
-References: <20200829173702.GA22301@embeddedor>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200829173702.GA22301@embeddedor>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/fallthrough-fixes-5.9-rc3
-X-PR-Tracked-Commit-Id: c165a08d2b2857c91c627039c4881f9d7ad1a3bd
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1127b219ce9481c84edad9711626d856127d5e51
-Message-Id: <159873627246.5962.7593439975044093985.pr-tracker-bot@kernel.org>
-Date:   Sat, 29 Aug 2020 21:24:32 +0000
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+        Sat, 29 Aug 2020 17:24:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728384AbgH2VYn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 17:24:43 -0400
+Received: from gofer.mess.org (gofer.mess.org [IPv6:2a02:8011:d000:212::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A8EC061573;
+        Sat, 29 Aug 2020 14:24:43 -0700 (PDT)
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id AB734C638A; Sat, 29 Aug 2020 22:24:35 +0100 (BST)
+Date:   Sat, 29 Aug 2020 22:24:35 +0100
+From:   Sean Young <sean@mess.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jia-Ju Bai <baijiaju@tsinghua.edu.cn>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.19 08/38] media: pci: ttpci: av7110: fix
+ possible buffer overflow caused by bad DMA value in debiirq()
+Message-ID: <20200829212435.GA9195@gofer.mess.org>
+References: <20200821161807.348600-1-sashal@kernel.org>
+ <20200821161807.348600-8-sashal@kernel.org>
+ <20200829121020.GA20944@duo.ucw.cz>
+ <20200829171600.GA7465@pendragon.ideasonboard.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200829171600.GA7465@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 29 Aug 2020 12:37:02 -0500:
+On Sat, Aug 29, 2020 at 08:16:00PM +0300, Laurent Pinchart wrote:
+> On Sat, Aug 29, 2020 at 02:10:20PM +0200, Pavel Machek wrote:
+> > Hi!
+> > 
+> > > The value av7110->debi_virt is stored in DMA memory, and it is assigned
+> > > to data, and thus data[0] can be modified at any time by malicious
+> > > hardware. In this case, "if (data[0] < 2)" can be passed, but then
+> > > data[0] can be changed into a large number, which may cause buffer
+> > > overflow when the code "av7110->ci_slot[data[0]]" is used.
+> > > 
+> > > To fix this possible bug, data[0] is assigned to a local variable, which
+> > > replaces the use of data[0].
+> > 
+> > I'm pretty sure hardware capable of manipulating memory can work
+> > around any such checks, but...
+> > 
+> > > +++ b/drivers/media/pci/ttpci/av7110.c
+> > > @@ -424,14 +424,15 @@ static void debiirq(unsigned long cookie)
+> > >  	case DATA_CI_GET:
+> > >  	{
+> > >  		u8 *data = av7110->debi_virt;
+> > > +		u8 data_0 = data[0];
+> > >  
+> > > -		if ((data[0] < 2) && data[2] == 0xff) {
+> > > +		if (data_0 < 2 && data[2] == 0xff) {
+> > >  			int flags = 0;
+> > >  			if (data[5] > 0)
+> > >  				flags |= CA_CI_MODULE_PRESENT;
+> > >  			if (data[5] > 5)
+> > >  				flags |= CA_CI_MODULE_READY;
+> > > -			av7110->ci_slot[data[0]].flags = flags;
+> > > +			av7110->ci_slot[data_0].flags = flags;
+> > 
+> > This does not even do what it says. Compiler is still free to access
+> > data[0] multiple times. It needs READ_ONCE() to be effective.
+> 
+> Yes, it seems quite dubious to me. If we *really* want to guard against
+> rogue hardware here, the whole DMA buffer should be copied. I don't
+> think it's worth it, a rogue PCI device can do much more harm.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/fallthrough-fixes-5.9-rc3
+That is a good point. I'm not sure what the kernel could do to protect
+against a malicious PCI device (that can do dma) so this patch is totally
+pointless.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1127b219ce9481c84edad9711626d856127d5e51
+Thanks
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Sean
