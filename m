@@ -2,90 +2,146 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9603C433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52754C433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7971420791
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:58:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598713112;
-	bh=c0kH1mCkin6PKzxzOGkPMYdlHMTyS8+zEbWgSAhV7MA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PcTVGFuuvKs/xAcuChr2za4rROQo3hSvHMMoKPZeh1RK+xr9OXqhQDcqtRLX1wQ88
-	 FFWx2xT8xrssRxvgTysz/PTis1/yS0ctG2tQm0a5P1w81pUlVgG3GpWjMctindqJ7G
-	 xgY3alSjBdHzHWQAXB2RPT/QgK9bOY4D9zhsOCXY=
+	by mail.kernel.org (Postfix) with ESMTP id 2ED83208A9
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:58:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TCYOE32Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgH2O6a (ORCPT
+        id S1728327AbgH2O65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 10:58:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727772AbgH2O6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 10:58:30 -0400
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB48E20791;
-        Sat, 29 Aug 2020 14:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598713110;
-        bh=c0kH1mCkin6PKzxzOGkPMYdlHMTyS8+zEbWgSAhV7MA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GgBD6YzjxULoQJnUtXFt7VfdIJRhe5Rd0Tt08OJQOX6cb2ViCdIsWieiBWFfxLp7Z
-         W965S6TkGiT7GL3a4c7/VPJoH3zgqNE7QMv+oBem+Tsl701+WBCt1wanClTa4LSMBy
-         Now+DMobFin8+h8+QiaFz3A8p0dmEtUGlt+ACdqw=
-Received: by mail-ed1-f50.google.com with SMTP id ba12so1686824edb.2;
-        Sat, 29 Aug 2020 07:58:29 -0700 (PDT)
-X-Gm-Message-State: AOAM531/X7gUg48e1uBzoluGH7Br3Sd0GhoWrq09KmBgQkkONayjntlo
-        MjMUXL8ct48fM9hNqxswFQbSo8f5TxfFikeL6hg=
-X-Google-Smtp-Source: ABdhPJxM3CQK1OUYoZ5xYcqstuCBrGAvaHwGlRhHKRx3pZp07S6h8XeiruczSbp5HTZyR8vx10Hdf/0noh1hFptm3rw=
-X-Received: by 2002:a50:ab1d:: with SMTP id s29mr3881143edc.246.1598713108547;
- Sat, 29 Aug 2020 07:58:28 -0700 (PDT)
+        Sat, 29 Aug 2020 10:58:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727772AbgH2O6z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 10:58:55 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8F0AC061236;
+        Sat, 29 Aug 2020 07:58:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=lZ/1nHdWsM0stEqTySawdkzFBJIINrqQZQrdzHezIOg=; b=TCYOE32QtYXHxXN0opcVrwM5Mz
+        kBQ37SOSJy8j01V9eIlDS81eUB7wNOxLci8NDVQbTQWRfFzr8iKJZ/JEQ0ovCMLfGtjRYma+8oVi3
+        4GTrI/hVgiqsk4TiUa2cRVSLeODaBl1P+DEqRJQraWYo59jMIPdcnERuHCe4wKdzg1+kmi7DFhelg
+        R7XPoLtbH7pCyVq75ml/4QsU3dxx8VPdS4IcOSKlIwOuPQqKVWQqg3KsTsoFcUzV4XwyzjXaixfIn
+        1SkOjl+dNuSLeDzMtGDXOJXSOxQM8ZNIJK/NEznoVucjU3VlUGeXow8D2EsSe7RbxTylDxd4+pA/d
+        HB7xWj9Q==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kC2Jd-0003cW-VL; Sat, 29 Aug 2020 14:58:50 +0000
+Date:   Sat, 29 Aug 2020 15:58:49 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] iov_iter: introduce iov_iter_pin_user_pages*()
+ routines
+Message-ID: <20200829145849.GB12470@infradead.org>
+References: <20200829080853.20337-1-jhubbard@nvidia.com>
+ <20200829080853.20337-3-jhubbard@nvidia.com>
 MIME-Version: 1.0
-References: <20200827201707.27075-1-krzk@kernel.org> <CAHp75VcnV8_SRQuiTnzzaWxfA1m37gVXfxgPkH51tbMT+-T2RA@mail.gmail.com>
- <20200829155410.6d34a8b9@archlinux>
-In-Reply-To: <20200829155410.6d34a8b9@archlinux>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Sat, 29 Aug 2020 16:58:17 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPd78m-3jMsFRa7ySREDdx+GMZ_YHMG3AcqCHTABLBwqVA@mail.gmail.com>
-Message-ID: <CAJKOXPd78m-3jMsFRa7ySREDdx+GMZ_YHMG3AcqCHTABLBwqVA@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Remove bouncing email of Beniamin Bia
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200829080853.20337-3-jhubbard@nvidia.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 29 Aug 2020 at 16:54, Jonathan Cameron <jic23@kernel.org> wrote:
+On Sat, Aug 29, 2020 at 01:08:52AM -0700, John Hubbard wrote:
+> The new routines are:
+>     iov_iter_pin_user_pages()
+>     iov_iter_pin_user_pages_alloc()
+> 
+> and those correspond to these pre-existing routines:
+>     iov_iter_get_pages()
+>     iov_iter_get_pages_alloc()
+> 
+> Also, pipe_get_pages() and related are changed so as to pass
+> down a "use_pup" (use pin_user_page() instead of get_page()) bool
+> argument.
+> 
+> Unlike the iov_iter_get_pages*() routines, the
+> iov_iter_pin_user_pages*() routines assert that only ITER_IOVEC or
+> ITER_PIPE items are passed in. They then call pin_user_page*(), instead
+> of get_user_pages_fast() or get_page().
+> 
+> Why: In order to incrementally change Direct IO callers from calling
+> get_user_pages_fast() and put_page(), over to calling
+> pin_user_pages_fast() and unpin_user_page(), there need to be mid-level
+> routines that specifically call one or the other systems, for both page
+> acquisition and page release.
+> 
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  include/linux/uio.h |   5 ++
+>  lib/iov_iter.c      | 110 ++++++++++++++++++++++++++++++++++++++++----
+>  2 files changed, 107 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/linux/uio.h b/include/linux/uio.h
+> index 3835a8a8e9ea..29b0504a27cc 100644
+> --- a/include/linux/uio.h
+> +++ b/include/linux/uio.h
+> @@ -229,6 +229,11 @@ int iov_iter_npages(const struct iov_iter *i, int maxpages);
+>  
+>  const void *dup_iter(struct iov_iter *new, struct iov_iter *old, gfp_t flags);
+>  
+> +ssize_t iov_iter_pin_user_pages(struct iov_iter *i, struct page **pages,
+> +			size_t maxsize, unsigned int maxpages, size_t *start);
+> +ssize_t iov_iter_pin_user_pages_alloc(struct iov_iter *i, struct page ***pages,
+> +			size_t maxsize, size_t *start);
+> +
+>  static inline size_t iov_iter_count(const struct iov_iter *i)
+>  {
+>  	return i->count;
+> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+> index 5e40786c8f12..f25555eb3279 100644
+> --- a/lib/iov_iter.c
+> +++ b/lib/iov_iter.c
+> @@ -1269,7 +1269,8 @@ static inline ssize_t __pipe_get_pages(struct iov_iter *i,
+>  				size_t maxsize,
+>  				struct page **pages,
+>  				int iter_head,
+> -				size_t *start)
+> +				size_t *start,
+> +				bool use_pup)
+>  {
+>  	struct pipe_inode_info *pipe = i->pipe;
+>  	unsigned int p_mask = pipe->ring_size - 1;
+> @@ -1280,7 +1281,11 @@ static inline ssize_t __pipe_get_pages(struct iov_iter *i,
+>  	maxsize = n;
+>  	n += *start;
+>  	while (n > 0) {
+> -		get_page(*pages++ = pipe->bufs[iter_head & p_mask].page);
+> +		if (use_pup)
+> +			pin_user_page(*pages++ = pipe->bufs[iter_head & p_mask].page);
+> +		else
+> +			get_page(*pages++ = pipe->bufs[iter_head & p_mask].page);
 
-(...)
+Maybe this would become a little more readable with a local variable
+and a little more verbosity:
 
-> > >  ANALOG DEVICES INC AD7091R5 DRIVER
-> > > -M:     Beniamin Bia <beniamin.bia@analog.com>
-> > >  L:     linux-iio@vger.kernel.org
-> > > -S:     Supported
-> > > +S:     Orphan
->
-> Given it should be covered by the catch all for Analog devices IIO drivers,
-> either we should confirm if it should move to someone else at Analog, or
-> if we should just drop specifically listing this one.
-> Listing it as Orphan when they are good at supporting their drivers
-> may give the wrong impression.
->
-> +CC Alex to make sure people at Analog notice :)
+		struct page *page = pipe->bufs[iter_head & p_mask].page;
 
-Sure, good point. I wanted to start the discussion so the interested
-people might appear.
+		if (use_pup)
+			pin_user_page(page);
+		else
+			get_page(page);
 
-Best regards,
-Krzysztof
+		*pages++ = page;
+
