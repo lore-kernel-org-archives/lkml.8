@@ -2,157 +2,79 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FDCC433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1A9C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2309D20791
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598712858;
-	bh=/hnmU7dblu1+2kI6nEfoP/ybPzuli9dDyPaZtgTBZ6w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=BtXrbj0QZrUnt+OboboIR7yXePKqeUclkk2YFjVftcpi1Khzs9rhg9ImFa06cvTBK
-	 ji8yrb+sUtTdUBEvFAIAHIt9AzFbaD4MpnxnYj361GKxdS7y30FECu3WY5K3EcMXeD
-	 dUvKNpc0+41aPReMxMR2ItNDHbmh8oCqhIXPD034=
+	by mail.kernel.org (Postfix) with ESMTP id 8AFAB20791
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:54:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L4h7n0OB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbgH2OyQ (ORCPT
+        id S1728273AbgH2Oyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 10:54:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727772AbgH2OyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 10:54:15 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78B8420791;
-        Sat, 29 Aug 2020 14:54:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598712854;
-        bh=/hnmU7dblu1+2kI6nEfoP/ybPzuli9dDyPaZtgTBZ6w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YOukvGup/7Sfzgq47oDLVVJg54NhKluYs4yypmDPWXuPy+hlAMsHx5kGk+llAeWcy
-         k7hg15JFmmw1iGRG+tILChL6uYQkgjAWBKK3xpSDKhAwWbCwiy68cTxr84aol4duwK
-         YbELuXhGAeDvsnrTnDIfOv9WfDLbPCQJzcg16L10=
-Date:   Sat, 29 Aug 2020 15:54:10 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: Re: [PATCH] MAINTAINERS: Remove bouncing email of Beniamin Bia
-Message-ID: <20200829155410.6d34a8b9@archlinux>
-In-Reply-To: <CAHp75VcnV8_SRQuiTnzzaWxfA1m37gVXfxgPkH51tbMT+-T2RA@mail.gmail.com>
-References: <20200827201707.27075-1-krzk@kernel.org>
-        <CAHp75VcnV8_SRQuiTnzzaWxfA1m37gVXfxgPkH51tbMT+-T2RA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 29 Aug 2020 10:54:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727772AbgH2Oya (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 10:54:30 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE33C061236;
+        Sat, 29 Aug 2020 07:54:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=syK03Q4xXEA+proHGQgPtI7XNxH7nklSo+/fI2tk1Lg=; b=L4h7n0OBMl1O11DSPJ1oqOBPs+
+        P7AjbVhlfitS+eORwFs7L7+y5XHNfj17uhWgRVLDQydbz/Pvs2M89SIM20IzkCdlQiGfHhbabIo0f
+        Ewd/PWS3YnToUrCZ/yX17vN1hiblN8YVFw6cES3zgKhWxtxOyaKtT4YCQ/jy+EqLZlzSUz74xbs9Q
+        5Q8CP+A5IJIx7uB8d/5c3uHEuSYgHSqsnn4+52xv4+OZS67L/hZmoOl+u8WxFPDpdmB2EnMnQAe7y
+        MQ+GjMGbE1g5zPlbrlg8vmbB3EWL4FOSIp+Tmg6TPgC+eXesdeCRqTbYRDOPQEs+x5mxesAxavLuI
+        y9j8ycFg==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kC2FJ-0003Nh-7c; Sat, 29 Aug 2020 14:54:21 +0000
+Date:   Sat, 29 Aug 2020 15:54:21 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] mm/gup: introduce pin_user_page()
+Message-ID: <20200829145421.GA12470@infradead.org>
+References: <20200829080853.20337-1-jhubbard@nvidia.com>
+ <20200829080853.20337-2-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200829080853.20337-2-jhubbard@nvidia.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Aug 2020 11:19:21 +0300
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-
-> On Thu, Aug 27, 2020 at 11:17 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > Emails to Beniamin Bia bounce with no such address so remove him from
-> > maintainers.
-> >
-> > Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>  
+On Sat, Aug 29, 2020 at 01:08:51AM -0700, John Hubbard wrote:
+> pin_user_page() is the FOLL_PIN equivalent of get_page().
 > 
-> I guess Reported-by suits better... But okay.
+> This was always a missing piece of the pin/unpin API calls (early
+> reviewers of pin_user_pages() asked about it, in fact), but until now,
+> it just wasn't needed. Finally though, now that the Direct IO pieces in
+> block/bio are about to be converted to use FOLL_PIN, it turns out that
+> there are some cases in which get_page() and get_user_pages_fast() were
+> both used. Converting those sites requires a drop-in replacement for
+> get_page(), which this patch supplies.
 
-As mentioned below, I'm not keen on marking a driver as orphan
-when it is covered by a catch all.
+I find the name really confusing vs pin_user_pages*, as it suggests as
+single version of the same.  It also seems partially wrong, at least
+in the direct I/O case as the only thing pinned here is the zero page.
 
-drivers/iio/*/ad*
-
-Let's find out what the Analog team want to do about these.
-
-Jonathan
-
-
-> 
-> > Cc: Michael Hennerich <Michael.Hennerich@analog.com>
-> > Cc: Jonathan Cameron <jic23@kernel.org>
-> > Cc: linux-iio <linux-iio@vger.kernel.org>
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  MAINTAINERS | 7 +------
-> >  1 file changed, 1 insertion(+), 6 deletions(-)
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 8107b3d5d6df..523ac1602b62 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -967,9 +967,8 @@ F:  Documentation/devicetree/bindings/iio/dac/ad5758.txt
-> >  F:     drivers/iio/dac/ad5758.c
-> >
-> >  ANALOG DEVICES INC AD7091R5 DRIVER
-> > -M:     Beniamin Bia <beniamin.bia@analog.com>
-> >  L:     linux-iio@vger.kernel.org
-> > -S:     Supported
-> > +S:     Orphan
-
-Given it should be covered by the catch all for Analog devices IIO drivers,
-either we should confirm if it should move to someone else at Analog, or
-if we should just drop specifically listing this one.
-Listing it as Orphan when they are good at supporting their drivers
-may give the wrong impression.
-
-+CC Alex to make sure people at Analog notice :)
-
-Jonathan
-
-> >  W:     http://ez.analog.com/community/linux-device-drivers
-> >  F:     Documentation/devicetree/bindings/iio/adc/adi,ad7091r5.yaml
-> >  F:     drivers/iio/adc/ad7091r5.c
-> > @@ -1000,7 +999,6 @@ F: drivers/iio/adc/ad7292.c
-> >
-> >  ANALOG DEVICES INC AD7606 DRIVER
-> >  M:     Michael Hennerich <Michael.Hennerich@analog.com>
-> > -M:     Beniamin Bia <beniamin.bia@analog.com>
-> >  L:     linux-iio@vger.kernel.org
-> >  S:     Supported
-> >  W:     http://ez.analog.com/community/linux-device-drivers
-> > @@ -1068,7 +1066,6 @@ F:        drivers/iio/imu/adis16475.c
-> >  F:     Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
-> >
-> >  ANALOG DEVICES INC ADM1177 DRIVER
-> > -M:     Beniamin Bia <beniamin.bia@analog.com>
-> >  M:     Michael Hennerich <Michael.Hennerich@analog.com>
-> >  L:     linux-hwmon@vger.kernel.org
-> >  S:     Supported
-> > @@ -1136,7 +1133,6 @@ W:        http://ez.analog.com/community/linux-device-drivers
-> >  F:     drivers/dma/dma-axi-dmac.c
-> >
-> >  ANALOG DEVICES INC HMC425A DRIVER
-> > -M:     Beniamin Bia <beniamin.bia@analog.com>
-> >  M:     Michael Hennerich <michael.hennerich@analog.com>
-> >  L:     linux-iio@vger.kernel.org
-> >  S:     Supported
-> > @@ -16537,7 +16533,6 @@ F:      drivers/staging/rtl8712/
-> >
-> >  STAGING - SEPS525 LCD CONTROLLER DRIVERS
-> >  M:     Michael Hennerich <michael.hennerich@analog.com>
-> > -M:     Beniamin Bia <beniamin.bia@analog.com>
-> >  L:     linux-fbdev@vger.kernel.org
-> >  S:     Supported
-> >  F:     Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> > --
-> > 2.17.1
-> >  
-> 
-> 
-
+So maybe pin_kernel_page is a better name together with an explanation?
+Or just pin_page?
