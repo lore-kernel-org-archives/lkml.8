@@ -2,138 +2,148 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A23DC433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D29CC433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17FC420E65
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:51:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="A5fmh2PI"
+	by mail.kernel.org (Postfix) with ESMTP id 4AB8420E65
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:51:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598683892;
+	bh=n7VC1uvUjKUVDq2UMbjFErf50gQRUMVporBtRadUTTY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bsZTjeIo3GJT2QSkkOrh/yIJFOQr15SnNGIK7yOR4juyfXII7Gj8LeNi3WL70DMMb
+	 f8gUoftf9UvxjaJyLXhtHpNwyaHhUYxb2dMfJkXqEARF86wXMljcR3VZBBr71k/+H4
+	 /IVr0IYrar+4ASQrOjO5NsnCs9LugkFALI3EtrlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgH2GvS (ORCPT
+        id S1727022AbgH2Gva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 02:51:18 -0400
-Received: from mout.gmx.net ([212.227.17.22]:52791 "EHLO mout.gmx.net"
+        Sat, 29 Aug 2020 02:51:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbgH2GvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 02:51:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1598683847;
-        bh=SxoEwaiAQ0pJTOazsRSLYff3KdUYfb+1JkvU/7If30E=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:References:Date:In-Reply-To;
-        b=A5fmh2PITVMXeSYNvPuuwkWDp7GkxjNvGB6gEc3n/RbQOaZh2uVJKClC0imX09B/k
-         JeKheRVUqjKARDUiQM/72PhDPLPtCktDcc2bDV9LXFjNlbx0936tm1J/8wmNc90GQY
-         3fGXdFX+HKRzcuM2pd7N/AgFG32wgRE+exsZP/Yo=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([79.223.54.124]) by mail.gmx.com
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MjjCF-1krnu02N9n-00lBJ5; Sat, 29 Aug 2020 08:50:47 +0200
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id DBE9C800D6; Sat, 29 Aug 2020 08:50:42 +0200 (CEST)
-From:   Sven Joachim <svenjoac@gmx.de>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Brian Vazquez <brianvv@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the net-next tree
-References: <20200729212721.1ee4eef8@canb.auug.org.au>
-        <87ft8lwxes.fsf@turtle.gmx.de>
-        <CAMzD94Rz4NYnhheS8SmuL14MNM4VGxOnAW-WZ9k1JEqrbwyrvw@mail.gmail.com>
-        <87y2m7gq86.fsf@turtle.gmx.de> <87pn7gh3er.fsf@turtle.gmx.de>
-        <CAMzD94Rkq1RTZJG5UsEz9VhaCBbvObD1azqU2gsJzZ6gPYcfag@mail.gmail.com>
-        <878sdyn6xz.fsf@turtle.gmx.de>
-        <49315f94-1ae6-8280-1050-5fc0d1ead984@infradead.org>
-        <CAMzD94QKnE+1Cmm0RNFUVAYArBRB0S2VUUC5c4jTY9Z4xdZH0w@mail.gmail.com>
-        <4dce5976-d4a1-1fbf-8824-a92adfc542b5@infradead.org>
-Date:   Sat, 29 Aug 2020 08:50:42 +0200
-In-Reply-To: <4dce5976-d4a1-1fbf-8824-a92adfc542b5@infradead.org> (Randy
-        Dunlap's message of "Fri, 28 Aug 2020 16:42:00 -0700")
-Message-ID: <87zh6ekksd.fsf@turtle.gmx.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1.50 (gnu/linux)
+        id S1725886AbgH2Gva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 02:51:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C91B320E65;
+        Sat, 29 Aug 2020 06:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598683889;
+        bh=n7VC1uvUjKUVDq2UMbjFErf50gQRUMVporBtRadUTTY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ON9S5JchC5JCj3pHo/S/cKsHxfWRHRK6OowmWc+3rALYSI5bmiRnfdqqdQgwvmvUl
+         praVjMcgKjnr56LxTsCLcWyVudLJekVct+AWWIR5UWhoW30wgIKNIjayTyt8DlK4HY
+         rYoxszfZLUAeLPa52db4qzfy1zz/7XMxCQU4t8gI=
+Date:   Sat, 29 Aug 2020 08:51:25 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Alex Dewar <alex.dewar90@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sysfs: Add sysfs_emit to replace sprintf to PAGE_SIZE
+ buffers.
+Message-ID: <20200829065125.GA94642@kroah.com>
+References: <a96cdf07cd136d06c3cc1e10eb884caa7498ba72.1598654887.git.joe@perches.com>
+ <20200829062254.GA79296@kroah.com>
+ <2acf2dc0945bc7f1ec2617b616808ab3c514067b.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Provags-ID: V03:K1:n1ZcUPQX5+IE7GHuwgGajCAtU+2FWz2hPlDbkDiHo3V7R9/8ab8
- 7oUHQsbYE7q+5uPahylw4DRkyzx0lU23FAhBStGYijeTf1eI99GlFrz5/ZOL/nAcfW3U7qy
- CPxMVDI3U+IvWgE6Ia2aZ7wfSYB4+4KyxYR2Sr+b/kcHQ2r3wRXARVkedHiKAAM8oXQfYIA
- JDACfv3sHCtjcUcPhPVPA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:tJwpPjJjNsc=:Fz46G4GVnyJ+rkPInIPcVT
- YYjLu3JbsAgKSG7PVZUbIlVr4v7MsPQChCbik2hryZWNr58hQwanru2cvZxOKlzNDMVuLwsRX
- PKtDge/v0VGsYqIW0VDplO3RywN5RGyIsuUyfA+jIoqrOR7W+sh/kbh3SkZg6tqDyr7Kax2MG
- jK+ZYhdqhaT+U+4UGt3DSWF0FcXEB0oU9wdYTk75feJQ87olQTnR7x+1bQcufst59xWQI7n6K
- a2SYY3W4fxEycjTHwZROWzlLBjeWwjizaAtAFhxOr6ZPgkgaR6JwynfxcpIQR7RcSea8iHLOV
- QGVVQi2A+Ye8o+ccKvWnHSrjHxSMRrNdp4v1TdujldCrQLSG60DchOYHj6KWmu81dXiCUY/2s
- 5TBDyecE+PlFESlkvVatmf/iXfVYyb7Jl17gSwlo0Izj0K04G3zIjrjPecNZXYqgwTahEWSCD
- LZCqJ26UQCDjtKcueKrcurIIJIIPmcGgnKxC0QVM4AT7/Pkeob08mIKDsBdCljbW9ZyfOzM3b
- QDdoynLE2ExIcR79bH3Kw5YVJDLT/WW8t3MMijiDLj8JXFfflP+oGVOqkS2TxpcLHAFHQEsuB
- +OkVdIrI+PcOzcFWG4llQTN1rqG6lQYHc02ymhLLrc3wsbRvQJKMKpBJPQmquhZFdzfRunJWR
- m6rO7sCPsA8UPzLktharVcd8QIL9sVOujK3KT3G2AW67gN6YDuoo1OwFwO0gUOCHOCqWkMo6k
- 06iX2mwBl8MUVBB9Ue0rGTEeWun8BwDaFtgOAxR8pOzolxdiLexSIuLT+/Wmy/gTIX/oZDGdW
- UwdoYC4epRojb5jmrh6Tf40VW1/mcSVAwEsHxdcu8V+RpfeEDi6XMhdBBNYEOycA88MO8sq12
- ujQbFd8wY/xi3h8sTfnNR2UICHLFrwplPpDdy/HsuLvzhl8qmAFo83fFe4znn3WEiVdbmQU2K
- 730sJ/mDQ7Gz0Wm7/u/ADnNNctQ2DYintvo9st1LELG8W25Fed+dkX3XFMO9nN9JTcaYnJujJ
- rcueyucRBAcG775Z867PTmvr5ccp8Irwf7f6LhsZoe8VSeWRAUcS/JANlKlwJakrkUZZ29qo8
- q0V4+b12mn9BXfJc6uZbcVD5wUIhUy6SDaZaCBr7HCs9iZsjpmPKwsy3xTITQpqQlKIULcgzl
- 1F6qo6rUU0Jf5uHXaJ3r252U8U4yRRITAy0Q3sI7/a30UPdqb1BsnWlQtiog2AmKij5NLhgCj
- v3uFyFMpouLYCap85
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2acf2dc0945bc7f1ec2617b616808ab3c514067b.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-28 16:42 -0700, Randy Dunlap wrote:
+On Fri, Aug 28, 2020 at 11:41:00PM -0700, Joe Perches wrote:
+> On Sat, 2020-08-29 at 08:22 +0200, Greg Kroah-Hartman wrote:
+> > On Fri, Aug 28, 2020 at 03:52:13PM -0700, Joe Perches wrote:
+> > > sprintf does not know the PAGE_SIZE maximum of the temporary buffer
+> > > used for outputting sysfs content requests and it's possible to
+> > > overrun the buffer length.
+> > > 
+> > > Add a generic sysfs_emit mechanism that knows that the size of the
+> > > temporary buffer and ensures that no overrun is done.
+> > > 
+> > > Signed-off-by: Joe Perches <joe@perches.com>
+> > > ---
+> > >  fs/sysfs/file.c       | 30 ++++++++++++++++++++++++++++++
+> > >  include/linux/sysfs.h |  8 ++++++++
+> > >  2 files changed, 38 insertions(+)
+> > > 
+> > > diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+> > > index eb6897ab78e7..06a13bbd7080 100644
+> > > --- a/fs/sysfs/file.c
+> > > +++ b/fs/sysfs/file.c
+> > > @@ -707,3 +707,33 @@ int sysfs_change_owner(struct kobject *kobj, kuid_t kuid, kgid_t kgid)
+> > >  	return 0;
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(sysfs_change_owner);
+> > > +
+> > > +/**
+> > > + *	sysfs_emit - scnprintf equivalent, aware of PAGE_SIZE buffer.
+> > > + *	@buf:	start of PAGE_SIZE buffer.
+> > > + *	@pos:	current position in buffer
+> > > + *              (pos - buf) must always be < PAGE_SIZE
+> > 
+> > sysfs files are always supposed to be "one value per file", so why would
+> > you ever need a 'pos' variable to show the location in the buffer?
+> 
+> I've done treewide conversions using cocci.
+> It's used all over the place.
+> Especially in loops with arrays.
+> 
+> Sometimes the output is single line.
+> Sometimes multiple lines.
+> 
+> Look at the sample conversion of mem_sleep_show I posted earlier.
+> 
+> #ifdef CONFIG_SUSPEND
+>  static ssize_t mem_sleep_show(struct kobject *kobj, struct kobj_attribute *attr,
+>                               char *buf)
+>  {
+> -       char *s = buf;
+> +       char *pos = buf;
+>         suspend_state_t i;
+>  
+>         for (i = PM_SUSPEND_MIN; i < PM_SUSPEND_MAX; i++)
+>                 if (mem_sleep_states[i]) {
+>                         const char *label = mem_sleep_states[i];
+>  
+>                         if (mem_sleep_current == i)
+> -                               s += sprintf(s, "[%s] ", label);
+> +                               pos += sysfs_emit(buf, pos, "[%s] ", label);
+>                         else
+> -                               s += sprintf(s, "%s ", label);
+> +                               pos += sysfs_emit(buf, pos, "%s ", label);
+>                 }
+>  
+>         /* Convert the last space to a newline if needed. */
+> -       if (s != buf)
+> -               *(s-1) = '\n';
+> +       if (pos != buf)
+> +               *(pos - 1) = '\n';
+>  
+> -       return (s - buf);
+> +       return pos - buf;
+>  }
 
-> On 8/28/20 4:16 PM, Brian Vazquez wrote:
->> On Fri, Aug 28, 2020 at 8:12 AM Randy Dunlap <rdunlap@infradead.org> wr=
-ote:
->>>
->>> On 8/28/20 8:09 AM, Sven Joachim wrote:
->>>> On 2020-08-27 11:12 -0700, Brian Vazquez wrote:
->>>>
->>>>> I've been trying to reproduce it with your config but I didn't
->>>>> succeed. I also looked at the file after the preprocessor and it
->>>>> looked good:
->>>>>
->>>>> ret =3D ({ __builtin_expect(!!(ops->match =3D=3D fib6_rule_match), 1=
-) ?
->>>>> fib6_rule_match(rule, fl, flags) : ops->match(rule, fl, flags); })
->>>>
->>>> However, in my configuration I have CONFIG_IPV6=3Dm, and so
->>>> fib6_rule_match is not available as a builtin.  I think that's why ld=
- is
->>>> complaining about the undefined reference.
->>>
->>> Same here FWIW. CONFIG_IPV6=3Dm.
->>
->> Oh I see,
->> I tried this and it seems to work fine for me, does this also fix your
->> problem? if so, I'll prepare the patch, and thanks for helping!
->> diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
->> index 51678a528f85..40dfd1f55899 100644
->> --- a/net/core/fib_rules.c
->> +++ b/net/core/fib_rules.c
->> @@ -16,7 +16,7 @@
->>  #include <net/ip_tunnels.h>
->>  #include <linux/indirect_call_wrapper.h>
->>
->> -#ifdef CONFIG_IPV6_MULTIPLE_TABLES
->> +#if defined(CONFIG_IPV6_MULTIPLE_TABLES) && defined(CONFIG_IPV6)
->
->
-> Yes, that works for me.
-> You can add this to your patch:
->
-> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+And again, this is the rare exception, not the rule, please do not make
+a generic helper function "easy" to do crazy things like this in sysfs.
 
-Works for me as well.
+Heck, make it explicit, call this function sysfs_emit_pos() and the
+non-pos version sysfs_emit().  That way I can easily search for the
+"offending" users of the sysfs api.
 
-Cheers,
-       Sven
+thanks,
+
+greg k-h
