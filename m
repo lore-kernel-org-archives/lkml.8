@@ -2,124 +2,85 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB9AC433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E392C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B07A207DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:01:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598698868;
-	bh=WGE/Ni8OgdnjEaI12x6E3/36gjTN5CWhg+VbB/qhaqE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=UetL+gANcifllBzVyXxx3TzAtxY/lsJVQ2DhTxpenedqj83wHZnmgfvJbLJFCfGvH
-	 H/xQaUTulc6IFAWPzL+PC5grMYZF8fLZfdeDQ9mKfhcLJ0XA5ERUaS9Z2jvZKnK3ES
-	 WcpAkFIOr9kLAB4qPO6+7wAtNQHp7DtrNza9MVsA=
+	by mail.kernel.org (Postfix) with ESMTP id 24E7C20CC7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:04:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgH2LA4 (ORCPT
+        id S1727931AbgH2LEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 07:00:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57710 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 07:04:43 -0400
+Received: from mga06.intel.com ([134.134.136.31]:5858 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbgH2LAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 07:00:51 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 581F4207DF;
-        Sat, 29 Aug 2020 11:00:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598698851;
-        bh=WGE/Ni8OgdnjEaI12x6E3/36gjTN5CWhg+VbB/qhaqE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bJnOvrmEP3qQTbfhE1/jw5kbaTMAOYtleMdzUUT9cIxQMOjn8Lq4dVhAkOnXeTBe6
-         O8LO8m0Bx55WrC11vqnNdsdNgnHwCGsUBTLE326hyT/40/2POv3i/v3US8LT0hMYH/
-         SKGboRGHLqFc9fsyw21UAySMuQUwNNecQzpVHVVs=
-Date:   Sat, 29 Aug 2020 16:30:47 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, sanyog.r.kale@intel.com,
-        mengdong.lin@intel.com, bard.liao@intel.com
-Subject: Re: [PATCH 09/11] soundwire: intel: add dynamic debug trace for
- clock-stop invalid configs
-Message-ID: <20200829110047.GC2639@vkoul-mobl>
+        id S1726876AbgH2LEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 07:04:40 -0400
+IronPort-SDR: J1cwb1yXm/2pAp2ynEzP+ZmVXMhRvuFvG1FRQF4O2o7lCmBjKN8+q4VM47tsiWhbHNXAYlk+9f
+ 8bOuq6BRokbg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="218341472"
+X-IronPort-AV: E=Sophos;i="5.76,367,1592895600"; 
+   d="scan'208";a="218341472"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2020 04:04:39 -0700
+IronPort-SDR: ZtQx8mFrOLJFCNO/bnyXbsFYf5aKDm2Czs65vOJUhs+EUA+bgGtw6IAUp78DPNofs3bI8UYd5/
+ cUJYdBwx7Qlw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,367,1592895600"; 
+   d="scan'208";a="313855298"
+Received: from shuo-intel.sh.intel.com (HELO localhost) ([10.239.154.30])
+  by orsmga002.jf.intel.com with ESMTP; 29 Aug 2020 04:04:36 -0700
+Date:   Sat, 29 Aug 2020 19:04:36 +0800
+From:   Shuo A Liu <shuo.a.liu@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     <linux-kernel@vger.kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Borislav Petkov" <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yu Wang <yu1.wang@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>, <x86@kernel.org>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: Re: [PATCH 06/17] virt: acrn: Introduce VM management interfaces
+Message-ID: <20200829110436.GF13723@shuo-intel.sh.intel.com>
+References: <20200825024516.16766-1-shuo.a.liu@intel.com>
+ <20200825024516.16766-7-shuo.a.liu@intel.com>
+ <20200828102738.GC1470435@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <b5d8a731-d753-060a-f224-63de3b29b7d2@linux.intel.com>
- <20200818024120.20721-10-yung-chuan.liao@linux.intel.com>
+In-Reply-To: <20200828102738.GC1470435@kroah.com>
+User-Agent: Mutt/1.8.3 (2017-05-23)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28-08-20, 09:54, Pierre-Louis Bossart wrote:
-> 
-> > > > > Detect cases where the clock is assumed to be stopped but the IP is
-> > > > > not in the relevant state, and add a dynamic debug trace.
-> > > > 
-> > > > you meant a debug print..and it looks like error print below (also in title).
-> > > 
-> > > I don't understand the comment. Is the 'trace' confusing and are you asking
-> > > to e.g. change the commit message to 'add dynamic debug log'?
-> > 
-> > Question is what is dynamic about this?
-> dev_dbg() is part of the kernel dynamic debug capability...
-> 
-> https://www.kernel.org/doc/html/latest/admin-guide/dynamic-debug-howto.html
-> 
-> Not sure what you are asking here?
+Hi Greg,
 
-:-| where is dev_dbg() ?
+On Fri 28.Aug'20 at 12:27:38 +0200, Greg Kroah-Hartman wrote:
+>On Tue, Aug 25, 2020 at 10:45:06AM +0800, shuo.a.liu@intel.com wrote:
+>> +	default:
+>> +		pr_warn("Unknown IOCTL 0x%x!\n", cmd);
+>> +		ret = -EINVAL;
+>
+>Wrong error value here, right?
 
-See [1]
+Right, it should be -ENOIOCTLCMD.
 
-On 18-08-20, 10:41, Bard Liao wrote:
-> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> 
-> Detect cases where the clock is assumed to be stopped but the IP is
-> not in the relevant state, and add a dynamic debug trace.
-> 
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-> ---
->  drivers/soundwire/intel.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-> index 7c63581270fd..b82d02af3c4f 100644
-> --- a/drivers/soundwire/intel.c
-> +++ b/drivers/soundwire/intel.c
-> @@ -1964,6 +1964,11 @@ static int intel_resume_runtime(struct device *dev)
->  			}
->  		}
->  	} else if (!clock_stop_quirks) {
-> +
-> +		clock_stop0 = sdw_cdns_is_clock_stop(&sdw->cdns);
-> +		if (!clock_stop0)
+However, i found many instances in kernel drivers return -EINVAL for no
+ioctl command support. :)
 
-[1]
+>
+>And you just made a simple way to cause a DoS on the kernel log :(
 
-> +			dev_err(dev, "%s invalid configuration, clock was not stopped", __func__);
+Oh, let me remove the warn log.
 
-                        ^^^^^^^
-
-> +
->  		ret = intel_init(sdw);
->  		if (ret) {
->  			dev_err(dev, "%s failed: %d", __func__, ret);
-> -- 
-> 2.17.1
-
-
--- 
-~Vinod
+Thanks
+shuo
