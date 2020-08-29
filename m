@@ -7,95 +7,86 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBADBC433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA740C433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9941A2075B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:20:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D3852075B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:23:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8lb4AKt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DzhKqam4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgH2IUF (ORCPT
+        id S1727050AbgH2IX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 04:20:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52200 "EHLO
+        Sat, 29 Aug 2020 04:23:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgH2IUC (ORCPT
+        with ESMTP id S1726083AbgH2IXz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 04:20:02 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A4AC061236;
-        Sat, 29 Aug 2020 01:20:02 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id l2so2154985eji.3;
-        Sat, 29 Aug 2020 01:20:02 -0700 (PDT)
+        Sat, 29 Aug 2020 04:23:55 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD0A7C061236;
+        Sat, 29 Aug 2020 01:23:54 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id b17so2119498ejq.8;
+        Sat, 29 Aug 2020 01:23:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to;
-        bh=0FDeOqqqmN/2W5Amk5t+HI0NVVDnV6N35z/hnvPE1Mk=;
-        b=C8lb4AKtQ+M33Y77NbBEHl+g05YntNtQ9wg/DNkcVkY2tEVrWqWU832s+5rZyydcRC
-         rNFzso/E2YSTeHOUoKrSNOXrax+BMKBhaMEEOHpJY0zRHqb4aE6h3oTW4yKA2mjHOcuB
-         m14csMkL9ETdckrw9M/0vOtK5WQmGZxwWrrBH5Ugp4uO9shQwaIWuQnte/YgZnjuRwr/
-         AzQKxke9o84pcEnFzYqnrGRziCcnIA7WGbcNF+LyF/dyK5ez4FQ1ORlxE7sRESgIrAfz
-         ldI7U+NNC5jErzBUNLf6KlZJIj7n2OcYHPq5PisCkVSpBvZrqbDH0CUo7fZ2JXU4Emw7
-         AAqA==
+        h=from:to:cc:subject:date:message-id;
+        bh=A+ePr4BS1Z98zja7dCsplHsBCgKfxFgBSR6fpgiDjMo=;
+        b=DzhKqam4WpPggvejEM6VMouvSX2LDHPdCSxVvBV6/JEI4AjsUPXhla7k0XmSG4dxad
+         84r6HevrWA4ozDGFzyOsoD735T7RdcEyiKBPdpUaNwwYy3tTmqrXLg4/xiM0bXUgCzYi
+         m0MU2DKE5Aw7qBJre/1AMO4nXokz0eiu7aFtIROU5b7Rb1yI1QPQd7NqHYnF4eHTJ4Ys
+         tQX415VtEQUJjU6MhMYUJHo/NukrDLDOdnD4YeHVQySkHFk3WS+EE0QvezX50PYSv3ZJ
+         iGQj0aSj31onRuabQyrYY0uK81x74VAuVymvhBlCLt2yrvvhh+XZq1WUIGmMkvbYuOpz
+         ZIww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
-        bh=0FDeOqqqmN/2W5Amk5t+HI0NVVDnV6N35z/hnvPE1Mk=;
-        b=irfitns0Sx/3Hv4V+A73R/74QUxPxT2aNoEiI9/mgcZAGUVQPaIVFX1/nNIvlHHA6e
-         o+1iMBfxXWjkEJ39eMgmnDuwdlyub6wDQiE3J+0HOA90PQDs8qWvw0FK12NzFVi6x9MN
-         qw3IMsqsAGTigJdm9AvzdcQM5pl7XMEc/ADoT00b43Vu1wIBHt2hLvx/AKpEeRpTL4k3
-         uh2GrTufii7RUfvZxsUy+vfnpaSpLD2QWAUMZcNYhk3/4qwcmtRxaU3mxWvAnhhvs4yt
-         zQ6zV3T/SQKyBHNX3AubVdJvA21QwWtTlVZUUpNp/x6zjPR2OxTaw6NrARubCZJZ+D+d
-         NYvg==
-X-Gm-Message-State: AOAM5303OziC8Tc2qR2AUX3HOQo7PfBFon9WdUUBWJeKW7BqmPKEko4J
-        YszptPr9pVsbuYJavWprPdY=
-X-Google-Smtp-Source: ABdhPJxFGzmps12K7nCfy55JGVMy+SCSvPss64XL3SCEY8Z2mVmSppYYUT3emqokc40pw2auCCHbVA==
-X-Received: by 2002:a17:906:ca4f:: with SMTP id jx15mr1239762ejb.454.1598689201237;
-        Sat, 29 Aug 2020 01:20:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=A+ePr4BS1Z98zja7dCsplHsBCgKfxFgBSR6fpgiDjMo=;
+        b=dYRct84eKmidMijJOxJjsEW9M2j/CYCioZ+jd21XMhP/y/UzhRJV05Q2k2tiotAsJH
+         HZ4R7A9ynPPNn16txDdys1FGFqid6exneFvfSxNindsPb9rsmVOWkg1NGR1yEh6BJqg8
+         TuMTSFnicBa5D8HIr+uLWIjJ7TagnDSMhe/qn2umJCvs/CxtHFnzYqhL5bfULRa2kkt3
+         BXvo/PMihUMd1fnhxj8DGOC8MYcrketLPDzEpWanuA5LgBvg1/+M4bonpQmzKp1mL7f0
+         vfY2kei6kzsKPPf/vYcNoeTZkwyCENv3RxjvAy7esMeeJyTOrJU8ehPY9DdltSjQpLNV
+         +qtw==
+X-Gm-Message-State: AOAM530k9eTj3Nbf5GVfrFd86XmfkEVf1ySYkcIWRTqyAVYjqktmcq0U
+        T8z5moQN2WwK+AaXi1fkVmE=
+X-Google-Smtp-Source: ABdhPJyFJcNIvvPtmwdrOsdxCFCyI0FBscvF8fIa/6qoazM4ga9d69QYvrxfQ1fZUzOWnX/xbvXn2w==
+X-Received: by 2002:a17:906:a0c5:: with SMTP id bh5mr2540962ejb.120.1598689433361;
+        Sat, 29 Aug 2020 01:23:53 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:2450:10d2:194d:f90b:b3a9:1300:5b1a])
-        by smtp.gmail.com with ESMTPSA id f6sm1561718ejh.92.2020.08.29.01.20.00
+        by smtp.gmail.com with ESMTPSA id o8sm1589184eji.34.2020.08.29.01.23.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Aug 2020 01:20:00 -0700 (PDT)
+        Sat, 29 Aug 2020 01:23:52 -0700 (PDT)
 From:   SeongJae Park <sj38.park@gmail.com>
-To:     SeongJae Park <sj38.park@gmail.com>
-Cc:     paulmck@kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     corbet@lwn.net
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         SeongJae Park <sjpark@amazon.de>
-Subject: Re: [PATCH 0/3] memory-barriers: Apply missed changes
-Date:   Sat, 29 Aug 2020 10:19:50 +0200
-Message-Id: <20200829081950.2709-1-sj38.park@gmail.com>
+Subject: [PATCH v2 0/2] docs/howto.rst: Sync with original
+Date:   Sat, 29 Aug 2020 10:23:41 +0200
+Message-Id: <20200829082343.2979-1-sj38.park@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200829080816.1440-1-sjpark@amazon.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oops, I forgot adding 'From:' line in the body.  This will make author and
-signed-off-by mismatch.  Sorry, I will send v2 soon.
+From: SeongJae Park <sjpark@amazon.de>
 
+This patchset syncs howto.rst for recent changes to the original doc and
+fix some trivial nits in the translation itself.
 
-Thanks,
-SeongJae Park
+The patches are based on v5.9-rc2.
 
-On Sat, 29 Aug 2020 10:08:13 +0200 SeongJae Park <sj38.park@gmail.com> wrote:
+Changes from v1
+ - Fix mismatch between author and Signed-off-by:
 
-> This patchset applies missed changes that should land in the
-> memory-barriers.txt and its Korean translation.
-> 
-> The patches are based on v5.9-rc2.
-> 
-> SeongJae Park (3):
->   docs/memory-barriers.txt: Fix references for DMA*.txt files
->   docs/memory-barriers.txt/kokr: Remove remaining references to mmiowb()
->   dics/memory-barriers.txt/kokr: Allow architecture to override the
->     flush barrier
-> 
->  Documentation/memory-barriers.txt             |  8 ++---
->  .../translations/ko_KR/memory-barriers.txt    | 32 ++++++++++++-------
->  2 files changed, 24 insertions(+), 16 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
+SeongJae Park (2):
+  Documentation/kokr: bring process docs up to date
+  Documentation/kokr/howto: Wordsmith
+
+ Documentation/translations/ko_KR/howto.rst | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+-- 
+2.17.1
+
