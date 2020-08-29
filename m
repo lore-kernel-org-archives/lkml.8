@@ -2,184 +2,134 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5CDC433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAC8C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7DC6208A9
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:04:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598717091;
-	bh=wAtTGXzByuZkl4YxA/doRZdDexZLsFSOeIVcGObOrLo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qCJmkNWKGVDcp/jP+B7YwCgbZNeYp/KwbR5DLBpTUgDE+U6CIMyDryJA9p/18exlh
-	 EQUA01LoctXTzq55n5DzHBx1HkBRYceZvysYzVQGWa1D7RYL9aV4pXXdpVAqWzPgmP
-	 sRNptQgaK8WWRJz7YY9RkbvIBOicWdFxV1fcs1OU=
+	by mail.kernel.org (Postfix) with ESMTP id 2D57E2075B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgH2QEt (ORCPT
+        id S1728414AbgH2QMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 12:04:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58678 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 12:12:30 -0400
+Received: from mga06.intel.com ([134.134.136.31]:63511 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726562AbgH2QE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 12:04:29 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8825A206C0;
-        Sat, 29 Aug 2020 16:04:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598717068;
-        bh=wAtTGXzByuZkl4YxA/doRZdDexZLsFSOeIVcGObOrLo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Hqx+QuVmG0IN6gSS6z9ooKtLDMPA8IN8wLj+mFvAYlGm7PALOu7aXLv0JLqJOWAvl
-         DyUk8LWwJDujxotTbECimceMzm7fsbxpS5sGWFmiKrIULO9FicTCJsiVYDBArwpYLk
-         UvVMsvGIJ1YeGm3UPv39Q/ulK0P5qejRf3IX9osQ=
-Date:   Sat, 29 Aug 2020 17:04:23 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "William.Sung" <William.Sung@advantech.com.tw>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        "Hartmut Knaack" <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        "Campion.Kang" <Campion.Kang@advantech.com.tw>,
-        "Shihlun.Lin" <Shihlun.Lin@advantech.com.tw>
-Subject: Re: [PATCH v2] iio: dac: ad5593r: Dynamically set AD5593R channel
- modes
-Message-ID: <20200829170423.4c8e8a11@archlinux>
-In-Reply-To: <fede086b9dd54a37bd539ab864bd8c55@taipei09.ADVANTECH.CORP>
-References: <20200825101614.2462-1-william.sung@advantech.com.tw>
-        <CAHp75VceTBHJ1p3amCQ0PpDSEP8L5+Tf-Qro69+G1WZBrt2oDw@mail.gmail.com>
-        <fede086b9dd54a37bd539ab864bd8c55@taipei09.ADVANTECH.CORP>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728310AbgH2QMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 12:12:24 -0400
+IronPort-SDR: 2Vx1zvFowkBPaG9svkt4WNOkNo+xPoecB2WDaleY3rKB/Ogchvp8VY/fWq+OfNoK8gU3aC1z1M
+ 5oADLFDoSBnA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9728"; a="218356441"
+X-IronPort-AV: E=Sophos;i="5.76,368,1592895600"; 
+   d="scan'208";a="218356441"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2020 09:12:23 -0700
+IronPort-SDR: +GrkzHyA36HafvypMtlhPp5ZiJP97FWVTsubco5fqtPQMbkr7Xtuq3yWpS4mhqzs5PcDS8C0YY
+ cj/D1cK0cubg==
+X-IronPort-AV: E=Sophos;i="5.76,368,1592895600"; 
+   d="scan'208";a="476111787"
+Received: from swagatad-mobl9.amr.corp.intel.com (HELO [10.209.20.68]) ([10.209.20.68])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2020 09:12:22 -0700
+Subject: Re: [PATCH 05/17] virt: acrn: Introduce ACRN HSM basic driver
+To:     Shuo A Liu <shuo.a.liu@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yu Wang <yu1.wang@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20200825024516.16766-1-shuo.a.liu@intel.com>
+ <20200825024516.16766-6-shuo.a.liu@intel.com>
+ <20200828102559.GA1470435@kroah.com>
+ <20200829104612.GD13723@shuo-intel.sh.intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <58093008-3072-f9df-5245-f74a82906e47@intel.com>
+Date:   Sat, 29 Aug 2020 09:12:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200829104612.GD13723@shuo-intel.sh.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 05:33:08 +0000
-William.Sung <William.Sung@advantech.com.tw> wrote:
+On 8/29/20 3:46 AM, Shuo A Liu wrote:
+> On Fri 28.Aug'20 at 12:25:59 +0200, Greg Kroah-Hartman wrote:
+>> On Tue, Aug 25, 2020 at 10:45:05AM +0800, shuo.a.liu@intel.com wrote:
+>>> +static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+>>> +               unsigned long ioctl_param)
+>>> +{
+>>> +    if (cmd == ACRN_IOCTL_GET_API_VERSION) {
+>>> +        if (copy_to_user((void __user *)ioctl_param,
+>>> +                 &api_version, sizeof(api_version)))
+>>> +            return -EFAULT;
+>>
+>> Why are you versioning your api?  Shouldn't that not be a thing and you
+>> either support an ioctl or you do not?
+> 
+> The API version here is more for the hypercalls.
+> The hypercalls might evolve later
 
-> Hi Andy,
-> 
-> Thanks for you to take your time reviewing this patch. Would you please let me explain your questions?
-> 
-> =========================================================================
-> > +/* Parameters for dynamic channel mode setting */ static u8 
-> > +update_channel_mode; static u8 new_channel_modes[AD559XR_CHANNEL_NR];  
-> 
-> Huh?! Global variables?!
-> 
-> ---
-> 
-> > +EXPORT_SYMBOL_GPL(ad5592r_update_default_channel_modes);  
-> 
-> What?!
-> 
-> ---
-> 
-> > +/* Parameters for dynamic channel mode setting */ static char 
-> > +*ch_mode = ""; module_param(ch_mode, charp, 0400);  
-> 
-> We have sysfs ABI, what's wrong with it?
-> 
-> ---
-> => William:  
-> 
-> The module ad5593r is dependent on the module ad5592r-base, there is also another module ad5592r dependent on it.
-> In the original progress of AD5593R probe up:
-> 1. ad5593r_probe(), and then it will call the expose function ad5592r_probe() in ad5592r-base.
-> 2. During ad5592r_probe() function, it will:
->    * Create ad5593r/ad5592r state structure (including the channel mode settings buffer)
->    * Read all 8 channel mode settings from acpi/dt and write to the state structure
->    * According to the channel mode settings, write the appropriate value to the registers
-> 
-> Would you please think about a scenario: 
-> The channel modes descript in the acpi/dt are 4 GPIOs and 4 ADCs
-> If a user wants to change the usage of the channel to 2GPIOs, 4 ADCs, and 2 DACs, no interface can do this.
-> The only way that he can do it is by modifying the settings in either acpi or dt.
+They might evolve, but the old ones must always keep working.  Right?
 
-Sorry, but no to doing this.  If a user actually wants to do this then they need to
-use something like a device tree overlay.  The only reason to make such a change
-is because the external hardware connected to those pins has changed.
-The person making that hardware change should be describing the hardware
-that is sitting on those DAC and GPIO lines.
+> and the version indicates which set of interfaces (include the
+> paramters' format) should be used by user space tools. Currently,
+> it's used rarely.
+Why do you need this when the core kernel doesn't?  We add syscalls,
+ioctl()s and prctl()s all the time, but nothing is versioned.
 
-It may seem overly restrictive and I appreciate that quick routes are handy for
-makers etc, but there are standard ways of supporting such hardware configurability.
-If those do not meet your requirements it is those standard ways that should be
-improved, not adding a custom hack for a specific driver.
-
-Jonathan
-
-
-> 
-> To increase the flexibility, we use module parameters for the user specifying the desired setting without modifying the acpi/dt.
-> However, during ad5593r_probe() function, the state structure in ad5592r-base has not been created. 
-> Since the other module ad5592r is also dependent on ad5592r-base, we try to keep the compatibility for both ad5592r/ad5593r as 
-> possible. So we export a function ad5592r_update_default_channel_modes to catch the settings and store in the global variable 
-> as the buffer. And the it can keep the original process flow until the module intent to allocate the channel modes.
-> 
-> If the user manually probe the module without specifying the parameters the module will keep the original flow: Read from acpi/dt as
-> the channel mode setting.
-> 
-> ==============================================================================
-> > +       if (strlen(ch_mode) != AD559XR_CHANNEL_NR)  
-> 
-> This is interesting...
-> 
-> ---
-> 
-> => William:  
-> My thought is to prevent the typing error. If the length of the input parameter is not matching the number of channels, we can ignore it.
-> Is that a weird way to do it?
-> 
-> ==============================================================================
-> > +                       pr_err("%s: invalid(%c) in index(%d)\n",
-> > +                               __func__, new_mode[idx], idx);  
-> 
-> Oh...
-> 
-> ---
-> 
-> => William  
-> 
-> Maybe it is more appropriate not to show this message, doesn't it?
-> 
-> ==============================================================================
-> > +               if (kstrtou8(tmp, 10, &new_ch_modes[AD559XR_CHANNEL_NR 
-> > + - idx - 1])) {  
-> 
-> Shadowing errors?
-> 
-> ---
-> 
-> => William  
-> 
-> In the prototype of kstrtou8, it will return int to indicate this function is successful or not.
-> I just want to make sure all the translations from string to integer are correct.
-> 
-> ==============================================================================
-> 
-> For the others, I'll fix these.
-> 
-> Thanks again and please kindly give me your advice if any.
-> 
-> Best regards,
-> 
-> William Sung
-> Phone: +886-2-2792-7818 ext: 7644
-> Advantech Co., Ltd.
-> 
-o
-
+This sounds like something you need to remove from the series.
