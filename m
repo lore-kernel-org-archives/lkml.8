@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3485BC433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 00:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B55ADC433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 00:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB0B20838
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 00:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CC4320838
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 00:34:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Slr/pUQw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P5IDxqlI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgH2Ac5 (ORCPT
+        id S1726977AbgH2AeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 20:32:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36690 "EHLO
+        Fri, 28 Aug 2020 20:34:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbgH2Ac4 (ORCPT
+        with ESMTP id S1726775AbgH2AeA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 20:32:56 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C93DC061264;
-        Fri, 28 Aug 2020 17:32:55 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id t6so719783ljk.9;
-        Fri, 28 Aug 2020 17:32:55 -0700 (PDT)
+        Fri, 28 Aug 2020 20:34:00 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF158C061264;
+        Fri, 28 Aug 2020 17:33:59 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id c8so557433lfh.9;
+        Fri, 28 Aug 2020 17:33:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=Q4A82mtCc9iYOPIj+bFVS82orE8e7VuC4YeTmwqXG+s=;
-        b=Slr/pUQw1t8UoOJU5VeyQFoLenqR1BiUzrqhrKMZPQm1JTSd9RDdmgv/9dp0l3ZECq
-         1Elsglq7MQTihUZs+t1cJk090e/IlIY0KpcVfxclo8MMPcUGU+rhMhPtbiuSQeAwVxOc
-         bhZbNqsV4fwiVy5SpmVnOHDZC2tl7M/sbhjp0Tg31MFghgWP5vHyNOEquslTpmtX/Kjp
-         XFndJp+fJ1xcr32Ranos15HzQvHehl+K18zTSooU5F6ff7miuMaviXGeoVimyeSK/ceg
-         ZN4ZYY7vGAwwuURaELHDrwPGt5RcqiIU609+zli4m0GeoWgRS29l99SP43aBC2dJb/hM
-         fHCg==
+        bh=udOnF2aAB4tWGY1xoa/IQjnlzFaq9wx8Ye/AaoZl7Gk=;
+        b=P5IDxqlIQPCjO6klyBH8ZF/1pfnkpw7C6ZDqo9nVBW9J9t8obK0rJhr05o0dutqmtJ
+         OQDLh2ReLHEuKZ1iRX4lAuCjYU2ysoRc5UT6FXkON3zcXMKgt+yZFPk/ty/fapMlHc5Q
+         URXWkcx6a3FSSDiLbkVSZuBNfTFOBBp/6e5iVUZAOfl7UIjqAUKNt6fwIxbpMj202/3q
+         ywqHm6QJcJ1VTGRMesJPECse3zBsGOLV8zwjtvm7YbxH1Y2skqQWA5BnaEnxf1wf9AD+
+         g1+59AjQgOsL8GBD6ULPuUNHA33amlT9G8xW/0bH3+4je7Q/C6Kp1yQsJk+rjRJ33dcl
+         BHBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Q4A82mtCc9iYOPIj+bFVS82orE8e7VuC4YeTmwqXG+s=;
-        b=gDdZymC8AJS40pW7PwtbccTjDnXQgyfn+akioIYilNsbLrSmVMWu1pUjXJcKEk3d3m
-         c7RK1wLEsrPVhfycBN5ZAfuYnQHm5XAd2T+EW0f0PmKT0EZCh8QlTVA58ySpA5Sc8fYU
-         QgQIwsSMYe7k1Wj/LWbRsDqr2BOTPO9CGkiRtggclk5FaKuZImqY2cngi8SkcKS6vb8R
-         b2cFQ5gQ3PT5eBnFZE4t+oNB6qQ2tnCk9HDAvdYzPnfU9kRzUQKZguyI4Zt8Fj9ZceFI
-         mt76S3fIII3a48kHn5Tocn0l2jHPLwqvxIvxH0Yq9QrEwDKRWPjHRjv3a+sZUsUYFvgs
-         2ogA==
-X-Gm-Message-State: AOAM533zs0v6mKQHCzCbQiYJgMt0fmzq7zmwp94zrJYVVJt2LveD08QL
-        xkN6OdCqzi/yPtZ1q3A0NeCm5ZFvNnojby87lBs=
-X-Google-Smtp-Source: ABdhPJwxuZiutFx6DCExGhPgSPZJudtRPRCwk1BePpD0DQiw64l4IZB7D68PBza2Vy1/AVUPcTaoe8fyijJJOoczAPQ=
-X-Received: by 2002:a2e:b009:: with SMTP id y9mr496183ljk.119.1598661173880;
- Fri, 28 Aug 2020 17:32:53 -0700 (PDT)
+        bh=udOnF2aAB4tWGY1xoa/IQjnlzFaq9wx8Ye/AaoZl7Gk=;
+        b=O8e1NhrH98Q1EcGqcmQ575cpSNadSVYFRDfZIOoXWoapHpmi6sY4RMkyKGokOLEYmn
+         ISIZvbZvJ/uxQh11E4l0+oYb/YIt/TjdQbF/r/2Gr5VDQdSiEFmDzqSPNV5F77Uq+lGD
+         p7JWHK0KUgiysPlr3pXygglaYaWwJNf+7FuIBuR7sqgv5YCMxVlYRl+aJdU3R/MPxrhG
+         zZrohzDrWULjntIEXzeXTHh2K+q0z53Mbf0LRseU4/b4ZF9eZRFyTbHJOOUaMdxgYpqW
+         zmuKgYocdBJow3gRzFZArN2Ft3a5Lq/K/6w0ULHv2O6agDK2h+dB7UNOjyfw2Epgtb1F
+         zAFg==
+X-Gm-Message-State: AOAM530w/PNxCYENb22/Uxj9i+DemDYYC728nXbdHl1wmCYh1feosZkE
+        36eYzAksaiHgtT2vVDRRCpi6zu1Eboqb5F54gzk=
+X-Google-Smtp-Source: ABdhPJy8NGfOfaHbEPkrHphhi9v8ADB1PgqoTUVgMDx4fmbTHt/3P7dSr9oJM+He5dCb3NjIB0ZYKiWMWUqgVXhAuas=
+X-Received: by 2002:ac2:4911:: with SMTP id n17mr465136lfi.185.1598661238298;
+ Fri, 28 Aug 2020 17:33:58 -0700 (PDT)
 MIME-Version: 1.0
 References: <1598610636-4939-1-git-send-email-u0084500@gmail.com>
- <1598610636-4939-2-git-send-email-u0084500@gmail.com> <20200828220520.GA3482472@bogus>
-In-Reply-To: <20200828220520.GA3482472@bogus>
+ <1598610636-4939-2-git-send-email-u0084500@gmail.com> <20200828220630.GB3482472@bogus>
+In-Reply-To: <20200828220630.GB3482472@bogus>
 From:   ChiYuan Huang <u0084500@gmail.com>
-Date:   Sat, 29 Aug 2020 08:32:42 +0800
-Message-ID: <CADiBU3-pd7nvtf2_1ssYVLQc4HOHX6PUyyx6GiJ_gH-4DaGmog@mail.gmail.com>
+Date:   Sat, 29 Aug 2020 08:33:46 +0800
+Message-ID: <CADiBU3-k91Rmoxzbzf44kFg7sEq42n5kc3ZhQUwVyEjkFpbshA@mail.gmail.com>
 Subject: Re: [PATCH v4 2/2] usb typec: mt6360: Add MT6360 Type-C DT binding documentation
 To:     Rob Herring <robh@kernel.org>
 Cc:     Greg KH <gregkh@linuxfoundation.org>, matthias.bgg@gmail.com,
@@ -79,7 +79,7 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Rob Herring <robh@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8829=E6=97=A5 =
-=E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=886:05=E5=AF=AB=E9=81=93=EF=BC=9A
+=E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=886:06=E5=AF=AB=E9=81=93=EF=BC=9A
 >
 > On Fri, Aug 28, 2020 at 06:30:36PM +0800, cy_huang wrote:
 > > From: ChiYuan Huang <cy_huang@richtek.com>
@@ -129,11 +129,6 @@ ivery controller.
 > > +      - mediatek,mt6360-tcpc
 > > +
 > > +  interrupts-extended:
->
-> Use 'interrupts'. The tooling will automatically support
-> 'interrupts-extended'.
-Okay.
->
 > > +    maxItems: 1
 > > +
 > > +  interrupt-names:
@@ -142,6 +137,11 @@ Okay.
 > > +
 > > +patternProperties:
 > > +  "connector":
+>
+> Also, this is not a pattern, so should be under 'properties', and it
+> doesn't need quotes.
+Will be fixed in next patch.
+>
 > > +    type: object
 > > +    $ref: ../connector/usb-connector.yaml#
 > > +    description:
@@ -173,18 +173,6 @@ Okay.
 > > +                interrupt-names =3D "PD_IRQB";
 > > +
 > > +                connector {
->
-> Where's the data connections? The assumption of the binding is the USB
-> (2 and 3) connections come from the parent if there's no graph to the
-> USB controller(s).
-MT6360 is only a subpmic. TypeC part only handle the CC logic to support US=
-BPD.
-For the usb connection like as usbhs/usbss,  it need to be handled
-by/connect to application processor side.
-LIke as connector/usb-connector.yaml decribed, it  specify the port
-property to bind USB HS/SS.
-
->
 > > +                        compatible =3D "usb-c-connector";
 > > +                        label =3D "USB-C";
 > > +                        data-role =3D "dual";
