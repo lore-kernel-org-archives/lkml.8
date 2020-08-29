@@ -2,93 +2,117 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C63C433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E426BC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A41C206B5
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8450206B5
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598721960;
-	bh=+nY9mykADdwF60jwNNmm7FFTN2Md3KZ+mkgsQiSWT+A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nf+FYklkUrGH09c70pDMDnWc8ad78YN1kHzADy6PScNf4Y32PNY3oMKYEv40fRE/q
-	 GSyCjUKQaeDq6ZNhV04KvdYeOrp72IAjMvTzF64oyhUnHRsx+GNOBQPFGrniJGBfnC
-	 2GHsQBmTNf2OK9VXomnGHq3J/8NhRIeaNH9WpR5I=
+	s=default; t=1598722087;
+	bh=qY7x57AGtsUkeHbRnNlDUQfIhyRS0g6JReGDi0RPd94=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=0DD8PK2ZfkiCKRkPjknWJ9ssRGdqBFhyMrgmtouBuZbL55ey9tmiYSORzOpjdjs86
+	 3PJYx9A6zHaw7ZvusHFH+MlYPp4bjIhl6JdPFnV9VNCPnL6jp5JKC00EBu77Z9Ts9i
+	 KppwR+DQpnG5sI4mRBUxCOAt6ergziE0mA9B4oxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgH2RZ7 (ORCPT
+        id S1728273AbgH2R2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 13:25:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59976 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 13:28:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728355AbgH2RZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 13:25:53 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728105AbgH2R2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 13:28:06 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 460AC20714;
-        Sat, 29 Aug 2020 17:25:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD57B206B5;
+        Sat, 29 Aug 2020 17:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598721953;
-        bh=+nY9mykADdwF60jwNNmm7FFTN2Md3KZ+mkgsQiSWT+A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uXvec8+QQTrPCMN2QCX7MutzzreA731+VA/ru/aRaEVo4FxWXEyrs4Nvji4j94j6+
-         6AbmrY3qk1PGNm0pXx+eEHDAOt6W/H5tOhSbELqVS1Nnk7CN7PJG5o/N6KzjFQVZEz
-         ZZKBhouPI0Oulk5z40uiLVft2UUwnO8ZSOFNSOYw=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: [PATCH 4/4] ARM: dts: exynos: Remove snps,dwc2 compatible in Exynos3250
-Date:   Sat, 29 Aug 2020 19:25:32 +0200
-Message-Id: <20200829172532.29358-4-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200829172532.29358-1-krzk@kernel.org>
-References: <20200829172532.29358-1-krzk@kernel.org>
+        s=default; t=1598722085;
+        bh=qY7x57AGtsUkeHbRnNlDUQfIhyRS0g6JReGDi0RPd94=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sqillNnVlaj1WTu3OaIzsuJDY0nq3eOaFhPRFbuifV6adDgYasJiObOTqdPYJyAU5
+         SyIK04VwkNP/YTKIduPBRw0TfF8Xq4KjxzLkX5EzO/kvN5xyqDUImSf4i3gq4KZCbw
+         q2wzuRgYtoj4tHa7ares9vlJHx9IaMMUPV/yMHnM=
+Date:   Sat, 29 Aug 2020 18:28:01 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Crt Mori <cmo@melexis.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v6 0/5] iio: temperature: mlx90632: Add extended
+ calibration calculations
+Message-ID: <20200829182801.19f028ef@archlinux>
+In-Reply-To: <20200818213737.140613-1-cmo@melexis.com>
+References: <20200818213737.140613-1-cmo@melexis.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The binding for DesignWare HS OTG USB 2.0 in Samsung SoCs take only one
-compatible.  This fixes dtbs_check warnings like:
+On Tue, 18 Aug 2020 23:37:32 +0200
+Crt Mori <cmo@melexis.com> wrote:
 
-  arch/arm/boot/dts/exynos3250-artik5-eval.dt.yaml: hsotg@12480000:
-    compatible: ['samsung,s3c6400-hsotg', 'snps,dwc2'] is not valid under any of the given schemas (Possible causes of the failure):
+> Add extended calibration calculations for the new subversion of DSP5.
+> 
+> V6 review comments from Andy Shevchenko <andy.shevchenko@gmail.com:
+> 	 - Covert all while loops to regmap_read_poll_timeout or
+> 	   read_poll_timeout even though udelay of more than 20ms is used
+> 	   in the second. Problem was, that timeout needs to be 800ms,
+> 	   while polling frequency could be 20ms, but we konw that that
+> 	   will generate more noise on line than needed. Did some tests and
+> 	   current number combination seems best. This also caused that
+> 	   commit messages were adjusted.
+> V5 review comments from Andy Shevchenko <andy.shevchenko@gmail.com:
+> 	 -  Swap order of patches to avoid re-doing the calculations
+> 	 - Add fixed name defines for Ambient and Object RAM temperature
+> 	   channels as per suggestion of the Jonathan Cameron <jic23@kernel.org>
+> V5:
+> 	 - Add style changes patch along with current series.
+> 
+> V4 review comments from Andy Shevchenko <andy.shevchenko@gmail.com>:
+> 	 - Move the function creation for Ta4 to first patch
+> 	 - Add kernel doc patch for documenting internal struct
+> 	 - Add patch to convert while loops to do-while loops for
+> 	   polling
+> 
+> V3 review comments from Andy Shevchenko <andy.shevchenko@gmail.com>:
+> 	 - Change commit message text to more proper English as per suggestions
+> 	 - Drop unneeded brackets and parentheses
+> 	 - Use defines from limits.h
+> 	 - Remove userspace typedefs as leftovers from porting
+> 	 - Testing of timeout loops with iopoll.h was no successful,
+> 	   because delay between measurements is 10ms, but we need to
+> 	   fill at least 3 channels, so final timeout should be 40ms
+> 	   which is out of scope of usleep function
+> 	 - Fixing some typos in comments
+> 
+> V2 review comments from Andy Shevchenko <andy.shevchenko@gmail.com>:
+> 	 - Convert divison back to shifts to make it more readable
+> 
+> Crt Mori (5):
+>   iio:temperature:mlx90632: Reduce number of equal calulcations
+>   iio:temperature:mlx90632: Add kerneldoc to the internal struct
+>   iio:temperature:mlx90632: Convert polling while loop to regmap
+>   iio:temperature:mlx90632: Adding extended calibration option
+>   iio:temperature:mlx90632: Some stylefixing leftovers
+> 
+>  drivers/iio/temperature/mlx90632.c | 274 ++++++++++++++++++++++++++---
+>  1 file changed, 247 insertions(+), 27 deletions(-)
+> 
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos3250.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks.  Also thanks to Andy for all his review work on these!
 
-diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-index 6d467022d929..78734c132822 100644
---- a/arch/arm/boot/dts/exynos3250.dtsi
-+++ b/arch/arm/boot/dts/exynos3250.dtsi
-@@ -350,7 +350,7 @@
- 		};
- 
- 		hsotg: hsotg@12480000 {
--			compatible = "samsung,s3c6400-hsotg", "snps,dwc2";
-+			compatible = "samsung,s3c6400-hsotg";
- 			reg = <0x12480000 0x20000>;
- 			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cmu CLK_USBOTG>;
--- 
-2.17.1
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to try and break it.
 
+Thanks,
+
+Jonathan
