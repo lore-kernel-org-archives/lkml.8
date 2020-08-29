@@ -2,117 +2,183 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA753C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCEDC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8C352076D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18E7B2076D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:09:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="foXFP4TK"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YgiZCIp7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgH2II4 (ORCPT
+        id S1728007AbgH2IJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 04:08:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727099AbgH2IIb (ORCPT
+        Sat, 29 Aug 2020 04:09:04 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6665 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727929AbgH2II4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 04:08:31 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A78ECC061239;
-        Sat, 29 Aug 2020 01:08:30 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id w14so1153066eds.0;
-        Sat, 29 Aug 2020 01:08:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9xSXJki88R/Q+T6fSRfPoG4+Pu0R/4p0TOoHdBe6ftk=;
-        b=foXFP4TKja4qOPphKcrdGyfF7zgYBCakPUgd94pB/9j2PMaC3rMXbZhrqooeYxHZuO
-         PcK4acSpVxE2PdM7c1lT/8zBFfXo7XH+ZyonWIxQjcSPpddfG4CZUE/BTeckTVfBViw3
-         ElqKQJ0o6Z/gCrC9UiWlcxUJMjK8bfBQ6csOoGEobSmQANv9ZaX/nNRQm8dvoYy3ra95
-         xQxAdhB902vVqw+wnjGh2qEWPbN94XvbY0AZeO9ft0NJaF28aCe39YNh2WnMI9jLhS39
-         LexZyBee1JmOqZbsWfnF+dor8U8kF2mMWyjyvnYIo8wRDGv0VhcHDYJcJXr4cstFYAKM
-         ZOMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9xSXJki88R/Q+T6fSRfPoG4+Pu0R/4p0TOoHdBe6ftk=;
-        b=svfLy4egz/RSni2UjKHHiiRwy91N4RoSGhwoxQlEhtAv0eLrC0difcoNZRJfTGLWHC
-         1Gc6dBwQT5zwrw/YCXwif6QEjJ7MjaYwQK25bJbGAW8rSKjKjw60mnVflR+GUIEB9EhH
-         T0QmNU1HaiDyFDg34Bvmd6uFO8j9pBLwWoaEfEZaB3QsScs/eG5LYvKEHtxR0spVDgtg
-         NIbhqMyKrVp5sDyo1AeUx4yJ6qvw0CIE5CfeIzhWmuwXazUzuCi/O9G+ePN27T5G3U60
-         NnMIvr5naDpIfaRz4Q83SmzIlxTQ0QQxs41RdB0QtAszdkazbQgUWwjiAdyPGOlwRShX
-         bQKA==
-X-Gm-Message-State: AOAM5313b+Fr6yzVTykUkZhfi+sonU/WBEoa41DuQatF7g69mrV7pdAa
-        2MD8HnuMVpE0nGwOmY1y5r0=
-X-Google-Smtp-Source: ABdhPJyJhYjyzRBGCOzZjbpblqxraiBwQogtj8BAFLqoDF+iftWtwns4EHcAwCBO0DZqcya7cDk8iQ==
-X-Received: by 2002:a05:6402:342:: with SMTP id r2mr2532601edw.353.1598688509413;
-        Sat, 29 Aug 2020 01:08:29 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:2450:10d2:194d:f90b:b3a9:1300:5b1a])
-        by smtp.gmail.com with ESMTPSA id h25sm1568923ejq.12.2020.08.29.01.08.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Aug 2020 01:08:28 -0700 (PDT)
-From:   SeongJae Park <sj38.park@gmail.com>
-X-Google-Original-From: SeongJae Park <sjpark@amazon.de>
-To:     paulmck@kernel.org, corbet@lwn.net
-Cc:     linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, SeongJae Park <sjpark@amazon.de>
-Subject: [PATCH 3/3] dics/memory-barriers.txt/kokr: Allow architecture to override the flush barrier
-Date:   Sat, 29 Aug 2020 10:08:16 +0200
-Message-Id: <20200829080816.1440-4-sjpark@amazon.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200829080816.1440-1-sjpark@amazon.de>
-References: <20200829080816.1440-1-sjpark@amazon.de>
+        Sat, 29 Aug 2020 04:08:56 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4a0c9b0001>; Sat, 29 Aug 2020 01:06:51 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Sat, 29 Aug 2020 01:08:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Sat, 29 Aug 2020 01:08:55 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 29 Aug
+ 2020 08:08:54 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Sat, 29 Aug 2020 08:08:54 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.50.252]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f4a0d160000>; Sat, 29 Aug 2020 01:08:54 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, <linux-xfs@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v2 0/3] bio: Direct IO: convert to pin_user_pages_fast()
+Date:   Sat, 29 Aug 2020 01:08:50 -0700
+Message-ID: <20200829080853.20337-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598688411; bh=f29+8U51sN7xD9DRBLq2nw+qMqJ1oMDZgC0r44yrcd4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=YgiZCIp71QQJea8/vSz5N0nHpsgBzIi0hXzOJenMST3nt/uuXRZZSpoJHi9YtQct2
+         ezsZJUW49zUEDtxWGF0BDcHrlMkY5InjJbmU5P6x2EZcxc5VsRDP6RGKVWOPKj3w3w
+         VvUaB/dBj0biYcaDSOqpPt7WUX6t/U7UEhLGAb+aM+5NsqAjnTRDIV1Q4TlwnruzD5
+         gaqWuWNVmyXMTI1YwrQORDgbYm7ROAvIH/Bm9+oVAo27XBmbLOrZrj/bb0bFrLG43I
+         RrgkJsGFTbBX9G2561TGfdgMRKGid0ReqWDUxnaTvLzHDOJahcILSK6BkyOfTkVY07
+         KNzSt1O5kalQA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Translate this commit to Korean:
+Hi,
 
-    3e79f082ebfc ("libnvdimm/nvdimm/flush: Allow architecture to override the flush barrier")
+Changes since v1:
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Reviewed-by: Yunjae Lee <lyj7694@gmail.com>
----
- .../translations/ko_KR/memory-barriers.txt          | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+* Now handles ITER_PIPE, by appying pin_user_page() to ITER_PIPE pages,
+on the Direct IO path. Thanks to Al Viro for pointing me in the right
+direction there.
 
-diff --git a/Documentation/translations/ko_KR/memory-barriers.txt b/Documentation/translations/ko_KR/memory-barriers.txt
-index 291039d77694..64d932f5dc77 100644
---- a/Documentation/translations/ko_KR/memory-barriers.txt
-+++ b/Documentation/translations/ko_KR/memory-barriers.txt
-@@ -1904,6 +1904,19 @@ Mandatory 배리어들은 SMP 시스템에서도 UP 시스템에서도 SMP 효
-      "커널 I/O 배리어의 효과" 섹션을, consistent memory 에 대한 자세한 내용을
-      위해선 Documentation/core-api/dma-api.rst 문서를 참고하세요.
- 
-+ (*) pmem_wmb();
-+
-+     이것은 persistent memory 를 위한 것으로, persistent 저장소에 가해진 변경
-+     사항이 플랫폼 연속성 도메인에 도달했을 것을 보장하기 위한 것입니다.
-+
-+     예를 들어, 임시적이지 않은 pmem 영역으로의 쓰기 후, 우리는 쓰기가 플랫폼
-+     연속성 도메인에 도달했을 것을 보장하기 위해 pmem_wmb() 를 사용합니다.
-+     이는 쓰기가 뒤따르는 instruction 들이 유발하는 어떠한 데이터 액세스나
-+     데이터 전송의 시작 전에 persistent 저장소를 업데이트 했을 것을 보장합니다.
-+     이는 wmb() 에 의해 이뤄지는 순서 규칙을 포함합니다.
-+
-+     Persistent memory 에서의 로드를 위해선 현재의 읽기 메모리 배리어로도 읽기
-+     순서를 보장하는데 충분합니다.
- 
- =========================
- 암묵적 커널 메모리 배리어
--- 
-2.17.1
+* Removed the ceph and BIO_FOLL_PIN patches: the ceph improvements were
+handled separately as a different patch entirely, by Jeff Layton. And
+the BIO_FOLL_PIN idea turned out to be completely undesirable here.
+
+Original cover letter, updated for v2:
+
+This converts the Direct IO block/bio layer over to use FOLL_PIN pages
+(those acquired via pin_user_pages*()). This effectively converts
+several file systems (ext4, for example) that use the common Direct IO
+routines. See "Remaining work", below for a bit more detail there.
+
+Quite a few approaches have been considered over the years. This one is
+inspired by Christoph Hellwig's July, 2019 observation that there are
+only 5 ITER_ types, and we can simplify handling of them for Direct IO
+[1]. After working through how bio submission and completion works, I
+became convinced that this is the simplest and cleanest approach to
+conversion.
+
+Design notes =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+This whole approach depends on certain concepts:
+
+1) Each struct bio instance must not mix different types of pages:
+FOLL_PIN and non-FOLL_PIN pages. (By FOLL_PIN I'm referring to pages
+that were acquired and pinned via pin_user_page*() routines.)
+Fortunately, this is already an enforced constraint for bio's, as
+evidenced by the existence and use of BIO_NO_PAGE_REF.
+
+2) Christoph Hellwig's July, 2019 observation that there are
+only 5 ITER_ types, and we can simplify handling of them for Direct IO
+[1]. Accordingly, this series implements the following pseudocode:
+
+Direct IO behavior:
+
+    ITER_IOVEC:
+        pin_user_pages_fast();
+        break;
+
+    ITER_PIPE:
+        for each page:
+             pin_user_page();
+        break;
+
+    ITER_KVEC:    // already elevated page refcount, leave alone
+    ITER_BVEC:    // already elevated page refcount, leave alone
+    ITER_DISCARD: // discard
+        return -EFAULT or -ENVALID;
+
+...which works for callers that already have sorted out which case they
+are in. Such as, Direct IO in the block/bio layers.
+
+Now, this does leave ITER_KVEC and ITER_BVEC unconverted, but on the
+other hand, it's not clear that these are actually affected in the real
+world, by the get_user_pages()+filesystem interaction problems of [2].
+If it turns out to matter, then those can be handled too, but it's just
+more refactoring and surgery to do so.
+
+Testing
+=3D=3D=3D=3D=3D=3D=3D
+
+Performance: no obvious regressions from running fio (direct=3D1: Direct
+IO) on both SSD and NVMe drives.
+
+Functionality: selected non-destructive bare metal xfstests on xfs,
+ext4, btrfs, orangefs filesystems, plus LTP tests.
+
+Note that I have only a single x86 64-bit test machine, though.
+
+Remaining work
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+Non-converted call sites for iter_iov_get_pages*() at the
+moment include: net, crypto, cifs, ceph, vhost, fuse, nfs/direct,
+vhost/scsi. However, it's not clear which of those really have to be
+converted, because some of them probably use ITER_BVEC or ITER_KVEC.
+
+About-to-be-converted sites (in a subsequent patch) are: Direct IO for
+filesystems that use the generic read/write functions.
+
+[1] https://lore.kernel.org/kvm/20190724061750.GA19397@infradead.org/
+
+[2] "Explicit pinning of user-space pages":
+    https://lwn.net/Articles/807108/
+
+
+John Hubbard (3):
+  mm/gup: introduce pin_user_page()
+  iov_iter: introduce iov_iter_pin_user_pages*() routines
+  bio: convert get_user_pages_fast() --> pin_user_pages_fast()
+
+ block/bio.c          |  24 +++++-----
+ block/blk-map.c      |   6 +--
+ fs/direct-io.c       |  28 +++++------
+ fs/iomap/direct-io.c |   2 +-
+ include/linux/mm.h   |   2 +
+ include/linux/uio.h  |   5 ++
+ lib/iov_iter.c       | 110 +++++++++++++++++++++++++++++++++++++++----
+ mm/gup.c             |  30 ++++++++++++
+ 8 files changed, 169 insertions(+), 38 deletions(-)
+
+--=20
+2.28.0
 
