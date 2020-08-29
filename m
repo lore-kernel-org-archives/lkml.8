@@ -2,110 +2,116 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A9BC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6951C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8680B20838
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84263205CB
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:35:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CLEcEkSV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgH2BYQ (ORCPT
+        id S1726579AbgH2Bfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 21:24:16 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:57315 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726236AbgH2BYQ (ORCPT
+        Fri, 28 Aug 2020 21:35:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbgH2Bfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 21:24:16 -0400
-Received: (qmail 487363 invoked by uid 1000); 28 Aug 2020 21:24:15 -0400
-Date:   Fri, 28 Aug 2020 21:24:15 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     syzbot <syzbot+7a7613e5ba9ae7bd15f9@syzkaller.appspotmail.com>
-Cc:     andriy.shevchenko@linux.intel.com, bigeasy@linutronix.de,
-        felipe.balbi@linux.intel.com, gregkh@linuxfoundation.org,
-        joe@perches.com, johan@kernel.org, kai.heng.feng@canonical.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, rafael.j.wysocki@intel.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: INFO: task hung in usb_bulk_msg
-Message-ID: <20200829012415.GB486691@rowland.harvard.edu>
-References: <000000000000d3c499057536ce86@google.com>
- <000000000000c69c7805adef8597@google.com>
+        Fri, 28 Aug 2020 21:35:39 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF33BC061264;
+        Fri, 28 Aug 2020 18:35:38 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id p11so1506037pfn.11;
+        Fri, 28 Aug 2020 18:35:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ZNK0OiZAzuMKTfZWlKjgsVU7byDX2P1YFCMooQsFrd4=;
+        b=CLEcEkSV3Y48hXfAfNsrbsbJbcwI2Rn6gvp5OCrupluNy+q6oqIuyxIVAWgHuYFABj
+         +v1VNBT8QLRwbQvrTgNev27DaMB/JJ9FnuXgqq/blerwnBPaFWphpX9BbdteoGsavPUk
+         JRu5PzLmdyBidO0ZDxCFg0QCcTVlx0SWzNOR3YmG6tfKODQ5/AnHDauFem/VgOVVdj6S
+         FLDRTgaac//Fhem9QtCSuV4dBQ1BbhIY3l8kSpaaW0B3CRDcTNdjjMRmt5e96e2TXduZ
+         lpfSIXm0kRlQ+/io6z2ByuL07/jGvqOZUdkjDu6Er0XlEAQroDYJTz0cpXsl1co+Gn/+
+         04Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ZNK0OiZAzuMKTfZWlKjgsVU7byDX2P1YFCMooQsFrd4=;
+        b=mBXg5ycJ9bv+/LkJZOioGkMhv2w9G2s1Qw+LBpuzlpN82l1cWcnoRS83ETxa/IqA9A
+         GoOAXFzr8MLw4U6+WLZBvkrvl09E71jM+gwHWuwTV1YDuH5cdJcol4340FZ4zWJHkxMC
+         4cbF6S3IBdaoUHKS32Sa6aahrcyAabZnbS3Yv+V4iXnfrI9RQ0xD1+yVbZGNWYtH3Ya6
+         Xf9tf3ftMKPiHLC4Go0dzUrkayQ6gin3vsrw3D4xV+/auzUo5uUl82fFYKeBSHHGqkE5
+         UIRzAaw4GJr9gFNz0lsG7vetDGIpJtOBAYr/Sfrve+V14XwnHhpbVu/ib8XQjmnXNNs2
+         sbdA==
+X-Gm-Message-State: AOAM532pU2xCi9gnynaBRy4YiD4Kdw00mOvXEskvpfSj9uTbfKQqI4tk
+        Z14HqfIc81cHKXGnjUjaSiHoBcpkLkE=
+X-Google-Smtp-Source: ABdhPJxSwMN816NwN1bLo4HR+IvCdFRKbphlREduyXq+9LOfSFQL0m2LBTouIqNhGH8v2v/BQYoarw==
+X-Received: by 2002:aa7:9910:: with SMTP id z16mr1405785pff.120.1598664938108;
+        Fri, 28 Aug 2020 18:35:38 -0700 (PDT)
+Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id a13sm669975pgn.17.2020.08.28.18.35.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 18:35:37 -0700 (PDT)
+Date:   Sat, 29 Aug 2020 09:35:32 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v5 00/20] gpio: cdev: add uAPI v2
+Message-ID: <20200829013532.GA5905@sol>
+References: <20200827140020.159627-1-warthog618@gmail.com>
+ <CACRpkdZZMbfpKy4gcfAzNq53LkYLcL9wm3Qtzyj_K8vkUW9RfQ@mail.gmail.com>
+ <CAMpxmJXRY2wqqN3SzfJN+QTWAHYSYz4vEjLKWU82Y=PAmcm=5w@mail.gmail.com>
+ <20200827224742.GA3714@sol>
+ <CACRpkdZroNFFsHoBHUFTUUQij7nOcPQiXP-567+fH-Xerv=L4w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <000000000000c69c7805adef8597@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACRpkdZroNFFsHoBHUFTUUQij7nOcPQiXP-567+fH-Xerv=L4w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 05:52:16AM -0700, syzbot wrote:
-> syzbot has found a reproducer for the following issue on:
+On Fri, Aug 28, 2020 at 04:37:19PM +0200, Linus Walleij wrote:
+> On Fri, Aug 28, 2020 at 12:47 AM Kent Gibson <warthog618@gmail.com> wrote:
 > 
-> HEAD commit:    15bc20c6 Merge tag 'tty-5.9-rc3' of git://git.kernel.org/p..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1052a669900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=978db74cb30aa994
-> dashboard link: https://syzkaller.appspot.com/bug?extid=7a7613e5ba9ae7bd15f9
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=101c328e900000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=155eff41900000
+> > The particular use case I am considering is one I had been asked about -
+> > changing a requested line from input with edge detection to output, and
+> > vice versa. Losing interrupts isn't really an issue for this use case -
+> > it is expected.  Yet the current implementation requires a re-request.
 > 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+7a7613e5ba9ae7bd15f9@syzkaller.appspotmail.com
+> This is possible to do for in-kernel users, but I don't know if that makes
+> sense for userspace. It is for one-offs and prototyping after all, there
+> is no need (IMO) to make it overly convenient for users to implement
+> all kind of weirdness in userspace unless there is a very real use case.
 > 
-> INFO: task syz-executor790:9958 blocked for more than 143 seconds.
->       Not tainted 5.9.0-rc2-syzkaller #0
-> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> task:syz-executor790 state:D stack:28240 pid: 9958 ppid:  6854 flags:0x00004004
-> Call Trace:
->  context_switch kernel/sched/core.c:3778 [inline]
->  __schedule+0x8e5/0x21e0 kernel/sched/core.c:4527
->  schedule+0xd0/0x2a0 kernel/sched/core.c:4602
->  schedule_timeout+0x1d8/0x250 kernel/time/timer.c:1855
->  do_wait_for_common kernel/sched/completion.c:85 [inline]
->  __wait_for_common kernel/sched/completion.c:106 [inline]
->  wait_for_common kernel/sched/completion.c:117 [inline]
->  wait_for_completion_timeout+0x15e/0x270 kernel/sched/completion.c:157
->  usb_start_wait_urb+0x144/0x2b0 drivers/usb/core/message.c:63
->  usb_bulk_msg+0x226/0x550 drivers/usb/core/message.c:254
->  do_proc_bulk+0x39b/0x710 drivers/usb/core/devio.c:1231
->  proc_bulk drivers/usb/core/devio.c:1268 [inline]
->  usbdev_do_ioctl drivers/usb/core/devio.c:2542 [inline]
->  usbdev_ioctl+0x586/0x3360 drivers/usb/core/devio.c:2708
 
-I'm confused about this bug report.
+Fair point - in fact it is the same one that made me reconsider why I
+was so concerned about potentially losing an edge event in a few rare
+corner cases.
 
-Here's the syz reproducer from the link listed above:
+Another point for this change are that it actually simplifies the kernel
+code, as it takes as much code to detect and filter these cases as it
+does to include them in the normal flow.
 
-# 
-https://syzkaller.appspot.com/bug?id=bf172344c5f1d3487a4feff67c3dd30e08d5b635
-# See https://goo.gl/kgGztJ for information about syzkaller reproducers.
-#{"threaded":true,"repeat":true,"procs":6,"sandbox":"none","fault_call":-1,"netdev":true,"close_fds":true}
-r0 = syz_open_dev$usbfs(&(0x7f0000000040)='/dev/bus/usb/00#/00#\x00', 
-0x4000000000000071, 0x28081)
-r1 = socket$inet6(0xa, 0x2, 0x0)
-r2 = dup(r1)
-ioctl$PERF_EVENT_IOC_ENABLE(r2, 0x8912, 0x400200)
-socketpair$unix(0x1, 0x0, 0x0, &(0x7f0000000000))
-ioctl$USBDEVFS_CONTROL(r0, 0x8108551b, &(0x7f0000001140)={0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0})
-ioctl$USBDEVFS_CLEAR_HALT(r0, 0xc0185502, &(0x7f0000000000)={0x1, 0x1})
+I had a play with it yesterday and the change removes two whole
+functions, gpio_v2_line_config_change_validate() and 
+gpio_v2_line_config_has_edge_detection() at the expense of making
+debounce_update() a little more complicated. I'm happy to put together a
+v6 that incorporates those changes if there aren't any strenuous
+objections - we can always revert to v5.  Or I could mail the couple of
+patches I've made and if they seem reasonable then I could merge them
+into this set?
 
-As far as I can see, the only USB ioctls used in this test are 
-USBDEVFS_CONTROL and USBDEVFS_CLEAR_HALT.  Neither of those calls 
-do_proc_bulk() or usb_bulk_msg(), so how did those routines end up in 
-the stack trace?
-
-In fact, do_proc_bulk() is called only for USBDEVFS_BULK.  But the test 
-doesn't use that ioctl!
-
-What's going on?  Am I missing part of the test?
-
-Alan Stern
-
+Cheers,
+Kent.
