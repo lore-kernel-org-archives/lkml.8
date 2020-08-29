@@ -2,207 +2,106 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6D3C433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1013C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99998207BB
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E36E207BB
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:15:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="UgCNc6zV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Opj1LNCX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgH2BMQ (ORCPT
+        id S1726321AbgH2BPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 21:12:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42798 "EHLO
+        Fri, 28 Aug 2020 21:15:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgH2BMN (ORCPT
+        with ESMTP id S1726330AbgH2BPD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 21:12:13 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D247C06121B
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 18:12:12 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id w13so721245wrk.5
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 18:12:12 -0700 (PDT)
+        Fri, 28 Aug 2020 21:15:03 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C3A2C061264
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 18:15:03 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id h10so879537ioq.6
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 18:15:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=39XN9yo1hBG3Se1gfQYF3vziZZPdblGeQ4oQR1sH/O8=;
-        b=UgCNc6zV3jHlrg/Fv8Pd/IrqWUk206ZSYfkd1Atuw6CbnwlSWhIo20Ev2bp0NzbxNE
-         5+Oqahty8CR5kwHAXEbFaKD1X/femDV4haD3dBHW5mwpqzOGgAoCxqHujgVFfx1UHLfQ
-         DbN1P+h/aae5Xy6kl9NPJkMdJU0rMyidTucdU=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vxf7wgPeqLBabv1qOZthQnmoMUNbcbCMRZRv8B/GiMg=;
+        b=Opj1LNCXNlXvkflsoK43cbKot9oqmkOo6+IZa/KEjk365anWH/gs7yT32PBD0YHMdK
+         dFd/6mcwA/lVrmjMW2VFdHLxIE7Q3dWeRoK7Uv4sVxGAhrkL5/V4EzdpP0ynKJ0R//f0
+         AtiZDc3udTbtviy7PviS9WgvZWBrVljjHZHiAOIMgD4M9xpdKQN6bCm8ibyOLWuIbh5o
+         hYt4vq/tXwWuMdz9SV3p4UbY+XUQXiXj6qg8/K7iRfTG/9Xt1PE8Qp/TzuwPOTEqXJdC
+         sn3Yd/yYPo7lK8BWa2V1/u+TBrn2BAGX+0FkoR+DW9FXb4NioTcVyI9+wjQGMURxyiBF
+         RYQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=39XN9yo1hBG3Se1gfQYF3vziZZPdblGeQ4oQR1sH/O8=;
-        b=DSqxaO2O44AHDriQ3/u7DX1sCRqrdDW0URqZuWjlXiOvpCRrD3NHqcyXlXgv9vn0V8
-         OaQHivLKiaPGCQIoGQWLVYPi+Jjid3VMdD1VD8KViuXrlLCmUGK6OBaGmYAaHI2Udn38
-         qJmkJoexa/FDND8CB1A0M9VYPhsQNEENX4rYuJoc7VhLl+m9XrgelyRORZ9A7BH/SV57
-         1WhLa/KCNwUyKGXMyAMZFwaT3zt8fheNcM6jCq9NAOB/zkgfd3zlQge/oQlWncvSXToc
-         O70/KWYuAQLLC5x/aUf0bPD2z6sYriG3EDButymiw40l752BuYymjRFumBYvAziGoo15
-         V7jA==
-X-Gm-Message-State: AOAM530Td5PGaB2aLdgqEWYkrnMMu56i75vjViDgPUiBX7CuhA/qtYnU
-        Z4P4xqypDMmyRNf3U6knMk6plAaw2m2bb+8xwaiC
-X-Google-Smtp-Source: ABdhPJzw5EtgUVJ3RG403SG6FcBlDty/Ese8S3VaJefPy33FqMxh5pEHcZSuvxcoiYJMWxt5uOMYBnTEwf6FImhkxMA=
-X-Received: by 2002:adf:e411:: with SMTP id g17mr1444394wrm.77.1598663531166;
- Fri, 28 Aug 2020 18:12:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vxf7wgPeqLBabv1qOZthQnmoMUNbcbCMRZRv8B/GiMg=;
+        b=WORgTaXbquc2GtjdQvLDqODbRqqSG5HSoJ5qscFTsCr9Y7K5Xfhg6UT4tvpbrZDseX
+         JsQLwYbmK37u1+BLduosep2IrgchyP9vQBhKh9+a33cu7htaBus9ESSdpdRjpGA+CZpF
+         TXqWV/i5JjLnIEgvnq/gplrEX/CLQsTmjTOEmFqv5sNaQ/3i4g1Mkt0XCrrQjDTzlq7g
+         5W8nvzuh78jwI+LFArMV8/saJun6IwyQmzlsBGE3s9ZeoFRXvTR26L7xISsh2bZro8MV
+         E/t0n6lXoY0uTenSjcKBxyPNf3m+o3BXUxsOp9eAundU622syU2fPOu+P+oPnD64+JeH
+         VUrg==
+X-Gm-Message-State: AOAM533uSwkHkNXafs3GD9s6uP91QD/cGgLqnGg2qh3oc/I4BpBUCIxD
+        JYRPLY4v2+9sGjwLEVO5GrVHljDwLOo=
+X-Google-Smtp-Source: ABdhPJxa6QgFX0IFJ+MWlMZxMd54+W6h+M9i7hsSajiazkRvrQ3/fk4rFtXRbPM1a7gfb5XbaWuG0A==
+X-Received: by 2002:a5d:9a15:: with SMTP id s21mr1143658iol.141.1598663701448;
+        Fri, 28 Aug 2020 18:15:01 -0700 (PDT)
+Received: from localhost.localdomain (c-73-242-81-227.hsd1.mn.comcast.net. [73.242.81.227])
+        by smtp.gmail.com with ESMTPSA id v75sm570527ila.19.2020.08.28.18.15.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 18:15:01 -0700 (PDT)
+From:   Ross Schmidt <ross.schm.dev@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Ross Schmidt <ross.schm.dev@gmail.com>
+Subject: [PATCH] Staging: rtl8723bs: os_dep: fixed some coding style issues
+Date:   Fri, 28 Aug 2020 20:14:05 -0500
+Message-Id: <20200829011405.2869-1-ross.schm.dev@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200828104830.000007bf@Huawei.com> <20200828161523.GA2158345@bjorn-Precision-5520>
-In-Reply-To: <20200828161523.GA2158345@bjorn-Precision-5520>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Fri, 28 Aug 2020 18:11:50 -0700
-Message-ID: <CAOnJCULtHzQKJNE4OO_U2NMaW6pX38Pw7dLywGc9og1BuuAYNQ@mail.gmail.com>
-Subject: Re: [RFC/RFT PATCH 3/6] arm64, numa: Move pcibus_to_node definition
- to generic numa code
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Zong Li <zong.li@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ganapatrao Kulkarni <gkulkarni@cavium.com>,
-        Steven Price <steven.price@arm.com>, linux-pci@vger.kernel.org,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Nick Hu <nickhu@andestech.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 9:15 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Aug 28, 2020 at 10:48:30AM +0100, Jonathan Cameron wrote:
-> > On Fri, 14 Aug 2020 14:47:22 -0700
-> > Atish Patra <atish.patra@wdc.com> wrote:
-> >
-> > > pcibus_to_node is used only when numa is enabled and does not depend
-> > > on ISA. Thus, it can be moved the generic numa implementation.
-> > >
-> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> >
-> > From a more general unification point of view, there seem to
-> > be two ways architectures implement this.
-> > Either
-> >
-> > bus->sysdata.node
-> >
-> > Or as here.
-> > There are weird other options, but let us ignore those :)
-> >
-> > That is going to take a bit of unwinding should we
-> > want to take this unification further and perhaps we want to think
-> > about doing this in pci generic code rather than here?
-> >
-> > Perhaps this is one we are better keeping architecture specific for
-> > now?
-> >
-> > +CC Bjorn and Linux-pci
-> >
-> >
-> > > ---
-> > >  arch/arm64/kernel/pci.c  | 10 ----------
-> > >  drivers/base/arch_numa.c | 11 +++++++++++
-> > >  2 files changed, 11 insertions(+), 10 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> > > index 1006ed2d7c60..07c122946c11 100644
-> > > --- a/arch/arm64/kernel/pci.c
-> > > +++ b/arch/arm64/kernel/pci.c
-> > > @@ -54,16 +54,6 @@ int raw_pci_write(unsigned int domain, unsigned int bus,
-> > >     return b->ops->write(b, devfn, reg, len, val);
-> > >  }
-> > >
-> > > -#ifdef CONFIG_NUMA
-> > > -
-> > > -int pcibus_to_node(struct pci_bus *bus)
-> > > -{
-> > > -   return dev_to_node(&bus->dev);
-> > > -}
-> > > -EXPORT_SYMBOL(pcibus_to_node);
-> > > -
-> > > -#endif
-> > > -
-> > >  #ifdef CONFIG_ACPI
-> > >
-> > >  struct acpi_pci_generic_root_info {
-> > > diff --git a/drivers/base/arch_numa.c b/drivers/base/arch_numa.c
-> > > index 83341c807240..4ab1b20a615d 100644
-> > > --- a/drivers/base/arch_numa.c
-> > > +++ b/drivers/base/arch_numa.c
-> > > @@ -11,6 +11,7 @@
-> > >  #include <linux/acpi.h>
-> > >  #include <linux/memblock.h>
-> > >  #include <linux/module.h>
-> > > +#include <linux/pci.h>
-> > >  #include <linux/of.h>
-> > >
-> > >  #ifdef CONFIG_ARM64
-> > > @@ -60,6 +61,16 @@ EXPORT_SYMBOL(cpumask_of_node);
-> > >
-> > >  #endif
-> > >
-> > > +#ifdef CONFIG_PCI
-> > > +
-> > > +int pcibus_to_node(struct pci_bus *bus)
-> > > +{
-> > > +   return dev_to_node(&bus->dev);
-> > > +}
-> > > +EXPORT_SYMBOL(pcibus_to_node);
-> > > +
-> > > +#endif
->
-> I certainly agree that this should not be arch-specific, but I'm not
-> really in favor of adding this PCI gunk in drivers/base.
->
-> I think we can do better (eventually) by getting rid of
-> pcibus_to_node() completely.  It's not used very much except by
-> cpumask_of_pcibus(), which itself is hardly used at all.
->
-I am a bit confused here. A quick grep suggested that pcibus_to_node()
-is also called from generic pci probe,
-controller and few drivers(block, infiniband) as well. Maybe I am
-missing something here ?
+Fixed some coding style issues.
 
-We can move the pcibus_to_node to arch specific code for now if that's
-what is preferred.
+Signed-off-by: Ross Schmidt <ross.schm.dev@gmail.com>
+---
+ drivers/staging/rtl8723bs/os_dep/sdio_intf.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> > >  static void numa_update_cpu(unsigned int cpu, bool remove)
-> > >  {
-> > >     int nid = cpu_to_node(cpu);
-> >
-> >
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+diff --git a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
+index f1e2829a19a7..2b2f4505b98b 100644
+--- a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
++++ b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
+@@ -121,6 +121,7 @@ extern unsigned int oob_irq;
+ static irqreturn_t gpio_hostwakeup_irq_thread(int irq, void *data)
+ {
+ 	struct adapter *padapter = data;
++
+ 	DBG_871X_LEVEL(_drv_always_, "gpio_hostwakeup_irq_thread\n");
+ 	/* Disable interrupt before calling handler */
+ 	/* disable_irq_nosync(oob_irq); */
+@@ -131,6 +132,7 @@ static irqreturn_t gpio_hostwakeup_irq_thread(int irq, void *data)
+ static u8 gpio_hostwakeup_alloc_irq(struct adapter *padapter)
+ {
+ 	int err;
++
+ 	if (oob_irq == 0) {
+ 		DBG_871X("oob_irq ZERO!\n");
+ 		return _FAIL;
+-- 
+2.26.2
 
-
-
---
-Regards,
-Atish
