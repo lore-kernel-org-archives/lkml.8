@@ -2,131 +2,137 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB72C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F736C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 119D7207DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24E5520707
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:55:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="S7HKF4Tp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbgH2Pzf (ORCPT
+        id S1728432AbgH2Pzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 11:55:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37618 "EHLO
+        Sat, 29 Aug 2020 11:55:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728300AbgH2Pz3 (ORCPT
+        with ESMTP id S1728350AbgH2Pza (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 11:55:29 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47DDFC061236;
+        Sat, 29 Aug 2020 11:55:30 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B3FDC061239;
         Sat, 29 Aug 2020 08:55:29 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kC3CG-0074dV-TG; Sat, 29 Aug 2020 15:55:16 +0000
-Date:   Sat, 29 Aug 2020 16:55:16 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     syzbot <syzbot+c92c93d1f1aaaacdb9db@syzkaller.appspotmail.com>
-Cc:     axboe@kernel.dk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, maz@kernel.org, oleg@redhat.com,
-        peterz@infradead.org, syzkaller-bugs@googlegroups.com
-Subject: Re: kernel BUG at fs/inode.c:LINE! (2)
-Message-ID: <20200829155516.GO1236603@ZenIV.linux.org.uk>
-References: <000000000000c8fcd905adefe24b@google.com>
- <20200828153825.GI1236603@ZenIV.linux.org.uk>
- <20200828175413.GL1236603@ZenIV.linux.org.uk>
+Received: from zn.tnic (p200300ec2f20450061bc46564a6ab4aa.dip0.t-ipconnect.de [IPv6:2003:ec:2f20:4500:61bc:4656:4a6a:b4aa])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EDDB41EC037C;
+        Sat, 29 Aug 2020 17:55:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1598716528;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=/hKrT6Agxsa0U42BH+OXVujqtR6Nrnq1ZKABoxchmnQ=;
+        b=S7HKF4Tptffv/o1WtKtqUzdKtdftwyIQBtMOCSEWGCYytv/FZEnVROCv9pXhDh6fn4saNE
+        ExIP/iUquIhslj/obBhSNv7pw8mAkwV0T+DA+QEsGeLvuXZWkElDhiFiSyTCZ1F9bUVRmw
+        l9HDLUPGTfCtTdr1HNIiZ5XGTFxKUmQ=
+Date:   Sat, 29 Aug 2020 17:55:25 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v6 38/76] x86/head/64: Set CR4.FSGSBASE early
+Message-ID: <20200829155525.GB29091@zn.tnic>
+References: <20200824085511.7553-1-joro@8bytes.org>
+ <20200824085511.7553-39-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200828175413.GL1236603@ZenIV.linux.org.uk>
+In-Reply-To: <20200824085511.7553-39-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 06:54:13PM +0100, Al Viro wrote:
-> On Fri, Aug 28, 2020 at 04:38:25PM +0100, Al Viro wrote:
-> > On Fri, Aug 28, 2020 at 06:18:17AM -0700, syzbot wrote:
-> > > Hello,
-> > > 
-> > > syzbot found the following issue on:
-> > > 
-> > > HEAD commit:    d012a719 Linux 5.9-rc2
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=15aa650e900000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=891ca5711a9f1650
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=c92c93d1f1aaaacdb9db
-> > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12ecb939900000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=140a19a9900000
-> > 
-> > Trying to reproduce...
+On Mon, Aug 24, 2020 at 10:54:33AM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 > 
-> OK, I think I see what's going on.  ep_loop_check_proc() runs into an already
-> doomed file that has already committed to getting killed (->f_count is already
-> at 0), but still hadn't gotten through its epitems removal (e.g. has its
-> eventpoll_release_file() sitting there trying to get epmutex).
+> Early exception handling will use rd/wrgsbase in paranoid_entry/exit.
+> Enable the feature to avoid #UD exceptions on boot APs.
 > 
-> Blindly bumping refcount here is worse than useless.  Try this, to verify that
-> this is what's going on; it's _not_ a proper fix, but it should at least tell
-> if we have something else going on.
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> Link: https://lore.kernel.org/r/20200724160336.5435-38-joro@8bytes.org
+> ---
+>  arch/x86/kernel/head_64.S | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+> index 08412f308de3..4622940134a5 100644
+> --- a/arch/x86/kernel/head_64.S
+> +++ b/arch/x86/kernel/head_64.S
+> @@ -153,6 +153,13 @@ SYM_CODE_START(secondary_startup_64)
+>  	orl	$X86_CR4_LA57, %ecx
+>  1:
+>  #endif
+> +
+> +	ALTERNATIVE "jmp .Lstartup_write_cr4", "", X86_FEATURE_FSGSBASE
+> +
+> +	/* Early exception handling uses FSGSBASE on APs */
+> +	orl	$X86_CR4_FSGSBASE, %ecx
 
-... and what I think is the right way to fix the original race is (on top of
-mainline) this:
+How is this supposed to work?
 
-[PATCH] Use list_empty_careful() in eventpoll_release()
+Alternatives haven't run that early yet and that piece of code looks
+like this:
 
-... to avoid races with list_del_init() in clear_tfile_check_list().
-Get rid of pinning files on check list in eventpoll.c - it's not needed
-there.
+ffffffff81000067:       eb 06                   jmp    ffffffff8100006f <secondary_startup_64+0x1f>
+ffffffff81000069:       81 c9 00 00 01 00       or     $0x10000,%ecx
+ffffffff8100006f:       0f 22 e1                mov    %rcx,%cr4
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index e0decff22ae2..39eae45bff18 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -1995,7 +1995,6 @@ static int ep_loop_check_proc(void *priv, void *cookie, int call_nests)
- 			 * during ep_insert().
- 			 */
- 			if (list_empty(&epi->ffd.file->f_tfile_llink)) {
--				get_file(epi->ffd.file);
- 				list_add(&epi->ffd.file->f_tfile_llink,
- 					 &tfile_check_list);
- 			}
-@@ -2042,7 +2041,6 @@ static void clear_tfile_check_list(void)
- 		file = list_first_entry(&tfile_check_list, struct file,
- 					f_tfile_llink);
- 		list_del_init(&file->f_tfile_llink);
--		fput(file);
- 	}
- 	INIT_LIST_HEAD(&tfile_check_list);
- }
-@@ -2206,7 +2204,6 @@ int do_epoll_ctl(int epfd, int op, int fd, struct epoll_event *epds,
- 				if (ep_loop_check(ep, tf.file) != 0)
- 					goto error_tgt_fput;
- 			} else {
--				get_file(tf.file);
- 				list_add(&tf.file->f_tfile_llink,
- 							&tfile_check_list);
- 			}
-diff --git a/include/linux/eventpoll.h b/include/linux/eventpoll.h
-index 8f000fada5a4..e2bdefd90cf8 100644
---- a/include/linux/eventpoll.h
-+++ b/include/linux/eventpoll.h
-@@ -46,11 +46,9 @@ static inline void eventpoll_release(struct file *file)
- 	 * Fast check to avoid the get/release of the semaphore. Since
- 	 * we're doing this outside the semaphore lock, it might return
- 	 * false negatives, but we don't care. It'll help in 99.99% of cases
--	 * to avoid the semaphore lock. False positives simply cannot happen
--	 * because the file in on the way to be removed and nobody ( but
--	 * eventpoll ) has still a reference to this file.
-+	 * to avoid the semaphore lock.
- 	 */
--	if (likely(list_empty(&file->f_ep_links)))
-+	if (likely(list_empty_careful(&file->f_ep_links)))
- 		return;
- 
- 	/*
+so we'll never set X86_CR4_FSGSBASE during early boot.
+
+Stopping a guest with gdb just before that shows the same thing:
+
+Dump of assembler code from 0x1000069 to 0x100007b:
+=> 0x0000000001000069:  eb 06   jmp    0x1000071
+   0x000000000100006b:  81 c9 00 00 01 00       or     $0x10000,%ecx
+   0x0000000001000071:  0f 22 e1        mov    %rcx,%cr4
+   0x0000000001000074:  48 03 05 95 ff 20 01    add    0x120ff95(%rip),%rax        # 0x2210010
+
+the unconditional JMP is there and it hasn't been patched out yet.
+
+If you really need to test CPUID flags, you need to do something similar
+to what verify_cpu does that early. And looking at that thing:
+
+ *      verify_cpu, returns the status of longmode and SSE in register %eax.
+ *              0: Success    1: Failure
+
+you could return the FSGSBASE CPUID bit there too and act accordingly.
+
+Hmm.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
