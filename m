@@ -2,143 +2,140 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A21C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91088C433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1DA206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:01:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Lj+3HmpE"
+	by mail.kernel.org (Postfix) with ESMTP id 7B556207DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:01:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728462AbgH2QA5 (ORCPT
+        id S1728484AbgH2QBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 12:00:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728445AbgH2P7H (ORCPT
+        Sat, 29 Aug 2020 12:01:13 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:34087 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728463AbgH2P7u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 11:59:07 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84FDFC0619C0
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 08:59:01 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id g207so2218920pfb.1
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 08:59:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=x7Lva39pftBA6FEqjewb6eW+oOxMNUrFl3pdrz2HNEg=;
-        b=Lj+3HmpEyxK4ys5SQafUdoDlyn05BgUs9LT198QYBWv66qQJuc9nUM/hZ1RjDEcsQN
-         GeBUtxjbZpZ4lCuc2rHCY3ccleQ9JP2YJMCm3Igj5oGHVemhQfjADw3g3DJkwJqLbB2k
-         gLeY7OaYguCEvySyiJJyc4PGcJ+yCFRWAt0gY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=x7Lva39pftBA6FEqjewb6eW+oOxMNUrFl3pdrz2HNEg=;
-        b=J061r5gzJBKOcTajKn//pytVnN+TZWt+KvdjnHXXDNuo4kGWfewYejqWIL9jJpS368
-         UFnK4UygomQP1pe5CEojhRPIi1loSfX8Dp3OdfxYPQ0NKEReL2I+3DHrLMlS4IJtxRNN
-         +YwyJdpbn6DCkVVa8NJu9YVsqiVZvtQYHvoXdyvdYLwDdYOcBjMxsz2ozRH0NNzdmZfM
-         1m5dFd0zOtcVWcp71cmd982kgmL9Natt1FumoUi3ZRrshkZI6xXqMgVHbhqBrjhxiHHq
-         +Xm0iKe63AR7kJd7cGEeWTl66ppO/wVUot1fxYj6r+To3CVBbU5kZCO/1+mhjqqJmncM
-         qyIg==
-X-Gm-Message-State: AOAM533wPYQ84rYcP6NFIAu0zsZVL1nXhi4h4MwT4MY6EbEHQWs/RhnW
-        SeiB1PtuI/fbXxART1QFEHfRdQ==
-X-Google-Smtp-Source: ABdhPJyd8r4VaGADPnKOn7M4yhYbeTP6dpEXeeSTpkNjRRZLUrB2zIAkjxL/cFsY6DjyI9ZZiyhwBA==
-X-Received: by 2002:a63:4621:: with SMTP id t33mr2948882pga.32.1598716741018;
-        Sat, 29 Aug 2020 08:59:01 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:9460:cfb8:90a:fedd])
-        by smtp.gmail.com with ESMTPSA id j20sm3131714pfi.122.2020.08.29.08.58.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Aug 2020 08:59:00 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
-Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        Jagan Teki <jagan@libreplatforms.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 7/7] arm64: dts: rockchip: Add Engicam PX30.Core C.TOUCH 2.0
-Date:   Sat, 29 Aug 2020 21:28:23 +0530
-Message-Id: <20200829155823.247360-8-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200829155823.247360-1-jagan@amarulasolutions.com>
-References: <20200829155823.247360-1-jagan@amarulasolutions.com>
+        Sat, 29 Aug 2020 11:59:50 -0400
+Received: (qmail 499484 invoked by uid 1000); 29 Aug 2020 11:59:49 -0400
+Date:   Sat, 29 Aug 2020 11:59:49 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Salvatore Bonaccorso <carnil@debian.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Dirk Kostrewa <dirk.kostrewa@mailbox.org>
+Subject: Re: kworker/0:3+pm hogging CPU
+Message-ID: <20200829155949.GA499295@rowland.harvard.edu>
+References: <20200720151255.GE1228057@rowland.harvard.edu>
+ <20200720163355.GA4061@dhcp22.suse.cz>
+ <20200720173807.GJ1228057@rowland.harvard.edu>
+ <20200720174530.GB4061@dhcp22.suse.cz>
+ <20200720174812.GK1228057@rowland.harvard.edu>
+ <20200720181605.GC4061@dhcp22.suse.cz>
+ <20200720200243.GA1244989@rowland.harvard.edu>
+ <20200721055917.GD4061@dhcp22.suse.cz>
+ <20200721143325.GB1272082@rowland.harvard.edu>
+ <20200829095003.GA2446485@eldamar.local>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200829095003.GA2446485@eldamar.local>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jagan Teki <jagan@libreplatforms.com>
+On Sat, Aug 29, 2020 at 11:50:03AM +0200, Salvatore Bonaccorso wrote:
+> Hi Alan,
+> 
+> I'm following up on this thread because a user in Debian (Dirk, Cc'ed)
+> as well encountered the same/similar issue:
+> 
+> On Tue, Jul 21, 2020 at 10:33:25AM -0400, Alan Stern wrote:
+> > On Tue, Jul 21, 2020 at 07:59:17AM +0200, Michal Hocko wrote:
+> > > > Sorry, my mistake.  The module name needs to be "xhci_hcd" with an '_' 
+> > > > character, not a '-' character -- the same as what shows up in the lsmod 
+> > > > output.
+> > > 
+> > > 
+> > > [14766.973734] xhci_hcd 0000:00:14.0: Get port status 2-1 read: 0xe000088, return 0x88
+> > > [14766.973738] xhci_hcd 0000:00:14.0: Get port status 2-2 read: 0xe000088, return 0x88
+> > > [14766.973742] xhci_hcd 0000:00:14.0: Get port status 2-3 read: 0xe0002a0, return 0x2a0
+> > > [14766.973746] xhci_hcd 0000:00:14.0: Get port status 2-4 read: 0xe0002a0, return 0x2a0
+> > > [14766.973750] xhci_hcd 0000:00:14.0: Get port status 2-5 read: 0xe0002a0, return 0x2a0
+> > > [14766.973754] xhci_hcd 0000:00:14.0: Get port status 2-6 read: 0xe0002a0, return 0x2a0
+> > > [14766.973759] xhci_hcd 0000:00:14.0: Get port status 2-1 read: 0xe000088, return 0x88
+> > > [14766.973763] xhci_hcd 0000:00:14.0: Get port status 2-2 read: 0xe000088, return 0x88
+> > 
+> > According to the xHCI specification, those 02a0 values are normal and 
+> > the 0088 values indicate the port is disabled and has an over-current 
+> > condition.  I don't know about the e000 bits in the upper part of the 
+> > word; according to my copy of the spec those bits should be 0.
+> > 
+> > If your machine has only two physical SuperSpeed (USB-3) ports then 
+> > perhaps the other four ports are internally wired in a way that creates 
+> > a permanent over-current indication.
+> > 
+> > > [14766.973771] xhci_hcd 0000:00:14.0: set port remote wake mask, actual port 0 status  = 0xe000088
+> > > [14766.973780] xhci_hcd 0000:00:14.0: set port remote wake mask, actual port 1 status  = 0xe000088
+> > > [14766.973789] xhci_hcd 0000:00:14.0: set port remote wake mask, actual port 2 status  = 0xe0002a0
+> > > [14766.973798] xhci_hcd 0000:00:14.0: set port remote wake mask, actual port 3 status  = 0xe0002a0
+> > > [14766.973807] xhci_hcd 0000:00:14.0: set port remote wake mask, actual port 4 status  = 0xe0002a0
+> > > [14766.973816] xhci_hcd 0000:00:14.0: set port remote wake mask, actual port 5 status  = 0xe0002a0
+> > > [14766.973830] xhci_hcd 0000:00:14.0: Bus suspend bailout, port over-current detected
+> > > 
+> > > Repeating again and again. The last message suggests a HW problem? But
+> > > why does the kernel try the same thing over and over?
+> > 
+> > Because over-current is supposed to be a transient condition that goes 
+> > away quickly.  It means there's a short circuit or something similar.
+> 
+> Dirk exprienced the same issue aand enabled dynamic debugging showed
+> similar pattern. His dmesg excerpt is attached.
+> 
+> The Debian report is at https://bugs.debian.org/966703
+> 
+> What could be tracked down is that the issue is uncovered since
+> e9fb08d617bf ("xhci: prevent bus suspend if a roothub port detected a
+> over-current condition") which was applied in 5.7-rc3 and backported
+> to several stable releases (v5.6.8, v5.4.36 and v4.19.119).
+> 
+> Dirk found additionally:
+> 
+> > I just found out, that if none of the two USB ports is connected, there
+> > are two kworker processes with permanently high CPU load, if one USB
+> > port is connected and the other not, there is one such kworker process,
+> > and if both USB ports are connected, there is no kworker process with
+> > high CPU load.
+> > I think, this supports your suspicion that these kworker processes are
+> > connected with the overcurrent condition for both USB ports that I also
+> > see in the dmesg output.
+> 
+> Reverting the above commit covers the problem again. But I'm not
+> exprienced enough here to claim if this is a HW issue or if the Kernel
+> should handle the situation otherwise. Is there anything else Dirk can
+> provide?
 
-PX30.Core is an EDIMM SOM based on Rockchip PX30 from Engicam.
+It is undoubtedly a hardware issue.  The dmesg extract shows that ports 
+1-10, 1-11, and 2-5 (which is probably the same port as one of the 
+others) have overcurrent conditions; I'm guessing that these are the 
+ports which have external connections.
 
-C.TOUCH 2.0 is a general purpose carrier board with capacitive
-touch interface support.
+What were the devices Dirk plugged in that got rid of the kworker 
+processes?  In particular, were they USB-2 or USB-3?  (The dmesg log for 
+when the devices were first attached can answer these questions.)
 
-PX30.Core needs to mount on top of this Carrier board for creating
-complete PX30.Core C.TOUCH 2.0 board.
+As far as I know, there is no way for the kernel to work around this 
+problem.  Preventing the controller from going into runtime suspend is 
+probably the best solution.
 
-Add support for it.
+Perhaps Mathias (the xhci-hcd maintainer) will have more suggestions.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v2:
-- new patch
-
- arch/arm64/boot/dts/rockchip/Makefile         |  1 +
- .../dts/rockchip/px30-px30-core-ctouch2.dts   | 21 +++++++++++++++++++
- 2 files changed, 22 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/px30-px30-core-ctouch2.dts
-
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 65116fcb7368..958eb57e403a 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-px30-core-ctouch2.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-px30-core-edimm2.2.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-evb.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-roc-cc.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/px30-px30-core-ctouch2.dts b/arch/arm64/boot/dts/rockchip/px30-px30-core-ctouch2.dts
-new file mode 100644
-index 000000000000..dffc49348f28
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/px30-px30-core-ctouch2.dts
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2020 Fuzhou Rockchip Electronics Co., Ltd
-+ * Copyright (c) 2020 Engicam srl
-+ * Copyright (c) 2020 Amarula Solutions(India)
-+ */
-+
-+/dts-v1/;
-+#include "px30.dtsi"
-+#include "px30-engicam-ctouch2.dtsi"
-+#include "px30-px30-core.dtsi"
-+
-+/ {
-+	model = "Engicam PX30.Core C.TOUCH 2.0";
-+	compatible = "engicam,px30-core-ctouch2", "engicam,px30-px30-core",
-+		     "rockchip,px30";
-+
-+	chosen {
-+		stdout-path = "serial2:115200n8";
-+	};
-+};
--- 
-2.25.1
-
+Alan Stern
