@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84054C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F5CC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53B1820838
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4574212CC
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598683744;
-	bh=zDEOh28j1k9ooHq5oLnJJrrHuUEXD3pzgG6ksnmhBno=;
+	s=default; t=1598683748;
+	bh=0L7TdaH8V331RKVNnYrP1jdM/0ZGtHpGBRBPwHv0ptA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LWU8wfelvP/3HG1QRem23iSfNyceCzqcDfKsTl/3lP5ij0evnPzu1ZhY3hHDnU7Kt
-	 aYmflQyifoX/votMIbdv7Etuie89UYlwMbYhcTrIG7KnqJV/jaEI5S3awZhuWlqunc
-	 7jwEwS/EOC05IAm/lZkbHxvCDhQIx4ooraSYmXyg=
+	b=tQYHVG6dq0xKbqc4BtaJ1bUKuv8iUvP5nR50rafmA2qj6XTe0XfjSNvy7WDH1vvTN
+	 EuOPoD/OCCOE915ckdeetIJsmkbPl1s0R3GsqGISQ3DLVwdmzSD/hABB5G8ktaHmSx
+	 o0xloPLcqzkIlUYdYJqEAK6yLNGUiZwjpHBbsISw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgH2GtD (ORCPT
+        id S1727883AbgH2GtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 02:49:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42534 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 02:49:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727884AbgH2Gs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 02:48:58 -0400
+        id S1727903AbgH2GtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 02:49:02 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEBE62137B;
-        Sat, 29 Aug 2020 06:48:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 633DA214D8;
+        Sat, 29 Aug 2020 06:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598683738;
-        bh=zDEOh28j1k9ooHq5oLnJJrrHuUEXD3pzgG6ksnmhBno=;
+        s=default; t=1598683741;
+        bh=0L7TdaH8V331RKVNnYrP1jdM/0ZGtHpGBRBPwHv0ptA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JzDaOD7LNRHAx6yJjcZh1Xxc1AKFlf12Mp55ONcza0ar/ZMRpjNaC2rqQePU2mIsa
-         wMXlYjVNXBxlVBgBqs78cGqmPxCRWQ3QiRwkRwvUCwVMvNqF6bexUGu23CvUgM9wnH
-         N/Fim3hNQuFlzzArgUI/4CF6NyVF5kxuEETMDABI=
+        b=lVcKCXOJzzvmliW/HS9/MdP0ppW4M+F3UE9kV68XUT2MgZj3L6w1cvasMmTk2sp9t
+         sud7bG5T7zNRaqfo/jdsxT1jLAqoqF9prNz5AoT8Yxyw9IsTSq91DnSFKg7EaMQVB0
+         mOGo3Zbby1agE3Rzo5oyfDuJy1BG6cBnOU9ZD5l0=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Jonathan Cameron <jic23@kernel.org>,
         Lars-Peter Clausen <lars@metafoo.de>,
@@ -54,9 +54,9 @@ To:     Jonathan Cameron <jic23@kernel.org>,
         linux-stm32@st-md-mailman.stormreply.com
 Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 16/18] iio: magnetometer: ak8974: Simplify with dev_err_probe()
-Date:   Sat, 29 Aug 2020 08:47:24 +0200
-Message-Id: <20200829064726.26268-16-krzk@kernel.org>
+Subject: [PATCH v3 17/18] iio: magnetometer: mag3110: Simplify with dev_err_probe()
+Date:   Sat, 29 Aug 2020 08:47:25 +0200
+Message-Id: <20200829064726.26268-17-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200829064726.26268-1-krzk@kernel.org>
 References: <20200829064726.26268-1-krzk@kernel.org>
@@ -70,38 +70,43 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
 ---
+ drivers/iio/magnetometer/mag3110.c | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
 
-Changes since v1:
-1. Wrap dev_err_probe() lines at 100 character
----
- drivers/iio/magnetometer/ak8974.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/iio/magnetometer/ak8974.c b/drivers/iio/magnetometer/ak8974.c
-index cbb44e401c0a..548c686e29d6 100644
---- a/drivers/iio/magnetometer/ak8974.c
-+++ b/drivers/iio/magnetometer/ak8974.c
-@@ -843,15 +843,8 @@ static int ak8974_probe(struct i2c_client *i2c,
- 	ret = devm_regulator_bulk_get(&i2c->dev,
- 				      ARRAY_SIZE(ak8974->regs),
- 				      ak8974->regs);
--	if (ret < 0) {
--		if (ret != -EPROBE_DEFER)
--			dev_err(&i2c->dev, "cannot get regulators: %d\n", ret);
--		else
--			dev_dbg(&i2c->dev,
--				"regulators unavailable, deferring probe\n");
--
--		return ret;
--	}
-+	if (ret < 0)
-+		return dev_err_probe(&i2c->dev, ret, "cannot get regulators\n");
+diff --git a/drivers/iio/magnetometer/mag3110.c b/drivers/iio/magnetometer/mag3110.c
+index 4d305a21c379..838b13c8bb3d 100644
+--- a/drivers/iio/magnetometer/mag3110.c
++++ b/drivers/iio/magnetometer/mag3110.c
+@@ -476,22 +476,14 @@ static int mag3110_probe(struct i2c_client *client,
+ 	data = iio_priv(indio_dev);
  
- 	ret = regulator_bulk_enable(ARRAY_SIZE(ak8974->regs), ak8974->regs);
- 	if (ret < 0) {
+ 	data->vdd_reg = devm_regulator_get(&client->dev, "vdd");
+-	if (IS_ERR(data->vdd_reg)) {
+-		if (PTR_ERR(data->vdd_reg) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
+-
+-		dev_err(&client->dev, "failed to get VDD regulator!\n");
+-		return PTR_ERR(data->vdd_reg);
+-	}
++	if (IS_ERR(data->vdd_reg))
++		return dev_err_probe(&client->dev, PTR_ERR(data->vdd_reg),
++				     "failed to get VDD regulator!\n");
+ 
+ 	data->vddio_reg = devm_regulator_get(&client->dev, "vddio");
+-	if (IS_ERR(data->vddio_reg)) {
+-		if (PTR_ERR(data->vddio_reg) == -EPROBE_DEFER)
+-			return -EPROBE_DEFER;
+-
+-		dev_err(&client->dev, "failed to get VDDIO regulator!\n");
+-		return PTR_ERR(data->vddio_reg);
+-	}
++	if (IS_ERR(data->vddio_reg))
++		return dev_err_probe(&client->dev, PTR_ERR(data->vddio_reg),
++				     "failed to get VDDIO regulator!\n");
+ 
+ 	ret = regulator_enable(data->vdd_reg);
+ 	if (ret) {
 -- 
 2.17.1
 
