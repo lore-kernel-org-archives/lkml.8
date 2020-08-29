@@ -7,201 +7,183 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E32AC433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38BFC433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C41920791
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 917B62145D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598711204;
-	bh=E9thMYeMHfyw6+b2VsGPYrGNBKia9yaCy7sNBsZe7r8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ey0xtGWnHR+MiQlvRCQGVJbh2Zv08pfH9d4tgT1mLTGggQLnaNMZnbJ8X7DLHQDtw
-	 VIa/K8LZ0ca9+IdHmbgGHHzZ3QwJMOd21F5FtX3cZmjE9ai0Wcnx16968+5CqJGPwy
-	 EqLcnhCO+j6HWXDDrfphpr7IRkNaHMmdo2HhQtkE=
+	s=default; t=1598711400;
+	bh=+r594Mll/9YuTOqi3UrI/hCezf7xrKr/GY6GKpDqTCw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=BUposF3mDxvBLbmbxqOwVe8XcvgVZCc+iCbC2SwvkCrw7sJX+xBj63dbKy29ChEvD
+	 vDgVesNzon7/Qo7mXd8ya7wfuI6YlRC72PepWCKiKYPTtA+oOqaqENobuvGjCN8JqI
+	 fVIqIoXigoFVVfzF5R+x3ds+njqWEofNc0GtvOrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgH2O0m (ORCPT
+        id S1728203AbgH2O37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 10:26:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53276 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 10:29:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728233AbgH2OZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 10:25:39 -0400
+        id S1728012AbgH2O35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 10:29:57 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 952B220BED;
-        Sat, 29 Aug 2020 14:25:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1125206C0;
+        Sat, 29 Aug 2020 14:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598711138;
-        bh=E9thMYeMHfyw6+b2VsGPYrGNBKia9yaCy7sNBsZe7r8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OrsmhwRShcIabXLwV8as2jDAx/r/uAy17Lq/fbtBG8LkRsAg8kvuZzbZKULZ7lB/I
-         nNJSWhl/tA2gxK/yuCsIQTte2i8RMSLUfdboo8zOpj5LnlKqfzvQk0wxWY356MkSpo
-         Pw4epVgwVo1EY5mT54nPSXg6YQsYCVOgHumLKa9A=
+        s=default; t=1598711396;
+        bh=+r594Mll/9YuTOqi3UrI/hCezf7xrKr/GY6GKpDqTCw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Rc7P51Xbp8wfp1EbyQwhCBLsD74s5v2H17QUdDJFuMJVOJtjDXKiGtSwcXVkAhwYH
+         7tMAEQiutEDfnBU455F7+7IpXTWSkfPkAsLl5EOp7S9cXhY3mDAiEKUZCFpuPQziHl
+         SP5vbQ3isjClTnmaZgEeDHbMFzvaqI3eswUXJbCE=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        alsa-devel@alsa-project.org
+        Krzysztof Opasiak <k.opasiak@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfc@lists.01.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
 Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sylwester Nawrocki <snawrocki@kernel.org>,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Inki Dae <inki.dae@samsung.com>
-Subject: [PATCH 05/10] dt-bindings: connector: Convert Samsung 11-pin USB bindings to dtschema
-Date:   Sat, 29 Aug 2020 16:24:56 +0200
-Message-Id: <20200829142501.31478-5-krzk@kernel.org>
+Subject: [PATCH 1/4] dt-bindings: net: nfc: s3fwrn5: Convert to dtschema
+Date:   Sat, 29 Aug 2020 16:29:45 +0200
+Message-Id: <20200829142948.32365-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200829142501.31478-1-krzk@kernel.org>
-References: <20200829142501.31478-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Samsung 11-pin USB-C connector into standard dtschema bindings file.
+Convert the Samsung S3FWRN5 NCI NFC controller bindings to dtschema.
+This is conversion only so it includes properties with invalid prefixes
+(s3fwrn5,en-gpios) which should be addressed later.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- .../connector/samsung,usb-connector-11pin.txt | 49 -------------------
- .../bindings/connector/usb-connector.yaml     | 44 +++++++++++++++++
- 2 files changed, 44 insertions(+), 49 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/connector/samsung,usb-connector-11pin.txt
+ .../devicetree/bindings/net/nfc/s3fwrn5.txt   | 25 --------
+ .../devicetree/bindings/net/nfc/s3fwrn5.yaml  | 59 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 3 files changed, 60 insertions(+), 25 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt
+ create mode 100644 Documentation/devicetree/bindings/net/nfc/s3fwrn5.yaml
 
-diff --git a/Documentation/devicetree/bindings/connector/samsung,usb-connector-11pin.txt b/Documentation/devicetree/bindings/connector/samsung,usb-connector-11pin.txt
+diff --git a/Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt b/Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt
 deleted file mode 100644
-index 3dd8961154ab..000000000000
---- a/Documentation/devicetree/bindings/connector/samsung,usb-connector-11pin.txt
+index f02f6fb7f81c..000000000000
+--- a/Documentation/devicetree/bindings/net/nfc/s3fwrn5.txt
 +++ /dev/null
-@@ -1,49 +0,0 @@
--Samsung micro-USB 11-pin connector
--==================================
--
--Samsung micro-USB 11-pin connector is an extension of micro-USB connector.
--It is present in multiple Samsung mobile devices.
--It has additional pins to route MHL traffic simultanously with USB.
--
--The bindings are superset of usb-connector bindings for micro-USB connector[1].
+@@ -1,25 +0,0 @@
+-* Samsung S3FWRN5 NCI NFC Controller
 -
 -Required properties:
--- compatible: must be: "samsung,usb-connector-11pin", "usb-b-connector",
--- type: must be "micro".
+-- compatible: Should be "samsung,s3fwrn5-i2c".
+-- reg: address on the bus
+-- interrupts: GPIO interrupt to which the chip is connected
+-- s3fwrn5,en-gpios: Output GPIO pin used for enabling/disabling the chip
+-- s3fwrn5,fw-gpios: Output GPIO pin used to enter firmware mode and
+-  sleep/wakeup control
 -
--Required nodes:
--- any data bus to the connector should be modeled using the OF graph bindings
--  specified in bindings/graph.txt, unless the bus is between parent node and
--  the connector. Since single connector can have multpile data buses every bus
--  has assigned OF graph port number as follows:
--    0: High Speed (HS),
--    3: Mobile High-Definition Link (MHL), specific to 11-pin Samsung micro-USB.
+-Example:
 -
--[1]: bindings/connector/usb-connector.yaml
+-&hsi2c_4 {
+-	s3fwrn5@27 {
+-		compatible = "samsung,s3fwrn5-i2c";
 -
--Example
---------
+-		reg = <0x27>;
 -
--Micro-USB connector with HS lines routed via controller (MUIC) and MHL lines
--connected to HDMI-MHL bridge (sii8620):
+-		interrupt-parent = <&gpa1>;
+-		interrupts = <3 0 0>;
 -
--muic-max77843@66 {
--	...
--	usb_con: connector {
--		compatible = "samsung,usb-connector-11pin", "usb-b-connector";
--		label = "micro-USB";
--		type = "micro";
--
--		ports {
--			#address-cells = <1>;
--			#size-cells = <0>;
--
--			port@3 {
--				reg = <3>;
--				usb_con_mhl: endpoint {
--					remote-endpoint = <&sii8620_mhl>;
--				};
--			};
--		};
+-		s3fwrn5,en-gpios = <&gpf1 4 0>;
+-		s3fwrn5,fw-gpios = <&gpj0 2 0>;
 -	};
 -};
-diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-index 9bd52e63c935..dc6ff64422d4 100644
---- a/Documentation/devicetree/bindings/connector/usb-connector.yaml
-+++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-@@ -25,6 +25,10 @@ properties:
-           - const: gpio-usb-b-connector
-           - const: usb-b-connector
- 
-+      - items:
-+          - const: samsung,usb-connector-11pin
-+          - const: usb-b-connector
+diff --git a/Documentation/devicetree/bindings/net/nfc/s3fwrn5.yaml b/Documentation/devicetree/bindings/net/nfc/s3fwrn5.yaml
+new file mode 100644
+index 000000000000..c22451dea350
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/nfc/s3fwrn5.yaml
+@@ -0,0 +1,59 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/nfc/s3fwrn5.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-   label:
-     description: Symbolic name for the connector.
- 
-@@ -158,6 +162,16 @@ allOf:
-         - required:
-             - id-gpios
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: samsung,usb-connector-11pin
-+    then:
-+      properties:
-+        type:
-+          const: micro
++title: Samsung S3FWRN5 NCI NFC Controller
 +
- examples:
-   # Micro-USB connector with HS lines routed via controller (MUIC).
-   - |
-@@ -233,3 +247,33 @@ examples:
-         vbus-supply = <&usb_p0_vbus>;
-       };
-     };
++maintainers:
++  - Krzysztof Kozlowski <krzk@kernel.org>
++  - Krzysztof Opasiak <k.opasiak@samsung.com>
 +
-+  # Micro-USB connector with HS lines routed via controller (MUIC) and MHL
-+  # lines connected to HDMI-MHL bridge (sii8620) on Samsung Exynos5433-based
-+  # mobile phone
++properties:
++  compatible:
++    const: samsung,s3fwrn5-i2c
++
++  interrupts:
++    maxItems: 1
++
++  reg:
++    maxItems: 1
++
++  s3fwrn5,en-gpios:
++    maxItems: 1
++    description:
++      Output GPIO pin used for enabling/disabling the chip
++
++  s3fwrn5,fw-gpios:
++    maxItems: 1
++    description:
++      Output GPIO pin used to enter firmware mode and sleep/wakeup control
++
++required:
++  - compatible
++  - interrupts
++  - reg
++  - s3fwrn5,en-gpios
++  - s3fwrn5,fw-gpios
++
++examples:
 +  - |
-+    muic-max77843 {
-+      usb_con4: connector {
-+        compatible = "samsung,usb-connector-11pin", "usb-b-connector";
-+        label = "micro-USB";
-+        type = "micro";
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
 +
-+        ports {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
++    i2c4 {
++        #address-cells = <1>;
++        #size-cells = <0>;
 +
-+          port@0 {
-+            reg = <0>;
-+            muic_to_usb: endpoint {
-+              remote-endpoint = <&usb_to_muic>;
-+            };
-+          };
-+          port@3 {
-+            reg = <3>;
-+            usb_con_mhl: endpoint {
-+              remote-endpoint = <&sii8620_mhl>;
-+            };
-+          };
++        s3fwrn5@27 {
++            compatible = "samsung,s3fwrn5-i2c";
++            reg = <0x27>;
++
++            interrupt-parent = <&gpa1>;
++            interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
++
++            s3fwrn5,en-gpios = <&gpf1 4 GPIO_ACTIVE_HIGH>;
++            s3fwrn5,fw-gpios = <&gpj0 2 GPIO_ACTIVE_HIGH>;
 +        };
-+      };
 +    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ac79fdbdf8d0..91b3d5c349d8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15273,6 +15273,7 @@ M:	Robert Baldyga <r.baldyga@samsung.com>
+ M:	Krzysztof Opasiak <k.opasiak@samsung.com>
+ L:	linux-nfc@lists.01.org (moderated for non-subscribers)
+ S:	Supported
++F:	Documentation/devicetree/bindings/net/nfc/s3fwrn5.yaml
+ F:	drivers/nfc/s3fwrn5
+ 
+ SAMSUNG S5C73M3 CAMERA DRIVER
 -- 
 2.17.1
 
