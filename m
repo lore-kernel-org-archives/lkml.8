@@ -2,139 +2,100 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13939C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3956C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC73420738
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D6E2076D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cRTjp+t5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pJ47QGaY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgH2HsV (ORCPT
+        id S1727015AbgH2ID4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 03:48:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47338 "EHLO
+        Sat, 29 Aug 2020 04:03:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgH2HsV (ORCPT
+        with ESMTP id S1726105AbgH2IDy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 03:48:21 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD65C061236
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 00:48:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YAahagjuFW3GJ48qjAgqdEDaO/Mu7SdJDTxXCJMml4g=; b=cRTjp+t541APFVTGgDNVgd0rNL
-        0xXIuXF75g2A4qUHrkn9XsNzTWho5xZz7KxHWSdxs+lEadmBDRJgnwp5BvedTpdbm8p/YhHwD5u8S
-        VepPalCkS94U3q+xmbZYWdh7bFgDfMfbAn+4gYkeNZN/b6EKVxKKukoeJypaWmc5axcpt09osqQqe
-        lJWtbF9a50reYLkEcJpjp3nF22cNCRM+JLJ05ilVToKJ9QouHrRUX8SDa7M6gkNjJ0bZGaNFBBBwk
-        trhkXpwirLM4g4IXdRoDNLixtGeyHXkfoSDJ/P8x7Jr0PGxc2Vj2KawGVIEULpNdgFO375yOV9V7j
-        Lm2gDKSg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBva8-00038N-Th; Sat, 29 Aug 2020 07:47:25 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C973D3011F0;
-        Sat, 29 Aug 2020 09:47:19 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A39DC22B8F14A; Sat, 29 Aug 2020 09:47:19 +0200 (CEST)
-Date:   Sat, 29 Aug 2020 09:47:19 +0200
-From:   peterz@infradead.org
-To:     Vineeth Pillai <viremana@linux.microsoft.com>
-Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Dhaval Giani <dhaval.giani@oracle.com>,
-        Chris Hyser <chris.hyser@oracle.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        mingo@kernel.org, tglx@linutronix.de, pjt@google.com,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, joel@joelfernandes.org,
-        vineeth@bitbyteword.org, Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Agata Gruza <agata.gruza@intel.com>,
-        Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>,
-        graf@amazon.com, konrad.wilk@oracle.com, dfaggioli@suse.com,
-        rostedt@goodmis.org, derkling@google.com, benbjiang@tencent.com,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Aaron Lu <aaron.lu@linux.alibaba.com>
-Subject: Re: [RFC PATCH v7 08/23] sched: Add core wide task selection and
- scheduling.
-Message-ID: <20200829074719.GJ1362448@hirez.programming.kicks-ass.net>
-References: <cover.1598643276.git.jdesfossez@digitalocean.com>
- <df3af13cc820a3c2397b85cb7de08cb6a0780e1d.1598643276.git.jdesfossez@digitalocean.com>
- <20200828205154.GB29142@worktop.programming.kicks-ass.net>
- <381e6ea5-a48c-9882-4c0d-49cfa92d21cc@linux.microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <381e6ea5-a48c-9882-4c0d-49cfa92d21cc@linux.microsoft.com>
+        Sat, 29 Aug 2020 04:03:54 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 952EDC061236
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 01:03:53 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id c15so1174150wrs.11
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 01:03:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=4suMcctfz6Bm64a3CG1Q4ZhgpBQhJ/zmSGep484vR+o=;
+        b=pJ47QGaYLlIR0FCfo0Miafdetuo7SIrjDhAYZe3baVWNIffFQ8eGsS/Yu85Y9w1l59
+         ptK9re46VkClF3RnLFwNZdVrIB0SG8HYrsnzhsYmiVCotUnnpEFbvqbLu1OP9GrS1Bz5
+         QgHrdyWB0ZTICHq3dCHYNcJaEW5sfHNBAL+GSXlbSHO+gvSRVx5Ei+XO8gzE1CUmPm44
+         yB/rybsaI0kyY8hR/uyrapT/ImAYCIr9lIilkC/dxbVsdchivhCidcgqnObWWX9LAGXw
+         GILb4VK0BwXseLqmv6egjWZ45NwVtg6O/oJZrYHURW2LNWpbJ+U5JGZyUeiCpAFqJzOE
+         C3sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4suMcctfz6Bm64a3CG1Q4ZhgpBQhJ/zmSGep484vR+o=;
+        b=GWrxuGPqSuYE7LArxRNHiVGwk3tZN0nrssAzUz9v1a/I1yEzsHygUwkY/0exIGsN5l
+         fM2H/D1BM4uwUeiitUkmHx+HwwTRXrncPKiMYnrwLJC39LsGbgUaP2DO0dtsXUCX7Vox
+         WECKjoZt0yU05bGR3TQWqAAXN7QEZUwsGBVCOhH9mxIhGKT6511rAza2Y+IQ1gKIqQWN
+         /gBh6ZOVzxi+ijnd5h+efQl69/HkXwTbWN4JtY3APLXZdLU+Izs+U964mc5SuWmsyqcQ
+         xhalPRkmmMBExFS6PoZUKLLOkkCEz1goVq5rfxGf8JtXXYZHml0+MTg2Hl4oXfuH6xwF
+         LZtQ==
+X-Gm-Message-State: AOAM531ZVJY03g2OtbVZfdq2t1M3Vti5EQ8FFZflbHEPXr9FqYKVmzRq
+        ARXuAeorNZ72Cw6Iz3ux3ByHwTVL0J0=
+X-Google-Smtp-Source: ABdhPJwhsK6r1U613D2Ndd1gtzrKQZDoIpExOi/QpMq8CljlwDhE8xAyNKhoLgvApwY8Z4FH3i1bSQ==
+X-Received: by 2002:adf:f10a:: with SMTP id r10mr2429157wro.86.1598688231122;
+        Sat, 29 Aug 2020 01:03:51 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
+        by smtp.gmail.com with ESMTPSA id g15sm2632631wrx.66.2020.08.29.01.03.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Aug 2020 01:03:50 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
+Cc:     Moti Haimovski <mhaimovski@habana.ai>
+Subject: [PATCH 1/2] habanalabs: prevent user buff overflow
+Date:   Sat, 29 Aug 2020 11:03:46 +0300
+Message-Id: <20200829080347.26050-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 06:02:25PM -0400, Vineeth Pillai wrote:
-> On 8/28/20 4:51 PM, Peter Zijlstra wrote:
+From: Moti Haimovski <mhaimovski@habana.ai>
 
-> > So where do things go side-ways?
+This commit fixes a potential debugfs issue that may occur when
+reading the clock gating mask into the user buffer since the
+user buffer size was not taken into consideration.
 
-> During hotplug stress test, we have noticed that while a sibling is in
-> pick_next_task, another sibling can go offline or come online. What
-> we have observed is smt_mask get updated underneath us even if
-> we hold the lock. From reading the code, looks like we don't hold the
-> rq lock when the mask is updated. This extra logic was to take care of that.
+Signed-off-by: Moti Haimovski <mhaimovski@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/common/debugfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sure, the mask is updated async, but _where_ is the actual problem with
-that?
-
-On Fri, Aug 28, 2020 at 06:23:55PM -0400, Joel Fernandes wrote:
-> Thanks Vineeth. Peter, also the "v6+" series (which were some addons on v6)
-> detail the individual hotplug changes squashed into this patch:
-> https://lore.kernel.org/lkml/20200815031908.1015049-9-joel@joelfernandes.org/
-> https://lore.kernel.org/lkml/20200815031908.1015049-11-joel@joelfernandes.org/
-
-That one looks fishy, the pick is core wide, making that pick_seq per rq
-just doesn't make sense.
-
-> https://lore.kernel.org/lkml/20200815031908.1015049-12-joel@joelfernandes.org/
-
-This one reads like tinkering, there is no description of the actual
-problem just some code that makes a symptom go away.
-
-Sure, on hotplug the smt mask can change, but only for a CPU that isn't
-actually scheduling, so who cares.
-
-/me re-reads the hotplug code...
-
-..ooOO is the problem that we clear the cpumasks on take_cpu_down()
-instead of play_dead() ?! That should be fixable.
-
-> https://lore.kernel.org/lkml/20200815031908.1015049-13-joel@joelfernandes.org/
-
-This is the only one that makes some sense, it makes rq->core consistent
-over hotplug.
-
-> Agreed we can split the patches for the next series, however for final
-> upstream merge, I suggest we fix hotplug issues in this patch itself so that
-> we don't break bisectability.
-
-Meh, who sodding cares about hotplug :-). Also you can 'fix' such things
-by making sure you can't actually enable core-sched until after
-everything is in place.
-
+diff --git a/drivers/misc/habanalabs/common/debugfs.c b/drivers/misc/habanalabs/common/debugfs.c
+index 37701e4f9d5a..aa77771635d3 100644
+--- a/drivers/misc/habanalabs/common/debugfs.c
++++ b/drivers/misc/habanalabs/common/debugfs.c
+@@ -982,7 +982,7 @@ static ssize_t hl_clk_gate_read(struct file *f, char __user *buf,
+ 		return 0;
+ 
+ 	sprintf(tmp_buf, "0x%llx\n", hdev->clock_gating_mask);
+-	rc = simple_read_from_buffer(buf, strlen(tmp_buf) + 1, ppos, tmp_buf,
++	rc = simple_read_from_buffer(buf, count, ppos, tmp_buf,
+ 			strlen(tmp_buf) + 1);
+ 
+ 	return rc;
+-- 
+2.17.1
 
