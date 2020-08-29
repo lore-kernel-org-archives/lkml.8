@@ -2,244 +2,247 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 861C9C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 10:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1247C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 10:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC78206FA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 10:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8433A208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 10:55:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fAliKrCi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgH2Kzs (ORCPT
+        id S1728109AbgH2Kzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 06:55:48 -0400
-Received: from mga01.intel.com ([192.55.52.88]:17384 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727964AbgH2KvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 06:51:05 -0400
-IronPort-SDR: SsGncjl2rAMtMoz/Tfw/iZvhhIVy1MaR7qAUui2zvQo4m3AAoHmDtwfpiz4CmOfq2l8gCzh1zy
- s790wJhgANrw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="174838404"
-X-IronPort-AV: E=Sophos;i="5.76,367,1592895600"; 
-   d="scan'208";a="174838404"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2020 03:51:04 -0700
-IronPort-SDR: IsYB5T/uEGHS93j7e8TOTdsBT/8ItwC6PTbshbVg+FyfmxQENev/n71B61tnqRta6RjBwzcPQY
- gjJojrU1ENmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,367,1592895600"; 
-   d="scan'208";a="313853177"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
-  by orsmga002.jf.intel.com with ESMTP; 29 Aug 2020 03:51:02 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 5/6] perf record: Add 'snapshot' control command
-Date:   Sat, 29 Aug 2020 13:50:14 +0300
-Message-Id: <20200829105015.10800-6-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200829105015.10800-1-adrian.hunter@intel.com>
-References: <20200829105015.10800-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        Sat, 29 Aug 2020 06:55:55 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41602 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728015AbgH2Kv2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 06:51:28 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07TAVeL8010478;
+        Sat, 29 Aug 2020 06:51:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : mime-version : content-type; s=pp1;
+ bh=sxYFtV5EAeFme9d2OdOx+kLoXL58n3m1iHdGRZ66dVA=;
+ b=fAliKrCi6Yn0TFbiBw3a4+F8QIhMdeoNS7f7DQPZh2Tbl4gFapqSQ0MyvoFpokIFsaRK
+ lFICVrre5T2GtFVMjCfs+Pg+iKVIGvce3bgb+2M+/c0k98t/ZV422faj+u0a4tS4+4AS
+ 90UCtonb20x7m3YB4zkeP500dYhaQ1g0cUXJh6bYw438rj+s6SDj9uiOpgZDE3hdEXDS
+ ygXS6sTVXfpZ+2AfrhmwpA66NoFI7eg2cv/xBgUidjuzLpa5Uyc94XIbLVkvnfUoEoyr
+ kLz5QFs3EtHWASbYaBUqxppVdxwqgRFHSnP76j/mcE+yt7Ab05PnwISxtpaCdZEvQIqE Lw== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 337jwdtjbb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 29 Aug 2020 06:51:21 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07TAlMGx028014;
+        Sat, 29 Aug 2020 10:51:20 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 337en80976-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 29 Aug 2020 10:51:20 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07TApHCW20382116
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 29 Aug 2020 10:51:17 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B1E6A4060;
+        Sat, 29 Aug 2020 10:51:17 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B82F9A405F;
+        Sat, 29 Aug 2020 10:51:16 +0000 (GMT)
+Received: from localhost (unknown [9.145.56.232])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat, 29 Aug 2020 10:51:16 +0000 (GMT)
+Date:   Sat, 29 Aug 2020 12:51:15 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [GIT PULL] s390 updates for 5.9-rc3
+Message-ID: <your-ad-here.call-01598698275-ext-0854@work.hours>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-29_05:2020-08-28,2020-08-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ adultscore=0 mlxlogscore=999 clxscore=1015 impostorscore=0
+ lowpriorityscore=0 suspectscore=2 priorityscore=1501 phishscore=0
+ spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008290080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add 'snapshot' control command to create an AUX area tracing snapshot the
-same as if sending SIGUSR2. The advantage of the FIFO is that access is
-governed by access to the FIFO.
+Hello Linus,
 
-Example:
+please pull s390 changes for 5.9-rc3.
 
- $ mkfifo perf.control
- $ mkfifo perf.ack
- $ cat perf.ack &
- [1] 15235
- $ sudo ~/bin/perf record --control perf.control,perf.ack -S -e intel_pt//u -- sleep 60 &
- [2] 15243
- $ ps -e | grep perf
-  15244 pts/1    00:00:00 perf
- $ kill -USR2 15244
- bash: kill: (15244) - Operation not permitted
- $ echo snapshot > perf.control
- ack
+Thank you,
+Vasily
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/Documentation/perf-record.txt |  8 ++++----
- tools/perf/builtin-record.c              | 24 +++++++++++++++++-------
- tools/perf/builtin-stat.c                |  1 +
- tools/perf/util/evlist.c                 | 11 +++++++++--
- tools/perf/util/evlist.h                 |  5 ++++-
- 5 files changed, 35 insertions(+), 14 deletions(-)
+The following changes since commit d012a7190fc1fd72ed48911e77ca97ba4521bccd:
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 74fa3e905bf1..0c028d48ebd0 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -631,10 +631,10 @@ endif::HAVE_LIBPFM[]
- --control=fd:ctl-fd[,ack-fd]::
- ctl-fifo / ack-fifo are opened and used as ctl-fd / ack-fd as follows.
- Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
--'disable': disable events). Measurements can be started with events disabled using
----delay=-1 option. Optionally send control command completion ('ack\n') to ack-fd descriptor
--to synchronize with the controlling process. Example of bash shell script to enable and
--disable events during measurements:
-+'disable': disable events, 'snapshot': AUX area tracing snapshot). Measurements can be
-+started with events disabled using --delay=-1 option. Optionally send control command
-+completion ('ack\n') to ack-fd descriptor to synchronize with the controlling process.
-+Example of bash shell script to enable and disable events during measurements:
+  Linux 5.9-rc2 (2020-08-23 14:08:43 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.9-4
+
+for you to fetch changes up to bffc2f7aa96343f91931272d7a8a2d8d925e1ab2:
+
+  s390/vmem: fix vmem_add_range for 4-level paging (2020-08-26 18:07:05 +0200)
+
+----------------------------------------------------------------
+s390 fixes for 5.9-rc3
+
+- Disable preemption trace in percpu macros since the lockdep code itself
+  uses percpu variables now and it causes recursions.
+
+- Fix kernel space 4-level paging broken by recent vmem rework.
+
+----------------------------------------------------------------
+Sven Schnelle (1):
+      s390: don't trace preemption in percpu macros
+
+Vasily Gorbik (1):
+      s390/vmem: fix vmem_add_range for 4-level paging
+
+ arch/s390/include/asm/percpu.h | 28 ++++++++++++++--------------
+ arch/s390/mm/vmem.c            |  1 +
+ 2 files changed, 15 insertions(+), 14 deletions(-)
+
+diff --git a/arch/s390/include/asm/percpu.h b/arch/s390/include/asm/percpu.h
+index 50b4ce8cddfd..918f0ba4f4d2 100644
+--- a/arch/s390/include/asm/percpu.h
++++ b/arch/s390/include/asm/percpu.h
+@@ -29,7 +29,7 @@
+ 	typedef typeof(pcp) pcp_op_T__;					\
+ 	pcp_op_T__ old__, new__, prev__;				\
+ 	pcp_op_T__ *ptr__;						\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp));					\
+ 	prev__ = *ptr__;						\
+ 	do {								\
+@@ -37,7 +37,7 @@
+ 		new__ = old__ op (val);					\
+ 		prev__ = cmpxchg(ptr__, old__, new__);			\
+ 	} while (prev__ != old__);					\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
+ 	new__;								\
+ })
  
-  #!/bin/bash
- 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index af7238b1356f..77d86a3a8553 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1593,6 +1593,16 @@ static int record__init_clock(struct record *rec)
- 	return 0;
+@@ -68,7 +68,7 @@
+ 	typedef typeof(pcp) pcp_op_T__; 				\
+ 	pcp_op_T__ val__ = (val);					\
+ 	pcp_op_T__ old__, *ptr__;					\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp)); 				\
+ 	if (__builtin_constant_p(val__) &&				\
+ 	    ((szcast)val__ > -129) && ((szcast)val__ < 128)) {		\
+@@ -84,7 +84,7 @@
+ 			: [val__] "d" (val__)				\
+ 			: "cc");					\
+ 	}								\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
  }
  
-+static void hit_auxtrace_snapshot_trigger(struct record *rec)
-+{
-+	if (trigger_is_ready(&auxtrace_snapshot_trigger)) {
-+		trigger_hit(&auxtrace_snapshot_trigger);
-+		auxtrace_record__snapshot_started = 1;
-+		if (auxtrace_record__snapshot_start(rec->itr))
-+			trigger_error(&auxtrace_snapshot_trigger);
-+	}
-+}
-+
- static int __cmd_record(struct record *rec, int argc, const char **argv)
- {
- 	int err;
-@@ -1937,6 +1947,10 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 			case EVLIST_CTL_CMD_DISABLE:
- 				pr_info(EVLIST_DISABLED_MSG);
- 				break;
-+			case EVLIST_CTL_CMD_SNAPSHOT:
-+				hit_auxtrace_snapshot_trigger(rec);
-+				evlist__ctlfd_ack(rec->evlist);
-+				break;
- 			case EVLIST_CTL_CMD_ACK:
- 			case EVLIST_CTL_CMD_UNSUPPORTED:
- 			default:
-@@ -2589,7 +2603,8 @@ static struct option __record_options[] = {
- 		parse_libpfm_events_option),
- #endif
- 	OPT_CALLBACK(0, "control", &record.opts, "fd:ctl-fd[,ack-fd] or ctl-fifo[,ack-fifo]",
--		     "Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events).\n"
-+		     "Listen on ctl-fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events,\n"
-+		     "\t\t\t  'snapshot': AUX area tracing snapshot).\n"
- 		     "\t\t\t  Optionally send control command completion ('ack\\n') to ack-fd descriptor.\n"
- 		     "\t\t\t  Alternatively, ctl-fifo / ack-fifo will be opened and used as ctl-fd / ack-fd.",
- 		      parse_control_option),
-@@ -2842,12 +2857,7 @@ static void snapshot_sig_handler(int sig __maybe_unused)
- {
- 	struct record *rec = &record;
+ #define this_cpu_add_4(pcp, val) arch_this_cpu_add(pcp, val, "laa", "asi", int)
+@@ -95,14 +95,14 @@
+ 	typedef typeof(pcp) pcp_op_T__; 				\
+ 	pcp_op_T__ val__ = (val);					\
+ 	pcp_op_T__ old__, *ptr__;					\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp));	 				\
+ 	asm volatile(							\
+ 		op "    %[old__],%[val__],%[ptr__]\n"			\
+ 		: [old__] "=d" (old__), [ptr__] "+Q" (*ptr__)		\
+ 		: [val__] "d" (val__)					\
+ 		: "cc");						\
+-	preempt_enable();						\
++	preempt_enable_notrace();						\
+ 	old__ + val__;							\
+ })
  
--	if (trigger_is_ready(&auxtrace_snapshot_trigger)) {
--		trigger_hit(&auxtrace_snapshot_trigger);
--		auxtrace_record__snapshot_started = 1;
--		if (auxtrace_record__snapshot_start(record.itr))
--			trigger_error(&auxtrace_snapshot_trigger);
--	}
-+	hit_auxtrace_snapshot_trigger(rec);
- 
- 	if (switch_output_signal(rec))
- 		trigger_hit(&switch_output_trigger);
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 0d4495bace13..3536299496a8 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -578,6 +578,7 @@ static void process_evlist(struct evlist *evlist, unsigned int interval)
- 				process_interval();
- 			pr_info(EVLIST_DISABLED_MSG);
- 			break;
-+		case EVLIST_CTL_CMD_SNAPSHOT:
- 		case EVLIST_CTL_CMD_ACK:
- 		case EVLIST_CTL_CMD_UNSUPPORTED:
- 		default:
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index cb61c223927f..bd88521a01a5 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1881,13 +1881,17 @@ static int evlist__ctlfd_recv(struct evlist *evlist, enum evlist_ctl_cmd *cmd,
- 		} else if (!strncmp(cmd_data, EVLIST_CTL_CMD_DISABLE_TAG,
- 				    (sizeof(EVLIST_CTL_CMD_DISABLE_TAG)-1))) {
- 			*cmd = EVLIST_CTL_CMD_DISABLE;
-+		} else if (!strncmp(cmd_data, EVLIST_CTL_CMD_SNAPSHOT_TAG,
-+				    (sizeof(EVLIST_CTL_CMD_SNAPSHOT_TAG)-1))) {
-+			*cmd = EVLIST_CTL_CMD_SNAPSHOT;
-+			pr_debug("is snapshot\n");
- 		}
- 	}
- 
- 	return bytes_read ? (int)bytes_read : err;
+@@ -114,14 +114,14 @@
+ 	typedef typeof(pcp) pcp_op_T__; 				\
+ 	pcp_op_T__ val__ = (val);					\
+ 	pcp_op_T__ old__, *ptr__;					\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp));	 				\
+ 	asm volatile(							\
+ 		op "    %[old__],%[val__],%[ptr__]\n"			\
+ 		: [old__] "=d" (old__), [ptr__] "+Q" (*ptr__)		\
+ 		: [val__] "d" (val__)					\
+ 		: "cc");						\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
  }
  
--static int evlist__ctlfd_ack(struct evlist *evlist)
-+int evlist__ctlfd_ack(struct evlist *evlist)
- {
- 	int err;
+ #define this_cpu_and_4(pcp, val)	arch_this_cpu_to_op(pcp, val, "lan")
+@@ -136,10 +136,10 @@
+ 	typedef typeof(pcp) pcp_op_T__;					\
+ 	pcp_op_T__ ret__;						\
+ 	pcp_op_T__ *ptr__;						\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp));					\
+ 	ret__ = cmpxchg(ptr__, oval, nval);				\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
+ 	ret__;								\
+ })
  
-@@ -1923,13 +1927,16 @@ int evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd)
- 			case EVLIST_CTL_CMD_DISABLE:
- 				evlist__disable(evlist);
- 				break;
-+			case EVLIST_CTL_CMD_SNAPSHOT:
-+				break;
- 			case EVLIST_CTL_CMD_ACK:
- 			case EVLIST_CTL_CMD_UNSUPPORTED:
- 			default:
- 				pr_debug("ctlfd: unsupported %d\n", *cmd);
- 				break;
- 			}
--			if (!(*cmd == EVLIST_CTL_CMD_ACK || *cmd == EVLIST_CTL_CMD_UNSUPPORTED))
-+			if (!(*cmd == EVLIST_CTL_CMD_ACK || *cmd == EVLIST_CTL_CMD_UNSUPPORTED ||
-+			      *cmd == EVLIST_CTL_CMD_SNAPSHOT))
- 				evlist__ctlfd_ack(evlist);
+@@ -152,10 +152,10 @@
+ ({									\
+ 	typeof(pcp) *ptr__;						\
+ 	typeof(pcp) ret__;						\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp));					\
+ 	ret__ = xchg(ptr__, nval);					\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
+ 	ret__;								\
+ })
+ 
+@@ -171,11 +171,11 @@
+ 	typeof(pcp1) *p1__;						\
+ 	typeof(pcp2) *p2__;						\
+ 	int ret__;							\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	p1__ = raw_cpu_ptr(&(pcp1));					\
+ 	p2__ = raw_cpu_ptr(&(pcp2));					\
+ 	ret__ = __cmpxchg_double(p1__, p2__, o1__, o2__, n1__, n2__);	\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
+ 	ret__;								\
+ })
+ 
+diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
+index 1aed1a4dfc2d..eddf71c22875 100644
+--- a/arch/s390/mm/vmem.c
++++ b/arch/s390/mm/vmem.c
+@@ -402,6 +402,7 @@ static int modify_p4d_table(pgd_t *pgd, unsigned long addr, unsigned long end,
+ 			pud = vmem_crst_alloc(_REGION3_ENTRY_EMPTY);
+ 			if (!pud)
+ 				goto out;
++			p4d_populate(&init_mm, p4d, pud);
  		}
- 	}
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index a5678eb5ee60..91d1da6e1fe3 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -363,6 +363,7 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evlist,
- #define EVLIST_CTL_CMD_ENABLE_TAG  "enable"
- #define EVLIST_CTL_CMD_DISABLE_TAG "disable"
- #define EVLIST_CTL_CMD_ACK_TAG     "ack\n"
-+#define EVLIST_CTL_CMD_SNAPSHOT_TAG "snapshot"
- 
- #define EVLIST_CTL_CMD_MAX_LEN 64
- 
-@@ -370,7 +371,8 @@ enum evlist_ctl_cmd {
- 	EVLIST_CTL_CMD_UNSUPPORTED = 0,
- 	EVLIST_CTL_CMD_ENABLE,
- 	EVLIST_CTL_CMD_DISABLE,
--	EVLIST_CTL_CMD_ACK
-+	EVLIST_CTL_CMD_ACK,
-+	EVLIST_CTL_CMD_SNAPSHOT,
- };
- 
- int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *ctl_fd_close);
-@@ -378,6 +380,7 @@ int evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
- int evlist__finalize_ctlfd(struct evlist *evlist);
- bool evlist__ctlfd_initialized(struct evlist *evlist);
- int evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd);
-+int evlist__ctlfd_ack(struct evlist *evlist);
- 
- #define EVLIST_ENABLED_MSG "Events enabled\n"
- #define EVLIST_DISABLED_MSG "Events disabled\n"
--- 
-2.17.1
-
+ 		ret = modify_pud_table(p4d, addr, next, add, direct);
+ 		if (ret)
