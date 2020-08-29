@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB307C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF916C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7778206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9571F206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598688944;
-	bh=z4iOJDs0jRU6p7okLCjDZ4/U88SsxRUpNrxZPI5c2/E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=drejAsQtjr443fCLGEKc/N7YKUmOL74iMAh/7OhDdqsdtf/0ydjzNwTffuZk7r/W7
-	 TW8kquSMPqzr/pgcqjnYKD4WWyxbPUDWhvLM1TYYyEVc4tYFCRptHfIKnRGv+E/cTI
-	 RV3xUROfuyExC7GMKOT/WMUl79rMGGeQtSSPr51M=
+	s=default; t=1598688953;
+	bh=2xBQwpYW3C+U+EZAmz9aUgrw1B10SLVziDjYrMH3QBM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XK4oNo7/oJk3MjHIDTy2aNFpTtJJc/VM4e9eJza0ks429NTCETxyz/HnG1lMm1yq1
+	 aIlvqsg4X7Ms6Khttg6cINXUCnmxEaFD1SSDxAog/Vm6N7BYCUTL8ruR72msAkjx3f
+	 mRFIuIvFix7EqyqxEfKPNnn0xB5FAbRnCKFS/r30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgH2IPk (ORCPT
+        id S1728052AbgH2IPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 04:15:40 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:47668 "EHLO
+        Sat, 29 Aug 2020 04:15:50 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:47525 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbgH2IPA (ORCPT
+        with ESMTP id S1726280AbgH2IOz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 04:15:00 -0400
+        Sat, 29 Aug 2020 04:14:55 -0400
 Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 07T8ELfk014307;
-        Sat, 29 Aug 2020 17:14:23 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 07T8ELfk014307
+        by conuserg-09.nifty.com with ESMTP id 07T8ELfh014307;
+        Sat, 29 Aug 2020 17:14:21 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 07T8ELfh014307
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1598688863;
-        bh=VahKc/HaFNgT2RmugNFqwontBaR0a5S/rVJo6WlbKPE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SxsCo4g9jl4ROcSTJB83LV7uXomkh97YCLnGp6ZtnjopES0Ff9T/vCG4Nj6Neal2o
-         UMBnc7CcQwgggsTnhfuK87D1cRCEbGGa38bVjlR3slRV5KfuJn964TGzwpKCTLFwmx
-         HeeSyEt/OSFOFobBlnowbZ9BbQolpbzS0xF3EMM61abfnPX/K6AIcP5+t6mZxGg/2r
-         PXGvr4B2c+yU7+EkyfBxSo0gGF9b4SxM7R6ZkON0ssoBEUeI8+LmUPFQ3cXlY01Rb8
-         o8g1NmGzzmzjawMgx8u6qaMaDD16ubKZkqEJjMQuPZ1PDVFJFgM6Ocv0paaW4VNS8C
-         qpWmRIG2X5DKQ==
+        s=dec2015msa; t=1598688861;
+        bh=rnMeFxtUozgRoWaZOL+eXZBgvS1kKsvPqvmSLOem0ZM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=D8kMxkhPZnYAOPqqTCXoj2ogevhLJAt4RKNqt9a++veTajLxSbTL+PRKQfuXG/SjU
+         RWDP8EOoFdIqg5c81atNI0kO+h0WBnAxfLO/AUV5nSgcagvKxYAIj3mKYP+TR6szEo
+         J5kG5569QItVGN0vxuozLCACK/2Mwrj4NPVn0qoFRB6hmpzU0+i7Mb1SkYrtIR9u9M
+         y2G5JkVje/an3rusIUBE4/cX+e+dgRkdAtDwE0YEjzDiJd+/Fp8R0HLWnNvr0zf9DA
+         OZkx1nOxDbLZ1WlpwRAgulxnQv2pIfzZcBwjT5I5trxjJC7PvwLT3HxSzall05QmTR
+         xke13ZVWkWNXA==
 X-Nifty-SrcIP: [126.90.211.135]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -49,12 +49,10 @@ Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 04/11] kconfig: qconf: move ConfigView::updateList(All) to ConfigList class
-Date:   Sat, 29 Aug 2020 17:14:10 +0900
-Message-Id: <20200829081417.725978-4-masahiroy@kernel.org>
+Subject: [PATCH 01/11] kconfig: qconf: reformat the intro message
+Date:   Sat, 29 Aug 2020 17:14:07 +0900
+Message-Id: <20200829081417.725978-1-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200829081417.725978-1-masahiroy@kernel.org>
-References: <20200829081417.725978-1-masahiroy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,208 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ConfigView::updateList() iterates over all views, and then calls
-updateList() against for its ConfigList instance.
+The introduction message displayed by 'Help -> Introduction' does not
+look nice due to excessive new lines.
 
-This means there is no point to implement it in the ConfigView class.
-
-Move and rename as follows:
-
-  ConfigView::updateList()     -> ConfigList::updateListForAll()
-  ConfigView::updateListAll()  -> ConfigList::updateListAllForAll()
-
-I used QList to contain all ConfigList instances.
+Reformat the message.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/kconfig/qconf.cc | 70 +++++++++++++++++++---------------------
- scripts/kconfig/qconf.h  | 11 +++----
- 2 files changed, 39 insertions(+), 42 deletions(-)
+ scripts/kconfig/qconf.cc | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
 
 diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 278c04de11ec..035101984bd3 100644
+index 8638785328a7..c40e37656f3f 100644
 --- a/scripts/kconfig/qconf.cc
 +++ b/scripts/kconfig/qconf.cc
-@@ -274,7 +274,7 @@ void ConfigLineEdit::keyPressEvent(QKeyEvent* e)
- 	case Qt::Key_Return:
- 	case Qt::Key_Enter:
- 		sym_set_string_value(item->menu->sym, text().toLatin1());
--		parent()->updateList();
-+		ConfigList::updateListForAll();
- 		break;
- 	default:
- 		Parent::keyPressEvent(e);
-@@ -315,9 +315,16 @@ ConfigList::ConfigList(ConfigView* p, const char *name)
+@@ -1831,17 +1831,24 @@ void ConfigMainWindow::closeEvent(QCloseEvent* e)
  
- 	showColumn(promptColIdx);
- 
-+	allLists.append(this);
-+
- 	reinit();
- }
- 
-+ConfigList::~ConfigList()
-+{
-+	allLists.removeOne(this);
-+}
-+
- bool ConfigList::menuSkip(struct menu *menu)
+ void ConfigMainWindow::showIntro(void)
  {
- 	if (optMode == normalOpt && menu_is_visible(menu))
-@@ -454,6 +461,28 @@ update:
- 	resizeColumnToContents(0);
+-	static const QString str = "Welcome to the qconf graphical configuration tool.\n\n"
+-		"For each option, a blank box indicates the feature is disabled, a check\n"
+-		"indicates it is enabled, and a dot indicates that it is to be compiled\n"
+-		"as a module.  Clicking on the box will cycle through the three states.\n\n"
+-		"If you do not see an option (e.g., a device driver) that you believe\n"
+-		"should be present, try turning on Show All Options under the Options menu.\n"
+-		"Although there is no cross reference yet to help you figure out what other\n"
+-		"options must be enabled to support the option you are interested in, you can\n"
+-		"still view the help of a grayed-out option.\n\n"
+-		"Toggling Show Debug Info under the Options menu will show the dependencies,\n"
+-		"which you can then match by examining other options.\n\n";
++	static const QString str =
++		"Welcome to the qconf graphical configuration tool.\n\n"
++
++		"For each option, a blank box indicates the feature is "
++		"disabled, a check indicates it is enabled, and a dot "
++		"indicates that it is to be compiled as a module. Clicking on "
++		"the box will cycle through the three states.\n\n"
++
++		"If you do not see an option (e.g., a device driver) that you "
++		"believe should be present, try turning on Show All Options "
++		"under the Options menu. Although there is no cross reference "
++		"yet to help you figure out what other options must be enabled "
++		"to support the option you are interested in, you can still "
++		"view the help of a grayed-out option.\n\n"
++
++		"Toggling Show Debug Info under the Options menu will show the "
++		"dependencies, which you can then match by examining other "
++		"options.\n\n";
+ 
+ 	QMessageBox::information(this, "qconf", str);
  }
- 
-+void ConfigList::updateListForAll()
-+{
-+	QListIterator<ConfigList *> it(allLists);
-+
-+	while (it.hasNext()) {
-+		ConfigList *list = it.next();
-+
-+		list->updateList();
-+	}
-+}
-+
-+void ConfigList::updateListAllForAll()
-+{
-+	QListIterator<ConfigList *> it(allLists);
-+
-+	while (it.hasNext()) {
-+		ConfigList *list = it.next();
-+
-+		list->updateList();
-+	}
-+}
-+
- void ConfigList::setValue(ConfigItem* item, tristate val)
- {
- 	struct symbol* sym;
-@@ -474,7 +503,7 @@ void ConfigList::setValue(ConfigItem* item, tristate val)
- 			return;
- 		if (oldval == no && item->menu->list)
- 			item->setExpanded(true);
--		parent()->updateList();
-+		ConfigList::updateListForAll();
- 		break;
- 	}
- }
-@@ -508,7 +537,7 @@ void ConfigList::changeValue(ConfigItem* item)
- 				item->setExpanded(true);
- 		}
- 		if (oldexpr != newexpr)
--			parent()->updateList();
-+			ConfigList::updateListForAll();
- 		break;
- 	case S_INT:
- 	case S_HEX:
-@@ -904,7 +933,7 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
- 	e->accept();
- }
- 
--ConfigView*ConfigView::viewList;
-+QList<ConfigList *> ConfigList::allLists;
- QAction *ConfigList::showNormalAction;
- QAction *ConfigList::showAllAction;
- QAction *ConfigList::showPromptAction;
-@@ -921,21 +950,6 @@ ConfigView::ConfigView(QWidget* parent, const char *name)
- 	lineEdit = new ConfigLineEdit(this);
- 	lineEdit->hide();
- 	verticalLayout->addWidget(lineEdit);
--
--	this->nextView = viewList;
--	viewList = this;
--}
--
--ConfigView::~ConfigView(void)
--{
--	ConfigView** vp;
--
--	for (vp = &viewList; *vp; vp = &(*vp)->nextView) {
--		if (*vp == this) {
--			*vp = nextView;
--			break;
--		}
--	}
- }
- 
- void ConfigView::setShowName(bool b)
-@@ -976,22 +990,6 @@ void ConfigList::setAllOpen(bool open)
- 	}
- }
- 
--void ConfigView::updateList()
--{
--	ConfigView* v;
--
--	for (v = viewList; v; v = v->nextView)
--		v->list->updateList();
--}
--
--void ConfigView::updateListAll(void)
--{
--	ConfigView* v;
--
--	for (v = viewList; v; v = v->nextView)
--		v->list->updateListAll();
--}
--
- ConfigInfoView::ConfigInfoView(QWidget* parent, const char *name)
- 	: Parent(parent), sym(0), _menu(0)
- {
-@@ -1600,7 +1598,7 @@ void ConfigMainWindow::loadConfig(void)
- 	free(configname);
- 	configname = xstrdup(name);
- 
--	ConfigView::updateListAll();
-+	ConfigList::updateListAllForAll();
- }
- 
- bool ConfigMainWindow::saveConfig(void)
-diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
-index d41670f322b3..818e00617ae3 100644
---- a/scripts/kconfig/qconf.h
-+++ b/scripts/kconfig/qconf.h
-@@ -44,6 +44,7 @@ class ConfigList : public QTreeWidget {
- 	typedef class QTreeWidget Parent;
- public:
- 	ConfigList(ConfigView* p, const char *name = 0);
-+	~ConfigList();
- 	void reinit(void);
- 	ConfigItem* findConfigItem(struct menu *);
- 	ConfigView* parent(void) const
-@@ -108,6 +109,10 @@ public slots:
- 	QPalette inactivedColorGroup;
- 	QMenu* headerPopup;
- 
-+	static QList<ConfigList *> allLists;
-+	static void updateListForAll();
-+	static void updateListAllForAll();
-+
- 	static QAction *showNormalAction, *showAllAction, *showPromptAction;
- };
- 
-@@ -188,9 +193,6 @@ class ConfigView : public QWidget {
- 	typedef class QWidget Parent;
- public:
- 	ConfigView(QWidget* parent, const char *name = 0);
--	~ConfigView(void);
--	static void updateList();
--	static void updateListAll(void);
- 
- 	bool showName(void) const { return list->showName; }
- 	bool showRange(void) const { return list->showRange; }
-@@ -206,9 +208,6 @@ public slots:
- public:
- 	ConfigList* list;
- 	ConfigLineEdit* lineEdit;
--
--	static ConfigView* viewList;
--	ConfigView* nextView;
- };
- 
- class ConfigInfoView : public QTextBrowser {
 -- 
 2.25.1
 
