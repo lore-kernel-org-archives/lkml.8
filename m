@@ -2,187 +2,234 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 567A8C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 09:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD404C43461
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 09:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A01F2075B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 09:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4FE72076D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 09:57:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldA3Uovv"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="iJqgYe2I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgH2Jyu (ORCPT
+        id S1727863AbgH2J53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 05:54:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbgH2Jyt (ORCPT
+        Sat, 29 Aug 2020 05:57:29 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:24605 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726869AbgH2J52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 05:54:49 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22EDBC061236;
-        Sat, 29 Aug 2020 02:54:49 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id l63so1249533edl.9;
-        Sat, 29 Aug 2020 02:54:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=pom5xppV9mtO5WyaZENR28MllTG1A0kT+Zjkh+342Fc=;
-        b=ldA3UovvJJmF0vWzRdFoykZN58eC2rdSQlN7ui2zSOar4ZSWhA+p2K2gW6z4z5Ol0X
-         aQMJ07i5P5xtueceJSz/A33fDwQHaLidpRPRqkvQr3fj8hIVTX9BcuehIVk0uLLXnb3u
-         1JL8h8A2aJpt3SfcvT4GTm727dy87t+dXKmIpXJLWP82iI7e2k0qzT/rs27Fvm7PWx23
-         G62s5cRlqoXsaN9p6DQst94VWSoq00PG+HdzK2K7DStKsvl35gk/rEMY+/aLry4rN9Up
-         Hb2JC+QU6FmJyYLtLdnu0cau3xE7dqPr9L2u7WM5k9zbyoCC/brMnCLsTeh0RUZGmT80
-         w3hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pom5xppV9mtO5WyaZENR28MllTG1A0kT+Zjkh+342Fc=;
-        b=FgyP/bzaJYLY/lqlL2kZKA5w/MhmyW/tVQvWAL1eVO9MeDcSS+9Z4nn2p3Vr1HM3aa
-         3V3gpbSmP79YMZZ0uW5sJ4Ai/SP3QxmCbB6HyUOmf9/jm8HoT8yFCd3m7JkQWBVhoXzE
-         5uHx2EBucnXtYtNd2tQVT5KhugEuZAks+dSR93HYuoKfMpKdkWaahUNCoZgZnvLUDcRm
-         V4q1aABCkeiSzBQqdo6WfVVkSKRf9/nLo/EVKYWmhqAI3Ugml5W5CH33XiYITw9/osRA
-         RmjvEu9GZf2iwsORDe/NCYB/yZSTBNhprE35h33TG46w/FQvRhpXgVg/5LkZfoptU1vx
-         W2LQ==
-X-Gm-Message-State: AOAM5301y2+Q/JWs63zTljfUJVrHlsai67pWQwvICXqLp8+GvxGircPL
-        LiII1PdpGYR09uObXtZ2WSqQEo/dcP4=
-X-Google-Smtp-Source: ABdhPJzf7KBEn/NhS3jAEvsqTbkgBhrMdENZfi2+TFzsu2p+7UuP2tiDWGgCEgmdYT24tUrWV2W6yw==
-X-Received: by 2002:a50:b046:: with SMTP id i64mr2869158edd.9.1598694885021;
-        Sat, 29 Aug 2020 02:54:45 -0700 (PDT)
-Received: from [192.168.0.48] (HSI-KBW-046-005-005-126.hsi8.kabel-badenwuerttemberg.de. [46.5.5.126])
-        by smtp.gmail.com with ESMTPSA id i35sm1696573edi.41.2020.08.29.02.54.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Aug 2020 02:54:44 -0700 (PDT)
-From:   Edward Shishkin <edward.shishkin@gmail.com>
-Subject: Re: [ANNOUNCE] Reiser5: Selective File Migration - User Interface
-To:     Metztli Information Technology <jose.r.r@metztli.com>,
-        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200827215351.620A468F3402@huitzilopochtli.metztli-it.com>
- <62dc962d-1dfd-641d-08ca-4abf62b50917@gmail.com>
-Message-ID: <d53eaaec-3150-b86f-254f-c12e60b2130c@gmail.com>
-Date:   Sat, 29 Aug 2020 11:54:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Sat, 29 Aug 2020 05:57:28 -0400
+X-UUID: 06a97a601b30491ab643e29003ee3d10-20200829
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=YQ4nWNJaU2/84I56GfA7izeF71Nu7GxMGRIJ/4QLhhI=;
+        b=iJqgYe2INoU7y5RbgeFWvqv7yXDT7wXXuH6QVWH8MwimigaAtcURtEZCqOdT81bfUhVmsmSMN0cgKkkduDX0H0CGIdSOMIeqyALhmkFm3cZq6FZ8b5Y573JvKeY6fGwQjf1MnghwP2HLQpe0YZOO0SZ+7z8XJSjwGZQ7GXZNHEA=;
+X-UUID: 06a97a601b30491ab643e29003ee3d10-20200829
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 818620872; Sat, 29 Aug 2020 17:56:23 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sat, 29 Aug
+ 2020 17:56:20 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sat, 29 Aug 2020 17:56:20 +0800
+Message-ID: <1598694891.19851.12.camel@mhfsdcap03>
+Subject: Re: [PATCH 09/18] iommu/mediatek-v1: Add IOMMU_DOMAIN_DMA support
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+CC:     <hch@lst.de>, <joro@8bytes.org>, <linux@armlinux.org.uk>,
+        <will@kernel.org>, <inki.dae@samsung.com>,
+        <sw0312.kim@samsung.com>, <kyungmin.park@samsung.com>,
+        <m.szyprowski@samsung.com>, <agross@kernel.org>,
+        <bjorn.andersson@linaro.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <vdumpa@nvidia.com>, <digetx@gmail.com>,
+        <matthias.bgg@gmail.com>, <geert+renesas@glider.be>,
+        <magnus.damm@gmail.com>, <t-kristo@ti.com>, <s-anna@ti.com>,
+        <laurent.pinchart@ideasonboard.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>,
+        <linux-samsung-soc@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Sat, 29 Aug 2020 17:54:51 +0800
+In-Reply-To: <a259b248ffb14273b56f8473c20b0381e8d74c7a.1597931876.git.robin.murphy@arm.com>
+References: <cover.1597931875.git.robin.murphy@arm.com>
+         <a259b248ffb14273b56f8473c20b0381e8d74c7a.1597931876.git.robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <62dc962d-1dfd-641d-08ca-4abf62b50917@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: AA63C797C93CBD61B254A639A39F87490728FF8037E9BB375825F26FABF9D7122000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/28/2020 01:50 AM, Edward Shishkin wrote:
-> 
-> 
-> On 08/27/2020 11:53 PM, Metztli Information Technology wrote:
->> On Wed, Aug 26, 2020 at 2:13 PM Edward Shishkin 
->> <edward.shishkin@gmail.com> wrote:
->>>
->>> [...]
->>>
->>>>
->>>> FYI Although not officially, the Debian metaframework Buster AMD64 
->>>> distribution might be the first to support native installation of 
->>>> Reiser4 SFRN 5.1.3, kernel and reiser4progs 2.0.3, file system 
->>>> utilities.
->>>>
->>>> I have already made a couple of successful Metztli Reiser4 SFRN 5 
->>>> native installations onto ~100 GB slices, which root file system is 
->>>> formatted in 'Reiser5' and 1 GB /boot in JFS.
->>>> https://metztli.it/reiser5 (Screenshot 600x338 size)
->>>>
->>>> The upgraded netboot installation media metztli-reiser4-sfrn5.iso is 
->>>> available at:
->>>> https://sourceforge.net/projects/debian-reiser4/
->>>> as well as
->>>> https://metztli.it/buster-reiser5/metztli-reiser4-sfrn5.iso
->>>> https://metztli.it/buster-reiser5/metztli-reiser4-sfrn5.iso.SHA256SUM
->>>>
->>>> Likely the brick/volume feature(s) will be useful in Cloud fabric 
->>>> infrastructures, like Google's, where reiser4 excels.
->>>>
->>>> The current SFRN 5.1.3 -patched Zstd -compressed kernel in the 
->>>> installation media is Debian's 5.7.10.
->>>
->>>
->>> wow, reiser5 from the box? I might want to try..
->> Well, it is more of a 'reference implementation' as there are persons 
->> who reached out to me because their builds succeeded, they were able 
->> to format in reiser4 SFRN x.y.z, but they were not able to mount their 
->> partition(s).
->> Turns out, they were inadvertently mixing SFRN 4.0.2 with 5.1.3, 
->> either in the reiser4 kernel patch -- released with the same in both 
->> instances -- or in the reiser4progs.
-> 
-> 
-> Yeah, some confusion can take place. Plus unsupported old 4.0.2
-> volumes (a special build with CONFIG_REISER4_OLD=y is required to
-> mount them), which is a payment for performance.
-> 
-> 
->>
->>>
->>>>
->>>> The installer defaults to create the root system reiser5 -formatted 
->>>> partition as:
->>>> mkfs.reiser4 -yo "create=reg42"
->>>
->>>
->>> "reg42" is default profile in reiser4progs-2.0.3 (check by
->>> "mkfs.reiser4 -p") - there is no need to specify it via option.
->> Acknowledged. Thanks.
->>
->>>
->>> Have you had a chance to play with logical volumes (add/remove
->>> bricks, etc)?
->> That is coming up. I still have to create/customize an image of 
->> Metztli Reiser4 SFRN5 for a Google Compute Engine (GCE) minimal ~200GB 
->> instance for evaluation.
->> Fact is 'not all clouds are created equal' -- even if KVM -based. For 
->> instance, reiser4 SFRN 4.0.2 on a trial Linode small ~80GB SSD 
->> slice(s) with 2 virtual cpus frequently hung under short sustained 
->> disk/network I/O usage.
->> I have not experienced that with reiser4 SFRN 4.0.2 on GCE -- where 
->> sometimes I allocate eight to sixteen virtual cpus with 16, 32, or 
->> even 64, GBs of RAM, on a region hosting AMD Epyc, for fast kernel 
->> building ops.
->>
->> But testing a relatively small bootable image first will usually 
->> provide insight if adding one, two... eight, TB slices will make sense 
->> later on.
-> 
-> 
-> I played with your media on a virtual machine. The basic volume
-> operations work, however, I guess, adding brick(s) to "/" will cause
-> problems at next boot: someone has to register all the bricks before
-> mounting "/"...
+T24gVGh1LCAyMDIwLTA4LTIwIGF0IDE2OjA4ICswMTAwLCBSb2JpbiBNdXJwaHkgd3JvdGU6DQo+
+IE5vdyB0aGF0IGFyY2gvYXJtIGlzIHdpcmVkIHVwIGZvciBkZWZhdWx0IGRvbWFpbnMgYW5kIGlv
+bW11LWRtYSwNCj4gaW1wbGVtZW50IHRoZSBjb3JyZXNwb25kaW5nIGRyaXZlci1zaWRlIHN1cHBv
+cnQgZm9yIGdyb3VwcyBhbmQgRE1BDQo+IGRvbWFpbnMgdG8gcmVwbGFjZSB0aGUgc2hhcmVkIG1h
+cHBpbmcgd29ya2Fyb3VuZC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFJvYmluIE11cnBoeSA8cm9i
+aW4ubXVycGh5QGFybS5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuaCAg
+ICB8ICAgMiAtDQo+ICBkcml2ZXJzL2lvbW11L210a19pb21tdV92MS5jIHwgMTUzICsrKysrKysr
+KysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDQ4IGluc2Vy
+dGlvbnMoKyksIDEwNyBkZWxldGlvbnMoLSkNCg0KSGkgUm9iaW4sDQoNClRoYW5rcyB2ZXJ5IG11
+Y2ggZm9yIHRoaXMgcGF0Y2gsIEl0IG1ha2VzIHRoZSBjb2RlIG11Y2ggY2xlYW5lci4NCg0KUGxl
+YXNlIGhlbHAgc3F1YXNoIHRoZSBsaXR0bGUgY2hhbmdlIGluIHRoaXMgcGF0Y2gsDQoNCi0tLSBh
+L2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11X3YxLmMNCisrKyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lv
+bW11X3YxLmMNCkBAIC01NTUsNiArNTU1LDcgQEAgc3RhdGljIGludCBtdGtfaW9tbXVfcHJvYmUo
+c3RydWN0IHBsYXRmb3JtX2RldmljZQ0KKnBkZXYpDQogCQlyZXR1cm4gcmV0Ow0KIA0KIAlpb21t
+dV9kZXZpY2Vfc2V0X29wcygmZGF0YS0+aW9tbXUsICZtdGtfaW9tbXVfb3BzKTsNCisJaW9tbXVf
+ZGV2aWNlX3NldF9md25vZGUoJmRhdGEtPmlvbW11LCAmZGV2LT5vZl9ub2RlLT5md25vZGUpOw0K
+IA0KIAlyZXQgPSBpb21tdV9kZXZpY2VfcmVnaXN0ZXIoJmRhdGEtPmlvbW11KTsNCiAJaWYgKHJl
+dCkNCg0KDQpUaGVuLA0KVGVzdGVkLWJ5OiBZb25nIFd1IDx5b25nLnd1QG1lZGlhdGVrLmNvbT4N
+Cg0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11LmggYi9kcml2ZXJz
+L2lvbW11L210a19pb21tdS5oDQo+IGluZGV4IDEyMjkyNWRiZTU0Ny4uNjI1M2U5OGQ4MTBjIDEw
+MDY0NA0KPiAtLS0gYS9kcml2ZXJzL2lvbW11L210a19pb21tdS5oDQo+ICsrKyBiL2RyaXZlcnMv
+aW9tbXUvbXRrX2lvbW11LmgNCj4gQEAgLTY3LDggKzY3LDYgQEAgc3RydWN0IG10a19pb21tdV9k
+YXRhIHsNCj4gIAlzdHJ1Y3QgaW9tbXVfZGV2aWNlCQlpb21tdTsNCj4gIAljb25zdCBzdHJ1Y3Qg
+bXRrX2lvbW11X3BsYXRfZGF0YSAqcGxhdF9kYXRhOw0KPiAgDQo+IC0Jc3RydWN0IGRtYV9pb21t
+dV9tYXBwaW5nCSptYXBwaW5nOyAvKiBGb3IgbXRrX2lvbW11X3YxLmMgKi8NCj4gLQ0KPiAgCXN0
+cnVjdCBsaXN0X2hlYWQJCWxpc3Q7DQo+ICAJc3RydWN0IG10a19zbWlfbGFyYl9pb21tdQlsYXJi
+X2ltdVtNVEtfTEFSQl9OUl9NQVhdOw0KPiAgfTsNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW9t
+bXUvbXRrX2lvbW11X3YxLmMgYi9kcml2ZXJzL2lvbW11L210a19pb21tdV92MS5jDQo+IGluZGV4
+IDgyZGRmZTkxNzBkNC4uNDBjODliOGQzYWM0IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2lvbW11
+L210a19pb21tdV92MS5jDQo+ICsrKyBiL2RyaXZlcnMvaW9tbXUvbXRrX2lvbW11X3YxLmMNCj4g
+QEAgLTI4LDcgKzI4LDYgQEANCj4gICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQo+ICAjaW5jbHVk
+ZSA8bGludXgvc3BpbmxvY2suaD4NCj4gICNpbmNsdWRlIDxhc20vYmFycmllci5oPg0KPiAtI2lu
+Y2x1ZGUgPGFzbS9kbWEtaW9tbXUuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9pbml0Lmg+DQo+ICAj
+aW5jbHVkZSA8ZHQtYmluZGluZ3MvbWVtb3J5L210MjcwMS1sYXJiLXBvcnQuaD4NCj4gICNpbmNs
+dWRlIDxzb2MvbWVkaWF0ZWsvc21pLmg+DQo+IEBAIC0yNDAsMTMgKzIzOSwxOCBAQCBzdGF0aWMg
+c3RydWN0IGlvbW11X2RvbWFpbiAqbXRrX2lvbW11X2RvbWFpbl9hbGxvYyh1bnNpZ25lZCB0eXBl
+KQ0KPiAgew0KPiAgCXN0cnVjdCBtdGtfaW9tbXVfZG9tYWluICpkb207DQo+ICANCj4gLQlpZiAo
+dHlwZSAhPSBJT01NVV9ET01BSU5fVU5NQU5BR0VEKQ0KPiArCWlmICh0eXBlICE9IElPTU1VX0RP
+TUFJTl9VTk1BTkFHRUQgJiYgdHlwZSAhPSBJT01NVV9ET01BSU5fRE1BKQ0KPiAgCQlyZXR1cm4g
+TlVMTDsNCj4gIA0KPiAgCWRvbSA9IGt6YWxsb2Moc2l6ZW9mKCpkb20pLCBHRlBfS0VSTkVMKTsN
+Cj4gIAlpZiAoIWRvbSkNCj4gIAkJcmV0dXJuIE5VTEw7DQo+ICANCj4gKwlpZiAodHlwZSA9PSBJ
+T01NVV9ET01BSU5fRE1BICYmIGlvbW11X2dldF9kbWFfY29va2llKCZkb20tPmRvbWFpbikpIHsN
+Cj4gKwkJa2ZyZWUoZG9tKTsNCj4gKwkJcmV0dXJuIE5VTEw7DQo+ICsJfQ0KPiArDQo+ICAJcmV0
+dXJuICZkb20tPmRvbWFpbjsNCj4gIH0NCj4gIA0KPiBAQCAtMjU3LDYgKzI2MSw3IEBAIHN0YXRp
+YyB2b2lkIG10a19pb21tdV9kb21haW5fZnJlZShzdHJ1Y3QgaW9tbXVfZG9tYWluICpkb21haW4p
+DQo+ICANCj4gIAlkbWFfZnJlZV9jb2hlcmVudChkYXRhLT5kZXYsIE0yNzAxX0lPTU1VX1BHVF9T
+SVpFLA0KPiAgCQkJZG9tLT5wZ3RfdmEsIGRvbS0+cGd0X3BhKTsNCj4gKwlpb21tdV9wdXRfZG1h
+X2Nvb2tpZShkb21haW4pOw0KPiAgCWtmcmVlKHRvX210a19kb21haW4oZG9tYWluKSk7DQo+ICB9
+DQo+ICANCj4gQEAgLTI2NSwxNCArMjcwLDggQEAgc3RhdGljIGludCBtdGtfaW9tbXVfYXR0YWNo
+X2RldmljZShzdHJ1Y3QgaW9tbXVfZG9tYWluICpkb21haW4sDQo+ICB7DQo+ICAJc3RydWN0IG10
+a19pb21tdV9kYXRhICpkYXRhID0gZGV2X2lvbW11X3ByaXZfZ2V0KGRldik7DQo+ICAJc3RydWN0
+IG10a19pb21tdV9kb21haW4gKmRvbSA9IHRvX210a19kb21haW4oZG9tYWluKTsNCj4gLQlzdHJ1
+Y3QgZG1hX2lvbW11X21hcHBpbmcgKm10a19tYXBwaW5nOw0KPiAgCWludCByZXQ7DQo+ICANCj4g
+LQkvKiBPbmx5IGFsbG93IHRoZSBkb21haW4gY3JlYXRlZCBpbnRlcm5hbGx5LiAqLw0KPiAtCW10
+a19tYXBwaW5nID0gZGF0YS0+bWFwcGluZzsNCj4gLQlpZiAobXRrX21hcHBpbmctPmRvbWFpbiAh
+PSBkb21haW4pDQo+IC0JCXJldHVybiAwOw0KPiAtDQo+ICAJaWYgKCFkYXRhLT5tNHVfZG9tKSB7
+DQo+ICAJCWRhdGEtPm00dV9kb20gPSBkb207DQo+ICAJCXJldCA9IG10a19pb21tdV9kb21haW5f
+ZmluYWxpc2UoZGF0YSk7DQo+IEBAIC0zNTgsMTggKzM1NywzOSBAQCBzdGF0aWMgcGh5c19hZGRy
+X3QgbXRrX2lvbW11X2lvdmFfdG9fcGh5cyhzdHJ1Y3QgaW9tbXVfZG9tYWluICpkb21haW4sDQo+
+ICANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgaW9tbXVfb3BzIG10a19pb21tdV9vcHM7DQo+ICAN
+Cj4gLS8qDQo+IC0gKiBNVEsgZ2VuZXJhdGlvbiBvbmUgaW9tbXUgSFcgb25seSBzdXBwb3J0IG9u
+ZSBpb21tdSBkb21haW4sIGFuZCBhbGwgdGhlIGNsaWVudA0KPiAtICogc2hhcmluZyB0aGUgc2Ft
+ZSBpb3ZhIGFkZHJlc3Mgc3BhY2UuDQo+IC0gKi8NCj4gLXN0YXRpYyBpbnQgbXRrX2lvbW11X2Ny
+ZWF0ZV9tYXBwaW5nKHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gLQkJCQkgICAgc3RydWN0IG9mX3Bo
+YW5kbGVfYXJncyAqYXJncykNCj4gK3N0YXRpYyBzdHJ1Y3QgaW9tbXVfZGV2aWNlICptdGtfaW9t
+bXVfcHJvYmVfZGV2aWNlKHN0cnVjdCBkZXZpY2UgKmRldikNCj4gIHsNCj4gIAlzdHJ1Y3QgaW9t
+bXVfZndzcGVjICpmd3NwZWMgPSBkZXZfaW9tbXVfZndzcGVjX2dldChkZXYpOw0KPiAgCXN0cnVj
+dCBtdGtfaW9tbXVfZGF0YSAqZGF0YTsNCj4gKw0KPiArCWlmICghZndzcGVjIHx8IGZ3c3BlYy0+
+b3BzICE9ICZtdGtfaW9tbXVfb3BzKQ0KPiArCQlyZXR1cm4gRVJSX1BUUigtRU5PREVWKTsgLyog
+Tm90IGEgaW9tbXUgY2xpZW50IGRldmljZSAqLw0KPiArDQo+ICsJZGF0YSA9IGRldl9pb21tdV9w
+cml2X2dldChkZXYpOw0KPiArDQo+ICsJcmV0dXJuICZkYXRhLT5pb21tdTsNCj4gK30NCj4gKw0K
+PiArc3RhdGljIHZvaWQgbXRrX2lvbW11X3JlbGVhc2VfZGV2aWNlKHN0cnVjdCBkZXZpY2UgKmRl
+dikNCj4gK3sNCj4gKwlzdHJ1Y3QgaW9tbXVfZndzcGVjICpmd3NwZWMgPSBkZXZfaW9tbXVfZndz
+cGVjX2dldChkZXYpOw0KPiArDQo+ICsJaWYgKCFmd3NwZWMgfHwgZndzcGVjLT5vcHMgIT0gJm10
+a19pb21tdV9vcHMpDQo+ICsJCXJldHVybjsNCj4gKw0KPiArCWlvbW11X2Z3c3BlY19mcmVlKGRl
+dik7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBzdHJ1Y3QgaW9tbXVfZ3JvdXAgKm10a19pb21tdV9k
+ZXZpY2VfZ3JvdXAoc3RydWN0IGRldmljZSAqZGV2KQ0KPiArew0KPiArCXN0cnVjdCBtdGtfaW9t
+bXVfZGF0YSAqZGF0YSA9IGRldl9pb21tdV9wcml2X2dldChkZXYpOw0KPiArDQo+ICsJcmV0dXJu
+IGlvbW11X2dyb3VwX3JlZl9nZXQoZGF0YS0+bTR1X2dyb3VwKTsNCj4gK30NCj4gKw0KPiArc3Rh
+dGljIGludCBtdGtfaW9tbXVfb2ZfeGxhdGUoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3Qgb2Zf
+cGhhbmRsZV9hcmdzICphcmdzKQ0KPiArew0KPiAgCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKm00
+dXBkZXY7DQo+IC0Jc3RydWN0IGRtYV9pb21tdV9tYXBwaW5nICptdGtfbWFwcGluZzsNCj4gLQlp
+bnQgcmV0Ow0KPiAgDQo+ICAJaWYgKGFyZ3MtPmFyZ3NfY291bnQgIT0gMSkgew0KPiAgCQlkZXZf
+ZXJyKGRldiwgImludmFsaWQgI2lvbW11LWNlbGxzKCVkKSBwcm9wZXJ0eSBmb3IgSU9NTVVcbiIs
+DQo+IEBAIC0zNzcsMTUgKzM5Nyw2IEBAIHN0YXRpYyBpbnQgbXRrX2lvbW11X2NyZWF0ZV9tYXBw
+aW5nKHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+ICAJfQ0KPiAg
+DQo+IC0JaWYgKCFmd3NwZWMpIHsNCj4gLQkJcmV0ID0gaW9tbXVfZndzcGVjX2luaXQoZGV2LCAm
+YXJncy0+bnAtPmZ3bm9kZSwgJm10a19pb21tdV9vcHMpOw0KPiAtCQlpZiAocmV0KQ0KPiAtCQkJ
+cmV0dXJuIHJldDsNCj4gLQkJZndzcGVjID0gZGV2X2lvbW11X2Z3c3BlY19nZXQoZGV2KTsNCj4g
+LQl9IGVsc2UgaWYgKGRldl9pb21tdV9md3NwZWNfZ2V0KGRldiktPm9wcyAhPSAmbXRrX2lvbW11
+X29wcykgew0KPiAtCQlyZXR1cm4gLUVJTlZBTDsNCj4gLQl9DQo+IC0NCj4gIAlpZiAoIWRldl9p
+b21tdV9wcml2X2dldChkZXYpKSB7DQo+ICAJCS8qIEdldCB0aGUgbTR1IGRldmljZSAqLw0KPiAg
+CQltNHVwZGV2ID0gb2ZfZmluZF9kZXZpY2VfYnlfbm9kZShhcmdzLT5ucCk7DQo+IEBAIC0zOTUs
+ODMgKzQwNiw3IEBAIHN0YXRpYyBpbnQgbXRrX2lvbW11X2NyZWF0ZV9tYXBwaW5nKHN0cnVjdCBk
+ZXZpY2UgKmRldiwNCj4gIAkJZGV2X2lvbW11X3ByaXZfc2V0KGRldiwgcGxhdGZvcm1fZ2V0X2Ry
+dmRhdGEobTR1cGRldikpOw0KPiAgCX0NCj4gIA0KPiAtCXJldCA9IGlvbW11X2Z3c3BlY19hZGRf
+aWRzKGRldiwgYXJncy0+YXJncywgMSk7DQo+IC0JaWYgKHJldCkNCj4gLQkJcmV0dXJuIHJldDsN
+Cj4gLQ0KPiAtCWRhdGEgPSBkZXZfaW9tbXVfcHJpdl9nZXQoZGV2KTsNCj4gLQltdGtfbWFwcGlu
+ZyA9IGRhdGEtPm1hcHBpbmc7DQo+IC0JaWYgKCFtdGtfbWFwcGluZykgew0KPiAtCQkvKiBNVEsg
+aW9tbXUgc3VwcG9ydCA0R0IgaW92YSBhZGRyZXNzIHNwYWNlLiAqLw0KPiAtCQltdGtfbWFwcGlu
+ZyA9IGFybV9pb21tdV9jcmVhdGVfbWFwcGluZygmcGxhdGZvcm1fYnVzX3R5cGUsDQo+IC0JCQkJ
+CQkwLCAxVUxMIDw8IDMyKTsNCj4gLQkJaWYgKElTX0VSUihtdGtfbWFwcGluZykpDQo+IC0JCQly
+ZXR1cm4gUFRSX0VSUihtdGtfbWFwcGluZyk7DQo+IC0NCj4gLQkJZGF0YS0+bWFwcGluZyA9IG10
+a19tYXBwaW5nOw0KPiAtCX0NCj4gLQ0KPiAtCXJldHVybiAwOw0KPiAtfQ0KPiAtDQo+IC1zdGF0
+aWMgaW50IG10a19pb21tdV9kZWZfZG9tYWluX3R5cGUoc3RydWN0IGRldmljZSAqZGV2KQ0KPiAt
+ew0KPiAtCXJldHVybiBJT01NVV9ET01BSU5fVU5NQU5BR0VEOw0KPiAtfQ0KPiAtDQo+IC1zdGF0
+aWMgc3RydWN0IGlvbW11X2RldmljZSAqbXRrX2lvbW11X3Byb2JlX2RldmljZShzdHJ1Y3QgZGV2
+aWNlICpkZXYpDQo+IC17DQo+IC0Jc3RydWN0IGlvbW11X2Z3c3BlYyAqZndzcGVjID0gZGV2X2lv
+bW11X2Z3c3BlY19nZXQoZGV2KTsNCj4gLQlzdHJ1Y3Qgb2ZfcGhhbmRsZV9hcmdzIGlvbW11X3Nw
+ZWM7DQo+IC0Jc3RydWN0IG9mX3BoYW5kbGVfaXRlcmF0b3IgaXQ7DQo+IC0Jc3RydWN0IG10a19p
+b21tdV9kYXRhICpkYXRhOw0KPiAtCWludCBlcnI7DQo+IC0NCj4gLQlvZl9mb3JfZWFjaF9waGFu
+ZGxlKCZpdCwgZXJyLCBkZXYtPm9mX25vZGUsICJpb21tdXMiLA0KPiAtCQkJIiNpb21tdS1jZWxs
+cyIsIC0xKSB7DQo+IC0JCWludCBjb3VudCA9IG9mX3BoYW5kbGVfaXRlcmF0b3JfYXJncygmaXQs
+IGlvbW11X3NwZWMuYXJncywNCj4gLQkJCQkJTUFYX1BIQU5ETEVfQVJHUyk7DQo+IC0JCWlvbW11
+X3NwZWMubnAgPSBvZl9ub2RlX2dldChpdC5ub2RlKTsNCj4gLQkJaW9tbXVfc3BlYy5hcmdzX2Nv
+dW50ID0gY291bnQ7DQo+IC0NCj4gLQkJbXRrX2lvbW11X2NyZWF0ZV9tYXBwaW5nKGRldiwgJmlv
+bW11X3NwZWMpOw0KPiAtDQo+IC0JCS8qIGRldi0+aW9tbXVfZndzcGVjIG1pZ2h0IGhhdmUgY2hh
+bmdlZCAqLw0KPiAtCQlmd3NwZWMgPSBkZXZfaW9tbXVfZndzcGVjX2dldChkZXYpOw0KPiAtDQo+
+IC0JCW9mX25vZGVfcHV0KGlvbW11X3NwZWMubnApOw0KPiAtCX0NCj4gLQ0KPiAtCWlmICghZndz
+cGVjIHx8IGZ3c3BlYy0+b3BzICE9ICZtdGtfaW9tbXVfb3BzKQ0KPiAtCQlyZXR1cm4gRVJSX1BU
+UigtRU5PREVWKTsgLyogTm90IGEgaW9tbXUgY2xpZW50IGRldmljZSAqLw0KPiAtDQo+IC0JZGF0
+YSA9IGRldl9pb21tdV9wcml2X2dldChkZXYpOw0KPiAtDQo+IC0JcmV0dXJuICZkYXRhLT5pb21t
+dTsNCj4gLX0NCj4gLQ0KPiAtc3RhdGljIHZvaWQgbXRrX2lvbW11X3Byb2JlX2ZpbmFsaXplKHN0
+cnVjdCBkZXZpY2UgKmRldikNCj4gLXsNCj4gLQlzdHJ1Y3QgZG1hX2lvbW11X21hcHBpbmcgKm10
+a19tYXBwaW5nOw0KPiAtCXN0cnVjdCBtdGtfaW9tbXVfZGF0YSAqZGF0YTsNCj4gLQlpbnQgZXJy
+Ow0KPiAtDQo+IC0JZGF0YSAgICAgICAgPSBkZXZfaW9tbXVfcHJpdl9nZXQoZGV2KTsNCj4gLQlt
+dGtfbWFwcGluZyA9IGRhdGEtPm1hcHBpbmc7DQo+IC0NCj4gLQllcnIgPSBhcm1faW9tbXVfYXR0
+YWNoX2RldmljZShkZXYsIG10a19tYXBwaW5nKTsNCj4gLQlpZiAoZXJyKQ0KPiAtCQlkZXZfZXJy
+KGRldiwgIkNhbid0IGNyZWF0ZSBJT01NVSBtYXBwaW5nIC0gRE1BLU9QUyB3aWxsIG5vdCB3b3Jr
+XG4iKTsNCj4gLX0NCj4gLQ0KPiAtc3RhdGljIHZvaWQgbXRrX2lvbW11X3JlbGVhc2VfZGV2aWNl
+KHN0cnVjdCBkZXZpY2UgKmRldikNCj4gLXsNCj4gLQlzdHJ1Y3QgaW9tbXVfZndzcGVjICpmd3Nw
+ZWMgPSBkZXZfaW9tbXVfZndzcGVjX2dldChkZXYpOw0KPiAtDQo+IC0JaWYgKCFmd3NwZWMgfHwg
+ZndzcGVjLT5vcHMgIT0gJm10a19pb21tdV9vcHMpDQo+IC0JCXJldHVybjsNCj4gLQ0KPiAtCWlv
+bW11X2Z3c3BlY19mcmVlKGRldik7DQo+ICsJcmV0dXJuIGlvbW11X2Z3c3BlY19hZGRfaWRzKGRl
+diwgYXJncy0+YXJncywgMSk7DQo+ICB9DQo+ICANCj4gIHN0YXRpYyBpbnQgbXRrX2lvbW11X2h3
+X2luaXQoY29uc3Qgc3RydWN0IG10a19pb21tdV9kYXRhICpkYXRhKQ0KPiBAQCAtNTI0LDEwICs0
+NTksOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGlvbW11X29wcyBtdGtfaW9tbXVfb3BzID0gew0K
+PiAgCS51bm1hcAkJPSBtdGtfaW9tbXVfdW5tYXAsDQo+ICAJLmlvdmFfdG9fcGh5cwk9IG10a19p
+b21tdV9pb3ZhX3RvX3BoeXMsDQo+ICAJLnByb2JlX2RldmljZQk9IG10a19pb21tdV9wcm9iZV9k
+ZXZpY2UsDQo+IC0JLnByb2JlX2ZpbmFsaXplID0gbXRrX2lvbW11X3Byb2JlX2ZpbmFsaXplLA0K
+PiAgCS5yZWxlYXNlX2RldmljZQk9IG10a19pb21tdV9yZWxlYXNlX2RldmljZSwNCj4gLQkuZGVm
+X2RvbWFpbl90eXBlID0gbXRrX2lvbW11X2RlZl9kb21haW5fdHlwZSwNCj4gLQkuZGV2aWNlX2dy
+b3VwCT0gZ2VuZXJpY19kZXZpY2VfZ3JvdXAsDQo+ICsJLmRldmljZV9ncm91cAk9IG10a19pb21t
+dV9kZXZpY2VfZ3JvdXAsDQo+ICsJLm9mX3hsYXRlCT0gbXRrX2lvbW11X29mX3hsYXRlLA0KPiAg
+CS5wZ3NpemVfYml0bWFwCT0gfjBVTCA8PCBNVDI3MDFfSU9NTVVfUEFHRV9TSElGVCwNCj4gIH07
+DQo+ICANCj4gQEAgLTYyNiw2ICs1NjAsMTQgQEAgc3RhdGljIGludCBtdGtfaW9tbXVfcHJvYmUo
+c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIAlpZiAocmV0KQ0KPiAgCQlyZXR1cm4g
+cmV0Ow0KPiAgDQo+ICsJLyoNCj4gKwkgKiBNVEsgZ2VuZXJhdGlvbiBvbmUgaW9tbXUgSFcgb25s
+eSBzdXBwb3J0IG9uZSBpb21tdSBkb21haW4sDQo+ICsJICogYW5kIGFsbCB0aGUgY2xpZW50IHNo
+YXJpbmcgdGhlIHNhbWUgaW92YSBhZGRyZXNzIHNwYWNlLg0KPiArCSAqLw0KPiArCWRhdGEtPm00
+dV9ncm91cCA9IGlvbW11X2dyb3VwX2FsbG9jKCk7DQo+ICsJaWYgKElTX0VSUihkYXRhLT5tNHVf
+Z3JvdXApKQ0KPiArCQlyZXR1cm4gUFRSX0VSUihkYXRhLT5tNHVfZ3JvdXApOw0KPiArDQo+ICAJ
+aWYgKCFpb21tdV9wcmVzZW50KCZwbGF0Zm9ybV9idXNfdHlwZSkpDQo+ICAJCWJ1c19zZXRfaW9t
+bXUoJnBsYXRmb3JtX2J1c190eXBlLCAgJm10a19pb21tdV9vcHMpOw0KPiAgDQo+IEBAIC02MzYs
+NiArNTc4LDcgQEAgc3RhdGljIGludCBtdGtfaW9tbXVfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9k
+ZXZpY2UgKnBkZXYpDQo+ICB7DQo+ICAJc3RydWN0IG10a19pb21tdV9kYXRhICpkYXRhID0gcGxh
+dGZvcm1fZ2V0X2RydmRhdGEocGRldik7DQo+ICANCj4gKwlpb21tdV9ncm91cF9wdXQoZGF0YS0+
+bTR1X2dyb3VwKTsNCj4gIAlpb21tdV9kZXZpY2Vfc3lzZnNfcmVtb3ZlKCZkYXRhLT5pb21tdSk7
+DQo+ICAJaW9tbXVfZGV2aWNlX3VucmVnaXN0ZXIoJmRhdGEtPmlvbW11KTsNCj4gIA0KDQo=
 
-
-It is important to register all bricks *before* mounting "/", as the
-registration procedure collects information need for volume activation
-(including transaction replay, etc).
-
-So at boot time before mounting "/" we need to scan the system and for
-each found block device call a brick registration procedure. The problem
-is that I don't know what do we actually have before mounting "/".
-
-Brick registration can be performed by calling "volume.reiser4 -g".
-However, it accepts device name, that we obviously don't have, as all
-the names are in "/", which is not yet mounted.
-
-I guess that solution exists (and possibly locates in initrd), because,
-it is perfectly possible to boot e.g. with root over LVM (a special
-utility scans the system and collects information about devices-
-components of the logical volume). Any ideas?
-
-Thanks,
-Edward.
