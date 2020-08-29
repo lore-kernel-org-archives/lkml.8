@@ -2,94 +2,89 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B36C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 02:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AEDC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 02:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B40BD208CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 02:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 231E6208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 02:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgH2Cvx (ORCPT
+        id S1726900AbgH2CyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 22:51:53 -0400
-Received: from mga06.intel.com ([134.134.136.31]:62212 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726460AbgH2Cvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 22:51:53 -0400
-IronPort-SDR: 8mTdMjcQdMH1UOY3aVTWyGXfW9ubOv8shkX3PYtroC0uPb+HkJD1mRcsPJ3av6H6oHkxSIasuO
- E9oL2O1xFUYA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="218325043"
-X-IronPort-AV: E=Sophos;i="5.76,366,1592895600"; 
-   d="scan'208";a="218325043"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 19:51:52 -0700
-IronPort-SDR: nXToNeIKugJp6cS9bPH9eXz6pmgmYpZ4D6j+NQLTaLUrOBzjDJPVuSJ4LHYpV2gQ97pLxJn0JR
- AtyedJXORm+g==
-X-IronPort-AV: E=Sophos;i="5.76,366,1592895600"; 
-   d="scan'208";a="475939800"
-Received: from jli113-mobl1.ccr.corp.intel.com (HELO [10.254.212.55]) ([10.254.212.55])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 19:51:50 -0700
-Subject: Re: [PATCH 1/5] KVM: nVMX: Fix VMX controls MSRs setup when nested
- VMX enabled
-To:     Chenyi Qiang <chenyi.qiang@intel.com>,
-        Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200828085622.8365-1-chenyi.qiang@intel.com>
- <20200828085622.8365-2-chenyi.qiang@intel.com>
- <CALMp9eThyqWuduU=JN+w3M3ANeCYN+7=s-gippzyu_GmvgtVGA@mail.gmail.com>
- <534a4ad5-b083-1278-a6ac-4a7e2b6b1600@intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <1fbfb77d-4f28-bcb6-a95c-f4ac7a313d2d@intel.com>
-Date:   Sat, 29 Aug 2020 10:51:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
-MIME-Version: 1.0
-In-Reply-To: <534a4ad5-b083-1278-a6ac-4a7e2b6b1600@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 28 Aug 2020 22:54:17 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:20210 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726460AbgH2CyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 22:54:16 -0400
+Received: from localhost.localdomain (unknown [10.192.85.18])
+        by mail-app3 (Coremail) with SMTP id cC_KCgAHIt5Mw0lflGRkAw--.459S4;
+        Sat, 29 Aug 2020 10:54:08 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] ext4: Fix error handling code in add_new_gdb
+Date:   Sat, 29 Aug 2020 10:54:02 +0800
+Message-Id: <20200829025403.3139-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgAHIt5Mw0lflGRkAw--.459S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7JryxXFy8ArykGrWkuFyrXrb_yoWfuFb_JF
+        n7Aw18X3yIvrn3C3ZFyr1Fyr4SyF4kXF15ua10qFnxW3Waya95Zr1vqr9rCr1j9F4S9rs8
+        Cr17Xr9xArn2gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbcxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxF
+        aVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr
+        4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxG
+        rwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8Jw
+        CI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
+        cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0EBlZdtPrBDAAws1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/29/2020 9:49 AM, Chenyi Qiang wrote:
-> 
-> 
-> On 8/29/2020 1:43 AM, Jim Mattson wrote:
->> On Fri, Aug 28, 2020 at 1:54 AM Chenyi Qiang <chenyi.qiang@intel.com> 
->> wrote:
->>>
->>> KVM supports the nested VM_{EXIT, ENTRY}_LOAD_IA32_PERF_GLOBAL_CTRL and
->>> VM_{ENTRY_LOAD, EXIT_CLEAR}_BNDCFGS, but they doesn't expose during
->>> the setup of nested VMX controls MSR.
->>>
->>
->> Aren't these features added conditionally in
->> nested_vmx_entry_exit_ctls_update() and
->> nested_vmx_pmu_entry_exit_ctls_update()?
->>
-> 
-> Yes, but I assume vmcs_config.nested should reflect the global 
-> capability of VMX MSR. KVM supports these two controls, so should be 
-> exposed here.
+When ext4_journal_get_write_access() fails, we should
+terminate the execution flow and release n_group_desc,
+iloc.bh, dind and gdb_bh.
 
-No. I prefer to say they are removed conditionally in 
-nested_vmx_entry_exit_ctls_update() and 
-nested_vmx_pmu_entry_exit_ctls_update().
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
 
-Userspace calls vmx_get_msr_feature() to query what KVM supports for 
-these VMX MSR. In vmx_get_msr_feature(), it returns the value of 
-vmcs_config.nested. As KVM supports these two bits, we should advertise 
-them in vmcs_config.nested and report to userspace.
+Changelog:
+
+v2: - Remove changes to ext4_handle_dirty_super()'s
+      error handling path.
+---
+ fs/ext4/resize.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/fs/ext4/resize.c b/fs/ext4/resize.c
+index a50b51270ea9..71bf600e5b42 100644
+--- a/fs/ext4/resize.c
++++ b/fs/ext4/resize.c
+@@ -843,8 +843,10 @@ static int add_new_gdb(handle_t *handle, struct inode *inode,
+ 
+ 	BUFFER_TRACE(dind, "get_write_access");
+ 	err = ext4_journal_get_write_access(handle, dind);
+-	if (unlikely(err))
++	if (unlikely(err)) {
+ 		ext4_std_error(sb, err);
++		goto errout;
++	}
+ 
+ 	/* ext4_reserve_inode_write() gets a reference on the iloc */
+ 	err = ext4_reserve_inode_write(handle, inode, &iloc);
+-- 
+2.17.1
+
