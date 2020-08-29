@@ -2,93 +2,193 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F00C433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764F1C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C672A20776
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598701360;
-	bh=Q0ph4oqiKCEwsDqeFSh6njs6C5uJMGOmkzo8miXAWwQ=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hmLCrYDFH/1PskMMHKWSpEzx0uKYX1I6K78b2moh0dQv6LqBhwFP9Z2wdAXDAqPWH
-	 BXtg8rlTjnAq/x1TbP/mg7+orXRme8VqWaccVtM2r+kfGudF6a2ndTz+h6slCBYxev
-	 0P/Leq96J8AlQr36SsW3NNA+WNzgE8KSVabAR9t8=
+	by mail.kernel.org (Postfix) with ESMTP id 5117D208CA
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:45:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgH2LmZ (ORCPT
+        id S1727822AbgH2LoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 07:42:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47900 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 07:44:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52752 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727940AbgH2La1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 07:30:27 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 939A1208CA;
-        Sat, 29 Aug 2020 11:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598699900;
-        bh=Q0ph4oqiKCEwsDqeFSh6njs6C5uJMGOmkzo8miXAWwQ=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=crTnDE87Kf/Au4dcCmJE2TKFsCI676nlC82aTqM/gtMdAKwFB0npRPhSZylhj6BPb
-         dtv7BxG7hZ6cu/mV1IzDBOxdf9fXvmaTeU2v+KLNHgsip3uuacfkUUEiwBT//fJX1U
-         cqzF33UGsCyzpwG9CkoLKYstVBQboZt0pKgakHA8=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Wolfram Sang <wolfram@the-dreams.de>,
-        Dong Aisheng <aisheng.dong@nxp.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: [PATCH 4/7] dt-bindings: i2c: imx-lpi2c: Use unevaluatedProperties
-Date:   Sat, 29 Aug 2020 13:17:57 +0200
-Message-Id: <20200829111800.2786-4-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200829111800.2786-1-krzk@kernel.org>
-References: <20200829111800.2786-1-krzk@kernel.org>
+        id S1728110AbgH2LdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 07:33:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 86719AEDA;
+        Sat, 29 Aug 2020 11:32:16 +0000 (UTC)
+Subject: Re: [PATCH v3 00/10] NTFS read-write driver GPL implementation by
+ Paragon Software
+To:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        linux-fsdevel@vger.kernel.org
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        pali@kernel.org, dsterba@suse.cz, aaptel@suse.com,
+        willy@infradead.org, rdunlap@infradead.org, joe@perches.com,
+        mark@harmstone.com
+References: <20200828143938.102889-1-almaz.alexandrovich@paragon-software.com>
+From:   Nikolay Borisov <nborisov@suse.com>
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <dcea3bfc-a082-8dfe-cbd0-c99333fe1b22@suse.com>
+Date:   Sat, 29 Aug 2020 14:31:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200828143938.102889-1-almaz.alexandrovich@paragon-software.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Additional properties actually might appear (e.g. power-domains) so use
-unevaluatedProperties to fix dtbs_check warnings like:
 
-  arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dt.yaml: i2c@5a800000:
-    'assigned-clock-rates', 'assigned-clocks', 'clock-names', 'power-domains' do not match any of the regexes: 'pinctrl-[0-9]+'
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 28.08.20 г. 17:39 ч., Konstantin Komarov wrote:
+> This patch adds NTFS Read-Write driver to fs/ntfs3.
+> 
+> Having decades of expertise in commercial file systems development and huge
+> test coverage, we at Paragon Software GmbH want to make our contribution to
+> the Open Source Community by providing implementation of NTFS Read-Write
+> driver for the Linux Kernel.
+> 
+> This is fully functional NTFS Read-Write driver. Current version works with
+> NTFS(including v3.1) and normal/compressed/sparse files and supports journal replaying.
+> 
+> We plan to support this version after the codebase once merged, and add new
+> features and fix bugs. For example, full journaling support over JBD will be
+> added in later updates.
+> 
+> v2:
+>  - patch splitted to chunks (file-wise)
+>  - build issues fixed
+>  - sparse and checkpatch.pl errors fixed
+>  - NULL pointer dereference on mkfs.ntfs-formatted volume mount fixed
+>  - cosmetics + code cleanup
+> 
+> v3:
+>  - added acl, noatime, no_acs_rules, prealloc mount options
+>  - added fiemap support
+>  - fixed encodings support
+>  - removed typedefs
+>  - adapted Kernel-way logging mechanisms
+>  - fixed typos and corner-case issues
+> 
+> Konstantin Komarov (10):
+>   fs/ntfs3: Add headers and misc files
+>   fs/ntfs3: Add initialization of super block
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
-index ac0bc5dd64d6..594e174e2cde 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
-+++ b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
-@@ -31,7 +31,7 @@ required:
-   - interrupts
-   - clocks
- 
--additionalProperties: false
-+unevaluatedProperties: false
- 
- examples:
-   - |
--- 
-2.17.1
+This patch is missing
 
+>   fs/ntfs3: Add bitmap
+>   fs/ntfs3: Add file operations and implementationThis patch is missing
+
+>   fs/ntfs3: Add attrib operations
+>   fs/ntfs3: Add compression
+>   fs/ntfs3: Add NTFS journal
+This patch is missing
+
+>   fs/ntfs3: Add Kconfig, Makefile and doc
+>   fs/ntfs3: Add NTFS3 in fs/Kconfig and fs/Makefile
+>   fs/ntfs3: Add MAINTAINERS
+> 
+>  Documentation/filesystems/ntfs3.rst |  103 +
+>  MAINTAINERS                         |    7 +
+>  fs/Kconfig                          |    1 +
+>  fs/Makefile                         |    1 +
+>  fs/ntfs3/Kconfig                    |   23 +
+>  fs/ntfs3/Makefile                   |   11 +
+>  fs/ntfs3/attrib.c                   | 1285 +++++++
+>  fs/ntfs3/attrlist.c                 |  462 +++
+>  fs/ntfs3/bitfunc.c                  |  137 +
+>  fs/ntfs3/bitmap.c                   | 1545 ++++++++
+>  fs/ntfs3/debug.h                    |   45 +
+>  fs/ntfs3/dir.c                      |  642 ++++
+>  fs/ntfs3/file.c                     | 1214 +++++++
+>  fs/ntfs3/frecord.c                  | 2378 ++++++++++++
+>  fs/ntfs3/fslog.c                    | 5222 +++++++++++++++++++++++++++
+>  fs/ntfs3/fsntfs.c                   | 2218 ++++++++++++
+>  fs/ntfs3/index.c                    | 2661 ++++++++++++++
+>  fs/ntfs3/inode.c                    | 2068 +++++++++++
+>  fs/ntfs3/lznt.c                     |  451 +++
+>  fs/ntfs3/namei.c                    |  580 +++
+>  fs/ntfs3/ntfs.h                     | 1249 +++++++
+>  fs/ntfs3/ntfs_fs.h                  | 1001 +++++
+>  fs/ntfs3/record.c                   |  615 ++++
+>  fs/ntfs3/run.c                      | 1188 ++++++
+>  fs/ntfs3/super.c                    | 1406 ++++++++
+>  fs/ntfs3/upcase.c                   |   78 +
+>  fs/ntfs3/xattr.c                    | 1007 ++++++
+>  27 files changed, 27598 insertions(+)
+>  create mode 100644 Documentation/filesystems/ntfs3.rst
+>  create mode 100644 fs/ntfs3/Kconfig
+>  create mode 100644 fs/ntfs3/Makefile
+>  create mode 100644 fs/ntfs3/attrib.c
+>  create mode 100644 fs/ntfs3/attrlist.c
+>  create mode 100644 fs/ntfs3/bitfunc.c
+>  create mode 100644 fs/ntfs3/bitmap.c
+>  create mode 100644 fs/ntfs3/debug.h
+>  create mode 100644 fs/ntfs3/dir.c
+>  create mode 100644 fs/ntfs3/file.c
+>  create mode 100644 fs/ntfs3/frecord.c
+>  create mode 100644 fs/ntfs3/fslog.c
+>  create mode 100644 fs/ntfs3/fsntfs.c
+>  create mode 100644 fs/ntfs3/index.c
+>  create mode 100644 fs/ntfs3/inode.c
+>  create mode 100644 fs/ntfs3/lznt.c
+>  create mode 100644 fs/ntfs3/namei.c
+>  create mode 100644 fs/ntfs3/ntfs.h
+>  create mode 100644 fs/ntfs3/ntfs_fs.h
+>  create mode 100644 fs/ntfs3/record.c
+>  create mode 100644 fs/ntfs3/run.c
+>  create mode 100644 fs/ntfs3/super.c
+>  create mode 100644 fs/ntfs3/upcase.c
+>  create mode 100644 fs/ntfs3/xattr.c
+> 
