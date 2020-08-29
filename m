@@ -2,121 +2,207 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9918EC433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6D3C433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E80B207BB
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99998207BB
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:12:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="UgCNc6zV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726748AbgH2BL2 (ORCPT
+        id S1726839AbgH2BMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 21:11:28 -0400
-Received: from mga07.intel.com ([134.134.136.100]:32974 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726219AbgH2BL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 21:11:28 -0400
-IronPort-SDR: PZYg/HrWfTJ0uNuNnb3vePgYd+QtD4KaxETCS4gXaqv7KUkzuz+dsJVFP9E6+Uec5uSQRrUls6
- Rnxk8ZFJUMgw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="221007537"
-X-IronPort-AV: E=Sophos;i="5.76,365,1592895600"; 
-   d="scan'208";a="221007537"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 18:11:26 -0700
-IronPort-SDR: 8XKr402pDMeWK7gEmQD5xxksZ4Ahvm4WNu5HdK4b4iIc2+2Ue8RLNHxZTUaChm8mBFjg67LmMY
- PwhzpuBP9gVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,365,1592895600"; 
-   d="scan'208";a="282549523"
-Received: from fmsmsx604.amr.corp.intel.com ([10.18.126.84])
-  by fmsmga008.fm.intel.com with ESMTP; 28 Aug 2020 18:11:26 -0700
-Received: from fmsmsx604.amr.corp.intel.com (10.18.126.84) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 28 Aug 2020 18:10:52 -0700
-Received: from fmsmsx151.amr.corp.intel.com (10.18.125.4) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 28 Aug 2020 18:10:52 -0700
-Received: from fmsmsx107.amr.corp.intel.com ([169.254.6.136]) by
- FMSMSX151.amr.corp.intel.com ([169.254.7.84]) with mapi id 14.03.0439.000;
- Fri, 28 Aug 2020 18:10:52 -0700
-From:   "Souza, Jose" <jose.souza@intel.com>
-To:     "airlied@linux.ie" <airlied@linux.ie>,
-        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
-        "Roper, Matthew D" <matthew.d.roper@intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "Srivatsa, Anusha" <anusha.srivatsa@intel.com>,
-        "Laxminarayan Bharadiya, Pankaj" 
-        <pankaj.laxminarayan.bharadiya@intel.com>,
-        "trix@redhat.com" <trix@redhat.com>,
-        "wambui.karugax@gmail.com" <wambui.karugax@gmail.com>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "Kasireddy, Vivek" <vivek.kasireddy@intel.com>
-CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/i915/display: fix uninitialized variable
-Thread-Topic: [PATCH] drm/i915/display: fix uninitialized variable
-Thread-Index: AQHWezZyFQ6O6CxC8EepYMeUJRKygKlOwiWA
-Date:   Sat, 29 Aug 2020 01:10:51 +0000
-Message-ID: <3a93ddc0727676afc8878ca11d0afbebe8e5e4ab.camel@intel.com>
-References: <20200825232057.31601-1-trix@redhat.com>
-In-Reply-To: <20200825232057.31601-1-trix@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.22.240.12]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EA13B763D4D41D4BB2E7EE3CFF27B0EC@intel.com>
-Content-Transfer-Encoding: base64
+        Fri, 28 Aug 2020 21:12:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42798 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbgH2BMN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 21:12:13 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D247C06121B
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 18:12:12 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id w13so721245wrk.5
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Aug 2020 18:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=39XN9yo1hBG3Se1gfQYF3vziZZPdblGeQ4oQR1sH/O8=;
+        b=UgCNc6zV3jHlrg/Fv8Pd/IrqWUk206ZSYfkd1Atuw6CbnwlSWhIo20Ev2bp0NzbxNE
+         5+Oqahty8CR5kwHAXEbFaKD1X/femDV4haD3dBHW5mwpqzOGgAoCxqHujgVFfx1UHLfQ
+         DbN1P+h/aae5Xy6kl9NPJkMdJU0rMyidTucdU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=39XN9yo1hBG3Se1gfQYF3vziZZPdblGeQ4oQR1sH/O8=;
+        b=DSqxaO2O44AHDriQ3/u7DX1sCRqrdDW0URqZuWjlXiOvpCRrD3NHqcyXlXgv9vn0V8
+         OaQHivLKiaPGCQIoGQWLVYPi+Jjid3VMdD1VD8KViuXrlLCmUGK6OBaGmYAaHI2Udn38
+         qJmkJoexa/FDND8CB1A0M9VYPhsQNEENX4rYuJoc7VhLl+m9XrgelyRORZ9A7BH/SV57
+         1WhLa/KCNwUyKGXMyAMZFwaT3zt8fheNcM6jCq9NAOB/zkgfd3zlQge/oQlWncvSXToc
+         O70/KWYuAQLLC5x/aUf0bPD2z6sYriG3EDButymiw40l752BuYymjRFumBYvAziGoo15
+         V7jA==
+X-Gm-Message-State: AOAM530Td5PGaB2aLdgqEWYkrnMMu56i75vjViDgPUiBX7CuhA/qtYnU
+        Z4P4xqypDMmyRNf3U6knMk6plAaw2m2bb+8xwaiC
+X-Google-Smtp-Source: ABdhPJzw5EtgUVJ3RG403SG6FcBlDty/Ese8S3VaJefPy33FqMxh5pEHcZSuvxcoiYJMWxt5uOMYBnTEwf6FImhkxMA=
+X-Received: by 2002:adf:e411:: with SMTP id g17mr1444394wrm.77.1598663531166;
+ Fri, 28 Aug 2020 18:12:11 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200828104830.000007bf@Huawei.com> <20200828161523.GA2158345@bjorn-Precision-5520>
+In-Reply-To: <20200828161523.GA2158345@bjorn-Precision-5520>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Fri, 28 Aug 2020 18:11:50 -0700
+Message-ID: <CAOnJCULtHzQKJNE4OO_U2NMaW6pX38Pw7dLywGc9og1BuuAYNQ@mail.gmail.com>
+Subject: Re: [RFC/RFT PATCH 3/6] arm64, numa: Move pcibus_to_node definition
+ to generic numa code
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Zong Li <zong.li@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ganapatrao Kulkarni <gkulkarni@cavium.com>,
+        Steven Price <steven.price@arm.com>, linux-pci@vger.kernel.org,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Nick Hu <nickhu@andestech.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SnVzdCBtZXJnZWQgdGhlIGZpcnN0IHBhdGNoIHRoYXQgZml4ZWQgdGhpcyBpc3N1ZSwgdGhhbmtz
-IGFueXdheXMuDQoNCjIwMzRjMjEyOWJjNGE5MWQ0NzE4MTVkNGRjN2EyYTY5ZWFhNTMzOGQgLSBk
-cm0vaTkxNS9kaXNwbGF5OiBFbnN1cmUgdGhhdCByZXQgaXMgYWx3YXlzIGluaXRpYWxpemVkIGlu
-IGljbF9jb21ib19waHlfdmVyaWZ5X3N0YXRlDQoNCg0KT24gVHVlLCAyMDIwLTA4LTI1IGF0IDE2
-OjIwIC0wNzAwLCB0cml4QHJlZGhhdC5jb20gd3JvdGU6DQo+IEZyb206IFRvbSBSaXggPA0KPiB0
-cml4QHJlZGhhdC5jb20NCj4gPg0KPiANCj4gY2xhbmcgc3RhdGljIGFuYWx5c2lzIGZsYWdzIHRo
-aXMgZXJyb3INCj4gDQo+IGludGVsX2NvbWJvX3BoeS5jOjI2ODo3OiB3YXJuaW5nOiBUaGUgbGVm
-dCBleHByZXNzaW9uIG9mIHRoZQ0KPiAgIGNvbXBvdW5kIGFzc2lnbm1lbnQgaXMgYW4gdW5pbml0
-aWFsaXplZCB2YWx1ZS4NCj4gICBUaGUgY29tcHV0ZWQgdmFsdWUgd2lsbCBhbHNvIGJlIGdhcmJh
-Z2UNCj4gICAgICAgICAgICAgICAgIHJldCAmPSBjaGVja19waHlfcmVnKC4uLg0KPiAgICAgICAg
-ICAgICAgICAgfn5+IF4NCj4gDQo+IHJldCBoYXMgbm8gaW5pdGlhbCB2YWx1ZXMsIGluIGljbF9j
-b21ib19waHlfdmVyaWZ5X3N0YXRlKCkgcmV0IGlzDQo+IHNldCBieSB0aGUgbmV4dCBzdGF0bWVu
-dCBhbmQgdGhlbiB1cGRhdGVkIGJ5IHNpbWlsYXIgJj0gbG9naWMuDQo+IA0KPiBCZWNhdXNlIHRo
-ZSBjaGVja19waHlfcmVxKCkgYXJlIG9ubHkgcmVnaXN0ZXIgcmVhZHMsIHJlb3JkZXIgdGhlDQo+
-IHN0YXRlbWVudHMuDQo+IA0KPiBGaXhlczogMjM5YmVmNjc2ZDhlICgiZHJtL2k5MTUvZGlzcGxh
-eTogSW1wbGVtZW50IG5ldyBjb21ibyBwaHkgaW5pdGlhbGl6YXRpb24gc3RlcCIpDQo+IFNpZ25l
-ZC1vZmYtYnk6IFRvbSBSaXggPA0KPiB0cml4QHJlZGhhdC5jb20NCj4gPg0KPiAtLS0NCj4gIGRy
-aXZlcnMvZ3B1L2RybS9pOTE1L2Rpc3BsYXkvaW50ZWxfY29tYm9fcGh5LmMgfCA0ICsrLS0NCj4g
-IDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+IA0KPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2k5MTUvZGlzcGxheS9pbnRlbF9jb21ib19waHku
-YyBiL2RyaXZlcnMvZ3B1L2RybS9pOTE1L2Rpc3BsYXkvaW50ZWxfY29tYm9fcGh5LmMNCj4gaW5k
-ZXggNjk2OGRlNGYzNDc3Li43NjIyZWY2NmM5ODcgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1
-L2RybS9pOTE1L2Rpc3BsYXkvaW50ZWxfY29tYm9fcGh5LmMNCj4gKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL2k5MTUvZGlzcGxheS9pbnRlbF9jb21ib19waHkuYw0KPiBAQCAtMjY0LDYgKzI2NCw4IEBA
-IHN0YXRpYyBib29sIGljbF9jb21ib19waHlfdmVyaWZ5X3N0YXRlKHN0cnVjdCBkcm1faTkxNV9w
-cml2YXRlICpkZXZfcHJpdiwNCj4gIAlpZiAoIWljbF9jb21ib19waHlfZW5hYmxlZChkZXZfcHJp
-diwgcGh5KSkNCj4gIAkJcmV0dXJuIGZhbHNlOw0KPiAgDQo+ICsJcmV0ID0gY25sX3ZlcmlmeV9w
-cm9jbW9uX3JlZl92YWx1ZXMoZGV2X3ByaXYsIHBoeSk7DQo+ICsNCj4gIAlpZiAoSU5URUxfR0VO
-KGRldl9wcml2KSA+PSAxMikgew0KPiAgCQlyZXQgJj0gY2hlY2tfcGh5X3JlZyhkZXZfcHJpdiwg
-cGh5LCBJQ0xfUE9SVF9UWF9EVzhfTE4wKHBoeSksDQo+ICAJCQkJICAgICBJQ0xfUE9SVF9UWF9E
-VzhfT0RDQ19DTEtfU0VMIHwNCj4gQEAgLTI3Niw4ICsyNzgsNiBAQCBzdGF0aWMgYm9vbCBpY2xf
-Y29tYm9fcGh5X3ZlcmlmeV9zdGF0ZShzdHJ1Y3QgZHJtX2k5MTVfcHJpdmF0ZSAqZGV2X3ByaXYs
-DQo+ICAJCQkJICAgICBEQ0NfTU9ERV9TRUxFQ1RfQ09OVElOVU9TTFkpOw0KPiAgCX0NCj4gIA0K
-PiAtCXJldCA9IGNubF92ZXJpZnlfcHJvY21vbl9yZWZfdmFsdWVzKGRldl9wcml2LCBwaHkpOw0K
-PiAtDQo+ICAJaWYgKHBoeV9pc19tYXN0ZXIoZGV2X3ByaXYsIHBoeSkpIHsNCj4gIAkJcmV0ICY9
-IGNoZWNrX3BoeV9yZWcoZGV2X3ByaXYsIHBoeSwgSUNMX1BPUlRfQ09NUF9EVzgocGh5KSwNCj4g
-IAkJCQkgICAgIElSRUZHRU4sIElSRUZHRU4pOw0KPiANCg==
+On Fri, Aug 28, 2020 at 9:15 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Aug 28, 2020 at 10:48:30AM +0100, Jonathan Cameron wrote:
+> > On Fri, 14 Aug 2020 14:47:22 -0700
+> > Atish Patra <atish.patra@wdc.com> wrote:
+> >
+> > > pcibus_to_node is used only when numa is enabled and does not depend
+> > > on ISA. Thus, it can be moved the generic numa implementation.
+> > >
+> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> >
+> > From a more general unification point of view, there seem to
+> > be two ways architectures implement this.
+> > Either
+> >
+> > bus->sysdata.node
+> >
+> > Or as here.
+> > There are weird other options, but let us ignore those :)
+> >
+> > That is going to take a bit of unwinding should we
+> > want to take this unification further and perhaps we want to think
+> > about doing this in pci generic code rather than here?
+> >
+> > Perhaps this is one we are better keeping architecture specific for
+> > now?
+> >
+> > +CC Bjorn and Linux-pci
+> >
+> >
+> > > ---
+> > >  arch/arm64/kernel/pci.c  | 10 ----------
+> > >  drivers/base/arch_numa.c | 11 +++++++++++
+> > >  2 files changed, 11 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> > > index 1006ed2d7c60..07c122946c11 100644
+> > > --- a/arch/arm64/kernel/pci.c
+> > > +++ b/arch/arm64/kernel/pci.c
+> > > @@ -54,16 +54,6 @@ int raw_pci_write(unsigned int domain, unsigned int bus,
+> > >     return b->ops->write(b, devfn, reg, len, val);
+> > >  }
+> > >
+> > > -#ifdef CONFIG_NUMA
+> > > -
+> > > -int pcibus_to_node(struct pci_bus *bus)
+> > > -{
+> > > -   return dev_to_node(&bus->dev);
+> > > -}
+> > > -EXPORT_SYMBOL(pcibus_to_node);
+> > > -
+> > > -#endif
+> > > -
+> > >  #ifdef CONFIG_ACPI
+> > >
+> > >  struct acpi_pci_generic_root_info {
+> > > diff --git a/drivers/base/arch_numa.c b/drivers/base/arch_numa.c
+> > > index 83341c807240..4ab1b20a615d 100644
+> > > --- a/drivers/base/arch_numa.c
+> > > +++ b/drivers/base/arch_numa.c
+> > > @@ -11,6 +11,7 @@
+> > >  #include <linux/acpi.h>
+> > >  #include <linux/memblock.h>
+> > >  #include <linux/module.h>
+> > > +#include <linux/pci.h>
+> > >  #include <linux/of.h>
+> > >
+> > >  #ifdef CONFIG_ARM64
+> > > @@ -60,6 +61,16 @@ EXPORT_SYMBOL(cpumask_of_node);
+> > >
+> > >  #endif
+> > >
+> > > +#ifdef CONFIG_PCI
+> > > +
+> > > +int pcibus_to_node(struct pci_bus *bus)
+> > > +{
+> > > +   return dev_to_node(&bus->dev);
+> > > +}
+> > > +EXPORT_SYMBOL(pcibus_to_node);
+> > > +
+> > > +#endif
+>
+> I certainly agree that this should not be arch-specific, but I'm not
+> really in favor of adding this PCI gunk in drivers/base.
+>
+> I think we can do better (eventually) by getting rid of
+> pcibus_to_node() completely.  It's not used very much except by
+> cpumask_of_pcibus(), which itself is hardly used at all.
+>
+I am a bit confused here. A quick grep suggested that pcibus_to_node()
+is also called from generic pci probe,
+controller and few drivers(block, infiniband) as well. Maybe I am
+missing something here ?
+
+We can move the pcibus_to_node to arch specific code for now if that's
+what is preferred.
+
+> > >  static void numa_update_cpu(unsigned int cpu, bool remove)
+> > >  {
+> > >     int nid = cpu_to_node(cpu);
+> >
+> >
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+
+
+--
+Regards,
+Atish
