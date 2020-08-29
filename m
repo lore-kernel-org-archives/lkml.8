@@ -2,99 +2,174 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3476C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 181CDC433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4BDC20707
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:16:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eatXXiu/"
+	by mail.kernel.org (Postfix) with ESMTP id E33ED207DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598721483;
+	bh=yLpc0Bq7J2kJf0h+UEQPJyey8SumotlKBh/LapBvpYA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=izAn77wx5U0HvPirV15C2ZyChORUTBfzvMbuPTAZdhpbizBF/mEeYQhSUQWQ6lk7z
+	 j+ukF0XxT1tOue2DaGB9P+b67oW/TGAdwxWkFwA6GXnPnHqswgZ4SZCgS8Adp2CK6E
+	 YR5Q4EaT0F+eA5mUoxf28spNcimLcKpp/ouSISFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgH2RQZ (ORCPT
+        id S1728192AbgH2RSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 13:16:25 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:34236 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728105AbgH2RQY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 13:16:24 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4A007303;
-        Sat, 29 Aug 2020 19:16:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1598721381;
-        bh=CU4taoOmDFFhxm8biPJdqxmXviSj+cJCy+kfWTx+v4Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eatXXiu/xs1ZWxxSvsVMx/+vF87ygwNUAh44oawI9uMl10KFjsicMvZRFIGTwAhpz
-         YtnW5N1YBXXWHfgFMfAiZH6wzmhQlxq0PpN6JMNVNJ4y155f9ed/IzRIXkI8Vebdmt
-         fcRB512voAIbAh6wmXQ1uz6O7a98B/QtmMS0hpcM=
-Date:   Sat, 29 Aug 2020 20:16:00 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju@tsinghua.edu.cn>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 08/38] media: pci: ttpci: av7110: fix
- possible buffer overflow caused by bad DMA value in debiirq()
-Message-ID: <20200829171600.GA7465@pendragon.ideasonboard.com>
-References: <20200821161807.348600-1-sashal@kernel.org>
- <20200821161807.348600-8-sashal@kernel.org>
- <20200829121020.GA20944@duo.ucw.cz>
+        Sat, 29 Aug 2020 13:18:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56696 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728105AbgH2RSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 13:18:00 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78B4820707;
+        Sat, 29 Aug 2020 17:17:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598721479;
+        bh=yLpc0Bq7J2kJf0h+UEQPJyey8SumotlKBh/LapBvpYA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HGmSJ59cXYPdz22vWtV+WQ26SjYKLY7rBhSiNCjMrOhwcSar98borkdNbN55aivzK
+         WF3Mx4aL8jhIU+KtwA9zYRkW1wQYF6NAbsSIlFWBpJsMpQzJfDdig4gmLW5049R1TM
+         ObIpu/HIYpzlxl5sS+nlU3sMXbUQIpM9xjPhKnBI=
+Date:   Sat, 29 Aug 2020 18:17:54 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Daniel Campello <campello@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Torokhov <dtor@chromium.org>
+Subject: Re: [PATCH] iio: sx9310: Prefer async probe
+Message-ID: <20200829181754.52d3cc3b@archlinux>
+In-Reply-To: <CAD=FV=W3=kRFH0TzEAX0DWS7jb113LuWUJqVS686EyRzexvoRA@mail.gmail.com>
+References: <20200828170052.1.Id02b2f451b3eed71ddd580f4b8b44b3e33e84970@changeid>
+        <20200829161230.398e0051@archlinux>
+        <CAD=FV=W3=kRFH0TzEAX0DWS7jb113LuWUJqVS686EyRzexvoRA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200829121020.GA20944@duo.ucw.cz>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 02:10:20PM +0200, Pavel Machek wrote:
-> Hi!
+On Sat, 29 Aug 2020 09:56:41 -0700
+Doug Anderson <dianders@chromium.org> wrote:
+
+> Hi,
 > 
-> > The value av7110->debi_virt is stored in DMA memory, and it is assigned
-> > to data, and thus data[0] can be modified at any time by malicious
-> > hardware. In this case, "if (data[0] < 2)" can be passed, but then
-> > data[0] can be changed into a large number, which may cause buffer
-> > overflow when the code "av7110->ci_slot[data[0]]" is used.
-> > 
-> > To fix this possible bug, data[0] is assigned to a local variable, which
-> > replaces the use of data[0].
-> 
-> I'm pretty sure hardware capable of manipulating memory can work
-> around any such checks, but...
-> 
-> > +++ b/drivers/media/pci/ttpci/av7110.c
-> > @@ -424,14 +424,15 @@ static void debiirq(unsigned long cookie)
-> >  	case DATA_CI_GET:
-> >  	{
-> >  		u8 *data = av7110->debi_virt;
-> > +		u8 data_0 = data[0];
+> On Sat, Aug 29, 2020 at 8:12 AM Jonathan Cameron <jic23@kernel.org> wrote:
+> >
+> > On Fri, 28 Aug 2020 17:01:18 -0700
+> > Douglas Anderson <dianders@chromium.org> wrote:
 > >  
-> > -		if ((data[0] < 2) && data[2] == 0xff) {
-> > +		if (data_0 < 2 && data[2] == 0xff) {
-> >  			int flags = 0;
-> >  			if (data[5] > 0)
-> >  				flags |= CA_CI_MODULE_PRESENT;
-> >  			if (data[5] > 5)
-> >  				flags |= CA_CI_MODULE_READY;
-> > -			av7110->ci_slot[data[0]].flags = flags;
-> > +			av7110->ci_slot[data_0].flags = flags;
+> > > On one board I found that:
+> > >   probe of 5-0028 returned 1 after 259547 usecs
+> > >
+> > > There's no reason to block probe of all other devices on our probe.
+> > > Turn on async probe.
+> > >
+> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > ---
+> > > NOTE: I haven't done any analysis of the driver to see _why_ it's so
+> > > slow, only that I have measured it to be slow.  Someone could
+> > > certainly take the time to profile / optimize it, but in any case it
+> > > still won't hurt to be async.  
+> >
+> > Hmm. It is vanishingly rare to use that flag  
 > 
-> This does not even do what it says. Compiler is still free to access
-> data[0] multiple times. It needs READ_ONCE() to be effective.
+> My guess is that people just haven't been spending as much time
+> optimizing boot performance recently.  I've been trying to do this and
+> finding that there are quite a few drivers that could benefit from
+> this flag.
+> 
+> In theory this flag should probably be on by default and it looks like
+> that was Dmitry's original intention but the state of the world 5
+> years ago was that it wasn't quite ready for this.  I think, in
+> particular, drivers that are more core to the system (IOMMUs, clocks,
+> regulators, etc) may not have been ready, but misc peripherals should
+> be no problem.
 
-Yes, it seems quite dubious to me. If we *really* want to guard against
-rogue hardware here, the whole DMA buffer should be copied. I don't
-think it's worth it, a rogue PCI device can do much more harm.
+That fits with my understanding.  Would be great to have it on
+by default though I guess it could make for some really hard to debug
+race conditions.
 
--- 
-Regards,
 
-Laurent Pinchart
+> 
+> 
+> > so I'm not particularly
+> > keen on starting to deploy it when we don't know why a particular
+> > driver is taking so long.  I agree it should be safe but I don't
+> > like oddities I don't understand!
+> >
+> > There are some sleeps in there but they are all of the order of a few
+> > msecs.
+> >
+> > Could it be there is a regulator that is coming up very slowly?
+> >
+> > Any other ideas?  
+> 
+> I can do a little bit of profiling next week, but even if we get this
+> down from 250 ms to 10 ms I'd still like to see async probe turned on.
+> There's no reason for it to be off and every little bit counts.
+Agreed. However, I'd like a comment next to the place we turn it on
+saying what delays we are trying to mitigate by enabling it in this
+driver.
+
+Jonathan
+
+> 
+> 
+> > Jonathan
+> >  
+> > >
+> > > This is a very safe flag to turn on since:
+> > >
+> > > 1. It's not like our probe order was defined by anything anyway.  When
+> > > we probe is at the whim of when our i2c controller probes and that can
+> > > be any time.
+> > >
+> > > 2. If some other driver needs us then they have to handle the fact
+> > > that we might not have probed yet anyway.
+> > >
+> > > 3. There may be other drivers probing at the same time as us anyway
+> > > because _they_ used async probe.
+> > >
+> > > While I won't say that it's impossible to tickle a bug by turning on
+> > > async probe, I would assert that in almost all cases the bug was
+> > > already there and needed to be fixed anyway.
+> > >
+> > > ALSO NOTE: measurement / testing was done on the downstream Chrome OS
+> > > 5.4 tree.  I confirmed compiling on mainline.
+> > >
+> > >  drivers/iio/proximity/sx9310.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> > > index dc2e11b43431..444cafc53408 100644
+> > > --- a/drivers/iio/proximity/sx9310.c
+> > > +++ b/drivers/iio/proximity/sx9310.c
+> > > @@ -1054,6 +1054,7 @@ static struct i2c_driver sx9310_driver = {
+> > >               .acpi_match_table = ACPI_PTR(sx9310_acpi_match),
+> > >               .of_match_table = of_match_ptr(sx9310_of_match),
+> > >               .pm = &sx9310_pm_ops,
+> > > +             .probe_type = PROBE_PREFER_ASYNCHRONOUS,
+> > >       },
+> > >       .probe          = sx9310_probe,
+> > >       .id_table       = sx9310_id,  
+> >  
+
