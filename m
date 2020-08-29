@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13360C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB307C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7B49206C0
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7778206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598688941;
-	bh=++1G+Sr6mB9yr4kwl1CXOBqWxRcJgZQEnLi2Io/oYG4=;
+	s=default; t=1598688944;
+	bh=z4iOJDs0jRU6p7okLCjDZ4/U88SsxRUpNrxZPI5c2/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0CJPM26qy319y+SL1mLAYPU3eZJSI3c5AqkPeUZXx07hCLQDdCCb6okblV+CxXuGU
-	 VHcxKKekqYJl+bqO6UxRIwjVPED0jbuEiF/8Qdlz6MEVnFpd/qbfddnmfLUT/1yEgb
-	 GckgBrfsHDWt7OPIRtV3gzzq/2lVi94bjxxpP7Bs=
+	b=drejAsQtjr443fCLGEKc/N7YKUmOL74iMAh/7OhDdqsdtf/0ydjzNwTffuZk7r/W7
+	 TW8kquSMPqzr/pgcqjnYKD4WWyxbPUDWhvLM1TYYyEVc4tYFCRptHfIKnRGv+E/cTI
+	 RV3xUROfuyExC7GMKOT/WMUl79rMGGeQtSSPr51M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgH2IPk (ORCPT
+        id S1728009AbgH2IPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 29 Aug 2020 04:15:40 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:47602 "EHLO
+Received: from conuserg-09.nifty.com ([210.131.2.76]:47668 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbgH2IO6 (ORCPT
+        with ESMTP id S1727783AbgH2IPA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 04:14:58 -0400
+        Sat, 29 Aug 2020 04:15:00 -0400
 Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 07T8ELfr014307;
-        Sat, 29 Aug 2020 17:14:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 07T8ELfr014307
+        by conuserg-09.nifty.com with ESMTP id 07T8ELfk014307;
+        Sat, 29 Aug 2020 17:14:23 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 07T8ELfk014307
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1598688867;
-        bh=DJwawnqNEjOuongm+fSBHgHFb7bZ8vPqaDUmQxjHe+s=;
+        s=dec2015msa; t=1598688863;
+        bh=VahKc/HaFNgT2RmugNFqwontBaR0a5S/rVJo6WlbKPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eTyFit+u2E1/kXGLPVJ99i12ni1JGLB+5TRkOeCz/W/1hBSRt3Fao5sisYnG9U0ZM
-         ATiEVVuVWfNYiSqQOGC4PV+378nStQHKuySjpgRzIJ5+XiVZAZqUJMH6LDu4oMS9I4
-         u5jPI4NctKByHCOl+ArfkHtg53KsMu/bh537/4KhmX1/fpCQ+lwuOUDRa7JXIkoBmT
-         SB9dtR6CQyclxbBw8vIYg4efdayhKUgx5djnhF+0I9Ig2UeGutL7PK9E9L4rVJ5PBA
-         npF0s34njjel/vvat3WCizkENr1ju6mrdhuF6NRqw0MI7V+/TuCWkHK4eQ4eZvVIX6
-         0GkHP84Za+A9g==
+        b=SxsCo4g9jl4ROcSTJB83LV7uXomkh97YCLnGp6ZtnjopES0Ff9T/vCG4Nj6Neal2o
+         UMBnc7CcQwgggsTnhfuK87D1cRCEbGGa38bVjlR3slRV5KfuJn964TGzwpKCTLFwmx
+         HeeSyEt/OSFOFobBlnowbZ9BbQolpbzS0xF3EMM61abfnPX/K6AIcP5+t6mZxGg/2r
+         PXGvr4B2c+yU7+EkyfBxSo0gGF9b4SxM7R6ZkON0ssoBEUeI8+LmUPFQ3cXlY01Rb8
+         o8g1NmGzzmzjawMgx8u6qaMaDD16ubKZkqEJjMQuPZ1PDVFJFgM6Ocv0paaW4VNS8C
+         qpWmRIG2X5DKQ==
 X-Nifty-SrcIP: [126.90.211.135]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -49,9 +49,9 @@ Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 11/11] kconfig: qconf: create QApplication after option checks
-Date:   Sat, 29 Aug 2020 17:14:17 +0900
-Message-Id: <20200829081417.725978-11-masahiroy@kernel.org>
+Subject: [PATCH 04/11] kconfig: qconf: move ConfigView::updateList(All) to ConfigList class
+Date:   Sat, 29 Aug 2020 17:14:10 +0900
+Message-Id: <20200829081417.725978-4-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200829081417.725978-1-masahiroy@kernel.org>
 References: <20200829081417.725978-1-masahiroy@kernel.org>
@@ -62,39 +62,208 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'scripts/kconfig/qconf -h' just calls usage() and exits, with
-QApplication unused.
+ConfigView::updateList() iterates over all views, and then calls
+updateList() against for its ConfigList instance.
 
-There is no need to construct QApplication so early. Do it after
-the parse stage.
+This means there is no point to implement it in the ConfigView class.
+
+Move and rename as follows:
+
+  ConfigView::updateList()     -> ConfigList::updateListForAll()
+  ConfigView::updateListAll()  -> ConfigList::updateListAllForAll()
+
+I used QList to contain all ConfigList instances.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/kconfig/qconf.cc | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ scripts/kconfig/qconf.cc | 70 +++++++++++++++++++---------------------
+ scripts/kconfig/qconf.h  | 11 +++----
+ 2 files changed, 39 insertions(+), 42 deletions(-)
 
 diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 09e98814485a..beaed6d177bb 100644
+index 278c04de11ec..035101984bd3 100644
 --- a/scripts/kconfig/qconf.cc
 +++ b/scripts/kconfig/qconf.cc
-@@ -1846,7 +1846,6 @@ int main(int ac, char** av)
- 	const char *name;
+@@ -274,7 +274,7 @@ void ConfigLineEdit::keyPressEvent(QKeyEvent* e)
+ 	case Qt::Key_Return:
+ 	case Qt::Key_Enter:
+ 		sym_set_string_value(item->menu->sym, text().toLatin1());
+-		parent()->updateList();
++		ConfigList::updateListForAll();
+ 		break;
+ 	default:
+ 		Parent::keyPressEvent(e);
+@@ -315,9 +315,16 @@ ConfigList::ConfigList(ConfigView* p, const char *name)
  
- 	progname = av[0];
--	configApp = new QApplication(ac, av);
- 	if (ac > 1 && av[1][0] == '-') {
- 		switch (av[1][1]) {
- 		case 's':
-@@ -1867,6 +1866,8 @@ int main(int ac, char** av)
- 	conf_read(NULL);
- 	//zconfdump(stdout);
+ 	showColumn(promptColIdx);
  
-+	configApp = new QApplication(ac, av);
++	allLists.append(this);
 +
- 	configSettings = new ConfigSettings();
- 	configSettings->beginGroup("/kconfig/qconf");
- 	v = new ConfigMainWindow();
+ 	reinit();
+ }
+ 
++ConfigList::~ConfigList()
++{
++	allLists.removeOne(this);
++}
++
+ bool ConfigList::menuSkip(struct menu *menu)
+ {
+ 	if (optMode == normalOpt && menu_is_visible(menu))
+@@ -454,6 +461,28 @@ update:
+ 	resizeColumnToContents(0);
+ }
+ 
++void ConfigList::updateListForAll()
++{
++	QListIterator<ConfigList *> it(allLists);
++
++	while (it.hasNext()) {
++		ConfigList *list = it.next();
++
++		list->updateList();
++	}
++}
++
++void ConfigList::updateListAllForAll()
++{
++	QListIterator<ConfigList *> it(allLists);
++
++	while (it.hasNext()) {
++		ConfigList *list = it.next();
++
++		list->updateList();
++	}
++}
++
+ void ConfigList::setValue(ConfigItem* item, tristate val)
+ {
+ 	struct symbol* sym;
+@@ -474,7 +503,7 @@ void ConfigList::setValue(ConfigItem* item, tristate val)
+ 			return;
+ 		if (oldval == no && item->menu->list)
+ 			item->setExpanded(true);
+-		parent()->updateList();
++		ConfigList::updateListForAll();
+ 		break;
+ 	}
+ }
+@@ -508,7 +537,7 @@ void ConfigList::changeValue(ConfigItem* item)
+ 				item->setExpanded(true);
+ 		}
+ 		if (oldexpr != newexpr)
+-			parent()->updateList();
++			ConfigList::updateListForAll();
+ 		break;
+ 	case S_INT:
+ 	case S_HEX:
+@@ -904,7 +933,7 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
+ 	e->accept();
+ }
+ 
+-ConfigView*ConfigView::viewList;
++QList<ConfigList *> ConfigList::allLists;
+ QAction *ConfigList::showNormalAction;
+ QAction *ConfigList::showAllAction;
+ QAction *ConfigList::showPromptAction;
+@@ -921,21 +950,6 @@ ConfigView::ConfigView(QWidget* parent, const char *name)
+ 	lineEdit = new ConfigLineEdit(this);
+ 	lineEdit->hide();
+ 	verticalLayout->addWidget(lineEdit);
+-
+-	this->nextView = viewList;
+-	viewList = this;
+-}
+-
+-ConfigView::~ConfigView(void)
+-{
+-	ConfigView** vp;
+-
+-	for (vp = &viewList; *vp; vp = &(*vp)->nextView) {
+-		if (*vp == this) {
+-			*vp = nextView;
+-			break;
+-		}
+-	}
+ }
+ 
+ void ConfigView::setShowName(bool b)
+@@ -976,22 +990,6 @@ void ConfigList::setAllOpen(bool open)
+ 	}
+ }
+ 
+-void ConfigView::updateList()
+-{
+-	ConfigView* v;
+-
+-	for (v = viewList; v; v = v->nextView)
+-		v->list->updateList();
+-}
+-
+-void ConfigView::updateListAll(void)
+-{
+-	ConfigView* v;
+-
+-	for (v = viewList; v; v = v->nextView)
+-		v->list->updateListAll();
+-}
+-
+ ConfigInfoView::ConfigInfoView(QWidget* parent, const char *name)
+ 	: Parent(parent), sym(0), _menu(0)
+ {
+@@ -1600,7 +1598,7 @@ void ConfigMainWindow::loadConfig(void)
+ 	free(configname);
+ 	configname = xstrdup(name);
+ 
+-	ConfigView::updateListAll();
++	ConfigList::updateListAllForAll();
+ }
+ 
+ bool ConfigMainWindow::saveConfig(void)
+diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
+index d41670f322b3..818e00617ae3 100644
+--- a/scripts/kconfig/qconf.h
++++ b/scripts/kconfig/qconf.h
+@@ -44,6 +44,7 @@ class ConfigList : public QTreeWidget {
+ 	typedef class QTreeWidget Parent;
+ public:
+ 	ConfigList(ConfigView* p, const char *name = 0);
++	~ConfigList();
+ 	void reinit(void);
+ 	ConfigItem* findConfigItem(struct menu *);
+ 	ConfigView* parent(void) const
+@@ -108,6 +109,10 @@ public slots:
+ 	QPalette inactivedColorGroup;
+ 	QMenu* headerPopup;
+ 
++	static QList<ConfigList *> allLists;
++	static void updateListForAll();
++	static void updateListAllForAll();
++
+ 	static QAction *showNormalAction, *showAllAction, *showPromptAction;
+ };
+ 
+@@ -188,9 +193,6 @@ class ConfigView : public QWidget {
+ 	typedef class QWidget Parent;
+ public:
+ 	ConfigView(QWidget* parent, const char *name = 0);
+-	~ConfigView(void);
+-	static void updateList();
+-	static void updateListAll(void);
+ 
+ 	bool showName(void) const { return list->showName; }
+ 	bool showRange(void) const { return list->showRange; }
+@@ -206,9 +208,6 @@ public slots:
+ public:
+ 	ConfigList* list;
+ 	ConfigLineEdit* lineEdit;
+-
+-	static ConfigView* viewList;
+-	ConfigView* nextView;
+ };
+ 
+ class ConfigInfoView : public QTextBrowser {
 -- 
 2.25.1
 
