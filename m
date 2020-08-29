@@ -2,89 +2,96 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58243C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3439C433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36C0A207BB
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:24:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pLldZGWX"
+	by mail.kernel.org (Postfix) with ESMTP id C812D207BB
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:25:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgH2HYP (ORCPT
+        id S1727069AbgH2HZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 03:24:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43604 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgH2HYM (ORCPT
+        Sat, 29 Aug 2020 03:25:58 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:40752 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726105AbgH2HZz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 03:24:12 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECAEEC061236;
-        Sat, 29 Aug 2020 00:24:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=b660aar3g6/JJYoLm+eUfNa34ts9ix4M3QDleqnb3gw=; b=pLldZGWXJimg9P6mCsRrKFdTvx
-        +tWqoU3zirJpqHj3nuY9IUdwAoEZ8YOdTXpXJWJtn9vvTq/wqjz41X/A/k2SYiOsqE4IUDymkW8DO
-        xUYByzEanMFhZnR3d7nZvrz5zl05p9eCYDHPcCf1L86lgms0eK3T6ypnKnZJWC2AThGDDT3jAp5+8
-        XXQRTrWOljEIBxOAq7tKEILzHXZ/qONGxGMGuBT8j4ke8Ag3Mgm4yFf3hhbW+xDNnLKBNlkB0yEU/
-        MJQaMlooU3V6aQYg3TP7bin0Ow487p2hXtDdW57xRAhHa+rddzTvDyu3OP1lt+6kQejtHiLIUxjtk
-        q2cL9stg==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBvDZ-0001qk-Bp; Sat, 29 Aug 2020 07:24:05 +0000
-Date:   Sat, 29 Aug 2020 08:24:05 +0100
-From:   "hch@infradead.org" <hch@infradead.org>
-To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>
-Cc:     "hch@infradead.org" <hch@infradead.org>,
-        "Derrick, Jonathan" <jonathan.derrick@intel.com>,
-        "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Huffman, Amber" <amber.huffman@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Message-ID: <20200829072405.GB6704@infradead.org>
-References: <20200821123222.32093-1-kai.heng.feng@canonical.com>
- <20200825062320.GA27116@infradead.org>
- <cd5aa2fef13f14b30c139d03d5256cf93c7195dc.camel@intel.com>
- <20200827063406.GA13738@infradead.org>
- <660c8671a51eec447dc7fab22bacbc9c600508d9.camel@intel.com>
- <20200827162333.GA6822@infradead.org>
- <DM6PR19MB2636ACECA16E43638B502A6DFA550@DM6PR19MB2636.namprd19.prod.outlook.com>
+        Sat, 29 Aug 2020 03:25:55 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 6716720026;
+        Sat, 29 Aug 2020 09:25:51 +0200 (CEST)
+Date:   Sat, 29 Aug 2020 09:25:49 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        agx@sigxcpu.org, lukas@mntmn.com
+Subject: Re: [PATCH v9 0/5] Add support for iMX8MQ Display Controller
+ Subsystem
+Message-ID: <20200829072549.GA729648@ravnborg.org>
+References: <20200731081836.3048-1-laurentiu.palcu@oss.nxp.com>
+ <20200828083620.6m5yhcv7rg5tckzh@fsr-ub1864-141>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DM6PR19MB2636ACECA16E43638B502A6DFA550@DM6PR19MB2636.namprd19.prod.outlook.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200828083620.6m5yhcv7rg5tckzh@fsr-ub1864-141>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=CaYmGojl c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8 a=FA2L6XnpJxR8pNLPXI4A:9
+        a=CjuIK1q_8ugA:10 a=xlwrDsRaDpwA:10 a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 05:49:40PM +0000, Limonciello, Mario wrote:
-> Can you further elaborate what exactly you're wanting here?  VMD enable/disable
-> is something that is configured in firmware setup as the firmware does the early
-> configuration for the silicon related to it.  So it's up to the OEM whether to
-> offer the knob to an end user.
-> 
-> At least for Dell this setting also does export to sysfs and can be turned on/off
-> around a reboot cycle via this: https://patchwork.kernel.org/patch/11693231/.
-> 
-> As was mentioned earlier in this thread VMD is likely to be defaulting to "on"
-> for many machines with the upcoming silicon.  Making it work well on Linux is
-> preferable to again having to change firmware settings between operating systems
-> like the NVME remapping thing from earlier silicon required.
+Hi Laurentiu.
 
-And the right answer is to turn it off, but we really need to do that
-at runtime, and not over a reboot cycle..
+> As to who is going to do the actual merge, I know we had a brief
+> discussion about it some time ago and I was supposed to apply for
+> drm-misc rights, however it feels a little awkward to merge my own
+> code... :)
+
+You are encouraged to commit your own code, it is anyway you who knows
+the state of the code best. The golden rule is that the code must have
+been seen by somone else before you merge, are translated there must be
+an acked-by or reviewed-by on each of the patches.
+
+If you look at ths page:
+
+    https://people.freedesktop.org/~seanpaul/whomisc.html
+
+You can see that a lot of people commit their own code in drm-misc.
+Example:
+
+    Daniel Vetter <daniel.vetter@ffwll.ch>, <daniel@ffwll.ch>
+    (authored=159 committed=249 self_committed=153)
+
+There is only a few patches written by Daniel that is committed by
+someone else. And all patches committed by Daniel carries an
+a-b or -rb by someone else.
+
+> Though, I might not even qualify for drm-misc rights anyway,
+> considering I haven't been very active in this area... :/
+> 
+> On that note, I will probably need help with the merging, provided it's
+> still happenning. Will you be able to help me out with this?
+
+If the challenge is only to push the patches to drm-misc-next there
+is a lot of people that can help you. I would be happy to do so, but
+would need a resend as I have deleted the patches from my inbox.
+
+I could dig the pathces out somewhere else, but a fresh rebase would
+be preferred.
+
+	Sam
