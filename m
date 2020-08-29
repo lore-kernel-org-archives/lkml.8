@@ -7,116 +7,88 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7507C433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFA2C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB2ED21527
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE0642074A
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598700592;
-	bh=B9VCR1gc3mVExEe2V499pC1prwSxp/+jhKu43FvTLNU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=yFIoDwDnaJKDmCyRDSALb13jkeydo15zENaTEnYR321kC7wn0cZARQQPZa+NcC+qy
-	 bJx/+AeAbgcXB/nRDgncx8SsVbVGk/6ZNe22gRXRYfcvym58LI0ycS+rPVeC3hqh7n
-	 PuktoVOGnfEbmH9hGVWN3vSqKIL56txH6fU0+tYQ=
+	s=default; t=1598700921;
+	bh=2emrk9nWcHdZwtEWl6g9xE6oJ+XCSa1tCDNmi6l6hH0=;
+	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=huoipI1F//nnb8DJye0NUt2Kv9CXA/JY5hfAFn6lQA22KP2TZ1f8XZXIyehkN/qoS
+	 lpXWky6uTyUfOaQLX994y3hYEID4tCZTyNljHsQgxFzmbjlQ+UiCxZJygLnmnZti+s
+	 fdOAec2jxuqAb55yON9Y2UWKXb8esyAiU3ZhbxMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbgH2L3v (ORCPT
+        id S1728090AbgH2LeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 07:29:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46396 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 07:34:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727999AbgH2L2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 07:28:06 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727863AbgH2La1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 07:30:27 -0400
+Received: from localhost.localdomain (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D427F214DB;
-        Sat, 29 Aug 2020 11:26:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FC0520848;
+        Sat, 29 Aug 2020 11:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598700369;
-        bh=B9VCR1gc3mVExEe2V499pC1prwSxp/+jhKu43FvTLNU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=zYwTfmnLzGYjYC7cBwL7UWSG8ImGKC3qfcDFucsRDuTTUP+MyQbSwuPojkS94jtBk
-         mQsz9/czKDf45ZLMs/uyQ42zTe3k7muKVy41rHIhwzRi3k+fA6irRUjjL6fJKHwhLH
-         v2NToLsTGTK2FN1AB+sRkSDYJA/BnetkQhQIJRPc=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kByzm-007dRY-Ra; Sat, 29 Aug 2020 12:26:07 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, kernel-team@android.com
-Subject: [PATCH] HID: core: Correctly handle ReportSize being zero
-Date:   Sat, 29 Aug 2020 12:26:01 +0100
-Message-Id: <20200829112601.1060527-1-maz@kernel.org>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: jikos@kernel.org, benjamin.tissoires@redhat.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        s=default; t=1598699896;
+        bh=2emrk9nWcHdZwtEWl6g9xE6oJ+XCSa1tCDNmi6l6hH0=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=aEzukWtliodAo4wqt/4B3TOMklS8BkREIBc68oRYTH7VTovxodw+0OgadqJ/DJmsh
+         BBNzscYqr3Yojx3j0UIz2O2Quy8VMmW47HTffMqrPtwKpCCnBQVB4K/ALrCMXup/3A
+         Uj4gYTYkB0E9mKlVgR7Kg4cFYigv3526rZIerZhM=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Wolfram Sang <wolfram@the-dreams.de>,
+        Dong Aisheng <aisheng.dong@nxp.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: [PATCH 3/7] dt-bindings: mailbox: fsl,mu: Use unevaluatedProperties
+Date:   Sat, 29 Aug 2020 13:17:56 +0200
+Message-Id: <20200829111800.2786-3-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200829111800.2786-1-krzk@kernel.org>
+References: <20200829111800.2786-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It appears that a ReportSize value of zero is legal, even if a bit
-non-sensical. Most of the HID code seems to handle that gracefully,
-except when computing the total size in bytes. When fed as input to
-memset, this leads to some funky outcomes.
+Additional properties actually might appear (e.g. power-domains) so use
+unevaluatedProperties to fix dtbs_check warnings like:
 
-Detect the corner case and correctly compute the size.
+  arch/arm64/boot/dts/freescale/imx8qxp-mek.dt.yaml:
+    mailbox@5d280000: 'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/hid/hid-core.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/mailbox/fsl,mu.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 359616e3efbb..d2ecc9c45255 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -1597,6 +1597,17 @@ static void hid_output_field(const struct hid_device *hid,
- 	}
- }
+diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.yaml b/Documentation/devicetree/bindings/mailbox/fsl,mu.yaml
+index 7ed096360be2..3ce6cd0ea173 100644
+--- a/Documentation/devicetree/bindings/mailbox/fsl,mu.yaml
++++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.yaml
+@@ -78,7 +78,7 @@ required:
+   - interrupts
+   - "#mbox-cells"
  
-+/*
-+ * Compute the size of a report.
-+ */
-+static size_t hid_compute_report_size(struct hid_report *report)
-+{
-+	if (report->size)
-+		return ((report->size - 1) >> 3) + 1;
-+
-+	return 0;
-+}
-+
- /*
-  * Create a report. 'data' has to be allocated using
-  * hid_alloc_report_buf() so that it has proper size.
-@@ -1609,7 +1620,7 @@ void hid_output_report(struct hid_report *report, __u8 *data)
- 	if (report->id > 0)
- 		*data++ = report->id;
+-additionalProperties: false
++unevaluatedProperties: false
  
--	memset(data, 0, ((report->size - 1) >> 3) + 1);
-+	memset(data, 0, hid_compute_report_size(report));
- 	for (n = 0; n < report->maxfield; n++)
- 		hid_output_field(report->device, report->field[n], data);
- }
-@@ -1739,7 +1750,7 @@ int hid_report_raw_event(struct hid_device *hid, int type, u8 *data, u32 size,
- 		csize--;
- 	}
- 
--	rsize = ((report->size - 1) >> 3) + 1;
-+	rsize = hid_compute_report_size(report);
- 
- 	if (report_enum->numbered && rsize >= HID_MAX_BUFFER_SIZE)
- 		rsize = HID_MAX_BUFFER_SIZE - 1;
+ examples:
+   - |
 -- 
-2.27.0
+2.17.1
 
