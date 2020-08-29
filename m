@@ -2,141 +2,132 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB0EC433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4DBC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB19C20707
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:53:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="svvnXsQE"
+	by mail.kernel.org (Postfix) with ESMTP id 4ECC820707
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:53:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598716405;
+	bh=Qqj02Lv0IUCa5p5sPcWrTdOrlwUiunqaS/VUy5b1CQ8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Vgho2WGNImuU9IBU3fitB4cXFl/sMFOHmdPWU/aaU/BkVrLBWVcTJp6agnkfIbc+U
+	 MpI/n4PtkTDFlgW/8oOLIAboFlOvffQrBwvLmKvshQvoO0QLFq0vB6S9zqDONcIh7w
+	 2GbTyI5AiObBwKKAIP1uL666nC2DID2dSy0mpOEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgH2Pwz (ORCPT
+        id S1728416AbgH2PxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 11:52:55 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:60342 "EHLO m43-7.mailgun.net"
+        Sat, 29 Aug 2020 11:53:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728310AbgH2Pwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 11:52:45 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598716365; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=w+hd4TjghSShhgFkfzUSoPKt3rG3sRSmRVLXY4b56fM=;
- b=svvnXsQET404vEZtvWLZWBorjLnemIUWUSmoBDND4/5wda26Da6v8fVz+wpXzaFlV+EmXFew
- 2Kl0AsK8URHZRXMT/qVOnA2W6GwiJGetp89fAOJbxbWQmHOR+MpwpN9aZDia8EnkX+lohiKY
- jIDG1PVSNClfi2hwci5Xh8tRIkE=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5f4a79c1bdef49b8a8bf93ef (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sat, 29 Aug 2020 15:52:33
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E4566C433A0; Sat, 29 Aug 2020 15:52:32 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id S1728375AbgH2PxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 11:53:15 -0400
+Received: from localhost (p5486cb47.dip0.t-ipconnect.de [84.134.203.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: wgong)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 24B5CC433CA;
-        Sat, 29 Aug 2020 15:52:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05D6820707;
+        Sat, 29 Aug 2020 15:53:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598716392;
+        bh=Qqj02Lv0IUCa5p5sPcWrTdOrlwUiunqaS/VUy5b1CQ8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Nn7kzJ5P7WCaEJFao9Tcvqb6W7w3j9T9OJyhSqsrJsoGr1VhuH9gViNQD26nXuOs2
+         2+mNS0G5nyhbmEpdwBRJ8an7qmIjeS4mifJy3VOAdxBJXfkQ6PG79j8GaQ1Y8N0YI4
+         0r/eCU7t9OZHl2i8oXs9s5OBw2/TECwdSSomHxmg=
+Date:   Sat, 29 Aug 2020 17:53:07 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PULL REQUEST] i2c for v5.9
+Message-ID: <20200829155302.GA1147@ninjato>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sat, 29 Aug 2020 23:52:32 +0800
-From:   Wen Gong <wgong@codeaurora.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-kernel-owner@vger.kernel.org, ath10k@lists.infradead.org,
-        ath11k@lists.infradead.org, abhishekpandit@google.com,
-        briannorris@google.com, drinkcat@google.com, tientzu@google.com
-Subject: Re: [for-next][PATCH 2/2] tracing: Use temp buffer when filtering
- events
-In-Reply-To: <20200828185538.1761f93d@oasis.local.home>
-References: <20160504135202.422290539@goodmis.org>
- <20160504135241.308454993@goodmis.org>
- <b504b3d7e989cae108669a0cd3072454@codeaurora.org>
- <20200828184955.6de9b54e@oasis.local.home>
- <20200828185450.101ebd09@oasis.local.home>
- <20200828185538.1761f93d@oasis.local.home>
-Message-ID: <f16b14066317f6a926b6636df6974966@codeaurora.org>
-X-Sender: wgong@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-29 06:55, Steven Rostedt wrote:
-> On Fri, 28 Aug 2020 18:54:50 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
->> On Fri, 28 Aug 2020 18:49:55 -0400
->> Steven Rostedt <rostedt@goodmis.org> wrote:
->> 
->> > On Fri, 28 Aug 2020 15:53:06 +0800
->> > Wen Gong <wgong@codeaurora.org> wrote:
->> >
->> > > this patch commit id is : 0fc1b09ff1ff404ddf753f5ffa5cd0adc8fdcdc9 which
->> > > has upstream.
->> > >
->> > > how much size is the per cpu buffer?
->> > > seems it is initilized in trace_buffered_event_enable,
->> > > it is only 1 page size as below:
->> > > void trace_buffered_event_enable(void)
->> > > {
->> > > ...
->> > > 	for_each_tracing_cpu(cpu) {
->> > > 		page = alloc_pages_node(cpu_to_node(cpu),
->> > > 					GFP_KERNEL | __GFP_NORETRY, 0);
->> > > If the size of buffer to trace is more than 1 page, such as 46680, then
->> > > it trigger kernel crash/panic in my case while run trace-cmd.
->> > > After debugging, the trace_file->flags in
->> > > trace_event_buffer_lock_reserve is 0x40b while run trace-cmd, and it is
->> > > 0x403 while collecting ftrace log.
->> > >
->> > > Is it have any operation to disable this patch dynamically?
->> >
->> > It shouldn't be disabled, this is a bug that needs to be fixed.
->> >
->> > Also, if an event is more than a page, it wont be saved in the ftrace
->> > ring buffer, as events are limited by page size minus the headers.
->> >
->> 
->> Untested (not even compiled, as I'm now on PTO) but does this patch
->> work for you?
->> 
->> -- Steve
->> 
->> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
->> index f40d850ebabc..3a9b4422e7fc 100644
->> --- a/kernel/trace/trace.c
->> +++ b/kernel/trace/trace.c
->> @@ -2598,7 +2598,7 @@ trace_event_buffer_lock_reserve(struct 
->> trace_buffer **current_rb,
->>  	    (entry = this_cpu_read(trace_buffered_event))) {
->>  		/* Try to use the per cpu buffer first */
->>  		val = this_cpu_inc_return(trace_buffered_event_cnt);
->> -		if (val == 1) {
->> +		if (val == 1 || (len > (PAGE_SIZE - 8))) {
-> 
-> That was suppose to be:
-> 
-> 		if (val == 1 && (len < (PAGE_SIZE - 8))) {
-> 
-> -- Steve
-Thanks Steve!
 
-If change like this, I think it will fix my issue of crash.
-Will you commit this change?
-> 
->>  			trace_event_setup(entry, type, flags, pc);
->>  			entry->array[0] = len;
->>  			return entry;
+--NzB8fVQJ5HfG6fxh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Linus,
+
+I2C has a core fix for ACPI matching and two driver bugfixes.
+
+Please pull.
+
+Thanks,
+
+   Wolfram
+
+
+The following changes since commit d012a7190fc1fd72ed48911e77ca97ba4521bccd:
+
+  Linux 5.9-rc2 (2020-08-23 14:08:43 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-current
+
+for you to fetch changes up to 0204081128d582965e9e39ca83ee6e4f7d27142b:
+
+  i2c: iproc: Fix shifting 31 bits (2020-08-25 09:46:38 +0200)
+
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      i2c: core: Don't fail PRP0001 enumeration when no ID table exist
+      i2c: acpi: Remove dead code, i.e. i2c_acpi_match_device()
+
+Ray Jui (1):
+      i2c: iproc: Fix shifting 31 bits
+
+Wolfram Sang (1):
+      i2c: rcar: in slave mode, clear NACK earlier
+
+
+with much appreciated quality assurance from
+----------------------------------------------------------------
+Mika Westerberg (2):
+      (Rev.) i2c: acpi: Remove dead code, i.e. i2c_acpi_match_device()
+      (Rev.) i2c: core: Don't fail PRP0001 enumeration when no ID table exist
+
+ drivers/i2c/busses/i2c-bcm-iproc.c |  4 ++--
+ drivers/i2c/busses/i2c-rcar.c      |  1 +
+ drivers/i2c/i2c-core-acpi.c        | 10 ----------
+ drivers/i2c/i2c-core-base.c        |  2 +-
+ drivers/i2c/i2c-core.h             |  9 ---------
+ 5 files changed, 4 insertions(+), 22 deletions(-)
+
+--NzB8fVQJ5HfG6fxh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9KedoACgkQFA3kzBSg
+KbaeSg//eewASwN0xa1Da5my5CE1Q77LLQKpdNq0cMAaXle+pqt9aEdD3KvAP1Th
+5lBCN8CEcAcDPMjaiLoTAIc1RpFucT4dht6L8V49mXqRA/QfpRW7YGWBCGzxyi+H
+/QGXCag6DuHmA5TP5+DF1/OUbDEKyfkOWRILnlhn0yorl+nOfxeoWGkjL/XrGKI8
+3Aca65HhsHj2x9UXJy97IvPdD03zlKBuSC/I5TuPKuCMQvi7icbjhI40hgD4xLQM
+NjLqCrXZC9Tak8uSIi71UhAMA9mIj6pcUKQdiyWE+lr7QmBFHstIxqzuuKq3evxf
+fcqfIYDatGViMs4ofKFJooWzsNMr0Vt3o/LGxiXvKgq8lvT7zBOQTu7ZknctwB1J
+tmsRBH7dQr/n6HMTrEHUyhurnNeH8jmDfQiPVh6LRzT+BrRAMOVgfUNbsftFtkjI
+GQJgd5g6MB7nBDeBeR5fFzbSpiyaObMyNH43fIt0qaFcOdTsw06JuPDs602zw5BD
+9XH4IfYzdxJbpDzv1Ku5VZRCo61iOLNiLz9++0WGvR3JaMY+2jQtVyg7YykMA97d
+ORhn4ndAWGRGyRX/VEX3qsI8iy7JotBpMXyAAosPZuetUKBIsFToRnnK5vbP7iLl
+g9oNY4/FoXYzvyNa6MzZDD8soumSnPFBkTgQ0ZfdcrwBMr+LS2M=
+=bo2d
+-----END PGP SIGNATURE-----
+
+--NzB8fVQJ5HfG6fxh--
