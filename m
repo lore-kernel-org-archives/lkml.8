@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F74C433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C74AC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21D8220707
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E33B7206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:00:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="HGBNFfvy"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Wv1taZH5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgH2P74 (ORCPT
+        id S1728351AbgH2QAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 11:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38188 "EHLO
+        Sat, 29 Aug 2020 12:00:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728410AbgH2P6w (ORCPT
+        with ESMTP id S1728417AbgH2P6w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 29 Aug 2020 11:58:52 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CC7BC06123D
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 08:58:44 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id g6so912457pjl.0
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 08:58:44 -0700 (PDT)
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E30C9C06123E
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 08:58:46 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id p15so1040546pli.6
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 08:58:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nxwHm2VuekYt0XLlgyTrwGM7XhV6Ku6W16NQioEm9rE=;
-        b=HGBNFfvyMj8caxJEkMJIH+GwBZwuc1YGxYnJDZg72pKvag+ZXcPerRI1ZfqsUqbNFV
-         UA8Qw+ucvmwZXAS/GwB/c5PwyslGZ2Pqwyxw+wQYAgoeY3lpgaZuFiuKrEv+1sXyko9y
-         L4KcLYJkntDkdfdN47yYDBJP0UieAFTndfERE=
+        bh=AFWUvI1g88Xmv/vy89tzSMyNzoqDNXz7MdWqYQPONoQ=;
+        b=Wv1taZH5KukCMM5bS0WeeABEvaBMzMc8CkN4a71i+rKLy68Zi/mHeWsZmzyrYd9wL5
+         vdFRt/JqLjatwQMNDetZAwnZB130t1Xea7CID4NPkUgM0DxHeEVvRL9AX4QgFAbt4KfV
+         aliaJ3yi8aiQi5qEgAwuVkf5wBqfjknHDT1Rg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nxwHm2VuekYt0XLlgyTrwGM7XhV6Ku6W16NQioEm9rE=;
-        b=DOjlW23LJeZtkHCV8I1q887js2IeR9DRgIA3539nsn1zeq6N0NOgnAKg2Kw0jki3RU
-         PJG/9EjeUKtjfKN+mHgp84tYBhGsY1WG5HETAXv2j9LiDFLvDANRTOrHi+RB+vnWcP82
-         gXENISYSq1ZkbQBoXt2ifPNTRY4hm6iV8XocO8zSrBBz3bWE7DwlVmPBDl1K+vvNTWOT
-         elOKfBHel9tvMD1C9f6HiXK80Yyq489+9aQPqLAabOkabuGq12F0WTe2+wOecq+odOcb
-         G3p7AN94tckoxxAuc19NbCX3WeK8UlQkcSTtF/AFyeDVe3YhEMEHpMApJO+5tYCJT+Kx
-         YOdQ==
-X-Gm-Message-State: AOAM532VJ2RL1rBKOYGvnOpYjSNyqH5hnK2SPsg1u9xHfjqH3Ty/4SyM
-        EVygjegzhmq69SYOQjri9XbJew==
-X-Google-Smtp-Source: ABdhPJzce9I/TRSbam4Qr9dItMOQaXfYbhUChv8CxER+mpC8zi9SawY3xte4Hpdg7etGhAQzjPSnow==
-X-Received: by 2002:a17:90b:100e:: with SMTP id gm14mr3474554pjb.39.1598716722795;
-        Sat, 29 Aug 2020 08:58:42 -0700 (PDT)
+        bh=AFWUvI1g88Xmv/vy89tzSMyNzoqDNXz7MdWqYQPONoQ=;
+        b=RFmkOcXOaso1FtK87LlmCHEpcj4YvAjzMPA68peChTJJG1Ie9S9buqhIt2Q2AVOLw8
+         4Fih3mckWYk0vUybFHfC5AfQQ4l0+4isxvFKzfiTcw8RpmXG3d4wtnmke/vBhr4vD+rw
+         DYs+ufoABNTrxWaMc62ostNv3NX5jo8SDl69wfSNYtFHf+hv1rnXt7+vIkhvmwheYCxy
+         hFPvJhmG2MUmX6uDM1iRsW6pHBzwH63DQ78sCrD3b+kE0XYz53WaaCtDX2rT4vLPX7dc
+         kYcz50WmcgFrZL8M7qMUwcucRhIdhVCzBUlmpyjykVB7t3t4IsH5Fy4epZ0S8X22fgog
+         PUuw==
+X-Gm-Message-State: AOAM532kGpI3VQXHqlTiFNFaE9+APh8pBV8quAATctn5vwTVpcJ4ujr1
+        LokfxU3YkzzShX65JzUmhEEWIA==
+X-Google-Smtp-Source: ABdhPJwAO5enZazZzwOOIDj2wo3gJj0jbGoMLFuTyOjc2T2bF4Wu8tXM2m3daQIz1CAo88u8+0fnew==
+X-Received: by 2002:a17:902:820c:: with SMTP id x12mr3023204pln.279.1598716726408;
+        Sat, 29 Aug 2020 08:58:46 -0700 (PDT)
 Received: from localhost.localdomain ([2405:201:c809:c7d5:9460:cfb8:90a:fedd])
-        by smtp.gmail.com with ESMTPSA id j20sm3131714pfi.122.2020.08.29.08.58.39
+        by smtp.gmail.com with ESMTPSA id j20sm3131714pfi.122.2020.08.29.08.58.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Aug 2020 08:58:42 -0700 (PDT)
+        Sat, 29 Aug 2020 08:58:45 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
 Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
@@ -65,9 +65,9 @@ Cc:     Suniel Mahesh <sunil@amarulasolutions.com>,
         linux-kernel@vger.kernel.org,
         linux-amarula <linux-amarula@amarulasolutions.com>,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 2/7] arm64: dts: rockchip: px30: Add Engicam EDIMM2.2 Starter Kit
-Date:   Sat, 29 Aug 2020 21:28:18 +0530
-Message-Id: <20200829155823.247360-3-jagan@amarulasolutions.com>
+Subject: [PATCH v2 3/7] arm64: dts: rockchip: Add Engicam PX30.Core SOM
+Date:   Sat, 29 Aug 2020 21:28:19 +0530
+Message-Id: <20200829155823.247360-4-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200829155823.247360-1-jagan@amarulasolutions.com>
 References: <20200829155823.247360-1-jagan@amarulasolutions.com>
@@ -78,97 +78,269 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Engicam EDIMM2.2 Starter Kit is an EDIMM 2.2 Form Factor Capacitive
-Evaluation Board.
+PX30.Core is an EDIMM SOM based on Rockchip PX30 from Engicam.
 
-Genaral features:
-- LCD 7" C.Touch
-- microSD slot
-- Ethernet 1Gb
-- Wifi/BT
-- 2x LVDS Full HD interfaces
-- 3x USB 2.0
-- 1x USB 3.0
-- HDMI Out
-- Mini PCIe
-- MIPI CSI
-- 2x CAN
-- Audio Out
+General features:
+- Rockchip PX30
+- Up to 2GB DDR4
+- eMMC 4 GB expandible
+- rest of PX30 features
 
-SOM's like PX30.Core needs to mount on top of this Evaluation board
-for creating complete PX30.Core EDIMM2.2 Starter Kit.
+PX30.Core needs to mount on top of Engicam baseboards for creating
+complete platform boards.
+
+Possible baseboards are,
+- EDIMM2.2
+- C.TOUCH 2.0
 
 Add support for it.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v2:
-- move carrier enablement nodes in carrier dtsi
+- none
 
- .../dts/rockchip/px30-engicam-common.dtsi     | 39 +++++++++++++++++++
- .../dts/rockchip/px30-engicam-edimm2.2.dtsi   |  7 ++++
- 2 files changed, 46 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/px30-engicam-common.dtsi
- create mode 100644 arch/arm64/boot/dts/rockchip/px30-engicam-edimm2.2.dtsi
+ .../boot/dts/rockchip/px30-px30-core.dtsi     | 231 ++++++++++++++++++
+ 1 file changed, 231 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/px30-px30-core.dtsi
 
-diff --git a/arch/arm64/boot/dts/rockchip/px30-engicam-common.dtsi b/arch/arm64/boot/dts/rockchip/px30-engicam-common.dtsi
+diff --git a/arch/arm64/boot/dts/rockchip/px30-px30-core.dtsi b/arch/arm64/boot/dts/rockchip/px30-px30-core.dtsi
 new file mode 100644
-index 000000000000..4e85c1a690e5
+index 000000000000..05d9a801d7cf
 --- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/px30-engicam-common.dtsi
-@@ -0,0 +1,39 @@
++++ b/arch/arm64/boot/dts/rockchip/px30-px30-core.dtsi
+@@ -0,0 +1,231 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
++ * Copyright (c) 2020 Fuzhou Rockchip Electronics Co., Ltd
 + * Copyright (c) 2020 Engicam srl
 + * Copyright (c) 2020 Amarula Solutions(India)
 + */
 +
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/rockchip.h>
++
 +/ {
-+	vcc5v0_sys: vcc5v0-sys {
-+		compatible = "regulator-fixed";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-name = "vcc5v0_sys";	/* +5V */
++	compatible = "engicam,px30-px30-core", "rockchip,px30";
++};
++
++&cpu0 {
++	cpu-supply = <&vdd_arm>;
++};
++
++&cpu1 {
++	cpu-supply = <&vdd_arm>;
++};
++
++&cpu2 {
++	cpu-supply = <&vdd_arm>;
++};
++
++&cpu3 {
++	cpu-supply = <&vdd_arm>;
++};
++
++&emmc {
++	cap-mmc-highspeed;
++	mmc-hs200-1_8v;
++	non-removable;
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++
++	rk809: pmic@20 {
++		compatible = "rockchip,rk809";
++		reg = <0x20>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <RK_PA7 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pmic_int>;
++		rockchip,system-power-controller;
++		wakeup-source;
++		#clock-cells = <1>;
++		clock-output-names = "rk808-clkout1", "rk808-clkout2";
++
++		vcc1-supply = <&vcc5v0_sys>;
++		vcc2-supply = <&vcc5v0_sys>;
++		vcc3-supply = <&vcc5v0_sys>;
++		vcc4-supply = <&vcc5v0_sys>;
++		vcc5-supply = <&vcc3v3_sys>;
++		vcc6-supply = <&vcc3v3_sys>;
++		vcc7-supply = <&vcc3v3_sys>;
++		vcc8-supply = <&vcc3v3_sys>;
++		vcc9-supply = <&vcc5v0_sys>;
++
++		regulators {
++			vdd_log: DCDC_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-max-microvolt = <1350000>;
++				regulator-min-microvolt = <950000>;
++				regulator-name = "vdd_log";
++				regulator-ramp-delay = <6001>;
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <950000>;
++				};
++			};
++
++			vdd_arm: DCDC_REG2 {
++				regulator-max-microvolt = <1350000>;
++				regulator-min-microvolt = <950000>;
++				regulator-name = "vdd_arm";
++				regulator-ramp-delay = <6001>;
++				regulator-always-on;
++				regulator-boot-on;
++
++				regulator-state-mem {
++					regulator-off-in-suspend;
++					regulator-suspend-microvolt = <950000>;
++				};
++			};
++
++			vcc_ddr: DCDC_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vcc_ddr";
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++				};
++			};
++
++			vcc_3v3: DCDC_REG4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-max-microvolt = <3300000>;
++				regulator-min-microvolt = <3300000>;
++				regulator-name = "vcc_3v3";
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			vcc3v3_sys: DCDC_REG5 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vcc3v3_sys";
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			vcc_1v0: LDO_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-name = "vcc_1v0";
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1000000>;
++				};
++			};
++
++			vcc_1v8: LDO_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcc_1v8";
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1800000>;
++				};
++			};
++
++			vdd_1v0: LDO_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-name = "vdd_1v0";
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1000000>;
++				};
++			};
++
++			vcc3v0_pmu: LDO_REG4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vcc3v0_pmu";
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++
++				};
++			};
++
++			vccio_sd: LDO_REG5 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vccio_sd";
++
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			vcc5v0_host: SWITCH_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vcc5v0_host";
++			};
++		};
 +	};
 +};
 +
-+&gmac {
-+	clock_in_out = "output";
-+	phy-supply = <&vcc_3v3>;	/* +3V3_SOM */
-+	snps,reset-active-low;
-+	snps,reset-delays-us = <0 50000 50000>;
-+	snps,reset-gpio = <&gpio2 RK_PB5 GPIO_ACTIVE_HIGH>;
++&io_domains {
++	vccio1-supply = <&vcc_3v3>;
++	vccio2-supply = <&vcc_3v3>;
++	vccio3-supply = <&vcc_3v3>;
++	vccio4-supply = <&vcc_3v3>;
++	vccio5-supply = <&vcc_3v3>;
++	vccio6-supply = <&vcc_1v8>;
 +	status = "okay";
 +};
 +
-+&sdmmc {
-+	cap-mmc-highspeed;
-+	cap-sd-highspeed;
-+	card-detect-delay = <800>;
-+	vqmmc-supply = <&vcc_3v3>;
-+	vmmc-supply = <&vcc_3v3>;	/* +3V3_SOM */
++&pinctrl {
++	pmic {
++		pmic_int: pmic_int {
++			rockchip,pins = <0 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++};
++
++&pmu_io_domains {
++	pmuio1-supply = <&vcc_3v3>;
++	pmuio2-supply = <&vcc_3v3>;
 +	status = "okay";
 +};
 +
-+&uart2 {
-+	pinctrl-0 = <&uart2m1_xfer>;
++&tsadc {
++	rockchip,hw-tshut-mode = <1>;
++	rockchip,hw-tshut-polarity = <1>;
 +	status = "okay";
 +};
-diff --git a/arch/arm64/boot/dts/rockchip/px30-engicam-edimm2.2.dtsi b/arch/arm64/boot/dts/rockchip/px30-engicam-edimm2.2.dtsi
-new file mode 100644
-index 000000000000..cb00988953e9
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/px30-engicam-edimm2.2.dtsi
-@@ -0,0 +1,7 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2020 Engicam srl
-+ * Copyright (c) 2020 Amarula Solutions(India)
-+ */
-+
-+#include "px30-engicam-common.dtsi"
 -- 
 2.25.1
 
