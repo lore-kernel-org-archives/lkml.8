@@ -2,79 +2,99 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1A9C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65393C433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFAB20791
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:54:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L4h7n0OB"
+	by mail.kernel.org (Postfix) with ESMTP id 3A41D207DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 14:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598713031;
+	bh=qdXm+nrrrgpho23Ano7UqAgXxxXTWhxdyQUQUsHB+YQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lW0NVbMWdJB5kAeBO3yVs6vUwDp0HoWeh19HLpUQPyRqpZgTV5WS8LIqD0940k2tg
+	 g311tRmDi41gLLzj+6ucWCZ6fDVZR8PW2aCx8xVCXgttigSw7WqeCJ2ltuSm6WGSN8
+	 X3VtKDMs82XMaG8sISAjewVvQPT0tqP1or3BlK1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgH2Oyc (ORCPT
+        id S1728274AbgH2O5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 10:54:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727772AbgH2Oya (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 10:54:30 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE33C061236;
-        Sat, 29 Aug 2020 07:54:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=syK03Q4xXEA+proHGQgPtI7XNxH7nklSo+/fI2tk1Lg=; b=L4h7n0OBMl1O11DSPJ1oqOBPs+
-        P7AjbVhlfitS+eORwFs7L7+y5XHNfj17uhWgRVLDQydbz/Pvs2M89SIM20IzkCdlQiGfHhbabIo0f
-        Ewd/PWS3YnToUrCZ/yX17vN1hiblN8YVFw6cES3zgKhWxtxOyaKtT4YCQ/jy+EqLZlzSUz74xbs9Q
-        5Q8CP+A5IJIx7uB8d/5c3uHEuSYgHSqsnn4+52xv4+OZS67L/hZmoOl+u8WxFPDpdmB2EnMnQAe7y
-        MQ+GjMGbE1g5zPlbrlg8vmbB3EWL4FOSIp+Tmg6TPgC+eXesdeCRqTbYRDOPQEs+x5mxesAxavLuI
-        y9j8ycFg==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kC2FJ-0003Nh-7c; Sat, 29 Aug 2020 14:54:21 +0000
-Date:   Sat, 29 Aug 2020 15:54:21 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] mm/gup: introduce pin_user_page()
-Message-ID: <20200829145421.GA12470@infradead.org>
-References: <20200829080853.20337-1-jhubbard@nvidia.com>
- <20200829080853.20337-2-jhubbard@nvidia.com>
+        Sat, 29 Aug 2020 10:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727772AbgH2O5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 10:57:08 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74A2020791;
+        Sat, 29 Aug 2020 14:57:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598713027;
+        bh=qdXm+nrrrgpho23Ano7UqAgXxxXTWhxdyQUQUsHB+YQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mP0t5E8r1r1tz/SdOWztOtGPNsuXcfxsBDVX+KrSQKE7+NC78hTa02xJHHkBf6UOg
+         ndBKdrzyZRNnBV42awFK77kWcRn6HiDV05LtIbxGu2OoQ2/j2b4l2O2agK5ztNiRs3
+         MBPeSM2rflYRXHhs9lkytUMx1fiWbw+moZkwF1tk=
+Date:   Sat, 29 Aug 2020 15:57:03 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Elisei <alexandru.elisei@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        xxm@rock-chips.com
+Subject: Re: [PATCH] iio: adc: rockchip_saradc: Select IIO_TRIGGERED_BUFFER
+Message-ID: <20200829155703.19bf1c9f@archlinux>
+In-Reply-To: <20200828174242.338068-1-alexandru.elisei@arm.com>
+References: <20200828174242.338068-1-alexandru.elisei@arm.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200829080853.20337-2-jhubbard@nvidia.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 01:08:51AM -0700, John Hubbard wrote:
-> pin_user_page() is the FOLL_PIN equivalent of get_page().
+On Fri, 28 Aug 2020 18:42:42 +0100
+Alexandru Elisei <alexandru.elisei@arm.com> wrote:
+
+> Building the Rockchip saradc driver can trigger the following error if the
+> driver is compiled into the kernel, but the IIO triggered buffer is not:
 > 
-> This was always a missing piece of the pin/unpin API calls (early
-> reviewers of pin_user_pages() asked about it, in fact), but until now,
-> it just wasn't needed. Finally though, now that the Direct IO pieces in
-> block/bio are about to be converted to use FOLL_PIN, it turns out that
-> there are some cases in which get_page() and get_user_pages_fast() were
-> both used. Converting those sites requires a drop-in replacement for
-> get_page(), which this patch supplies.
+> aarch64-linux-gnu-ld: drivers/iio/adc/rockchip_saradc.o: in function `rockchip_saradc_probe':
+> /path/to/linux/drivers/iio/adc/rockchip_saradc.c:427: undefined reference to `devm_iio_triggered_buffer_setup'
+> 
+> This is because commit 4e130dc7b413 ("iio: adc: rockchip_saradc: Add
+> support iio buffers") added support for industrial I/O triggered buffers,
+> but didn't update Kconfig to build the required file. Fix that.
+> 
+> Fixes: 4e130dc7b413 ("iio: adc: rockchip_saradc: Add support iio buffers")
+> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
 
-I find the name really confusing vs pin_user_pages*, as it suggests as
-single version of the same.  It also seems partially wrong, at least
-in the direct I/O case as the only thing pinned here is the zero page.
+Sorry, I've had a patch queued to fix this for a while, but had a
+vacation just after merge window occurred that delayed me sending it out.
 
-So maybe pin_kernel_page is a better name together with an explanation?
-Or just pin_page?
+Will send a pull sometime this weekend.
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 66d9cc073157..baa36a07a9cf 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -865,6 +865,7 @@ config ROCKCHIP_SARADC
+>  	tristate "Rockchip SARADC driver"
+>  	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
+>  	depends on RESET_CONTROLLER
+> +	select IIO_TRIGGERED_BUFFER
+>  	help
+>  	  Say yes here to build support for the SARADC found in SoCs from
+>  	  Rockchip.
+
