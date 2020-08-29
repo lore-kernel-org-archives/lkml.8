@@ -2,133 +2,117 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7043C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8895AC433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 18:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D060A2075B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9F320838
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 18:04:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598724245;
+	bh=UvKZOM3C+T67dDEEmRBTjLYqlXBDkmFfMlbePdpjd0o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=HkWXSQY2csttQtdvlD6bQONFtbCPmysAieAOypIT+YfrtH6f/Uu2dfJuDal/lp1qQ
+	 BLcNiI5v93Yz3aEB551OtfHMZrWYnxCBk/vuC1vhtxKm0kIp9Mv5chgPk2yX+54EPB
+	 zIO5kdOUVu/dEkHvZDoWzxTz5DGp0k9n43yNyL54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgH2R5k (ORCPT
+        id S1728406AbgH2SED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 13:57:40 -0400
-Received: from verein.lst.de ([213.95.11.211]:44941 "EHLO verein.lst.de"
+        Sat, 29 Aug 2020 14:04:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728244AbgH2R5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 13:57:40 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 076EB68C4E; Sat, 29 Aug 2020 19:57:36 +0200 (CEST)
-Date:   Sat, 29 Aug 2020 19:57:35 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Daniel Exner <dex@dragonslave.de>, Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        crazy@frugalware.org
-Subject: Re: Kernel 5.9-rc Regression: Boot failure with nvme
-Message-ID: <20200829175735.GA16416@lst.de>
-References: <f7328aad-ce1d-dd3f-577b-20b3d2efbabc@dragonslave.de> <CAHk-=whuO3U90x_i6nq+xmVymwqcc=kkb5=gv4vyLScQn7ZwBw@mail.gmail.com>
+        id S1728265AbgH2SEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 14:04:01 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51C86206B5;
+        Sat, 29 Aug 2020 18:03:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598724240;
+        bh=UvKZOM3C+T67dDEEmRBTjLYqlXBDkmFfMlbePdpjd0o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TyUs8HJwsmg08VDwvHaYdWCjMvKTZpSlZm5oAuavnVsmOpOLSi5pBu2m39ujW3fYX
+         EaPxG7O/SnTrEPVIdvsfboPGw1A10phXBJBJOjBGX6XxxN+JqE5IQV6l6KHvYmnx0x
+         xnSEV3eLTwlmTrJF5OoldLwFF5zpCXlpFvSqs9g4=
+Date:   Sat, 29 Aug 2020 19:03:56 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        alexandru.ardelean@analog.com, hslester96@gmail.com,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH 1/3] iio: accel: mma8452: Use dev_err_probe() to
+ simplify error handling
+Message-ID: <20200829190356.4ed2a666@archlinux>
+In-Reply-To: <1597117396-2894-1-git-send-email-Anson.Huang@nxp.com>
+References: <1597117396-2894-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whuO3U90x_i6nq+xmVymwqcc=kkb5=gv4vyLScQn7ZwBw@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 10:54:47AM -0700, Linus Torvalds wrote:
-> Just adding Christoph to the participants list, since at a guess it's
-> due to his changes whether they came from the nvme side or the dma
-> side..
+On Tue, 11 Aug 2020 11:43:14 +0800
+Anson Huang <Anson.Huang@nxp.com> wrote:
+
+> dev_err_probe() can reduce code size, uniform error handling and record the
+> defer probe reason etc., use it to simplify the code.
 > 
-> Christoph?
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Sorry Anson.
 
-This kinda looks like the sqsize regression we had in earlier 5.9-rc,
-but that should have been fixed in -rc2 with
+You got in first, but I was working backwards through my email today and
+picked up Krzysztof Kozlowski's series doing the same thing across a whole
+set of drivers.
 
-7442ddcedc344b6fa073692f165dffdd1889e780
-Author: John Garry <john.garry@huawei.com>
-Date:   Fri Aug 14 23:34:25 2020 +0800
+Sorry about that.
 
-    nvme-pci: Use u32 for nvme_dev.q_depth and nvme_queue.q_depth
+Jonathan
 
-Daniel, can you double check that you don't have that commit?
 
+> ---
+>  drivers/iio/accel/mma8452.c | 20 ++++++--------------
+>  1 file changed, 6 insertions(+), 14 deletions(-)
 > 
->                   Linus
-> 
-> On Sat, Aug 29, 2020 at 10:06 AM Daniel Exner <dex@dragonslave.de> wrote:
-> >
-> > Hi,
-> >
-> > (please keep me in the loop, as I'm currently not suscribed)
-> >
-> > both 5.9-rc1 and -rc2 fail to boot with my TOSHIBA-RD400 NVME:
-> >
-> > [    1.015590] ------------[ cut here ]------------
-> > [    1.015594] WARNING: CPU: 7 PID: 99 at mm/page_alloc.c:4864
-> > __alloc_pages_nodemask+0x299/0x330
-> > [    1.015594] Modules linked in: syscopyarea xhci_pci(+)
-> > xhci_pci_renesas sysfillrect xhci_hcd nvme aesni_intel(+) crypto_simd
-> > sysimgblt fb_sys_fops cryptd nvme_core t10_pi glue_helper drm hwmon
-> > scsi_mod agpgart i2c_core usbcore video wmi button dm_mirror
-> > dm_region_hash dm_log dm_mod unix ipv6 autofs4
-> > [    1.015602] CPU: 7 PID: 99 Comm: kworker/u16:1 Not tainted
-> > 5.9.0-rc2-dirty #12
-> > [    1.015603] Hardware name: To Be Filled By O.E.M. To Be Filled By
-> > O.E.M./Z170 Gaming K6, BIOS P7.50 10/18/2018
-> > [    1.015607] Workqueue: nvme-reset-wq nvme_reset_work [nvme]
-> > [    1.015608] RIP: 0010:__alloc_pages_nodemask+0x299/0x330
-> > [    1.015609] Code: 66 0f 85 46 ff ff ff e8 24 46 dd ff e9 3c ff ff ff
-> > e8 4b 4f fc ff 48 89 c7 e9 ad fe ff ff 81 e5 00 20 00 00 0f 85 7b ff ff
-> > ff <0f> 0b e9 74 ff ff ff 31 c0 e9 1b fe ff ff 65 48 8b 04 25 00 6d 01
-> > [    1.015610] RSP: 0000:ffffb3ed002abcb8 EFLAGS: 00010246
-> > [    1.015611] RAX: 0000000000000000 RBX: ffff9c8e827c4118 RCX:
-> > 0000000000000000
-> > [    1.015611] RDX: 0000000000000000 RSI: 0000000000000034 RDI:
-> > 0000000000000cc0
-> > [    1.015612] RBP: 0000000000000000 R08: 0000000000000000 R09:
-> > ffffffffffffffff
-> > [    1.015612] R10: 0000000000000006 R11: ffffb3ee002abb97 R12:
-> > 0000000000000000
-> > [    1.015613] R13: 0000000000000000 R14: ffff9c8e921060b0 R15:
-> > 0000000000000cc0
-> > [    1.015614] FS:  0000000000000000(0000) GS:ffff9c8e96bc0000(0000)
-> > knlGS:0000000000000000
-> > [    1.015615] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [    1.015615] CR2: 0000559988e2f4d8 CR3: 00000008433e4004 CR4:
-> > 00000000003706e0
-> > [    1.015616] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> > 0000000000000000
-> > [    1.015617] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> > 0000000000000400
-> > [    1.015617] Call Trace:
-> > [    1.015621]  dma_direct_alloc_pages+0x1e9/0x2c0
-> > [    1.015623]  ? pci_alloc_irq_vectors_affinity+0xa5/0x100
-> > [    1.015626]  nvme_alloc_queue+0x10a/0x170 [nvme]
-> > [    1.015629]  nvme_reset_work+0x70b/0x12b0 [nvme]
-> > [    1.015631]  ? nvme_irq_check+0x30/0x30 [nvme]
-> > [    1.015634]  process_one_work+0x1da/0x3d0
-> > [    1.015636]  worker_thread+0x4a/0x3c0
-> > [    1.015637]  ? process_one_work+0x3d0/0x3d0
-> > [    1.015638]  kthread+0x114/0x160
-> > [    1.015640]  ? kthread_park+0x90/0x90
-> > [    1.015641]  ret_from_fork+0x22/0x30
-> > [    1.015643] ---[ end trace 268d4f4db1ef121e ]---
-> >
-> >
-> > Resulting in:
-> > [    1.015644] nvme nvme0: Removing after probe failure status: -12
-> >
-> > If you need more infos I can try to provide them.
-> >
-> > Greetings
-> > Daniel
-> >
-> >
-> >
----end quoted text---
+> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+> index ba27f86..9b5f23b 100644
+> --- a/drivers/iio/accel/mma8452.c
+> +++ b/drivers/iio/accel/mma8452.c
+> @@ -1538,22 +1538,14 @@ static int mma8452_probe(struct i2c_client *client,
+>  	data->chip_info = match->data;
+>  
+>  	data->vdd_reg = devm_regulator_get(&client->dev, "vdd");
+> -	if (IS_ERR(data->vdd_reg)) {
+> -		if (PTR_ERR(data->vdd_reg) == -EPROBE_DEFER)
+> -			return -EPROBE_DEFER;
+> -
+> -		dev_err(&client->dev, "failed to get VDD regulator!\n");
+> -		return PTR_ERR(data->vdd_reg);
+> -	}
+> +	if (IS_ERR(data->vdd_reg))
+> +		return dev_err_probe(&client->dev, PTR_ERR(data->vdd_reg),
+> +				     "failed to get VDD regulator!\n");
+>  
+>  	data->vddio_reg = devm_regulator_get(&client->dev, "vddio");
+> -	if (IS_ERR(data->vddio_reg)) {
+> -		if (PTR_ERR(data->vddio_reg) == -EPROBE_DEFER)
+> -			return -EPROBE_DEFER;
+> -
+> -		dev_err(&client->dev, "failed to get VDDIO regulator!\n");
+> -		return PTR_ERR(data->vddio_reg);
+> -	}
+> +	if (IS_ERR(data->vddio_reg))
+> +		return dev_err_probe(&client->dev, PTR_ERR(data->vddio_reg),
+> +				     "failed to get VDDIO regulator!\n");
+>  
+>  	ret = regulator_enable(data->vdd_reg);
+>  	if (ret) {
+
