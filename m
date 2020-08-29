@@ -2,137 +2,108 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EE6C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01314C433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A38C3207BB
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4EF720E65
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598683465;
-	bh=Fa3ytPwbtjOSb9eP8IVzHuFxn+Gz74zrip68UY+4Fxg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1Y9rucB8xS9vNCMZB3eM60RtlN4jF/uRI9w4iYJdh1JNU4vQKpQntWoEuOZhEG+bY
-	 9/JIbr8A7AG+qwIjP+RI1VvB1ib45xqrbH3Z5IC6B5Qr8bcsqr+iIos+e7NGpl+xX0
-	 hguSk/+A7Rez0Tm2djKjrI5UjUHzAz5YTrUKCkEs=
+	s=default; t=1598683687;
+	bh=yjKI4zUzuXR+IVjk7uHyPqKHxj0RHDSmODneNvcyT0g=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=sxgvpg02sbbGAqTTgpky94ZM5AwldAL6LRHifMPrIkicOjRMg+gvpnmp95cIvxGLZ
+	 wZCTIHqM+ieZYALddULhaPcXRCumDSo5bPiRDoSC3FB1HfPWNd6FlZ08h5iGX5eE23
+	 R/OgDCYxgenuU7gFxAjeMCYubXZ6BYyibs+Lgv18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbgH2GoY (ORCPT
+        id S1726464AbgH2GsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 02:44:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38340 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 02:48:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbgH2GoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 02:44:23 -0400
-Received: from coco.lan (ip5f5ad5bb.dynamic.kabel-deutschland.de [95.90.213.187])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725886AbgH2GsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 02:48:06 -0400
+Received: from localhost.localdomain (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2985F207BB;
-        Sat, 29 Aug 2020 06:44:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8734B20838;
+        Sat, 29 Aug 2020 06:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598683463;
-        bh=Fa3ytPwbtjOSb9eP8IVzHuFxn+Gz74zrip68UY+4Fxg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=es0I5+/9eLX8edVzmtQgOmM0PI59vy+RLhrSDZRaqoB7vIvcsKNdoUgZ6ZyKYRJmE
-         AbZ3mqNDwHYSrC7goKrjZ1ZRxGv3IUxMPYPfq/mIKvBfbQ8xgcEfLjAI1LNrk8raRH
-         pFnOOnpklrCy/AvJ/0exohxFuwdjfI0b3c90gmL0=
-Date:   Sat, 29 Aug 2020 08:44:14 +0200
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH 08/20] media: pci: saa7164.c: Replace if(cond) BUG with
- BUG_ON
-Message-ID: <20200829084414.701a02b8@coco.lan>
-In-Reply-To: <20200807083548.204360-8-dwlsalmeida@gmail.com>
-References: <20200807083548.204360-8-dwlsalmeida@gmail.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1598683685;
+        bh=yjKI4zUzuXR+IVjk7uHyPqKHxj0RHDSmODneNvcyT0g=;
+        h=From:To:Cc:Subject:Date:From;
+        b=v1itUy8PJxMJU90/s/P4twMjMOdkFOc+jJ43EZmEUWpZ1BwoaDCntjPop5LrTaebQ
+         l+VF63Yd2eaCVhuqI5BNiG5LmTZ2abboHxbQkBOJnNZ0KUc0o+rm19ThGyKxS+1H3W
+         aExY/a1lCtxl0Fg/Geuvk5zMc54z1F3BuXftNjvg=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Peter Rosin <peda@axentia.se>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3 01/18] iio: accel: bma180: Simplify with dev_err_probe()
+Date:   Sat, 29 Aug 2020 08:47:09 +0200
+Message-Id: <20200829064726.26268-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and also it prints the error value.
 
-Em Fri,  7 Aug 2020 05:35:35 -0300
-"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> escreveu:
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+---
+ drivers/iio/accel/bma180.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
-> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-> 
-> Fix the following coccinelle reports:
-> 
-> drivers/media/pci/saa7164/saa7164-buffer.c:254:3-6: WARNING: Use BUG_ON
-> instead of if condition followed by BUG.
-> 
-> drivers/media/pci/saa7164/saa7164-buffer.c:261:3-6: WARNING: Use BUG_ON
-> instead of if condition followed by BUG.
-> 
-> Found using - Coccinelle (http://coccinelle.lip6.fr)
+diff --git a/drivers/iio/accel/bma180.c b/drivers/iio/accel/bma180.c
+index 5b7a467c7b27..448faed001fd 100644
+--- a/drivers/iio/accel/bma180.c
++++ b/drivers/iio/accel/bma180.c
+@@ -1000,19 +1000,15 @@ static int bma180_probe(struct i2c_client *client,
+ 		return ret;
+ 
+ 	data->vdd_supply = devm_regulator_get(dev, "vdd");
+-	if (IS_ERR(data->vdd_supply)) {
+-		if (PTR_ERR(data->vdd_supply) != -EPROBE_DEFER)
+-			dev_err(dev, "Failed to get vdd regulator %d\n",
+-				(int)PTR_ERR(data->vdd_supply));
+-		return PTR_ERR(data->vdd_supply);
+-	}
++	if (IS_ERR(data->vdd_supply))
++		return dev_err_probe(dev, PTR_ERR(data->vdd_supply),
++				     "Failed to get vdd regulator\n");
++
+ 	data->vddio_supply = devm_regulator_get(dev, "vddio");
+-	if (IS_ERR(data->vddio_supply)) {
+-		if (PTR_ERR(data->vddio_supply) != -EPROBE_DEFER)
+-			dev_err(dev, "Failed to get vddio regulator %d\n",
+-				(int)PTR_ERR(data->vddio_supply));
+-		return PTR_ERR(data->vddio_supply);
+-	}
++	if (IS_ERR(data->vddio_supply))
++		return dev_err_probe(dev, PTR_ERR(data->vddio_supply),
++				     "Failed to get vddio regulator\n");
++
+ 	/* Typical voltage 2.4V these are min and max */
+ 	ret = regulator_set_voltage(data->vdd_supply, 1620000, 3600000);
+ 	if (ret)
+-- 
+2.17.1
 
-I ended accepting those patches, but IMO, this doesn't make
-the code any better.
-
-The thing is that very few parts of the Kernel should panic if
-things go sideways. I don't think that any media driver would
-apply on such cases.
-
-As pointed at:
-
-	https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
-
-The real fix is to use WARN_ON(), probably with something like:
-
-	if (WARN_ON(something))
-		return;
-
-as probably the code after BUG() would be assuming that the
-condition was asserted.
-
-Regards,
-Mauro
-
-> 
-> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
-> ---
->  drivers/media/pci/saa7164/saa7164-buffer.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/media/pci/saa7164/saa7164-buffer.c b/drivers/media/pci/saa7164/saa7164-buffer.c
-> index 289cb901985b..245d9db280aa 100644
-> --- a/drivers/media/pci/saa7164/saa7164-buffer.c
-> +++ b/drivers/media/pci/saa7164/saa7164-buffer.c
-> @@ -250,15 +250,14 @@ int saa7164_buffer_cfg_port(struct saa7164_port *port)
->  	list_for_each_safe(c, n, &port->dmaqueue.list) {
->  		buf = list_entry(c, struct saa7164_buffer, list);
->  
-> -		if (buf->flags != SAA7164_BUFFER_FREE)
-> -			BUG();
-> +		BUG_ON(buf->flags != SAA7164_BUFFER_FREE);
->  
->  		/* Place the buffer in the h/w queue */
->  		saa7164_buffer_activate(buf, i);
->  
->  		/* Don't exceed the device maximum # bufs */
-> -		if (i++ > port->hwcfg.buffercount)
-> -			BUG();
-> +		BUG_ON(i > port->hwcfg.buffercount);
-> +		i++;
->  
->  	}
->  	mutex_unlock(&port->dmaqueue_lock);
-> @@ -302,4 +301,3 @@ void saa7164_buffer_dealloc_user(struct saa7164_user_buffer *buf)
->  
->  	kfree(buf);
->  }
-> -
-
-
-
-Thanks,
-Mauro
