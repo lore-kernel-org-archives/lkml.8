@@ -2,89 +2,117 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AEDC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 02:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B218EC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 03:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 231E6208CA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 02:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A05A20757
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 03:05:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgH2CyR (ORCPT
+        id S1726845AbgH2DFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 22:54:17 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:20210 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726460AbgH2CyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 22:54:16 -0400
-Received: from localhost.localdomain (unknown [10.192.85.18])
-        by mail-app3 (Coremail) with SMTP id cC_KCgAHIt5Mw0lflGRkAw--.459S4;
-        Sat, 29 Aug 2020 10:54:08 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] ext4: Fix error handling code in add_new_gdb
-Date:   Sat, 29 Aug 2020 10:54:02 +0800
-Message-Id: <20200829025403.3139-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgAHIt5Mw0lflGRkAw--.459S4
-X-Coremail-Antispam: 1UD129KBjvdXoW7JryxXFy8ArykGrWkuFyrXrb_yoWfuFb_JF
-        n7Aw18X3yIvrn3C3ZFyr1Fyr4SyF4kXF15ua10qFnxW3Waya95Zr1vqr9rCr1j9F4S9rs8
-        Cr17Xr9xArn2gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbcxFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxF
-        aVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr
-        4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxG
-        rwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8Jw
-        CI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
-        cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0EBlZdtPrBDAAws1
+        Fri, 28 Aug 2020 23:05:39 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34751 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbgH2DFh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 23:05:37 -0400
+Received: by mail-io1-f67.google.com with SMTP id w20so1049606iom.1;
+        Fri, 28 Aug 2020 20:05:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l7xUaI995Ekm5CK+TxZkIt4YFPavrrAEtoUbXr4ArNs=;
+        b=SKfbW6mLkCNVeg3PyztUiSMc+4CdpetkAQHV5x6BnYhm5YYGHdn9RM7TvNEPD/rvAj
+         d5s6ODnlYwfQxYwbhjq2HoeRRmjF/Ze5/n/1sV4It4bD7gONXIIvKAF16fBVLxd8WIwp
+         51qsQUNPYR0NhqY0/1qkrGj1sBRCNQTfeQTRWs4pIvNM6xYumWNd0/2jy2ygd2c59/Fn
+         E8B7N1W+U4Dhnr2Vzb5HfMFXLBOuIpCop+mNtV/xllHTg92jK23SY/Zxlu3cA4bqaf7T
+         85StxZz+FujzDeTAWKKg/Zqu5WIr8VQzo5hiaDvYFXMtnUbtSPYBXCgk1V74UhQTriep
+         dI/g==
+X-Gm-Message-State: AOAM533HaFhSftmSeF6BfoU56THUlRkwlRz77enVx3xPbQv2w5L3ABfh
+        qqPjsjTL4pZIHFX5h8dfFNJUqd/ZPjJyQIAnprU=
+X-Google-Smtp-Source: ABdhPJzhcslFhvjF32ufDTHkrVrtYDJvqRTYpjO7neI9C50BVG2K5GbfCakoYCM66vEYHeDebELfRjxAztiULqm+WyY=
+X-Received: by 2002:a02:840f:: with SMTP id k15mr3841034jah.100.1598670336665;
+ Fri, 28 Aug 2020 20:05:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200827161237.889877377@infradead.org> <20200827161754.535381269@infradead.org>
+ <20200828144650.GF28468@redhat.com> <20200828152946.GG1362448@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200828152946.GG1362448@hirez.programming.kicks-ass.net>
+From:   Cameron <cameron@moodycamel.com>
+Date:   Fri, 28 Aug 2020 23:05:20 -0400
+Message-ID: <CAFCw3dq=L_MYkw-oDgf1Yowc1w0VWkuducnPEZrF9df8s1cvUA@mail.gmail.com>
+Subject: Re: [RFC][PATCH 6/7] freelist: Lock less freelist
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>, Eddy_Wu@trendmicro.com,
+        x86@kernel.org, davem@davemloft.net, rostedt@goodmis.org,
+        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        linux-arch@vger.kernel.org, will@kernel.org, paulmck@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When ext4_journal_get_write_access() fails, we should
-terminate the execution flow and release n_group_desc,
-iloc.bh, dind and gdb_bh.
+> I'm curious whether it is correct to just set the prev->refs to zero and return
+> @prev? So that it can remove an unneeded "add()&get()" pair (although in
+> an unlikely branch) and __freelist_add() can be folded into freelist_add()
+> for tidier code.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
+That is a very good question. I believe it would be correct, yes, and
+would certainly simplify the code. The reference count is zero, so
+nobody can increment it again, and REFS_ON_FREELIST is set (the
+should-be-on-freelist flag), so instead of adding it to the freelist
+to be removed later, it can be returned directly.
 
-Changelog:
+> On Fri, Aug 28, 2020 at 04:46:52PM +0200, Oleg Nesterov wrote:
+> > 129 lines! And I spent more than 2 hours trying to understand these
+> > 129 lines ;) looks correct...
 
-v2: - Remove changes to ext4_handle_dirty_super()'s
-      error handling path.
----
- fs/ext4/resize.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Hahaha. Sorry about that. Some of the most mind-bending code I've ever
+written. :-)
 
-diff --git a/fs/ext4/resize.c b/fs/ext4/resize.c
-index a50b51270ea9..71bf600e5b42 100644
---- a/fs/ext4/resize.c
-+++ b/fs/ext4/resize.c
-@@ -843,8 +843,10 @@ static int add_new_gdb(handle_t *handle, struct inode *inode,
- 
- 	BUFFER_TRACE(dind, "get_write_access");
- 	err = ext4_journal_get_write_access(handle, dind);
--	if (unlikely(err))
-+	if (unlikely(err)) {
- 		ext4_std_error(sb, err);
-+		goto errout;
-+	}
- 
- 	/* ext4_reserve_inode_write() gets a reference on the iloc */
- 	err = ext4_reserve_inode_write(handle, inode, &iloc);
--- 
-2.17.1
+> > +                     /*
+> > +                      * Hmm, the add failed, but we can only try again when
+> > +                      * the refcount goes back to zero.
+> > +                      */
+> > +                     if (atomic_fetch_add_release(REFS_ON_FREELIST - 1, &node->refs) == 1)
+> > +                             continue;
+> Do we really need _release ? Why can't atomic_fetch_add_relaxed() work?
 
+The release is to synchronize with the acquire in the compare-exchange
+of try_get. However, I think you're right, between the previous
+release-write to the refs and that point, there are no memory effects
+that need to be synchronized, and so it could be safely replaced with
+a relaxed operation.
+
+> Cosmetic, but why not atomic_fetch_dec() ?
+
+This is just one of my idiosyncrasies. I prefer exclusively using
+atomic add, I find it easier to read. Feel free to change them all to
+subs!
+
+Cameron
+
+
+> >
+> > Do we the barriers implied by _fetch_? Why can't atomic_sub(2, refs) work?
+>
+> I think we can, the original has std::memory_order_relaxed here. So I
+> should've used atomic_fetch_add_relaxed() but since we don't use the
+> return value, atomic_sub() would work just fine too.
+>
+> > > +           /*
+> > > +            * OK, the head must have changed on us, but we still need to decrement
+> > > +            * the refcount we increased.
+> > > +            */
+> > > +           refs = atomic_fetch_add(-1, &prev->refs);
+> >
+> > Cosmetic, but why not atomic_fetch_dec() ?
+>
+> The original had that, I didn't want to risk more bugs by 'improving'
+> things. But yes, that can definitely become dec().
