@@ -2,174 +2,107 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 181CDC433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47582C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E33ED207DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F58A2071B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 17:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598721483;
-	bh=yLpc0Bq7J2kJf0h+UEQPJyey8SumotlKBh/LapBvpYA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=izAn77wx5U0HvPirV15C2ZyChORUTBfzvMbuPTAZdhpbizBF/mEeYQhSUQWQ6lk7z
-	 j+ukF0XxT1tOue2DaGB9P+b67oW/TGAdwxWkFwA6GXnPnHqswgZ4SZCgS8Adp2CK6E
-	 YR5Q4EaT0F+eA5mUoxf28spNcimLcKpp/ouSISFU=
+	s=default; t=1598721945;
+	bh=PAx0+OydMEHzBmwG79GAR/AQlFPKngcxVB7RdipQB8U=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zGysPQIq3J2tSLhSlY5bmOrSV6Wg8OAJx/Ub95zQSuvRTjT0pWZq0B4C64rgb4ate
+	 oPn4YQk+poxllOHNCy8PQf83BUpJTBLFAT4A56M4d1X8lpPuHxU429WTM5BJ3m0vg3
+	 EyrcXR50ixbJL+Uzl32LOdRwMNH24e40fCnbAKsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgH2RSB (ORCPT
+        id S1728265AbgH2RZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 13:18:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56696 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 13:25:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728105AbgH2RSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 13:18:00 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728105AbgH2RZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 13:25:41 -0400
+Received: from localhost.localdomain (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78B4820707;
-        Sat, 29 Aug 2020 17:17:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05E3C206B5;
+        Sat, 29 Aug 2020 17:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598721479;
-        bh=yLpc0Bq7J2kJf0h+UEQPJyey8SumotlKBh/LapBvpYA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HGmSJ59cXYPdz22vWtV+WQ26SjYKLY7rBhSiNCjMrOhwcSar98borkdNbN55aivzK
-         WF3Mx4aL8jhIU+KtwA9zYRkW1wQYF6NAbsSIlFWBpJsMpQzJfDdig4gmLW5049R1TM
-         ObIpu/HIYpzlxl5sS+nlU3sMXbUQIpM9xjPhKnBI=
-Date:   Sat, 29 Aug 2020 18:17:54 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Daniel Campello <campello@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Torokhov <dtor@chromium.org>
-Subject: Re: [PATCH] iio: sx9310: Prefer async probe
-Message-ID: <20200829181754.52d3cc3b@archlinux>
-In-Reply-To: <CAD=FV=W3=kRFH0TzEAX0DWS7jb113LuWUJqVS686EyRzexvoRA@mail.gmail.com>
-References: <20200828170052.1.Id02b2f451b3eed71ddd580f4b8b44b3e33e84970@changeid>
-        <20200829161230.398e0051@archlinux>
-        <CAD=FV=W3=kRFH0TzEAX0DWS7jb113LuWUJqVS686EyRzexvoRA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1598721941;
+        bh=PAx0+OydMEHzBmwG79GAR/AQlFPKngcxVB7RdipQB8U=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mpVIoQzZ1YogEx+PTRt9DNFtpizI+iHqcH2vQ0HCPr3Z0xt8nXIsITo8Tqev8lHWe
+         hRBTzSyL8qlibl8km/etPH1INIyTg/pc1Tp4kCMIDUCjPb8TMscX2savhm+xrbexf9
+         AldGn8F/Boqsl/lGA6rS4BP59EV6BR/as8YHhtQY=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>
+Subject: [PATCH 1/4] dt-bindings: display: samsung,amoled-mipi-dsi: Do not require enable-gpios on samsung,s6e63j0x03
+Date:   Sat, 29 Aug 2020 19:25:29 +0200
+Message-Id: <20200829172532.29358-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 29 Aug 2020 09:56:41 -0700
-Doug Anderson <dianders@chromium.org> wrote:
+The samsung,s6e63j0x03 does not have enable GPIO, so do not require it.
+This fixes dtbs_check warning:
 
-> Hi,
-> 
-> On Sat, Aug 29, 2020 at 8:12 AM Jonathan Cameron <jic23@kernel.org> wrote:
-> >
-> > On Fri, 28 Aug 2020 17:01:18 -0700
-> > Douglas Anderson <dianders@chromium.org> wrote:
-> >  
-> > > On one board I found that:
-> > >   probe of 5-0028 returned 1 after 259547 usecs
-> > >
-> > > There's no reason to block probe of all other devices on our probe.
-> > > Turn on async probe.
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > ---
-> > > NOTE: I haven't done any analysis of the driver to see _why_ it's so
-> > > slow, only that I have measured it to be slow.  Someone could
-> > > certainly take the time to profile / optimize it, but in any case it
-> > > still won't hurt to be async.  
-> >
-> > Hmm. It is vanishingly rare to use that flag  
-> 
-> My guess is that people just haven't been spending as much time
-> optimizing boot performance recently.  I've been trying to do this and
-> finding that there are quite a few drivers that could benefit from
-> this flag.
-> 
-> In theory this flag should probably be on by default and it looks like
-> that was Dmitry's original intention but the state of the world 5
-> years ago was that it wasn't quite ready for this.  I think, in
-> particular, drivers that are more core to the system (IOMMUs, clocks,
-> regulators, etc) may not have been ready, but misc peripherals should
-> be no problem.
+  arch/arm/boot/dts/exynos3250-rinato.dt.yaml: panel@0: 'enable-gpios' is a required property
 
-That fits with my understanding.  Would be great to have it on
-by default though I guess it could make for some really hard to debug
-race conditions.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ .../display/panel/samsung,amoled-mipi-dsi.yaml       | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-
-> 
-> 
-> > so I'm not particularly
-> > keen on starting to deploy it when we don't know why a particular
-> > driver is taking so long.  I agree it should be safe but I don't
-> > like oddities I don't understand!
-> >
-> > There are some sleeps in there but they are all of the order of a few
-> > msecs.
-> >
-> > Could it be there is a regulator that is coming up very slowly?
-> >
-> > Any other ideas?  
-> 
-> I can do a little bit of profiling next week, but even if we get this
-> down from 250 ms to 10 ms I'd still like to see async probe turned on.
-> There's no reason for it to be off and every little bit counts.
-Agreed. However, I'd like a comment next to the place we turn it on
-saying what delays we are trying to mitigate by enabling it in this
-driver.
-
-Jonathan
-
-> 
-> 
-> > Jonathan
-> >  
-> > >
-> > > This is a very safe flag to turn on since:
-> > >
-> > > 1. It's not like our probe order was defined by anything anyway.  When
-> > > we probe is at the whim of when our i2c controller probes and that can
-> > > be any time.
-> > >
-> > > 2. If some other driver needs us then they have to handle the fact
-> > > that we might not have probed yet anyway.
-> > >
-> > > 3. There may be other drivers probing at the same time as us anyway
-> > > because _they_ used async probe.
-> > >
-> > > While I won't say that it's impossible to tickle a bug by turning on
-> > > async probe, I would assert that in almost all cases the bug was
-> > > already there and needed to be fixed anyway.
-> > >
-> > > ALSO NOTE: measurement / testing was done on the downstream Chrome OS
-> > > 5.4 tree.  I confirmed compiling on mainline.
-> > >
-> > >  drivers/iio/proximity/sx9310.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> > > index dc2e11b43431..444cafc53408 100644
-> > > --- a/drivers/iio/proximity/sx9310.c
-> > > +++ b/drivers/iio/proximity/sx9310.c
-> > > @@ -1054,6 +1054,7 @@ static struct i2c_driver sx9310_driver = {
-> > >               .acpi_match_table = ACPI_PTR(sx9310_acpi_match),
-> > >               .of_match_table = of_match_ptr(sx9310_of_match),
-> > >               .pm = &sx9310_pm_ops,
-> > > +             .probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> > >       },
-> > >       .probe          = sx9310_probe,
-> > >       .id_table       = sx9310_id,  
-> >  
+diff --git a/Documentation/devicetree/bindings/display/panel/samsung,amoled-mipi-dsi.yaml b/Documentation/devicetree/bindings/display/panel/samsung,amoled-mipi-dsi.yaml
+index 96bdde9298e0..ccc482570d6a 100644
+--- a/Documentation/devicetree/bindings/display/panel/samsung,amoled-mipi-dsi.yaml
++++ b/Documentation/devicetree/bindings/display/panel/samsung,amoled-mipi-dsi.yaml
+@@ -12,6 +12,17 @@ maintainers:
+ allOf:
+   - $ref: panel-common.yaml#
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - samsung,s6e3ha2
++              - samsung,s6e3hf2
++    then:
++      required:
++        - enable-gpios
++
+ properties:
+   compatible:
+     enum:
+@@ -39,7 +50,6 @@ required:
+   - vdd3-supply
+   - vci-supply
+   - reset-gpios
+-  - enable-gpios
+ 
+ additionalProperties: false
+ 
+-- 
+2.17.1
 
