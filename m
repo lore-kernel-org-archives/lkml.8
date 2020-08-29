@@ -2,165 +2,100 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2A8C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6375C433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27DF020936
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C360D20936
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:23:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="MEmYW1wq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gLbTnKYi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgH2HVz (ORCPT
+        id S1727003AbgH2HXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 03:21:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43248 "EHLO
+        Sat, 29 Aug 2020 03:23:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgH2HVv (ORCPT
+        with ESMTP id S1726083AbgH2HXW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 03:21:51 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 362DEC061236
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 00:21:51 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id g1so1522342pgm.9
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 00:21:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
-         :references;
-        bh=G2MSpHN+OgTuVkTkfaadPVZ4uyPRsDUXgqMIPwUf15Q=;
-        b=MEmYW1wqlSUD9Uuaolj+MncB61scGjgDT7gQ74efYuAXck0fQealA2w0Nt+F1jJqxd
-         k/tj4IovJZhVFoliXYgkzPQ6MTkUa0SYM0cm1xVn+7mJCYP/kJUPML+w+2KtfZELnpS4
-         WG0x1ayVTHNKigKSUHF5YpIC/nWFV+ki1Ol1wLDkO318r49VgJ3yFz1vJlSei7sp79uG
-         OivU7HOqIq1nMU9tTXqnM2XqGYe6xqfz9W9+X3Qb/D96hel09pE8arde9F+ML07SmVlz
-         j4lPoNLb2/c01UZcExrp+3wEBMQb/5Gowpfr3RWRZP+eRvuEfPX48TBCCrnLZ2VfiSgb
-         7y0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:message-id:mime-version:subject:date
-         :in-reply-to:cc:to:references;
-        bh=G2MSpHN+OgTuVkTkfaadPVZ4uyPRsDUXgqMIPwUf15Q=;
-        b=FJlUUJ1h/lkOmRmoHr8NGCQeF3smeU/Dci7eVDVmjxG5hwQHJibPS4oaQ09O+hLmke
-         SlHmjzoJPY+hJtex+Rw2133BIDq2AYxejHFT/WhOtpSG93jp+DWSzrjyKMPI06YCLg2Z
-         DWcjS6WpZ2YIN+gVFj4J0hnokZaf2Zou5jlXeptbdVCg6XzsFUMbEaV2jxhuPRSgNTUs
-         HWzrNJHmgoafCx986qdGoI31uZnk9xMqqXssVx1kDABHiSXiqkjSN/odv6gZLsjvLIe1
-         2zgdY0OMw4KrhmXlcNnniBncZRegi/8jw0EDiNfq12rce9nm+mNIIWnb/cULTzFjJoEN
-         cFcA==
-X-Gm-Message-State: AOAM530QbMVCNdZWJq8HvmrU2GHTarKWV2mV6C5lTjypFFuv4J7zDx2d
-        h8QxsFiFQyUSkmmUySRReZpmvQ==
-X-Google-Smtp-Source: ABdhPJywGbjAovBweNF37d+UBZ1ETPn4IZ31WDdUnnLqR+lNbOv3OZiu64yDFjPl3Up3W0PBo7XKng==
-X-Received: by 2002:a62:9215:: with SMTP id o21mr2156994pfd.268.1598685710666;
-        Sat, 29 Aug 2020 00:21:50 -0700 (PDT)
-Received: from [192.168.10.160] (S01061cabc081bf83.cg.shawcable.net. [70.77.221.9])
-        by smtp.gmail.com with ESMTPSA id y128sm1582419pfy.74.2020.08.29.00.21.49
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 29 Aug 2020 00:21:49 -0700 (PDT)
-From:   Andreas Dilger <adilger@dilger.ca>
-Message-Id: <9EDDAFAC-52D2-4FE3-958C-5F57DD0792C0@dilger.ca>
-Content-Type: multipart/signed;
- boundary="Apple-Mail=_A34A9549-DC04-4DFB-8572-37CBD4BC080F";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Subject: Re: [PATCH] [v2] ext4: Fix error handling code in add_new_gdb
-Date:   Sat, 29 Aug 2020 01:21:46 -0600
-In-Reply-To: <20200829025403.3139-1-dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, Theodore Ts'o <tytso@mit.edu>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-References: <20200829025403.3139-1-dinghao.liu@zju.edu.cn>
-X-Mailer: Apple Mail (2.3273)
+        Sat, 29 Aug 2020 03:23:22 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FF43C061236;
+        Sat, 29 Aug 2020 00:23:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=QNu7WskT6/ByA/SlTVpDtv1Uo1ftd0R0JFxhIta6WFQ=; b=gLbTnKYia/vcnmkitTXpw08E+d
+        BXzQDIDN9FWHcHIFPvn3m+VIKNUT/mjS6WCSKr7xFlFPdv3K1NJlCab+ReyU6axduh7Lwyojbczx9
+        Zz+fs7aFwQ1nPwxHf+RPMSWAcn546HEBogzq307eZQSkjnV04JoKSgQLNVtkrJZU95JddneQSvp/d
+        K1Dq1cvPRYnhOhzeiIPosmjFNtvG4E/dGGWCjEUpIK/ARdm1qTzYljFVzrk+1+k51dVmgWet5sPxO
+        fJtiB4wZDEo1OSA2C2yXq58SXFhEd8j55PQFO+DW7WWa42gF3+0PXteedleNdGAhxQhL4EQGsXXVo
+        +Drd1k9A==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kBvCZ-0001n6-TP; Sat, 29 Aug 2020 07:23:03 +0000
+Date:   Sat, 29 Aug 2020 08:23:03 +0100
+From:   "hch@infradead.org" <hch@infradead.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     "Derrick, Jonathan" <jonathan.derrick@intel.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
+        "kw@linux.com" <kw@linux.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Huffman, Amber" <amber.huffman@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
+Message-ID: <20200829072303.GA6704@infradead.org>
+References: <20200821123222.32093-1-kai.heng.feng@canonical.com>
+ <20200825062320.GA27116@infradead.org>
+ <cd5aa2fef13f14b30c139d03d5256cf93c7195dc.camel@intel.com>
+ <20200827063406.GA13738@infradead.org>
+ <660c8671a51eec447dc7fab22bacbc9c600508d9.camel@intel.com>
+ <20200827162333.GA6822@infradead.org>
+ <eb45485d9107440a667e598da99ad949320b77b1.camel@intel.com>
+ <CAPcyv4ie53kswpk8E8=SCv4HBUAjCuFTNb6mLNUR+V-=cJ_XtA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4ie53kswpk8E8=SCv4HBUAjCuFTNb6mLNUR+V-=cJ_XtA@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 27, 2020 at 02:33:56PM -0700, Dan Williams wrote:
+> > Just a few benefits and there are other users with unique use cases:
+> > 1. Passthrough of the endpoint to OSes which don't natively support
+> > hotplug can enable hotplug for that OS using the guest VMD driver
+> > 2. Some hypervisors have a limit on the number of devices that can be
+> > passed through. VMD endpoint is a single device that expands to many.
+> > 3. Expansion of possible bus numbers beyond 256 by using other
+> > segments.
+> > 4. Custom RAID LED patterns driven by ledctl
+> >
+> > I'm not trying to market this. Just pointing out that this isn't
+> > "bringing zero actual benefits" to many users.
+> >
+> 
+> The initial intent of the VMD driver was to allow Linux to find and
+> initialize devices behind a VMD configuration where VMD was required
+> for a non-Linux OS. For Linux, if full native PCI-E is an available
+> configuration option I think it makes sense to recommend Linux users
+> to flip that knob rather than continue to wrestle with the caveats of
+> the VMD driver. Where that knob isn't possible / available VMD can be
+> a fallback, but full native PCI-E is what Linux wants in the end.
 
---Apple-Mail=_A34A9549-DC04-4DFB-8572-37CBD4BC080F
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
-
-On Aug 28, 2020, at 8:54 PM, Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
->=20
-> When ext4_journal_get_write_access() fails, we should
-> terminate the execution flow and release n_group_desc,
-> iloc.bh, dind and gdb_bh.
->=20
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-
-Looks good.  I also reviewed the other error conditions in this function
-and didn't see any similar problems.
-
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-
-> ---
->=20
-> Changelog:
->=20
-> v2: - Remove changes to ext4_handle_dirty_super()'s
->      error handling path.
-> ---
-> fs/ext4/resize.c | 4 +++-
-> 1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/fs/ext4/resize.c b/fs/ext4/resize.c
-> index a50b51270ea9..71bf600e5b42 100644
-> --- a/fs/ext4/resize.c
-> +++ b/fs/ext4/resize.c
-> @@ -843,8 +843,10 @@ static int add_new_gdb(handle_t *handle, struct =
-inode *inode,
->=20
-> 	BUFFER_TRACE(dind, "get_write_access");
-> 	err =3D ext4_journal_get_write_access(handle, dind);
-> -	if (unlikely(err))
-> +	if (unlikely(err)) {
-> 		ext4_std_error(sb, err);
-> +		goto errout;
-> +	}
->=20
-> 	/* ext4_reserve_inode_write() gets a reference on the iloc */
-> 	err =3D ext4_reserve_inode_write(handle, inode, &iloc);
-> --
-> 2.17.1
->=20
-
-
-Cheers, Andreas
-
-
-
-
-
-
---Apple-Mail=_A34A9549-DC04-4DFB-8572-37CBD4BC080F
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
-
------BEGIN PGP SIGNATURE-----
-Comment: GPGTools - http://gpgtools.org
-
-iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl9KAgoACgkQcqXauRfM
-H+DdZg//a+1K6sGK8/H73C8h7/R9fnvH6cntaUve5o1D4TwrC7iWqSE2deP5VWLt
-XU5nbIqQ0ZQjBTXm3Iio+P1kG7l73xdoxnummeswPmgzJYkx30Ll0ll5AvWlGYC9
-NU/FVnvxkEBpAV8LCx4F0oYQOTS4ohQ4F6EBZ3LYQ1nzR6Gwp0hGlucYCZLvo/rd
-DXCHzfAViptT5UZnXkFtp3acGvtbf7Bkm6/4UTf9UzEKasLL3kTX5TFs5yZsh4R8
-IDHRY8mVFATf1dccyk6cScLHGp1NuHct7nW6O36c5Mh42tMoWCXsg4exwt/+OF30
-aVvrQ338qtm5nlGjJ41gMwJ5CK/UaW6ik38ncd2Z4+jskWkjBk+1NK78XHShgDp+
-NtqmuvKAJljzlUI/7E8VfhayiPug86ZPic+hH37p+EcN59NqvWWTSWfQCBMSICmY
-6zvjB9CFw46bWLeEAdj8W3aIMWTXa0eOIrrxlIzHlR+3ob26TL9W5981XKOXuX1V
-Hkc2i7Ib6WP37bDEqQj2qzhVtd+YLFmkKvVnXZ+oeN0fHQlzyAUltgW0UATiCbZT
-3Maby+r04JlS2EwHMWSg9dGVql8H72b5/1b33SYDIaDmke7jB3/fYY0LFG5o1GU6
-xdwRa1K37omaAhVNOG6/iGQua5e+kCdaoTD6WK0iO9w+0WTQfpA=
-=4rkn
------END PGP SIGNATURE-----
-
---Apple-Mail=_A34A9549-DC04-4DFB-8572-37CBD4BC080F--
+Agreed.  And the thing we need for this to really work is to turn VMD
+off without a reboot when we find it.  That would solve all the problems
+we have, and also allow an amazing kernel hacker like Derrick do more
+productive work than coming up with one VMD workaround after another.
