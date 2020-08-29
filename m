@@ -2,89 +2,134 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB02EC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 19:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9641AC433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 19:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF16120774
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 19:28:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JqHqtB+a"
+	by mail.kernel.org (Postfix) with ESMTP id 7CD822076D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 19:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbgH2T2T (ORCPT
+        id S1728515AbgH2Tb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 15:28:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42312 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728335AbgH2T2S (ORCPT
+        Sat, 29 Aug 2020 15:31:28 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:29419 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728370AbgH2Tb1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 15:28:18 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DD85C061236;
-        Sat, 29 Aug 2020 12:28:18 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id q14so3440476ilj.8;
-        Sat, 29 Aug 2020 12:28:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MYeksI7pkYccpBPOaIhMC41dpt0mmv/5RTQ5WIGZNNw=;
-        b=JqHqtB+ahol9VjbuRNUmo8PczCY8sgJaMxIW2w5uW0FZFrWVqJbNSbyfcNrnKczoNc
-         BFZWGIJYI40zcbkOP6QQluJUyb+ib9su0NoBLCskm8XDET82Ofq5RgT/rLN7F14j+yHX
-         l0076UHCB2obID6mQyxtsvP4tEyYkoTQ8dRio5IxElDzE7ddU09UDSh0jC4GyvvNx7O8
-         iIZuwmeqPHM7RniR9KGhbZApxFpvXDdWavK9nYrq4RKEaWNz4ZaCjqtMMf3aAOoCQG+n
-         jxgSf75LOEBStQfKrSiTwHIeYJUre3cHNijVGV7a5LMOHnJMg8N/OelRPOGuCJm4HVP7
-         /1eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MYeksI7pkYccpBPOaIhMC41dpt0mmv/5RTQ5WIGZNNw=;
-        b=uQrCtirJZwFvTyWBzU4svg6jibwYMJrpes2C+QxZJrFd2aaDzYY0WY8b6YitkJhtn2
-         6H6p2hW3uTptEiVDWOSQl/0xij+QqvbKNZMpJEsnsMhxubL2+DQkQClW1am7I9RZ+R0n
-         T2350V8f+to8/Lnb3nDF3DfxmuvIE1zIZ22jbrD6JuSUgTWicpt9iUleGV1ni+57heW9
-         PgYTb6ipHiwVhK7k7qfznq4tnXqTARPwFpRywNCSU025HHp/OUzdKa1YroO7fvn/g43J
-         xY5Hs6hIhaH4YbKxQ4+SpInEfURlcvdKwKt4zmLtdRl3FeXDQ8NDeP4pS07ljSo79HP4
-         MySg==
-X-Gm-Message-State: AOAM531AHXiZwF1xUEH7rMu08WKJ/2G94nn9wgQeXYDgGCBZYOqCN5Ex
-        9dfPf9VyaezuvEkchrSHLVlCpf719hfb8w==
-X-Google-Smtp-Source: ABdhPJwe2jB+YjrlISBhPE5QSm0vnm09ZxIebTRr2FT0zoGgRWhyDuTVJ++JX7zayrGmnaLwaUEdlg==
-X-Received: by 2002:a05:6e02:ca3:: with SMTP id 3mr3574833ilg.8.1598729297698;
-        Sat, 29 Aug 2020 12:28:17 -0700 (PDT)
-Received: from Davids-MacBook-Pro.local ([2601:282:803:7700:21a5:5fc5:213b:a337])
-        by smtp.googlemail.com with ESMTPSA id u81sm1822585ilc.52.2020.08.29.12.28.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Aug 2020 12:28:17 -0700 (PDT)
-Subject: Re: [PATCH] net: ipv6: remove unused arg exact_dif in compute_score
-To:     Miaohe Lin <linmiaohe@huawei.com>, davem@davemloft.net,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200829090420.6351-1-linmiaohe@huawei.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <887af39d-2c79-f1a0-4e2c-4315c58ad029@gmail.com>
-Date:   Sat, 29 Aug 2020 13:28:16 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.0
+        Sat, 29 Aug 2020 15:31:27 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-66-2ft33eF5NHCr6OGuIjxBCA-1; Sat, 29 Aug 2020 20:31:21 +0100
+X-MC-Unique: 2ft33eF5NHCr6OGuIjxBCA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Sat, 29 Aug 2020 20:31:20 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Sat, 29 Aug 2020 20:31:20 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Josh Poimboeuf' <jpoimboe@redhat.com>,
+        "'x86@kernel.org'" <x86@kernel.org>
+CC:     "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        "'Linus Torvalds'" <torvalds@linux-foundation.org>,
+        'Al Viro' <viro@zeniv.linux.org.uk>,
+        'Will Deacon' <will@kernel.org>,
+        'Dan Williams' <dan.j.williams@intel.com>,
+        'Andrea Arcangeli' <aarcange@redhat.com>,
+        "'Waiman Long'" <longman@redhat.com>,
+        'Peter Zijlstra' <peterz@infradead.org>,
+        "'Thomas Gleixner'" <tglx@linutronix.de>,
+        'Andrew Cooper' <andrew.cooper3@citrix.com>,
+        'Andy Lutomirski' <luto@kernel.org>,
+        'Christoph Hellwig' <hch@lst.de>
+Subject: RE: [PATCH] x86/uaccess: Use pointer masking to limit uaccess
+ speculation
+Thread-Topic: [PATCH] x86/uaccess: Use pointer masking to limit uaccess
+ speculation
+Thread-Index: AQHWfXGL4X8nWl6IwEyifUSeZx09HqlPCNzQgABwecA=
+Date:   Sat, 29 Aug 2020 19:31:20 +0000
+Message-ID: <56488b800d044a7e81efd8b40198a527@AcuMS.aculab.com>
+References: <f12e7d3cecf41b2c29734ea45a393be21d4a8058.1597848273.git.jpoimboe@redhat.com>
+ <20200828192911.ezqspexfb2gtvrr7@treble>
+ <f54657f1b5e74ec99cef62228db50dee@AcuMS.aculab.com>
+In-Reply-To: <f54657f1b5e74ec99cef62228db50dee@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-In-Reply-To: <20200829090420.6351-1-linmiaohe@huawei.com>
-Content-Type: text/plain; charset=utf-8
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/29/20 3:04 AM, Miaohe Lin wrote:
-> @@ -138,15 +138,13 @@ static struct sock *inet6_lhash2_lookup(struct net *net,
->  		const __be16 sport, const struct in6_addr *daddr,
->  		const unsigned short hnum, const int dif, const int sdif)
->  {
-> -	bool exact_dif = inet6_exact_dif_match(net, skb);
+RnJvbTogRGF2aWQgTGFpZ2h0DQo+IFNlbnQ6IDI5IEF1Z3VzdCAyMDIwIDE0OjIxDQo+IA0KPiBG
+cm9tOiBKb3NoIFBvaW1ib2V1Zg0KPiA+IFNlbnQ6IDI4IEF1Z3VzdCAyMDIwIDIwOjI5DQo+ID4N
+Cj4gPiBPbiBXZWQsIEF1ZyAxOSwgMjAyMCBhdCAwOTo1MDowNkFNIC0wNTAwLCBKb3NoIFBvaW1i
+b2V1ZiB3cm90ZToNCj4gPiA+IFRoZSB4ODYgdWFjY2VzcyBjb2RlIHVzZXMgYmFycmllcl9ub3Nw
+ZWMoKSBpbiB2YXJpb3VzIHBsYWNlcyB0byBwcmV2ZW50DQo+ID4gPiBzcGVjdWxhdGl2ZSBkZXJl
+ZmVyZW5jaW5nIG9mIHVzZXItY29udHJvbGxlZCBwb2ludGVycyAod2hpY2ggbWlnaHQgYmUNCj4g
+PiA+IGNvbWJpbmVkIHdpdGggZnVydGhlciBnYWRnZXRzIG9yIENQVSBidWdzIHRvIGxlYWsgZGF0
+YSkuDQo+ID4gPg0KPiA+ID4gVGhlcmUgYXJlIHNvbWUgaXNzdWVzIHdpdGggdGhlIGN1cnJlbnQg
+aW1wbGVtZW50YXRpb246DQo+ID4gPg0KPiA+ID4gLSBUaGUgYmFycmllcl9ub3NwZWMoKSBpbiBj
+b3B5X2Zyb21fdXNlcigpIHdhcyBpbmFkdmVydGVudGx5IHJlbW92ZWQNCj4gPiA+ICAgd2l0aDog
+NGI4NDJlNGUyNWIxICgieDg2OiBnZXQgcmlkIG9mIHNtYWxsIGNvbnN0YW50IHNpemUgY2FzZXMg
+aW4NCj4gPiA+ICAgcmF3X2NvcHlfe3RvLGZyb219X3VzZXIoKSIpDQo+ID4gPg0KPiA+ID4gLSBj
+b3B5X3RvX3VzZXIoKSBhbmQgZnJpZW5kcyBzaG91bGQgYWxzbyBoYXZlIGEgc3BlY3VsYXRpb24g
+YmFycmllciwNCj4gPiA+ICAgYmVjYXVzZSBhIHNwZWN1bGF0aXZlIHdyaXRlIHRvIGEgdXNlci1j
+b250cm9sbGVkIGFkZHJlc3MgY2FuIHN0aWxsDQo+ID4gPiAgIHBvcHVsYXRlIHRoZSBjYWNoZSBs
+aW5lIHdpdGggdGhlIG9yaWdpbmFsIGRhdGEuDQo+ID4gPg0KPiA+ID4gLSBUaGUgTEZFTkNFIGlu
+IGJhcnJpZXJfbm9zcGVjKCkgaXMgb3ZlcmtpbGwsIHdoZW4gbW9yZSBsaWdodHdlaWdodCB1c2Vy
+DQo+ID4gPiAgIHBvaW50ZXIgbWFza2luZyBjYW4gYmUgdXNlZCBpbnN0ZWFkLg0KPiA+ID4NCj4g
+PiA+IFJlbW92ZSBhbGwgZXhpc3RpbmcgYmFycmllcl9ub3NwZWMoKSB1c2FnZSwgYW5kIGluc3Rl
+YWQgZG8gdXNlciBwb2ludGVyDQo+ID4gPiBtYXNraW5nLCB0aHJvdWdob3V0IHRoZSB4ODYgdWFj
+Y2VzcyBjb2RlLiAgVGhpcyBpcyBzaW1pbGFyIHRvIHdoYXQgYXJtNjQNCj4gPiA+IGlzIGFscmVh
+ZHkgZG9pbmcuDQo+ID4gPg0KPiA+ID4gYmFycmllcl9ub3NwZWMoKSBpcyBub3cgdW51c2VkLCBh
+bmQgY2FuIGJlIHJlbW92ZWQuDQo+ID4gPg0KPiA+ID4gRml4ZXM6IDRiODQyZTRlMjViMSAoIng4
+NjogZ2V0IHJpZCBvZiBzbWFsbCBjb25zdGFudCBzaXplIGNhc2VzIGluIHJhd19jb3B5X3t0byxm
+cm9tfV91c2VyKCkiKQ0KPiA+ID4gU3VnZ2VzdGVkLWJ5OiBXaWxsIERlYWNvbiA8d2lsbEBrZXJu
+ZWwub3JnPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogSm9zaCBQb2ltYm9ldWYgPGpwb2ltYm9lQHJl
+ZGhhdC5jb20+DQo+ID4NCj4gPiBQaW5nPw0KPiANCj4gUmVyZWFkaW5nIHRoZSBwYXRjaCBpdCBs
+b29rcyBsaWtlIGEgbG90IG9mIGJsb2F0IChhcyB3ZWxsIGFzIGENCj4gbG90IG9mIGNoYW5nZXMp
+Lg0KPiBEb2VzIHRoZSBhcnJheV9tYXNrIGV2ZW4gd29yayBvbiAzMmJpdCBhcmNocyB3aGVyZSB0
+aGUga2VybmVsDQo+IGJhc2UgYWRkcmVzcyBpcyAweGMwMDAwMDAwPw0KPiBJJ20gc3VyZSB0aGVy
+ZSBpcyBzb21ldGhpbmcgbXVjaCBzaW1wbGVyLg0KPiANCj4gSWYgYWNjZXNzX29rKCkgZ2VuZXJh
+dGVzIH4wdSBvciAwIHdpdGhvdXQgYSBjb25kaXRpb25hbCB0aGVuDQo+IHRoZSBhZGRyZXNzIGNh
+biBiZSBtYXNrZWQgd2l0aCB0aGUgcmVzdWx0Lg0KPiBTbyB5b3UgcHJvYmFibHkgbmVlZCB0byBj
+aGFuZ2UgYWNjZXNzX29rKCkgdG8gdGFrZSB0aGUgYWRkcmVzcw0KPiBvZiB0aGUgdXNlciBwb2lu
+dGVyIC0gc28gdGhlIGNhbGxlcnMgYmVjb21lIGxpa2U6DQo+IAlpZiAoYWNjZXNzX29rKCZ1c2Vy
+X2J1ZmZlciwgbGVuKSkNCj4gCQlyZXR1cm4gLUVGQVVMVA0KPiAJX19wdXRfdXNlcih1c2VyX2J1
+ZmZlciwgdmFsdWUpOw0KPiANCj4gSXQgd291bGQgYmUgZWFzaWVyIGlmIE5VTEwgd2VyZSBndWFy
+YW50ZWVkIHRvIGJlIGFuIGludmFsaWQNCj4gdXNlciBhZGRyZXNzIChpcyBpdD8pLg0KPiBUaGVu
+IGFjY2Vzc19vaygpIGNvdWxkIHJldHVybiB0aGUgbW9kaWZpZWQgcG9pbnRlci4NCj4gU28geW91
+IGdldCBzb21ldGhpbmcgbGlrZToNCj4gCXVzZXJfYnVmZmVyID0gYWNjZXNzX29rKHVzZXJfYnVm
+ZmVyLCBsZW4pOw0KPiAJaWYgKCF1c2VyX2J1ZmZlcikNCj4gCQlyZXR1cm4gLUVGQVVMVC4NCj4g
+DQo+IFByb3ZpZGVkIHRoZSAnbGFzdCcgdXNlciBwYWdlIGlzIG5ldmVyIGFsbG9jYXRlZCAoaXQg
+Y2FuJ3QNCj4gYmUgb24gaTM4NiBkdWUgdG8gY3B1IHByZWZldGNoIGlzc3Vlcykgc29tZXRoaW5n
+IGxpa2U6DQo+IChhbmQgd2l0aCB0aGUgYXNtIHByb2JhYmx5IGFsbCBicm9rZW4pDQo+IA0KPiBz
+dGF0aWMgaW5saW5lIHZvaWQgX191c2VyICogYWNjZXNzX29rKHZvaWQgX191c2VyICpiLCBzaXpl
+X3QgbGVuKQ0KPiB7DQo+IAl1bnNpZ25lZCBsb25nIHggPSAobG9uZyliIHwgKGxvbmcpKGIgKyBs
+ZW4pOw0KPiAJdW5zaWduZWQgbG9uZyBsaW0gPSA2NF9iaXQgPyAxdSA8PCA2MyA6IDB4NDAwMDAw
+MDA7DQo+IAlhc20gdm9sYXRpbGUgKCIgYWRkICUxLCAlMFxuIg0KPiAJCQkiIHNiYiAkMCwgJTAi
+LCAiPXIiICh4KSwgInIiIChsaW0pKTsNCj4gCXJldHVybiAodm9pZCBfX3VzZXIgKikobG9uZyli
+ICYgfngpOw0KPiB9DQoNCkFjdHVhbGx5LCB0aGlua2luZyBmdXJ0aGVyLCBpZjoNCjEpIHRoZSBh
+Y2Nlc3Nfb2soKSBpbW1lZGlhdGVseSBwcmVjZWRlcyB0aGUgdXNlciBjb3B5IChhcyBpdCBzaG91
+bGQpLg0KMikgdGhlIHVzZXItY29waWVzIHVzZSBhIHNlbnNpYmxlICdpbmNyZWFzaW5nIGFkZHJl
+c3MnIGNvcHkuDQphbmQNCjMpIHRoZXJlIGlzIGEgJ2d1YXJkIHBhZ2UnIGJldHdlZW4gdmFsaWQg
+dXNlciBhbmQga2VybmVsIGFkZHJlc3Nlcy4NClRoZW4gYWNjZXNzX29rKCkgb25seSBuZWVkIGNo
+ZWNrIHRoZSBiYXNlIGFkZHJlc3Mgb2YgdGhlIHVzZXIgYnVmZmVyLg0KDQoJRGF2aWQNCg0KLQ0K
+UmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1p
+bHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVz
+KQ0K
 
-inet6_exact_dif_match is no longer needed after the above is removed.
