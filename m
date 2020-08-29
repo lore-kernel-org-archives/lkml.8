@@ -2,86 +2,143 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B17CC433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CE3C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 634E6207BB
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23519207BB
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 07:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UmsTEw14"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="AgqIy+rv";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="IpEGE/K5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgH2HbW (ORCPT
+        id S1727048AbgH2HcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 03:31:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44708 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgH2HbW (ORCPT
+        Sat, 29 Aug 2020 03:32:14 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:4371 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbgH2HcL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 03:31:22 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A625EC061236;
-        Sat, 29 Aug 2020 00:31:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=279k8AeqOLCTopTeV5uu2VZ9asceYdrmtuKPOqaG8bc=; b=UmsTEw1411nVBcjgUuowDWKFWB
-        WzoGCd6PpoQ0VqtNDI9zgVFZlPal6fRAnjhyoYuEywtutKkTG4HsKIwVYweMS+Nf5Pk3dCbivo2k8
-        01lln/IP2BqFsaahqVZC7VqMynPiLJyDsTqPZFa1Yz4I4bK3BaorIAiWu1m7eUhgKodFH/gOuIFbu
-        6BG6U/eixy02pdpk9QH7XDBZKfdYokq/5IjzuTsXMyCPTKqtVP1thTOjjVckRwVOKCh+WOLNEpRQa
-        mm1GDtaIgkeUXrXGlgaJKz0x8oJbzPi0S8dKH2C1v3lcLkWaGsc6f62H56diwpZTNgsFwJTM4ePvm
-        80tX+HRQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBvKA-0002GY-CU; Sat, 29 Aug 2020 07:30:54 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 561A43011F0;
-        Sat, 29 Aug 2020 09:30:49 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 150A722B8F169; Sat, 29 Aug 2020 09:30:49 +0200 (CEST)
-Date:   Sat, 29 Aug 2020 09:30:49 +0200
-From:   peterz@infradead.org
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Eddy_Wu@trendmicro.com,
-        x86@kernel.org, davem@davemloft.net, rostedt@goodmis.org,
-        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        linux-arch@vger.kernel.org, cameron@moodycamel.com,
-        oleg@redhat.com, will@kernel.org, paulmck@kernel.org
-Subject: Re: [PATCH v4 18/23] sched: Fix try_invoke_on_locked_down_task()
- semantics
-Message-ID: <20200829073049.GC2674@hirez.programming.kicks-ass.net>
-References: <159861759775.992023.12553306821235086809.stgit@devnote2>
- <159861779482.992023.8503137488052381952.stgit@devnote2>
- <20200829110155.70c676520ad2cfef8374171d@kernel.org>
+        Sat, 29 Aug 2020 03:32:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1598686331; x=1630222331;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=SMfWT8t8Ye/STTHMxxumJ7xfGDzJOeasYwnCTcVmnHY=;
+  b=AgqIy+rvFxhb+WzTZlAoSBPjMEQf+nu1orGzZ51PUdUyMu5RnlsZRNod
+   1I2Jmt5XVxDQ3BnNEEQnr3DM5w2d0nPnqTtSqy/3nh0rM75EgT9pgnQJL
+   BnJ6SY1nLQpbynuHRlV8Ci7HCNVrpLIeryanbMiyubtxwGxJycEn6tiMD
+   g04BDj0c6GSQFLpGvgP5lGmxFezz82o8juvDaLLckIW32Q7/0DNltmoTz
+   vFFYX5i5C1K7dWXJbYxo/WHrTFrt5JOj/eq/4OeEXYWI0FtzFFI2+jWlH
+   NlV2Ljvx/uVk9gGoEh3vS60d9d5MeiwguZRxghtjBm4ovSZEoyc47Ln/r
+   Q==;
+IronPort-SDR: YjeE12eBj8qKE23jUYjKh9quf4Rpyi7dghDKCi5jmaQHx7sL9MbCVyxbEvkn9G7PVwjOJ9WGJg
+ 1oDXSCtXLmepNxTiCOKGFjV0XqdKkTWEqpic8weoUo1uRXrYs3ywbJzVium80omX4exflDQuKQ
+ wrho5oNnbdo54UDGZVUt+dk17PjHGU/K7Ye2r+X4Mqm+hoadVehCLGe6bAUXVlwBuJF3q2hQqs
+ 4wIQs+J6BwdlgeDlANol1JKK6jyjx6Eg9uNW7UjQzsx6RBB10oPUGK/7lsvft5AO/szZQJ1qg+
+ iL4=
+X-IronPort-AV: E=Sophos;i="5.76,366,1592841600"; 
+   d="scan'208";a="150455914"
+Received: from mail-bn8nam12lp2177.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.177])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Aug 2020 15:32:09 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ePtgQ6RnK77fcuPl1574PzGGLHrvFlrbMO8L29eiT3/c8zc914VnIjQFlo8ek/zmNja/VNHrbsJzs2402B+qDnmmTwIvhLoPO2vxRbn2U3DHC3iE7oRFwKEWLk9vbG4dBUr/0Hy2jH/SH2brKP6PNP7T8lovCS+AM3t9d17/IEwYJHslhw1SZ0mKufhQ3lADUcunBlIRvd9/jxRwGtXTBANYrJbzCqh4+WrDmjJ9VY3CXgiHNtNyJYmPeut8W/gv0ApWu52y/bImyOvZPH6uGkewuKFj4uctE7uB0sayNrKY5tSWTw7FgX2S6fht8A34YyybkC6/lA+AGkC7+/4xkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SMfWT8t8Ye/STTHMxxumJ7xfGDzJOeasYwnCTcVmnHY=;
+ b=FINxorYjYmaVjjUrxnfj7z+H85oaBovdrIhQjbw6f1cGkatkX0afjLqBpm7Dx10QLHuwpsxcOiw9TVY2NqC01JD0IdSuQToKxETGvDxtFqD+aRsYV6So9fv26JSREqXFgwess8ndQC4YtouVUnfCTTc0caA4/8SVQaU0S/GLEk2krUbhQFXPwqKj1TQ3lK4UIl2a22yF8w6nJjfU+8SuNtYGer2s0324meOj4eoxSXq8rB4YXt3mK9D50a/3Il3HI9ApSOmz2z8vYkq8TAcQrwY75uT1rJ7HcmOsjfcdqvVZm3rPLS52CFgdTrK7AFCw86Bn5ByBcVgrJ6rUf3gnug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SMfWT8t8Ye/STTHMxxumJ7xfGDzJOeasYwnCTcVmnHY=;
+ b=IpEGE/K5gF1Krz99tHdri00jQowIjOyv0a/yjoRW0l8qTF+VFAJKUh8nuB+WBrzO/0V0GpRtQdux1NvGibv+flKqBSjKhb0exir6Ydh7ivGeuF0sX7Tyyp12JborHe9UZiSUPilHniGx1qZylU3DK31Xtjf3XUSCwLUuZyvEwVg=
+Received: from BY5PR04MB6705.namprd04.prod.outlook.com (2603:10b6:a03:220::8)
+ by BYAPR04MB4711.namprd04.prod.outlook.com (2603:10b6:a03:14::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Sat, 29 Aug
+ 2020 07:32:05 +0000
+Received: from BY5PR04MB6705.namprd04.prod.outlook.com
+ ([fe80::1083:4093:49fa:a3fd]) by BY5PR04MB6705.namprd04.prod.outlook.com
+ ([fe80::1083:4093:49fa:a3fd%2]) with mapi id 15.20.3326.023; Sat, 29 Aug 2020
+ 07:32:05 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     "Bao D. Nguyen" <nguyenb@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+CC:     "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Nitin Rawat <nitirawa@codeaurora.org>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 1/1] scsi: ufshcd: Allow zero value setting to
+ Auto-Hibernate Timer
+Thread-Topic: [PATCH v1 1/1] scsi: ufshcd: Allow zero value setting to
+ Auto-Hibernate Timer
+Thread-Index: AQHWfaC3kd0c1Nm+d0KoEDt9jyytd6lOsAkw
+Date:   Sat, 29 Aug 2020 07:32:05 +0000
+Message-ID: <BY5PR04MB6705177184FC1A0E5F7710FDFC530@BY5PR04MB6705.namprd04.prod.outlook.com>
+References: <b141cfcd7998b8933635828b56fbb64f8ad4d175.1598661071.git.nguyenb@codeaurora.org>
+In-Reply-To: <b141cfcd7998b8933635828b56fbb64f8ad4d175.1598661071.git.nguyenb@codeaurora.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: codeaurora.org; dkim=none (message not signed)
+ header.d=none;codeaurora.org; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [77.138.4.172]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 88308c96-14eb-41cb-eeec-08d84beda125
+x-ms-traffictypediagnostic: BYAPR04MB4711:
+x-microsoft-antispam-prvs: <BYAPR04MB4711B8F6BBF6A302EE1FA0E6FC530@BYAPR04MB4711.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pUY5iEuY79n/z8Wpt2y2Wn8gWz1LIpWol8GLHuIRECSvOvqfEFoM9Hwmq6pQAe/FrERi78Lq/zUZsvonsvOB/aYRibEsqMo+fIoYLLtsf5VjdZku6yoKqpDbeFn3L3I0UAscCf1+cxS0ej9+qMFqSsbRXck3U8Bn7woTwfn4QH5fDQBlvshyZuwLZPnqGVMvaPWDfhXptulc6FWWPXoJRhx0887G1MygV9wwWxebVhUfBBo3Aj0hqDQUp5weNe1lVb+TJvojw5sfiY/WrmsqKehrcxnVQ3D7jhFeBm+g4UNtnmzTJjBXO7aS0fsHizjJ
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6705.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(366004)(39860400002)(396003)(136003)(2906002)(316002)(86362001)(7416002)(7696005)(6506007)(54906003)(4744005)(71200400001)(110136005)(4326008)(66476007)(186003)(55016002)(8936002)(26005)(33656002)(478600001)(66446008)(66946007)(64756008)(66556008)(52536014)(83380400001)(76116006)(8676002)(5660300002)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: O1b4C1RIPSUwB86UDbF/YWm63BWjwJoLShpz0bUFPm3pDzgHEZr2Fg/f80ErgzVyyyCfN6izZfhdsa7pCsPA8lp/+p5X65s0nnhSdHFjmrNZ8YzI7DxadqZuXFYETuYSzj0x8M1Q3BsA0RR6cTUpFpxZ7SVfYFERyNaALyETyoYMeqFQPGlHX8Xeyu2lgfuAZQgTUcQej/sNRjpqu6i4cd78XLCW+XsFuPDKWyuZklv1aTlQE7lyijmHFgaMtGU9zvc0Q4eGVRyilevMJmr4dZZ8VZRfqu8cXmWTmSMe+UXeJDrzMkxh98O5qfbW+5cEsbHC5HvtKE+P4Sg458zlh4DKVao5H0EoeADv03klNvIBD+PkHFV4lX87yc234ncw+0nPbW7pKthZvKvc1PVqSTcvYDRt5NeC0nGpRxLhu0rWNBkRsuz2FujcTyETaRWgWEwF+Cdf0lCfwkACRfF0mPtLD96JefYmjj47lz4+3tZbOjGa5TrkaS85OWFUrWfeOg7T/D2mCiplwiY+0oB/LC5Jwg3AwrPJ7cPnbU78SEFdytCjk8mX2znUKEQZ4r2epzPEEsqR8IjTIvAMHZiI5zeysWvh4+y2yWjZS8zsSMa0TT8saGk+VO8pH6yuBdOInSLzr2g4rUZLB12My+f5xw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200829110155.70c676520ad2cfef8374171d@kernel.org>
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR04MB6705.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88308c96-14eb-41cb-eeec-08d84beda125
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2020 07:32:05.4282
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gnd5piqZyUH14hTGgCm8Cb2hS9jknGsM1RAo3jGR9lNgyONWHHz/l5lVmtOSgUILc2mIUnc9XRZCR16sbmFMEg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4711
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 11:01:55AM +0900, Masami Hiramatsu wrote:
-> On Fri, 28 Aug 2020 21:29:55 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > From: Peter Zijlstra <peterz@infradead.org>
-> 
-> In the next version I will drop this since I will merge the kretprobe_holder
-> things into removing kretporbe hash patch.
-> 
-> However, this patch itself seems fixing a bug of commit 2beaf3280e57
-> ("sched/core: Add function to sample state of locked-down task").
-> Peter, could you push this separately?
+=20
+>=20
+> The zero value Auto-Hibernate Timer is a valid setting, and it
+> indicates the Auto-Hibernate feature being disabled. Correctly
+Right. So " ufshcd_auto_hibern8_enable" is no longer an appropriate name.
+Maybe ufshcd_auto_hibern8_set instead?
 
-Yeah, Paul and me have a slightly different version for that, this also
-changes semantics we're still bickering over ;-)
+Also, did you verified that no other platform relies on its non-zero value?
 
-But yes, I'll take care of it.
+Thanks,
+Avri
