@@ -2,177 +2,111 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4F2C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 10:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C18A1C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD99320848
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 10:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E3E620848
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:00:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M4tw0T9Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgH2K4d (ORCPT
+        id S1727904AbgH2LAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 06:56:33 -0400
-Received: from mga09.intel.com ([134.134.136.24]:60007 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728077AbgH2Kzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 06:55:37 -0400
-IronPort-SDR: xA4aNxm5G1MPMSV4g57rEH/BnpcL69lxj+sZYn2comYYHNeP33R9mK2vU9PHyGT0bXemILcykJ
- sV+6wWNfhQHw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="157807118"
-X-IronPort-AV: E=Sophos;i="5.76,367,1592895600"; 
-   d="scan'208";a="157807118"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2020 03:55:36 -0700
-IronPort-SDR: jepVJiZHigirgJG8hB2a6rqM8nfB9gHvja9lJDNkPzODR31JJZwdc/wT2dJ/TxYXPrtpFGeyIB
- qlkuB7ufGgmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,367,1592895600"; 
-   d="scan'208";a="324338400"
-Received: from shuo-intel.sh.intel.com (HELO localhost) ([10.239.154.30])
-  by fmsmga004.fm.intel.com with ESMTP; 29 Aug 2020 03:55:33 -0700
-Date:   Sat, 29 Aug 2020 18:55:32 +0800
-From:   Shuo A Liu <shuo.a.liu@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     <linux-kernel@vger.kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Borislav Petkov" <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yu Wang <yu1.wang@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>, <x86@kernel.org>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: Re: [PATCH 06/17] virt: acrn: Introduce VM management interfaces
-Message-ID: <20200829105532.GE13723@shuo-intel.sh.intel.com>
-References: <20200825024516.16766-1-shuo.a.liu@intel.com>
- <20200825024516.16766-7-shuo.a.liu@intel.com>
- <20200828102704.GB1470435@kroah.com>
+        Sat, 29 Aug 2020 07:00:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbgH2LAb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 07:00:31 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D8EC061236;
+        Sat, 29 Aug 2020 04:00:30 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id bh1so829931plb.12;
+        Sat, 29 Aug 2020 04:00:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=rbN31fDgN155GoEPESBbfhOMLuhG295QfIVmklyynfc=;
+        b=M4tw0T9Qf9xg3i50nAO6NEFPH0QiPj1hJ2d3crfampfvSqM0XPH+X7FDJFJnfJXqSp
+         CEfpYdLqN31z+u5NjHoPZssVkp7MgTXx53YWS4Aa7Z/ZLHqHUpUQ7pwtH5dfzwJUVwdG
+         lD9s+EwCPFZFq8kqmrFJ71+QAmn6fMVCEJW2JBRmUPH/2FhbSQSd4RW7jAkTpArsP/09
+         8qwDAr0o1Ur0kMmZgu76Xk/2B1dunipPzBdlLodfUFFvesYi/cIRTkfOV8cju+g25Slz
+         SXuVieGPoX4mDzK3b3uWVXRgxQ52ipNgzyzM+UrE3jAA5e1pfDlxrCmLl/1TLncTaiRy
+         /KyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=rbN31fDgN155GoEPESBbfhOMLuhG295QfIVmklyynfc=;
+        b=hDE/wjUjC2YK4GLublxeEq4SJUlGmgRi/NtwFG4/NqCiMoYp311qmev7eY4BpD+FZm
+         fQFV9/uQchmp8oJLhmjU0hnr4hJ0vo+kJNbzB7+YBu5bUNqfZtpB0bZFDXx6WfWylzCH
+         xzMVNq43MGy+COxTAeHqRNxTG2xcOj+2u7qa7y7kXiHcej5j3uWcsUSwRNA0hO8gq+0+
+         fN5xbAJrFyMtnmpiLZn4MQCZrbujQQo88poF0mDhPA96J+PodBzpUA0cuo4wUGKx6r1E
+         qYGWaexV5Ohb+DWAK+4gO+1ilxLNm6cTtPUk8Z4NwyZIdoSipUz0KKdzrZ3HIPMvu5Rp
+         3gNQ==
+X-Gm-Message-State: AOAM532hWlEqQZS1CIO8HuP5l7YUebLCMLmf6rq8QSWeuppbhpGYiXvw
+        ZMvcROTMVV0Uw+I6E+2ugqmP0sBa6KsHf810MUs=
+X-Google-Smtp-Source: ABdhPJwSgwTECrL2qJy6gBd1V8IHxFn4UupJo7fWiDvJWS1ifGSPZYR63kl6danPfCmdx8EPuUrFXYHozuIR/xoYDSQ=
+X-Received: by 2002:a17:90a:80c6:: with SMTP id k6mr2476928pjw.81.1598698830055;
+ Sat, 29 Aug 2020 04:00:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200828102704.GB1470435@kroah.com>
-User-Agent: Mutt/1.8.3 (2017-05-23)
+Received: by 2002:a17:90a:1952:0:0:0:0 with HTTP; Sat, 29 Aug 2020 04:00:29
+ -0700 (PDT)
+In-Reply-To: <20200829103637.1730050-1-yili@winhong.com>
+References: <20200829103637.1730050-1-yili@winhong.com>
+From:   Yi Li <yilikernel@gmail.com>
+Date:   Sat, 29 Aug 2020 19:00:29 +0800
+Message-ID: <CAJfdMYCLNzWVKZMgmzU5oDg+6yhZ3JMaBv7_CmM7MCgY7A9iPQ@mail.gmail.com>
+Subject: Re: [PATCH] bnx2x: correct a mistake when show error code
+To:     Yi Li <yili@winhong.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        kuba@kernel.org, davem@davemloft.net,
+        GR-everest-linux-l2@marvell.com, skalluru@marvell.com,
+        aelior@marvell.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+It is useless.
+The original code just tell some error info. and don't  show errorcode
 
-On Fri 28.Aug'20 at 12:27:04 +0200, Greg Kroah-Hartman wrote:
->On Tue, Aug 25, 2020 at 10:45:06AM +0800, shuo.a.liu@intel.com wrote:
->> From: Shuo Liu <shuo.a.liu@intel.com>
->>
->> The VM management interfaces expose several VM operations to ACRN
->> userspace via ioctls. For example, creating VM, starting VM, destroying
->> VM and so on.
->>
->> The ACRN Hypervisor needs to exchange data with the ACRN userspace
->> during the VM operations. HSM provides VM operation ioctls to the ACRN
->> userspace and communicates with the ACRN Hypervisor for VM operations
->> via hypercalls.
->>
->> HSM maintains a list of User VM. Each User VM will be bound to an
->> existing file descriptor of /dev/acrn_hsm. The User VM will be
->> destroyed when the file descriptor is closed.
->>
->> Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
->> Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
->> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
->> Cc: Zhi Wang <zhi.a.wang@intel.com>
->> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
->> Cc: Yu Wang <yu1.wang@intel.com>
->> Cc: Reinette Chatre <reinette.chatre@intel.com>
->> ---
->>  drivers/virt/acrn/Makefile    |  2 +-
->>  drivers/virt/acrn/acrn_drv.h  | 16 ++++++++-
->>  drivers/virt/acrn/hsm.c       | 58 +++++++++++++++++++++++++++++-
->>  drivers/virt/acrn/hypercall.h | 62 ++++++++++++++++++++++++++++++++
->>  drivers/virt/acrn/vm.c        | 66 +++++++++++++++++++++++++++++++++++
->>  include/uapi/linux/acrn.h     | 36 +++++++++++++++++++
->>  6 files changed, 237 insertions(+), 3 deletions(-)
->>  create mode 100644 drivers/virt/acrn/vm.c
->>
->> diff --git a/drivers/virt/acrn/Makefile b/drivers/virt/acrn/Makefile
->> index 6920ed798aaf..cf8b4ed5e74e 100644
->> --- a/drivers/virt/acrn/Makefile
->> +++ b/drivers/virt/acrn/Makefile
->> @@ -1,3 +1,3 @@
->>  # SPDX-License-Identifier: GPL-2.0
->>  obj-$(CONFIG_ACRN_HSM)	:= acrn.o
->> -acrn-y := hsm.o
->> +acrn-y := hsm.o vm.o
->> diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
->> index 36f43d8d43d0..35fcb5cbbff3 100644
->> --- a/drivers/virt/acrn/acrn_drv.h
->> +++ b/drivers/virt/acrn/acrn_drv.h
->> @@ -10,12 +10,26 @@
->>
->>  #define ACRN_INVALID_VMID (0xffffU)
->>
->> +#define ACRN_VM_FLAG_DESTROYED		0U
->> +extern struct list_head acrn_vm_list;
->> +extern rwlock_t acrn_vm_list_lock;
->>  /**
->>   * struct acrn_vm - Properties of ACRN User VM.
->> + * @list:	Entry within global list of all VMs
->>   * @vmid:	User VM ID
->> + * @vcpu_num:	Number of virtual CPUs in the VM
->> + * @flags:	Flags (ACRN_VM_FLAG_*) of the VM. This is VM flag management
->> + *		in HSM which is different from the &acrn_vm_creation.vm_flag.
->>   */
->>  struct acrn_vm {
->> -	u16	vmid;
->> +	struct list_head	list;
->> +	u16			vmid;
->> +	int			vcpu_num;
->> +	unsigned long		flags;
->>  };
->>
->> +struct acrn_vm *acrn_vm_create(struct acrn_vm *vm,
->> +			       struct acrn_vm_creation *vm_param);
->> +int acrn_vm_destroy(struct acrn_vm *vm);
->> +
->>  #endif /* __ACRN_HSM_DRV_H */
->> diff --git a/drivers/virt/acrn/hsm.c b/drivers/virt/acrn/hsm.c
->> index a08169f35c96..ed8921a6c68b 100644
->> --- a/drivers/virt/acrn/hsm.c
->> +++ b/drivers/virt/acrn/hsm.c
->> @@ -45,19 +45,75 @@ static int acrn_dev_open(struct inode *inode, struct file *filp)
->>  static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
->>  			   unsigned long ioctl_param)
->>  {
->> +	struct acrn_vm *vm = filp->private_data;
->> +	struct acrn_vm_creation *vm_param;
->> +	int ret = 0;
->> +
->>  	if (cmd == ACRN_IOCTL_GET_API_VERSION) {
->>  		if (copy_to_user((void __user *)ioctl_param,
->>  				 &api_version, sizeof(api_version)))
->>  			return -EFAULT;
->> +		return 0;
->>  	}
->>
->> -	return 0;
->> +	if (vm->vmid == ACRN_INVALID_VMID && cmd != ACRN_IOCTL_CREATE_VM) {
->> +		pr_err("ioctl 0x%x: Invalid VM state!\n", cmd);
+On 8/29/20, Yi Li <yili@winhong.com> wrote:
+> use rc for error code.
 >
->For this whole driver, you have a real 'struct device' to use, please
->use it for all of these error messages everywhere.  dev_err() gives you
->much more information than pr_err() does.
-
-OK. I will use dev_err() instead.
-
+> Signed-off-by: Yi Li <yili@winhong.com>
+> ---
+>  drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 >
->Same everywhere in this patch series.
-
-Sure.
-
-Thanks
-shuo
+> diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c
+> b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c
+> index 1426c691c7c4..0346771396ce 100644
+> --- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c
+> +++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_link.c
+> @@ -13562,9 +13560,8 @@ static int bnx2x_ext_phy_common_init(struct bnx2x
+> *bp, u32 shmem_base_path[],
+>  	}
+>
+>  	if (rc)
+> -		netdev_err(bp->dev,  "Warning: PHY was not initialized,"
+> -				      " Port %d\n",
+> -			 0);
+> +		netdev_err(bp->dev, "Warning: PHY was not initialized, Port %d\n",
+> +			   rc);
+>  	return rc;
+>  }
+>
+> --
+> 2.25.3
+>
+>
+>
+>
