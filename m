@@ -2,157 +2,125 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D47C433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B14C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72B47207BB
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AFC20E65
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598682329;
-	bh=qIkTPYaLCHkfiMzdPbJZFSyObU1cQmHOgPZyCvUGrds=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=vDVZ0F+Ex4R3ztvg0QdRpw32bGufsj7ri0RK/eskBlH7H+A6gdUBmh0Iwjj/9/BS+
-	 oY2QyHHoXhQWE/8SfTfcyfZ8J71HyiudV7KYDT/YOb8073qGa3bVD90mUo72sKi+kg
-	 S8ee9EDrHfMJ8eA/NCKzsx1No5RDqGP5sHTuQYWU=
+	s=default; t=1598682444;
+	bh=nmPv6vDLuaeXHEYBEjQxMedQhS6gWik2Zx2Xfd6Z2rs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KtKZ5a7KI5RTxsdG6hl1qjdyiXTUVxb3p05X1nEY/4mqlGCPQ5JPIWq+E9l8mD8J1
+	 /Mt371S+52zU4egOthXtb36nB0xRh7l+ZYspCXRQn0pSDJ56aKAMouJDoQkX56oNjN
+	 mRNkiPzhe2GGCLKxiQcSpgYsK6T1+6MoXyRrQNKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgH2GZ1 (ORCPT
+        id S1726412AbgH2G1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 02:25:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56730 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 02:27:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbgH2GZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 02:25:20 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725886AbgH2G1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 02:27:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E3A420936;
-        Sat, 29 Aug 2020 06:25:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A177E20936;
+        Sat, 29 Aug 2020 06:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598682319;
-        bh=qIkTPYaLCHkfiMzdPbJZFSyObU1cQmHOgPZyCvUGrds=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jxALBv4gVlZsetLBui5NUtHFVD9Uz+jH6gR4bdjj7GqsRskdbXn9YoI5xDAV4coWs
-         Tomeao5mkuGFpBtbsSwdI1/iinnt33w6RYQ206lWsUDr5pcinLPczqLP88/4DB5lWc
-         urNLvjOV8mXtPa7jahP0LPj9eiVG5kPuLzJq+0tM=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v4] dt-bindings: mmc: fsl-imx-esdhc: Fix i.MX 8 compatible matching
-Date:   Sat, 29 Aug 2020 08:25:05 +0200
-Message-Id: <20200829062505.4642-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        s=default; t=1598682442;
+        bh=nmPv6vDLuaeXHEYBEjQxMedQhS6gWik2Zx2Xfd6Z2rs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oyZgoHlz2pgoYTLWrnFmo74kMioGJkgPCP1NRq+fVd7PJUqXibhyxvSyKSumdkiDE
+         9aqwGIuCeubslJ3WGVgY6u/TH/7Tj7Gd+q1D+d+ra0jFquK6gPaPj4p/p0733JprTB
+         EH3rYPFsdo73/1bCtWAn+jU8J24hIHG9zROoeHA8=
+Date:   Sat, 29 Aug 2020 08:27:19 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Mani, Rajmohan" <rajmohan.mani@intel.com>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        "Joseph, Jithu" <jithu.joseph@intel.com>,
+        =?utf-8?B?Qmxhxb4=?= Hrastnik <blaz@mxxn.io>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "pmalani@chromium.org" <pmalani@chromium.org>,
+        "bleung@chromium.org" <bleung@chromium.org>
+Subject: Re: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager
+ (IOM) driver
+Message-ID: <20200829062719.GA80106@kroah.com>
+References: <20200822040508.23510-1-rajmohan.mani@intel.com>
+ <20200822040508.23510-2-rajmohan.mani@intel.com>
+ <20200828074359.GC942935@kroah.com>
+ <20200828090832.GB174928@kuha.fi.intel.com>
+ <DM6PR11MB3963228D43B50604AE4D0F3AF6520@DM6PR11MB3963.namprd11.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR11MB3963228D43B50604AE4D0F3AF6520@DM6PR11MB3963.namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i.MX 8 DTSes use two compatibles so update the binding to fix
-dtbs_check warnings like:
+On Fri, Aug 28, 2020 at 03:20:22PM +0000, Mani, Rajmohan wrote:
+> Hi Greg,
+> 
+> > Subject: Re: [PATCH v2 1/3] platform/x86: Add Intel Input Output Manager
+> > (IOM) driver
+> > 
+> > Hi Greg,
+> > 
+> > On Fri, Aug 28, 2020 at 09:43:59AM +0200, Greg Kroah-Hartman wrote:
+> > > I still find this crazy that a whole separate driver is created just
+> > > to read a single 32bit value.
+> > >
+> > > Why not put this logic in the driver that wants to read that value?
+> > > That would be much simpler, smaller, and more obvious.
+> > 
+> > That would mean that we start maintaining something like DMI quirk table in
+> > those drivers. Unfortunately the IOM device is not available on every platform.
+> > Also, even on platforms that do have it, there is no guarantee that the device is
+> > always going to be mapped to the same address.
+> > 
+> > Nevertheless, I was originally hoping that we could hide the handling of IOM
+> > somehow in ACPI without the need for an actual device object, but it now
+> > turns out that the other features of the IOM chip have created interest. At
+> > least our i915 guys probable have some use for it (I don't know exactly what
+> > they are planning to use it for).
+> > 
+> > So the fact that we may later need the device for something else, on top of the
+> > clumsiness and most importantly risks involved with using ACPI to take care of
+> > extra tasks (ASL tends to have bugs - bugs that may never ever get fixed), I
+> > think the IOM device object, and the driver that binds to it, do have a valid
+> > reason for existing.
+> > 
+> 
+> Intel PMC USB mux device is part of the PCH, while IOM is part of the SoC.
 
-  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: mmc@30b40000:
-    compatible: ['fsl,imx8mn-usdhc', 'fsl,imx7d-usdhc'] is too long
-    From schema: Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+I have no idea what a "PCH" is, what "IOM" is, and how any of this
+relates to a "SoC" :)
 
-  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: mmc@30b40000:
-    compatible: Additional items are not allowed ('fsl,imx7d-usdhc' was unexpected)
+Don't impose arbritrary hardware "splits" to kernel code when the kernel
+has no such "partitioning" please.
 
-  arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: mmc@30b40000:
-    compatible: ['fsl,imx8mn-usdhc', 'fsl,imx7d-usdhc'] is too long
+> This was another reason we had to have a separate ACPI device.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+That sounds like a firmware issue you can solve in UEFI.
 
----
+I think this is the most TLA-laden email I have ever written, and I used
+to work at IBM :)
 
-Changes since v3:
-1. Fix also example in Documentation/devicetree/bindings/clock/imx8qxp-lpcg.yaml
-
-Changes since v2:
-1. Remove moved compatibles.
-
-Changes since v1:
-1. Handle also fsl,imx8mm-usdhc and fsl,imx8qxp-usdhc
----
- .../bindings/clock/imx8qxp-lpcg.yaml          |  2 +-
- .../bindings/mmc/fsl-imx-esdhc.yaml           | 37 ++++++++++---------
- 2 files changed, 21 insertions(+), 18 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.yaml b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.yaml
-index 1d5e9bcce4c8..33f3010f48c3 100644
---- a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.yaml
-+++ b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.yaml
-@@ -62,7 +62,7 @@ examples:
-     };
- 
-     mmc@5b010000 {
--        compatible = "fsl,imx8qxp-usdhc";
-+        compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
-         interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
-         reg = <0x5b010000 0x10000>;
-         clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC0_IPG_CLK>,
-diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-index 10b45966f1b8..e71d13c2d109 100644
---- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-+++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-@@ -21,23 +21,26 @@ description: |
- 
- properties:
-   compatible:
--    enum:
--      - fsl,imx25-esdhc
--      - fsl,imx35-esdhc
--      - fsl,imx51-esdhc
--      - fsl,imx53-esdhc
--      - fsl,imx6q-usdhc
--      - fsl,imx6sl-usdhc
--      - fsl,imx6sx-usdhc
--      - fsl,imx6ull-usdhc
--      - fsl,imx7d-usdhc
--      - fsl,imx7ulp-usdhc
--      - fsl,imx8mq-usdhc
--      - fsl,imx8mm-usdhc
--      - fsl,imx8mn-usdhc
--      - fsl,imx8mp-usdhc
--      - fsl,imx8qm-usdhc
--      - fsl,imx8qxp-usdhc
-+    oneOf:
-+      - enum:
-+          - fsl,imx25-esdhc
-+          - fsl,imx35-esdhc
-+          - fsl,imx51-esdhc
-+          - fsl,imx53-esdhc
-+          - fsl,imx6q-usdhc
-+          - fsl,imx6sl-usdhc
-+          - fsl,imx6sx-usdhc
-+          - fsl,imx6ull-usdhc
-+          - fsl,imx7d-usdhc
-+          - fsl,imx7ulp-usdhc
-+      - items:
-+          - enum:
-+              - fsl,imx8mm-usdhc
-+              - fsl,imx8mn-usdhc
-+              - fsl,imx8mp-usdhc
-+              - fsl,imx8mq-usdhc
-+              - fsl,imx8qxp-usdhc
-+          - const: fsl,imx7d-usdhc
- 
-   reg:
-     maxItems: 1
--- 
-2.17.1
-
+greg k-h
