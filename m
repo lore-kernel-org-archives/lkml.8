@@ -7,76 +7,80 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB4CC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FEBC433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6959207DF
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E05207DF
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 11:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598699544;
-	bh=1rZZTHYv2srzGJyq4r3KsvCUUvcAAp36hZsvCxBAaik=;
+	s=default; t=1598699597;
+	bh=VnNc7+uZcxG8XMiLRL43M8aRpdv+zundAbqmloq3LDg=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=hUuayXZvZW9Zdb8niUXQXnlsjOo0UlubRKreNlbj44zB+XFVbuLk/4XCV8WG/9lAu
-	 IkORBWHMvd4xRfgS8vekHzVMf0+KCm/go7OehnVnY5Ba8AGbeadtuucrDeiK+28URY
-	 YjPhsTUIaVB5dLrOHI9uqKv/FNYYjeRa5s0lGeR4=
+	b=1OF4C8mcKEmMVYRi2kB5RpuvaN2Yx9sW5JkziHJBr+moWU/pC4HoFvP+a36Bi3bdf
+	 qS7o353UaMIaDog4xiPxhAqnw/CrrK1irgHQHi2+PJV4tM0YsQLf3b05k3zBc4/ApU
+	 RJi3pxxQ4Dkbt4pYrTNQVGxDtN9N5WwozQq53t24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgH2LMX (ORCPT
+        id S1726981AbgH2LNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 07:12:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38582 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 07:13:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726876AbgH2LMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 07:12:17 -0400
+        id S1726876AbgH2LMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 07:12:54 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 960DF207DF;
-        Sat, 29 Aug 2020 11:12:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD174207DF;
+        Sat, 29 Aug 2020 11:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598699537;
-        bh=1rZZTHYv2srzGJyq4r3KsvCUUvcAAp36hZsvCxBAaik=;
+        s=default; t=1598699574;
+        bh=VnNc7+uZcxG8XMiLRL43M8aRpdv+zundAbqmloq3LDg=;
         h=From:To:Cc:Subject:Date:From;
-        b=Y5+2Zu9+0ji/9k7BPULSt0zGyr8h/eAh8E6Swaxpm1Snyc4wseqJl0n/17yvNiJak
-         ZiC6vJQliFizVeC36aSg879gIi/bDZPpaGOOlYWqGPxv2yOauRnmIkyVqL4GMqeYTu
-         ivcUCAn/nuyYsJpXnalLThSyDN9oipFTs8FJEp1M=
+        b=W+liGVS9wxeji6GF3xckVmzm30iqWbvrah6E/uw8bvbfQVF7G6hv38z5D6h4q4W+u
+         sLB8Ap139V+UFTHoKuER2j9D7Kx6IuZABUMyo+41nl5NAeG3WhiLAcb6EHO1ZWVlVV
+         UROVmQtnaKc9PA+3Wj0tH2dJnylgBmkH3DGKGGes=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@gmail.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] arm64: dts: qcom: msm8992: Fix UART interrupt property
-Date:   Sat, 29 Aug 2020 13:12:09 +0200
-Message-Id: <20200829111209.32685-1-krzk@kernel.org>
+Subject: [PATCH] arm64: dts: imx8mq: Fix TMU interrupt property
+Date:   Sat, 29 Aug 2020 13:12:48 +0200
+Message-Id: <20200829111248.321-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"interrupt" is not a valid property.
+"interrupt" is not a valid property.  Using proper name fixes dtbs_check
+warning:
 
-Fixes: 7f8bcc0c4cfe ("arm64: dts: qcom: msm8992: Add BLSP2_UART2 and I2C nodes")
+  arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-zest.dt.yaml: tmu@30260000: 'interrupts' is a required property
+
+Fixes: e464fd2ba4d4 ("arm64: dts: imx8mq: enable the multi sensor TMU")
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8992.dtsi | 2 +-
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-index 188fff2095f1..8626b3a50eda 100644
---- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-@@ -335,7 +335,7 @@
- 		blsp2_uart2: serial@f995e000 {
- 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
- 			reg = <0xf995e000 0x1000>;
--			interrupt = <GIC_SPI 146 IRQ_TYPE_LEVEL_LOW>;
-+			interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_LOW>;
- 			clock-names = "core", "iface";
- 			clocks = <&gcc GCC_BLSP2_UART2_APPS_CLK>,
- 				<&gcc GCC_BLSP2_AHB_CLK>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index f70435cf9ad5..561fa792fe5a 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -423,7 +423,7 @@
+ 			tmu: tmu@30260000 {
+ 				compatible = "fsl,imx8mq-tmu";
+ 				reg = <0x30260000 0x10000>;
+-				interrupt = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clk IMX8MQ_CLK_TMU_ROOT>;
+ 				little-endian;
+ 				fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
 -- 
 2.17.1
 
