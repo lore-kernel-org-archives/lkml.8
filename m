@@ -2,209 +2,164 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF96AC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 13:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0D6C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 13:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEA18207BB
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 13:11:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598706702;
-	bh=+Q2qs+5oSv+DDSatfvwe0sYEk5sx3ecNkoK1/NfZIcU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nwf2+v2OKVb2IWnuqa3ASItG5A1Da5F9q64n0C9ZZnWI3bnJFbWFM6kmqJSW65S7z
-	 MkYRMpdRqW8tosX9oO2JF5qThPGlUPt8C6dpztOUBf8gck+UdcpTCml/DUil3Gyu5I
-	 LLuhHHZwmA/J46mhcx5O4F8hKh3A5/sib3PkML6Q=
+	by mail.kernel.org (Postfix) with ESMTP id D7B3D207BB
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 13:12:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rK1Hmsb3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728082AbgH2NLm (ORCPT
+        id S1728233AbgH2NLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 09:11:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728122AbgH2NEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 09:04:01 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98E5820E65;
-        Sat, 29 Aug 2020 13:03:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598706230;
-        bh=+Q2qs+5oSv+DDSatfvwe0sYEk5sx3ecNkoK1/NfZIcU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PbwQA0+fiBcwvPT+AQCSP6X+7bLk/4m8wt5Gb5gKMuypPnVer7yd+bzmyaKQCjPym
-         PksoV7txGuIrNh6JB3riDh+3b7mdETL1p25VZ+alC6ejNwZISLR4O7C3eKgC7wyFW/
-         PuZSjwusXbkoLscZvyP8XaKM8bvxS2nlN0meHAHw=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Cc:     Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
-        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
-        cameron@moodycamel.com, oleg@redhat.com, will@kernel.org,
-        paulmck@kernel.org, mhiramat@kernel.org
-Subject: [PATCH v5 20/21] freelist: Lock less freelist
-Date:   Sat, 29 Aug 2020 22:03:46 +0900
-Message-Id: <159870622579.1229682.16729440870040944993.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <159870598914.1229682.15230803449082078353.stgit@devnote2>
-References: <159870598914.1229682.15230803449082078353.stgit@devnote2>
-User-Agent: StGit/0.19
+        Sat, 29 Aug 2020 09:11:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5880 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728235AbgH2NEs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 09:04:48 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07TD1XZa122290;
+        Sat, 29 Aug 2020 09:04:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=7MqhdwTj5lKbX+jh+JmPegmmYZsxZQX9IBMyUrTRHfY=;
+ b=rK1Hmsb3jYg7QCmbv2VGYaw4Wm3vtDjGCyCX+qXTxpC54ODVNPDBveNJAHxWu262GYry
+ bzLa4ZB8P+l6bjq3sfmmIxT5xyEbc15hau/VdpCVbyVWGsN0Tyc3vllOvRH4l7BaExul
+ QZeKBO4cLFCa5Cf+mxPSerfSKxH42t0VyafP/utXIp23NYfMpVWRXrEn6L+Ic1gwqtEg
+ VHq/pYm3fAvt/dzs267SnkTPiwG8L2XOi4viZdPcjTzXApVLPDhE0xXXmks/WA97iGCn
+ TF8wGkP7v7XjqkQS7ZLE1AqVRjEuRkv27iGF2SJK5GOx18C49k5vGPy5QbTiqorzRmlu BA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 337kdpv0ka-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 29 Aug 2020 09:04:37 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07TD2KRI124347;
+        Sat, 29 Aug 2020 09:04:37 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 337kdpv0jr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 29 Aug 2020 09:04:36 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07TD3kaH025145;
+        Sat, 29 Aug 2020 13:04:34 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03fra.de.ibm.com with ESMTP id 337en8875s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 29 Aug 2020 13:04:34 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07TD4WOm31457540
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 29 Aug 2020 13:04:32 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1FF8E11C04C;
+        Sat, 29 Aug 2020 13:04:32 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 02AE411C04A;
+        Sat, 29 Aug 2020 13:04:31 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.145.92.75])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat, 29 Aug 2020 13:04:30 +0000 (GMT)
+Date:   Sat, 29 Aug 2020 16:04:29 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org
+Subject: Re: [ALTERNATE PATCH] memblock: fix min_low_pfn/max_low_pfn build
+ errors
+Message-ID: <20200829130429.GG167163@linux.ibm.com>
+References: <20200829000139.2513-1-rdunlap@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200829000139.2513-1-rdunlap@infradead.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-29_07:2020-08-28,2020-08-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ phishscore=0 mlxlogscore=875 clxscore=1011 lowpriorityscore=0 mlxscore=0
+ bulkscore=0 impostorscore=0 adultscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008290101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+On Fri, Aug 28, 2020 at 05:01:39PM -0700, Randy Dunlap wrote:
+> Export min_low_pfn & max_low_pfn in mm/memblock.c to fix build errors
+> on arch/microblaze/ and arch/ia64/: (e.g.)
 
-Cc: cameron@moodycamel.com
-Cc: oleg@redhat.com
-Cc: will@kernel.org
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- include/linux/freelist.h |  129 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 129 insertions(+)
- create mode 100644 include/linux/freelist.h
+Please don't. This would give driver developers a wrong impression that
+these variables can be used to query memory boundaries, but this is not
+the case, at least not on all architectures.
 
-diff --git a/include/linux/freelist.h b/include/linux/freelist.h
-new file mode 100644
-index 000000000000..fc1842b96469
---- /dev/null
-+++ b/include/linux/freelist.h
-@@ -0,0 +1,129 @@
-+/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-+#ifndef FREELIST_H
-+#define FREELIST_H
-+
-+#include <linux/atomic.h>
-+
-+/*
-+ * Copyright: cameron@moodycamel.com
-+ *
-+ * A simple CAS-based lock-free free list. Not the fastest thing in the world
-+ * under heavy contention, but simple and correct (assuming nodes are never
-+ * freed until after the free list is destroyed), and fairly speedy under low
-+ * contention.
-+ *
-+ * Adapted from: https://moodycamel.com/blog/2014/solving-the-aba-problem-for-lock-free-free-lists
-+ */
-+
-+struct freelist_node {
-+	atomic_t		refs;
-+	struct freelist_node	*next;
-+};
-+
-+struct freelist_head {
-+	struct freelist_node	*head;
-+};
-+
-+#define REFS_ON_FREELIST 0x80000000
-+#define REFS_MASK	 0x7FFFFFFF
-+
-+static inline void __freelist_add(struct freelist_node *node, struct freelist_head *list)
-+{
-+	/*
-+	 * Since the refcount is zero, and nobody can increase it once it's
-+	 * zero (except us, and we run only one copy of this method per node at
-+	 * a time, i.e. the single thread case), then we know we can safely
-+	 * change the next pointer of the node; however, once the refcount is
-+	 * back above zero, then other threads could increase it (happens under
-+	 * heavy contention, when the refcount goes to zero in between a load
-+	 * and a refcount increment of a node in try_get, then back up to
-+	 * something non-zero, then the refcount increment is done by the other
-+	 * thread) -- so if the CAS to add the node to the actual list fails,
-+	 * decrese the refcount and leave the add operation to the next thread
-+	 * who puts the refcount back to zero (which could be us, hence the
-+	 * loop).
-+	 */
-+	struct freelist_node *head = READ_ONCE(list->head);
-+
-+	for (;;) {
-+		WRITE_ONCE(node->next, head);
-+		atomic_set_release(&node->refs, 1);
-+
-+		if (!try_cmpxchg_release(&list->head, &head, node)) {
-+			/*
-+			 * Hmm, the add failed, but we can only try again when
-+			 * the refcount goes back to zero.
-+			 */
-+			if (atomic_fetch_add_release(REFS_ON_FREELIST - 1, &node->refs) == 1)
-+				continue;
-+		}
-+		return;
-+	}
-+}
-+
-+static inline void freelist_add(struct freelist_node *node, struct freelist_head *list)
-+{
-+	/*
-+	 * We know that the should-be-on-freelist bit is 0 at this point, so
-+	 * it's safe to set it using a fetch_add.
-+	 */
-+	if (!atomic_fetch_add_release(REFS_ON_FREELIST, &node->refs)) {
-+		/*
-+		 * Oh look! We were the last ones referencing this node, and we
-+		 * know we want to add it to the free list, so let's do it!
-+		 */
-+		__freelist_add(node, list);
-+	}
-+}
-+
-+static inline struct freelist_node *freelist_try_get(struct freelist_head *list)
-+{
-+	struct freelist_node *prev, *next, *head = smp_load_acquire(&list->head);
-+	unsigned int refs;
-+
-+	while (head) {
-+		prev = head;
-+		refs = atomic_read(&head->refs);
-+		if ((refs & REFS_MASK) == 0 ||
-+		    !atomic_try_cmpxchg_acquire(&head->refs, &refs, refs+1)) {
-+			head = smp_load_acquire(&list->head);
-+			continue;
-+		}
-+
-+		/*
-+		 * Good, reference count has been incremented (it wasn't at
-+		 * zero), which means we can read the next and not worry about
-+		 * it changing between now and the time we do the CAS.
-+		 */
-+		next = READ_ONCE(head->next);
-+		if (try_cmpxchg_acquire(&list->head, &head, next)) {
-+			/*
-+			 * Yay, got the node. This means it was on the list,
-+			 * which means should-be-on-freelist must be false no
-+			 * matter the refcount (because nobody else knows it's
-+			 * been taken off yet, it can't have been put back on).
-+			 */
-+			WARN_ON_ONCE(atomic_read(&head->refs) & REFS_ON_FREELIST);
-+
-+			/*
-+			 * Decrease refcount twice, once for our ref, and once
-+			 * for the list's ref.
-+			 */
-+			atomic_fetch_add(-2, &head->refs);
-+
-+			return head;
-+		}
-+
-+		/*
-+		 * OK, the head must have changed on us, but we still need to decrement
-+		 * the refcount we increased.
-+		 */
-+		refs = atomic_fetch_add(-1, &prev->refs);
-+		if (refs == REFS_ON_FREELIST + 1)
-+			__freelist_add(prev, list);
-+	}
-+
-+	return NULL;
-+}
-+
-+#endif /* FREELIST_H */
+I would prefer fixing it up locally for microblaze and ia64.
 
+>   ERROR: "max_low_pfn" [drivers/rpmsg/virtio_rpmsg_bus.ko] undefined!
+>   ERROR: "min_low_pfn" [drivers/rpmsg/virtio_rpmsg_bus.ko] undefined!
+>   ERROR: "max_low_pfn" [drivers/mtd/spi-nor/spi-nor.ko] undefined!
+>   ERROR: "min_low_pfn" [drivers/mtd/spi-nor/spi-nor.ko] undefined!
+>   ERROR: "min_low_pfn" [drivers/mtd/nand/raw/nand.ko] undefined!
+>   ERROR: "max_low_pfn" [drivers/mtd/nand/raw/nand.ko] undefined!
+>   ERROR: "max_low_pfn" [drivers/rapidio/devices/rio_mport_cdev.ko] undefined!
+>   ERROR: "min_low_pfn" [drivers/rapidio/devices/rio_mport_cdev.ko] undefined!
+>   ERROR: "min_low_pfn" [drivers/hwtracing/intel_th/intel_th_msu.ko] undefined!
+>   ERROR: "max_low_pfn" [drivers/hwtracing/intel_th/intel_th_msu.ko] undefined!
+>   ERROR: "min_low_pfn" [drivers/crypto/cavium/nitrox/n5pf.ko] undefined!
+>   ERROR: "max_low_pfn" [drivers/crypto/cavium/nitrox/n5pf.ko] undefined!
+>   ERROR: "max_low_pfn" [drivers/md/dm-integrity.ko] undefined!
+>   ERROR: "min_low_pfn" [drivers/md/dm-integrity.ko] undefined!
+>   ERROR: "max_low_pfn" [crypto/tcrypt.ko] undefined!
+>   ERROR: "min_low_pfn" [crypto/tcrypt.ko] undefined!
+> 
+> In both arches, these variables are referenced in
+> arch/$ARCH/include/asm/page.h.
+> 
+> Mike had/has an alternate patch for Microblaze:
+> https://lore.kernel.org/lkml/20200630111519.GA1951986@linux.ibm.com/
+> 
+> David suggested just exporting min_low_pfn & max_low_pfn in
+> mm/memblock.c:
+> https://lore.kernel.org/lkml/alpine.DEB.2.22.394.2006291911220.1118534@chino.kir.corp.google.com/
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Suggested-by: David Rientjes <rientjes@google.com>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: linux-mm@kvack.org
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Michal Simek <monstr@monstr.eu>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Fenghua Yu <fenghua.yu@intel.com>
+> Cc: linux-ia64@vger.kernel.org
+> ---
+>  mm/memblock.c |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> --- linux-next-20200825.orig/mm/memblock.c
+> +++ linux-next-20200825/mm/memblock.c
+> @@ -99,6 +99,8 @@ EXPORT_SYMBOL(contig_page_data);
+>  
+>  unsigned long max_low_pfn;
+>  unsigned long min_low_pfn;
+> +EXPORT_SYMBOL(min_low_pfn);
+> +EXPORT_SYMBOL(max_low_pfn);
+>  unsigned long max_pfn;
+>  unsigned long long max_possible_pfn;
+>  
+
+-- 
+Sincerely yours,
+Mike.
