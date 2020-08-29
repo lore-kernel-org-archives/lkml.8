@@ -2,83 +2,92 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81148C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F083C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5844920757
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:25:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="hhBQ51tB"
+	by mail.kernel.org (Postfix) with ESMTP id 733A620757
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 16:26:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598718363;
+	bh=VUtBauJ47pgm9pXDykb9ZdpG6WyVP6v53G/qCbGvngI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=h2A0azrRYG95xCL+FvOA5dvU9g2FG7fAQdewRBV0COOgBEM3OpTrqtGis2L79Ql7d
+	 bEuuEcRX5RttrL8KkJlkVa9EqvVK8U5UYqJQCniotS1o8W/PiS7oXh9RL7JRBf+eTw
+	 gigq3agyLrB7OnsMd+JgWQWAyUisAHFTCd/bxLvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgH2QZd (ORCPT
+        id S1728445AbgH2Q0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 12:25:33 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:38512 "EHLO mail.skyhub.de"
+        Sat, 29 Aug 2020 12:26:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728310AbgH2QZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 12:25:29 -0400
-Received: from zn.tnic (p200300ec2f20450061bc46564a6ab4aa.dip0.t-ipconnect.de [IPv6:2003:ec:2f20:4500:61bc:4656:4a6a:b4aa])
+        id S1728422AbgH2QZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 12:25:58 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 21C2A1EC037C;
-        Sat, 29 Aug 2020 18:25:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1598718328;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=HbySJQXChJDM0F+N38SDaiCS004SCJXnUJohWjFm+LA=;
-        b=hhBQ51tBAWqqMqoOKI2QyX23xPRzrrwsfPexRWHbIbi5yqiaoW+rzJkT243eibJ9vM1Pi5
-        6DoiGlyGJlC2nKrvRDlCGdOvjhr2xjCu9QyQ2Po3OzI9OwAe1/hlV/vaOWpqGSpb5JrXrm
-        G8/dQNqZioDLvANtDHO37gbF7YoCOF4=
-Date:   Sat, 29 Aug 2020 18:25:24 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>,
-        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v6 39/76] x86/sev-es: Add SEV-ES Feature Detection
-Message-ID: <20200829162524.GC29091@zn.tnic>
-References: <20200824085511.7553-1-joro@8bytes.org>
- <20200824085511.7553-40-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8215D20757;
+        Sat, 29 Aug 2020 16:25:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598718358;
+        bh=VUtBauJ47pgm9pXDykb9ZdpG6WyVP6v53G/qCbGvngI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ANW8LLjznPypRpmgaiyh3pRUtPqoMv4JPmFrOnogCTlMGZcGAihyUuoI8kMK3ARDf
+         U7IwDSOOy0rJUXnZ9cgPvEZio8yGGm1cI7x+1tp5qrle2q1XEAifRcip4F+n+XYpoS
+         sluhyM8j3C83YPt4uxRcM+HUIlZvbfxBdURKIfcw=
+Date:   Sat, 29 Aug 2020 17:25:54 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Nishant Malpani <nish.malpani25@gmail.com>
+Cc:     dragos.bogdan@analog.com, darius.berghe@analog.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 1/1] iio: gyro: adxrs290: Insert missing mutex
+ initialization call
+Message-ID: <20200829172554.288e314d@archlinux>
+In-Reply-To: <20200825124552.11155-1-nish.malpani25@gmail.com>
+References: <20200825124552.11155-1-nish.malpani25@gmail.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200824085511.7553-40-joro@8bytes.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:54:34AM +0200, Joerg Roedel wrote:
-> +/* Needs to be called from non-instrumentable code */
-> +bool noinstr sev_es_active(void)
-> +{
-> +	return !!(sev_status & MSR_AMD64_SEV_ES_ENABLED);
+On Tue, 25 Aug 2020 18:15:52 +0530
+Nishant Malpani <nish.malpani25@gmail.com> wrote:
 
-You don't need the "!!" since you're returning bool.
+> Insert a missing mutex_init() call during the probe that initializes
+> the driver's local lock to unlocked state.
+> 
+> Fixes: 2c8920fff145 ("iio: gyro: Add driver support for ADXRS290")
+> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it
 
--- 
-Regards/Gruss,
-    Boris.
+Thanks,
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Jonathan
+
+> ---
+>  drivers/iio/gyro/adxrs290.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/iio/gyro/adxrs290.c b/drivers/iio/gyro/adxrs290.c
+> index 38bab4e3eee9..ff989536d2fb 100644
+> --- a/drivers/iio/gyro/adxrs290.c
+> +++ b/drivers/iio/gyro/adxrs290.c
+> @@ -385,6 +385,8 @@ static int adxrs290_probe(struct spi_device *spi)
+>  	indio_dev->num_channels = ARRAY_SIZE(adxrs290_channels);
+>  	indio_dev->info = &adxrs290_info;
+>  
+> +	mutex_init(&st->lock);
+> +
+>  	val = spi_w8r8(spi, ADXRS290_READ_REG(ADXRS290_REG_ADI_ID));
+>  	if (val != ADXRS290_ADI_ID) {
+>  		dev_err(&spi->dev, "Wrong ADI ID 0x%02x\n", val);
+
