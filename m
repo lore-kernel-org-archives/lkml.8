@@ -2,141 +2,88 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ED9C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 10:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0441DC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 10:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 652EF2137B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 10:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D178020791
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 10:51:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbgH2KqV (ORCPT
+        id S1728019AbgH2Kv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 06:46:21 -0400
-Received: from mga09.intel.com ([134.134.136.24]:59580 "EHLO mga09.intel.com"
+        Sat, 29 Aug 2020 06:51:27 -0400
+Received: from mga01.intel.com ([192.55.52.88]:17379 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbgH2KqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 06:46:16 -0400
-IronPort-SDR: yh1bja9Zk3L9JuBaGgcPlrnE8b6xCUtUUC0qzJDtwjA2QTJXuFPdJX2bTeUMAARYaN0/vu789P
- szWw51/UT7Ww==
-X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="157806884"
+        id S1727061AbgH2Ku5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 06:50:57 -0400
+IronPort-SDR: N1UI92Ntt9KKG1BNiCn80opCVaHK505w+UQEME9qTgRqTIlxbH9k2QLerooDY6uW9SDBqsFefE
+ AyhSPQRcgvZg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="174838396"
 X-IronPort-AV: E=Sophos;i="5.76,367,1592895600"; 
-   d="scan'208";a="157806884"
+   d="scan'208";a="174838396"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2020 03:46:16 -0700
-IronPort-SDR: T6xmkOoupvAZ9Yrhtai1YScQgfB10+J3wVSer2lE/p1UifbW5DV3S664Hwz8sLEDiUCjYjxyr+
- UVcVzcqM0qdQ==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2020 03:50:53 -0700
+IronPort-SDR: T4tnsmhQlfI2GBRnhCSyWQx0tF2AtAbCS4p9uM8UQUS/NuWxUFInOUSceh3zzPeq057Ak7XKe+
+ /KEQ5KlXfzQw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,367,1592895600"; 
-   d="scan'208";a="501313399"
-Received: from shuo-intel.sh.intel.com (HELO localhost) ([10.239.154.30])
-  by fmsmga005.fm.intel.com with ESMTP; 29 Aug 2020 03:46:13 -0700
-Date:   Sat, 29 Aug 2020 18:46:12 +0800
-From:   Shuo A Liu <shuo.a.liu@intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     <linux-kernel@vger.kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Borislav Petkov" <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yu Wang <yu1.wang@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>, <x86@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: Re: [PATCH 05/17] virt: acrn: Introduce ACRN HSM basic driver
-Message-ID: <20200829104612.GD13723@shuo-intel.sh.intel.com>
-References: <20200825024516.16766-1-shuo.a.liu@intel.com>
- <20200825024516.16766-6-shuo.a.liu@intel.com>
- <20200828102559.GA1470435@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200828102559.GA1470435@kroah.com>
-User-Agent: Mutt/1.8.3 (2017-05-23)
+   d="scan'208";a="313853142"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
+  by orsmga002.jf.intel.com with ESMTP; 29 Aug 2020 03:50:51 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] perf tools: Enable AUX area tracing snapshots using a FIFO
+Date:   Sat, 29 Aug 2020 13:50:09 +0300
+Message-Id: <20200829105015.10800-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Hi
 
-On Fri 28.Aug'20 at 12:25:59 +0200, Greg Kroah-Hartman wrote:
->On Tue, Aug 25, 2020 at 10:45:05AM +0800, shuo.a.liu@intel.com wrote:
->> +static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
->> +			   unsigned long ioctl_param)
->> +{
->> +	if (cmd == ACRN_IOCTL_GET_API_VERSION) {
->> +		if (copy_to_user((void __user *)ioctl_param,
->> +				 &api_version, sizeof(api_version)))
->> +			return -EFAULT;
->
->Why are you versioning your api?  Shouldn't that not be a thing and you
->either support an ioctl or you do not?
+Here are some patches to enable AUX area tracing snapshots using a FIFO.
+Presently SIGUSR2 can be used but the advantage of the FIFO is that access
+is governed by access to the FIFO.  Refer to the example in patch 5.
 
-The API version here is more for the hypercalls.
-The hypercalls might evolve later and the version indicates which set of
-interfaces (include the paramters' format) should be used by user space
-tools. Currently, it's used rarely.
+The first 4 patches are preparation, including patch 4 which enhances the
+--control option to accept file names.
 
->
->
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int acrn_dev_release(struct inode *inode, struct file *filp)
->> +{
->> +	struct acrn_vm *vm = filp->private_data;
->> +
->> +	kfree(vm);
->> +	return 0;
->> +}
->> +
->> +static const struct file_operations acrn_fops = {
->> +	.owner		= THIS_MODULE,
->> +	.open		= acrn_dev_open,
->> +	.release	= acrn_dev_release,
->> +	.unlocked_ioctl	= acrn_dev_ioctl,
->> +};
->> +
->> +static struct miscdevice acrn_dev = {
->> +	.minor	= MISC_DYNAMIC_MINOR,
->> +	.name	= "acrn_hsm",
->> +	.fops	= &acrn_fops,
->> +};
->> +
->> +static int __init hsm_init(void)
->> +{
->> +	int ret;
->> +
->> +	if (x86_hyper_type != X86_HYPER_ACRN)
->> +		return -ENODEV;
->> +
->> +	if (!acrn_is_privileged_vm())
->> +		return -EPERM;
->> +
->> +	ret = hcall_get_api_version(slow_virt_to_phys(&api_version));
->> +	if (ret < 0) {
->> +		pr_err("Failed to get API version from hypervisor!\n");
->> +		return ret;
->> +	}
->> +
->> +	pr_info("API version is %u.%u\n",
->> +		api_version.major_version, api_version.minor_version);
->
->Shouldn't drivers be quiet when they load and all goes well?  pr_dbg()?
->
->And can't you defer the "read the version" call until open happens?
->Does it have to happen at module load time, increasing boot time for no
->good reason if there is not a user?
+Patch 5 adds snapshot control command.
 
-OK. I can defer the version fetch and pr_dbg() until open.
+The final patch updates Intel PT documentation.
 
-Thanks
-shuo
+
+Adrian Hunter (6):
+      perf tools: Consolidate --control option parsing into one function
+      perf tools: Handle read errors from ctl_fd
+      perf tools: Use AsciiDoc formatting for --control option documentation
+      perf tools: Add FIFO file names as alternative options to --control
+      perf record: Add 'snapshot' control command
+      perf intel-pt: Document snapshot control command
+
+ tools/perf/Documentation/perf-intel-pt.txt | 23 ++++++-
+ tools/perf/Documentation/perf-record.txt   | 56 ++++++++---------
+ tools/perf/Documentation/perf-stat.txt     | 48 ++++++++-------
+ tools/perf/builtin-record.c                | 74 +++++++++++++----------
+ tools/perf/builtin-stat.c                  | 35 +++++------
+ tools/perf/util/evlist.c                   | 96 +++++++++++++++++++++++++++---
+ tools/perf/util/evlist.h                   |  6 +-
+ tools/perf/util/record.h                   |  1 +
+ tools/perf/util/stat.h                     |  1 +
+ 9 files changed, 227 insertions(+), 113 deletions(-)
+
+
+Regards
+Adrian
