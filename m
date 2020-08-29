@@ -2,100 +2,116 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E730C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 00:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AD7C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 00:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02752207DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 00:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D42E2068E
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 00:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgH2AM5 (ORCPT
+        id S1726859AbgH2AVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 20:12:57 -0400
-Received: from mga18.intel.com ([134.134.136.126]:24037 "EHLO mga18.intel.com"
+        Fri, 28 Aug 2020 20:21:12 -0400
+Received: from mga14.intel.com ([192.55.52.115]:49793 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726584AbgH2AM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 20:12:56 -0400
-IronPort-SDR: SlUZ12gOD/aVhSZ9C7qk9jQyBgNINfY/t+G1287Q5kZkl6/uIqYjnG+u+HmCtHBrJfbDAh32H1
- RsPfmveC3cqQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="144440466"
+        id S1726584AbgH2AVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 20:21:11 -0400
+IronPort-SDR: MpFWC40r6sZtFFFqyJdV72SmPVU+ptm13awjhWSLLOmVhCq7Ph1+jy+c2vfpbM2QgUdVF+R5qs
+ VkNFamtJ2TxA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="156027449"
 X-IronPort-AV: E=Sophos;i="5.76,365,1592895600"; 
-   d="scan'208";a="144440466"
+   d="scan'208";a="156027449"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 17:11:54 -0700
-IronPort-SDR: h4/orcg6Gn8nZ9ohrRYk+lZSm+43zkLVdgDI4N9Y2stHaHJZBEYbeRpB1m00xdjqKyRt5YQyWb
- VxfQI2pIm4Eg==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 17:21:10 -0700
+IronPort-SDR: XsL7UiaTnATWvQFIcY/3MD+Sm5W8U41OWW6gftH2LedzEuZTp8ocscyURk3zZPyDqWy9YX22Dj
+ aRlVHA3S71sA==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,365,1592895600"; 
-   d="scan'208";a="340050304"
-Received: from fvera1-mobl.amr.corp.intel.com (HELO [10.212.55.68]) ([10.212.55.68])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 17:11:52 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: [PATCH v6 2/2] ASoC: qcom: sc7180: Add machine driver for sound
- card registration
-To:     Doug Anderson <dianders@chromium.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     Taniya Das <tdas@codeaurora.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Ajit Pandey <ajitp@codeaurora.org>,
-        Tzung-Bi Shih <tzungbi@google.com>,
-        Andy Gross <agross@kernel.org>,
-        Dylan Reid <dgreid@chromium.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, tzungbi@chromium.org,
-        Stephan Gerhold <stephan@gerhold.net>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>
-References: <20200826110454.1811352-1-cychiang@chromium.org>
- <20200826110454.1811352-3-cychiang@chromium.org>
- <CAD=FV=XaCt6V+VXfk8T+2mS4d5sKQzMC12AcH9a=MNkgguvmjQ@mail.gmail.com>
-Message-ID: <7b3bb666-c53e-e385-e153-1383f2831c2e@linux.intel.com>
-Date:   Fri, 28 Aug 2020 19:11:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+   d="scan'208";a="340052040"
+Received: from faerberc-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.36.74])
+  by orsmga007.jf.intel.com with ESMTP; 28 Aug 2020 17:21:03 -0700
+Date:   Sat, 29 Aug 2020 03:21:02 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jethro Beekman <jethro@fortanix.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>,
+        Chunyang Hui <sanqian.hcy@antfin.com>,
+        Jordan Hand <jorhand@linux.microsoft.com>,
+        Nathaniel McCallum <npmccallum@redhat.com>,
+        Seth Moore <sethmo@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
+        tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v36 12/24] x86/sgx: Add SGX_IOC_ENCLAVE_CREATE
+Message-ID: <20200829002102.GB39420@linux.intel.com>
+References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
+ <20200716135303.276442-13-jarkko.sakkinen@linux.intel.com>
+ <20200826145239.GC22390@zn.tnic>
+ <20200827132436.GA4674@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=XaCt6V+VXfk8T+2mS4d5sKQzMC12AcH9a=MNkgguvmjQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827132436.GA4674@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 27, 2020 at 04:24:50PM +0300, Jarkko Sakkinen wrote:
+> > > + * @arg:	userspace pointer to a struct sgx_enclave_create instance
+> > > + *
+> > > + * Allocate kernel data structures for a new enclave and execute ECREATE after
+> > > + * verifying the correctness of the provided SECS.
+> > > + *
+> > > + * Note, enforcement of restricted and disallowed attributes is deferred until
+> > > + * sgx_ioc_enclave_init(), only the architectural correctness of the SECS is
+> > > + * checked by sgx_ioc_enclave_create().
+> > 
+> > From that same review:
+> > 
+> > "Well, I don't see that checking. Where is it?"
+> > 
+> > Ok, I'm going to stop here. Please go over v33's review and either
+> > address *all* feedback or incorporate it into your patches if you agree
+> > with it but do not silently ignore it. One of the things I very strongly
+> > detest is ignored review comments.
 
->> +config SND_SOC_SC7180
->> +       tristate "SoC Machine driver for SC7180 boards"
->> +       depends on SND_SOC_QCOM
+OK, so sgx_validate_secs() is the validation of what the CPU requires
+from the contents of the SECS. That is mean by "architectural
+correctness".
 
-this depends is probably not necessary, the code is already in an if case.
+I spotted the glitch that makes this confusing.
 
->> +       select SND_SOC_QCOM_COMMON
->> +       select SND_SOC_LPASS_SC7180
->> +       select SND_SOC_MAX98357A
->> +       select SND_SOC_RT5682
-> 
-> I haven't done any significant testing / review of your patch (I'm
-> mostly sound-clueless), but I believe that the above needs to be
-> "select SND_SOC_RT5682_I2C" atop the current top of the sound tree.
-> When I fix that I can confirm that I see the rt5682 probe on
-> sc7180-trogdor with Rob Clark's dts patch.
+The change that the comment is related is
 
-Ack, no one should select SND_SOC_RT5682 directly in machine drivers. 
-now that the code is split between I2C and SoundWire parts.
+https://lore.kernel.org/linux-sgx/20200716135303.276442-16-jarkko.sakkinen@linux.intel.com/
 
-There should probably be a depends on I2C as well?
+This check in sgx_encl_init() should be relocated to this commit:
+
+	/* Check that the required attributes have been authorized. */
+	if (encl->secs_attributes & ~encl->allowed_attributes)
+		return -EACCES;
+
+It is the "enforcement of restricted and disallowed attributes" part.
+
+Does this make sense to you?
+
+> > -- 
+> > Regards/Gruss,
+> >     Boris.
+
+/Jarkko
