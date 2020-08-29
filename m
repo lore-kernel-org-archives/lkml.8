@@ -2,137 +2,89 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F736C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EB5C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24E5520707
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:55:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="S7HKF4Tp"
+	by mail.kernel.org (Postfix) with ESMTP id D9FCC20707
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 15:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598716690;
+	bh=YHcSw/hqKHXdDTuCSO/5dUdyJsCtyVzZTzxsaX4IgQ0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TkSs+T6kKxfO4TI4AUsli0DrMPddYvPEINXnEKr5TGiTpQbFb0G1IR/CzKk77w95k
+	 ltnhylI9nBeGLjq36tjLeC2hf1vgkyyE2cgO5zatInnBmnaUo6qEX0ZfkTnvyt2c3j
+	 etguGloyn+jgAobf8myVoOepdVYunvr15GTgNAys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbgH2Pzy (ORCPT
+        id S1728411AbgH2P6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 11:55:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728350AbgH2Pza (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 11:55:30 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B3FDC061239;
-        Sat, 29 Aug 2020 08:55:29 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f20450061bc46564a6ab4aa.dip0.t-ipconnect.de [IPv6:2003:ec:2f20:4500:61bc:4656:4a6a:b4aa])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sat, 29 Aug 2020 11:58:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728310AbgH2P5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 11:57:41 -0400
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EDDB41EC037C;
-        Sat, 29 Aug 2020 17:55:27 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1598716528;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=/hKrT6Agxsa0U42BH+OXVujqtR6Nrnq1ZKABoxchmnQ=;
-        b=S7HKF4Tptffv/o1WtKtqUzdKtdftwyIQBtMOCSEWGCYytv/FZEnVROCv9pXhDh6fn4saNE
-        ExIP/iUquIhslj/obBhSNv7pw8mAkwV0T+DA+QEsGeLvuXZWkElDhiFiSyTCZ1F9bUVRmw
-        l9HDLUPGTfCtTdr1HNIiZ5XGTFxKUmQ=
-Date:   Sat, 29 Aug 2020 17:55:25 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v6 38/76] x86/head/64: Set CR4.FSGSBASE early
-Message-ID: <20200829155525.GB29091@zn.tnic>
-References: <20200824085511.7553-1-joro@8bytes.org>
- <20200824085511.7553-39-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FDB220CC7;
+        Sat, 29 Aug 2020 15:57:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598716661;
+        bh=YHcSw/hqKHXdDTuCSO/5dUdyJsCtyVzZTzxsaX4IgQ0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AkdJQsqeMBVFlI4TSshlD/nSJrK5ARHEAUHmsDHccDh8eYv3qeyks8P0oSmoUP1JF
+         /iMp71OeOFuKi9TvL5EkWjLwmy/PieLf1t36ev8C2wbtY+MRYbbYCwZ2065fej+fR3
+         VcDQp+02Yv7vLoOzgcYh7Rd3umJh2zYrAwUQtTBc=
+Received: by mail-ed1-f51.google.com with SMTP id q4so1766357eds.3;
+        Sat, 29 Aug 2020 08:57:41 -0700 (PDT)
+X-Gm-Message-State: AOAM533X3b+rBCm3X1gdI75cDONhEabyGt/OVq6nKibSUyY/1Zu4uivV
+        WxevJS99DFvzDyYQGBiw6lHCINmcnnKeK5eOyoo=
+X-Google-Smtp-Source: ABdhPJx/hw+xUReRY08qMnVSvo8WfizFrkcGJBp6fVnLKoNLq4zUQsZf+SAHKYqnu6aW9Akvgdww2mqhRltNtho15Ik=
+X-Received: by 2002:a05:6402:515:: with SMTP id m21mr1264650edv.348.1598716659667;
+ Sat, 29 Aug 2020 08:57:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200824085511.7553-39-joro@8bytes.org>
+References: <20200826161539.20788-1-krzk@kernel.org> <20200829162102.602a3424@archlinux>
+In-Reply-To: <20200829162102.602a3424@archlinux>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Sat, 29 Aug 2020 17:57:28 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfOBR16_UjW5-Xv+9n4OFuOL9Aykzm2zqjx+G3KYHEkGA@mail.gmail.com>
+Message-ID: <CAJKOXPfOBR16_UjW5-Xv+9n4OFuOL9Aykzm2zqjx+G3KYHEkGA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] iio: magnetometer: mag3110: Simplify with dev_err_probe()
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Peter Rosin <peda@axentia.se>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:54:33AM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> Early exception handling will use rd/wrgsbase in paranoid_entry/exit.
-> Enable the feature to avoid #UD exceptions on boot APs.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> Link: https://lore.kernel.org/r/20200724160336.5435-38-joro@8bytes.org
-> ---
->  arch/x86/kernel/head_64.S | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-> index 08412f308de3..4622940134a5 100644
-> --- a/arch/x86/kernel/head_64.S
-> +++ b/arch/x86/kernel/head_64.S
-> @@ -153,6 +153,13 @@ SYM_CODE_START(secondary_startup_64)
->  	orl	$X86_CR4_LA57, %ecx
->  1:
->  #endif
-> +
-> +	ALTERNATIVE "jmp .Lstartup_write_cr4", "", X86_FEATURE_FSGSBASE
-> +
-> +	/* Early exception handling uses FSGSBASE on APs */
-> +	orl	$X86_CR4_FSGSBASE, %ecx
+On Sat, 29 Aug 2020 at 17:21, Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Wed, 26 Aug 2020 18:15:38 +0200
+> Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> > Common pattern of handling deferred probe can be simplified with
+> > dev_err_probe().  Less code and also it prints the error value.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> I'm a lazy person, so if you have a series like this where you decide
+> to post a new version without anyone having commented on it, please
+> send a quick reply to say you have done that.  Avoids me
+> applying wrong versions of things!
 
-How is this supposed to work?
+It was the part of v3 (18 patches) which you just applied so these two
+you can skip.
 
-Alternatives haven't run that early yet and that piece of code looks
-like this:
+Sorry for not mentioning it.
 
-ffffffff81000067:       eb 06                   jmp    ffffffff8100006f <secondary_startup_64+0x1f>
-ffffffff81000069:       81 c9 00 00 01 00       or     $0x10000,%ecx
-ffffffff8100006f:       0f 22 e1                mov    %rcx,%cr4
-
-so we'll never set X86_CR4_FSGSBASE during early boot.
-
-Stopping a guest with gdb just before that shows the same thing:
-
-Dump of assembler code from 0x1000069 to 0x100007b:
-=> 0x0000000001000069:  eb 06   jmp    0x1000071
-   0x000000000100006b:  81 c9 00 00 01 00       or     $0x10000,%ecx
-   0x0000000001000071:  0f 22 e1        mov    %rcx,%cr4
-   0x0000000001000074:  48 03 05 95 ff 20 01    add    0x120ff95(%rip),%rax        # 0x2210010
-
-the unconditional JMP is there and it hasn't been patched out yet.
-
-If you really need to test CPUID flags, you need to do something similar
-to what verify_cpu does that early. And looking at that thing:
-
- *      verify_cpu, returns the status of longmode and SSE in register %eax.
- *              0: Success    1: Failure
-
-you could return the FSGSBASE CPUID bit there too and act accordingly.
-
-Hmm.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Best regards,
+Krzysztof
