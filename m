@@ -2,116 +2,83 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6951C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AAA3C433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84263205CB
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:35:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CLEcEkSV"
+	by mail.kernel.org (Postfix) with ESMTP id 382DA2098B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgH2Bfm (ORCPT
+        id S1726839AbgH2Btx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 21:35:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbgH2Bfj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 21:35:39 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF33BC061264;
-        Fri, 28 Aug 2020 18:35:38 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id p11so1506037pfn.11;
-        Fri, 28 Aug 2020 18:35:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZNK0OiZAzuMKTfZWlKjgsVU7byDX2P1YFCMooQsFrd4=;
-        b=CLEcEkSV3Y48hXfAfNsrbsbJbcwI2Rn6gvp5OCrupluNy+q6oqIuyxIVAWgHuYFABj
-         +v1VNBT8QLRwbQvrTgNev27DaMB/JJ9FnuXgqq/blerwnBPaFWphpX9BbdteoGsavPUk
-         JRu5PzLmdyBidO0ZDxCFg0QCcTVlx0SWzNOR3YmG6tfKODQ5/AnHDauFem/VgOVVdj6S
-         FLDRTgaac//Fhem9QtCSuV4dBQ1BbhIY3l8kSpaaW0B3CRDcTNdjjMRmt5e96e2TXduZ
-         lpfSIXm0kRlQ+/io6z2ByuL07/jGvqOZUdkjDu6Er0XlEAQroDYJTz0cpXsl1co+Gn/+
-         04Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZNK0OiZAzuMKTfZWlKjgsVU7byDX2P1YFCMooQsFrd4=;
-        b=mBXg5ycJ9bv+/LkJZOioGkMhv2w9G2s1Qw+LBpuzlpN82l1cWcnoRS83ETxa/IqA9A
-         GoOAXFzr8MLw4U6+WLZBvkrvl09E71jM+gwHWuwTV1YDuH5cdJcol4340FZ4zWJHkxMC
-         4cbF6S3IBdaoUHKS32Sa6aahrcyAabZnbS3Yv+V4iXnfrI9RQ0xD1+yVbZGNWYtH3Ya6
-         Xf9tf3ftMKPiHLC4Go0dzUrkayQ6gin3vsrw3D4xV+/auzUo5uUl82fFYKeBSHHGqkE5
-         UIRzAaw4GJr9gFNz0lsG7vetDGIpJtOBAYr/Sfrve+V14XwnHhpbVu/ib8XQjmnXNNs2
-         sbdA==
-X-Gm-Message-State: AOAM532pU2xCi9gnynaBRy4YiD4Kdw00mOvXEskvpfSj9uTbfKQqI4tk
-        Z14HqfIc81cHKXGnjUjaSiHoBcpkLkE=
-X-Google-Smtp-Source: ABdhPJxSwMN816NwN1bLo4HR+IvCdFRKbphlREduyXq+9LOfSFQL0m2LBTouIqNhGH8v2v/BQYoarw==
-X-Received: by 2002:aa7:9910:: with SMTP id z16mr1405785pff.120.1598664938108;
-        Fri, 28 Aug 2020 18:35:38 -0700 (PDT)
-Received: from sol (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id a13sm669975pgn.17.2020.08.28.18.35.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 18:35:37 -0700 (PDT)
-Date:   Sat, 29 Aug 2020 09:35:32 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v5 00/20] gpio: cdev: add uAPI v2
-Message-ID: <20200829013532.GA5905@sol>
-References: <20200827140020.159627-1-warthog618@gmail.com>
- <CACRpkdZZMbfpKy4gcfAzNq53LkYLcL9wm3Qtzyj_K8vkUW9RfQ@mail.gmail.com>
- <CAMpxmJXRY2wqqN3SzfJN+QTWAHYSYz4vEjLKWU82Y=PAmcm=5w@mail.gmail.com>
- <20200827224742.GA3714@sol>
- <CACRpkdZroNFFsHoBHUFTUUQij7nOcPQiXP-567+fH-Xerv=L4w@mail.gmail.com>
+        Fri, 28 Aug 2020 21:49:53 -0400
+Received: from mga14.intel.com ([192.55.52.115]:56499 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726395AbgH2Btx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 28 Aug 2020 21:49:53 -0400
+IronPort-SDR: 2FqDBL0I2HX3DIQtl7+QKpWv5VgLC5uGCYPky5rhvwafjWf1wC5GTnCfKWEtMOctrR4fuGhB9L
+ HHLuebx+JGpQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9727"; a="156032036"
+X-IronPort-AV: E=Sophos;i="5.76,365,1592895600"; 
+   d="scan'208";a="156032036"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 18:49:52 -0700
+IronPort-SDR: ocvihYaTA+edOSIZYPBYdos5/xzUVS6Q06grOqQRho96v4YNP20w7WWJQdWFD5VZijyPQMzgec
+ xutJuaK0Qh6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,365,1592895600"; 
+   d="scan'208";a="296315937"
+Received: from cqiang-mobl.ccr.corp.intel.com (HELO [10.255.28.251]) ([10.255.28.251])
+  by orsmga003.jf.intel.com with ESMTP; 28 Aug 2020 18:49:49 -0700
+Subject: Re: [PATCH 1/5] KVM: nVMX: Fix VMX controls MSRs setup when nested
+ VMX enabled
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200828085622.8365-1-chenyi.qiang@intel.com>
+ <20200828085622.8365-2-chenyi.qiang@intel.com>
+ <CALMp9eThyqWuduU=JN+w3M3ANeCYN+7=s-gippzyu_GmvgtVGA@mail.gmail.com>
+From:   Chenyi Qiang <chenyi.qiang@intel.com>
+Message-ID: <534a4ad5-b083-1278-a6ac-4a7e2b6b1600@intel.com>
+Date:   Sat, 29 Aug 2020 09:49:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZroNFFsHoBHUFTUUQij7nOcPQiXP-567+fH-Xerv=L4w@mail.gmail.com>
+In-Reply-To: <CALMp9eThyqWuduU=JN+w3M3ANeCYN+7=s-gippzyu_GmvgtVGA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 04:37:19PM +0200, Linus Walleij wrote:
-> On Fri, Aug 28, 2020 at 12:47 AM Kent Gibson <warthog618@gmail.com> wrote:
+
+
+On 8/29/2020 1:43 AM, Jim Mattson wrote:
+> On Fri, Aug 28, 2020 at 1:54 AM Chenyi Qiang <chenyi.qiang@intel.com> wrote:
+>>
+>> KVM supports the nested VM_{EXIT, ENTRY}_LOAD_IA32_PERF_GLOBAL_CTRL and
+>> VM_{ENTRY_LOAD, EXIT_CLEAR}_BNDCFGS, but they doesn't expose during
+>> the setup of nested VMX controls MSR.
+>>
 > 
-> > The particular use case I am considering is one I had been asked about -
-> > changing a requested line from input with edge detection to output, and
-> > vice versa. Losing interrupts isn't really an issue for this use case -
-> > it is expected.  Yet the current implementation requires a re-request.
-> 
-> This is possible to do for in-kernel users, but I don't know if that makes
-> sense for userspace. It is for one-offs and prototyping after all, there
-> is no need (IMO) to make it overly convenient for users to implement
-> all kind of weirdness in userspace unless there is a very real use case.
+> Aren't these features added conditionally in
+> nested_vmx_entry_exit_ctls_update() and
+> nested_vmx_pmu_entry_exit_ctls_update()?
 > 
 
-Fair point - in fact it is the same one that made me reconsider why I
-was so concerned about potentially losing an edge event in a few rare
-corner cases.
-
-Another point for this change are that it actually simplifies the kernel
-code, as it takes as much code to detect and filter these cases as it
-does to include them in the normal flow.
-
-I had a play with it yesterday and the change removes two whole
-functions, gpio_v2_line_config_change_validate() and 
-gpio_v2_line_config_has_edge_detection() at the expense of making
-debounce_update() a little more complicated. I'm happy to put together a
-v6 that incorporates those changes if there aren't any strenuous
-objections - we can always revert to v5.  Or I could mail the couple of
-patches I've made and if they seem reasonable then I could merge them
-into this set?
-
-Cheers,
-Kent.
+Yes, but I assume vmcs_config.nested should reflect the global 
+capability of VMX MSR. KVM supports these two controls, so should be 
+exposed here.
