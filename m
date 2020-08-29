@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1D4C433E6
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BECC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBEC42075B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B812206C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598688926;
-	bh=ikFkh3GHjpTvMZfA2Bn4wiPzm8K6WuCfgt8wgEy6x1Y=;
+	s=default; t=1598688929;
+	bh=aHHDlqdxD5BCAq0GTd/cobwZozAxrqHTORwszeg+TMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w0UWU8edI8Twvxnzfs6wSuIznkuBALAVfQpl9CVmOu8Q4BVFRB7mCI7IwjHUDpOVw
-	 ZmWF2mYuFtDmrs5Fnl+hyozEgsfuiGtu7TsKJ9HROmJY0ExqpGNDPeMsB1JkzSgAEy
-	 PJZoouTs4W+EZYTkis6x8yzaW52fHbPJoGlHMmTo=
+	b=fjpbdl6VArgWqgq4IU6L7Idzfbltrhsq+RTa6jGSPCCzevrJ9dRU/UECl06QQG1kU
+	 cSJtmBhMoI6NZQuwHyQ5Uc55z4iIOOcALtbJvh2mbgTEX0E6AlmHANeD2ADPAiqPWu
+	 SF2K85WaBpE23Zb4cflKHNWzSTR0X+24dFQKLeJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbgH2IPZ (ORCPT
+        id S1727930AbgH2IP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 04:15:25 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:47661 "EHLO
+        Sat, 29 Aug 2020 04:15:28 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:47660 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgH2IPA (ORCPT
+        with ESMTP id S1727780AbgH2IPA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 29 Aug 2020 04:15:00 -0400
 Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 07T8ELfq014307;
-        Sat, 29 Aug 2020 17:14:26 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 07T8ELfq014307
+        by conuserg-09.nifty.com with ESMTP id 07T8ELfm014307;
+        Sat, 29 Aug 2020 17:14:24 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 07T8ELfm014307
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1598688867;
-        bh=cAwiyDQBc4rVj6A9uC7Rxsf1FCuTHT5ceickHFJ37uw=;
+        s=dec2015msa; t=1598688864;
+        bh=1hIq6ZEqp/v1iB+uAOdAiLH/pwMC3I09n/InGsbAoME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=28OF1KSVHt7W9WDBcE4giF5C7id3W9NsgpZElaz+ROkluHSNzmbZkFRdmaJx3Gxm+
-         fsRJlnZ5rf2zM38Y0pcXhzQMPK9g44A3hVloZ/QTQfMjTGOoiXe6KIjuMED1igAgI8
-         mREO4hayAkygxDfB8nlRXPhE2wk93uyU/yZ/qn7YGgT7OHXMZGus+okVH1HFnHAJCa
-         f6qqcVnqL1IzFzzNW5U+PGobjiETQEOveVCPbDnU3imFMdtuH2J5BqLmTjNZPYMZC9
-         LF/AV0Fjx+CigQzzFYrFgY6mljb97ZPNQZguw0TOGthNEQv35mLUNQWgzzbFVIKPKw
-         /Pq8e1+1QynJg==
+        b=b+p5ipOtVuitKAgcNXrGjRHbfeBTHBOB/sdoucymsTuJcidjFCIl/dHZPbgurzUR3
+         CD+Te41EEUbs50QN33xtO33wYZiYeqnz9Qi0LS/oNDlVsbjqC1LHQ2AxDxrKspa7Qa
+         7BumVGgSzKrqoR+b8RHRjWsmWkBqB+yDcuTl9UsqtXZ3BdLGQtK9oNok52X7agwgOZ
+         xzA9AvPtehCvf9v0K7mCq0okl1X68Z4xdZlpuPrkgBO7pM3X0ghA35LST2RWEZbn5s
+         92GXsyOouPAs+1HQsGRkuz4RQMP5pKOAuT/5UWKruCD4adg0KE8s9+UW6B1TKMZYRa
+         Jh2b/CYJyCURQ==
 X-Nifty-SrcIP: [126.90.211.135]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -49,9 +49,9 @@ Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 10/11] kconfig: qconf: remove Y, M, N columns
-Date:   Sat, 29 Aug 2020 17:14:16 +0900
-Message-Id: <20200829081417.725978-10-masahiroy@kernel.org>
+Subject: [PATCH 06/11] kconfig: qconf: allow to edit "int", "hex", "string" menus in-place
+Date:   Sat, 29 Aug 2020 17:14:12 +0900
+Message-Id: <20200829081417.725978-6-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200829081417.725978-1-masahiroy@kernel.org>
 References: <20200829081417.725978-1-masahiroy@kernel.org>
@@ -62,220 +62,208 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are so many ways to toggle bool / tristate options.
+Previously, when you double-clicked the "int", "hex", or "string" menus,
+a line-edit gadget showed up to allow you to input the value, which
+looked clumsy.
 
-I do not know how useful these columns are.
+Also, it was buggy; the editor opened even if the config option was not
+editable. For example, just try to double-click CC_VERSION_TEXT, which
+has no prompt.
+
+This commit sub-classes QStyleItemDelegate to allow users to edit
+"int", "hex", "string" menus in-place. Just double-click (or press
+the F2 key) in the data column. Then, an editor widget is placed on
+top of the item view.
+
+The two methods are overridden:
+
+ createEditor - process only when the data column is being accessed
+ and the menu is visible. Otherwise, return nullptr to disallow editing.
+
+ setModelData - take the new data from the editor, and set it to the
+ addressed symbol. If it was successful, update all the list windows.
+ Otherwise, (the reason for the failure is possibly the input data was
+ out of range), set the old value back to the editor.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/kconfig/qconf.cc | 59 ++--------------------------------------
- scripts/kconfig/qconf.h  |  6 ++--
- 2 files changed, 4 insertions(+), 61 deletions(-)
+ scripts/kconfig/qconf.cc | 93 ++++++++++++++++++++++++++++++++--------
+ scripts/kconfig/qconf.h  | 15 +++++++
+ 2 files changed, 91 insertions(+), 17 deletions(-)
 
 diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index b9333115dda3..09e98814485a 100644
+index c48e48a3735f..d592f05363c9 100644
 --- a/scripts/kconfig/qconf.cc
 +++ b/scripts/kconfig/qconf.cc
-@@ -139,9 +139,6 @@ void ConfigItem::updateMenu(void)
- 
- 		if (!sym_is_changeable(sym) && list->optMode == normalOpt) {
- 			setIcon(promptColIdx, QIcon());
--			setText(noColIdx, QString());
--			setText(modColIdx, QString());
--			setText(yesColIdx, QString());
- 			break;
- 		}
- 		expr = sym_get_tristate_value(sym);
-@@ -151,12 +148,10 @@ void ConfigItem::updateMenu(void)
- 				setIcon(promptColIdx, choiceYesIcon);
- 			else
- 				setIcon(promptColIdx, symbolYesIcon);
--			setText(yesColIdx, "Y");
- 			ch = 'Y';
- 			break;
- 		case mod:
- 			setIcon(promptColIdx, symbolModIcon);
--			setText(modColIdx, "M");
- 			ch = 'M';
- 			break;
- 		default:
-@@ -164,16 +159,9 @@ void ConfigItem::updateMenu(void)
- 				setIcon(promptColIdx, choiceNoIcon);
- 			else
- 				setIcon(promptColIdx, symbolNoIcon);
--			setText(noColIdx, "N");
- 			ch = 'N';
- 			break;
- 		}
--		if (expr != no)
--			setText(noColIdx, sym_tristate_within_range(sym, no) ? "_" : 0);
--		if (expr != mod)
--			setText(modColIdx, sym_tristate_within_range(sym, mod) ? "_" : 0);
--		if (expr != yes)
--			setText(yesColIdx, sym_tristate_within_range(sym, yes) ? "_" : 0);
- 
- 		setText(dataColIdx, QChar(ch));
- 		break;
-@@ -310,7 +298,7 @@ parent:
- ConfigList::ConfigList(QWidget *parent, const char *name)
- 	: QTreeWidget(parent),
- 	  updateAll(false),
--	  showName(false), showRange(false), mode(singleMode), optMode(normalOpt),
-+	  showName(false), mode(singleMode), optMode(normalOpt),
- 	  rootEntry(0), headerPopup(0)
- {
- 	setObjectName(name);
-@@ -320,7 +308,7 @@ ConfigList::ConfigList(QWidget *parent, const char *name)
- 	setVerticalScrollMode(ScrollPerPixel);
- 	setHorizontalScrollMode(ScrollPerPixel);
- 
--	setHeaderLabels(QStringList() << "Option" << "Name" << "N" << "M" << "Y" << "Value");
-+	setHeaderLabels(QStringList() << "Option" << "Name" << "Value");
- 
- 	connect(this, SIGNAL(itemSelectionChanged(void)),
- 		SLOT(updateSelection(void)));
-@@ -328,7 +316,6 @@ ConfigList::ConfigList(QWidget *parent, const char *name)
- 	if (name) {
- 		configSettings->beginGroup(name);
- 		showName = configSettings->value("/showName", false).toBool();
--		showRange = configSettings->value("/showRange", false).toBool();
- 		optMode = (enum optionMode)configSettings->value("/optionMode", 0).toInt();
- 		configSettings->endGroup();
- 		connect(configApp, SIGNAL(aboutToQuit()), SLOT(saveSettings()));
-@@ -361,18 +348,10 @@ bool ConfigList::menuSkip(struct menu *menu)
- 
- void ConfigList::reinit(void)
- {
--	hideColumn(yesColIdx);
--	hideColumn(modColIdx);
--	hideColumn(noColIdx);
- 	hideColumn(nameColIdx);
- 
- 	if (showName)
- 		showColumn(nameColIdx);
--	if (showRange) {
--		showColumn(noColIdx);
--		showColumn(modColIdx);
--		showColumn(yesColIdx);
--	}
- 
- 	updateListAll();
- }
-@@ -394,7 +373,6 @@ void ConfigList::saveSettings(void)
- 	if (!objectName().isEmpty()) {
- 		configSettings->beginGroup(objectName());
- 		configSettings->setValue("/showName", showName);
--		configSettings->setValue("/showRange", showRange);
- 		configSettings->setValue("/optionMode", (int)optMode);
- 		configSettings->endGroup();
- 	}
-@@ -841,15 +819,6 @@ void ConfigList::mouseReleaseEvent(QMouseEvent* e)
- 			}
- 		}
- 		break;
--	case noColIdx:
--		setValue(item, no);
--		break;
--	case modColIdx:
--		setValue(item, mod);
--		break;
--	case yesColIdx:
--		setValue(item, yes);
--		break;
- 	case dataColIdx:
- 		changeValue(item);
- 		break;
-@@ -925,15 +894,6 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
- 			action, SLOT(setChecked(bool)));
- 		action->setChecked(showName);
- 		headerPopup->addAction(action);
+@@ -180,15 +180,7 @@ void ConfigItem::updateMenu(void)
+ 	case S_INT:
+ 	case S_HEX:
+ 	case S_STRING:
+-		const char* data;
 -
--		action = new QAction("Show Range", this);
--		action->setCheckable(true);
--		connect(action, SIGNAL(toggled(bool)),
--			SLOT(setShowRange(bool)));
--		connect(this, SIGNAL(showRangeChanged(bool)),
--			action, SLOT(setChecked(bool)));
--		action->setChecked(showRange);
--		headerPopup->addAction(action);
+-		data = sym_get_string_value(sym);
+-
+-		setText(dataColIdx, data);
+-		if (type == S_STRING)
+-			prompt = QString("%1: %2").arg(prompt).arg(data);
+-		else
+-			prompt = QString("(%2) %1").arg(prompt).arg(data);
++		setText(dataColIdx, sym_get_string_value(sym));
+ 		break;
  	}
- 
- 	headerPopup->exec(e->globalPos());
-@@ -950,16 +910,6 @@ void ConfigList::setShowName(bool on)
- 	emit showNameChanged(on);
+ 	if (!sym_has_value(sym) && visible)
+@@ -229,6 +221,17 @@ void ConfigItem::init(void)
+ 		if (list->mode != fullMode)
+ 			setExpanded(true);
+ 		sym_calc_value(menu->sym);
++
++		if (menu->sym) {
++			enum symbol_type type = menu->sym->type;
++
++			// Allow to edit "int", "hex", and "string" in-place in
++			// the data column. Unfortunately, you cannot specify
++			// the flags per column. Set ItemIsEditable for all
++			// columns here, and check the column in createEditor().
++			if (type == S_INT || type == S_HEX || type == S_STRING)
++				setFlags(flags() | Qt::ItemIsEditable);
++		}
+ 	}
+ 	updateMenu();
+ }
+@@ -249,6 +252,61 @@ ConfigItem::~ConfigItem(void)
+ 	}
  }
  
--void ConfigList::setShowRange(bool on)
--{
--	if (showRange == on)
--		return;
--
--	showRange = on;
--	reinit();
--	emit showRangeChanged(on);
--}
--
- QList<ConfigList *> ConfigList::allLists;
- QAction *ConfigList::showNormalAction;
- QAction *ConfigList::showAllAction;
-@@ -1452,10 +1402,6 @@ ConfigMainWindow::ConfigMainWindow(void)
- 	connect(showNameAction, SIGNAL(toggled(bool)), configList, SLOT(setShowName(bool)));
- 	showNameAction->setChecked(configList->showName);
++QWidget *ConfigItemDelegate::createEditor(QWidget *parent,
++					  const QStyleOptionViewItem &option,
++					  const QModelIndex &index) const
++{
++	ConfigItem *item;
++
++	// Only the data column is editable
++	if (index.column() != dataColIdx)
++		return nullptr;
++
++	// You cannot edit invisible menus
++	item = static_cast<ConfigItem *>(index.internalPointer());
++	if (!item || !item->menu || !menu_is_visible(item->menu))
++		return nullptr;
++
++	return QStyledItemDelegate::createEditor(parent, option, index);
++}
++
++void ConfigItemDelegate::setModelData(QWidget *editor,
++				      QAbstractItemModel *model,
++				      const QModelIndex &index) const
++{
++	QLineEdit *lineEdit;
++	ConfigItem *item;
++	struct symbol *sym;
++	bool success;
++
++	lineEdit = qobject_cast<QLineEdit *>(editor);
++	// If this is not a QLineEdit, use the parent's default.
++	// (does this happen?)
++	if (!lineEdit)
++		goto parent;
++
++	item = static_cast<ConfigItem *>(index.internalPointer());
++	if (!item || !item->menu)
++		goto parent;
++
++	sym = item->menu->sym;
++	if (!sym)
++		goto parent;
++
++	success = sym_set_string_value(sym, lineEdit->text().toUtf8().data());
++	if (success) {
++		ConfigList::updateListForAll();
++	} else {
++		QMessageBox::information(editor, "qconf",
++			"Cannot set the data (maybe due to out of range).\n"
++			"Setting the old value.");
++		lineEdit->setText(sym_get_string_value(sym));
++	}
++
++parent:
++	QStyledItemDelegate::setModelData(editor, model, index);
++}
++
+ ConfigLineEdit::ConfigLineEdit(ConfigView* parent)
+ 	: Parent(parent)
+ {
+@@ -314,6 +372,8 @@ ConfigList::ConfigList(ConfigView* p, const char *name)
  
--	QAction *showRangeAction = new QAction("Show Range", this);
--	  showRangeAction->setCheckable(true);
--	connect(showRangeAction, SIGNAL(toggled(bool)), configList, SLOT(setShowRange(bool)));
--
- 	QActionGroup *optGroup = new QActionGroup(this);
- 	optGroup->setExclusive(true);
- 	connect(optGroup, SIGNAL(triggered(QAction*)), configList,
-@@ -1506,7 +1452,6 @@ ConfigMainWindow::ConfigMainWindow(void)
- 	// create options menu
- 	menu = menuBar()->addMenu("&Option");
- 	menu->addAction(showNameAction);
--	menu->addAction(showRangeAction);
- 	menu->addSeparator();
- 	menu->addActions(optGroup->actions());
- 	menu->addSeparator();
+ 	showColumn(promptColIdx);
+ 
++	setItemDelegate(new ConfigItemDelegate(this));
++
+ 	allLists.append(this);
+ 
+ 	reinit();
+@@ -534,10 +594,7 @@ void ConfigList::changeValue(ConfigItem* item)
+ 		if (oldexpr != newexpr)
+ 			ConfigList::updateListForAll();
+ 		break;
+-	case S_INT:
+-	case S_HEX:
+-	case S_STRING:
+-		parent()->lineEdit->show(item);
++	default:
+ 		break;
+ 	}
+ }
+@@ -1797,10 +1854,12 @@ void ConfigMainWindow::showIntro(void)
+ 	static const QString str =
+ 		"Welcome to the qconf graphical configuration tool.\n\n"
+ 
+-		"For each option, a blank box indicates the feature is "
+-		"disabled, a check indicates it is enabled, and a dot "
+-		"indicates that it is to be compiled as a module. Clicking on "
+-		"the box will cycle through the three states.\n\n"
++		"For bool and tristate options, a blank box indicates the "
++		"feature is disabled, a check indicates it is enabled, and a "
++		"dot indicates that it is to be compiled as a module. Clicking "
++		"on the box will cycle through the three states. For int, hex, "
++		"and string options, double-clicking or pressing F2 on the "
++		"Value cell will allow you to edit the value.\n\n"
+ 
+ 		"If you do not see an option (e.g., a device driver) that you "
+ 		"believe should be present, try turning on Show All Options "
 diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
-index 1289fdaa7d82..78b0a1dfcd53 100644
+index d01a6c620dbb..b02acf2464ec 100644
 --- a/scripts/kconfig/qconf.h
 +++ b/scripts/kconfig/qconf.h
-@@ -29,7 +29,7 @@ class ConfigSettings : public QSettings {
+@@ -11,6 +11,7 @@
+ #include <QPushButton>
+ #include <QSettings>
+ #include <QSplitter>
++#include <QStyledItemDelegate>
+ #include <QTextBrowser>
+ #include <QTreeWidget>
+ 
+@@ -172,6 +173,20 @@ class ConfigItem : public QTreeWidgetItem {
+ 	static QIcon menuIcon, menubackIcon;
  };
  
- enum colIdx {
--	promptColIdx, nameColIdx, noColIdx, modColIdx, yesColIdx, dataColIdx
-+	promptColIdx, nameColIdx, dataColIdx
- };
- enum listMode {
- 	singleMode, menuMode, symbolMode, fullMode, listMode
-@@ -72,7 +72,6 @@ public slots:
- 	void saveSettings(void);
- 	void setOptionMode(QAction *action);
- 	void setShowName(bool on);
--	void setShowRange(bool on);
- 
- signals:
- 	void menuChanged(struct menu *menu);
-@@ -81,7 +80,6 @@ public slots:
- 	void parentSelected(void);
- 	void gotFocus(struct menu *);
- 	void showNameChanged(bool on);
--	void showRangeChanged(bool on);
- 
- public:
- 	void updateListAll(void)
-@@ -100,7 +98,7 @@ public slots:
- 
- 	bool updateAll;
- 
--	bool showName, showRange;
-+	bool showName;
- 	enum listMode mode;
- 	enum optionMode optMode;
- 	struct menu *rootEntry;
++class ConfigItemDelegate : public QStyledItemDelegate
++{
++private:
++	struct menu *menu;
++public:
++	ConfigItemDelegate(QObject *parent = nullptr)
++		: QStyledItemDelegate(parent) {}
++	QWidget *createEditor(QWidget *parent,
++			      const QStyleOptionViewItem &option,
++			      const QModelIndex &index) const override;
++	void setModelData(QWidget *editor, QAbstractItemModel *model,
++			  const QModelIndex &index) const override;
++};
++
+ class ConfigLineEdit : public QLineEdit {
+ 	Q_OBJECT
+ 	typedef class QLineEdit Parent;
 -- 
 2.25.1
 
