@@ -2,107 +2,82 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FD7C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E28CC433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF4A320E65
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:49:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598683771;
-	bh=6UjWOMAikeIKWUaBl4tPRLctxnQGbZpjLVEks3gNgKw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=npb7+drQCChVXj9KaGM9sHBXljVOW5sjxCkALAnqhxOS+Zb7N3WCHOn9bpRBSDXNu
-	 0q7xb0sV3iTpq4ActP2KA2zm+iHDfTkyQy8JJHUI9ZGmLbtamSLSe773cApvBv8Om2
-	 kxM8H/8f7psgHuTByrv4y07rT5aK4i2IqiVNCLHg=
+	by mail.kernel.org (Postfix) with ESMTP id 78B6D20838
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 06:49:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgH2Gt3 (ORCPT
+        id S1727981AbgH2Gt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 02:49:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40664 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 02:49:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44092 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726876AbgH2GsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 02:48:16 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1023B2145D;
-        Sat, 29 Aug 2020 06:48:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598683696;
-        bh=6UjWOMAikeIKWUaBl4tPRLctxnQGbZpjLVEks3gNgKw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uSXg2zIxy8JCQQMU9GNo8vzeCcIH9Cl8GLGs31FuNsQFSjWQ/WODKkPey/7NiX7YT
-         FKYLIBOi8lPv8/6Cz5mu4QT5EikjWMxZRBTuJtOoWzwyrlzvpUVNn4TfUm7FQHDIeo
-         yZ+kVAsZJLS5U6RHnRv+oYSPioypghIe05aqCujI=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Peter Rosin <peda@axentia.se>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 04/18] iio: adc: exynos_adc: Simplify with dev_err_probe()
-Date:   Sat, 29 Aug 2020 08:47:12 +0200
-Message-Id: <20200829064726.26268-4-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200829064726.26268-1-krzk@kernel.org>
-References: <20200829064726.26268-1-krzk@kernel.org>
+        id S1725886AbgH2Gty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 02:49:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 1FBD5AC4D;
+        Sat, 29 Aug 2020 06:50:27 +0000 (UTC)
+Date:   Sat, 29 Aug 2020 08:49:53 +0200
+Message-ID: <s5htuwmj69a.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Dan Crawford <dnlcrwfrd@gmail.com>
+Cc:     tiwai@suse.com, perex@perex.cz, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] Fix silent audio output and corrupted input on MSI X570-A PRO
+In-Reply-To: <20200829024946.5691-1-dnlcrwfrd@gmail.com>
+References: <20200829024946.5691-1-dnlcrwfrd@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and also it prints the error value.
+On Sat, 29 Aug 2020 04:49:46 +0200,
+Dan Crawford wrote:
+> 
+> From: Dan Crawford <dnlcrwfrd@gmail.com>
+> 
+> Following Christian Lachner's patch for Gigabyte X570-based motherboards,
+> also patch the MSI X570-A PRO motherboard; the ALC1220 codec requires the
+> same workaround for Clevo laptops to enforce the DAC/mixer connection
+> path. Set up a quirk entry for that.
+> 
+> I suspect most if all X570 motherboards will require similar patches.
+> 
+> Related buglink: https://bugzilla.kernel.org/show_bug.cgi?id=205275
+> Signed-off-by: Dan Crawford <dnlcrwfrd@gmail.com>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Thanks, applied after reordering in SSID order.
 
----
 
-Changes since v2:
-1. Wrap dev_err_probe() lines at 80 character
+Takashi
 
-Changes since v1:
-1. Wrap dev_err_probe() lines at 100 character
----
- drivers/iio/adc/exynos_adc.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
-index 7d23b6c33284..20477b249f2a 100644
---- a/drivers/iio/adc/exynos_adc.c
-+++ b/drivers/iio/adc/exynos_adc.c
-@@ -844,13 +844,9 @@ static int exynos_adc_probe(struct platform_device *pdev)
- 	}
- 
- 	info->vdd = devm_regulator_get(&pdev->dev, "vdd");
--	if (IS_ERR(info->vdd)) {
--		if (PTR_ERR(info->vdd) != -EPROBE_DEFER)
--			dev_err(&pdev->dev,
--				"failed getting regulator, err = %ld\n",
--				PTR_ERR(info->vdd));
--		return PTR_ERR(info->vdd);
--	}
-+	if (IS_ERR(info->vdd))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(info->vdd),
-+				     "failed getting regulator");
- 
- 	ret = regulator_enable(info->vdd);
- 	if (ret)
--- 
-2.17.1
-
+> ---
+>  sound/pci/hda/patch_realtek.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+> index a1fa983d2..a52d8640e 100644
+> --- a/sound/pci/hda/patch_realtek.c
+> +++ b/sound/pci/hda/patch_realtek.c
+> @@ -2474,6 +2474,7 @@ static const struct snd_pci_quirk alc882_fixup_tbl[] = {
+>  	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
+>  	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
+>  	SND_PCI_QUIRK(0x1462, 0x1293, "MSI-GP65", ALC1220_FIXUP_CLEVO_P950),
+> +	SND_PCI_QUIRK(0x1462, 0x9c37, "MSI X570-A PRO", ALC1220_FIXUP_CLEVO_P950),
+>  	SND_PCI_QUIRK(0x1462, 0x7350, "MSI-7350", ALC889_FIXUP_CD),
+>  	SND_PCI_QUIRK(0x1462, 0xda57, "MSI Z270-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
+>  	SND_PCI_QUIRK_VENDOR(0x1462, "MSI", ALC882_FIXUP_GPIO3),
+> -- 
+> 2.28.0
+> 
