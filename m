@@ -2,70 +2,105 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 623C4C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 09:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 118DBC433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 09:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 430C220714
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 09:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42992075B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 09:14:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kdrag0n.dev header.i=@kdrag0n.dev header.b="sERlu4vT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="m4+iXbAw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgH2JKj (ORCPT
+        id S1727022AbgH2JO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 05:10:39 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58502 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726258AbgH2JKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 05:10:39 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id BC1E14AA4C4907C8CD60;
-        Sat, 29 Aug 2020 17:10:35 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Sat, 29 Aug 2020
- 17:10:29 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
-        <yoshfuji@linux-ipv6.org>, <kuba@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] net: Use helper macro IP_MAX_MTU in __ip_append_data()
-Date:   Sat, 29 Aug 2020 05:09:18 -0400
-Message-ID: <20200829090918.17614-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        Sat, 29 Aug 2020 05:14:28 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:55905 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726405AbgH2JOZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 05:14:25 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id AB40B5C0161;
+        Sat, 29 Aug 2020 05:14:23 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Sat, 29 Aug 2020 05:14:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdrag0n.dev; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=vdgCpwlVAM9JPg+izfOV7VwaHm
+        Ozcnhhr5dI10N741Y=; b=sERlu4vTM9W4o+BsA3vsuG7ET1JJmL4YcqnYXfZwai
+        T5lA1CimLxQwHg1UqUfh0D8fDJMq7k2MV2NPzNsnEwJ8myFfpxIMGAsIZJxADYYv
+        IU1N5kUAMeGl+Yu0WT5wMlxek8XW3gkRYzrWxAXjOrDAZ6oJ7sjWpNOn9V81ELFC
+        xOwdGV3oe9oU7i/B6oMepxQueatQfGVBEGpTsk7ZbQXopyNs4xMqqTf7We95PFBG
+        8yZ49eMHC2U8yQSQeXJmxZrn0uPvpB3E1EKOhfO/Kh8FVmlZVBBgz4ijKXw41lPJ
+        rKO1xmgjOa/qmgNbqE15evoeey3s7wxB2jNqClxC6GcA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=vdgCpwlVAM9JPg+iz
+        fOV7VwaHmOzcnhhr5dI10N741Y=; b=m4+iXbAwXcxgEWvqMT0DZwXLPt8MK/EmM
+        pehXHmVk7E86D58Fihgu6dUqhhhQUeYfENcLa+5AHiAa8GG8hMgx7DqK2hlXSL9C
+        CBSuiHBCjxM/i4LIgS0LgPEH0iDD4/AZVNAwwJ6MxZu/KtFFYqoY2OIHPSfQ5q35
+        2AM6I77K2mVsCiw2yZ0CoCYyzKuZy3SOyfVCNrHx4mNCCwvEq1Igfye3bXFT7UTG
+        BFEGT/UmrRkaFyz+sEx5P9qWbwGpedzz1pKsdwKR7/fh6wNjIYzXrUr2bIrZE4gC
+        xwGobuj8rMpfTj9b00ZdN6wv8Iz0HN87CetiC0r8rKk+pkRGpG+tQ==
+X-ME-Sender: <xms:bxxKX1pPr69mjndIWH6grRgwhsLcAmrTuAOMK10Dhp8QrLycuiKY9w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefuddgudefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeffrghnnhihucfn
+    ihhnuceouggrnhhnhieskhgurhgrghdtnhdruggvvheqnecuggftrfgrthhtvghrnhephf
+    eihffglefgudefvdduledvfedvfefgieeuueefgeetffdukeeghfevtdeifeetnecukfhp
+    pedutdegrddvtddtrdduvdelrddvuddvnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepuggrnhhnhieskhgurhgrghdtnhdruggvvh
+X-ME-Proxy: <xmx:bxxKX3rB3ckTgh6fUNE1CirxBSaxhTK73eRbymscTXp37xsBg1fvIg>
+    <xmx:bxxKXyNVF094Vkrwp7dD8pyEArAqgEw8whS0d37Un75OHCby08iY-Q>
+    <xmx:bxxKXw4elL48Xrie--ogZiLdSHo0n9DNduvMNVhPpGTJEcaiAcwd5A>
+    <xmx:bxxKX5jTPuMH-U2rrQRKpN7RuTEKtiIX-Nc6wYbikXqHHZGYX9nZ7Q>
+Received: from pinwheel.localdomain (unknown [104.200.129.212])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5EB653280060;
+        Sat, 29 Aug 2020 05:14:21 -0400 (EDT)
+From:   Danny Lin <danny@kdrag0n.dev>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Danny Lin <danny@kdrag0n.dev>
+Subject: [PATCH] blk-wbt: Remove obsolete multiqueue I/O scheduling comment
+Date:   Sat, 29 Aug 2020 02:13:53 -0700
+Message-Id: <20200829091353.2923361-1-danny@kdrag0n.dev>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-What 0xFFFF means here is actually the max mtu of a ip packet. Use help
-macro IP_MAX_MTU here.
+This comment was added before the multiqueue I/O scheduler framework
+was introduced; multiqueue has support for I/O scheduling now, so this
+obsolete comment can be removed.
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: Danny Lin <danny@kdrag0n.dev>
 ---
- net/ipv4/ip_output.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/Kconfig | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
-index 329a0ab87542..f0f234727547 100644
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -996,7 +996,7 @@ static int __ip_append_data(struct sock *sk,
+diff --git a/block/Kconfig b/block/Kconfig
+index bbad5e8bbffe..a2297edfdde8 100644
+--- a/block/Kconfig
++++ b/block/Kconfig
+@@ -161,8 +161,6 @@ config BLK_WBT_MQ
+ 	depends on BLK_WBT
+ 	help
+ 	Enable writeback throttling by default on multiqueue devices.
+-	Multiqueue currently doesn't have support for IO scheduling,
+-	enabling this option is recommended.
  
- 	fragheaderlen = sizeof(struct iphdr) + (opt ? opt->optlen : 0);
- 	maxfraglen = ((mtu - fragheaderlen) & ~7) + fragheaderlen;
--	maxnonfragsize = ip_sk_ignore_df(sk) ? 0xFFFF : mtu;
-+	maxnonfragsize = ip_sk_ignore_df(sk) ? IP_MAX_MTU : mtu;
- 
- 	if (cork->length + length > maxnonfragsize - fragheaderlen) {
- 		ip_local_error(sk, EMSGSIZE, fl4->daddr, inet->inet_dport,
+ config BLK_DEBUG_FS
+ 	bool "Block layer debugging information in debugfs"
 -- 
-2.19.1
+2.27.0
 
