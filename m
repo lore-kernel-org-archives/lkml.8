@@ -2,156 +2,112 @@ Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2254DC43461
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F617C43461
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECC3A2076D
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:09:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GeCR42p0"
+	by mail.kernel.org (Postfix) with ESMTP id 060122076D
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:14:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598688899;
+	bh=ax9h4LUCCNUQA51bwTmwKpfIzaWN5DUAbgCQZ0oZRIk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EkYB1RM/xRFB3Fo75dw4LYRYEa7e2D6IS8tuxYiT1vPjzCca8jdn9wDaKT//CJ2SR
+	 3ZCC3GbvVHexVFefLtx6FORWOAi6icvUZVHJsMr0RvZ0jTlUT92w7btGoL3jAklBcw
+	 WoPRuZ66E50g4GgmnXBkLlcyGnRdB4bm5SaFKvVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgH2IJD (ORCPT
+        id S1727112AbgH2IO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 04:09:03 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:6667 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727931AbgH2II4 (ORCPT
+        Sat, 29 Aug 2020 04:14:57 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:47524 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbgH2IOz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 04:08:56 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4a0c9b0000>; Sat, 29 Aug 2020 01:06:51 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 29 Aug 2020 01:08:55 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 29 Aug 2020 01:08:55 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sat, 29 Aug
- 2020 08:08:54 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Sat, 29 Aug 2020 08:08:54 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.50.252]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f4a0d160001>; Sat, 29 Aug 2020 01:08:54 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, <linux-xfs@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v2 1/3] mm/gup: introduce pin_user_page()
-Date:   Sat, 29 Aug 2020 01:08:51 -0700
-Message-ID: <20200829080853.20337-2-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200829080853.20337-1-jhubbard@nvidia.com>
-References: <20200829080853.20337-1-jhubbard@nvidia.com>
+        Sat, 29 Aug 2020 04:14:55 -0400
+Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 07T8ELfj014307;
+        Sat, 29 Aug 2020 17:14:22 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 07T8ELfj014307
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1598688862;
+        bh=5Y8va6v9Vkf0rKYqbjXOJvX5NgHpMaTUd+vQU6FBxB8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Rtr7QzyrKnHMcA4KgUpSH7wI0otUG2SItMIpBjK3LAeIzUqV8TMNLVoSkhnqZOore
+         CVteMo9EPvh/kllQ/H7naPzU6xiCox5syCXre/t6jBg/3AUMByyk7CO4e4pw2iIDAX
+         vK+S6XnvMJU+nQFMICXujClbp5xzDPP7ifXpNcLwG9zfNIMN88P257WnUezYLiI7mb
+         GxF/ngw1ZnU/d5/EX8esRVpaiDbc+zYnkyC5VjGz9UuoMElH8f5THeW9QBdM/3JqKR
+         jZvXpO5Qb3mpNITvxwde5iFL+QgfOF5dK6by11G3r2kCNUdgOAvKn6S4El4f+55BUB
+         NZyMfQ0MiDrNQ==
+X-Nifty-SrcIP: [126.90.211.135]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 03/11] kconfig: qconf: remove unused ConfigItem::okRename()
+Date:   Sat, 29 Aug 2020 17:14:09 +0900
+Message-Id: <20200829081417.725978-3-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200829081417.725978-1-masahiroy@kernel.org>
+References: <20200829081417.725978-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598688411; bh=nt0PtF6oHhEk4Ehi11ZCG1lTaPX813pQeWdo2szO18M=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=GeCR42p0vG1Y/mcPDPfFg8Jr+t+lxTu2SPIfM2gbW6ioXBlHyDFBEpuWKpukI54u+
-         wsuDo2DHLHKzyLlIOzIMY4I1LBumbthJEXfQmWXbbOStiZGBDqfFygVpB3cAvHtCxJ
-         O7vNWk/2AOqUKjPA6p+gj8ZomZWK4+T5oteaJhEgJEmZcyDIMb4EFnfTlOEIici30Q
-         IBgbsi1Eg0hhZ4Jobh5b6/CjdUvus97FqFJ/WqgEUtSAFqIA33aVOm1GONjDKd6GC3
-         ODte/dvdN6LsXZp/2yOMJiuHmDsUiIwW+lNAgUdH40w5HufWhROtZDg4IwW21uTptn
-         FfBYqJQiWcdAg==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pin_user_page() is the FOLL_PIN equivalent of get_page().
+Commit 76538660fb08 ("Port xconfig to Qt5 - Remove custom
+ListView classes.") removed the original implementation, where
+ConfigItem::okRename() overrode Q3ListViewItem::okRename().
 
-This was always a missing piece of the pin/unpin API calls (early
-reviewers of pin_user_pages() asked about it, in fact), but until now,
-it just wasn't needed. Finally though, now that the Direct IO pieces in
-block/bio are about to be converted to use FOLL_PIN, it turns out that
-there are some cases in which get_page() and get_user_pages_fast() were
-both used. Converting those sites requires a drop-in replacement for
-get_page(), which this patch supplies.
+Commit 59e564408f88 ("Port xconfig to Qt5 - Put back some of the
+old implementation.") restored the empty stub, but it seems
+useless.
 
-[1] and [2] provide some background about pin_user_pages() in general.
-
-[1] "Explicit pinning of user-space pages":
-    https://lwn.net/Articles/807108/
-
-[2] Documentation/core-api/pin_user_pages.rst
-
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- include/linux/mm.h |  2 ++
- mm/gup.c           | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 97c83773b6f0..51c6ae4b63f7 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1152,6 +1152,8 @@ static inline void get_page(struct page *page)
- 	page_ref_inc(page);
- }
-=20
-+void pin_user_page(struct page *page);
-+
- bool __must_check try_grab_page(struct page *page, unsigned int flags);
-=20
- static inline __must_check bool try_get_page(struct page *page)
-diff --git a/mm/gup.c b/mm/gup.c
-index ae096ea7583f..2cae5bbbc862 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -123,6 +123,36 @@ static __maybe_unused struct page *try_grab_compound_h=
-ead(struct page *page,
- 	return NULL;
- }
-=20
-+/*
-+ * pin_user_page() - elevate the page refcount, and mark as FOLL_PIN
-+ *
-+ * This the FOLL_PIN equivalent of get_page(). It is intended for use when=
- the
-+ * page will be released via unpin_user_page().
-+ */
-+void pin_user_page(struct page *page)
-+{
-+	int refs =3D 1;
-+
-+	page =3D compound_head(page);
-+
-+	VM_BUG_ON_PAGE(page_ref_count(page) <=3D 0, page);
-+
-+	if (hpage_pincount_available(page))
-+		hpage_pincount_add(page, 1);
-+	else
-+		refs =3D GUP_PIN_COUNTING_BIAS;
-+
-+	/*
-+	 * Similar to try_grab_compound_head(): even if using the
-+	 * hpage_pincount_add/_sub() routines, be sure to
-+	 * *also* increment the normal page refcount field at least
-+	 * once, so that the page really is pinned.
-+	 */
-+	page_ref_add(page, refs);
-+
-+	mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_ACQUIRED, 1);
-+}
-+
- /**
-  * try_grab_page() - elevate a page's refcount by a flag-dependent amount
-  *
---=20
-2.28.0
+ scripts/kconfig/qconf.cc | 8 --------
+ scripts/kconfig/qconf.h  | 1 -
+ 2 files changed, 9 deletions(-)
+
+diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+index 30a58aa6507a..278c04de11ec 100644
+--- a/scripts/kconfig/qconf.cc
++++ b/scripts/kconfig/qconf.cc
+@@ -82,14 +82,6 @@ QIcon ConfigItem::choiceNoIcon;
+ QIcon ConfigItem::menuIcon;
+ QIcon ConfigItem::menubackIcon;
+ 
+-/*
+- * set the new data
+- * TODO check the value
+- */
+-void ConfigItem::okRename(int col)
+-{
+-}
+-
+ /*
+  * update the displayed of a menu entry
+  */
+diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
+index f97376a8123f..d41670f322b3 100644
+--- a/scripts/kconfig/qconf.h
++++ b/scripts/kconfig/qconf.h
+@@ -131,7 +131,6 @@ class ConfigItem : public QTreeWidgetItem {
+ 	}
+ 	~ConfigItem(void);
+ 	void init(void);
+-	void okRename(int col);
+ 	void updateMenu(void);
+ 	void testUpdateMenu(bool v);
+ 	ConfigList* listView() const
+-- 
+2.25.1
 
