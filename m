@@ -7,65 +7,66 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03174C433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBADBC433E6
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C25512075B
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9941A2075B
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 08:20:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RXTf/vAH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8lb4AKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgH2ISv (ORCPT
+        id S1727848AbgH2IUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 04:18:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52014 "EHLO
+        Sat, 29 Aug 2020 04:20:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgH2ISs (ORCPT
+        with ESMTP id S1726083AbgH2IUC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 04:18:48 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A08C061236;
-        Sat, 29 Aug 2020 01:18:47 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id ba12so1152581edb.2;
-        Sat, 29 Aug 2020 01:18:47 -0700 (PDT)
+        Sat, 29 Aug 2020 04:20:02 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A4AC061236;
+        Sat, 29 Aug 2020 01:20:02 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id l2so2154985eji.3;
+        Sat, 29 Aug 2020 01:20:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to;
-        bh=wRFsH65qEKlAb6hncYTia/pYv8Gyz6fqeLSzzlTd088=;
-        b=RXTf/vAH7+1eg3sPtJR3mUZhFp/HjFxZOBqzv1oAEN/XHPPyXVcyDQogjXth44xzrx
-         bo9s+DXL0CtR7jecoHyFbdrmhxgk4YpngS+55eUTcjTjSAGEEYdgc0Luy/dkl7ZYhvFE
-         gjzS8ewUc/UY+dHO8gJxgq5B+ZI3lshpNmC3Q529NlA3mV/gwkL49/kPvWoccGgNHtdD
-         rLg4C0RnBZwWvmMDp+zJmdKwxUDgCdzWtl/GGWPw/Q/1P+K8Sv4TMuIsQASA5MPCwPNg
-         mzEUn9rBEASqsDcpeOYZD3zL5vQIFSIDTEyFwhP3l/UCjJOhGoHcynqiOX/JrXx+2fsy
-         0xMA==
+        bh=0FDeOqqqmN/2W5Amk5t+HI0NVVDnV6N35z/hnvPE1Mk=;
+        b=C8lb4AKtQ+M33Y77NbBEHl+g05YntNtQ9wg/DNkcVkY2tEVrWqWU832s+5rZyydcRC
+         rNFzso/E2YSTeHOUoKrSNOXrax+BMKBhaMEEOHpJY0zRHqb4aE6h3oTW4yKA2mjHOcuB
+         m14csMkL9ETdckrw9M/0vOtK5WQmGZxwWrrBH5Ugp4uO9shQwaIWuQnte/YgZnjuRwr/
+         AzQKxke9o84pcEnFzYqnrGRziCcnIA7WGbcNF+LyF/dyK5ez4FQ1ORlxE7sRESgIrAfz
+         ldI7U+NNC5jErzBUNLf6KlZJIj7n2OcYHPq5PisCkVSpBvZrqbDH0CUo7fZ2JXU4Emw7
+         AAqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
-        bh=wRFsH65qEKlAb6hncYTia/pYv8Gyz6fqeLSzzlTd088=;
-        b=cQBaLL05WLlqFIuy+v5lT3tWrv8LBHmXvPBvX8ArFOdbtl3FXsFJyyhjjAQbS9wvjm
-         NqD179EyYp2Uycbz+SWGYxgtAW9IMl55t7+tRolY48WMKCAdBg5hF1jcn3TIiDxN+azN
-         2h8ZPMI5z6xtWM3i4aBu3bap6YrqSDIFusGCys7rGZBP50E4idKRMgA36P29q6sAB067
-         dqqYR6y3Zu6CkjNQE8/qodoX5LxCtB+NjNCQPi305cQArDZd6eyEIO61ZNG3cOP5UYfj
-         0hTNrniUo1K8vgf2NB4uJZXOU3rZpPPgOiEmoUvKeeWkDRrpFZHYFk3PBSvGfE/NZxlH
-         iODw==
-X-Gm-Message-State: AOAM531IzqlOmuyiXRKwwdnoKTtD/IQ4dV1IfnU1nplqryZDI/H4b/UZ
-        kn3f5J5pjo1o7U0TCyUZiI2CO8o+J2Y=
-X-Google-Smtp-Source: ABdhPJyt1i8CCPsON1BaSsP8z4tlI7mtDz7h02HFK6FEHAXm5g8qXOiKvjzUgXC9BYBUXUulAsVOPQ==
-X-Received: by 2002:a05:6402:2:: with SMTP id d2mr2519849edu.221.1598689126406;
-        Sat, 29 Aug 2020 01:18:46 -0700 (PDT)
+        bh=0FDeOqqqmN/2W5Amk5t+HI0NVVDnV6N35z/hnvPE1Mk=;
+        b=irfitns0Sx/3Hv4V+A73R/74QUxPxT2aNoEiI9/mgcZAGUVQPaIVFX1/nNIvlHHA6e
+         o+1iMBfxXWjkEJ39eMgmnDuwdlyub6wDQiE3J+0HOA90PQDs8qWvw0FK12NzFVi6x9MN
+         qw3IMsqsAGTigJdm9AvzdcQM5pl7XMEc/ADoT00b43Vu1wIBHt2hLvx/AKpEeRpTL4k3
+         uh2GrTufii7RUfvZxsUy+vfnpaSpLD2QWAUMZcNYhk3/4qwcmtRxaU3mxWvAnhhvs4yt
+         zQ6zV3T/SQKyBHNX3AubVdJvA21QwWtTlVZUUpNp/x6zjPR2OxTaw6NrARubCZJZ+D+d
+         NYvg==
+X-Gm-Message-State: AOAM5303OziC8Tc2qR2AUX3HOQo7PfBFon9WdUUBWJeKW7BqmPKEko4J
+        YszptPr9pVsbuYJavWprPdY=
+X-Google-Smtp-Source: ABdhPJxFGzmps12K7nCfy55JGVMy+SCSvPss64XL3SCEY8Z2mVmSppYYUT3emqokc40pw2auCCHbVA==
+X-Received: by 2002:a17:906:ca4f:: with SMTP id jx15mr1239762ejb.454.1598689201237;
+        Sat, 29 Aug 2020 01:20:01 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:2450:10d2:194d:f90b:b3a9:1300:5b1a])
-        by smtp.gmail.com with ESMTPSA id q15sm1500297edc.74.2020.08.29.01.18.45
+        by smtp.gmail.com with ESMTPSA id f6sm1561718ejh.92.2020.08.29.01.20.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Aug 2020 01:18:45 -0700 (PDT)
+        Sat, 29 Aug 2020 01:20:00 -0700 (PDT)
 From:   SeongJae Park <sj38.park@gmail.com>
 To:     SeongJae Park <sj38.park@gmail.com>
-Cc:     corbet@lwn.net, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, SeongJae Park <sjpark@amazon.de>
-Subject: Re: [PATCH 0/2] howto.rst: Sync with original
-Date:   Sat, 29 Aug 2020 10:18:39 +0200
-Message-Id: <20200829081839.2546-1-sj38.park@gmail.com>
+Cc:     paulmck@kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        SeongJae Park <sjpark@amazon.de>
+Subject: Re: [PATCH 0/3] memory-barriers: Apply missed changes
+Date:   Sat, 29 Aug 2020 10:19:50 +0200
+Message-Id: <20200829081950.2709-1-sj38.park@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200829080428.1219-1-sjpark@amazon.de>
+In-Reply-To: <20200829080816.1440-1-sjpark@amazon.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -78,19 +79,22 @@ signed-off-by mismatch.  Sorry, I will send v2 soon.
 Thanks,
 SeongJae Park
 
-On Sat, 29 Aug 2020 10:04:26 +0200 SeongJae Park <sj38.park@gmail.com> wrote:
+On Sat, 29 Aug 2020 10:08:13 +0200 SeongJae Park <sj38.park@gmail.com> wrote:
 
-> This patchset syncs howto.rst for recent changes to the original doc and
-> fix some trivial nits in the translation itself.
+> This patchset applies missed changes that should land in the
+> memory-barriers.txt and its Korean translation.
 > 
 > The patches are based on v5.9-rc2.
 > 
-> SeongJae Park (2):
->   Documentation/kokr: bring process docs up to date
->   Documentation/kokr/howto: Wordsmith
+> SeongJae Park (3):
+>   docs/memory-barriers.txt: Fix references for DMA*.txt files
+>   docs/memory-barriers.txt/kokr: Remove remaining references to mmiowb()
+>   dics/memory-barriers.txt/kokr: Allow architecture to override the
+>     flush barrier
 > 
->  Documentation/translations/ko_KR/howto.rst | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+>  Documentation/memory-barriers.txt             |  8 ++---
+>  .../translations/ko_KR/memory-barriers.txt    | 32 ++++++++++++-------
+>  2 files changed, 24 insertions(+), 16 deletions(-)
 > 
 > -- 
 > 2.17.1
