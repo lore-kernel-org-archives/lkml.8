@@ -4,31 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 585A6C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0F1C433E7
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 02:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3689B207BB
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 01:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 565A6207BB
+	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 02:00:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbgH2B4O (ORCPT
+        id S1726814AbgH2CAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 28 Aug 2020 21:56:14 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:47880 "EHLO
+        Fri, 28 Aug 2020 22:00:05 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:47888 "EHLO
         brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726392AbgH2B4O (ORCPT
+        with ESMTP id S1726395AbgH2CAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 28 Aug 2020 21:56:14 -0400
-Date:   Fri, 28 Aug 2020 21:56:13 -0400
+        Fri, 28 Aug 2020 22:00:03 -0400
+Date:   Fri, 28 Aug 2020 22:00:02 -0400
 From:   Rich Felker <dalias@libc.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>
-Subject: [PATCH] seccomp: kill process instead of thread for unknown actions
-Message-ID: <20200829015609.GA32566@brightrain.aerifal.cx>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: [RESEND PATCH] vfs: add RWF_NOAPPEND flag for pwritev2
+Message-ID: <20200829020002.GC3265@brightrain.aerifal.cx>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -38,50 +37,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Asynchronous termination of a thread outside of the userspace thread
-library's knowledge is an unsafe operation that leaves the process in
-an inconsistent, corrupt, and possibly unrecoverable state. In order
-to make new actions that may be added in the future safe on kernels
-not aware of them, change the default action from
-SECCOMP_RET_KILL_THREAD to SECCOMP_RET_KILL_PROCESS.
+The pwrite function, originally defined by POSIX (thus the "p"), is
+defined to ignore O_APPEND and write at the offset passed as its
+argument. However, historically Linux honored O_APPEND if set and
+ignored the offset. This cannot be changed due to stability policy,
+but is documented in the man page as a bug.
+
+Now that there's a pwritev2 syscall providing a superset of the pwrite
+functionality that has a flags argument, the conforming behavior can
+be offered to userspace via a new flag. Since pwritev2 checks flag
+validity (in kiocb_set_rw_flags) and reports unknown ones with
+EOPNOTSUPP, callers will not get wrong behavior on old kernels that
+don't support the new flag; the error is reported and the caller can
+decide how to handle it.
 
 Signed-off-by: Rich Felker <dalias@libc.org>
 ---
+ include/linux/fs.h      | 4 ++++
+ include/uapi/linux/fs.h | 5 ++++-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-This fundamental problem with SECCOMP_RET_KILL_THREAD, and that it
-should be considered unsafe and deprecated, was recently noted/fixed
-seccomp in the man page and its example. Here I've only changed the
-default action for new/unknown action codes. Ideally the behavior for
-strict seccomp mode would be changed too but I think that breaks
-stability policy; in any case it's less likely to be an issue since
-strict mode is hard or impossible to use reasonably in a multithreaded
-process.
-
-Unfortunately changing this now won't help older kernels where unknown
-new actions would still be handled unsafely, but at least it makes it
-so the problem will fade away over time.
-
- kernel/seccomp.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index d653d8426de9..ce1875fa6b39 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -910,10 +910,10 @@ static int __seccomp_filter(int this_syscall, const struct seccomp_data *sd,
- 			seccomp_init_siginfo(&info, this_syscall, data);
- 			do_coredump(&info);
- 		}
--		if (action == SECCOMP_RET_KILL_PROCESS)
--			do_group_exit(SIGSYS);
--		else
-+		if (action == SECCOMP_RET_KILL_THREAD)
- 			do_exit(SIGSYS);
-+		else
-+			do_group_exit(SIGSYS);
- 	}
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index e0d909d35763..3a769a972f79 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3397,6 +3397,8 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
+ {
+ 	if (unlikely(flags & ~RWF_SUPPORTED))
+ 		return -EOPNOTSUPP;
++	if (unlikely((flags & RWF_APPEND) && (flags & RWF_NOAPPEND)))
++		return -EINVAL;
  
- 	unreachable();
+ 	if (flags & RWF_NOWAIT) {
+ 		if (!(ki->ki_filp->f_mode & FMODE_NOWAIT))
+@@ -3411,6 +3413,8 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
+ 		ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
+ 	if (flags & RWF_APPEND)
+ 		ki->ki_flags |= IOCB_APPEND;
++	if (flags & RWF_NOAPPEND)
++		ki->ki_flags &= ~IOCB_APPEND;
+ 	return 0;
+ }
+ 
+diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+index 379a612f8f1d..591357d9b3c9 100644
+--- a/include/uapi/linux/fs.h
++++ b/include/uapi/linux/fs.h
+@@ -299,8 +299,11 @@ typedef int __bitwise __kernel_rwf_t;
+ /* per-IO O_APPEND */
+ #define RWF_APPEND	((__force __kernel_rwf_t)0x00000010)
+ 
++/* per-IO negation of O_APPEND */
++#define RWF_NOAPPEND	((__force __kernel_rwf_t)0x00000020)
++
+ /* mask of flags supported by the kernel */
+ #define RWF_SUPPORTED	(RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT |\
+-			 RWF_APPEND)
++			 RWF_APPEND | RWF_NOAPPEND)
+ 
+ #endif /* _UAPI_LINUX_FS_H */
 -- 
 2.21.0
 
