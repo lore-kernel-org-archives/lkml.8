@@ -2,177 +2,159 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0428C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA575C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C77BD2076D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E29E207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgHaBVq (ORCPT
+        id S1726981AbgHaBVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 21:21:46 -0400
-Received: from mga02.intel.com ([134.134.136.20]:18375 "EHLO mga02.intel.com"
+        Sun, 30 Aug 2020 21:21:40 -0400
+Received: from mga02.intel.com ([134.134.136.20]:18361 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727021AbgHaBVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 21:21:41 -0400
-IronPort-SDR: /gjYJnUWtj7VAIUwFNQDDiewG7VRfx9bMJqEJUMOoRSvUI2d8tUy52tfxc8j9RD5H4B17ZPHAg
- zj6uaVBu45yw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="144639119"
+        id S1726525AbgHaBVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 21:21:34 -0400
+IronPort-SDR: u8Y8+l/gAqNsaqdcamNPTHhCADv48yRuPlnpnF5G+YkLOzbgK0q7mXZ4LJUtZ9tiTuPvAUCubI
+ rdS/neKOcDXw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="144639116"
 X-IronPort-AV: E=Sophos;i="5.76,373,1592895600"; 
-   d="scan'208";a="144639119"
+   d="scan'208";a="144639116"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2020 18:21:41 -0700
-IronPort-SDR: qjEmzA0Hzk/Z7aJAVcRPHrQ+lVeFSGOwvrJe/040UfCFmiT+3vNbiK3/3n2WxVtP2xhLZ9QTWS
- WO2OalPcCPSA==
-X-ExtLoop1: 1
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2020 18:21:34 -0700
+IronPort-SDR: c0Ku5MibqjQ9SDXJS3HHAHkZECjqzsOnDojOkmkmOJfWlXlMLoh93Y2OE6PybBiAGt2qvzIgVd
+ yj0v4TE9W+mQ==
 X-IronPort-AV: E=Sophos;i="5.76,373,1592895600"; 
-   d="scan'208";a="324742092"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by fmsmga004.fm.intel.com with ESMTP; 30 Aug 2020 18:21:38 -0700
-Cc:     baolu.lu@linux.intel.com,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: Re: [PATCH 1/1] iommu/vt-d: Use device numa domain if RHSA is missing
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200827055640.31408-1-baolu.lu@linux.intel.com>
- <MWHPR11MB1645E6D6BD1EFDFA139AA37C8C520@MWHPR11MB1645.namprd11.prod.outlook.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <757c4e10-519a-6736-8f22-7ae7308434b4@linux.intel.com>
-Date:   Mon, 31 Aug 2020 09:16:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <MWHPR11MB1645E6D6BD1EFDFA139AA37C8C520@MWHPR11MB1645.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+   d="scan'208";a="476529226"
+Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2020 18:21:30 -0700
+From:   Bard Liao <yung-chuan.liao@linux.intel.com>
+To:     alsa-devel@alsa-project.org, vkoul@kernel.org
+Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
+        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
+        mengdong.lin@intel.com, bard.liao@intel.com
+Subject: [PATCH v3 2/3] soundwire: fix port_ready[] dynamic allocation in mipi_disco
+Date:   Sun, 30 Aug 2020 21:27:41 +0800
+Message-Id: <20200830132742.20404-3-yung-chuan.liao@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200830132742.20404-1-yung-chuan.liao@linux.intel.com>
+References: <20200830132742.20404-1-yung-chuan.liao@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kevin,
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-Thanks a lot for looking at my patch.
+The existing code allocates memory for the total number of ports.
+This only works if the ports are contiguous, but will break if e.g. a
+Devices uses port0, 1, and 14. The port_ready[] array would contain 3
+elements, which would lead to an out-of-bounds access. Conversely in
+other cases, the wrong port index would be used leading to timeouts on
+prepare.
 
-On 8/28/20 10:13 AM, Tian, Kevin wrote:
->> From: Lu Baolu <baolu.lu@linux.intel.com>
->> Sent: Thursday, August 27, 2020 1:57 PM
->>
->> If there are multiple NUMA domains but the RHSA is missing in ACPI/DMAR
->> table, we could default to the device NUMA domain as fall back. This also
->> benefits the vIOMMU use case where only a single vIOMMU is exposed,
->> hence
->> no RHSA will be present but device numa domain can be correct.
-> 
-> this benefits vIOMMU but not necessarily only applied to single-vIOMMU
-> case. The logic still holds in multiple vIOMMU cases as long as RHSA is
-> not provided.
+This can be fixed by allocating for the worst-case of 15
+ports (DP0..DP14). In addition since the number is now fixed, we can
+use an array instead of a dynamic allocation.
 
-Yes. Will refine the description.
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
+Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+---
+ drivers/soundwire/mipi_disco.c | 18 +-----------------
+ drivers/soundwire/slave.c      |  4 ++++
+ include/linux/soundwire/sdw.h  |  2 +-
+ 3 files changed, 6 insertions(+), 18 deletions(-)
 
-> 
->>
->> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
->> Cc: Kevin Tian <kevin.tian@intel.com>
->> Cc: Ashok Raj <ashok.raj@intel.com>
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/intel/iommu.c | 31 +++++++++++++++++++++++++++++--
->>   1 file changed, 29 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
->> index e0516d64d7a3..bce158468abf 100644
->> --- a/drivers/iommu/intel/iommu.c
->> +++ b/drivers/iommu/intel/iommu.c
->> @@ -700,12 +700,41 @@ static int
->> domain_update_iommu_superpage(struct dmar_domain *domain,
->>   	return fls(mask);
->>   }
->>
->> +static int domain_update_device_node(struct dmar_domain *domain)
->> +{
->> +	struct device_domain_info *info;
->> +	int nid = NUMA_NO_NODE;
->> +
->> +	assert_spin_locked(&device_domain_lock);
->> +
->> +	if (list_empty(&domain->devices))
->> +		return NUMA_NO_NODE;
->> +
->> +	list_for_each_entry(info, &domain->devices, link) {
->> +		if (!info->dev)
->> +			continue;
->> +
->> +		nid = dev_to_node(info->dev);
->> +		if (nid != NUMA_NO_NODE)
->> +			break;
->> +	}
-> 
-> There could be multiple device numa nodes as devices within the
-> same domain may sit behind different IOMMUs. Of course there
-> is no perfect answer in such situation, and this patch is still an
-> obvious improvement on current always-on-node0 policy. But
-> some comment about such implication is welcomed.
+diff --git a/drivers/soundwire/mipi_disco.c b/drivers/soundwire/mipi_disco.c
+index 4ae62b452b8c..55a9c51c84c1 100644
+--- a/drivers/soundwire/mipi_disco.c
++++ b/drivers/soundwire/mipi_disco.c
+@@ -289,7 +289,7 @@ int sdw_slave_read_prop(struct sdw_slave *slave)
+ 	struct sdw_slave_prop *prop = &slave->prop;
+ 	struct device *dev = &slave->dev;
+ 	struct fwnode_handle *port;
+-	int num_of_ports, nval, i, dp0 = 0;
++	int nval;
+ 
+ 	device_property_read_u32(dev, "mipi-sdw-sw-interface-revision",
+ 				 &prop->mipi_revision);
+@@ -352,7 +352,6 @@ int sdw_slave_read_prop(struct sdw_slave *slave)
+ 			return -ENOMEM;
+ 
+ 		sdw_slave_read_dp0(slave, port, prop->dp0_prop);
+-		dp0 = 1;
+ 	}
+ 
+ 	/*
+@@ -383,21 +382,6 @@ int sdw_slave_read_prop(struct sdw_slave *slave)
+ 	sdw_slave_read_dpn(slave, prop->sink_dpn_prop, nval,
+ 			   prop->sink_ports, "sink");
+ 
+-	/* some ports are bidirectional so check total ports by ORing */
+-	nval = prop->source_ports | prop->sink_ports;
+-	num_of_ports = hweight32(nval) + dp0; /* add DP0 */
+-
+-	/* Allocate port_ready based on num_of_ports */
+-	slave->port_ready = devm_kcalloc(&slave->dev, num_of_ports,
+-					 sizeof(*slave->port_ready),
+-					 GFP_KERNEL);
+-	if (!slave->port_ready)
+-		return -ENOMEM;
+-
+-	/* Initialize completion */
+-	for (i = 0; i < num_of_ports; i++)
+-		init_completion(&slave->port_ready[i]);
+-
+ 	return 0;
+ }
+ EXPORT_SYMBOL(sdw_slave_read_prop);
+diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
+index 0839445ee07b..a762ee24e6fa 100644
+--- a/drivers/soundwire/slave.c
++++ b/drivers/soundwire/slave.c
+@@ -25,6 +25,7 @@ static int sdw_slave_add(struct sdw_bus *bus,
+ {
+ 	struct sdw_slave *slave;
+ 	int ret;
++	int i;
+ 
+ 	slave = kzalloc(sizeof(*slave), GFP_KERNEL);
+ 	if (!slave)
+@@ -58,6 +59,9 @@ static int sdw_slave_add(struct sdw_bus *bus,
+ 	init_completion(&slave->probe_complete);
+ 	slave->probed = false;
+ 
++	for (i = 0; i < SDW_MAX_PORTS; i++)
++		init_completion(&slave->port_ready[i]);
++
+ 	mutex_lock(&bus->bus_lock);
+ 	list_add_tail(&slave->node, &bus->slaves);
+ 	mutex_unlock(&bus->bus_lock);
+diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
+index 0aa4c6af7554..63e71645fd13 100644
+--- a/include/linux/soundwire/sdw.h
++++ b/include/linux/soundwire/sdw.h
+@@ -619,7 +619,7 @@ struct sdw_slave {
+ 	struct dentry *debugfs;
+ #endif
+ 	struct list_head node;
+-	struct completion *port_ready;
++	struct completion port_ready[SDW_MAX_PORTS];
+ 	enum sdw_clk_stop_mode curr_clk_stop_mode;
+ 	u16 dev_num;
+ 	u16 dev_num_sticky;
+-- 
+2.17.1
 
-I will add some comments here. Without more knowledge, currently we
-choose to use the first hit.
-
-> 
->> +
->> +	return nid;
->> +}
->> +
->>   /* Some capabilities may be different across iommus */
->>   static void domain_update_iommu_cap(struct dmar_domain *domain)
->>   {
->>   	domain_update_iommu_coherency(domain);
->>   	domain->iommu_snooping =
->> domain_update_iommu_snooping(NULL);
->>   	domain->iommu_superpage =
->> domain_update_iommu_superpage(domain, NULL);
->> +
->> +	/*
->> +	 * If RHSA is missing, we should default to the device numa domain
->> +	 * as fall back.
->> +	 */
->> +	if (domain->nid == NUMA_NO_NODE)
->> +		domain->nid = domain_update_device_node(domain);
->>   }
->>
->>   struct context_entry *iommu_context_addr(struct intel_iommu *iommu, u8
->> bus,
->> @@ -5086,8 +5115,6 @@ static struct iommu_domain
->> *intel_iommu_domain_alloc(unsigned type)
->>   		if (type == IOMMU_DOMAIN_DMA)
->>   			intel_init_iova_domain(dmar_domain);
->>
->> -		domain_update_iommu_cap(dmar_domain);
->> -
-> 
-> Is it intended or by mistake? If the former, looks it is a separate fix...
-
-It's a cleanup. When a domain is newly created, this function is
-actually a no-op.
-
-> 
->>   		domain = &dmar_domain->domain;
->>   		domain->geometry.aperture_start = 0;
->>   		domain->geometry.aperture_end   =
->> --
->> 2.17.1
-> 
-
-Best regards,
-baolu
