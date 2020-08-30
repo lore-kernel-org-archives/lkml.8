@@ -2,148 +2,78 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C44DCC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46672C433E7
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A804B20714
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F40220BED
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:25:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbgH3JWS (ORCPT
+        id S1728716AbgH3JZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 05:22:18 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:52972 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbgH3JWS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 05:22:18 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id B3D8C1C0B81; Sun, 30 Aug 2020 11:22:13 +0200 (CEST)
-Date:   Sun, 30 Aug 2020 11:22:12 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next v4 0/2] Add support for LEDs on
- Marvell PHYs
-Message-ID: <20200830092212.GA6861@duo.ucw.cz>
-References: <20200728150530.28827-1-marek.behun@nic.cz>
- <20200807090653.ihnt2arywqtpdzjg@duo.ucw.cz>
- <20200807132920.GB2028541@lunn.ch>
- <20200829224351.GA29564@duo.ucw.cz>
- <20200829233641.GC2966560@lunn.ch>
+        Sun, 30 Aug 2020 05:25:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:49362 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725869AbgH3JZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 05:25:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A31DD31B;
+        Sun, 30 Aug 2020 02:25:48 -0700 (PDT)
+Received: from [10.37.8.19] (unknown [10.37.8.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82AE33F68F;
+        Sun, 30 Aug 2020 02:25:47 -0700 (PDT)
+Subject: Re: [PATCH] iio: adc: rockchip_saradc: Select IIO_TRIGGERED_BUFFER
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        xxm@rock-chips.com
+References: <20200828174242.338068-1-alexandru.elisei@arm.com>
+ <20200829155703.19bf1c9f@archlinux>
+From:   Alexandru Elisei <alexandru.elisei@arm.com>
+Message-ID: <73cb7fcd-df73-e287-7733-4ce657e5a758@arm.com>
+Date:   Sun, 30 Aug 2020 10:26:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
-Content-Disposition: inline
-In-Reply-To: <20200829233641.GC2966560@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200829155703.19bf1c9f@archlinux>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jonathan,
 
---6c2NcOVqGQ03X4Wi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 8/29/20 3:57 PM, Jonathan Cameron wrote:
+> On Fri, 28 Aug 2020 18:42:42 +0100
+> Alexandru Elisei <alexandru.elisei@arm.com> wrote:
+>
+>> Building the Rockchip saradc driver can trigger the following error if the
+>> driver is compiled into the kernel, but the IIO triggered buffer is not:
+>>
+>> aarch64-linux-gnu-ld: drivers/iio/adc/rockchip_saradc.o: in function `rockchip_saradc_probe':
+>> /path/to/linux/drivers/iio/adc/rockchip_saradc.c:427: undefined reference to `devm_iio_triggered_buffer_setup'
+>>
+>> This is because commit 4e130dc7b413 ("iio: adc: rockchip_saradc: Add
+>> support iio buffers") added support for industrial I/O triggered buffers,
+>> but didn't update Kconfig to build the required file. Fix that.
+>>
+>> Fixes: 4e130dc7b413 ("iio: adc: rockchip_saradc: Add support iio buffers")
+>> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+> Sorry, I've had a patch queued to fix this for a while, but had a
+> vacation just after merge window occurred that delayed me sending it out.
+>
+> Will send a pull sometime this weekend.
+>
+> Jonathan
 
-Hi!
+That's great, thank you!
 
-> > > The phydev name is not particularly nice:
-> > >=20
-> > > !mdio-mux!mdio@1!switch@0!mdio:00
-=2E..
-> > > 400d0000.ethernet-1:00
-> > > 400d0000.ethernet-1:01
-> > > fixed-0:00
-> >=20
-> > Not nice, I see. In particular, it contains ":"... which would be a
-> > problem.
-> >=20
-> > > The interface name are:
-> > >=20
-> > > 1: lo:
-> > > 2: eth0:
-> > > 3: eth1:
-=2E..
-> > > 13: optical3@eth1:
-> > > 14: optical4@eth1:
-> >=20
-> > OTOH... renaming LEDs when interface is renamed... sounds like a
-> > disaster, too.
->=20
-> I don't think it is. The stack has all the needed support. There is a
-> notification before the rename, and another notification after the
-> rename. Things like bonding, combing two interfaces into one and load
-> balancing, etc. hook these notifiers. There is plenty of examples to
-> follow. What i don't know about is the lifetime of files under
-> /sys/class/led, does the destroying of an LED block while one of the
-> files is open?.
-
-Well, there may be no problems on the networking side, but I'd prefer
-not to make LED side more complex. Files could be open, and userland
-could have assumptions about LEDs not changing names...
-
-> > > You could make a good guess at matching to two together, but it is
-> > > error prone. Phys are low level things which the user is not really
-> > > involved in. They interact with interface names. ethtool, ip, etc, all
-> > > use interface names. In fact, i don't know of any tool which uses
-> > > phydev names.
-> >=20
-> > So... proposal:
-> >=20
-> > Users should not be dealing with sysfs interface directly, anyway. We
-> > should have a tool for that. It can live in kernel/tools somewhere, I
-> > guess.
->=20
-> We already have one, ethtool(1).=20
-
-Well... ethtool is for networking, we'll want to have a ledtool, too :-).
-
-> > Would we name leds phy0:... (with simple incrementing number), and
-> > expose either interface name or phydev name as a attribute?
-> >=20
-> > So user could do
-> >=20
-> > cat /sys/class/leds/phy14:green:foobar/netdev
-> > lan5@eth1:
->=20
-> Which is the wrong way around. ethtool will be passed the interface
-> name and an PHY descriptor of some sort, and it has to go search
-> through all the LEDs to find the one with this attribute. I would be
-> much more likely to add a sysfs link from
-> /sys/class/net/lan5/phy:left:green to
-> /sys/class/leds/phy14:left:green.
-
-Okay, that might be even better, as it provides links in the more
-useful direction.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---6c2NcOVqGQ03X4Wi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX0tvxAAKCRAw5/Bqldv6
-8gIVAJ9SudFhekKjKm3bC/uDVNilGxzJygCfZrfUDL9p+GGWmvf90udFglMRUcg=
-=fgw1
------END PGP SIGNATURE-----
-
---6c2NcOVqGQ03X4Wi--
+Thanks,
+Alex
