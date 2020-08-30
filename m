@@ -2,109 +2,102 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694C0C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 04:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A213C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 04:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6A2208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 04:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430652083E
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 04:54:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oIvGVXCN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bLc/Xhve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726078AbgH3Ek5 (ORCPT
+        id S1726013AbgH3Ey0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 00:40:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42468 "EHLO
+        Sun, 30 Aug 2020 00:54:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgH3Ekz (ORCPT
+        with ESMTP id S1725815AbgH3EyZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 00:40:55 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7059CC061573
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 21:40:55 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id q14so3947708ilm.2
-        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 21:40:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HHWDMq/nbO4xHE4a0KqcQiAEa78+4OGfNY+553VihpA=;
-        b=oIvGVXCNlLGgwIZeCgWK+LINRZM6tE8Fy0EICDHiZqnaqDcBZaxirt4X7zZZzXpN+I
-         m8Iye277Hzg8IzN5WcPFqm8R4U6o2lTwrv3mdi7/6zbfNOjMYPDr5sS7JcFV/Fi1d8W7
-         mqQY5NKNRemjIm9VF6eEebcNaXWrLLkQuUo2sFAG5ZQn+hGVFpCIvDkIup35FPjeVnb9
-         paGHyjWKtJeVeEBs8VS0C1x7Y0wo8oAGImx2vzHQM9JrYO8SKn/QNdx+FdJ1DSfqCfFW
-         1JmSo6quY+Drh2k5ofagjJUCfAzcxBGe5tNyct5JFg5EhiVlgPVNIxQN3m+MFghZ/reK
-         /abg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HHWDMq/nbO4xHE4a0KqcQiAEa78+4OGfNY+553VihpA=;
-        b=JUn8qBEul35RBi69dYhRBhF5erbOwHgHDjl/X4NRueEtuRhpXp8tZzSfNhZ7N9GcV3
-         Ys44nEGucwVjThUPCK5eS/fLRovQgxFDAz13BpUKZ5HjT4l6E8OanFKXiQJKGpk77k9p
-         j3miePHJ0Kj9w9xIQ/S38UIBWTdhdLDWFtNmkkjwqFv57q5BoUXsHkjVELjTJvPQSCaP
-         GiNilYRXdP+xPYq/hi7Q/NwoW517N1ZBIEJSeGi2fsm5MXGD9PTMTOr8Wng8jWeu971O
-         Bg6G+Rud7MZzx77lyY6oOFpZZ/AgwYy5zzHUECTjTU5tcPqkZDsaqpZnHnVyCRFjLz41
-         z0rA==
-X-Gm-Message-State: AOAM532o0WmsbU0Zv1nrZM4G+2pgIVJheF9+NJihkgZP24i/j0x1BB76
-        dGnxwt86kFqeAwb/PhLtDRe1gkSh4MxHYCERzQ==
-X-Google-Smtp-Source: ABdhPJyswRQJrqQ6CNwwCr4ZFRbkXMz3EXEYiZmPALIPayfK8vBxYKHmTP+7ld1GVqWc67Sn09tff89X/btVnlDY8DI=
-X-Received: by 2002:a92:6a09:: with SMTP id f9mr4725159ilc.273.1598762453371;
- Sat, 29 Aug 2020 21:40:53 -0700 (PDT)
+        Sun, 30 Aug 2020 00:54:25 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31A2FC061573;
+        Sat, 29 Aug 2020 21:54:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=MFqiM3hTwV/fkTjmipGxqNOxLLgA3iwwXkUUehMy8qg=; b=bLc/XhveXRAuGg14wNB8lRn0UP
+        5ZOGfYtKqW1DzbwqjzenMhl6yEdIYWJW/AsNFDDq8yBZoefIlmMdIvXq5iqjlhr6TX4Y+64vtEjOD
+        bSCuNbDTv3widKza3Re2tb8SWVabLdF8XpJnGZHvh1BQvOeOzV4g1958drtJvPrTgi428Omdr0XzV
+        dNMlTRiJFDo1xtHBRiLK7HJEZaQ0UyF1f0bcFbpt1FsgglpzH9Xqy50BssNLncArJq9U2STkAmLf2
+        VlHc5A6ZFJahyMN/kdkl0jJMO7GUKkaGmvNRp/Us+FasX0GDVl+u8Vyu6BGg/ikqvznYVCWH5Od4P
+        23Bg+btg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kCFME-0006Y2-VA; Sun, 30 Aug 2020 04:54:23 +0000
+Subject: Re: [PATCH 06/11] kconfig: qconf: allow to edit "int", "hex",
+ "string" menus in-place
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kbuild@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <20200829081417.725978-1-masahiroy@kernel.org>
+ <20200829081417.725978-6-masahiroy@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <bd8696df-72b7-fb92-d53a-edff715fe5a0@infradead.org>
+Date:   Sat, 29 Aug 2020 21:54:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <CALCETrWXvAMA7tQ3XZdAk2FixKfzQ_0fBmyNVyyPHVAomLvrWQ@mail.gmail.com>
-In-Reply-To: <CALCETrWXvAMA7tQ3XZdAk2FixKfzQ_0fBmyNVyyPHVAomLvrWQ@mail.gmail.com>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Sun, 30 Aug 2020 00:40:42 -0400
-Message-ID: <CAMzpN2hmR+0-Yse1csbiVOiqgZ0e+VRkCBBXUKoPSTSMOOOFAQ@mail.gmail.com>
-Subject: Re: ptrace_syscall_32 is failing
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200829081417.725978-6-masahiroy@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 12:52 PM Andy Lutomirski <luto@kernel.org> wrote:
->
-> Seems to be a recent regression, maybe related to entry/exit work changes.
->
-> # ./tools/testing/selftests/x86/ptrace_syscall_32
-> [RUN]    Check int80 return regs
-> [OK]    getpid() preserves regs
-> [OK]    kill(getpid(), SIGUSR1) preserves regs
-> [RUN]    Check AT_SYSINFO return regs
-> [OK]    getpid() preserves regs
-> [OK]    kill(getpid(), SIGUSR1) preserves regs
-> [RUN]    ptrace-induced syscall restart
->     Child will make one syscall
-> [RUN]    SYSEMU
-> [FAIL]    Initial args are wrong (nr=224, args=10 11 12 13 14 4289172732)
-> [RUN]    Restart the syscall (ip = 0xf7f3b549)
-> [OK]    Restarted nr and args are correct
-> [RUN]    Change nr and args and restart the syscall (ip = 0xf7f3b549)
-> [OK]    Replacement nr and args are correct
-> [OK]    Child exited cleanly
-> [RUN]    kernel syscall restart under ptrace
->     Child will take a nap until signaled
-> [RUN]    SYSCALL
-> [FAIL]    Initial args are wrong (nr=29, args=0 0 0 0 0 4289172732)
-> [RUN]    SYSCALL
-> [OK]    Args after SIGUSR1 are correct (ax = -514)
-> [OK]    Child got SIGUSR1
-> [RUN]    Step again
-> [OK]    pause(2) restarted correctly
+On 8/29/20 1:14 AM, Masahiro Yamada wrote:
+> Previously, when you double-clicked the "int", "hex", or "string" menus,
+> a line-edit gadget showed up to allow you to input the value, which
+> looked clumsy.
+> 
+> Also, it was buggy; the editor opened even if the config option was not
+> editable. For example, just try to double-click CC_VERSION_TEXT, which
+> has no prompt.
+> 
+> This commit sub-classes QStyleItemDelegate to allow users to edit
+> "int", "hex", "string" menus in-place. Just double-click (or press
+> the F2 key) in the data column. Then, an editor widget is placed on
+> top of the item view.
 
-Bisected to commit 0b085e68f407 ("x86/entry: Consolidate 32/64 bit
-syscall entry").
-It looks like it is because syscall_enter_from_user_mode() is called
-before reading the 6th argument from the user stack.
+The F2 key doesn't work for me. I guess that's a desktop environment
+issue (I am using Xfce).
 
---
-Brian Gerst
+> The two methods are overridden:
+> 
+>  createEditor - process only when the data column is being accessed
+>  and the menu is visible. Otherwise, return nullptr to disallow editing.
+> 
+>  setModelData - take the new data from the editor, and set it to the
+>  addressed symbol. If it was successful, update all the list windows.
+>  Otherwise, (the reason for the failure is possibly the input data was
+>  out of range), set the old value back to the editor.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+>  scripts/kconfig/qconf.cc | 93 ++++++++++++++++++++++++++++++++--------
+>  scripts/kconfig/qconf.h  | 15 +++++++
+>  2 files changed, 91 insertions(+), 17 deletions(-)
+> 
+
+
+-- 
+~Randy
+
