@@ -2,120 +2,101 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7BDC433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 16:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CD6C433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 16:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE8820714
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 16:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3750E20714
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 16:39:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgH3QhF (ORCPT
+        id S1726589AbgH3QjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 12:37:05 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:48216 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726035AbgH3QhA (ORCPT
+        Sun, 30 Aug 2020 12:39:10 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:43436 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726506AbgH3QjH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 12:37:00 -0400
-Date:   Sun, 30 Aug 2020 12:36:58 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [RESEND PATCH] vfs: add RWF_NOAPPEND flag for pwritev2
-Message-ID: <20200830163657.GD3265@brightrain.aerifal.cx>
-References: <20200829020002.GC3265@brightrain.aerifal.cx>
- <CAG48ez1BExw7DdCEeRD1hG5ZpRObpGDodnizW2xD5tC0saTDqg@mail.gmail.com>
+        Sun, 30 Aug 2020 12:39:07 -0400
+Received: from [78.134.86.56] (port=34202 helo=melee.dev.aim)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.93)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1kCQMC-000E3G-2F; Sun, 30 Aug 2020 18:39:04 +0200
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     linux-fpga@vger.kernel.org
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Moritz Fischer <mdf@kernel.org>, Tom Rix <trix@redhat.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anatolij Gustschin <agust@denx.de>
+Subject: [PATCH v4 2/5] fpga manager: xilinx-spi: remove final dot from dev_err() strings
+Date:   Sun, 30 Aug 2020 18:38:47 +0200
+Message-Id: <20200830163850.8380-2-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200830163850.8380-1-luca@lucaceresoli.net>
+References: <20200830163850.8380-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez1BExw7DdCEeRD1hG5ZpRObpGDodnizW2xD5tC0saTDqg@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 05:05:45PM +0200, Jann Horn wrote:
-> On Sat, Aug 29, 2020 at 4:00 AM Rich Felker <dalias@libc.org> wrote:
-> > The pwrite function, originally defined by POSIX (thus the "p"), is
-> > defined to ignore O_APPEND and write at the offset passed as its
-> > argument. However, historically Linux honored O_APPEND if set and
-> > ignored the offset. This cannot be changed due to stability policy,
-> > but is documented in the man page as a bug.
-> >
-> > Now that there's a pwritev2 syscall providing a superset of the pwrite
-> > functionality that has a flags argument, the conforming behavior can
-> > be offered to userspace via a new flag.
-> [...]
-> > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> [...]
-> > @@ -3411,6 +3413,8 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
-> >                 ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
-> >         if (flags & RWF_APPEND)
-> >                 ki->ki_flags |= IOCB_APPEND;
-> > +       if (flags & RWF_NOAPPEND)
-> > +               ki->ki_flags &= ~IOCB_APPEND;
-> >         return 0;
-> >  }
-> 
-> Linux enforces the S_APPEND flag (set by "chattr +a") only at open()
-> time, not at write() time:
-> 
-> # touch testfile
-> # exec 100>testfile
-> # echo foo > testfile
-> # cat testfile
-> foo
-> # chattr +a testfile
-> # echo bar > testfile
-> bash: testfile: Operation not permitted
-> # echo bar >&100
-> # cat testfile
-> bar
-> #
-> 
-> At open() time, the kernel enforces that you can't use O_WRONLY/O_RDWR
-> without also setting O_APPEND if the file is marked as append-only:
-> 
-> static int may_open(const struct path *path, int acc_mode, int flag)
-> {
-> [...]
->   /*
->    * An append-only file must be opened in append mode for writing.
->    */
->   if (IS_APPEND(inode)) {
->     if  ((flag & O_ACCMODE) != O_RDONLY && !(flag & O_APPEND))
->       return -EPERM;
->     if (flag & O_TRUNC)
->       return -EPERM;
->   }
-> [...]
-> }
-> 
-> It seems to me like your patch will permit bypassing S_APPEND by
-> opening an append-only file with O_WRONLY|O_APPEND, then calling
-> pwritev2() with RWF_NOAPPEND? I think you'll have to add an extra
-> check for IS_APPEND() somewhere.
-> 
-> 
-> One could also argue that if an O_APPEND file descriptor is handed
-> across privilege boundaries, a programmer might reasonably expect that
-> the recipient will not be able to use the file descriptor for
-> non-append writes; if that is not actually true, that should probably
-> be noted in the open.2 manpage, at the end of the description of
-> O_APPEND.
+Most dev_err messages in this file have no final dot. Remove the only two
+exceptions to make them consistent.
 
-fcntl F_SETFL can remove O_APPEND, so it is not a security boundary.
-I'm not sure how this interacts with S_APPEND; presumably fcntl
-rechecks it. So just checking IS_APPEND in the code paths used by
-pwritev2 (and erroring out rather than silently writing output at the
-wrong place) should suffice to preserve all existing security
-invariants.
+Reviewed-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 
-Rich
+---
+
+Changes in v4:
+ - add Reviewed-by Tom Rix
+
+Changes in v3: none.
+
+Changes in v2:
+ - move before the "provide better diagnostics on programming failure"
+   patch for clarity
+---
+ drivers/fpga/xilinx-spi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
+index 502fae0d1d85..01f494172379 100644
+--- a/drivers/fpga/xilinx-spi.c
++++ b/drivers/fpga/xilinx-spi.c
+@@ -77,7 +77,7 @@ static int xilinx_spi_write_init(struct fpga_manager *mgr,
+ 	int err;
+ 
+ 	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
+-		dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
++		dev_err(&mgr->dev, "Partial reconfiguration not supported\n");
+ 		return -EINVAL;
+ 	}
+ 
+@@ -169,7 +169,7 @@ static int xilinx_spi_write_complete(struct fpga_manager *mgr,
+ 			return xilinx_spi_apply_cclk_cycles(conf);
+ 	}
+ 
+-	dev_err(&mgr->dev, "Timeout after config data transfer.\n");
++	dev_err(&mgr->dev, "Timeout after config data transfer\n");
+ 	return -ETIMEDOUT;
+ }
+ 
+-- 
+2.28.0
+
