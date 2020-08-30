@@ -2,117 +2,182 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DCDC433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03337C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09A3120693
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB7020693
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:04:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mixtli.metztli.it header.i=@mixtli.metztli.it header.b="IvfvFd89"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbgH3HDM (ORCPT
+        id S1726512AbgH3HEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 03:03:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35192 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgH3HCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 03:02:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 31797AEFA;
-        Sun, 30 Aug 2020 07:03:25 +0000 (UTC)
-Date:   Sun, 30 Aug 2020 09:02:45 +0200
-From:   Borislav Petkov <bp@suse.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-edac <linux-edac@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] EDAC urgent for v5.9-rc3
-Message-ID: <20200830070245.GB4363@zn.tnic>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Sun, 30 Aug 2020 03:04:50 -0400
+Received: from mail7.static.mailgun.info ([104.130.122.7]:45946 "EHLO
+        mail7.static.mailgun.info" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgH3HEr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 03:04:47 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mixtli.metztli.it; q=dns/txt;
+ s=mx; t=1598771085; h=From: Date: Message-Id: To: Subject: Sender;
+ bh=RKlOvLy0FhCW9JvWrJl/c2N/eBgziZDhPlr2MnVbGCw=; b=IvfvFd896et1ROshqyj4ESWl6o9x3H+L73G0WsQyS1ofnkDFIIJ8E1Lehv6joFbjwRJrNcWL
+ GV4ffnUgdyZ4eCRY5KNHXnoQnXvJSYKHWbq1mHg0s9tWVSiqNP5Y8zxBJr3xcfP9lAXFJQ4T
+ Uc6i/f67QdEgeyISI3/AoPefdQo=
+X-Mailgun-Sending-Ip: 104.130.122.7
+X-Mailgun-Sid: WyIxYzIzYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgIjE3YjU0Il0=
+Received: from huitzilopochtli.metztli-it.com
+ (99-130-254-3.lightspeed.sntcca.sbcglobal.net [99.130.254.3]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f4b4f8d12acec35e2018f3c (version=TLS1.3, cipher=TLS_AES_128_GCM_SHA256);
+ Sun, 30 Aug 2020 07:04:45 GMT
+Received: by huitzilopochtli.metztli-it.com (Postfix, from userid 1000)
+        id A2FE96902BB7; Sun, 30 Aug 2020 00:04:43 -0700 (PDT)
+Subject: Re: [ANNOUNCE] Reiser5: Selective File Migration - User Interface
+To:     <edward.shishkin@gmail.com>, <reiserfs-devel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+X-Mailer: mail (GNU Mailutils 3.9)
+Message-Id: <20200830070443.A2FE96902BB7@huitzilopochtli.metztli-it.com>
+Date:   Sun, 30 Aug 2020 00:04:43 -0700 (PDT)
+From:   Metztli Information Technology <jose.r.r@metztli.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Sat, Aug 29, 2020 at 2:54 AM Edward Shishkin <edward.shishkin@gmail.com> wrote:
+>
+> On 08/28/2020 01:50 AM, Edward Shishkin wrote:
+> >
+> >
+> > On 08/27/2020 11:53 PM, Metztli Information Technology wrote:
+> >> On Wed, Aug 26, 2020 at 2:13 PM Edward Shishkin
+> >> <edward.shishkin@gmail.com> wrote:
+> >>>
+> >>> [...]
+> >>>
+> >>>>
+> >>>> FYI Although not officially, the Debian metaframework Buster AMD64
+> >>>> distribution might be the first to support native installation of
+> >>>> Reiser4 SFRN 5.1.3, kernel and reiser4progs 2.0.3, file system
+> >>>> utilities.
+> >>>>
+> >>>> I have already made a couple of successful Metztli Reiser4 SFRN 5
+> >>>> native installations onto ~100 GB slices, which root file system is
+> >>>> formatted in 'Reiser5' and 1 GB /boot in JFS.
+> >>>> https://metztli.it/reiser5 (Screenshot 600x338 size)
+> >>>>
+> >>>> The upgraded netboot installation media metztli-reiser4-sfrn5.iso is
+> >>>> available at:
+> >>>> https://sourceforge.net/projects/debian-reiser4/
+> >>>> as well as
+> >>>> https://metztli.it/buster-reiser5/metztli-reiser4-sfrn5.iso
+> >>>> https://metztli.it/buster-reiser5/metztli-reiser4-sfrn5.iso.SHA256SUM
+> >>>>
+> >>>> Likely the brick/volume feature(s) will be useful in Cloud fabric
+> >>>> infrastructures, like Google's, where reiser4 excels.
+> >>>>
+> >>>> The current SFRN 5.1.3 -patched Zstd -compressed kernel in the
+> >>>> installation media is Debian's 5.7.10.
+> >>>
+> >>>
+> >>> wow, reiser5 from the box? I might want to try..
+> >> Well, it is more of a 'reference implementation' as there are persons
+> >> who reached out to me because their builds succeeded, they were able
+> >> to format in reiser4 SFRN x.y.z, but they were not able to mount their
+> >> partition(s).
+> >> Turns out, they were inadvertently mixing SFRN 4.0.2 with 5.1.3,
+> >> either in the reiser4 kernel patch -- released with the same in both
+> >> instances -- or in the reiser4progs.
+> >
+> >
+> > Yeah, some confusion can take place. Plus unsupported old 4.0.2
+> > volumes (a special build with CONFIG_REISER4_OLD=y is required to
+> > mount them), which is a payment for performance.
+> >
+> >
+> >>
+> >>>
+> >>>>
+> >>>> The installer defaults to create the root system reiser5 -formatted
+> >>>> partition as:
+> >>>> mkfs.reiser4 -yo "create=reg42"
+> >>>
+> >>>
+> >>> "reg42" is default profile in reiser4progs-2.0.3 (check by
+> >>> "mkfs.reiser4 -p") - there is no need to specify it via option.
+> >> Acknowledged. Thanks.
+> >>
+> >>>
+> >>> Have you had a chance to play with logical volumes (add/remove
+> >>> bricks, etc)?
+> >> That is coming up. I still have to create/customize an image of
+> >> Metztli Reiser4 SFRN5 for a Google Compute Engine (GCE) minimal ~200GB
+> >> instance for evaluation.
+> >> Fact is 'not all clouds are created equal' -- even if KVM -based. For
+> >> instance, reiser4 SFRN 4.0.2 on a trial Linode small ~80GB SSD
+> >> slice(s) with 2 virtual cpus frequently hung under short sustained
+> >> disk/network I/O usage.
+> >> I have not experienced that with reiser4 SFRN 4.0.2 on GCE -- where
+> >> sometimes I allocate eight to sixteen virtual cpus with 16, 32, or
+> >> even 64, GBs of RAM, on a region hosting AMD Epyc, for fast kernel
+> >> building ops.
+> >>
+> >> But testing a relatively small bootable image first will usually
+> >> provide insight if adding one, two... eight, TB slices will make sense
+> >> later on.
+> >
+> >
+> > I played with your media on a virtual machine. The basic volume
+> > operations work, however, I guess, adding brick(s) to "/" will cause
+> > problems at next boot: someone has to register all the bricks before
+> > mounting "/"...
+>
+>
+> It is important to register all bricks *before* mounting "/", as the
+> registration procedure collects information need for volume activation
+> (including transaction replay, etc).
+>
+> So at boot time before mounting "/" we need to scan the system and for
+> each found block device call a brick registration procedure. The problem
+> is that I don't know what do we actually have before mounting "/".
+>
+> Brick registration can be performed by calling "volume.reiser4 -g".
+> However, it accepts device name, that we obviously don't have, as all
+> the names are in "/", which is not yet mounted.
+>
+> I guess that solution exists (and possibly locates in initrd), because,
+> it is perfectly possible to boot e.g. with root over LVM (a special
+> utility scans the system and collects information about devices-
+> components of the logical volume). Any ideas?
+man initramfs-tools
 
-please pull a single fix for the ghes_edac driver to properly clear
-state on remove, when testing with CONFIG_DEBUG_TEST_DRIVER_REMOVE.
+Under debian there are: 
+/etc/initramfs-tools/hooks/
+/usr/share/initramfs-tools/hooks/
 
-Thx.
+Observing the latter, we can see that it contains executable scripts for reiserfs, lvm2, etc.; hence, every time an
+update-initramfs command is performed to create/update an initrd.img-`uname -r` these scripts are bundled into the initrd image.
 
----
-The following changes since commit d012a7190fc1fd72ed48911e77ca97ba4521bccd:
+An executable script, i.e., named reiser5, might also be added to perform the 'brick registration procedure', then subsequently running
+update-initramfs for its inclusion into the initrd image.
 
-  Linux 5.9-rc2 (2020-08-23 14:08:43 -0700)
+>
+> Thanks,
+> Edward.
 
-are available in the Git repository at:
+Best Professional Regards
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v5.9_rc3
-
-for you to fetch changes up to b972fdba8665d75109ade0357739f46af6415d2a:
-
-  EDAC/ghes: Fix NULL pointer dereference in ghes_edac_register() (2020-08-27 18:04:07 +0200)
-
-----------------------------------------------------------------
-A fix to properly clear ghes_edac driver state on driver remove so that
-a subsequent load can probe the system properly; by Shiju Jose.
-
-----------------------------------------------------------------
-Shiju Jose (1):
-      EDAC/ghes: Fix NULL pointer dereference in ghes_edac_register()
-
- drivers/edac/ghes_edac.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-index da60c29468a7..54ebc8afc6b1 100644
---- a/drivers/edac/ghes_edac.c
-+++ b/drivers/edac/ghes_edac.c
-@@ -55,6 +55,8 @@ static DEFINE_SPINLOCK(ghes_lock);
- static bool __read_mostly force_load;
- module_param(force_load, bool, 0);
- 
-+static bool system_scanned;
-+
- /* Memory Device - Type 17 of SMBIOS spec */
- struct memdev_dmi_entry {
- 	u8 type;
-@@ -225,14 +227,12 @@ static void enumerate_dimms(const struct dmi_header *dh, void *arg)
- 
- static void ghes_scan_system(void)
- {
--	static bool scanned;
--
--	if (scanned)
-+	if (system_scanned)
- 		return;
- 
- 	dmi_walk(enumerate_dimms, &ghes_hw);
- 
--	scanned = true;
-+	system_scanned = true;
- }
- 
- void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
-@@ -631,6 +631,8 @@ void ghes_edac_unregister(struct ghes *ghes)
- 
- 	mutex_lock(&ghes_reg_mutex);
- 
-+	system_scanned = false;
-+
- 	if (!refcount_dec_and_test(&ghes_refcount))
- 		goto unlock;
- 
 
 -- 
-Regards/Gruss,
-    Boris.
-
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
+Jose R R
+http://metztli.it
+---------------------------------------------------------------------------------------------
+Download Metztli Reiser4: Debian Buster w/ Linux 5.7.10 AMD64
+---------------------------------------------------------------------------------------------
+feats ZSTD compression https://sf.net/projects/metztli-reiser4/
+-------------------------------------------------------------------------------------------
+Official current Reiser4 resources: https://reiser4.wiki.kernel.org/
