@@ -2,182 +2,96 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF9EC433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 11:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE6FC433E7
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 11:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3BB2068F
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 11:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C95EF2087D
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 11:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598786675;
-	bh=AXgZqkiNKdqMz0DhD4cmdUyH6rTmmy1aRlxJUhshraI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=12VKmFc0BM9I9CFYK4jTOGZvBs2lYGN+uR+pREeB+h5MUbJy7kT82CwnnM1xAp9JZ
-	 TJln2DhsmBw8JRuwHQfRXtStE+Xa4idZ6fsJ3jM8pduMXS7oSdAYc9B3t4eEJoDBrS
-	 IhBz4JJpntfWt78kh+OArb3wtnMBGOFrGlTZD1PA=
+	s=default; t=1598786802;
+	bh=yMnFhXHlxippItZdgfHLbRUuY7UCY/HWezFEFtyBv5w=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=vzvaegx2NRdbi2wzAIKe5totwIqH+Csl643k89EiBM8bG0k7PSlEQKqDhmkB883Lr
+	 72vmXk2tPk/e2uqqMtM0WpkvonadBnkqgCzbbKXMioPoV0y8uc469SwnebA/tMs4uq
+	 GXcFTmjxTLrq28/zhLKNRfaXFZrbl9H/oBNGif8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbgH3LYd (ORCPT
+        id S1728810AbgH3L0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 07:24:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38000 "EHLO mail.kernel.org"
+        Sun, 30 Aug 2020 07:26:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbgH3LYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 07:24:32 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726406AbgH3L0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 07:26:40 -0400
+Received: from localhost.localdomain (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCAAA2068F;
-        Sun, 30 Aug 2020 11:24:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85C0D20714;
+        Sun, 30 Aug 2020 11:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598786671;
-        bh=AXgZqkiNKdqMz0DhD4cmdUyH6rTmmy1aRlxJUhshraI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KdabngcQxahpORg7MDTXEJ4ITSMi4t7bfYIDfAfgVPMNmA8FCBCF4nzEmqMWEfAOu
-         2SnzGjs0mKYmPEJGkQP5B1LL/hGqy05B0mdTr6kI0RisseJ3iI/D5EKnNtEVrSDBCv
-         PfrxMv6KAEXQmnkiTbuj63JuEbIjArjXur0Vf9eA=
-Date:   Sun, 30 Aug 2020 12:24:25 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Cristian Pop <cristian.pop@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v2] iio: core: Add optional symbolic label to a
- device channel
-Message-ID: <20200830122425.3e00332b@archlinux>
-In-Reply-To: <20200824083646.84886-1-cristian.pop@analog.com>
-References: <20200824083646.84886-1-cristian.pop@analog.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1598786799;
+        bh=yMnFhXHlxippItZdgfHLbRUuY7UCY/HWezFEFtyBv5w=;
+        h=From:To:Subject:Date:From;
+        b=lniyAStplYVHoTNln5UL2w9VIlSX2osOegi9pZOhk+UV7Kgu3WPGvFsdHJLNY9bqW
+         7539o/8ImcjHRET4t+KRWbHWtVL6RS1vzgFMk5aN8M2xCC191Z/GADFg82HFmf4PDq
+         8f8Z71I6b7kalIeqaQmXedkusxCzxoy3eifDrgbk=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: sound: midas-audio: Correct parsing sound-dai phandles
+Date:   Sun, 30 Aug 2020 13:26:32 +0200
+Message-Id: <20200830112633.6732-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Aug 2020 11:36:46 +0300
-Cristian Pop <cristian.pop@analog.com> wrote:
+The "sound-dai" property has cells therefore phandle-array should be
+used, even if it is just one phandle.  This fixes dtbs_check warnings
+like:
 
-> If a label is defined in the device tree for this channel add that
-> to the channel specific attributes. This is useful for userspace to
-> be able to identify an individual channel.
-> 
-> Signed-off-by: Cristian Pop <cristian.pop@analog.com>
-> ---
->  Changes in v2:
-> 	- Move label check before "read_raw" callback.
-> 	- Move the responsability to of parsing channel labels, to the
-> 	  driver.
-> 
->  drivers/iio/industrialio-core.c | 10 ++++++++--
->  include/linux/iio/iio.h         |  2 ++
->  include/linux/iio/types.h       |  1 +
->  3 files changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-> index 1527f01a44f1..32277e94f02d 100644
-> --- a/drivers/iio/industrialio-core.c
-> +++ b/drivers/iio/industrialio-core.c
-> @@ -135,6 +135,7 @@ static const char * const iio_modifier_names[] = {
->  /* relies on pairs of these shared then separate */
->  static const char * const iio_chan_info_postfix[] = {
->  	[IIO_CHAN_INFO_RAW] = "raw",
-> +	[IIO_CHAN_INFO_LABEL] = "label",
->  	[IIO_CHAN_INFO_PROCESSED] = "input",
->  	[IIO_CHAN_INFO_SCALE] = "scale",
->  	[IIO_CHAN_INFO_OFFSET] = "offset",
-> @@ -653,14 +654,18 @@ static ssize_t iio_read_channel_info(struct device *dev,
->  	int ret;
->  	int val_len = 2;
->  
-> -	if (indio_dev->info->read_raw_multi)
-> +	if (indio_dev->info->read_raw_multi) {
->  		ret = indio_dev->info->read_raw_multi(indio_dev, this_attr->c,
->  							INDIO_MAX_RAW_ELEMENTS,
->  							vals, &val_len,
->  							this_attr->address);
-> -	else
-> +	} else {
->  		ret = indio_dev->info->read_raw(indio_dev, this_attr->c,
->  				    &vals[0], &vals[1], this_attr->address);
-> +		if (ret < 0 && this_attr->address == IIO_CHAN_INFO_LABEL &&
-> +			this_attr->c->label_name)
+  arch/arm/boot/dts/exynos4412-trats2.dt.yaml: sound: cpu:sound-dai:0:1: missing phandle tag in 0
+  arch/arm/boot/dts/exynos4412-trats2.dt.yaml: sound: cpu:sound-dai:0: [158, 0] is too long
 
-I'm not keen on this. We shouldn't be calling read_raw at all in this path.
-There is no way it can return a valid label.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ .../devicetree/bindings/sound/samsung,midas-audio.yaml      | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> +			return sprintf(buf, "%s\n", this_attr->c->label_name);
-> +	}
->  
->  	if (ret < 0)
->  		return ret;
-> @@ -1399,6 +1404,7 @@ static int iio_device_register_sysfs(struct iio_dev *indio_dev)
->  			attrcount_orig++;
->  	}
->  	attrcount = attrcount_orig;
-> +
-
-Please avoid unrelated white space changes.
-
->  	/*
->  	 * New channel registration method - relies on the fact a group does
->  	 * not need to be initialized if its name is NULL.
-> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-> index a1be82e74c93..39209f3b62be 100644
-> --- a/include/linux/iio/iio.h
-> +++ b/include/linux/iio/iio.h
-> @@ -223,6 +223,7 @@ struct iio_event_spec {
->   *			correspond to the first name that the channel is referred
->   *			to by in the datasheet (e.g. IND), or the nearest
->   *			possible compound name (e.g. IND-INC).
-> + * @label_name:		Unique name to identify which channel this is.
->   * @modified:		Does a modifier apply to this channel. What these are
->   *			depends on the channel type.  Modifier is set in
->   *			channel2. Examples are IIO_MOD_X for axial sensors about
-> @@ -260,6 +261,7 @@ struct iio_chan_spec {
->  	const struct iio_chan_spec_ext_info *ext_info;
->  	const char		*extend_name;
->  	const char		*datasheet_name;
-> +	const char		*label_name;
-
-This can't be part of chan_spec as that is constant in many drivers.
-We need a separate way of doing this.  Don't use info_mask,
-but register it separately for each channel in a similar way
-to we do the name and label attributes for the whole device.
-
-I would add a new callback to iio_info that is passed the
-iio_chan_spec and returns a const char * for the label name.
-
-The driver would be responsible for doing a lookup based
-on what it has cached from the dt parse, probably indexed
-off address or scan_index (that can be driver specific)
-
-To create the attribute you need to add this to
-iio_device_register_sysfs and use the various core
-functions to build the attribute name in a similar fashion to
-that done for info mask elements.
-
-It will be more complex than your approach, but make it more
-'separable' as a feature in drivers.
-
-Jonathan
-
-
->  	unsigned		modified:1;
->  	unsigned		indexed:1;
->  	unsigned		output:1;
-> diff --git a/include/linux/iio/types.h b/include/linux/iio/types.h
-> index e6fd3645963c..c8f65f476eb2 100644
-> --- a/include/linux/iio/types.h
-> +++ b/include/linux/iio/types.h
-> @@ -34,6 +34,7 @@ enum iio_available_type {
->  
->  enum iio_chan_info_enum {
->  	IIO_CHAN_INFO_RAW = 0,
-> +	IIO_CHAN_INFO_LABEL,
->  	IIO_CHAN_INFO_PROCESSED,
->  	IIO_CHAN_INFO_SCALE,
->  	IIO_CHAN_INFO_OFFSET,
+diff --git a/Documentation/devicetree/bindings/sound/samsung,midas-audio.yaml b/Documentation/devicetree/bindings/sound/samsung,midas-audio.yaml
+index 1c755de686f7..578928e67e5c 100644
+--- a/Documentation/devicetree/bindings/sound/samsung,midas-audio.yaml
++++ b/Documentation/devicetree/bindings/sound/samsung,midas-audio.yaml
+@@ -21,7 +21,8 @@ properties:
+     type: object
+     properties:
+       sound-dai:
+-        $ref: /schemas/types.yaml#/definitions/phandle
++        $ref: /schemas/types.yaml#/definitions/phandle-array
++        maxItems: 1
+         description: phandle to the I2S controller
+     required:
+       - sound-dai
+@@ -30,7 +31,8 @@ properties:
+     type: object
+     properties:
+       sound-dai:
+-        $ref: /schemas/types.yaml#/definitions/phandle
++        $ref: /schemas/types.yaml#/definitions/phandle-array
++        maxItems: 1
+         description: phandle to the WM1811 CODEC
+     required:
+       - sound-dai
+-- 
+2.17.1
 
