@@ -2,128 +2,124 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720B9C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DB3C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CFF420714
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23C8620714
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:37:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MGNjjXB+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XXe8ONkA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgH3ScN (ORCPT
+        id S1726520AbgH3ShB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 14:32:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57954 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgH3ScJ (ORCPT
+        Sun, 30 Aug 2020 14:37:01 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31315 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726155AbgH3Sg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 14:32:09 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1CB3C061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 11:32:08 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id w14so4238125ljj.4
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 11:32:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y8uwjU5oHiF47ZrSXJ4yl5s3nLvBtRFzRy7WTBSBm60=;
-        b=MGNjjXB+sKk0AO3lukEHRKMns6YteBnRQd8m5Bll9lSZ/Eml2CBmh4gTdwtWTxIP6r
-         UK4oJoC2yzNckRturFI5L/egulnjeVsLW8C/ZIDjidPe5svsGSCX/aKWPhqTL1rngZPk
-         33U5kKOxFG2i3PxPGx1/ADEnRCXW0Cj+rOMksm0Lacqaikw2OTBk/4E7Y0PIz9oC4ca9
-         UsYadqznNUBk3Gcz+E+3QnAjKIquDMO2giLssBhNoP1Ge6wGJQ5D26ySn0fukexoSOWM
-         43N9w551soMF9GansBYEpVOQ7aIBV5/1N2P1ZIDJjZ7nofUQwS+TWo8wAOSR5LTglIYp
-         uciQ==
+        Sun, 30 Aug 2020 14:36:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598812616;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=QozYeGLLb3VY909mnDA2JjEU+D2LsIUp8jIV0Jpgmp4=;
+        b=XXe8ONkAOIOg48XgLbK5kVSJL4L1HGy63VAqzpewlKUEeZZcOl8S7OKa+XgxzXuI/It+Ta
+        oeNNkJ2d+yd+RKfS2cFbIy4P0RsI08MVsHlXS0eoqiByT9dLC4S+nV0eCdaPy4B1n/uUEH
+        YDS2G2RzR17t8uwpM8qyYc1TVbFmxPY=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-475-P7ZniasyOW6L0w4wh2Pl1g-1; Sun, 30 Aug 2020 14:36:53 -0400
+X-MC-Unique: P7ZniasyOW6L0w4wh2Pl1g-1
+Received: by mail-il1-f200.google.com with SMTP id a15so2335695ilb.22
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 11:36:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y8uwjU5oHiF47ZrSXJ4yl5s3nLvBtRFzRy7WTBSBm60=;
-        b=K+sgZSa/IjE9kwe9ESQGSSrdbkgdptgSWHcd1isj9SU67oUcH2Sy6q/dYrP/S2yXfi
-         vf+JWE926xIKo0qmjBUwlVfzy0D6BJpshG/YkYR4fxtA+PHHhFI4EcpejRFgQIEBJXwm
-         SGCzD8Yy9fUAFl8kUavWSQOISD8MSMTjL2hDSuQ3Wj6gEhA99qvMwrLSY+gTsoRu13YC
-         mtksp9WKkPIA6EHiR7O/uu50GK+jpnxnQA9a6SqHtA3XEuH22TjipNIVl+N1xa1EpZIK
-         9vNx6F5oSmMm1d74QIMbsWVN9uDuz9dS3AiN5K5d7ziIyLnBBgH5/8b4/psfgcCXn3Zd
-         CkBA==
-X-Gm-Message-State: AOAM533kv3yepoNSZaGxZastBV5HyFhRnTy7AXpc0GbyEz9DKQEfX+BD
-        guu5MaCGaiAM8x5ZtRAG43V1YLTcKsgMWwudJ3DvIg==
-X-Google-Smtp-Source: ABdhPJyX6iKtCQdnK9B5zVHdLV6bTjpC02NKqEpb6xHUI18AnWkDRbQnBVUWMYHPEuxPsY8nyKrUyh0dRzSackS4pY0=
-X-Received: by 2002:a2e:9990:: with SMTP id w16mr3391033lji.156.1598812323032;
- Sun, 30 Aug 2020 11:32:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200829020002.GC3265@brightrain.aerifal.cx> <CAG48ez1BExw7DdCEeRD1hG5ZpRObpGDodnizW2xD5tC0saTDqg@mail.gmail.com>
- <20200830163657.GD3265@brightrain.aerifal.cx>
-In-Reply-To: <20200830163657.GD3265@brightrain.aerifal.cx>
-From:   Jann Horn <jannh@google.com>
-Date:   Sun, 30 Aug 2020 20:31:36 +0200
-Message-ID: <CAG48ez00caDqMomv+PF4dntJkWx7rNYf3E+8gufswis6UFSszw@mail.gmail.com>
-Subject: Re: [RESEND PATCH] vfs: add RWF_NOAPPEND flag for pwritev2
-To:     Rich Felker <dalias@libc.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QozYeGLLb3VY909mnDA2JjEU+D2LsIUp8jIV0Jpgmp4=;
+        b=EEf6JH44fWpnUveYg6hIBspeIShBhvHZcBazAXqLnNri6hl1kw2tVmrn3Zkdl7whpb
+         EFhk8s6UEyrYNdypXbKdROkjdkxM7z7DHuwKy2r/t45TowrNK3G9TD5Ihg77fc2BicBB
+         iD9Iqj3f0mfzolf5vTnkSe7hY5AihUJiWdRGtOoe5wL2bEjjbYBgAcAt3gp+Cf81RHG+
+         9aHxXH39FKB9UCsiv1lXWSYC+BIm2igaL+RGt60vftC9V+yhUPvbQZuMvDYfBwfcAQUK
+         wYqTj72ynHwWeP9fFmaHEjBq6uPkRhRy42Yda7NAMkC1QHRwUOwakUv/pggMXpV4v+OT
+         Xdxw==
+X-Gm-Message-State: AOAM533o/KNCVgCT8fxDKRDIxo2SJTZdU3yKui7i+0Ev7iFmgaxQxFNu
+        37NiPpNwnW8FHZonCngA9XIZwcrxsZV1THZflTJs9NtUpUqrRMcfvJYWMRfAcAygSqT2SWOb3sz
+        CDQkqDHCL44beDgQcTFo0aPM2
+X-Received: by 2002:a92:c904:: with SMTP id t4mr6323566ilp.257.1598812612571;
+        Sun, 30 Aug 2020 11:36:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJws0aS2JRLx2nRnOEJQonJ8J7aNV73fnvMcA6Cq8vQw0/+MPUr+w4mfxekC3wDSgZkuIXIHRg==
+X-Received: by 2002:a92:c904:: with SMTP id t4mr6323556ilp.257.1598812612345;
+        Sun, 30 Aug 2020 11:36:52 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id x185sm2883927iof.41.2020.08.30.11.36.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Aug 2020 11:36:51 -0700 (PDT)
+From:   trix@redhat.com
+To:     balbi@kernel.org, gregkh@linuxfoundation.org,
+        natechancellor@gmail.com, ndesaulniers@google.com,
+        christophe.jaillet@wanadoo.fr, peter.chen@nxp.com, b-liu@ti.com,
+        chunfeng.yun@mediatek.com, novikov@ispras.ru, yanaijie@huawei.com
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] usb: gadget: net2272: assert for a valid dma request
+Date:   Sun, 30 Aug 2020 11:36:46 -0700
+Message-Id: <20200830183646.24930-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 6:36 PM Rich Felker <dalias@libc.org> wrote:
-> On Sun, Aug 30, 2020 at 05:05:45PM +0200, Jann Horn wrote:
-> > On Sat, Aug 29, 2020 at 4:00 AM Rich Felker <dalias@libc.org> wrote:
-> > > The pwrite function, originally defined by POSIX (thus the "p"), is
-> > > defined to ignore O_APPEND and write at the offset passed as its
-> > > argument. However, historically Linux honored O_APPEND if set and
-> > > ignored the offset. This cannot be changed due to stability policy,
-> > > but is documented in the man page as a bug.
-> > >
-> > > Now that there's a pwritev2 syscall providing a superset of the pwrite
-> > > functionality that has a flags argument, the conforming behavior can
-> > > be offered to userspace via a new flag.
-[...]
-> > Linux enforces the S_APPEND flag (set by "chattr +a") only at open()
-> > time, not at write() time:
-[...]
-> > It seems to me like your patch will permit bypassing S_APPEND by
-> > opening an append-only file with O_WRONLY|O_APPEND, then calling
-> > pwritev2() with RWF_NOAPPEND? I think you'll have to add an extra
-> > check for IS_APPEND() somewhere.
-> >
-> >
-> > One could also argue that if an O_APPEND file descriptor is handed
-> > across privilege boundaries, a programmer might reasonably expect that
-> > the recipient will not be able to use the file descriptor for
-> > non-append writes; if that is not actually true, that should probably
-> > be noted in the open.2 manpage, at the end of the description of
-> > O_APPEND.
->
-> fcntl F_SETFL can remove O_APPEND, so it is not a security boundary.
-> I'm not sure how this interacts with S_APPEND; presumably fcntl
-> rechecks it.
+From: Tom Rix <trix@redhat.com>
 
-Ah, good point, you're right. In fs/fcntl.c:
+clang static analysis flags this representive problem
 
-  35 static int setfl(int fd, struct file * filp, unsigned long arg)
-  36 {
-  37    struct inode * inode = file_inode(filp);
-  38    int error = 0;
-  39
-  40    /*
-  41     * O_APPEND cannot be cleared if the file is marked as append-only
-  42     * and the file is open for write.
-  43     */
-  44    if (((arg ^ filp->f_flags) & O_APPEND) && IS_APPEND(inode))
-  45            return -EPERM;
+net2272.c:1541:8: warning: Dereference of null pointer
+    if ((req->req.length % ep->ep.maxpacket != 0) ||
+         ^~~~~~~~~~~~~~~
+This is mostly not a problem.
 
-> So just checking IS_APPEND in the code paths used by
-> pwritev2 (and erroring out rather than silently writing output at the
-> wrong place) should suffice to preserve all existing security
-> invariants.
+In net2272_handle_dma(), even though every path through
+the routine dereferences req, it is set to NULL when the
+ep->queue is empty.  If the eq->queue was ever empty this
+would have oops.
 
-Makes sense.
+So the else statement should not be needed.  If it is,
+flag it as a BUG.
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/usb/gadget/udc/net2272.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/usb/gadget/udc/net2272.c b/drivers/usb/gadget/udc/net2272.c
+index 44d1ea2307bb..8301723a8b1a 100644
+--- a/drivers/usb/gadget/udc/net2272.c
++++ b/drivers/usb/gadget/udc/net2272.c
+@@ -1506,17 +1506,16 @@ static int net2272_stop(struct usb_gadget *_gadget)
+ static void
+ net2272_handle_dma(struct net2272_ep *ep)
+ {
+-	struct net2272_request *req;
++	struct net2272_request *req = NULL;
+ 	unsigned len;
+ 	int status;
+ 
+ 	if (!list_empty(&ep->queue))
+ 		req = list_entry(ep->queue.next,
+ 				struct net2272_request, queue);
+-	else
+-		req = NULL;
+ 
+ 	dev_vdbg(ep->dev->dev, "handle_dma %s req %p\n", ep->ep.name, req);
++	BUG_ON(!req);
+ 
+ 	/* Ensure DREQ is de-asserted */
+ 	net2272_write(ep->dev, DMAREQ,
+-- 
+2.18.1
+
