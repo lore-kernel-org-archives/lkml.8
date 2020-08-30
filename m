@@ -2,93 +2,102 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF25C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8F9C433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C51C02087D
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:46:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598798804;
-	bh=U0oxIumzrar1JxnaRQFyP4U4DzbcRA+kUEXg1R8kxBo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=irmKpHXCbSvCZwYY6t+46eTBac991Uq9AZHGt5ZvsYhSVaBU1hGotRwOG0mZ7wj9i
-	 rLqGz+QL8ZGSL4RunZKjlZP0wxNW30hMDqYBl6OKC2EAgAuaJy/6hovzQqHn1rVTvw
-	 iHy1dPxPdB5vHfQFkEy9xSBFzKFnl+cuFEVXgc9Q=
+	by mail.kernel.org (Postfix) with ESMTP id 38E7E2087D
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:54:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G1mmmW/E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbgH3Oqm (ORCPT
+        id S1726521AbgH3Oy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 10:46:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725898AbgH3Oqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 10:46:34 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2FBC2087D;
-        Sun, 30 Aug 2020 14:46:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598798794;
-        bh=U0oxIumzrar1JxnaRQFyP4U4DzbcRA+kUEXg1R8kxBo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K1JwZ13c/x1oacuBew1ze9HEyy4RETXNJ52/lKHfkM8iLJO1lZWdbNSCdPHhcuNqR
-         0iJtU4EPgyJklusLudVn+7ivjFwwpEQSqQXbUdVsZv3VWJEXcfFua2LiLgCAo2TLmI
-         nOgl5yxGkf6rvQhZ0aiLLWlnWYXlqx+bafPq0yvg=
-Date:   Sun, 30 Aug 2020 10:46:32 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Qu Wenruo <wqu@suse.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 34/38] btrfs: file: reserve qgroup space
- after the hole punch range is locked
-Message-ID: <20200830144632.GZ8670@sasha-vm>
-References: <20200821161807.348600-1-sashal@kernel.org>
- <20200821161807.348600-34-sashal@kernel.org>
- <20200829121123.GB20944@duo.ucw.cz>
+        Sun, 30 Aug 2020 10:54:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52676 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725898AbgH3OyX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 10:54:23 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5D95C061573;
+        Sun, 30 Aug 2020 07:54:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=9PPKfXe7kpGFMgrqa1M7KwlEZAb+8W2f+PfTg/rKw7I=; b=G1mmmW/EIxwt023nrxILPhAH/s
+        Xo8ENT3bIsLT+HOa7g93ZU7ub5qI1LCn/zR7OlGzg+Q/wy4KC+nU8TEkTFpskuKr3dKu1ALhHczs1
+        kb5/3hCDOTMafg2v/6Ll/BSDx2Z+vboeLb8mys/3po4soBaBy4hCLn9+WIDdxufdCJloKeGYIhLnm
+        WZHf3+XqaSMyckU0aaJerEGf0mQeqiRcaz1roFy0EyqWfu3zLtds7q0z5ywZQmoIcbF/Z+BEYlRL3
+        nEY5SO9MqM1hrnNBOkVFWFt3eSQTFUQQ+QkObnhNYwW8PtsbvieNHR2z7pPY/VTozCkHPg9rIgegG
+        OxKyiEFQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kCOip-0003tk-QL; Sun, 30 Aug 2020 14:54:20 +0000
+Subject: Re: [PATCH] Documentation: submit-checklist: add Documentation clean
+ builds
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <e38b108c-afec-fd0e-ad09-b4dd5da59fd1@infradead.org>
+ <20200830114153.GC423750@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <203a91be-4ee4-5466-acd7-531e24792422@infradead.org>
+Date:   Sun, 30 Aug 2020 07:54:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200829121123.GB20944@duo.ucw.cz>
+In-Reply-To: <20200830114153.GC423750@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 02:11:23PM +0200, Pavel Machek wrote:
->Hi!
->
->> [ Upstream commit a7f8b1c2ac21bf081b41264c9cfd6260dffa6246 ]
+On 8/30/20 4:41 AM, Mike Rapoport wrote:
+> On Sun, Aug 23, 2020 at 05:38:12PM -0700, Randy Dunlap wrote:
+>> From: Randy Dunlap <rdunlap@infradead.org>
 >>
->> The incoming qgroup reserved space timing will move the data reservation
->> to ordered extent completely.
+>> Add to Documentation/process/submit-checklist.rst that patch
+>> submitters should run "make htmldocs" and verify that any
+>> Documentation/ changes (patches) are clean (no new warnings/errors).
 >>
->> However in btrfs_punch_hole_lock_range() will call
->> btrfs_invalidate_page(), which will clear QGROUP_RESERVED bit for the
->> range.
+>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> ---
+>>  Documentation/process/submit-checklist.rst |    4 ++++
+>>  1 file changed, 4 insertions(+)
 >>
->> In current stage it's OK, but if we're making ordered extents handle the
->> reserved space, then btrfs_punch_hole_lock_range() can clear the
->> QGROUP_RESERVED bit before we submit ordered extent, leading to qgroup
->> reserved space leakage.
->>
->> So here change the timing to make reserve data space after
->> btrfs_punch_hole_lock_range().
->> The new timing is fine for either current code or the new code.
->
->I'm not sure why this is queued for -stable. It is preparation for
->future work, and that work is not queued for -stable.
+>> --- linux-next-20200821.orig/Documentation/process/submit-checklist.rst
+>> +++ linux-next-20200821/Documentation/process/submit-checklist.rst
+>> @@ -24,6 +24,10 @@ and elsewhere regarding submitting Linux
+>>  
+>>    c) Builds successfully when using ``O=builddir``
+>>  
+>> +  d) Any Documentation/ changes build successfully without warnings/errors.
+> 
+> Maybe "... without new warnings/errors"?
+> Unfortunately we still have plenty of old ones...
 
-So you understand why it was queued: it's preparation for a fix that is
-relevant to 4.19 but didn't apply cleanly.
+Yes, I'll change that.
+Thanks.
 
-I can look into what happened next week, or if you'd sent me a backport
-I'd be happy to take it.
+>> +     Use ``make htmldocs`` or ``make pdfdocs`` to check the build and
+>> +     fix any issues.
+>> +
+>>  3) Builds on multiple CPU architectures by using local cross-compile tools
+>>     or some other build farm.
+>>  
+>>
 
 -- 
-Thanks,
-Sasha
+~Randy
+
