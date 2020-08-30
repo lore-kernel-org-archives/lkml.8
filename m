@@ -2,73 +2,98 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60152C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 01:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5466BC433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 01:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED7120776
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 01:50:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598752211;
-	bh=9lA1Qqp+XUdPeSwNbDpMNb70lYHeu0RbmQcP2hyivJM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yxsR3PWvQCmVpHYy1vbnX2MXdITTWW7fRRWdGJ1gyufReWDcBHy15feyMTvXPiuwA
-	 vJoCf0mgB02xz0yxnAmXOrqwwBTwKNdnYOTL0A2vMOO85NbSmpqeA3Ls3ICcXHcAp8
-	 J8SEm+/UTBR2B2gKKn/1ByXyTTgu8WQzTfmFh5ic=
+	by mail.kernel.org (Postfix) with ESMTP id 3AE4B2075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 01:50:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbgH3BuK (ORCPT
+        id S1728645AbgH3BuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 21:50:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37750 "EHLO mail.kernel.org"
+        Sat, 29 Aug 2020 21:50:19 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:60358 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728439AbgH3BuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 21:50:09 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 905F02075B;
-        Sun, 30 Aug 2020 01:50:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598752208;
-        bh=9lA1Qqp+XUdPeSwNbDpMNb70lYHeu0RbmQcP2hyivJM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OOGIjE16n3Akmg1tYC0XRlkzojwJB4e6d8rYbipofze1jlVNHl0ZK6H5oSVeg7MPq
-         D6NWYOZwVh89hnsDEO6Ti1SNsRRn5epNlenTiXqwLbIQQrSLnj6q73agOo5yu14LV8
-         uIazvgm2053lK+1eMAjzx7gbAVttW8JRsaccb00s=
-Date:   Sun, 30 Aug 2020 09:50:03 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        id S1728439AbgH3BuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 21:50:17 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kCCTt-00CSEg-Qh; Sun, 30 Aug 2020 03:50:05 +0200
+Date:   Sun, 30 Aug 2020 03:50:05 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
+        netdev@vger.kernel.org, linux-leds@vger.kernel.org,
+        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] arm64: dts: imx8mm-evk: remove orphaned
- pinctrl-names property
-Message-ID: <20200830015002.GE32096@dragon>
-References: <20200823090505.5579-1-krzk@kernel.org>
+Subject: Re: [PATCH RFC leds + net-next v4 0/2] Add support for LEDs on
+ Marvell PHYs
+Message-ID: <20200830015005.GD2966560@lunn.ch>
+References: <20200728150530.28827-1-marek.behun@nic.cz>
+ <20200807090653.ihnt2arywqtpdzjg@duo.ucw.cz>
+ <20200807132920.GB2028541@lunn.ch>
+ <20200829224351.GA29564@duo.ucw.cz>
+ <20200829233641.GC2966560@lunn.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200823090505.5579-1-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200829233641.GC2966560@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 23, 2020 at 11:05:03AM +0200, Krzysztof Kozlowski wrote:
-> The "pinctrl-names" property in iomux node does not make sense on its
-> own (without "pinctrl-X").
+> > > You could make a good guess at matching to two together, but it is
+> > > error prone. Phys are low level things which the user is not really
+> > > involved in. They interact with interface names. ethtool, ip, etc, all
+> > > use interface names. In fact, i don't know of any tool which uses
+> > > phydev names.
+> > 
+> > So... proposal:
+> > 
+> > Users should not be dealing with sysfs interface directly, anyway. We
+> > should have a tool for that. It can live in kernel/tools somewhere, I
+> > guess.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> We already have one, ethtool(1). 
+> 
+> > 
+> > Would we name leds phy0:... (with simple incrementing number), and
+> > expose either interface name or phydev name as a attribute?
+> > 
+> > So user could do
+> > 
+> > cat /sys/class/leds/phy14:green:foobar/netdev
+> > lan5@eth1:
 
-Applied all, thanks.
+I forgot about network name spaces. There can be multiple interfaces
+with the name eth0, each in its own network namespace. For your
+proposal to work, /sys/class/leds/phy14:green:foobar needs to be in
+the network namespace, so it is only visible to other processes in the
+same name space, and lan5@eth1 is then unique to that namespace.
+
+> Which is the wrong way around. ethtool will be passed the interface
+> name and an PHY descriptor of some sort, and it has to go search
+> through all the LEDs to find the one with this attribute. I would be
+> much more likely to add a sysfs link from
+> /sys/class/net/lan5/phy:left:green to
+> /sys/class/leds/phy14:left:green.
+
+I need to test a bit, but i think this works. Everything under
+/sys/class/net is network namespace aware. You only see
+/sys/class/net/lan5 if there is a lan5 is in the current name space,
+and you see the current namespaces version of lan5.. A sysfs symlink
+out of namespace to /sys/class/led should work, assuming
+/sys/class/led is namespace unaware, and phy14 is unique across all
+network name spaces. But you cannot have a link in the opposite
+direction from /sys/class/led/phy14 to /sys/class/net/lan5, since it
+has no idea which lan5 to symlink to.
+
+    Andrew
