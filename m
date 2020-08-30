@@ -2,77 +2,161 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE24BC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 12:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7ABC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 12:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93F2B20DD4
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 12:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB907214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 12:26:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qn/++4J3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbgH3MVg (ORCPT
+        id S1728855AbgH3M0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 08:21:36 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:53738 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726130AbgH3MV2 (ORCPT
+        Sun, 30 Aug 2020 08:26:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728831AbgH3M0e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 08:21:28 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 07UCKsfm000554;
-        Sun, 30 Aug 2020 15:20:54 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 20088)
-        id B9DDC639D3; Sun, 30 Aug 2020 15:20:54 +0300 (IDT)
-From:   Tali Perry <tali.perry1@gmail.com>
-To:     kunyi@google.com, xqiu@google.com, benjaminfair@google.com,
-        avifishman70@gmail.com, joel@jms.id.au, tmaimon77@gmail.com,
-        wsa@the-dreams.de
-Cc:     linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>
-Subject: [PATCH v2] i2c: npcm7xx: bug fix timeout (usec instead of msec)
-Date:   Sun, 30 Aug 2020 15:20:51 +0300
-Message-Id: <20200830122051.197892-1-tali.perry1@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Sun, 30 Aug 2020 08:26:34 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3F27C061573;
+        Sun, 30 Aug 2020 05:26:33 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id x18so516404pll.6;
+        Sun, 30 Aug 2020 05:26:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ejqO87rorFkVXw0/ByXTM9CvLRvpm4qV9tVsBbkXl5I=;
+        b=Qn/++4J3Z/bAbP0hfH0Wek8D4QXU9x5lXBOPjjGgyy3p6+DhkFdVlK0Qvg4sbZbHyi
+         CspnA895diI0L0XAsK24N+J8fESh1feelF5xwmNNhoiSTCepBgdldjloZbw4/vZe2zDP
+         MFGkygHfhqtWNHZh8kpm+fFqiz6gT1qfCwekkFSoTCejD0LBLfreK8URHXDxS9BRd0WL
+         9IGdmslXLCm0sIlbc6e9rhoSWtKYoR17FJ7W7FwGuRs1i7vfZoggNq+0lXyEQ8Z2FnOP
+         cn26BnOtUttf/mNbMH2hNrvEXPEJ7hsA82rYu1pSJEvQ93ItrDGAR4UXt4O4uI5vEPnw
+         Jt8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ejqO87rorFkVXw0/ByXTM9CvLRvpm4qV9tVsBbkXl5I=;
+        b=FWs+QFB9pM+nZa4mQ7tSTToenNuVNBmjhnI+hu5JXsOK1rsa8Se9RfdU/SHMx44uGu
+         oy9qwlkBbOn7CZurJzlnuA0K1CmGR4Ut6mJ5DqzkO0baRGihrg7OXjot85hMtJvc8Tpt
+         MNGdg7WJsfML9RzLoqUxGPUf7S6eQMtv4EiPvxpSoM3tmxZRC9afCJC6rFvpdeR5VJ+B
+         K4zjcMeJ2eERo/+XbU8iwGBTPfS9BLutrpMhXxkXr/gpL8MX1zTdVFbnJVTKgQ8lVOrc
+         Tjy2Wk4ozADuk2NVn+VYwbxQzeWsamOG+eeStZ9Uy6xHuZnsY4Jl9ShW39L4cnGPg5p+
+         JR3Q==
+X-Gm-Message-State: AOAM533FdLyVa2aD9I6SVm7VunlDI5NM42XIiWaXoZI6H1Dr/G/cQabK
+        paKTzjwSon55twUtr5PR1Yw=
+X-Google-Smtp-Source: ABdhPJzZtb1Nfg209xbdteCKN2XIoYQJIeLuvoBWNxezlKGZpJEy+OsTzIZvgQ8YxxVX/yrRKcwePw==
+X-Received: by 2002:a17:902:8347:: with SMTP id z7mr5506118pln.20.1598790391028;
+        Sun, 30 Aug 2020 05:26:31 -0700 (PDT)
+Received: from Thinkpad ([45.118.165.143])
+        by smtp.gmail.com with ESMTPSA id lj3sm4290067pjb.26.2020.08.30.05.26.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Aug 2020 05:26:30 -0700 (PDT)
+Date:   Sun, 30 Aug 2020 17:56:23 +0530
+From:   Anmol Karn <anmol.karan123@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     syzbot+0bef568258653cff272f@syzkaller.appspotmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        kuba@kernel.org, davem@davemloft.net, anmol.karan123@gmail.com
+Subject: Re: [Linux-kernel-mentees] [PATCH] net: bluetooth: Fix null pointer
+ deref in hci_phy_link_complete_evt
+Message-ID: <20200830122623.GA235919@Thinkpad>
+References: <20200829124112.227133-1-anmol.karan123@gmail.com>
+ <20200829165712.229437-1-anmol.karan123@gmail.com>
+ <20200830091917.GB122343@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200830091917.GB122343@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i2c: npcm7xx: bug fix timeout (usec instead of msec)
+On Sun, Aug 30, 2020 at 11:19:17AM +0200, Greg KH wrote:
+> On Sat, Aug 29, 2020 at 10:27:12PM +0530, Anmol Karn wrote:
+> > Fix null pointer deref in hci_phy_link_complete_evt, there was no 
+> > checking there for the hcon->amp_mgr->l2cap_conn->hconn, and also 
+> > in hci_cmd_work, for hdev->sent_cmd.
+> > 
+> > To fix this issue Add pointer checking in hci_cmd_work and
+> > hci_phy_link_complete_evt.
+> > [Linux-next-20200827]
+> > 
+> > This patch corrected some mistakes from previous patch.
+> > 
+> > Reported-by: syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+> > Link: https://syzkaller.appspot.com/bug?id=0d93140da5a82305a66a136af99b088b75177b99
+> > Signed-off-by: Anmol Karn <anmol.karan123@gmail.com>
+> > ---
+> >  net/bluetooth/hci_core.c  | 5 ++++-
+> >  net/bluetooth/hci_event.c | 4 ++++
+> >  2 files changed, 8 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> > index 68bfe57b6625..996efd654e7a 100644
+> > --- a/net/bluetooth/hci_core.c
+> > +++ b/net/bluetooth/hci_core.c
+> > @@ -4922,7 +4922,10 @@ static void hci_cmd_work(struct work_struct *work)
+> >  
+> >  		kfree_skb(hdev->sent_cmd);
+> >  
+> > -		hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
+> > +		if (hdev->sent_cmd) {
+> > +			hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
+> > +		}
+> 
+> How can sent_cmd be NULL here?  Are you sure something previous to this
+> shouldn't be fixed instead?
 
-Signed-off-by: Tali Perry <tali.perry1@gmail.com>
----
- drivers/i2c/busses/i2c-npcm7xx.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Sir, sent_cmd was freed before this condition check, thats why i checked it,
 
-diff --git a/drivers/i2c/busses/i2c-npcm7xx.c b/drivers/i2c/busses/i2c-npcm7xx.c
-index 75f07138a6fa..abb334492a3d 100644
---- a/drivers/i2c/busses/i2c-npcm7xx.c
-+++ b/drivers/i2c/busses/i2c-npcm7xx.c
-@@ -2093,8 +2093,13 @@ static int npcm_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 		}
- 	}
- 
--	/* Adaptive TimeOut: astimated time in usec + 100% margin */
--	timeout_usec = (2 * 10000 / bus->bus_freq) * (2 + nread + nwrite);
-+	/*
-+	 * Adaptive TimeOut: estimated time in usec + 100% margin:
-+	 * 2: double the timeout for clock stretching case
-+	 * 9: bits per transaction (including the ack/nack)
-+	 * 1000000: micro second in a second
-+	 */
-+	timeout_usec = (2 * 9 * 1000000 / bus->bus_freq) * (2 + nread + nwrite);
- 	timeout = max(msecs_to_jiffies(35), usecs_to_jiffies(timeout_usec));
- 	if (nwrite >= 32 * 1024 || nread >= 32 * 1024) {
- 		dev_err(bus->dev, "i2c%d buffer too big\n", bus->num);
+i think i should check it before the free of hdev->sent_cmd like,
 
-base-commit: d012a7190fc1fd72ed48911e77ca97ba4521bccd
--- 
-2.22.0
+if (hdev->sent_cmd)
+	kfree_skb(hdev->sent_cmd);
 
+what's your opininon on this.
+
+> 
+> 
+> > +
+> >  		if (hdev->sent_cmd) {
+> >  			if (hci_req_status_pend(hdev))
+> >  				hci_dev_set_flag(hdev, HCI_CMD_PENDING);
+> > diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> > index 4b7fc430793c..1e7d9bee9111 100644
+> > --- a/net/bluetooth/hci_event.c
+> > +++ b/net/bluetooth/hci_event.c
+> > @@ -4941,6 +4941,10 @@ static void hci_phy_link_complete_evt(struct hci_dev *hdev,
+> >  		hci_dev_unlock(hdev);
+> >  		return;
+> >  	}
+> > +	if (!(hcon->amp_mgr->l2cap_conn->hcon)) {
+> > +		hci_dev_unlock(hdev);
+> > +		return;
+> > +	}
+> 
+> How can this be triggered?
+
+syzbot showed that this line is accessed irrespective of the null value it contains, so  added a 
+pointer check for that.
+
+please give some opinions on this,
+
+if (!bredr_hcon) {
+	hci_dev_unlock(hdev);
+        return;
+}
+
+Thanks,
+Anmol Karn
