@@ -2,189 +2,69 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62632C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 22:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F17EC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 23:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DBD5208A9
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 22:56:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="InX6j2UT"
+	by mail.kernel.org (Postfix) with ESMTP id 7F43F208A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 23:02:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598828554;
+	bh=g19HIBCaikce97qaQS6+Cx2QnvGVLPKIY6Z7TpJ8ii4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=hJaKUoEqhhMTA8dzpvmXgxJtyEtcY/MQriK3BPuN2KDGpuDjhoNSkIhaijXYkMjJH
+	 98jmZdYVOBzvSUwnKJ5xiJp7VWBEdYZUaD+yTY1i1hEEFd+kvhkFwKO9ve2Gi3V7OG
+	 4zqRZKVFBp9krpQqPiyOJK5+02sXqAcPWvZez3z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726488AbgH3W4R (ORCPT
+        id S1726430AbgH3XCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 18:56:17 -0400
-Received: from mail.nic.cz ([217.31.204.67]:52906 "EHLO mail.nic.cz"
+        Sun, 30 Aug 2020 19:02:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbgH3W4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 18:56:16 -0400
-Received: from localhost (unknown [172.20.6.135])
-        by mail.nic.cz (Postfix) with ESMTPSA id B75E713FFFB;
-        Mon, 31 Aug 2020 00:56:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1598828173; bh=YTHzXCb4ZdLDojUITwXuoxdvQt+Vc8tV3tMINYete5U=;
-        h=Date:From:To;
-        b=InX6j2UTCOUnMtb9JVcZ9l5pcOhbEsqQeJ2i3YIu1gIyKt42g/+/fTn6s2oeHsAw2
-         cuOyst+9NclOWosVIaZ21Dkv4OBHY66dLpB7E7I1UYjgW80nxl8APYORpN4Om+VSG4
-         9W+8v+0fBFlZSVwsIsf7MwdsvGqBzXJH+4TOCsNY=
-Date:   Mon, 31 Aug 2020 00:56:13 +0200
-From:   Marek Behun <marek.behun@nic.cz>
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?B?T25k?= =?UTF-8?B?xZllag==?= Jirman 
-        <megous@megous.com>, Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next v4 0/2] Add support for LEDs on
- Marvell PHYs
-Message-ID: <20200831005613.3c00215a@nic.cz>
-In-Reply-To: <2b3604bf88082f8d8f6d21707907eff757b49362.camel@ew.tq-group.com>
-References: <20200728150530.28827-1-marek.behun@nic.cz>
-        <2b3604bf88082f8d8f6d21707907eff757b49362.camel@ew.tq-group.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+        id S1726178AbgH3XCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 19:02:30 -0400
+Subject: Re: [GIT PULL] Crypto Fixes for 5.9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598828549;
+        bh=g19HIBCaikce97qaQS6+Cx2QnvGVLPKIY6Z7TpJ8ii4=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=j+nif+htGcLBFfcUeeHjIm3caLH7+uGx2iCUsoNSZWwbWMLxblF8NC1woGU8FOmf9
+         QsHwF4znMnJkaV0iXHKWEZ4PrqyK0Xj9RPL0Br2GwZNv1Sxl384bxf9ERfg72mU8w1
+         uR60rocPfr//Xkz+0pGb33DeMgR1oOeCv2Nb6OWM=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200830223304.GA16882@gondor.apana.org.au>
+References: <20200803044024.GA6429@gondor.apana.org.au> <20200830223304.GA16882@gondor.apana.org.au>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200830223304.GA16882@gondor.apana.org.au>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+X-PR-Tracked-Commit-Id: c195d66a8a75c60515819b101975f38b7ec6577f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e43327c706f28d9e66fc4242af4aefdd69e8ff24
+Message-Id: <159882854967.16047.10951519758747174964.pr-tracker-bot@kernel.org>
+Date:   Sun, 30 Aug 2020 23:02:29 +0000
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020 10:13:59 +0200
-Matthias Schiffer <matthias.schiffer@ew.tq-group.com> wrote:
+The pull request you sent on Mon, 31 Aug 2020 08:33:04 +1000:
 
-> On Tue, 2020-07-28 at 17:05 +0200, Marek Beh=C3=BAn wrote:
-> > Hi,
-> >=20
-> > this is v4 of my RFC adding support for LEDs connected to Marvell
-> > PHYs.
-> >=20
-> > Please note that if you want to test this, you still need to first
-> > apply
-> > the patch adding the LED private triggers support from Pavel's tree.
-> >  =20
-> https://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/comm=
-it/?h=3Dfor-next&id=3D93690cdf3060c61dfce813121d0bfc055e7fa30d
-> >=20
-> > What I still don't like about this is that the LEDs created by the
-> > code
-> > don't properly support device names. LEDs should have name in format
-> > "device:color:function", for example "eth0:green:activity".
-> >=20
-> > The code currently looks for attached netdev for a given PHY, but
-> > at the time this happens there is no netdev attached, so the LEDs
-> > gets
-> > names without the device part (ie ":green:activity").
-> >=20
-> > This can be addressed in next version by renaming the LED when a
-> > netdev
-> > is attached to the PHY, but first a API for LED device renaming needs
-> > to
-> > be proposed. I am going to try to do that. This would also solve the
-> > same problem when userspace renames an interface.
-> >=20
-> > And no, I don't want phydev name there. =20
->=20
->=20
-> Hello Marek,
->=20
-> thanks for your patches - Andrew suggested me to have a look at them as
-> I'm currently trying to add LED trigger support to the TI DP83867 PHY.
->=20
-> Is there already a plan to add support for polarity and similiar
-> settings, at least to the generic part of your changes?
->=20
+> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
 
-Hello Matthias,
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e43327c706f28d9e66fc4242af4aefdd69e8ff24
 
-sorry for answering with delay, I somehow overlooked your email.
-Yes, I plan to add some basic platform data properties (like polarity)
-in the generic part.
+Thank you!
 
-> In the TI DP83867, there are 2 separate settings for each LED:
->=20
-> - Trigger event
-> - Polarity or override (active-high/active-low/force-high/force-low -
-> the latter two would be used for led_brightness_set)
-> - (There is also a 3rd register that defines the blink frequency, but
-> as it allows only a single setting for all LEDs, I would ignore it for
-> now)
-
-I think that blink frequency should be in the generic part as well.
-
->=20
-> At least the per-LED polarity setting would be essential to have for
-> this feature to be useful for our TQ-Systems mainboards with TI PHYs.
->=20
-
-I will try to send new version next week (starting 7th September).
-
-Marek
-
->=20
-> Kind regards,
-> Matthias
->=20
->=20
->=20
-> >=20
-> > Changes since v3:
-> > - addressed some of Andrew's suggestions
-> > - phy_hw_led_mode.c renamed to phy_led.c
-> > - the DT reading code is now also generic, moved to phy_led.c and
-> > called
-> >   from phy_probe
-> > - the function registering the phydev-hw-mode trigger is now called
-> > from
-> >   phy_device.c function phy_init before registering genphy drivers
-> > - PHY LED functionality now depends on CONFIG_LEDS_TRIGGERS
-> >=20
-> > Changes since v2:
-> > - to share code with other drivers which may want to also offer PHY
-> > HW
-> >   control of LEDs some of the code was refactored and now resides in
-> >   phy_hw_led_mode.c. This code is compiled in when config option
-> >   LED_TRIGGER_PHY_HW is enabled. Drivers wanting to offer PHY HW
-> > control
-> >   of LEDs should depend on this option.
-> > - the "hw-control" trigger is renamed to "phydev-hw-mode" and is
-> >   registered by the code in phy_hw_led_mode.c
-> > - the "hw_control" sysfs file is renamed to "hw_mode"
-> > - struct phy_driver is extended by three methods to support PHY HW
-> > LED
-> >   control
-> > - I renamed the various HW control modes offeret by Marvell PHYs to
-> >   conform to other Linux mode names, for example the
-> > "1000/100/10/else"
-> >   mode was renamed to "1Gbps/100Mbps/10Mbps", or "recv/else" was
-> > renamed
-> >   to "rx" (this is the name of the mode in netdev trigger).
-> >=20
-> > Marek
-> >=20
-> >=20
-> > Marek Beh=C3=BAn (2):
-> >   net: phy: add API for LEDs controlled by PHY HW
-> >   net: phy: marvell: add support for PHY LEDs via LED class
-> >=20
-> >  drivers/net/phy/Kconfig      |   4 +
-> >  drivers/net/phy/Makefile     |   1 +
-> >  drivers/net/phy/marvell.c    | 287
-> > +++++++++++++++++++++++++++++++++++
-> >  drivers/net/phy/phy_device.c |  25 ++-
-> >  drivers/net/phy/phy_led.c    | 176 +++++++++++++++++++++
-> >  include/linux/phy.h          |  51 +++++++
-> >  6 files changed, 537 insertions(+), 7 deletions(-)
-> >  create mode 100644 drivers/net/phy/phy_led.c
-> >  =20
->=20
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
