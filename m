@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA594C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF4EC433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F46C206FA
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F1BC206FA
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:01:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598796056;
-	bh=iO29siIj1A3pg94M9/E7qHOcb8dG0rcPAl2NI4lvh6s=;
+	s=default; t=1598796080;
+	bh=FaOPcDhgZcobruDLgJzbpI0/gTfdD2QV0RtRB8lWHYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nRqJLoqH6ReOIOo/J7T1H4sC2ZaEgbtk943vr2CzgpXw+Vfkmr7OrBdrKkKHPr66v
-	 +ZaKb5iWn2+apBM8vwzRWB1RLu5krJV+4Z91/7vX7HlrHmS3/abDxFbHp13AT6SP3w
-	 QQp3a2LIjJfVVttRU9Yo/socdK4L8k8upqp6oglE=
+	b=dWTnyOfB1rGMyg5HuV7mmaJ5VpjelbawugHbOXNVExASyL9fFIMZjEDHZjW8a7uza
+	 Bq/GspysgAEarB/UWxOLnGotua6i7Pgz5qGqyBsVZTYS3wa8gs6W17+m6cx1t/dlTm
+	 cmavUwstxvN4R9qfEocvqynhpIdvxTvumYT1I36s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgH3OAy (ORCPT
+        id S1726657AbgH3OA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 10:00:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55896 "EHLO mail.kernel.org"
+        Sun, 30 Aug 2020 10:00:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728957AbgH3NzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 09:55:08 -0400
+        id S1728954AbgH3NzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 09:55:01 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E01222087D;
-        Sun, 30 Aug 2020 13:55:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7B8A208DB;
+        Sun, 30 Aug 2020 13:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598795704;
-        bh=iO29siIj1A3pg94M9/E7qHOcb8dG0rcPAl2NI4lvh6s=;
+        s=default; t=1598795701;
+        bh=FaOPcDhgZcobruDLgJzbpI0/gTfdD2QV0RtRB8lWHYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zeaPP37IN+ywOlmiuegUWc80CNzYLSOFgVt7+BSOduJcC+rO97Ze942JGwkdaRFvf
-         Z8gHrHD/UdeKBNwyrD+cdrRkcKqN+3d0bFe8TpN4IM0PbrVwbB7Y/uSgp3QmCzvmGU
-         jiJkuiDrmnt5SjrOSyvul2WZF8OGxDUxdHhL6IK0=
+        b=XFIGDQOuYnDGl+CsJiUET7CVF/FOSyBK3NwWfOUg+VG5dU4PDoQsokrpjuto/VOV3
+         O4flj0KTePJt2LyADWktbwKrOnj1kvJnZrWEjKobg+rbt/+vcK+TpimpkTfKKeD2Ei
+         FekIAMxJBN9riiGE5MCtBxZoC24P6HE5q1p1YT4k=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -49,9 +49,9 @@ To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
 Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: [PATCH 23/33] ARM: dts: exynos: Remove empty camera pinctrl configuration in Odroid X/U3
-Date:   Sun, 30 Aug 2020 15:51:50 +0200
-Message-Id: <20200830135200.24304-23-krzk@kernel.org>
+Subject: [PATCH 22/33] ARM: dts: exynos: Align MHL GPIO pin configuration with dtschema on Galaxy I9100
+Date:   Sun, 30 Aug 2020 15:51:49 +0200
+Message-Id: <20200830135200.24304-22-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200830135200.24304-1-krzk@kernel.org>
 References: <20200830135200.24304-1-krzk@kernel.org>
@@ -60,29 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The camera's pinctrl configuration is simply empty and not effective.
-Remove it to fix dtbs_check warning:
+Align the name of mag-mhl-gpio node to avoid dtschema confusion and
+dtbs_check warning:
 
-  arch/arm/boot/dts/exynos4412-odroidx.dt.yaml: camera: pinctrl-0: True is not of type 'array'
+  arch/arm/boot/dts/exynos4210-i9100.dt.yaml: pinctrl@11000000: mag-mhl-gpio:
+    {'samsung,pins': ['gpd0-2'], 'samsung,pin-function': [[3]], 'samsung,pin-pud': [[0]]} is not of type 'array'
+    From schema: dtschema/schemas/gpio/gpio-consumer.yaml
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm/boot/dts/exynos4210-i9100.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-index a5c1ce1e396c..6d3576e21ffa 100644
---- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-@@ -136,8 +136,6 @@
+diff --git a/arch/arm/boot/dts/exynos4210-i9100.dts b/arch/arm/boot/dts/exynos4210-i9100.dts
+index 799b69e1a93a..5370ee477186 100644
+--- a/arch/arm/boot/dts/exynos4210-i9100.dts
++++ b/arch/arm/boot/dts/exynos4210-i9100.dts
+@@ -681,7 +681,7 @@
+ 		samsung,pin-val = <0>;
+ 	};
  
- &camera {
- 	status = "okay";
--	pinctrl-names = "default";
--	pinctrl-0 = <>;
- };
- 
- &clock {
+-	mag_mhl_gpio: mag-mhl-gpio {
++	mag_mhl_gpio: mag-mhl {
+ 		samsung,pins = "gpd0-2";
+ 		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
+ 		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
 -- 
 2.17.1
 
