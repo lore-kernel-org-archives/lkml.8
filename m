@@ -2,110 +2,56 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F81C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 19:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2237EC433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 19:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9079F2071B
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 19:40:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="doHu4bBn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0rhYLX79"
+	by mail.kernel.org (Postfix) with ESMTP id 060BB2071B
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 19:42:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgH3TkS (ORCPT
+        id S1726459AbgH3Tmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 15:40:18 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56510 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgH3TkO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 15:40:14 -0400
-Date:   Sun, 30 Aug 2020 19:40:11 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598816412;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XiAAgUvSNccOgA7JpVc10IsS1/IXlp9LFkRCl50OY5Y=;
-        b=doHu4bBn5sYLzFYH3HxsCbV0PJfZQRvF3CbBodxNa8SA0tksx5b4nUi75+4GZkr9AgV7EZ
-        Gi3xTA9mrcGHNIzvLnjbOOgy9Bx5IZ26scDvjGGrFQJPEH11+21UibsZTVPzJQQm2x+nzr
-        7QBGs78qmB9ImtVqwX7pSEsA9XyckQUu3CIwpNkb2SXpicjyMwNSEm0G/rU1XlrV3NXv+o
-        boaIMIzyllh95k566EZwRbeNe+NJisDjqYxDKKnORjVbeNVreh0tEotlGRxyKPR9+lc5kr
-        1BH1KS/V7sslmBofhgIzvgJ+cvWktLluCOx3AfGAMzH7H490WtlNW9gLrH/NFQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598816412;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XiAAgUvSNccOgA7JpVc10IsS1/IXlp9LFkRCl50OY5Y=;
-        b=0rhYLX79ZEpxRtQlYR1GDnVBrrbS8m9qSxOzRxDo9NJnE1J6VvDuDkwWKnYT5LkYGOFj3C
-        TQ632WYuGhwp+3Cg==
-From:   "tip-bot2 for Cathy Zhang" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/kvm: Expose TSX Suspend Load Tracking feature
-Cc:     Cathy Zhang <cathy.zhang@intel.com>, Borislav Petkov <bp@suse.de>,
-        Tony Luck <tony.luck@intel.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1598316478-23337-3-git-send-email-cathy.zhang@intel.com>
-References: <1598316478-23337-3-git-send-email-cathy.zhang@intel.com>
+        Sun, 30 Aug 2020 15:42:40 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:48008 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726201AbgH3Tmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 15:42:36 -0400
+Received: from p508fca7b.dip0.t-ipconnect.de ([80.143.202.123] helo=phil.fritz.box)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1kCTDl-0002KX-AO; Sun, 30 Aug 2020 21:42:33 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: fix cpu-supply for rk3328-evb
+Date:   Sun, 30 Aug 2020 21:42:28 +0200
+Message-Id: <159881654154.22245.13684137249237383351.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200813181711.15906-1-jbx6244@gmail.com>
+References: <20200813181711.15906-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-Message-ID: <159881641103.20229.17685673567805540731.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cpu branch of tip:
+On Thu, 13 Aug 2020 20:17:11 +0200, Johan Jonker wrote:
+> The property cpu-supply should be added to each cpu separately,
+> so fix that for rk3328-evb.
 
-Commit-ID:     61aa9a0a5eae2100c171698bffabde8d5e9f694d
-Gitweb:        https://git.kernel.org/tip/61aa9a0a5eae2100c171698bffabde8d5e9f694d
-Author:        Cathy Zhang <cathy.zhang@intel.com>
-AuthorDate:    Tue, 25 Aug 2020 08:47:58 +08:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Sun, 30 Aug 2020 21:34:10 +02:00
+Applied, thanks!
 
-x86/kvm: Expose TSX Suspend Load Tracking feature
+[1/1] arm64: dts: rockchip: fix cpu-supply for rk3328-evb
+      commit: 4be8df7b3bcd46a75f7e297ef310234975a437d8
 
-TSX suspend load tracking instruction is supported by the Intel uarch
-Sapphire Rapids. It aims to give a way to choose which memory accesses
-do not need to be tracked in the TSX read set. It's availability is
-indicated as CPUID.(EAX=7,ECX=0):EDX[bit 16].
-
-Expose TSX Suspend Load Address Tracking feature in KVM CPUID, so KVM
-could pass this information to guests and they can make use of this
-feature accordingly.
-
-Signed-off-by: Cathy Zhang <cathy.zhang@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/1598316478-23337-3-git-send-email-cathy.zhang@intel.com
----
- arch/x86/kvm/cpuid.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 3fd6eec..7456f9a 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -371,7 +371,7 @@ void kvm_set_cpu_caps(void)
- 		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
- 		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
- 		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM) |
--		F(SERIALIZE)
-+		F(SERIALIZE) | F(TSXLDTRK)
- 	);
- 
- 	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
