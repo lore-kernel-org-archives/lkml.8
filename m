@@ -2,122 +2,159 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4976EC433E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67849C433E7
 	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 21:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23E72208A9
+	by mail.kernel.org (Postfix) with ESMTP id 410912083E
 	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 21:01:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oRJZiql1"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="e28trhzh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbgH3U7l (ORCPT
+        id S1726452AbgH3VA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 16:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52440 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgH3U7j (ORCPT
+        Sun, 30 Aug 2020 17:00:56 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:35564 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgH3VAy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 16:59:39 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09BBFC061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 13:59:38 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id z22so5491908oid.1
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 13:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=QBRmCzycKmVnu23sFsGovUalfChtQnjWcQWYwI41Axs=;
-        b=oRJZiql1EBss2KvDcVmuLG7L3aCyu2+FBgk3j1giZZqACibEjKQb6SkstVBGYZU4QK
-         bRrTWKp2d3YEVyAooD3KGlCqvmb6iSkk4Me6fnFWAAquDC1qrySjhUCG2z/DiQ3qN7qh
-         mWKoNV40sLxpuJbCb8yMKMfwcLwJtPPdadVpvHiX/sUfeVrFocScInFqHGt2zKRCHjLD
-         hXWib8afQ6yXkkv7yDORDIYjd42qidf6OqaPSyyRGcQIAXEIQPbSC17BKRwiURY+uoLm
-         TiKpyPEFCFrS7VE1GQ1LnEdUuPjBlcxhYR5ZNIaPhWTWW8O252C6J+xMDzYWhX7KV7el
-         PU9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=QBRmCzycKmVnu23sFsGovUalfChtQnjWcQWYwI41Axs=;
-        b=WRwjWA+xjzIAGuVkvJQLX/v8rRjbL1c4jUt13VXYE2BAfSIl4BY5XGjk1eX6NkQt34
-         2xRfNxXfh3klci7nCx7RJe/XD8/8vDdOl6cTz+I9ZYJiCzlxjlvh0aXePGVERtEVIs+C
-         7jmX1V2rUx7tnPZm/Ik12hM3Yzfeg7NShL6/xkE8VYCUaTZZ3UhAt//3+lJC4d1QdCUM
-         6Fkt7mqyAQZYS79AR/YqjrUCcoTa7GrmJ4jB5bYAqJT0OmqOUFmCjbwTK+l0E0xuFYw8
-         0EZXfDwDWgpAKlCh028kyV//w9QBEjTmCSo/IWQM/cpgrvn2g/wZBBYBocl3/5hC9Id0
-         v90Q==
-X-Gm-Message-State: AOAM531M7FDhznARkPwEFzs9/uk54WSSXpjwbygPIHiBJ3k5FW1Ihgq4
-        mKBc1IAzcWqg67yafh/Am+KK6A==
-X-Google-Smtp-Source: ABdhPJxxjozAFzN+mLHtGpaXsRTl7d/7QcyQjmZRGz/hgM/tIVGeTiFgtm4/XScrqZiVh2LIn3H+bg==
-X-Received: by 2002:aca:1904:: with SMTP id l4mr1911081oii.67.1598821178001;
-        Sun, 30 Aug 2020 13:59:38 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id w136sm1256385oif.14.2020.08.30.13.59.36
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Sun, 30 Aug 2020 13:59:36 -0700 (PDT)
-Date:   Sun, 30 Aug 2020 13:59:35 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Andrew Morton <akpm@linux-foundation.org>
-cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH 1/5] ksm: reinstate memcg charge on copied pages
-In-Reply-To: <alpine.LSU.2.11.2008301343270.5954@eggly.anvils>
-Message-ID: <alpine.LSU.2.11.2008301358020.5954@eggly.anvils>
-References: <alpine.LSU.2.11.2008301343270.5954@eggly.anvils>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        Sun, 30 Aug 2020 17:00:54 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 166F6891B0;
+        Mon, 31 Aug 2020 09:00:50 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1598821250;
+        bh=EJLjX89WdyvDHn+7R8EgEdBdf2Jw0A+9k5f1ib+1iE0=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=e28trhzhMurFnBLdOrtw7kt43zg6bwHPTRXnMG6fflcQy81CaWCEa628Ykg6LtwUK
+         E9O/e9oz5+Icz1NjRQEtUc/GmOTEi1uyJdByO1/NDWnnneyo/+ec4noB0Op1X6ZEqY
+         vwVDXqbeMBYwVQKceyObolzgQmbKliwb2x1gzhLDWKcp5Zm2RHN4ONS7uYc/87SOhw
+         TsuLcYQW86Le6go6GypcLfY0O20q4LjDW/8qvbpFd+HGytS2Fuqp9O0PBs2IAWKh0F
+         8p3Hie/9Zc3T+7Ka4v5Ay3+Q4YDIFKLQQ47HBJlIKWrj2WmOM5nxdZ2NUJkhqe2qiA
+         7JoolEoOEs2Jg==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f4c13820001>; Mon, 31 Aug 2020 09:00:50 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 31 Aug 2020 09:00:49 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Mon, 31 Aug 2020 09:00:49 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Nicholas Piggin <npiggin@gmail.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "Heiner Kallweit" <hkallweit1@gmail.com>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "paulus@samba.org" <paulus@samba.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+Subject: Re: fsl_espi errors on v5.7.15
+Thread-Topic: fsl_espi errors on v5.7.15
+Thread-Index: AQHWceVnik7XsBYbp0S+yHVGh1hdQak2WMaAgAQdSwCAAz9MAIAAfdcAgAD5u4CAB+sMAIAAYfwAgAA6JQCAAPtUgIAAOXyAgABIbACAAAjRgIABm7wAgAD5+gCABBXPAIAAjqOA
+Date:   Sun, 30 Aug 2020 21:00:49 +0000
+Message-ID: <524a0f50-f954-f5a7-eccb-66eece59c7c4@alliedtelesis.co.nz>
+References: <42107721-614b-96e8-68d9-4b888206562e@alliedtelesis.co.nz>
+ <1020029e-4cb9-62ba-c6d6-e6b9bdf93aac@gmail.com>
+ <1598510348.1g7wt0s02s.astroid@bobo.none>
+ <0068446e-06f8-6648-2f40-56f324c1ee6e@alliedtelesis.co.nz>
+ <1598788275.m90vz24p6x.astroid@bobo.none>
+In-Reply-To: <1598788275.m90vz24p6x.astroid@bobo.none>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <074623954D471445A42C0B113966A6EA@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In 5.8 some instances of memcg charging in do_swap_page() and unuse_pte()
-were removed, on the understanding that swap cache is now already charged
-at those points; but a case was missed, when ksm_might_need_to_copy() has
-decided it must allocate a substitute page: such pages were never charged.
-Fix it inside ksm_might_need_to_copy().
-
-This was discovered by Alex Shi's prospective commit "mm/memcg: warning
-on !memcg after readahead page charged".
-
-But there is a another surprise: this also fixes some rarer uncharged
-PageAnon cases, when KSM is configured in, but has never been activated.
-ksm_might_need_to_copy()'s anon_vma->root and linear_page_index() check
-sometimes catches a case which would need to have been copied if KSM
-were turned on.  Or that's my optimistic interpretation (of my own old
-code), but it leaves some doubt as to whether everything is working as
-intended there - might it hint at rare anon ptes which rmap cannot find?
-A question not easily answered: put in the fix for missed memcg charges.
-
-Fixes: 4c6355b25e8b ("mm: memcontrol: charge swapin pages on instantiation")
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Cc: stable@vger.kernel.org # v5.8
----
-
- mm/ksm.c |    4 ++++
- 1 file changed, 4 insertions(+)
-
---- 5.9-rc2/mm/ksm.c	2020-08-16 17:32:50.645506940 -0700
-+++ linux/mm/ksm.c	2020-08-28 17:42:07.967278385 -0700
-@@ -2582,6 +2582,10 @@ struct page *ksm_might_need_to_copy(stru
- 		return page;		/* let do_swap_page report the error */
- 
- 	new_page = alloc_page_vma(GFP_HIGHUSER_MOVABLE, vma, address);
-+	if (new_page && mem_cgroup_charge(new_page, vma->vm_mm, GFP_KERNEL)) {
-+		put_page(new_page);
-+		new_page = NULL;
-+	}
- 	if (new_page) {
- 		copy_user_highpage(new_page, page, address, vma);
- 
+DQpPbiAzMS8wOC8yMCAxMjozMCBhbSwgTmljaG9sYXMgUGlnZ2luIHdyb3RlOg0KPiBFeGNlcnB0
+cyBmcm9tIENocmlzIFBhY2toYW0ncyBtZXNzYWdlIG9mIEF1Z3VzdCAyOCwgMjAyMCA4OjA3IGFt
+Og0KDQo8c25pcD4NCg0KPj4+Pj4+IEkndmUgYWxzbyBub3cgc2VlbiB0aGUgUlggRklGTyBub3Qg
+ZW1wdHkgZXJyb3Igb24gdGhlIFQyMDgwUkRCDQo+Pj4+Pj4NCj4+Pj4+PiBmc2xfZXNwaSBmZmUx
+MTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQhDQo+Pj4+Pj4g
+ZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogVHJhbnNmZXIgZG9uZSBidXQgU1BJRV9ET04gaXNuJ3Qg
+c2V0IQ0KPj4+Pj4+IGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IFRyYW5zZmVyIGRvbmUgYnV0IFNQ
+SUVfRE9OIGlzbid0IHNldCENCj4+Pj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2Zl
+ciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQhDQo+Pj4+Pj4gZnNsX2VzcGkgZmZlMTEwMDAw
+LnNwaTogVHJhbnNmZXIgZG9uZSBidXQgcngvdHggZmlmbydzIGFyZW4ndCBlbXB0eSENCj4+Pj4+
+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBTUElFX1JYQ05UID0gMSwgU1BJRV9UWENOVCA9IDMy
+DQo+Pj4+Pj4NCj4+Pj4+PiBXaXRoIG15IGN1cnJlbnQgd29ya2Fyb3VuZCBvZiBlbXB0eWluZyB0
+aGUgUlggRklGTy4gSXQgc2VlbXMNCj4+Pj4+PiBzdXJ2aXZhYmxlLiBJbnRlcmVzdGluZ2x5IGl0
+IG9ubHkgZXZlciBzZWVtcyB0byBiZSAxIGV4dHJhIGJ5dGUgaW4gdGhlDQo+Pj4+Pj4gUlggRklG
+TyBhbmQgaXQgc2VlbXMgdG8gYmUgYWZ0ZXIgZWl0aGVyIGEgUkVBRF9TUiBvciBhIFJFQURfRlNS
+Lg0KPj4+Pj4+DQo+Pj4+Pj4gZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogdHggNzANCj4+Pj4+PiBm
+c2xfZXNwaSBmZmUxMTAwMDAuc3BpOiByeCAwMw0KPj4+Pj4+IGZzbF9lc3BpIGZmZTExMDAwMC5z
+cGk6IEV4dHJhIFJYIDAwDQo+Pj4+Pj4gZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogVHJhbnNmZXIg
+ZG9uZSBidXQgU1BJRV9ET04gaXNuJ3Qgc2V0IQ0KPj4+Pj4+IGZzbF9lc3BpIGZmZTExMDAwMC5z
+cGk6IFRyYW5zZmVyIGRvbmUgYnV0IHJ4L3R4IGZpZm8ncyBhcmVuJ3QgZW1wdHkhDQo+Pj4+Pj4g
+ZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogU1BJRV9SWENOVCA9IDEsIFNQSUVfVFhDTlQgPSAzMg0K
+Pj4+Pj4+IGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IHR4IDA1DQo+Pj4+Pj4gZnNsX2VzcGkgZmZl
+MTEwMDAwLnNwaTogcnggMDANCj4+Pj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBFeHRyYSBS
+WCAwMw0KPj4+Pj4+IGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IFRyYW5zZmVyIGRvbmUgYnV0IFNQ
+SUVfRE9OIGlzbid0IHNldCENCj4+Pj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2Zl
+ciBkb25lIGJ1dCByeC90eCBmaWZvJ3MgYXJlbid0IGVtcHR5IQ0KPj4+Pj4+IGZzbF9lc3BpIGZm
+ZTExMDAwMC5zcGk6IFNQSUVfUlhDTlQgPSAxLCBTUElFX1RYQ05UID0gMzINCj4+Pj4+PiBmc2xf
+ZXNwaSBmZmUxMTAwMDAuc3BpOiB0eCAwNQ0KPj4+Pj4+IGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6
+IHJ4IDAwDQo+Pj4+Pj4gZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogRXh0cmEgUlggMDMNCj4+Pj4+
+Pg0KPj4+Pj4+ICAgRnJvbSBhbGwgdGhlIE1pY3JvbiBTUEktTk9SIGRhdGFzaGVldHMgSSd2ZSBn
+b3QgYWNjZXNzIHRvIGl0IGlzDQo+Pj4+Pj4gcG9zc2libGUgdG8gY29udGludWFsbHkgcmVhZCB0
+aGUgU1IvRlNSLiBCdXQgSSd2ZSBubyBpZGVhIHdoeSBpdA0KPj4+Pj4+IGhhcHBlbnMgc29tZSB0
+aW1lcyBhbmQgbm90IG90aGVycy4NCj4+Pj4+IFNvIEkgdGhpbmsgSSd2ZSBnb3QgYSByZXByb2R1
+Y3Rpb24gYW5kIEkgdGhpbmsgSSd2ZSBiaXNlY3RlZCB0aGUgcHJvYmxlbQ0KPj4+Pj4gdG8gY29t
+bWl0IDMyODJhM2RhMjViZCAoInBvd2VycGMvNjQ6IEltcGxlbWVudCBzb2Z0IGludGVycnVwdCBy
+ZXBsYXkgaW4NCj4+Pj4+IEMiKS4gTXkgZGF5IGlzIGp1c3QgZmluaXNoaW5nIG5vdyBzbyBJIGhh
+dmVuJ3QgYXBwbGllZCB0b28gbXVjaCBzY3J1dGlueQ0KPj4+Pj4gdG8gdGhpcyByZXN1bHQuIEdp
+dmVuIHRoZSB2YXJpb3VzIHJhYmJpdCBob2xlcyBJJ3ZlIGJlZW4gZG93biBvbiB0aGlzDQo+Pj4+
+PiBpc3N1ZSBhbHJlYWR5IEknZCB0YWtlIHRoaXMgaW5mb3JtYXRpb24gd2l0aCBhIGdvb2QgZGVn
+cmVlIG9mIHNrZXB0aWNpc20uDQo+Pj4+Pg0KPj4+PiBPSywgc28gYW4gZWFzeSB0ZXN0IHNob3Vs
+ZCBiZSB0byByZS10ZXN0IHdpdGggYSA1LjQga2VybmVsLg0KPj4+PiBJdCBkb2Vzbid0IGhhdmUg
+eWV0IHRoZSBjaGFuZ2UgeW91J3JlIHJlZmVycmluZyB0bywgYW5kIHRoZSBmc2wtZXNwaSBkcml2
+ZXINCj4+Pj4gaXMgYmFzaWNhbGx5IHRoZSBzYW1lIGFzIGluIDUuNyAoanVzdCB0d28gc21hbGwg
+Y2hhbmdlcyBpbiA1LjcpLg0KPj4+IFRoZXJlJ3MgNmNjMGMxNmQ4MmY4OCBhbmQgbWF5YmUgYWxz
+byBvdGhlciBpbnRlcnJ1cHQgcmVsYXRlZCBwYXRjaGVzDQo+Pj4gYXJvdW5kIHRoaXMgdGltZSB0
+aGF0IGNvdWxkIGFmZmVjdCBib29rIEUsIHNvIGl0J3MgZ29vZCBpZiB0aGF0IGV4YWN0DQo+Pj4g
+cGF0Y2ggaXMgY29uZmlybWVkLg0KPj4gTXkgY29uZmlybWF0aW9uIGlzIGJhc2ljYWxseSB0aGF0
+IEkgY2FuIGluZHVjZSB0aGUgaXNzdWUgaW4gYSA1LjQga2VybmVsDQo+PiBieSBjaGVycnktcGlj
+a2luZyAzMjgyYTNkYTI1YmQuIEknbSBhbHNvIGFibGUgdG8gImZpeCIgdGhlIGlzc3VlIGluDQo+
+PiA1LjktcmMyIGJ5IHJldmVydGluZyB0aGF0IG9uZSBjb21taXQuDQo+Pg0KPj4gSSBib3RoIGNh
+c2VzIGl0J3Mgbm90IGV4YWN0bHkgYSBjbGVhbiBjaGVycnktcGljay9yZXZlcnQgc28gSSBhbHNv
+DQo+PiBjb25maXJtZWQgdGhlIGJpc2VjdGlvbiByZXN1bHQgYnkgYnVpbGRpbmcgYXQgMzI4MmEz
+ZGEyNWJkICh3aGljaCBzZWVzDQo+PiB0aGUgaXNzdWUpIGFuZCB0aGUgY29tbWl0IGp1c3QgYmVm
+b3JlICh3aGljaCBkb2VzIG5vdCkuDQo+IFRoYW5rcyBmb3IgdGVzdGluZywgdGhhdCBjb25maXJt
+cyBpdCB3ZWxsLg0KPg0KPiBbc25pcCBwYXRjaF0NCj4NCj4+IEkgc3RpbGwgc2F3IHRoZSBpc3N1
+ZSB3aXRoIHRoaXMgY2hhbmdlIGFwcGxpZWQuIFBQQ19JUlFfU09GVF9NQVNLX0RFQlVHDQo+PiBk
+aWRuJ3QgcmVwb3J0IGFueXRoaW5nIChlaXRoZXIgd2l0aCBvciB3aXRob3V0IHRoZSBjaGFuZ2Ug
+YWJvdmUpLg0KPiBPa2F5LCBpdCB3YXMgYSBiaXQgb2YgYSBzaG90IGluIHRoZSBkYXJrLiBJIHN0
+aWxsIGNhbid0IHNlZSB3aGF0DQo+IGVsc2UgaGFzIGNoYW5nZWQuDQo+DQo+IFdoYXQgd291bGQg
+Y2F1c2UgdGhpcywgYSBsb3N0IGludGVycnVwdD8gQSBzcHVyaW91cyBpbnRlcnJ1cHQ/IE9yDQo+
+IGhpZ2hlciBpbnRlcnJ1cHQgbGF0ZW5jeT8NCj4NCj4gSSBkb24ndCB0aGluayB0aGUgcGF0Y2gg
+c2hvdWxkIGNhdXNlIHNpZ25pZmljYW50bHkgd29yc2UgbGF0ZW5jeSwNCj4gKGl0J3Mgc3VwcG9z
+ZWQgdG8gYmUgYSBiaXQgYmV0dGVyIGlmIGFueXRoaW5nIGJlY2F1c2UgaXQgZG9lc24ndCBzZXQN
+Cj4gdXAgdGhlIGZ1bGwgaW50ZXJydXB0IGZyYW1lKS4gQnV0IGl0J3MgcG9zc2libGUuDQoNCk15
+IHdvcmtpbmcgdGhlb3J5IGlzIHRoYXQgdGhlIFNQSV9ET04gaW5kaWNhdGlvbiBpcyBhbGwgYWJv
+dXQgdGhlIFRYIA0KZGlyZWN0aW9uIGFuIG5vdyB0aGF0IHRoZSBpbnRlcnJ1cHRzIGFyZSBmYXN0
+ZXIgd2UncmUgaGl0dGluZyBhbiBlcnJvciANCmJlY2F1c2UgdGhlcmUgaXMgc3RpbGwgUlggYWN0
+aXZpdHkgZ29pbmcgb24uIEhlaW5lciBkaXNhZ3JlZXMgd2l0aCBteSANCmludGVycHJldGF0aW9u
+IG9mIHRoZSBTUElfRE9OIGluZGljYXRpb24gYW5kIHRoZSBmYWN0IHRoYXQgaXQgZG9lc24ndCAN
+CmhhcHBlbiBldmVyeSB0aW1lIGRvZXMgdGhyb3cgZG91YnQgb24gaXQuDQoNCkkgY2FuJ3QgcmVh
+bGx5IGV4cGxhaW4gdGhlIGV4dHJhIFJYIGJ5dGUgaW4gdGhlIGZpZm8uIFdlIGtub3cgaG93IG1h
+bnkgDQpieXRlcyB0byBleHBlY3QgYW5kIHdlIHB1bGwgdGhhdCBtYW55IGZyb20gdGhlIGZpZm8g
+c28gaXQncyBub3QgYXMgaWYgDQp3ZSdyZSBtaXNzaW5nIGFuIGludGVycnVwdCBjYXVzaW5nIHVz
+IHRvIHNraXAgdGhlIGxhc3QgYnl0ZS4gSSd2ZSBiZWVuIA0KbG9va2luZyBmb3Igc29tZSBraW5k
+IG9mIG9mZi1ieS1vbmUgY2FsY3VsYXRpb24gYnV0IGFnYWluIGlmIGl0IHdlcmUgDQpzb21ldGhp
+bmcgbGlrZSB0aGF0IGl0J2QgaGFwcGVuIGFsbCB0aGUgdGltZS4NCg0K
