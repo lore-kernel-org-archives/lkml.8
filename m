@@ -2,116 +2,126 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31261C433E7
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D6BC433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10842207BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0464207BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:57:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PnBi0CKD"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tYJF8x20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbgH3Jw6 (ORCPT
+        id S1728759AbgH3J5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 05:52:58 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45670 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726264AbgH3Jwt (ORCPT
+        Sun, 30 Aug 2020 05:57:08 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51096 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726404AbgH3J5G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 05:52:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598781168;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CMkU+ayG9L0but2trh3KXSaT/21HI/OkkHJggUMtR4s=;
-        b=PnBi0CKD0Fk34OoKMPYtPR3uJ1fw9UiacjHc+Zd+8ISGUDdPoj+d/xTSjPToUpiPpdbOXX
-        vFblvHoG+KruZ3DwrKfhwaqO+BWstShAZwQz47N2xQodwzNFcvUZT6E5ncdxN/zVEkKcVE
-        /5+mnEs9U3o9kpfA9a+EBxYg5w/M6a0=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472-YTt7XyGzMu6rqsya8IkJzg-1; Sun, 30 Aug 2020 05:52:46 -0400
-X-MC-Unique: YTt7XyGzMu6rqsya8IkJzg-1
-Received: by mail-wr1-f71.google.com with SMTP id f14so1867372wrm.22
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 02:52:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CMkU+ayG9L0but2trh3KXSaT/21HI/OkkHJggUMtR4s=;
-        b=dR4i3ADfhCmw7Y3IYtLseVFgHcI9N6MjPBrWtx2Lc2IfqTiwRX8ZhwiR03DTUO0RyB
-         beL7sov/vbRJ9mU/DboZrsOEadvgeqb+VFG0wApscCjpIZu3OuJ6f4sJ9POMWa+893HU
-         1PIRCzyD4B+FEUmERGTt7R9g1b+fUKi86keGZaqWoY1ZJxlKyDUZyLEuW+6LL/aCUIZN
-         YApQi9jZ09qhVjD4BmLTuW5n13O8HDsAUN1qaE69sd7x1qMrN57B++0LqeTAHrCtgrg2
-         ykmXBgjwlNb1ucLm6Lg8oSwDBzqcrp7uHU413/m2wPOC3oUQZCyScT5lJYk6GjlaTeI0
-         8JJQ==
-X-Gm-Message-State: AOAM5307VcVhcZHkXiqQac/nWo7ViQOdZI668W+Y84H79NVB0yyEu3yQ
-        T7tNcb3QwtPxcekVQd83CBHHSKeu4qalHI2I+6G2ITuJ7yUAwbgA1TqahVz9JpvXFwfhsbrj0tk
-        KP4IhYxuF+pHujfheOyUh+iNG
-X-Received: by 2002:adf:b306:: with SMTP id j6mr5702941wrd.279.1598781164775;
-        Sun, 30 Aug 2020 02:52:44 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwXOhZ7ViZzfafJn3Iw5fXJyfwgbvXBQ0gQrqm4R0MlaFsmI3OelMzCKNjjMyQ2G3uYIpfUyw==
-X-Received: by 2002:adf:b306:: with SMTP id j6mr5702925wrd.279.1598781164574;
-        Sun, 30 Aug 2020 02:52:44 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:9d8:ed0a:2dde:9ff7? ([2001:b07:6468:f312:9d8:ed0a:2dde:9ff7])
-        by smtp.gmail.com with ESMTPSA id t14sm7448920wrg.38.2020.08.30.02.52.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Aug 2020 02:52:44 -0700 (PDT)
-Subject: Re: [PATCH v2] KVM: nVMX: fix the layout of struct
- kvm_vmx_nested_state_hdr
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Peter Shier <pshier@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200713162206.1930767-1-vkuznets@redhat.com>
- <CALMp9eR+DYVH0UZvbNKUNArzPdf1mvAoxakzj++szaVCD0Fcpw@mail.gmail.com>
- <CALMp9eRGStwpYbeHbxo79zF9EyQ=35wwhNt03rjMHMDD9a5G0A@mail.gmail.com>
- <20200827204020.GE22351@sjchrist-ice>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <e9327d67-3342-8a6e-c981-a53acbd04e9b@redhat.com>
-Date:   Sun, 30 Aug 2020 11:52:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Sun, 30 Aug 2020 05:57:06 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07U9XtR3001438;
+        Sun, 30 Aug 2020 05:56:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=zZZaGO9f6qJS5ucPnn8G8zA+KB54agYzgvVLkqVDWi8=;
+ b=tYJF8x208ofzu7GOhWPgHPcswnpNR+x7iLNKufVbymAkVQJbr0Z1szfJSS9rZGSbrdlI
+ I5XCpB+445wILSWhjn0RPv8AK2byOfb7CoJr7rl4eQ/Jt1AUVIUytGlTCgKkeaAiU491
+ FZ4VLlD8o54+ncSgWFCPMXAoS6f2pSXQjObOcYzishkRxchsNGZLHck34WXXfOqgfmnX
+ 4q0JHvFMchFLuZaSiECBaqnBI9y2QbNSUeBpl/vq0k792c9Avm40lEmJK1+zxKUQiidj
+ FaQV3owHbWG6duCGlpUg+k249urRc5meKenePZ50ei8fQDoe/LbVMXV2fhJKZdeWnc9E Sw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3388n6h7x7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 30 Aug 2020 05:56:56 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07U9ZwbG005193;
+        Sun, 30 Aug 2020 05:56:55 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3388n6h7wp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 30 Aug 2020 05:56:55 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07U9lXWo018395;
+        Sun, 30 Aug 2020 09:56:54 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03ams.nl.ibm.com with ESMTP id 337en891xs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 30 Aug 2020 09:56:54 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07U9upSu25035050
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 30 Aug 2020 09:56:52 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D177652051;
+        Sun, 30 Aug 2020 09:56:51 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.145.92.75])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 65C4352050;
+        Sun, 30 Aug 2020 09:56:50 +0000 (GMT)
+Date:   Sun, 30 Aug 2020 12:56:48 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org
+Subject: Re: [ALTERNATE PATCH] memblock: fix min_low_pfn/max_low_pfn build
+ errors
+Message-ID: <20200830095648.GA424181@linux.ibm.com>
+References: <20200829000139.2513-1-rdunlap@infradead.org>
+ <20200829130429.GG167163@linux.ibm.com>
+ <a0665bb7-3389-1178-0a79-2155fb88255d@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200827204020.GE22351@sjchrist-ice>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a0665bb7-3389-1178-0a79-2155fb88255d@infradead.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-30_03:2020-08-28,2020-08-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 impostorscore=0
+ suspectscore=1 clxscore=1015 phishscore=0 adultscore=0 mlxlogscore=927
+ mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008300072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/08/20 22:40, Sean Christopherson wrote:
-> Paolo pushed an alternative solution for 5.8, commit 5e105c88ab485 ("KVM:
-> nVMX: check for invalid hdr.vmx.flags").  His argument was that there was
-> no point in adding proper padding since we already broke the ABI, i.e.
-> damage done.
+Hi Randy,
+
+On Sat, Aug 29, 2020 at 08:40:51AM -0700, Randy Dunlap wrote:
+> On 8/29/20 6:04 AM, Mike Rapoport wrote:
+> > On Fri, Aug 28, 2020 at 05:01:39PM -0700, Randy Dunlap wrote:
+> >> Export min_low_pfn & max_low_pfn in mm/memblock.c to fix build errors
+> >> on arch/microblaze/ and arch/ia64/: (e.g.)
+> > 
+> > Please don't. This would give driver developers a wrong impression that
+> > these variables can be used to query memory boundaries, but this is not
+> > the case, at least not on all architectures.
+> > 
+> > I would prefer fixing it up locally for microblaze and ia64.
 > 
-> So rather than pad the struct, which doesn't magically fix the ABI for old
-> userspace, just check for unsupported flags.  That gives decent odds of
-> failing the ioctl() for old userspace if it's passing garbage (through no
-> fault of its own), prevents new userspace from setting unsupported flags,
-> and allows KVM to grow the struct by conditioning consumption of new fields
-> on an associated flag.
+> I did that.
+> and that's why this is labeled as an ALTERNATE PATCH.
 
-In general userspace (as a hygiene/future-proofing measure) should
-generally zero the contents of structs before filling in some fields
-only.  There was no guarantee that smm wouldn't grow new fields that
-would have occupied the padding, for example.  The general solution we
-use is flags fields and checking them.
+I've seen that, I just wanted to make sure that Andrew wouldn't pick
+this one :)
 
-(The original KVM_GET/SET_NESTED_STATE patches did add a generic flags
-fields, but not a VMX-specific one).
+I can help with taking microblaze and ia64 patches via memblock tree
+once we have Acks from the arch maintainers.
+ 
+> thanks.
+> -- 
+> ~Randy
+> 
 
-Paolo
-
+-- 
+Sincerely yours,
+Mike.
