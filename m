@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C0CC433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31261C433E7
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00697207BB
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10842207BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cNZLA23C"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PnBi0CKD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728771AbgH3Jwu (ORCPT
+        id S1728787AbgH3Jw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 05:52:50 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58458 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726404AbgH3Jwp (ORCPT
+        Sun, 30 Aug 2020 05:52:58 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45670 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726264AbgH3Jwt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 05:52:45 -0400
+        Sun, 30 Aug 2020 05:52:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598781163;
+        s=mimecast20190719; t=1598781168;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=shLz+NHIQw6ehBccBaS6HwdyHsjPr6eHCbl/kzv3/W0=;
-        b=cNZLA23CbaxUrHcgy8/MkBgwwkGcf+fLwUeyMy97dh+cF0rUDxmnM8zrMRmGJhXzoCrGYM
-        WEZRL+Uqr9GAU5c9/S3YMGuNK4IRCJa/kCnVG0NvsxjCMYopWp7HtaWHauqs367drVSRiz
-        xB8qOcefZ7jyZw+NfNEpYYUpCIlBOOg=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-323-UhJQaOaHNNq6GJjACYuQbA-1; Sun, 30 Aug 2020 05:52:41 -0400
-X-MC-Unique: UhJQaOaHNNq6GJjACYuQbA-1
-Received: by mail-wm1-f70.google.com with SMTP id d5so588264wmb.2
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 02:52:41 -0700 (PDT)
+        bh=CMkU+ayG9L0but2trh3KXSaT/21HI/OkkHJggUMtR4s=;
+        b=PnBi0CKD0Fk34OoKMPYtPR3uJ1fw9UiacjHc+Zd+8ISGUDdPoj+d/xTSjPToUpiPpdbOXX
+        vFblvHoG+KruZ3DwrKfhwaqO+BWstShAZwQz47N2xQodwzNFcvUZT6E5ncdxN/zVEkKcVE
+        /5+mnEs9U3o9kpfA9a+EBxYg5w/M6a0=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-472-YTt7XyGzMu6rqsya8IkJzg-1; Sun, 30 Aug 2020 05:52:46 -0400
+X-MC-Unique: YTt7XyGzMu6rqsya8IkJzg-1
+Received: by mail-wr1-f71.google.com with SMTP id f14so1867372wrm.22
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 02:52:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=shLz+NHIQw6ehBccBaS6HwdyHsjPr6eHCbl/kzv3/W0=;
-        b=AEFApAN3wMSXShw56gyGuw+AXbNVXPqo9iqLS0FYjOK51nRwzEZAlna6IAMl8OASpf
-         a/FQvYxkeYmgGE5HbJ4DQuGbYV6aOxEv2mqh5U9W5biUgtZqVbL4eeCgeFVflJZdxwVB
-         k1P7KhWM1dPwSzWwikAnFuITWN+dbM+AEpceurhfo161a9G43R2f7+v4fiRDf35RVjem
-         0q+8WJGNbGVKJgd1MkAjfehQqLWi0QKNoUujv7vvrU8TCx63FwrNr3FAdpOxeMR6R4kT
-         TOJzGiVnyNGQRFc7oUUOhQcdPLLd9PcBnNy3f1gKOxSrtcEincwi97vZZFxN/F5hD58P
-         kGjw==
-X-Gm-Message-State: AOAM532WQzVIjW+WcfcujXUAHeH6xizD6C6D7Kh1/fqho8PBdBAx/36s
-        /+rNGSl0fkcJWbpYCV1LJQEbz26Bgfx/lZvknI5cNRjradZEkCPSOH1AEyNSW1p6vAe71mqQG1K
-        pFAolpzZfR7LX5mVKYPoQCevE
-X-Received: by 2002:a1c:e256:: with SMTP id z83mr1674900wmg.137.1598781160436;
-        Sun, 30 Aug 2020 02:52:40 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyu3YdiiJZJIOOb9YNtA+ULjbymzyuHXduF3D7yxpxJzNd5MhrgTQiao4swsuBo5MOq0oLLYw==
-X-Received: by 2002:a1c:e256:: with SMTP id z83mr1674885wmg.137.1598781160243;
-        Sun, 30 Aug 2020 02:52:40 -0700 (PDT)
+        bh=CMkU+ayG9L0but2trh3KXSaT/21HI/OkkHJggUMtR4s=;
+        b=dR4i3ADfhCmw7Y3IYtLseVFgHcI9N6MjPBrWtx2Lc2IfqTiwRX8ZhwiR03DTUO0RyB
+         beL7sov/vbRJ9mU/DboZrsOEadvgeqb+VFG0wApscCjpIZu3OuJ6f4sJ9POMWa+893HU
+         1PIRCzyD4B+FEUmERGTt7R9g1b+fUKi86keGZaqWoY1ZJxlKyDUZyLEuW+6LL/aCUIZN
+         YApQi9jZ09qhVjD4BmLTuW5n13O8HDsAUN1qaE69sd7x1qMrN57B++0LqeTAHrCtgrg2
+         ykmXBgjwlNb1ucLm6Lg8oSwDBzqcrp7uHU413/m2wPOC3oUQZCyScT5lJYk6GjlaTeI0
+         8JJQ==
+X-Gm-Message-State: AOAM5307VcVhcZHkXiqQac/nWo7ViQOdZI668W+Y84H79NVB0yyEu3yQ
+        T7tNcb3QwtPxcekVQd83CBHHSKeu4qalHI2I+6G2ITuJ7yUAwbgA1TqahVz9JpvXFwfhsbrj0tk
+        KP4IhYxuF+pHujfheOyUh+iNG
+X-Received: by 2002:adf:b306:: with SMTP id j6mr5702941wrd.279.1598781164775;
+        Sun, 30 Aug 2020 02:52:44 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwXOhZ7ViZzfafJn3Iw5fXJyfwgbvXBQ0gQrqm4R0MlaFsmI3OelMzCKNjjMyQ2G3uYIpfUyw==
+X-Received: by 2002:adf:b306:: with SMTP id j6mr5702925wrd.279.1598781164574;
+        Sun, 30 Aug 2020 02:52:44 -0700 (PDT)
 Received: from ?IPv6:2001:b07:6468:f312:9d8:ed0a:2dde:9ff7? ([2001:b07:6468:f312:9d8:ed0a:2dde:9ff7])
-        by smtp.gmail.com with ESMTPSA id q6sm6274965wmq.19.2020.08.30.02.52.39
+        by smtp.gmail.com with ESMTPSA id t14sm7448920wrg.38.2020.08.30.02.52.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Aug 2020 02:52:39 -0700 (PDT)
+        Sun, 30 Aug 2020 02:52:44 -0700 (PDT)
 Subject: Re: [PATCH v2] KVM: nVMX: fix the layout of struct
  kvm_vmx_nested_state_hdr
 To:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -77,8 +77,8 @@ References: <20200713162206.1930767-1-vkuznets@redhat.com>
  <CALMp9eRGStwpYbeHbxo79zF9EyQ=35wwhNt03rjMHMDD9a5G0A@mail.gmail.com>
  <20200827204020.GE22351@sjchrist-ice>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <8ba02f98-045d-a089-cb7e-8d0b613f76e7@redhat.com>
-Date:   Sun, 30 Aug 2020 11:52:50 +0200
+Message-ID: <e9327d67-3342-8a6e-c981-a53acbd04e9b@redhat.com>
+Date:   Sun, 30 Aug 2020 11:52:55 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
@@ -111,7 +111,7 @@ would have occupied the padding, for example.  The general solution we
 use is flags fields and checking them.
 
 (The original KVM_GET/SET_NESTED_STATE patches did add a generic flags
-fields, but not a VMX-specific one field).
+fields, but not a VMX-specific one).
 
 Paolo
 
