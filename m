@@ -2,111 +2,113 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3401CC433E7
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8D1C433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 099B620738
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:41:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598780509;
-	bh=k08ME3JDK4Gf72G0743+68FC+Jt7TdUfF3cIxI3Mtlc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PbjFxM9cyhCQZB5mHxicvRKT198iYx41guA0N0IdWoX584k9u4t4skRPRdD2ajtcy
-	 slDPNhjykQNANkld///1F1EXpdK1lEJVC+guDgWnY3KFIlTzmP/wsoJyvWvcrvJA1r
-	 0bp72QjCFg2Vc5ra5t4TA/D6F7J3GMO8oeRdNVQ8=
+	by mail.kernel.org (Postfix) with ESMTP id EAA2F207BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:48:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CxOYH1Tf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728742AbgH3Jlq (ORCPT
+        id S1728752AbgH3Jst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 05:41:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbgH3Jlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 05:41:45 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3E6F20738;
-        Sun, 30 Aug 2020 09:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598780504;
-        bh=k08ME3JDK4Gf72G0743+68FC+Jt7TdUfF3cIxI3Mtlc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bVHPqylinVz5Fur63sAf0ZDd7st/OEgSM9ButsjdNl6wPRFq8iCAH6ZlpzuyB8yR/
-         HYsHjbFrf4VGcxviO2E6IWrqGZpTyIVY0v3msj3H6E3QmGT9bXtvnP70VYfbJth3ih
-         ynO45M9ZgssnohZj4nT40d03nU3bMBW35cHn6dFY=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kCJqI-007mQ2-MD; Sun, 30 Aug 2020 10:41:42 +0100
+        Sun, 30 Aug 2020 05:48:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbgH3Jso (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 05:48:44 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B543C061573;
+        Sun, 30 Aug 2020 02:48:44 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id h12so2652318pgm.7;
+        Sun, 30 Aug 2020 02:48:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JD/yNeyHUsDvJLMZBjT/sYWFLZpY6ahAJFA2kbTEKrw=;
+        b=CxOYH1Tf2XZZ7ozhzxcZedMl6ZFeem+ArJRljp/K7NlzSMhFQcB/ID5mJPmpTnwcoK
+         x42ftohGFpizC38lPudDUe6v74VoQ7U8/ziZLV9rmODALgdml/Xz8xDKf/nDRP2QrCaC
+         vY4bU2KMLw13Fpsw1/3H/VoEhyQREDY+rnlVMFikHk7pwFKHy4ZHSM+xa6FrztIHfS8R
+         4dU3XAg2Dnsts5Ben9qF4fosT/ryvaF4jzWD2ESJCxSDYhFXaVtb+vgPDkW21ekTQDxz
+         mhtZKzchHCegYPaX/La1qObSySyBs5+Gx0CnqZN3aGyyAi6Oq1Jp2ud3v8HhibhZUCdi
+         T3JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JD/yNeyHUsDvJLMZBjT/sYWFLZpY6ahAJFA2kbTEKrw=;
+        b=W9HQ9ocnplTA0pajrU55vXmraoOUO71MRza2ZgcvDXceALdV8kZ1Q74LQNxn9W7bI8
+         4/2e78ZFvGo9xq6S/T/c9/dknQZj/Pz7kT7fyXPZV0pGHCTIlz3Jdhz4SkzyG5Q7CFMW
+         3NxELZpVSai2JwAQ+DxuQOGyc/4NNTefR9TVtVyxQzQRASMExDfja9t6dvZjtxMIpv44
+         qDZ0mNY1kKvYw8CBsbwyYyYrfPQ3XbG+set2Fk5kFe+hMiGhBg3EuK7u2J2z3o/8hgUs
+         3TPsPnN+xCJew6nbnxcrGXAw99gTVzLprZaJWpulII981NjPhwClnC2hItgG6jQVDvFe
+         0SSQ==
+X-Gm-Message-State: AOAM533El2rYfQDMbHA86lLeF6I+Upa39NPwTChD1n3HC5qkC5pN/WqF
+        fmKovMVRcJ/kEIlf5DOHV6U=
+X-Google-Smtp-Source: ABdhPJxV1I4M0suxwFIohpp3kBNZ+IJ+cXw5YDJ4m9TuuDZofEkMd1S2uMdN62LO7dyv0DkOAlhjhw==
+X-Received: by 2002:a63:c543:: with SMTP id g3mr4820264pgd.203.1598780922842;
+        Sun, 30 Aug 2020 02:48:42 -0700 (PDT)
+Received: from varodek.localdomain ([223.190.108.199])
+        by smtp.gmail.com with ESMTPSA id f13sm4597019pfd.215.2020.08.30.02.48.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Aug 2020 02:48:42 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Sean Young <sean@mess.org>, Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sergey Kozlov <serjk@netup.ru>, Abylay Ospan <aospan@netup.ru>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v2] netup_unidvb: drop initialization of PM pointers
+Date:   Sun, 30 Aug 2020 15:14:14 +0530
+Message-Id: <20200830094413.43816-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200830081004.GA17376@gofer.mess.org>
+References: <20200830081004.GA17376@gofer.mess.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 30 Aug 2020 10:41:42 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Samuel Dionne-Riel <samuel@dionne-riel.com>
-Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: Boot failure on gru-scarlet-inx with 5.9-rc2
-In-Reply-To: <20200829164920.7d28e01a@DUFFMAN>
-References: <20200829164920.7d28e01a@DUFFMAN>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <65d88bdd0888a69849327501a2aad186@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: samuel@dionne-riel.com, devicetree@vger.kernel.org, frowand.list@gmail.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Samuel,
+The .suspend() and .resume() callbacks are not defined for this driver.
+Thus, just the unlisting of PM pointers in the struct initializer will make
+no change in its behavior. Still unlisting is necessary so as to get rid of
+.suspend and .resume pointers as they are part of the legacy framework and
+should not be used in the driver code explicitly.
 
-On 2020-08-29 21:54, Samuel Dionne-Riel wrote:
-> Hi,
-> 
-> The patch "of: address: Work around missing device_type property in
-> pcie nodes" by Marc Zyngier, d1ac0002dd297069bb8448c2764c9c31c4668441,
-> causes the "DUMO" variant of the gru-scarlet-inx, at the very least,
-> to not boot. A gru-kevin reportedly had no issues booting (further),
-> though it most likely had a different kernel configuration.
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/media/pci/netup_unidvb/netup_unidvb_core.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Do you have a pointer to the device-tree for this system? I couldn't
-spot anything amiss in the scarlet-inx DT, but I'm not sure the
-system you have is that exact one. Even a DTB would help.
-
-The fact that Kevin still boots is a good indication that the issue
-could be with with the board-specific changes layered on top of the
-GRU base. My own rk3399 systems are running with this patch.
-
-> Using a SuzyQ cable, there is absolutely no serial output at boot,
-> while reverting the commit (and this commit alone) on top of v5.9-rc2
-> works just as it did with v5.9-rc1.
-
-Do you have "earlycon" on the kernel command-line?
-
-> From this point on, I don't know what's the usual process, so bear with
-> me if I forgot to provide relevant information, or made a faux-pas by
-> CC-ing too many people or not enough.
-
-No need to worry, and thank you for reporting the issue.
-
-Could you try replacing the problematic patch with [1], and let me
-know whether this changes anything on your end? This patch probably
-isn't the right approach, but it would certainly help pointing me
-in the right direction.
-
-Thanks,
-
-         M.
-
-[1] https://lore.kernel.org/lkml/20200815125112.462652-2-maz@kernel.org/
+diff --git a/drivers/media/pci/netup_unidvb/netup_unidvb_core.c b/drivers/media/pci/netup_unidvb/netup_unidvb_core.c
+index 80a7c41baa90..6f3125c2d097 100644
+--- a/drivers/media/pci/netup_unidvb/netup_unidvb_core.c
++++ b/drivers/media/pci/netup_unidvb/netup_unidvb_core.c
+@@ -1016,8 +1016,6 @@ static struct pci_driver netup_unidvb_pci_driver = {
+ 	.id_table = netup_unidvb_pci_tbl,
+ 	.probe    = netup_unidvb_initdev,
+ 	.remove   = netup_unidvb_finidev,
+-	.suspend  = NULL,
+-	.resume   = NULL,
+ };
+ 
+ module_pci_driver(netup_unidvb_pci_driver);
 -- 
-Jazz is not dead. It just smells funny...
+2.28.0
+
