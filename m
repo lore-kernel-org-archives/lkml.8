@@ -2,68 +2,123 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0756C433E7
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 19:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5E1C433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 19:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAF9206F0
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 19:17:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598815062;
-	bh=O8tj7DSx0vwmnNuv7eWXpLFX2YMjUI8WL9iHmjVf47w=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=RTFG0N/5sSVSC02mteslj1NcJAjBlQHvnei22xgN042Rv1pKzm5PhawFXYqSKBcbY
-	 /z4BeEMO1ZJLr31ZezNSXpAKjBIvigzGG2oDyc/gC/OKXImUimPhrxu+7V/zY8I/Rn
-	 WeVnqjYDeItdp4Ng427mJFV6Fu6FGrmGNTY7E1nU=
+	by mail.kernel.org (Postfix) with ESMTP id 8651B2078D
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 19:18:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ADD6Kq4a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgH3TRk (ORCPT
+        id S1726520AbgH3TRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 15:17:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726454AbgH3TPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 15:15:14 -0400
-Subject: Re: [GIT PULL] EDAC urgent for v5.9-rc3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598814913;
-        bh=O8tj7DSx0vwmnNuv7eWXpLFX2YMjUI8WL9iHmjVf47w=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=sHU25HXOVLtOX9aiebyoqbdm399QmMUlIry++8+O45XzOsyuxIqIM4yHNWLklKDHd
-         hu9XbU+GIh7KSa0PEvNM6LYUyHtH3i78K8SO/WJ3znolATfBtrjVK51r176XOyHxFR
-         d4QsbF6INJ0kLv/SAboF+wmcb99RT6jDECI5Vw4o=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200830070245.GB4363@zn.tnic>
-References: <20200830070245.GB4363@zn.tnic>
-X-PR-Tracked-List-Id: <linux-edac.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200830070245.GB4363@zn.tnic>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v5.9_rc3
-X-PR-Tracked-Commit-Id: b972fdba8665d75109ade0357739f46af6415d2a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 42df60fcdfb8c02fa1800899cb33858e46efd587
-Message-Id: <159881491366.11937.4998385925824911031.pr-tracker-bot@kernel.org>
-Date:   Sun, 30 Aug 2020 19:15:13 +0000
-To:     Borislav Petkov <bp@suse.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
+        Sun, 30 Aug 2020 15:17:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36392 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726380AbgH3TPJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 15:15:09 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6439FC061239;
+        Sun, 30 Aug 2020 12:15:08 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id j15so2315593lfg.7;
+        Sun, 30 Aug 2020 12:15:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WKk6KWPNkMHUCww/FbErLxUYYQtEUh3n/PTtmJB/IIQ=;
+        b=ADD6Kq4arZJOO7Z+X6dlbNFUKa2MGhu79OcOljRz3WAcc/N3H23SdadMXUusZl7Re7
+         mavcADGOOGjw4YPLh4Bd3AHe3Wf3GrR9xszVDjKeNWBVzpgfPFpbu+G5v/ZCc1IocLez
+         Tml2HhWF++QwC8/gg0QSMJMYiVTHYrz7Mfq31KkwcMzdX/uXIwpZBuRtIx3Vf6OfTE4I
+         gSfTcZ6mcSbFla2yJur9lviMamt/2uiHZG0/UTLDqfDQ0fXciUFWXW/wU1YYVwLxynkp
+         32H0oWWSihfW4LFt7gufNGgSOCh6YMorVxHCY3+a2JagEhMaXuLn853leokAN8VD3nsO
+         IjnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WKk6KWPNkMHUCww/FbErLxUYYQtEUh3n/PTtmJB/IIQ=;
+        b=P70ZXffe7IiriynRgLFOrgujg3zCp+qiQV2DtraBUnPXzHbxNDRH7MnRX8RyYwJZs7
+         MDwZwyOsryxbtpv/1lQfakB0pFKDzMAqpRhxIc4amXyIBz2g4uoZIDStNSODVhXtjG5H
+         h4uPuSz9neHI7vO4/7Yp1kvBCS29fbXLIKIFGR4QrwqWxGuaMhNyeXs2Eb3K/jkyfDjn
+         1HVDqw+yW5WX2R5Rq7xkjw05AMrqSVvecbX+WV/ksoCgYd3N9bS52B0rBA3Qd6uOADTj
+         82vYn1zNANhjSnTRMC0hOTZmzmnqZsyksYdQrpbyEsdpHaKbB6GkX7ylp3TM9XDpD9xK
+         +ROQ==
+X-Gm-Message-State: AOAM532osjv7Nw1P0/HRBwzPySBJZh+vqXrZj/Ko6Yzt0eyt2qeOFDG3
+        JOT89QLhVftNg53aBYKa2p4=
+X-Google-Smtp-Source: ABdhPJzL0Cdo7AKGH5FiC2AREv1bSdtUCg+BEl1uu43NLTd1wRmGMfv3vj1BvcduUPeX7jN48VJ+7Q==
+X-Received: by 2002:ac2:41cc:: with SMTP id d12mr4018561lfi.20.1598814906867;
+        Sun, 30 Aug 2020 12:15:06 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id e23sm1409709lfj.80.2020.08.30.12.15.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Aug 2020 12:15:06 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 3/3] brcmfmac: set F2 SDIO block size to 128 bytes for BCM4329
+Date:   Sun, 30 Aug 2020 22:14:39 +0300
+Message-Id: <20200830191439.10017-4-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200830191439.10017-1-digetx@gmail.com>
+References: <20200830191439.10017-1-digetx@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 30 Aug 2020 09:02:45 +0200:
+Setting F2 block size to 128 bytes for BCM4329 allows to significantly
+improve RX throughput on NVIDIA Tegra20. Before this change the throughput
+was capped to 30 Mbit/s on Tegra, now throughput is at 40 Mbit/s, which is
+a maximum throughput for the BCM4329 chip. The F2 block size is borrowed
+from the downstream BCMDHD driver. The comment in the BCMDHD driver says
+that 128B improves throughput and turns out that it works for the brcmfmac
+as well.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v5.9_rc3
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/42df60fcdfb8c02fa1800899cb33858e46efd587
-
-Thank you!
-
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+index 0dc4de2fa9f6..318bd00bf94f 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
+@@ -45,6 +45,7 @@
+ #define SDIO_FUNC2_BLOCKSIZE		512
+ #define SDIO_4373_FUNC2_BLOCKSIZE	256
+ #define SDIO_435X_FUNC2_BLOCKSIZE	256
++#define SDIO_4329_FUNC2_BLOCKSIZE	128
+ /* Maximum milliseconds to wait for F2 to come up */
+ #define SDIO_WAIT_F2RDY	3000
+ 
+@@ -920,6 +921,9 @@ int brcmf_sdiod_probe(struct brcmf_sdio_dev *sdiodev)
+ 	case SDIO_DEVICE_ID_BROADCOM_4356:
+ 		f2_blksz = SDIO_435X_FUNC2_BLOCKSIZE;
+ 		break;
++	case SDIO_DEVICE_ID_BROADCOM_4329:
++		f2_blksz = SDIO_4329_FUNC2_BLOCKSIZE;
++		break;
+ 	default:
+ 		break;
+ 	}
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.27.0
+
