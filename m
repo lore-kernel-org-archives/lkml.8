@@ -2,136 +2,75 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C43DC433E7
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 01:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CB9C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 01:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13BBE20776
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 01:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 305232075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 01:04:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgH3BA3 (ORCPT
+        id S1728584AbgH3BEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 21:00:29 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35308 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728246AbgH3BA1 (ORCPT
+        Sat, 29 Aug 2020 21:04:52 -0400
+Received: from mail.parknet.co.jp ([210.171.160.6]:33434 "EHLO
+        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728246AbgH3BEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 21:00:27 -0400
-Received: by mail-pg1-f194.google.com with SMTP id g29so2330111pgl.2;
-        Sat, 29 Aug 2020 18:00:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=4x9Y37hGo7dYMbHIwPQnyQub3kar4dZzeiDIibRQ0Z0=;
-        b=DlSooqYJBqWiGlEggg1P8ytwz531RIRNJ6FCBZyacsPYnvjCBeaAlNwnnw70nEl+uz
-         nmFX66Ej2P8O7/+OsgNkSgeiGYOv9mevgGa0BJ17wQswbM5c/lU8T5/hKPngTo2vTWmx
-         q/spO8PCkf7DqhbW8qoNA3xSpeK2LCKK4McmO6PInWITYwL9fRHb8GeHVrEac6d9dOQI
-         1HPrrV2HhXXAlSpgKqIvCCFQiF76+sR84UFeKUfOuzfmDuIc4aomzHlmJpe2ifCnPnbN
-         PVs/EPutrz+q69F+ZGXjmSTPSGauMTNVuAktwk/oaeh3ISnxaBrjU9+JSXFGYD+zffMZ
-         UDbA==
-X-Gm-Message-State: AOAM530HH1agX7z0qLXCBZwi0ZMFVtwH9hRxXXrhmdglKqMTIR0tg1rt
-        KDBoTy6cxMpQrfPfC00QqO8xOKhKsU4=
-X-Google-Smtp-Source: ABdhPJywUsXxxHLzlNySajXEDKXm3bSoyUhsQ213Vz8vJbMsGZtiz7tobg71wwlz9DfUm0Goq/pUIA==
-X-Received: by 2002:aa7:8b0c:: with SMTP id f12mr4556707pfd.58.1598749226303;
-        Sat, 29 Aug 2020 18:00:26 -0700 (PDT)
-Received: from [192.168.3.218] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id c143sm3891930pfb.84.2020.08.29.18.00.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Aug 2020 18:00:25 -0700 (PDT)
-Subject: Re: [PATCH v2] block: grant IOPRIO_CLASS_RT to CAP_SYS_NICE
-To:     Khazhismel Kumykov <khazhy@google.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Serge Hallyn <serge@hallyn.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org
-References: <20200824221034.2170308-1-khazhy@google.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <e50a4ff6-39fb-6ba0-40ab-d348fbf5567f@acm.org>
-Date:   Sat, 29 Aug 2020 18:00:24 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Sat, 29 Aug 2020 21:04:51 -0400
+X-Greylist: delayed 308 seconds by postgrey-1.27 at vger.kernel.org; Sat, 29 Aug 2020 21:04:51 EDT
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+        by mail.parknet.co.jp (Postfix) with ESMTPSA id 1E86E1B44E0;
+        Sun, 30 Aug 2020 10:04:51 +0900 (JST)
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-20) with ESMTPS id 07U14nYt321827
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Sun, 30 Aug 2020 10:04:50 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-20) with ESMTPS id 07U14nL03061478
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Sun, 30 Aug 2020 10:04:49 +0900
+Received: (from hirofumi@localhost)
+        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id 07U14n7l3061477;
+        Sun, 30 Aug 2020 10:04:49 +0900
+From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] block: Set default value to bdi->io_pages instead of zero
+Date:   Sun, 30 Aug 2020 10:04:49 +0900
+Message-ID: <878sdxosem.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200824221034.2170308-1-khazhy@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-24 15:10, Khazhismel Kumykov wrote:
-> CAP_SYS_ADMIN is too broad, and ionice fits into CAP_SYS_NICE's grouping.
-> 
-> Retain CAP_SYS_ADMIN permission for backwards compatibility.
-> 
-> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
-> ---
->  block/ioprio.c                  | 2 +-
->  include/uapi/linux/capability.h | 2 ++
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> v2: fix embarrassing logic mistake
-> diff --git a/block/ioprio.c b/block/ioprio.c
-> index 77bcab11dce5..276496246fe9 100644
-> --- a/block/ioprio.c
-> +++ b/block/ioprio.c
-> @@ -69,7 +69,7 @@ int ioprio_check_cap(int ioprio)
->  
->  	switch (class) {
->  		case IOPRIO_CLASS_RT:
-> -			if (!capable(CAP_SYS_ADMIN))
-> +			if (!capable(CAP_SYS_NICE) && !capable(CAP_SYS_ADMIN))
->  				return -EPERM;
->  			/* fall through */
->  			/* rt has prio field too */
-> diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
-> index 395dd0df8d08..c6ca33034147 100644
-> --- a/include/uapi/linux/capability.h
-> +++ b/include/uapi/linux/capability.h
-> @@ -288,6 +288,8 @@ struct vfs_ns_cap_data {
->     processes and setting the scheduling algorithm used by another
->     process. */
->  /* Allow setting cpu affinity on other processes */
-> +/* Allow setting realtime ioprio class */
-> +/* Allow setting ioprio class on other processes */
->  
->  #define CAP_SYS_NICE         23
+This may not enough to guarantee ->io_pages is not zero though,
+instead of leaving ->io_pages as zero, this initializing ->io_pages to
+sane value. (maybe some part of NVMe driver seems to be)
 
-From https://www.kernel.org/doc/man-pages/linux-api-ml.html:
-"all Linux kernel patches that change userspace interfaces should be CCed
-to linux-api@vger.kernel.org"
+Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+---
+ block/blk-core.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-So I have added the linux-api mailing list to the Cc-list. Anyway:
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 03252af..619a3dc 100644
+--- a/block/blk-core.c	2020-08-30 06:47:21.221530450 +0900
++++ b/block/blk-core.c	2020-08-30 06:48:05.805875540 +0900
+@@ -526,6 +526,7 @@ struct request_queue *__blk_alloc_queue(
+ 		goto fail_stats;
+ 
+ 	q->backing_dev_info->ra_pages = VM_READAHEAD_PAGES;
++	q->backing_dev_info->io_pages = VM_READAHEAD_PAGES;
+ 	q->backing_dev_info->capabilities = BDI_CAP_CGROUP_WRITEBACK;
+ 	q->node = node_id;
+ 
+_
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+-- 
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
