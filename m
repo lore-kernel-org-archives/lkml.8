@@ -2,120 +2,133 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B993C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D98C43461
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 746D3206CD
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C21A0206CD
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:55:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HanuPX9h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uhimOhHN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgH3Szk (ORCPT
+        id S1726851AbgH3Szs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 14:55:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33336 "EHLO
+        Sun, 30 Aug 2020 14:55:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726601AbgH3Sz1 (ORCPT
+        with ESMTP id S1726492AbgH3SzL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 14:55:27 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B33B7C061239
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 11:55:26 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id x12so3363161qtp.1
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 11:55:26 -0700 (PDT)
+        Sun, 30 Aug 2020 14:55:11 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D187C06123A;
+        Sun, 30 Aug 2020 11:55:10 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id r13so4297888ljm.0;
+        Sun, 30 Aug 2020 11:55:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jXrSKvfqB4+Buys69P+bVAXzX+bSR1lG5u67Zo5PRtY=;
-        b=HanuPX9hVfAaMBoIfhMzUGtXvCQIwGuqg/HblZb3DrJni5pvpRIa3CRkw4jG2r8bHO
-         hsqbcu2htVUmpJgjv/+fI0Z8Q/8l+eaSGKv3cZChM2I7NcBXuleldlMZXuMGMHjxHbYF
-         2hDfSeHNE6kSxhWCtRhVkuOpIil+/+6wN9u86iRw4S59y5q9AQo8zy6rlWy0X7wWdZkB
-         mNV6Okhmg32GafV37F7sdpOrBSjpnTK7wDe9fyvjbp4L/+powrCCQma6RPFkaYuN+v5o
-         wVxvZwVq8fsuX7U+jPTejQXc++1sEE4Yf1OYwwmgHonIgdSAQn57yKX3ombFN4kTpLGh
-         aXlA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=35wLUHHiL0jcYl7dr+ydbL6W/M+IENF1DgF9AQYM8t8=;
+        b=uhimOhHNcVOop7DdL+0642zRtqUW3EjZYZ87OCM4VJnKnP2te6EhR+DxcP+EcdN34A
+         Lcz++9haTnvEtJqJzHCsDt3XFecw2X6iOen/xKTWsHySnYpSNJ0a9Km44cg9zb2S7oyo
+         QZcgxgYF4bEpZYp6xNwe+RjEq2p5iRN6eFxptoYVp4TEqXy/8BJx3Qr0RYp2YrJBNIgY
+         AqqsVwyk78Zhynvb3hsUsg0UpmHWdXHgp6Rjp+WGKAXK9YkYnkmYnkirGvTa15l3uYXO
+         bHswcbkZzCMoTIWDCE4PzeXv/Jfwt19sFvMB1tkoOSjyrEzxNkwtfUBb6P1fZFExaVjp
+         Gcqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jXrSKvfqB4+Buys69P+bVAXzX+bSR1lG5u67Zo5PRtY=;
-        b=c2YFm16TRiFuFTuuxBR7GW2nff7jbKJ+tlab6uT1W/GlCNWjjTefhMYlZjrcg5PDaj
-         Pyuu4Wxm0PWWE57uQX2OmnD3Cmkf0gs1PlkaUBP/8Cs5g8T02Ry0bDxP2lOTLT0F7297
-         XkFZyXkUy3z9iPFclGDulfsU6IcCCddeAnyaAk/ec636WfOvldVwg2Zst4V3Z+UEGkte
-         Vk1SFCn4fKVNDDF/PAChI+Uyt18BVlFGx2Dlm+9Ne34qT4LIwVMqPWUBDjQNFgXQ42kI
-         aZU9FP0DcJHems/uewTYNYwhyI4esEdNuslQI/k24gOsL9ysqcT25z/vgWgiHSVcsMY6
-         aTVw==
-X-Gm-Message-State: AOAM533nTuSl/zjoLQDS4jAcIvkvT+e10a2IVDwTuOUNEMS4RfhaJGSb
-        lvTMhRYzeIJ79+lAkMpc4UnMzQ==
-X-Google-Smtp-Source: ABdhPJy/ocA9TsLg/Ih3oR4Qq4aGqIWbqqqZHo0pVWvRyYt7k/l2EHjr6jEpGm4Wn1jbuQIKEgf/6g==
-X-Received: by 2002:aed:2352:: with SMTP id i18mr10442115qtc.167.1598813723414;
-        Sun, 30 Aug 2020 11:55:23 -0700 (PDT)
-Received: from uller (ec2-34-197-84-77.compute-1.amazonaws.com. [34.197.84.77])
-        by smtp.gmail.com with ESMTPSA id d16sm7632575qte.19.2020.08.30.11.55.22
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=35wLUHHiL0jcYl7dr+ydbL6W/M+IENF1DgF9AQYM8t8=;
+        b=ddRhFAchFJxqSpkfAo+OaXoQopqQGKDQ2zXavacgz0kpAeZlarcPoxKvt6EeDvpDM7
+         DfjGs8Ai05AI/QnjCkaZi0RBKydd1VfTs2fxPF17XjLk5FqBgvbrJmX7WL6T4YGANBo2
+         OpjslSSu7mCJj1/HLgVRgfWi2eKee2ARFHSFW7+MGe63CQSCZo4OmQJpHNUvSUFM7jah
+         rGo7UAlzzGIpG58Ha2mUGU6YPMsdSaEuZh7Ou/qkC+UIuphFMgGNOF1zxW7rke0wIJQG
+         DUUqNqxNUOR8a6PIApEVmOV/IDfyiiMp6/b3IxctuIi/VELi1m4w1k5NOwrdvIpKSbrk
+         M6cQ==
+X-Gm-Message-State: AOAM533tWsOQSgpxFpQ0szujf5AiXaHsqH2LALdGRZwm0as58cE15lW5
+        CvZdNM3LOD6lsiwapVXGF0o=
+X-Google-Smtp-Source: ABdhPJw+xY56U8MvvQE71DOroKATcepLQ64qhNh+AUcrFIbij52qmH2rMpKZ3ooqNrrNB0swam8nRQ==
+X-Received: by 2002:a2e:8046:: with SMTP id p6mr2514730ljg.372.1598813708857;
+        Sun, 30 Aug 2020 11:55:08 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id n21sm21630ljc.89.2020.08.30.11.55.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 11:55:22 -0700 (PDT)
-Date:   Sun, 30 Aug 2020 18:55:21 +0000
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     sboyd@kernel.org, heikki.krogerus@linux.intel.com,
-        agross@kernel.org, robh+dt@kernel.org, gregkh@linuxfoundation.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH v8 3/4] arm64: boot: dts: qcom: pm8150b: Add node for USB
- type C block
-Message-ID: <20200830185521.GC1947@uller>
-References: <20200812071925.315-1-wcheng@codeaurora.org>
- <20200812071925.315-4-wcheng@codeaurora.org>
+        Sun, 30 Aug 2020 11:55:08 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 6/6] ARM: tegra: acer-a500: Add Embedded Controller
+Date:   Sun, 30 Aug 2020 21:53:56 +0300
+Message-Id: <20200830185356.5365-7-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200830185356.5365-1-digetx@gmail.com>
+References: <20200830185356.5365-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812071925.315-4-wcheng@codeaurora.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 12 Aug 07:19 UTC 2020, Wesley Cheng wrote:
+This patch adds device-tree node for the Embedded Controller which is
+found on the Picasso board. The Embedded Controller itself is ENE KB930,
+it provides functions like battery-gauge/LED/GPIO/etc and it uses firmware
+that is specifically customized for the Acer A500 device.
 
-> The PM8150B has a dedicated USB type C block, which can be used for type C
-> orientation and role detection.  Create the reference node to this type C
-> block for further use.
-> 
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ arch/arm/boot/dts/tegra20-acer-a500-picasso.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+diff --git a/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts b/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
+index 2d683c9a1a5d..f92712e4bd34 100644
+--- a/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
++++ b/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
+@@ -502,6 +502,16 @@ panel_ddc: i2c@1 {
+ 			reg = <1>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++
++			embedded-controller@58 {
++				compatible = "acer,a500-iconia-ec", "ene,kb930";
++				reg = <0x58>;
++
++				system-power-controller;
++
++				monitored-battery = <&bat1010>;
++				power-supplies = <&mains>;
++			};
+ 		};
+ 	};
+ 
+@@ -780,6 +790,13 @@ backlight: backlight {
+ 		default-brightness-level = <20>;
+ 	};
+ 
++	bat1010: battery-2s1p {
++		compatible = "simple-battery";
++		charge-full-design-microamp-hours = <3260000>;
++		energy-full-design-microwatt-hours = <24000000>;
++		operating-range-celsius = <0 40>;
++	};
++
+ 	/* PMIC has a built-in 32KHz oscillator which is used by PMC */
+ 	clk32k_in: clock@0 {
+ 		compatible = "fixed-clock";
+-- 
+2.27.0
 
-Regards,
-Bjorn
-
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/pm8150b.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> index e112e8876db6..053c659734a7 100644
-> --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> @@ -53,6 +53,13 @@ power-on@800 {
->  			status = "disabled";
->  		};
->  
-> +		pm8150b_typec: typec@1500 {
-> +			compatible = "qcom,pm8150b-usb-typec";
-> +			status = "disabled";
-> +			reg = <0x1500>;
-> +			interrupts = <0x2 0x15 0x5 IRQ_TYPE_EDGE_RISING>;
-> +		};
-> +
->  		pm8150b_temp: temp-alarm@2400 {
->  			compatible = "qcom,spmi-temp-alarm";
->  			reg = <0x2400>;
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
