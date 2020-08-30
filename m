@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9743BC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2977C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70F4220757
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC7C320757
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:21:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KsBGTRO5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TufzN+pN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726477AbgH3OU6 (ORCPT
+        id S1726940AbgH3OVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 10:20:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47454 "EHLO
+        Sun, 30 Aug 2020 10:21:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgH3OUg (ORCPT
+        with ESMTP id S1726126AbgH3OUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 10:20:36 -0400
+        Sun, 30 Aug 2020 10:20:37 -0400
 Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59928C061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 07:20:36 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id f2so1388308qkh.3
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 07:20:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51C68C061236
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 07:20:37 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id w186so4002088qkd.1
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 07:20:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ZyBQRIpRIUmxpLX99Up9AVw+3VgEJCImZ8A6MyCXh6U=;
-        b=KsBGTRO52k++UKESUj3LZEkH1y/FAgcQvgDqfF6MkFB41OmG/SK6RL6Yfk4bvjv+lg
-         Y/tkVL17SmyJCm8PXC6FF8Qo+jinAMsR62n8AL77QRSNd0BEYsGPQCzX6/Ar99Kk3YO4
-         BVOYmd9ezdHtrjANrO9UHYwGxXenvRZzRJzZovjH3xHbgkPEBOoH9w+DcTd5BNBfeJdB
-         YfO5fDf0QWL15CFJj78d0W3LgTzPTDxvr/iAj6rRcf41+/1cwkq2beVauyZEseFf/T6i
-         SQZs7OCIwtk0ykxj8LZFshgDl7wsbSa7rCnc2RlwrhisiWWZ7LtNHlNGliMm9+wQTu5e
-         l9Tw==
+        bh=3bwWKMSkRvOEL7YPRUvfw4HtVpw9bW0LN4U6a+UXn+Q=;
+        b=TufzN+pNu74PL6ESl+o6lR3qczJn4loFbgr5N0BarA4Pbscrm+frzq70lvB8EhtG+t
+         P5s2t1Hjk+t0zDmsFl/Ws54uZpVilXQQW6QMU82/dV8hfLfElNMNkQ85Q9+z9NjOTfc5
+         cLwagE1GrgGsVX8SLilPtnqOIYPTEKvFFmwDrhlzlvCmSDLNKx9cz7LGOH5Qz/yUf/JY
+         qPWHRXFx1aMfXeezKG96O+b9V9F0b7kqnEVTHsyOAIcLfN82O16nykd1Zaks42Ipt/hr
+         i6GuhouHzMMrqnbzox3VPvyRfagVOtyHNQsX6/Jr9YMzwr+Ini7soxhqfI/tQ0DDPyFp
+         C57g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZyBQRIpRIUmxpLX99Up9AVw+3VgEJCImZ8A6MyCXh6U=;
-        b=C74sDgUt9C/s8w97qLcnWyAJ8K5+XOfZ1qiD8Q99ENebG/sWbtzy4XeWlZJFlvr+sz
-         j91htJp6h8Ft8RU25bFmJ5JVMhhx3zDbXjTXTpAf7ltWvvLgB8F+vz5a9oiVnR0UP9nI
-         vkHqndwfJxdw5t5PFsmiY1cqpGK09s0eiY7+LZNZZbbGQy8o+3LYubWP6tfkmRhKFddu
-         FE1w5m7clb8P4RWaNaIM8RjNUiEYq6aeJZfw4NW+io0nvl6NfwpqgTzKLfhAFmNqllo6
-         8ATGNdLXbUrPXfshqZI9Vpl419T0dThsBNgTNzoRAaycVvwcll+pI+yaoveEEH3eNQ/2
-         D6RQ==
-X-Gm-Message-State: AOAM532W5hNUVugO6rZ4tbj1FdR1vc4aR0wyW+0bl5KfgzGqSX0REKBJ
-        LGYMQSznz+666GyONfhj4Ni54qOMrwaR3A==
-X-Google-Smtp-Source: ABdhPJxsV5fFyQC18a+jfublWGOo9qfN4mYE2R8vdPhzeREJmj4D78nShs3gibfD+qeGT2tAGQQHgg==
-X-Received: by 2002:a37:bcc:: with SMTP id 195mr6891348qkl.287.1598797235190;
-        Sun, 30 Aug 2020 07:20:35 -0700 (PDT)
+        bh=3bwWKMSkRvOEL7YPRUvfw4HtVpw9bW0LN4U6a+UXn+Q=;
+        b=h+cnwBjgUHYeDB8tzHrliqb0pTXDue1cQLz7sd52AuGwT7FzUqt3uH7d/I9pnLEVKX
+         gqAvT/8qSd4q7K2iYycBXbVakfppExwQlJ864xqTWUXahG5jQHf/yfN8iwItsINduhd2
+         Ic5QpWpvz9Vqisx+k3dS0wW6I8eMVo7Vh1y6Mlx+ADv4q3b0LuYBxC/UPaFaJAy67GZd
+         ksRU2DfAA9LLOF980QhN6ii+JbM1e5+SjqLvz8KUlTG8vGMp2mW+BCMfBQmzIMIfYWwq
+         JSVbSl6lO5wee7d4B2eMi+80dvq6l3J1yw/zH7XAKL3xeEF2w+g1FpuFCBqpSRhHfcuI
+         vVVw==
+X-Gm-Message-State: AOAM532OcnAo0CWk3uqxZLrOOX9NDwfmwUCeUSjs9w/XQI6rWJ/9JfVw
+        WhcDcdOQPMJ/IwYyn4aetBdx/dI4LlKUaA==
+X-Google-Smtp-Source: ABdhPJyPJkHpOhlBfpi6mKFBVfVZQcx17T2SFL1d7NKkZUq5JJCuCkeUo76htNk/OIFP+eGug4Nmew==
+X-Received: by 2002:a37:8601:: with SMTP id i1mr7332702qkd.307.1598797236348;
+        Sun, 30 Aug 2020 07:20:36 -0700 (PDT)
 Received: from atma2.hitronhub.home ([2607:fea8:56e0:6d60::2db6])
-        by smtp.gmail.com with ESMTPSA id o72sm5884861qka.113.2020.08.30.07.20.34
+        by smtp.gmail.com with ESMTPSA id o72sm5884861qka.113.2020.08.30.07.20.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 07:20:34 -0700 (PDT)
+        Sun, 30 Aug 2020 07:20:35 -0700 (PDT)
 From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
 To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 Cc:     melissa.srw@gmail.com, Brian Starkey <brian.starkey@arm.com>,
@@ -68,9 +68,9 @@ Cc:     melissa.srw@gmail.com, Brian Starkey <brian.starkey@arm.com>,
         Simon Ser <contact@emersion.fr>,
         Leandro Ribeiro <leandro.ribeiro@collabora.com>,
         daniels@collabora.com, Emil Velikov <emil.l.velikov@gmail.com>
-Subject: [PATCH v6 1/3] drm/vkms: Decouple crc operations from composer
-Date:   Sun, 30 Aug 2020 10:19:58 -0400
-Message-Id: <20200830142000.146706-2-rodrigosiqueiramelo@gmail.com>
+Subject: [PATCH v6 2/3] drm/vkms: Compute CRC without change input data
+Date:   Sun, 30 Aug 2020 10:19:59 -0400
+Message-Id: <20200830142000.146706-3-rodrigosiqueiramelo@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200830142000.146706-1-rodrigosiqueiramelo@gmail.com>
 References: <20200830142000.146706-1-rodrigosiqueiramelo@gmail.com>
@@ -81,114 +81,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the vkms_composer.c, some of the functions related to CRC and compose
-have interdependence between each other. This patch reworks some
-functions inside vkms_composer to make crc and composer computation
-decoupled.
+The compute_crc() function is responsible for calculating the
+framebuffer CRC value; due to the XRGB format, this function has to
+ignore the alpha channel during the CRC computation. Therefore,
+compute_crc() set zero to the alpha channel directly in the input
+framebuffer, which is not a problem since this function receives a copy
+of the original buffer. However, if we want to use this function in a
+context without a buffer copy, it will change the initial value. This
+patch makes compute_crc() calculate the CRC value without modifying the
+input framebuffer.
 
-This patch is preparation work for making vkms able to support new
-features.
+Change in V5 (Melissa):
+- Rebase and drop bitmap for alpha
+Change in V4 (Emil):
+- Move bitmap_clear operation and comments to get_pixel function
 
-Tested-by: Melissa Wen <melissa.srw@gmail.com>
 Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
 ---
- drivers/gpu/drm/vkms/vkms_composer.c | 49 ++++++++++++++++------------
- 1 file changed, 29 insertions(+), 20 deletions(-)
+ drivers/gpu/drm/vkms/vkms_composer.c | 34 ++++++++++++++++++----------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index eaecc5a6c5db..f67d1baf1942 100644
+index f67d1baf1942..c5b32fe5870f 100644
 --- a/drivers/gpu/drm/vkms/vkms_composer.c
 +++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -131,35 +131,31 @@ static void compose_cursor(struct vkms_composer *cursor_composer,
- 	      primary_composer, cursor_composer);
- }
+@@ -9,31 +9,41 @@
  
--static uint32_t _vkms_get_crc(struct vkms_composer *primary_composer,
--			      struct vkms_composer *cursor_composer)
-+static int compose_planes(void **vaddr_out,
-+			  struct vkms_composer *primary_composer,
-+			  struct vkms_composer *cursor_composer)
+ #include "vkms_drv.h"
+ 
++static u32 get_pixel_from_buffer(int x, int y, const u8 *buffer,
++				 const struct vkms_composer *composer)
++{
++	u32 pixel;
++	int src_offset = composer->offset + (y * composer->pitch)
++				      + (x * composer->cpp);
++
++	pixel = *(u32 *)&buffer[src_offset];
++
++	return pixel;
++}
++
+ /**
+  * compute_crc - Compute CRC value on output frame
+  *
+- * @vaddr_out: address to final framebuffer
++ * @vaddr: address to final framebuffer
+  * @composer: framebuffer's metadata
+  *
+  * returns CRC value computed using crc32 on the visible portion of
+  * the final framebuffer at vaddr_out
+  */
+-static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
++static uint32_t compute_crc(const u8 *vaddr,
++			    const struct vkms_composer *composer)
  {
- 	struct drm_framebuffer *fb = &primary_composer->fb;
- 	struct drm_gem_object *gem_obj = drm_gem_fb_get_obj(fb, 0);
- 	struct vkms_gem_object *vkms_obj = drm_gem_to_vkms_gem(gem_obj);
--	void *vaddr_out = kzalloc(vkms_obj->gem.size, GFP_KERNEL);
+-	int i, j, src_offset;
++	int x, y;
++	u32 crc = 0, pixel = 0;
+ 	int x_src = composer->src.x1 >> 16;
+ 	int y_src = composer->src.y1 >> 16;
+ 	int h_src = drm_rect_height(&composer->src) >> 16;
+ 	int w_src = drm_rect_width(&composer->src) >> 16;
 -	u32 crc = 0;
- 
--	if (!vaddr_out) {
--		DRM_ERROR("Failed to allocate memory for output frame.");
--		return 0;
-+	if (!*vaddr_out) {
-+		*vaddr_out = kzalloc(vkms_obj->gem.size, GFP_KERNEL);
-+		if (!*vaddr_out) {
-+			DRM_ERROR("Cannot allocate memory for output frame.");
-+			return -ENOMEM;
-+		}
+-
+-	for (i = y_src; i < y_src + h_src; ++i) {
+-		for (j = x_src; j < x_src + w_src; ++j) {
+-			src_offset = composer->offset
+-				     + (i * composer->pitch)
+-				     + (j * composer->cpp);
+-			crc = crc32_le(crc, vaddr_out + src_offset,
+-				       sizeof(u32));
++
++	for (y = y_src; y < y_src + h_src; ++y) {
++		for (x = x_src; x < x_src + w_src; ++x) {
++			pixel = get_pixel_from_buffer(x, y, vaddr, composer);
++			crc = crc32_le(crc, (void *)&pixel, sizeof(u32));
+ 		}
  	}
  
--	if (WARN_ON(!vkms_obj->vaddr)) {
--		kfree(vaddr_out);
--		return crc;
--	}
-+	if (WARN_ON(!vkms_obj->vaddr))
-+		return -EINVAL;
- 
--	memcpy(vaddr_out, vkms_obj->vaddr, vkms_obj->gem.size);
-+	memcpy(*vaddr_out, vkms_obj->vaddr, vkms_obj->gem.size);
- 
- 	if (cursor_composer)
--		compose_cursor(cursor_composer, primary_composer, vaddr_out);
-+		compose_cursor(cursor_composer, primary_composer, *vaddr_out);
- 
--	crc = compute_crc(vaddr_out, primary_composer);
--
--	kfree(vaddr_out);
--
--	return crc;
-+	return 0;
- }
- 
- /**
-@@ -180,9 +176,11 @@ void vkms_composer_worker(struct work_struct *work)
- 	struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
- 	struct vkms_composer *primary_composer = NULL;
- 	struct vkms_composer *cursor_composer = NULL;
-+	void *vaddr_out = NULL;
- 	u32 crc32 = 0;
- 	u64 frame_start, frame_end;
- 	bool crc_pending;
-+	int ret;
- 
- 	spin_lock_irq(&out->composer_lock);
- 	frame_start = crtc_state->frame_start;
-@@ -206,14 +204,25 @@ void vkms_composer_worker(struct work_struct *work)
- 	if (crtc_state->num_active_planes == 2)
- 		cursor_composer = crtc_state->active_planes[1]->composer;
- 
--	if (primary_composer)
--		crc32 = _vkms_get_crc(primary_composer, cursor_composer);
-+	if (!primary_composer)
-+		return;
-+
-+	ret = compose_planes(&vaddr_out, primary_composer, cursor_composer);
-+	if (ret) {
-+		if (ret == -EINVAL)
-+			kfree(vaddr_out);
-+		return;
-+	}
-+
-+	crc32 = compute_crc(vaddr_out, primary_composer);
- 
- 	/*
- 	 * The worker can fall behind the vblank hrtimer, make sure we catch up.
- 	 */
- 	while (frame_start <= frame_end)
- 		drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
-+
-+	kfree(vaddr_out);
- }
- 
- static const char * const pipe_crc_sources[] = {"auto"};
 -- 
 2.28.0
 
