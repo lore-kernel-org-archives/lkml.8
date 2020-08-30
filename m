@@ -2,38 +2,41 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=BAYES_00,
-	CHARSET_FARAWAY_HEADER,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B787C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 16:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B702FC433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 16:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A21920714
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 16:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9339B20707
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 16:48:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="w07y+HIV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgH3QmN (ORCPT
+        id S1726456AbgH3Qsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 12:42:13 -0400
-Received: from mx1.unisoc.com ([222.66.158.135]:26039 "EHLO
-        SHSQR01.spreadtrum.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726155AbgH3QmK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 12:42:10 -0400
-Received: from ig2.spreadtrum.com (shmbx02.spreadtrum.com [10.0.1.204])
-        by SHSQR01.spreadtrum.com with ESMTPS id 07UGalxD024044
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Mon, 31 Aug 2020 00:36:47 +0800 (CST)
-        (envelope-from Leon.He@unisoc.com)
-Received: from SHMBX04.spreadtrum.com (10.0.1.214) by SHMBX02.spreadtrum.com
- (10.0.1.204) with Microsoft SMTP Server (TLS) id 15.0.847.32; Mon, 31 Aug
- 2020 00:36:43 +0800
-Received: from SHMBX04.spreadtrum.com ([fe80::8532:ef18:9217:26f5]) by
- shmbx04.spreadtrum.com ([fe80::8532:ef18:9217:26f5%13]) with mapi id
- 15.00.0847.030; Mon, 31 Aug 2020 00:36:43 +0800
-From:   =?gb2312?B?us7QocH6IChMZW9uIEhlKQ==?= <Leon.He@unisoc.com>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Sun, 30 Aug 2020 12:48:31 -0400
+Received: from crapouillou.net ([89.234.176.41]:40920 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726030AbgH3Qs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 12:48:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1598806105; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dpiKqvqWt50oYWkDZ/C8i5w2dOneeK046AHbWiBzqtY=;
+        b=w07y+HIVSnOUB9g6Qd+qpuEjTYThdHnCaIpCek14hSmCiv/fOGBVLpZsMGg8v58/0MKLfu
+        CWCqlL8pRNSQDOD/z0qgvCrxfCCyxIY2CnVQ60EN1b6l5RF2JSfMNB/I9DhbQgm2EeZOdq
+        anVvItIYUIgBaV2nq/mEokPvYCtpGOc=
+Date:   Sun, 30 Aug 2020 18:48:12 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: =?UTF-8?B?562U5aSNOg==?= [PATCH v2 6/6] drm/panel: Add Ilitek
+ ILI9341 DBI panel driver
+To:     =?UTF-8?b?5L2V5bCP6b6Z?= <Leon.He@unisoc.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
@@ -43,127 +46,169 @@ To:     Paul Cercueil <paul@crapouillou.net>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         Noralf Tronnes <noralf@tronnes.org>,
         Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "od@zcrc.me" <od@zcrc.me>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIIHYyIDYvNl0gZHJtL3BhbmVsOiBBZGQgSWxpdGVrIElM?=
- =?gb2312?Q?I9341_DBI_panel_driver?=
-Thread-Topic: [PATCH v2 6/6] drm/panel: Add Ilitek ILI9341 DBI panel driver
-Thread-Index: AQHWeePNyyv5zmRbwEG1Gp1RC5T8uKlQ281x
-Date:   Sun, 30 Aug 2020 16:36:42 +0000
-Message-ID: <edf38d68214247f486db3cc1f81ec404@shmbx04.spreadtrum.com>
-References: <20200822163250.63664-1-paul@crapouillou.net>,<20200822163250.63664-7-paul@crapouillou.net>
-In-Reply-To: <20200822163250.63664-7-paul@crapouillou.net>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.0.1.253]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, od@zcrc.me,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Message-Id: <COYVFQ.2IA7KFB6BF4C3@crapouillou.net>
+In-Reply-To: <edf38d68214247f486db3cc1f81ec404@shmbx04.spreadtrum.com>
+References: <20200822163250.63664-1-paul@crapouillou.net>
+        <20200822163250.63664-7-paul@crapouillou.net>
+        <edf38d68214247f486db3cc1f81ec404@shmbx04.spreadtrum.com>
 MIME-Version: 1.0
-X-MAIL: SHSQR01.spreadtrum.com 07UGalxD024044
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiArc3RydWN0IGlsaTkzNDEgew0KPiArICAgICAgIHN0cnVjdCBkcm1fcGFuZWwgcGFuZWw7DQo+
-ICsgICAgICAgc3RydWN0IG1pcGlfZHNpX2RldmljZSAqZHNpOw0KPiArICAgICAgIGNvbnN0IHN0
-cnVjdCBpbGk5MzQxX3BkYXRhICpwZGF0YTsNCj4gKw0KPiArICAgICAgIHN0cnVjdCBncGlvX2Rl
-c2MgICAgICAgICpyZXNldF9ncGlvZDsNCj4gKyAgICAgICB1MzIgcm90YXRpb247DQo+ICt9Ow0K
-PiArDQoNCkhpIFBhdWwsIHlvdSBwdXQgdGhlIG1pcGlfZHNpX2RldmljZSBpbnNpZGUgdGhlIHN0
-cnVjdC4gSSB0aGluayBpdCBtYXliZSBub3QNCmEgZ29vZCBpZGVhLiBUaGF0IG1lYW5zIHRoZSBw
-YW5lbCBoYXMgYSBNSVBJLURTSSBpbnRlcmZhY2UgYnV0IGl0IGRvZXNuJ3QNCmhhdmUgYWN0dWFs
-bHkuDQoNCj4gK3N0YXRpYyBpbnQgaWxpOTM0MV9wcm9iZShzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNl
-ICpkc2kpDQo+ICt7DQo+ICsgICAgICAgc3RydWN0IGRldmljZSAqZGV2ID0gJmRzaS0+ZGV2Ow0K
-PiArICAgICAgIHN0cnVjdCBpbGk5MzQxICpwcml2Ow0KPiArICAgICAgIGludCByZXQ7DQo+ICsN
-Cj4gKyAgICAgICAvKiBTZWUgY29tbWVudCBmb3IgbWlwaV9kYmlfc3BpX2luaXQoKSAqLw0KPiAr
-ICAgICAgIGlmICghZGV2LT5jb2hlcmVudF9kbWFfbWFzaykgew0KPiArICAgICAgICAgICAgICAg
-cmV0ID0gZG1hX2NvZXJjZV9tYXNrX2FuZF9jb2hlcmVudChkZXYsIERNQV9CSVRfTUFTSygzMikp
-Ow0KPiArICAgICAgICAgICAgICAgaWYgKHJldCkgew0KPiArICAgICAgICAgICAgICAgICAgICAg
-ICBkZXZfd2FybihkZXYsICJGYWlsZWQgdG8gc2V0IGRtYSBtYXNrICVkXG4iLCByZXQpOw0KPiAr
-ICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiArICAgICAgICAgICAgICAgfQ0K
-PiArICAgICAgIH0NCj4gKw0KPiArICAgICAgIHByaXYgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXpl
-b2YoKnByaXYpLCBHRlBfS0VSTkVMKTsNCj4gKyAgICAgICBpZiAoIXByaXYpDQo+ICsgICAgICAg
-ICAgICAgICByZXR1cm4gLUVOT01FTTsNCj4gKw0KPiArICAgICAgIG1pcGlfZHNpX3NldF9kcnZk
-YXRhKGRzaSwgcHJpdik7DQo+ICsgICAgICAgcHJpdi0+ZHNpID0gZHNpOw0KPiArDQo+ICsgICAg
-ICAgZGV2aWNlX3Byb3BlcnR5X3JlYWRfdTMyKGRldiwgInJvdGF0aW9uIiwgJnByaXYtPnJvdGF0
-aW9uKTsNCj4gKw0KPiArICAgICAgIHByaXYtPnBkYXRhID0gZGV2aWNlX2dldF9tYXRjaF9kYXRh
-KGRldik7DQo+ICsgICAgICAgaWYgKCFwcml2LT5wZGF0YSkNCj4gKyAgICAgICAgICAgICAgIHJl
-dHVybiAtRUlOVkFMOw0KPiArDQo+ICsgICAgICAgZHJtX3BhbmVsX2luaXQoJnByaXYtPnBhbmVs
-LCBkZXYsICZpbGk5MzQxX2Z1bmNzLA0KPiArICAgICAgICAgICAgICAgICAgICAgIERSTV9NT0RF
-X0NPTk5FQ1RPUl9EUEkpOw0KPiArDQo+ICsgICAgICAgcHJpdi0+cmVzZXRfZ3Bpb2QgPSBkZXZt
-X2dwaW9kX2dldChkZXYsICJyZXNldCIsIEdQSU9EX09VVF9ISUdIKTsNCj4gKyAgICAgICBpZiAo
-SVNfRVJSKHByaXYtPnJlc2V0X2dwaW9kKSkgew0KPiArICAgICAgICAgICAgICAgZGV2X2Vycihk
-ZXYsICJDb3VsZG4ndCBnZXQgb3VyIHJlc2V0IEdQSU9cbiIpOw0KPiArICAgICAgICAgICAgICAg
-cmV0dXJuIFBUUl9FUlIocHJpdi0+cmVzZXRfZ3Bpb2QpOw0KPiArICAgICAgIH0NCj4gKw0KPiAr
-ICAgICAgIHJldCA9IGRybV9wYW5lbF9vZl9iYWNrbGlnaHQoJnByaXYtPnBhbmVsKTsNCj4gKyAg
-ICAgICBpZiAocmV0IDwgMCkgew0KPiArICAgICAgICAgICAgICAgaWYgKHJldCAhPSAtRVBST0JF
-X0RFRkVSKQ0KPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZfZXJyKGRldiwgIkZhaWxlZCB0
-byBnZXQgYmFja2xpZ2h0IGhhbmRsZVxuIik7DQo+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0
-Ow0KPiArICAgICAgIH0NCj4gKw0KPiArICAgICAgIGRybV9wYW5lbF9hZGQoJnByaXYtPnBhbmVs
-KTsNCj4gKw0KPiArICAgICAgIGRzaS0+YnVzX3R5cGUgPSBwcml2LT5wZGF0YS0+YnVzX3R5cGU7
-DQo+ICsgICAgICAgZHNpLT5sYW5lcyA9IHByaXYtPnBkYXRhLT5sYW5lczsNCj4gKyAgICAgICBk
-c2ktPmZvcm1hdCA9IE1JUElfRFNJX0ZNVF9SR0I1NjU7DQo+ICsNCj4gKyAgICAgICByZXQgPSBt
-aXBpX2RzaV9hdHRhY2goZHNpKTsNCj4gKyAgICAgICBpZiAocmV0KSB7DQo+ICsgICAgICAgICAg
-ICAgICBkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBhdHRhY2ggRFNJIHBhbmVsXG4iKTsNCj4gKyAg
-ICAgICAgICAgICAgIGdvdG8gZXJyX3BhbmVsX3JlbW92ZTsNCj4gKyAgICAgICB9DQo+ICsNCj4g
-KyAgICAgICByZXQgPSBtaXBpX2RzaV9tYXliZV9yZWdpc3Rlcl90aW55X2RyaXZlcihkc2kpOw0K
-PiArICAgICAgIGlmIChyZXQpIHsNCj4gKyAgICAgICAgICAgICAgIGRldl9lcnIoZGV2LCAiRmFp
-bGVkIHRvIGluaXQgVGlueURSTSBkcml2ZXJcbiIpOw0KPiArICAgICAgICAgICAgICAgZ290byBl
-cnJfbWlwaV9kc2lfZGV0YWNoOw0KPiArICAgICAgIH0NCj4gKw0KPiArICAgICAgIHJldHVybiAw
-Ow0KPiArDQo+ICtlcnJfbWlwaV9kc2lfZGV0YWNoOg0KPiArICAgICAgIG1pcGlfZHNpX2RldGFj
-aChkc2kpOw0KPiArZXJyX3BhbmVsX3JlbW92ZToNCj4gKyAgICAgICBkcm1fcGFuZWxfcmVtb3Zl
-KCZwcml2LT5wYW5lbCk7DQo+ICsgICAgICAgcmV0dXJuIHJldDsNCj4gK30NCj4gKw0KPiArc3Rh
-dGljIGludCBpbGk5MzQxX3JlbW92ZShzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICpkc2kpDQo+ICt7
-DQo+ICsgICAgICAgc3RydWN0IGlsaTkzNDEgKnByaXYgPSBtaXBpX2RzaV9nZXRfZHJ2ZGF0YShk
-c2kpOw0KPiArDQo+ICsgICAgICAgbWlwaV9kc2lfZGV0YWNoKGRzaSk7DQo+ICsgICAgICAgZHJt
-X3BhbmVsX3JlbW92ZSgmcHJpdi0+cGFuZWwpOw0KPiArDQo+ICsgICAgICAgZHJtX3BhbmVsX2Rp
-c2FibGUoJnByaXYtPnBhbmVsKTsNCj4gKyAgICAgICBkcm1fcGFuZWxfdW5wcmVwYXJlKCZwcml2
-LT5wYW5lbCk7DQo+ICsNCj4gKyAgICAgICByZXR1cm4gMDsNCj4gK30NCj4gKw0KPiArc3RhdGlj
-IGNvbnN0IHN0cnVjdCBpbGk5MzQxX3BkYXRhIHl4MjQwcXYyOV9wZGF0YSA9IHsNCj4gKyAgICAg
-ICAubW9kZSA9IHsgRFJNX1NJTVBMRV9NT0RFKDI0MCwgMzIwLCAzNywgNDkpIH0sDQo+ICsgICAg
-ICAgLndpZHRoX21tID0gMCwgLy8gVE9ETw0KPiArICAgICAgIC5oZWlnaHRfbW0gPSAwLCAvLyBU
-T0RPDQo+ICsgICAgICAgLmJ1c190eXBlID0gTUlQSV9EQ1NfQlVTX1RZUEVfREJJX1NQSV9DMywN
-Cj4gKyAgICAgICAubGFuZXMgPSAxLA0KPiArfTsNCj4gKw0KPiArc3RhdGljIGNvbnN0IHN0cnVj
-dCBvZl9kZXZpY2VfaWQgaWxpOTM0MV9vZl9tYXRjaFtdID0gew0KPiArICAgICAgIHsgLmNvbXBh
-dGlibGUgPSAiYWRhZnJ1aXQseXgyNDBxdjI5IiwgLmRhdGEgPSAmeXgyNDBxdjI5X3BkYXRhIH0s
-DQo+ICsgICAgICAgeyB9DQo+ICt9Ow0KPiArTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgaWxpOTM0
-MV9vZl9tYXRjaCk7DQo+ICsNCj4gK3N0YXRpYyBzdHJ1Y3QgbWlwaV9kc2lfZHJpdmVyIGlsaTkz
-NDFfZHNpX2RyaXZlciA9IHsNCj4gKyAgICAgICAucHJvYmUgICAgICAgICAgPSBpbGk5MzQxX3By
-b2JlLA0KPiArICAgICAgIC5yZW1vdmUgICAgICAgICA9IGlsaTkzNDFfcmVtb3ZlLA0KPiArICAg
-ICAgIC5kcml2ZXIgPSB7DQo+ICsgICAgICAgICAgICAgICAubmFtZSAgICAgICAgICAgPSAiaWxp
-OTM0MS1kc2kiLA0KPiArICAgICAgICAgICAgICAgLm9mX21hdGNoX3RhYmxlID0gaWxpOTM0MV9v
-Zl9tYXRjaCwNCj4gKyAgICAgICB9LA0KPiArfTsNCj4gK21vZHVsZV9taXBpX2RzaV9kcml2ZXIo
-aWxpOTM0MV9kc2lfZHJpdmVyKTsNCg0KQWdhaW4sIHlvdSB0cmVhdCB0aGlzIGRyaXZlciBhcyBh
-IG1pcGkgZHNpIGRyaXZlciBidXQgZm9yIGEgTUlQSS1EQkkgKEk4MDgwL1NQSSkNCnBhbmVsIGRl
-dmljZS4gVGhhdCB3aWxsIG1ha2UgZGV2ZWxvcGVycyBjb25mdXNlZC4NCg0KSXMgaXQgcG9zc2li
-bGUgdG8ganVzdCBhZGQgYSBtaXBpX2RiaV9kcml2ZXIgZm9yIEk4MDgwL1NQSSBpbnRlcmZhY2Ug
-cGFuZWw/DQpUaGFua3MhDQoNCg0KQmVzdCByZWdhcmRzDQoNCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fDQogVGhpcyBlbWFpbCAoaW5jbHVkaW5nIGl0cyBhdHRhY2htZW50cykgaXMg
-aW50ZW5kZWQgb25seSBmb3IgdGhlIHBlcnNvbiBvciBlbnRpdHkgdG8gd2hpY2ggaXQgaXMgYWRk
-cmVzc2VkIGFuZCBtYXkgY29udGFpbiBpbmZvcm1hdGlvbiB0aGF0IGlzIHByaXZpbGVnZWQsIGNv
-bmZpZGVudGlhbCBvciBvdGhlcndpc2UgcHJvdGVjdGVkIGZyb20gZGlzY2xvc3VyZS4gVW5hdXRo
-b3JpemVkIHVzZSwgZGlzc2VtaW5hdGlvbiwgZGlzdHJpYnV0aW9uIG9yIGNvcHlpbmcgb2YgdGhp
-cyBlbWFpbCBvciB0aGUgaW5mb3JtYXRpb24gaGVyZWluIG9yIHRha2luZyBhbnkgYWN0aW9uIGlu
-IHJlbGlhbmNlIG9uIHRoZSBjb250ZW50cyBvZiB0aGlzIGVtYWlsIG9yIHRoZSBpbmZvcm1hdGlv
-biBoZXJlaW4sIGJ5IGFueW9uZSBvdGhlciB0aGFuIHRoZSBpbnRlbmRlZCByZWNpcGllbnQsIG9y
-IGFuIGVtcGxveWVlIG9yIGFnZW50IHJlc3BvbnNpYmxlIGZvciBkZWxpdmVyaW5nIHRoZSBtZXNz
-YWdlIHRvIHRoZSBpbnRlbmRlZCByZWNpcGllbnQsIGlzIHN0cmljdGx5IHByb2hpYml0ZWQuIElm
-IHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQsIHBsZWFzZSBkbyBub3QgcmVhZCwg
-Y29weSwgdXNlIG9yIGRpc2Nsb3NlIGFueSBwYXJ0IG9mIHRoaXMgZS1tYWlsIHRvIG90aGVycy4g
-UGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIGltbWVkaWF0ZWx5IGFuZCBwZXJtYW5lbnRseSBkZWxl
-dGUgdGhpcyBlLW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBpZiB5b3UgcmVjZWl2ZWQgaXQgaW4g
-ZXJyb3IuIEludGVybmV0IGNvbW11bmljYXRpb25zIGNhbm5vdCBiZSBndWFyYW50ZWVkIHRvIGJl
-IHRpbWVseSwgc2VjdXJlLCBlcnJvci1mcmVlIG9yIHZpcnVzLWZyZWUuIFRoZSBzZW5kZXIgZG9l
-cyBub3QgYWNjZXB0IGxpYWJpbGl0eSBmb3IgYW55IGVycm9ycyBvciBvbWlzc2lvbnMuDQqxvtPK
-vP68sMbkuL28/r7f09Cxo8Pc0NTWyqOsyty3qMLJsaO7pLK7tcPQucK2o6y99reiy824+LG+08q8
-/sv51rjM2LaoytW8/sjLoaPRz737t8e+rcrayKjKudPDoaLQ+7SroaK3orK8u/K4tNbGsb7Tyrz+
-u/LG5MTayN2ho8j0t8e4w8zYtqjK1bz+yMujrMfrzvDUxLbBoaK4tNbGoaIgyrnTw7vyxfvCtrG+
-08q8/rXEyM66zsTayN2ho8j0zvPK1bG+08q8/qOsx+u008+1zbPW0NPAvsPQ1Mm+s/2xvtPKvP68
-sMv509C4vbz+o6yyotLUu9i4tNPKvP61xLe9yr28tL/MuObWqreivP7Iy6Gjzt63qLGj1qS7pcGq
-zfjNqNDFvLDKsaGisLLIq6Gizt7O87vyt8C2vqGjt6K8/sjLttTIzrrOtO3Cqb75sruz0LWj1PDI
-zqGjDQo=
+Hi Leon,
+
+Le dim. 30 ao=C3=BBt 2020 =C3=A0 16:36, =E4=BD=95=E5=B0=8F=E9=BE=99 (Leon H=
+e)=20
+<Leon.He@unisoc.com> a =C3=A9crit :
+>>  +struct ili9341 {
+>>  +       struct drm_panel panel;
+>>  +       struct mipi_dsi_device *dsi;
+>>  +       const struct ili9341_pdata *pdata;
+>>  +
+>>  +       struct gpio_desc        *reset_gpiod;
+>>  +       u32 rotation;
+>>  +};
+>>  +
+>=20
+> Hi Paul, you put the mipi_dsi_device inside the struct. I think it=20
+> maybe not
+> a good idea. That means the panel has a MIPI-DSI interface but it=20
+> doesn't
+> have actually.
+>=20
+>>  +static int ili9341_probe(struct mipi_dsi_device *dsi)
+>>  +{
+>>  +       struct device *dev =3D &dsi->dev;
+>>  +       struct ili9341 *priv;
+>>  +       int ret;
+>>  +
+>>  +       /* See comment for mipi_dbi_spi_init() */
+>>  +       if (!dev->coherent_dma_mask) {
+>>  +               ret =3D dma_coerce_mask_and_coherent(dev,=20
+>> DMA_BIT_MASK(32));
+>>  +               if (ret) {
+>>  +                       dev_warn(dev, "Failed to set dma mask=20
+>> %d\n", ret);
+>>  +                       return ret;
+>>  +               }
+>>  +       }
+>>  +
+>>  +       priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>>  +       if (!priv)
+>>  +               return -ENOMEM;
+>>  +
+>>  +       mipi_dsi_set_drvdata(dsi, priv);
+>>  +       priv->dsi =3D dsi;
+>>  +
+>>  +       device_property_read_u32(dev, "rotation", &priv->rotation);
+>>  +
+>>  +       priv->pdata =3D device_get_match_data(dev);
+>>  +       if (!priv->pdata)
+>>  +               return -EINVAL;
+>>  +
+>>  +       drm_panel_init(&priv->panel, dev, &ili9341_funcs,
+>>  +                      DRM_MODE_CONNECTOR_DPI);
+>>  +
+>>  +       priv->reset_gpiod =3D devm_gpiod_get(dev, "reset",=20
+>> GPIOD_OUT_HIGH);
+>>  +       if (IS_ERR(priv->reset_gpiod)) {
+>>  +               dev_err(dev, "Couldn't get our reset GPIO\n");
+>>  +               return PTR_ERR(priv->reset_gpiod);
+>>  +       }
+>>  +
+>>  +       ret =3D drm_panel_of_backlight(&priv->panel);
+>>  +       if (ret < 0) {
+>>  +               if (ret !=3D -EPROBE_DEFER)
+>>  +                       dev_err(dev, "Failed to get backlight=20
+>> handle\n");
+>>  +               return ret;
+>>  +       }
+>>  +
+>>  +       drm_panel_add(&priv->panel);
+>>  +
+>>  +       dsi->bus_type =3D priv->pdata->bus_type;
+>>  +       dsi->lanes =3D priv->pdata->lanes;
+>>  +       dsi->format =3D MIPI_DSI_FMT_RGB565;
+>>  +
+>>  +       ret =3D mipi_dsi_attach(dsi);
+>>  +       if (ret) {
+>>  +               dev_err(dev, "Failed to attach DSI panel\n");
+>>  +               goto err_panel_remove;
+>>  +       }
+>>  +
+>>  +       ret =3D mipi_dsi_maybe_register_tiny_driver(dsi);
+>>  +       if (ret) {
+>>  +               dev_err(dev, "Failed to init TinyDRM driver\n");
+>>  +               goto err_mipi_dsi_detach;
+>>  +       }
+>>  +
+>>  +       return 0;
+>>  +
+>>  +err_mipi_dsi_detach:
+>>  +       mipi_dsi_detach(dsi);
+>>  +err_panel_remove:
+>>  +       drm_panel_remove(&priv->panel);
+>>  +       return ret;
+>>  +}
+>>  +
+>>  +static int ili9341_remove(struct mipi_dsi_device *dsi)
+>>  +{
+>>  +       struct ili9341 *priv =3D mipi_dsi_get_drvdata(dsi);
+>>  +
+>>  +       mipi_dsi_detach(dsi);
+>>  +       drm_panel_remove(&priv->panel);
+>>  +
+>>  +       drm_panel_disable(&priv->panel);
+>>  +       drm_panel_unprepare(&priv->panel);
+>>  +
+>>  +       return 0;
+>>  +}
+>>  +
+>>  +static const struct ili9341_pdata yx240qv29_pdata =3D {
+>>  +       .mode =3D { DRM_SIMPLE_MODE(240, 320, 37, 49) },
+>>  +       .width_mm =3D 0, // TODO
+>>  +       .height_mm =3D 0, // TODO
+>>  +       .bus_type =3D MIPI_DCS_BUS_TYPE_DBI_SPI_C3,
+>>  +       .lanes =3D 1,
+>>  +};
+>>  +
+>>  +static const struct of_device_id ili9341_of_match[] =3D {
+>>  +       { .compatible =3D "adafruit,yx240qv29", .data =3D=20
+>> &yx240qv29_pdata },
+>>  +       { }
+>>  +};
+>>  +MODULE_DEVICE_TABLE(of, ili9341_of_match);
+>>  +
+>>  +static struct mipi_dsi_driver ili9341_dsi_driver =3D {
+>>  +       .probe          =3D ili9341_probe,
+>>  +       .remove         =3D ili9341_remove,
+>>  +       .driver =3D {
+>>  +               .name           =3D "ili9341-dsi",
+>>  +               .of_match_table =3D ili9341_of_match,
+>>  +       },
+>>  +};
+>>  +module_mipi_dsi_driver(ili9341_dsi_driver);
+>=20
+> Again, you treat this driver as a mipi dsi driver but for a MIPI-DBI=20
+> (I8080/SPI)
+> panel device. That will make developers confused.
+>=20
+> Is it possible to just add a mipi_dbi_driver for I8080/SPI interface=20
+> panel?
+> Thanks!
+
+Please read the cover letter, it explains why it's done this way. The=20
+whole point of this patchset is to merge DSI and DBI frameworks in a=20
+way that can be maintained.
+
+Cheers,
+-Paul
+
+
