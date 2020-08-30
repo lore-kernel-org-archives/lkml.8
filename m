@@ -2,168 +2,126 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FA9C43461
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C794CC433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA1732071B
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D67E2071B
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:59:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eqfaNI4/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WvWUDcgu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgH3S4F (ORCPT
+        id S1726426AbgH3S7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 14:56:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33268 "EHLO
+        Sun, 30 Aug 2020 14:59:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726412AbgH3SzF (ORCPT
+        with ESMTP id S1726264AbgH3S7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 14:55:05 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2674BC061575;
-        Sun, 30 Aug 2020 11:55:05 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id c15so2325197lfi.3;
-        Sun, 30 Aug 2020 11:55:05 -0700 (PDT)
+        Sun, 30 Aug 2020 14:59:02 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A9DDC061236
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 11:59:01 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id o2so1894853qvk.6
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 11:59:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gyFVRrq7oNAkyBDcab1pW5QCuvDZJBB4EknZ7t3FCyQ=;
-        b=eqfaNI4/kuXYQV3upPkbU1Poja6coHGtkB3x+Zbdd5q/kvBXoQ3WVV9lVlV7SmiKJ2
-         u21imvSfFW/H0FNjchmlvEAXLj4xmsNmVgUbbZrvwGeNwR9G/mRS4eRzGYBM+cyW+gTg
-         IZ17Q0jzzEWXu17fMMVPiuT5wqW0NWC57P0Pb8ZN+uf/HwK04jKAr42E5pQtSYOVOchw
-         3DbZh8uUm1VtQllkW3Oh6HsMoH+tB0dT2jLFkUdlyPf9BO8wKy9EN1j0BhBtphNMxdgg
-         UYiUIxzauGngNYfKiHmjcosKfLOX1vKH1B5D91Ft2SIqdsTRkvsZwLx0nLnm/4RChzTF
-         Y6HQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lUMKQLlBSJCarKsSu0GjI45SsOuLiQU3I20h0koncyY=;
+        b=WvWUDcguQ3mKtncotDNXG+mBPq9NyvJv9t7WpxvwJ96ZIj6fnKG2qm6ZK8LIqVQAr+
+         kYOvS0hYk8MXGbZucOJqZJKKUDQ6tj/dr5bGEaYICOO2pIbEj9Rm5xWZDJOBIS6RlOL7
+         ngPuGNcAIgjrI7fWarHAncCoHq21UoDkbGfwkeQ9O6gc0SAv5oHS6N8k8kvbP7yFqKUr
+         yTDkP9ELUKo9roSiT+rEP+wYlDVeVLGGSd9gE1OjCWchS1e4YlTAaiGzYqfw5lcLFFVo
+         jVPIQko0qxMHSHXZeeGRkU+iV3Czu8PZydpLfptDKlw/UldaEFGp7A8VxDJV8vjirIe3
+         xgrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gyFVRrq7oNAkyBDcab1pW5QCuvDZJBB4EknZ7t3FCyQ=;
-        b=jvMu5R0E45gw2ptg3+6JANJyTs4ec0hUXNN7cbDT3sIRpAJqO04fFM1wKJkd2eYvjt
-         nZfV1yRt1iPeLroCYAsiCp6o+bjz5bheuPsffytGejAsy3OpZQ0a0KML8B5iYlqTPTuZ
-         DYKUZ4uQa5Lw+kbmSqXFQ0DhrMKpp8R625fFlr2vMneJWbJOUyYv3bhH2stMoOnegC3g
-         S/y3lIcpBYFL1wbwQWoVsTcktQpZ/ccC1dCEyDjysSq7tHIKdnFbgPT2rWM5xDr3kZoO
-         sVFqlJ29uEj9Y8ZGFZArvzINagdFXvBB0Rfqzrfj7VFz7+NykoONkHd7r2ZuFuTDGx7c
-         iXKg==
-X-Gm-Message-State: AOAM532l4G5JV47ZAxThsu1HaAVoqBMyo9cH2yiG8k1ptXnXRIbwuaYh
-        XG/3nMHD4o0nqBgS2s4B+Hc=
-X-Google-Smtp-Source: ABdhPJxSgb/zvqZMjCfnMXtPsXy8CIvbp061yJoZhxOfVfnVI7ZEnO98gX7KcwhZ8GNi9zDUFR/Yeg==
-X-Received: by 2002:ac2:51b4:: with SMTP id f20mr3884946lfk.188.1598813703445;
-        Sun, 30 Aug 2020 11:55:03 -0700 (PDT)
-Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id n21sm21630ljc.89.2020.08.30.11.55.02
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lUMKQLlBSJCarKsSu0GjI45SsOuLiQU3I20h0koncyY=;
+        b=c6eFuvZa+CD/OlzIH8ta85whx86q7wk1QwUGkF2SVu58Ckn104/lvq29HFJzO11Smq
+         G7053BG6jx4OQa8AKxDeYledJwOzEzBoADSeA42LmhXOuEdOGP6CQm9Okob2GiNORStR
+         OKZCsPMTDqZRKnPi/LYR3vruN1tNQm5iiEoWkfLqzrOwDdZa9hW8tDN5aaMk4UxiLS/b
+         OAWi+S07bUTg4FYbmMouFhwrIzd5owDDrU4EeQkISry59j3FP9LzaPDIL45z8Pu4zLeT
+         PTIzFP2CbW4OD8CoFbV3vAuZITiBt3w45liWpVCdjW9loJ161/tyDlQB7rXPsyKsGC6C
+         4KtQ==
+X-Gm-Message-State: AOAM530aVkHSfD5msJbkKNBb8ZRGo6/r6NN2J8fK/rM/ST6kbQ63l0PT
+        vTj4703fNXiaPx9qj07SGcjDBhO1Tk8RFQ==
+X-Google-Smtp-Source: ABdhPJzVuLSEAXfc5i2H+uVW+pqJ7JPE9Po3NtUqrMnVy/uGx1VZFC8jdwxXC/5i+jNQ+IcThz62+A==
+X-Received: by 2002:a0c:fdc4:: with SMTP id g4mr3795975qvs.30.1598813940154;
+        Sun, 30 Aug 2020 11:59:00 -0700 (PDT)
+Received: from uller (ec2-34-197-84-77.compute-1.amazonaws.com. [34.197.84.77])
+        by smtp.gmail.com with ESMTPSA id c9sm265256qkg.46.2020.08.30.11.58.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 11:55:02 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/6] dt-bindings: mfd: Add ENE KB930 Embedded Controller binding
-Date:   Sun, 30 Aug 2020 21:53:51 +0300
-Message-Id: <20200830185356.5365-2-digetx@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200830185356.5365-1-digetx@gmail.com>
-References: <20200830185356.5365-1-digetx@gmail.com>
+        Sun, 30 Aug 2020 11:58:59 -0700 (PDT)
+Date:   Sun, 30 Aug 2020 18:58:57 +0000
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Amit Pundir <amit.pundir@linaro.org>
+Cc:     Konrad Dybcio <konradybcio@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        dt <devicetree@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Subject: Re: your mail
+Message-ID: <20200830185857.GD1947@uller>
+References: <CAMi1Hd3Dv_T7kgThLTk2QLtfS7LBvhJ5R=6C3seUYK0GvNV6eA@mail.gmail.com>
+ <20200806223134.42748-1-konradybcio@gmail.com>
+ <20200813070448.GA499758@builder.lan>
+ <CAMi1Hd3j-A1Se9swD0TQ9YzTBGicPDc1nFZbf4uisVk5A+u1GQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMi1Hd3j-A1Se9swD0TQ9YzTBGicPDc1nFZbf4uisVk5A+u1GQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding document for the ENE KB930 Embedded Controller.
+On Mon 17 Aug 17:12 UTC 2020, Amit Pundir wrote:
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- .../devicetree/bindings/mfd/ene-kb930.yaml    | 66 +++++++++++++++++++
- 1 file changed, 66 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/ene-kb930.yaml
+> On Thu, 13 Aug 2020 at 12:38, Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> >
+> > On Thu 06 Aug 15:31 PDT 2020, Konrad Dybcio wrote:
+> >
+> > > Subject: Re: [PATCH v4] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
+> > >
+> > > >// This removed_region is needed to boot the device
+> > > >               // TODO: Find out the user of this reserved memory
+> > > >               removed_region: memory@88f00000 {
+> > >
+> > > This region seems to belong to the Trust Zone. When Linux tries to access it, TZ bites and shuts the device down.
+> > >
+> >
+> > This is in line with what the documentation indicates and then it would
+> > be better to just bump &tz_mem to a size of 0x4900000.
+> 
+> Hi, so just to be sure that I got this right, you want me to extend
+> &tz_mem to the size of 0x4900000 from the default size of 0x2D00000 by
+> including this downstream &removed_region (of size 0x1A00000) +
+> previously unreserved downstream memory region (of size 0x200000), to
+> align with the starting address of &qseecom_mem?
+> 
 
-diff --git a/Documentation/devicetree/bindings/mfd/ene-kb930.yaml b/Documentation/devicetree/bindings/mfd/ene-kb930.yaml
-new file mode 100644
-index 000000000000..635c8966ca22
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/ene-kb930.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/ene-kb930.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ENE KB930 Embedded Controller bindings
-+
-+description: |
-+  This binding describes the ENE KB930 Embedded Controller attached to an
-+  I2C bus.
-+
-+maintainers:
-+  - Dmitry Osipenko <digetx@gmail.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+        - acer,a500-iconia-ec # Acer A500 Iconia tablet device
-+      - enum:
-+        - ene,kb930
-+  reg:
-+    maxItems: 1
-+
-+  monitored-battery: true
-+  power-supplies: true
-+  system-power-controller: true
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    battery: battery-cell {
-+      compatible = "simple-battery";
-+      charge-full-design-microamp-hours = <3260000>;
-+      energy-full-design-microwatt-hours = <24000000>;
-+      operating-range-celsius = <0 40>;
-+    };
-+
-+    mains: ac-adapter {
-+      compatible = "gpio-charger";
-+      charger-type = "mains";
-+      gpios = <&gpio 125 0>;
-+    };
-+
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      embedded-controller@58 {
-+        compatible = "acer,a500-iconia-ec", "ene,kb930";
-+        reg = <0x58>;
-+
-+        system-power-controller;
-+
-+        monitored-battery = <&battery>;
-+        power-supplies = <&mains>;
-+      };
-+    };
-+
-+...
--- 
-2.27.0
+Yes
 
+Regards,
+Bjorn
+
+> I just gave this &tz_mem change a spin and I do not see any obvious
+> regression in my limited smoke testing (Boots AOSP to UI with
+> v5.9-rc1. Touch/BT/WiFi works) so far, with 20+ out-of-tree patches.
+> 
+> Regards,
+> Amit Pundir
+> 
+> >
+> > Regards,
+> > Bjorn
