@@ -2,129 +2,142 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D0DC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE20C433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11FDA2071B
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC8B20720
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:06:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MEaZJ54k"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iAF3hF5D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgH3PGK (ORCPT
+        id S1726880AbgH3PGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 11:06:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54308 "EHLO
+        Sun, 30 Aug 2020 11:06:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbgH3PE4 (ORCPT
+        with ESMTP id S1726454AbgH3PGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 11:04:56 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CB05C061239;
-        Sun, 30 Aug 2020 08:04:56 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id t7so3297445otp.0;
-        Sun, 30 Aug 2020 08:04:56 -0700 (PDT)
+        Sun, 30 Aug 2020 11:06:14 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B30FCC061575
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 08:06:13 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id w11so136570lfn.2
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 08:06:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Es4kZEIMvRU2zV/gMiYhHOsFVc+QsyIoOtUdccLtNdo=;
-        b=MEaZJ54kn8cL89PvsI0AHlm+W5xJuRyQGLHXQJBrL4I3fuaJXmCbyZ6nZhjAW/rVVl
-         ioztRcHskqevxCjpaGAy3vwF1LnJUUzrRJJGpWzAWW3w/eTle3LELOI8LrqBdzGPKHXo
-         Z3oxCGg05PS088Jdi3J0thU5UPNJTPYI9LPOw41SgdwRZDtz5utlHAbcjF9NCX/cLJMU
-         VZzdmibml4IJSpqRye+BN/PwYXl0q1Eut8+eeLC8IqB1DvW7VH72pF56b0hOP5WnKVMn
-         TgrojcB2EPTt4s3uON8pytz3MsQu1SYqihc0dZKGjc4PnRP33oaqMJX//MoHX1bDAvHp
-         gVXg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hqQ8AtdFMS0ym9cnkvwXQx8xXEYehPD89tUpAkFBrhM=;
+        b=iAF3hF5DV7MaK2Vla97BRmuHRZzXPlTAov2WZVMKuCL2tZHZSZq9cBt6yr7oxyLToo
+         bQX3kLIRIJcinshXJHPYhojYeiVW8PqiLGRjzFiABARktiwDXnkw9qSJwFvgBpan7aOO
+         +GGOL6mWb0nYteHzB3v2V+OgB4f3L8uNAufxdX/JR3Kz27nIbG1VecMHe/xWyX7b8gaq
+         GYb3EtJ6rFUJGlXxOhwHtAIYfwbwavqkVinNZCaWcSiToyIkGOtuOEVjW5KFmHXXrw53
+         QZ/5CZpE8dIQklst1vAjbM6W1FB066Y+jUqt2sEQSWUCIGAPIqLtocblf20KmxWuQN2C
+         nLRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=Es4kZEIMvRU2zV/gMiYhHOsFVc+QsyIoOtUdccLtNdo=;
-        b=uX8nDeostAwKPdeRVgG7qUDiz58l8sx7ctkXd4XgG83igEvyXnEkIFGyxFNj0hNRIJ
-         RFAa04+ftcZ48+n7OwPHZlerS5jVp4fQPZnJTzpnt6GpnjHOjY/8oFirKn1+ICozyduL
-         gr+wrHyOyEiJ3uWTvwER7j2cJVAV6BSwPvhIxw16D+jWyQxYpiU2jAEqVcNI9njikpJ5
-         XTV3hjcD8BSEmEPE8QwbKM+cQz4NxVkapcW2cctGFiIZlW+toJR+5OGja5uj5u/qMSas
-         UZi0HXuniCpMjvLX0HAnzl7IhbDhe4V1H0mh1UH2suTSCv7+fNtp/7ruLr4/7++uIZhE
-         5geg==
-X-Gm-Message-State: AOAM530AUhe+uRkBzwI7SgwUDYJc060C51P9/OYA/wHJva+FQ3owGoRS
-        jXTn5Rm98HA/JMAfm5jVFfU=
-X-Google-Smtp-Source: ABdhPJzR6UopvhKv4I7vbbBAESp6f/cDqIX8GkcmhOErrU7gTQXke3+AEaBRjNvgANgCyyRAvjgugA==
-X-Received: by 2002:a9d:5e0c:: with SMTP id d12mr4761399oti.239.1598799895933;
-        Sun, 30 Aug 2020 08:04:55 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c15sm1101354oiy.13.2020.08.30.08.04.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 30 Aug 2020 08:04:55 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        linux-uvc-devel@lists.sourceforge.net, linux-usb@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Subject: [PATCH 5/5] media: uvcvideo: In uvc_v4l2_open, check if video device is registered
-Date:   Sun, 30 Aug 2020 08:04:43 -0700
-Message-Id: <20200830150443.167286-6-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200830150443.167286-1-linux@roeck-us.net>
-References: <20200830150443.167286-1-linux@roeck-us.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hqQ8AtdFMS0ym9cnkvwXQx8xXEYehPD89tUpAkFBrhM=;
+        b=pshV6PJ6Iqxm8aCK9y6x67t3suPY6R+kFVQ/XHZQQzeJD97lvOcnk1fy78/Wmq4dAm
+         Wv6YrAqhWuZ/wL7Kburw3bncc4XEZB1Mu/HcJA8cdnCmaZXzneVxLwpx8psmKS4v45m8
+         ZLAZrgOoxsesKDo0BKemciOK/GNnVT6wLD6ovyuQ0i2yL6Mv+vuJFu4TDMGeNDWH5A6d
+         TQhZ6IyRrZw6UvjnjXqnTGW6omN1KnHCuwUWn3DhfrgkzI8b3R+hTmuZR39BwH1fdO4K
+         jtylO8WRsOyBWm+9RJJGi6cxA1kM7AzgX9I6woi7NGodf70FdDqZbj7cFskJ5iDHPS5/
+         UKqg==
+X-Gm-Message-State: AOAM53225tfQoDj9CA0aA2L7PjiN8886qT6v3SxonQqbxnfTtOKPk/by
+        I//n+TH4STAKGwreXyr2neEGa7rnI1UKSbTlSw+9vg==
+X-Google-Smtp-Source: ABdhPJwVwLYPWD7KtU6ZDFzNcrcxstYiGCbmWW1akQet2KsblsR9CgOdMt9+7OuFdIfhjiuts7wSnKpIadr7RNhcKQk=
+X-Received: by 2002:a19:2286:: with SMTP id i128mr3570361lfi.45.1598799971846;
+ Sun, 30 Aug 2020 08:06:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200829020002.GC3265@brightrain.aerifal.cx>
+In-Reply-To: <20200829020002.GC3265@brightrain.aerifal.cx>
+From:   Jann Horn <jannh@google.com>
+Date:   Sun, 30 Aug 2020 17:05:45 +0200
+Message-ID: <CAG48ez1BExw7DdCEeRD1hG5ZpRObpGDodnizW2xD5tC0saTDqg@mail.gmail.com>
+Subject: Re: [RESEND PATCH] vfs: add RWF_NOAPPEND flag for pwritev2
+To:     Rich Felker <dalias@libc.org>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-uvc_v4l2_open() acquires the uvc device mutex. After doing so,
-it does not check if the video device is still registered. This may
-result in race conditions and can result in an attempt to submit an urb
-to a disconnected USB interface (from uvc_v4l2_open).
+On Sat, Aug 29, 2020 at 4:00 AM Rich Felker <dalias@libc.org> wrote:
+> The pwrite function, originally defined by POSIX (thus the "p"), is
+> defined to ignore O_APPEND and write at the offset passed as its
+> argument. However, historically Linux honored O_APPEND if set and
+> ignored the offset. This cannot be changed due to stability policy,
+> but is documented in the man page as a bug.
+>
+> Now that there's a pwritev2 syscall providing a superset of the pwrite
+> functionality that has a flags argument, the conforming behavior can
+> be offered to userspace via a new flag.
+[...]
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+[...]
+> @@ -3411,6 +3413,8 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
+>                 ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
+>         if (flags & RWF_APPEND)
+>                 ki->ki_flags |= IOCB_APPEND;
+> +       if (flags & RWF_NOAPPEND)
+> +               ki->ki_flags &= ~IOCB_APPEND;
+>         return 0;
+>  }
 
-The problem was observed after adding a call to msleep() just before
-acquiring the mutex and disconnecting the camera during the sleep.
+Linux enforces the S_APPEND flag (set by "chattr +a") only at open()
+time, not at write() time:
 
-Check if the video device is still registered after acquiring the mutex
-to avoid the problem. In the release function, only call uvc_status_stop()
-if the video device is still registered. If the video device has been
-unregistered, the urb associated with uvc status has already been killed
-in uvc_status_unregister(). Trying to kill it again won't do any good
-and might have unexpected side effects.
+# touch testfile
+# exec 100>testfile
+# echo foo > testfile
+# cat testfile
+foo
+# chattr +a testfile
+# echo bar > testfile
+bash: testfile: Operation not permitted
+# echo bar >&100
+# cat testfile
+bar
+#
 
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/media/usb/uvc/uvc_v4l2.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+At open() time, the kernel enforces that you can't use O_WRONLY/O_RDWR
+without also setting O_APPEND if the file is marked as append-only:
 
-diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-index 7e5e583dae5e..1f7d454557b9 100644
---- a/drivers/media/usb/uvc/uvc_v4l2.c
-+++ b/drivers/media/usb/uvc/uvc_v4l2.c
-@@ -548,6 +548,10 @@ static int uvc_v4l2_open(struct file *file)
- 	}
- 
- 	mutex_lock(&stream->dev->lock);
-+	if (!video_is_registered(&stream->vdev)) {
-+		mutex_unlock(&stream->dev->lock);
-+		return -ENODEV;
-+	}
- 	if (stream->dev->users == 0) {
- 		ret = uvc_status_start(stream->dev, GFP_KERNEL);
- 		if (ret < 0) {
-@@ -590,7 +594,7 @@ static int uvc_v4l2_release(struct file *file)
- 	file->private_data = NULL;
- 
- 	mutex_lock(&stream->dev->lock);
--	if (--stream->dev->users == 0)
-+	if (--stream->dev->users == 0 && video_is_registered(&stream->vdev))
- 		uvc_status_stop(stream->dev);
- 	mutex_unlock(&stream->dev->lock);
- 
--- 
-2.17.1
+static int may_open(const struct path *path, int acc_mode, int flag)
+{
+[...]
+  /*
+   * An append-only file must be opened in append mode for writing.
+   */
+  if (IS_APPEND(inode)) {
+    if  ((flag & O_ACCMODE) != O_RDONLY && !(flag & O_APPEND))
+      return -EPERM;
+    if (flag & O_TRUNC)
+      return -EPERM;
+  }
+[...]
+}
 
+It seems to me like your patch will permit bypassing S_APPEND by
+opening an append-only file with O_WRONLY|O_APPEND, then calling
+pwritev2() with RWF_NOAPPEND? I think you'll have to add an extra
+check for IS_APPEND() somewhere.
+
+
+One could also argue that if an O_APPEND file descriptor is handed
+across privilege boundaries, a programmer might reasonably expect that
+the recipient will not be able to use the file descriptor for
+non-append writes; if that is not actually true, that should probably
+be noted in the open.2 manpage, at the end of the description of
+O_APPEND.
