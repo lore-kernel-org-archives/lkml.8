@@ -2,140 +2,120 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1413C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EC6C433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA882071B
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925FF2078D
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:54:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="u4+TwwpL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBuiYpmu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbgH3HuP (ORCPT
+        id S1726572AbgH3HyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 03:50:15 -0400
-Received: from mail-am6eur05on2116.outbound.protection.outlook.com ([40.107.22.116]:63009
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726201AbgH3HuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 03:50:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KyONkyM9QkOifhK0Wv4P831FMcQPYV7eaFNh+ljUGd97IFsdwpW9TDLyy5DYVIAmWfAuQQ3Yxy17cxHCBOEB/tx6qMZEhtkjglgIZKOgURt4oGOIE3qimlLRGKtjyEbW9zZ7b6nSH9MDXMdk49Wd5LcZLuzp7mjKwnDcuWNsfIwEpXTW5jewmy6FSkVUk7tQksNEhF551+eQ3d/sw1auK6B6NCgmHEF7nlHOkHovkE5jH49ouAkbpN69ve+YSyNDutPffx5xUVR5eB7M3CJ+eqXES1klQTJQS8tKOLLehGj2Jsd9eKuZBIP5sXm6bVxFQZBkO3n6ft3L8imQ0XHPww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mjc6Qi9eQXSe3lEptsNtQrAdwg2qaURMF5tNmX6BeMs=;
- b=CpgFbIHS9ZxNq6SXJPAZJaa+PeoSzs3rZB0bhCPO2etPJenfuSWXDOhJec2TqAxAKb71F+IZCXjU/atj3D3NYLfgc4UwTkHrmYmCPvCorYEPH7p1e2OCOklikaBu37MmMV6xer00OlfN6PV07fJQVEq8IXg4FLFNcSAmtUrUhVbKnUIvZPNK3hIwHPobDjr+s5dUT/8Eh5zWMPJKIAvwvLJ7OL4ZqO/3Z14StYbP51vOWriXVKvfCNirmO5eBE2PkZ1PGdhOlnKX0rr4b4EcsnzfmfIed9D9z8PoLIAJWk3YLpy97USNdRuA0N79cF68Kv+A+By/ne9gdMEkbDuJgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mjc6Qi9eQXSe3lEptsNtQrAdwg2qaURMF5tNmX6BeMs=;
- b=u4+TwwpLAT+1BpMcIJyTzgQzT+oxdjCpuEKDEWAK4bkBC/k1CTavuUZrriC7oB+k8aghuQwVM6zbjzG3+Kev3XYHavh0L4fez86Zspi51ag4MIUPxbcSyAaqJAnCw41TT5rsXd5BRe+vkH/EFhKSuE8iT5jrvscRGXN6dgOpe/g=
-Authentication-Results: davemloft.net; dkim=none (message not signed)
- header.d=none;davemloft.net; dmarc=none action=none header.from=plvision.eu;
-Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:56::28) by
- HE1P190MB0185.EURP190.PROD.OUTLOOK.COM (2603:10a6:3:cc::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3326.25; Sun, 30 Aug 2020 07:50:06 +0000
-Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- ([fe80::b1a4:e5e3:a12b:1305]) by HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- ([fe80::b1a4:e5e3:a12b:1305%6]) with mapi id 15.20.3326.025; Sun, 30 Aug 2020
- 07:50:06 +0000
-Date:   Sun, 30 Aug 2020 10:49:58 +0300
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     David Miller <davem@davemloft.net>
-Cc:     kuba@kernel.org, jiri@mellanox.com, idosch@mellanox.com,
-        andrew@lunn.ch, oleksandr.mazur@plvision.eu,
-        serhiy.boiko@plvision.eu, serhiy.pshyk@plvision.eu,
-        volodymyr.mytnyk@plvision.eu, taras.chornyi@plvision.eu,
-        andrii.savka@plvision.eu, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com,
-        mickeyr@marvell.com
-Subject: Re: [net-next v5 1/6] net: marvell: prestera: Add driver for
- Prestera family ASIC devices
-Message-ID: <20200830074958.GA2568@plvision.eu>
-References: <20200825122013.2844-2-vadym.kochan@plvision.eu>
- <20200825.172003.1417643181819895272.davem@davemloft.net>
- <20200826081744.GA2729@plvision.eu>
- <20200826.073446.971357864812593855.davem@davemloft.net>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826.073446.971357864812593855.davem@davemloft.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: AM7PR02CA0002.eurprd02.prod.outlook.com
- (2603:10a6:20b:100::12) To HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:7:56::28)
+        Sun, 30 Aug 2020 03:54:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbgH3HyF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 03:54:05 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1378C061573
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 00:54:04 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id h4so2910194ejj.0
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 00:54:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ohDVHll9uNXquWg/6LUDMQsitXnSxjQWS4MTv84+k88=;
+        b=QBuiYpmuSQYBHZAZ/Jw90PmwEpkYyjbmSDHyKKMSCvR+m5CDksZFiIlevVBV9sWL/4
+         MP+Zax0lFrV/IHMEUdh4dUAHlzjeDQLkUkR0u8Y6sXFQoIN0VHVZpdYdUheaDZJGlpjm
+         8sE0aB9CECoGkPE1b9MzbVkl73XJMvYbOt22NsLUUBjIH6kT/BMME1GgzWWMPT04oeiu
+         rhx2ANl/3qjBrRw4uNoq3y99SNpOpEC3qFSnEIqdb+Uagao8KnmQa0BqiJ9SQbRmi1Zf
+         JTNC+24bWm5BM2tzrhdSnVJCVbod5V5faiEJefafnudd/v0OvTrreWIBk/CcEc28UhQG
+         PXOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ohDVHll9uNXquWg/6LUDMQsitXnSxjQWS4MTv84+k88=;
+        b=lA6Wq55YlWJnC0PTS5fanYJHlzChrRglOXR65gfz4ksBzlGQiAiC/TN7/rK4J2hfS1
+         8IUhyrH64n/tIm2T4OuDiUz4c673xGTOhnoTW1Wy94yASgY90qPnSkjmKM1UuK1Lpb/L
+         qwWRVqMwP1uREpt9Mvllwfu7sW8CA9lvKAmyqnXRahtk5w8xEvOicDp5krFtj9Fu9Jqg
+         yVKpGFjLEN/wDf319k0DnVZ1buQzEQ7L7PqIYzO75HpV3oq/t+4ynRtbfP2jrezlc/Pq
+         FyEM2E9ebhDaiS47rHAUjN0fjYGHQ/Y1ERmRBCFhIg50p5jGBgB6UEbezyLlEHFm885I
+         8n6w==
+X-Gm-Message-State: AOAM533XUTC+WfdlaN5B2FNzwQnLrQ3Qd7qyuj9c2JC9z4T+7fa0ij9J
+        ImFQ35+R/IwzsU9VgZi8WGJjJrwEl8Z1o8UBuZClS3iX7EqbsA==
+X-Google-Smtp-Source: ABdhPJxJOKBGQIwl5zr92GkAxuJ/JNXh2osmS0VcZOhDmNUCHlcHZq1jn722dLnsh0dgRyK7pglsCsJpCWAKFf/1r+A=
+X-Received: by 2002:a17:906:bb06:: with SMTP id jz6mr6991256ejb.248.1598774042143;
+ Sun, 30 Aug 2020 00:54:02 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from plvision.eu (217.20.186.93) by AM7PR02CA0002.eurprd02.prod.outlook.com (2603:10a6:20b:100::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Sun, 30 Aug 2020 07:50:04 +0000
-X-Originating-IP: [217.20.186.93]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1499e905-61b1-4dd8-6cbc-08d84cb94f4f
-X-MS-TrafficTypeDiagnostic: HE1P190MB0185:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <HE1P190MB0185C819E6023E897968090F95500@HE1P190MB0185.EURP190.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8vRoxmkw7AR8iph8/6gTvBLouTG9+yBi8yT8XCzndGoEYOfBY++44ZpYIvBN+cbAm94gSDWASlgWNhCtJXVm1kPwFXmBm42gFH9YdmGkTFCu4wphS69nn1L/3DNdasb6XMAg4Kb3H6BycrUv2/EuTCtGqAmjJBrqFtBWBVqW4DRVamyEdnG5xT49DaS6+9tSuvqy3q5Qt+s7613hwQ04WDOiCCKB9QdtHdRnF8x9hyZ8nXLAmUs4fBbO70wTOhtBOIIL/n2kpDYvuQgOdH13cWDqF4tdtQgUmGT11twsf/jf+hm5QYq3v/ZyuoTlil4Qy/l+EFKokKlE4UStGDodzw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1P190MB0539.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(346002)(39830400003)(136003)(366004)(396003)(376002)(86362001)(8676002)(1076003)(8936002)(55016002)(5660300002)(2906002)(4326008)(7696005)(52116002)(36756003)(316002)(8886007)(33656002)(66946007)(26005)(66556008)(66476007)(6916009)(16526019)(186003)(2616005)(956004)(478600001)(83380400001)(44832011)(6666004);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: GhFYvc706wn9eIseFpkbsUQXl8h8VXUhMZDIAQsCuYl0GoHkRw9mL5fnF2GfRPD4StRiIS5jGR1CdHyYHHIiyvp7xPfQLSR/i2MiW0RQj0PoFoB2U1Vfxak1FyHGvbEIgHGMFkFY47Q3RHfYggJu922nMFPWFFLiN5mF9gC/zotKM0hDdJsFiEa984zeiEvtxJsQg07hPbxGB1ysnq9oVQLWoucUE+Prhbn70OyDnA0txbP+1zzxlIxNBzQg7qmJ/KFHn2WkAisCm8+JT2/FXpITTUTGTOV6Ogm2afumJVp2f/nPNJ3QiGBjf/odETokvgjqMiCQtgV2c3ubK461346E5EmQDzYShQ0N/4yS/uVZBuMC+foVI3U2Ixo3F0CGlpiUncxqNhHL5TCEh64cxXbMvKmWGGF/yaH76MBjj75znCKo1zosHScIzvFF+0te9bIU4uUgVr2c+E6ymQN4sq+9FDryapb+1G/9RYRz4UCkS7gGCw3Br/qOZ28w5DFL/d6eOehk1c46I3Gnn3ViuPyLsZEsotekAnuHQ2uNkiuybHHHgBzs7YnoZCTdvBEu/rOcJCQFfAsDWBlEoWD2+kUDp+JEHh2DjbvyMLXTdjKdx3+2HRR+Ex6aai85KZTRDT8Gj55ivaol0sRQqq1xJw==
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1499e905-61b1-4dd8-6cbc-08d84cb94f4f
-X-MS-Exchange-CrossTenant-AuthSource: HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Aug 2020 07:50:06.2037
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cSRZGrPUkU1WrL8gt7jmPkCBAD/MjYwjgwt4DbOJniir3etbOF6UaiGAurGl4OlhcZFHMWhpdNZVjAzqDqfbNaFL7Z3MsbflrvAGY4m2EpM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1P190MB0185
+References: <cover.1598598459.git.zong.li@sifive.com> <3f1f693147f0b62f19f4a44b8e8ef3d5bde23352.1598598459.git.zong.li@sifive.com>
+In-Reply-To: <3f1f693147f0b62f19f4a44b8e8ef3d5bde23352.1598598459.git.zong.li@sifive.com>
+From:   Pekka Enberg <penberg@gmail.com>
+Date:   Sun, 30 Aug 2020 10:53:43 +0300
+Message-ID: <CAOJsxLHOvvt8WGQUynGkLxZCA4OQQ+KgxxJJD7s_iP8Pxf-Omg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] riscv: Set more data to cacheinfo
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        david.abdurachmanov@sifive.com,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+Hi,
 
-On Wed, Aug 26, 2020 at 07:34:46AM -0700, David Miller wrote:
-> From: Vadym Kochan <vadym.kochan@plvision.eu>
-> Date: Wed, 26 Aug 2020 11:17:44 +0300
-> 
-> > Initially there was (in RFC patch set), not locking, but _rcu list API
-> > used, because the port list is modified only by 1 writer when creating
-> > the port or deleting it on switch uninit (the really theoretical case
-> > which might happen is that event might be received at that time which
-> > causes to loop over this list to find the port), as I understand
-> > correctly list_add_rcu is safe to use with no additional locking if there is 1
-> > writer and many readers ? So can I use back this approach ?
-> 
-> Are you really certain only one writer can exist at one time?
+On Fri, Aug 28, 2020 at 10:09 AM Zong Li <zong.li@sifive.com> wrote:
+>
+> Set cacheinfo.{size,sets,line_size} for each cache node, then we can
+> get these information from userland through auxiliary vector.
+>
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> ---
+>  arch/riscv/kernel/cacheinfo.c | 59 ++++++++++++++++++++++++++---------
+>  1 file changed, 44 insertions(+), 15 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
+> index bd0f122965c3..8b85abfbd77a 100644
+> --- a/arch/riscv/kernel/cacheinfo.c
+> +++ b/arch/riscv/kernel/cacheinfo.c
+> @@ -25,12 +25,46 @@ cache_get_priv_group(struct cacheinfo *this_leaf)
+>         return NULL;
+>  }
+>
+> -static void ci_leaf_init(struct cacheinfo *this_leaf,
+> -                        struct device_node *node,
+> -                        enum cache_type type, unsigned int level)
+> +static void ci_leaf_init(struct cacheinfo *this_leaf, enum cache_type type,
+> +                        unsigned int level, unsigned int size,
+> +                        unsigned int sets, unsigned int line_size)
+>  {
+>         this_leaf->level = level;
+>         this_leaf->type = type;
+> +       this_leaf->size = size;
+> +       this_leaf->number_of_sets = sets;
+> +       this_leaf->coherency_line_size = line_size;
+> +
+> +       /*
+> +        * If the cache is fully associative, there is no need to
+> +        * check the other properties.
+> +        */
+> +       if (!(sets == 1) && (sets > 0 && size > 0 && line_size > 0))
 
-Yes, list_add() is called on:
+Can you explain what this is attempting to do? AFAICT, the if
+expression can be reduced to "sets > 1 && size > 0 && size > 0", but
+what do you mean with the comment about fully associative caches?
 
-    prestera_pci_probe() -> prestera_device_register() -> prestera_switch_init() -> prestera_create_ports()
-
-and list_del() is called on:
-
-    prestera_pci_remove() -> prestera_device_unregister() -> prestera_switch_fini() -> prestera_destroy_ports()
-
-in all other cases the port_list is used for port lookup on rx or when
-event is received from the fw. So I really think that at least RCU list
-API might be used or rw lock. In early version the ports were creating
-before fw event handlers registration, but in this version the ports are
-creating after event handlers are registered so it really needs locking.
-
-Regarding DMA comments, looks like I can get rid of those bounce buffer
-handling because swiotlb can handle this ? In that case looks like just
-DMA map/unmap and sync should be enough.
-
-Regards,
-Vadym Kochan
+> +               this_leaf->ways_of_associativity = (size / sets) / line_size;
+> +}
