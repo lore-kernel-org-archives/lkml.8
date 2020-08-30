@@ -2,43 +2,44 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF049C433E7
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EB8C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C66120714
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B50208CA
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598779094;
-	bh=4gJ7NN/H4ONVbNKPoKOQktRZKpaRJ+juo2KX4MEgL04=;
+	s=default; t=1598779161;
+	bh=e2CkEznyGpjK37GjiF87TzHNHnfIBnUNctJ8uWQKXXM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YiGm+DLOaeAIWa6uQOP8hmexB7PeGmKn2LAiggC2ZqjIzqATHEneNmXJ0h60EWf3b
-	 jd3Aq4rLs4gZrkvxR36GbEGoLz+IDQOibqQ0KIxEYsNPbWbFT9Yb9DEls18wqqXHpa
-	 OUk1vzM0PMFHd/G82VuLlKW1hAAM5UKw/a93M2Sc=
+	b=Axu/e/5PcqtjZsD2shZB20OszhKKY+ZWu479iA7tOBxRhEaIowhAIkox5b/+tJer4
+	 0A9RUmBv3bobREmf+6zR7Ah2JMdWepqLPWnHEvr/UjJY8JqbD8BpzGf2slueUwXf/B
+	 BCErPqekb9woY1gJpEidYBaJsGgOQkCFvACysRaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbgH3JSN (ORCPT
+        id S1728756AbgH3JTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 05:18:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34726 "EHLO mail.kernel.org"
+        Sun, 30 Aug 2020 05:19:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbgH3JSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 05:18:10 -0400
+        id S1725869AbgH3JTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 05:19:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ACFF20714;
-        Sun, 30 Aug 2020 09:18:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BA7B20714;
+        Sun, 30 Aug 2020 09:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598779090;
-        bh=4gJ7NN/H4ONVbNKPoKOQktRZKpaRJ+juo2KX4MEgL04=;
+        s=default; t=1598779159;
+        bh=e2CkEznyGpjK37GjiF87TzHNHnfIBnUNctJ8uWQKXXM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GzNpPawjHdJDC5Aqr+olvKQsVN5Tp+oHeiTDbaEpznDzXM7VF6OPu0I/vgyaBiXW8
-         IN/2wyT5EjS8UULRfqAVr518SJa/C5X07H756FOZQCsgxizKmRgdcm9gvJ/VxMa3Ts
-         bE9UbT/OOZSFaI+CE3vYXRKRab9ClY4tS3figrtE=
-Date:   Sun, 30 Aug 2020 11:18:08 +0200
+        b=nNoW5uMGuk930nrYwDxvhKucdfXCTUqfYPHcv2boWxibjqj7fY06U4WqDh4Inpe75
+         0NtVbdlzcP11m1XKOZDEBvQaTgWmOcAZI2nxjrqJwNihwqwWO97aCTKaYMbYKn4p1W
+         jbraUucjy7oBpHOFj6fcfR8ZaUJUczz15FOWjuVc=
+Date:   Sun, 30 Aug 2020 11:19:17 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Anmol Karn <anmol.karan123@gmail.com>
 Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
@@ -49,7 +50,7 @@ Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
         linux-kernel-mentees@lists.linuxfoundation.org, davem@davemloft.net
 Subject: Re: [Linux-kernel-mentees] [PATCH] net: bluetooth: Fix null pointer
  deref in hci_phy_link_complete_evt
-Message-ID: <20200830091808.GA122343@kroah.com>
+Message-ID: <20200830091917.GB122343@kroah.com>
 References: <20200829124112.227133-1-anmol.karan123@gmail.com>
  <20200829165712.229437-1-anmol.karan123@gmail.com>
 MIME-Version: 1.0
@@ -71,11 +72,50 @@ On Sat, Aug 29, 2020 at 10:27:12PM +0530, Anmol Karn wrote:
 > [Linux-next-20200827]
 > 
 > This patch corrected some mistakes from previous patch.
+> 
+> Reported-by: syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+> Link: https://syzkaller.appspot.com/bug?id=0d93140da5a82305a66a136af99b088b75177b99
+> Signed-off-by: Anmol Karn <anmol.karan123@gmail.com>
+> ---
+>  net/bluetooth/hci_core.c  | 5 ++++-
+>  net/bluetooth/hci_event.c | 4 ++++
+>  2 files changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> index 68bfe57b6625..996efd654e7a 100644
+> --- a/net/bluetooth/hci_core.c
+> +++ b/net/bluetooth/hci_core.c
+> @@ -4922,7 +4922,10 @@ static void hci_cmd_work(struct work_struct *work)
+>  
+>  		kfree_skb(hdev->sent_cmd);
+>  
+> -		hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
+> +		if (hdev->sent_cmd) {
+> +			hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
+> +		}
 
-So this is a v2?  That should go below the --- line, right?  And you
-should have a v2 in the subject line like the documentation asks?
+How can sent_cmd be NULL here?  Are you sure something previous to this
+shouldn't be fixed instead?
 
-Can you redo this please?
+
+> +
+>  		if (hdev->sent_cmd) {
+>  			if (hci_req_status_pend(hdev))
+>  				hci_dev_set_flag(hdev, HCI_CMD_PENDING);
+> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> index 4b7fc430793c..1e7d9bee9111 100644
+> --- a/net/bluetooth/hci_event.c
+> +++ b/net/bluetooth/hci_event.c
+> @@ -4941,6 +4941,10 @@ static void hci_phy_link_complete_evt(struct hci_dev *hdev,
+>  		hci_dev_unlock(hdev);
+>  		return;
+>  	}
+> +	if (!(hcon->amp_mgr->l2cap_conn->hcon)) {
+> +		hci_dev_unlock(hdev);
+> +		return;
+> +	}
+
+How can this be triggered?
 
 thanks,
 
