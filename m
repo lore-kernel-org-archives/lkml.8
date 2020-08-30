@@ -2,97 +2,143 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 192D6C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 01:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA7CC43461
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 02:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7B452075B
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 01:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8364207BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 02:23:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598754213;
+	bh=dXTTvvUTH4ze8YE/wK5hp4N4rIH/LzeYfhV5j6PFUWE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x24wN+rXvJbVyZJrYPQsYFzemGGzgKl3Iq6mxLxQ9fuXs4ssxkB8AySxhl/z9HKAQ
+	 zth7nqVRiw0MNLOeuGF4UB2trG1CMiOVbHd/ufXT3RPtaO7eL2wbJ9UOhlKBOgWnj/
+	 RmlgZBfQohWovbXkpxe0a0bYXjd+ApjF4xokl9h8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbgH3Byk (ORCPT
+        id S1728630AbgH3CXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 21:54:40 -0400
-Received: from mail.parknet.co.jp ([210.171.160.6]:33444 "EHLO
-        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728602AbgH3Byk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 21:54:40 -0400
-Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-        by mail.parknet.co.jp (Postfix) with ESMTPSA id 46FB51B44DF;
-        Sun, 30 Aug 2020 10:54:38 +0900 (JST)
-Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-20) with ESMTPS id 07U1sbJI322084
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Sun, 30 Aug 2020 10:54:38 +0900
-Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-20) with ESMTPS id 07U1saM43070424
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Sun, 30 Aug 2020 10:54:36 +0900
-Received: (from hirofumi@localhost)
-        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id 07U1sZBX3070422;
-        Sun, 30 Aug 2020 10:54:35 +0900
-From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] fat: Avoid oops when bdi->io_pages==0
-References: <87ft85osn6.fsf@mail.parknet.co.jp>
-        <20200830012151.GW14765@casper.infradead.org>
-Date:   Sun, 30 Aug 2020 10:54:35 +0900
-In-Reply-To: <20200830012151.GW14765@casper.infradead.org> (Matthew Wilcox's
-        message of "Sun, 30 Aug 2020 02:21:51 +0100")
-Message-ID: <874kokq4o4.fsf@mail.parknet.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        Sat, 29 Aug 2020 22:23:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728609AbgH3CXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 22:23:32 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C6E420776;
+        Sun, 30 Aug 2020 02:23:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598754211;
+        bh=dXTTvvUTH4ze8YE/wK5hp4N4rIH/LzeYfhV5j6PFUWE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ziuXrkGcW3IS9YeYrKruFhO2o6MBX9552VS8jGjrQajKayxIcNmHxG7RpsDx3swt9
+         UeDE4pKRaJPdleBPoPok81iOnHuKfyvHsGlKoLZZxcrkKphvmS7U8JUGh5c+h1Lqsa
+         76Wz78sMFKalEB0JU38zeyYx7B7LkFlDrLxmpFZs=
+Date:   Sat, 29 Aug 2020 22:23:30 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Hauke Mehrtens <hauke@hauke-m.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Victor Kamensky <kamensky@cisco.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Paul Burton <paulburton@kernel.org>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        richard.purdie@linuxfoundation.org,
+        Tony Ambardar <itugrok@yahoo.com>
+Subject: Re: [PATCH AUTOSEL 5.4 10/58] mips: vdso: fix 'jalr t9' crash in
+ vdso code
+Message-ID: <20200830022330.GY8670@sasha-vm>
+References: <20200305171420.29595-1-sashal@kernel.org>
+ <20200305171420.29595-10-sashal@kernel.org>
+ <d10c1981-ab79-86a9-4cf4-bd098d8c55f4@hauke-m.de>
+ <20200829135656.GX8670@sasha-vm>
+ <3c275203-8df8-4746-0941-c142cf72bee4@hauke-m.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3c275203-8df8-4746-0941-c142cf72bee4@hauke-m.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> writes:
-
-> On Sun, Aug 30, 2020 at 09:59:41AM +0900, OGAWA Hirofumi wrote:
->> On one system, there was bdi->io_pages==0. This seems to be the bug of
->> a driver somewhere, and should fix it though. Anyway, it is better to
->> avoid the divide-by-zero Oops.
->> 
->> So this check it.
->> 
->> Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
->> Cc: <stable@vger.kernel.org>
->> ---
->>  fs/fat/fatent.c |    2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/fs/fat/fatent.c b/fs/fat/fatent.c
->> index f7e3304..98a1c4f 100644
->> --- a/fs/fat/fatent.c	2020-08-30 06:52:47.251564566 +0900
->> +++ b/fs/fat/fatent.c	2020-08-30 06:54:05.838319213 +0900
->> @@ -660,7 +660,7 @@ static void fat_ra_init(struct super_blo
->>  	if (fatent->entry >= ent_limit)
->>  		return;
->>  
->> -	if (ra_pages > sb->s_bdi->io_pages)
->> +	if (sb->s_bdi->io_pages && ra_pages > sb->s_bdi->io_pages)
->>  		ra_pages = rounddown(ra_pages, sb->s_bdi->io_pages);
+On Sat, Aug 29, 2020 at 04:37:32PM +0200, Hauke Mehrtens wrote:
+>On 8/29/20 3:56 PM, Sasha Levin wrote:
+>> On Sat, Aug 29, 2020 at 03:08:01PM +0200, Hauke Mehrtens wrote:
+>>> On 3/5/20 6:13 PM, Sasha Levin wrote:
+>>>> From: Victor Kamensky <kamensky@cisco.com>
+>>>>
+>>>> [ Upstream commit d3f703c4359ff06619b2322b91f69710453e6b6d ]
+>>>>
+>>>> Observed that when kernel is built with Yocto mips64-poky-linux-gcc,
+>>>> and mips64-poky-linux-gnun32-gcc toolchain, resulting vdso contains
+>>>> 'jalr t9' instructions in its code and since in vdso case nobody
+>>>> sets GOT table code crashes when instruction reached. On other hand
+>>>> observed that when kernel is built mips-poky-linux-gcc toolchain, the
+>>>> same 'jalr t9' instruction are replaced with PC relative function
+>>>> calls using 'bal' instructions.
+>>>>
+>>>> The difference boils down to -mrelax-pic-calls and -mexplicit-relocs
+>>>> gcc options that gets different default values depending on gcc
+>>>> target triplets and corresponding binutils. -mrelax-pic-calls got
+>>>> enabled by default only in mips-poky-linux-gcc case. MIPS binutils
+>>>> ld relies on R_MIPS_JALR relocation to convert 'jalr t9' into 'bal'
+>>>> and such relocation is generated only if -mrelax-pic-calls option
+>>>> is on.
+>>>>
+>>>> Please note 'jalr t9' conversion to 'bal' can happen only to static
+>>>> functions. These static PIC calls use mips local GOT entries that
+>>>> are supposed to be filled with start of DSO value by run-time linker
+>>>> (missing in VDSO case) and they do not have dynamic relocations.
+>>>> Global mips GOT entries must have dynamic relocations and they should
+>>>> be prevented by cmd_vdso_check Makefile rule.
+>>>>
+>>>> Solution call out -mrelax-pic-calls and -mexplicit-relocs options
+>>>> explicitly while compiling MIPS vdso code. That would get correct
+>>>> and consistent between different toolchains behaviour.
+>>>>
+>>>> Reported-by: Bruce Ashfield <bruce.ashfield@gmail.com>
+>>>> Signed-off-by: Victor Kamensky <kamensky@cisco.com>
+>>>> Signed-off-by: Paul Burton <paulburton@kernel.org>
+>>>> Cc: linux-mips@vger.kernel.org
+>>>> Cc: Ralf Baechle <ralf@linux-mips.org>
+>>>> Cc: James Hogan <jhogan@kernel.org>
+>>>> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+>>>> Cc: richard.purdie@linuxfoundation.org
+>>>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>>>> ---
+>>>>  arch/mips/vdso/Makefile | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>
+>>> Hi Sasha,
+>>>
+>>> Why was this not added to the 5.4 stable branch?
+>>>
+>>> Some OpenWrt users ran into this problem with kernel 5.4 on MIPS64 [0].
+>>> We backported this patch on our own in OpenWrt [1], but it should be
+>>> added to the sable branch in my opinion as it fixes a real problem.
+>>>
+>>> @Sasha: Can you add it to the 5.4 stable branch or should I send some
+>>> special email?
+>>
+>> It failed building on 5.4. If you'd like it included, please send me a
+>> tested backport for 5.4.
+>>
 >
-> Wait, rounddown?  ->io_pages is supposed to be the maximum number of
-> pages to readahead.  Shouldn't this be max() instead of rounddown()?
+>I successfully compiled a kernel 5.4.61 with this patch on top with GCC
+>8.4 for MIPS 64 big and little Endian.
+>
+>What was broken in your compile test?
 
-Hm, io_pages is limited by driver setting too, and io_pages can be lower
-than ra_pages, e.g. usb storage.
+See https://lore.kernel.org/stable/bfdce3ef-5fe9-8dab-1695-be3d33727529@roeck-us.net/
 
-Assuming ra_pages is user intent of readahead window. So if io_pages is
-lower than ra_pages, this try ra_pages to align of io_pages chunk, but
-not bigger than ra_pages. Because if block layer splits I/O requests to
-hard limit, then I/O is not optimal.
-
-So it is intent, I can be misunderstanding though.
-
-Thanks.
 -- 
-OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Thanks,
+Sasha
