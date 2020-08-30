@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9ADC433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F12D8C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1CF20757
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA88720714
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:04:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q/eIRZ5p";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IcjQmbQg"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zQSPIwrT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GoPOJ+jJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbgH3SEL (ORCPT
+        id S1726517AbgH3SEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 30 Aug 2020 14:04:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53670 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgH3SED (ORCPT
+        with ESMTP id S1726201AbgH3SEE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 14:04:03 -0400
+        Sun, 30 Aug 2020 14:04:04 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13323C061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 11:04:02 -0700 (PDT)
-Date:   Sun, 30 Aug 2020 18:03:35 -0000
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C5DFC061575
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 11:04:03 -0700 (PDT)
+Date:   Sun, 30 Aug 2020 18:03:36 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020; t=1598810641;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=94NT7/rse/Juf2wKp/zwKTM1ExELmsTLuDAmnUh2VVI=;
-        b=q/eIRZ5pTQ8mCRfaPxeMiS9Z6AiNuab3G+RuZ9uzsXWV9o4D5zbRVyxrPhWonikZITTuBZ
-        tm3tZGD8b26hscHBFCzMSv4VSsZ2hii/opl9gDABsPAz0adJhvJWQW4KUcdpgblYZ6/VEr
-        ABrrIb8fL8laPoILnT+Pp/Vr0QYDSYXpXMB2JCrYEgnGu/v0aIdhrAviGD9gFf+IpezWZA
-        ArtDuyuDzZ1Ru8ggJ/hpxY/PqIv/W3Xa/COYpRijJVFv9PV5qk3/T0DvO+cYrYo9RVTHhl
-        Y2eG7Y2WeWEopZwBSpuFmHh12L7LrYe/QX6Dp9iKtYe/Wzy/ibrbzT7gs9i6jg==
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=J/AbQGSLM4DW+8xAbazmgbb8xlIxdfVSO24gjB8EDpY=;
+        b=zQSPIwrT6Z1GS62dHzPRhU3ZX8wYwbOQYCyh4KxispxDilvAOCVB2+kw6WfYKySCdGQqXZ
+        xdx754wRik7Q03L7lAfkG6+rJN/9+5WgO2CcPW95MdMawrld7A5IoCWkgaROM/+Buj9CK6
+        vhcZ9g3qZmJbLuV38nmZz99tm8uwMm/60+wFH0gHcynNiTxBamBD+iZlGH5VihDOQrhr6b
+        z2Q7w0T3YPrB+UScO3xN4MSR/ROFwFzenHIDni41nAGYeq1v1VKVvYROrW28Fu1CZ5+Bwh
+        xjMfxpSlZZJfafzJJ6aPx2T5qtVf9raTw099TYrLthYqlSS2FOKb1Rg7idVLAg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020e; t=1598810641;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=94NT7/rse/Juf2wKp/zwKTM1ExELmsTLuDAmnUh2VVI=;
-        b=IcjQmbQg+mmVm/SP7X/nJeMAOoUmVej7M1u+T9fYxj+iSVFnmwDKVpBzL4RYTAaiBzLki4
-        EXFjzZU18pyN9lAg==
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=J/AbQGSLM4DW+8xAbazmgbb8xlIxdfVSO24gjB8EDpY=;
+        b=GoPOJ+jJ6wFkThd9tIvYCxiw4PyBnWIMohu4LF3cDI1C98PDlkphT2B1M8oDgpI5NwC/h+
+        D7ZdVvw2fBo8O3CA==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] irq/urgent for v5.9-rc2
-Message-ID: <159881061564.27993.11909051048930389391.tglx@nanos>
+Subject: [GIT pull] locking/urgent for v5.9-rc2
+References: <159881061564.27993.11909051048930389391.tglx@nanos>
+Message-ID: <159881061684.27993.2189953397609628514.tglx@nanos>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,1747 +62,783 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-please pull the latest irq/urgent branch from:
+please pull the latest locking/urgent branch from:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-2020-08-30
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking-urgent-2020-08-30
 
-up to:  ceb2465c5119: Merge tag 'irqchip-fixes-5.9-2' of git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms into irq/urgent
+up to:  eb1f00237aca: lockdep,trace: Expose tracepoints
 
-A set of fixes for interrupt chip drivers:
 
- - Revert the platform driver conversion of interrupt chip drivers as it
-   turned out to create more problems than it solves.
+A set of fixes for lockdep, tracing and RCU:
 
- - Fix a trivial typo in the new module helpers which made probing reliably
-   fail.
+  - Prevent recursion by using raw_cpu_* operations
 
- - Small fixes in the STM32 and MIPS Ingenic drivers
+  - Fixup the interrupt state in the cpu idle code to be consistent
 
- - The TI firmware rework which had badly managed dependencies and had to
-   wait post rc1.
+  - Push rcu_idle_enter/exit() invocations deeper into the idle path so
+    that the lock operations are inside the RCU watching sections
+
+  - Move trace_cpu_idle() into generic code so it's called before RCU goes
+    idle.
+
+  - Handle raw_local_irq* vs. local_irq* operations correctly
+
+  - Move the tracepoints out from under the lockdep recursion handling
+    which turned out to be fragile and inconsistent.
 
 Thanks,
 
 	tglx
 
 ------------------>
-Lokesh Vutla (13):
-      firmware: ti_sci: Drop the device id to resource type translation
-      firmware: ti_sci: Drop unused structure ti_sci_rm_type_map
-      firmware: ti_sci: Add support for getting resource with subtype
-      dt-bindings: irqchip: ti, sci-intr: Update bindings to drop the usage of gic as parent
-      dt-bindings: irqchip: Convert ti, sci-intr bindings to yaml
-      irqchip/ti-sci-intr: Add support for INTR being a parent to INTR
-      dt-bindings: irqchip: ti, sci-inta: Update docs to support different parent.
-      dt-bindings: irqchip: Convert ti, sci-inta bindings to yaml
-      irqchip/ti-sci-inta: Do not store TISCI device id in platform device id field
-      irqchip/ti-sci-inta: Add support for INTA directly connecting to GIC
-      arm64: dts: k3-j721e: ti-sci-inta/intr: Update to latest bindings
-      arm64: dts: k3-am65: ti-sci-inta/intr: Update to latest bindings
-      arm64: dts: k3-am65: Update the RM resource types
+Nicholas Piggin (1):
+      lockdep: Only trace IRQ edges
 
-Marc Zyngier (2):
-      irqchip: Fix probing deferal when using IRQCHIP_PLATFORM_DRIVER helpers
-      irqchip: Revert modular support for drivers using IRQCHIP_PLATFORM_DRIVER helperse
-
-Paul Cercueil (1):
-      irqchip/ingenic: Leave parent IRQ unmasked on suspend
-
-qiuguorui1 (1):
-      irqchip/stm32-exti: Avoid losing interrupts due to clearing pending bits by mistake
+Peter Zijlstra (11):
+      lockdep: Use raw_cpu_*() for per-cpu variables
+      cpuidle: Fixup IRQ state
+      sched,idle,rcu: Push rcu_idle deeper into the idle path
+      cpuidle: Make CPUIDLE_FLAG_TLB_FLUSHED generic
+      cpuidle: Move trace_cpu_idle() into generic code
+      x86/entry: Remove unused THUNKs
+      locking/lockdep: Cleanup
+      nds32: Implement arch_irqs_disabled()
+      arm64: Implement arch_irqs_disabled()
+      mips: Implement arch_irqs_disabled()
+      lockdep,trace: Expose tracepoints
 
 
- .../bindings/interrupt-controller/ti,sci-inta.txt  |  66 ---------
- .../bindings/interrupt-controller/ti,sci-inta.yaml |  98 +++++++++++++
- .../bindings/interrupt-controller/ti,sci-intr.txt  |  82 -----------
- .../bindings/interrupt-controller/ti,sci-intr.yaml | 102 ++++++++++++++
- MAINTAINERS                                        |   4 +-
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi           |  36 +++--
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi            |  12 +-
- arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi         |   8 +-
- arch/arm64/boot/dts/ti/k3-am654-base-board.dts     |   4 +-
- .../boot/dts/ti/k3-j721e-common-proc-board.dts     |  10 +-
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi          |  43 +++---
- arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi    |  12 +-
- drivers/firmware/ti_sci.c                          | 155 +++++++++------------
- drivers/irqchip/Kconfig                            |   2 +-
- drivers/irqchip/irq-ingenic.c                      |   2 +-
- drivers/irqchip/irq-mtk-cirq.c                     |   4 +-
- drivers/irqchip/irq-mtk-sysirq.c                   |   4 +-
- drivers/irqchip/irq-stm32-exti.c                   |  14 +-
- drivers/irqchip/irq-ti-sci-inta.c                  |  95 ++++++++++---
- drivers/irqchip/irq-ti-sci-intr.c                  | 152 ++++++++++++--------
- drivers/irqchip/irqchip.c                          |   2 +-
- drivers/irqchip/qcom-pdc.c                         |   8 +-
- include/linux/soc/ti/ti_sci_protocol.h             |  13 ++
- 23 files changed, 534 insertions(+), 394 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml
+ arch/arm/mach-omap2/pm34xx.c      |  4 ---
+ arch/arm64/include/asm/irqflags.h |  5 +++
+ arch/arm64/kernel/process.c       |  2 --
+ arch/mips/include/asm/irqflags.h  |  5 +++
+ arch/nds32/include/asm/irqflags.h |  5 +++
+ arch/powerpc/include/asm/hw_irq.h | 11 +++---
+ arch/s390/kernel/idle.c           |  3 +-
+ arch/x86/entry/thunk_32.S         |  5 ---
+ arch/x86/include/asm/mmu.h        |  1 +
+ arch/x86/kernel/process.c         |  4 ---
+ arch/x86/mm/tlb.c                 | 13 ++-----
+ drivers/cpuidle/cpuidle.c         | 19 +++++++---
+ drivers/idle/intel_idle.c         | 16 ---------
+ include/linux/cpuidle.h           | 13 +++----
+ include/linux/irqflags.h          | 73 +++++++++++++++++++++------------------
+ include/linux/lockdep.h           | 18 +++++++---
+ include/linux/mmu_context.h       |  5 +++
+ kernel/locking/lockdep.c          | 18 ++++++----
+ kernel/sched/idle.c               | 25 ++++++--------
+ 19 files changed, 123 insertions(+), 122 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
-deleted file mode 100644
-index 7841cb099e13..000000000000
---- a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
-+++ /dev/null
-@@ -1,66 +0,0 @@
--Texas Instruments K3 Interrupt Aggregator
--=========================================
+diff --git a/arch/arm/mach-omap2/pm34xx.c b/arch/arm/mach-omap2/pm34xx.c
+index 6df395fff971..f5dfddf492e2 100644
+--- a/arch/arm/mach-omap2/pm34xx.c
++++ b/arch/arm/mach-omap2/pm34xx.c
+@@ -298,11 +298,7 @@ static void omap3_pm_idle(void)
+ 	if (omap_irq_pending())
+ 		return;
+ 
+-	trace_cpu_idle_rcuidle(1, smp_processor_id());
 -
--The Interrupt Aggregator (INTA) provides a centralized machine
--which handles the termination of system events to that they can
--be coherently processed by the host(s) in the system. A maximum
--of 64 events can be mapped to a single interrupt.
+ 	omap_sram_idle();
 -
--
--                              Interrupt Aggregator
--                     +-----------------------------------------+
--                     |      Intmap            VINT             |
--                     | +--------------+  +------------+        |
--            m ------>| | vint  | bit  |  | 0 |.....|63| vint0  |
--               .     | +--------------+  +------------+        |       +------+
--               .     |         .               .               |       | HOST |
--Globalevents  ------>|         .               .               |------>| IRQ  |
--               .     |         .               .               |       | CTRL |
--               .     |         .               .               |       +------+
--            n ------>| +--------------+  +------------+        |
--                     | | vint  | bit  |  | 0 |.....|63| vintx  |
--                     | +--------------+  +------------+        |
--                     |                                         |
--                     +-----------------------------------------+
--
--Configuration of these Intmap registers that maps global events to vint is done
--by a system controller (like the Device Memory and Security Controller on K3
--AM654 SoC). Driver should request the system controller to get the range
--of global events and vints assigned to the requesting host. Management
--of these requested resources should be handled by driver and requests
--system controller to map specific global event to vint, bit pair.
--
--Communication between the host processor running an OS and the system
--controller happens through a protocol called TI System Control Interface
--(TISCI protocol). For more details refer:
--Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
--
--TISCI Interrupt Aggregator Node:
---------------------------------
--- compatible:		Must be "ti,sci-inta".
--- reg:			Should contain registers location and length.
--- interrupt-controller:	Identifies the node as an interrupt controller
--- msi-controller:	Identifies the node as an MSI controller.
--- interrupt-parent:	phandle of irq parent.
--- ti,sci:		Phandle to TI-SCI compatible System controller node.
--- ti,sci-dev-id:	TISCI device ID of the Interrupt Aggregator.
--- ti,sci-rm-range-vint:	Array of TISCI subtype ids representing vints(inta
--			outputs) range within this INTA, assigned to the
--			requesting host context.
--- ti,sci-rm-range-global-event:	Array of TISCI subtype ids representing the
--			global events range reaching this IA and are assigned
--			to the requesting host context.
--
--Example:
----------
--main_udmass_inta: interrupt-controller@33d00000 {
--	compatible = "ti,sci-inta";
--	reg = <0x0 0x33d00000 0x0 0x100000>;
--	interrupt-controller;
--	msi-controller;
--	interrupt-parent = <&main_navss_intr>;
--	ti,sci = <&dmsc>;
--	ti,sci-dev-id = <179>;
--	ti,sci-rm-range-vint = <0x0>;
--	ti,sci-rm-range-global-event = <0x1>;
--};
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml
-new file mode 100644
-index 000000000000..c7cd05656a3e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml
-@@ -0,0 +1,98 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/ti,sci-inta.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments K3 Interrupt Aggregator
-+
-+maintainers:
-+  - Lokesh Vutla <lokeshvutla@ti.com>
-+
-+allOf:
-+  - $ref: /schemas/arm/keystone/ti,k3-sci-common.yaml#
-+
-+description: |
-+  The Interrupt Aggregator (INTA) provides a centralized machine
-+  which handles the termination of system events to that they can
-+  be coherently processed by the host(s) in the system. A maximum
-+  of 64 events can be mapped to a single interrupt.
-+
-+                                Interrupt Aggregator
-+                       +-----------------------------------------+
-+                       |      Intmap            VINT             |
-+                       | +--------------+  +------------+        |
-+              m ------>| | vint  | bit  |  | 0 |.....|63| vint0  |
-+                 .     | +--------------+  +------------+        |      +------+
-+                 .     |         .               .               |      | HOST |
-+  Globalevents  ------>|         .               .               |----->| IRQ  |
-+                 .     |         .               .               |      | CTRL |
-+                 .     |         .               .               |      +------+
-+              n ------>| +--------------+  +------------+        |
-+                       | | vint  | bit  |  | 0 |.....|63| vintx  |
-+                       | +--------------+  +------------+        |
-+                       |                                         |
-+                       +-----------------------------------------+
-+
-+  Configuration of these Intmap registers that maps global events to vint is
-+  done by a system controller (like the Device Memory and Security Controller
-+  on AM654 SoC). Driver should request the system controller to get the range
-+  of global events and vints assigned to the requesting host. Management
-+  of these requested resources should be handled by driver and requests
-+  system controller to map specific global event to vint, bit pair.
-+
-+  Communication between the host processor running an OS and the system
-+  controller happens through a protocol called TI System Control Interface
-+  (TISCI protocol).
-+
-+properties:
-+  compatible:
-+    const: ti,sci-inta
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  msi-controller: true
-+
-+  ti,interrupt-ranges:
-+    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-+    description: |
-+      Interrupt ranges that converts the INTA output hw irq numbers
-+      to parents's input interrupt numbers.
-+    items:
-+      items:
-+        - description: |
-+            "output_irq" specifies the base for inta output irq
-+        - description: |
-+            "parent's input irq" specifies the base for parent irq
-+        - description: |
-+            "limit" specifies the limit for translation
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupt-controller
-+  - msi-controller
-+  - ti,sci
-+  - ti,sci-dev-id
-+  - ti,interrupt-ranges
-+
-+examples:
-+  - |
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        main_udmass_inta: msi-controller@33d00000 {
-+            compatible = "ti,sci-inta";
-+            reg = <0x0 0x33d00000 0x0 0x100000>;
-+            interrupt-controller;
-+            msi-controller;
-+            interrupt-parent = <&main_navss_intr>;
-+            ti,sci = <&dmsc>;
-+            ti,sci-dev-id = <179>;
-+            ti,interrupt-ranges = <0 0 256>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
-deleted file mode 100644
-index 178fca08278f..000000000000
---- a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
-+++ /dev/null
-@@ -1,82 +0,0 @@
--Texas Instruments K3 Interrupt Router
--=====================================
--
--The Interrupt Router (INTR) module provides a mechanism to mux M
--interrupt inputs to N interrupt outputs, where all M inputs are selectable
--to be driven per N output. An Interrupt Router can either handle edge triggered
--or level triggered interrupts and that is fixed in hardware.
--
--                                 Interrupt Router
--                             +----------------------+
--                             |  Inputs     Outputs  |
--        +-------+            | +------+    +-----+  |
--        | GPIO  |----------->| | irq0 |    |  0  |  |       Host IRQ
--        +-------+            | +------+    +-----+  |      controller
--                             |    .           .     |      +-------+
--        +-------+            |    .           .     |----->|  IRQ  |
--        | INTA  |----------->|    .           .     |      +-------+
--        +-------+            |    .        +-----+  |
--                             | +------+    |  N  |  |
--                             | | irqM |    +-----+  |
--                             | +------+             |
--                             |                      |
--                             +----------------------+
--
--There is one register per output (MUXCNTL_N) that controls the selection.
--Configuration of these MUXCNTL_N registers is done by a system controller
--(like the Device Memory and Security Controller on K3 AM654 SoC). System
--controller will keep track of the used and unused registers within the Router.
--Driver should request the system controller to get the range of GIC IRQs
--assigned to the requesting hosts. It is the drivers responsibility to keep
--track of Host IRQs.
--
--Communication between the host processor running an OS and the system
--controller happens through a protocol called TI System Control Interface
--(TISCI protocol). For more details refer:
--Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
--
--TISCI Interrupt Router Node:
------------------------------
--Required Properties:
--- compatible:		Must be "ti,sci-intr".
--- ti,intr-trigger-type:	Should be one of the following:
--			1: If intr supports edge triggered interrupts.
--			4: If intr supports level triggered interrupts.
--- interrupt-controller:	Identifies the node as an interrupt controller
--- #interrupt-cells:	Specifies the number of cells needed to encode an
--			interrupt source. The value should be 2.
--			First cell should contain the TISCI device ID of source
--			Second cell should contain the interrupt source offset
--			within the device.
--- ti,sci:		Phandle to TI-SCI compatible System controller node.
--- ti,sci-dst-id:	TISCI device ID of the destination IRQ controller.
--- ti,sci-rm-range-girq:	Array of TISCI subtype ids representing the host irqs
--			assigned to this interrupt router. Each subtype id
--			corresponds to a range of host irqs.
--
--For more details on TISCI IRQ resource management refer:
--https://downloads.ti.com/tisci/esd/latest/2_tisci_msgs/rm/rm_irq.html
--
--Example:
----------
--The following example demonstrates both interrupt router node and the consumer
--node(main gpio) on the AM654 SoC:
--
--main_intr: interrupt-controller0 {
--	compatible = "ti,sci-intr";
--	ti,intr-trigger-type = <1>;
--	interrupt-controller;
--	interrupt-parent = <&gic500>;
--	#interrupt-cells = <2>;
--	ti,sci = <&dmsc>;
--	ti,sci-dst-id = <56>;
--	ti,sci-rm-range-girq = <0x1>;
--};
--
--main_gpio0: gpio@600000 {
--	...
--	interrupt-parent = <&main_intr>;
--	interrupts = <57 256>, <57 257>, <57 258>,
--		     <57 259>, <57 260>, <57 261>;
--	...
--};
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml
-new file mode 100644
-index 000000000000..cff6a956afb4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml
-@@ -0,0 +1,102 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/ti,sci-intr.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments K3 Interrupt Router
-+
-+maintainers:
-+  - Lokesh Vutla <lokeshvutla@ti.com>
-+
-+allOf:
-+  - $ref: /schemas/arm/keystone/ti,k3-sci-common.yaml#
-+
-+description: |
-+  The Interrupt Router (INTR) module provides a mechanism to mux M
-+  interrupt inputs to N interrupt outputs, where all M inputs are selectable
-+  to be driven per N output. An Interrupt Router can either handle edge
-+  triggered or level triggered interrupts and that is fixed in hardware.
-+
-+                                   Interrupt Router
-+                               +----------------------+
-+                               |  Inputs     Outputs  |
-+          +-------+            | +------+    +-----+  |
-+          | GPIO  |----------->| | irq0 |    |  0  |  |       Host IRQ
-+          +-------+            | +------+    +-----+  |      controller
-+                               |    .           .     |      +-------+
-+          +-------+            |    .           .     |----->|  IRQ  |
-+          | INTA  |----------->|    .           .     |      +-------+
-+          +-------+            |    .        +-----+  |
-+                               | +------+    |  N  |  |
-+                               | | irqM |    +-----+  |
-+                               | +------+             |
-+                               |                      |
-+                               +----------------------+
-+
-+  There is one register per output (MUXCNTL_N) that controls the selection.
-+  Configuration of these MUXCNTL_N registers is done by a system controller
-+  (like the Device Memory and Security Controller on K3 AM654 SoC). System
-+  controller will keep track of the used and unused registers within the Router.
-+  Driver should request the system controller to get the range of GIC IRQs
-+  assigned to the requesting hosts. It is the drivers responsibility to keep
-+  track of Host IRQs.
-+
-+  Communication between the host processor running an OS and the system
-+  controller happens through a protocol called TI System Control Interface
-+  (TISCI protocol).
-+
-+properties:
-+  compatible:
-+    const: ti,sci-intr
-+
-+  ti,intr-trigger-type:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [1, 4]
-+    description: |
-+      Should be one of the following.
-+        1 = If intr supports edge triggered interrupts.
-+        4 = If intr supports level triggered interrupts.
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    const: 1
-+    description: |
-+      The 1st cell should contain interrupt router input hw number.
-+
-+  ti,interrupt-ranges:
-+    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-+    description: |
-+      Interrupt ranges that converts the INTR output hw irq numbers
-+      to parents's input interrupt numbers.
-+    items:
-+      items:
-+        - description: |
-+            "output_irq" specifies the base for intr output irq
-+        - description: |
-+            "parent's input irq" specifies the base for parent irq
-+        - description: |
-+            "limit" specifies the limit for translation
-+
-+required:
-+  - compatible
-+  - ti,intr-trigger-type
-+  - interrupt-controller
-+  - '#interrupt-cells'
-+  - ti,sci
-+  - ti,sci-dev-id
-+  - ti,interrupt-ranges
-+
-+examples:
-+  - |
-+    main_gpio_intr: interrupt-controller0 {
-+        compatible = "ti,sci-intr";
-+        ti,intr-trigger-type = <1>;
-+        interrupt-controller;
-+        interrupt-parent = <&gic500>;
-+        #interrupt-cells = <1>;
-+        ti,sci = <&dmsc>;
-+        ti,sci-dev-id = <131>;
-+        ti,interrupt-ranges = <0 360 32>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index deaafb617361..e3f1cdb69c84 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17116,8 +17116,8 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/arm/keystone/ti,k3-sci-common.yaml
- F:	Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
- F:	Documentation/devicetree/bindings/clock/ti,sci-clk.txt
--F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
--F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
-+F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml
-+F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml
- F:	Documentation/devicetree/bindings/reset/ti,sci-reset.txt
- F:	Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
- F:	drivers/clk/keystone/sci-clk.c
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 9edfae5944f7..24ef18fe77df 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -417,10 +417,10 @@
- 		ti,intr-trigger-type = <1>;
- 		interrupt-controller;
- 		interrupt-parent = <&gic500>;
--		#interrupt-cells = <2>;
-+		#interrupt-cells = <1>;
- 		ti,sci = <&dmsc>;
--		ti,sci-dst-id = <56>;
--		ti,sci-rm-range-girq = <0x1>;
-+		ti,sci-dev-id = <100>;
-+		ti,interrupt-ranges = <0 392 32>;
- 	};
- 
- 	main_navss {
-@@ -438,10 +438,11 @@
- 			ti,intr-trigger-type = <4>;
- 			interrupt-controller;
- 			interrupt-parent = <&gic500>;
--			#interrupt-cells = <2>;
-+			#interrupt-cells = <1>;
- 			ti,sci = <&dmsc>;
--			ti,sci-dst-id = <56>;
--			ti,sci-rm-range-girq = <0x0>, <0x2>;
-+			ti,sci-dev-id = <182>;
-+			ti,interrupt-ranges = <0 64 64>,
-+					      <64 448 64>;
- 		};
- 
- 		inta_main_udmass: interrupt-controller@33d00000 {
-@@ -452,8 +453,7 @@
- 			msi-controller;
- 			ti,sci = <&dmsc>;
- 			ti,sci-dev-id = <179>;
--			ti,sci-rm-range-vint = <0x0>;
--			ti,sci-rm-range-global-event = <0x1>;
-+			ti,interrupt-ranges = <0 0 256>;
- 		};
- 
- 		secure_proxy_main: mailbox@32c00000 {
-@@ -589,7 +589,7 @@
- 				<0x0 0x33000000 0x0 0x40000>;
- 			reg-names = "rt", "fifos", "proxy_gcfg", "proxy_target";
- 			ti,num-rings = <818>;
--			ti,sci-rm-range-gp-rings = <0x2>; /* GP ring range */
-+			ti,sci-rm-range-gp-rings = <0x1>; /* GP ring range */
- 			ti,dma-ring-reset-quirk;
- 			ti,sci = <&dmsc>;
- 			ti,sci-dev-id = <187>;
-@@ -609,11 +609,11 @@
- 			ti,sci-dev-id = <188>;
- 			ti,ringacc = <&ringacc>;
- 
--			ti,sci-rm-range-tchan = <0x1>, /* TX_HCHAN */
--						<0x2>; /* TX_CHAN */
--			ti,sci-rm-range-rchan = <0x4>, /* RX_HCHAN */
--						<0x5>; /* RX_CHAN */
--			ti,sci-rm-range-rflow = <0x6>; /* GP RFLOW */
-+			ti,sci-rm-range-tchan = <0xf>, /* TX_HCHAN */
-+						<0xd>; /* TX_CHAN */
-+			ti,sci-rm-range-rchan = <0xb>, /* RX_HCHAN */
-+						<0xa>; /* RX_CHAN */
-+			ti,sci-rm-range-rflow = <0x0>; /* GP RFLOW */
- 		};
- 
- 		cpts@310d0000 {
-@@ -622,7 +622,7 @@
- 			reg-names = "cpts";
- 			clocks = <&main_cpts_mux>;
- 			clock-names = "cpts";
--			interrupts-extended = <&intr_main_navss 163 0>;
-+			interrupts-extended = <&intr_main_navss 391>;
- 			interrupt-names = "cpts";
- 			ti,cpts-periodic-outputs = <6>;
- 			ti,cpts-ext-ts-inputs = <8>;
-@@ -645,8 +645,7 @@
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&intr_main_gpio>;
--		interrupts = <57 256>, <57 257>, <57 258>, <57 259>, <57 260>,
--				<57 261>;
-+		interrupts = <192>, <193>, <194>, <195>, <196>, <197>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,ngpio = <96>;
-@@ -661,8 +660,7 @@
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&intr_main_gpio>;
--		interrupts = <58 256>, <58 257>, <58 258>, <58 259>, <58 260>,
--				<58 261>;
-+		interrupts = <200>, <201>, <202>, <203>, <204>, <205>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,ngpio = <90>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-index 8c1abcfe0860..51ca4b4d4c21 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-@@ -134,7 +134,7 @@
- 				<0x0 0x2a500000 0x0 0x40000>;
- 			reg-names = "rt", "fifos", "proxy_gcfg", "proxy_target";
- 			ti,num-rings = <286>;
--			ti,sci-rm-range-gp-rings = <0x2>; /* GP ring range */
-+			ti,sci-rm-range-gp-rings = <0x1>; /* GP ring range */
- 			ti,dma-ring-reset-quirk;
- 			ti,sci = <&dmsc>;
- 			ti,sci-dev-id = <195>;
-@@ -154,11 +154,11 @@
- 			ti,sci-dev-id = <194>;
- 			ti,ringacc = <&mcu_ringacc>;
- 
--			ti,sci-rm-range-tchan = <0x1>, /* TX_HCHAN */
--						<0x2>; /* TX_CHAN */
--			ti,sci-rm-range-rchan = <0x3>, /* RX_HCHAN */
--						<0x4>; /* RX_CHAN */
--			ti,sci-rm-range-rflow = <0x5>; /* GP RFLOW */
-+			ti,sci-rm-range-tchan = <0xf>, /* TX_HCHAN */
-+						<0xd>; /* TX_CHAN */
-+			ti,sci-rm-range-rchan = <0xb>, /* RX_HCHAN */
-+						<0xa>; /* RX_CHAN */
-+			ti,sci-rm-range-rflow = <0x0>; /* GP RFLOW */
- 		};
- 	};
- 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-index 5f55b9e82cf1..a1ffe88d9664 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-@@ -74,10 +74,10 @@
- 		ti,intr-trigger-type = <1>;
- 		interrupt-controller;
- 		interrupt-parent = <&gic500>;
--		#interrupt-cells = <2>;
-+		#interrupt-cells = <1>;
- 		ti,sci = <&dmsc>;
--		ti,sci-dst-id = <56>;
--		ti,sci-rm-range-girq = <0x4>;
-+		ti,sci-dev-id = <156>;
-+		ti,interrupt-ranges = <0 712 16>;
- 	};
- 
- 	wkup_gpio0: wkup_gpio0@42110000 {
-@@ -86,7 +86,7 @@
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&intr_wkup_gpio>;
--		interrupts = <59 128>, <59 129>, <59 130>, <59 131>;
-+		interrupts = <60>, <61>, <62>, <63>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,ngpio = <56>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-index 611e66207010..b8a8a0fcb8af 100644
---- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-@@ -384,7 +384,7 @@
- };
- 
- &mailbox0_cluster0 {
--	interrupts = <164 0>;
-+	interrupts = <436>;
- 
- 	mbox_mcu_r5fss0_core0: mbox-mcu-r5fss0-core0 {
- 		ti,mbox-tx = <1 0 0>;
-@@ -393,7 +393,7 @@
- };
- 
- &mailbox0_cluster1 {
--	interrupts = <165 0>;
-+	interrupts = <432>;
- 
- 	mbox_mcu_r5fss0_core1: mbox-mcu-r5fss0-core1 {
- 		ti,mbox-tx = <1 0 0>;
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-index 8bc1e6ecc50e..e8fc01d97ada 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
-@@ -287,7 +287,7 @@
- };
- 
- &mailbox0_cluster0 {
--	interrupts = <214 0>;
-+	interrupts = <436>;
- 
- 	mbox_mcu_r5fss0_core0: mbox-mcu-r5fss0-core0 {
- 		ti,mbox-rx = <0 0 0>;
-@@ -301,7 +301,7 @@
- };
- 
- &mailbox0_cluster1 {
--	interrupts = <215 0>;
-+	interrupts = <432>;
- 
- 	mbox_main_r5fss0_core0: mbox-main-r5fss0-core0 {
- 		ti,mbox-rx = <0 0 0>;
-@@ -315,7 +315,7 @@
- };
- 
- &mailbox0_cluster2 {
--	interrupts = <216 0>;
-+	interrupts = <428>;
- 
- 	mbox_main_r5fss1_core0: mbox-main-r5fss1-core0 {
- 		ti,mbox-rx = <0 0 0>;
-@@ -329,7 +329,7 @@
- };
- 
- &mailbox0_cluster3 {
--	interrupts = <217 0>;
-+	interrupts = <424>;
- 
- 	mbox_c66_0: mbox-c66-0 {
- 		ti,mbox-rx = <0 0 0>;
-@@ -343,7 +343,7 @@
- };
- 
- &mailbox0_cluster4 {
--	interrupts = <218 0>;
-+	interrupts = <420>;
- 
- 	mbox_c71_0: mbox-c71-0 {
- 		ti,mbox-rx = <0 0 0>;
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-index d14060207f00..12ceea9b3c9a 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
-@@ -80,10 +80,10 @@
- 		ti,intr-trigger-type = <1>;
- 		interrupt-controller;
- 		interrupt-parent = <&gic500>;
--		#interrupt-cells = <2>;
-+		#interrupt-cells = <1>;
- 		ti,sci = <&dmsc>;
--		ti,sci-dst-id = <14>;
--		ti,sci-rm-range-girq = <0x1>;
-+		ti,sci-dev-id = <131>;
-+		ti,interrupt-ranges = <8 392 56>;
- 	};
- 
- 	main_navss {
-@@ -101,10 +101,12 @@
- 			ti,intr-trigger-type = <4>;
- 			interrupt-controller;
- 			interrupt-parent = <&gic500>;
--			#interrupt-cells = <2>;
-+			#interrupt-cells = <1>;
- 			ti,sci = <&dmsc>;
--			ti,sci-dst-id = <14>;
--			ti,sci-rm-range-girq = <0>, <2>;
-+			ti,sci-dev-id = <213>;
-+			ti,interrupt-ranges = <0 64 64>,
-+					      <64 448 64>,
-+					      <128 672 64>;
- 		};
- 
- 		main_udmass_inta: interrupt-controller@33d00000 {
-@@ -115,8 +117,7 @@
- 			msi-controller;
- 			ti,sci = <&dmsc>;
- 			ti,sci-dev-id = <209>;
--			ti,sci-rm-range-vint = <0xa>;
--			ti,sci-rm-range-global-event = <0xd>;
-+			ti,interrupt-ranges = <0 0 256>;
- 		};
- 
- 		secure_proxy_main: mailbox@32c00000 {
-@@ -296,7 +297,7 @@
- 			reg-names = "cpts";
- 			clocks = <&k3_clks 201 1>;
- 			clock-names = "cpts";
--			interrupts-extended = <&main_navss_intr 201 0>;
-+			interrupts-extended = <&main_navss_intr 391>;
- 			interrupt-names = "cpts";
- 			ti,cpts-periodic-outputs = <6>;
- 			ti,cpts-ext-ts-inputs = <8>;
-@@ -688,8 +689,8 @@
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&main_gpio_intr>;
--		interrupts = <105 0>, <105 1>, <105 2>, <105 3>,
--			     <105 4>, <105 5>, <105 6>, <105 7>;
-+		interrupts = <256>, <257>, <258>, <259>,
-+			     <260>, <261>, <262>, <263>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,ngpio = <128>;
-@@ -705,7 +706,7 @@
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&main_gpio_intr>;
--		interrupts = <106 0>, <106 1>, <106 2>;
-+		interrupts = <288>, <289>, <290>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,ngpio = <36>;
-@@ -721,8 +722,8 @@
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&main_gpio_intr>;
--		interrupts = <107 0>, <107 1>, <107 2>, <107 3>,
--			     <107 4>, <107 5>, <107 6>, <107 7>;
-+		interrupts = <264>, <265>, <266>, <267>,
-+			     <268>, <269>, <270>, <271>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,ngpio = <128>;
-@@ -738,7 +739,7 @@
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&main_gpio_intr>;
--		interrupts = <108 0>, <108 1>, <108 2>;
-+		interrupts = <292>, <293>, <294>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,ngpio = <36>;
-@@ -754,8 +755,8 @@
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&main_gpio_intr>;
--		interrupts = <109 0>, <109 1>, <109 2>, <109 3>,
--			     <109 4>, <109 5>, <109 6>, <109 7>;
-+		interrupts = <272>, <273>, <274>, <275>,
-+			     <276>, <277>, <278>, <279>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,ngpio = <128>;
-@@ -771,7 +772,7 @@
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&main_gpio_intr>;
--		interrupts = <110 0>, <110 1>, <110 2>;
-+		interrupts = <296>, <297>, <298>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,ngpio = <36>;
-@@ -787,8 +788,8 @@
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&main_gpio_intr>;
--		interrupts = <111 0>, <111 1>, <111 2>, <111 3>,
--			     <111 4>, <111 5>, <111 6>, <111 7>;
-+		interrupts = <280>, <281>, <282>, <283>,
-+			     <284>, <285>, <286>, <287>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,ngpio = <128>;
-@@ -804,7 +805,7 @@
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&main_gpio_intr>;
--		interrupts = <112 0>, <112 1>, <112 2>;
-+		interrupts = <300>, <301>, <302>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,ngpio = <36>;
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-index 30a735bcd0c8..c4a48e8d420a 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-@@ -101,10 +101,10 @@
- 		ti,intr-trigger-type = <1>;
- 		interrupt-controller;
- 		interrupt-parent = <&gic500>;
--		#interrupt-cells = <2>;
-+		#interrupt-cells = <1>;
- 		ti,sci = <&dmsc>;
--		ti,sci-dst-id = <14>;
--		ti,sci-rm-range-girq = <0x5>;
-+		ti,sci-dev-id = <137>;
-+		ti,interrupt-ranges = <16 960 16>;
- 	};
- 
- 	wkup_gpio0: gpio@42110000 {
-@@ -113,8 +113,7 @@
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&wkup_gpio_intr>;
--		interrupts = <113 0>, <113 1>, <113 2>,
--			     <113 3>, <113 4>, <113 5>;
-+		interrupts = <103>, <104>, <105>, <106>, <107>, <108>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,ngpio = <84>;
-@@ -130,8 +129,7 @@
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 		interrupt-parent = <&wkup_gpio_intr>;
--		interrupts = <114 0>, <114 1>, <114 2>,
--			     <114 3>, <114 4>, <114 5>;
-+		interrupts = <112>, <113>, <114>, <115>, <116>, <117>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 		ti,ngpio = <84>;
-diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index 53cee17d0115..722af9ee53d6 100644
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -64,22 +64,6 @@ struct ti_sci_xfers_info {
- 	spinlock_t xfer_lock;
- };
- 
--/**
-- * struct ti_sci_rm_type_map - Structure representing TISCI Resource
-- *				management representation of dev_ids.
-- * @dev_id:	TISCI device ID
-- * @type:	Corresponding id as identified by TISCI RM.
-- *
-- * Note: This is used only as a work around for using RM range apis
-- *	for AM654 SoC. For future SoCs dev_id will be used as type
-- *	for RM range APIs. In order to maintain ABI backward compatibility
-- *	type is not being changed for AM654 SoC.
-- */
--struct ti_sci_rm_type_map {
--	u32 dev_id;
--	u16 type;
--};
--
- /**
-  * struct ti_sci_desc - Description of SoC integration
-  * @default_host_id:	Host identifier representing the compute entity
-@@ -87,14 +71,12 @@ struct ti_sci_rm_type_map {
-  * @max_msgs: Maximum number of messages that can be pending
-  *		  simultaneously in the system
-  * @max_msg_size: Maximum size of data per message that can be handled.
-- * @rm_type_map: RM resource type mapping structure.
-  */
- struct ti_sci_desc {
- 	u8 default_host_id;
- 	int max_rx_timeout_ms;
- 	int max_msgs;
- 	int max_msg_size;
--	struct ti_sci_rm_type_map *rm_type_map;
- };
- 
- /**
-@@ -1710,33 +1692,6 @@ static int ti_sci_cmd_core_reboot(const struct ti_sci_handle *handle)
- 	return ret;
+-	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, smp_processor_id());
  }
  
--static int ti_sci_get_resource_type(struct ti_sci_info *info, u16 dev_id,
--				    u16 *type)
--{
--	struct ti_sci_rm_type_map *rm_type_map = info->desc->rm_type_map;
--	bool found = false;
--	int i;
--
--	/* If map is not provided then assume dev_id is used as type */
--	if (!rm_type_map) {
--		*type = dev_id;
--		return 0;
--	}
--
--	for (i = 0; rm_type_map[i].dev_id; i++) {
--		if (rm_type_map[i].dev_id == dev_id) {
--			*type = rm_type_map[i].type;
--			found = true;
--			break;
--		}
--	}
--
--	if (!found)
--		return -EINVAL;
--
--	return 0;
--}
--
- /**
-  * ti_sci_get_resource_range - Helper to get a range of resources assigned
-  *			       to a host. Resource is uniquely identified by
-@@ -1760,7 +1715,6 @@ static int ti_sci_get_resource_range(const struct ti_sci_handle *handle,
- 	struct ti_sci_xfer *xfer;
- 	struct ti_sci_info *info;
- 	struct device *dev;
--	u16 type;
- 	int ret = 0;
+ #ifdef CONFIG_SUSPEND
+diff --git a/arch/arm64/include/asm/irqflags.h b/arch/arm64/include/asm/irqflags.h
+index aa4b6521ef14..ff328e5bbb75 100644
+--- a/arch/arm64/include/asm/irqflags.h
++++ b/arch/arm64/include/asm/irqflags.h
+@@ -95,6 +95,11 @@ static inline int arch_irqs_disabled_flags(unsigned long flags)
+ 	return res;
+ }
  
- 	if (IS_ERR(handle))
-@@ -1780,15 +1734,9 @@ static int ti_sci_get_resource_range(const struct ti_sci_handle *handle,
- 		return ret;
++static inline int arch_irqs_disabled(void)
++{
++	return arch_irqs_disabled_flags(arch_local_save_flags());
++}
++
+ static inline unsigned long arch_local_irq_save(void)
+ {
+ 	unsigned long flags;
+diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+index b63ce4c54cfe..f1804496b935 100644
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -123,10 +123,8 @@ void arch_cpu_idle(void)
+ 	 * This should do all the clock switching and wait for interrupt
+ 	 * tricks
+ 	 */
+-	trace_cpu_idle_rcuidle(1, smp_processor_id());
+ 	cpu_do_idle();
+ 	local_irq_enable();
+-	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, smp_processor_id());
+ }
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+diff --git a/arch/mips/include/asm/irqflags.h b/arch/mips/include/asm/irqflags.h
+index 47a8ffc0b413..f5b8300f4573 100644
+--- a/arch/mips/include/asm/irqflags.h
++++ b/arch/mips/include/asm/irqflags.h
+@@ -137,6 +137,11 @@ static inline int arch_irqs_disabled_flags(unsigned long flags)
+ 	return !(flags & 1);
+ }
+ 
++static inline int arch_irqs_disabled(void)
++{
++	return arch_irqs_disabled_flags(arch_local_save_flags());
++}
++
+ #endif /* #ifndef __ASSEMBLY__ */
+ 
+ /*
+diff --git a/arch/nds32/include/asm/irqflags.h b/arch/nds32/include/asm/irqflags.h
+index fb45ec46bb1b..51ef800bb301 100644
+--- a/arch/nds32/include/asm/irqflags.h
++++ b/arch/nds32/include/asm/irqflags.h
+@@ -34,3 +34,8 @@ static inline int arch_irqs_disabled_flags(unsigned long flags)
+ {
+ 	return !flags;
+ }
++
++static inline int arch_irqs_disabled(void)
++{
++	return arch_irqs_disabled_flags(arch_local_save_flags());
++}
+diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm/hw_irq.h
+index 3a0db7b0b46e..35060be09073 100644
+--- a/arch/powerpc/include/asm/hw_irq.h
++++ b/arch/powerpc/include/asm/hw_irq.h
+@@ -200,17 +200,14 @@ static inline bool arch_irqs_disabled(void)
+ #define powerpc_local_irq_pmu_save(flags)			\
+ 	 do {							\
+ 		raw_local_irq_pmu_save(flags);			\
+-		trace_hardirqs_off();				\
++		if (!raw_irqs_disabled_flags(flags))		\
++			trace_hardirqs_off();			\
+ 	} while(0)
+ #define powerpc_local_irq_pmu_restore(flags)			\
+ 	do {							\
+-		if (raw_irqs_disabled_flags(flags)) {		\
+-			raw_local_irq_pmu_restore(flags);	\
+-			trace_hardirqs_off();			\
+-		} else {					\
++		if (!raw_irqs_disabled_flags(flags))		\
+ 			trace_hardirqs_on();			\
+-			raw_local_irq_pmu_restore(flags);	\
+-		}						\
++		raw_local_irq_pmu_restore(flags);		\
+ 	} while(0)
+ #else
+ #define powerpc_local_irq_pmu_save(flags)			\
+diff --git a/arch/s390/kernel/idle.c b/arch/s390/kernel/idle.c
+index 88bb42ca5008..c73f50649e7e 100644
+--- a/arch/s390/kernel/idle.c
++++ b/arch/s390/kernel/idle.c
+@@ -33,14 +33,13 @@ void enabled_wait(void)
+ 		PSW_MASK_IO | PSW_MASK_EXT | PSW_MASK_MCHECK;
+ 	clear_cpu_flag(CIF_NOHZ_DELAY);
+ 
+-	trace_cpu_idle_rcuidle(1, smp_processor_id());
+ 	local_irq_save(flags);
+ 	/* Call the assembler magic in entry.S */
+ 	psw_idle(idle, psw_mask);
+ 	local_irq_restore(flags);
+-	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, smp_processor_id());
+ 
+ 	/* Account time spent with enabled wait psw loaded as idle time. */
++	/* XXX seqcount has tracepoints that require RCU */
+ 	write_seqcount_begin(&idle->seqcount);
+ 	idle_time = idle->clock_idle_exit - idle->clock_idle_enter;
+ 	idle->clock_idle_enter = idle->clock_idle_exit = 0ULL;
+diff --git a/arch/x86/entry/thunk_32.S b/arch/x86/entry/thunk_32.S
+index 3a07ce3ec70b..f1f96d4d8cd6 100644
+--- a/arch/x86/entry/thunk_32.S
++++ b/arch/x86/entry/thunk_32.S
+@@ -29,11 +29,6 @@ SYM_CODE_START_NOALIGN(\name)
+ SYM_CODE_END(\name)
+ 	.endm
+ 
+-#ifdef CONFIG_TRACE_IRQFLAGS
+-	THUNK trace_hardirqs_on_thunk,trace_hardirqs_on_caller,1
+-	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller,1
+-#endif
+-
+ #ifdef CONFIG_PREEMPTION
+ 	THUNK preempt_schedule_thunk, preempt_schedule
+ 	THUNK preempt_schedule_notrace_thunk, preempt_schedule_notrace
+diff --git a/arch/x86/include/asm/mmu.h b/arch/x86/include/asm/mmu.h
+index 0a301ad0b02f..9257667d13c5 100644
+--- a/arch/x86/include/asm/mmu.h
++++ b/arch/x86/include/asm/mmu.h
+@@ -59,5 +59,6 @@ typedef struct {
  	}
  
--	ret = ti_sci_get_resource_type(info, dev_id, &type);
--	if (ret) {
--		dev_err(dev, "rm type lookup failed for %u\n", dev_id);
--		goto fail;
--	}
--
- 	req = (struct ti_sci_msg_req_get_resource_range *)xfer->xfer_buf;
- 	req->secondary_host = s_host;
--	req->type = type & MSG_RM_RESOURCE_TYPE_MASK;
-+	req->type = dev_id & MSG_RM_RESOURCE_TYPE_MASK;
- 	req->subtype = subtype & MSG_RM_RESOURCE_SUBTYPE_MASK;
+ void leave_mm(int cpu);
++#define leave_mm leave_mm
  
- 	ret = ti_sci_do_xfer(info, xfer);
-@@ -3260,61 +3208,50 @@ u32 ti_sci_get_num_resources(struct ti_sci_resource *res)
- EXPORT_SYMBOL_GPL(ti_sci_get_num_resources);
- 
- /**
-- * devm_ti_sci_get_of_resource() - Get a TISCI resource assigned to a device
-+ * devm_ti_sci_get_resource_sets() - Get a TISCI resources assigned to a device
-  * @handle:	TISCI handle
-  * @dev:	Device pointer to which the resource is assigned
-  * @dev_id:	TISCI device id to which the resource is assigned
-- * @of_prop:	property name by which the resource are represented
-+ * @sub_types:	Array of sub_types assigned corresponding to device
-+ * @sets:	Number of sub_types
-  *
-  * Return: Pointer to ti_sci_resource if all went well else appropriate
-  *	   error pointer.
+ #endif /* _ASM_X86_MMU_H */
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index 994d8393f2f7..13ce616cc7af 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -684,9 +684,7 @@ void arch_cpu_idle(void)
   */
--struct ti_sci_resource *
--devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
--			    struct device *dev, u32 dev_id, char *of_prop)
-+static struct ti_sci_resource *
-+devm_ti_sci_get_resource_sets(const struct ti_sci_handle *handle,
-+			      struct device *dev, u32 dev_id, u32 *sub_types,
-+			      u32 sets)
+ void __cpuidle default_idle(void)
  {
- 	struct ti_sci_resource *res;
- 	bool valid_set = false;
--	u32 resource_subtype;
- 	int i, ret;
+-	trace_cpu_idle_rcuidle(1, smp_processor_id());
+ 	safe_halt();
+-	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, smp_processor_id());
+ }
+ #if defined(CONFIG_APM_MODULE) || defined(CONFIG_HALTPOLL_CPUIDLE_MODULE)
+ EXPORT_SYMBOL(default_idle);
+@@ -792,7 +790,6 @@ static int prefer_mwait_c1_over_halt(const struct cpuinfo_x86 *c)
+ static __cpuidle void mwait_idle(void)
+ {
+ 	if (!current_set_polling_and_test()) {
+-		trace_cpu_idle_rcuidle(1, smp_processor_id());
+ 		if (this_cpu_has(X86_BUG_CLFLUSH_MONITOR)) {
+ 			mb(); /* quirk */
+ 			clflush((void *)&current_thread_info()->flags);
+@@ -804,7 +801,6 @@ static __cpuidle void mwait_idle(void)
+ 			__sti_mwait(0, 0);
+ 		else
+ 			local_irq_enable();
+-		trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, smp_processor_id());
+ 	} else {
+ 		local_irq_enable();
+ 	}
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 1a3569b43aa5..0951b47e64c1 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -555,21 +555,12 @@ void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
+ 		this_cpu_write(cpu_tlbstate.ctxs[new_asid].tlb_gen, next_tlb_gen);
+ 		load_new_mm_cr3(next->pgd, new_asid, true);
  
- 	res = devm_kzalloc(dev, sizeof(*res), GFP_KERNEL);
- 	if (!res)
- 		return ERR_PTR(-ENOMEM);
+-		/*
+-		 * NB: This gets called via leave_mm() in the idle path
+-		 * where RCU functions differently.  Tracing normally
+-		 * uses RCU, so we need to use the _rcuidle variant.
+-		 *
+-		 * (There is no good reason for this.  The idle code should
+-		 *  be rearranged to call this before rcu_idle_enter().)
+-		 */
+-		trace_tlb_flush_rcuidle(TLB_FLUSH_ON_TASK_SWITCH, TLB_FLUSH_ALL);
++		trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, TLB_FLUSH_ALL);
+ 	} else {
+ 		/* The new ASID is already up to date. */
+ 		load_new_mm_cr3(next->pgd, new_asid, false);
  
--	ret = of_property_count_elems_of_size(dev_of_node(dev), of_prop,
--					      sizeof(u32));
--	if (ret < 0) {
--		dev_err(dev, "%s resource type ids not available\n", of_prop);
--		return ERR_PTR(ret);
--	}
--	res->sets = ret;
+-		/* See above wrt _rcuidle. */
+-		trace_tlb_flush_rcuidle(TLB_FLUSH_ON_TASK_SWITCH, 0);
++		trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, 0);
+ 	}
+ 
+ 	/* Make sure we write CR3 before loaded_mm. */
+diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+index 87197319ab06..04becd70cc41 100644
+--- a/drivers/cpuidle/cpuidle.c
++++ b/drivers/cpuidle/cpuidle.c
+@@ -22,6 +22,7 @@
+ #include <linux/module.h>
+ #include <linux/suspend.h>
+ #include <linux/tick.h>
++#include <linux/mmu_context.h>
+ #include <trace/events/power.h>
+ 
+ #include "cpuidle.h"
+@@ -145,21 +146,24 @@ static void enter_s2idle_proper(struct cpuidle_driver *drv,
+ 	 * executing it contains RCU usage regarded as invalid in the idle
+ 	 * context, so tell RCU about that.
+ 	 */
+-	RCU_NONIDLE(tick_freeze());
++	tick_freeze();
+ 	/*
+ 	 * The state used here cannot be a "coupled" one, because the "coupled"
+ 	 * cpuidle mechanism enables interrupts and doing that with timekeeping
+ 	 * suspended is generally unsafe.
+ 	 */
+ 	stop_critical_timings();
++	rcu_idle_enter();
+ 	drv->states[index].enter_s2idle(dev, drv, index);
+-	WARN_ON(!irqs_disabled());
++	if (WARN_ON_ONCE(!irqs_disabled()))
++		local_irq_disable();
+ 	/*
+ 	 * timekeeping_resume() that will be called by tick_unfreeze() for the
+ 	 * first CPU executing it calls functions containing RCU read-side
+ 	 * critical sections, so tell RCU about that.
+ 	 */
+-	RCU_NONIDLE(tick_unfreeze());
++	rcu_idle_exit();
++	tick_unfreeze();
+ 	start_critical_timings();
+ 
+ 	time_end = ns_to_ktime(local_clock());
+@@ -225,19 +229,24 @@ int cpuidle_enter_state(struct cpuidle_device *dev, struct cpuidle_driver *drv,
+ 		broadcast = false;
+ 	}
+ 
++	if (target_state->flags & CPUIDLE_FLAG_TLB_FLUSHED)
++		leave_mm(dev->cpu);
++
+ 	/* Take note of the planned idle state. */
+ 	sched_idle_set_state(target_state);
+ 
+-	trace_cpu_idle_rcuidle(index, dev->cpu);
++	trace_cpu_idle(index, dev->cpu);
+ 	time_start = ns_to_ktime(local_clock());
+ 
+ 	stop_critical_timings();
++	rcu_idle_enter();
+ 	entered_state = target_state->enter(dev, drv, index);
++	rcu_idle_exit();
+ 	start_critical_timings();
+ 
+ 	sched_clock_idle_wakeup_event();
+ 	time_end = ns_to_ktime(local_clock());
+-	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, dev->cpu);
++	trace_cpu_idle(PWR_EVENT_EXIT, dev->cpu);
+ 
+ 	/* The cpu is no longer idle or about to enter idle. */
+ 	sched_idle_set_state(NULL);
+diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+index 8e0fb1a5bdbd..9a810e4a7946 100644
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -89,14 +89,6 @@ static unsigned int mwait_substates __initdata;
+  */
+ #define CPUIDLE_FLAG_ALWAYS_ENABLE	BIT(15)
+ 
+-/*
+- * Set this flag for states where the HW flushes the TLB for us
+- * and so we don't need cross-calls to keep it consistent.
+- * If this flag is set, SW flushes the TLB, so even if the
+- * HW doesn't do the flushing, this flag is safe to use.
+- */
+-#define CPUIDLE_FLAG_TLB_FLUSHED	BIT(16)
 -
-+	res->sets = sets;
- 	res->desc = devm_kcalloc(dev, res->sets, sizeof(*res->desc),
- 				 GFP_KERNEL);
- 	if (!res->desc)
- 		return ERR_PTR(-ENOMEM);
- 
- 	for (i = 0; i < res->sets; i++) {
--		ret = of_property_read_u32_index(dev_of_node(dev), of_prop, i,
--						 &resource_subtype);
--		if (ret)
--			return ERR_PTR(-EINVAL);
+ /*
+  * MWAIT takes an 8-bit "hint" in EAX "suggesting"
+  * the C-state (top nibble) and sub-state (bottom nibble)
+@@ -131,14 +123,6 @@ static __cpuidle int intel_idle(struct cpuidle_device *dev,
+ 	unsigned long eax = flg2MWAIT(state->flags);
+ 	unsigned long ecx = 1; /* break on interrupt flag */
+ 	bool tick;
+-	int cpu = smp_processor_id();
 -
- 		ret = handle->ops.rm_core_ops.get_range(handle, dev_id,
--							resource_subtype,
-+							sub_types[i],
- 							&res->desc[i].start,
- 							&res->desc[i].num);
- 		if (ret) {
- 			dev_dbg(dev, "dev = %d subtype %d not allocated for this host\n",
--				dev_id, resource_subtype);
-+				dev_id, sub_types[i]);
- 			res->desc[i].start = 0;
- 			res->desc[i].num = 0;
- 			continue;
+-	/*
+-	 * leave_mm() to avoid costly and often unnecessary wakeups
+-	 * for flushing the user TLB's associated with the active mm.
+-	 */
+-	if (state->flags & CPUIDLE_FLAG_TLB_FLUSHED)
+-		leave_mm(cpu);
+ 
+ 	if (!static_cpu_has(X86_FEATURE_ARAT)) {
+ 		/*
+diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+index b65909ae4e20..75895e6363b8 100644
+--- a/include/linux/cpuidle.h
++++ b/include/linux/cpuidle.h
+@@ -75,12 +75,13 @@ struct cpuidle_state {
+ };
+ 
+ /* Idle State Flags */
+-#define CPUIDLE_FLAG_NONE       (0x00)
+-#define CPUIDLE_FLAG_POLLING	BIT(0) /* polling state */
+-#define CPUIDLE_FLAG_COUPLED	BIT(1) /* state applies to multiple cpus */
+-#define CPUIDLE_FLAG_TIMER_STOP BIT(2) /* timer is stopped on this state */
+-#define CPUIDLE_FLAG_UNUSABLE	BIT(3) /* avoid using this state */
+-#define CPUIDLE_FLAG_OFF	BIT(4) /* disable this state by default */
++#define CPUIDLE_FLAG_NONE       	(0x00)
++#define CPUIDLE_FLAG_POLLING		BIT(0) /* polling state */
++#define CPUIDLE_FLAG_COUPLED		BIT(1) /* state applies to multiple cpus */
++#define CPUIDLE_FLAG_TIMER_STOP 	BIT(2) /* timer is stopped on this state */
++#define CPUIDLE_FLAG_UNUSABLE		BIT(3) /* avoid using this state */
++#define CPUIDLE_FLAG_OFF		BIT(4) /* disable this state by default */
++#define CPUIDLE_FLAG_TLB_FLUSHED	BIT(5) /* idle-state flushes TLBs */
+ 
+ struct cpuidle_device_kobj;
+ struct cpuidle_state_kobj;
+diff --git a/include/linux/irqflags.h b/include/linux/irqflags.h
+index bd5c55755447..3ed4e8771b64 100644
+--- a/include/linux/irqflags.h
++++ b/include/linux/irqflags.h
+@@ -49,17 +49,18 @@ struct irqtrace_events {
+ DECLARE_PER_CPU(int, hardirqs_enabled);
+ DECLARE_PER_CPU(int, hardirq_context);
+ 
+-  extern void trace_hardirqs_on_prepare(void);
+-  extern void trace_hardirqs_off_finish(void);
+-  extern void trace_hardirqs_on(void);
+-  extern void trace_hardirqs_off(void);
+-# define lockdep_hardirq_context()	(this_cpu_read(hardirq_context))
++extern void trace_hardirqs_on_prepare(void);
++extern void trace_hardirqs_off_finish(void);
++extern void trace_hardirqs_on(void);
++extern void trace_hardirqs_off(void);
++
++# define lockdep_hardirq_context()	(raw_cpu_read(hardirq_context))
+ # define lockdep_softirq_context(p)	((p)->softirq_context)
+ # define lockdep_hardirqs_enabled()	(this_cpu_read(hardirqs_enabled))
+ # define lockdep_softirqs_enabled(p)	((p)->softirqs_enabled)
+ # define lockdep_hardirq_enter()			\
+ do {							\
+-	if (this_cpu_inc_return(hardirq_context) == 1)	\
++	if (__this_cpu_inc_return(hardirq_context) == 1)\
+ 		current->hardirq_threaded = 0;		\
+ } while (0)
+ # define lockdep_hardirq_threaded()		\
+@@ -68,7 +69,7 @@ do {						\
+ } while (0)
+ # define lockdep_hardirq_exit()			\
+ do {						\
+-	this_cpu_dec(hardirq_context);		\
++	__this_cpu_dec(hardirq_context);	\
+ } while (0)
+ # define lockdep_softirq_enter()		\
+ do {						\
+@@ -120,17 +121,17 @@ do {						\
+ #else
+ # define trace_hardirqs_on_prepare()		do { } while (0)
+ # define trace_hardirqs_off_finish()		do { } while (0)
+-# define trace_hardirqs_on()		do { } while (0)
+-# define trace_hardirqs_off()		do { } while (0)
+-# define lockdep_hardirq_context()	0
+-# define lockdep_softirq_context(p)	0
+-# define lockdep_hardirqs_enabled()	0
+-# define lockdep_softirqs_enabled(p)	0
+-# define lockdep_hardirq_enter()	do { } while (0)
+-# define lockdep_hardirq_threaded()	do { } while (0)
+-# define lockdep_hardirq_exit()		do { } while (0)
+-# define lockdep_softirq_enter()	do { } while (0)
+-# define lockdep_softirq_exit()		do { } while (0)
++# define trace_hardirqs_on()			do { } while (0)
++# define trace_hardirqs_off()			do { } while (0)
++# define lockdep_hardirq_context()		0
++# define lockdep_softirq_context(p)		0
++# define lockdep_hardirqs_enabled()		0
++# define lockdep_softirqs_enabled(p)		0
++# define lockdep_hardirq_enter()		do { } while (0)
++# define lockdep_hardirq_threaded()		do { } while (0)
++# define lockdep_hardirq_exit()			do { } while (0)
++# define lockdep_softirq_enter()		do { } while (0)
++# define lockdep_softirq_exit()			do { } while (0)
+ # define lockdep_hrtimer_enter(__hrtimer)	false
+ # define lockdep_hrtimer_exit(__context)	do { } while (0)
+ # define lockdep_posixtimer_enter()		do { } while (0)
+@@ -181,26 +182,33 @@ do {						\
+  * if !TRACE_IRQFLAGS.
+  */
+ #ifdef CONFIG_TRACE_IRQFLAGS
+-#define local_irq_enable() \
+-	do { trace_hardirqs_on(); raw_local_irq_enable(); } while (0)
+-#define local_irq_disable() \
+-	do { raw_local_irq_disable(); trace_hardirqs_off(); } while (0)
++
++#define local_irq_enable()				\
++	do {						\
++		trace_hardirqs_on();			\
++		raw_local_irq_enable();			\
++	} while (0)
++
++#define local_irq_disable()				\
++	do {						\
++		bool was_disabled = raw_irqs_disabled();\
++		raw_local_irq_disable();		\
++		if (!was_disabled)			\
++			trace_hardirqs_off();		\
++	} while (0)
++
+ #define local_irq_save(flags)				\
+ 	do {						\
+ 		raw_local_irq_save(flags);		\
+-		trace_hardirqs_off();			\
++		if (!raw_irqs_disabled_flags(flags))	\
++			trace_hardirqs_off();		\
+ 	} while (0)
+ 
+-
+ #define local_irq_restore(flags)			\
+ 	do {						\
+-		if (raw_irqs_disabled_flags(flags)) {	\
+-			raw_local_irq_restore(flags);	\
+-			trace_hardirqs_off();		\
+-		} else {				\
++		if (!raw_irqs_disabled_flags(flags))	\
+ 			trace_hardirqs_on();		\
+-			raw_local_irq_restore(flags);	\
+-		}					\
++		raw_local_irq_restore(flags);		\
+ 	} while (0)
+ 
+ #define safe_halt()				\
+@@ -214,10 +222,7 @@ do {						\
+ 
+ #define local_irq_enable()	do { raw_local_irq_enable(); } while (0)
+ #define local_irq_disable()	do { raw_local_irq_disable(); } while (0)
+-#define local_irq_save(flags)					\
+-	do {							\
+-		raw_local_irq_save(flags);			\
+-	} while (0)
++#define local_irq_save(flags)	do { raw_local_irq_save(flags); } while (0)
+ #define local_irq_restore(flags) do { raw_local_irq_restore(flags); } while (0)
+ #define safe_halt()		do { raw_safe_halt(); } while (0)
+ 
+diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
+index 62a382d1845b..6a584b3e5c74 100644
+--- a/include/linux/lockdep.h
++++ b/include/linux/lockdep.h
+@@ -535,19 +535,27 @@ do {									\
+ DECLARE_PER_CPU(int, hardirqs_enabled);
+ DECLARE_PER_CPU(int, hardirq_context);
+ 
++/*
++ * The below lockdep_assert_*() macros use raw_cpu_read() to access the above
++ * per-cpu variables. This is required because this_cpu_read() will potentially
++ * call into preempt/irq-disable and that obviously isn't right. This is also
++ * correct because when IRQs are enabled, it doesn't matter if we accidentally
++ * read the value from our previous CPU.
++ */
++
+ #define lockdep_assert_irqs_enabled()					\
+ do {									\
+-	WARN_ON_ONCE(debug_locks && !this_cpu_read(hardirqs_enabled));	\
++	WARN_ON_ONCE(debug_locks && !raw_cpu_read(hardirqs_enabled));	\
+ } while (0)
+ 
+ #define lockdep_assert_irqs_disabled()					\
+ do {									\
+-	WARN_ON_ONCE(debug_locks && this_cpu_read(hardirqs_enabled));	\
++	WARN_ON_ONCE(debug_locks && raw_cpu_read(hardirqs_enabled));	\
+ } while (0)
+ 
+ #define lockdep_assert_in_irq()						\
+ do {									\
+-	WARN_ON_ONCE(debug_locks && !this_cpu_read(hardirq_context));	\
++	WARN_ON_ONCE(debug_locks && !raw_cpu_read(hardirq_context));	\
+ } while (0)
+ 
+ #define lockdep_assert_preemption_enabled()				\
+@@ -555,7 +563,7 @@ do {									\
+ 	WARN_ON_ONCE(IS_ENABLED(CONFIG_PREEMPT_COUNT)	&&		\
+ 		     debug_locks			&&		\
+ 		     (preempt_count() != 0		||		\
+-		      !this_cpu_read(hardirqs_enabled)));		\
++		      !raw_cpu_read(hardirqs_enabled)));		\
+ } while (0)
+ 
+ #define lockdep_assert_preemption_disabled()				\
+@@ -563,7 +571,7 @@ do {									\
+ 	WARN_ON_ONCE(IS_ENABLED(CONFIG_PREEMPT_COUNT)	&&		\
+ 		     debug_locks			&&		\
+ 		     (preempt_count() == 0		&&		\
+-		      this_cpu_read(hardirqs_enabled)));		\
++		      raw_cpu_read(hardirqs_enabled)));			\
+ } while (0)
+ 
+ #else
+diff --git a/include/linux/mmu_context.h b/include/linux/mmu_context.h
+index c51a84132d7c..03dee12d2b61 100644
+--- a/include/linux/mmu_context.h
++++ b/include/linux/mmu_context.h
+@@ -3,10 +3,15 @@
+ #define _LINUX_MMU_CONTEXT_H
+ 
+ #include <asm/mmu_context.h>
++#include <asm/mmu.h>
+ 
+ /* Architectures that care about IRQ state in switch_mm can override this. */
+ #ifndef switch_mm_irqs_off
+ # define switch_mm_irqs_off switch_mm
+ #endif
+ 
++#ifndef leave_mm
++static inline void leave_mm(int cpu) { }
++#endif
++
+ #endif
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 2fad21d345b0..54b74fabf40c 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -3756,7 +3756,7 @@ void noinstr lockdep_hardirqs_on(unsigned long ip)
+ 
+ skip_checks:
+ 	/* we'll do an OFF -> ON transition: */
+-	this_cpu_write(hardirqs_enabled, 1);
++	__this_cpu_write(hardirqs_enabled, 1);
+ 	trace->hardirq_enable_ip = ip;
+ 	trace->hardirq_enable_event = ++trace->irq_events;
+ 	debug_atomic_inc(hardirqs_on_events);
+@@ -3795,7 +3795,7 @@ void noinstr lockdep_hardirqs_off(unsigned long ip)
+ 		/*
+ 		 * We have done an ON -> OFF transition:
+ 		 */
+-		this_cpu_write(hardirqs_enabled, 0);
++		__this_cpu_write(hardirqs_enabled, 0);
+ 		trace->hardirq_disable_ip = ip;
+ 		trace->hardirq_disable_event = ++trace->irq_events;
+ 		debug_atomic_inc(hardirqs_off_events);
+@@ -4977,6 +4977,8 @@ void lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+ {
+ 	unsigned long flags;
+ 
++	trace_lock_acquire(lock, subclass, trylock, read, check, nest_lock, ip);
++
+ 	if (unlikely(current->lockdep_recursion)) {
+ 		/* XXX allow trylock from NMI ?!? */
+ 		if (lockdep_nmi() && !trylock) {
+@@ -5001,7 +5003,6 @@ void lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+ 	check_flags(flags);
+ 
+ 	current->lockdep_recursion++;
+-	trace_lock_acquire(lock, subclass, trylock, read, check, nest_lock, ip);
+ 	__lock_acquire(lock, subclass, trylock, read, check,
+ 		       irqs_disabled_flags(flags), nest_lock, ip, 0, 0);
+ 	lockdep_recursion_finish();
+@@ -5013,13 +5014,15 @@ void lock_release(struct lockdep_map *lock, unsigned long ip)
+ {
+ 	unsigned long flags;
+ 
++	trace_lock_release(lock, ip);
++
+ 	if (unlikely(current->lockdep_recursion))
+ 		return;
+ 
+ 	raw_local_irq_save(flags);
+ 	check_flags(flags);
++
+ 	current->lockdep_recursion++;
+-	trace_lock_release(lock, ip);
+ 	if (__lock_release(lock, ip))
+ 		check_chain_key(current);
+ 	lockdep_recursion_finish();
+@@ -5205,8 +5208,6 @@ __lock_acquired(struct lockdep_map *lock, unsigned long ip)
+ 		hlock->holdtime_stamp = now;
+ 	}
+ 
+-	trace_lock_acquired(lock, ip);
+-
+ 	stats = get_lock_stats(hlock_class(hlock));
+ 	if (waittime) {
+ 		if (hlock->read)
+@@ -5225,6 +5226,8 @@ void lock_contended(struct lockdep_map *lock, unsigned long ip)
+ {
+ 	unsigned long flags;
+ 
++	trace_lock_acquired(lock, ip);
++
+ 	if (unlikely(!lock_stat || !debug_locks))
+ 		return;
+ 
+@@ -5234,7 +5237,6 @@ void lock_contended(struct lockdep_map *lock, unsigned long ip)
+ 	raw_local_irq_save(flags);
+ 	check_flags(flags);
+ 	current->lockdep_recursion++;
+-	trace_lock_contended(lock, ip);
+ 	__lock_contended(lock, ip);
+ 	lockdep_recursion_finish();
+ 	raw_local_irq_restore(flags);
+@@ -5245,6 +5247,8 @@ void lock_acquired(struct lockdep_map *lock, unsigned long ip)
+ {
+ 	unsigned long flags;
+ 
++	trace_lock_contended(lock, ip);
++
+ 	if (unlikely(!lock_stat || !debug_locks))
+ 		return;
+ 
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index 6bf34986f45c..f324dc36fc43 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -54,17 +54,18 @@ __setup("hlt", cpu_idle_nopoll_setup);
+ 
+ static noinline int __cpuidle cpu_idle_poll(void)
+ {
++	trace_cpu_idle(0, smp_processor_id());
++	stop_critical_timings();
+ 	rcu_idle_enter();
+-	trace_cpu_idle_rcuidle(0, smp_processor_id());
+ 	local_irq_enable();
+-	stop_critical_timings();
+ 
+ 	while (!tif_need_resched() &&
+-		(cpu_idle_force_poll || tick_check_broadcast_expired()))
++	       (cpu_idle_force_poll || tick_check_broadcast_expired()))
+ 		cpu_relax();
+-	start_critical_timings();
+-	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, smp_processor_id());
++
+ 	rcu_idle_exit();
++	start_critical_timings();
++	trace_cpu_idle(PWR_EVENT_EXIT, smp_processor_id());
+ 
+ 	return 1;
+ }
+@@ -90,9 +91,14 @@ void __cpuidle default_idle_call(void)
+ 	if (current_clr_polling_and_test()) {
+ 		local_irq_enable();
+ 	} else {
++
++		trace_cpu_idle(1, smp_processor_id());
+ 		stop_critical_timings();
++		rcu_idle_enter();
+ 		arch_cpu_idle();
++		rcu_idle_exit();
+ 		start_critical_timings();
++		trace_cpu_idle(PWR_EVENT_EXIT, smp_processor_id());
+ 	}
+ }
+ 
+@@ -158,7 +164,6 @@ static void cpuidle_idle_call(void)
+ 
+ 	if (cpuidle_not_available(drv, dev)) {
+ 		tick_nohz_idle_stop_tick();
+-		rcu_idle_enter();
+ 
+ 		default_idle_call();
+ 		goto exit_idle;
+@@ -178,21 +183,17 @@ static void cpuidle_idle_call(void)
+ 		u64 max_latency_ns;
+ 
+ 		if (idle_should_enter_s2idle()) {
+-			rcu_idle_enter();
+ 
+ 			entered_state = call_cpuidle_s2idle(drv, dev);
+ 			if (entered_state > 0)
+ 				goto exit_idle;
+ 
+-			rcu_idle_exit();
+-
+ 			max_latency_ns = U64_MAX;
+ 		} else {
+ 			max_latency_ns = dev->forced_idle_latency_limit_ns;
  		}
  
- 		dev_dbg(dev, "dev = %d, subtype = %d, start = %d, num = %d\n",
--			dev_id, resource_subtype, res->desc[i].start,
-+			dev_id, sub_types[i], res->desc[i].start,
- 			res->desc[i].num);
+ 		tick_nohz_idle_stop_tick();
+-		rcu_idle_enter();
  
- 		valid_set = true;
-@@ -3332,6 +3269,62 @@ devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
- 	return ERR_PTR(-EINVAL);
- }
+ 		next_state = cpuidle_find_deepest_state(drv, dev, max_latency_ns);
+ 		call_cpuidle(drv, dev, next_state);
+@@ -209,8 +210,6 @@ static void cpuidle_idle_call(void)
+ 		else
+ 			tick_nohz_idle_retain_tick();
  
-+/**
-+ * devm_ti_sci_get_of_resource() - Get a TISCI resource assigned to a device
-+ * @handle:	TISCI handle
-+ * @dev:	Device pointer to which the resource is assigned
-+ * @dev_id:	TISCI device id to which the resource is assigned
-+ * @of_prop:	property name by which the resource are represented
-+ *
-+ * Return: Pointer to ti_sci_resource if all went well else appropriate
-+ *	   error pointer.
-+ */
-+struct ti_sci_resource *
-+devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
-+			    struct device *dev, u32 dev_id, char *of_prop)
-+{
-+	struct ti_sci_resource *res;
-+	u32 *sub_types;
-+	int sets;
-+
-+	sets = of_property_count_elems_of_size(dev_of_node(dev), of_prop,
-+					       sizeof(u32));
-+	if (sets < 0) {
-+		dev_err(dev, "%s resource type ids not available\n", of_prop);
-+		return ERR_PTR(sets);
-+	}
-+
-+	sub_types = kcalloc(sets, sizeof(*sub_types), GFP_KERNEL);
-+	if (!sub_types)
-+		return ERR_PTR(-ENOMEM);
-+
-+	of_property_read_u32_array(dev_of_node(dev), of_prop, sub_types, sets);
-+	res = devm_ti_sci_get_resource_sets(handle, dev, dev_id, sub_types,
-+					    sets);
-+
-+	kfree(sub_types);
-+	return res;
-+}
-+EXPORT_SYMBOL_GPL(devm_ti_sci_get_of_resource);
-+
-+/**
-+ * devm_ti_sci_get_resource() - Get a resource range assigned to the device
-+ * @handle:	TISCI handle
-+ * @dev:	Device pointer to which the resource is assigned
-+ * @dev_id:	TISCI device id to which the resource is assigned
-+ * @suub_type:	TISCI resource subytpe representing the resource.
-+ *
-+ * Return: Pointer to ti_sci_resource if all went well else appropriate
-+ *	   error pointer.
-+ */
-+struct ti_sci_resource *
-+devm_ti_sci_get_resource(const struct ti_sci_handle *handle, struct device *dev,
-+			 u32 dev_id, u32 sub_type)
-+{
-+	return devm_ti_sci_get_resource_sets(handle, dev, dev_id, &sub_type, 1);
-+}
-+EXPORT_SYMBOL_GPL(devm_ti_sci_get_resource);
-+
- static int tisci_reboot_handler(struct notifier_block *nb, unsigned long mode,
- 				void *cmd)
- {
-@@ -3352,17 +3345,6 @@ static const struct ti_sci_desc ti_sci_pmmc_k2g_desc = {
- 	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
- 	.max_msgs = 20,
- 	.max_msg_size = 64,
--	.rm_type_map = NULL,
--};
+-		rcu_idle_enter();
 -
--static struct ti_sci_rm_type_map ti_sci_am654_rm_type_map[] = {
--	{.dev_id = 56, .type = 0x00b}, /* GIC_IRQ */
--	{.dev_id = 179, .type = 0x000}, /* MAIN_NAV_UDMASS_IA0 */
--	{.dev_id = 187, .type = 0x009}, /* MAIN_NAV_RA */
--	{.dev_id = 188, .type = 0x006}, /* MAIN_NAV_UDMAP */
--	{.dev_id = 194, .type = 0x007}, /* MCU_NAV_UDMAP */
--	{.dev_id = 195, .type = 0x00a}, /* MCU_NAV_RA */
--	{.dev_id = 0, .type = 0x000}, /* end of table */
- };
- 
- /* Description for AM654 */
-@@ -3373,7 +3355,6 @@ static const struct ti_sci_desc ti_sci_pmmc_am654_desc = {
- 	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
- 	.max_msgs = 20,
- 	.max_msg_size = 60,
--	.rm_type_map = ti_sci_am654_rm_type_map,
- };
- 
- static const struct of_device_id ti_sci_of_match[] = {
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index bb70b7177f94..bfc9719dbcdc 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -425,7 +425,7 @@ config GOLDFISH_PIC
-          for Goldfish based virtual platforms.
- 
- config QCOM_PDC
--	tristate "QCOM PDC"
-+	bool "QCOM PDC"
- 	depends on ARCH_QCOM
- 	select IRQ_DOMAIN_HIERARCHY
- 	help
-diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
-index 9f3da4260ca6..b61a8901ef72 100644
---- a/drivers/irqchip/irq-ingenic.c
-+++ b/drivers/irqchip/irq-ingenic.c
-@@ -125,7 +125,7 @@ static int __init ingenic_intc_of_init(struct device_node *node,
- 		irq_reg_writel(gc, IRQ_MSK(32), JZ_REG_INTC_SET_MASK);
- 	}
- 
--	if (request_irq(parent_irq, intc_cascade, 0,
-+	if (request_irq(parent_irq, intc_cascade, IRQF_NO_SUSPEND,
- 			"SoC intc cascade interrupt", NULL))
- 		pr_err("Failed to register SoC intc cascade interrupt\n");
- 	return 0;
-diff --git a/drivers/irqchip/irq-mtk-cirq.c b/drivers/irqchip/irq-mtk-cirq.c
-index 62a61275aaa3..69ba8ce3c178 100644
---- a/drivers/irqchip/irq-mtk-cirq.c
-+++ b/drivers/irqchip/irq-mtk-cirq.c
-@@ -295,6 +295,4 @@ static int __init mtk_cirq_of_init(struct device_node *node,
- 	return ret;
- }
- 
--IRQCHIP_PLATFORM_DRIVER_BEGIN(mtk_cirq)
--IRQCHIP_MATCH("mediatek,mtk-cirq", mtk_cirq_of_init)
--IRQCHIP_PLATFORM_DRIVER_END(mtk_cirq)
-+IRQCHIP_DECLARE(mtk_cirq, "mediatek,mtk-cirq", mtk_cirq_of_init);
-diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
-index 7299c5ab4d10..6ff98b87e5c0 100644
---- a/drivers/irqchip/irq-mtk-sysirq.c
-+++ b/drivers/irqchip/irq-mtk-sysirq.c
-@@ -231,6 +231,4 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
- 	kfree(chip_data);
- 	return ret;
- }
--IRQCHIP_PLATFORM_DRIVER_BEGIN(mtk_sysirq)
--IRQCHIP_MATCH("mediatek,mt6577-sysirq", mtk_sysirq_of_init)
--IRQCHIP_PLATFORM_DRIVER_END(mtk_sysirq)
-+IRQCHIP_DECLARE(mtk_sysirq, "mediatek,mt6577-sysirq", mtk_sysirq_of_init);
-diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
-index 03a36be757d8..0c2c61db26b4 100644
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -416,6 +416,16 @@ static void stm32_irq_ack(struct irq_data *d)
- 	irq_gc_unlock(gc);
- }
- 
-+/* directly set the target bit without reading first. */
-+static inline void stm32_exti_write_bit(struct irq_data *d, u32 reg)
-+{
-+	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d);
-+	void __iomem *base = chip_data->host_data->base;
-+	u32 val = BIT(d->hwirq % IRQS_PER_BANK);
-+
-+	writel_relaxed(val, base + reg);
-+}
-+
- static inline u32 stm32_exti_set_bit(struct irq_data *d, u32 reg)
- {
- 	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d);
-@@ -449,9 +459,9 @@ static void stm32_exti_h_eoi(struct irq_data *d)
- 
- 	raw_spin_lock(&chip_data->rlock);
- 
--	stm32_exti_set_bit(d, stm32_bank->rpr_ofst);
-+	stm32_exti_write_bit(d, stm32_bank->rpr_ofst);
- 	if (stm32_bank->fpr_ofst != UNDEF_REG)
--		stm32_exti_set_bit(d, stm32_bank->fpr_ofst);
-+		stm32_exti_write_bit(d, stm32_bank->fpr_ofst);
- 
- 	raw_spin_unlock(&chip_data->rlock);
- 
-diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
-index b7cc5d6580d8..d4e97605456b 100644
---- a/drivers/irqchip/irq-ti-sci-inta.c
-+++ b/drivers/irqchip/irq-ti-sci-inta.c
-@@ -8,6 +8,7 @@
- 
- #include <linux/err.h>
- #include <linux/io.h>
-+#include <linux/irq.h>
- #include <linux/irqchip.h>
- #include <linux/irqdomain.h>
- #include <linux/interrupt.h>
-@@ -83,6 +84,7 @@ struct ti_sci_inta_vint_desc {
-  * @vint_mutex:		Mutex to protect vint_list
-  * @base:		Base address of the memory mapped IO registers
-  * @pdev:		Pointer to platform device.
-+ * @ti_sci_id:		TI-SCI device identifier
-  */
- struct ti_sci_inta_irq_domain {
- 	const struct ti_sci_handle *sci;
-@@ -93,6 +95,7 @@ struct ti_sci_inta_irq_domain {
- 	struct mutex vint_mutex;
- 	void __iomem *base;
- 	struct platform_device *pdev;
-+	u32 ti_sci_id;
- };
- 
- #define to_vint_desc(e, i) container_of(e, struct ti_sci_inta_vint_desc, \
-@@ -128,6 +131,37 @@ static void ti_sci_inta_irq_handler(struct irq_desc *desc)
- 	chained_irq_exit(irq_desc_get_chip(desc), desc);
- }
- 
-+/**
-+ * ti_sci_inta_xlate_irq() - Translate hwirq to parent's hwirq.
-+ * @inta:	IRQ domain corresponding to Interrupt Aggregator
-+ * @irq:	Hardware irq corresponding to the above irq domain
-+ *
-+ * Return parent irq number if translation is available else -ENOENT.
-+ */
-+static int ti_sci_inta_xlate_irq(struct ti_sci_inta_irq_domain *inta,
-+				 u16 vint_id)
-+{
-+	struct device_node *np = dev_of_node(&inta->pdev->dev);
-+	u32 base, parent_base, size;
-+	const __be32 *range;
-+	int len;
-+
-+	range = of_get_property(np, "ti,interrupt-ranges", &len);
-+	if (!range)
-+		return vint_id;
-+
-+	for (len /= sizeof(*range); len >= 3; len -= 3) {
-+		base = be32_to_cpu(*range++);
-+		parent_base = be32_to_cpu(*range++);
-+		size = be32_to_cpu(*range++);
-+
-+		if (base <= vint_id && vint_id < base + size)
-+			return vint_id - base + parent_base;
-+	}
-+
-+	return -ENOENT;
-+}
-+
- /**
-  * ti_sci_inta_alloc_parent_irq() - Allocate parent irq to Interrupt aggregator
-  * @domain:	IRQ domain corresponding to Interrupt Aggregator
-@@ -139,30 +173,52 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
- 	struct ti_sci_inta_irq_domain *inta = domain->host_data;
- 	struct ti_sci_inta_vint_desc *vint_desc;
- 	struct irq_fwspec parent_fwspec;
-+	struct device_node *parent_node;
- 	unsigned int parent_virq;
--	u16 vint_id;
-+	u16 vint_id, p_hwirq;
-+	int ret;
- 
- 	vint_id = ti_sci_get_free_resource(inta->vint);
- 	if (vint_id == TI_SCI_RESOURCE_NULL)
- 		return ERR_PTR(-EINVAL);
- 
-+	p_hwirq = ti_sci_inta_xlate_irq(inta, vint_id);
-+	if (p_hwirq < 0) {
-+		ret = p_hwirq;
-+		goto free_vint;
-+	}
-+
- 	vint_desc = kzalloc(sizeof(*vint_desc), GFP_KERNEL);
--	if (!vint_desc)
--		return ERR_PTR(-ENOMEM);
-+	if (!vint_desc) {
-+		ret = -ENOMEM;
-+		goto free_vint;
-+	}
- 
- 	vint_desc->domain = domain;
- 	vint_desc->vint_id = vint_id;
- 	INIT_LIST_HEAD(&vint_desc->list);
- 
--	parent_fwspec.fwnode = of_node_to_fwnode(of_irq_find_parent(dev_of_node(&inta->pdev->dev)));
--	parent_fwspec.param_count = 2;
--	parent_fwspec.param[0] = inta->pdev->id;
--	parent_fwspec.param[1] = vint_desc->vint_id;
-+	parent_node = of_irq_find_parent(dev_of_node(&inta->pdev->dev));
-+	parent_fwspec.fwnode = of_node_to_fwnode(parent_node);
-+
-+	if (of_device_is_compatible(parent_node, "arm,gic-v3")) {
-+		/* Parent is GIC */
-+		parent_fwspec.param_count = 3;
-+		parent_fwspec.param[0] = 0;
-+		parent_fwspec.param[1] = p_hwirq - 32;
-+		parent_fwspec.param[2] = IRQ_TYPE_LEVEL_HIGH;
-+	} else {
-+		/* Parent is Interrupt Router */
-+		parent_fwspec.param_count = 1;
-+		parent_fwspec.param[0] = p_hwirq;
-+	}
- 
- 	parent_virq = irq_create_fwspec_mapping(&parent_fwspec);
- 	if (parent_virq == 0) {
--		kfree(vint_desc);
--		return ERR_PTR(-EINVAL);
-+		dev_err(&inta->pdev->dev, "Parent IRQ allocation failed\n");
-+		ret = -EINVAL;
-+		goto free_vint_desc;
-+
- 	}
- 	vint_desc->parent_virq = parent_virq;
- 
-@@ -171,6 +227,11 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
- 					 ti_sci_inta_irq_handler, vint_desc);
- 
- 	return vint_desc;
-+free_vint_desc:
-+	kfree(vint_desc);
-+free_vint:
-+	ti_sci_release_resource(inta->vint, vint_id);
-+	return ERR_PTR(ret);
- }
- 
- /**
-@@ -202,7 +263,7 @@ static struct ti_sci_inta_event_desc *ti_sci_inta_alloc_event(struct ti_sci_inta
- 
- 	err = inta->sci->ops.rm_irq_ops.set_event_map(inta->sci,
- 						      dev_id, dev_index,
--						      inta->pdev->id,
-+						      inta->ti_sci_id,
- 						      vint_desc->vint_id,
- 						      event_desc->global_event,
- 						      free_bit);
-@@ -299,7 +360,7 @@ static void ti_sci_inta_free_irq(struct ti_sci_inta_event_desc *event_desc,
- 	inta->sci->ops.rm_irq_ops.free_event_map(inta->sci,
- 						 HWIRQ_TO_DEVID(hwirq),
- 						 HWIRQ_TO_IRQID(hwirq),
--						 inta->pdev->id,
-+						 inta->ti_sci_id,
- 						 vint_desc->vint_id,
- 						 event_desc->global_event,
- 						 event_desc->vint_bit);
-@@ -547,21 +608,21 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	ret = of_property_read_u32(dev->of_node, "ti,sci-dev-id", &pdev->id);
-+	ret = of_property_read_u32(dev->of_node, "ti,sci-dev-id", &inta->ti_sci_id);
- 	if (ret) {
- 		dev_err(dev, "missing 'ti,sci-dev-id' property\n");
- 		return -EINVAL;
- 	}
- 
--	inta->vint = devm_ti_sci_get_of_resource(inta->sci, dev, pdev->id,
--						 "ti,sci-rm-range-vint");
-+	inta->vint = devm_ti_sci_get_resource(inta->sci, dev, inta->ti_sci_id,
-+					      TI_SCI_RESASG_SUBTYPE_IA_VINT);
- 	if (IS_ERR(inta->vint)) {
- 		dev_err(dev, "VINT resource allocation failed\n");
- 		return PTR_ERR(inta->vint);
- 	}
- 
--	inta->global_event = devm_ti_sci_get_of_resource(inta->sci, dev, pdev->id,
--						"ti,sci-rm-range-global-event");
-+	inta->global_event = devm_ti_sci_get_resource(inta->sci, dev, inta->ti_sci_id,
-+						      TI_SCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT);
- 	if (IS_ERR(inta->global_event)) {
- 		dev_err(dev, "Global event resource allocation failed\n");
- 		return PTR_ERR(inta->global_event);
-@@ -592,6 +653,8 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&inta->vint_list);
- 	mutex_init(&inta->vint_mutex);
- 
-+	dev_info(dev, "Interrupt Aggregator domain %d created\n", pdev->id);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/irqchip/irq-ti-sci-intr.c b/drivers/irqchip/irq-ti-sci-intr.c
-index 5ea148faf2ab..cbc1758228d9 100644
---- a/drivers/irqchip/irq-ti-sci-intr.c
-+++ b/drivers/irqchip/irq-ti-sci-intr.c
-@@ -17,29 +17,20 @@
- #include <linux/of_irq.h>
- #include <linux/soc/ti/ti_sci_protocol.h>
- 
--#define TI_SCI_DEV_ID_MASK	0xffff
--#define TI_SCI_DEV_ID_SHIFT	16
--#define TI_SCI_IRQ_ID_MASK	0xffff
--#define TI_SCI_IRQ_ID_SHIFT	0
--#define HWIRQ_TO_DEVID(hwirq)	(((hwirq) >> (TI_SCI_DEV_ID_SHIFT)) & \
--				 (TI_SCI_DEV_ID_MASK))
--#define HWIRQ_TO_IRQID(hwirq)	((hwirq) & (TI_SCI_IRQ_ID_MASK))
--#define TO_HWIRQ(dev, index)	((((dev) & TI_SCI_DEV_ID_MASK) << \
--				 TI_SCI_DEV_ID_SHIFT) | \
--				((index) & TI_SCI_IRQ_ID_MASK))
--
- /**
-  * struct ti_sci_intr_irq_domain - Structure representing a TISCI based
-  *				   Interrupt Router IRQ domain.
-  * @sci:	Pointer to TISCI handle
-- * @dst_irq:	TISCI resource pointer representing GIC irq controller.
-- * @dst_id:	TISCI device ID of the GIC irq controller.
-+ * @out_irqs:	TISCI resource pointer representing INTR irqs.
-+ * @dev:	Struct device pointer.
-+ * @ti_sci_id:	TI-SCI device identifier
-  * @type:	Specifies the trigger type supported by this Interrupt Router
-  */
- struct ti_sci_intr_irq_domain {
- 	const struct ti_sci_handle *sci;
--	struct ti_sci_resource *dst_irq;
--	u32 dst_id;
-+	struct ti_sci_resource *out_irqs;
-+	struct device *dev;
-+	u32 ti_sci_id;
- 	u32 type;
- };
- 
-@@ -70,15 +61,44 @@ static int ti_sci_intr_irq_domain_translate(struct irq_domain *domain,
- {
- 	struct ti_sci_intr_irq_domain *intr = domain->host_data;
- 
--	if (fwspec->param_count != 2)
-+	if (fwspec->param_count != 1)
- 		return -EINVAL;
- 
--	*hwirq = TO_HWIRQ(fwspec->param[0], fwspec->param[1]);
-+	*hwirq = fwspec->param[0];
- 	*type = intr->type;
- 
- 	return 0;
- }
- 
-+/**
-+ * ti_sci_intr_xlate_irq() - Translate hwirq to parent's hwirq.
-+ * @intr:	IRQ domain corresponding to Interrupt Router
-+ * @irq:	Hardware irq corresponding to the above irq domain
-+ *
-+ * Return parent irq number if translation is available else -ENOENT.
-+ */
-+static int ti_sci_intr_xlate_irq(struct ti_sci_intr_irq_domain *intr, u32 irq)
-+{
-+	struct device_node *np = dev_of_node(intr->dev);
-+	u32 base, pbase, size, len;
-+	const __be32 *range;
-+
-+	range = of_get_property(np, "ti,interrupt-ranges", &len);
-+	if (!range)
-+		return irq;
-+
-+	for (len /= sizeof(*range); len >= 3; len -= 3) {
-+		base = be32_to_cpu(*range++);
-+		pbase = be32_to_cpu(*range++);
-+		size = be32_to_cpu(*range++);
-+
-+		if (base <= irq && irq < base + size)
-+			return irq - base + pbase;
-+	}
-+
-+	return -ENOENT;
-+}
-+
- /**
-  * ti_sci_intr_irq_domain_free() - Free the specified IRQs from the domain.
-  * @domain:	Domain to which the irqs belong
-@@ -89,66 +109,76 @@ static void ti_sci_intr_irq_domain_free(struct irq_domain *domain,
- 					unsigned int virq, unsigned int nr_irqs)
- {
- 	struct ti_sci_intr_irq_domain *intr = domain->host_data;
--	struct irq_data *data, *parent_data;
--	u16 dev_id, irq_index;
-+	struct irq_data *data;
-+	int out_irq;
- 
--	parent_data = irq_domain_get_irq_data(domain->parent, virq);
- 	data = irq_domain_get_irq_data(domain, virq);
--	irq_index = HWIRQ_TO_IRQID(data->hwirq);
--	dev_id = HWIRQ_TO_DEVID(data->hwirq);
-+	out_irq = (uintptr_t)data->chip_data;
- 
--	intr->sci->ops.rm_irq_ops.free_irq(intr->sci, dev_id, irq_index,
--					   intr->dst_id, parent_data->hwirq);
--	ti_sci_release_resource(intr->dst_irq, parent_data->hwirq);
-+	intr->sci->ops.rm_irq_ops.free_irq(intr->sci,
-+					   intr->ti_sci_id, data->hwirq,
-+					   intr->ti_sci_id, out_irq);
-+	ti_sci_release_resource(intr->out_irqs, out_irq);
- 	irq_domain_free_irqs_parent(domain, virq, 1);
- 	irq_domain_reset_irq_data(data);
- }
- 
- /**
-- * ti_sci_intr_alloc_gic_irq() - Allocate GIC specific IRQ
-+ * ti_sci_intr_alloc_parent_irq() - Allocate parent IRQ
-  * @domain:	Pointer to the interrupt router IRQ domain
-  * @virq:	Corresponding Linux virtual IRQ number
-  * @hwirq:	Corresponding hwirq for the IRQ within this IRQ domain
-  *
-- * Returns 0 if all went well else appropriate error pointer.
-+ * Returns parent irq if all went well else appropriate error pointer.
-  */
--static int ti_sci_intr_alloc_gic_irq(struct irq_domain *domain,
--				     unsigned int virq, u32 hwirq)
-+static int ti_sci_intr_alloc_parent_irq(struct irq_domain *domain,
-+					unsigned int virq, u32 hwirq)
- {
- 	struct ti_sci_intr_irq_domain *intr = domain->host_data;
-+	struct device_node *parent_node;
- 	struct irq_fwspec fwspec;
--	u16 dev_id, irq_index;
--	u16 dst_irq;
--	int err;
--
--	dev_id = HWIRQ_TO_DEVID(hwirq);
--	irq_index = HWIRQ_TO_IRQID(hwirq);
-+	u16 out_irq, p_hwirq;
-+	int err = 0;
- 
--	dst_irq = ti_sci_get_free_resource(intr->dst_irq);
--	if (dst_irq == TI_SCI_RESOURCE_NULL)
-+	out_irq = ti_sci_get_free_resource(intr->out_irqs);
-+	if (out_irq == TI_SCI_RESOURCE_NULL)
- 		return -EINVAL;
- 
--	fwspec.fwnode = domain->parent->fwnode;
--	fwspec.param_count = 3;
--	fwspec.param[0] = 0;	/* SPI */
--	fwspec.param[1] = dst_irq - 32; /* SPI offset */
--	fwspec.param[2] = intr->type;
-+	p_hwirq = ti_sci_intr_xlate_irq(intr, out_irq);
-+	if (p_hwirq < 0)
-+		goto err_irqs;
-+
-+	parent_node = of_irq_find_parent(dev_of_node(intr->dev));
-+	fwspec.fwnode = of_node_to_fwnode(parent_node);
-+
-+	if (of_device_is_compatible(parent_node, "arm,gic-v3")) {
-+		/* Parent is GIC */
-+		fwspec.param_count = 3;
-+		fwspec.param[0] = 0;	/* SPI */
-+		fwspec.param[1] = p_hwirq - 32; /* SPI offset */
-+		fwspec.param[2] = intr->type;
-+	} else {
-+		/* Parent is Interrupt Router */
-+		fwspec.param_count = 1;
-+		fwspec.param[0] = p_hwirq;
-+	}
- 
- 	err = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
- 	if (err)
- 		goto err_irqs;
- 
--	err = intr->sci->ops.rm_irq_ops.set_irq(intr->sci, dev_id, irq_index,
--						intr->dst_id, dst_irq);
-+	err = intr->sci->ops.rm_irq_ops.set_irq(intr->sci,
-+						intr->ti_sci_id, hwirq,
-+						intr->ti_sci_id, out_irq);
- 	if (err)
- 		goto err_msg;
- 
--	return 0;
-+	return p_hwirq;
- 
- err_msg:
- 	irq_domain_free_irqs_parent(domain, virq, 1);
- err_irqs:
--	ti_sci_release_resource(intr->dst_irq, dst_irq);
-+	ti_sci_release_resource(intr->out_irqs, out_irq);
- 	return err;
- }
- 
-@@ -168,18 +198,19 @@ static int ti_sci_intr_irq_domain_alloc(struct irq_domain *domain,
- 	struct irq_fwspec *fwspec = data;
- 	unsigned long hwirq;
- 	unsigned int flags;
--	int err;
-+	int err, p_hwirq;
- 
- 	err = ti_sci_intr_irq_domain_translate(domain, fwspec, &hwirq, &flags);
- 	if (err)
- 		return err;
- 
--	err = ti_sci_intr_alloc_gic_irq(domain, virq, hwirq);
--	if (err)
--		return err;
-+	p_hwirq = ti_sci_intr_alloc_parent_irq(domain, virq, hwirq);
-+	if (p_hwirq < 0)
-+		return p_hwirq;
- 
- 	irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
--				      &ti_sci_intr_irq_chip, NULL);
-+				      &ti_sci_intr_irq_chip,
-+				      (void *)(uintptr_t)p_hwirq);
- 
- 	return 0;
- }
-@@ -214,6 +245,7 @@ static int ti_sci_intr_irq_domain_probe(struct platform_device *pdev)
- 	if (!intr)
- 		return -ENOMEM;
- 
-+	intr->dev = dev;
- 	ret = of_property_read_u32(dev_of_node(dev), "ti,intr-trigger-type",
- 				   &intr->type);
- 	if (ret) {
-@@ -230,19 +262,19 @@ static int ti_sci_intr_irq_domain_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	ret = of_property_read_u32(dev_of_node(dev), "ti,sci-dst-id",
--				   &intr->dst_id);
-+	ret = of_property_read_u32(dev_of_node(dev), "ti,sci-dev-id",
-+				   &intr->ti_sci_id);
- 	if (ret) {
--		dev_err(dev, "missing 'ti,sci-dst-id' property\n");
-+		dev_err(dev, "missing 'ti,sci-dev-id' property\n");
- 		return -EINVAL;
- 	}
- 
--	intr->dst_irq = devm_ti_sci_get_of_resource(intr->sci, dev,
--						    intr->dst_id,
--						    "ti,sci-rm-range-girq");
--	if (IS_ERR(intr->dst_irq)) {
-+	intr->out_irqs = devm_ti_sci_get_resource(intr->sci, dev,
-+						  intr->ti_sci_id,
-+						  TI_SCI_RESASG_SUBTYPE_IR_OUTPUT);
-+	if (IS_ERR(intr->out_irqs)) {
- 		dev_err(dev, "Destination irq resource allocation failed\n");
--		return PTR_ERR(intr->dst_irq);
-+		return PTR_ERR(intr->out_irqs);
- 	}
- 
- 	domain = irq_domain_add_hierarchy(parent_domain, 0, 0, dev_of_node(dev),
-@@ -252,6 +284,8 @@ static int ti_sci_intr_irq_domain_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 
-+	dev_info(dev, "Interrupt Router %d domain created\n", intr->ti_sci_id);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/irqchip/irqchip.c b/drivers/irqchip/irqchip.c
-index 1bb0e36c2bf3..d2341153e181 100644
---- a/drivers/irqchip/irqchip.c
-+++ b/drivers/irqchip/irqchip.c
-@@ -52,7 +52,7 @@ int platform_irqchip_probe(struct platform_device *pdev)
- 	 * interrupt controller. The actual initialization callback of this
- 	 * interrupt controller can check for specific domains as necessary.
+ 		entered_state = call_cpuidle(drv, dev, next_state);
+ 		/*
+ 		 * Give the governor an opportunity to reflect on the outcome
+@@ -226,8 +225,6 @@ static void cpuidle_idle_call(void)
  	 */
--	if (par_np && !irq_find_matching_host(np, DOMAIN_BUS_ANY))
-+	if (par_np && !irq_find_matching_host(par_np, DOMAIN_BUS_ANY))
- 		return -EPROBE_DEFER;
- 
- 	return irq_init_cb(np, par_np);
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index c1c5dfad57cc..6ae9e1f0819d 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -11,11 +11,9 @@
- #include <linux/irqdomain.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
--#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_device.h>
--#include <linux/of_irq.h>
- #include <linux/soc/qcom/irq.h>
- #include <linux/spinlock.h>
- #include <linux/slab.h>
-@@ -432,8 +430,4 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
- 	return ret;
+ 	if (WARN_ON_ONCE(irqs_disabled()))
+ 		local_irq_enable();
+-
+-	rcu_idle_exit();
  }
  
--IRQCHIP_PLATFORM_DRIVER_BEGIN(qcom_pdc)
--IRQCHIP_MATCH("qcom,pdc", qcom_pdc_init)
--IRQCHIP_PLATFORM_DRIVER_END(qcom_pdc)
--MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Power Domain Controller");
--MODULE_LICENSE("GPL v2");
-+IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
-diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
-index 49c5d29cd33c..cf27b080e148 100644
---- a/include/linux/soc/ti/ti_sci_protocol.h
-+++ b/include/linux/soc/ti/ti_sci_protocol.h
-@@ -220,6 +220,9 @@ struct ti_sci_rm_core_ops {
- 				    u16 *range_start, u16 *range_num);
- };
- 
-+#define TI_SCI_RESASG_SUBTYPE_IR_OUTPUT		0
-+#define TI_SCI_RESASG_SUBTYPE_IA_VINT		0xa
-+#define TI_SCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT	0xd
- /**
-  * struct ti_sci_rm_irq_ops: IRQ management operations
-  * @set_irq:		Set an IRQ route between the requested source
-@@ -556,6 +559,9 @@ u32 ti_sci_get_num_resources(struct ti_sci_resource *res);
- struct ti_sci_resource *
- devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
- 			    struct device *dev, u32 dev_id, char *of_prop);
-+struct ti_sci_resource *
-+devm_ti_sci_get_resource(const struct ti_sci_handle *handle, struct device *dev,
-+			 u32 dev_id, u32 sub_type);
- 
- #else	/* CONFIG_TI_SCI_PROTOCOL */
- 
-@@ -609,6 +615,13 @@ devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
- {
- 	return ERR_PTR(-EINVAL);
- }
-+
-+static inline struct ti_sci_resource *
-+devm_ti_sci_get_resource(const struct ti_sci_handle *handle, struct device *dev,
-+			 u32 dev_id, u32 sub_type);
-+{
-+	return ERR_PTR(-EINVAL);
-+}
- #endif	/* CONFIG_TI_SCI_PROTOCOL */
- 
- #endif	/* __TISCI_PROTOCOL_H */
+ /*
 
