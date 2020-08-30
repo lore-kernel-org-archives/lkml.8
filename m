@@ -2,97 +2,110 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F039EC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4BAC433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C93A5208DB
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:23:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598772229;
-	bh=km28S5CzZd+At7Y+4S9PG+dHmU5CXJCtMAWKdL1fxBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xJe1+NjpKFEnLXIisMlzAdbTGmwOpxQwLrQs51A8XRyN9t2sR9smjG2ZZOaNRy2jy
-	 VSgII+ct0O6uDgn6BDpH30gkkc9cGcGa94Mqdr21bUyCNDXZNNQ368NaHGeSE7H6Rw
-	 ItJbqIQgVQ8hp43TMZ1mNUT4RgsrYzcBw5jRCi2w=
+	by mail.kernel.org (Postfix) with ESMTP id 0ECFF206FA
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgH3HXr (ORCPT
+        id S1726915AbgH3HYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 03:23:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726459AbgH3HXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 03:23:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59F3B206FA;
-        Sun, 30 Aug 2020 07:23:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598772225;
-        bh=km28S5CzZd+At7Y+4S9PG+dHmU5CXJCtMAWKdL1fxBg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Dej4xrrFN62W8cFGVEBlUkZK/4CsbMBrz2dE21RgprMb3qSYwvDEJEBApM4vJ2hhT
-         frwLI0HzBLGDLiJvADhAKj3DDpG2teZf1oCjyfae7YJp43pH2iRFeFJmzCpxV+q4fr
-         CqXH0NVoUwIreII9lgMcIYY3u7k9FpiupNG8ZKhw=
-Date:   Sun, 30 Aug 2020 09:23:42 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Shuo A Liu <shuo.a.liu@intel.com>
-Cc:     linux-kernel@vger.kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yu Wang <yu1.wang@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: Re: [PATCH 06/17] virt: acrn: Introduce VM management interfaces
-Message-ID: <20200830072342.GA110796@kroah.com>
-References: <20200825024516.16766-1-shuo.a.liu@intel.com>
- <20200825024516.16766-7-shuo.a.liu@intel.com>
- <20200828102738.GC1470435@kroah.com>
- <20200829110436.GF13723@shuo-intel.sh.intel.com>
+        Sun, 30 Aug 2020 03:24:38 -0400
+Received: from zg8tmja5ljk3lje4mi4ymjia.icoremail.net ([209.97.182.222]:58880
+        "HELO zg8tmja5ljk3lje4mi4ymjia.icoremail.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with SMTP id S1725934AbgH3HYh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 03:24:37 -0400
+Received: from [166.111.139.123] (unknown [166.111.139.123])
+        by app-3 (Coremail) with SMTP id EQQGZQCHOSYnVEtfzRnPAA--.24490S2;
+        Sun, 30 Aug 2020 15:24:23 +0800 (CST)
+Subject: Re: [PATCH AUTOSEL 4.19 08/38] media: pci: ttpci: av7110: fix
+ possible buffer overflow caused by bad DMA value in debiirq()
+To:     Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-media@vger.kernel.org
+References: <20200821161807.348600-1-sashal@kernel.org>
+ <20200821161807.348600-8-sashal@kernel.org>
+ <20200829121020.GA20944@duo.ucw.cz>
+From:   Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+Message-ID: <a9c96d50-a4d1-29bf-3bb0-68c4f7cd4c10@tsinghua.edu.cn>
+Date:   Sun, 30 Aug 2020 15:24:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200829110436.GF13723@shuo-intel.sh.intel.com>
+In-Reply-To: <20200829121020.GA20944@duo.ucw.cz>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID: EQQGZQCHOSYnVEtfzRnPAA--.24490S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7ur4UWryrCFWkJr48tw1rCrg_yoW8Jw13pF
+        WIq3W0qFs5tF9IkrW2vrsFvaykAa4xJryDGwsrA34UArZ0gF1xCFWkJF4ru3ZYkF98ZayI
+        qF4Yq342gryqqaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvFb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY
+        02Avz4vE14v_GF4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r12
+        6r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+        kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAF
+        wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvj
+        xU7LvtDUUUU
+X-CM-SenderInfo: xedlyxhdmxq3pvlqwxlxdovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 07:04:36PM +0800, Shuo A Liu wrote:
-> Hi Greg,
-> 
-> On Fri 28.Aug'20 at 12:27:38 +0200, Greg Kroah-Hartman wrote:
-> > On Tue, Aug 25, 2020 at 10:45:06AM +0800, shuo.a.liu@intel.com wrote:
-> > > +	default:
-> > > +		pr_warn("Unknown IOCTL 0x%x!\n", cmd);
-> > > +		ret = -EINVAL;
-> > 
-> > Wrong error value here, right?
-> 
-> Right, it should be -ENOIOCTLCMD.
 
-It could, but really, just return the correct error for this, to prevent
-the core from having to do the conversion.
 
-The reviewers at Intel who should have read this before submitting it,
-know the correct value to return for an illegal ioctl, please go ask
-them.
+On 2020/8/29 20:10, Pavel Machek wrote:
+> Hi!
+>
+>> The value av7110->debi_virt is stored in DMA memory, and it is assigned
+>> to data, and thus data[0] can be modified at any time by malicious
+>> hardware. In this case, "if (data[0] < 2)" can be passed, but then
+>> data[0] can be changed into a large number, which may cause buffer
+>> overflow when the code "av7110->ci_slot[data[0]]" is used.
+>>
+>> To fix this possible bug, data[0] is assigned to a local variable, which
+>> replaces the use of data[0].
+> I'm pretty sure hardware capable of manipulating memory can work
+> around any such checks, but...
+>
+>> +++ b/drivers/media/pci/ttpci/av7110.c
+>> @@ -424,14 +424,15 @@ static void debiirq(unsigned long cookie)
+>>   	case DATA_CI_GET:
+>>   	{
+>>   		u8 *data = av7110->debi_virt;
+>> +		u8 data_0 = data[0];
+>>   
+>> -		if ((data[0] < 2) && data[2] == 0xff) {
+>> +		if (data_0 < 2 && data[2] == 0xff) {
+>>   			int flags = 0;
+>>   			if (data[5] > 0)
+>>   				flags |= CA_CI_MODULE_PRESENT;
+>>   			if (data[5] > 5)
+>>   				flags |= CA_CI_MODULE_READY;
+>> -			av7110->ci_slot[data[0]].flags = flags;
+>> +			av7110->ci_slot[data_0].flags = flags;
+> This does not even do what it says. Compiler is still free to access
+> data[0] multiple times. It needs READ_ONCE() to be effective.
+>
+>
 
-> However, i found many instances in kernel drivers return -EINVAL for no
-> ioctl command support. :)
+Thanks for this advice, I will submit a v2 patch soon.
 
-Then they too are wrong.  No need to add known bugs before the code is
-accepted.
 
-See the comments above the is_unrecognized_ioctl() in block/ioctl.c for
-all of the details and why -EINVAL is not the correct thing to do here.
+Best wishes,
+Jia-Ju Bai
 
-thanks,
-
-greg k-h
