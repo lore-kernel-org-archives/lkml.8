@@ -2,235 +2,97 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A85EC43461
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F039EC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13501206FA
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:22:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="ev41B5EF"
+	by mail.kernel.org (Postfix) with ESMTP id C93A5208DB
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:23:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598772229;
+	bh=km28S5CzZd+At7Y+4S9PG+dHmU5CXJCtMAWKdL1fxBg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xJe1+NjpKFEnLXIisMlzAdbTGmwOpxQwLrQs51A8XRyN9t2sR9smjG2ZZOaNRy2jy
+	 VSgII+ct0O6uDgn6BDpH30gkkc9cGcGa94Mqdr21bUyCNDXZNNQ368NaHGeSE7H6Rw
+	 ItJbqIQgVQ8hp43TMZ1mNUT4RgsrYzcBw5jRCi2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726527AbgH3HWk (ORCPT
+        id S1726629AbgH3HXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 03:22:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726459AbgH3HWh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 03:22:37 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3CBBC061236
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 00:22:36 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id z9so2603659wmk.1
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 00:22:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4opMeD0irkmL+H/7a2xU8cjZEUDcxPJmk8YZgecU11U=;
-        b=ev41B5EFXjL0HxofoOjttHQ6QGEn6veUb6kOs0Ns242BN1OiMhySf9H/hh07Qnpbkg
-         MMpLIVSS65ZDgDHIx7PElFL0cBpwbRgELXBC7jdMB0bsznVUrSRYgX1ja2svjiYa/Pf/
-         oxnXESGpn2lQhS8u6tRI8ir0+iNweFG5aY838=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4opMeD0irkmL+H/7a2xU8cjZEUDcxPJmk8YZgecU11U=;
-        b=rM6H1mWx3cEpm2Fd1PwmO7zDfHpq4xwkSubHDGBkyuTMplJq0gpTWvg0dIJAocMVhY
-         O7nDpaviVtFahLNhkaxyCl5GRgyevfzRH6zrJxp3dN2HT7mJYZi9UP/zLMMxOQEOZwRy
-         ycJQ9PWngcbIlvN8nm2ysOm697S3IACcl9sDGYIhudJmWn1onHXL3cYmbjhpRMbIDmgC
-         xqWnuAtOhvpX6yBzD7N3nVTtj+yKqfbDYtDY+jt9Ab4TcaWsPr/fmAZ4COkTCh1IBuMk
-         mezKe+lTTIVJCzAHvyvNFLSEB0c9P9jFfZZSROThyTFgMukreFVaMtAL8nvzzr/xZrav
-         Lo4Q==
-X-Gm-Message-State: AOAM531DF+4kA5ERF4dJyeKnNiv5puLTKaKy9phdVTswCodZK9Vc4Gym
-        QzXZJkUDv69XlqR6SyHOFHRKx9jrY8i7Ug99rQ9o
-X-Google-Smtp-Source: ABdhPJzQzOQBHc1leDOQrEXNb0qMTYMct/i4koF+5cCOM/9s3foq/y8nV/Q1mKIYmeHaHIuX7z9qqfUoyU2G3WRZDWc=
-X-Received: by 2002:a05:600c:230f:: with SMTP id 15mr5945544wmo.186.1598772155263;
- Sun, 30 Aug 2020 00:22:35 -0700 (PDT)
+        Sun, 30 Aug 2020 03:23:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59308 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726459AbgH3HXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 03:23:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59F3B206FA;
+        Sun, 30 Aug 2020 07:23:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598772225;
+        bh=km28S5CzZd+At7Y+4S9PG+dHmU5CXJCtMAWKdL1fxBg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Dej4xrrFN62W8cFGVEBlUkZK/4CsbMBrz2dE21RgprMb3qSYwvDEJEBApM4vJ2hhT
+         frwLI0HzBLGDLiJvADhAKj3DDpG2teZf1oCjyfae7YJp43pH2iRFeFJmzCpxV+q4fr
+         CqXH0NVoUwIreII9lgMcIYY3u7k9FpiupNG8ZKhw=
+Date:   Sun, 30 Aug 2020 09:23:42 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Shuo A Liu <shuo.a.liu@intel.com>
+Cc:     linux-kernel@vger.kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yu Wang <yu1.wang@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: Re: [PATCH 06/17] virt: acrn: Introduce VM management interfaces
+Message-ID: <20200830072342.GA110796@kroah.com>
+References: <20200825024516.16766-1-shuo.a.liu@intel.com>
+ <20200825024516.16766-7-shuo.a.liu@intel.com>
+ <20200828102738.GC1470435@kroah.com>
+ <20200829110436.GF13723@shuo-intel.sh.intel.com>
 MIME-Version: 1.0
-References: <CAOnJCULtHzQKJNE4OO_U2NMaW6pX38Pw7dLywGc9og1BuuAYNQ@mail.gmail.com>
- <20200830025438.GA9624@bjorn-Precision-5520>
-In-Reply-To: <20200830025438.GA9624@bjorn-Precision-5520>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Sun, 30 Aug 2020 00:22:24 -0700
-Message-ID: <CAOnJCU+-=_Tjm1Wc8se1moTa7fJxzJJafiw=My7mPLBmszwccQ@mail.gmail.com>
-Subject: Re: [RFC/RFT PATCH 3/6] arm64, numa: Move pcibus_to_node definition
- to generic numa code
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Zong Li <zong.li@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ganapatrao Kulkarni <gkulkarni@cavium.com>,
-        Steven Price <steven.price@arm.com>, linux-pci@vger.kernel.org,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Nick Hu <nickhu@andestech.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200829110436.GF13723@shuo-intel.sh.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 7:54 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Aug 28, 2020 at 06:11:50PM -0700, Atish Patra wrote:
-> > On Fri, Aug 28, 2020 at 9:15 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Fri, Aug 28, 2020 at 10:48:30AM +0100, Jonathan Cameron wrote:
-> > > > On Fri, 14 Aug 2020 14:47:22 -0700
-> > > > Atish Patra <atish.patra@wdc.com> wrote:
-> > > >
-> > > > > pcibus_to_node is used only when numa is enabled and does not depend
-> > > > > on ISA. Thus, it can be moved the generic numa implementation.
-> > > > >
-> > > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > >
-> > > > From a more general unification point of view, there seem to
-> > > > be two ways architectures implement this.
-> > > > Either
-> > > >
-> > > > bus->sysdata.node
-> > > >
-> > > > Or as here.
-> > > > There are weird other options, but let us ignore those :)
-> > > >
-> > > > That is going to take a bit of unwinding should we
-> > > > want to take this unification further and perhaps we want to think
-> > > > about doing this in pci generic code rather than here?
-> > > >
-> > > > Perhaps this is one we are better keeping architecture specific for
-> > > > now?
-> > > >
-> > > > +CC Bjorn and Linux-pci
-> > > >
-> > > >
-> > > > > ---
-> > > > >  arch/arm64/kernel/pci.c  | 10 ----------
-> > > > >  drivers/base/arch_numa.c | 11 +++++++++++
-> > > > >  2 files changed, 11 insertions(+), 10 deletions(-)
-> > > > >
-> > > > > diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> > > > > index 1006ed2d7c60..07c122946c11 100644
-> > > > > --- a/arch/arm64/kernel/pci.c
-> > > > > +++ b/arch/arm64/kernel/pci.c
-> > > > > @@ -54,16 +54,6 @@ int raw_pci_write(unsigned int domain, unsigned int bus,
-> > > > >     return b->ops->write(b, devfn, reg, len, val);
-> > > > >  }
-> > > > >
-> > > > > -#ifdef CONFIG_NUMA
-> > > > > -
-> > > > > -int pcibus_to_node(struct pci_bus *bus)
-> > > > > -{
-> > > > > -   return dev_to_node(&bus->dev);
-> > > > > -}
-> > > > > -EXPORT_SYMBOL(pcibus_to_node);
-> > > > > -
-> > > > > -#endif
-> > > > > -
-> > > > >  #ifdef CONFIG_ACPI
-> > > > >
-> > > > >  struct acpi_pci_generic_root_info {
-> > > > > diff --git a/drivers/base/arch_numa.c b/drivers/base/arch_numa.c
-> > > > > index 83341c807240..4ab1b20a615d 100644
-> > > > > --- a/drivers/base/arch_numa.c
-> > > > > +++ b/drivers/base/arch_numa.c
-> > > > > @@ -11,6 +11,7 @@
-> > > > >  #include <linux/acpi.h>
-> > > > >  #include <linux/memblock.h>
-> > > > >  #include <linux/module.h>
-> > > > > +#include <linux/pci.h>
-> > > > >  #include <linux/of.h>
-> > > > >
-> > > > >  #ifdef CONFIG_ARM64
-> > > > > @@ -60,6 +61,16 @@ EXPORT_SYMBOL(cpumask_of_node);
-> > > > >
-> > > > >  #endif
-> > > > >
-> > > > > +#ifdef CONFIG_PCI
-> > > > > +
-> > > > > +int pcibus_to_node(struct pci_bus *bus)
-> > > > > +{
-> > > > > +   return dev_to_node(&bus->dev);
-> > > > > +}
-> > > > > +EXPORT_SYMBOL(pcibus_to_node);
-> > > > > +
-> > > > > +#endif
-> > >
-> > > I certainly agree that this should not be arch-specific, but I'm not
-> > > really in favor of adding this PCI gunk in drivers/base.
-> > >
-> > > I think we can do better (eventually) by getting rid of
-> > > pcibus_to_node() completely.  It's not used very much except by
-> > > cpumask_of_pcibus(), which itself is hardly used at all.
-> > >
-> > I am a bit confused here. A quick grep suggested that pcibus_to_node()
-> > is also called from generic pci probe,
-> > controller and few drivers(block, infiniband) as well. Maybe I am
-> > missing something here ?
->
-> I didn't say it was *only* used by cpumask_of_pcibus().  13 of the 29
-> calls are from cpumask_of_pcibus().
->
-Ahh okay. Sorry I misunderstood that.
+On Sat, Aug 29, 2020 at 07:04:36PM +0800, Shuo A Liu wrote:
+> Hi Greg,
+> 
+> On Fri 28.Aug'20 at 12:27:38 +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Aug 25, 2020 at 10:45:06AM +0800, shuo.a.liu@intel.com wrote:
+> > > +	default:
+> > > +		pr_warn("Unknown IOCTL 0x%x!\n", cmd);
+> > > +		ret = -EINVAL;
+> > 
+> > Wrong error value here, right?
+> 
+> Right, it should be -ENOIOCTLCMD.
 
-> As you point out, there are a few drivers that use it.  They typically
-> have a pci_dev, so they do the equivalent of pcibus_to_node(pdev->bus).
-> That seems silly; they should just do dev_to_node(&pdev->dev) instead.
->
+It could, but really, just return the correct error for this, to prevent
+the core from having to do the conversion.
 
-That covers the use case for ARM64. There are other arch implementations
-as well which retrieve node information from sysdata which seems to be
-type casted to different structures on different arch.
-What should be done for those ?
+The reviewers at Intel who should have read this before submitting it,
+know the correct value to return for an illegal ioctl, please go ask
+them.
 
-> I looked at this once, and it seems like there might have been a
-> wrinkle like the pdev->dev node not being set correctly or something.
-> If that's the case, I think it should be fixed.
->
-> > We can move the pcibus_to_node to arch specific code for now if that's
-> > what is preferred.
->
-> Now I'm the one who's confused :)  Most arches, including arm64,
-> already have arch-specific implementations of pcibus_to_node().  I
-> didn't look at the rest of the series to see if there's a reason you
-> need to move pcibus_to_node() from arch/arm64/kernel/pci.c to
-> drivers//base/arch_numa.c.  If you don't need to, I would just leave
-> it where it is.
->
+> However, i found many instances in kernel drivers return -EINVAL for no
+> ioctl command support. :)
 
-The reason I moved it from arch/arm64/kernel/pci.c to drivers//base/arch_numa.c.
-so that we don't have to define it for RISC-V. But it's just a single
-line function and
-we can define it in RISC-V as well. I will try that in v2.
+Then they too are wrong.  No need to add known bugs before the code is
+accepted.
 
-> > > > >  static void numa_update_cpu(unsigned int cpu, bool remove)
-> > > > >  {
-> > > > >     int nid = cpu_to_node(cpu);
+See the comments above the is_unrecognized_ioctl() in block/ioctl.c for
+all of the details and why -EINVAL is not the correct thing to do here.
 
+thanks,
 
-
--- 
-Regards,
-Atish
+greg k-h
