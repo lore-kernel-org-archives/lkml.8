@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E71EC433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B98C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 050C120707
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B8720707
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgH3Pci (ORCPT
+        id S1727088AbgH3Pcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 11:32:38 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:42740 "EHLO
+        Sun, 30 Aug 2020 11:32:53 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:42756 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726584AbgH3P2C (ORCPT
+        with ESMTP id S1726712AbgH3P2C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 30 Aug 2020 11:28:02 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
-        with SMTP; 30 Aug 2020 18:27:55 +0300
+        with SMTP; 30 Aug 2020 18:27:56 +0300
 Received: from dev-l-vrt-135.mtl.labs.mlnx (dev-l-vrt-135.mtl.labs.mlnx [10.234.135.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 07UFRtRb029638;
-        Sun, 30 Aug 2020 18:27:55 +0300
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 07UFRutt029662;
+        Sun, 30 Aug 2020 18:27:56 +0300
 Received: from dev-l-vrt-135.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 07UFRtjw027843;
-        Sun, 30 Aug 2020 18:27:55 +0300
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 07UFRu9m027849;
+        Sun, 30 Aug 2020 18:27:56 +0300
 Received: (from moshe@localhost)
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 07UFRtg3027842;
-        Sun, 30 Aug 2020 18:27:55 +0300
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 07UFRu8P027848;
+        Sun, 30 Aug 2020 18:27:56 +0300
 From:   Moshe Shemesh <moshe@mellanox.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
 Cc:     Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>
-Subject: [PATCH net-next RFC v3 07/14] net/mlx5: Handle sync reset now event
-Date:   Sun, 30 Aug 2020 18:27:27 +0300
-Message-Id: <1598801254-27764-8-git-send-email-moshe@mellanox.com>
+Subject: [PATCH net-next RFC v3 10/14] devlink: Add enable_remote_dev_reset generic parameter
+Date:   Sun, 30 Aug 2020 18:27:30 +0300
+Message-Id: <1598801254-27764-11-git-send-email-moshe@mellanox.com>
 X-Mailer: git-send-email 1.8.4.3
 In-Reply-To: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
 References: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
@@ -48,172 +48,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On sync_reset_now event the driver does reload and PCI link toggle to
-activate firmware upgrade reset. When the firmware sends this event it
-syncs the event on all PFs, so all PFs will do PCI link toggle at once.
-To do PCI link toggle, the driver ensures that no other device ID under
-the same bridge by checking that all the PF functions under the same PCI
-bridge have same device ID. If no other device it uses PCI bridge link
-control to turn link down and up.
+The enable_remote_dev_reset devlink param flags that the host admin
+allows device resets that can be initiated by other hosts. This
+parameter is useful for setups where a device is shared by different
+hosts, such as multi-host setup. Once the user set this parameter to
+false, the driver should NACK any attempt to reset the device while the
+driver is loaded.
 
 Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
 ---
- .../ethernet/mellanox/mlx5/core/fw_reset.c    | 121 ++++++++++++++++++
- 1 file changed, 121 insertions(+)
+ Documentation/networking/devlink/devlink-params.rst | 6 ++++++
+ include/net/devlink.h                               | 4 ++++
+ net/core/devlink.c                                  | 5 +++++
+ 3 files changed, 15 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
-index 0f224454b4a2..f9e293de9de3 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
-@@ -13,6 +13,7 @@ struct mlx5_fw_reset {
- 	struct workqueue_struct *wq;
- 	struct work_struct reset_request_work;
- 	struct work_struct reset_reload_work;
-+	struct work_struct reset_now_work;
- 	unsigned long reset_flags;
- 	struct timer_list timer;
+diff --git a/Documentation/networking/devlink/devlink-params.rst b/Documentation/networking/devlink/devlink-params.rst
+index d075fd090b3d..54c9f107c4b0 100644
+--- a/Documentation/networking/devlink/devlink-params.rst
++++ b/Documentation/networking/devlink/devlink-params.rst
+@@ -108,3 +108,9 @@ own name.
+    * - ``region_snapshot_enable``
+      - Boolean
+      - Enable capture of ``devlink-region`` snapshots.
++   * - ``enable_remote_dev_reset``
++     - Boolean
++     - Enable device reset by remote host. When cleared, the device driver
++       will NACK any attempt of other host to reset the device. This parameter
++       is useful for setups where a device is shared by different hosts, such
++       as multi-host setup.
+diff --git a/include/net/devlink.h b/include/net/devlink.h
+index 0547f0707d92..231b277136cd 100644
+--- a/include/net/devlink.h
++++ b/include/net/devlink.h
+@@ -421,6 +421,7 @@ enum devlink_param_generic_id {
+ 	DEVLINK_PARAM_GENERIC_ID_FW_LOAD_POLICY,
+ 	DEVLINK_PARAM_GENERIC_ID_RESET_DEV_ON_DRV_PROBE,
+ 	DEVLINK_PARAM_GENERIC_ID_ENABLE_ROCE,
++	DEVLINK_PARAM_GENERIC_ID_ENABLE_REMOTE_DEV_RESET,
+ 
+ 	/* add new param generic ids above here*/
+ 	__DEVLINK_PARAM_GENERIC_ID_MAX,
+@@ -458,6 +459,9 @@ enum devlink_param_generic_id {
+ #define DEVLINK_PARAM_GENERIC_ENABLE_ROCE_NAME "enable_roce"
+ #define DEVLINK_PARAM_GENERIC_ENABLE_ROCE_TYPE DEVLINK_PARAM_TYPE_BOOL
+ 
++#define DEVLINK_PARAM_GENERIC_ENABLE_REMOTE_DEV_RESET_NAME "enable_remote_dev_reset"
++#define DEVLINK_PARAM_GENERIC_ENABLE_REMOTE_DEV_RESET_TYPE DEVLINK_PARAM_TYPE_BOOL
++
+ #define DEVLINK_PARAM_GENERIC(_id, _cmodes, _get, _set, _validate)	\
+ {									\
+ 	.id = DEVLINK_PARAM_GENERIC_ID_##_id,				\
+diff --git a/net/core/devlink.c b/net/core/devlink.c
+index 962b14295380..e9ec6b5dfd0b 100644
+--- a/net/core/devlink.c
++++ b/net/core/devlink.c
+@@ -3312,6 +3312,11 @@ static const struct devlink_param devlink_param_generic[] = {
+ 		.name = DEVLINK_PARAM_GENERIC_ENABLE_ROCE_NAME,
+ 		.type = DEVLINK_PARAM_GENERIC_ENABLE_ROCE_TYPE,
+ 	},
++	{
++		.id = DEVLINK_PARAM_GENERIC_ID_ENABLE_REMOTE_DEV_RESET,
++		.name = DEVLINK_PARAM_GENERIC_ENABLE_REMOTE_DEV_RESET_NAME,
++		.type = DEVLINK_PARAM_GENERIC_ENABLE_REMOTE_DEV_RESET_TYPE,
++	},
  };
-@@ -149,6 +150,122 @@ static void mlx5_sync_reset_request_event(struct work_struct *work)
- 		mlx5_core_warn(dev, "PCI Sync FW Update Reset Ack. Device reset is expected.\n");
- }
  
-+#define MLX5_PCI_LINK_UP_TIMEOUT 2000
-+
-+static int mlx5_pci_link_toggle(struct mlx5_core_dev *dev)
-+{
-+	struct pci_bus *bridge_bus = dev->pdev->bus;
-+	struct pci_dev *bridge = bridge_bus->self;
-+	u16 reg16, dev_id, sdev_id;
-+	unsigned long timeout;
-+	struct pci_dev *sdev;
-+	int cap, err;
-+	u32 reg32;
-+
-+	/* Check that all functions under the pci bridge are PFs of
-+	 * this device otherwise fail this function.
-+	 */
-+	err = pci_read_config_word(dev->pdev, PCI_DEVICE_ID, &dev_id);
-+	if (err)
-+		return err;
-+	list_for_each_entry(sdev, &bridge_bus->devices, bus_list) {
-+		err = pci_read_config_word(sdev, PCI_DEVICE_ID, &sdev_id);
-+		if (err)
-+			return err;
-+		if (sdev_id != dev_id)
-+			return -EPERM;
-+	}
-+
-+	cap = pci_find_capability(bridge, PCI_CAP_ID_EXP);
-+	if (!cap)
-+		return -EOPNOTSUPP;
-+
-+	list_for_each_entry(sdev, &bridge_bus->devices, bus_list) {
-+		pci_save_state(sdev);
-+		pci_cfg_access_lock(sdev);
-+	}
-+	/* PCI link toggle */
-+	err = pci_read_config_word(bridge, cap + PCI_EXP_LNKCTL, &reg16);
-+	if (err)
-+		return err;
-+	reg16 |= PCI_EXP_LNKCTL_LD;
-+	err = pci_write_config_word(bridge, cap + PCI_EXP_LNKCTL, reg16);
-+	if (err)
-+		return err;
-+	msleep(500);
-+	reg16 &= ~PCI_EXP_LNKCTL_LD;
-+	err = pci_write_config_word(bridge, cap + PCI_EXP_LNKCTL, reg16);
-+	if (err)
-+		return err;
-+
-+	/* Check link */
-+	err = pci_read_config_dword(bridge, cap + PCI_EXP_LNKCAP, &reg32);
-+	if (err)
-+		return err;
-+	if (!(reg32 & PCI_EXP_LNKCAP_DLLLARC)) {
-+		mlx5_core_warn(dev, "No PCI link reporting capability (0x%08x)\n", reg32);
-+		msleep(1000);
-+		goto restore;
-+	}
-+
-+	timeout = jiffies + msecs_to_jiffies(MLX5_PCI_LINK_UP_TIMEOUT);
-+	do {
-+		err = pci_read_config_word(bridge, cap + PCI_EXP_LNKSTA, &reg16);
-+		if (err)
-+			return err;
-+		if (reg16 & PCI_EXP_LNKSTA_DLLLA)
-+			break;
-+		msleep(20);
-+	} while (!time_after(jiffies, timeout));
-+
-+	if (reg16 & PCI_EXP_LNKSTA_DLLLA) {
-+		mlx5_core_info(dev, "PCI Link up\n");
-+	} else {
-+		mlx5_core_err(dev, "PCI link not ready (0x%04x) after %d ms\n",
-+			      reg16, MLX5_PCI_LINK_UP_TIMEOUT);
-+		err = -ETIMEDOUT;
-+	}
-+
-+restore:
-+	list_for_each_entry(sdev, &bridge_bus->devices, bus_list) {
-+		pci_cfg_access_unlock(sdev);
-+		pci_restore_state(sdev);
-+	}
-+
-+	return err;
-+}
-+
-+static void mlx5_sync_reset_now_event(struct work_struct *work)
-+{
-+	struct mlx5_fw_reset *fw_reset = container_of(work, struct mlx5_fw_reset,
-+						      reset_now_work);
-+	struct mlx5_core_dev *dev = fw_reset->dev;
-+	int err;
-+
-+	mlx5_sync_reset_clear_reset_requested(dev, false);
-+
-+	mlx5_core_warn(dev, "Sync Reset now. Device is going to reset.\n");
-+
-+	err = mlx5_cmd_fast_teardown_hca(dev);
-+	if (err) {
-+		mlx5_core_warn(dev, "Fast teardown failed, no reset done, err %d\n", err);
-+		goto done;
-+	}
-+
-+	err = mlx5_pci_link_toggle(dev);
-+	if (err) {
-+		mlx5_core_warn(dev, "mlx5_pci_link_toggle failed, no reset done, err %d\n", err);
-+		goto done;
-+	}
-+
-+	mlx5_enter_error_state(dev, true);
-+	mlx5_unload_one(dev, false);
-+done:
-+	if (err)
-+		mlx5_start_health_poll(dev);
-+	mlx5_load_one(dev, false);
-+}
-+
- static void mlx5_sync_reset_events_handle(struct mlx5_fw_reset *fw_reset, struct mlx5_eqe *eqe)
- {
- 	struct mlx5_eqe_sync_fw_update *sync_fw_update_eqe;
-@@ -160,6 +277,9 @@ static void mlx5_sync_reset_events_handle(struct mlx5_fw_reset *fw_reset, struct
- 	case MLX5_SYNC_RST_STATE_RESET_REQUEST:
- 		queue_work(fw_reset->wq, &fw_reset->reset_request_work);
- 		break;
-+	case MLX5_SYNC_RST_STATE_RESET_NOW:
-+		queue_work(fw_reset->wq, &fw_reset->reset_now_work);
-+		break;
- 	}
- }
- 
-@@ -196,6 +316,7 @@ int mlx5_fw_reset_events_init(struct mlx5_core_dev *dev)
- 
- 	INIT_WORK(&fw_reset->reset_request_work, mlx5_sync_reset_request_event);
- 	INIT_WORK(&fw_reset->reset_reload_work, mlx5_sync_reset_reload_work);
-+	INIT_WORK(&fw_reset->reset_now_work, mlx5_sync_reset_now_event);
- 
- 	MLX5_NB_INIT(&fw_reset->nb, fw_reset_event_notifier, GENERAL_EVENT);
- 	mlx5_eq_notifier_register(dev, &fw_reset->nb);
+ static int devlink_param_generic_verify(const struct devlink_param *param)
 -- 
 2.17.1
 
