@@ -2,148 +2,112 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC480C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A39A3C433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5D0520707
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:42:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vyyuQ/EF"
+	by mail.kernel.org (Postfix) with ESMTP id 8C75220707
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:42:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgH3Olw (ORCPT
+        id S1727906AbgH3Omn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 10:41:52 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:36205 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726928AbgH3Oj1 (ORCPT
+        Sun, 30 Aug 2020 10:42:43 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44862 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726928AbgH3OmE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 10:39:27 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598798366; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=YsxKBIKWbk9+hM99fxRravC3T6qT3Gy/CmU0L8pLAw0=; b=vyyuQ/EFCEFDe45wobKr56g7X/+bGnpmwl7tri0uUZepMJsvA6BHmQdLcSY9qjwwVQx6dUhh
- jcW/RtI588IV4mPBwb1YMDqNHYopNDA4vqBI8oJ/cXHL0oei+Aip9KXgK/AGcBhCxVxSyQNX
- VzJWLvcU4Ar51DqxxIv2/UY+Ekg=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5f4bb9f2c4154e1df2124dfc (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 30 Aug 2020 14:38:42
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 83F08C43395; Sun, 30 Aug 2020 14:38:41 +0000 (UTC)
-Received: from deesin-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: deesin)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 36322C433C6;
-        Sun, 30 Aug 2020 14:38:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 36322C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=deesin@codeaurora.org
-From:   Deepak Kumar Singh <deesin@codeaurora.org>
-To:     bjorn.andersson@linaro.org, clew@codeaurora.org
-Cc:     mathieu.poirier@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Carl Huang <cjhuang@codeaurora.org>,
-        Necip Fazil Yildiran <necip@google.com>,
-        netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
-Subject: [PATCH V1 1/4] net: qrtr: Do not send packets before hello negotiation
-Date:   Sun, 30 Aug 2020 20:08:09 +0530
-Message-Id: <1598798292-5971-2-git-send-email-deesin@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598798292-5971-1-git-send-email-deesin@codeaurora.org>
-References: <1598798292-5971-1-git-send-email-deesin@codeaurora.org>
+        Sun, 30 Aug 2020 10:42:04 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 12so2102900lfb.11;
+        Sun, 30 Aug 2020 07:42:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t835k1LV75bF/p7yGDiAqwKpKLxEKCTqYo8kSWmJosQ=;
+        b=JcIN868ambj6eshg95VTyxr8LR84DqFp+vyRSsGGYxaTRv2ML+V+/180CfNTBwRCfZ
+         +tb05BniajotTXDh6Hff0oPydaRlmH+qbfNI1H/hkcUxru7MVGzh4NsETfvhzLP1N/dC
+         G5U+7v95tN34ubYrZIH5Oi+8jkfHAF9dxOdzOO3gN/se7yNHfgc64w74Cv+6AWxfEgOV
+         40Uiiw318735xuR7nUk2mENrtpDBcb6gPVUnUArdc9cjKV1YyJkQooTPjFDpkl6JGUms
+         2yQF69fW4elTzyjDDeDkQNFFc7+XHe0p7bW8nOL7Ij1D6j3GzF7T5JmqqTpa3XZaGcfn
+         mHZw==
+X-Gm-Message-State: AOAM531DUp46aJtrb+K6gTw3rVHjvgzaR6Bcy6mL7n+LpjJduT6Kp7t2
+        N+fDdNjewvRIyc4MmTSGW/E=
+X-Google-Smtp-Source: ABdhPJxiljaJHGwPNIAIZzx360N62T61h6Lq/D+R5KWmxG/uacLFXXWCUDMnrzNtjnAgnw7ODWkRmQ==
+X-Received: by 2002:a05:6512:10ce:: with SMTP id k14mr3666539lfg.7.1598798522069;
+        Sun, 30 Aug 2020 07:42:02 -0700 (PDT)
+Received: from localhost.localdomain ([213.87.147.111])
+        by smtp.googlemail.com with ESMTPSA id h2sm1002466ljl.16.2020.08.30.07.41.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Aug 2020 07:42:01 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Jonathan Corbet <corbet@lwn.net>, Harry Wei <harryxiyou@gmail.com>
+Cc:     Denis Efremov <efremov@linux.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] docs: filesystems: replace to_dev() with kobj_to_dev()
+Date:   Sun, 30 Aug 2020 17:41:35 +0300
+Message-Id: <20200830144135.6956-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Lew <clew@codeaurora.org>
+Commit a4232963757e ("driver-core: Move kobj_to_dev from genhd.h to device.h")
+introduced kobj_to_dev() function.
 
-There is a race where broadcast packets can be sent to a node that has
-not sent the hello message to the remote processor. This breaks the
-protocol expectation. Add a status variable to track when the hello
-packet has been sent.
-
-An alternative solution attempted was to remove the nodes from the
-broadcast list until the hello packet is sent. This is not a valid
-solution because hello messages are broadcasted if the ns is restarted
-or started late. There needs to be a status variable separate from the
-broadcast list.
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- net/qrtr/qrtr.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ Documentation/filesystems/sysfs.rst                    | 3 +--
+ Documentation/translations/zh_CN/filesystems/sysfs.txt | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
-index 90c558f8..d9858a1 100644
---- a/net/qrtr/qrtr.c
-+++ b/net/qrtr/qrtr.c
-@@ -115,6 +115,7 @@ static DEFINE_MUTEX(qrtr_port_lock);
-  * @ep: endpoint
-  * @ref: reference count for node
-  * @nid: node id
-+ * @hello_sent: hello packet sent to endpoint
-  * @qrtr_tx_flow: tree of qrtr_tx_flow, keyed by node << 32 | port
-  * @qrtr_tx_lock: lock for qrtr_tx_flow inserts
-  * @rx_queue: receive queue
-@@ -125,6 +126,7 @@ struct qrtr_node {
- 	struct qrtr_endpoint *ep;
- 	struct kref ref;
- 	unsigned int nid;
-+	atomic_t hello_sent;
+diff --git a/Documentation/filesystems/sysfs.rst b/Documentation/filesystems/sysfs.rst
+index ab0f7795792b..5a3209a4cebf 100644
+--- a/Documentation/filesystems/sysfs.rst
++++ b/Documentation/filesystems/sysfs.rst
+@@ -172,14 +172,13 @@ calls the associated methods.
  
- 	struct radix_tree_root qrtr_tx_flow;
- 	struct mutex qrtr_tx_lock; /* for qrtr_tx_flow */
-@@ -335,6 +337,11 @@ static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
- 	int rc = -ENODEV;
- 	int confirm_rx;
+ To illustrate::
  
-+	if (!atomic_read(&node->hello_sent) && type != QRTR_TYPE_HELLO) {
-+		kfree_skb(skb);
-+		return rc;
-+	}
-+
- 	confirm_rx = qrtr_tx_wait(node, to->sq_node, to->sq_port, type);
- 	if (confirm_rx < 0) {
- 		kfree_skb(skb);
-@@ -370,6 +377,8 @@ static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
- 	 * confirm_rx flag if we dropped this one */
- 	if (rc && confirm_rx)
- 		qrtr_tx_flow_failed(node, to->sq_node, to->sq_port);
-+	if (!rc && type == QRTR_TYPE_HELLO)
-+		atomic_inc(&node->hello_sent);
+-    #define to_dev(obj) container_of(obj, struct device, kobj)
+     #define to_dev_attr(_attr) container_of(_attr, struct device_attribute, attr)
  
- 	return rc;
- }
-@@ -563,6 +572,7 @@ int qrtr_endpoint_register(struct qrtr_endpoint *ep, unsigned int nid)
- 	skb_queue_head_init(&node->rx_queue);
- 	node->nid = QRTR_EP_NID_AUTO;
- 	node->ep = ep;
-+	atomic_set(&node->hello_sent, 0);
+     static ssize_t dev_attr_show(struct kobject *kobj, struct attribute *attr,
+ 				char *buf)
+     {
+ 	    struct device_attribute *dev_attr = to_dev_attr(attr);
+-	    struct device *dev = to_dev(kobj);
++	    struct device *dev = kobj_to_dev(kobj);
+ 	    ssize_t ret = -EIO;
  
- 	INIT_RADIX_TREE(&node->qrtr_tx_flow, GFP_KERNEL);
- 	mutex_init(&node->qrtr_tx_lock);
-@@ -854,6 +864,8 @@ static int qrtr_bcast_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+ 	    if (dev_attr->show)
+diff --git a/Documentation/translations/zh_CN/filesystems/sysfs.txt b/Documentation/translations/zh_CN/filesystems/sysfs.txt
+index 9481e3ed2a06..046cc1d52058 100644
+--- a/Documentation/translations/zh_CN/filesystems/sysfs.txt
++++ b/Documentation/translations/zh_CN/filesystems/sysfs.txt
+@@ -154,14 +154,13 @@ sysfs 会为这个类型调用适当的方法。当一个文件被读写时，
  
- 	mutex_lock(&qrtr_node_lock);
- 	list_for_each_entry(node, &qrtr_all_nodes, item) {
-+		if (node->nid == QRTR_EP_NID_AUTO)
-+			continue;
- 		skbn = skb_clone(skb, GFP_KERNEL);
- 		if (!skbn)
- 			break;
+ 示例:
+ 
+-#define to_dev(obj) container_of(obj, struct device, kobj)
+ #define to_dev_attr(_attr) container_of(_attr, struct device_attribute, attr)
+ 
+ static ssize_t dev_attr_show(struct kobject *kobj, struct attribute *attr,
+                              char *buf)
+ {
+         struct device_attribute *dev_attr = to_dev_attr(attr);
+-        struct device *dev = to_dev(kobj);
++        struct device *dev = kobj_to_dev(kobj);
+         ssize_t ret = -EIO;
+ 
+         if (dev_attr->show)
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.26.2
 
