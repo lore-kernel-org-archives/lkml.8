@@ -2,142 +2,221 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE20C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5E9C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CC8B20720
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 339272071B
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:11:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iAF3hF5D"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sb1mBqrp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgH3PGb (ORCPT
+        id S1726326AbgH3PLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 11:06:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54516 "EHLO
+        Sun, 30 Aug 2020 11:11:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbgH3PGO (ORCPT
+        with ESMTP id S1726030AbgH3PLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 11:06:14 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B30FCC061575
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 08:06:13 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id w11so136570lfn.2
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 08:06:13 -0700 (PDT)
+        Sun, 30 Aug 2020 11:11:04 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84FFCC061573;
+        Sun, 30 Aug 2020 08:11:03 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id h17so3271661otl.9;
+        Sun, 30 Aug 2020 08:11:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hqQ8AtdFMS0ym9cnkvwXQx8xXEYehPD89tUpAkFBrhM=;
-        b=iAF3hF5DV7MaK2Vla97BRmuHRZzXPlTAov2WZVMKuCL2tZHZSZq9cBt6yr7oxyLToo
-         bQX3kLIRIJcinshXJHPYhojYeiVW8PqiLGRjzFiABARktiwDXnkw9qSJwFvgBpan7aOO
-         +GGOL6mWb0nYteHzB3v2V+OgB4f3L8uNAufxdX/JR3Kz27nIbG1VecMHe/xWyX7b8gaq
-         GYb3EtJ6rFUJGlXxOhwHtAIYfwbwavqkVinNZCaWcSiToyIkGOtuOEVjW5KFmHXXrw53
-         QZ/5CZpE8dIQklst1vAjbM6W1FB066Y+jUqt2sEQSWUCIGAPIqLtocblf20KmxWuQN2C
-         nLRA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=eABizydsWlDpE/Ze04Xdta0L7OMTGzzMowhyaa0B8Hw=;
+        b=sb1mBqrpsI6VATKEU1OUw02RFiNRQZ3igrpZweuj6eA7fR3A8YdiIvO22spK53jeCl
+         8dFR7Mmb5B6pqN9TF7tehWSVgeDlOqybsvDm2zBddaYJkLljTQH7hiaB62iNuQPje8D+
+         nw9xaz+0TrhfQWmeWjcLsEBhbNSYorJtIrFlAN56kOtikJzklqKwsZuJqdmPibbTbxxB
+         84vK/Zgu08KZqSYha43onChH07ZEY7/ZOkWwby+PMRvOVek6AHQYp+2601IkAh8tb41F
+         WeD8Pr5I0JjeAud2z9+lEa2GKV05NqBq/R4yIPg4eqkiS/j/0zE/1vD4R89EJrNVIs30
+         id4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hqQ8AtdFMS0ym9cnkvwXQx8xXEYehPD89tUpAkFBrhM=;
-        b=pshV6PJ6Iqxm8aCK9y6x67t3suPY6R+kFVQ/XHZQQzeJD97lvOcnk1fy78/Wmq4dAm
-         Wv6YrAqhWuZ/wL7Kburw3bncc4XEZB1Mu/HcJA8cdnCmaZXzneVxLwpx8psmKS4v45m8
-         ZLAZrgOoxsesKDo0BKemciOK/GNnVT6wLD6ovyuQ0i2yL6Mv+vuJFu4TDMGeNDWH5A6d
-         TQhZ6IyRrZw6UvjnjXqnTGW6omN1KnHCuwUWn3DhfrgkzI8b3R+hTmuZR39BwH1fdO4K
-         jtylO8WRsOyBWm+9RJJGi6cxA1kM7AzgX9I6woi7NGodf70FdDqZbj7cFskJ5iDHPS5/
-         UKqg==
-X-Gm-Message-State: AOAM53225tfQoDj9CA0aA2L7PjiN8886qT6v3SxonQqbxnfTtOKPk/by
-        I//n+TH4STAKGwreXyr2neEGa7rnI1UKSbTlSw+9vg==
-X-Google-Smtp-Source: ABdhPJwVwLYPWD7KtU6ZDFzNcrcxstYiGCbmWW1akQet2KsblsR9CgOdMt9+7OuFdIfhjiuts7wSnKpIadr7RNhcKQk=
-X-Received: by 2002:a19:2286:: with SMTP id i128mr3570361lfi.45.1598799971846;
- Sun, 30 Aug 2020 08:06:11 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=eABizydsWlDpE/Ze04Xdta0L7OMTGzzMowhyaa0B8Hw=;
+        b=BDZ3NlyUo7FIHsK+jAJzuac4C41NxL4KhJ3TDKXGvv+Ca+hf8gBQ5v7G8V3IaLFHgp
+         RoNegeN9YvXjc1yNTNqPNeCOJiEENzn5erCYTMpe7lw9sZI0t8LVuZcsTVURLDQPVtoD
+         LjJwBdjEiVv3m072eHOfNIGqm9BUzSj+ITj8nIx3UoATegGTy/FsVoaCFFG+kPuI0mmK
+         CLzqhpV3hyR+oEF1o+7tYBDRgWyA1lJr+Mg8l842rNSWVQ+t8Xk8K0d3Kuk1tUWOvWBy
+         33tn6rZh/ZB6X0gMW7w2cQdCdLkoNQYYGI0ZFFKK1hJIJCx8fkrjONmLXqOYphKqspbp
+         jUVQ==
+X-Gm-Message-State: AOAM530bBlicIYdOMpYwGz8yL3p4kj4L4MqtThEsf7inWI4U5+mYjanh
+        iHx7Knv+YZqXlnsdjYI+hvXGnuShobU=
+X-Google-Smtp-Source: ABdhPJz8KcZclke67/+nsfLsKTifU/5WF7cY8cdhVrvL/b1CprbC8amrOKfw8BtrFdptvAGZdZk7HA==
+X-Received: by 2002:a9d:7a92:: with SMTP id l18mr763754otn.89.1598800262135;
+        Sun, 30 Aug 2020 08:11:02 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y10sm1288045ooh.9.2020.08.30.08.11.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 30 Aug 2020 08:11:01 -0700 (PDT)
+Date:   Sun, 30 Aug 2020 08:11:00 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Robert Jones <rjones@gateworks.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] hwmon: gsc-hwmon: add fan sensor
+Message-ID: <20200830151100.GA168034@roeck-us.net>
 MIME-Version: 1.0
-References: <20200829020002.GC3265@brightrain.aerifal.cx>
-In-Reply-To: <20200829020002.GC3265@brightrain.aerifal.cx>
-From:   Jann Horn <jannh@google.com>
-Date:   Sun, 30 Aug 2020 17:05:45 +0200
-Message-ID: <CAG48ez1BExw7DdCEeRD1hG5ZpRObpGDodnizW2xD5tC0saTDqg@mail.gmail.com>
-Subject: Re: [RESEND PATCH] vfs: add RWF_NOAPPEND flag for pwritev2
-To:     Rich Felker <dalias@libc.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 4:00 AM Rich Felker <dalias@libc.org> wrote:
-> The pwrite function, originally defined by POSIX (thus the "p"), is
-> defined to ignore O_APPEND and write at the offset passed as its
-> argument. However, historically Linux honored O_APPEND if set and
-> ignored the offset. This cannot be changed due to stability policy,
-> but is documented in the man page as a bug.
->
-> Now that there's a pwritev2 syscall providing a superset of the pwrite
-> functionality that has a flags argument, the conforming behavior can
-> be offered to userspace via a new flag.
-[...]
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-[...]
-> @@ -3411,6 +3413,8 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
->                 ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
->         if (flags & RWF_APPEND)
->                 ki->ki_flags |= IOCB_APPEND;
-> +       if (flags & RWF_NOAPPEND)
-> +               ki->ki_flags &= ~IOCB_APPEND;
->         return 0;
->  }
+On Thu, Aug 27, 2020 at 01:04:54PM -0700, Tim Harvey wrote:
+> Add a fan sensor to report RPM's from a fan tach input.
+> 
+> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
 
-Linux enforces the S_APPEND flag (set by "chattr +a") only at open()
-time, not at write() time:
+Applied.
 
-# touch testfile
-# exec 100>testfile
-# echo foo > testfile
-# cat testfile
-foo
-# chattr +a testfile
-# echo bar > testfile
-bash: testfile: Operation not permitted
-# echo bar >&100
-# cat testfile
-bar
-#
+Thanks,
+Guenter
 
-At open() time, the kernel enforces that you can't use O_WRONLY/O_RDWR
-without also setting O_APPEND if the file is marked as append-only:
+> --
 
-static int may_open(const struct path *path, int acc_mode, int flag)
-{
-[...]
-  /*
-   * An append-only file must be opened in append mode for writing.
-   */
-  if (IS_APPEND(inode)) {
-    if  ((flag & O_ACCMODE) != O_RDONLY && !(flag & O_APPEND))
-      return -EPERM;
-    if (flag & O_TRUNC)
-      return -EPERM;
-  }
-[...]
-}
+Note there is a '-' missing here, causing the version history to be added
+to the commit log. I dropped that.
 
-It seems to me like your patch will permit bypassing S_APPEND by
-opening an append-only file with O_WRONLY|O_APPEND, then calling
-pwritev2() with RWF_NOAPPEND? I think you'll have to add an extra
-check for IS_APPEND() somewhere.
-
-
-One could also argue that if an O_APPEND file descriptor is handed
-across privilege boundaries, a programmer might reasonably expect that
-the recipient will not be able to use the file descriptor for
-non-append writes; if that is not actually true, that should probably
-be noted in the open.2 manpage, at the end of the description of
-O_APPEND.
+> v2:
+>  - avoid unnecessary line split and fix opening brace location
+> ---
+>  drivers/hwmon/gsc-hwmon.c               | 32 +++++++++++++++++++++++++++++---
+>  include/linux/platform_data/gsc_hwmon.h |  1 +
+>  2 files changed, 30 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/hwmon/gsc-hwmon.c b/drivers/hwmon/gsc-hwmon.c
+> index c6d4567..1fe3741 100644
+> --- a/drivers/hwmon/gsc-hwmon.c
+> +++ b/drivers/hwmon/gsc-hwmon.c
+> @@ -17,6 +17,7 @@
+>  
+>  #define GSC_HWMON_MAX_TEMP_CH	16
+>  #define GSC_HWMON_MAX_IN_CH	16
+> +#define GSC_HWMON_MAX_FAN_CH	16
+>  
+>  #define GSC_HWMON_RESOLUTION	12
+>  #define GSC_HWMON_VREF		2500
+> @@ -27,11 +28,14 @@ struct gsc_hwmon_data {
+>  	struct regmap *regmap;
+>  	const struct gsc_hwmon_channel *temp_ch[GSC_HWMON_MAX_TEMP_CH];
+>  	const struct gsc_hwmon_channel *in_ch[GSC_HWMON_MAX_IN_CH];
+> +	const struct gsc_hwmon_channel *fan_ch[GSC_HWMON_MAX_FAN_CH];
+>  	u32 temp_config[GSC_HWMON_MAX_TEMP_CH + 1];
+>  	u32 in_config[GSC_HWMON_MAX_IN_CH + 1];
+> +	u32 fan_config[GSC_HWMON_MAX_FAN_CH + 1];
+>  	struct hwmon_channel_info temp_info;
+>  	struct hwmon_channel_info in_info;
+> -	const struct hwmon_channel_info *info[3];
+> +	struct hwmon_channel_info fan_info;
+> +	const struct hwmon_channel_info *info[4];
+>  	struct hwmon_chip_info chip;
+>  };
+>  
+> @@ -155,6 +159,9 @@ gsc_hwmon_read(struct device *dev, enum hwmon_sensor_types type, u32 attr,
+>  	case hwmon_temp:
+>  		ch = hwmon->temp_ch[channel];
+>  		break;
+> +	case hwmon_fan:
+> +		ch = hwmon->fan_ch[channel];
+> +		break;
+>  	default:
+>  		return -EOPNOTSUPP;
+>  	}
+> @@ -187,6 +194,9 @@ gsc_hwmon_read(struct device *dev, enum hwmon_sensor_types type, u32 attr,
+>  		/* adjust by uV offset */
+>  		tmp += ch->mvoffset;
+>  		break;
+> +	case mode_fan:
+> +		tmp *= 30; /* convert to revolutions per minute */
+> +		break;
+>  	case mode_voltage_24bit:
+>  	case mode_voltage_16bit:
+>  		/* no adjustment needed */
+> @@ -211,6 +221,9 @@ gsc_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
+>  	case hwmon_temp:
+>  		*buf = hwmon->temp_ch[channel]->name;
+>  		break;
+> +	case hwmon_fan:
+> +		*buf = hwmon->fan_ch[channel]->name;
+> +		break;
+>  	default:
+>  		return -ENOTSUPP;
+>  	}
+> @@ -304,7 +317,7 @@ static int gsc_hwmon_probe(struct platform_device *pdev)
+>  	struct gsc_hwmon_platform_data *pdata = dev_get_platdata(dev);
+>  	struct gsc_hwmon_data *hwmon;
+>  	const struct attribute_group **groups;
+> -	int i, i_in, i_temp;
+> +	int i, i_in, i_temp, i_fan;
+>  
+>  	if (!pdata) {
+>  		pdata = gsc_hwmon_get_devtree_pdata(dev);
+> @@ -324,7 +337,7 @@ static int gsc_hwmon_probe(struct platform_device *pdev)
+>  	if (IS_ERR(hwmon->regmap))
+>  		return PTR_ERR(hwmon->regmap);
+>  
+> -	for (i = 0, i_in = 0, i_temp = 0; i < hwmon->pdata->nchannels; i++) {
+> +	for (i = 0, i_in = 0, i_temp = 0, i_fan = 0; i < hwmon->pdata->nchannels; i++) {
+>  		const struct gsc_hwmon_channel *ch = &pdata->channels[i];
+>  
+>  		switch (ch->mode) {
+> @@ -338,6 +351,16 @@ static int gsc_hwmon_probe(struct platform_device *pdev)
+>  						     HWMON_T_LABEL;
+>  			i_temp++;
+>  			break;
+> +		case mode_fan:
+> +			if (i_fan == GSC_HWMON_MAX_FAN_CH) {
+> +				dev_err(gsc->dev, "too many fan channels\n");
+> +				return -EINVAL;
+> +			}
+> +			hwmon->fan_ch[i_fan] = ch;
+> +			hwmon->fan_config[i_fan] = HWMON_F_INPUT |
+> +						   HWMON_F_LABEL;
+> +			i_fan++;
+> +			break;
+>  		case mode_voltage_24bit:
+>  		case mode_voltage_16bit:
+>  		case mode_voltage_raw:
+> @@ -361,10 +384,13 @@ static int gsc_hwmon_probe(struct platform_device *pdev)
+>  	hwmon->chip.info = hwmon->info;
+>  	hwmon->info[0] = &hwmon->temp_info;
+>  	hwmon->info[1] = &hwmon->in_info;
+> +	hwmon->info[2] = &hwmon->fan_info;
+>  	hwmon->temp_info.type = hwmon_temp;
+>  	hwmon->temp_info.config = hwmon->temp_config;
+>  	hwmon->in_info.type = hwmon_in;
+>  	hwmon->in_info.config = hwmon->in_config;
+> +	hwmon->fan_info.type = hwmon_fan;
+> +	hwmon->fan_info.config = hwmon->fan_config;
+>  
+>  	groups = pdata->fan_base ? gsc_hwmon_groups : NULL;
+>  	hwmon_dev = devm_hwmon_device_register_with_info(dev,
+> diff --git a/include/linux/platform_data/gsc_hwmon.h b/include/linux/platform_data/gsc_hwmon.h
+> index 37a8f554d..281f499 100644
+> --- a/include/linux/platform_data/gsc_hwmon.h
+> +++ b/include/linux/platform_data/gsc_hwmon.h
+> @@ -7,6 +7,7 @@ enum gsc_hwmon_mode {
+>  	mode_voltage_24bit,
+>  	mode_voltage_raw,
+>  	mode_voltage_16bit,
+> +	mode_fan,
+>  	mode_max,
+>  };
+>  
+> -- 
+> 2.7.4
+> 
