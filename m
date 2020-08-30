@@ -7,61 +7,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 696F2C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC480C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43D3920707
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D0520707
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:42:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sdi9d+vU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vyyuQ/EF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbgH3OlQ (ORCPT
+        id S1727061AbgH3Olw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 10:41:16 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:53251 "EHLO
+        Sun, 30 Aug 2020 10:41:52 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:36205 "EHLO
         mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727002AbgH3Ojd (ORCPT
+        by vger.kernel.org with ESMTP id S1726928AbgH3Oj1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 10:39:33 -0400
+        Sun, 30 Aug 2020 10:39:27 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598798373; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1598798366; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=63k57UM9aKfRQtY/EP8nhwKq5dGcYV4cF/NPx0Pmcm0=; b=sdi9d+vUk/dlIzn4y8sRdxdPYwkNiziMnsnWdgv6jnxOV7O7Y4cu5zo5dlRF4C7WNwNLBqfH
- LeqtXwklvOHr5eR39LeoeuVL5nURm04vigo5TYXlUAfSwDYrODLDalNinRBOS7qYYV94wdnH
- MXNoKAcznIBXptxqA6cCvsaoy34=
+ bh=YsxKBIKWbk9+hM99fxRravC3T6qT3Gy/CmU0L8pLAw0=; b=vyyuQ/EFCEFDe45wobKr56g7X/+bGnpmwl7tri0uUZepMJsvA6BHmQdLcSY9qjwwVQx6dUhh
+ jcW/RtI588IV4mPBwb1YMDqNHYopNDA4vqBI8oJ/cXHL0oei+Aip9KXgK/AGcBhCxVxSyQNX
+ VzJWLvcU4Ar51DqxxIv2/UY+Ekg=
 X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f4bba03f4f3e646136427d1 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 30 Aug 2020 14:38:59
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5f4bb9f2c4154e1df2124dfc (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 30 Aug 2020 14:38:42
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 076CBC433CA; Sun, 30 Aug 2020 14:38:59 +0000 (UTC)
+        id 83F08C43395; Sun, 30 Aug 2020 14:38:41 +0000 (UTC)
 Received: from deesin-linux.qualcomm.com (unknown [202.46.22.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: deesin)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A8D5FC433C6;
-        Sun, 30 Aug 2020 14:38:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A8D5FC433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 36322C433C6;
+        Sun, 30 Aug 2020 14:38:36 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 36322C433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=deesin@codeaurora.org
 From:   Deepak Kumar Singh <deesin@codeaurora.org>
 To:     bjorn.andersson@linaro.org, clew@codeaurora.org
 Cc:     mathieu.poirier@linaro.org, linux-arm-msm@vger.kernel.org,
         linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arun Kumar Neelakantam <aneela@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         Carl Huang <cjhuang@codeaurora.org>,
         Necip Fazil Yildiran <necip@google.com>,
         netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
-Subject: [PATCH V1 4/4] net: qrtr: Check function pointer before calling
-Date:   Sun, 30 Aug 2020 20:08:12 +0530
-Message-Id: <1598798292-5971-5-git-send-email-deesin@codeaurora.org>
+Subject: [PATCH V1 1/4] net: qrtr: Do not send packets before hello negotiation
+Date:   Sun, 30 Aug 2020 20:08:09 +0530
+Message-Id: <1598798292-5971-2-git-send-email-deesin@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1598798292-5971-1-git-send-email-deesin@codeaurora.org>
 References: <1598798292-5971-1-git-send-email-deesin@codeaurora.org>
@@ -70,30 +69,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Kumar Neelakantam <aneela@codeaurora.org>
+From: Chris Lew <clew@codeaurora.org>
 
-sk_error_report callback function called without validating cause the NULL
-pointer dereference.
+There is a race where broadcast packets can be sent to a node that has
+not sent the hello message to the remote processor. This breaks the
+protocol expectation. Add a status variable to track when the hello
+packet has been sent.
 
-Validate function pointer before using for error report.
+An alternative solution attempted was to remove the nodes from the
+broadcast list until the hello packet is sent. This is not a valid
+solution because hello messages are broadcasted if the ns is restarted
+or started late. There needs to be a status variable separate from the
+broadcast list.
 ---
- net/qrtr/qrtr.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/qrtr/qrtr.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
-index e2dd38e..01cabd3 100644
+index 90c558f8..d9858a1 100644
 --- a/net/qrtr/qrtr.c
 +++ b/net/qrtr/qrtr.c
-@@ -786,7 +786,8 @@ static void qrtr_reset_ports(void)
+@@ -115,6 +115,7 @@ static DEFINE_MUTEX(qrtr_port_lock);
+  * @ep: endpoint
+  * @ref: reference count for node
+  * @nid: node id
++ * @hello_sent: hello packet sent to endpoint
+  * @qrtr_tx_flow: tree of qrtr_tx_flow, keyed by node << 32 | port
+  * @qrtr_tx_lock: lock for qrtr_tx_flow inserts
+  * @rx_queue: receive queue
+@@ -125,6 +126,7 @@ struct qrtr_node {
+ 	struct qrtr_endpoint *ep;
+ 	struct kref ref;
+ 	unsigned int nid;
++	atomic_t hello_sent;
  
- 		sock_hold(&ipc->sk);
- 		ipc->sk.sk_err = ENETRESET;
--		ipc->sk.sk_error_report(&ipc->sk);
-+		if (ipc->sk.sk_error_report)
-+			ipc->sk.sk_error_report(&ipc->sk);
- 		sock_put(&ipc->sk);
- 	}
- 	mutex_unlock(&qrtr_port_lock);
+ 	struct radix_tree_root qrtr_tx_flow;
+ 	struct mutex qrtr_tx_lock; /* for qrtr_tx_flow */
+@@ -335,6 +337,11 @@ static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+ 	int rc = -ENODEV;
+ 	int confirm_rx;
+ 
++	if (!atomic_read(&node->hello_sent) && type != QRTR_TYPE_HELLO) {
++		kfree_skb(skb);
++		return rc;
++	}
++
+ 	confirm_rx = qrtr_tx_wait(node, to->sq_node, to->sq_port, type);
+ 	if (confirm_rx < 0) {
+ 		kfree_skb(skb);
+@@ -370,6 +377,8 @@ static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+ 	 * confirm_rx flag if we dropped this one */
+ 	if (rc && confirm_rx)
+ 		qrtr_tx_flow_failed(node, to->sq_node, to->sq_port);
++	if (!rc && type == QRTR_TYPE_HELLO)
++		atomic_inc(&node->hello_sent);
+ 
+ 	return rc;
+ }
+@@ -563,6 +572,7 @@ int qrtr_endpoint_register(struct qrtr_endpoint *ep, unsigned int nid)
+ 	skb_queue_head_init(&node->rx_queue);
+ 	node->nid = QRTR_EP_NID_AUTO;
+ 	node->ep = ep;
++	atomic_set(&node->hello_sent, 0);
+ 
+ 	INIT_RADIX_TREE(&node->qrtr_tx_flow, GFP_KERNEL);
+ 	mutex_init(&node->qrtr_tx_lock);
+@@ -854,6 +864,8 @@ static int qrtr_bcast_enqueue(struct qrtr_node *node, struct sk_buff *skb,
+ 
+ 	mutex_lock(&qrtr_node_lock);
+ 	list_for_each_entry(node, &qrtr_all_nodes, item) {
++		if (node->nid == QRTR_EP_NID_AUTO)
++			continue;
+ 		skbn = skb_clone(skb, GFP_KERNEL);
+ 		if (!skbn)
+ 			break;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
