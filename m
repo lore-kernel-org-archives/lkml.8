@@ -2,82 +2,111 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADD2C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFF3C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8B92064B
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3A120707
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:39:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bXI0h9jZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgH3OZg (ORCPT
+        id S1727093AbgH3Ojr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 10:25:36 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42194 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbgH3OZ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 10:25:29 -0400
-Received: by mail-lf1-f68.google.com with SMTP id c8so2090320lfh.9;
-        Sun, 30 Aug 2020 07:25:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IV+yFxxwpQ0Xw6dmwqTaElxTbkcDYhyvv8ZvJBYCDow=;
-        b=MCdeg0AgvnLCOhENvkrOt3TPIZXFD9wXllKNsc8fSiaRJVyk8Rk2jkm/U2tAZx4APM
-         zZCUzDTniSDmzYmNufVV7HBaqG7Js72iK0Eq01dMLaFGconUK8ez5eQQJWWKcN2rwv+0
-         hdZHHFz0gfSaGGIv95moo9//pX7EhBmdozfzc86bux6fEu0JEMH79p8/AT6hBH5VAbQp
-         QBbfh4LMAN4kEgNGrvl1G8yPV/yf0k9bhImxgiRYBaE9IhBRNQRyaS+8J2euHM/o535j
-         ZmK5r1oPWAotLHcIDqk9yobguEw1336m859Mh7z6oiBoO6dys8C6nmELsQEzuqePb1tJ
-         F+1g==
-X-Gm-Message-State: AOAM530TvlClGRLxMxnKd2tfWT3lCPbJ5wLqYOJgIEltc/pKyTzLh96z
-        vV6KnbtUxiD/nY+lFVA2vOs2e/4DtLHqEA==
-X-Google-Smtp-Source: ABdhPJyzt5EuUp4VD/mc3H46Yr8npNHlCdnK8Y6zpiJBuTKB1l+sQNmmXjHQqKUQ+mOYvrZ/Jsh9yg==
-X-Received: by 2002:a05:6512:3084:: with SMTP id z4mr3573651lfd.141.1598797527807;
-        Sun, 30 Aug 2020 07:25:27 -0700 (PDT)
-Received: from localhost.localdomain ([213.87.147.111])
-        by smtp.googlemail.com with ESMTPSA id x20sm285282ljc.38.2020.08.30.07.25.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 07:25:27 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Denis Efremov <efremov@linux.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Documentation: remove current_security() reference
-Date:   Sun, 30 Aug 2020 17:25:09 +0300
-Message-Id: <20200830142509.5738-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 30 Aug 2020 10:39:47 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:22844 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726397AbgH3OjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 10:39:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598798363; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=BG5Bli+klgMbg2PSkB4G0lK79qcXpmQXHNwoceerTbI=; b=bXI0h9jZJYJN9lSdERdgHnEXahcjKA0u1xOuU8HK4/nWv39D0uoSbg0y9TvG/sgHlzOcNiXD
+ I9DTsY2M9R8VCp5GdkwJL1RSWn1iP8dvba5JV28OPG94fjJHqOcMSborwiUdPSFU9vQRrgml
+ ri2trVLMd9w7CWI6yhtMC6yKtfw=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5f4bb9fe63431d1144a3fb02 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Sun, 30 Aug 2020 14:38:54
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 65027C43387; Sun, 30 Aug 2020 14:38:53 +0000 (UTC)
+Received: from deesin-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: deesin)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B36ACC433C6;
+        Sun, 30 Aug 2020 14:38:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B36ACC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=deesin@codeaurora.org
+From:   Deepak Kumar Singh <deesin@codeaurora.org>
+To:     bjorn.andersson@linaro.org, clew@codeaurora.org
+Cc:     mathieu.poirier@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Carl Huang <cjhuang@codeaurora.org>,
+        Necip Fazil Yildiran <necip@google.com>,
+        netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
+Subject: [PATCH V1 3/4] net: qrtr: Change port allocation to use cyclic idr
+Date:   Sun, 30 Aug 2020 20:08:11 +0530
+Message-Id: <1598798292-5971-4-git-send-email-deesin@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1598798292-5971-1-git-send-email-deesin@codeaurora.org>
+References: <1598798292-5971-1-git-send-email-deesin@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 15322a0d90b6 ("lsm: remove current_security()") removed
-current_security() from the sources.
+From: Chris Lew <clew@codeaurora.org>
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
+There is a race for clients that open sockets before the control port
+is bound. If a client gets an idr that was allocated before the control
+port is bound, there is a chance the previous address owner sent lookup
+packets to the control port. The new address owner will get residual
+responses to this the lookup packets.
+
+Change the idr_alloc to idr_alloc_cyclic so new idr's are allocated
+instead of trying to reuse the freed idrs.
 ---
- Documentation/security/credentials.rst | 1 -
- 1 file changed, 1 deletion(-)
+ net/qrtr/qrtr.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/security/credentials.rst b/Documentation/security/credentials.rst
-index d9387209d143..357328d566c8 100644
---- a/Documentation/security/credentials.rst
-+++ b/Documentation/security/credentials.rst
-@@ -323,7 +323,6 @@ credentials (the value is simply returned in each case)::
- 	uid_t current_fsuid(void)	Current's file access UID
- 	gid_t current_fsgid(void)	Current's file access GID
- 	kernel_cap_t current_cap(void)	Current's effective capabilities
--	void *current_security(void)	Current's LSM security pointer
- 	struct user_struct *current_user(void)  Current's user account
- 
- There are also convenience wrappers for retrieving specific associated pairs of
+diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
+index 4496b75..e2dd38e 100644
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -744,7 +744,8 @@ static int qrtr_port_assign(struct qrtr_sock *ipc, int *port)
+ 	mutex_lock(&qrtr_port_lock);
+ 	if (!*port) {
+ 		min_port = QRTR_MIN_EPH_SOCKET;
+-		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, QRTR_MAX_EPH_SOCKET, GFP_ATOMIC);
++		rc = idr_alloc_cyclic(&qrtr_ports, ipc, &min_port,
++				      QRTR_MAX_EPH_SOCKET, GFP_ATOMIC);
+ 		if (!rc)
+ 			*port = min_port;
+ 	} else if (*port < QRTR_MIN_EPH_SOCKET && !capable(CAP_NET_ADMIN)) {
+@@ -754,7 +755,8 @@ static int qrtr_port_assign(struct qrtr_sock *ipc, int *port)
+ 		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, 0, GFP_ATOMIC);
+ 	} else {
+ 		min_port = *port;
+-		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, *port, GFP_ATOMIC);
++		rc = idr_alloc_cyclic(&qrtr_ports, ipc, &min_port,
++				      *port, GFP_ATOMIC);
+ 		if (!rc)
+ 			*port = min_port;
+ 	}
 -- 
-2.26.2
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
