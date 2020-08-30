@@ -2,90 +2,138 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC99BC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9E7C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA81E20720
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2363A20720
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:05:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jR6mRCmV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OB5COtSU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgH3PB2 (ORCPT
+        id S1726501AbgH3PFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 11:01:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53750 "EHLO
+        Sun, 30 Aug 2020 11:05:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgH3PBU (ORCPT
+        with ESMTP id S1726030AbgH3PEt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 11:01:20 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68EAEC061573;
-        Sun, 30 Aug 2020 08:01:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description;
-        bh=oCHVt42okohO0gylQNQyVW0C6OzwnP8SCmOEeTDqT64=; b=jR6mRCmVYr8gGatQ+zdEvZl9rh
-        9xYIOVNIVBW+1W1Ej2rOACKMnKijQfCTVesTlC8gnvnX0bfBE4Ed3to8Ys5g1pXrSzLPUMjrXN867
-        McbupSCJymUCyAzXTXg6NeTZ+no06tfnTPou9u3fUVTOtylqWnSOKDWaV58fbRN8N7oB6UktciJI1
-        5kcCUnrWedZ8SK/GEOEYTrstC/mfk8qwLf3aazvlPKozcniHSmzZN5Mo8D/Hw6yJJ9LHzVWrb5cnN
-        Lp1supJIteoshFPENdZJ2+hIwktQJRQ/D0fg+s1aBs71yOysRw9mdl5koV21FCUGLrzLPwTJE+LkK
-        07PxRPfQ==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kCOpV-0004JZ-09; Sun, 30 Aug 2020 15:01:13 +0000
-Subject: Re: [RESEND PATCH] KEYS: asymmetric: Fix kerneldoc
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200819175212.20583-1-krzk@kernel.org>
- <20200830145655.GA31461@kozik-lap>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <46f2119d-d94c-517f-46cf-10ec27c820f3@infradead.org>
-Date:   Sun, 30 Aug 2020 08:01:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200830145655.GA31461@kozik-lap>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 30 Aug 2020 11:04:49 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04068C061573;
+        Sun, 30 Aug 2020 08:04:49 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id k13so523583oor.2;
+        Sun, 30 Aug 2020 08:04:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=BuCpEw+EZ23rQm56+0nKrPRHRJlGh2aurjyoqcnesH8=;
+        b=OB5COtSUNnP5PJ4wdVP/6+MrypbDCHdoNk54WOKjOPRe/jAHZqhBbTLdyqE5+G4dOz
+         cxDb/yKwEOlG873h7CtUAkUOWV9nzABG5nAwCVRoouk8+fjlXe2vuP74P/7S8wBXHFmY
+         mf1qakKt1kLlqfWIL5jVZcwA3AXheyfX8EQmwCWOu7ImiXR46tywdmWTuR3BSSVxluNd
+         BvTzP3+4yFZDbd1mkscO2ZEc8J4oVtLHl4wChY0mEgjsTSNItqFKATdRs1D2feWtdXbA
+         Yd6jjbtlbeTMV1sQCpJY5KDSR1bivwG9G/ZZLA+PQhc34iket8l5wPtb6vB2/ojAe0F4
+         PZaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=BuCpEw+EZ23rQm56+0nKrPRHRJlGh2aurjyoqcnesH8=;
+        b=ktxgReDOdoU6p/k19N8sAJyXFR1wOrW1QeQuZjvF7vvE6fqcgNP2abrBH2rcKwPAPB
+         hrDi89zmxpJ5k01y/nAAFTDX984MoyKfiOEpK325tjD2XHgSVbLVWa11r5ExxjyRTdwh
+         9dM23FNZQxAvpOH8e+RNQSvIRipSnvgSkSQ1AimboRcIWa1u3qknxvVcyeh9SKZ5NrP9
+         lbBAKAvD5fmyxQblB7pmZEwdDCUjyot566vQ3HduBxmiSExEOcise8GLrjtwT+9tQdm5
+         jZXQji9G6TcPrjm8QFlcVVDrHpd8+SZOOwYL7s1q0yNE62aR1sgXxzMNQUhmzXvE0MFR
+         xdkQ==
+X-Gm-Message-State: AOAM532B0oPdkG/gyGFnXE/Po8uaIsnyXJFWfpksI5ljRk9j7MuuOsbW
+        5xy5eRKpTFcSAf7PgEw4QMw=
+X-Google-Smtp-Source: ABdhPJyjV//48S9aVDUGtC9l8bZgiGM0RCaQxnsJ2nXVgCgjgQFTsA5rGb7yXz5svqlsJhhpYWHtdQ==
+X-Received: by 2002:a4a:e98e:: with SMTP id s14mr5092375ood.28.1598799887541;
+        Sun, 30 Aug 2020 08:04:47 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y7sm661387oih.55.2020.08.30.08.04.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 30 Aug 2020 08:04:46 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        linux-uvc-devel@lists.sourceforge.net, linux-usb@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 0/5] media: uvcvideo: Fix race conditions
+Date:   Sun, 30 Aug 2020 08:04:38 -0700
+Message-Id: <20200830150443.167286-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/30/20 7:56 AM, Krzysztof Kozlowski wrote:
-> On Wed, Aug 19, 2020 at 07:52:12PM +0200, Krzysztof Kozlowski wrote:
->> Fix W=1 compile warnings (invalid kerneldoc):
->>
->>     crypto/asymmetric_keys/asymmetric_type.c:160: warning: Function parameter or member 'kid1' not described in 'asymmetric_key_id_same'
->>     crypto/asymmetric_keys/asymmetric_type.c:160: warning: Function parameter or member 'kid2' not described in 'asymmetric_key_id_same'
->>     crypto/asymmetric_keys/asymmetric_type.c:160: warning: Excess function parameter 'kid_1' description in 'asymmetric_key_id_same'
->>     crypto/asymmetric_keys/asymmetric_type.c:160: warning: Excess function parameter 'kid_2' description in 'asymmetric_key_id_same'
->>
->> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->> ---
->>  crypto/asymmetric_keys/asymmetric_type.c | 6 ++++--
->>  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> Hi David, Herbert,
-> 
-> Any comments here?
-> 
-> Best regards,
-> Krzysztof
+The uvcvideo code has no lock protection against USB disconnects
+while video operations are ongoing. This has resulted in random
+error reports, typically pointing to a crash in usb_ifnum_to_if(),
+called from usb_hcd_alloc_bandwidth(). A typical traceback is as
+follows.
 
-LGTM.  Thanks.
+usb 1-4: USB disconnect, device number 3
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+PGD 0 P4D 0
+Oops: 0000 [#1] PREEMPT SMP PTI
+CPU: 0 PID: 5633 Comm: V4L2CaptureThre Not tainted 4.19.113-08536-g5d29ca36db06 #1
+Hardware name: GOOGLE Edgar, BIOS Google_Edgar.7287.167.156 03/25/2019
+RIP: 0010:usb_ifnum_to_if+0x29/0x40
+Code: <...>
+RSP: 0018:ffffa46f42a47a80 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffff904a396c9000
+RDX: ffff904a39641320 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: ffffa46f42a47a80 R08: 0000000000000002 R09: 0000000000000000
+R10: 0000000000009975 R11: 0000000000000009 R12: 0000000000000000
+R13: ffff904a396b3800 R14: ffff904a39e88000 R15: 0000000000000000
+FS: 00007f396448e700(0000) GS:ffff904a3ba00000(0000) knlGS:0000000000000000
+CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000016cb46000 CR4: 00000000001006f0
+Call Trace:
+ usb_hcd_alloc_bandwidth+0x1ee/0x30f
+ usb_set_interface+0x1a3/0x2b7
+ uvc_video_start_transfer+0x29b/0x4b8 [uvcvideo]
+ uvc_video_start_streaming+0x91/0xdd [uvcvideo]
+ uvc_start_streaming+0x28/0x5d [uvcvideo]
+ vb2_start_streaming+0x61/0x143 [videobuf2_common]
+ vb2_core_streamon+0xf7/0x10f [videobuf2_common]
+ uvc_queue_streamon+0x2e/0x41 [uvcvideo]
+ uvc_ioctl_streamon+0x42/0x5c [uvcvideo]
+ __video_do_ioctl+0x33d/0x42a
+ video_usercopy+0x34e/0x5ff
+ ? video_ioctl2+0x16/0x16
+ v4l2_ioctl+0x46/0x53
+ do_vfs_ioctl+0x50a/0x76f
+ ksys_ioctl+0x58/0x83
+ __x64_sys_ioctl+0x1a/0x1e
+ do_syscall_64+0x54/0xde
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
+While this is problem rarely observed in the field, it is relatively easy
+to reproduce by adding msleep() calls into the code.
 
--- 
-~Randy
+I don't presume to claim that I found every issue, but this patch series
+should fix at least the major problems.
+
+The patch series was tested exensively on a Chromebook running chromeos-4.19
+and on a Linux system running a v5.8.y based kernel.
+
+----------------------------------------------------------------
+Guenter Roeck (5):
+      media: uvcvideo: Cancel async worker earlier
+      media: uvcvideo: Lock video streams and queues while unregistering
+      media: uvcvideo: Release stream queue when unregistering video device
+      media: uvcvideo: Protect uvc queue file operations against disconnect
+      media: uvcvideo: In uvc_v4l2_open, check if video device is registered
+
+ drivers/media/usb/uvc/uvc_ctrl.c   | 11 ++++++----
+ drivers/media/usb/uvc/uvc_driver.c | 12 ++++++++++
+ drivers/media/usb/uvc/uvc_queue.c  | 32 +++++++++++++++++++++++++--
+ drivers/media/usb/uvc/uvc_v4l2.c   | 45 ++++++++++++++++++++++++++++++++++++--
+ drivers/media/usb/uvc/uvcvideo.h   |  1 +
+ 5 files changed, 93 insertions(+), 8 deletions(-)
