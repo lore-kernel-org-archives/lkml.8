@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DD8C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E71EC433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5568820707
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 050C120707
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:32:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbgH3Pbw (ORCPT
+        id S1726942AbgH3Pci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 11:31:52 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:42767 "EHLO
+        Sun, 30 Aug 2020 11:32:38 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:42740 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726687AbgH3P2C (ORCPT
+        with ESMTP id S1726584AbgH3P2C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 30 Aug 2020 11:28:02 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
-        with SMTP; 30 Aug 2020 18:27:56 +0300
+        with SMTP; 30 Aug 2020 18:27:55 +0300
 Received: from dev-l-vrt-135.mtl.labs.mlnx (dev-l-vrt-135.mtl.labs.mlnx [10.234.135.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 07UFRuf1029672;
-        Sun, 30 Aug 2020 18:27:56 +0300
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 07UFRtRb029638;
+        Sun, 30 Aug 2020 18:27:55 +0300
 Received: from dev-l-vrt-135.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 07UFRuBq027853;
-        Sun, 30 Aug 2020 18:27:56 +0300
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 07UFRtjw027843;
+        Sun, 30 Aug 2020 18:27:55 +0300
 Received: (from moshe@localhost)
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 07UFRute027852;
-        Sun, 30 Aug 2020 18:27:56 +0300
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 07UFRtg3027842;
+        Sun, 30 Aug 2020 18:27:55 +0300
 From:   Moshe Shemesh <moshe@mellanox.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
 Cc:     Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>
-Subject: [PATCH net-next RFC v3 12/14] net/mlx5: Add support for fw live patch event
-Date:   Sun, 30 Aug 2020 18:27:32 +0300
-Message-Id: <1598801254-27764-13-git-send-email-moshe@mellanox.com>
+Subject: [PATCH net-next RFC v3 07/14] net/mlx5: Handle sync reset now event
+Date:   Sun, 30 Aug 2020 18:27:27 +0300
+Message-Id: <1598801254-27764-8-git-send-email-moshe@mellanox.com>
 X-Mailer: git-send-email 1.8.4.3
 In-Reply-To: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
 References: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
@@ -48,151 +48,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Firmware live patch event notifies the driver that the firmware was just
-updated using live patch. In such case the driver should not reload or
-re-initiate entities, part to updating the firmware version and
-re-initiate the firmware tracer which can be updated by live patch with
-new strings database to help debugging an issue.
+On sync_reset_now event the driver does reload and PCI link toggle to
+activate firmware upgrade reset. When the firmware sends this event it
+syncs the event on all PFs, so all PFs will do PCI link toggle at once.
+To do PCI link toggle, the driver ensures that no other device ID under
+the same bridge by checking that all the PF functions under the same PCI
+bridge have same device ID. If no other device it uses PCI bridge link
+control to turn link down and up.
 
 Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
 ---
- .../mellanox/mlx5/core/diag/fw_tracer.c       | 31 +++++++++++++++++++
- .../mellanox/mlx5/core/diag/fw_tracer.h       |  1 +
- .../ethernet/mellanox/mlx5/core/fw_reset.c    | 27 ++++++++++++++++
- include/linux/mlx5/device.h                   |  1 +
- 4 files changed, 60 insertions(+)
+ .../ethernet/mellanox/mlx5/core/fw_reset.c    | 121 ++++++++++++++++++
+ 1 file changed, 121 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-index ad3594c4afcb..08dae045d185 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.c
-@@ -1064,6 +1064,37 @@ void mlx5_fw_tracer_destroy(struct mlx5_fw_tracer *tracer)
- 	kvfree(tracer);
- }
- 
-+int mlx5_fw_tracer_recreate_strings_db(struct mlx5_fw_tracer *tracer)
-+{
-+	struct mlx5_core_dev *dev;
-+	int err;
-+
-+	if (IS_ERR_OR_NULL(tracer))
-+		return -EINVAL;
-+
-+	cancel_work_sync(&tracer->read_fw_strings_work);
-+	mlx5_fw_tracer_clean_ready_list(tracer);
-+	mlx5_fw_tracer_clean_print_hash(tracer);
-+	mlx5_fw_tracer_clean_saved_traces_array(tracer);
-+	mlx5_fw_tracer_free_strings_db(tracer);
-+
-+	dev = tracer->dev;
-+	err = mlx5_query_mtrc_caps(tracer);
-+	if (err) {
-+		mlx5_core_dbg(dev, "FWTracer: Failed to query capabilities %d\n", err);
-+		return err;
-+	}
-+
-+	err = mlx5_fw_tracer_allocate_strings_db(tracer);
-+	if (err) {
-+		mlx5_core_warn(dev, "FWTracer: Allocate strings DB failed %d\n", err);
-+		return err;
-+	}
-+	mlx5_fw_tracer_init_saved_traces_array(tracer);
-+
-+	return 0;
-+}
-+
- static int fw_tracer_event(struct notifier_block *nb, unsigned long action, void *data)
- {
- 	struct mlx5_fw_tracer *tracer = mlx5_nb_cof(nb, struct mlx5_fw_tracer, nb);
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.h b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.h
-index 40601fba80ba..1a755098aeeb 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/diag/fw_tracer.h
-@@ -191,5 +191,6 @@ void mlx5_fw_tracer_destroy(struct mlx5_fw_tracer *tracer);
- int mlx5_fw_tracer_trigger_core_dump_general(struct mlx5_core_dev *dev);
- int mlx5_fw_tracer_get_saved_traces_objects(struct mlx5_fw_tracer *tracer,
- 					    struct devlink_fmsg *fmsg);
-+int mlx5_fw_tracer_recreate_strings_db(struct mlx5_fw_tracer *tracer);
- 
- #endif
 diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
-index 0df2ad9d555c..13a5e226d331 100644
+index 0f224454b4a2..f9e293de9de3 100644
 --- a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
 +++ b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
-@@ -2,6 +2,7 @@
- /* Copyright (c) 2020, Mellanox Technologies inc.  All rights reserved. */
- 
- #include "fw_reset.h"
-+#include "diag/fw_tracer.h"
- 
- enum {
- 	MLX5_FW_RESET_FLAGS_RESET_REQUESTED,
-@@ -13,6 +14,7 @@ struct mlx5_fw_reset {
- 	struct mlx5_core_dev *dev;
- 	struct mlx5_nb nb;
+@@ -13,6 +13,7 @@ struct mlx5_fw_reset {
  	struct workqueue_struct *wq;
-+	struct work_struct fw_live_patch_work;
  	struct work_struct reset_request_work;
  	struct work_struct reset_reload_work;
- 	struct work_struct reset_now_work;
-@@ -187,6 +189,27 @@ static void mlx5_sync_reset_set_reset_requested(struct mlx5_core_dev *dev)
- 	mlx5_start_sync_reset_poll(dev);
++	struct work_struct reset_now_work;
+ 	unsigned long reset_flags;
+ 	struct timer_list timer;
+ };
+@@ -149,6 +150,122 @@ static void mlx5_sync_reset_request_event(struct work_struct *work)
+ 		mlx5_core_warn(dev, "PCI Sync FW Update Reset Ack. Device reset is expected.\n");
  }
  
-+static void mlx5_fw_live_patch_event(struct work_struct *work)
++#define MLX5_PCI_LINK_UP_TIMEOUT 2000
++
++static int mlx5_pci_link_toggle(struct mlx5_core_dev *dev)
 +{
-+	struct mlx5_fw_reset *fw_reset = container_of(work, struct mlx5_fw_reset,
-+						      fw_live_patch_work);
-+	struct mlx5_core_dev *dev = fw_reset->dev;
-+	struct mlx5_fw_tracer *tracer;
++	struct pci_bus *bridge_bus = dev->pdev->bus;
++	struct pci_dev *bridge = bridge_bus->self;
++	u16 reg16, dev_id, sdev_id;
++	unsigned long timeout;
++	struct pci_dev *sdev;
++	int cap, err;
++	u32 reg32;
 +
-+	mlx5_core_info(dev, "Live patch updated firmware version: %d.%d.%d\n", fw_rev_maj(dev),
-+		       fw_rev_min(dev), fw_rev_sub(dev));
++	/* Check that all functions under the pci bridge are PFs of
++	 * this device otherwise fail this function.
++	 */
++	err = pci_read_config_word(dev->pdev, PCI_DEVICE_ID, &dev_id);
++	if (err)
++		return err;
++	list_for_each_entry(sdev, &bridge_bus->devices, bus_list) {
++		err = pci_read_config_word(sdev, PCI_DEVICE_ID, &sdev_id);
++		if (err)
++			return err;
++		if (sdev_id != dev_id)
++			return -EPERM;
++	}
 +
-+	tracer = dev->tracer;
-+	if (IS_ERR_OR_NULL(tracer))
-+		return;
++	cap = pci_find_capability(bridge, PCI_CAP_ID_EXP);
++	if (!cap)
++		return -EOPNOTSUPP;
 +
-+	mlx5_fw_tracer_cleanup(tracer);
-+	if (mlx5_fw_tracer_recreate_strings_db(tracer))
-+		mlx5_core_err(dev, "Failed to recreate FW tracer strings DB\n");
-+	if (mlx5_fw_tracer_init(tracer))
-+		mlx5_core_err(dev, "Failed to re-initialize FW tracer\n");
++	list_for_each_entry(sdev, &bridge_bus->devices, bus_list) {
++		pci_save_state(sdev);
++		pci_cfg_access_lock(sdev);
++	}
++	/* PCI link toggle */
++	err = pci_read_config_word(bridge, cap + PCI_EXP_LNKCTL, &reg16);
++	if (err)
++		return err;
++	reg16 |= PCI_EXP_LNKCTL_LD;
++	err = pci_write_config_word(bridge, cap + PCI_EXP_LNKCTL, reg16);
++	if (err)
++		return err;
++	msleep(500);
++	reg16 &= ~PCI_EXP_LNKCTL_LD;
++	err = pci_write_config_word(bridge, cap + PCI_EXP_LNKCTL, reg16);
++	if (err)
++		return err;
++
++	/* Check link */
++	err = pci_read_config_dword(bridge, cap + PCI_EXP_LNKCAP, &reg32);
++	if (err)
++		return err;
++	if (!(reg32 & PCI_EXP_LNKCAP_DLLLARC)) {
++		mlx5_core_warn(dev, "No PCI link reporting capability (0x%08x)\n", reg32);
++		msleep(1000);
++		goto restore;
++	}
++
++	timeout = jiffies + msecs_to_jiffies(MLX5_PCI_LINK_UP_TIMEOUT);
++	do {
++		err = pci_read_config_word(bridge, cap + PCI_EXP_LNKSTA, &reg16);
++		if (err)
++			return err;
++		if (reg16 & PCI_EXP_LNKSTA_DLLLA)
++			break;
++		msleep(20);
++	} while (!time_after(jiffies, timeout));
++
++	if (reg16 & PCI_EXP_LNKSTA_DLLLA) {
++		mlx5_core_info(dev, "PCI Link up\n");
++	} else {
++		mlx5_core_err(dev, "PCI link not ready (0x%04x) after %d ms\n",
++			      reg16, MLX5_PCI_LINK_UP_TIMEOUT);
++		err = -ETIMEDOUT;
++	}
++
++restore:
++	list_for_each_entry(sdev, &bridge_bus->devices, bus_list) {
++		pci_cfg_access_unlock(sdev);
++		pci_restore_state(sdev);
++	}
++
++	return err;
 +}
 +
- static void mlx5_sync_reset_request_event(struct work_struct *work)
++static void mlx5_sync_reset_now_event(struct work_struct *work)
++{
++	struct mlx5_fw_reset *fw_reset = container_of(work, struct mlx5_fw_reset,
++						      reset_now_work);
++	struct mlx5_core_dev *dev = fw_reset->dev;
++	int err;
++
++	mlx5_sync_reset_clear_reset_requested(dev, false);
++
++	mlx5_core_warn(dev, "Sync Reset now. Device is going to reset.\n");
++
++	err = mlx5_cmd_fast_teardown_hca(dev);
++	if (err) {
++		mlx5_core_warn(dev, "Fast teardown failed, no reset done, err %d\n", err);
++		goto done;
++	}
++
++	err = mlx5_pci_link_toggle(dev);
++	if (err) {
++		mlx5_core_warn(dev, "mlx5_pci_link_toggle failed, no reset done, err %d\n", err);
++		goto done;
++	}
++
++	mlx5_enter_error_state(dev, true);
++	mlx5_unload_one(dev, false);
++done:
++	if (err)
++		mlx5_start_health_poll(dev);
++	mlx5_load_one(dev, false);
++}
++
+ static void mlx5_sync_reset_events_handle(struct mlx5_fw_reset *fw_reset, struct mlx5_eqe *eqe)
  {
- 	struct mlx5_fw_reset *fw_reset = container_of(work, struct mlx5_fw_reset,
-@@ -360,6 +383,9 @@ static int fw_reset_event_notifier(struct notifier_block *nb, unsigned long acti
- 	struct mlx5_eqe *eqe = data;
- 
- 	switch (eqe->sub_type) {
-+	case MLX5_GENERAL_SUBTYPE_FW_LIVE_PATCH_EVENT:
-+			queue_work(fw_reset->wq, &fw_reset->fw_live_patch_work);
-+		break;
- 	case MLX5_GENERAL_SUBTYPE_PCI_SYNC_FOR_FW_UPDATE_EVENT:
- 		mlx5_sync_reset_events_handle(fw_reset, eqe);
+ 	struct mlx5_eqe_sync_fw_update *sync_fw_update_eqe;
+@@ -160,6 +277,9 @@ static void mlx5_sync_reset_events_handle(struct mlx5_fw_reset *fw_reset, struct
+ 	case MLX5_SYNC_RST_STATE_RESET_REQUEST:
+ 		queue_work(fw_reset->wq, &fw_reset->reset_request_work);
  		break;
-@@ -404,6 +430,7 @@ int mlx5_fw_reset_events_init(struct mlx5_core_dev *dev)
- 	fw_reset->dev = dev;
- 	dev->priv.fw_reset = fw_reset;
++	case MLX5_SYNC_RST_STATE_RESET_NOW:
++		queue_work(fw_reset->wq, &fw_reset->reset_now_work);
++		break;
+ 	}
+ }
  
-+	INIT_WORK(&fw_reset->fw_live_patch_work, mlx5_fw_live_patch_event);
+@@ -196,6 +316,7 @@ int mlx5_fw_reset_events_init(struct mlx5_core_dev *dev)
+ 
  	INIT_WORK(&fw_reset->reset_request_work, mlx5_sync_reset_request_event);
  	INIT_WORK(&fw_reset->reset_reload_work, mlx5_sync_reset_reload_work);
- 	INIT_WORK(&fw_reset->reset_now_work, mlx5_sync_reset_now_event);
-diff --git a/include/linux/mlx5/device.h b/include/linux/mlx5/device.h
-index 4d3376e20f5e..ab5bedd9d3d3 100644
---- a/include/linux/mlx5/device.h
-+++ b/include/linux/mlx5/device.h
-@@ -366,6 +366,7 @@ enum {
- enum {
- 	MLX5_GENERAL_SUBTYPE_DELAY_DROP_TIMEOUT = 0x1,
- 	MLX5_GENERAL_SUBTYPE_PCI_POWER_CHANGE_EVENT = 0x5,
-+	MLX5_GENERAL_SUBTYPE_FW_LIVE_PATCH_EVENT = 0x7,
- 	MLX5_GENERAL_SUBTYPE_PCI_SYNC_FOR_FW_UPDATE_EVENT = 0x8,
- };
++	INIT_WORK(&fw_reset->reset_now_work, mlx5_sync_reset_now_event);
  
+ 	MLX5_NB_INIT(&fw_reset->nb, fw_reset_event_notifier, GENERAL_EVENT);
+ 	mlx5_eq_notifier_register(dev, &fw_reset->nb);
 -- 
 2.17.1
 
