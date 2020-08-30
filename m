@@ -2,78 +2,111 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46672C433E7
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3401CC433E7
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F40220BED
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 099B620738
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 09:41:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598780509;
+	bh=k08ME3JDK4Gf72G0743+68FC+Jt7TdUfF3cIxI3Mtlc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PbjFxM9cyhCQZB5mHxicvRKT198iYx41guA0N0IdWoX584k9u4t4skRPRdD2ajtcy
+	 slDPNhjykQNANkld///1F1EXpdK1lEJVC+guDgWnY3KFIlTzmP/wsoJyvWvcrvJA1r
+	 0bp72QjCFg2Vc5ra5t4TA/D6F7J3GMO8oeRdNVQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbgH3JZu (ORCPT
+        id S1728742AbgH3Jlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 05:25:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:49362 "EHLO foss.arm.com"
+        Sun, 30 Aug 2020 05:41:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbgH3JZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 05:25:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A31DD31B;
-        Sun, 30 Aug 2020 02:25:48 -0700 (PDT)
-Received: from [10.37.8.19] (unknown [10.37.8.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82AE33F68F;
-        Sun, 30 Aug 2020 02:25:47 -0700 (PDT)
-Subject: Re: [PATCH] iio: adc: rockchip_saradc: Select IIO_TRIGGERED_BUFFER
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        xxm@rock-chips.com
-References: <20200828174242.338068-1-alexandru.elisei@arm.com>
- <20200829155703.19bf1c9f@archlinux>
-From:   Alexandru Elisei <alexandru.elisei@arm.com>
-Message-ID: <73cb7fcd-df73-e287-7733-4ce657e5a758@arm.com>
-Date:   Sun, 30 Aug 2020 10:26:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1726404AbgH3Jlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 05:41:45 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3E6F20738;
+        Sun, 30 Aug 2020 09:41:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598780504;
+        bh=k08ME3JDK4Gf72G0743+68FC+Jt7TdUfF3cIxI3Mtlc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bVHPqylinVz5Fur63sAf0ZDd7st/OEgSM9ButsjdNl6wPRFq8iCAH6ZlpzuyB8yR/
+         HYsHjbFrf4VGcxviO2E6IWrqGZpTyIVY0v3msj3H6E3QmGT9bXtvnP70VYfbJth3ih
+         ynO45M9ZgssnohZj4nT40d03nU3bMBW35cHn6dFY=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kCJqI-007mQ2-MD; Sun, 30 Aug 2020 10:41:42 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200829155703.19bf1c9f@archlinux>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Date:   Sun, 30 Aug 2020 10:41:42 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Samuel Dionne-Riel <samuel@dionne-riel.com>
+Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: Boot failure on gru-scarlet-inx with 5.9-rc2
+In-Reply-To: <20200829164920.7d28e01a@DUFFMAN>
+References: <20200829164920.7d28e01a@DUFFMAN>
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <65d88bdd0888a69849327501a2aad186@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: samuel@dionne-riel.com, devicetree@vger.kernel.org, frowand.list@gmail.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+Hi Samuel,
 
-On 8/29/20 3:57 PM, Jonathan Cameron wrote:
-> On Fri, 28 Aug 2020 18:42:42 +0100
-> Alexandru Elisei <alexandru.elisei@arm.com> wrote:
->
->> Building the Rockchip saradc driver can trigger the following error if the
->> driver is compiled into the kernel, but the IIO triggered buffer is not:
->>
->> aarch64-linux-gnu-ld: drivers/iio/adc/rockchip_saradc.o: in function `rockchip_saradc_probe':
->> /path/to/linux/drivers/iio/adc/rockchip_saradc.c:427: undefined reference to `devm_iio_triggered_buffer_setup'
->>
->> This is because commit 4e130dc7b413 ("iio: adc: rockchip_saradc: Add
->> support iio buffers") added support for industrial I/O triggered buffers,
->> but didn't update Kconfig to build the required file. Fix that.
->>
->> Fixes: 4e130dc7b413 ("iio: adc: rockchip_saradc: Add support iio buffers")
->> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
-> Sorry, I've had a patch queued to fix this for a while, but had a
-> vacation just after merge window occurred that delayed me sending it out.
->
-> Will send a pull sometime this weekend.
->
-> Jonathan
+On 2020-08-29 21:54, Samuel Dionne-Riel wrote:
+> Hi,
+> 
+> The patch "of: address: Work around missing device_type property in
+> pcie nodes" by Marc Zyngier, d1ac0002dd297069bb8448c2764c9c31c4668441,
+> causes the "DUMO" variant of the gru-scarlet-inx, at the very least,
+> to not boot. A gru-kevin reportedly had no issues booting (further),
+> though it most likely had a different kernel configuration.
 
-That's great, thank you!
+Do you have a pointer to the device-tree for this system? I couldn't
+spot anything amiss in the scarlet-inx DT, but I'm not sure the
+system you have is that exact one. Even a DTB would help.
+
+The fact that Kevin still boots is a good indication that the issue
+could be with with the board-specific changes layered on top of the
+GRU base. My own rk3399 systems are running with this patch.
+
+> Using a SuzyQ cable, there is absolutely no serial output at boot,
+> while reverting the commit (and this commit alone) on top of v5.9-rc2
+> works just as it did with v5.9-rc1.
+
+Do you have "earlycon" on the kernel command-line?
+
+> From this point on, I don't know what's the usual process, so bear with
+> me if I forgot to provide relevant information, or made a faux-pas by
+> CC-ing too many people or not enough.
+
+No need to worry, and thank you for reporting the issue.
+
+Could you try replacing the problematic patch with [1], and let me
+know whether this changes anything on your end? This patch probably
+isn't the right approach, but it would certainly help pointing me
+in the right direction.
 
 Thanks,
-Alex
+
+         M.
+
+[1] https://lore.kernel.org/lkml/20200815125112.462652-2-maz@kernel.org/
+-- 
+Jazz is not dead. It just smells funny...
