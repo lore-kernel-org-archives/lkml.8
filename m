@@ -2,98 +2,106 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7E9C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 08:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B130BC433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 08:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55953208CA
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 08:12:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="gvzb+apb"
+	by mail.kernel.org (Postfix) with ESMTP id 8C13920BED
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 08:16:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgH3IMh (ORCPT
+        id S1726517AbgH3IQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 04:12:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbgH3IMT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 04:12:19 -0400
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0912C061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 01:12:19 -0700 (PDT)
-Received: by mail-pg1-x530.google.com with SMTP id e33so176913pgm.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 01:12:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PAgUhU0xjT1+DLGdJJ9Io2w7gWNW2HWrdKE+ZGxRNCs=;
-        b=gvzb+apblsXdy+1M5TBqxV7Twl+YcfSKwwo5mYxlykEA/w8PJVptt7yTiBK/QpELJ7
-         zs8/CRbvBgFQ8SjKuUOEAbI6LpTIppHS+1Wm2dpE7HJQdLTRBt/oQMkMH50MSvsrlsrI
-         nroNg8ebIVNt6vg/Gzi3De2tVlu6QDKyO5n5srYMA8vZujTlMQpJ/SSBQPcAZ3L/SD69
-         YbRE0qioz+siivYxt0Psh1zQZhtZ+k1PuLVANuOS31lvlSGsJlu5KdfqJ21PLv5JGw//
-         WxaWAYz9UtvhDc3r51R53lzcPYZq1DDKaIcrbYRnKt1YmhD8l2veQE4swsXioCcinIzc
-         Ndnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PAgUhU0xjT1+DLGdJJ9Io2w7gWNW2HWrdKE+ZGxRNCs=;
-        b=BkxaBqo5XlyW860pQ0H6xLRlbo64q2b+T5EV7ETn7K3KQMpG9Yx6a37zLctVRcrvKL
-         MN7cOiw+zItfawJ/YGINnIe5GSdYT2BK7SZH2egcpZXbF9dYjuFvMp5zDVPK95pyhWHW
-         VPSN1nVvO6MakhmG0E5W2PfXK8/eX5dq2RXhri0AzmfFJ+gIiMUbW831L/QeGcg5q5/m
-         FW43mblA8MPthsOfI+a2OVRR0XWiNxpbtCKgOE0qhyb0gj+vvwl5h6yceW86rqGZvPNx
-         cCafzLefwSo7JyONyUdYaCoiV4BC31MHc2amTc62+iZpgetZuOy9RC/L1VXCwpINq5xC
-         UlBg==
-X-Gm-Message-State: AOAM531O1cUl5sth8CtzhpyBMerI2nYa7GeqIfd7qBcQAmgGDpwJf0Aa
-        3ycY1nmJvJCOm0/zdpJQeFZ1Dw==
-X-Google-Smtp-Source: ABdhPJypoJjBgCqz9e10W3z+JWUgVWhMpjZgA07gs54eevc1BVzaC4eWnjTMPayn0eBWw/mmU+w47A==
-X-Received: by 2002:aa7:918d:: with SMTP id x13mr5150473pfa.292.1598775138444;
-        Sun, 30 Aug 2020 01:12:18 -0700 (PDT)
-Received: from localhost.localdomain ([103.136.221.66])
-        by smtp.gmail.com with ESMTPSA id g75sm4455669pfb.57.2020.08.30.01.12.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 30 Aug 2020 01:12:18 -0700 (PDT)
-From:   Muchun Song <songmuchun@bytedance.com>
-To:     naoya.horiguchi@nec.com, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH] mm/memory-failure: Fix return wrong value when isolate page fail
-Date:   Sun, 30 Aug 2020 16:10:53 +0800
-Message-Id: <20200830081053.64981-1-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+        Sun, 30 Aug 2020 04:16:22 -0400
+Received: from mga14.intel.com ([192.55.52.115]:59117 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726013AbgH3IQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 04:16:20 -0400
+IronPort-SDR: AfKBnsnUaJZEVvGUw6ZkCSM7WBpQFuTBV+XRbkczRQ+W6db5XEIIiz+5hC3XBIOcbtYQyO3oVz
+ LPvtSiKwMYLg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9728"; a="156108637"
+X-IronPort-AV: E=Sophos;i="5.76,371,1592895600"; 
+   d="scan'208";a="156108637"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2020 01:16:18 -0700
+IronPort-SDR: /7T2yQCqaQHMU6kes3LeCqjFI7HAEqYM/TLWHePSQltPZm5X8x7mMM8T/Nd2sSVqmH2bLQfBRK
+ URK/+FAYpIpg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,371,1592895600"; 
+   d="scan'208";a="324560999"
+Received: from shuo-intel.sh.intel.com (HELO localhost) ([10.239.154.30])
+  by fmsmga004.fm.intel.com with ESMTP; 30 Aug 2020 01:16:15 -0700
+Date:   Sun, 30 Aug 2020 16:16:15 +0800
+From:   Shuo A Liu <shuo.a.liu@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yu Wang <yu1.wang@intel.com>,
+        "Reinette Chatre" <reinette.chatre@intel.com>, <x86@kernel.org>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: Re: [PATCH 05/17] virt: acrn: Introduce ACRN HSM basic driver
+Message-ID: <20200830081615.GG13723@shuo-intel.sh.intel.com>
+References: <20200825024516.16766-1-shuo.a.liu@intel.com>
+ <20200825024516.16766-6-shuo.a.liu@intel.com>
+ <20200828102559.GA1470435@kroah.com>
+ <20200829104612.GD13723@shuo-intel.sh.intel.com>
+ <58093008-3072-f9df-5245-f74a82906e47@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <58093008-3072-f9df-5245-f74a82906e47@intel.com>
+User-Agent: Mutt/1.8.3 (2017-05-23)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we isolate page fail, we should not return 0, because we do not
-set page HWPoison on any page.
+Hi Dave,
 
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
----
- mm/memory-failure.c | 1 +
- 1 file changed, 1 insertion(+)
+On Sat 29.Aug'20 at  9:12:22 -0700, Dave Hansen wrote:
+>On 8/29/20 3:46 AM, Shuo A Liu wrote:
+>> On Fri 28.Aug'20 at 12:25:59 +0200, Greg Kroah-Hartman wrote:
+>>> On Tue, Aug 25, 2020 at 10:45:05AM +0800, shuo.a.liu@intel.com wrote:
+>>>> +static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+>>>> +               unsigned long ioctl_param)
+>>>> +{
+>>>> +    if (cmd == ACRN_IOCTL_GET_API_VERSION) {
+>>>> +        if (copy_to_user((void __user *)ioctl_param,
+>>>> +                 &api_version, sizeof(api_version)))
+>>>> +            return -EFAULT;
+>>>
+>>> Why are you versioning your api?  Shouldn't that not be a thing and you
+>>> either support an ioctl or you do not?
+>>
+>> The API version here is more for the hypercalls.
+>> The hypercalls might evolve later
+>
+>They might evolve, but the old ones must always keep working.  Right?
 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 696505f56910..4eb3c42ffe35 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1850,6 +1850,7 @@ static int __soft_offline_page(struct page *page)
- 	} else {
- 		pr_info("soft offline: %#lx: %s isolation failed: %d, page count %d, type %lx (%pGp)\n",
- 			pfn, msg_page[huge], ret, page_count(page), page->flags, &page->flags);
-+		ret = -EBUSY;
- 	}
- 	return ret;
- }
--- 
-2.11.0
+Yes, it's right.
 
+>
+>> and the version indicates which set of interfaces (include the
+>> paramters' format) should be used by user space tools. Currently,
+>> it's used rarely.
+>Why do you need this when the core kernel doesn't?  We add syscalls,
+>ioctl()s and prctl()s all the time, but nothing is versioned.
+
+Indeed. It looks a bit odd.
+
+>
+>This sounds like something you need to remove from the series.
+
+OK. I will remove the api version related code.
+
+Thanks
+shuo
