@@ -2,121 +2,132 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA39DC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 11:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC85C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 11:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6AC520757
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 11:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9579920757
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 11:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598785900;
-	bh=gXODkDbcQF17NTHovr6nEh8zgdaj1s2Ph6JY/EZmbC8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=rKOLYwrIuYFcbEkCwi/DD3FuY0v3+P0e7FQkFMonP0e9xLOzidMgKfXwB1ZGMxNcJ
-	 SyE8XNmVYlNVik91ljCkISDY78kwrB0ZguiQLlIr3+E3T9ICTMR3L18e4xBG1UaS5u
-	 QtjOL+E+s1nMsOw5M2pdnFFSDQo+XtTNSCvw/+aY=
+	s=default; t=1598785926;
+	bh=49OJIxyOPMZUAp+93Ub60KpOyCCqoNiyoBmC+jSKGMM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=iYDOvfmrCO6mCMCCHXR05DJeFMkhZ6Ne4MOy+ecVcybIcWljo7cWX0DcbVf5jH589
+	 BYDc69EK87X/NyoDy0I3d4LIKYbJhX3dJAdosExdcKNRE1L8ux6vYdATuwutgbFfak
+	 hk9aMaAXXjryiGeHYMjemYzgplHxjfP1rtSRD7oM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbgH3LLi (ORCPT
+        id S1728717AbgH3LMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 07:11:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56278 "EHLO mail.kernel.org"
+        Sun, 30 Aug 2020 07:12:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725845AbgH3LLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 07:11:35 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725845AbgH3LLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 07:11:51 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A526E20757;
-        Sun, 30 Aug 2020 11:11:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E2C020757;
+        Sun, 30 Aug 2020 11:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598785894;
-        bh=gXODkDbcQF17NTHovr6nEh8zgdaj1s2Ph6JY/EZmbC8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=q+yk8voUyPk3N9ED0KyO0ZcI+jgV0Na/1bJfDfEYX+UjR+kFBDCXdw8n0NhVz160b
-         ohi2ic/pU1ivI8S3Ajf5U0LSOd+t56I/edrUOuDciMQQ1+61F/WXYOD4mbBf5Cvrd3
-         tiUuEnYyZvUgH85v6TYrZXfrWUcn80NWehkWo+A4=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] dt-bindings: leds: common: Add mmc0 as default trigger
-Date:   Sun, 30 Aug 2020 13:11:15 +0200
-Message-Id: <20200830111115.32623-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        s=default; t=1598785911;
+        bh=49OJIxyOPMZUAp+93Ub60KpOyCCqoNiyoBmC+jSKGMM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=amkiRBqW8qjh46XHvFi6rlDLa7tg9uLDdr6j1mD92ycc2nbzDUUZmPlp5TvSirbtu
+         k6OO28fPdK9AIouRf3k23mZTwfn8JRuJXKKb+btoMlP/MddpwiKCEwCgA6RinqJrXP
+         4+VuQUrMtK964rwXA1oSeBCIoLg7RrQm2llbnhCU=
+Date:   Sun, 30 Aug 2020 12:11:47 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] platform: cros_ec: Reduce ligthbar get version
+ command
+Message-ID: <20200830121147.6920e1ee@archlinux>
+In-Reply-To: <CAPUE2uu7wQvJtesgk1sw=b7AOj7-7RW3skcvHs9y2kL_k7-tdA@mail.gmail.com>
+References: <20200826002945.394562-1-gwendal@chromium.org>
+        <20200829165433.57b0e5e4@archlinux>
+        <CAPUE2uu7wQvJtesgk1sw=b7AOj7-7RW3skcvHs9y2kL_k7-tdA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MMC could be a default trigger so add a pattern to match it and fix
-dtbs_check warnings like:
+On Sun, 30 Aug 2020 00:00:02 -0700
+Gwendal Grignou <gwendal@chromium.org> wrote:
 
-  arch/arm/boot/dts/exynos4412-odroidx.dt.yaml: leds: led2:linux,default-trigger:0:
-    'mmc0' is not one of ['backlight', 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer', 'pattern']
-    From schema: Documentation/devicetree/bindings/leds/leds-gpio.yaml
+> On Sat, Aug 29, 2020 at 8:54 AM Jonathan Cameron <jic23@kernel.org> wrote:
+> >
+> > On Tue, 25 Aug 2020 17:29:45 -0700
+> > Gwendal Grignou <gwendal@chromium.org> wrote:
+> >  
+> > > By default, the lightbar commands are set to the
+> > > biggest lightbar command and response. That length is greater than 128
+> > > bytes and may not work on all machines.
+> > > But all EC are probed for lightbar by sending a get version request.
+> > > Set that request size precisely.
+> > >
+> > > Before the command would be:
+> > > cros_ec_cmd: version: 0, command: EC_CMD_LIGHTBAR_CMD, outsize: 194, insize: 128, result: 0
+> > > Afer:
+> > > cros_ec_cmd: version: 0, command: EC_CMD_LIGHTBAR_CMD, outsize: 1, insize: 8, result: 0
+> > >
+> > > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>  
+> > Hi Gwendal,
+> >
+> > Description seems to me to suggest this is a fix?
+> > Are there known machines on which it doesn't work currently?  
+> We have a prototype [without lightbar] where the command size was
+> limited to 128 bytes.
+> Given we issue a get_lightbar_version on all chromebooks, we had a
+> failure on this prototype. Devices with a lightbar must support a
+> command size greater or equal to 194 bytes.
+> Beside helping the prototype to boot, this patch slightly speeds up
+> the enumeration of devices managed by the EC.
+> >
+> > If so, please can I have a fixes tag.  If it's just a precaution
+> > against future problems then let me know and I can add it for the
+> > next merge window.  
+> Done in v3.
+> Note I made a mistake by sending the patch to linux-iio as it targeted
+> platform/chromeos.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- .../devicetree/bindings/leds/common.yaml      | 39 ++++++++++---------
- 1 file changed, 20 insertions(+), 19 deletions(-)
+I hadn't even noticed that it wasn't in IIO. Oops :)
 
-diff --git a/Documentation/devicetree/bindings/leds/common.yaml b/Documentation/devicetree/bindings/leds/common.yaml
-index a2a541bca73c..6b38f9f3792c 100644
---- a/Documentation/devicetree/bindings/leds/common.yaml
-+++ b/Documentation/devicetree/bindings/leds/common.yaml
-@@ -78,25 +78,26 @@ properties:
-       This parameter, if present, is a string defining the trigger assigned to
-       the LED.
-     $ref: /schemas/types.yaml#definitions/string
--
--    enum:
--        # LED will act as a back-light, controlled by the framebuffer system
--      - backlight
--        # LED will turn on (but for leds-gpio see "default-state" property in
--        # Documentation/devicetree/bindings/leds/leds-gpio.yaml)
--      - default-on
--        # LED "double" flashes at a load average based rate
--      - heartbeat
--        # LED indicates disk activity
--      - disk-activity
--        # LED indicates IDE disk activity (deprecated), in new implementations
--        # use "disk-activity"
--      - ide-disk
--        # LED flashes at a fixed, configurable rate
--      - timer
--        # LED alters the brightness for the specified duration with one software
--        # timer (requires "led-pattern" property)
--      - pattern
-+    oneOf:
-+      - enum:
-+            # LED will act as a back-light, controlled by the framebuffer system
-+          - backlight
-+            # LED will turn on (but for leds-gpio see "default-state" property in
-+            # Documentation/devicetree/bindings/leds/leds-gpio.yaml)
-+          - default-on
-+            # LED "double" flashes at a load average based rate
-+          - heartbeat
-+            # LED indicates disk activity
-+          - disk-activity
-+            # LED indicates IDE disk activity (deprecated), in new implementations
-+            # use "disk-activity"
-+          - ide-disk
-+            # LED flashes at a fixed, configurable rate
-+          - timer
-+            # LED alters the brightness for the specified duration with one software
-+            # timer (requires "led-pattern" property)
-+          - pattern
-+      - pattern: "^mmc[0-9]+$"
- 
-   led-pattern:
-     description: |
--- 
-2.17.1
+Jonathan
+> >
+> > Thanks,
+> >
+> > Jonathan
+> >  
+> > > ---
+> > > Changes since v1:
+> > > - Remove BUG and TEST fields.
+> > >
+> > >  drivers/platform/chrome/cros_ec_lightbar.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
+> > > index b59180bff5a3e..ef61298c30bdd 100644
+> > > --- a/drivers/platform/chrome/cros_ec_lightbar.c
+> > > +++ b/drivers/platform/chrome/cros_ec_lightbar.c
+> > > @@ -116,6 +116,8 @@ static int get_lightbar_version(struct cros_ec_dev *ec,
+> > >
+> > >       param = (struct ec_params_lightbar *)msg->data;
+> > >       param->cmd = LIGHTBAR_CMD_VERSION;
+> > > +     msg->outsize = sizeof(param->cmd);
+> > > +     msg->result = sizeof(resp->version);
+> > >       ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+> > >       if (ret < 0) {
+> > >               ret = 0;  
+> >  
 
