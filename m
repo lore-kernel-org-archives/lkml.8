@@ -2,100 +2,90 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AF7C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC99BC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2BC620757
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:00:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598799626;
-	bh=5MuDOvLpN2j2GGFm+ogmqEiGuZETh0tPb0fLz8lHFtw=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=eysSytYYsq4etBuswQONVEsi0aP7HjgscFLJ9IzUoTHlo8/qqkijjpnKsIrN6fYMC
-	 iHgpvy1OSZZ0zfNdSDnoZDcyFU4qYS0bgmYf19WX2zMP5gPQiRdfVCzos66y6kHLDt
-	 M/UekIEBbDe8ofSRvJt4dFX69henWR6YNY6BoF04=
+	by mail.kernel.org (Postfix) with ESMTP id BA81E20720
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:01:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jR6mRCmV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgH3PAX (ORCPT
+        id S1727819AbgH3PB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 11:00:23 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33295 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgH3PAR (ORCPT
+        Sun, 30 Aug 2020 11:01:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgH3PBU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 11:00:17 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w14so3236466eds.0;
-        Sun, 30 Aug 2020 08:00:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8f10Pn0g1AkB3s/S4iP1tBrGAB+OycQ7IuFHYDJH2OI=;
-        b=mAQr9ZNCXJhsxI1eg501IMDyK9GD3lKNsRU3ltIuwajAzKetInZ9glJHUh3FHly/Fw
-         UksQLRqMp8+EmJURMaWBRaAktClvDqtKyEL7ukDhvSzQj6YooEmGAbfj8MpEXfLb810P
-         QRkhuZYqF6p3DdLYD2NMT5xHEAKCbLtJ1RN6tINrNEIuZeb9nDsbbftcTa0s7NpqufCW
-         7gAE25z2Z6lkU3H4HRpzVtZiMzytsnklxXyTv8p8vYjkPB+UuY7+tMye3oj6+aHc1Azb
-         yq+3JTYN3Rvi05JcL5FMtSvLrj+RR1yswgDOhavKdCWS/WJPY9LVpduz1iHQ3lPFnn76
-         1Taw==
-X-Gm-Message-State: AOAM531EwCKMPirRxPcunAle46UkK2vYUGxtxxUDym53lnLN7ZJcUfv1
-        nA8z8WFRZOVVzsgxhCKZ6Ag=
-X-Google-Smtp-Source: ABdhPJwDIFgs7QFDh3dvTWrjd4AwOLqNbWFJ/ReTtIGnvRW8SBiMV+ERpeOi0oZ6qh6q2yyJtm2ATw==
-X-Received: by 2002:a50:a6d1:: with SMTP id f17mr7753345edc.379.1598799614832;
-        Sun, 30 Aug 2020 08:00:14 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id cf7sm2637445edb.78.2020.08.30.08.00.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 30 Aug 2020 08:00:14 -0700 (PDT)
-Date:   Sun, 30 Aug 2020 17:00:11 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Barry Song <baohua@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>, Jun Nie <jun.nie@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [RESEND PATCH 5/5] ARM: dts: zx: Align L2 cache-controller
- nodename with dtschema
-Message-ID: <20200830150011.GE31461@kozik-lap>
-References: <20200819175853.21492-1-krzk@kernel.org>
- <20200819175853.21492-5-krzk@kernel.org>
- <20200820093010.GA15884@kozik-lap>
+        Sun, 30 Aug 2020 11:01:20 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68EAEC061573;
+        Sun, 30 Aug 2020 08:01:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description;
+        bh=oCHVt42okohO0gylQNQyVW0C6OzwnP8SCmOEeTDqT64=; b=jR6mRCmVYr8gGatQ+zdEvZl9rh
+        9xYIOVNIVBW+1W1Ej2rOACKMnKijQfCTVesTlC8gnvnX0bfBE4Ed3to8Ys5g1pXrSzLPUMjrXN867
+        McbupSCJymUCyAzXTXg6NeTZ+no06tfnTPou9u3fUVTOtylqWnSOKDWaV58fbRN8N7oB6UktciJI1
+        5kcCUnrWedZ8SK/GEOEYTrstC/mfk8qwLf3aazvlPKozcniHSmzZN5Mo8D/Hw6yJJ9LHzVWrb5cnN
+        Lp1supJIteoshFPENdZJ2+hIwktQJRQ/D0fg+s1aBs71yOysRw9mdl5koV21FCUGLrzLPwTJE+LkK
+        07PxRPfQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kCOpV-0004JZ-09; Sun, 30 Aug 2020 15:01:13 +0000
+Subject: Re: [RESEND PATCH] KEYS: asymmetric: Fix kerneldoc
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200819175212.20583-1-krzk@kernel.org>
+ <20200830145655.GA31461@kozik-lap>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <46f2119d-d94c-517f-46cf-10ec27c820f3@infradead.org>
+Date:   Sun, 30 Aug 2020 08:01:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <20200830145655.GA31461@kozik-lap>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200820093010.GA15884@kozik-lap>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 11:30:10AM +0200, Krzysztof Kozlowski wrote:
-> On Wed, Aug 19, 2020 at 07:58:53PM +0200, Krzysztof Kozlowski wrote:
-> > Fix dtschema validator warnings like:
-> >     l2-cache-controller@c00000: $nodename:0:
-> >         'l2-cache-controller@c00000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+On 8/30/20 7:56 AM, Krzysztof Kozlowski wrote:
+> On Wed, Aug 19, 2020 at 07:52:12PM +0200, Krzysztof Kozlowski wrote:
+>> Fix W=1 compile warnings (invalid kerneldoc):
+>>
+>>     crypto/asymmetric_keys/asymmetric_type.c:160: warning: Function parameter or member 'kid1' not described in 'asymmetric_key_id_same'
+>>     crypto/asymmetric_keys/asymmetric_type.c:160: warning: Function parameter or member 'kid2' not described in 'asymmetric_key_id_same'
+>>     crypto/asymmetric_keys/asymmetric_type.c:160: warning: Excess function parameter 'kid_1' description in 'asymmetric_key_id_same'
+>>     crypto/asymmetric_keys/asymmetric_type.c:160: warning: Excess function parameter 'kid_2' description in 'asymmetric_key_id_same'
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> ---
+>>  crypto/asymmetric_keys/asymmetric_type.c | 6 ++++--
+>>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> I forgot to add the tag from Jun provided on previous submission:
-> Reviewed-by: Jun Nie <jun.nie@linaro.org>
+> Hi David, Herbert,
+> 
+> Any comments here?
 > 
 > Best regards,
 > Krzysztof
-> 
 
-Hi,
+LGTM.  Thanks.
 
-Ping, any comments here? Can anyone pick it up?
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
-Best regards,
-Krzysztof
+-- 
+~Randy
