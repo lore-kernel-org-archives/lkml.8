@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AF6C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 21:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D429FC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 21:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCCF02083E
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 21:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB7772083E
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 21:08:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mLgm8Hki"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c4OqQCxX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbgH3VE6 (ORCPT
+        id S1726436AbgH3VI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 17:04:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53248 "EHLO
+        Sun, 30 Aug 2020 17:08:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgH3VE5 (ORCPT
+        with ESMTP id S1726150AbgH3VIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 17:04:57 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E8DC061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 14:04:56 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id 185so2533481oie.11
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 14:04:56 -0700 (PDT)
+        Sun, 30 Aug 2020 17:08:24 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF13C061573
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 14:08:24 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id j7so5477981oij.9
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 14:08:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=coS1VgOeVvuW3zilDte6RopNvB+JCPXBV06ZRlXDP00=;
-        b=mLgm8HkihKv7FyGuefBErbKi1q1X3jgYF1hFyRbkUtb+OlouRU6smur6+yj1xhcX5o
-         mudVlzmxyk3BIsBQ+jxr0UGffsZM9yHUxOWGMJy6iP4fPeUNHnCpypxiDiDSe26OP8CP
-         WaD1ejKPn5MwG679WL8r5CkBr4ucRNV4Fki7DfaAZdyGCroDviXtVHCUmZWgTa0ggtUP
-         ifGpay17H5XsEl31i4ALDPfoMpW26ISN3x0V7bMmMeOak1enznroTYmgomSaLQ/7zVcH
-         voFY5z0lGiViIVUs/JP2LEhQwAzltEAb9mLieOjaBjUcg+uiL5oPQeDt9Li8eYlhKfYv
-         2cdQ==
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=SQ10D8PXryeEKHHcl5IvJgd6P48aMcyJPD1+SoD+oOw=;
+        b=c4OqQCxXIwZCv3JjpmkYk1C/CeDsSc970MD8kj38easVa+rgeXjtnreeKAvbX5dnN9
+         d2uuNuM4vPcJmTcVou5fUb4QsSDGIo0I3jzh7ZNG+qN6GK/hSQ+UkqXT4pYaGthcv1VY
+         89WTQRrQljR99h7ywkXXy3vo2t9LlTpEqqRthmrCKuytS4dvmws+u25TJBxt6AwCfwvX
+         bT4yk0N1mRAjDTukMmYU2jHo7PXwaeoqAUCooMsaalgiXLhzYKEMF9PsTlbNZOGJBrAa
+         PFUs3sGOo/dZLqlr4+danZhsgj+kTFIxVg381SJZ22wuz518PSM0dkFR3E6QF7kOlmHp
+         TUfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=coS1VgOeVvuW3zilDte6RopNvB+JCPXBV06ZRlXDP00=;
-        b=bqe0IrhF9KpId5pmPq91cVA9u3bM2QgPQYss3/aA9qqoHU/mi6aI/ibh0s+8HRtOcD
-         nwyeCNX9pceC8ENFuJg+u9pEu9pRl45K+6FFbJNG4CVrw74GdtyarVFmNRupFndT/H/X
-         zNWWMQ7gZPVIbYelBDTBSWEXkJ1Uy/aoNaPOGQFmJlrNwvu9XS9KuVVikndCw8jSAbn8
-         jY9cXCRGjgmCLwMc4RL/xAznNVfzwKRWKSJrNSOgEilEWdZznl/wJ/CbtTBWXZCuA7UM
-         GG3HJ1bHXALJiY6h8dQF1p/ab5tGKJfjTwrBsI3nhv4qqH8xC8fHBpvq5gpNEhD4lXz0
-         PNFg==
-X-Gm-Message-State: AOAM532vq68GQ5BaPAAINN28I4HjNKSlziNvP1YJtFivdcRZ+hsdV2L4
-        O7VzXgVMaATlv6aK6aAUTDCSsA==
-X-Google-Smtp-Source: ABdhPJyBDjSpD7vn8efGsx/WG5uLd+GklOI9Mc88ks1Nx40bsNuBq8J3UE90x7tcCu+8R+f7RbVQiQ==
-X-Received: by 2002:a05:6808:b36:: with SMTP id t22mr1874161oij.159.1598821496074;
-        Sun, 30 Aug 2020 14:04:56 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=SQ10D8PXryeEKHHcl5IvJgd6P48aMcyJPD1+SoD+oOw=;
+        b=Fl3DM9iNplOf90kqK80Ah0485nHFWwd0KOZKCl0MoPuJ0t7faB8/IL6GiVgv4vZQia
+         S/yN0sC6Iw4EEnt5ji4DgQRhb5dpC/2WM/SAkarzovskaJfw8NdV0R+6UpiBrQCEUGGX
+         d1zFOnatK5NZUPgdREd0tbp4p4pnKiSa3jYKHVQt5gXtzLInc+lDc7siVuUilk419v0G
+         WOzuuSfzTSvMdd/3Bmoy0lx0s7twhZbs7GOjcGmRpBWlpdIt1WECj/Ap9BYpWKZ/COhp
+         C8i2Cly9KHyw6o32husobVdNoCtP6GCjMBPP8+4npmgeyvxoVxw5OUt9UM4Z+MeglZiX
+         zJpQ==
+X-Gm-Message-State: AOAM530h1C56TBCS1jNKUGoUyfRFL6eYqbGPgNP5aqgcxetk/ft3jDCb
+        EZK8GjfkB7hmhqBbZquBQDJqow==
+X-Google-Smtp-Source: ABdhPJxF1SCIvzAbelWpBIoB9i54xpvq6aZj7/FIsSEv2EFOm/IpDLQv50VMevxq6JU/ORrsgv5lJQ==
+X-Received: by 2002:aca:fc85:: with SMTP id a127mr1801672oii.148.1598821699723;
+        Sun, 30 Aug 2020 14:08:19 -0700 (PDT)
 Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id z10sm1362907otk.6.2020.08.30.14.04.54
+        by smtp.gmail.com with ESMTPSA id 63sm1408348ooj.32.2020.08.30.14.08.17
         (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Sun, 30 Aug 2020 14:04:55 -0700 (PDT)
-Date:   Sun, 30 Aug 2020 14:04:53 -0700 (PDT)
+        Sun, 30 Aug 2020 14:08:18 -0700 (PDT)
+Date:   Sun, 30 Aug 2020 14:08:16 -0700 (PDT)
 From:   Hugh Dickins <hughd@google.com>
 X-X-Sender: hugh@eggly.anvils
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -71,8 +72,10 @@ cc:     Alex Shi <alex.shi@linux.alibaba.com>,
         Chris Wilson <chris@chris-wilson.co.uk>,
         Kuo-Hsin Yang <vovoy@chromium.org>,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH 3/5] shmem: shmem_writepage() split unlikely i915 THP
-Message-ID: <alpine.LSU.2.11.2008301401390.5954@eggly.anvils>
+Subject: [PATCH 4/5] mm: fix check_move_unevictable_pages() on THP
+In-Reply-To: <alpine.LSU.2.11.2008301343270.5954@eggly.anvils>
+Message-ID: <alpine.LSU.2.11.2008301405000.5954@eggly.anvils>
+References: <alpine.LSU.2.11.2008301343270.5954@eggly.anvils>
 User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
@@ -81,43 +84,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/gpu/drm/i915/gem/i915_gem_shmem.c contains a shmem_writeback()
-which calls shmem_writepage() from a shrinker: that usually works well
-enough; but if /sys/kernel/mm/transparent_hugepage/shmem_enabled has
-been set to "force" (documented as "Force the huge option on for all -
-very useful for testing"), shmem_writepage() is surprised to be called
-with a huge page, and crashes on the VM_BUG_ON_PAGE(PageCompound) (I
-did not find out where the crash happens when CONFIG_DEBUG_VM is off).
+check_move_unevictable_pages() is used in making unevictable shmem pages
+evictable: by shmem_unlock_mapping(), drm_gem_check_release_pagevec() and
+i915/gem check_release_pagevec().  Those may pass down subpages of a huge
+page, when /sys/kernel/mm/transparent_hugepage/shmem_enabled is "force".
 
-LRU page reclaim always splits the shmem huge page first: I'd prefer not
-to demand that of i915, so check and split compound in shmem_writepage().
+That does not crash or warn at present, but the accounting of vmstats
+unevictable_pgs_scanned and unevictable_pgs_rescued is inconsistent:
+scanned being incremented on each subpage, rescued only on the head
+(since tails already appear evictable once the head has been updated).
 
-Fixes: 2d6692e642e7 ("drm/i915: Start writeback from the shrinker")
+5.8 commit 5d91f31faf8e ("mm: swap: fix vmstats for huge page") has
+established that vm_events in general (and unevictable_pgs_rescued in
+particular) should count every subpage: so follow that precedent here.
+
+Do this in such a way that if mem_cgroup_page_lruvec() is made stricter
+(to check page->mem_cgroup is always set), no problem: skip the tails
+before calling it, and add thp_nr_pages() to vmstats on the head.
+
 Signed-off-by: Hugh Dickins <hughd@google.com>
-Cc: stable@vger.kernel.org # v5.3+
 ---
-I've marked this for stable just for the info, but the number of users
-affected is very probably 1, so please feel free to delete that marking.
+Nothing here worth going to stable, since it's just a testing config
+that is fixed, whose event numbers are not very important; but this
+will be needed before Alex Shi's warning, and might as well go in now.
 
- mm/shmem.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+The callers of check_move_unevictable_pages() could be optimized,
+to skip over tails: but Matthew Wilcox has other changes in flight
+there, so let's skip the optimization for now.
 
---- 5.9-rc2/mm/shmem.c	2020-08-16 17:32:50.693507198 -0700
-+++ linux/mm/shmem.c	2020-08-28 17:35:08.326024349 -0700
-@@ -1362,7 +1362,15 @@ static int shmem_writepage(struct page *
- 	swp_entry_t swap;
- 	pgoff_t index;
- 
--	VM_BUG_ON_PAGE(PageCompound(page), page);
-+	/*
-+	 * If /sys/kernel/mm/transparent_hugepage/shmem_enabled is "force",
-+	 * then drivers/gpu/drm/i915/gem/i915_gem_shmem.c gets huge pages,
-+	 * and its shmem_writeback() needs them to be split when swapping.
-+	 */
-+	if (PageTransCompound(page))
-+		if (split_huge_page(page) < 0)
-+			goto redirty;
+ mm/vmscan.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+--- 5.9-rc2/mm/vmscan.c	2020-08-16 17:32:50.721507348 -0700
++++ linux/mm/vmscan.c	2020-08-28 17:47:10.595580876 -0700
+@@ -4260,8 +4260,14 @@ void check_move_unevictable_pages(struct
+ 	for (i = 0; i < pvec->nr; i++) {
+ 		struct page *page = pvec->pages[i];
+ 		struct pglist_data *pagepgdat = page_pgdat(page);
++		int nr_pages;
 +
- 	BUG_ON(!PageLocked(page));
- 	mapping = page->mapping;
- 	index = page->index;
++		if (PageTransTail(page))
++			continue;
++
++		nr_pages = thp_nr_pages(page);
++		pgscanned += nr_pages;
+ 
+-		pgscanned++;
+ 		if (pagepgdat != pgdat) {
+ 			if (pgdat)
+ 				spin_unlock_irq(&pgdat->lru_lock);
+@@ -4280,7 +4286,7 @@ void check_move_unevictable_pages(struct
+ 			ClearPageUnevictable(page);
+ 			del_page_from_lru_list(page, lruvec, LRU_UNEVICTABLE);
+ 			add_page_to_lru_list(page, lruvec, lru);
+-			pgrescued++;
++			pgrescued += nr_pages;
+ 		}
+ 	}
+ 
