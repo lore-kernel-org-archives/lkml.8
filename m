@@ -2,182 +2,96 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03337C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A01C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB7020693
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:04:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mixtli.metztli.it header.i=@mixtli.metztli.it header.b="IvfvFd89"
+	by mail.kernel.org (Postfix) with ESMTP id 25C5820693
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:05:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598771103;
+	bh=qJZMAD9Q2MOXNf2qIsusoobMRyMbqbCp4Y0wWiOf6Bo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yCRVlpN4UtSo3u5mov3senh2Y+csRLNiSxfy2TZlU4RnSZfkSdskktksIVblIS9AL
+	 r74KruMqkErP5N7u43t7eKkQxQoUd2xYXlqwOmV1gtgkhX4KHthDzC1NarhlrxE4Ce
+	 RjI87Dd8HMsYHrbaTKAub4yHqOrufDwYXjgX1Sb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgH3HEu (ORCPT
+        id S1726554AbgH3HFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 03:04:50 -0400
-Received: from mail7.static.mailgun.info ([104.130.122.7]:45946 "EHLO
-        mail7.static.mailgun.info" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgH3HEr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 03:04:47 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mixtli.metztli.it; q=dns/txt;
- s=mx; t=1598771085; h=From: Date: Message-Id: To: Subject: Sender;
- bh=RKlOvLy0FhCW9JvWrJl/c2N/eBgziZDhPlr2MnVbGCw=; b=IvfvFd896et1ROshqyj4ESWl6o9x3H+L73G0WsQyS1ofnkDFIIJ8E1Lehv6joFbjwRJrNcWL
- GV4ffnUgdyZ4eCRY5KNHXnoQnXvJSYKHWbq1mHg0s9tWVSiqNP5Y8zxBJr3xcfP9lAXFJQ4T
- Uc6i/f67QdEgeyISI3/AoPefdQo=
-X-Mailgun-Sending-Ip: 104.130.122.7
-X-Mailgun-Sid: WyIxYzIzYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgIjE3YjU0Il0=
-Received: from huitzilopochtli.metztli-it.com
- (99-130-254-3.lightspeed.sntcca.sbcglobal.net [99.130.254.3]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f4b4f8d12acec35e2018f3c (version=TLS1.3, cipher=TLS_AES_128_GCM_SHA256);
- Sun, 30 Aug 2020 07:04:45 GMT
-Received: by huitzilopochtli.metztli-it.com (Postfix, from userid 1000)
-        id A2FE96902BB7; Sun, 30 Aug 2020 00:04:43 -0700 (PDT)
-Subject: Re: [ANNOUNCE] Reiser5: Selective File Migration - User Interface
-To:     <edward.shishkin@gmail.com>, <reiserfs-devel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-X-Mailer: mail (GNU Mailutils 3.9)
-Message-Id: <20200830070443.A2FE96902BB7@huitzilopochtli.metztli-it.com>
-Date:   Sun, 30 Aug 2020 00:04:43 -0700 (PDT)
-From:   Metztli Information Technology <jose.r.r@metztli.com>
+        Sun, 30 Aug 2020 03:05:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgH3HE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 03:04:58 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DB2120693;
+        Sun, 30 Aug 2020 07:04:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598771098;
+        bh=qJZMAD9Q2MOXNf2qIsusoobMRyMbqbCp4Y0wWiOf6Bo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pfIZ1vx57j916BoBhdQerDPM8AEsb6NK4bOmf5q7T0QeByeTeWXt/ZDh1fU38a8MY
+         OsNxqdRh6Iqjc7R7vhWNKo64ab8Og1SFqJaD9wyZpxIkvbmuvw6uYmgujyFhB1XTZS
+         lwq4e956dKCgJz64VTP9PtyVafYqtVCBiG7c2BFQ=
+Date:   Sun, 30 Aug 2020 15:04:52 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/5] arm64: dts: imx8mm-beacon-kit: Add missing build
+ through Makefile
+Message-ID: <20200830070452.GG32096@dragon>
+References: <20200823172019.18606-1-krzk@kernel.org>
+ <20200823172019.18606-2-krzk@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200823172019.18606-2-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 2:54 AM Edward Shishkin <edward.shishkin@gmail.com> wrote:
->
-> On 08/28/2020 01:50 AM, Edward Shishkin wrote:
-> >
-> >
-> > On 08/27/2020 11:53 PM, Metztli Information Technology wrote:
-> >> On Wed, Aug 26, 2020 at 2:13 PM Edward Shishkin
-> >> <edward.shishkin@gmail.com> wrote:
-> >>>
-> >>> [...]
-> >>>
-> >>>>
-> >>>> FYI Although not officially, the Debian metaframework Buster AMD64
-> >>>> distribution might be the first to support native installation of
-> >>>> Reiser4 SFRN 5.1.3, kernel and reiser4progs 2.0.3, file system
-> >>>> utilities.
-> >>>>
-> >>>> I have already made a couple of successful Metztli Reiser4 SFRN 5
-> >>>> native installations onto ~100 GB slices, which root file system is
-> >>>> formatted in 'Reiser5' and 1 GB /boot in JFS.
-> >>>> https://metztli.it/reiser5 (Screenshot 600x338 size)
-> >>>>
-> >>>> The upgraded netboot installation media metztli-reiser4-sfrn5.iso is
-> >>>> available at:
-> >>>> https://sourceforge.net/projects/debian-reiser4/
-> >>>> as well as
-> >>>> https://metztli.it/buster-reiser5/metztli-reiser4-sfrn5.iso
-> >>>> https://metztli.it/buster-reiser5/metztli-reiser4-sfrn5.iso.SHA256SUM
-> >>>>
-> >>>> Likely the brick/volume feature(s) will be useful in Cloud fabric
-> >>>> infrastructures, like Google's, where reiser4 excels.
-> >>>>
-> >>>> The current SFRN 5.1.3 -patched Zstd -compressed kernel in the
-> >>>> installation media is Debian's 5.7.10.
-> >>>
-> >>>
-> >>> wow, reiser5 from the box? I might want to try..
-> >> Well, it is more of a 'reference implementation' as there are persons
-> >> who reached out to me because their builds succeeded, they were able
-> >> to format in reiser4 SFRN x.y.z, but they were not able to mount their
-> >> partition(s).
-> >> Turns out, they were inadvertently mixing SFRN 4.0.2 with 5.1.3,
-> >> either in the reiser4 kernel patch -- released with the same in both
-> >> instances -- or in the reiser4progs.
-> >
-> >
-> > Yeah, some confusion can take place. Plus unsupported old 4.0.2
-> > volumes (a special build with CONFIG_REISER4_OLD=y is required to
-> > mount them), which is a payment for performance.
-> >
-> >
-> >>
-> >>>
-> >>>>
-> >>>> The installer defaults to create the root system reiser5 -formatted
-> >>>> partition as:
-> >>>> mkfs.reiser4 -yo "create=reg42"
-> >>>
-> >>>
-> >>> "reg42" is default profile in reiser4progs-2.0.3 (check by
-> >>> "mkfs.reiser4 -p") - there is no need to specify it via option.
-> >> Acknowledged. Thanks.
-> >>
-> >>>
-> >>> Have you had a chance to play with logical volumes (add/remove
-> >>> bricks, etc)?
-> >> That is coming up. I still have to create/customize an image of
-> >> Metztli Reiser4 SFRN5 for a Google Compute Engine (GCE) minimal ~200GB
-> >> instance for evaluation.
-> >> Fact is 'not all clouds are created equal' -- even if KVM -based. For
-> >> instance, reiser4 SFRN 4.0.2 on a trial Linode small ~80GB SSD
-> >> slice(s) with 2 virtual cpus frequently hung under short sustained
-> >> disk/network I/O usage.
-> >> I have not experienced that with reiser4 SFRN 4.0.2 on GCE -- where
-> >> sometimes I allocate eight to sixteen virtual cpus with 16, 32, or
-> >> even 64, GBs of RAM, on a region hosting AMD Epyc, for fast kernel
-> >> building ops.
-> >>
-> >> But testing a relatively small bootable image first will usually
-> >> provide insight if adding one, two... eight, TB slices will make sense
-> >> later on.
-> >
-> >
-> > I played with your media on a virtual machine. The basic volume
-> > operations work, however, I guess, adding brick(s) to "/" will cause
-> > problems at next boot: someone has to register all the bricks before
-> > mounting "/"...
->
->
-> It is important to register all bricks *before* mounting "/", as the
-> registration procedure collects information need for volume activation
-> (including transaction replay, etc).
->
-> So at boot time before mounting "/" we need to scan the system and for
-> each found block device call a brick registration procedure. The problem
-> is that I don't know what do we actually have before mounting "/".
->
-> Brick registration can be performed by calling "volume.reiser4 -g".
-> However, it accepts device name, that we obviously don't have, as all
-> the names are in "/", which is not yet mounted.
->
-> I guess that solution exists (and possibly locates in initrd), because,
-> it is perfectly possible to boot e.g. with root over LVM (a special
-> utility scans the system and collects information about devices-
-> components of the logical volume). Any ideas?
-man initramfs-tools
+On Sun, Aug 23, 2020 at 07:20:16PM +0200, Krzysztof Kozlowski wrote:
+> Add missing imx8mm-beacon-kit.dts object in Makefile so it will be build
+> when building dtbs.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Under debian there are: 
-/etc/initramfs-tools/hooks/
-/usr/share/initramfs-tools/hooks/
+We have applied a patch from Rob [1] for that.
 
-Observing the latter, we can see that it contains executable scripts for reiserfs, lvm2, etc.; hence, every time an
-update-initramfs command is performed to create/update an initrd.img-`uname -r` these scripts are bundled into the initrd image.
+Shawn
 
-An executable script, i.e., named reiser5, might also be added to perform the 'brick registration procedure', then subsequently running
-update-initramfs for its inclusion into the initrd image.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git/commit/?h=imx/fixes&id=56e79dfd036b538940227fb31371c1cd67b2467f
 
->
-> Thanks,
-> Edward.
-
-Best Professional Regards
-
-
--- 
-Jose R R
-http://metztli.it
----------------------------------------------------------------------------------------------
-Download Metztli Reiser4: Debian Buster w/ Linux 5.7.10 AMD64
----------------------------------------------------------------------------------------------
-feats ZSTD compression https://sf.net/projects/metztli-reiser4/
--------------------------------------------------------------------------------------------
-Official current Reiser4 resources: https://reiser4.wiki.kernel.org/
+> ---
+>  arch/arm64/boot/dts/freescale/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index a39f0a1723e0..903c0eb61290 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-honeycomb.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
+>  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
+>  
+> +dtb-$(CONFIG_ARCH_MXC) += imx8mm-beacon-kit.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mn-ddr4-evk.dtb
+> -- 
+> 2.17.1
+> 
