@@ -2,149 +2,121 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA35C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 11:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA39DC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 11:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B57920738
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 11:05:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ivbFmx19"
+	by mail.kernel.org (Postfix) with ESMTP id A6AC520757
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 11:11:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598785900;
+	bh=gXODkDbcQF17NTHovr6nEh8zgdaj1s2Ph6JY/EZmbC8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=rKOLYwrIuYFcbEkCwi/DD3FuY0v3+P0e7FQkFMonP0e9xLOzidMgKfXwB1ZGMxNcJ
+	 SyE8XNmVYlNVik91ljCkISDY78kwrB0ZguiQLlIr3+E3T9ICTMR3L18e4xBG1UaS5u
+	 QtjOL+E+s1nMsOw5M2pdnFFSDQo+XtTNSCvw/+aY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbgH3LFT (ORCPT
+        id S1728649AbgH3LLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 07:05:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgH3LFR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 07:05:17 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C388DC061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 04:05:14 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id c15so3170120wrs.11
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 04:05:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+gapKvtqVL4A5DDW8eESdE7vLROc6PFHC2USxeOexv0=;
-        b=ivbFmx19jzkrujZR22GqxHw8+yCLuysq7xSMQ8dBB2CT2t3FfoBKWj4jr8hBQdbEpA
-         9KipZlMkP21Kau2w749MNR6EeVd04EEiDEeqsksTPR+XY9z4VO46rGbgny8GlzIP3JQC
-         AVCDSR5Y4DodbAVPHQwPNYNJe5JJI/R5M+6H8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+gapKvtqVL4A5DDW8eESdE7vLROc6PFHC2USxeOexv0=;
-        b=N+qiGicz3hWKigu3Q/1t4bSSkuyjjtpydCIScKcSaGfwP1t70To3+y8x9YnOyfCYtI
-         qHeY4DEEVa/FwjPXoGwkWZDyrggfv+1pSKm4sNG7isDKD5BrDThe4niPZ23K6+IE1/g3
-         YTTFMpN67QqB1QnZ6sNTt+s4XfOiArN+JnZThXNYUBkccOxfBYDnTmnppKH4HcTjBXrP
-         pLEYqt9WKtN4M2vKXumo8xdpkhFuZ0nIZDEOI6fNBdp930owtAhixdjk8qosfpm2lffX
-         tVmZfSnViJ+KxdU/X2MTc6fyAJxmglbZ30pV7+raVdZKEAA0JFYUX5gs4c221hq7e8cM
-         /g/A==
-X-Gm-Message-State: AOAM5309DNVcDOiFe58Ya1tVXFTkjwxwO4Z87zRHfJVlX70i/bl7e/0G
-        HD7hsxBlqPTiNCOsl/1OaXuxBA8BqBdZ9EtgejT2XA==
-X-Google-Smtp-Source: ABdhPJz6S7KlVIQ+jF4DcOJClBsVEG+nqn+q+JFI/KzLmRup7UV+T1RYuwmr8EEore1ZJB3BAb+4Rnc+4gTbFVY/PdQ=
-X-Received: by 2002:a5d:4ccb:: with SMTP id c11mr6954453wrt.159.1598785508966;
- Sun, 30 Aug 2020 04:05:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200828162005.1.I4f67f494c4f759b0e5c7f487e040dfdcf16e0876@changeid>
-In-Reply-To: <20200828162005.1.I4f67f494c4f759b0e5c7f487e040dfdcf16e0876@changeid>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Sun, 30 Aug 2020 19:04:42 +0800
-Message-ID: <CAFv8NwL-s0c_nFWKHmBKgPVeLXwGWdgV+fUtw8MLBJw2D3ox1w@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: rt5682: Prefer async probe
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 30 Aug 2020 07:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725845AbgH3LLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 07:11:35 -0400
+Received: from localhost.localdomain (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A526E20757;
+        Sun, 30 Aug 2020 11:11:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598785894;
+        bh=gXODkDbcQF17NTHovr6nEh8zgdaj1s2Ph6JY/EZmbC8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=q+yk8voUyPk3N9ED0KyO0ZcI+jgV0Na/1bJfDfEYX+UjR+kFBDCXdw8n0NhVz160b
+         ohi2ic/pU1ivI8S3Ajf5U0LSOd+t56I/edrUOuDciMQQ1+61F/WXYOD4mbBf5Cvrd3
+         tiUuEnYyZvUgH85v6TYrZXfrWUcn80NWehkWo+A4=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] dt-bindings: leds: common: Add mmc0 as default trigger
+Date:   Sun, 30 Aug 2020 13:11:15 +0200
+Message-Id: <20200830111115.32623-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 7:20 AM Douglas Anderson <dianders@chromium.org> wrote:
->
-> The probe of rt5682 is pretty slow.  A quick measurement shows that it
-> takes ~650 ms on at least one board.  There's no reason to block all
-> other drivers waiting for this probe to finish.  Set the flag to allow
-> other drivers to probe while we're probing.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> NOTE: I haven't done any analysis of the driver to see _why_ it's so
-> slow, only that I have measured it to be slow.  Someone could
-> certainly take the time to profile / optimize it, but in any case it
-> still won't hurt to be async.
+MMC could be a default trigger so add a pattern to match it and fix
+dtbs_check warnings like:
 
+  arch/arm/boot/dts/exynos4412-odroidx.dt.yaml: leds: led2:linux,default-trigger:0:
+    'mmc0' is not one of ['backlight', 'default-on', 'heartbeat', 'disk-activity', 'ide-disk', 'timer', 'pattern']
+    From schema: Documentation/devicetree/bindings/leds/leds-gpio.yaml
 
-Hi Doug, thank you for the fix.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ .../devicetree/bindings/leds/common.yaml      | 39 ++++++++++---------
+ 1 file changed, 20 insertions(+), 19 deletions(-)
 
-There are multiple usleep in the probe of rt5682 driver.
-The major one is a 300 ms sleep after the regulator turns on.
-There are other sleeps for several tens of ms.
->
->
-> This is a very safe flag to turn on since:
->
-> 1. It's not like our probe order was defined by anything anyway.  When
-> we probe is at the whim of when our i2c controller probes and that can
-> be any time.
->
-> 2. If some other driver needs us then they have to handle the fact
-> that we might not have probed yet anyway.
+diff --git a/Documentation/devicetree/bindings/leds/common.yaml b/Documentation/devicetree/bindings/leds/common.yaml
+index a2a541bca73c..6b38f9f3792c 100644
+--- a/Documentation/devicetree/bindings/leds/common.yaml
++++ b/Documentation/devicetree/bindings/leds/common.yaml
+@@ -78,25 +78,26 @@ properties:
+       This parameter, if present, is a string defining the trigger assigned to
+       the LED.
+     $ref: /schemas/types.yaml#definitions/string
+-
+-    enum:
+-        # LED will act as a back-light, controlled by the framebuffer system
+-      - backlight
+-        # LED will turn on (but for leds-gpio see "default-state" property in
+-        # Documentation/devicetree/bindings/leds/leds-gpio.yaml)
+-      - default-on
+-        # LED "double" flashes at a load average based rate
+-      - heartbeat
+-        # LED indicates disk activity
+-      - disk-activity
+-        # LED indicates IDE disk activity (deprecated), in new implementations
+-        # use "disk-activity"
+-      - ide-disk
+-        # LED flashes at a fixed, configurable rate
+-      - timer
+-        # LED alters the brightness for the specified duration with one software
+-        # timer (requires "led-pattern" property)
+-      - pattern
++    oneOf:
++      - enum:
++            # LED will act as a back-light, controlled by the framebuffer system
++          - backlight
++            # LED will turn on (but for leds-gpio see "default-state" property in
++            # Documentation/devicetree/bindings/leds/leds-gpio.yaml)
++          - default-on
++            # LED "double" flashes at a load average based rate
++          - heartbeat
++            # LED indicates disk activity
++          - disk-activity
++            # LED indicates IDE disk activity (deprecated), in new implementations
++            # use "disk-activity"
++          - ide-disk
++            # LED flashes at a fixed, configurable rate
++          - timer
++            # LED alters the brightness for the specified duration with one software
++            # timer (requires "led-pattern" property)
++          - pattern
++      - pattern: "^mmc[0-9]+$"
+ 
+   led-pattern:
+     description: |
+-- 
+2.17.1
 
-
-Agree.
-soc-core already handled this by returning -EPROBE_DEFER when a
-component is not found.
-So the machine driver can probe again.
-Even in the current behavior, we already see machine driver probe
-again when the codec driver is not ready,
-so I think adding this async flag will not affect the machine driver.
-
->
->
-> 3. There may be other drivers probing at the same time as us anyway
-> because _they_ used async probe.
->
-> While I won't say that it's impossible to tickle a bug by turning on
-> async probe, I would assert that in almost all cases the bug was
-> already there and needed to be fixed anyway.
->
->  sound/soc/codecs/rt5682-i2c.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/sound/soc/codecs/rt5682-i2c.c b/sound/soc/codecs/rt5682-i2c.c
-> index 85aba311bdc8..6b4e0eb30c89 100644
-> --- a/sound/soc/codecs/rt5682-i2c.c
-> +++ b/sound/soc/codecs/rt5682-i2c.c
-> @@ -294,6 +294,7 @@ static struct i2c_driver rt5682_i2c_driver = {
->                 .name = "rt5682",
->                 .of_match_table = rt5682_of_match,
->                 .acpi_match_table = rt5682_acpi_match,
-> +               .probe_type = PROBE_PREFER_ASYNCHRONOUS,
-
-
-One thing I am wondering is that there has not been any usage in codec
-driver for this.
-I think every codec driver can use this, and take the benefit of a
-possible faster boot time ?
-
->
->         },
->         .probe = rt5682_i2c_probe,
->         .shutdown = rt5682_i2c_shutdown,
-> --
-> 2.28.0.402.g5ffc5be6b7-goog
->
