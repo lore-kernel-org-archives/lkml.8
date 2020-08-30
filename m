@@ -2,74 +2,104 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE07CC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91355C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C33702071B
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71AC220707
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:33:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgH3Pc6 (ORCPT
+        id S1727946AbgH3Pdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 11:32:58 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:42729 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726565AbgH3P2B (ORCPT
+        Sun, 30 Aug 2020 11:33:35 -0400
+Received: from smtprelay0126.hostedemail.com ([216.40.44.126]:42808 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727957AbgH3PcV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 11:28:01 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
-        with SMTP; 30 Aug 2020 18:27:55 +0300
-Received: from dev-l-vrt-135.mtl.labs.mlnx (dev-l-vrt-135.mtl.labs.mlnx [10.234.135.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 07UFRtiD029632;
-        Sun, 30 Aug 2020 18:27:55 +0300
-Received: from dev-l-vrt-135.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 07UFRtN4027839;
-        Sun, 30 Aug 2020 18:27:55 +0300
-Received: (from moshe@localhost)
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 07UFRtXw027838;
-        Sun, 30 Aug 2020 18:27:55 +0300
-From:   Moshe Shemesh <moshe@mellanox.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>
-Subject: [PATCH net-next RFC v3 05/14] net/mlx5: Set cap for pci sync for fw update event
-Date:   Sun, 30 Aug 2020 18:27:25 +0300
-Message-Id: <1598801254-27764-6-git-send-email-moshe@mellanox.com>
-X-Mailer: git-send-email 1.8.4.3
-In-Reply-To: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
-References: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
+        Sun, 30 Aug 2020 11:32:21 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 8F66818009132;
+        Sun, 30 Aug 2020 15:32:05 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: vest59_190bab027088
+X-Filterd-Recvd-Size: 2726
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 30 Aug 2020 15:32:02 +0000 (UTC)
+Message-ID: <1d7c6ef2794bedca7e3164e5435f46864eacddfa.camel@perches.com>
+Subject: Re: [PATCH v6 2/3] MAINTAINERS: Add Purism Librem 5 section to the
+ list
+From:   Joe Perches <joe@perches.com>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     robh@kernel.org, kernel@puri.sm, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        mchehab@kernel.org, Anson.Huang@nxp.com, agx@sigxcpu.org,
+        angus@akkea.ca, broonie@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date:   Sun, 30 Aug 2020 08:32:01 -0700
+In-Reply-To: <20200830131459.GL32096@dragon>
+References: <20200821121755.24599-1-martin.kepplinger@puri.sm>
+         <20200821121755.24599-2-martin.kepplinger@puri.sm>
+         <20200830131459.GL32096@dragon>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set capability to notify the firmware that this host driver is capable
-of handling pci sync for firmware update events.
+On Sun, 2020-08-30 at 21:15 +0800, Shawn Guo wrote:
+> On Fri, Aug 21, 2020 at 02:17:54PM +0200, Martin Kepplinger wrote:
+> > Add development information for the devicetree files for hardware
+> > by Purism SPC.
+> > 
+> > Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> 
+> I decided to drop this patch from my queue, as I took the suggestion
+> from Joe and sent a patch to have get_maintainer report email address
+> in the dts file.
 
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/main.c | 3 +++
- 1 file changed, 3 insertions(+)
+It's OK to find maintainers in files, but what about the
+B: bug reporting and T: source code repository location lines,
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-index ce43e3feccd9..871d28b09f8a 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -548,6 +548,9 @@ static int handle_hca_cap(struct mlx5_core_dev *dev, void *set_ctx)
- 	if (MLX5_CAP_GEN_MAX(dev, dct))
- 		MLX5_SET(cmd_hca_cap, set_hca_cap, dct, 1);
- 
-+	if (MLX5_CAP_GEN_MAX(dev, pci_sync_for_fw_update_event))
-+		MLX5_SET(cmd_hca_cap, set_hca_cap, pci_sync_for_fw_update_event, 1);
-+
- 	if (MLX5_CAP_GEN_MAX(dev, num_vhca_ports))
- 		MLX5_SET(cmd_hca_cap,
- 			 set_hca_cap,
--- 
-2.17.1
+Those seem useful.
+
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+[]
+> > @@ -14061,6 +14061,13 @@ T:	git git://linuxtv.org/media_tree.git
+> >  F:	Documentation/admin-guide/media/pulse8-cec.rst
+> >  F:	drivers/media/cec/usb/pulse8/
+> >  
+> > +PURISM LIBREM 5
+> > +M:	Purism Kernel Team <kernel@puri.sm>
+
+People feel like their mails go into a void when no
+responses happen after sending to nameless addresses.
+
+It's better to have a named individual as a maintainer
+rather than an unspecified exploder address.
+
+It's OK to have both, but just the exploder doesn't
+really have that much value as it's faceless.
+
+> > +S:	Supported
+> > +B:	https://source.puri.sm/Librem5/linux-next/issues
+> > +T:	https://source.puri.sm/Librem5/linux-next
+
+This T: line should be something else.
+
+Perhaps
+W;	https://source.puri.sm/Librem5/linux-next
+T:	git https://source.puri.sm/Librem5/linux-next.git
+
+> > +F:	arch/arm64/boot/dts/freescale/imx8mq-librem5*
+
 
