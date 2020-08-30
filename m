@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2E9C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AA4C433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 472242078D
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A142087D
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598796653;
-	bh=TJtlygoY/w0YlAC0Y0RpJRO7BKHHMoo0CEZk3p9WflY=;
+	s=default; t=1598796662;
+	bh=n6ISBKgyXGjN5UhUaUmHsRkq7VLueawe87DSKZRjw5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l1RLXkvYjUDPRzYu/42J2WwnJHuoub5Wt+C2kZE2Ri1UOc9aWURQ86wqvOlSHhQTJ
-	 Rblzovvvi/y3B9o1DOvQNlr5xUa7oHAjsxKRSL4gjBQSYK6N3NYPXMOD4S0E4WHSc+
-	 naKZ58t3LWSBukhjaiz3TRJ/dKJ746MBicBcr/OY=
+	b=n9JbPuun2UT+HDkG1y9EFw6coDeitn2TIB17SxuQdzEgVejselLdDxTWjY5iqQ18c
+	 m6dLPAwjMEjefhq84mywZnxl1sTVdibf26RP8A+jeQ13TrWy3MjEGqzzFfsqXsSgbS
+	 FS8C8406lW8axlwzMnAjHX8DWnwb2qJQl4vgdgSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgH3OKp (ORCPT
+        id S1728847AbgH3NyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 10:10:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55720 "EHLO mail.kernel.org"
+        Sun, 30 Aug 2020 09:54:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728932AbgH3Nyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 09:54:44 -0400
+        id S1728780AbgH3NyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 09:54:00 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3CB0208DB;
-        Sun, 30 Aug 2020 13:54:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D580620757;
+        Sun, 30 Aug 2020 13:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598795683;
-        bh=TJtlygoY/w0YlAC0Y0RpJRO7BKHHMoo0CEZk3p9WflY=;
+        s=default; t=1598795640;
+        bh=n6ISBKgyXGjN5UhUaUmHsRkq7VLueawe87DSKZRjw5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NbrFTJu+Plki7WU9nsnZnOp0gTSCYfuO/EDNkowUAG74VGP0BbeR6r+abmkGlDzqo
-         qnplg66HY9FikwXcmkcpRWqCLEdLzq1yKw6Gvntxq+0MbX232caNAF7xRSNReJRYQ6
-         vGf2bd7PsUQW1yf46bIhOtrEgCa22649XJpd2fbI=
+        b=2IM1dodOxeoK3mlXjngrFkSGEQsFR40NGYcQ/P0VKyocwfPA/rMhzQCSo2PziXwp2
+         EdChq4sypvse9ikVZCbBWHDENZEYmvB7HB+72LTx7SoING5lghJCFpVkd/r921UHkk
+         pQ3tI26y5TU+QuCyPSYVHPpuLEjvQFSLQ635V/iM=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -49,9 +49,9 @@ To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
 Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: [PATCH 16/33] ARM: dts: exynos: Override thermal by label in Exynos4210
-Date:   Sun, 30 Aug 2020 15:51:43 +0200
-Message-Id: <20200830135200.24304-16-krzk@kernel.org>
+Subject: [PATCH 02/33] ARM: dts: exynos: Correct GPU regulator properties in Galaxy I9100
+Date:   Sun, 30 Aug 2020 15:51:29 +0200
+Message-Id: <20200830135200.24304-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200830135200.24304-1-krzk@kernel.org>
 References: <20200830135200.24304-1-krzk@kernel.org>
@@ -60,67 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using full paths to extend or override a device tree node is error prone
-since if there was a typo error, a new node will be created instead of
-extending the node as it was desired.  This will lead to run-time errors
-that could be hard to detect.
+The regulator property 'regulator-microvolt-offset' should be put next
+to regulator definition, not consumer.
 
-A mistyped label on the other hand, will cause a dtc compile error
-(during build time).
+The property 'regulator-microsecs-delay' is not valid at all.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/exynos4210.dtsi | 36 +++++++++++++++----------------
- 1 file changed, 17 insertions(+), 19 deletions(-)
+ arch/arm/boot/dts/exynos4210-i9100.dts | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-index 73360f29d53e..fddc661ded28 100644
---- a/arch/arm/boot/dts/exynos4210.dtsi
-+++ b/arch/arm/boot/dts/exynos4210.dtsi
-@@ -365,26 +365,24 @@
- 			};
- 		};
- 	};
-+};
+diff --git a/arch/arm/boot/dts/exynos4210-i9100.dts b/arch/arm/boot/dts/exynos4210-i9100.dts
+index 3eb11cc2c3c5..6fa57d1fa1d7 100644
+--- a/arch/arm/boot/dts/exynos4210-i9100.dts
++++ b/arch/arm/boot/dts/exynos4210-i9100.dts
+@@ -304,8 +304,6 @@
+ 	status = "okay";
  
--	thermal-zones {
--		cpu_thermal: cpu-thermal {
--			polling-delay-passive = <0>;
--			polling-delay = <0>;
--			thermal-sensors = <&tmu 0>;
--
--			trips {
--				cpu_alert0: cpu-alert-0 {
--					temperature = <85000>; /* millicelsius */
--				};
--				cpu_alert1: cpu-alert-1 {
--					temperature = <100000>; /* millicelsius */
--				};
--				cpu_alert2: cpu-alert-2 {
--					temperature = <110000>; /* millicelsius */
--				};
--			};
--		};
--	};
-+&cpu_alert0 {
-+	temperature = <85000>; /* millicelsius */
-+};
-+
-+&cpu_alert1 {
-+	temperature = <100000>; /* millicelsius */
-+};
-+
-+&cpu_alert2 {
-+	temperature = <110000>; /* millicelsius */
-+};
-+
-+&cpu_thermal {
-+	polling-delay-passive = <0>;
-+	polling-delay = <0>;
-+	thermal-sensors = <&tmu 0>;
+ 	mali-supply = <&vg3d_breg>;
+-	regulator-microvolt-offset = <50000>;
+-	regulator-microsecs-delay = <50>;
  };
  
- &gic {
+ &hsotg {
+@@ -524,6 +522,7 @@
+ 				regulator-name = "G3D_1.1V";
+ 				regulator-min-microvolt = <900000>;
+ 				regulator-max-microvolt = <1200000>;
++				regulator-microvolt-offset = <50000>;
+ 				regulator-always-on;
+ 			};
+ 
 -- 
 2.17.1
 
