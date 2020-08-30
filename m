@@ -6,113 +6,155 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2BBC433E7
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B5FC433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE84E206EB
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9454F2071B
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:52:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598801879;
-	bh=Ky8WZcvLA6RRhgL1u44QnF3iAcvOtIXT+Pxx/AL88xs=;
+	s=default; t=1598802776;
+	bh=OS6SXiqY+lshjjjCn0KjODoLYajvf991ognvS2HPuKs=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=N/iFr/Znwl9n6+9BBixBioJOO9m3d4F+hqTV+Cvt0F0nzt2KSX83/bkZX9Mx7LFE/
-	 L5LoJKaijs4hqGHcDbp1gNqucbLGaw9TmDpPHK9Rd/fgdV+tYhyXe9l/5KKBshOllk
-	 8xLC1Ocmfw5xA0h8viRvNUr4HRPS65QpHH3enj0o=
+	b=CNFoSBai3dj38jCx9MNoV9ZAm9txyVabKlu1A1yJzWcAZhBBNGaeqvdWT2Xk4ainX
+	 /n+9g4jcbIpSzheABFxRVRbWFn3UDX2NmYq+t/bz9D4hmrzYIqZY35YYLkhBy65Nm0
+	 lMjfLLcoqMF0Gfq3TCpXHIXNsGNdRVGZ/tTeZoK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgH3Ph5 (ORCPT
+        id S1726264AbgH3Pww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 11:37:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43722 "EHLO mail.kernel.org"
+        Sun, 30 Aug 2020 11:52:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbgH3Phw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 11:37:52 -0400
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        id S1726046AbgH3Pwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 11:52:47 -0400
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3A66208DB
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 15:37:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E23D220EDD
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 15:52:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598801872;
-        bh=Ky8WZcvLA6RRhgL1u44QnF3iAcvOtIXT+Pxx/AL88xs=;
+        s=default; t=1598802766;
+        bh=OS6SXiqY+lshjjjCn0KjODoLYajvf991ognvS2HPuKs=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vbfkGqLLfy2DbjB/ExklgKrk5bLby4XxBr7haICm78qf4jr/56msMPDO+PDMkEZff
-         H3HgwGKuspVp0ACLXkVBjyMeIRixs5BxB7V65ro84b7L41Kpm9PCr2vDWmNZg7Y2XH
-         XQLGlWb+idXtRCV9x1ZZ2HCCMcNOAge/wStVHodg=
-Received: by mail-wr1-f54.google.com with SMTP id e16so3587995wrm.2
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 08:37:51 -0700 (PDT)
-X-Gm-Message-State: AOAM531SKIVAVtMXQbWPqvKJb7sgbbrqlW35+moh5vuHusgl+cgUv48K
-        fC9LJzt6nTKdAC8jfiOZJwq7Wuq4VLLusRDnvgXDsg==
-X-Google-Smtp-Source: ABdhPJy1Cig6isTrNsU1CNS0leoIgn3n82Zq+tjXpbvFOUJMC2+LKOujy1Tw3sXuFDGsUypPl+Kmt+Q4EXdL9CY/A9M=
-X-Received: by 2002:a5d:6a47:: with SMTP id t7mr1252760wrw.75.1598801870331;
- Sun, 30 Aug 2020 08:37:50 -0700 (PDT)
+        b=NdzyBPliWINf0MX6JY+vAWcuFhZ24x7rCOZuGvhkw/NRRrQwv1fKvEf8LsNV0EpCN
+         jzYoFt5T8CAo/RDgIKSC7RZoaIJ5Z/VPNiH5FqMahOxm2I85y2vpEVELc3hw0R1oYg
+         2CzJSFHAy66HEqL5iHS/tTolWHetNUqGT8agDlaw=
+Received: by mail-wm1-f45.google.com with SMTP id z9so3210297wmk.1
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 08:52:45 -0700 (PDT)
+X-Gm-Message-State: AOAM533P9pf8bVkLs4+5jrlEYcNygjwDkcCny0MI7CeX5HsqEbKrzcj7
+        qYV+M2tBKskhxCC7RGS27IVizcyy/knpUmg5TgJ0Mw==
+X-Google-Smtp-Source: ABdhPJztsRRiZUaHkgWepEkB/Pn9/0WW0xMy61f55qTGBnf2A1p6r3o9jA8KDreDbwx5okjYm0jVUfFo4sMGnre0bQc=
+X-Received: by 2002:a05:600c:2183:: with SMTP id e3mr7795286wme.49.1598802764333;
+ Sun, 30 Aug 2020 08:52:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <875z98jkof.fsf@nanos.tec.linutronix.de> <3babf003-6854-e50a-34ca-c87ce4169c77@citrix.com>
- <20200825043959.GF15046@sjchrist-ice> <CALCETrUP1T2k3UzZMsXMfAD83xbYEG+nAv3a-LeBjNW+=ijJAg@mail.gmail.com>
- <20200825171903.GA20660@sjchrist-ice> <CALCETrWy2x-RByfknjjKxRbE0LBPk2Ugj1d58xYHb91ogbfnvA@mail.gmail.com>
- <20200826191644.GC21065@sjchrist-ice>
-In-Reply-To: <20200826191644.GC21065@sjchrist-ice>
+References: <CALCETrWXvAMA7tQ3XZdAk2FixKfzQ_0fBmyNVyyPHVAomLvrWQ@mail.gmail.com>
+ <CAMzpN2hmR+0-Yse1csbiVOiqgZ0e+VRkCBBXUKoPSTSMOOOFAQ@mail.gmail.com>
+In-Reply-To: <CAMzpN2hmR+0-Yse1csbiVOiqgZ0e+VRkCBBXUKoPSTSMOOOFAQ@mail.gmail.com>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 30 Aug 2020 08:37:39 -0700
-X-Gmail-Original-Message-ID: <CALCETrUwqka6M9wxkwFYvq-5Byi8JFiiPNRdYQRw3_2m1hXd0w@mail.gmail.com>
-Message-ID: <CALCETrUwqka6M9wxkwFYvq-5Byi8JFiiPNRdYQRw3_2m1hXd0w@mail.gmail.com>
-Subject: Re: TDX #VE in SYSCALL gap (was: [RFD] x86: Curing the exception and
- syscall trainwreck in hardware)
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Date:   Sun, 30 Aug 2020 08:52:33 -0700
+X-Gmail-Original-Message-ID: <CALCETrXY1x0MReMoTOG2awcZvr4c7gp99JVNthK37vUUk-kyew@mail.gmail.com>
+Message-ID: <CALCETrXY1x0MReMoTOG2awcZvr4c7gp99JVNthK37vUUk-kyew@mail.gmail.com>
+Subject: Re: ptrace_syscall_32 is failing
+To:     Brian Gerst <brgerst@gmail.com>
 Cc:     Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Pu Wen <puwen@hygon.cn>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Dirk Hohndel <dirkhh@vmware.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        "H. Peter Anvin" <hpa@linux.intel.com>,
-        Asit Mallick <asit.k.mallick@intel.com>,
-        Gordon Tetlow <gordon@tetlows.org>,
-        David Kaplan <David.Kaplan@amd.com>,
-        Tony Luck <tony.luck@intel.com>
+        Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 12:16 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+On Sat, Aug 29, 2020 at 9:40 PM Brian Gerst <brgerst@gmail.com> wrote:
 >
-> On Tue, Aug 25, 2020 at 10:28:53AM -0700, Andy Lutomirski wrote:
-> > On Tue, Aug 25, 2020 at 10:19 AM Sean Christopherson
-> > <sean.j.christopherson@intel.com> wrote:
-> > > One thought would be to have the TDX module (thing that runs in SEAM and
-> > > sits between the VMM and the guest) provide a TDCALL (hypercall from guest
-> > > to TDX module) to the guest that would allow the guest to specify a very
-> > > limited number of GPAs that must never generate a #VE, e.g. go straight to
-> > > guest shutdown if a disallowed GPA would go pending.  That seems doable
-> > > from a TDX perspective without incurring noticeable overhead (assuming the
-> > > list of GPAs is very small) and should be easy to to support in the guest,
-> > > e.g. make a TDCALL/hypercall or two during boot to protect the SYSCALL
-> > > page and its scratch data.
+> On Sat, Aug 29, 2020 at 12:52 PM Andy Lutomirski <luto@kernel.org> wrote:
 > >
-> > I guess you could do that, but this is getting gross.  The x86
-> > architecture has really gone off the rails here.
+> > Seems to be a recent regression, maybe related to entry/exit work changes.
+> >
+> > # ./tools/testing/selftests/x86/ptrace_syscall_32
+> > [RUN]    Check int80 return regs
+> > [OK]    getpid() preserves regs
+> > [OK]    kill(getpid(), SIGUSR1) preserves regs
+> > [RUN]    Check AT_SYSINFO return regs
+> > [OK]    getpid() preserves regs
+> > [OK]    kill(getpid(), SIGUSR1) preserves regs
+> > [RUN]    ptrace-induced syscall restart
+> >     Child will make one syscall
+> > [RUN]    SYSEMU
+> > [FAIL]    Initial args are wrong (nr=224, args=10 11 12 13 14 4289172732)
+> > [RUN]    Restart the syscall (ip = 0xf7f3b549)
+> > [OK]    Restarted nr and args are correct
+> > [RUN]    Change nr and args and restart the syscall (ip = 0xf7f3b549)
+> > [OK]    Replacement nr and args are correct
+> > [OK]    Child exited cleanly
+> > [RUN]    kernel syscall restart under ptrace
+> >     Child will take a nap until signaled
+> > [RUN]    SYSCALL
+> > [FAIL]    Initial args are wrong (nr=29, args=0 0 0 0 0 4289172732)
+> > [RUN]    SYSCALL
+> > [OK]    Args after SIGUSR1 are correct (ax = -514)
+> > [OK]    Child got SIGUSR1
+> > [RUN]    Step again
+> > [OK]    pause(2) restarted correctly
 >
-> Does it suck less than using an IST?  Honest question.
->
-> I will add my voice to the "fix SYSCALL" train, but the odds of that getting
-> a proper fix in time to intercept TDX are not good.  On the other hand,
-> "fixing" the SYSCALL issue in the TDX module is much more feasible, but only
-> if we see real value in such an approach as opposed to just using an IST.  I
-> personally like the idea of a TDX module solution as I think it would be
-> simpler for the kernel to implement/support, and would mean we wouldn't need
-> to roll back IST usage for #VE if the heavens should part and bestow upon us
-> a sane SYSCALL.
+> Bisected to commit 0b085e68f407 ("x86/entry: Consolidate 32/64 bit
+> syscall entry").
+> It looks like it is because syscall_enter_from_user_mode() is called
+> before reading the 6th argument from the user stack.
 
-There's no such thing as "just" using an IST.  Using IST opens a huge
-can of works due to its recursion issues.
+Ugh.  I caught, in review, a potential related issue with exit (not a
+problem in current kernels), but I missed the entry version.
 
-The TDX module solution is utterly gross but may well suck less than
-using an IST.
+Thomas, can we revert the syscall_enter() and syscall_exit() part of
+the series?  I think that they almost work for x86, but not quite as
+indicated by this bug.  Even if we imagine we can somehow hack around
+this bug, I imagine we're going to find other problems with this
+model, e.g. the potential upcoming exit problem I noted in my review.
+
+I really think the model should be:
+
+void do_syscall_whatever(...)
+{
+  irqentry_enter(...);
+  instrumentation_begin();
+
+  /* Do whatever arch ABI oddities are needed on entry. */
+
+  Then either:
+  syscall_begin(arch, nr, regs);
+  dispatch the syscall;
+  syscall_end(arch, nr, regs);
+
+  Or just:
+  generic_do_syscall(arch, nr, regs);
+
+  /* Do whatever arch ABI oddities are needed on exit from the syscall. */
+
+  instrumentation_end();
+  irqentry_exit(...);
+}
+
+x86 has an ABI oddity needed on entry: this fast syscall argument
+fixup.  We also might end up with ABI oddities on exit if we ever try
+to make single-stepping of syscalls work fully correctly.  x86 sort of
+gets away without specifying arch because the arch helpers that get
+called for audit, etc can deduce the arch, but this is kind of gross.
+I suppose we could omit arch as an explicit parameter.
+
+Or I suppose we could try to rejigger the API in time for 5.9.
+Fortunately only x86 uses the new APIs so far.  I cc'd a bunch of
+other arch maintainers to see if other architectures fit well in the
+new syscall_enter() model, but I feel like the fact that x86 is
+already broken indicates that we messed it up a bit.
+
+--Andy
