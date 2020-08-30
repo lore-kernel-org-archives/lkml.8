@@ -2,90 +2,71 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A48C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 08:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34434C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 08:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7EEC20714
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 08:01:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e17tUimt"
+	by mail.kernel.org (Postfix) with ESMTP id 181F420714
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 08:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbgH3IBp (ORCPT
+        id S1726507AbgH3IJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 04:01:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbgH3IBm (ORCPT
+        Sun, 30 Aug 2020 04:09:22 -0400
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:53676 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725934AbgH3IIn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 04:01:42 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C8DAC061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 01:01:42 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id i26so4130139ejb.12
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 01:01:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y/8mkZkNr8MCMt5D6YbG+h46YXVdjKr6kILMxJe8eeQ=;
-        b=e17tUimtOqdDOpNkjROCuuIderSWFMKZO8bmgr6bl9Zy7xZjs2vVWoCjw3I7un4Bp0
-         vJVh+kX5Hm7sJ+xLxqDAGZcta+FXZEHy2kN2Jkdxw5CYcQsYIt8YpHaWyIAvC3txbFZd
-         2QGBYw9bAr/bFQAlP/ECkTafc1hQtvvZ3aZRTmDCb08HAByLFah2J2FlQiUl8f0NK2aS
-         catDqxqlUK88PbTeQtgZOLUjllGv/XJSEjT2lq/xLRCzLNxk5MxLKDMf+mu4eTJzWGSo
-         IgL3XCQzoFAVO2bqVcXe7bmeE401N4Q/tB4/aJJ79Gx3E9Ace0BfuxsgQNS+t+g6Mac6
-         zvFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y/8mkZkNr8MCMt5D6YbG+h46YXVdjKr6kILMxJe8eeQ=;
-        b=Kmat9i6KQq7PmUfRL9W1TYWtwQVqKX0eEBnL3KVVdHMaExybEOXIuMxPFV0tuNdRRm
-         D7hTNQfZalUMab8jw+nzZkQQcOIx9Z3pABRpmLOKBUZ4kzm1iVd7ycvquFiJ2Ha9Mls4
-         As/1dHFJHXmNMPY0UocEQ+8nh9hbrEqk1ahSm3Uyl7OHKZAbeDwb2vPtY55CwGWqUfmM
-         gkR03PBSsw5mpXUzqKBA8MqL4TOKM/JbbHNsZ8jM6fHCzBc/6OuHCjeLUvhWgGpywt0e
-         cOBTM4MPWpwZdV1eXFSgKD31As3ztRMsnlnwZ+WuIZ5OINxWS51FZ8lq7GKkehY2iexv
-         aOkA==
-X-Gm-Message-State: AOAM533zN5YP3XlVfzhjHROKQ9t37IOTssSV6/luPcMlExgtupxNUE2D
-        HZCqBq93Hz4wmpXfHrESTY4Yzm1AweHtB2uiSt8=
-X-Google-Smtp-Source: ABdhPJyHI1vhRcIh7T+QdG1gOkjboGssT04ZTA/RaYK/qvgRQZM+xTcwmU9xfnSyeFg9BxT8qV6/GQyEkB9L3EBcd9w=
-X-Received: by 2002:a17:907:7094:: with SMTP id yj20mr6554020ejb.471.1598774500814;
- Sun, 30 Aug 2020 01:01:40 -0700 (PDT)
+        Sun, 30 Aug 2020 04:08:43 -0400
+X-Greylist: delayed 1104 seconds by postgrey-1.27 at vger.kernel.org; Sun, 30 Aug 2020 04:08:36 EDT
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 07U7nJ6X027387;
+        Sun, 30 Aug 2020 10:49:19 +0300
+Received: by taln60.nuvoton.co.il (Postfix, from userid 20088)
+        id 9127C639D3; Sun, 30 Aug 2020 10:49:19 +0300 (IDT)
+From:   Tali Perry <tali.perry1@gmail.com>
+To:     kunyi@google.com, xqiu@google.com, benjaminfair@google.com,
+        avifishman70@gmail.com, joel@jms.id.au, tmaimon77@gmail.com,
+        wsa@the-dreams.de
+Cc:     linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>
+Subject: [PATCH v1] i2c: npcm7xx: bug fix timeout (usec instead of msec)
+Date:   Sun, 30 Aug 2020 10:49:03 +0300
+Message-Id: <20200830074903.176871-1-tali.perry1@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <cover.1598598459.git.zong.li@sifive.com> <ee6a18d118b65cca0602e32bbb8be092f63ae8b6.1598598459.git.zong.li@sifive.com>
-In-Reply-To: <ee6a18d118b65cca0602e32bbb8be092f63ae8b6.1598598459.git.zong.li@sifive.com>
-From:   Pekka Enberg <penberg@gmail.com>
-Date:   Sun, 30 Aug 2020 11:01:22 +0300
-Message-ID: <CAOJsxLHuX-nXFS6Dp+X=_hOrbT=-FUvWF_oM+6q508r=MNnFrQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] riscv: Add cache information in AUX vector
-To:     Zong Li <zong.li@sifive.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        david.abdurachmanov@sifive.com,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 10:09 AM Zong Li <zong.li@sifive.com> wrote:
-> +uintptr_t get_cache_geometry(u32 level, enum cache_type type)
-> +{
-> +       struct cacheinfo *this_leaf = get_cacheinfo(level, type);
-> +       uintptr_t ret = (this_leaf->ways_of_associativity << 16 |
-> +                        this_leaf->coherency_line_size);
+i2c: npcm7xx: bug fix timeout (usec instead of msec)
 
-You are dereferencing "this_leaf" without checking if it's NULL here.
+Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+---
+ drivers/i2c/busses/i2c-npcm7xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +
-> +       return this_leaf ? ret : 0;
-> +}
+diff --git a/drivers/i2c/busses/i2c-npcm7xx.c b/drivers/i2c/busses/i2c-npcm7xx.c
+index 75f07138a6fa..c118f93a2610 100644
+--- a/drivers/i2c/busses/i2c-npcm7xx.c
++++ b/drivers/i2c/busses/i2c-npcm7xx.c
+@@ -2094,7 +2094,7 @@ static int npcm_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+ 	}
+ 
+ 	/* Adaptive TimeOut: astimated time in usec + 100% margin */
+-	timeout_usec = (2 * 10000 / bus->bus_freq) * (2 + nread + nwrite);
++	timeout_usec = (2 * 10000000 / bus->bus_freq) * (2 + nread + nwrite);
+ 	timeout = max(msecs_to_jiffies(35), usecs_to_jiffies(timeout_usec));
+ 	if (nwrite >= 32 * 1024 || nread >= 32 * 1024) {
+ 		dev_err(bus->dev, "i2c%d buffer too big\n", bus->num);
 
-- Pekka
+base-commit: d012a7190fc1fd72ed48911e77ca97ba4521bccd
+-- 
+2.22.0
+
