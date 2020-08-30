@@ -2,93 +2,189 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBDFC433E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62632C433E6
 	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 22:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D46D520738
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 22:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DBD5208A9
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 22:56:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="d1g8VLkv"
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="InX6j2UT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgH3W4B (ORCPT
+        id S1726488AbgH3W4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 18:56:01 -0400
-Received: from crapouillou.net ([89.234.176.41]:54556 "EHLO crapouillou.net"
+        Sun, 30 Aug 2020 18:56:17 -0400
+Received: from mail.nic.cz ([217.31.204.67]:52906 "EHLO mail.nic.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbgH3Wz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 18:55:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1598828157; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/ed/EF0gPQmZhJFSMnr0/oT1EzF7WA3QTt0WC2jzwuE=;
-        b=d1g8VLkvpKLDDxYfkUArJw9BAE9k2usXcMWxipgKQPolROWfUNZkjWBPRsWnVsrVkmt8Q8
-        g/s9Fjivv/XHOIb/BeFS4yTSilcrfnbjX3WU7QOd5YHpzoThGptK80uJHoIE7UJuJc670Y
-        WapRJk40NAJtnNwSD8j6WkEm8KyYHgE=
-Date:   Mon, 31 Aug 2020 00:55:46 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/2] drm/ingenic: Fix leak of device_node pointer
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        od@zcrc.me
-Message-Id: <YOFWFQ.M1IUN63RB1ZA1@crapouillou.net>
-In-Reply-To: <20200829210727.GE796939@ravnborg.org>
-References: <20200827114404.36748-1-paul@crapouillou.net>
-        <20200829210727.GE796939@ravnborg.org>
+        id S1726179AbgH3W4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 18:56:16 -0400
+Received: from localhost (unknown [172.20.6.135])
+        by mail.nic.cz (Postfix) with ESMTPSA id B75E713FFFB;
+        Mon, 31 Aug 2020 00:56:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1598828173; bh=YTHzXCb4ZdLDojUITwXuoxdvQt+Vc8tV3tMINYete5U=;
+        h=Date:From:To;
+        b=InX6j2UTCOUnMtb9JVcZ9l5pcOhbEsqQeJ2i3YIu1gIyKt42g/+/fTn6s2oeHsAw2
+         cuOyst+9NclOWosVIaZ21Dkv4OBHY66dLpB7E7I1UYjgW80nxl8APYORpN4Om+VSG4
+         9W+8v+0fBFlZSVwsIsf7MwdsvGqBzXJH+4TOCsNY=
+Date:   Mon, 31 Aug 2020 00:56:13 +0200
+From:   Marek Behun <marek.behun@nic.cz>
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
+        =?UTF-8?B?T25k?= =?UTF-8?B?xZllag==?= Jirman 
+        <megous@megous.com>, Russell King <linux@armlinux.org.uk>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH RFC leds + net-next v4 0/2] Add support for LEDs on
+ Marvell PHYs
+Message-ID: <20200831005613.3c00215a@nic.cz>
+In-Reply-To: <2b3604bf88082f8d8f6d21707907eff757b49362.camel@ew.tq-group.com>
+References: <20200728150530.28827-1-marek.behun@nic.cz>
+        <2b3604bf88082f8d8f6d21707907eff757b49362.camel@ew.tq-group.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
+On Tue, 25 Aug 2020 10:13:59 +0200
+Matthias Schiffer <matthias.schiffer@ew.tq-group.com> wrote:
 
-Le sam. 29 ao=FBt 2020 =E0 23:07, Sam Ravnborg <sam@ravnborg.org> a=20
-=E9crit :
-> On Thu, Aug 27, 2020 at 01:44:03PM +0200, Paul Cercueil wrote:
->>  of_graph_get_remote_node() requires of_node_put() to be called on=20
->> the
->>  device_node pointer when it's no more in use.
->>=20
->>  Fixes: fc1acf317b01 ("drm/ingenic: Add support for the IPU")
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> On Tue, 2020-07-28 at 17:05 +0200, Marek Beh=C3=BAn wrote:
+> > Hi,
+> >=20
+> > this is v4 of my RFC adding support for LEDs connected to Marvell
+> > PHYs.
+> >=20
+> > Please note that if you want to test this, you still need to first
+> > apply
+> > the patch adding the LED private triggers support from Pavel's tree.
+> >  =20
+> https://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/comm=
+it/?h=3Dfor-next&id=3D93690cdf3060c61dfce813121d0bfc055e7fa30d
+> >=20
+> > What I still don't like about this is that the LEDs created by the
+> > code
+> > don't properly support device names. LEDs should have name in format
+> > "device:color:function", for example "eth0:green:activity".
+> >=20
+> > The code currently looks for attached netdev for a given PHY, but
+> > at the time this happens there is no netdev attached, so the LEDs
+> > gets
+> > names without the device part (ie ":green:activity").
+> >=20
+> > This can be addressed in next version by renaming the LED when a
+> > netdev
+> > is attached to the PHY, but first a API for LED device renaming needs
+> > to
+> > be proposed. I am going to try to do that. This would also solve the
+> > same problem when userspace renames an interface.
+> >=20
+> > And no, I don't want phydev name there. =20
+>=20
+>=20
+> Hello Marek,
+>=20
+> thanks for your patches - Andrew suggested me to have a look at them as
+> I'm currently trying to add LED trigger support to the TI DP83867 PHY.
+>=20
+> Is there already a plan to add support for polarity and similiar
+> settings, at least to the generic part of your changes?
+>=20
 
-Thanks. Both patches pushed to drm-misc-fixes.
+Hello Matthias,
 
-Cheers,
--Paul
+sorry for answering with delay, I somehow overlooked your email.
+Yes, I plan to add some basic platform data properties (like polarity)
+in the generic part.
 
->>  ---
->>   drivers/gpu/drm/ingenic/ingenic-drm-drv.c | 1 +
->>   1 file changed, 1 insertion(+)
->>=20
->>  diff --git a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c=20
->> b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
->>  index ada990a7f911..c1bcb93aed2d 100644
->>  --- a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
->>  +++ b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
->>  @@ -978,6 +978,7 @@ static int ingenic_drm_probe(struct=20
->> platform_device *pdev)
->>   	}
->>=20
->>   	drm_of_component_match_add(dev, &match, compare_of, np);
->>  +	of_node_put(np);
->>=20
->>   	return component_master_add_with_match(dev, &ingenic_master_ops,=20
->> match);
->>   }
->>  --
->>  2.28.0
+> In the TI DP83867, there are 2 separate settings for each LED:
+>=20
+> - Trigger event
+> - Polarity or override (active-high/active-low/force-high/force-low -
+> the latter two would be used for led_brightness_set)
+> - (There is also a 3rd register that defines the blink frequency, but
+> as it allows only a single setting for all LEDs, I would ignore it for
+> now)
 
+I think that blink frequency should be in the generic part as well.
+
+>=20
+> At least the per-LED polarity setting would be essential to have for
+> this feature to be useful for our TQ-Systems mainboards with TI PHYs.
+>=20
+
+I will try to send new version next week (starting 7th September).
+
+Marek
+
+>=20
+> Kind regards,
+> Matthias
+>=20
+>=20
+>=20
+> >=20
+> > Changes since v3:
+> > - addressed some of Andrew's suggestions
+> > - phy_hw_led_mode.c renamed to phy_led.c
+> > - the DT reading code is now also generic, moved to phy_led.c and
+> > called
+> >   from phy_probe
+> > - the function registering the phydev-hw-mode trigger is now called
+> > from
+> >   phy_device.c function phy_init before registering genphy drivers
+> > - PHY LED functionality now depends on CONFIG_LEDS_TRIGGERS
+> >=20
+> > Changes since v2:
+> > - to share code with other drivers which may want to also offer PHY
+> > HW
+> >   control of LEDs some of the code was refactored and now resides in
+> >   phy_hw_led_mode.c. This code is compiled in when config option
+> >   LED_TRIGGER_PHY_HW is enabled. Drivers wanting to offer PHY HW
+> > control
+> >   of LEDs should depend on this option.
+> > - the "hw-control" trigger is renamed to "phydev-hw-mode" and is
+> >   registered by the code in phy_hw_led_mode.c
+> > - the "hw_control" sysfs file is renamed to "hw_mode"
+> > - struct phy_driver is extended by three methods to support PHY HW
+> > LED
+> >   control
+> > - I renamed the various HW control modes offeret by Marvell PHYs to
+> >   conform to other Linux mode names, for example the
+> > "1000/100/10/else"
+> >   mode was renamed to "1Gbps/100Mbps/10Mbps", or "recv/else" was
+> > renamed
+> >   to "rx" (this is the name of the mode in netdev trigger).
+> >=20
+> > Marek
+> >=20
+> >=20
+> > Marek Beh=C3=BAn (2):
+> >   net: phy: add API for LEDs controlled by PHY HW
+> >   net: phy: marvell: add support for PHY LEDs via LED class
+> >=20
+> >  drivers/net/phy/Kconfig      |   4 +
+> >  drivers/net/phy/Makefile     |   1 +
+> >  drivers/net/phy/marvell.c    | 287
+> > +++++++++++++++++++++++++++++++++++
+> >  drivers/net/phy/phy_device.c |  25 ++-
+> >  drivers/net/phy/phy_led.c    | 176 +++++++++++++++++++++
+> >  include/linux/phy.h          |  51 +++++++
+> >  6 files changed, 537 insertions(+), 7 deletions(-)
+> >  create mode 100644 drivers/net/phy/phy_led.c
+> >  =20
+>=20
 
