@@ -2,118 +2,102 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B18C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 12:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B56CC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 13:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 089562087D
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 12:49:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nXZvxVAY"
+	by mail.kernel.org (Postfix) with ESMTP id CBFDD207DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 13:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598793319;
+	bh=L0UEGoE0XoSNof1CQ/i74GslohOVgHMvBPV1kDOSfnY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=THke+/ADru9TM9lbnoND4O0pI5ButdSc2t4w+4CC5KnMV/iRIN+yXCiToWUTvmcP4
+	 0n3ddaa5PZrQ0J8lwinJr4869fYhQaFYAs6Xck+sQ9I8GKCqORWuy4y4iF9Ew/SzJl
+	 caf/7lhHZKVodrN8FugL8tfKYPcQIxkG+k/C0P1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbgH3MtT (ORCPT
+        id S1728846AbgH3NPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 08:49:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728686AbgH3MtP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 08:49:15 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB8B7C061573;
-        Sun, 30 Aug 2020 05:49:14 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id d18so3348859iop.13;
-        Sun, 30 Aug 2020 05:49:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pdBRR0cueC+gQFMWe643ZTOPACqLEtpMVbSZLMNIJk8=;
-        b=nXZvxVAYREeSQudgh5+FEP9PDKNIFXymwC/FlXmvC3gptxL63qm2e7mHxhHkFau5qh
-         2B5zLmRu9pDycfVr8sGnqogTSC9i8RWh2jTLL+eLAlVA1PuposUsD3C4QigoyoS4aV+e
-         jC1xTnrrMuj87umbNnmcDgLuO22Hp3K2A6zBqumWazXMaE+CuUrnCnk1fHk+LPmM4sFC
-         uKfK5UiIeLES0sJzHHylkDPqEYYO7RGucS0X+HM2h3EZgqIUv0RPWuaxwj249C1VplMd
-         ORn/YxVjTGLzbzXCL3crni/RO6PDMpQ6vdePMs7tKwX2BGgt900+8kCsHtjtwtAOfVtn
-         ZP+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pdBRR0cueC+gQFMWe643ZTOPACqLEtpMVbSZLMNIJk8=;
-        b=OSNcregdiO8DdPnWrUFndG9/84wCyloGpTlHT06UIQcnTET3Le9mkAHVpadRnSrGDl
-         LDyne5AmK44C2cXBiD7+nHbOY3BAWLnf7Z4I9bcfaEXrzYoYkiFXQ6yTnAJF6JNz4vV/
-         tJIZlPpyaW5DeWssoUEzeUoJlB3tG8jb/QeeOhXLQEH2daea/fOyI1HG2x4PJeS+ZmOs
-         bby5BPKjvgbFk8BCC4SzK8mRW6RVpOGlz0AMPPOj4TSOpg0POoqJhCq2URZhvMR53CxX
-         EfLxOYzQaxFi7xDeRgujZn3pJ6QVZrDZA/AIchIj5dyFzyF5/vV90nPvvf6i0sNbLQ+P
-         ETow==
-X-Gm-Message-State: AOAM533GORqJx2el739mVf0qsp+jzLxrG2sj1reaVlQRPLCUheex1CXZ
-        wqrRHdhNX81S58jrT+hdYLuWki36MLCQhFKkxA==
-X-Google-Smtp-Source: ABdhPJw7O7EzuonqLJJFe/6YP0MDgHVcW3ajTLQEw/YH6cRXtE4Hd9v1Grf3WAIzDWhra7xl7zwb3LoQhXLRSc5T6Gs=
-X-Received: by 2002:a02:ccdb:: with SMTP id k27mr7904474jaq.103.1598791753939;
- Sun, 30 Aug 2020 05:49:13 -0700 (PDT)
+        Sun, 30 Aug 2020 09:15:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726030AbgH3NPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 09:15:08 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3A6F20757;
+        Sun, 30 Aug 2020 13:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598793308;
+        bh=L0UEGoE0XoSNof1CQ/i74GslohOVgHMvBPV1kDOSfnY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gOsVjxFZfIg3lmX6HYHO4XnTxB1AmjIMBHVW9wIhWgdRFAlvmOTZEiEohhDB0fnhM
+         Vj3IHebJ8V227P9Mas3YeSwE63uuNRMbV1i/wsdVZ8zJLjgRp0IwlyKWT2TQ4UJ0pH
+         yNd8Hd2zn5RR+RfqgSMvi1ZrxaFFfqTKHz/QJZGk=
+Date:   Sun, 30 Aug 2020 21:15:02 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     robh@kernel.org, kernel@puri.sm, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        mchehab@kernel.org, Anson.Huang@nxp.com, agx@sigxcpu.org,
+        angus@akkea.ca, broonie@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 2/3] MAINTAINERS: Add Purism Librem 5 section to the
+ list
+Message-ID: <20200830131459.GL32096@dragon>
+References: <20200821121755.24599-1-martin.kepplinger@puri.sm>
+ <20200821121755.24599-2-martin.kepplinger@puri.sm>
 MIME-Version: 1.0
-References: <20200830122051.197892-1-tali.perry1@gmail.com>
-In-Reply-To: <20200830122051.197892-1-tali.perry1@gmail.com>
-From:   Avi Fishman <avifishman70@gmail.com>
-Date:   Sun, 30 Aug 2020 15:47:52 +0300
-Message-ID: <CAKKbWA47=-ubf+HZJwNMWdPsKdeOO6VAUvApcvewhOcxhg0KWQ@mail.gmail.com>
-Subject: Re: [PATCH v2] i2c: npcm7xx: bug fix timeout (usec instead of msec)
-To:     Tali Perry <tali.perry1@gmail.com>
-Cc:     kunyi@google.com, xqiu@google.com,
-        Benjamin Fair <benjaminfair@google.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Tomer Maimon <tmaimon77@gmail.com>, wsa@the-dreams.de,
-        linux-i2c@vger.kernel.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821121755.24599-2-martin.kepplinger@puri.sm>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 3:21 PM Tali Perry <tali.perry1@gmail.com> wrote:
->
-> i2c: npcm7xx: bug fix timeout (usec instead of msec)
->
-> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-Reviewed-by: Avi Fishman <avifishman70@gmail.com>
+On Fri, Aug 21, 2020 at 02:17:54PM +0200, Martin Kepplinger wrote:
+> Add development information for the devicetree files for hardware
+> by Purism SPC.
+> 
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+
+I decided to drop this patch from my queue, as I took the suggestion
+from Joe and sent a patch to have get_maintainer report email address
+in the dts file.
+
+Shawn
+
+[1] https://lkml.org/lkml/2020/8/30/118
 
 > ---
->  drivers/i2c/busses/i2c-npcm7xx.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/i2c/busses/i2c-npcm7xx.c b/drivers/i2c/busses/i2c-npcm7xx.c
-> index 75f07138a6fa..abb334492a3d 100644
-> --- a/drivers/i2c/busses/i2c-npcm7xx.c
-> +++ b/drivers/i2c/busses/i2c-npcm7xx.c
-> @@ -2093,8 +2093,13 @@ static int npcm_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
->                 }
->         }
->
-> -       /* Adaptive TimeOut: astimated time in usec + 100% margin */
-> -       timeout_usec = (2 * 10000 / bus->bus_freq) * (2 + nread + nwrite);
-> +       /*
-> +        * Adaptive TimeOut: estimated time in usec + 100% margin:
-> +        * 2: double the timeout for clock stretching case
-> +        * 9: bits per transaction (including the ack/nack)
-> +        * 1000000: micro second in a second
-> +        */
-> +       timeout_usec = (2 * 9 * 1000000 / bus->bus_freq) * (2 + nread + nwrite);
->         timeout = max(msecs_to_jiffies(35), usecs_to_jiffies(timeout_usec));
->         if (nwrite >= 32 * 1024 || nread >= 32 * 1024) {
->                 dev_err(bus->dev, "i2c%d buffer too big\n", bus->num);
->
-> base-commit: d012a7190fc1fd72ed48911e77ca97ba4521bccd
-> --
-> 2.22.0
->
-
-
---
-Regards,
-Avi
+>  MAINTAINERS | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ac79fdbdf8d0..70a09eb3e6d6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14061,6 +14061,13 @@ T:	git git://linuxtv.org/media_tree.git
+>  F:	Documentation/admin-guide/media/pulse8-cec.rst
+>  F:	drivers/media/cec/usb/pulse8/
+>  
+> +PURISM LIBREM 5
+> +M:	Purism Kernel Team <kernel@puri.sm>
+> +S:	Supported
+> +B:	https://source.puri.sm/Librem5/linux-next/issues
+> +T:	https://source.puri.sm/Librem5/linux-next
+> +F:	arch/arm64/boot/dts/freescale/imx8mq-librem5*
+> +
+>  PVRUSB2 VIDEO4LINUX DRIVER
+>  M:	Mike Isely <isely@pobox.com>
+>  L:	pvrusb2@isely.net	(subscribers-only)
+> -- 
+> 2.20.1
+> 
