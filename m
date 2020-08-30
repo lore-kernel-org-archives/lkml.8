@@ -2,64 +2,63 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A74C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322F1C433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEBA6206CD
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F5FA206CD
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:55:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSLpIkR4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VGHVZ9FE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgH3SzW (ORCPT
+        id S1726505AbgH3SzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 14:55:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33270 "EHLO
+        Sun, 30 Aug 2020 14:55:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726468AbgH3SzG (ORCPT
+        with ESMTP id S1726282AbgH3SzE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 14:55:06 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAA45C061573;
-        Sun, 30 Aug 2020 11:55:05 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id v12so4236351ljc.10;
-        Sun, 30 Aug 2020 11:55:05 -0700 (PDT)
+        Sun, 30 Aug 2020 14:55:04 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D957DC061573;
+        Sun, 30 Aug 2020 11:55:03 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id d2so2318593lfj.1;
+        Sun, 30 Aug 2020 11:55:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=bfkugI/LH5e/fdWRheFGhtoVkFSs2RbzC3QtJXx//30=;
-        b=eSLpIkR4N6ywW9V7JdCundGyX+rsmoIUbuxQemwY84A+Nd67XcTfTg0OQkdoi9DaH3
-         PiX3MSSoS0lgV/zRFQlsRp3Y7OL1wGrZqPLgYYDNdRKW0VkE6PFTqUo3c4hW2goqotcQ
-         Xanmi5x43qhTJLRPWjbf0+VnCbselVkfPxEKX7odWzjr46yFG4uI98s5L+1n3H+aRUzu
-         6PUBbK1Rp5u8N7xGRyifGK9eqK+Hwdx0otSUyYydn0Hp52HqOSoAfJ3rnnkGtgFoH0Ny
-         Iw7B7fKkIkM0Z6KXX0F0Zz8Mm90Mch0Usi8h9d9vx4UajR3+Qqb9e6KquIkVQ4DwTnpA
-         uGQg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KB/orVYY3/iyi1+OEIa3l5Zb1NRAkevYQaE0xhLNDhY=;
+        b=VGHVZ9FEWLfnTHug243P4hrtTxperC/kE3E0vF1ZeYaI0NEfmOXsDz/tlFNOyyoXJO
+         VHVbFyRVRpJGdnfBBnhG5nIx4FwKXEfDs4oPII6dsE354utxZJavTfqHr2bERsDWi19N
+         5ffZpKRR7KeVCo2el9CMtjXlZ/zj+KTbnPWgb+fhnUNsFSvOg+4Q+G28wxoRfD92xGeP
+         zJQAlhJW73evGxJ+4MwHpo5qjU/vI7OzbB8Xu1ei0lpV0r2q1by9iOAULtX9cXi2cCt5
+         d2SiqViqCGZI+ZjjcBe8ays+IdqFBa7y0JfZHzs5diwS3G9QFRrUHws/dkwBLl8oQpWf
+         eBLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bfkugI/LH5e/fdWRheFGhtoVkFSs2RbzC3QtJXx//30=;
-        b=HMlpCvaSPGYEe+SUHrgLLJUysn1VlUoea6IPhlxMwqmd5bwDH16e604Mkpu25NT80h
-         +IkFBEzGPpFwmRjZQPACJlx+g5fc4ZHU5kdJuFlkewt6jwcvLu6O8jGPFjFHQIWRFeVa
-         rMQ6RumPdFLUOfYvbtj7uvF579/jFonydTiZsXjZDtoaybKA9cPc04Y25lfVUMjf8lMd
-         pyNZAKoUezRMwPOLETExSzgQM4uG6sASYrUcicA45F/YpSMUrDsg4qjD10VVtMFtwE5k
-         P3dnFPAN6g/13H+JX5jU0b6Z2Ra3MRFHM/B/7oKUqz9yaLC0Ekhj0ri7EllR30THug0F
-         gU7Q==
-X-Gm-Message-State: AOAM532BujqQmHYiIVBwBa2Kw2N/2aLc5wnZUeWcHC4oUHq4IduyPLBK
-        LF8MmE7lLZyrHwEOzNCMkU8=
-X-Google-Smtp-Source: ABdhPJyTua/0i+etpjIH7cfPsBa9xJiXpna9WtQiXng9CI46B2MDoc8yOJ7cUtJGuciz0gKzZCs5Dg==
-X-Received: by 2002:a2e:895a:: with SMTP id b26mr860324ljk.468.1598813704457;
-        Sun, 30 Aug 2020 11:55:04 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KB/orVYY3/iyi1+OEIa3l5Zb1NRAkevYQaE0xhLNDhY=;
+        b=qSZ8OmOeIP7SDgIn9MBEUlg3r72XdAnQsF0TYiZqjOGGM8kEhBnV7gCNeYLl4J/+j9
+         ixK3u+YPRgNZKvuJhQN2gRWA91vE9QF8t/aU7Q9YBtkZL7ojNoUoKuM70KkFvnAqJqlH
+         AxVBEj8TsS7pz9hal5C3ZOMElkPlouurDFLl8PtziyG7kugHGLNH7DmzpAQzyZ3ESTcY
+         ZbIKthr0p1VwAQ+lMCWWPPLGNEnjhoFk0C84MbqGO54cGIULc7+ehVmFeRdVVo9SD61e
+         fR5HoGipL9mwoVG7FiRRhLEHr0DvVXEstoXjCjAeegBHj42IzWmYTgA3CtOC63ih+Z7V
+         7RhQ==
+X-Gm-Message-State: AOAM5304v27W9h2U5wX0UUpU897ZC/qs7dMZdmjLP6fOqSs40imRJuhY
+        +zm2rvHJQoSy6nTdJtq8PRY=
+X-Google-Smtp-Source: ABdhPJxGQoR/UevvS7mGsEvM7E+6XaqGsRNUGzs6zBl/GWHaA1SVMDWljN1/Xw5Fab/puIiqg7EYNw==
+X-Received: by 2002:ac2:4d0f:: with SMTP id r15mr3955240lfi.114.1598813702322;
+        Sun, 30 Aug 2020 11:55:02 -0700 (PDT)
 Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id n21sm21630ljc.89.2020.08.30.11.55.03
+        by smtp.gmail.com with ESMTPSA id n21sm21630ljc.89.2020.08.30.11.55.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 11:55:04 -0700 (PDT)
+        Sun, 30 Aug 2020 11:55:01 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -71,12 +70,10 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
 Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/6] regmap: Use flexible sleep
-Date:   Sun, 30 Aug 2020 21:53:52 +0300
-Message-Id: <20200830185356.5365-3-digetx@gmail.com>
+Subject: [PATCH v2 0/6] Introduce Embedded Controller driver for Acer A500
+Date:   Sun, 30 Aug 2020 21:53:50 +0300
+Message-Id: <20200830185356.5365-1-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200830185356.5365-1-digetx@gmail.com>
-References: <20200830185356.5365-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,38 +81,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The multi-reg write function uses udelay(), which is a busy-loop based
-delaying function that is not suitable for a long delays. Hence let's
-replace the udelay() with fsleep(), which is flexible sleep function that
-selects best delay function based on the delay-time.
+Hello!
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/base/regmap/regmap.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This series adds support for the Embedded Controller which is found on
+Acer Iconia Tab A500 (Android tablet device).
 
-diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
-index e93700af7e6e..a417cb1a11dc 100644
---- a/drivers/base/regmap/regmap.c
-+++ b/drivers/base/regmap/regmap.c
-@@ -2231,7 +2231,7 @@ static int _regmap_range_multi_paged_reg_write(struct regmap *map,
- 					return ret;
- 
- 				if (regs[i].delay_us)
--					udelay(regs[i].delay_us);
-+					fsleep(regs[i].delay_us);
- 
- 				base += n;
- 				n = 0;
-@@ -2268,7 +2268,7 @@ static int _regmap_multi_reg_write(struct regmap *map,
- 				return ret;
- 
- 			if (regs[i].delay_us)
--				udelay(regs[i].delay_us);
-+				fsleep(regs[i].delay_us);
- 		}
- 		return 0;
- 	}
+The Embedded Controller is ENE KB930 and it's running firmware customized
+for the A500. The firmware interface may be reused by some other sibling
+Acer tablets, although none of those tablets are supported in upstream yet.
+Please review and apply, thanks in advance!
+
+Changelog:
+
+v2: - Factored out KB930 device-tree binding into a separate file, like it
+      was suggested by Lubomir Rintel.
+
+    - Switched to use regmap API like it was suggested by Lubomir Rintel.
+
+    - Added patch "regmap: Use flexible sleep" which allows not to hog
+      CPU while LED is switching state.
+
+    - Corrected MODULE_LICENSE to use "GPL" in all patches.
+
+    - Corrected MFD driver Kconfig entry like it was suggested by
+      Lubomir Rintel, it now depends on I2C.
+
+    - Switched to use I2C probe_new() in the MFD driver.
+
+    - Renamed the global pm_off variable, like it was suggested by
+      Lubomir Rintel and Lee Jones.
+
+    - Dropped serial number from the battery driver because I realized
+      that it's not a battery serial, but a device serial.
+
+    - Battery driver now uses dev_err_probe(), like it was suggested by
+      Sebastian Reichel.
+
+    - Dropped legacy LED_ON usage from the LED driver and renamed the
+      LEDs, like it was suggested by Pavel Machek. I also checked whether
+      LED-name customization via device-tree could be needed by other
+      potentially compatible devices and it shouldn't be needed, anyways it
+      won't be difficult to extend the code even if I'm wrong.
+
+Dmitry Osipenko (6):
+  dt-bindings: mfd: Add ENE KB930 Embedded Controller binding
+  regmap: Use flexible sleep
+  mfd: Add driver for Embedded Controller found on Acer Iconia Tab A500
+  power: supply: Add battery gauge driver for Acer Iconia Tab A500
+  leds: Add driver for Acer Iconia Tab A500
+  ARM: tegra: acer-a500: Add Embedded Controller
+
+ .../devicetree/bindings/mfd/ene-kb930.yaml    |  66 ++++
+ .../boot/dts/tegra20-acer-a500-picasso.dts    |  17 +
+ drivers/base/regmap/regmap.c                  |   4 +-
+ drivers/leds/Kconfig                          |   7 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-acer-a500.c                 | 130 ++++++++
+ drivers/mfd/Kconfig                           |  12 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/acer-ec-a500.c                    | 203 ++++++++++++
+ drivers/power/supply/Kconfig                  |   6 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/acer_a500_battery.c      | 297 ++++++++++++++++++
+ 12 files changed, 743 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/ene-kb930.yaml
+ create mode 100644 drivers/leds/leds-acer-a500.c
+ create mode 100644 drivers/mfd/acer-ec-a500.c
+ create mode 100644 drivers/power/supply/acer_a500_battery.c
+
 -- 
 2.27.0
 
