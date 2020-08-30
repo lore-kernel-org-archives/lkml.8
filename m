@@ -2,98 +2,97 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5466BC433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 01:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 192D6C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 01:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE4B2075B
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 01:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7B452075B
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 01:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbgH3BuT (ORCPT
+        id S1728633AbgH3Byk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 21:50:19 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:60358 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728439AbgH3BuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 21:50:17 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1kCCTt-00CSEg-Qh; Sun, 30 Aug 2020 03:50:05 +0200
-Date:   Sun, 30 Aug 2020 03:50:05 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        netdev@vger.kernel.org, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC leds + net-next v4 0/2] Add support for LEDs on
- Marvell PHYs
-Message-ID: <20200830015005.GD2966560@lunn.ch>
-References: <20200728150530.28827-1-marek.behun@nic.cz>
- <20200807090653.ihnt2arywqtpdzjg@duo.ucw.cz>
- <20200807132920.GB2028541@lunn.ch>
- <20200829224351.GA29564@duo.ucw.cz>
- <20200829233641.GC2966560@lunn.ch>
+        Sat, 29 Aug 2020 21:54:40 -0400
+Received: from mail.parknet.co.jp ([210.171.160.6]:33444 "EHLO
+        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728602AbgH3Byk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 29 Aug 2020 21:54:40 -0400
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+        by mail.parknet.co.jp (Postfix) with ESMTPSA id 46FB51B44DF;
+        Sun, 30 Aug 2020 10:54:38 +0900 (JST)
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-20) with ESMTPS id 07U1sbJI322084
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Sun, 30 Aug 2020 10:54:38 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-20) with ESMTPS id 07U1saM43070424
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Sun, 30 Aug 2020 10:54:36 +0900
+Received: (from hirofumi@localhost)
+        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id 07U1sZBX3070422;
+        Sun, 30 Aug 2020 10:54:35 +0900
+From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] fat: Avoid oops when bdi->io_pages==0
+References: <87ft85osn6.fsf@mail.parknet.co.jp>
+        <20200830012151.GW14765@casper.infradead.org>
+Date:   Sun, 30 Aug 2020 10:54:35 +0900
+In-Reply-To: <20200830012151.GW14765@casper.infradead.org> (Matthew Wilcox's
+        message of "Sun, 30 Aug 2020 02:21:51 +0100")
+Message-ID: <874kokq4o4.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200829233641.GC2966560@lunn.ch>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > You could make a good guess at matching to two together, but it is
-> > > error prone. Phys are low level things which the user is not really
-> > > involved in. They interact with interface names. ethtool, ip, etc, all
-> > > use interface names. In fact, i don't know of any tool which uses
-> > > phydev names.
-> > 
-> > So... proposal:
-> > 
-> > Users should not be dealing with sysfs interface directly, anyway. We
-> > should have a tool for that. It can live in kernel/tools somewhere, I
-> > guess.
-> 
-> We already have one, ethtool(1). 
-> 
-> > 
-> > Would we name leds phy0:... (with simple incrementing number), and
-> > expose either interface name or phydev name as a attribute?
-> > 
-> > So user could do
-> > 
-> > cat /sys/class/leds/phy14:green:foobar/netdev
-> > lan5@eth1:
+Matthew Wilcox <willy@infradead.org> writes:
 
-I forgot about network name spaces. There can be multiple interfaces
-with the name eth0, each in its own network namespace. For your
-proposal to work, /sys/class/leds/phy14:green:foobar needs to be in
-the network namespace, so it is only visible to other processes in the
-same name space, and lan5@eth1 is then unique to that namespace.
+> On Sun, Aug 30, 2020 at 09:59:41AM +0900, OGAWA Hirofumi wrote:
+>> On one system, there was bdi->io_pages==0. This seems to be the bug of
+>> a driver somewhere, and should fix it though. Anyway, it is better to
+>> avoid the divide-by-zero Oops.
+>> 
+>> So this check it.
+>> 
+>> Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+>> Cc: <stable@vger.kernel.org>
+>> ---
+>>  fs/fat/fatent.c |    2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/fs/fat/fatent.c b/fs/fat/fatent.c
+>> index f7e3304..98a1c4f 100644
+>> --- a/fs/fat/fatent.c	2020-08-30 06:52:47.251564566 +0900
+>> +++ b/fs/fat/fatent.c	2020-08-30 06:54:05.838319213 +0900
+>> @@ -660,7 +660,7 @@ static void fat_ra_init(struct super_blo
+>>  	if (fatent->entry >= ent_limit)
+>>  		return;
+>>  
+>> -	if (ra_pages > sb->s_bdi->io_pages)
+>> +	if (sb->s_bdi->io_pages && ra_pages > sb->s_bdi->io_pages)
+>>  		ra_pages = rounddown(ra_pages, sb->s_bdi->io_pages);
+>
+> Wait, rounddown?  ->io_pages is supposed to be the maximum number of
+> pages to readahead.  Shouldn't this be max() instead of rounddown()?
 
-> Which is the wrong way around. ethtool will be passed the interface
-> name and an PHY descriptor of some sort, and it has to go search
-> through all the LEDs to find the one with this attribute. I would be
-> much more likely to add a sysfs link from
-> /sys/class/net/lan5/phy:left:green to
-> /sys/class/leds/phy14:left:green.
+Hm, io_pages is limited by driver setting too, and io_pages can be lower
+than ra_pages, e.g. usb storage.
 
-I need to test a bit, but i think this works. Everything under
-/sys/class/net is network namespace aware. You only see
-/sys/class/net/lan5 if there is a lan5 is in the current name space,
-and you see the current namespaces version of lan5.. A sysfs symlink
-out of namespace to /sys/class/led should work, assuming
-/sys/class/led is namespace unaware, and phy14 is unique across all
-network name spaces. But you cannot have a link in the opposite
-direction from /sys/class/led/phy14 to /sys/class/net/lan5, since it
-has no idea which lan5 to symlink to.
+Assuming ra_pages is user intent of readahead window. So if io_pages is
+lower than ra_pages, this try ra_pages to align of io_pages chunk, but
+not bigger than ra_pages. Because if block layer splits I/O requests to
+hard limit, then I/O is not optimal.
 
-    Andrew
+So it is intent, I can be misunderstanding though.
+
+Thanks.
+-- 
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
