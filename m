@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB92C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D6ACC433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3719F20BED
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E34022087D
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598796784;
-	bh=GM7bDpVSBfYrf0CvR7vtGK9Q0tg3TKRLZ1dysrb3pjs=;
+	s=default; t=1598796827;
+	bh=PezkV/BBxdiRHsbfh2DW7duf8rwEieb1A2/fZcuH92g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=13YKivSrcYgtrWuQ0DIwbB8jayemP8FpROXGts0L0QV1oPRN9qgqsRezRZgVoU+yn
-	 SHPCYO+QHDZzLksn0QDVuVcnph8mk8Uuxq6ZV+OtwZiPbxk7fB2EI/cSOsSFv0JFhc
-	 s+5XiIzXFdqT8hkjmyqED8qIJnkdCfkKyrM7rJBw=
+	b=npdsA/3EKEgM+VBZz1cRG3gXY0vVBEcCDTXPGTdMQKCPNFdq+2A6YEXwVqcYWtXcy
+	 DVkKUgm36zXLlIUEMinNqvWOtROlNZZGa51Q15Ewr7T+/0q/3w1Tm5E2pmXaDB4Yxk
+	 gw4KvRN2IvCaiApAUAQiftRU5giXkN7eGSLI2ouA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgH3OL7 (ORCPT
+        id S1726939AbgH3OND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 10:11:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55260 "EHLO mail.kernel.org"
+        Sun, 30 Aug 2020 10:13:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728909AbgH3NyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 09:54:22 -0400
+        id S1728789AbgH3NyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 09:54:19 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4662021473;
-        Sun, 30 Aug 2020 13:54:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B19E2087D;
+        Sun, 30 Aug 2020 13:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598795661;
-        bh=GM7bDpVSBfYrf0CvR7vtGK9Q0tg3TKRLZ1dysrb3pjs=;
+        s=default; t=1598795658;
+        bh=PezkV/BBxdiRHsbfh2DW7duf8rwEieb1A2/fZcuH92g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rEb4dT8zMoWQiIvCOZpuli2P8j+LCV25Ora4D+DlbkwlVrg1lubaYc3BlkkLTAgVp
-         jeEDEeRtC9jqqv0IoGaPgce+W01VIH+FTunaY/wnZL1PuJ0K02YonXXLcOzFSD0sLF
-         eGDzbviQimjLDputHS7tz8FHQjGTBX9o8TRJ4Si0=
+        b=YQ1Lkc+DLVhD8zbiFFDJOxl7GM+sItk3JeIvbiuVnOlSS+bOju7ShyYxgAiB24FZT
+         AP4wg9Q4xXyAp696G5OmGqLqCzrOH0FZrl227DmEIqgLAj5lIWa5hCPu1BjCyNiURz
+         7Rf1idlvZ8lzpchlTez1Tv2/k1Mq9zNthWY84Q7I=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -49,9 +49,9 @@ To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
 Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: [PATCH 09/33] ARM: dts: exynos: Add and enable 32 kHz modem clock in Origen
-Date:   Sun, 30 Aug 2020 15:51:36 +0200
-Message-Id: <20200830135200.24304-9-krzk@kernel.org>
+Subject: [PATCH 08/33] ARM: dts: exynos: Add and enable 32 kHz modem clock in Galaxy I9100
+Date:   Sun, 30 Aug 2020 15:51:35 +0200
+Message-Id: <20200830135200.24304-8-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200830135200.24304-1-krzk@kernel.org>
 References: <20200830135200.24304-1-krzk@kernel.org>
@@ -66,14 +66,14 @@ signal.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/exynos4210-origen.dts | 5 +++++
+ arch/arm/boot/dts/exynos4210-i9100.dts | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos4210-origen.dts b/arch/arm/boot/dts/exynos4210-origen.dts
-index 747221bbb856..fcf45619a3e4 100644
---- a/arch/arm/boot/dts/exynos4210-origen.dts
-+++ b/arch/arm/boot/dts/exynos4210-origen.dts
-@@ -298,6 +298,11 @@
+diff --git a/arch/arm/boot/dts/exynos4210-i9100.dts b/arch/arm/boot/dts/exynos4210-i9100.dts
+index d63274c8539d..1d200a5e1b72 100644
+--- a/arch/arm/boot/dts/exynos4210-i9100.dts
++++ b/arch/arm/boot/dts/exynos4210-i9100.dts
+@@ -580,6 +580,11 @@
  				regulator-name = "EN32KHZ_AP";
  				regulator-always-on;
  			};
