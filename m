@@ -2,89 +2,88 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C79A1C433E7
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 22:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7FDC433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 22:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADE8C2083E
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 22:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9FFC2083E
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 22:41:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598827310;
+	bh=dozG/V0QLz75yvvhtnhJiCnR4Wh8JH9/N5EL/DF+S5c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2AKNWo/DNI5QxMo6XBqKlzX5tAHZ6kAbR1wA79DqsMKKTivFE+ocrsMLphVUczi0L
+	 uEkRg2WYu2lmJoL3B7Qzm28j5L2zl/KI8aUtdvCf//y7lS0a+ovNcWPCbm5n1uqUez
+	 j5D49V8C+WuOFAGCIsSBCSd1Vsd12IZ9yEx4n8nQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgH3WdR (ORCPT
+        id S1726436AbgH3Wlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 18:33:17 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:37624 "EHLO fornost.hmeau.com"
+        Sun, 30 Aug 2020 18:41:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbgH3WdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 18:33:14 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1kCVsm-0000Lm-KD; Mon, 31 Aug 2020 08:33:05 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 31 Aug 2020 08:33:04 +1000
-Date:   Mon, 31 Aug 2020 08:33:04 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [GIT PULL] Crypto Fixes for 5.9
-Message-ID: <20200830223304.GA16882@gondor.apana.org.au>
-References: <20200803044024.GA6429@gondor.apana.org.au>
+        id S1726179AbgH3Wla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 18:41:30 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2703B2083E;
+        Sun, 30 Aug 2020 22:41:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598827290;
+        bh=dozG/V0QLz75yvvhtnhJiCnR4Wh8JH9/N5EL/DF+S5c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Da2nllEbuK8U4cXg/3Q6NyVmTP24ILAO+nfw/FEUrgG8DsXugKB149e0jsnsyyR5u
+         huYR1Rrh4mVmv8ppJyCX12gjIQeTO2dDag+QAZ+JElKmEchDjym1MmggeNBsyekVyq
+         ALl+urnJi2NQ3OywAp0Jv+S4cZ7e1yPgcD7i2ips=
+Date:   Sun, 30 Aug 2020 18:41:29 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "for 3.8" <stable@vger.kernel.org>, Tao Zhou <tao.zhou1@amd.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Jiansong Chen <Jiansong.Chen@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: [PATCH AUTOSEL 5.8 52/63] drm/amdgpu: disable gfxoff for
+ navy_flounder
+Message-ID: <20200830224129.GA8670@sasha-vm>
+References: <20200824163504.605538-1-sashal@kernel.org>
+ <20200824163504.605538-52-sashal@kernel.org>
+ <CADnq5_Osp+ePNgm1c5VxRzuymZzkTCF1Zps+Y0JjO8AJ66r+TQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200803044024.GA6429@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CADnq5_Osp+ePNgm1c5VxRzuymZzkTCF1Zps+Y0JjO8AJ66r+TQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus:
+On Mon, Aug 24, 2020 at 02:23:42PM -0400, Alex Deucher wrote:
+>On Mon, Aug 24, 2020 at 12:36 PM Sasha Levin <sashal@kernel.org> wrote:
+>>
+>> From: Jiansong Chen <Jiansong.Chen@amd.com>
+>>
+>> [ Upstream commit 9c9b17a7d19a8e21db2e378784fff1128b46c9d3 ]
+>>
+>> gfxoff is temporarily disabled for navy_flounder,
+>> since at present the feature has broken some basic
+>> amdgpu test.
+>>
+>> Signed-off-by: Jiansong Chen <Jiansong.Chen@amd.com>
+>> Reviewed-by: Tao Zhou <tao.zhou1@amd.com>
+>> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+>Support for this chip does not exist in 5.8 or any other older trees.
+>Please drop this.
 
-This push fixes the following issues:
+I've dropped both of the commits you'ce pointed out from all branches.
 
-- Regression in af_alg that affects iwd.
-- Restore polling delay in qat.
-- Double free in ingenic on error path.
-- Potential build failure in sa2ul due to missing Kconfig dependency.
-
-The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
-
-  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus 
-
-for you to fetch changes up to c195d66a8a75c60515819b101975f38b7ec6577f:
-
-  crypto: af_alg - Work around empty control messages without MSG_MORE (2020-08-27 23:20:36 +1000)
-
-----------------------------------------------------------------
-Giovanni Cabiddu (1):
-      crypto: qat - add delay before polling mailbox
-
-Herbert Xu (1):
-      crypto: af_alg - Work around empty control messages without MSG_MORE
-
-Randy Dunlap (1):
-      crypto: sa2ul - add Kconfig selects to fix build error
-
-Wei Yongjun (1):
-      crypto: ingenic - Drop kfree for memory allocated with devm_kzalloc
-
- crypto/af_alg.c                           | 13 ++++++++++---
- drivers/char/hw_random/ingenic-rng.c      |  9 ++-------
- drivers/crypto/Kconfig                    |  3 +++
- drivers/crypto/qat/qat_common/adf_admin.c |  7 ++++---
- 4 files changed, 19 insertions(+), 13 deletions(-)
-
-Thanks,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thanks,
+Sasha
