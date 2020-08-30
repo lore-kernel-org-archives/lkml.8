@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 443C0C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 179FFC433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E20220BED
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCA0D206CD
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598796870;
-	bh=niICbcBz2rtNi4SVKxMCoMeh3QFoGrH5fkVUjCceR1Y=;
+	s=default; t=1598796942;
+	bh=xcU4Jo/kDMY8kA69z7qrLRBuuBBFyNvu7a/iY6erYKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BzIJNwaJsPk3IR5LRK/SqCDpESVMb7ImOZMuyrq34Ug4lkldf9OV6i5gQSZBdRPop
-	 20b7HDn8JoHi2TcSAJs9x4SpCuZ+dB8ho/c677Zb/g/UIrHsk7GA7QXteNGy9JSvf0
-	 NgkqWKW1pJTNifGuw4elESM54gu5SVWoMvnTvR+w=
+	b=ryc3K3J3whw2rgEBwSqyWXy+BoyzlASKPTQBUEqutLFuSey5/XAscer6hklFpTfn7
+	 csrl12s3JUhwbUPMbN0kLR0h9bV5wmFAnNr5XwA5AjxTf3Jmn8LDWP1ldycrJ7jqLd
+	 yuQH6ux2G/3aXtdsMdw+1FHlCPNsW8cpevSkA6VU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgH3OO2 (ORCPT
+        id S1727042AbgH3OPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 10:14:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55080 "EHLO mail.kernel.org"
+        Sun, 30 Aug 2020 10:15:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728904AbgH3NyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 09:54:16 -0400
+        id S1728894AbgH3NyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 09:54:13 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 083D420EDD;
-        Sun, 30 Aug 2020 13:54:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA250208DB;
+        Sun, 30 Aug 2020 13:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598795655;
-        bh=niICbcBz2rtNi4SVKxMCoMeh3QFoGrH5fkVUjCceR1Y=;
+        s=default; t=1598795652;
+        bh=xcU4Jo/kDMY8kA69z7qrLRBuuBBFyNvu7a/iY6erYKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=koAxN9ff5ZxZ4Vb+nonO9jNTMF2DJya09+pSQmV46xR9SXaz2tPC1Tv8R86QxasQ5
-         Gm5OVVXLPRC3sA9x/TwzN1hZ7fcJNZfyfHTcmOY88OtSHRDMxs1SM85tH8Z9kA/2O0
-         Uo0Pf8mmb4MP0vAvuRz0jky8khp3rll9hBxU17yM=
+        b=LCiruBmXnYwvg2cVU8Xn7OssfHHByMYlgfi6SQps3vPUnCHQAMTgBSOlS4OWb+ZgK
+         J+J2hVHlOu2KeypY4w2Q/tWXeUFap9hajLwsSHbvx/lgeiOp/WnAhqwY/ctE8ThsJL
+         1jty1OmRAcSdfBiVFWFA0FCLCOpfPIih6K3RgApI=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -49,9 +49,9 @@ To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
 Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: [PATCH 07/33] ARM: dts: exynos: Correct S3C RTC bindings in SMDKv310
-Date:   Sun, 30 Aug 2020 15:51:34 +0200
-Message-Id: <20200830135200.24304-7-krzk@kernel.org>
+Subject: [PATCH 06/33] ARM: dts: exynos: Correct S3C RTC bindings and enable it in Universal C210
+Date:   Sun, 30 Aug 2020 15:51:33 +0200
+Message-Id: <20200830135200.24304-6-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200830135200.24304-1-krzk@kernel.org>
 References: <20200830135200.24304-1-krzk@kernel.org>
@@ -63,24 +63,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 The S3C RTC requires 32768 Hz clock as input which is provided by PMIC.
 However there is no clock provided for the PMIC and the driver registers
 the clock as regulator.  This is an old driver which will not be updated
-so add a workaround - a fixed-clock to fill missing clock phandle
-reference in S3C RTC.
+so add a workaround - add a fixed-clock to fill missing clock phandle
+reference in S3C RTC.  The "clock" regulator in PMIC is already present
+and enabled.
 
 This allows to enable the S3C RTC and fixes dtbs_check warnings:
 
-  arch/arm/boot/dts/exynos4210-smdkv310.dt.yaml: rtc@10070000: clocks: [[5, 346]] is too short
-  arch/arm/boot/dts/exynos4210-smdkv310.dt.yaml: rtc@10070000: clock-names: ['rtc'] is too short
+  arch/arm/boot/dts/exynos4210-universal_c210.dt.yaml: rtc@10070000: clocks: [[5, 346]] is too short
+  arch/arm/boot/dts/exynos4210-universal_c210.dt.yaml: rtc@10070000: clock-names: ['rtc'] is too short
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/exynos4210-smdkv310.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/exynos4210-universal_c210.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos4210-smdkv310.dts b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-index 77fc11e593ad..0b0e86737b26 100644
---- a/arch/arm/boot/dts/exynos4210-smdkv310.dts
-+++ b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-@@ -40,6 +40,13 @@
+diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+index 99ce53b120ac..9479e41bdc2a 100644
+--- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
++++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+@@ -39,6 +39,13 @@
  			compatible = "samsung,clock-xusbxti";
  			clock-frequency = <24000000>;
  		};
@@ -92,20 +93,21 @@ index 77fc11e593ad..0b0e86737b26 100644
 +			clock-frequency = <32768>;
 +		};
  	};
- };
  
-@@ -148,6 +155,11 @@
- 	};
+ 	vemmc_reg: voltage-regulator {
+@@ -537,6 +544,12 @@
+ 	status = "okay";
  };
  
 +&rtc {
++	status = "okay";
 +	clocks = <&clock CLK_RTC>, <&pmic_ap_clk>;
 +	clock-names = "rtc", "rtc_src";
 +};
 +
- &sdhci_2 {
- 	bus-width = <4>;
- 	pinctrl-names = "default";
+ &sdhci_0 {
+ 	bus-width = <8>;
+ 	non-removable;
 -- 
 2.17.1
 
