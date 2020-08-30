@@ -1,109 +1,163 @@
-Return-Path: <SRS0=PjrZ=CH=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AB5C433E7
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 23:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD61BC433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 00:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A80C0206F5
-	for <linux-kernel@archiver.kernel.org>; Sat, 29 Aug 2020 23:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9059F207BB
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 00:08:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728510AbgH2Xyv (ORCPT
+        id S1728567AbgH3AI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 19:54:51 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:54115 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728010AbgH2Xyt (ORCPT
+        Sat, 29 Aug 2020 20:08:28 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:38171 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbgH3AIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 19:54:49 -0400
-Received: by mail-pj1-f67.google.com with SMTP id nv17so1236500pjb.3;
-        Sat, 29 Aug 2020 16:54:48 -0700 (PDT)
+        Sat, 29 Aug 2020 20:08:16 -0400
+Received: by mail-il1-f197.google.com with SMTP id m10so2241203ild.5
+        for <linux-kernel@vger.kernel.org>; Sat, 29 Aug 2020 17:08:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=/dCYP4u2tuJbGRkiP485A6OJ0Qbqcq9RVKEJ97FFRpQ=;
-        b=EFZ10jw/KtgBwsCqulOu2S7LCzHGFpJ9Yjl6duSCWOGDTwG+lvCEkx7gWGU+HDmjNT
-         HMlrreZI/hOYhYOhHZayBiZrLsYUiWnPp158K8d7gO6jdZi+TRFbJbSJ7xmQwL3J974f
-         Ps1yM9405b98VqbRmwMiw8x8CdQTZw89xWCVi2UFAjw9KB39dP6gR5mWl3jZUQihGTjK
-         rI6mC+Na8v77crzW3DMVIbpgNctI1dwl3+Ve//V+s3x9NDwo/UXcWDKZjpY5y+8IRrs5
-         s72RGWs3w1sVXniGJPwP+IXcBPBMhxxywgOSLdqfROoZ0EDtkH0yQdMU8tA6xPoDOU7k
-         cKug==
-X-Gm-Message-State: AOAM532lDArBtiDvrcpnJbYQ1LBWxrsIEUysSQdWlNQ9O1boGI7Ot71V
-        KO/vZE90grAF9T9GlmRfNnw=
-X-Google-Smtp-Source: ABdhPJwMHNixYIy7gybWqDtxy5ln3FMNVgNdfH1gkEx9VCQ0AUqmuEYk7sdwTHXAaR4YMge7PX0FFw==
-X-Received: by 2002:a17:90a:fe07:: with SMTP id ck7mr2816748pjb.20.1598745288359;
-        Sat, 29 Aug 2020 16:54:48 -0700 (PDT)
-Received: from [192.168.3.217] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id t25sm3702261pfe.51.2020.08.29.16.54.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 29 Aug 2020 16:54:47 -0700 (PDT)
-Subject: Re: [PATCH v9 4/4] scsi: ufs: Prepare HPB read for cached sub-region
-To:     daejun7.park@samsung.com,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-References: <963815509.21598598782155.JavaMail.epsvc@epcpadp2>
- <CGME20200828070950epcms2p5470bd43374be18d184dd802da09e73c8@epcms2p6>
- <717176949.41598601302683.JavaMail.epsvc@epcpadp1>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <07d3fd31-a09a-716d-eac1-a22a5101a324@acm.org>
-Date:   Sat, 29 Aug 2020 16:54:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=WP/oTxD4ikGNevYxi/Gik02i9253kfcXZ0yBayVCSiw=;
+        b=oZam3K2vgF2aQLIZ98vAYkrsEmQeuIuiTLQjlrS+3Wk3N2m6mMIEu5Tkzp1aw+M/9R
+         16BoTmHWEYpDelf8wX7/4tDbnPJ+qlRsN7tmUjRNonFOoYwhFIyJZelnNoUoHiHtby/S
+         OOF+whWOOoyTpE8cTBXJfZeNb8jd/ELSOOxJut0fXA5zwzbaIYXIk6lq9VAgl9LaRuAX
+         lNict3HpXjuG03bvpV+OZrf14QmkLVq9XNxvg67M0Ved/sY9ANP1aUUGet/iCUYk7v9D
+         dJws6MvrBIvKfRC0K8AqMpBeYDIF/51nkrgIO8fVyLeIhPgOF8w9gfV33Us+Cwh4m996
+         WtPQ==
+X-Gm-Message-State: AOAM531LNPASQvAAqx0jB4sAeiiM09dqi1MuX7odRTKIRBmtV6D7Rgm6
+        DZJThJptNNzd1Vi3RZjPrsFKisZZQzy88O9jgcqkwyQfrCu1
+X-Google-Smtp-Source: ABdhPJw0JMQM6lalm7PDDjvr3fjL+p7YaO8HuhgTbLhVq72JaBaadXE+3ga9zfRLPZamFWJ2sINujFnqlzWJO93bryjdalEo7G+0
 MIME-Version: 1.0
-In-Reply-To: <717176949.41598601302683.JavaMail.epsvc@epcpadp1>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:5e5b:: with SMTP id s88mr3893010ilb.65.1598746095507;
+ Sat, 29 Aug 2020 17:08:15 -0700 (PDT)
+Date:   Sat, 29 Aug 2020 17:08:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001bdf9705ae0d151b@google.com>
+Subject: possible deadlock in __lock_task_sighand
+From:   syzbot <syzbot+6e8f5b555cce8fac0423@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, christian@brauner.io, ebiederm@xmission.com,
+        io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, liuzhiqiang26@huawei.com,
+        oleg@redhat.com, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-28 00:19, Daejun Park wrote:
-> This patch changes the read I/O to the HPB read I/O.
+Hello,
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+syzbot found the following issue on:
+
+HEAD commit:    abb3438d Merge tag 'm68knommu-for-v5.9-rc3' of git://git.k..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10bb5105900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=978db74cb30aa994
+dashboard link: https://syzkaller.appspot.com/bug?extid=6e8f5b555cce8fac0423
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=123a3996900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=158b8eb6900000
+
+The issue was bisected to:
+
+commit 0ba9c9edcd152158a0e321a4c13ac1dfc571ff3d
+Author: Jens Axboe <axboe@kernel.dk>
+Date:   Fri Aug 7 01:41:50 2020 +0000
+
+    io_uring: use TWA_SIGNAL for task_work uncondtionally
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1672c549900000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1572c549900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1172c549900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+6e8f5b555cce8fac0423@syzkaller.appspotmail.com
+Fixes: 0ba9c9edcd15 ("io_uring: use TWA_SIGNAL for task_work uncondtionally")
+
+============================================
+WARNING: possible recursive locking detected
+5.9.0-rc2-syzkaller #0 Not tainted
+--------------------------------------------
+syz-executor339/7010 is trying to acquire lock:
+ffff888094030058 (&sighand->siglock){....}-{2:2}, at: __lock_task_sighand+0x106/0x2d0 kernel/signal.c:1390
+
+but task is already holding lock:
+ffff888094030058 (&sighand->siglock){....}-{2:2}, at: force_sig_info_to_task+0x6c/0x3a0 kernel/signal.c:1316
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(&sighand->siglock);
+  lock(&sighand->siglock);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+3 locks held by syz-executor339/7010:
+ #0: ffff888094030058 (&sighand->siglock){....}-{2:2}, at: force_sig_info_to_task+0x6c/0x3a0 kernel/signal.c:1316
+ #1: ffff8880940300a0 (&sighand->signalfd_wqh){....}-{2:2}, at: __wake_up_common_lock+0xb4/0x130 kernel/sched/wait.c:122
+ #2: ffffffff89bd6900 (rcu_read_lock){....}-{1:2}, at: __lock_task_sighand+0x0/0x2d0 kernel/signal.c:1352
+
+stack backtrace:
+CPU: 1 PID: 7010 Comm: syz-executor339 Not tainted 5.9.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_deadlock_bug kernel/locking/lockdep.c:2391 [inline]
+ check_deadlock kernel/locking/lockdep.c:2432 [inline]
+ validate_chain kernel/locking/lockdep.c:3202 [inline]
+ __lock_acquire.cold+0x115/0x396 kernel/locking/lockdep.c:4426
+ lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:5005
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x8c/0xc0 kernel/locking/spinlock.c:159
+ __lock_task_sighand+0x106/0x2d0 kernel/signal.c:1390
+ lock_task_sighand include/linux/sched/signal.h:687 [inline]
+ task_work_add+0x1d7/0x290 kernel/task_work.c:51
+ io_req_task_work_add fs/io_uring.c:1765 [inline]
+ __io_async_wake+0x415/0x980 fs/io_uring.c:4589
+ __wake_up_common+0x147/0x650 kernel/sched/wait.c:93
+ __wake_up_common_lock+0xd0/0x130 kernel/sched/wait.c:123
+ signalfd_notify include/linux/signalfd.h:22 [inline]
+ __send_signal+0x75b/0xf90 kernel/signal.c:1163
+ force_sig_info_to_task+0x2a0/0x3a0 kernel/signal.c:1333
+ force_sig_fault_to_task kernel/signal.c:1672 [inline]
+ force_sig_fault+0xb0/0xf0 kernel/signal.c:1679
+ __bad_area_nosemaphore+0x32a/0x480 arch/x86/mm/fault.c:778
+ do_user_addr_fault+0x852/0xbf0 arch/x86/mm/fault.c:1257
+ handle_page_fault arch/x86/mm/fault.c:1351 [inline]
+ exc_page_fault+0xa8/0x160 arch/x86/mm/fault.c:1404
+ asm_exc_page_fault+0x1e/0x30 arch/x86/include/asm/idtentry.h:538
+RIP: 0033:0x4013f9
+Code: 00 20 00 c6 04 25 3d 02 00 20 00 c6 04 25 3e 02 00 20 00 c6 04 25 3f 02 00 20 00 48 8b 15 a7 ac 2d 00 48 8b 34 25 00 02 00 20 <8b> 8a 0c 01 00 00 48 89 30 48 8b 34 25 08 02 00 20 c1 e1 04 48 89
+RSP: 002b:00007f8507d67d10 EFLAGS: 00010246
+RAX: ffffffffffffffff RBX: 00000000006f0038 RCX: 0000000000000000
+RDX: ffffffffffffffff RSI: 0000000600000002 RDI: 0000000000000000
+RBP: 00000000006f0030 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006f003c
+R13: 00007f8507d67d10 R14: 00007f8507d67d10 R15: 0000000000000001
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
