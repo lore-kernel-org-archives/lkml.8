@@ -2,128 +2,145 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849D6C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 10:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FADC433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 10:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 637C3208CA
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 10:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D175C2078D
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 10:18:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598782486;
-	bh=YtCnCHfNPMwebTaJNkKt9knUiwPTCg4dVZL7GaXUcRs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=jPdmWkkMsY3k7EbsT0hs6m8FMpQ9qarZiDVV9O8nGCvbaAPnwGciydKR7x+oyVWU7
-	 VzZEqsHKJEmKUrEO8HqP2TxJdAO2T1Yl+4PK/wDxUjR3zv77c+0lkAobI2pAbe7Xie
-	 XF1obc3wpWydgBUzP6Jqzg/H39PylNBZMPRmg/qk=
+	s=default; t=1598782725;
+	bh=sRD04fQkd7ArwvwEzVrpFGIAtRfVKXTA5eBOjfae0nY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FmQrzXtsUBczw8FgHdAFokFWrO0EPMr5iShEtTy5kuiZxyFXfG/Z2zndeiq0Reqxw
+	 h9avxFE3J0LkzxLxobCfqLnP3nnwZsQ+IEIiiq2WB+W24xF5/k4jQJF5OQqVkUpnfL
+	 Hitw7PvNIAbFLf6LS9LL3CHYrRqHXDxsM/E5pQ0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgH3KOp (ORCPT
+        id S1728714AbgH3KSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 06:14:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48844 "EHLO mail.kernel.org"
+        Sun, 30 Aug 2020 06:18:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726264AbgH3KOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 06:14:43 -0400
-Received: from localhost (unknown [213.57.247.131])
+        id S1726406AbgH3KSo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 06:18:44 -0400
+Received: from kernel.org (unknown [87.70.91.42])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52C5B2071B;
-        Sun, 30 Aug 2020 10:14:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F69220738;
+        Sun, 30 Aug 2020 10:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598782482;
-        bh=YtCnCHfNPMwebTaJNkKt9knUiwPTCg4dVZL7GaXUcRs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=yS1qmxARoUjaYoxGXtue6oEfs8u4bR66np2Avp9Yh7SESuwGx7W66zhn1L722rLC+
-         coUB8/6P7uz8qLZ80TXzK6cFL96hAt/ffUwbjPPbcuS2klCOMHFlRZO8dF96SO7PdB
-         SmgVJ6HkwPb0CdzRDhNY/f6JjpnFpYhzeDivIBuM=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Leon Romanovsky <leonro@nvidia.com>,
-        Gal Pressman <galpress@amazon.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Mark Zhang <markz@nvidia.com>
-Subject: [PATCH rdma-next v1 00/13] Track memory allocation with restrack DB help
-Date:   Sun, 30 Aug 2020 13:14:23 +0300
-Message-Id: <20200830101436.108487-1-leon@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        s=default; t=1598782722;
+        bh=sRD04fQkd7ArwvwEzVrpFGIAtRfVKXTA5eBOjfae0nY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cgWN+UpBHbinEyxZtXkegtbYJGDbuJ+YNBBJFlAwGNoxYapiivYV4080E3L2xMoYl
+         HNyQpk5USDSZCxFaOw3sL8yI/hcE7dKTtGb+yjZBkhhsbvDLN9m4OSHe67qgIR7FsB
+         6c0gsA8gwj5ojXAxmeVg0/R5kHFC2Iu1CHDAqwDo=
+Date:   Sun, 30 Aug 2020 13:18:37 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 00/23] Use asm-generic for mmu_context no-op functions
+Message-ID: <20200830101837.GB423750@kernel.org>
+References: <20200826145249.745432-1-npiggin@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826145249.745432-1-npiggin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On Thu, Aug 27, 2020 at 12:52:26AM +1000, Nicholas Piggin wrote:
+> It would be nice to be able to modify mmu_context functions or add a
+> hook without updating all architectures, many of which will be no-ops.
+> 
+> The motivation for this series is a change to lazy mmu handling, but
+> this series stands on its own as a good cleanup whether or not we end
+> up making that change.
 
-Changelog:
-v1:
- * Fixed rebase error, deleted second assignment of qp_type.
- * Rebased code on latests rdma-next, the changes in cma.c caused to change
-   in patch "RDMA/cma: Delete from restrack DB after successful destroy".
- * Dropped patch of port assignment, it is already done as part of this
-   series.
- * I didn't add @calller description, regular users should not use _named() funciton.
-v0: https://lore.kernel.org/lkml/20200824104415.1090901-1-leon@kernel.org
+I really like this series, I just have some small comments in reply to
+patch 1, otherwise feel free to add
 
-----------------------------------------------------------------------------------
-Hi,
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
 
-The resource tracker has built-in kref counter to synchronize object
-release. It makes restrack perfect choice to be responsible for the
-memory lifetime of any object in which restrack entry is embedded.
+> Arnd, is this something you could take through your asm-generic tree?
+> (assuming arch maintainers are okay with it)
+> 
+> Thanks,
+> Nick
+> 
+> Since v1:
+> - Added acks and feedback from various people.
+> - Fixed a nommu build error caught by ktp.
+> - Dropped unicore32.
+> 
+> Nicholas Piggin (23):
+>   asm-generic: add generic MMU versions of mmu context functions
+>   alpha: use asm-generic/mmu_context.h for no-op implementations
+>   arc: use asm-generic/mmu_context.h for no-op implementations
+>   arm: use asm-generic/mmu_context.h for no-op implementations
+>   arm64: use asm-generic/mmu_context.h for no-op implementations
+>   csky: use asm-generic/mmu_context.h for no-op implementations
+>   hexagon: use asm-generic/mmu_context.h for no-op implementations
+>   ia64: use asm-generic/mmu_context.h for no-op implementations
+>   m68k: use asm-generic/mmu_context.h for no-op implementations
+>   microblaze: use asm-generic/mmu_context.h for no-op implementations
+>   mips: use asm-generic/mmu_context.h for no-op implementations
+>   nds32: use asm-generic/mmu_context.h for no-op implementations
+>   nios2: use asm-generic/mmu_context.h for no-op implementations
+>   openrisc: use asm-generic/mmu_context.h for no-op implementations
+>   parisc: use asm-generic/mmu_context.h for no-op implementations
+>   powerpc: use asm-generic/mmu_context.h for no-op implementations
+>   riscv: use asm-generic/mmu_context.h for no-op implementations
+>   s390: use asm-generic/mmu_context.h for no-op implementations
+>   sh: use asm-generic/mmu_context.h for no-op implementations
+>   sparc: use asm-generic/mmu_context.h for no-op implementations
+>   um: use asm-generic/mmu_context.h for no-op implementations
+>   x86: use asm-generic/mmu_context.h for no-op implementations
+>   xtensa: use asm-generic/mmu_context.h for no-op implementations
+> 
+>  arch/alpha/include/asm/mmu_context.h         | 12 ++---
+>  arch/arc/include/asm/mmu_context.h           | 17 +++---
+>  arch/arm/include/asm/mmu_context.h           | 26 ++-------
+>  arch/arm64/include/asm/mmu_context.h         |  9 ++--
+>  arch/csky/include/asm/mmu_context.h          |  8 ++-
+>  arch/hexagon/include/asm/mmu_context.h       | 33 ++----------
+>  arch/ia64/include/asm/mmu_context.h          | 17 ++----
+>  arch/m68k/include/asm/mmu_context.h          | 47 +++-------------
+>  arch/microblaze/include/asm/mmu_context.h    |  2 +-
+>  arch/microblaze/include/asm/mmu_context_mm.h |  8 +--
+>  arch/microblaze/include/asm/processor.h      |  3 --
+>  arch/mips/include/asm/mmu_context.h          | 11 ++--
+>  arch/nds32/include/asm/mmu_context.h         | 10 +---
+>  arch/nios2/include/asm/mmu_context.h         | 21 ++------
+>  arch/openrisc/include/asm/mmu_context.h      |  8 ++-
+>  arch/parisc/include/asm/mmu_context.h        | 12 ++---
+>  arch/powerpc/include/asm/mmu_context.h       | 22 +++-----
+>  arch/riscv/include/asm/mmu_context.h         | 22 +-------
+>  arch/s390/include/asm/mmu_context.h          |  9 ++--
+>  arch/sh/include/asm/mmu_context.h            |  7 ++-
+>  arch/sh/include/asm/mmu_context_32.h         |  9 ----
+>  arch/sparc/include/asm/mmu_context_32.h      | 10 ++--
+>  arch/sparc/include/asm/mmu_context_64.h      | 10 ++--
+>  arch/um/include/asm/mmu_context.h            | 12 ++---
+>  arch/x86/include/asm/mmu_context.h           |  6 +++
+>  arch/xtensa/include/asm/mmu_context.h        | 11 ++--
+>  arch/xtensa/include/asm/nommu_context.h      | 26 +--------
+>  include/asm-generic/mmu_context.h            | 57 +++++++++++++++-----
+>  include/asm-generic/nommu_context.h          | 19 +++++++
+>  29 files changed, 166 insertions(+), 298 deletions(-)
+>  create mode 100644 include/asm-generic/nommu_context.h
+> 
+> -- 
+> 2.23.0
+> 
+> 
 
-In order to make it, the restrack was changed to be mandatory and all
-callers of rdma_restrack_add() started to rely on result returned from
-that call. Being mandatory means that all objects specific to restrack
-type must be tracked.
-
-Before this series, the restrack and rdmatool were aid tools in debug
-session of user space applications, this caused to some of the
-functionality to be left behind, like support XRC QPs, device memory MRs
-and QP0/QP1 in multi-port devices.
-
-This series fixes all mentioned above without extending rdmatool at all.
-
-Thanks
-
-
-Leon Romanovsky (13):
-  RDMA/cma: Delete from restrack DB after successful destroy
-  RDMA/mlx5: Don't call to restrack recursively
-  RDMA/restrack: Count references to the verbs objects
-  RDMA/restrack: Simplify restrack tracking in kernel flows
-  RDMA/restrack: Improve readability in task name management
-  RDMA/cma: Be strict with attaching to CMA device
-  RDMA/core: Allow drivers to disable restrack DB
-  RDMA/counter: Combine allocation and bind logic
-  RDMA/restrack: Store all special QPs in restrack DB
-  RDMA/restrack: Make restrack DB mandatory for IB objects
-  RDMA/restrack: Support all QP types
-  RDMA/core: Track device memory MRs
-  RDMA/restrack: Drop valid restrack field as source of ambiguity
-
- drivers/infiniband/core/cma.c                 | 225 +++++++++++-------
- drivers/infiniband/core/core_priv.h           |  39 ++-
- drivers/infiniband/core/counters.c            | 178 +++++++-------
- drivers/infiniband/core/cq.c                  |  24 +-
- drivers/infiniband/core/rdma_core.c           |   3 +-
- drivers/infiniband/core/restrack.c            | 208 ++++++++--------
- drivers/infiniband/core/restrack.h            |  10 +-
- drivers/infiniband/core/uverbs_cmd.c          |  50 +++-
- drivers/infiniband/core/uverbs_std_types_cq.c |  12 +-
- drivers/infiniband/core/uverbs_std_types_mr.c |  10 +
- drivers/infiniband/core/uverbs_std_types_qp.c |   4 +-
- drivers/infiniband/core/verbs.c               |  91 +++++--
- drivers/infiniband/hw/mlx5/gsi.c              |  16 +-
- drivers/infiniband/hw/mlx5/qp.c               |   2 +-
- include/rdma/ib_verbs.h                       |  10 +-
- include/rdma/restrack.h                       |  46 ++--
- 16 files changed, 537 insertions(+), 391 deletions(-)
-
---
-2.26.2
-
+-- 
+Sincerely yours,
+Mike.
