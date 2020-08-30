@@ -2,122 +2,110 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF76C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 21:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D053C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 21:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E07C020DD4
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 21:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C9E20DD4
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 21:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dT+D8vnV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1v2af67P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726397AbgH3VSI (ORCPT
+        id S1726453AbgH3VTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 17:18:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55322 "EHLO
+        Sun, 30 Aug 2020 17:19:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgH3VSG (ORCPT
+        with ESMTP id S1726150AbgH3VTr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 17:18:06 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56E67C061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 14:18:06 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id 185so4451866ljj.7
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 14:18:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jiTIAaOvTcC09Rh4hOm98fvpcoLfNJ6VwISeHIermxU=;
-        b=dT+D8vnV5/QzPKHiw6JhuWu5OSBIX4DLxnaw/T5DX05HnmcrgLb+jX8oQubdeVvTEp
-         tI0HmpYQwddTfQRC6Ah+ud63bjLYFhVxXDYcRmzXE2zkmSe6WHKj4Q5GiAFBcfwfpKBm
-         DJCU1st5oF4zZK0eWFR+b3mTMCobdeawD6T9qHLhagCfpGzr7tPanxbXkR17Tb0K0fuB
-         1nXjn3xsEM1X5zFsa6KSKBWOuQP2wUJpZiJnM0h9GWbDhp5Kip1BGcEipS510pb9J7eM
-         8Fi2XJC+5l3HiEDwVwpXFKAcENcrOVw1cq4F1PFwPP2FbD7tUSpIyqXiSYMDGN9jrKHu
-         21hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jiTIAaOvTcC09Rh4hOm98fvpcoLfNJ6VwISeHIermxU=;
-        b=XGRQ+cf6qX8omUbQqJmtkfGUcLaZMlUx2i9R3nl0NdwOZoHXr0PCW/kEuZE28jqckT
-         unFECBvWWXk34YareC6pdBwTA1wZuIStOD+jveRyLtiZZOgFw7HyeCSc4BgfgZYt8REZ
-         XLRStXUzo6k0kQzhwtFWvIvXDIQbp4iuraA/37wYIPe+wRNmz5mPz89bPMkdIWA/y47R
-         B8R6Y8Z1TzgmR7gOoGZhp1/cOrOkSAarWJszJMLO/qxVZ0fTa9Lx3rqmCOSgF/torns9
-         B509xKe6QLqaDfd2Ha6Un1M0YLCfK8Qkaix3rzNVi9Wi4H76DhCIQ13Yt16vb+qSfYuS
-         T75w==
-X-Gm-Message-State: AOAM5324Gu8N3Hq3dcX14CXjjojSJum+v1vUYumriLXzxFzWU9k4Knjn
-        d/cnYG3wC7YICeAEDyxVhfk=
-X-Google-Smtp-Source: ABdhPJw0+B2rnE9+5WaS9MRpDfvC8pRvDb6ixwRob4AV7JgunEpgK/MucpOqxcn96aSlnza5+VKABQ==
-X-Received: by 2002:a2e:2f16:: with SMTP id v22mr3785894ljv.39.1598822284777;
-        Sun, 30 Aug 2020 14:18:04 -0700 (PDT)
-Received: from localhost.localdomain (h-82-196-111-59.NA.cust.bahnhof.se. [82.196.111.59])
-        by smtp.gmail.com with ESMTPSA id r11sm1153464lji.104.2020.08.30.14.18.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 14:18:04 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH] drm/gma500: Constify static structs
-Date:   Sun, 30 Aug 2020 23:17:41 +0200
-Message-Id: <20200830211741.17326-1-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Sun, 30 Aug 2020 17:19:47 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F35AC061573
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 14:19:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=qxuGBO7OHoFOqMd5t3qfneyvkZfiMHtZf+BcpIMWA1c=; b=1v2af67PQiAzYmGMzuzpuzM3MD
+        mo879MTEtJWgzTdjZMLkv5ZgqXAVjnKEdYq+rum8BJdNmasImy+T76wB7QQCmuY4KB9o3BY/4YuiF
+        /90dRhblefAHjNPkUvDEvBpG37eJT0+nw1Bv8O1m0Lfc0UCdP+cfRQZbgrqen+PZKV6KbRz7guaUQ
+        hDuVvCmd0l4s4/7zMUyVTqFn/1H1QiRJGqDegYzb1xN9ZofoBxzwpjYOgQXS1pf/naWGFG87LuGOT
+        q7KaC4iKcfbZ2Ykm2lzD6qh5tTVRJf0JvMdNtybeYCrOsKzIAwY6pDPeTFC6iFiCgPlphlXzAEumV
+        +ulgwAVA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kCUjl-0007UQ-3z; Sun, 30 Aug 2020 21:19:41 +0000
+Subject: Re: powerpc64-linux-ld: mm/page_alloc.o:undefined reference to
+ `node_reclaim_distance'
+To:     kernel test robot <lkp@intel.com>,
+        Matt Fleming <matt@codeblueprint.co.uk>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <202008310314.JpP8vEJ9%lkp@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <47426554-9d42-602d-d3fe-b6b38a48b8c6@infradead.org>
+Date:   Sun, 30 Aug 2020 14:19:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <202008310314.JpP8vEJ9%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only usage of these is to assign their address to the fbops field in
-the fb_info struct, which is a const pointer. Make them const to allow
-the compiler to put them in read-only memory.
+On 8/30/20 12:32 PM, kernel test robot wrote:
+> Hi Matt,
+> 
+> FYI, the error/warning still remains.
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   1127b219ce9481c84edad9711626d856127d5e51
+> commit: a55c7454a8c887b226a01d7eed088ccb5374d81e sched/topology: Improve load balancing on AMD EPYC systems
+> date:   12 months ago
+> config: powerpc64-randconfig-c003-20200831 (attached as .config)
+> compiler: powerpc64-linux-gcc (GCC) 9.3.0
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout a55c7454a8c887b226a01d7eed088ccb5374d81e
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=powerpc64 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    powerpc64-linux-ld: warning: orphan section `.gnu.hash' from `linker stubs' being placed in section `.gnu.hash'
+>    powerpc64-linux-ld: arch/powerpc/perf/perf_regs.o: in function `perf_reg_value':
+>    arch/powerpc/perf/perf_regs.c:80: undefined reference to `.is_sier_available'
+>>> powerpc64-linux-ld: mm/page_alloc.o:(.toc+0x0): undefined reference to `node_reclaim_distance'
+> 
+> ---
 
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
----
- drivers/gpu/drm/gma500/framebuffer.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Build error for undefined "node_reclaim_distance" has been reported on both
+arch/sh/ and arch/powerpc64/.
 
-diff --git a/drivers/gpu/drm/gma500/framebuffer.c b/drivers/gpu/drm/gma500/framebuffer.c
-index da02d7e8a8f5..54d9876b5305 100644
---- a/drivers/gpu/drm/gma500/framebuffer.c
-+++ b/drivers/gpu/drm/gma500/framebuffer.c
-@@ -164,7 +164,7 @@ static int psbfb_mmap(struct fb_info *info, struct vm_area_struct *vma)
- 	return 0;
- }
- 
--static struct fb_ops psbfb_ops = {
-+static const struct fb_ops psbfb_ops = {
- 	.owner = THIS_MODULE,
- 	DRM_FB_HELPER_DEFAULT_OPS,
- 	.fb_setcolreg = psbfb_setcolreg,
-@@ -175,7 +175,7 @@ static struct fb_ops psbfb_ops = {
- 	.fb_sync = psbfb_sync,
- };
- 
--static struct fb_ops psbfb_roll_ops = {
-+static const struct fb_ops psbfb_roll_ops = {
- 	.owner = THIS_MODULE,
- 	DRM_FB_HELPER_DEFAULT_OPS,
- 	.fb_setcolreg = psbfb_setcolreg,
-@@ -186,7 +186,7 @@ static struct fb_ops psbfb_roll_ops = {
- 	.fb_mmap = psbfb_mmap,
- };
- 
--static struct fb_ops psbfb_unaccel_ops = {
-+static const struct fb_ops psbfb_unaccel_ops = {
- 	.owner = THIS_MODULE,
- 	DRM_FB_HELPER_DEFAULT_OPS,
- 	.fb_setcolreg = psbfb_setcolreg,
+Matt's patch here
+https://lore.kernel.org/lkml/20191223164220.GA14394@codeblueprint.co.uk/
+
+fixes the build error in both cases (both $ARCH-es), although it needs to be
+resent as a patch instead of "can someone test this?".
+
+Matt?
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+
+thanks.
 -- 
-2.28.0
-
+~Randy
