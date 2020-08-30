@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D517BC433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73323C433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A967620738
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ABD520738
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 15:30:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgH3P3J (ORCPT
+        id S1727846AbgH3PaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 11:29:09 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:42704 "EHLO
+        Sun, 30 Aug 2020 11:30:14 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:42731 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726485AbgH3P2D (ORCPT
+        with ESMTP id S1726528AbgH3P2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 11:28:03 -0400
+        Sun, 30 Aug 2020 11:28:04 -0400
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
-        with SMTP; 30 Aug 2020 18:27:54 +0300
+        with SMTP; 30 Aug 2020 18:27:55 +0300
 Received: from dev-l-vrt-135.mtl.labs.mlnx (dev-l-vrt-135.mtl.labs.mlnx [10.234.135.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 07UFRsfd029618;
-        Sun, 30 Aug 2020 18:27:54 +0300
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 07UFRtBJ029635;
+        Sun, 30 Aug 2020 18:27:55 +0300
 Received: from dev-l-vrt-135.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 07UFRslY027828;
-        Sun, 30 Aug 2020 18:27:54 +0300
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Debian-10) with ESMTP id 07UFRtjT027841;
+        Sun, 30 Aug 2020 18:27:55 +0300
 Received: (from moshe@localhost)
-        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 07UFRsMm027827;
-        Sun, 30 Aug 2020 18:27:54 +0300
+        by dev-l-vrt-135.mtl.labs.mlnx (8.15.2/8.15.2/Submit) id 07UFRtAw027840;
+        Sun, 30 Aug 2020 18:27:55 +0300
 From:   Moshe Shemesh <moshe@mellanox.com>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
 Cc:     Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>
-Subject: [PATCH net-next RFC v3 01/14] devlink: Add reload action option to devlink reload command
-Date:   Sun, 30 Aug 2020 18:27:21 +0300
-Message-Id: <1598801254-27764-2-git-send-email-moshe@mellanox.com>
+Subject: [PATCH net-next RFC v3 06/14] net/mlx5: Handle sync reset request event
+Date:   Sun, 30 Aug 2020 18:27:26 +0300
+Message-Id: <1598801254-27764-7-git-send-email-moshe@mellanox.com>
 X-Mailer: git-send-email 1.8.4.3
 In-Reply-To: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
 References: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
@@ -48,489 +48,404 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add devlink reload action to allow the user to request a specific reload
-action. The action parameter is optional, if not specified then devlink
-driver re-init action is used (backward compatible).
-Note that when required to do firmware activation some drivers may need
-to reload the driver. On the other hand some drivers may need to reset
-the firmware to reinitialize the driver entities. Therefore, the devlink
-reload command returns the actions which were actually done.
-However, in case fw_activate_no_reset action is selected, then no other
-reload action is allowed.
-Reload actions supported are:
-driver_reinit: driver entities re-initialization, applying devlink-param
-               and devlink-resource values.
-fw_activate: firmware activate.
-fw_activate_no_reset: Activate new firmware image without any reset.
-                      (also known as: firmware live patching).
-
-command examples:
-$devlink dev reload pci/0000:82:00.0 action driver_reinit
-reload_actions_done:
-  driver_reinit
-
-$devlink dev reload pci/0000:82:00.0 action fw_activate
-reload_actions_done:
-  driver_reinit fw_activate
+Once the driver gets sync_reset_request from firmware it prepares for the
+coming reset and sends acknowledge.
+After getting this event the driver expects device reset, either it will
+trigger PCI reset on sync_reset_now event or such PCI reset will be
+triggered by another PF of the same device. So it moves to reset
+requested mode and if it gets PCI reset triggered by the other PF it
+detect the reset and reloads.
 
 Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
 ---
-v2 -> v3:
-- Replace fw_live_patch action by fw_activate_no_reset
-- Devlink reload returns the actions done over netlink reply
 v1 -> v2:
-- Instead of reload levels driver,fw_reset,fw_live_patch have reload
-  actions driver_reinit,fw_activate,fw_live_patch
-- Remove driver default level, the action driver_reinit is the default
-  action for all drivers
+- Moved handling of sync reset recovery from health to fw_reset
 ---
- drivers/net/ethernet/mellanox/mlx4/main.c     |  14 ++-
- .../net/ethernet/mellanox/mlx5/core/devlink.c |  15 ++-
- drivers/net/ethernet/mellanox/mlxsw/core.c    |  24 ++--
- drivers/net/netdevsim/dev.c                   |  16 ++-
- include/net/devlink.h                         |   7 +-
- include/uapi/linux/devlink.h                  |  21 ++++
- net/core/devlink.c                            | 112 +++++++++++++++++-
- 7 files changed, 182 insertions(+), 27 deletions(-)
+ .../ethernet/mellanox/mlx5/core/fw_reset.c    | 167 ++++++++++++++++++
+ .../ethernet/mellanox/mlx5/core/fw_reset.h    |   3 +
+ .../net/ethernet/mellanox/mlx5/core/health.c  |  35 ++--
+ .../net/ethernet/mellanox/mlx5/core/main.c    |  10 ++
+ .../ethernet/mellanox/mlx5/core/mlx5_core.h   |   2 +
+ include/linux/mlx5/driver.h                   |   4 +
+ 6 files changed, 206 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/main.c b/drivers/net/ethernet/mellanox/mlx4/main.c
-index 258c7a96f269..3aeaa87556c8 100644
---- a/drivers/net/ethernet/mellanox/mlx4/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/main.c
-@@ -3935,6 +3935,7 @@ static int mlx4_restart_one_up(struct pci_dev *pdev, bool reload,
- 			       struct devlink *devlink);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
+index 76d2cece29ac..0f224454b4a2 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.c
+@@ -3,6 +3,20 @@
  
- static int mlx4_devlink_reload_down(struct devlink *devlink, bool netns_change,
-+				    enum devlink_reload_action action,
- 				    struct netlink_ext_ack *extack)
- {
- 	struct mlx4_priv *priv = devlink_priv(devlink);
-@@ -3951,8 +3952,8 @@ static int mlx4_devlink_reload_down(struct devlink *devlink, bool netns_change,
- 	return 0;
- }
+ #include "fw_reset.h"
  
--static int mlx4_devlink_reload_up(struct devlink *devlink,
--				  struct netlink_ext_ack *extack)
-+static int mlx4_devlink_reload_up(struct devlink *devlink, enum devlink_reload_action action,
-+				  struct netlink_ext_ack *extack, unsigned long *actions_done)
- {
- 	struct mlx4_priv *priv = devlink_priv(devlink);
- 	struct mlx4_dev *dev = &priv->dev;
-@@ -3960,15 +3961,20 @@ static int mlx4_devlink_reload_up(struct devlink *devlink,
- 	int err;
- 
- 	err = mlx4_restart_one_up(persist->pdev, true, devlink);
--	if (err)
-+	if (err) {
- 		mlx4_err(persist->dev, "mlx4_restart_one_up failed, ret=%d\n",
- 			 err);
-+		return err;
-+	}
-+	if (actions_done)
-+		*actions_done = BIT(DEVLINK_RELOAD_ACTION_DRIVER_REINIT);
- 
--	return err;
-+	return 0;
- }
- 
- static const struct devlink_ops mlx4_devlink_ops = {
- 	.port_type_set	= mlx4_devlink_port_type_set,
-+	.supported_reload_actions = BIT(DEVLINK_RELOAD_ACTION_DRIVER_REINIT),
- 	.reload_down	= mlx4_devlink_reload_down,
- 	.reload_up	= mlx4_devlink_reload_up,
- };
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/devlink.c b/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
-index c709e9a385f6..e0f1a1a2c6a9 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
-@@ -89,6 +89,7 @@ mlx5_devlink_info_get(struct devlink *devlink, struct devlink_info_req *req,
- }
- 
- static int mlx5_devlink_reload_down(struct devlink *devlink, bool netns_change,
-+				    enum devlink_reload_action action,
- 				    struct netlink_ext_ack *extack)
- {
- 	struct mlx5_core_dev *dev = devlink_priv(devlink);
-@@ -97,12 +98,19 @@ static int mlx5_devlink_reload_down(struct devlink *devlink, bool netns_change,
- 	return 0;
- }
- 
--static int mlx5_devlink_reload_up(struct devlink *devlink,
--				  struct netlink_ext_ack *extack)
-+static int mlx5_devlink_reload_up(struct devlink *devlink, enum devlink_reload_action action,
-+				  struct netlink_ext_ack *extack, unsigned long *actions_done)
- {
- 	struct mlx5_core_dev *dev = devlink_priv(devlink);
-+	int err;
- 
--	return mlx5_load_one(dev, false);
-+	err = mlx5_load_one(dev, false);
-+	if (err)
-+		return err;
-+	if (actions_done)
-+		*actions_done = BIT(DEVLINK_RELOAD_ACTION_DRIVER_REINIT);
-+
-+	return 0;
- }
- 
- static const struct devlink_ops mlx5_devlink_ops = {
-@@ -118,6 +126,7 @@ static const struct devlink_ops mlx5_devlink_ops = {
- #endif
- 	.flash_update = mlx5_devlink_flash_update,
- 	.info_get = mlx5_devlink_info_get,
-+	.supported_reload_actions = BIT(DEVLINK_RELOAD_ACTION_DRIVER_REINIT),
- 	.reload_down = mlx5_devlink_reload_down,
- 	.reload_up = mlx5_devlink_reload_up,
- };
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
-index 08d101138fbe..c42b66d88884 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/core.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
-@@ -1113,7 +1113,7 @@ mlxsw_devlink_info_get(struct devlink *devlink, struct devlink_info_req *req,
- 
- static int
- mlxsw_devlink_core_bus_device_reload_down(struct devlink *devlink,
--					  bool netns_change,
-+					  bool netns_change, enum devlink_reload_action action,
- 					  struct netlink_ext_ack *extack)
- {
- 	struct mlxsw_core *mlxsw_core = devlink_priv(devlink);
-@@ -1126,15 +1126,23 @@ mlxsw_devlink_core_bus_device_reload_down(struct devlink *devlink,
- }
- 
- static int
--mlxsw_devlink_core_bus_device_reload_up(struct devlink *devlink,
--					struct netlink_ext_ack *extack)
-+mlxsw_devlink_core_bus_device_reload_up(struct devlink *devlink, enum devlink_reload_action action,
-+					struct netlink_ext_ack *extack, unsigned long *actions_done)
- {
- 	struct mlxsw_core *mlxsw_core = devlink_priv(devlink);
-+	int err;
- 
--	return mlxsw_core_bus_device_register(mlxsw_core->bus_info,
--					      mlxsw_core->bus,
--					      mlxsw_core->bus_priv, true,
--					      devlink, extack);
-+	err = mlxsw_core_bus_device_register(mlxsw_core->bus_info,
-+					     mlxsw_core->bus,
-+					     mlxsw_core->bus_priv, true,
-+					     devlink, extack);
-+	if (err)
-+		return err;
-+	if (actions_done)
-+		*actions_done = BIT(DEVLINK_RELOAD_ACTION_DRIVER_REINIT) |
-+				BIT(DEVLINK_RELOAD_ACTION_FW_ACTIVATE);
-+
-+	return 0;
- }
- 
- static int mlxsw_devlink_flash_update(struct devlink *devlink,
-@@ -1268,6 +1276,8 @@ mlxsw_devlink_trap_policer_counter_get(struct devlink *devlink,
- }
- 
- static const struct devlink_ops mlxsw_devlink_ops = {
-+	.supported_reload_actions	= BIT(DEVLINK_RELOAD_ACTION_DRIVER_REINIT) |
-+					  BIT(DEVLINK_RELOAD_ACTION_FW_ACTIVATE),
- 	.reload_down		= mlxsw_devlink_core_bus_device_reload_down,
- 	.reload_up		= mlxsw_devlink_core_bus_device_reload_up,
- 	.port_type_set			= mlxsw_devlink_port_type_set,
-diff --git a/drivers/net/netdevsim/dev.c b/drivers/net/netdevsim/dev.c
-index 32f339fedb21..e2166e755659 100644
---- a/drivers/net/netdevsim/dev.c
-+++ b/drivers/net/netdevsim/dev.c
-@@ -697,7 +697,7 @@ static int nsim_dev_reload_create(struct nsim_dev *nsim_dev,
- static void nsim_dev_reload_destroy(struct nsim_dev *nsim_dev);
- 
- static int nsim_dev_reload_down(struct devlink *devlink, bool netns_change,
--				struct netlink_ext_ack *extack)
-+				enum devlink_reload_action action, struct netlink_ext_ack *extack)
- {
- 	struct nsim_dev *nsim_dev = devlink_priv(devlink);
- 
-@@ -713,10 +713,11 @@ static int nsim_dev_reload_down(struct devlink *devlink, bool netns_change,
- 	return 0;
- }
- 
--static int nsim_dev_reload_up(struct devlink *devlink,
--			      struct netlink_ext_ack *extack)
-+static int nsim_dev_reload_up(struct devlink *devlink, enum devlink_reload_action action,
-+			      struct netlink_ext_ack *extack, unsigned long *actions_done)
- {
- 	struct nsim_dev *nsim_dev = devlink_priv(devlink);
-+	int err;
- 
- 	if (nsim_dev->fail_reload) {
- 		/* For testing purposes, user set debugfs fail_reload
-@@ -726,7 +727,13 @@ static int nsim_dev_reload_up(struct devlink *devlink,
- 		return -EINVAL;
- 	}
- 
--	return nsim_dev_reload_create(nsim_dev, extack);
-+	err = nsim_dev_reload_create(nsim_dev, extack);
-+	if (err)
-+		return err;
-+	if (actions_done)
-+		*actions_done = BIT(DEVLINK_RELOAD_ACTION_DRIVER_REINIT);
-+
-+	return 0;
- }
- 
- static int nsim_dev_info_get(struct devlink *devlink,
-@@ -875,6 +882,7 @@ nsim_dev_devlink_trap_policer_counter_get(struct devlink *devlink,
- }
- 
- static const struct devlink_ops nsim_dev_devlink_ops = {
-+	.supported_reload_actions = BIT(DEVLINK_RELOAD_ACTION_DRIVER_REINIT),
- 	.reload_down = nsim_dev_reload_down,
- 	.reload_up = nsim_dev_reload_up,
- 	.info_get = nsim_dev_info_get,
-diff --git a/include/net/devlink.h b/include/net/devlink.h
-index 8f3c8a443238..b8f0152a1fff 100644
---- a/include/net/devlink.h
-+++ b/include/net/devlink.h
-@@ -991,10 +991,11 @@ enum devlink_trap_group_generic_id {
- 	}
- 
- struct devlink_ops {
-+	unsigned long supported_reload_actions;
- 	int (*reload_down)(struct devlink *devlink, bool netns_change,
--			   struct netlink_ext_ack *extack);
--	int (*reload_up)(struct devlink *devlink,
--			 struct netlink_ext_ack *extack);
-+			   enum devlink_reload_action action, struct netlink_ext_ack *extack);
-+	int (*reload_up)(struct devlink *devlink, enum devlink_reload_action action,
-+			 struct netlink_ext_ack *extack, unsigned long *actions_done);
- 	int (*port_type_set)(struct devlink_port *devlink_port,
- 			     enum devlink_port_type port_type);
- 	int (*port_split)(struct devlink *devlink, unsigned int port_index,
-diff --git a/include/uapi/linux/devlink.h b/include/uapi/linux/devlink.h
-index cfef4245ea5a..0a438135c3cf 100644
---- a/include/uapi/linux/devlink.h
-+++ b/include/uapi/linux/devlink.h
-@@ -272,6 +272,24 @@ enum {
- 	DEVLINK_ATTR_TRAP_METADATA_TYPE_FA_COOKIE,
- };
- 
-+/**
-+ * enum devlink_reload_action - Reload action.
-+ * @DEVLINK_RELOAD_ACTION_DRIVER_REINIT: Driver entities re-instantiation.
-+ * @DEVLINK_RELOAD_ACTION_FW_ACTIVATE: FW activate.
-+ * @DEVLINK_RELOAD_ACTION_FW_ACTIVATE_NO_RESET: Activate new FW image withouti any reset
-+ *                                              (firmware live patching).
-+ */
-+enum devlink_reload_action {
-+	DEVLINK_RELOAD_ACTION_UNSPEC,
-+	DEVLINK_RELOAD_ACTION_DRIVER_REINIT,
-+	DEVLINK_RELOAD_ACTION_FW_ACTIVATE,
-+	DEVLINK_RELOAD_ACTION_FW_ACTIVATE_NO_RESET,
-+
-+	/* Add new reload actions above */
-+	__DEVLINK_RELOAD_ACTION_MAX,
-+	DEVLINK_RELOAD_ACTION_MAX = __DEVLINK_RELOAD_ACTION_MAX - 1
++enum {
++	MLX5_FW_RESET_FLAGS_RESET_REQUESTED,
 +};
 +
- enum devlink_attr {
- 	/* don't change the order or add anything between, this is ABI! */
- 	DEVLINK_ATTR_UNSPEC,
-@@ -458,6 +476,9 @@ enum devlink_attr {
- 	DEVLINK_ATTR_PORT_LANES,			/* u32 */
- 	DEVLINK_ATTR_PORT_SPLITTABLE,			/* u8 */
- 
-+	DEVLINK_ATTR_RELOAD_ACTION,		/* u8 */
-+	DEVLINK_ATTR_RELOAD_ACTIONS_DONE,	/* nested */
++struct mlx5_fw_reset {
++	struct mlx5_core_dev *dev;
++	struct mlx5_nb nb;
++	struct workqueue_struct *wq;
++	struct work_struct reset_request_work;
++	struct work_struct reset_reload_work;
++	unsigned long reset_flags;
++	struct timer_list timer;
++};
 +
- 	/* add new attributes above here, update the policy in devlink.c */
- 
- 	__DEVLINK_ATTR_MAX,
-diff --git a/net/core/devlink.c b/net/core/devlink.c
-index 58c8bb07fa19..8d4137ad40db 100644
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -462,6 +462,12 @@ static int devlink_nl_put_handle(struct sk_buff *msg, struct devlink *devlink)
- 	return 0;
+ static int mlx5_reg_mfrl_set(struct mlx5_core_dev *dev, u8 reset_level,
+ 			     u8 reset_type_sel, u8 sync_resp, bool sync_start)
+ {
+@@ -44,3 +58,156 @@ int mlx5_fw_set_live_patch(struct mlx5_core_dev *dev)
+ {
+ 	return mlx5_reg_mfrl_set(dev, MLX5_MFRL_REG_RESET_LEVEL0, 0, 0, false);
  }
- 
-+static bool
-+devlink_reload_action_is_supported(struct devlink *devlink, enum devlink_reload_action action)
++
++static int mlx5_fw_set_reset_sync_ack(struct mlx5_core_dev *dev)
 +{
-+	return test_bit(action, &devlink->ops->supported_reload_actions);
++	return mlx5_reg_mfrl_set(dev, MLX5_MFRL_REG_RESET_LEVEL3, 0, 1, false);
 +}
 +
- static int devlink_nl_fill(struct sk_buff *msg, struct devlink *devlink,
- 			   enum devlink_command cmd, u32 portid,
- 			   u32 seq, int flags)
-@@ -2964,29 +2970,72 @@ bool devlink_is_reload_failed(const struct devlink *devlink)
- EXPORT_SYMBOL_GPL(devlink_is_reload_failed);
- 
- static int devlink_reload(struct devlink *devlink, struct net *dest_net,
--			  struct netlink_ext_ack *extack)
-+			  enum devlink_reload_action action, struct netlink_ext_ack *extack,
-+			  unsigned long *actions_done)
- {
- 	int err;
- 
- 	if (!devlink->reload_enabled)
- 		return -EOPNOTSUPP;
- 
--	err = devlink->ops->reload_down(devlink, !!dest_net, extack);
-+	err = devlink->ops->reload_down(devlink, !!dest_net, action, extack);
- 	if (err)
- 		return err;
- 
- 	if (dest_net && !net_eq(dest_net, devlink_net(devlink)))
- 		devlink_reload_netns_change(devlink, dest_net);
- 
--	err = devlink->ops->reload_up(devlink, extack);
-+	err = devlink->ops->reload_up(devlink, action, extack, actions_done);
- 	devlink_reload_failed_set(devlink, !!err);
- 	return err;
- }
- 
-+static int
-+devlink_nl_reload_actions_done_fill(struct sk_buff *msg,
-+				    struct devlink *devlink,
-+				    unsigned long actions_done,
-+				    enum devlink_command cmd, u32 portid,
-+				    u32 seq, int flags)
++static void mlx5_sync_reset_reload_work(struct work_struct *work)
 +{
-+	struct nlattr *actions_done_attr;
-+	void *hdr;
-+	int i;
++	struct mlx5_fw_reset *fw_reset = container_of(work, struct mlx5_fw_reset,
++						      reset_reload_work);
++	struct mlx5_core_dev *dev = fw_reset->dev;
 +
-+	hdr = genlmsg_put(msg, portid, seq, &devlink_nl_family, flags, cmd);
-+	if (!hdr)
-+		return -EMSGSIZE;
-+
-+	if (devlink_nl_put_handle(msg, devlink))
-+		goto genlmsg_cancel;
-+
-+	actions_done_attr = nla_nest_start(msg, DEVLINK_ATTR_RELOAD_ACTIONS_DONE);
-+	if (!actions_done_attr)
-+		goto genlmsg_cancel;
-+
-+	for (i = 0; i <= DEVLINK_RELOAD_ACTION_MAX; i++) {
-+		if (!test_bit(i, &actions_done))
-+			continue;
-+		if (nla_put_u8(msg, DEVLINK_ATTR_RELOAD_ACTION, i))
-+			goto actions_done_nest_cancel;
++	mlx5_enter_error_state(dev, true);
++	mlx5_unload_one(dev, false);
++	if (mlx5_health_wait_pci_up(dev)) {
++		mlx5_core_err(dev, "reset reload flow aborted, PCI reads still not working\n");
++		return;
 +	}
-+	nla_nest_end(msg, actions_done_attr);
-+	genlmsg_end(msg, hdr);
-+	return 0;
-+
-+actions_done_nest_cancel:
-+	nla_nest_cancel(msg, actions_done_attr);
-+genlmsg_cancel:
-+	genlmsg_cancel(msg, hdr);
-+	return -EMSGSIZE;
++	mlx5_load_one(dev, false);
 +}
 +
- static int devlink_nl_cmd_reload(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct devlink *devlink = info->user_ptr[0];
-+	enum devlink_reload_action action;
- 	struct net *dest_net = NULL;
-+	unsigned long actions_done;
-+	struct sk_buff *msg;
- 	int err;
++static void mlx5_stop_sync_reset_poll(struct mlx5_core_dev *dev)
++{
++	struct mlx5_fw_reset *fw_reset = dev->priv.fw_reset;
++
++	del_timer(&fw_reset->timer);
++}
++
++static void mlx5_sync_reset_clear_reset_requested(struct mlx5_core_dev *dev, bool poll_health)
++{
++	struct mlx5_fw_reset *fw_reset = dev->priv.fw_reset;
++
++	mlx5_stop_sync_reset_poll(dev);
++	clear_bit(MLX5_FW_RESET_FLAGS_RESET_REQUESTED, &fw_reset->reset_flags);
++	if (poll_health)
++		mlx5_start_health_poll(dev);
++}
++
++#define MLX5_RESET_POLL_INTERVAL	(HZ / 10)
++static void poll_sync_reset(struct timer_list *t)
++{
++	struct mlx5_fw_reset *fw_reset = from_timer(fw_reset, t, timer);
++	struct mlx5_core_dev *dev = fw_reset->dev;
++	u32 fatal_error;
++
++	if (!test_bit(MLX5_FW_RESET_FLAGS_RESET_REQUESTED, &fw_reset->reset_flags))
++		return;
++
++	fatal_error = mlx5_health_check_fatal_sensors(dev);
++
++	if (fatal_error) {
++		mlx5_core_warn(dev, "Got Device Reset\n");
++		mlx5_sync_reset_clear_reset_requested(dev, false);
++		queue_work(fw_reset->wq, &fw_reset->reset_reload_work);
++		return;
++	}
++
++	mod_timer(&fw_reset->timer, round_jiffies(jiffies + MLX5_RESET_POLL_INTERVAL));
++}
++
++static void mlx5_start_sync_reset_poll(struct mlx5_core_dev *dev)
++{
++	struct mlx5_fw_reset *fw_reset = dev->priv.fw_reset;
++
++	timer_setup(&fw_reset->timer, poll_sync_reset, 0);
++	fw_reset->timer.expires = round_jiffies(jiffies + MLX5_RESET_POLL_INTERVAL);
++	add_timer(&fw_reset->timer);
++}
++
++static void mlx5_sync_reset_set_reset_requested(struct mlx5_core_dev *dev)
++{
++	struct mlx5_fw_reset *fw_reset = dev->priv.fw_reset;
++
++	mlx5_stop_health_poll(dev, true);
++	set_bit(MLX5_FW_RESET_FLAGS_RESET_REQUESTED, &fw_reset->reset_flags);
++	mlx5_start_sync_reset_poll(dev);
++}
++
++static void mlx5_sync_reset_request_event(struct work_struct *work)
++{
++	struct mlx5_fw_reset *fw_reset = container_of(work, struct mlx5_fw_reset,
++						      reset_request_work);
++	struct mlx5_core_dev *dev = fw_reset->dev;
++
++	mlx5_sync_reset_set_reset_requested(dev);
++	if (mlx5_fw_set_reset_sync_ack(dev))
++		mlx5_core_warn(dev, "PCI Sync FW Update Reset Ack Failed.\n");
++	else
++		mlx5_core_warn(dev, "PCI Sync FW Update Reset Ack. Device reset is expected.\n");
++}
++
++static void mlx5_sync_reset_events_handle(struct mlx5_fw_reset *fw_reset, struct mlx5_eqe *eqe)
++{
++	struct mlx5_eqe_sync_fw_update *sync_fw_update_eqe;
++	u8 sync_event_rst_type;
++
++	sync_fw_update_eqe = &eqe->data.sync_fw_update;
++	sync_event_rst_type = sync_fw_update_eqe->sync_rst_state & SYNC_RST_STATE_MASK;
++	switch (sync_event_rst_type) {
++	case MLX5_SYNC_RST_STATE_RESET_REQUEST:
++		queue_work(fw_reset->wq, &fw_reset->reset_request_work);
++		break;
++	}
++}
++
++static int fw_reset_event_notifier(struct notifier_block *nb, unsigned long action, void *data)
++{
++	struct mlx5_fw_reset *fw_reset = mlx5_nb_cof(nb, struct mlx5_fw_reset, nb);
++	struct mlx5_eqe *eqe = data;
++
++	switch (eqe->sub_type) {
++	case MLX5_GENERAL_SUBTYPE_PCI_SYNC_FOR_FW_UPDATE_EVENT:
++		mlx5_sync_reset_events_handle(fw_reset, eqe);
++		break;
++	default:
++		return NOTIFY_DONE;
++	}
++
++	return NOTIFY_OK;
++}
++
++int mlx5_fw_reset_events_init(struct mlx5_core_dev *dev)
++{
++	struct mlx5_fw_reset *fw_reset = kzalloc(sizeof(*fw_reset), GFP_KERNEL);
++
++	if (!fw_reset)
++		return -ENOMEM;
++	fw_reset->wq = create_singlethread_workqueue("mlx5_fw_reset_events");
++	if (!fw_reset->wq) {
++		kfree(fw_reset);
++		return -ENOMEM;
++	}
++
++	fw_reset->dev = dev;
++	dev->priv.fw_reset = fw_reset;
++
++	INIT_WORK(&fw_reset->reset_request_work, mlx5_sync_reset_request_event);
++	INIT_WORK(&fw_reset->reset_reload_work, mlx5_sync_reset_reload_work);
++
++	MLX5_NB_INIT(&fw_reset->nb, fw_reset_event_notifier, GENERAL_EVENT);
++	mlx5_eq_notifier_register(dev, &fw_reset->nb);
++
++	return 0;
++}
++
++void mlx5_fw_reset_events_cleanup(struct mlx5_core_dev *dev)
++{
++	struct mlx5_fw_reset *fw_reset = dev->priv.fw_reset;
++
++	mlx5_eq_notifier_unregister(dev, &fw_reset->nb);
++	destroy_workqueue(fw_reset->wq);
++	kvfree(dev->priv.fw_reset);
++}
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h
+index 1bbd95182ca6..278f538ea92a 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fw_reset.h
+@@ -10,4 +10,7 @@ int mlx5_reg_mfrl_query(struct mlx5_core_dev *dev, u8 *reset_level, u8 *reset_ty
+ int mlx5_fw_set_reset_sync(struct mlx5_core_dev *dev, u8 reset_type_sel);
+ int mlx5_fw_set_live_patch(struct mlx5_core_dev *dev);
  
- 	if (!devlink_reload_supported(devlink))
-@@ -3006,12 +3055,42 @@ static int devlink_nl_cmd_reload(struct sk_buff *skb, struct genl_info *info)
- 			return PTR_ERR(dest_net);
++int mlx5_fw_reset_events_init(struct mlx5_core_dev *dev);
++void mlx5_fw_reset_events_cleanup(struct mlx5_core_dev *dev);
++
+ #endif
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/health.c b/drivers/net/ethernet/mellanox/mlx5/core/health.c
+index b31f769d2df9..54523bed16cd 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/health.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/health.c
+@@ -110,7 +110,7 @@ static bool sensor_fw_synd_rfr(struct mlx5_core_dev *dev)
+ 	return rfr && synd;
+ }
+ 
+-static u32 check_fatal_sensors(struct mlx5_core_dev *dev)
++u32 mlx5_health_check_fatal_sensors(struct mlx5_core_dev *dev)
+ {
+ 	if (sensor_pci_not_working(dev))
+ 		return MLX5_SENSOR_PCI_COMM_ERR;
+@@ -173,7 +173,7 @@ static bool reset_fw_if_needed(struct mlx5_core_dev *dev)
+ 	 * Check again to avoid a redundant 2nd reset. If the fatal erros was
+ 	 * PCI related a reset won't help.
+ 	 */
+-	fatal_error = check_fatal_sensors(dev);
++	fatal_error = mlx5_health_check_fatal_sensors(dev);
+ 	if (fatal_error == MLX5_SENSOR_PCI_COMM_ERR ||
+ 	    fatal_error == MLX5_SENSOR_NIC_DISABLED ||
+ 	    fatal_error == MLX5_SENSOR_NIC_SW_RESET) {
+@@ -195,7 +195,7 @@ void mlx5_enter_error_state(struct mlx5_core_dev *dev, bool force)
+ 	bool err_detected = false;
+ 
+ 	/* Mark the device as fatal in order to abort FW commands */
+-	if ((check_fatal_sensors(dev) || force) &&
++	if ((mlx5_health_check_fatal_sensors(dev) || force) &&
+ 	    dev->state == MLX5_DEVICE_STATE_UP) {
+ 		dev->state = MLX5_DEVICE_STATE_INTERNAL_ERROR;
+ 		err_detected = true;
+@@ -208,7 +208,7 @@ void mlx5_enter_error_state(struct mlx5_core_dev *dev, bool force)
+ 		goto unlock;
  	}
  
--	err = devlink_reload(devlink, dest_net, info->extack);
-+	if (info->attrs[DEVLINK_ATTR_RELOAD_ACTION])
-+		action = nla_get_u8(info->attrs[DEVLINK_ATTR_RELOAD_ACTION]);
-+	else
-+		action = DEVLINK_RELOAD_ACTION_DRIVER_REINIT;
-+
-+	if (action == DEVLINK_RELOAD_ACTION_UNSPEC || action > DEVLINK_RELOAD_ACTION_MAX) {
-+		NL_SET_ERR_MSG_MOD(info->extack, "Invalid reload action");
-+		return -EINVAL;
-+	} else if (!devlink_reload_action_is_supported(devlink, action)) {
-+		NL_SET_ERR_MSG_MOD(info->extack, "Requested reload action is not supported");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	err = devlink_reload(devlink, dest_net, action, info->extack, &actions_done);
+-	if (check_fatal_sensors(dev) || force) { /* protected state setting */
++	if (mlx5_health_check_fatal_sensors(dev) || force) { /* protected state setting */
+ 		dev->state = MLX5_DEVICE_STATE_INTERNAL_ERROR;
+ 		mlx5_cmd_flush(dev);
+ 	}
+@@ -231,7 +231,7 @@ void mlx5_error_sw_reset(struct mlx5_core_dev *dev)
  
- 	if (dest_net)
- 		put_net(dest_net);
+ 	mlx5_core_err(dev, "start\n");
  
--	return err;
-+	if (err)
-+		return err;
-+
-+	WARN_ON(!actions_done);
-+	if (action == DEVLINK_RELOAD_ACTION_FW_ACTIVATE_NO_RESET)
-+		WARN_ON(actions_done != BIT(DEVLINK_RELOAD_ACTION_FW_ACTIVATE_NO_RESET));
-+	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	err = devlink_nl_reload_actions_done_fill(msg, devlink, actions_done, DEVLINK_CMD_RELOAD,
-+						  info->snd_portid, info->snd_seq, 0);
-+	if (err) {
-+		nlmsg_free(msg);
-+		return err;
-+	}
-+
-+	return genlmsg_reply(msg, info);
- }
+-	if (check_fatal_sensors(dev) == MLX5_SENSOR_FW_SYND_RFR) {
++	if (mlx5_health_check_fatal_sensors(dev) == MLX5_SENSOR_FW_SYND_RFR) {
+ 		/* Get cr-dump and reset FW semaphore */
+ 		lock = lock_sem_sw_reset(dev, true);
  
- static int devlink_nl_flash_update_fill(struct sk_buff *msg,
-@@ -7042,6 +7121,7 @@ static const struct nla_policy devlink_nl_policy[DEVLINK_ATTR_MAX + 1] = {
- 	[DEVLINK_ATTR_TRAP_POLICER_RATE] = { .type = NLA_U64 },
- 	[DEVLINK_ATTR_TRAP_POLICER_BURST] = { .type = NLA_U64 },
- 	[DEVLINK_ATTR_PORT_FUNCTION] = { .type = NLA_NESTED },
-+	[DEVLINK_ATTR_RELOAD_ACTION] = { .type = NLA_U8 },
- };
+@@ -308,26 +308,31 @@ static void mlx5_handle_bad_state(struct mlx5_core_dev *dev)
  
- static const struct genl_ops devlink_nl_ops[] = {
-@@ -7367,6 +7447,20 @@ static struct genl_family devlink_nl_family __ro_after_init = {
- 	.n_mcgrps	= ARRAY_SIZE(devlink_nl_mcgrps),
- };
+ /* How much time to wait until health resetting the driver (in msecs) */
+ #define MLX5_RECOVERY_WAIT_MSECS 60000
+-static int mlx5_health_try_recover(struct mlx5_core_dev *dev)
++int mlx5_health_wait_pci_up(struct mlx5_core_dev *dev)
+ {
+ 	unsigned long end;
  
-+static int devlink_reload_actions_verify(struct devlink *devlink)
-+{
-+	const struct devlink_ops *ops;
-+
-+	if (!devlink_reload_supported(devlink))
-+		return 0;
-+
-+	ops = devlink->ops;
-+	if (WARN_ON(ops->supported_reload_actions >= BIT(__DEVLINK_RELOAD_ACTION_MAX) ||
-+		    ops->supported_reload_actions <= BIT(DEVLINK_RELOAD_ACTION_UNSPEC)))
-+		return -EINVAL;
+-	mlx5_core_warn(dev, "handling bad device here\n");
+-	mlx5_handle_bad_state(dev);
+ 	end = jiffies + msecs_to_jiffies(MLX5_RECOVERY_WAIT_MSECS);
+ 	while (sensor_pci_not_working(dev)) {
+-		if (time_after(jiffies, end)) {
+-			mlx5_core_err(dev,
+-				      "health recovery flow aborted, PCI reads still not working\n");
+-			return -EIO;
+-		}
++		if (time_after(jiffies, end))
++			return -ETIMEDOUT;
+ 		msleep(100);
+ 	}
 +	return 0;
 +}
-+
- /**
-  *	devlink_alloc - Allocate new devlink instance resources
-  *
-@@ -7387,6 +7481,11 @@ struct devlink *devlink_alloc(const struct devlink_ops *ops, size_t priv_size)
- 	if (!devlink)
- 		return NULL;
- 	devlink->ops = ops;
-+	if (devlink_reload_actions_verify(devlink)) {
-+		kfree(devlink);
-+		return NULL;
+ 
++static int mlx5_health_try_recover(struct mlx5_core_dev *dev)
++{
++	mlx5_core_warn(dev, "handling bad device here\n");
++	mlx5_handle_bad_state(dev);
++	if (mlx5_health_wait_pci_up(dev)) {
++		mlx5_core_err(dev, "health recovery flow aborted, PCI reads still not working\n");
++		return -EIO;
++	}
+ 	mlx5_core_err(dev, "starting health recovery flow\n");
+ 	mlx5_recover_device(dev);
+ 	if (!test_bit(MLX5_INTERFACE_STATE_UP, &dev->intf_state) ||
+-	    check_fatal_sensors(dev)) {
++	    mlx5_health_check_fatal_sensors(dev)) {
+ 		mlx5_core_err(dev, "health recovery failed\n");
+ 		return -EIO;
+ 	}
+@@ -696,7 +701,7 @@ static void poll_health(struct timer_list *t)
+ 	if (dev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR)
+ 		goto out;
+ 
+-	fatal_error = check_fatal_sensors(dev);
++	fatal_error = mlx5_health_check_fatal_sensors(dev);
+ 
+ 	if (fatal_error && !health->fatal_error) {
+ 		mlx5_core_err(dev, "Fatal error %u detected\n", fatal_error);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+index 871d28b09f8a..e833db424f11 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+@@ -57,6 +57,7 @@
+ #include "lib/mpfs.h"
+ #include "eswitch.h"
+ #include "devlink.h"
++#include "fw_reset.h"
+ #include "lib/mlx5.h"
+ #include "fpga/core.h"
+ #include "fpga/ipsec.h"
+@@ -835,6 +836,12 @@ static int mlx5_init_once(struct mlx5_core_dev *dev)
+ 		goto err_eq_cleanup;
+ 	}
+ 
++	err = mlx5_fw_reset_events_init(dev);
++	if (err) {
++		mlx5_core_err(dev, "failed to initialize fw reset events\n");
++		goto err_events_cleanup;
 +	}
 +
- 	xa_init_flags(&devlink->snapshot_ids, XA_FLAGS_ALLOC);
- 	__devlink_net_set(devlink, &init_net);
- 	INIT_LIST_HEAD(&devlink->port_list);
-@@ -9618,7 +9717,8 @@ static void __net_exit devlink_pernet_pre_exit(struct net *net)
- 		if (net_eq(devlink_net(devlink), net)) {
- 			if (WARN_ON(!devlink_reload_supported(devlink)))
- 				continue;
--			err = devlink_reload(devlink, &init_net, NULL);
-+			err = devlink_reload(devlink, &init_net,
-+					     DEVLINK_RELOAD_ACTION_DRIVER_REINIT, NULL, NULL);
- 			if (err && err != -EOPNOTSUPP)
- 				pr_warn("Failed to reload devlink instance into init_net\n");
- 		}
+ 	mlx5_cq_debugfs_init(dev);
+ 
+ 	mlx5_init_reserved_gids(dev);
+@@ -896,6 +903,8 @@ static int mlx5_init_once(struct mlx5_core_dev *dev)
+ 	mlx5_geneve_destroy(dev->geneve);
+ 	mlx5_vxlan_destroy(dev->vxlan);
+ 	mlx5_cq_debugfs_cleanup(dev);
++	mlx5_fw_reset_events_cleanup(dev);
++err_events_cleanup:
+ 	mlx5_events_cleanup(dev);
+ err_eq_cleanup:
+ 	mlx5_eq_table_cleanup(dev);
+@@ -923,6 +932,7 @@ static void mlx5_cleanup_once(struct mlx5_core_dev *dev)
+ 	mlx5_cleanup_clock(dev);
+ 	mlx5_cleanup_reserved_gids(dev);
+ 	mlx5_cq_debugfs_cleanup(dev);
++	mlx5_fw_reset_events_cleanup(dev);
+ 	mlx5_events_cleanup(dev);
+ 	mlx5_eq_table_cleanup(dev);
+ 	mlx5_irq_table_cleanup(dev);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h b/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
+index fc1649dac11b..d07a32165792 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/mlx5_core.h
+@@ -123,6 +123,8 @@ int mlx5_cmd_force_teardown_hca(struct mlx5_core_dev *dev);
+ int mlx5_cmd_fast_teardown_hca(struct mlx5_core_dev *dev);
+ void mlx5_enter_error_state(struct mlx5_core_dev *dev, bool force);
+ void mlx5_error_sw_reset(struct mlx5_core_dev *dev);
++u32 mlx5_health_check_fatal_sensors(struct mlx5_core_dev *dev);
++int mlx5_health_wait_pci_up(struct mlx5_core_dev *dev);
+ void mlx5_disable_device(struct mlx5_core_dev *dev);
+ void mlx5_recover_device(struct mlx5_core_dev *dev);
+ int mlx5_sriov_init(struct mlx5_core_dev *dev);
+diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h
+index c145de0473bc..abf2b92133bd 100644
+--- a/include/linux/mlx5/driver.h
++++ b/include/linux/mlx5/driver.h
+@@ -501,6 +501,7 @@ struct mlx5_mpfs;
+ struct mlx5_eswitch;
+ struct mlx5_lag;
+ struct mlx5_devcom;
++struct mlx5_fw_reset;
+ struct mlx5_eq_table;
+ struct mlx5_irq_table;
+ 
+@@ -578,6 +579,7 @@ struct mlx5_priv {
+ 	struct mlx5_core_sriov	sriov;
+ 	struct mlx5_lag		*lag;
+ 	struct mlx5_devcom	*devcom;
++	struct mlx5_fw_reset	*fw_reset;
+ 	struct mlx5_core_roce	roce;
+ 	struct mlx5_fc_stats		fc_stats;
+ 	struct mlx5_rl_table            rl_table;
+@@ -944,6 +946,8 @@ void mlx5_start_health_poll(struct mlx5_core_dev *dev);
+ void mlx5_stop_health_poll(struct mlx5_core_dev *dev, bool disable_health);
+ void mlx5_drain_health_wq(struct mlx5_core_dev *dev);
+ void mlx5_trigger_health_work(struct mlx5_core_dev *dev);
++void mlx5_health_set_reset_requested_mode(struct mlx5_core_dev *dev);
++void mlx5_health_clear_reset_requested_mode(struct mlx5_core_dev *dev);
+ int mlx5_buf_alloc(struct mlx5_core_dev *dev,
+ 		   int size, struct mlx5_frag_buf *buf);
+ void mlx5_buf_free(struct mlx5_core_dev *dev, struct mlx5_frag_buf *buf);
 -- 
 2.17.1
 
