@@ -2,153 +2,114 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5F2C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 17:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16454C433E7
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D930B20757
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 17:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBEF320714
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:02:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X9jDW+Wq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GhLe+JR6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbgH3RxI (ORCPT
+        id S1726439AbgH3SB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 13:53:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51980 "EHLO
+        Sun, 30 Aug 2020 14:01:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726035AbgH3RxB (ORCPT
+        with ESMTP id S1726150AbgH3SB6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 13:53:01 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4654C061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 10:53:00 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id e5so3272215qth.5
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 10:53:00 -0700 (PDT)
+        Sun, 30 Aug 2020 14:01:58 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C533C061573;
+        Sun, 30 Aug 2020 11:01:58 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id 2so1890286pjx.5;
+        Sun, 30 Aug 2020 11:01:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=yH1J8hCQGCEZj5x88WC5CgJLue5izK8xcUhAdJYu3aA=;
-        b=X9jDW+WqEr6Qd3xz4JS91mS4qm67XNj7+gQA1hLCr+ozEP3K6HAMzADL6YT177DB1G
-         /uXyuMAfgt83xMKn/rq89+mSfzY6INhLIl6lcn7ZKAl7lPxVpA4eXz8WA0RU86VKw67o
-         ww+X3E6VPh93mlAJGXCRhS7DA/pDcSthwfFU04SiCw2onUUgH5NtkjZ6RicWIrCtyLzH
-         /Js8Tbm6nyA9zsLKOEbbGxfghiJF0RlQQrO5bKrbS5n02Q7etZMlSnjZzme0cC2tZ9bh
-         gdcic7T+o+OecISpXqBh7G9HV5xVLKn/kI5Uw2phbDzc+XjVbFJURc5vYZ1QeYdupAGY
-         fqGA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l67Rw1sesTKoXlj3/enQAM/CdJ/NqO3HI/tHvDZitDc=;
+        b=GhLe+JR6MCYusy5seMJga70EhO0dPqsJES/tKOcXiEd5uAQKJgZ4KwCCGcXjxP4YyO
+         z8219umkSpaknsvY3swr4PpPl1TiL0u45d5VnMAuJKoDuQth+of2PvQ+D8sj4FV4Crs+
+         /7DocExmKVPjmmJ14SFc94TCugtt8/C53e+6L5m1EiRG89Z2P08oJEasVQKE1eCzOaWD
+         bINJLMXO9l4LNR5OJ6taAa5qmORQJrex4QLdOGywhGTswbSo05Vw66SSPXy5FC2TpQ/D
+         vOuIO66MhbBf6QmaCimw/SUslZ3FvTznWa0hhw6pcnbpHQHH5TewJV0vpuvBKjLYhCjt
+         OdgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=yH1J8hCQGCEZj5x88WC5CgJLue5izK8xcUhAdJYu3aA=;
-        b=VZXvqLbXRSqOXciQIEXrV+3kXdVci3871fZgDLeHTFWA/ojpsZDxSH2VtcnOGYbq2a
-         G0vrH0jTL0i/iab55k2iazOHthh/Vx13WaPTVD9xfxno7Lce350CEHwRZIJCum5vvugp
-         sRpGPjAa2HSay97Px42WO3zorphDb8j9sY0KNMLtzCrGy1SFiHTlwpFr61G96IZ8TdUU
-         ovZ8FSz9tuL5saIZ9YjoipcWig/q12i9ei1kcbEO8tW/u+Ij8gum0FdfCRh/SM/vgKDb
-         ffqsaDNkCOtcKbV3NFB8Tmkw6GmgosGJ+2arLKKrHXCdikmkwfoG8UgFGvuybbgxqW0E
-         WlKA==
-X-Gm-Message-State: AOAM532L8afOLQvBvJlq6OYl1zg/e+etLuFk4JYuvOniBk2Xx6qrCLlT
-        WjQh3uI5AUhE/y+2btBpWmPNAQ==
-X-Google-Smtp-Source: ABdhPJxlJuKK9dY0j5/s+p7Qz0nZTmqAnQO0yYzGoJC44cJ1LxMP6cZVfZIvfKOT/cENF+n/xibkEQ==
-X-Received: by 2002:ac8:292a:: with SMTP id y39mr9431959qty.89.1598809979234;
-        Sun, 30 Aug 2020 10:52:59 -0700 (PDT)
-Received: from uller (ec2-34-197-84-77.compute-1.amazonaws.com. [34.197.84.77])
-        by smtp.gmail.com with ESMTPSA id b199sm4988671qkg.116.2020.08.30.10.52.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 10:52:58 -0700 (PDT)
-Date:   Sun, 30 Aug 2020 17:52:57 +0000
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     Sergei Shtylyov <sergei.shtylyov@gmail.com>, sboyd@kernel.org,
-        heikki.krogerus@linux.intel.com, agross@kernel.org,
-        robh+dt@kernel.org, gregkh@linuxfoundation.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH v8 4/4] arm64: boot: dts: qcom: pm8150b: Add DTS node for
- PMIC VBUS booster
-Message-ID: <20200830175257.GA1947@uller>
-References: <20200812071925.315-1-wcheng@codeaurora.org>
- <20200812071925.315-5-wcheng@codeaurora.org>
- <1ed0a34c-6219-fe3d-7d9c-13a74ce2d4d0@gmail.com>
- <02111c69-73fd-5e8c-5594-27393865d458@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l67Rw1sesTKoXlj3/enQAM/CdJ/NqO3HI/tHvDZitDc=;
+        b=Tl5yqiDfDAuxQ++AfIzGQW5V0TnqIh8ODfjAOw5HPzJ52Yfqyo4KP+o+8bIF29Qr/K
+         QgkUU0mWkAalEhTGjmP3GBUFB22Tq4fRodI367+CKj27OCgevmvctxGTgCHOERekHW9E
+         cJPGzco5wF5tgAalCKQAiN/Sxhkio4h6mo1ON76mfQQgd+LFZwP6+n9/0U08eVfWHPvI
+         xJmfzU7eFNqoRxooRrdCfKr7o04D871xRk/0hL22eLSd/hCBkLLZI9po5KAj8M5i6+2C
+         xcSL2YzvhXBkuXbVwnRZErekINYR/fCY7F52Iv/YrsvQzCat3JMzyY98hnMEDy/5ANx6
+         nszw==
+X-Gm-Message-State: AOAM533fvGgWl/YuYUBPr9mlI+YdAce2suiokIbrs2UUhcYyC0G3r85E
+        +A4qc/wEiSsZaUCW2eqoekqAWdVcCMAMt74HL+0=
+X-Google-Smtp-Source: ABdhPJw+9Yw8+S266cpAmsmm5KS2ZNuUQJG0BrPBnDrpPTXTgGfVD8RPnxrG98llvczA/goxydGlReOrf3ARelFPguE=
+X-Received: by 2002:a17:90a:e7cb:: with SMTP id kb11mr7065082pjb.181.1598810515270;
+ Sun, 30 Aug 2020 11:01:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <02111c69-73fd-5e8c-5594-27393865d458@codeaurora.org>
+References: <20200830122051.197892-1-tali.perry1@gmail.com>
+In-Reply-To: <20200830122051.197892-1-tali.perry1@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 30 Aug 2020 21:01:38 +0300
+Message-ID: <CAHp75VeX7OUeF=K_NmtXU4LACS9MxN1=nbSn01rvy-1MXoBL3Q@mail.gmail.com>
+Subject: Re: [PATCH v2] i2c: npcm7xx: bug fix timeout (usec instead of msec)
+To:     Tali Perry <tali.perry1@gmail.com>
+Cc:     kunyi@google.com, xqiu@google.com, benjaminfair@google.com,
+        Avi Fishman <avifishman70@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 20 Aug 07:47 UTC 2020, Wesley Cheng wrote:
+On Sun, Aug 30, 2020 at 3:23 PM Tali Perry <tali.perry1@gmail.com> wrote:
 
-> 
-> 
-> On 8/12/2020 2:34 AM, Sergei Shtylyov wrote:
-> > Hello!
-> > 
-> > On 12.08.2020 10:19, Wesley Cheng wrote:
-> > 
-> >> Add the required DTS node for the USB VBUS output regulator, which is
-> >> available on PM8150B.  This will provide the VBUS source to connected
-> >> peripherals.
-> >>
-> >> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> >> ---
-> >>   arch/arm64/boot/dts/qcom/pm8150b.dtsi   | 6 ++++++
-> >>   arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 4 ++++
-> >>   2 files changed, 10 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> >> b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> >> index 053c659734a7..9e560c1ca30d 100644
-> >> --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> >> +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-> >> @@ -53,6 +53,12 @@ power-on@800 {
-> >>               status = "disabled";
-> >>           };
-> >>   +        pm8150b_vbus: dcdc@1100 {
-> > 
-> >    s/dcdc/regulator/? What is "dcdc", anyway?
-> >    The device nodes must have the generic names, according to the DT spec.
-> > 
-> 
-> Hi Sergei,
-> 
-> Thanks for the comment!
-> 
-> DCDC is the label that we use for the DC to DC converter block, since
-> the VBUS booster will output 5V to the connected devices.  Would it make
-> more sense to have "dc-dc?"
-> 
+>
+> i2c: npcm7xx: bug fix timeout (usec instead of msec)
 
-At this level it's just a regulator at 0x1100, so it should be
-"regulator@1100". If you would like a more useful name in the running
-system you should be able to use the "regulator-name" property.
+This commit message is awful. Please read [1] as a tutorial how to
+write a commit messages.
 
-Regards,
-Bjorn
+[1]: https://chris.beams.io/posts/git-commit/
 
-> Thanks
-> Wesley
-> 
-> >> +            compatible = "qcom,pm8150b-vbus-reg";
-> >> +            status = "disabled";
-> >> +            reg = <0x1100>;
-> >> +        };
-> >> +
-> >>           pm8150b_typec: typec@1500 {
-> >>               compatible = "qcom,pm8150b-usb-typec";
-> >>               status = "disabled";
-> > [...]
-> > 
-> > MBR, Sergei
-> 
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+...
+
+> -       /* Adaptive TimeOut: astimated time in usec + 100% margin */
+> -       timeout_usec = (2 * 10000 / bus->bus_freq) * (2 + nread + nwrite);
+> +       /*
+> +        * Adaptive TimeOut: estimated time in usec + 100% margin:
+> +        * 2: double the timeout for clock stretching case
+> +        * 9: bits per transaction (including the ack/nack)
+
+> +        * 1000000: micro second in a second
+
+No need. See below.
+
+> +        */
+
+> +       timeout_usec = (2 * 9 * 1000000 / bus->bus_freq) * (2 + nread + nwrite);
+
+USEC_PER_SEC
+
+>         timeout = max(msecs_to_jiffies(35), usecs_to_jiffies(timeout_usec));
+>         if (nwrite >= 32 * 1024 || nread >= 32 * 1024) {
+>                 dev_err(bus->dev, "i2c%d buffer too big\n", bus->num);
+
+-- 
+With Best Regards,
+Andy Shevchenko
