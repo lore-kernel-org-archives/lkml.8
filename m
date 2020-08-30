@@ -2,113 +2,117 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC284C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 17:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA828C433E7
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 17:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1CA2071B
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 17:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1F820714
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 17:22:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ouJNefUD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jlr40h3s";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YYMqeDlR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbgH3RHc (ORCPT
+        id S1726388AbgH3RWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 13:07:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44996 "EHLO
+        Sun, 30 Aug 2020 13:22:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbgH3RH3 (ORCPT
+        with ESMTP id S1725934AbgH3RWL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 13:07:29 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 796F2C061573;
-        Sun, 30 Aug 2020 10:07:27 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d22so3249058pfn.5;
-        Sun, 30 Aug 2020 10:07:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gMjyFGBWWFv0LuuBdjLpLERWkVOrqJ19BFy0/U/TZ4k=;
-        b=ouJNefUDJiMdBSDEi5xOTaJJyioWu+vSjkCfg5bh70XhBqnuGzlDp4yA5MxbiWN4ub
-         VDWR6TAeHIlrxIW4VsYEOgcOl4RtjUYcvbvqlVidmYMjnX/FTYxBvOAO/6jBblvHL1SH
-         JTdEkalFmXccGDoeCkNjyHOneDOI0vnic0ENcWxGTg9ceuDHroYgZ+ndiPYB+DRBKZkS
-         xWfQXqmMeUA0vkFuFO1Pv0GaHPzzbYyq/In8VrAMsFloRkYaudTsj/5qL1/jbbCSqSwp
-         qQlyTOa6u/J4QCEyTDA/CKas2QpVni2ngYaevVEnAigjZUcWFGbiKSYIQpIJMSKl5qGU
-         4gCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gMjyFGBWWFv0LuuBdjLpLERWkVOrqJ19BFy0/U/TZ4k=;
-        b=FDeqO+6qQJez0NqYHEfeP9TgyO1fgdssX6rpuF93fLMaNGXwvcsoaP0oyAz3m6yW+8
-         /g/8Q0e22t8vRF0RjphGexQP2RkUoRXwtWhywLVWrTe5SAn8DEuGspuTNvZInCJ/0SE/
-         3nXCRw9xtTY1u4oW6BEa1PSFqZ+ftoZ8dH4nwO9PIdp1+NAchZ8UbyEHmnfl6iPZh97c
-         25is1+Tm2vlkZFgRiDTHy81gSxUtPU5togUNonC7VJgkqnnHT+6GS+InMaE3WrqAGoXD
-         nhCX2itqO9FefK3mj3ML+6X5p57I+9mFL4j+LtzF9CQvwYIFVJ27algwpCzwMs7Bxa8+
-         qsuA==
-X-Gm-Message-State: AOAM5309gxJFghFCSnxTOt/bsdSAgiG0+LTMc9PtFJywbn1zSipPeN6U
-        yovaS45V/6q9K1Vi4WQr33h5NFGUZghR0/gZfWbEQgM/imDETw==
-X-Google-Smtp-Source: ABdhPJz6MTJTNv/YcqhFKeWQsVO4HFCc408Ke9R/sb8IOV1QV6lPH51hKfb+XOvv9an8xE+tfmTe+sZvuzHyy0ZgWXc=
-X-Received: by 2002:a62:7c86:: with SMTP id x128mr1059391pfc.268.1598807246571;
- Sun, 30 Aug 2020 10:07:26 -0700 (PDT)
+        Sun, 30 Aug 2020 13:22:11 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1C4BC061573;
+        Sun, 30 Aug 2020 10:22:10 -0700 (PDT)
+Date:   Sun, 30 Aug 2020 17:21:55 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598808116;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+        bh=kxjzaFHv2FrCYmgeO7dK+Bq6890QjPkWk7t2pW/woHg=;
+        b=jlr40h3smz45wYwGUBsah83bWF2mophW6S/CQm1FZTlEZsXWQnIYkhv7+AIeX6T9FRTjwc
+        mU8TxEAjd7e4mFCoe6x/36RVJ6p54V9daOl28lTjss7NdA9m86l6j/iRRESHhO91CJwn7t
+        e6EjCtNRKNtl0W12GAN4NdJ1Adzg/ck6/9YJKKET/FvbDvoe5o780b4Yuk/HwD6t//RWIV
+        PPonBV+E56ORARADx9u6gwsjYoXLIQPf/XcTLVeRHnSeY62jshRh8on8bzxEqTKSfbhCuL
+        4zBYHLXjVF8IAuECAGvQlaNCBeCEKNQy/0MlIsOr849lBEwvHlG8NzwwsXrUmA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598808116;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+        bh=kxjzaFHv2FrCYmgeO7dK+Bq6890QjPkWk7t2pW/woHg=;
+        b=YYMqeDlRw+ImYZGZDNm2fN/IN0p3yV3hFKvTC3i0hV+FJDPAQZlOI/LLn5uD8h9ARcQH4a
+        f6R9unvG10QB/yDw==
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] genirq/matrix: Deal with the sillyness of
+ for_each_cpu() on UP
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-References: <20200824054347.3805-1-william.sung@advantech.com.tw>
-In-Reply-To: <20200824054347.3805-1-william.sung@advantech.com.tw>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 30 Aug 2020 20:07:09 +0300
-Message-ID: <CAHp75VeZLPR02xB2XRzec5mSBvq93XYZg56OOODxpFTPva6cXw@mail.gmail.com>
-Subject: Re: [PATCH] iio: dac: ad5593r: Dynamically set AD5593R channel modes
-To:     William Sung <william.sung@advantech.com.tw>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Campion Kang <Campion.Kang@advantech.com.tw>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <159880811534.20229.17365970881693987724.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 8:54 AM William Sung
-<william.sung@advantech.com.tw> wrote:
->
-> To use ad5593r more flexibly, we use the module parameter to setting the
-> channel modes dynamically whenever the module probe up.
+The following commit has been merged into the x86/urgent branch of tip:
 
-> Users can pass
-> the channel modes to the module parameter for allocating the
-> functionality of channels as desired.
+Commit-ID:     784a0830377d0761834e385975bc46861fea9fa0
+Gitweb:        https://git.kernel.org/tip/784a0830377d0761834e385975bc46861fea9fa0
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Sun, 30 Aug 2020 19:07:53 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Sun, 30 Aug 2020 19:17:28 +02:00
 
-NAK. We have a sysfs interface.
+genirq/matrix: Deal with the sillyness of for_each_cpu() on UP
 
-> For example:
-> * Use in the kernel command line:
-> Users can add the module parameter in the kernel command line such as
->
->     "ad5593r.ch_mode_cmdline=88001122"
->
-> "88001122" means the channel mode setting for each channel. The most
-> left side indicates the mode of channel 7, and the most right side
-> indicates the mode of channel 0.
->
-> * Use when manually probe the module:
-> Similar to the kernel command line usage, users can enter
->
->     "modprobe ad5593r ch_mode_probe=88001122"
->
-> to start the ad5593r module with the desired channel mode setting.
+Most of the CPU mask operations behave the same way, but for_each_cpu() and
+it's variants ignore the cpumask argument and claim that CPU0 is always in
+the mask. This is historical, inconsistent and annoying behaviour.
 
-Again NAK, this basically should come from Device Tree or ACPI.
+The matrix allocator uses for_each_cpu() and can be called on UP with an
+empty cpumask. The calling code does not expect that this succeeds but
+until commit e027fffff799 ("x86/irq: Unbreak interrupt affinity setting")
+this went unnoticed. That commit added a WARN_ON() to catch cases which
+move an interrupt from one vector to another on the same CPU. The warning
+triggers on UP.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Add a check for the cpumask being empty to prevent this.
+
+Fixes: 2f75d9e1c905 ("genirq: Implement bitmap matrix allocator")
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+---
+ kernel/irq/matrix.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/kernel/irq/matrix.c b/kernel/irq/matrix.c
+index 30cc217..651a4ad 100644
+--- a/kernel/irq/matrix.c
++++ b/kernel/irq/matrix.c
+@@ -380,6 +380,13 @@ int irq_matrix_alloc(struct irq_matrix *m, const struct cpumask *msk,
+ 	unsigned int cpu, bit;
+ 	struct cpumap *cm;
+ 
++	/*
++	 * Not required in theory, but matrix_find_best_cpu() uses
++	 * for_each_cpu() which ignores the cpumask on UP .
++	 */
++	if (cpumask_empty(msk))
++		return -EINVAL;
++
+ 	cpu = matrix_find_best_cpu(m, msk);
+ 	if (cpu == UINT_MAX)
+ 		return -ENOSPC;
