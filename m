@@ -2,117 +2,142 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA828C433E7
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 17:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2261C433E7
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 17:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB1F820714
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 17:22:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jlr40h3s";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YYMqeDlR"
+	by mail.kernel.org (Postfix) with ESMTP id AB92920720
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 17:30:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598808606;
+	bh=BopSRUDvmAHu4C4ZgQT5LSsunJM/+eyFrpOMQmKj4+I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jdsNi4oMuQPLqMOqLjCEerTMKQlgv5r1Tt98/DqFeRQ2dEDx9UL5T9GbbAV/t11PT
+	 81GCGP8BE8NxlibqZCU5npBztYULpBTadJxdUsCsi40bydF9u7GJO46fno+m4E/ook
+	 mK7aCZ6vgK5mRP/rHPdkvH3s6Bzh4WHsww+28cYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgH3RWM (ORCPT
+        id S1726438AbgH3RaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 13:22:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbgH3RWL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 13:22:11 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1C4BC061573;
-        Sun, 30 Aug 2020 10:22:10 -0700 (PDT)
-Date:   Sun, 30 Aug 2020 17:21:55 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598808116;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=kxjzaFHv2FrCYmgeO7dK+Bq6890QjPkWk7t2pW/woHg=;
-        b=jlr40h3smz45wYwGUBsah83bWF2mophW6S/CQm1FZTlEZsXWQnIYkhv7+AIeX6T9FRTjwc
-        mU8TxEAjd7e4mFCoe6x/36RVJ6p54V9daOl28lTjss7NdA9m86l6j/iRRESHhO91CJwn7t
-        e6EjCtNRKNtl0W12GAN4NdJ1Adzg/ck6/9YJKKET/FvbDvoe5o780b4Yuk/HwD6t//RWIV
-        PPonBV+E56ORARADx9u6gwsjYoXLIQPf/XcTLVeRHnSeY62jshRh8on8bzxEqTKSfbhCuL
-        4zBYHLXjVF8IAuECAGvQlaNCBeCEKNQy/0MlIsOr849lBEwvHlG8NzwwsXrUmA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598808116;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=kxjzaFHv2FrCYmgeO7dK+Bq6890QjPkWk7t2pW/woHg=;
-        b=YYMqeDlRw+ImYZGZDNm2fN/IN0p3yV3hFKvTC3i0hV+FJDPAQZlOI/LLn5uD8h9ARcQH4a
-        f6R9unvG10QB/yDw==
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] genirq/matrix: Deal with the sillyness of
- for_each_cpu() on UP
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+        Sun, 30 Aug 2020 13:30:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbgH3RaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 13:30:03 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B598020714;
+        Sun, 30 Aug 2020 17:30:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598808602;
+        bh=BopSRUDvmAHu4C4ZgQT5LSsunJM/+eyFrpOMQmKj4+I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a/zT74G2muYeReBEmL01IvpBsAYzbg5InWmKENnYGXCe/CJs+n+lN7YGS5w2Ku2LU
+         W43mtTTjg1YBcBEAMCLFOTpRHcgS2bhXQ/tMU4azm211lZA0UXM36AIMRTSlJOAWNP
+         R5fHsy4/+y4oBWFiAvdI4SDnogWOvna90R4xEJTs=
+Date:   Sun, 30 Aug 2020 19:30:10 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Anmol Karn <anmol.karan123@gmail.com>
+Cc:     syzbot+0bef568258653cff272f@syzkaller.appspotmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        netdev@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        kuba@kernel.org, davem@davemloft.net
+Subject: Re: [Linux-kernel-mentees] [PATCH] net: bluetooth: Fix null pointer
+ deref in hci_phy_link_complete_evt
+Message-ID: <20200830173010.GA1872728@kroah.com>
+References: <20200829124112.227133-1-anmol.karan123@gmail.com>
+ <20200829165712.229437-1-anmol.karan123@gmail.com>
+ <20200830091917.GB122343@kroah.com>
+ <20200830122623.GA235919@Thinkpad>
 MIME-Version: 1.0
-Message-ID: <159880811534.20229.17365970881693987724.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200830122623.GA235919@Thinkpad>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Sun, Aug 30, 2020 at 05:56:23PM +0530, Anmol Karn wrote:
+> On Sun, Aug 30, 2020 at 11:19:17AM +0200, Greg KH wrote:
+> > On Sat, Aug 29, 2020 at 10:27:12PM +0530, Anmol Karn wrote:
+> > > Fix null pointer deref in hci_phy_link_complete_evt, there was no 
+> > > checking there for the hcon->amp_mgr->l2cap_conn->hconn, and also 
+> > > in hci_cmd_work, for hdev->sent_cmd.
+> > > 
+> > > To fix this issue Add pointer checking in hci_cmd_work and
+> > > hci_phy_link_complete_evt.
+> > > [Linux-next-20200827]
+> > > 
+> > > This patch corrected some mistakes from previous patch.
+> > > 
+> > > Reported-by: syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
+> > > Link: https://syzkaller.appspot.com/bug?id=0d93140da5a82305a66a136af99b088b75177b99
+> > > Signed-off-by: Anmol Karn <anmol.karan123@gmail.com>
+> > > ---
+> > >  net/bluetooth/hci_core.c  | 5 ++++-
+> > >  net/bluetooth/hci_event.c | 4 ++++
+> > >  2 files changed, 8 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> > > index 68bfe57b6625..996efd654e7a 100644
+> > > --- a/net/bluetooth/hci_core.c
+> > > +++ b/net/bluetooth/hci_core.c
+> > > @@ -4922,7 +4922,10 @@ static void hci_cmd_work(struct work_struct *work)
+> > >  
+> > >  		kfree_skb(hdev->sent_cmd);
+> > >  
+> > > -		hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
+> > > +		if (hdev->sent_cmd) {
+> > > +			hdev->sent_cmd = skb_clone(skb, GFP_KERNEL);
+> > > +		}
+> > 
+> > How can sent_cmd be NULL here?  Are you sure something previous to this
+> > shouldn't be fixed instead?
+> 
+> Sir, sent_cmd was freed before this condition check, thats why i checked it,
 
-Commit-ID:     784a0830377d0761834e385975bc46861fea9fa0
-Gitweb:        https://git.kernel.org/tip/784a0830377d0761834e385975bc46861fea9fa0
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Sun, 30 Aug 2020 19:07:53 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Sun, 30 Aug 2020 19:17:28 +02:00
+But it can not be NULL at that point in time, as nothing set it to NULL,
+correct?
 
-genirq/matrix: Deal with the sillyness of for_each_cpu() on UP
+> i think i should check it before the free of hdev->sent_cmd like,
+> 
+> if (hdev->sent_cmd)
+> 	kfree_skb(hdev->sent_cmd);
 
-Most of the CPU mask operations behave the same way, but for_each_cpu() and
-it's variants ignore the cpumask argument and claim that CPU0 is always in
-the mask. This is historical, inconsistent and annoying behaviour.
+No, that's not needed.
 
-The matrix allocator uses for_each_cpu() and can be called on UP with an
-empty cpumask. The calling code does not expect that this succeeds but
-until commit e027fffff799 ("x86/irq: Unbreak interrupt affinity setting")
-this went unnoticed. That commit added a WARN_ON() to catch cases which
-move an interrupt from one vector to another on the same CPU. The warning
-triggers on UP.
+What is the problem with these lines that you are trying to solve?
 
-Add a check for the cpumask being empty to prevent this.
+> > > +
+> > >  		if (hdev->sent_cmd) {
+> > >  			if (hci_req_status_pend(hdev))
+> > >  				hci_dev_set_flag(hdev, HCI_CMD_PENDING);
+> > > diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> > > index 4b7fc430793c..1e7d9bee9111 100644
+> > > --- a/net/bluetooth/hci_event.c
+> > > +++ b/net/bluetooth/hci_event.c
+> > > @@ -4941,6 +4941,10 @@ static void hci_phy_link_complete_evt(struct hci_dev *hdev,
+> > >  		hci_dev_unlock(hdev);
+> > >  		return;
+> > >  	}
+> > > +	if (!(hcon->amp_mgr->l2cap_conn->hcon)) {
+> > > +		hci_dev_unlock(hdev);
+> > > +		return;
+> > > +	}
+> > 
+> > How can this be triggered?
+> 
+> syzbot showed that this line is accessed irrespective of the null value it contains, so  added a 
+> pointer check for that.
 
-Fixes: 2f75d9e1c905 ("genirq: Implement bitmap matrix allocator")
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
----
- kernel/irq/matrix.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+But does hcon->amp_mgr->l2cap_conn->hcon become NULL here?
 
-diff --git a/kernel/irq/matrix.c b/kernel/irq/matrix.c
-index 30cc217..651a4ad 100644
---- a/kernel/irq/matrix.c
-+++ b/kernel/irq/matrix.c
-@@ -380,6 +380,13 @@ int irq_matrix_alloc(struct irq_matrix *m, const struct cpumask *msk,
- 	unsigned int cpu, bit;
- 	struct cpumap *cm;
- 
-+	/*
-+	 * Not required in theory, but matrix_find_best_cpu() uses
-+	 * for_each_cpu() which ignores the cpumask on UP .
-+	 */
-+	if (cpumask_empty(msk))
-+		return -EINVAL;
-+
- 	cpu = matrix_find_best_cpu(m, msk);
- 	if (cpu == UINT_MAX)
- 		return -ENOSPC;
+thanks,
+
+greg k-h
