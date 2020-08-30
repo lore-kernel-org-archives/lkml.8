@@ -2,126 +2,150 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C794CC433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B608EC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 19:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D67E2071B
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 18:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA12206F0
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 19:03:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WvWUDcgu"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZebtGy+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgH3S7H (ORCPT
+        id S1726438AbgH3TDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 14:59:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33896 "EHLO
+        Sun, 30 Aug 2020 15:03:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgH3S7C (ORCPT
+        with ESMTP id S1726201AbgH3TDF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 14:59:02 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A9DDC061236
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 11:59:01 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id o2so1894853qvk.6
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 11:59:01 -0700 (PDT)
+        Sun, 30 Aug 2020 15:03:05 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDBF1C061573
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 12:03:04 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id c2so168498ljj.12
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 12:03:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lUMKQLlBSJCarKsSu0GjI45SsOuLiQU3I20h0koncyY=;
-        b=WvWUDcguQ3mKtncotDNXG+mBPq9NyvJv9t7WpxvwJ96ZIj6fnKG2qm6ZK8LIqVQAr+
-         kYOvS0hYk8MXGbZucOJqZJKKUDQ6tj/dr5bGEaYICOO2pIbEj9Rm5xWZDJOBIS6RlOL7
-         ngPuGNcAIgjrI7fWarHAncCoHq21UoDkbGfwkeQ9O6gc0SAv5oHS6N8k8kvbP7yFqKUr
-         yTDkP9ELUKo9roSiT+rEP+wYlDVeVLGGSd9gE1OjCWchS1e4YlTAaiGzYqfw5lcLFFVo
-         jVPIQko0qxMHSHXZeeGRkU+iV3Czu8PZydpLfptDKlw/UldaEFGp7A8VxDJV8vjirIe3
-         xgrQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kZKdmJoSrqH9H4OC01i8QEPZEiSSbw2/cpeusSfExI8=;
+        b=ZebtGy+hRVgFT9b5YzuE6Bu4vNXZ9JfVwfXq203IY1zz6YVYlMvMexxdlXaFkSBZv6
+         KwQJSI+DidyJLBQMT5X9+ZQQk2lN+hMsvJqMrix+kSpHpT84YlSNzU0XpkarIOTIDH3o
+         +UbAAP6DgYuU9jbkhTeoKhVrlGx3TGZVmG69DEtI6fBvRfEbdzq5AnU8iNJz7mjXYmXk
+         9anfz367rI51xOzKFAY9QV0NIoNUQ8p1l5BvDtrDCYp2Sz4cMmu+WQzpLQ8rIQLLQyqg
+         tN2MWlFuWqye8xMtiRTjgsE6EsKO962SaCc2CplTaIXTGM7mdPFfJb+siLon+vig9e3+
+         xCyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lUMKQLlBSJCarKsSu0GjI45SsOuLiQU3I20h0koncyY=;
-        b=c6eFuvZa+CD/OlzIH8ta85whx86q7wk1QwUGkF2SVu58Ckn104/lvq29HFJzO11Smq
-         G7053BG6jx4OQa8AKxDeYledJwOzEzBoADSeA42LmhXOuEdOGP6CQm9Okob2GiNORStR
-         OKZCsPMTDqZRKnPi/LYR3vruN1tNQm5iiEoWkfLqzrOwDdZa9hW8tDN5aaMk4UxiLS/b
-         OAWi+S07bUTg4FYbmMouFhwrIzd5owDDrU4EeQkISry59j3FP9LzaPDIL45z8Pu4zLeT
-         PTIzFP2CbW4OD8CoFbV3vAuZITiBt3w45liWpVCdjW9loJ161/tyDlQB7rXPsyKsGC6C
-         4KtQ==
-X-Gm-Message-State: AOAM530aVkHSfD5msJbkKNBb8ZRGo6/r6NN2J8fK/rM/ST6kbQ63l0PT
-        vTj4703fNXiaPx9qj07SGcjDBhO1Tk8RFQ==
-X-Google-Smtp-Source: ABdhPJzVuLSEAXfc5i2H+uVW+pqJ7JPE9Po3NtUqrMnVy/uGx1VZFC8jdwxXC/5i+jNQ+IcThz62+A==
-X-Received: by 2002:a0c:fdc4:: with SMTP id g4mr3795975qvs.30.1598813940154;
-        Sun, 30 Aug 2020 11:59:00 -0700 (PDT)
-Received: from uller (ec2-34-197-84-77.compute-1.amazonaws.com. [34.197.84.77])
-        by smtp.gmail.com with ESMTPSA id c9sm265256qkg.46.2020.08.30.11.58.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 11:58:59 -0700 (PDT)
-Date:   Sun, 30 Aug 2020 18:58:57 +0000
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Amit Pundir <amit.pundir@linaro.org>
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        dt <devicetree@vger.kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: Re: your mail
-Message-ID: <20200830185857.GD1947@uller>
-References: <CAMi1Hd3Dv_T7kgThLTk2QLtfS7LBvhJ5R=6C3seUYK0GvNV6eA@mail.gmail.com>
- <20200806223134.42748-1-konradybcio@gmail.com>
- <20200813070448.GA499758@builder.lan>
- <CAMi1Hd3j-A1Se9swD0TQ9YzTBGicPDc1nFZbf4uisVk5A+u1GQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kZKdmJoSrqH9H4OC01i8QEPZEiSSbw2/cpeusSfExI8=;
+        b=hzfhvSKUAg+4jWhgc3OpXIjmAtQ3FVevYp4KwGk5towuucUg8Zd/LWe9rKzZpQ/Sdn
+         zZmY6WtxhdutChihXureLpkFHp602gsv259hIlKDXmeiUxypsaBC0eJlLU/tn6vav6xR
+         GYqowNH6X6WcvzAJ2lrX/r8CkjtPP/xS6qLpLgmEIphb02dxd7qWKfHfvi5jo5RxV/js
+         iMnkWexpMHSKrS0bIsTa7ZPR+AVnU932bWHl8/zXbeLu+wDtMrxV8Uvfril13Lzc04gX
+         PeCgWke0QmsSjC/Y7hgQL6giCzke2AqwxBNzwR2XWjh1d5N9eBFv0R1UG/70Q23rzC3y
+         sGlw==
+X-Gm-Message-State: AOAM531ejYv7Vwg686Lf5TWI8oJies7dUfmU9ZPbI0UNoAgBDC11CbxD
+        2a2PIf0oRr+Bey0keRi0JBrcMfmtlQxAdx/uXXETUD8fghM=
+X-Google-Smtp-Source: ABdhPJxDwSG51eX0XQLPAOc9poRQi71Xfhex04WZKJ57hw2DOl/bfc2xDE0ocUmauxuhFgUpiBBF1qmzXcAyRfmW0cI=
+X-Received: by 2002:a05:651c:543:: with SMTP id q3mr3599894ljp.145.1598814177899;
+ Sun, 30 Aug 2020 12:02:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMi1Hd3j-A1Se9swD0TQ9YzTBGicPDc1nFZbf4uisVk5A+u1GQ@mail.gmail.com>
+References: <20200829020002.GC3265@brightrain.aerifal.cx> <CAG48ez1BExw7DdCEeRD1hG5ZpRObpGDodnizW2xD5tC0saTDqg@mail.gmail.com>
+ <20200830163657.GD3265@brightrain.aerifal.cx> <CAG48ez00caDqMomv+PF4dntJkWx7rNYf3E+8gufswis6UFSszw@mail.gmail.com>
+ <20200830184334.GE3265@brightrain.aerifal.cx>
+In-Reply-To: <20200830184334.GE3265@brightrain.aerifal.cx>
+From:   Jann Horn <jannh@google.com>
+Date:   Sun, 30 Aug 2020 21:02:31 +0200
+Message-ID: <CAG48ez3LvbWLBsJ+Edc9qCjXDYV0TRjVRrANhiR2im1aRUQ6gQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH] vfs: add RWF_NOAPPEND flag for pwritev2
+To:     Rich Felker <dalias@libc.org>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 17 Aug 17:12 UTC 2020, Amit Pundir wrote:
-
-> On Thu, 13 Aug 2020 at 12:38, Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> >
-> > On Thu 06 Aug 15:31 PDT 2020, Konrad Dybcio wrote:
-> >
-> > > Subject: Re: [PATCH v4] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
+On Sun, Aug 30, 2020 at 8:43 PM Rich Felker <dalias@libc.org> wrote:
+> On Sun, Aug 30, 2020 at 08:31:36PM +0200, Jann Horn wrote:
+> > On Sun, Aug 30, 2020 at 6:36 PM Rich Felker <dalias@libc.org> wrote:
+> > > On Sun, Aug 30, 2020 at 05:05:45PM +0200, Jann Horn wrote:
+> > > > On Sat, Aug 29, 2020 at 4:00 AM Rich Felker <dalias@libc.org> wrote:
+> > > > > The pwrite function, originally defined by POSIX (thus the "p"), is
+> > > > > defined to ignore O_APPEND and write at the offset passed as its
+> > > > > argument. However, historically Linux honored O_APPEND if set and
+> > > > > ignored the offset. This cannot be changed due to stability policy,
+> > > > > but is documented in the man page as a bug.
+> > > > >
+> > > > > Now that there's a pwritev2 syscall providing a superset of the pwrite
+> > > > > functionality that has a flags argument, the conforming behavior can
+> > > > > be offered to userspace via a new flag.
+> > [...]
+> > > > Linux enforces the S_APPEND flag (set by "chattr +a") only at open()
+> > > > time, not at write() time:
+> > [...]
+> > > > It seems to me like your patch will permit bypassing S_APPEND by
+> > > > opening an append-only file with O_WRONLY|O_APPEND, then calling
+> > > > pwritev2() with RWF_NOAPPEND? I think you'll have to add an extra
+> > > > check for IS_APPEND() somewhere.
+> > > >
+> > > >
+> > > > One could also argue that if an O_APPEND file descriptor is handed
+> > > > across privilege boundaries, a programmer might reasonably expect that
+> > > > the recipient will not be able to use the file descriptor for
+> > > > non-append writes; if that is not actually true, that should probably
+> > > > be noted in the open.2 manpage, at the end of the description of
+> > > > O_APPEND.
 > > >
-> > > >// This removed_region is needed to boot the device
-> > > >               // TODO: Find out the user of this reserved memory
-> > > >               removed_region: memory@88f00000 {
-> > >
-> > > This region seems to belong to the Trust Zone. When Linux tries to access it, TZ bites and shuts the device down.
-> > >
+> > > fcntl F_SETFL can remove O_APPEND, so it is not a security boundary.
+> > > I'm not sure how this interacts with S_APPEND; presumably fcntl
+> > > rechecks it.
 > >
-> > This is in line with what the documentation indicates and then it would
-> > be better to just bump &tz_mem to a size of 0x4900000.
-> 
-> Hi, so just to be sure that I got this right, you want me to extend
-> &tz_mem to the size of 0x4900000 from the default size of 0x2D00000 by
-> including this downstream &removed_region (of size 0x1A00000) +
-> previously unreserved downstream memory region (of size 0x200000), to
-> align with the starting address of &qseecom_mem?
-> 
-
-Yes
-
-Regards,
-Bjorn
-
-> I just gave this &tz_mem change a spin and I do not see any obvious
-> regression in my limited smoke testing (Boots AOSP to UI with
-> v5.9-rc1. Touch/BT/WiFi works) so far, with 20+ out-of-tree patches.
-> 
-> Regards,
-> Amit Pundir
-> 
+> > Ah, good point, you're right. In fs/fcntl.c:
 > >
-> > Regards,
-> > Bjorn
+> >   35 static int setfl(int fd, struct file * filp, unsigned long arg)
+> >   36 {
+> >   37    struct inode * inode = file_inode(filp);
+> >   38    int error = 0;
+> >   39
+> >   40    /*
+> >   41     * O_APPEND cannot be cleared if the file is marked as append-only
+> >   42     * and the file is open for write.
+> >   43     */
+> >   44    if (((arg ^ filp->f_flags) & O_APPEND) && IS_APPEND(inode))
+> >   45            return -EPERM;
+>
+> FWIW I think this check is mildly wrong; it seems to disallow *adding*
+> O_APPEND if the file became chattr +a after it was opened. It should
+> probably be changed to only disallow removal.
+
+Yeah...
+
+> > > So just checking IS_APPEND in the code paths used by
+> > > pwritev2 (and erroring out rather than silently writing output at the
+> > > wrong place) should suffice to preserve all existing security
+> > > invariants.
+> >
+> > Makes sense.
+>
+> There are 3 places where kiocb_set_rw_flags is called with flags that
+> seem to be controlled by userspace: aio.c, io_uring.c, and
+> read_write.c. Presumably each needs to EPERM out on RWF_NOAPPEND if
+> the underlying inode is S_APPEND. To avoid repeating the same logic in
+> an error-prone way, should kiocb_set_rw_flags's signature be updated
+> to take the filp so that it can obtain the inode and check IS_APPEND
+> before accepting RWF_NOAPPEND? It's inline so this should avoid
+> actually loading anything except in the codepath where
+> flags&RWF_NOAPPEND is nonzero.
+
+You can get the file pointer from ki->ki_filp. See the RWF_NOWAIT
+branch of kiocb_set_rw_flags().
