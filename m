@@ -2,119 +2,176 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF49C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 10:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CF3C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 10:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90E5520714
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 10:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7389520714
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 10:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598781634;
+	bh=Blav2CdF+jTEoKfZHuJ/YUIVlAd55WTsjVo7hacST+k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=V0Z/HfEQh53LngOy6Rx00rXJs4AKFwqqqEtpfDOnswyHiMj6WbyO38Zn1vGOyrFoi
+	 6nQZO1bcGhniinc7z+7S4N8o2xuCy421l9Y8FDH3RhlnRbv6zootUzJTqunEu8tMhw
+	 t6/J4DoNA7MiMLvOxP//3zJdqVYysvukIQ0hIbb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgH3KAZ (ORCPT
+        id S1728777AbgH3KAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 06:00:25 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:47164 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725869AbgH3KAY (ORCPT
+        Sun, 30 Aug 2020 06:00:33 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:18128 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbgH3KAa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 06:00:24 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U7FbXgd_1598781620;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U7FbXgd_1598781620)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 30 Aug 2020 18:00:21 +0800
-Subject: Re: [PATCH v2 2/2] mm/pageblock: remove false sharing in
- pageblock_flags
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-References: <1597816075-61091-1-git-send-email-alex.shi@linux.alibaba.com>
- <1597816075-61091-2-git-send-email-alex.shi@linux.alibaba.com>
- <715f1588-9cd5-b845-51a5-ca58549c4d28@arm.com>
- <a7376a9c-82e8-7dc1-b656-9c0516738801@linux.alibaba.com>
- <CAKgT0UcXRB2HH4S+k=SmTz0Dgw9pKp=i4kT4U+yy8MFVC6_JWQ@mail.gmail.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <e2bda56b-445d-f2a3-3a3c-3193d65cc743@linux.alibaba.com>
-Date:   Sun, 30 Aug 2020 18:00:20 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Sun, 30 Aug 2020 06:00:30 -0400
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 07UA07wn012491;
+        Sun, 30 Aug 2020 19:00:07 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 07UA07wn012491
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1598781607;
+        bh=AmQbryS++Fw4i9u5pbHkdaDrivt7AeziREnHYA7ycsg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=evvc/WaVIy2k9E2t+lxInsoBuoLM0/g2XMZHXUz4ixux2iIFIMx6KqCI6qlPCWaKG
+         DbXpFLpDKYn44L02+9N4XNUDsMTSZJeRvu64oobRDE8CJZFgt9Nq2oqMVeeoUv2ywn
+         d7+lRyarwziE74lHIIz+RYHkbpalvOzfLYUWV6Sdc/tlUOThMrhOsIyBMhzJRuvWSy
+         cPlodpIXmHwlsVamMn6A0yYtMDvDGC7egmyhNqqdwqWoNlWRdzRnaXo9t/cF7vvBOW
+         fqHMgdP17Po4gsfK83JQ4pN+HTLAPzXb4OGvYRjVEl/hUm0Zx6B4pXeWK+XBu5fouM
+         u3tvye/SYnAbA==
+X-Nifty-SrcIP: [209.85.214.170]
+Received: by mail-pl1-f170.google.com with SMTP id v16so1670091plo.1;
+        Sun, 30 Aug 2020 03:00:07 -0700 (PDT)
+X-Gm-Message-State: AOAM532lEqGIIjPHrsIQ5p1gYhqPmlXtU1AOtPXE4alW+1EMyM3Wbntb
+        fehW0xsNgD3AbrV1K2m6cAg9PfpoJM7nLXLroic=
+X-Google-Smtp-Source: ABdhPJzepc/ee7wevUkzgBvlKwgo3wRx0XQMZkaQ3J/+cOjFteDd3VIoaRrYnOJVBS9+mYzgUAxXgEtytsoq3KyfiZ4=
+X-Received: by 2002:a17:902:b60b:: with SMTP id b11mr4920718pls.268.1598781606646;
+ Sun, 30 Aug 2020 03:00:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UcXRB2HH4S+k=SmTz0Dgw9pKp=i4kT4U+yy8MFVC6_JWQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <20200829081417.725978-1-masahiroy@kernel.org> <20200829081417.725978-5-masahiroy@kernel.org>
+ <25add4c8-fc8d-9874-2e34-b45cc7ae675e@infradead.org>
+In-Reply-To: <25add4c8-fc8d-9874-2e34-b45cc7ae675e@infradead.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 30 Aug 2020 18:59:29 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARgG=SWfCDgwVST-fuYGZ-sxdh_W_=bAWqXbmw67+Qg2g@mail.gmail.com>
+Message-ID: <CAK7LNARgG=SWfCDgwVST-fuYGZ-sxdh_W_=bAWqXbmw67+Qg2g@mail.gmail.com>
+Subject: Re: [PATCH 05/11] kconfig: qconf: show data column all the time
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Aug 30, 2020 at 1:54 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 8/29/20 1:14 AM, Masahiro Yamada wrote:
+> > The next commit will allow users to edit "int", "hex", "string"
+> > menus in-place from the data column.
+> >
+> > The data column should be always displayed.
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> >  scripts/kconfig/qconf.cc | 29 +----------------------------
+> >  scripts/kconfig/qconf.h  |  5 +----
+> >  2 files changed, 2 insertions(+), 32 deletions(-)
+> >
+>
+> I am trying to edit LOG_BUF_SHIFT, which has a value of 17
+> (this is x86_64).
 
 
-在 2020/8/20 上午12:50, Alexander Duyck 写道:
-> On Wed, Aug 19, 2020 at 1:11 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->>
->>
->>
->> 在 2020/8/19 下午3:57, Anshuman Khandual 写道:
->>>
->>>
->>> On 08/19/2020 11:17 AM, Alex Shi wrote:
->>>> Current pageblock_flags is only 4 bits, so it has to share a char size
->>>> in cmpxchg when get set, the false sharing cause perf drop.
->>>>
->>>> If we incrase the bits up to 8, false sharing would gone in cmpxchg. and
->>>> the only cost is half char per pageblock, which is half char per 128MB
->>>> on x86, 4 chars in 1 GB.
->>>
->>> Agreed that increase in memory utilization is negligible here but does
->>> this really improve performance ?
->>>
->>
->> It's no doubt in theory. and it would had a bad impact according to
->> commit e380bebe4771548  mm, compaction: keep migration source private to a single
->>
->> but I do have some problem in running thpscale/mmtest. I'd like to see if anyone
->> could give a try.
->>
->> BTW, I naturally hate the false sharing even it's in theory. Anyone who doesn't? :)
-> 
-> You keep bringing up false sharing but you don't fix the false sharing
-> by doing this. You are still allowing the flags for multiple
-> pageblocks per cacheline so you still have false sharing even after
-> this.
-
-yes, the cacheline false sharing is still there. But as you pointed, cmpxchg level
-false sharing could be addressed much by the patchset.
+My goal is to use Qt gadgets with least modification
+and align with the standard behavior as much as possible.
 
 
-> 
-> What I believe you are attempting to address is the fact that multiple
-> pageblocks share a single long value and that long is being used with
-> a cmpxchg so you end up with multiple threads potentially all banging
-> on the same value and watching it change. However the field currently
-> consists of only 4 bits, 3 of them for migratetype and 1 for the skip
-> bit. In the case of the 3 bit portion a cmpxchg makes sense and is
-> usually protected by the zone lock so you would only have one thread
-> accessing it in most cases with the possible exception of a section
-> that spans multiple zones.
-> 
-> For the case such as the skip bit and MIGRATE_UNMOVABLE (0x0) where we
-> would be clearing or setting the entire mask maybe it would make more
-> sense to simply use an atomic_or or atomic_and depending on if you are
-> setting or clearing the flag? It would allow you to avoid the spinning
-> or having to read the word before performing the operation since you
-> would just be directly applying an AND or OR via a mask value.
 
-Right that the different level to fix this problem, but narrow the cmpxchg
-comparsion is still needed and helpful.
+> I want to change the 7 to 9, making it 19, so I double-click on the "17"
+> (single-click won't give me an edit cursor).
 
-Thanks
-Alex
-> 
+
+Yes. You need to double-click the cell
+to open up the editor.
+Single-click is not enough.
+
+It is the same for a simple example
+program using QTreeWidgetItem.
+So, it is the standard behavior of the Qt library.
+
+
+
+> The edit cursor is
+> immediately after the "17", so it's like
+>                                                 17|
+> with the | cursor blinking.
+
+
+Same for me.
+And the "17" is highlighted.
+
+> What I expect to be able to do is
+> Backspace, enter 9, press Enter, and the new value is 19.
+> But Backspace does nothing.
+
+That is different from what I see on my machine
+(matacity of Ubuntu).
+
+After I double-clicked the cell, the entire "17" is high-lighted.
+Backspace deleted "17" entirely for me.
+
+The same behavior for a simple example,
+and it makes sense since Backspace should delete the selected characters.
+
+If Backspace does not work at all for you,
+was it perhaps captured somewhere else on your machine?
+
+
+> I just have to enter the complete new
+> value: 19. So IMO it does not act like an edit box so much as a
+> replacement box.
+
+I am re-implementing a new way to edit values.
+It does not need to act as before.
+
+
+> Also, the new value that I enter is displayed/written over the old value,
+> so I see 17 in white-on-blue and over that I see 19 in black until I
+> press Enter, then I see only 19 in white-on-blue.
+
+I do not see such a weirdness either on my machine.
+I see only the new value I am entering.
+
+
+I have no idea what makes it work differently
+for you.
+
+
+
+>
+> BTW, if I edit DEFAULT_HOSTNAME, which begins as "(none)" and I change it
+> to "xyz" and then change it to <empty string>, it becomes
+> CONFIG_DEFAULT_HOSTNAME=""
+> Should I have to enter "(none)" to get it back to (none)?  I guess so.
+
+
+It is a text string, "(none)",
+which is not an empty string.
+
+See init/Kconfig.
+
+
+config DEFAULT_HOSTNAME
+        string "Default hostname"
+        default "(none)"
+
+
+--
+Best Regards
+Masahiro Yamada
