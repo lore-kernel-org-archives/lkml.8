@@ -2,171 +2,79 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8579C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 12:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBFEC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 12:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A91E214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 12:27:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="JIgXg6C7"
+	by mail.kernel.org (Postfix) with ESMTP id 7E3D2214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 12:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598790580;
+	bh=wHGR+e2YQ6p1W88wyu41jeFfclK5kDp8flK1giHFHYg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=kyqRR7UJVPtgrDoiorW+oGpUFLi/Vt854qbbyheDlMO1VFMQVi/nh2Hwf81513EQZ
+	 /MQKqeVMmvyyeCsW8Ne1UndjtcC2GswkK9VvmBuMsAWiM/HAwDBdXz2/+AtWjYvUuc
+	 gai7zyFmpPi/SEQ4/awTXnP6hwJBNhuzPKujTT8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbgH3M1g (ORCPT
+        id S1728868AbgH3M3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 08:27:36 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60215 "EHLO ozlabs.org"
+        Sun, 30 Aug 2020 08:29:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728609AbgH3M1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 08:27:32 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1728609AbgH3M3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 08:29:34 -0400
+Received: from localhost.localdomain (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BfXf93h19z9sSP;
-        Sun, 30 Aug 2020 22:27:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1598790450;
-        bh=2MLIj4dW/5jOfVSMbtoRZCbtssdTQ2QkrOKiGG+EQmU=;
+        by mail.kernel.org (Postfix) with ESMTPSA id C773F214D8;
+        Sun, 30 Aug 2020 12:29:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598790573;
+        bh=wHGR+e2YQ6p1W88wyu41jeFfclK5kDp8flK1giHFHYg=;
         h=From:To:Cc:Subject:Date:From;
-        b=JIgXg6C7KmIiic0G2rxmWJ50eqP3NCYv1uOQVZ0Pk6b7gP/yrYy5nfyCchZsJr2h5
-         OCUBn4z5xh7ywixHI5W0AET2GcO5/zyUP8CO+ss+GXDQjyrWfYQjHyTyrsrOmvhnWz
-         +klauMlKPt5J2yByk7F0ChQnN9BmTcxQ3k18t8WFa7HCNKPR6mwJg4vkE0YANKQOnd
-         2mysd10zaxHGGiijvgD3TY4RiJbcnpthJxokEM53bE5qjIg3LrxI2ZB7qzx60TSbBX
-         qaSAqBCMGzywR6YncRH3hikGalTBfSPLSmq5wDk0JDuiN0RE3ObryEncr2KXYODjrS
-         YMG6CHAff4fsQ==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     aik@ozlabs.ru, atrajeev@linux.vnet.ibm.com,
-        b.zolnierkie@samsung.com, christophe.leroy@csgroup.eu,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        npiggin@gmail.com, psampat@linux.ibm.com, rdunlap@infradead.org,
-        shawn@anastas.io
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.9-4 tag
-Date:   Sun, 30 Aug 2020 22:27:25 +1000
-Message-ID: <877dtg2uaa.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain
+        b=STqM98b801VPdgcgmaoo3AOrK6HLCEwWehddZA40KegL/d+QnNLECkwNfuYRGNO0i
+         IdvYgpRc8peun4GhLZiE0LNhmWzKqmJaJm5QmlPzvSUE//OJtOCttpqO/D/MK2enG/
+         Yzc4PrJ9Di9QEI3gFq9WnQ6/FRlXrgoXiwLGmhUc=
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH] get_maintainer: add email addresses from dts files
+Date:   Sun, 30 Aug 2020 20:29:22 +0800
+Message-Id: <20200830122922.3884-1-shawnguo@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+MAINTAINER file will get bloated quickly if individual section entry
+is created for each .dts/.dtsi file.  Add the email address from dts
+files to get_maintainer output for saving unnecessary patching on
+MAINTAINER file.
 
-Hi Linus,
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+---
+ scripts/get_maintainer.pl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Please pull some more powerpc fixes for 5.9:
+diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
+index 484d2fbf5921..b8e104028359 100755
+--- a/scripts/get_maintainer.pl
++++ b/scripts/get_maintainer.pl
+@@ -436,7 +436,7 @@ sub maintainers_in_file {
+ 
+     return if ($file =~ m@\bMAINTAINERS$@);
+ 
+-    if (-f $file && ($email_file_emails || $file =~ /\.yaml$/)) {
++    if (-f $file && ($email_file_emails || $file =~ /\.(?:yaml|dtsi?)$/)) {
+ 	open(my $f, '<', $file)
+ 	    or die "$P: Can't open $file: $!\n";
+ 	my $text = do { local($/) ; <$f> };
+-- 
+2.17.1
 
-The following changes since commit 64ef8f2c4791940d7f3945507b6a45c20d959260:
-
-  powerpc/perf/hv-24x7: Move cpumask file to top folder of hv-24x7 driver (2020-08-21 23:35:27 +1000)
-
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.9-4
-
-for you to fetch changes up to 4a133eb351ccc275683ad49305d0b04dde903733:
-
-  powerpc/32s: Disable VMAP stack which CONFIG_ADB_PMU (2020-08-28 12:03:18 +1000)
-
-- ------------------------------------------------------------------
-powerpc fixes for 5.9 #4
-
-Revert our removal of PROT_SAO, at least one user expressed an interest in using
-it on Power9. Instead don't allow it to be used in guests unless enabled
-explicitly at compile time.
-
-A fix for a crash introduced by a recent change to FP handling.
-
-Revert a change to our idle code that left Power10 with no idle support.
-
-One minor fix for the new scv system call path to set PPR.
-
-Fix a crash in our "generic" PMU if branch stack events were enabled.
-
-A fix for the IMC PMU, to correctly identify host kernel samples.
-
-The ADB_PMU powermac code was found to be incompatible with VMAP_STACK, so make
-them incompatible in Kconfig until the code can be fixed.
-
-A build fix in drivers/video/fbdev/controlfb.c, and a documentation fix.
-
-Thanks to:
-  Alexey Kardashevskiy, Athira Rajeev, Christophe Leroy, Giuseppe Sacco,
-  Madhavan Srinivasan, Milton Miller, Nicholas Piggin, Pratik Rajesh Sampat,
-  Randy Dunlap, Shawn Anastasio, Vaidyanathan Srinivasan.
-
-- ------------------------------------------------------------------
-Alexey Kardashevskiy (1):
-      powerpc/perf: Fix crashes with generic_compat_pmu & BHRB
-
-Athira Rajeev (1):
-      powerpc/perf: Fix reading of MSR[HV/PR] bits in trace-imc
-
-Christophe Leroy (1):
-      powerpc/32s: Disable VMAP stack which CONFIG_ADB_PMU
-
-Michael Ellerman (2):
-      video: fbdev: controlfb: Fix build for COMPILE_TEST=y && PPC_PMAC=n
-      powerpc/64s: Fix crash in load_fp_state() due to fpexc_mode
-
-Nicholas Piggin (1):
-      powerpc/64s: scv entry should set PPR
-
-Pratik Rajesh Sampat (1):
-      Revert "powerpc/powernv/idle: Replace CPU feature check with PVR check"
-
-Randy Dunlap (1):
-      Documentation/powerpc: fix malformed table in syscall64-abi
-
-Shawn Anastasio (3):
-      Revert "powerpc/64s: Remove PROT_SAO support"
-      powerpc/64s: Disallow PROT_SAO in LPARs by default
-      selftests/powerpc: Update PROT_SAO test to skip ISA 3.1
-
-
- Documentation/powerpc/syscall64-abi.rst       |  4 +-
- arch/powerpc/Kconfig                          | 12 ++++++
- arch/powerpc/include/asm/book3s/64/pgtable.h  |  8 ++--
- arch/powerpc/include/asm/cputable.h           | 10 ++---
- arch/powerpc/include/asm/mman.h               | 31 ++++++++++++--
- arch/powerpc/include/asm/nohash/64/pgtable.h  |  2 +
- arch/powerpc/include/uapi/asm/mman.h          |  2 +-
- arch/powerpc/kernel/dt_cpu_ftrs.c             |  2 +-
- arch/powerpc/kernel/entry_64.S                |  4 ++
- arch/powerpc/kernel/process.c                 | 12 ++++--
- arch/powerpc/mm/book3s64/hash_utils.c         |  2 +
- arch/powerpc/perf/core-book3s.c               | 19 ++++++---
- arch/powerpc/perf/imc-pmu.c                   |  4 +-
- arch/powerpc/platforms/Kconfig.cputype        |  2 +-
- arch/powerpc/platforms/powernv/idle.c         |  2 +-
- drivers/video/fbdev/controlfb.c               |  2 +
- include/linux/mm.h                            |  2 +
- include/trace/events/mmflags.h                |  2 +
- mm/ksm.c                                      |  4 ++
- tools/testing/selftests/powerpc/mm/.gitignore |  1 +
- tools/testing/selftests/powerpc/mm/Makefile   |  4 +-
- tools/testing/selftests/powerpc/mm/prot_sao.c | 43 ++++++++++++++++++++
- 22 files changed, 144 insertions(+), 30 deletions(-)
- create mode 100644 tools/testing/selftests/powerpc/mm/prot_sao.c
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl9LmmkACgkQUevqPMjh
-pYBw8w//RQpss9mLAe8NTVBF9bV6sMRWaTugjaRwQIIzbhu21eygaIcW9d4XFtXz
-xVB83HHRoD4ND+DH/7rOq6ZCIzusbfeqhm0uRBzkrlwVZuo4Y/ZuCvW+0Bo06qRp
-nkayAtpoI1wGoeWQcHUpHunZgwQTbWVNAo1yRo4cm8ux5wP88E1iEiZdNXcP/IPr
-V3p0BGYpCrwuNUKE54N3JPOHRP1UILBff1agjfhfctTTVY+tUB5katgMxYh8Euv+
-HVTm7U5QHnvkqhLSxdP76UP6R1DCN+E8GruXbDpR+ofJ5PLd1TgY5w3CLNjE88Pn
-fnM7GigG6xB3x/DunbVOD3RRGKKg6FFJIRvJ6YrSEWkf84IUKxsQ6Y0Noeb2bLs9
-04C5hN0d7GBi7JSjW0nZZvB3jZT0ptiAl3BggEhOshfaqyloogOHEk4pxyXG2/ja
-fkTFDdhEgNBO/iAjGCsXaUmaSa1OimpENKNZtosPL6dYbG/FFQ2UgKz+lUR7jsD8
-5uH8H1gKH1565JmRfckcplX2hkwPteVDQ2HzSQAD3KyjIMmvDPLCAynTlvxxxn/V
-wPeoXpeD1DDZA7RSiV+jaVtjK6rNcjbAUUOhlngigSiXCjBvfsA4lDhovQzivsOF
-E1TRnWSmCrTlV21+rtSZjbEdg/WLiBIHVu0DLGjcSw/XeaVa9g8=
-=3NM9
------END PGP SIGNATURE-----
