@@ -2,102 +2,90 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8F9C433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B465DC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38E7E2087D
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:54:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G1mmmW/E"
+	by mail.kernel.org (Postfix) with ESMTP id 8A1282087D
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598799428;
+	bh=39+KdiOMDJ84HXP5g0zhPgjous2vUWi/MRfv/Il8has=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=TxvTDuHGVzutWPAwueqeRfsfWxghjowRhq7JzbziOi4r6uqqWqBkgM3XchTLmqIS1
+	 YjWzQHt2zLpW31FkVeNEr/odLPIdn7+7/eqsRXeWzXdnxkz1AQhyxt4v/SIphC8AXV
+	 NJHGj43+XzyXYFkqzsh7pg1CPwdam7quxhStQSB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbgH3Oy0 (ORCPT
+        id S1726775AbgH3O5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 10:54:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52676 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725898AbgH3OyX (ORCPT
+        Sun, 30 Aug 2020 10:57:07 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:36148 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725898AbgH3O47 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 10:54:23 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5D95C061573;
-        Sun, 30 Aug 2020 07:54:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=9PPKfXe7kpGFMgrqa1M7KwlEZAb+8W2f+PfTg/rKw7I=; b=G1mmmW/EIxwt023nrxILPhAH/s
-        Xo8ENT3bIsLT+HOa7g93ZU7ub5qI1LCn/zR7OlGzg+Q/wy4KC+nU8TEkTFpskuKr3dKu1ALhHczs1
-        kb5/3hCDOTMafg2v/6Ll/BSDx2Z+vboeLb8mys/3po4soBaBy4hCLn9+WIDdxufdCJloKeGYIhLnm
-        WZHf3+XqaSMyckU0aaJerEGf0mQeqiRcaz1roFy0EyqWfu3zLtds7q0z5ywZQmoIcbF/Z+BEYlRL3
-        nEY5SO9MqM1hrnNBOkVFWFt3eSQTFUQQ+QkObnhNYwW8PtsbvieNHR2z7pPY/VTozCkHPg9rIgegG
-        OxKyiEFQ==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kCOip-0003tk-QL; Sun, 30 Aug 2020 14:54:20 +0000
-Subject: Re: [PATCH] Documentation: submit-checklist: add Documentation clean
- builds
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <e38b108c-afec-fd0e-ad09-b4dd5da59fd1@infradead.org>
- <20200830114153.GC423750@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <203a91be-4ee4-5466-acd7-531e24792422@infradead.org>
-Date:   Sun, 30 Aug 2020 07:54:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Sun, 30 Aug 2020 10:56:59 -0400
+Received: by mail-ej1-f68.google.com with SMTP id l2so5222933eji.3;
+        Sun, 30 Aug 2020 07:56:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FmfbpA0t89Y3GN3q2a0BqnJH3Vsp3rUS9TSaNl4DebE=;
+        b=JJm0akM5QkYFhx6hL/bNTmqVZknsCl0I6JUmjihTNTu/LgluKGV6Gw3qLirOWD6qCQ
+         3P/EzaUnjlYUqAJxjgXfdJpU4dmQqPlfgFq5sDszjd/IbHMf1BK5z4AJnDuqu2u7M7Ej
+         q2Fw2Z5KgfY8OWvtTLBwfGte2q7uhXJuLiEy01YfDh5q0xTFhS1weLZRtVrD3kwKilYw
+         4QVePB/Kc2NpPDFToOMF0l7vMDGIXQrSno5hCmEpTpXptV3Lb3WZbrFebUeAVaIeKrkZ
+         s+crxy1o5S2svF1Lh77dqRtdJgTB8r9Mkuoic/c1/5BLn+RGcOd5fsvOirxfK/5Eouqb
+         K3VQ==
+X-Gm-Message-State: AOAM532SiIeUpO7B51d1lf8MRVhV2QtO5Bg4j7ZK5eYMbBryZYLwMAPO
+        L2Gi3QOuJyyKpmAnwo7SoCiM5jCGf9w=
+X-Google-Smtp-Source: ABdhPJz1TROFuryXhQ5bxBd9DP2kpjRz3z/1fdQtws9ck3EeSWBtSP/Z/YV/cGDVPZgbrESkwFClQQ==
+X-Received: by 2002:a17:906:f84b:: with SMTP id ks11mr7582022ejb.264.1598799417607;
+        Sun, 30 Aug 2020 07:56:57 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id v10sm5001715edi.69.2020.08.30.07.56.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 30 Aug 2020 07:56:57 -0700 (PDT)
+Date:   Sun, 30 Aug 2020 16:56:55 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] KEYS: asymmetric: Fix kerneldoc
+Message-ID: <20200830145655.GA31461@kozik-lap>
+References: <20200819175212.20583-1-krzk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200830114153.GC423750@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200819175212.20583-1-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/30/20 4:41 AM, Mike Rapoport wrote:
-> On Sun, Aug 23, 2020 at 05:38:12PM -0700, Randy Dunlap wrote:
->> From: Randy Dunlap <rdunlap@infradead.org>
->>
->> Add to Documentation/process/submit-checklist.rst that patch
->> submitters should run "make htmldocs" and verify that any
->> Documentation/ changes (patches) are clean (no new warnings/errors).
->>
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> ---
->>  Documentation/process/submit-checklist.rst |    4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> --- linux-next-20200821.orig/Documentation/process/submit-checklist.rst
->> +++ linux-next-20200821/Documentation/process/submit-checklist.rst
->> @@ -24,6 +24,10 @@ and elsewhere regarding submitting Linux
->>  
->>    c) Builds successfully when using ``O=builddir``
->>  
->> +  d) Any Documentation/ changes build successfully without warnings/errors.
+On Wed, Aug 19, 2020 at 07:52:12PM +0200, Krzysztof Kozlowski wrote:
+> Fix W=1 compile warnings (invalid kerneldoc):
 > 
-> Maybe "... without new warnings/errors"?
-> Unfortunately we still have plenty of old ones...
+>     crypto/asymmetric_keys/asymmetric_type.c:160: warning: Function parameter or member 'kid1' not described in 'asymmetric_key_id_same'
+>     crypto/asymmetric_keys/asymmetric_type.c:160: warning: Function parameter or member 'kid2' not described in 'asymmetric_key_id_same'
+>     crypto/asymmetric_keys/asymmetric_type.c:160: warning: Excess function parameter 'kid_1' description in 'asymmetric_key_id_same'
+>     crypto/asymmetric_keys/asymmetric_type.c:160: warning: Excess function parameter 'kid_2' description in 'asymmetric_key_id_same'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  crypto/asymmetric_keys/asymmetric_type.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 
-Yes, I'll change that.
-Thanks.
+Hi David, Herbert,
 
->> +     Use ``make htmldocs`` or ``make pdfdocs`` to check the build and
->> +     fix any issues.
->> +
->>  3) Builds on multiple CPU architectures by using local cross-compile tools
->>     or some other build farm.
->>  
->>
+Any comments here?
 
--- 
-~Randy
+Best regards,
+Krzysztof
 
