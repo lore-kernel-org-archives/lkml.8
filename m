@@ -2,106 +2,81 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B130BC433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 08:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EB0C433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 08:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C13920BED
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 08:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BF420714
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 08:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgH3IQW (ORCPT
+        id S1726540AbgH3IU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 04:16:22 -0400
-Received: from mga14.intel.com ([192.55.52.115]:59117 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbgH3IQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 04:16:20 -0400
-IronPort-SDR: AfKBnsnUaJZEVvGUw6ZkCSM7WBpQFuTBV+XRbkczRQ+W6db5XEIIiz+5hC3XBIOcbtYQyO3oVz
- LPvtSiKwMYLg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9728"; a="156108637"
-X-IronPort-AV: E=Sophos;i="5.76,371,1592895600"; 
-   d="scan'208";a="156108637"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2020 01:16:18 -0700
-IronPort-SDR: /7T2yQCqaQHMU6kes3LeCqjFI7HAEqYM/TLWHePSQltPZm5X8x7mMM8T/Nd2sSVqmH2bLQfBRK
- URK/+FAYpIpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,371,1592895600"; 
-   d="scan'208";a="324560999"
-Received: from shuo-intel.sh.intel.com (HELO localhost) ([10.239.154.30])
-  by fmsmga004.fm.intel.com with ESMTP; 30 Aug 2020 01:16:15 -0700
-Date:   Sun, 30 Aug 2020 16:16:15 +0800
-From:   Shuo A Liu <shuo.a.liu@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yu Wang <yu1.wang@intel.com>,
-        "Reinette Chatre" <reinette.chatre@intel.com>, <x86@kernel.org>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: Re: [PATCH 05/17] virt: acrn: Introduce ACRN HSM basic driver
-Message-ID: <20200830081615.GG13723@shuo-intel.sh.intel.com>
-References: <20200825024516.16766-1-shuo.a.liu@intel.com>
- <20200825024516.16766-6-shuo.a.liu@intel.com>
- <20200828102559.GA1470435@kroah.com>
- <20200829104612.GD13723@shuo-intel.sh.intel.com>
- <58093008-3072-f9df-5245-f74a82906e47@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <58093008-3072-f9df-5245-f74a82906e47@intel.com>
-User-Agent: Mutt/1.8.3 (2017-05-23)
+        Sun, 30 Aug 2020 04:20:56 -0400
+Received: from zg8tmja5ljk3lje4mi4ymjia.icoremail.net ([209.97.182.222]:40780
+        "HELO zg8tmja5ljk3lje4mi4ymjia.icoremail.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with SMTP id S1725869AbgH3IU4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 04:20:56 -0400
+Received: from oslab.tsinghua.edu.cn (unknown [166.111.139.112])
+        by app-1 (Coremail) with SMTP id DwQGZQBnSSNbYUtfs2HPAA--.4425S2;
+        Sun, 30 Aug 2020 16:20:46 +0800 (CST)
+From:   Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+To:     mchehab@kernel.org, sean@mess.org, pavel@ucw.cz
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+Subject: [PATCH] media: pci: ttpci: av7110: avoid compiler optimization of reading data[0] in debiirq()
+Date:   Sun, 30 Aug 2020 16:20:42 +0800
+Message-Id: <20200830082042.17462-1-baijiaju@tsinghua.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: DwQGZQBnSSNbYUtfs2HPAA--.4425S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xr1UZryfZr17Kw4xAw48tFb_yoWfZrc_Wr
+        ykXrW3uw4DZF97tr12yrsay3yjya98XF1xC3WSqa43Aw1DCr4xX39IkFnrJr97C345urW5
+        AFyDXFnY9w17CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbckFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+        0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+        jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8ZwCF
+        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+        1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
+        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUhiSdUUUUU=
+X-CM-SenderInfo: xedlyxhdmxq3pvlqwxlxdovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+In debiirq(), data_0 stores the value of data[0], but it can be dropped
+by compiler optimization. Thus, data[0] is read through READ_ONCE().
 
-On Sat 29.Aug'20 at  9:12:22 -0700, Dave Hansen wrote:
->On 8/29/20 3:46 AM, Shuo A Liu wrote:
->> On Fri 28.Aug'20 at 12:25:59 +0200, Greg Kroah-Hartman wrote:
->>> On Tue, Aug 25, 2020 at 10:45:05AM +0800, shuo.a.liu@intel.com wrote:
->>>> +static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
->>>> +               unsigned long ioctl_param)
->>>> +{
->>>> +    if (cmd == ACRN_IOCTL_GET_API_VERSION) {
->>>> +        if (copy_to_user((void __user *)ioctl_param,
->>>> +                 &api_version, sizeof(api_version)))
->>>> +            return -EFAULT;
->>>
->>> Why are you versioning your api?  Shouldn't that not be a thing and you
->>> either support an ioctl or you do not?
->>
->> The API version here is more for the hypercalls.
->> The hypercalls might evolve later
->
->They might evolve, but the old ones must always keep working.  Right?
+Fixes: 6499a0db9b0f ("media: pci: ttpci: av7110: fix possible buffer overflow caused by bad DMA value in debiirq()")
+Reported-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+---
+ drivers/media/pci/ttpci/av7110.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yes, it's right.
+diff --git a/drivers/media/pci/ttpci/av7110.c b/drivers/media/pci/ttpci/av7110.c
+index bf36b1e22b63..f7d098d5b198 100644
+--- a/drivers/media/pci/ttpci/av7110.c
++++ b/drivers/media/pci/ttpci/av7110.c
+@@ -406,7 +406,7 @@ static void debiirq(unsigned long cookie)
+ 	case DATA_CI_GET:
+ 	{
+ 		u8 *data = av7110->debi_virt;
+-		u8 data_0 = data[0];
++		u8 data_0 = READ_ONCE(data[0]);
+ 
+ 		if (data_0 < 2 && data[2] == 0xff) {
+ 			int flags = 0;
+-- 
+2.17.1
 
->
->> and the version indicates which set of interfaces (include the
->> paramters' format) should be used by user space tools. Currently,
->> it's used rarely.
->Why do you need this when the core kernel doesn't?  We add syscalls,
->ioctl()s and prctl()s all the time, but nothing is versioned.
-
-Indeed. It looks a bit odd.
-
->
->This sounds like something you need to remove from the series.
-
-OK. I will remove the api version related code.
-
-Thanks
-shuo
