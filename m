@@ -2,116 +2,115 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0871CC433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 03:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF48C433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 04:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B788E20707
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 03:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46FA02074A
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 04:34:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q/IHlZYM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmmq4yt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgH3DxK (ORCPT
+        id S1726013AbgH3EeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 29 Aug 2020 23:53:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35172 "EHLO
+        Sun, 30 Aug 2020 00:34:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728609AbgH3DxJ (ORCPT
+        with ESMTP id S1725766AbgH3EeD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 29 Aug 2020 23:53:09 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00B06C061573;
-        Sat, 29 Aug 2020 20:53:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=WbMAzbTAVAIQl6lHjgeLTj8i/9ypXVT0o1tVe85oxSw=; b=Q/IHlZYM18zzXoBEEPcSMvjsjE
-        fS/Ekpw9afXvbBIWA+DTiEAP/XFm9LWtboYB901Qg2ZyHDW9pwD9Xbxx28RG4UxWouWvSyldWoLx1
-        kEyknipx3XgZjbyHDRBdTX4GHgzCIgVkoVjGXB+r9Mamfa6AHKZbej4zXiqBlRbbYW+Pd/4XxYd6q
-        9pG540fXcCocL45QTzM+tbl9LUyJHuCDVDtKx63z9lB9/dGNSafRi2MAkkSskk54MjW9rkVmcstf9
-        pIvnIYxgo3N2lesyLKIF8B8DZN2Wr3Yyo6XWOzbpyv2fDwe5pJ+aP5WJHKV8EWiY9TdWm6D5e2FO9
-        DTA21FAg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kCEOr-000380-CY; Sun, 30 Aug 2020 03:53:01 +0000
-Date:   Sun, 30 Aug 2020 04:53:00 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] fat: Avoid oops when bdi->io_pages==0
-Message-ID: <20200830035300.GX14765@casper.infradead.org>
-References: <87ft85osn6.fsf@mail.parknet.co.jp>
- <20200830012151.GW14765@casper.infradead.org>
- <874kokq4o4.fsf@mail.parknet.co.jp>
+        Sun, 30 Aug 2020 00:34:03 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E63C061573;
+        Sat, 29 Aug 2020 21:34:03 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id g207so2754174pfb.1;
+        Sat, 29 Aug 2020 21:34:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xT5hOA3Q9LtPiLNaX+syaa1JIKrmhIwC08WtkEEf/0E=;
+        b=nmmq4yt2jDGvMdopd9AnAONRTa4o80logLsYKaV7kuMUI6EYuTNs8A+SfJOCmrCiGU
+         9TBCTO6Zqp1UghiKDOh/jVOVEyMWWfPDJBL4frWHmSCarqcERdZRwSZ/9HXxAcup6yBJ
+         O+GUy7CSvKdtoFN43GxKYsQt8ubs+YyGw/Wszeo8IDodUaLRakVbXoP0n3IG/SdWSSdk
+         5jY//dKbifCKbHgxugw5kOulA5x/kU6Gh0DFvYakBca5HCLZfTJgvxXzX4PoZdBTYJ7u
+         mkyp+gSWke2XO9T0/gCDh4ej+fpHY0Tror4tF+qoCf0We3od1htIhkJgY1WpnZ+u1mb2
+         Io8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xT5hOA3Q9LtPiLNaX+syaa1JIKrmhIwC08WtkEEf/0E=;
+        b=VJD/r6QdEp1wLiuzgsBAei/nyIkw7saOi8YvE120pt5DYXSeo100Kimkk+R0FUlohc
+         dloDlFVheAjDvU4wdYtxGcF+G/7jZqiGT7LTbGVevimeQoeglKQKRQW2aafwMHIIYCJE
+         E+CLmwxWxUO3NXEJqaUIfdCZpUQcjQAnlfC19TwD6nebxnA/DekfJBd8yDSkI5YdnYTv
+         Alhfrr6qrQldOSaqAx4y+Yecdljag+2t/XQbQSj7J3wfIh7kyXxvP3Yyh85GLieTaz1u
+         4BR/toqhzXV4qzZTvXrDegm5sbaCHevC/S0mvqzT0GOrMyaQyxk+Flk6f2uADXtFwa+u
+         BOrQ==
+X-Gm-Message-State: AOAM530mDrN86cA4Gh3J9ZdNPpagV21siDWjhw7F4SC8BDjNaCi8lMQI
+        101Yli3qU+gJ/NFOODIl+Zw=
+X-Google-Smtp-Source: ABdhPJxL59CylV1nSHfWdYJMO6uDnfQ8foYdlMNRTWw78U3S/+mM5nt5uIsDFHhRw3bTt+il0JrooA==
+X-Received: by 2002:a63:fe06:: with SMTP id p6mr4181417pgh.337.1598762039854;
+        Sat, 29 Aug 2020 21:33:59 -0700 (PDT)
+Received: from thinkpad.teksavvy.com (104.36.148.139.aurocloud.com. [104.36.148.139])
+        by smtp.gmail.com with ESMTPSA id j18sm3740390pgm.30.2020.08.29.21.33.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Aug 2020 21:33:59 -0700 (PDT)
+From:   Rustam Kovhaev <rkovhaev@gmail.com>
+To:     pbonzini@redhat.com, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        Rustam Kovhaev <rkovhaev@gmail.com>
+Subject: [PATCH] KVM: fix memory leak in kvm_io_bus_unregister_dev()
+Date:   Sat, 29 Aug 2020 21:34:05 -0700
+Message-Id: <20200830043405.268044-1-rkovhaev@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kokq4o4.fsf@mail.parknet.co.jp>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 10:54:35AM +0900, OGAWA Hirofumi wrote:
-> Matthew Wilcox <willy@infradead.org> writes:
-> 
-> > On Sun, Aug 30, 2020 at 09:59:41AM +0900, OGAWA Hirofumi wrote:
-> >> On one system, there was bdi->io_pages==0. This seems to be the bug of
-> >> a driver somewhere, and should fix it though. Anyway, it is better to
-> >> avoid the divide-by-zero Oops.
-> >> 
-> >> So this check it.
-> >> 
-> >> Signed-off-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-> >> Cc: <stable@vger.kernel.org>
-> >> ---
-> >>  fs/fat/fatent.c |    2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >> 
-> >> diff --git a/fs/fat/fatent.c b/fs/fat/fatent.c
-> >> index f7e3304..98a1c4f 100644
-> >> --- a/fs/fat/fatent.c	2020-08-30 06:52:47.251564566 +0900
-> >> +++ b/fs/fat/fatent.c	2020-08-30 06:54:05.838319213 +0900
-> >> @@ -660,7 +660,7 @@ static void fat_ra_init(struct super_blo
-> >>  	if (fatent->entry >= ent_limit)
-> >>  		return;
-> >>  
-> >> -	if (ra_pages > sb->s_bdi->io_pages)
-> >> +	if (sb->s_bdi->io_pages && ra_pages > sb->s_bdi->io_pages)
-> >>  		ra_pages = rounddown(ra_pages, sb->s_bdi->io_pages);
-> >
-> > Wait, rounddown?  ->io_pages is supposed to be the maximum number of
-> > pages to readahead.  Shouldn't this be max() instead of rounddown()?
+when kmalloc() fails in kvm_io_bus_unregister_dev(), before removing
+the bus, we should iterate over all other devices linked to it and call
+kvm_iodevice_destructor() for them
 
-Sorry, I meant 'min', not 'max'.
+Reported-and-tested-by: syzbot+f196caa45793d6374707@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=f196caa45793d6374707
+Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
+---
+ virt/kvm/kvm_main.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-> Hm, io_pages is limited by driver setting too, and io_pages can be lower
-> than ra_pages, e.g. usb storage.
-> 
-> Assuming ra_pages is user intent of readahead window. So if io_pages is
-> lower than ra_pages, this try ra_pages to align of io_pages chunk, but
-> not bigger than ra_pages. Because if block layer splits I/O requests to
-> hard limit, then I/O is not optimal.
-> 
-> So it is intent, I can be misunderstanding though.
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 67cd0b88a6b6..646aa7b82548 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -4332,7 +4332,7 @@ int kvm_io_bus_register_dev(struct kvm *kvm, enum kvm_bus bus_idx, gpa_t addr,
+ void kvm_io_bus_unregister_dev(struct kvm *kvm, enum kvm_bus bus_idx,
+ 			       struct kvm_io_device *dev)
+ {
+-	int i;
++	int i, j;
+ 	struct kvm_io_bus *new_bus, *bus;
+ 
+ 	bus = kvm_get_bus(kvm, bus_idx);
+@@ -4351,6 +4351,11 @@ void kvm_io_bus_unregister_dev(struct kvm *kvm, enum kvm_bus bus_idx,
+ 			  GFP_KERNEL_ACCOUNT);
+ 	if (!new_bus)  {
+ 		pr_err("kvm: failed to shrink bus, removing it completely\n");
++		for (j = 0; j < bus->dev_count; j++) {
++			if (j == i)
++				continue;
++			kvm_iodevice_destructor(bus->range[j].dev);
++		}
+ 		goto broken;
+ 	}
+ 
+-- 
+2.28.0
 
-Looking at this some more, I'm not sure it makes sense to consult ->io_pages
-at all.  I see how it gets set to 0 -- the admin can write '1' to
-/sys/block/<device>/queue/max_sectors_kb and that gets turned into 0
-in ->io_pages.
-
-But I'm not sure it makes any sense to respect that.  Looking at mm/readahead.c, all it does is limit the size of a read request which exceeds the current readahead window.  It's not used to limit the readahead window itself.  For
-example:
-
-        unsigned long max_pages = ra->ra_pages;
-...
-        if (req_size > max_pages && bdi->io_pages > max_pages)
-                max_pages = min(req_size, bdi->io_pages);
-
-Setting io_pages below ra_pages has no effect.  So maybe fat should also
-disregard it?
