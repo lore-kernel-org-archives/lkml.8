@@ -2,130 +2,95 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7ECCC43461
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 19:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1F7C433E7
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 20:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A243D2078D
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 19:44:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhzf3GQj"
+	by mail.kernel.org (Postfix) with ESMTP id 117EE206FA
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 20:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbgH3Top (ORCPT
+        id S1726453AbgH3UAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 15:44:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgH3Tom (ORCPT
+        Sun, 30 Aug 2020 16:00:32 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:48260 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbgH3UAa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 15:44:42 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 708DEC061573;
-        Sun, 30 Aug 2020 12:44:42 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id c2so229856ljj.12;
-        Sun, 30 Aug 2020 12:44:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=w2b3uQ3grQuHzLpPQOfEHno6ki6zY9r+UONQurulOvI=;
-        b=fhzf3GQjA1EtS/4zAwotNBVfEP5BgQC/vHh7NlqVuoqdj7ROn0tVvewLZVBzxTj4Pv
-         4uAEsVCRdvMO7MN38yRhvjx55DRhviVUp+DeySquLtSENxd8LUNUq5mIKtUDp7268hWj
-         EiAUYpoHBSpKqaW7iOB+cqshvXFhudBmVbsI7vuQfku+8lEdvR++g+KmaUBIrqUudFxn
-         W8bUy8KkEXDCgYhxAAGz+7w9KmUMEitnB8JF5nbRsi/deNwUInd6AYGqmk3s0Ib8ljbl
-         l0EyB1+767rr0k5EB5hEav1tXcXzg8p3RaCj4yuxNRG9oCWCo1/o1xG6lEcvfnnZFy/d
-         3pcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=w2b3uQ3grQuHzLpPQOfEHno6ki6zY9r+UONQurulOvI=;
-        b=leG/wgtrMJFH5J1J6VxTS5Hd9aNg/sD84usrjAA03Y1WiJFHL4z0fproDJoB7tZcAL
-         64na/53cO6FqPjD53NATlKU+XdzYTqaZK6RXa5Tzy/xcHKDjRrmc1FwbKQ0alVVFyx1l
-         rUciuBZv4gnUyPPz95rSjHMUOwjfMxcLqt1KrEbWowTn5W/NQLmeq8nYdsxxZ319OF5V
-         HdHM5iyf0h4q1Z6QO0wEx8cEHseIRCq6bUp+ZNkg+3wZrQWED/tbQOXW3dHOW2y5UWB5
-         TkWkcCJOypZMplVCrlU6gWw1a+GlGk0roCnk6JjsbxNd0OcjMXmYy21aRkSfK4ebEzgD
-         3Xxg==
-X-Gm-Message-State: AOAM530wrMXZiGXqjocBQznwdUCvRy6X8lg5eIBDvQkGtFfKVewLDvZT
-        NcfpDvUyAuhtxtARDPDNifjjow+d+5c=
-X-Google-Smtp-Source: ABdhPJz59TfkPi8wlRB5m8RE5yjEcxQe68Z6X9P8P2LdznriMOncqOezMDUqioFbPNx1FbZLjJi8TA==
-X-Received: by 2002:a05:651c:11c5:: with SMTP id z5mr3132694ljo.74.1598816680601;
-        Sun, 30 Aug 2020 12:44:40 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id e8sm1114886lja.93.2020.08.30.12.44.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Aug 2020 12:44:39 -0700 (PDT)
-Subject: Re: [PATCH 16/18] staging/media/tegra-vde: Clean up IOMMU workaround
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, hch@lst.de, joro@8bytes.org,
-        linux@armlinux.org.uk, will@kernel.org, inki.dae@samsung.com,
-        sw0312.kim@samsung.com, kyungmin.park@samsung.com,
-        m.szyprowski@samsung.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, jonathanh@nvidia.com,
-        vdumpa@nvidia.com, matthias.bgg@gmail.com, yong.wu@mediatek.com,
-        geert+renesas@glider.be, magnus.damm@gmail.com, t-kristo@ti.com,
-        s-anna@ti.com, laurent.pinchart@ideasonboard.com,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1597931875.git.robin.murphy@arm.com>
- <3535c205b9bce52556abbf2f63384fb38e009df9.1597931876.git.robin.murphy@arm.com>
- <07135a55-cbc9-83e5-60dc-731282192554@gmail.com>
- <cb12808b-7316-19db-7413-b7f852a6f8ae@arm.com>
- <62a72187-442b-2103-46c3-39d3cd999f54@gmail.com>
- <affe2cfb-19e8-8e55-acd0-7170e274ab34@arm.com>
- <f1923a53-e799-e63c-fd22-4a6cca3b8212@gmail.com>
- <20200827155446.GB1660457@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <f6240633-feed-70b7-2fe8-49fcee687676@gmail.com>
-Date:   Sun, 30 Aug 2020 22:44:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 30 Aug 2020 16:00:30 -0400
+Date:   Sun, 30 Aug 2020 16:00:29 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [RESEND PATCH] vfs: add RWF_NOAPPEND flag for pwritev2
+Message-ID: <20200830200029.GF3265@brightrain.aerifal.cx>
+References: <20200829020002.GC3265@brightrain.aerifal.cx>
+ <CAG48ez1BExw7DdCEeRD1hG5ZpRObpGDodnizW2xD5tC0saTDqg@mail.gmail.com>
+ <20200830163657.GD3265@brightrain.aerifal.cx>
+ <CAG48ez00caDqMomv+PF4dntJkWx7rNYf3E+8gufswis6UFSszw@mail.gmail.com>
+ <20200830184334.GE3265@brightrain.aerifal.cx>
+ <CAG48ez3LvbWLBsJ+Edc9qCjXDYV0TRjVRrANhiR2im1aRUQ6gQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200827155446.GB1660457@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez3LvbWLBsJ+Edc9qCjXDYV0TRjVRrANhiR2im1aRUQ6gQ@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-27.08.2020 18:54, Thierry Reding пишет:
-...
->> The Tegra DRM has a very special quirk for ARM32 that was added in this
->> commit [2] and driver relies on checking of whether explicit or implicit
->> IOMMU is used in order to activate the quirk.
->>
->> [2]
->> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=273da5a046965ccf0ec79eb63f2d5173467e20fa
->>
->> Once the implicit IOMMU is used for the DRM driver, the quirk no longer
->> works (if I'm not missing something). This problem needs to be resolved
->> before implicit IOMMU could be used by the Tegra DRM on ARM32.
-...
-> I do have a patch lying around somewhere that implements the mapping
-> cache that was referenced in the above commit. Let me know if I should
-> dig that up and send it out.
+On Sun, Aug 30, 2020 at 09:02:31PM +0200, Jann Horn wrote:
+> On Sun, Aug 30, 2020 at 8:43 PM Rich Felker <dalias@libc.org> wrote:
+> > On Sun, Aug 30, 2020 at 08:31:36PM +0200, Jann Horn wrote:
+> > > On Sun, Aug 30, 2020 at 6:36 PM Rich Felker <dalias@libc.org> wrote:
+> > > > So just checking IS_APPEND in the code paths used by
+> > > > pwritev2 (and erroring out rather than silently writing output at the
+> > > > wrong place) should suffice to preserve all existing security
+> > > > invariants.
+> > >
+> > > Makes sense.
+> >
+> > There are 3 places where kiocb_set_rw_flags is called with flags that
+> > seem to be controlled by userspace: aio.c, io_uring.c, and
+> > read_write.c. Presumably each needs to EPERM out on RWF_NOAPPEND if
+> > the underlying inode is S_APPEND. To avoid repeating the same logic in
+> > an error-prone way, should kiocb_set_rw_flags's signature be updated
+> > to take the filp so that it can obtain the inode and check IS_APPEND
+> > before accepting RWF_NOAPPEND? It's inline so this should avoid
+> > actually loading anything except in the codepath where
+> > flags&RWF_NOAPPEND is nonzero.
+> 
+> You can get the file pointer from ki->ki_filp. See the RWF_NOWAIT
+> branch of kiocb_set_rw_flags().
 
-Hello, Thierry! It certainly will be interesting to take a look at yours
-patch!
+Thanks. I should have looked for that. OK, so a fixup like this on top
+of the existing patch?
 
-I think that the caching shouldn't be strictly necessary for keeping the
-current workaround working and it should be possible to keep the code
-as-is by replacing the domain-type checking with the SoC-generation
-check in the Tegra DRM driver.
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 473289bff4c6..674131e8d139 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3457,8 +3457,11 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
+ 		ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
+ 	if (flags & RWF_APPEND)
+ 		ki->ki_flags |= IOCB_APPEND;
+-	if (flags & RWF_NOAPPEND)
++	if (flags & RWF_NOAPPEND) {
++		if (IS_APPEND(file_inode(ki->ki_filp)))
++			return -EPERM;
+ 		ki->ki_flags &= ~IOCB_APPEND;
++	}
+ 	return 0;
+ }
+ 
+If this is good I'll submit a v2 as the above squashed with the
+original patch.
 
-In general, IMO it should be better to stash the complex changes until
-we'll get closer to adopting the new UAPI as it will certainly touch the
-aspect of the per-device mappings. But if yours patch is less than 100
-LOC, then maybe we could consider applying it right now!
+Rich
