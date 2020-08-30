@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F25DC433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 13:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 231E3C433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7F1320707
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 13:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0BB5206FA
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 14:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598795995;
-	bh=j77CktKo3T9lOAIW0GGqvgAET3t3oeLi6WGf+te7xiU=;
+	s=default; t=1598796018;
+	bh=TTjHKAyk9At+IUU5vNSawItxwFQVyBHFrL+xnjQf8yc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HYzq8mNPlJDAYRxEmwK4z9H+MnnMPgl4rxVn1IDLoCIPWU7wOQuWLL1fsYFmFkaWH
-	 UREHLlZ/Ynz61oqV6g9HaNK/tEkzysXMT0gXiVuhDheJhSu2rGWE8J9wTV+EG2olpT
-	 pu/cJqFyktGSW0zMiatZkdedVtHcaKFtSYurh89A=
+	b=tcdgH4qjrQjof7jYja19MuZ4JJE1rHcWfLaRbs/aWqgg6jn5t2qMEeI+bN/r03bM7
+	 kjvMOwOIHqZUzvR3QYFMM3GhfM5ywqf5dCuQKquVVCaCMYtXQ10rlv/esXgSHV61it
+	 zjpe9QD0NdKXMyNfHaV0Nw2Tlgw6Aw0Q/hXqvTrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgH3N7X (ORCPT
+        id S1726472AbgH3OAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 09:59:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55826 "EHLO mail.kernel.org"
+        Sun, 30 Aug 2020 10:00:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728936AbgH3Nyr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 09:54:47 -0400
+        id S1728941AbgH3Nyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 09:54:50 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3CD82145D;
-        Sun, 30 Aug 2020 13:54:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8D042137B;
+        Sun, 30 Aug 2020 13:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598795686;
-        bh=j77CktKo3T9lOAIW0GGqvgAET3t3oeLi6WGf+te7xiU=;
+        s=default; t=1598795689;
+        bh=TTjHKAyk9At+IUU5vNSawItxwFQVyBHFrL+xnjQf8yc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ddfgfj+GfV+bDD537Y7xdMhWXrxjfVOH1up1ZICU7i2Mma97xCV9UIDAK9Dr4ooDO
-         iMqFopjvTMn+2FLfiFSXDEt4b3Ljlm4gSYoxHL1fbq+XyIP5G5VvcevKVbYTgNWGCS
-         ZRIWE7/yM79SowZEJhXGcig6cO/57LgKqALDTrhM=
+        b=HE1fjI0+fT5mhm0IWRVSB7I06QSINTSR0V5aBMsNguT9M5iJZKkYsoSJvROOzdgk8
+         XSScjZst+pwzZQ+JktPxpCVIY1QNE3dNvYCzQ97dmOMjvkO2GSdGid5ONn7k5xHZ3J
+         UhWZEYTRw23KCqvC29pTvhHyvW85FwqI0SsVWTEI=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -49,9 +49,9 @@ To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
 Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: [PATCH 17/33] ARM: dts: exynos: Override thermal by label in Galaxy I9000
-Date:   Sun, 30 Aug 2020 15:51:44 +0200
-Message-Id: <20200830135200.24304-17-krzk@kernel.org>
+Subject: [PATCH 18/33] ARM: dts: exynos: Override thermal by label in Trats
+Date:   Sun, 30 Aug 2020 15:51:45 +0200
+Message-Id: <20200830135200.24304-18-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200830135200.24304-1-krzk@kernel.org>
 References: <20200830135200.24304-1-krzk@kernel.org>
@@ -70,14 +70,14 @@ A mistyped label on the other hand, will cause a dtc compile error
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/exynos4210-i9100.dts | 28 ++++++++++++--------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+ arch/arm/boot/dts/exynos4210-trats.dts | 29 ++++++++++++--------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos4210-i9100.dts b/arch/arm/boot/dts/exynos4210-i9100.dts
-index 5623e17889a5..799b69e1a93a 100644
---- a/arch/arm/boot/dts/exynos4210-i9100.dts
-+++ b/arch/arm/boot/dts/exynos4210-i9100.dts
-@@ -217,21 +217,6 @@
+diff --git a/arch/arm/boot/dts/exynos4210-trats.dts b/arch/arm/boot/dts/exynos4210-trats.dts
+index 33b40f619dea..75483e08b4b4 100644
+--- a/arch/arm/boot/dts/exynos4210-trats.dts
++++ b/arch/arm/boot/dts/exynos4210-trats.dts
+@@ -140,22 +140,6 @@
  			clock-frequency = <32768>;
  		};
  	};
@@ -86,39 +86,40 @@ index 5623e17889a5..799b69e1a93a 100644
 -		cpu_thermal: cpu-thermal {
 -			cooling-maps {
 -				map0 {
--					/* Corresponds to 800MHz */
--					cooling-device = <&cpu0 2 2>;
+-				     /* Corresponds to 800MHz at freq_table */
+-				     cooling-device = <&cpu0 2 2>, <&cpu1 2 2>;
 -				};
 -				map1 {
--					/* Corresponds to 200MHz */
--					cooling-device = <&cpu0 4 4>;
--				};
--			};
+-				     /* Corresponds to 200MHz at freq_table */
+-				     cooling-device = <&cpu0 4 4>, <&cpu1 4 4>;
+-			       };
+-		       };
 -		};
 -	};
+-
  };
  
  &camera {
-@@ -242,6 +227,19 @@
+@@ -166,6 +150,19 @@
  	cpu0-supply = <&varm_breg>;
  };
  
 +&cpu_thermal {
 +	cooling-maps {
 +		map0 {
-+			/* Corresponds to 800MHz */
-+			cooling-device = <&cpu0 2 2>;
++			/* Corresponds to 800MHz at freq_table */
++			cooling-device = <&cpu0 2 2>, <&cpu1 2 2>;
 +		};
 +		map1 {
-+			/* Corresponds to 200MHz */
-+			cooling-device = <&cpu0 4 4>;
++			/* Corresponds to 200MHz at freq_table */
++			cooling-device = <&cpu0 4 4>, <&cpu1 4 4>;
 +		};
 +	};
 +};
 +
- &ehci {
- 	status = "okay";
- 
+ &dsi_0 {
+ 	vddcore-supply = <&vusb_reg>;
+ 	vddio-supply = <&vmipi_reg>;
 -- 
 2.17.1
 
