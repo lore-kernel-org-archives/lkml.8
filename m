@@ -2,143 +2,114 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA85BC433E6
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 16:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35119C433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 16:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C54F720707
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 16:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C8B020714
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 16:22:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e6gDQeM+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbgH3QFY (ORCPT
+        id S1726430AbgH3QWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 12:05:24 -0400
-Received: from smtprelay0034.hostedemail.com ([216.40.44.34]:33336 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725993AbgH3QFT (ORCPT
+        Sun, 30 Aug 2020 12:22:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37984 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726035AbgH3QWY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 12:05:19 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 1E88F100E7B42;
-        Sun, 30 Aug 2020 16:05:18 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: skin10_3613be727088
-X-Filterd-Recvd-Size: 3306
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 30 Aug 2020 16:05:15 +0000 (UTC)
-Message-ID: <09bacd3b3da948df632a0ffb4d7ca90603a45d06.camel@perches.com>
-Subject: Re: [PATCH V2] sysfs: Add sysfs_emit and sysfs_emit_at to format
- sysfs output
-From:   Joe Perches <joe@perches.com>
-To:     Denis Efremov <efremov@linux.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Alex Dewar <alex.dewar90@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Sun, 30 Aug 2020 09:05:13 -0700
-In-Reply-To: <8b01dc3a-3642-bc12-ae4d-42b90ec208f1@linux.com>
-References: <a9054fb521e65f2809671fa9c18e2453061e9d91.1598744610.git.joe@perches.com>
-         <c22b7006813b1776467a72e716a5970e9277b4b7.camel@perches.com>
-         <8b01dc3a-3642-bc12-ae4d-42b90ec208f1@linux.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Sun, 30 Aug 2020 12:22:24 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9381AC061573
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 09:22:23 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id u48so588795uau.0
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 09:22:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z06b0kU9wn19cfBXnF5Y+xrjYDF9DOBSpgPz6QyB+UE=;
+        b=e6gDQeM+scr90I8EBtpkiubS50gqjj1637ZJiexV9K+RaCcCN9QW2/FNQhlcWitbE2
+         u/DHZ7xjURb5sKwMwYWnfThwBItFTs1ibu477EpbwoEY/oWjmluCks0AvrFrjf+sjdOR
+         WKwpjVk8LbLc85cQTkazXFRedDSGV0cHQjudI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z06b0kU9wn19cfBXnF5Y+xrjYDF9DOBSpgPz6QyB+UE=;
+        b=WIX9WUgjiuOsOA5gz4O/fb6Bn9w8BiBejHlXYQNm5hz8K4NzusnTIPBba/tRXDv8en
+         rFCZ21WW7X5A1WewKVtpmYeVy1l2gS2taLI8abrssQT5w4PKutgpDQmYj5M3EB6lmeL3
+         Yb3QJO6D3DOjpupAmveIx4cWU8wqcUN+xJC0hVhPb4K9mqEx1qaKf5w5DfZ/BiHV0mJ0
+         NcyGY3lPMHCGMOpUANXMmP0Mq1iQ3HpHHNePeTVcHWztZnJvnSSvxqi3HKDGk7sRkW+k
+         fSz+6b1/1bM1S2gc4b+mv4LygRYCb4hQRW5kAa4ezol2rGqQUusTWSQ+R4rKYoWZvZrA
+         SWHw==
+X-Gm-Message-State: AOAM531o2pb7HFK5aH5Ub4BW+Mf6DxMtR3cm6XKnMG1qmmxCGP9ha6vC
+        +fuf6ghrgqEjqSDavUPjLH3vzK5qfpKRyQ==
+X-Google-Smtp-Source: ABdhPJyrtsYzMjWN8vPfLdkG8hJidiB+Exd8arTNn+xVrLCelog9pS/V7BLAaw3qt3gEYOkcgT48Eg==
+X-Received: by 2002:ab0:804:: with SMTP id a4mr3760724uaf.3.1598804536153;
+        Sun, 30 Aug 2020 09:22:16 -0700 (PDT)
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
+        by smtp.gmail.com with ESMTPSA id k12sm980864vke.4.2020.08.30.09.22.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 30 Aug 2020 09:22:15 -0700 (PDT)
+Received: by mail-vs1-f44.google.com with SMTP id y3so2080115vsn.1
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 09:22:15 -0700 (PDT)
+X-Received: by 2002:a67:1c86:: with SMTP id c128mr3728071vsc.219.1598804534454;
+ Sun, 30 Aug 2020 09:22:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200828162005.1.I4f67f494c4f759b0e5c7f487e040dfdcf16e0876@changeid>
+ <CAFv8NwL-s0c_nFWKHmBKgPVeLXwGWdgV+fUtw8MLBJw2D3ox1w@mail.gmail.com>
+In-Reply-To: <CAFv8NwL-s0c_nFWKHmBKgPVeLXwGWdgV+fUtw8MLBJw2D3ox1w@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Sun, 30 Aug 2020 09:22:02 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WTUKfcoBdVhpWm1ULyh8PvJj1O8eDxHTG_EBUbkNj9xw@mail.gmail.com>
+Message-ID: <CAD=FV=WTUKfcoBdVhpWm1ULyh8PvJj1O8eDxHTG_EBUbkNj9xw@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: rt5682: Prefer async probe
+To:     Cheng-yi Chiang <cychiang@chromium.org>
+Cc:     Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-08-30 at 18:25 +0300, Denis Efremov wrote:
-> 
-> On 8/30/20 3:43 AM, Joe Perches wrote:
-> > $ cat sysfs_emit.cocci
-> > @@
-> > identifier d_show =~ "^.*show.*$";
-> 
-> I think this additional pattern will allow to take more functions into the scope. 
-> 
-> @da@
-> identifier show, store;
-> expression name, mode;
-> @@
-> 
-> (
->   DEVICE_ATTR(name, mode, show, store)
->   DEVICE_ATTR_PREALLOC(name, mode, show, store)
->   DEVICE_ATTR_IGNORE_LOCKDEP(name, mode, show, store)
-> )
+Hi,
 
-Thanks Denis.
+On Sun, Aug 30, 2020 at 4:05 AM Cheng-yi Chiang <cychiang@chromium.org> wrote:
+>
+> > @@ -294,6 +294,7 @@ static struct i2c_driver rt5682_i2c_driver = {
+> >                 .name = "rt5682",
+> >                 .of_match_table = rt5682_of_match,
+> >                 .acpi_match_table = rt5682_acpi_match,
+> > +               .probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>
+>
+> One thing I am wondering is that there has not been any usage in codec
+> driver for this.
+> I think every codec driver can use this, and take the benefit of a
+> possible faster boot time ?
 
-I'll try that out too.
+One possibility is that they are all enabled as modules instead of
+builtin to the kernel so nobody ever thought to do it.  Modules are
+always probed asynchronously, so this flag is basically a no-op there
+(and, in fact, for anything that can be built as a module we have even
+more certainty that async probe is safe).
 
-A trivial grep shows there are at least 130+
-DEVICE_ATTR functions that have a show function
-that doesn't include "show" in the function name.
+In the case of the Chrome OS 5.4 tree it's possible this driver should
+be moved to a module.  However, even if we do that my patch is still
+fine and would be helpful if anyone has a reason to build this driver
+in.  Similar patches could likely be made to other codecs and would
+similarly speed up boots in cases where codecs were builtin.
 
-$ grep-2.5.4 -rP --include=*.[ch] '\bDEVICE_ATTR\s*\(\s*\w+\s*,\s*[^,]+,\s*[^,]*,[^;]+;' * | \
-  perl -p -e 's/[[:space:]]*//g; s/;/;\n/g' | \
-  cut -f3 -d, | \
-  grep -v show | \
-  sort | uniq | wc -l
-139
-
-> @@
-> // I think device_show_ulong, device_show_int, device_show_bool
-> // functions deserve explicit handling because they are somewhat
-> // reference implementations.
-
-Those reference implementations could be send as
-a separate patch but this preliminary script does
-already handle them.
-
-I do like the idea below of renaming the show
-functions without _show in the name adding _show.
-
-> identifier d_show = { da.show, device_show_ulong, device_show_int, device_show_bool };
-> identifier dev, attr, buf;
-> @@
-> 
-> * ssize_t d_show(struct device *dev, struct device_attribute *attr, char *buf)
->   {
->      ...
->   }
-> 
-> 
-> I tried also to handle DEVICE_ATTR_RW, but I failed to use fresh identifier.
-> This doesn't work:
-> 
-> @darw@
-> identifier name;
-> @@
-> 
-> (
->   DEVICE_ATTR_RW(name)
->   DEVICE_ATTR_RO(name)
->   DEVICE_ATTR_WO(name)
-> )
-> 
-> @@
-> identifier darw.name;
-> fresh identifier d_show = name ## "_show"; // <== parse error
-> identifier dev, attr, buf;
-> @@
-> 
-> * ssize_t d_show(struct device *dev, struct device_attribute *attr, char *buf)
->   {
->      ...
->   }
-> 
-> 
-> Regards,
-> Denis
-
+-Doug
