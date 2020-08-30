@@ -2,132 +2,117 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45BDC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DCDC433E6
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE93020693
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:01:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bmBMJHAX"
+	by mail.kernel.org (Postfix) with ESMTP id 09A3120693
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 07:03:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbgH3HB2 (ORCPT
+        id S1726506AbgH3HDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 03:01:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbgH3HAP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 03:00:15 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6002FC061575
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 00:00:14 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id g14so3066553iom.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 00:00:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gQBUlRioMlWbPftg4AmnacybhFwBNHiRgDukSFWvsS4=;
-        b=bmBMJHAXyBCFKv6Xoeg0cFFAEyerKqnUbRm1gOxQyjsHyBlchnV9nXNNKkfO7Ce2C4
-         /Yg15YjWMxYO+cFvP3VdN6k10wR5hT0G9hcfiifRT7J+uvzUEPm39Xen3kLCcIeoNWVX
-         UqE5Nn2aJn3xMTnAJZI3n69PcNgK4F761lvsg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gQBUlRioMlWbPftg4AmnacybhFwBNHiRgDukSFWvsS4=;
-        b=rk4euz5ztEyb3hhZvieeE2N9d34Tx8KIdwnmDAE3iKXOQ/6/0gzG1K5UGudE+viTQN
-         etx8/e5hQZhsGGihS1ag5N3g/XtUlecDW5SdAC0dgBn8E5IEJF7UeqwPJQTUpZhQsPKc
-         p08ArtS/M1O6wIre4jhg8G9u9yLL+Et5i9687/7D+JAucrj4yD+6FkchhLiBQyxdj8sd
-         BVSNpxBDf8eZdmCw4rm5z3vh+TFG7UEvDKwSqHGwyFQJcKK3WG7R3VtmLZmo3rFK5YM8
-         oJdSh9G1m5fDHdwg3CEuz54nH+VI5e1MTHfwDRd7WDDjwCPauJmJ8d48YK2F932+FzG+
-         5YXg==
-X-Gm-Message-State: AOAM532LOWK3txWjgyuST7wKT24viPBaoKmZdEKr7wN43eGU6W7giRHd
-        bXCwmCdskwKvmCETtrppidiZ/DcGp70+8G+OEHsXsA==
-X-Google-Smtp-Source: ABdhPJz/OkkgGY1Q2elxBKoSrfB63/QFiiB/PIQmMPFGGis//WHubfzqdEVVopB2GaMlQKFzX8D8TONWfzrI/WdogBg=
-X-Received: by 2002:a6b:8f10:: with SMTP id r16mr4688662iod.165.1598770813402;
- Sun, 30 Aug 2020 00:00:13 -0700 (PDT)
+        Sun, 30 Aug 2020 03:03:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35192 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgH3HCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 03:02:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 31797AEFA;
+        Sun, 30 Aug 2020 07:03:25 +0000 (UTC)
+Date:   Sun, 30 Aug 2020 09:02:45 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-edac <linux-edac@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] EDAC urgent for v5.9-rc3
+Message-ID: <20200830070245.GB4363@zn.tnic>
 MIME-Version: 1.0
-References: <20200826002945.394562-1-gwendal@chromium.org> <20200829165433.57b0e5e4@archlinux>
-In-Reply-To: <20200829165433.57b0e5e4@archlinux>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Sun, 30 Aug 2020 00:00:02 -0700
-Message-ID: <CAPUE2uu7wQvJtesgk1sw=b7AOj7-7RW3skcvHs9y2kL_k7-tdA@mail.gmail.com>
-Subject: Re: [PATCH v2] platform: cros_ec: Reduce ligthbar get version command
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 8:54 AM Jonathan Cameron <jic23@kernel.org> wrote:
->
-> On Tue, 25 Aug 2020 17:29:45 -0700
-> Gwendal Grignou <gwendal@chromium.org> wrote:
->
-> > By default, the lightbar commands are set to the
-> > biggest lightbar command and response. That length is greater than 128
-> > bytes and may not work on all machines.
-> > But all EC are probed for lightbar by sending a get version request.
-> > Set that request size precisely.
-> >
-> > Before the command would be:
-> > cros_ec_cmd: version: 0, command: EC_CMD_LIGHTBAR_CMD, outsize: 194, insize: 128, result: 0
-> > Afer:
-> > cros_ec_cmd: version: 0, command: EC_CMD_LIGHTBAR_CMD, outsize: 1, insize: 8, result: 0
-> >
-> > Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
-> Hi Gwendal,
->
-> Description seems to me to suggest this is a fix?
-> Are there known machines on which it doesn't work currently?
-We have a prototype [without lightbar] where the command size was
-limited to 128 bytes.
-Given we issue a get_lightbar_version on all chromebooks, we had a
-failure on this prototype. Devices with a lightbar must support a
-command size greater or equal to 194 bytes.
-Beside helping the prototype to boot, this patch slightly speeds up
-the enumeration of devices managed by the EC.
->
-> If so, please can I have a fixes tag.  If it's just a precaution
-> against future problems then let me know and I can add it for the
-> next merge window.
-Done in v3.
-Note I made a mistake by sending the patch to linux-iio as it targeted
-platform/chromeos.
->
-> Thanks,
->
-> Jonathan
->
-> > ---
-> > Changes since v1:
-> > - Remove BUG and TEST fields.
-> >
-> >  drivers/platform/chrome/cros_ec_lightbar.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
-> > index b59180bff5a3e..ef61298c30bdd 100644
-> > --- a/drivers/platform/chrome/cros_ec_lightbar.c
-> > +++ b/drivers/platform/chrome/cros_ec_lightbar.c
-> > @@ -116,6 +116,8 @@ static int get_lightbar_version(struct cros_ec_dev *ec,
-> >
-> >       param = (struct ec_params_lightbar *)msg->data;
-> >       param->cmd = LIGHTBAR_CMD_VERSION;
-> > +     msg->outsize = sizeof(param->cmd);
-> > +     msg->result = sizeof(resp->version);
-> >       ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-> >       if (ret < 0) {
-> >               ret = 0;
->
+Hi Linus,
+
+please pull a single fix for the ghes_edac driver to properly clear
+state on remove, when testing with CONFIG_DEBUG_TEST_DRIVER_REMOVE.
+
+Thx.
+
+---
+The following changes since commit d012a7190fc1fd72ed48911e77ca97ba4521bccd:
+
+  Linux 5.9-rc2 (2020-08-23 14:08:43 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v5.9_rc3
+
+for you to fetch changes up to b972fdba8665d75109ade0357739f46af6415d2a:
+
+  EDAC/ghes: Fix NULL pointer dereference in ghes_edac_register() (2020-08-27 18:04:07 +0200)
+
+----------------------------------------------------------------
+A fix to properly clear ghes_edac driver state on driver remove so that
+a subsequent load can probe the system properly; by Shiju Jose.
+
+----------------------------------------------------------------
+Shiju Jose (1):
+      EDAC/ghes: Fix NULL pointer dereference in ghes_edac_register()
+
+ drivers/edac/ghes_edac.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+index da60c29468a7..54ebc8afc6b1 100644
+--- a/drivers/edac/ghes_edac.c
++++ b/drivers/edac/ghes_edac.c
+@@ -55,6 +55,8 @@ static DEFINE_SPINLOCK(ghes_lock);
+ static bool __read_mostly force_load;
+ module_param(force_load, bool, 0);
+ 
++static bool system_scanned;
++
+ /* Memory Device - Type 17 of SMBIOS spec */
+ struct memdev_dmi_entry {
+ 	u8 type;
+@@ -225,14 +227,12 @@ static void enumerate_dimms(const struct dmi_header *dh, void *arg)
+ 
+ static void ghes_scan_system(void)
+ {
+-	static bool scanned;
+-
+-	if (scanned)
++	if (system_scanned)
+ 		return;
+ 
+ 	dmi_walk(enumerate_dimms, &ghes_hw);
+ 
+-	scanned = true;
++	system_scanned = true;
+ }
+ 
+ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+@@ -631,6 +631,8 @@ void ghes_edac_unregister(struct ghes *ghes)
+ 
+ 	mutex_lock(&ghes_reg_mutex);
+ 
++	system_scanned = false;
++
+ 	if (!refcount_dec_and_test(&ghes_refcount))
+ 		goto unlock;
+ 
+
+-- 
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
