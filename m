@@ -2,159 +2,108 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67849C433E7
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 21:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEA1C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 21:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 410912083E
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 21:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6A1F2083E
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 21:01:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="e28trhzh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oFyFWS/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbgH3VA4 (ORCPT
+        id S1726465AbgH3VBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 17:00:56 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:35564 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgH3VAy (ORCPT
+        Sun, 30 Aug 2020 17:01:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbgH3VBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 17:00:54 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 166F6891B0;
-        Mon, 31 Aug 2020 09:00:50 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1598821250;
-        bh=EJLjX89WdyvDHn+7R8EgEdBdf2Jw0A+9k5f1ib+1iE0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=e28trhzhMurFnBLdOrtw7kt43zg6bwHPTRXnMG6fflcQy81CaWCEa628Ykg6LtwUK
-         E9O/e9oz5+Icz1NjRQEtUc/GmOTEi1uyJdByO1/NDWnnneyo/+ec4noB0Op1X6ZEqY
-         vwVDXqbeMBYwVQKceyObolzgQmbKliwb2x1gzhLDWKcp5Zm2RHN4ONS7uYc/87SOhw
-         TsuLcYQW86Le6go6GypcLfY0O20q4LjDW/8qvbpFd+HGytS2Fuqp9O0PBs2IAWKh0F
-         8p3Hie/9Zc3T+7Ka4v5Ay3+Q4YDIFKLQQ47HBJlIKWrj2WmOM5nxdZ2NUJkhqe2qiA
-         7JoolEoOEs2Jg==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f4c13820001>; Mon, 31 Aug 2020 09:00:50 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 31 Aug 2020 09:00:49 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Mon, 31 Aug 2020 09:00:49 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Nicholas Piggin <npiggin@gmail.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "Heiner Kallweit" <hkallweit1@gmail.com>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "paulus@samba.org" <paulus@samba.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
-Subject: Re: fsl_espi errors on v5.7.15
-Thread-Topic: fsl_espi errors on v5.7.15
-Thread-Index: AQHWceVnik7XsBYbp0S+yHVGh1hdQak2WMaAgAQdSwCAAz9MAIAAfdcAgAD5u4CAB+sMAIAAYfwAgAA6JQCAAPtUgIAAOXyAgABIbACAAAjRgIABm7wAgAD5+gCABBXPAIAAjqOA
-Date:   Sun, 30 Aug 2020 21:00:49 +0000
-Message-ID: <524a0f50-f954-f5a7-eccb-66eece59c7c4@alliedtelesis.co.nz>
-References: <42107721-614b-96e8-68d9-4b888206562e@alliedtelesis.co.nz>
- <1020029e-4cb9-62ba-c6d6-e6b9bdf93aac@gmail.com>
- <1598510348.1g7wt0s02s.astroid@bobo.none>
- <0068446e-06f8-6648-2f40-56f324c1ee6e@alliedtelesis.co.nz>
- <1598788275.m90vz24p6x.astroid@bobo.none>
-In-Reply-To: <1598788275.m90vz24p6x.astroid@bobo.none>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.1.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <074623954D471445A42C0B113966A6EA@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Sun, 30 Aug 2020 17:01:34 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A16FDC061573
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 14:01:34 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 109so3765739otv.3
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 14:01:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=0A0MgBvdZsn83Ew2Ktjq3B8TXEsbXPWHsWkGfR3n5Sk=;
+        b=oFyFWS/knp2ok2Qu0qsMN8fKLiiU0kOo/mIL5IkekajG5x9dgm1oAvakoa5SgfZHsu
+         1qzYznn+LwXijJPZS5UvQ28q4NzUqmQb5JYoYoaQQusdmgpdVzkKh2AOHSU9euxcpNYl
+         omLFmPd1dP35wP+etXy3lmrM1uUlWvqnZPAKCuZ/k8Dno8MbpcvA8qEhhlhnzQXBYM+B
+         ux5CuQ7sti0552QPWjIrs+ZMNYXdqpMx98JzBmfA6sPypX7LUj7UIwUjrVLfIvb3FIfd
+         T5tlwA6YskZ2woohS40ycZRntDy8zFveF5niV8KmeDlng4hl5LLHWoI5KQ7NQ/26N/xN
+         dVTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=0A0MgBvdZsn83Ew2Ktjq3B8TXEsbXPWHsWkGfR3n5Sk=;
+        b=GSaopekZDmVOIO8pWAfvvT8GbODh18n/WHTo0A/TvUi+eUtInCirSkatM0HYLGSrnL
+         AHWf3KPDN2UAovTZYSsrWZKoCeHxd5sK6ScRk60jNod/BWwtn/ICwHi+CiRq7wr/T7pN
+         hadZ1z6ojjgkZvpQNVnLkWQCDCo7vrnIJlIaLuhvVap8wuND1RFRieMyVTdPwsUkXHzr
+         xbhGxnokfj9f4BaeJyr2qZwZCvtmgTz4uPt3uQ4rFvzmwRNzFYfDsr/zKrCw0CZ0IxKV
+         tA55I4K4lDv9rLzVN4NmvNSwE/4vt/XTG2YyOBBqHBt2WaaEStqa0nnwdqO5/gwo/qfd
+         B2pQ==
+X-Gm-Message-State: AOAM530mJEwwoTC6xE/umRRropFpYdfPLu13UoQjcvoAN5sb0mQ5g11p
+        P7yYyeMS1pPwJy2GH3Lojt1xHA==
+X-Google-Smtp-Source: ABdhPJyM3ZCANKZOyGmfG66cOB7Sxsfltxqe3tzoqaKIbYnuzUsBOB5hyE7Vr76l2sr1FdMpsJQYTw==
+X-Received: by 2002:a9d:24c6:: with SMTP id z64mr2594644ota.97.1598821293211;
+        Sun, 30 Aug 2020 14:01:33 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id m11sm281916ooe.43.2020.08.30.14.01.31
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Sun, 30 Aug 2020 14:01:32 -0700 (PDT)
+Date:   Sun, 30 Aug 2020 14:01:30 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Andrew Morton <akpm@linux-foundation.org>
+cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH 2/5] mm: migration of hugetlbfs page skip memcg
+In-Reply-To: <alpine.LSU.2.11.2008301343270.5954@eggly.anvils>
+Message-ID: <alpine.LSU.2.11.2008301359460.5954@eggly.anvils>
+References: <alpine.LSU.2.11.2008301343270.5954@eggly.anvils>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiAzMS8wOC8yMCAxMjozMCBhbSwgTmljaG9sYXMgUGlnZ2luIHdyb3RlOg0KPiBFeGNlcnB0
-cyBmcm9tIENocmlzIFBhY2toYW0ncyBtZXNzYWdlIG9mIEF1Z3VzdCAyOCwgMjAyMCA4OjA3IGFt
-Og0KDQo8c25pcD4NCg0KPj4+Pj4+IEkndmUgYWxzbyBub3cgc2VlbiB0aGUgUlggRklGTyBub3Qg
-ZW1wdHkgZXJyb3Igb24gdGhlIFQyMDgwUkRCDQo+Pj4+Pj4NCj4+Pj4+PiBmc2xfZXNwaSBmZmUx
-MTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQhDQo+Pj4+Pj4g
-ZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogVHJhbnNmZXIgZG9uZSBidXQgU1BJRV9ET04gaXNuJ3Qg
-c2V0IQ0KPj4+Pj4+IGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IFRyYW5zZmVyIGRvbmUgYnV0IFNQ
-SUVfRE9OIGlzbid0IHNldCENCj4+Pj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2Zl
-ciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQhDQo+Pj4+Pj4gZnNsX2VzcGkgZmZlMTEwMDAw
-LnNwaTogVHJhbnNmZXIgZG9uZSBidXQgcngvdHggZmlmbydzIGFyZW4ndCBlbXB0eSENCj4+Pj4+
-PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBTUElFX1JYQ05UID0gMSwgU1BJRV9UWENOVCA9IDMy
-DQo+Pj4+Pj4NCj4+Pj4+PiBXaXRoIG15IGN1cnJlbnQgd29ya2Fyb3VuZCBvZiBlbXB0eWluZyB0
-aGUgUlggRklGTy4gSXQgc2VlbXMNCj4+Pj4+PiBzdXJ2aXZhYmxlLiBJbnRlcmVzdGluZ2x5IGl0
-IG9ubHkgZXZlciBzZWVtcyB0byBiZSAxIGV4dHJhIGJ5dGUgaW4gdGhlDQo+Pj4+Pj4gUlggRklG
-TyBhbmQgaXQgc2VlbXMgdG8gYmUgYWZ0ZXIgZWl0aGVyIGEgUkVBRF9TUiBvciBhIFJFQURfRlNS
-Lg0KPj4+Pj4+DQo+Pj4+Pj4gZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogdHggNzANCj4+Pj4+PiBm
-c2xfZXNwaSBmZmUxMTAwMDAuc3BpOiByeCAwMw0KPj4+Pj4+IGZzbF9lc3BpIGZmZTExMDAwMC5z
-cGk6IEV4dHJhIFJYIDAwDQo+Pj4+Pj4gZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogVHJhbnNmZXIg
-ZG9uZSBidXQgU1BJRV9ET04gaXNuJ3Qgc2V0IQ0KPj4+Pj4+IGZzbF9lc3BpIGZmZTExMDAwMC5z
-cGk6IFRyYW5zZmVyIGRvbmUgYnV0IHJ4L3R4IGZpZm8ncyBhcmVuJ3QgZW1wdHkhDQo+Pj4+Pj4g
-ZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogU1BJRV9SWENOVCA9IDEsIFNQSUVfVFhDTlQgPSAzMg0K
-Pj4+Pj4+IGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IHR4IDA1DQo+Pj4+Pj4gZnNsX2VzcGkgZmZl
-MTEwMDAwLnNwaTogcnggMDANCj4+Pj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBFeHRyYSBS
-WCAwMw0KPj4+Pj4+IGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IFRyYW5zZmVyIGRvbmUgYnV0IFNQ
-SUVfRE9OIGlzbid0IHNldCENCj4+Pj4+PiBmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2Zl
-ciBkb25lIGJ1dCByeC90eCBmaWZvJ3MgYXJlbid0IGVtcHR5IQ0KPj4+Pj4+IGZzbF9lc3BpIGZm
-ZTExMDAwMC5zcGk6IFNQSUVfUlhDTlQgPSAxLCBTUElFX1RYQ05UID0gMzINCj4+Pj4+PiBmc2xf
-ZXNwaSBmZmUxMTAwMDAuc3BpOiB0eCAwNQ0KPj4+Pj4+IGZzbF9lc3BpIGZmZTExMDAwMC5zcGk6
-IHJ4IDAwDQo+Pj4+Pj4gZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogRXh0cmEgUlggMDMNCj4+Pj4+
-Pg0KPj4+Pj4+ICAgRnJvbSBhbGwgdGhlIE1pY3JvbiBTUEktTk9SIGRhdGFzaGVldHMgSSd2ZSBn
-b3QgYWNjZXNzIHRvIGl0IGlzDQo+Pj4+Pj4gcG9zc2libGUgdG8gY29udGludWFsbHkgcmVhZCB0
-aGUgU1IvRlNSLiBCdXQgSSd2ZSBubyBpZGVhIHdoeSBpdA0KPj4+Pj4+IGhhcHBlbnMgc29tZSB0
-aW1lcyBhbmQgbm90IG90aGVycy4NCj4+Pj4+IFNvIEkgdGhpbmsgSSd2ZSBnb3QgYSByZXByb2R1
-Y3Rpb24gYW5kIEkgdGhpbmsgSSd2ZSBiaXNlY3RlZCB0aGUgcHJvYmxlbQ0KPj4+Pj4gdG8gY29t
-bWl0IDMyODJhM2RhMjViZCAoInBvd2VycGMvNjQ6IEltcGxlbWVudCBzb2Z0IGludGVycnVwdCBy
-ZXBsYXkgaW4NCj4+Pj4+IEMiKS4gTXkgZGF5IGlzIGp1c3QgZmluaXNoaW5nIG5vdyBzbyBJIGhh
-dmVuJ3QgYXBwbGllZCB0b28gbXVjaCBzY3J1dGlueQ0KPj4+Pj4gdG8gdGhpcyByZXN1bHQuIEdp
-dmVuIHRoZSB2YXJpb3VzIHJhYmJpdCBob2xlcyBJJ3ZlIGJlZW4gZG93biBvbiB0aGlzDQo+Pj4+
-PiBpc3N1ZSBhbHJlYWR5IEknZCB0YWtlIHRoaXMgaW5mb3JtYXRpb24gd2l0aCBhIGdvb2QgZGVn
-cmVlIG9mIHNrZXB0aWNpc20uDQo+Pj4+Pg0KPj4+PiBPSywgc28gYW4gZWFzeSB0ZXN0IHNob3Vs
-ZCBiZSB0byByZS10ZXN0IHdpdGggYSA1LjQga2VybmVsLg0KPj4+PiBJdCBkb2Vzbid0IGhhdmUg
-eWV0IHRoZSBjaGFuZ2UgeW91J3JlIHJlZmVycmluZyB0bywgYW5kIHRoZSBmc2wtZXNwaSBkcml2
-ZXINCj4+Pj4gaXMgYmFzaWNhbGx5IHRoZSBzYW1lIGFzIGluIDUuNyAoanVzdCB0d28gc21hbGwg
-Y2hhbmdlcyBpbiA1LjcpLg0KPj4+IFRoZXJlJ3MgNmNjMGMxNmQ4MmY4OCBhbmQgbWF5YmUgYWxz
-byBvdGhlciBpbnRlcnJ1cHQgcmVsYXRlZCBwYXRjaGVzDQo+Pj4gYXJvdW5kIHRoaXMgdGltZSB0
-aGF0IGNvdWxkIGFmZmVjdCBib29rIEUsIHNvIGl0J3MgZ29vZCBpZiB0aGF0IGV4YWN0DQo+Pj4g
-cGF0Y2ggaXMgY29uZmlybWVkLg0KPj4gTXkgY29uZmlybWF0aW9uIGlzIGJhc2ljYWxseSB0aGF0
-IEkgY2FuIGluZHVjZSB0aGUgaXNzdWUgaW4gYSA1LjQga2VybmVsDQo+PiBieSBjaGVycnktcGlj
-a2luZyAzMjgyYTNkYTI1YmQuIEknbSBhbHNvIGFibGUgdG8gImZpeCIgdGhlIGlzc3VlIGluDQo+
-PiA1LjktcmMyIGJ5IHJldmVydGluZyB0aGF0IG9uZSBjb21taXQuDQo+Pg0KPj4gSSBib3RoIGNh
-c2VzIGl0J3Mgbm90IGV4YWN0bHkgYSBjbGVhbiBjaGVycnktcGljay9yZXZlcnQgc28gSSBhbHNv
-DQo+PiBjb25maXJtZWQgdGhlIGJpc2VjdGlvbiByZXN1bHQgYnkgYnVpbGRpbmcgYXQgMzI4MmEz
-ZGEyNWJkICh3aGljaCBzZWVzDQo+PiB0aGUgaXNzdWUpIGFuZCB0aGUgY29tbWl0IGp1c3QgYmVm
-b3JlICh3aGljaCBkb2VzIG5vdCkuDQo+IFRoYW5rcyBmb3IgdGVzdGluZywgdGhhdCBjb25maXJt
-cyBpdCB3ZWxsLg0KPg0KPiBbc25pcCBwYXRjaF0NCj4NCj4+IEkgc3RpbGwgc2F3IHRoZSBpc3N1
-ZSB3aXRoIHRoaXMgY2hhbmdlIGFwcGxpZWQuIFBQQ19JUlFfU09GVF9NQVNLX0RFQlVHDQo+PiBk
-aWRuJ3QgcmVwb3J0IGFueXRoaW5nIChlaXRoZXIgd2l0aCBvciB3aXRob3V0IHRoZSBjaGFuZ2Ug
-YWJvdmUpLg0KPiBPa2F5LCBpdCB3YXMgYSBiaXQgb2YgYSBzaG90IGluIHRoZSBkYXJrLiBJIHN0
-aWxsIGNhbid0IHNlZSB3aGF0DQo+IGVsc2UgaGFzIGNoYW5nZWQuDQo+DQo+IFdoYXQgd291bGQg
-Y2F1c2UgdGhpcywgYSBsb3N0IGludGVycnVwdD8gQSBzcHVyaW91cyBpbnRlcnJ1cHQ/IE9yDQo+
-IGhpZ2hlciBpbnRlcnJ1cHQgbGF0ZW5jeT8NCj4NCj4gSSBkb24ndCB0aGluayB0aGUgcGF0Y2gg
-c2hvdWxkIGNhdXNlIHNpZ25pZmljYW50bHkgd29yc2UgbGF0ZW5jeSwNCj4gKGl0J3Mgc3VwcG9z
-ZWQgdG8gYmUgYSBiaXQgYmV0dGVyIGlmIGFueXRoaW5nIGJlY2F1c2UgaXQgZG9lc24ndCBzZXQN
-Cj4gdXAgdGhlIGZ1bGwgaW50ZXJydXB0IGZyYW1lKS4gQnV0IGl0J3MgcG9zc2libGUuDQoNCk15
-IHdvcmtpbmcgdGhlb3J5IGlzIHRoYXQgdGhlIFNQSV9ET04gaW5kaWNhdGlvbiBpcyBhbGwgYWJv
-dXQgdGhlIFRYIA0KZGlyZWN0aW9uIGFuIG5vdyB0aGF0IHRoZSBpbnRlcnJ1cHRzIGFyZSBmYXN0
-ZXIgd2UncmUgaGl0dGluZyBhbiBlcnJvciANCmJlY2F1c2UgdGhlcmUgaXMgc3RpbGwgUlggYWN0
-aXZpdHkgZ29pbmcgb24uIEhlaW5lciBkaXNhZ3JlZXMgd2l0aCBteSANCmludGVycHJldGF0aW9u
-IG9mIHRoZSBTUElfRE9OIGluZGljYXRpb24gYW5kIHRoZSBmYWN0IHRoYXQgaXQgZG9lc24ndCAN
-CmhhcHBlbiBldmVyeSB0aW1lIGRvZXMgdGhyb3cgZG91YnQgb24gaXQuDQoNCkkgY2FuJ3QgcmVh
-bGx5IGV4cGxhaW4gdGhlIGV4dHJhIFJYIGJ5dGUgaW4gdGhlIGZpZm8uIFdlIGtub3cgaG93IG1h
-bnkgDQpieXRlcyB0byBleHBlY3QgYW5kIHdlIHB1bGwgdGhhdCBtYW55IGZyb20gdGhlIGZpZm8g
-c28gaXQncyBub3QgYXMgaWYgDQp3ZSdyZSBtaXNzaW5nIGFuIGludGVycnVwdCBjYXVzaW5nIHVz
-IHRvIHNraXAgdGhlIGxhc3QgYnl0ZS4gSSd2ZSBiZWVuIA0KbG9va2luZyBmb3Igc29tZSBraW5k
-IG9mIG9mZi1ieS1vbmUgY2FsY3VsYXRpb24gYnV0IGFnYWluIGlmIGl0IHdlcmUgDQpzb21ldGhp
-bmcgbGlrZSB0aGF0IGl0J2QgaGFwcGVuIGFsbCB0aGUgdGltZS4NCg0K
+hugetlbfs pages do not participate in memcg: so although they do find
+most of migrate_page_states() useful, it would be better if they did
+not call into mem_cgroup_migrate() - where Qian Cai reported that LTP's
+move_pages12 triggers the warning in Alex Shi's prospective commit
+"mm/memcg: warning on !memcg after readahead page charged".
+
+Signed-off-by: Hugh Dickins <hughd@google.com>
+---
+This fixes a likely future warning, but is just a cleanup right now.
+
+ mm/migrate.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- 5.9-rc2/mm/migrate.c	2020-08-16 17:32:50.665507048 -0700
++++ linux/mm/migrate.c	2020-08-28 17:42:07.967278385 -0700
+@@ -668,7 +668,8 @@ void migrate_page_states(struct page *ne
+ 
+ 	copy_page_owner(page, newpage);
+ 
+-	mem_cgroup_migrate(page, newpage);
++	if (!PageHuge(page))
++		mem_cgroup_migrate(page, newpage);
+ }
+ EXPORT_SYMBOL(migrate_page_states);
+ 
