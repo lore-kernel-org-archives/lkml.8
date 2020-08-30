@@ -2,138 +2,128 @@ Return-Path: <SRS0=gmpU=CI=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F121AC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 10:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849D6C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 10:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9DE1207DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 10:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637C3208CA
+	for <linux-kernel@archiver.kernel.org>; Sun, 30 Aug 2020 10:14:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598782486;
+	bh=YtCnCHfNPMwebTaJNkKt9knUiwPTCg4dVZL7GaXUcRs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=jPdmWkkMsY3k7EbsT0hs6m8FMpQ9qarZiDVV9O8nGCvbaAPnwGciydKR7x+oyVWU7
+	 VzZEqsHKJEmKUrEO8HqP2TxJdAO2T1Yl+4PK/wDxUjR3zv77c+0lkAobI2pAbe7Xie
+	 XF1obc3wpWydgBUzP6Jqzg/H39PylNBZMPRmg/qk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgH3KOj (ORCPT
+        id S1728760AbgH3KOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 06:14:39 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:39051 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726264AbgH3KOi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 06:14:38 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04392;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U7FapVA_1598782473;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U7FapVA_1598782473)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 30 Aug 2020 18:14:34 +0800
-Subject: Re: [PATCH v2 1/2] mm/pageblock: mitigation cmpxchg false sharing in
- pageblock flags
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1597816075-61091-1-git-send-email-alex.shi@linux.alibaba.com>
- <8ec2a4b0-9e51-abf9-fa7a-29989d3f1fac@arm.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <01c846d4-2fe4-eeef-6c79-e71fda1f9a39@linux.alibaba.com>
-Date:   Sun, 30 Aug 2020 18:14:33 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Sun, 30 Aug 2020 06:14:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726264AbgH3KOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 06:14:43 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52C5B2071B;
+        Sun, 30 Aug 2020 10:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598782482;
+        bh=YtCnCHfNPMwebTaJNkKt9knUiwPTCg4dVZL7GaXUcRs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=yS1qmxARoUjaYoxGXtue6oEfs8u4bR66np2Avp9Yh7SESuwGx7W66zhn1L722rLC+
+         coUB8/6P7uz8qLZ80TXzK6cFL96hAt/ffUwbjPPbcuS2klCOMHFlRZO8dF96SO7PdB
+         SmgVJ6HkwPb0CdzRDhNY/f6JjpnFpYhzeDivIBuM=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Leon Romanovsky <leonro@nvidia.com>,
+        Gal Pressman <galpress@amazon.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        Mark Zhang <markz@nvidia.com>
+Subject: [PATCH rdma-next v1 00/13] Track memory allocation with restrack DB help
+Date:   Sun, 30 Aug 2020 13:14:23 +0300
+Message-Id: <20200830101436.108487-1-leon@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <8ec2a4b0-9e51-abf9-fa7a-29989d3f1fac@arm.com>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Leon Romanovsky <leonro@nvidia.com>
+
+Changelog:
+v1:
+ * Fixed rebase error, deleted second assignment of qp_type.
+ * Rebased code on latests rdma-next, the changes in cma.c caused to change
+   in patch "RDMA/cma: Delete from restrack DB after successful destroy".
+ * Dropped patch of port assignment, it is already done as part of this
+   series.
+ * I didn't add @calller description, regular users should not use _named() funciton.
+v0: https://lore.kernel.org/lkml/20200824104415.1090901-1-leon@kernel.org
+
+----------------------------------------------------------------------------------
+Hi,
+
+The resource tracker has built-in kref counter to synchronize object
+release. It makes restrack perfect choice to be responsible for the
+memory lifetime of any object in which restrack entry is embedded.
+
+In order to make it, the restrack was changed to be mandatory and all
+callers of rdma_restrack_add() started to rely on result returned from
+that call. Being mandatory means that all objects specific to restrack
+type must be tracked.
+
+Before this series, the restrack and rdmatool were aid tools in debug
+session of user space applications, this caused to some of the
+functionality to be left behind, like support XRC QPs, device memory MRs
+and QP0/QP1 in multi-port devices.
+
+This series fixes all mentioned above without extending rdmatool at all.
+
+Thanks
 
 
-在 2020/8/19 下午3:55, Anshuman Khandual 写道:
-> 
-> 
-> On 08/19/2020 11:17 AM, Alex Shi wrote:
->> pageblock_flags is used as long, since every pageblock_flags is just 4
->> bits, 'long' size will include 8(32bit machine) or 16 pageblocks' flags,
->> that flag setting has to sync in cmpxchg with 7 or 15 other pageblock
->> flags. It would cause long waiting for sync.
->>
->> If we could change the pageblock_flags variable as char, we could use
->> char size cmpxchg, which just sync up with 2 pageblock flags. it could
->> relief much false sharing in cmpxchg.
-> 
-> Do you have numbers demonstrating claimed performance improvement
-> after this change ?
-> 
+Leon Romanovsky (13):
+  RDMA/cma: Delete from restrack DB after successful destroy
+  RDMA/mlx5: Don't call to restrack recursively
+  RDMA/restrack: Count references to the verbs objects
+  RDMA/restrack: Simplify restrack tracking in kernel flows
+  RDMA/restrack: Improve readability in task name management
+  RDMA/cma: Be strict with attaching to CMA device
+  RDMA/core: Allow drivers to disable restrack DB
+  RDMA/counter: Combine allocation and bind logic
+  RDMA/restrack: Store all special QPs in restrack DB
+  RDMA/restrack: Make restrack DB mandatory for IB objects
+  RDMA/restrack: Support all QP types
+  RDMA/core: Track device memory MRs
+  RDMA/restrack: Drop valid restrack field as source of ambiguity
 
-the performance data show in another email.
+ drivers/infiniband/core/cma.c                 | 225 +++++++++++-------
+ drivers/infiniband/core/core_priv.h           |  39 ++-
+ drivers/infiniband/core/counters.c            | 178 +++++++-------
+ drivers/infiniband/core/cq.c                  |  24 +-
+ drivers/infiniband/core/rdma_core.c           |   3 +-
+ drivers/infiniband/core/restrack.c            | 208 ++++++++--------
+ drivers/infiniband/core/restrack.h            |  10 +-
+ drivers/infiniband/core/uverbs_cmd.c          |  50 +++-
+ drivers/infiniband/core/uverbs_std_types_cq.c |  12 +-
+ drivers/infiniband/core/uverbs_std_types_mr.c |  10 +
+ drivers/infiniband/core/uverbs_std_types_qp.c |   4 +-
+ drivers/infiniband/core/verbs.c               |  91 +++++--
+ drivers/infiniband/hw/mlx5/gsi.c              |  16 +-
+ drivers/infiniband/hw/mlx5/qp.c               |   2 +-
+ include/rdma/ib_verbs.h                       |  10 +-
+ include/rdma/restrack.h                       |  46 ++--
+ 16 files changed, 537 insertions(+), 391 deletions(-)
 
-LKP reported the arm6 has a bug on this patchset, since it has no cmpxchgb
-solution, so maybe let's fallback to cmpxchg on it.
-
-From db3d97ba8cc5e206b440bd40a92ef6955ad86bc0 Mon Sep 17 00:00:00 2001
-From: Alex Shi <alex.shi@linux.alibaba.com>
-Date: Tue, 18 Aug 2020 15:51:18 +0800
-Subject: [PATCH v2 3/3] armv6: fix armv6 build issue
-
-Arm v6 can not simulate cmpxchg1 func, so we have to use cmpxchg4 on it.
-
-   arm-linux-gnueabi-ld: mm/page_alloc.o: in function `set_pfnblock_flags_mask':
-   (.text+0x32b4): undefined reference to `__bad_cmpxchg'
-   arm-linux-gnueabi-ld: (.text+0x32e0): undefined reference to `__bad_cmpxchg'
-   arm-linux-gnueabi-ld: drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.o: in function `hw_atl_b0_get_mac_temp':
-   hw_atl_b0.c:(.text+0x30fc): undefined reference to `__bad_udelay'
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
----
- mm/page_alloc.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 7da09d66233b..c09146a8946c 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -517,7 +517,11 @@ void set_pfnblock_flags_mask(struct page *page, unsigned long flags,
- {
- 	unsigned char *bitmap;
- 	unsigned long bitidx, byte_bitidx;
-+#ifdef	CONFIG_CPU_V6
-+	unsigned long old_byte, byte;
-+#else
- 	unsigned char old_byte, byte;
-+#endif
- 
- 	BUILD_BUG_ON(NR_PAGEBLOCK_BITS != BITS_PER_BYTE);
- 	BUILD_BUG_ON(MIGRATE_TYPES > (1 << PB_migratetype_bits));
-@@ -532,9 +536,18 @@ void set_pfnblock_flags_mask(struct page *page, unsigned long flags,
- 	mask <<= bitidx;
- 	flags <<= bitidx;
- 
-+#ifdef	CONFIG_CPU_V6
-+	byte = (unsigned long)READ_ONCE(bitmap[byte_bitidx]);
-+#else
- 	byte = READ_ONCE(bitmap[byte_bitidx]);
-+#endif
- 	for (;;) {
-+#ifdef	CONFIG_CPU_V6
-+		/* arm v6 has no cmpxchgb function, so still false sharing long word */
-+		old_byte = cmpxchg((unsigned long*)&bitmap[byte_bitidx], byte, (byte & ~mask) | flags);
-+#else
- 		old_byte = cmpxchg(&bitmap[byte_bitidx], byte, (byte & ~mask) | flags);
-+#endif
- 		if (byte == old_byte)
- 			break;
- 		byte = old_byte;
--- 
-1.8.3.1
+--
+2.26.2
 
