@@ -2,175 +2,162 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E75CC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5105C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67A60214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:34:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598888074;
-	bh=oFwQTqkPx4RNpgcIPFeuHBuLYJqGFWWbtO/xBgcKfw8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ppDvoSPgmjBQrc66WaHLmMmKwBSmMkICr+Z3GlbV4QFavJfkWEx7pWy1U9RPuWI83
-	 FStQlsp6Tijj7kXXH18n06ixB6AfOVZ0bqY02hWkgUK6ik2Scy10nGmwL7pN2GpEO2
-	 pkbVWpOvbTs4apuKE4uuYRBBRJHmLPCxVnEhON8g=
+	by mail.kernel.org (Postfix) with ESMTP id C980C214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:34:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbgHaPed (ORCPT
+        id S1729240AbgHaPem convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:34:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728868AbgHaPbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:31:24 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2359A207EA;
-        Mon, 31 Aug 2020 15:31:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887883;
-        bh=oFwQTqkPx4RNpgcIPFeuHBuLYJqGFWWbtO/xBgcKfw8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JpG0G8lxaHLSpn/J3G9ghOTB2+D/r2GolCeDeo1gwyCJVqTdPiXDZEq8Stmrb1jpF
-         Ju8dPWFjtuVajMDpYV0WAV/Cxha9/r7qyeVEzzMmbad2m2LJ4UoPsbOd9kCtdmxqli
-         fNH+qs+PVRhgY7FoaYVJT3rY1u1IB8vS7bNDO5mw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 03/11] tty: serial: qcom_geni_serial: Drop __init from qcom_geni_console_setup
-Date:   Mon, 31 Aug 2020 11:31:09 -0400
-Message-Id: <20200831153117.1024537-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200831153117.1024537-1-sashal@kernel.org>
-References: <20200831153117.1024537-1-sashal@kernel.org>
+        Mon, 31 Aug 2020 11:34:42 -0400
+Received: from jptosegrel01.sonyericsson.com ([124.215.201.71]:3542 "EHLO
+        JPTOSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728868AbgHaPei (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:34:38 -0400
+Subject: Re: [RFC PATCH] selinux: Add denied trace with permssion filter
+To:     Paul Moore <paul@paul-moore.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>
+References: <CAHC9VhRuvK55JVyHOxckThbRQ7sCwkeZsudwCaBo2f5G4g11VA@mail.gmail.com>
+ <20200824132252.31261-1-peter.enderborg@sony.com>
+ <20200824132252.31261-2-peter.enderborg@sony.com>
+ <CAHC9VhR8PscKpA5BrgTNj8cq_eQ6svqru6UXidc=v5+Ha+PM7Q@mail.gmail.com>
+ <6cbe5d27-ebb2-70a6-bad4-31c9f310eff2@sony.com>
+ <CAHC9VhRGaE4FwE8iXo_zeAPdimE9ryMR+r4Jcq=ZpF_2aTJxzQ@mail.gmail.com>
+ <59fa190f-37c0-79f3-ea46-8f821d820e1c@sony.com>
+ <CAHC9VhRE94YVK5bTcqqbNYJu-EwjbcwjSFgqV8jkyLn9HD39Ag@mail.gmail.com>
+ <abaccc15-85a8-24d2-4481-8303e3a42362@sony.com>
+ <CAHC9VhRi87H2GhsKQN9iMOQeSw3g5_qwok9jpx+pfFSouQ9d5w@mail.gmail.com>
+From:   peter enderborg <peter.enderborg@sony.com>
+Message-ID: <000e6a1b-6026-5e99-9a92-6ae9aafc07d4@sony.com>
+Date:   Mon, 31 Aug 2020 17:34:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHC9VhRi87H2GhsKQN9iMOQeSw3g5_qwok9jpx+pfFSouQ9d5w@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-GB
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=FfdJO626 c=1 sm=1 tr=0 a=9drRLWArJOlETflmpfiyCA==:117 a=IkcTkHD0fZMA:10 a=reM5J-MqmosA:10 a=z6gsHLkEAAAA:8 a=RpNjiQI2AAAA:8 a=8zP3SKBWyszBrXB_GscA:9 a=jpIH26JlB8aEU1M81S3jpgcb7nU=:19 a=QEXdDO2ut3YA:10 a=d-OLMTCWyvARjPbQ-enb:22
+X-SEG-SpamProfiler-Score: 0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Stultz <john.stultz@linaro.org>
+On 8/31/20 4:16 PM, Paul Moore wrote:
+> On Thu, Aug 27, 2020 at 10:04 AM peter enderborg
+> <peter.enderborg@sony.com> wrote:
+>> On 8/27/20 3:30 PM, Paul Moore wrote:
+>>> On Wed, Aug 26, 2020 at 11:06 AM peter enderborg
+>>> <peter.enderborg@sony.com> wrote:
+>>>> On 8/26/20 4:45 PM, Paul Moore wrote:
+>>>>> On Wed, Aug 26, 2020 at 10:34 AM peter enderborg
+>>>>> <peter.enderborg@sony.com> wrote:
+>>>>>> On 8/26/20 3:42 PM, Paul Moore wrote:
+>>>>>>> On Mon, Aug 24, 2020 at 9:23 AM Peter Enderborg
+>>>>>>> <peter.enderborg@sony.com> wrote:
+>>>>>>>> This adds tracing of all denies. They are grouped with trace_seq for
+>>>>>>>> each audit.
+>>>>>>>>
+>>>>>>>> A filter can be inserted with a write to it's filter section.
+>>>>>>>>
+>>>>>>>> echo "permission==\"entrypoint\"" > events/avc/selinux_denied/filter
+>>>>>>>>
+>>>>>>>> A output will be like:
+>>>>>>>>           runcon-1046  [002] .N..   156.351738: selinux_denied:
+>>>>>>>>           trace_seq=2 result=-13
+>>>>>>>>           scontext=system_u:system_r:cupsd_t:s0-s0:c0.
+>>>>>>>>           c1023 tcontext=system_u:object_r:bin_t:s0
+>>>>>>>>           tclass=file permission=entrypoint
+>>>>>>>>
+>>>>>>>> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
+>>>>>>>> ---
+>>>>>>>>  include/trace/events/avc.h | 37 +++++++++++++++++++++++++++++++++++++
+>>>>>>>>  security/selinux/avc.c     | 27 +++++++++++++++++++++++++--
+>>>>>>>>  2 files changed, 62 insertions(+), 2 deletions(-)
+>>>>>>> My most significant comment is that I don't think we want, or need,
+>>>>>>> two trace points in the avc_audit_post_callback() function.  Yes, I
+>>>>>>> understand they are triggered slightly differently, but from my
+>>>>>>> perspective there isn't enough difference between the two tracepoints
+>>>>>>> to warrant including both.  However, while the tracepoints may be
+>>>>>> We tried that but that was problematic too.
+>>>>> My apologies if I was on that thread, but can you remind me why it was
+>>>>> a problem?  Why can't we use a single tracepoint to capture the AVC
+>>>>> information?
+>>>> The problem is parsing the event.
+>>>>
+>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_2020_8_18_842&d=DwIBaQ&c=fP4tf--1dS0biCFlB0saz0I0kjO5v7-GLPtvShAo4cc&r=oO5HuGEGxznA2F3djiiYxmxxWQonw0h6Sks-BEoB4ys&m=qmi2ROWsLC_0mLLhHkpb71j1YoicydLh-7l4cOsLYcY&s=iS3eZr3TFrN5I7BbnvPFYOKd6DfW1FHTFcwI7joS_fk&e=
+>>>>
+>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_2020_8_21_526&d=DwIBaQ&c=fP4tf--1dS0biCFlB0saz0I0kjO5v7-GLPtvShAo4cc&r=oO5HuGEGxznA2F3djiiYxmxxWQonw0h6Sks-BEoB4ys&m=qmi2ROWsLC_0mLLhHkpb71j1YoicydLh-7l4cOsLYcY&s=9OsLN0Y5mUWxEAAqUE6K4PS57Pn1XyZz7GXak6uc_Ls&e=
+>>>>
+>>>> and the "single list" version
+>>>>
+>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_2020_8_17_1346&d=DwIBaQ&c=fP4tf--1dS0biCFlB0saz0I0kjO5v7-GLPtvShAo4cc&r=oO5HuGEGxznA2F3djiiYxmxxWQonw0h6Sks-BEoB4ys&m=qmi2ROWsLC_0mLLhHkpb71j1YoicydLh-7l4cOsLYcY&s=tWSY2ry2IT6RcT5BIUwMuqBL_yPObDE1VljbLqI1zrA&e=
+>>>>
+>>>> With this patch we follow standard message format so no plugin should be needed.
+>>> I'm evidently missing something very fundamental (likely), and/or I'm
+>>> just not communicating very clearly (also likely), because the above
+>>> links don't appear to make any sense with respect to my question.
+>>>
+>>> Let me try a reset ... Why can't we basically take the
+>>> "selinux_denied" TRACE_EVENT implementation in your patch and use it
+>>> to replace the "selinux_audited" TRACE_EVENT in the selinux/next tree
+>>> (of course with the necessary changes to the AVC callback code)?
+>>>
+>>> If the "selinux_denied" implementation is valid from a tracing point
+>>> of view, why can we not do this?  Of course if the "selinux_denied"
+>>> implementation is not a valid TRACE_EVENT then I'm not sure why this
+>>> was suggested for SELinux :)
+>> Im happly fine with replacing the selinux_audited with selinux_denied.  However it is the case where there are more than one denial at the same time. Im not sure how and when it might happen.
+> One thing I wondered about was why not build up a single string with
+> all of the permissions instead of generating multiple trace events?
+> In the previous discussion it was implied that this was due to
+> limitations in the tracing subsystem's filtering, and based on the
+> discussion thus far I'm guessing there is little desire for this
+> information if it can't be filtered on?
 
-[ Upstream commit 975efc66d4e654207c17f939eb737ac591ac38fe ]
+The information is of course as essential as for audit messages.
+I dont see much of the problem with having as the first suggestion with
+a list. It works fine for trace_pipe. It is not failing due to that we can not
+filter with that. It is cause in other tools in user-space
+that needs a plugin to parse it. It need static
+mapping for something that is not really static. Not in runtime, and it will
+change over time.
 
-When booting with heavily modularized config, the serial console
-may not be able to load until after init when modules that
-satisfy needed dependencies have time to load.
+A other idea based on the first one is to have multiple pairs like
 
-Unfortunately, as qcom_geni_console_setup is marked as __init,
-the function may have been freed before we get to run it,
-causing boot time crashes such as:
+class=file permission=read permission=write permission=open
 
-[    6.469057] Unable to handle kernel paging request at virtual address ffffffe645d4e6cc
-[    6.481623] Mem abort info:
-[    6.484466]   ESR = 0x86000007
-[    6.487557]   EC = 0x21: IABT (current EL), IL = 32 bits
-[    6.492929]   SET = 0, FnV = 0g
-[    6.496016]   EA = 0, S1PTW = 0
-[    6.499202] swapper pgtable: 4k pages, 39-bit VAs, pgdp=000000008151e000
-[    6.501286] ufshcd-qcom 1d84000.ufshc: ufshcd_print_pwr_info:[RX, TX]: gear=[3, 3], lane[2, 2], pwr[FAST MODE, FAST MODE], rate = 2
-[    6.505977] [ffffffe645d4e6cc] pgd=000000017df9f003, p4d=000000017df9f003, pud=000000017df9f003, pmd=000000017df9c003, pte=0000000000000000
-[    6.505990] Internal error: Oops: 86000007 [#1] PREEMPT SMP
-[    6.505995] Modules linked in: zl10353 zl10039 zl10036 zd1301_demod xc5000 xc4000 ves1x93 ves1820 tuner_xc2028 tuner_simple tuner_types tua9001 tua6100 1
-[    6.506152]  isl6405
-[    6.518104] ufshcd-qcom 1d84000.ufshc: ufshcd_find_max_sup_active_icc_level: Regulator capability was not set, actvIccLevel=0
-[    6.530549]  horus3a helene fc2580 fc0013 fc0012 fc0011 ec100 e4000 dvb_pll ds3000 drxk drxd drx39xyj dib9000 dib8000 dib7000p dib7000m dib3000mc dibx003
-[    6.624271] CPU: 7 PID: 148 Comm: kworker/7:2 Tainted: G        W       5.8.0-mainline-12021-g6defd37ba1cd #3455
-[    6.624273] Hardware name: Thundercomm Dragonboard 845c (DT)
-[    6.624290] Workqueue: events deferred_probe_work_func
-[    6.624296] pstate: 40c00005 (nZcv daif +PAN +UAO BTYPE=--)
-[    6.624307] pc : qcom_geni_console_setup+0x0/0x110
-[    6.624316] lr : try_enable_new_console+0xa0/0x140
-[    6.624318] sp : ffffffc010843a30
-[    6.624320] x29: ffffffc010843a30 x28: ffffffe645c3e7d0
-[    6.624325] x27: ffffff80f8022180 x26: ffffffc010843b28
-[    6.637937] x25: 0000000000000000 x24: ffffffe6462a2000
-[    6.637941] x23: ffffffe646398000 x22: 0000000000000000
-[    6.637945] x21: 0000000000000000 x20: ffffffe6462a5ce8
-[    6.637952] x19: ffffffe646398e38 x18: ffffffffffffffff
-[    6.680296] x17: 0000000000000000 x16: ffffffe64492b900
-[    6.680300] x15: ffffffe6461e9d08 x14: 69202930203d2064
-[    6.680305] x13: 7561625f65736162 x12: 202c363331203d20
-[    6.696434] x11: 0000000000000030 x10: 0101010101010101
-[    6.696438] x9 : 4d4d20746120304d x8 : 7f7f7f7f7f7f7f7f
-[    6.707249] x7 : feff4c524c787373 x6 : 0000000000008080
-[    6.707253] x5 : 0000000000000000 x4 : 8080000000000000
-[    6.707257] x3 : 0000000000000000 x2 : ffffffe645d4e6cc
-[    6.744223] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate: failed to find OPP for freq 102400000 (-34)
-[    6.744966] x1 : fffffffefe74e174 x0 : ffffffe6462a5ce8
-[    6.753580] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate: failed to find OPP for freq 102400000 (-34)
-[    6.761634] Call trace:
-[    6.761639]  qcom_geni_console_setup+0x0/0x110
-[    6.761645]  register_console+0x29c/0x2f8
-[    6.767981] Bluetooth: hci0: Frame reassembly failed (-84)
-[    6.775252]  uart_add_one_port+0x438/0x500
-[    6.775258]  qcom_geni_serial_probe+0x2c4/0x4a8
-[    6.775266]  platform_drv_probe+0x58/0xa8
-[    6.855359]  really_probe+0xec/0x398
-[    6.855362]  driver_probe_device+0x5c/0xb8
-[    6.855367]  __device_attach_driver+0x98/0xb8
-[    7.184945]  bus_for_each_drv+0x74/0xd8
-[    7.188825]  __device_attach+0xec/0x148
-[    7.192705]  device_initial_probe+0x24/0x30
-[    7.196937]  bus_probe_device+0x9c/0xa8
-[    7.200816]  deferred_probe_work_func+0x7c/0xb8
-[    7.205398]  process_one_work+0x20c/0x4b0
-[    7.209456]  worker_thread+0x48/0x460
-[    7.213157]  kthread+0x14c/0x158
-[    7.216432]  ret_from_fork+0x10/0x18
-[    7.220049] Code: bad PC value
-[    7.223139] ---[ end trace 73f3b21e251d5a70 ]---
+but then you need to filter on numeric values that are not static and
+I don't know if library can make anything useful from that.
 
-Thus this patch removes the __init avoiding crash in such
-configs.
+I don't see why it should be a issue with a event for each denial, all
+of the trace system is opt-in. It is usually only a NOP instruction,
+but here  it is a conditional branch and it is in the end of long
+process where of a very tiny percent a ending up as denial.
 
-Cc: Andy Gross <agross@kernel.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Amit Pundir <amit.pundir@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: linux-serial@vger.kernel.org
-Suggested-by: Saravana Kannan <saravanak@google.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20200811025044.70626-1-john.stultz@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/tty/serial/qcom_geni_serial.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+From my view it is more annoying that we do similar things for
+audit_log but not equal enough to be shared.
 
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index 0d405cc58e722..cd0768c3e773e 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -1050,7 +1050,7 @@ static unsigned int qcom_geni_serial_tx_empty(struct uart_port *uport)
- }
- 
- #ifdef CONFIG_SERIAL_QCOM_GENI_CONSOLE
--static int __init qcom_geni_console_setup(struct console *co, char *options)
-+static int qcom_geni_console_setup(struct console *co, char *options)
- {
- 	struct uart_port *uport;
- 	struct qcom_geni_serial_port *port;
--- 
-2.25.1
+
+>
+> If that's the case then I think we are stuck with the tracing code
+> that currently lives in selinux/next, as I currently have little
+> desire to add more than one tracepoint in the SELinux permission
+> checking codepath.
+>
+>> When that happen we got more than one event. I have no problems with that, but im not sure if the debug tools and perf can make sense of that.
+>>
+>> A other feature with the selinux_audited event it might be inserted on other places in the code too.  A denial is sort of final.
+
 
