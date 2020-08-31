@@ -2,178 +2,118 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106A7C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 355F1C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB6DD20782
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B0FA20782
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:29:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IC5nDs49"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NA4ctU1k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgHaE0f (ORCPT
+        id S1726117AbgHaE3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 00:26:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36518 "EHLO
+        Mon, 31 Aug 2020 00:29:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgHaE0c (ORCPT
+        with ESMTP id S1725835AbgHaE3R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 00:26:32 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7302BC061573;
-        Sun, 30 Aug 2020 21:26:32 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id 145so2150241ybd.0;
-        Sun, 30 Aug 2020 21:26:32 -0700 (PDT)
+        Mon, 31 Aug 2020 00:29:17 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED193C061575
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 21:29:14 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 17so3857335pfw.9
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 21:29:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PX06aBk627NQ1JeMegFd6B64tEFsLtmyNkqRlailfm0=;
-        b=IC5nDs49gJJNp2v81GvqILFp/15eYtDl2QXUOSAriKrk+Im/ZtF0wapcjFhYD1Aee2
-         jvbpHrmUBKZXPH50RHisaYAu6eL3nQMi8tqIbaQ0/GVrplidaSlxi0XkF9MZl9ZISJUy
-         4R6NeoUFpvYWgz/AVuuJruEx6FpoghNJLz+43yhjUyTFi+RgQA0FMEjf7VmO0Gn4rpOp
-         K/qD0gy4DvulktUJNfw234A3UgA/n0f5FM+/q+PywIVycMRHERMlSkWhhpulpNbrvxve
-         NZ2SJEQXzdPfvLg/ZZLsNRwFLSf7nvcbLvCRacQlOO83T58wRYi8uvtv/ICk4aX+fulv
-         i55g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fy+jYTLzmo8SG0PRGSLlA/pnVKtwE9a1uKPk/UDp9I4=;
+        b=NA4ctU1kZIKSEfqA8R2XSbBLEyXSCjda7w9pU9k/KMsgUTwNEPReFipZw7VUKCb0tb
+         TRy4OCOMUBA29mByAF5JiZgD0Qt9inZ3HuChAvAxxnFwXrWmjHGKxGXYkY3pmnynkb6z
+         OYvELM2mDyL8dfVNEkQ9c0DnRkmk1UGStGtJS4yOtZ00Pb6rmJE7QF2OElRDPHYb8zhH
+         ZMI7y/MvR3UJIrdxn12l0R3X6aml2dbxkz6FGd+Tj8kVb9zSYRQTLb3RqH+w3RQ+bWO7
+         quqAr0ZA4rwS1G12JBIlV2fxR6h8JtA5lJXbNfCDXLt3qmthqFeKLQMXFJNzVTsfzDlg
+         vb9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PX06aBk627NQ1JeMegFd6B64tEFsLtmyNkqRlailfm0=;
-        b=jrTbdNG/7rPlno8AW8yHDtug7LCwv+y6m0FR9rcFGDwrXwHklOeQN0CkteKwgbxVpY
-         MqlfmaCSCGNeKwnrndVM4aYVvUHMvxr4EGc9sHAXfTy2tzVVmgnmU894N/8ikwCI+KZ0
-         UDNBs7aPQSQQKtIZO1srBZUuo5UoxL4k7BSjw8CE1VXp9FvHr1GBkRvv4S1Am9Fi9AUz
-         sgiFnEn8hY/qqLsfKHTaNVCgzlvr2PRu8gaEqbnudzlsAQEbbkHCHkGy8BwgJKBQPrfO
-         oATnsqPFLlfYptl9zFPiaGYMa3fOvs6kBY3bzhN52Cu/kh+Kp+5KR3TS3oawJFDw/ZnS
-         gtLw==
-X-Gm-Message-State: AOAM532faJvNngQjAgMzCQhdAOXU0WIiYn3Ono+mPf+CJ7gfVE/lJwe3
-        JzU2vGf0Jl9izXD6A/kpsrAz9iSUU5rQkyr9xQ6LcCw1G+M=
-X-Google-Smtp-Source: ABdhPJy+0rEbq+GkNgtCw3GXB22ZHNHLhDwqJ7psgye+ciyrN8LcA9ntQoXdSFcOYdxLiOIsyTwz2cd2MlTJH1iqhGY=
-X-Received: by 2002:a25:c4c5:: with SMTP id u188mr16615125ybf.162.1598847990436;
- Sun, 30 Aug 2020 21:26:30 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fy+jYTLzmo8SG0PRGSLlA/pnVKtwE9a1uKPk/UDp9I4=;
+        b=rJqh14XUkhr1AHpQYT5tKLmr/6NDUIvt3SVTGgme8kadreWScFCnRJaGkk8ghur5QN
+         W2JtYmtTZhVeS3UvYRxprxpstpf+S6Rq1zd5yDAxurf7GoCySOWhganfoEILrWVOT7fb
+         jN2sm6lQ/4/HJMlw+0bLl3QN1NUo46tkL6m/Fy3uJtP/2/B1M79Vt/kB7YOnW7GUfGyM
+         XrzhDM/4bXdi0rtABkUTXju3xOKYKBF5SP++e+DvoaETyfJbcH/l94Mm+uCvty2Gqo7+
+         P4UGmUU7iRe3lWUO8hBArQ0krPYX99Nmc5cT6mn4ld461aMbXqXMgKUUelBpRjwM0sow
+         whTw==
+X-Gm-Message-State: AOAM532MXeJBQC8SuVHH8i5M5m/h7utZHPho+sdycufi+fVuMa05f37Q
+        iFL3xNfD3aUP7EbZ90KABo6i4Q==
+X-Google-Smtp-Source: ABdhPJyD6b4IOWELQvuYc3r+NvPnogxg5ZJa39sm8LOUCLLFiHHrfalUW2QapDOWE73WPvEvqmk3zA==
+X-Received: by 2002:a63:ab43:: with SMTP id k3mr7183808pgp.426.1598848154284;
+        Sun, 30 Aug 2020 21:29:14 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id h9sm6641639pfq.18.2020.08.30.21.29.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 30 Aug 2020 21:29:13 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 09:59:09 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] cpufreq: s5pv210: Use dev_err instead of pr_err in
+ probe
+Message-ID: <20200831042909.jeg2rv6f3mhcnkim@vireshk-i7>
+References: <20200826160016.469-1-krzk@kernel.org>
+ <20200826160016.469-2-krzk@kernel.org>
 MIME-Version: 1.0
-References: <20200824183253.826343-1-lyude@redhat.com> <20200824183253.826343-2-lyude@redhat.com>
- <CACAvsv6hymdcGkEcigL3fWACZ_1POpB+aefq9d9ChnYv_dHnVg@mail.gmail.com> <76392bff28359a88fbdf0857f011e0ed9f666dc4.camel@redhat.com>
-In-Reply-To: <76392bff28359a88fbdf0857f011e0ed9f666dc4.camel@redhat.com>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Mon, 31 Aug 2020 14:26:19 +1000
-Message-ID: <CACAvsv6GKeX=u4Jn0VVJk1qgnPcnPCW6exukqjvfrfmm2mwSUg@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH 1/2] drm/nouveau/kms/nv50-: Program notifier
- offset before requesting disp caps
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     ML nouveau <nouveau@lists.freedesktop.org>,
-        Sasha Levin <sashal@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <dri-devel@lists.freedesktop.org>, Ben Skeggs <bskeggs@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826160016.469-2-krzk@kernel.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 at 02:52, Lyude Paul <lyude@redhat.com> wrote:
->
-> On Tue, 2020-08-25 at 08:28 +1000, Ben Skeggs wrote:
-> > On Tue, 25 Aug 2020 at 04:33, Lyude Paul <lyude@redhat.com> wrote:
-> > > Not entirely sure why this never came up when I originally tested this
-> > > (maybe some BIOSes already have this setup?) but the ->caps_init vfunc
-> > > appears to cause the display engine to throw an exception on driver
-> > > init, at least on my ThinkPad P72:
-> > >
-> > > nouveau 0000:01:00.0: disp: chid 0 mthd 008c data 00000000 0000508c 0000102b
-> > >
-> > > This is magic nvidia speak for "You need to have the DMA notifier offset
-> > > programmed before you can call NV507D_GET_CAPABILITIES." So, let's fix
-> > > this by doing that, and also perform an update afterwards to prevent
-> > > racing with the GPU when reading capabilities.
-> > >
-> > > Changes since v1:
-> > > * Don't just program the DMA notifier offset, make sure to actually
-> > >   perform an update
-> > I'm not sure there's a need to send an Update() method here, I believe
-> > GetCapabilities() is an action method on its own right?
-> >
->
-> I'm not entirely sure about this part tbh. I do know that we need to call
-> GetCapabilities() _after_ the DMA notifier offset is programmed. But, my
-> assumption was that if GetCapabilities() requires a DMA notifier offset to store
-> its results in, we'd probably want to fire an update or something to make sure
-> that we're not reading before it finishes writing capabilities?
-We definitely want to *wait* on GetCapabilities() finishing, I believe
-it should also update the notifier the same (or similar) way Update()
-does.  But I don't think we want to send an Update() here, it'll
-actually trigger a modeset (which, on earlier HW, will tear down the
-boot mode.  Not sure about current HW, it might preserve state), and
-we may not want that to happen there.
+On 26-08-20, 18:00, Krzysztof Kozlowski wrote:
+> dev_err() allows easily to identify the device printing the message so
+> no need for __func__.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/cpufreq/s5pv210-cpufreq.c | 14 +++++---------
+>  1 file changed, 5 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/s5pv210-cpufreq.c b/drivers/cpufreq/s5pv210-cpufreq.c
+> index 7dccdb364fcf..911a655895d8 100644
+> --- a/drivers/cpufreq/s5pv210-cpufreq.c
+> +++ b/drivers/cpufreq/s5pv210-cpufreq.c
+> @@ -616,8 +616,7 @@ static int s5pv210_cpufreq_probe(struct platform_device *pdev)
+>  
+>  	np = of_find_compatible_node(NULL, NULL, "samsung,s5pv210-clock");
+>  	if (!np) {
+> -		pr_err("%s: failed to find clock controller DT node\n",
+> -			__func__);
+> +		dev_err(dev, "failed to find clock controller DT node\n");
+>  		result = -ENODEV;
+>  		goto err_clock;
+>  	}
+> @@ -625,16 +624,14 @@ static int s5pv210_cpufreq_probe(struct platform_device *pdev)
+>  	clk_base = of_iomap(np, 0);
+>  	of_node_put(np);
+>  	if (!clk_base) {
+> -		pr_err("%s: failed to map clock registers\n", __func__);
+> -		result = -EFAULT;
 
-Ben.
+I have restored this back as it didn't look intentional.
 
->
-> > Ben.
-> >
-> > > Signed-off-by: Lyude Paul <lyude@redhat.com>
-> > > Fixes: 4a2cb4181b07 ("drm/nouveau/kms/nv50-: Probe SOR and PIOR caps for DP
-> > > interlacing support")
-> > > Cc: <stable@vger.kernel.org> # v5.8+
-> > > ---
-> > >  drivers/gpu/drm/nouveau/dispnv50/core507d.c | 25 ++++++++++++++++-----
-> > >  1 file changed, 19 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/nouveau/dispnv50/core507d.c
-> > > b/drivers/gpu/drm/nouveau/dispnv50/core507d.c
-> > > index e341f572c2696..5e86feec3b720 100644
-> > > --- a/drivers/gpu/drm/nouveau/dispnv50/core507d.c
-> > > +++ b/drivers/gpu/drm/nouveau/dispnv50/core507d.c
-> > > @@ -65,13 +65,26 @@ core507d_ntfy_init(struct nouveau_bo *bo, u32 offset)
-> > >  int
-> > >  core507d_caps_init(struct nouveau_drm *drm, struct nv50_disp *disp)
-> > >  {
-> > > -       u32 *push = evo_wait(&disp->core->chan, 2);
-> > > +       struct nv50_core *core = disp->core;
-> > > +       u32 interlock[NV50_DISP_INTERLOCK__SIZE] = {0};
-> > > +       u32 *push;
-> > >
-> > > -       if (push) {
-> > > -               evo_mthd(push, 0x008c, 1);
-> > > -               evo_data(push, 0x0);
-> > > -               evo_kick(push, &disp->core->chan);
-> > > -       }
-> > > +       core->func->ntfy_init(disp->sync, NV50_DISP_CORE_NTFY);
-> > > +
-> > > +       push = evo_wait(&core->chan, 4);
-> > > +       if (!push)
-> > > +               return 0;
-> > > +
-> > > +       evo_mthd(push, 0x0084, 1);
-> > > +       evo_data(push, 0x80000000 | NV50_DISP_CORE_NTFY);
-> > > +       evo_mthd(push, 0x008c, 1);
-> > > +       evo_data(push, 0x0);
-> > > +       evo_kick(push, &core->chan);
-> > > +
-> > > +       core->func->update(core, interlock, false);
-> > > +       if (core->func->ntfy_wait_done(disp->sync, NV50_DISP_CORE_NTFY,
-> > > +                                      core->chan.base.device))
-> > > +               NV_ERROR(drm, "core notifier timeout\n");
-> > >
-> > >         return 0;
-> > >  }
-> > > --
-> > > 2.26.2
-> > >
-> > > _______________________________________________
-> > > Nouveau mailing list
-> > > Nouveau@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/nouveau
-> --
-> Sincerely,
->       Lyude Paul (she/her)
->       Software Engineer at Red Hat
->
+Applied both. Thanks.
+
+-- 
+viresh
