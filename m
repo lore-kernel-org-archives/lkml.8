@@ -2,157 +2,322 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B01FEC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA93C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D20C2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598872072;
-	bh=C+1fKhJBNw/Y3PJKxGvNWyUc7dhncI98yBJO4d14IJo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i3BShFG4LCnMcv5/xoWeQeOcG9EZj2uoolhFduY//N7nXeWa9kPQl0ApUSs0P4oJ+
-	 a3q9XDW972hZX6rmxf5yYZ6BEpWC+YS41SduMy5T0wVQ01FN9KGwB2yCiFnpkfrYkd
-	 Vhs73NcyrxqRw/KmZChvQTEaQiu75NqNylCsnX60=
+	by mail.kernel.org (Postfix) with ESMTP id E6BF52068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:16:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726249AbgHaLHA (ORCPT
+        id S1726359AbgHaLPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 07:07:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54562 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 07:15:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:56620 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726224AbgHaLBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 07:01:19 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6F482072D;
-        Mon, 31 Aug 2020 11:00:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598871636;
-        bh=C+1fKhJBNw/Y3PJKxGvNWyUc7dhncI98yBJO4d14IJo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WfQm7zL27aM+2aGqyAcsedQ8Dko+y1Kwvx25LUAl+6/suNTRdkCJhJbgYopap3ZIR
-         uScl0ijE0IlvZu3amNL60oaIxi7/6b1o5xnnK/lj5pIGpgjIGR+Bo76uf7Uw2xT3Hu
-         3jo3iO1ofbIm0W3j2MhexTl2pwXlZqHridtCUqQM=
-Date:   Mon, 31 Aug 2020 16:30:32 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
-Cc:     Rob Herring <robh@kernel.org>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, chuanhua.lei@linux.intel.com,
-        malliamireddy009@gmail.com
-Subject: Re: [PATCH v5 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
-Message-ID: <20200831110032.GN2639@vkoul-mobl>
-References: <cover.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <68c77fd2ffb477aa4a52a58f8a26bfb191d3c5d1.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <20200814203222.GA2674896@bogus>
- <7cdc0587-8b4f-4360-a303-1541c9ad57b2@linux.intel.com>
- <20200825112107.GN2639@vkoul-mobl>
- <ffa5ba4d-f1b2-6a30-f2f1-f4578a77bce2@linux.intel.com>
- <20200828104530.GT2639@vkoul-mobl>
- <09547b0e-1c2e-d916-d4c0-f66b0110e173@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <09547b0e-1c2e-d916-d4c0-f66b0110e173@linux.intel.com>
+        id S1726522AbgHaLF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 07:05:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C62B11D4;
+        Mon, 31 Aug 2020 04:05:26 -0700 (PDT)
+Received: from e124572.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 07AE53F71F;
+        Mon, 31 Aug 2020 04:05:23 -0700 (PDT)
+From:   Boyan Karatotev <boyan.karatotev@arm.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     vincenzo.frascino@arm.com, amit.kachhap@arm.com,
+        boian4o1@gmail.com, Boyan Karatotev <boyan.karatotev@arm.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH v2 3/4] kselftests/arm64: add PAuth test for whether exec() changes keys
+Date:   Mon, 31 Aug 2020 12:04:49 +0100
+Message-Id: <20200831110450.30188-4-boyan.karatotev@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200831110450.30188-1-boyan.karatotev@arm.com>
+References: <20200831110450.30188-1-boyan.karatotev@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31-08-20, 16:06, Reddy, MallikarjunaX wrote:
-> Hi Vinod,
-> 
-> Thanks for the review. Please see my comment inline.
-> 
-> On 8/28/2020 6:45 PM, Vinod Koul wrote:
-> > On 27-08-20, 17:54, Reddy, MallikarjunaX wrote:
-> > > Hi Vinod,
-> > > Thanks for the review comments.
-> > > 
-> > > On 8/25/2020 7:21 PM, Vinod Koul wrote:
-> > > > On 18-08-20, 15:00, Reddy, MallikarjunaX wrote:
-> > > > 
-> > > > > > > +
-> > > > > > > +            intel,chans:
-> > > > > > > +              $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > > > > > +              description:
-> > > > > > > +                 The channels included on this port. Format is channel start
-> > > > > > > +                 number and how many channels on this port.
-> > > > > > Why does this need to be in DT? This all seems like it can be in the dma
-> > > > > > cells for each client.
-> > > > > (*ABC)
-> > > > > Yes. We need this.
-> > > > > for dma0(lgm-cdma) old SOC supports 16 channels and the new SOC supports 22
-> > > > > channels. and the logical channel mapping for the peripherals also differ
-> > > > > b/w old and new SOCs.
-> > > > > 
-> > > > > Because of this hardware limitation we are trying to configure the total
-> > > > > channels and port-channel mapping dynamically from device tree.
-> > > > > 
-> > > > > based on port name we are trying to configure the default values for
-> > > > > different peripherals(ports).
-> > > > > Example: burst length is not same for all ports, so using port name to do
-> > > > > default configurations.
-> > > > Sorry that does not make sense to me, why not specify the values to be
-> > > > used here instead of defining your own name scheme!
-> > > OK. Agreed. I will remove port name from DT and only use intel,chans
-> > what is intel,chans, why not use dma-channels?
->  The intel,chans says about the channels included on the correspondng port.
+Kernel documentation states that it will change PAuth keys on exec() calls.
 
-What do you mean by a port here?
+Verify that all keys are correctly switched to new ones.
 
-> Format is channel start number and how many channels on this port.
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Reviewed-by: Vincenzo Frascino <Vincenzo.Frascino@arm.com>
+Reviewed-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+Signed-off-by: Boyan Karatotev <boyan.karatotev@arm.com>
+---
+ tools/testing/selftests/arm64/pauth/Makefile  |   4 +
+ .../selftests/arm64/pauth/exec_target.c       |  35 +++++
+ tools/testing/selftests/arm64/pauth/helper.h  |  10 ++
+ tools/testing/selftests/arm64/pauth/pac.c     | 148 ++++++++++++++++++
+ 4 files changed, 197 insertions(+)
+ create mode 100644 tools/testing/selftests/arm64/pauth/exec_target.c
 
-It is perfectly reasonable to have 16 channels but linux not use use all, lets
-say from 5th channel channel onwards
-
-So you need to use standard dma-channels also with dma-channel-mask to
-specify which channels linux can use
-
->  The reasong behind using this attribute instead of standrad dma-channels
-> is...
-> 
-> 
-> DMA_VER22 HW supports 22 channels. But there is a hole in HW, total it can
-> use only 16.
-> 
-> Old soc supports 4ports and 16 channels.
-> New soc supports 6ports and 22 channels.
-> (old and new soc carry the same version VER22)
-> 
-> port channel mapping for the old and new soc also not the same.
-> old soc: logical channels:(Rx, Tx)
-> 0, 1 - SPI0
-> 2, 3 - SPI1
-> 4, 5 - HSNAND
-> 12, 14, 13, 15 - Memcopy
-> 
-> New soc: Logical channels(Rx, Tx)
-> 0, 1 - SPI0
-> 2, 3 - SPI1
-> 4, 5 - SPI2
-> 6, 7 - SPI3
-> 8, 9 - HSNAND
-> 10 to 21 - Mcopy
-
-Mapping is different, client can set that channel required in dmas
-property and use a specific required channel.
-
-> Because of these reasons we are trying to use "intel,chans" attribute, and
-> reading then number of channels from the dt.
-> Advantaage:
-> 1. we can map the channels correspondign to port
-> 2. Dynamically configure the channels (due to hw limitation)
-> 
-> If this is not ok, please suggest us the better way to handle this.
-> > 
-
+diff --git a/tools/testing/selftests/arm64/pauth/Makefile b/tools/testing/selftests/arm64/pauth/Makefile
+index 5c0dd129562f..72e290b0b10c 100644
+--- a/tools/testing/selftests/arm64/pauth/Makefile
++++ b/tools/testing/selftests/arm64/pauth/Makefile
+@@ -13,6 +13,7 @@ pauth_cc_support := $(shell if ($(CC) $(CFLAGS) -march=armv8.3-a -E -x c /dev/nu
+ ifeq ($(pauth_cc_support),1)
+ TEST_GEN_PROGS := pac
+ TEST_GEN_FILES := pac_corruptor.o helper.o
++TEST_GEN_PROGS_EXTENDED := exec_target
+ endif
+ 
+ include ../../lib.mk
+@@ -30,6 +31,9 @@ $(OUTPUT)/helper.o: helper.c
+ # greater, gcc emits pac* instructions which are not in HINT NOP space,
+ # preventing the tests from occurring at all. Compile for ARMv8.2 so tests can
+ # run on earlier targets and print a meaningful error messages
++$(OUTPUT)/exec_target: exec_target.c $(OUTPUT)/helper.o
++	$(CC) $^ -o $@ $(CFLAGS) -march=armv8.2-a
++
+ $(OUTPUT)/pac: pac.c $(OUTPUT)/pac_corruptor.o $(OUTPUT)/helper.o
+ 	$(CC) $^ -o $@ $(CFLAGS) -march=armv8.2-a
+ endif
+diff --git a/tools/testing/selftests/arm64/pauth/exec_target.c b/tools/testing/selftests/arm64/pauth/exec_target.c
+new file mode 100644
+index 000000000000..07addef5a1d7
+--- /dev/null
++++ b/tools/testing/selftests/arm64/pauth/exec_target.c
+@@ -0,0 +1,35 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) 2020 ARM Limited
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <sys/auxv.h>
++
++#include "helper.h"
++
++
++int main(void)
++{
++	struct signatures signed_vals;
++	unsigned long hwcaps;
++	size_t val;
++
++	fread(&val, sizeof(size_t), 1, stdin);
++
++	/* don't try to execute illegal (unimplemented) instructions) caller
++	 * should have checked this and keep worker simple
++	 */
++	hwcaps = getauxval(AT_HWCAP);
++
++	if (hwcaps & HWCAP_PACA) {
++		signed_vals.keyia = keyia_sign(val);
++		signed_vals.keyib = keyib_sign(val);
++		signed_vals.keyda = keyda_sign(val);
++		signed_vals.keydb = keydb_sign(val);
++	}
++	signed_vals.keyg = (hwcaps & HWCAP_PACG) ?  keyg_sign(val) : 0;
++
++	fwrite(&signed_vals, sizeof(struct signatures), 1, stdout);
++
++	return 0;
++}
+diff --git a/tools/testing/selftests/arm64/pauth/helper.h b/tools/testing/selftests/arm64/pauth/helper.h
+index e2ed910c9863..da6457177727 100644
+--- a/tools/testing/selftests/arm64/pauth/helper.h
++++ b/tools/testing/selftests/arm64/pauth/helper.h
+@@ -6,6 +6,16 @@
+ 
+ #include <stdlib.h>
+ 
++#define NKEYS 5
++
++
++struct signatures {
++	size_t keyia;
++	size_t keyib;
++	size_t keyda;
++	size_t keydb;
++	size_t keyg;
++};
+ 
+ void pac_corruptor(void);
+ 
+diff --git a/tools/testing/selftests/arm64/pauth/pac.c b/tools/testing/selftests/arm64/pauth/pac.c
+index 035fdd6aae9b..1b9e3acfeb61 100644
+--- a/tools/testing/selftests/arm64/pauth/pac.c
++++ b/tools/testing/selftests/arm64/pauth/pac.c
+@@ -2,6 +2,8 @@
+ // Copyright (C) 2020 ARM Limited
+ 
+ #include <sys/auxv.h>
++#include <sys/types.h>
++#include <sys/wait.h>
+ #include <signal.h>
+ 
+ #include "../../kselftest_harness.h"
+@@ -33,6 +35,117 @@ do { \
+ } while (0)
+ 
+ 
++void sign_specific(struct signatures *sign, size_t val)
++{
++	sign->keyia = keyia_sign(val);
++	sign->keyib = keyib_sign(val);
++	sign->keyda = keyda_sign(val);
++	sign->keydb = keydb_sign(val);
++}
++
++void sign_all(struct signatures *sign, size_t val)
++{
++	sign->keyia = keyia_sign(val);
++	sign->keyib = keyib_sign(val);
++	sign->keyda = keyda_sign(val);
++	sign->keydb = keydb_sign(val);
++	sign->keyg  = keyg_sign(val);
++}
++
++int are_same(struct signatures *old, struct signatures *new, int nkeys)
++{
++	int res = 0;
++
++	res |= old->keyia == new->keyia;
++	res |= old->keyib == new->keyib;
++	res |= old->keyda == new->keyda;
++	res |= old->keydb == new->keydb;
++	if (nkeys == NKEYS)
++		res |= old->keyg  == new->keyg;
++
++	return res;
++}
++
++int exec_sign_all(struct signatures *signed_vals, size_t val)
++{
++	int new_stdin[2];
++	int new_stdout[2];
++	int status;
++	ssize_t ret;
++	pid_t pid;
++
++	ret = pipe(new_stdin);
++	if (ret == -1) {
++		perror("pipe returned error");
++		return -1;
++	}
++
++	ret = pipe(new_stdout);
++	if (ret == -1) {
++		perror("pipe returned error");
++		return -1;
++	}
++
++	pid = fork();
++	// child
++	if (pid == 0) {
++		dup2(new_stdin[0], STDIN_FILENO);
++		if (ret == -1) {
++			perror("dup2 returned error");
++			exit(1);
++		}
++
++		dup2(new_stdout[1], STDOUT_FILENO);
++		if (ret == -1) {
++			perror("dup2 returned error");
++			exit(1);
++		}
++
++		close(new_stdin[0]);
++		close(new_stdin[1]);
++		close(new_stdout[0]);
++		close(new_stdout[1]);
++
++		ret = execl("exec_target", "exec_target", (char *) NULL);
++		if (ret == -1) {
++			perror("exec returned error");
++			exit(1);
++		}
++	}
++
++	close(new_stdin[0]);
++	close(new_stdout[1]);
++
++	ret = write(new_stdin[1], &val, sizeof(size_t));
++	if (ret == -1) {
++		perror("write returned error");
++		return -1;
++	}
++
++	/*
++	 * wait for the worker to finish, so that read() reads all data
++	 * will also context switch with worker so that this function can be used
++	 * for context switch tests
++	 */
++	waitpid(pid, &status, 0);
++	if (WIFEXITED(status) == 0) {
++		fprintf(stderr, "worker exited unexpectedly\n");
++		return -1;
++	}
++	if (WEXITSTATUS(status) != 0) {
++		fprintf(stderr, "worker exited with error\n");
++		return -1;
++	}
++
++	ret = read(new_stdout[0], signed_vals, sizeof(struct signatures));
++	if (ret == -1) {
++		perror("read returned error");
++		return -1;
++	}
++
++	return 0;
++}
++
+ /* check that a corrupted PAC results in SIGSEGV */
+ TEST_SIGNAL(corrupt_pac, SIGSEGV)
+ {
+@@ -79,4 +192,39 @@ TEST(pac_instructions_not_nop_generic)
+ 	ASSERT_NE(0, keyg)  TH_LOG("keyg instructions did nothing");
+ }
+ 
++/*
++ * fork() does not change keys. Only exec() does so call a worker program.
++ * Its only job is to sign a value and report back the resutls
++ */
++TEST(exec_unique_keys)
++{
++	struct signatures new_keys;
++	struct signatures old_keys;
++	int ret;
++	int different = 0;
++	int nkeys = NKEYS;
++	unsigned long hwcaps = getauxval(AT_HWCAP);
++
++	/* generic and data key instructions are not in NOP space. This prevents a SIGILL */
++	ASSERT_NE(0, hwcaps & HWCAP_PACA) TH_LOG("PAUTH not enabled");
++	if (!(hwcaps & HWCAP_PACG)) {
++		TH_LOG("WARNING: Generic PAUTH not enabled. Skipping generic key checks");
++		nkeys = NKEYS - 1;
++	}
++
++	for (int i = 0; i < PAC_COLLISION_ATTEMPTS; i++) {
++		ret = exec_sign_all(&new_keys, i);
++		ASSERT_EQ(0, ret) TH_LOG("failed to run worker");
++
++		if (nkeys == NKEYS)
++			sign_all(&old_keys, i);
++		else
++			sign_specific(&old_keys, i);
++
++		different |= !are_same(&old_keys, &new_keys, nkeys);
++	}
++
++	ASSERT_EQ(1, different) TH_LOG("exec() did not change keys");
++}
++
+ TEST_HARNESS_MAIN
 -- 
-~Vinod
+2.17.1
+
