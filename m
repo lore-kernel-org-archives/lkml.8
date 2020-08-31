@@ -2,225 +2,202 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C81EC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D189C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3E84208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AABE208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:15:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j+O8vW6W"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="Suk9Hv4X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgHaMPE (ORCPT
+        id S1726839AbgHaMPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 08:15:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52986 "EHLO
+        Mon, 31 Aug 2020 08:15:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgHaMPC (ORCPT
+        with ESMTP id S1726224AbgHaMPE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 08:15:02 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A40AC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 05:15:01 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id q3so2927518pls.11
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 05:15:01 -0700 (PDT)
+        Mon, 31 Aug 2020 08:15:04 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E171C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 05:15:04 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id e17so5032997wme.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 05:15:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nIooSS36mtQC1Oee0ilIZhL51ovS8/MOftc7lgwrhZk=;
-        b=j+O8vW6W1Gc50LTKk+bPWDl2aD/Y/8v0pN3M5ooAkHOOfnKXNv8lHpBa+hz5hQ9Qdm
-         aQzNQDduTCwPIejvzPLN+j3zImKOghfg2di9S+GDHQQyV7t8crdnPp+kW+MXD4tMddBJ
-         mBsLbCHxIRFFOHvyAbcro/zDqrQEDkrChrMU1bTr4c/QKBICKZvWlt621mhde4OTEQnF
-         nPWfBjH11OUH07SsJ9O14NieyiySbMT0SYcFpxHwXwrAC3vmGtQGgfD6uSL0D+ObZ5TK
-         UAtpVpS9uj7SipfCzgmclRHOHaN4jKHiihAIDptj/PeyC0LNgihCLtYkHyY04Hf9bIX3
-         scfw==
+         :content-disposition:in-reply-to;
+        bh=CXDVX0YGELPDSa9HVQRD/zIo3Ak3H4cRsj5762Lwo2k=;
+        b=Suk9Hv4XqaEVcYgIX72xD9qy6GzEbaukryuo/LPaLlbBcQl0JfpaSVflC0+G/dhh+d
+         EhDQLGm1HQjtbAzMnd9KvkCmMSrv3N1mYUpSdiHh7RJJX3h5QrrDUw7CksT9/aCb79Qa
+         y0lp3CE8bhy9iInAcoJv+cD6xQyMwU45tqSyS1rNULkYizJNQfR8NHxwFVEO9/L3TGHy
+         ePM9hcNTIrFbUrN2VGjNrXlnJLtZKYKtE7HJm6jwEAowPM1rq2gNUfuW32h5f0Z+Sjix
+         VNjoDbV4CLRdKSdWaUaEkkgN7jHFGuw1vQlDdowhlQFTi7v9rRtq9q1tPWDf45CqZ22S
+         f9fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nIooSS36mtQC1Oee0ilIZhL51ovS8/MOftc7lgwrhZk=;
-        b=o1mmegfkWcsGMXi95CiEx621wkGpw52FDO09qoN0Rs5LWfV2RTqMOhVxFm2CrfOOQW
-         NnyjzfCUOseV8M855LBtumhytQsIXrDCFfIeFQ8lbqA3UPnGU17S4wTkDb8FQRuuFM8w
-         p8K4gjIwlS2oJ+bWPSnC3q6BvRScCKMZCLGz7dqTDmmKEvahqTE2Zp2TqrctKL+gWV+Q
-         whgac3x9QW7zWR2fEeQltZYB0VGplZAI3uU/fvkR/2cACBGh0TGGddxzCozKkw5TkUsv
-         5uPw2XFfqPGv87ovLB6o30+H/JfYGm47mFKyhXQc0AYBRPcfZGO6OPMPf666uDtwSW1C
-         Q+7A==
-X-Gm-Message-State: AOAM530z17Rt9Ood/U7Z1OB+0m7y6/RN7l2L5xCWp0oczv8KJAl0wHjO
-        ALxJWLe1n64ZThzKTUoIHt0JKw==
-X-Google-Smtp-Source: ABdhPJxKWJ0rCeInmPfUSpGM2WCVJBJ1w1idLupTRD9Q7rQbKYLU49QfLGAqAh/76r6mL1e990sjGg==
-X-Received: by 2002:a17:90b:a44:: with SMTP id gw4mr1105729pjb.26.1598876101178;
-        Mon, 31 Aug 2020 05:15:01 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id t10sm7650745pfq.77.2020.08.31.05.14.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 31 Aug 2020 05:14:59 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 17:44:57 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Niklas Cassel <nks@flawful.org>
-Subject: Re: [PATCH v2] opp: Power on (virtual) power domains managed by the
- OPP core
-Message-ID: <20200831121457.2v6avendroclvrn5@vireshk-i7>
-References: <20200826093328.88268-1-stephan@gerhold.net>
+         :mime-version:content-disposition:in-reply-to;
+        bh=CXDVX0YGELPDSa9HVQRD/zIo3Ak3H4cRsj5762Lwo2k=;
+        b=niklsThhLhxLyZhRg2gsDc85Y2vpn/B3BoAAPQBeipyXpYx3l5Ypt9DtrEAKJ3hHPc
+         Gg93J29hVG/7N+5YeGSicWwZ4gePTYDGCogO6t3krKhdVyK3UdoFar67zgVO9ux8xvAA
+         0ePPsT5gn5mQnVVCgd9kNpIDrhw4c70hvzyVug71qOi9P/3VK5wnwpDaQjsEVc0slTWH
+         k/PCkABLRrI/C6mZRDzwz8iWUXZdbMEO+iqoHoHTE5SDZmht/ow7hXNqO4/QKJ6PYS0L
+         XKaPFEqr5Uc96e5mScV8mBcWqYU/FleY8rXTYWaXKbLa/fsFV9BdnB1Gb1LGhkCDgr+K
+         fXig==
+X-Gm-Message-State: AOAM5317+8wl0Hq/v+g5nqUBAzo+a/HfTnLTxEXjlW/khiQY514IKIOm
+        6hi0t+lUscZnVNVPJuGnqjejPA==
+X-Google-Smtp-Source: ABdhPJxI4FQAA9nLp+cBM2Zp8GbhP4AfLQr1AzKsa0RP42KutjwrSTnkJlyUuTOuzaS252dE0ZOpSg==
+X-Received: by 2002:a1c:20d3:: with SMTP id g202mr1151473wmg.54.1598876103080;
+        Mon, 31 Aug 2020 05:15:03 -0700 (PDT)
+Received: from localhost ([86.61.181.4])
+        by smtp.gmail.com with ESMTPSA id u16sm11347086wmc.7.2020.08.31.05.15.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 05:15:02 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 14:15:01 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Moshe Shemesh <moshe@mellanox.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next RFC v3 01/14] devlink: Add reload action option
+ to devlink reload command
+Message-ID: <20200831121501.GD3794@nanopsycho.orion>
+References: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
+ <1598801254-27764-2-git-send-email-moshe@mellanox.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200826093328.88268-1-stephan@gerhold.net>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <1598801254-27764-2-git-send-email-moshe@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26-08-20, 11:33, Stephan Gerhold wrote:
-> dev_pm_opp_attach_genpd() allows attaching an arbitrary number of
-> power domains to an OPP table. In that case, the genpd core will
-> create a virtual device for each of the power domains.
-> 
-> At the moment, the OPP core only calls
-> dev_pm_genpd_set_performance_state() on these virtual devices.
-> It does not attempt to power on the power domains. Therefore
-> the required power domain might never get turned on.
-> 
-> So far, dev_pm_opp_attach_genpd() is only used in qcom-cpufreq-nvmem.c
-> to attach the CPR power domain to the CPU OPP table. The CPR driver
-> does not check if it was actually powered on so this did not cause
-> any problems. However, other drivers (e.g. rpmpd) might ignore the
-> performance state until the power domain is actually powered on.
-> 
-> Since these virtual devices are managed exclusively by the OPP core,
-> I would say that it should also be responsible to ensure they are
-> enabled.
-> 
-> This commit implements this similar to the non-virtual power domains;
-> we create device links for each of attached power domains so that they
-> are turned on whenever the consumer device is active.
-> 
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-> ---
+Sun, Aug 30, 2020 at 05:27:21PM CEST, moshe@mellanox.com wrote:
+>Add devlink reload action to allow the user to request a specific reload
+>action. The action parameter is optional, if not specified then devlink
+>driver re-init action is used (backward compatible).
+>Note that when required to do firmware activation some drivers may need
+>to reload the driver. On the other hand some drivers may need to reset
+>the firmware to reinitialize the driver entities. Therefore, the devlink
+>reload command returns the actions which were actually done.
+>However, in case fw_activate_no_reset action is selected, then no other
+>reload action is allowed.
+>Reload actions supported are:
+>driver_reinit: driver entities re-initialization, applying devlink-param
+>               and devlink-resource values.
+>fw_activate: firmware activate.
+>fw_activate_no_reset: Activate new firmware image without any reset.
+>                      (also known as: firmware live patching).
+>
+>command examples:
+>$devlink dev reload pci/0000:82:00.0 action driver_reinit
+>reload_actions_done:
+>  driver_reinit
+>
+>$devlink dev reload pci/0000:82:00.0 action fw_activate
+>reload_actions_done:
+>  driver_reinit fw_activate
+>
+>Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+>---
+>v2 -> v3:
+>- Replace fw_live_patch action by fw_activate_no_reset
+>- Devlink reload returns the actions done over netlink reply
+>v1 -> v2:
+>- Instead of reload levels driver,fw_reset,fw_live_patch have reload
+>  actions driver_reinit,fw_activate,fw_live_patch
+>- Remove driver default level, the action driver_reinit is the default
+>  action for all drivers
+>---
 
-Applied with some changes, hope that is fine:
+[...]
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-[ Viresh: Rearranged the code to remove extra loop and minor cleanup ]
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/opp/core.c | 37 ++++++++++++++++++++++++++++++++++++-
- drivers/opp/opp.h  |  1 +
- 2 files changed, 37 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index e65174725a4d..b608b0253079 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -17,6 +17,7 @@
- #include <linux/device.h>
- #include <linux/export.h>
- #include <linux/pm_domain.h>
-+#include <linux/pm_runtime.h>
- #include <linux/regulator/consumer.h>
- 
- #include "opp.h"
-@@ -1967,10 +1968,15 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
- 		if (!opp_table->genpd_virt_devs[index])
- 			continue;
- 
-+		if (opp_table->genpd_virt_links[index])
-+			device_link_del(opp_table->genpd_virt_links[index]);
-+
- 		dev_pm_domain_detach(opp_table->genpd_virt_devs[index], false);
- 		opp_table->genpd_virt_devs[index] = NULL;
- 	}
- 
-+	kfree(opp_table->genpd_virt_links);
-+	opp_table->genpd_virt_links = NULL;
- 	kfree(opp_table->genpd_virt_devs);
- 	opp_table->genpd_virt_devs = NULL;
- }
-@@ -2002,8 +2008,10 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
- {
- 	struct opp_table *opp_table;
- 	struct device *virt_dev;
-+	struct device_link *dev_link;
- 	int index = 0, ret = -EINVAL;
- 	const char **name = names;
-+	u32 flags;
- 
- 	opp_table = dev_pm_opp_get_opp_table(dev);
- 	if (IS_ERR(opp_table))
-@@ -2030,6 +2038,21 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
- 	if (!opp_table->genpd_virt_devs)
- 		goto unlock;
- 
-+	opp_table->genpd_virt_links = kcalloc(opp_table->required_opp_count,
-+					      sizeof(*opp_table->genpd_virt_links),
-+					      GFP_KERNEL);
-+	if (!opp_table->genpd_virt_links) {
-+		kfree(opp_table->genpd_virt_devs);
-+		opp_table->genpd_virt_devs = NULL;
-+		goto unlock;
-+	}
-+
-+	/* Turn on power domain initially if consumer is active */
-+	pm_runtime_get_noresume(dev);
-+	flags = DL_FLAG_PM_RUNTIME | DL_FLAG_STATELESS;
-+	if (pm_runtime_active(dev))
-+		flags |= DL_FLAG_RPM_ACTIVE;
-+
- 	while (*name) {
- 		if (index >= opp_table->required_opp_count) {
- 			dev_err(dev, "Index can't be greater than required-opp-count - 1, %s (%d : %d)\n",
-@@ -2043,12 +2066,23 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
- 			dev_err(dev, "Couldn't attach to pm_domain: %d\n", ret);
- 			goto err;
- 		}
--
- 		opp_table->genpd_virt_devs[index] = virt_dev;
-+
-+		/* Create device links to manage runtime PM */
-+		dev_link = device_link_add(dev, opp_table->genpd_virt_devs[index],
-+					   flags);
-+		if (!dev_link) {
-+			dev_err(dev, "Failed to create device link\n");
-+			goto err;
-+		}
-+		opp_table->genpd_virt_links[index] = dev_link;
-+
- 		index++;
- 		name++;
- 	}
- 
-+	pm_runtime_put(dev);
-+
- 	if (virt_devs)
- 		*virt_devs = opp_table->genpd_virt_devs;
- 	mutex_unlock(&opp_table->genpd_virt_dev_lock);
-@@ -2056,6 +2090,7 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
- 	return opp_table;
- 
- err:
-+	pm_runtime_put(dev);
- 	_opp_detach_genpd(opp_table);
- unlock:
- 	mutex_unlock(&opp_table->genpd_virt_dev_lock);
-diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-index 78e876ec803e..be5526cdbdba 100644
---- a/drivers/opp/opp.h
-+++ b/drivers/opp/opp.h
-@@ -186,6 +186,7 @@ struct opp_table {
- 
- 	struct mutex genpd_virt_dev_lock;
- 	struct device **genpd_virt_devs;
-+	struct device_link **genpd_virt_links;
- 	struct opp_table **required_opp_tables;
- 	unsigned int required_opp_count;
+>diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
+>index 08d101138fbe..c42b66d88884 100644
+>--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
+>+++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
+>@@ -1113,7 +1113,7 @@ mlxsw_devlink_info_get(struct devlink *devlink, struct devlink_info_req *req,
+> 
+> static int
+> mlxsw_devlink_core_bus_device_reload_down(struct devlink *devlink,
+>-					  bool netns_change,
+>+					  bool netns_change, enum devlink_reload_action action,
+> 					  struct netlink_ext_ack *extack)
+> {
+> 	struct mlxsw_core *mlxsw_core = devlink_priv(devlink);
+>@@ -1126,15 +1126,23 @@ mlxsw_devlink_core_bus_device_reload_down(struct devlink *devlink,
+> }
+> 
+> static int
+>-mlxsw_devlink_core_bus_device_reload_up(struct devlink *devlink,
+>-					struct netlink_ext_ack *extack)
+>+mlxsw_devlink_core_bus_device_reload_up(struct devlink *devlink, enum devlink_reload_action action,
+>+					struct netlink_ext_ack *extack, unsigned long *actions_done)
+> {
+> 	struct mlxsw_core *mlxsw_core = devlink_priv(devlink);
+>+	int err;
+> 
+>-	return mlxsw_core_bus_device_register(mlxsw_core->bus_info,
+>-					      mlxsw_core->bus,
+>-					      mlxsw_core->bus_priv, true,
+>-					      devlink, extack);
+>+	err = mlxsw_core_bus_device_register(mlxsw_core->bus_info,
+>+					     mlxsw_core->bus,
+>+					     mlxsw_core->bus_priv, true,
+>+					     devlink, extack);
+>+	if (err)
+>+		return err;
+>+	if (actions_done)
+>+		*actions_done = BIT(DEVLINK_RELOAD_ACTION_DRIVER_REINIT) |
+>+				BIT(DEVLINK_RELOAD_ACTION_FW_ACTIVATE);
+>+
+>+	return 0;
+> }
+> 
+> static int mlxsw_devlink_flash_update(struct devlink *devlink,
+>@@ -1268,6 +1276,8 @@ mlxsw_devlink_trap_policer_counter_get(struct devlink *devlink,
+> }
+> 
+> static const struct devlink_ops mlxsw_devlink_ops = {
+>+	.supported_reload_actions	= BIT(DEVLINK_RELOAD_ACTION_DRIVER_REINIT) |
+>+					  BIT(DEVLINK_RELOAD_ACTION_FW_ACTIVATE),
+
+This is confusing and open to interpretation. Does this mean that the
+driver supports:
+1) REINIT && FW_ACTIVATE
+2) REINIT || FW_ACTIVATE
+?
+
+Because mlxsw supports only 1. I guess that mlx5 supports both. This
+needs to be distinguished.
+
+I think you need an array of combinations. Or perhaps rather to extend
+the enum with combinations. You kind of have it already with
+DEVLINK_RELOAD_ACTION_FW_ACTIVATE_NO_RESET
+
+Maybe we can have something like:
+DEVLINK_RELOAD_ACTION_DRIVER_REINIT
+DEVLINK_RELOAD_ACTION_DRIVER_REINIT_FW_ACTIVATE_RESET
+DEVLINK_RELOAD_ACTION_FW_ACTIVATE_RESET
+DEVLINK_RELOAD_ACTION_FW_ACTIVATE (this is the original FW_ACTIVATE_NO_RESET)
+
+Each has very clear meaning.
+
+Also, then the "actions_done" would be a simple enum, directly returned
+to the user. No bitfield needed.
+
+
+> 	.reload_down		= mlxsw_devlink_core_bus_device_reload_down,
+> 	.reload_up		= mlxsw_devlink_core_bus_device_reload_up,
+> 	.port_type_set			= mlxsw_devlink_port_type_set,
+
+[...]
