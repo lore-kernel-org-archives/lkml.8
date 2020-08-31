@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFEAC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5B4C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 429E3207EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACB6207EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598888399;
-	bh=B97NLXDNmXiVAlhX37PNK8zdprVaWzpuhoXhsMeIYVc=;
+	s=default; t=1598888401;
+	bh=2S3ivuzEZGfnY77yUs2AAU8aYTRtxOGZowmybDPmTt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f6tpEoD7V/MFlX5VQ+3LxDiVMAl9G6obL/PvIhxtbl+wYr0PfHR9B20tqmvwPidrb
-	 dHQm7D8cjsX08G0skan9xRcDTWEvert2RrSNAbflYW1hB0GvlZ93veIx87pyjEtiki
-	 RcUSw5Y7chsLrcZrccKyXPMNWBAoZ7JeBz0kzAqY=
+	b=IEw3jSgj7gRt0/U0GycFKXrTbAkST8KGCp8xlasV1b79gPXr9JpzcxMmD1IPawTMm
+	 xaXJkYux81QCn7lEqJhwia8L4/8Tcpq/1n7fgaI/RBo4hu337VgFAq7v18XOnsM3zZ
+	 OBINJgQbgyE8khsu92KRQY4Do47obleSTTC9mfeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbgHaPjy (ORCPT
+        id S1729429AbgHaPj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:39:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39106 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:39:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728336AbgHaPaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:30:02 -0400
+        id S1728521AbgHaPaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:30:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2D7F20E65;
-        Mon, 31 Aug 2020 15:30:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E72720767;
+        Mon, 31 Aug 2020 15:29:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887801;
-        bh=B97NLXDNmXiVAlhX37PNK8zdprVaWzpuhoXhsMeIYVc=;
+        s=default; t=1598887800;
+        bh=2S3ivuzEZGfnY77yUs2AAU8aYTRtxOGZowmybDPmTt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KnziI5s3+TGZsvRbY4xCk6Y7N3MEIXo5ya49lPyv2IYoQsHfIgApGZLDHLaXO+kYv
-         kPs6tJhWnq1k5IuQMKpp1ny2Vjg+LgBR4QJBNhE2aKVTilVA/3RFFN5oKEw02t+RE7
-         KJHHaRZlRvS/fykrdm3gQNKj8JfG0Oz1OKnLYNG4=
+        b=0HD1eT5TwPXxdSLB3Q9rr6nmdnYp6+H7xzTlH0ESfIiICYAdMmfOPBl7DdEkiJXZD
+         3grQ0DsqPtxGi1KLjEgE4IMOu1Zy8v8DrjXWC11zJ++8wUEuUOcSjBwApnd59Yiywi
+         7BNz75E9XNDzUKSawkrl0RXvsTubYdc0lK9RBmJE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ofir Bitton <obitton@habana.ai>,
         Oded Gabbay <oded.gabbay@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.8 17/42] habanalabs: proper handling of alloc size in coresight
-Date:   Mon, 31 Aug 2020 11:29:09 -0400
-Message-Id: <20200831152934.1023912-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 16/42] habanalabs: set clock gating according to mask
+Date:   Mon, 31 Aug 2020 11:29:08 -0400
+Message-Id: <20200831152934.1023912-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831152934.1023912-1-sashal@kernel.org>
 References: <20200831152934.1023912-1-sashal@kernel.org>
@@ -61,84 +61,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ofir Bitton <obitton@habana.ai>
 
-[ Upstream commit 36545279f076afeb77104f5ffeab850da3b6d107 ]
+[ Upstream commit f44d23b9095abd91dad9f5f3add2a3149833ec83 ]
 
-Allocation size can go up to 64bit but truncated to 32bit,
-we should make sure it is not truncated and validate no address
-overflow.
+Once clock gating is set we enable clock gating according to mask,
+we should also disable clock gating according to relevant bits.
 
 Signed-off-by: Ofir Bitton <obitton@habana.ai>
 Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/gaudi/gaudi_coresight.c | 8 +++++++-
- drivers/misc/habanalabs/goya/goya_coresight.c   | 8 +++++++-
- drivers/misc/habanalabs/habanalabs.h            | 2 +-
- 3 files changed, 15 insertions(+), 3 deletions(-)
+ drivers/misc/habanalabs/gaudi/gaudi.c | 44 +++++++++++++--------------
+ 1 file changed, 21 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/gaudi/gaudi_coresight.c b/drivers/misc/habanalabs/gaudi/gaudi_coresight.c
-index bf0e062d7b874..cc3d03549a6e4 100644
---- a/drivers/misc/habanalabs/gaudi/gaudi_coresight.c
-+++ b/drivers/misc/habanalabs/gaudi/gaudi_coresight.c
-@@ -523,7 +523,7 @@ static int gaudi_config_etf(struct hl_device *hdev,
- }
- 
- static bool gaudi_etr_validate_address(struct hl_device *hdev, u64 addr,
--					u32 size, bool *is_host)
-+					u64 size, bool *is_host)
+diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
+index 0261f60df5633..8b6cf722ddf8e 100644
+--- a/drivers/misc/habanalabs/gaudi/gaudi.c
++++ b/drivers/misc/habanalabs/gaudi/gaudi.c
+@@ -2564,6 +2564,7 @@ static void gaudi_set_clock_gating(struct hl_device *hdev)
  {
- 	struct asic_fixed_properties *prop = &hdev->asic_prop;
  	struct gaudi_device *gaudi = hdev->asic_specific;
-@@ -535,6 +535,12 @@ static bool gaudi_etr_validate_address(struct hl_device *hdev, u64 addr,
- 		return false;
+ 	u32 qman_offset;
++	bool enable;
+ 	int i;
+ 
+ 	/* In case we are during debug session, don't enable the clock gate
+@@ -2573,46 +2574,43 @@ static void gaudi_set_clock_gating(struct hl_device *hdev)
+ 		return;
+ 
+ 	for (i = GAUDI_PCI_DMA_1, qman_offset = 0 ; i < GAUDI_HBM_DMA_1 ; i++) {
+-		if (!(hdev->clock_gating_mask &
+-					(BIT_ULL(gaudi_dma_assignment[i]))))
+-			continue;
++		enable = !!(hdev->clock_gating_mask &
++				(BIT_ULL(gaudi_dma_assignment[i])));
+ 
+ 		qman_offset = gaudi_dma_assignment[i] * DMA_QMAN_OFFSET;
+-		WREG32(mmDMA0_QM_CGM_CFG1 + qman_offset, QMAN_CGM1_PWR_GATE_EN);
++		WREG32(mmDMA0_QM_CGM_CFG1 + qman_offset,
++				enable ? QMAN_CGM1_PWR_GATE_EN : 0);
+ 		WREG32(mmDMA0_QM_CGM_CFG + qman_offset,
+-				QMAN_UPPER_CP_CGM_PWR_GATE_EN);
++				enable ? QMAN_UPPER_CP_CGM_PWR_GATE_EN : 0);
  	}
  
-+	if (addr > (addr + size)) {
-+		dev_err(hdev->dev,
-+			"ETR buffer size %llu overflow\n", size);
-+		return false;
-+	}
-+
- 	/* PMMU and HPMMU addresses are equal, check only one of them */
- 	if ((gaudi->hw_cap_initialized & HW_CAP_MMU) &&
- 		hl_mem_area_inside_range(addr, size,
-diff --git a/drivers/misc/habanalabs/goya/goya_coresight.c b/drivers/misc/habanalabs/goya/goya_coresight.c
-index 1258724ea5106..c23a9fcb74b57 100644
---- a/drivers/misc/habanalabs/goya/goya_coresight.c
-+++ b/drivers/misc/habanalabs/goya/goya_coresight.c
-@@ -358,11 +358,17 @@ static int goya_config_etf(struct hl_device *hdev,
- }
+ 	for (i = GAUDI_HBM_DMA_1 ; i < GAUDI_DMA_MAX ; i++) {
+-		if (!(hdev->clock_gating_mask &
+-					(BIT_ULL(gaudi_dma_assignment[i]))))
+-			continue;
++		enable = !!(hdev->clock_gating_mask &
++				(BIT_ULL(gaudi_dma_assignment[i])));
  
- static int goya_etr_validate_address(struct hl_device *hdev, u64 addr,
--		u32 size)
-+		u64 size)
- {
- 	struct asic_fixed_properties *prop = &hdev->asic_prop;
- 	u64 range_start, range_end;
+ 		qman_offset = gaudi_dma_assignment[i] * DMA_QMAN_OFFSET;
+-		WREG32(mmDMA0_QM_CGM_CFG1 + qman_offset, QMAN_CGM1_PWR_GATE_EN);
++		WREG32(mmDMA0_QM_CGM_CFG1 + qman_offset,
++				enable ? QMAN_CGM1_PWR_GATE_EN : 0);
+ 		WREG32(mmDMA0_QM_CGM_CFG + qman_offset,
+-				QMAN_COMMON_CP_CGM_PWR_GATE_EN);
++				enable ? QMAN_COMMON_CP_CGM_PWR_GATE_EN : 0);
+ 	}
  
-+	if (addr > (addr + size)) {
-+		dev_err(hdev->dev,
-+			"ETR buffer size %llu overflow\n", size);
-+		return false;
-+	}
-+
- 	if (hdev->mmu_enable) {
- 		range_start = prop->dmmu.start_addr;
- 		range_end = prop->dmmu.end_addr;
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index 194d833526964..feedf3194ea6c 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -1587,7 +1587,7 @@ struct hl_ioctl_desc {
-  *
-  * Return: true if the area is inside the valid range, false otherwise.
-  */
--static inline bool hl_mem_area_inside_range(u64 address, u32 size,
-+static inline bool hl_mem_area_inside_range(u64 address, u64 size,
- 				u64 range_start_address, u64 range_end_address)
- {
- 	u64 end_address = address + size;
+-	if (hdev->clock_gating_mask & (BIT_ULL(GAUDI_ENGINE_ID_MME_0))) {
+-		WREG32(mmMME0_QM_CGM_CFG1, QMAN_CGM1_PWR_GATE_EN);
+-		WREG32(mmMME0_QM_CGM_CFG, QMAN_COMMON_CP_CGM_PWR_GATE_EN);
+-	}
++	enable = !!(hdev->clock_gating_mask & (BIT_ULL(GAUDI_ENGINE_ID_MME_0)));
++	WREG32(mmMME0_QM_CGM_CFG1, enable ? QMAN_CGM1_PWR_GATE_EN : 0);
++	WREG32(mmMME0_QM_CGM_CFG, enable ? QMAN_COMMON_CP_CGM_PWR_GATE_EN : 0);
+ 
+-	if (hdev->clock_gating_mask & (BIT_ULL(GAUDI_ENGINE_ID_MME_2))) {
+-		WREG32(mmMME2_QM_CGM_CFG1, QMAN_CGM1_PWR_GATE_EN);
+-		WREG32(mmMME2_QM_CGM_CFG, QMAN_COMMON_CP_CGM_PWR_GATE_EN);
+-	}
++	enable = !!(hdev->clock_gating_mask & (BIT_ULL(GAUDI_ENGINE_ID_MME_2)));
++	WREG32(mmMME2_QM_CGM_CFG1, enable ? QMAN_CGM1_PWR_GATE_EN : 0);
++	WREG32(mmMME2_QM_CGM_CFG, enable ? QMAN_COMMON_CP_CGM_PWR_GATE_EN : 0);
+ 
+ 	for (i = 0, qman_offset = 0 ; i < TPC_NUMBER_OF_ENGINES ; i++) {
+-		if (!(hdev->clock_gating_mask &
+-					(BIT_ULL(GAUDI_ENGINE_ID_TPC_0 + i))))
+-			continue;
++		enable = !!(hdev->clock_gating_mask &
++				(BIT_ULL(GAUDI_ENGINE_ID_TPC_0 + i)));
+ 
+ 		WREG32(mmTPC0_QM_CGM_CFG1 + qman_offset,
+-				QMAN_CGM1_PWR_GATE_EN);
++				enable ? QMAN_CGM1_PWR_GATE_EN : 0);
+ 		WREG32(mmTPC0_QM_CGM_CFG + qman_offset,
+-				QMAN_COMMON_CP_CGM_PWR_GATE_EN);
++				enable ? QMAN_COMMON_CP_CGM_PWR_GATE_EN : 0);
+ 
+ 		qman_offset += TPC_QMAN_OFFSET;
+ 	}
 -- 
 2.25.1
 
