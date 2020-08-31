@@ -2,174 +2,110 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D13DC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0575C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D68D2068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A012C206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:35:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fewlgfbO"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="T2KW9+cb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729510AbgHaSeY (ORCPT
+        id S1728881AbgHaSfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:34:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45346 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728748AbgHaSeX (ORCPT
+        Mon, 31 Aug 2020 14:35:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbgHaSfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:34:23 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07VIWWG8146794;
-        Mon, 31 Aug 2020 14:34:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=TEjsDqJ+Qq9r48V+zxdJ1HjjfjTzuEurbsewT8DpRDE=;
- b=fewlgfbOwLPYhkvXTFSRodFfRl9TX37w+fW787h0OPHH1TYmzLYLaD6Qw1dd1Rk0/AGz
- qFNF1Tgu18z2+gGImT2Th7LwziGoaK2wSZJs+PdX6ck30y4W7wbyD4c2NY2P2PWsj+Oj
- iXLodE2odFNQyddPjEN5L39FzJnWXIhjsK8lWo/3Y52BPQAZn88r707TuHNys/iniPOW
- dVQzz8ALGfQ9uA0RXMjupFS2IuASmALKX63r9WFtMV2HjNv0xcfq0bTo3MVlDuKMdr5X
- n5mCmgYEyNKVrc+B/1nLGUHc7RSlC4iBf/R4DbfryOKyyEborDHWupdu7gJPsMOqqXqH XQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3395wns5uk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 14:34:21 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07VIXlRv154296;
-        Mon, 31 Aug 2020 14:34:20 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3395wns5ts-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 14:34:20 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07VIVL5f029266;
-        Mon, 31 Aug 2020 18:34:19 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma01dal.us.ibm.com with ESMTP id 337en96kjd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 18:34:19 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07VIYHKY48824606
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 31 Aug 2020 18:34:17 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 88C7EAE05F;
-        Mon, 31 Aug 2020 18:34:17 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 039DCAE060;
-        Mon, 31 Aug 2020 18:34:16 +0000 (GMT)
-Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.170.64])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 31 Aug 2020 18:34:16 +0000 (GMT)
-Subject: Re: [PATCH v10 16/16] s390/vfio-ap: update docs to include dynamic
- config support
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
-References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
- <20200821195616.13554-17-akrowiak@linux.ibm.com>
- <20200825124529.7b51d825.cohuck@redhat.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <cb4d43b9-bfe1-b2a0-179c-a6362a5f1380@linux.ibm.com>
-Date:   Mon, 31 Aug 2020 14:34:16 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 31 Aug 2020 14:35:45 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E351FC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:35:44 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id np15so352592pjb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:35:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=PaGS2uzZD7Kro0ekXrFmFn9ksemHuyaMEDFaP9+HbTs=;
+        b=T2KW9+cbq+bqJgzBohyRO9AXZ3t79XlryYl2YWgCmE3YqwFUr81ry3FUWcjyJVBn2p
+         xjUiO7MYKO0Tw2gcFcTizQ+dODXK/SBA/KJoFX14hCv9TfWUpeCFG8aMapGwzAQzQ/jC
+         CUxdbq35dkUogDSODZNByRWqf3iSNZL4s+x/7gdWYV4MO23W0Bqllva69SV6xWeoO1bW
+         AoeECFKdDvFuMr1sobC9HzMtIWYkGrNGudHSNN/e/cXOkz5RJ9ypvz5zfeEc8uX6cXfH
+         xf1+FbWEUCOlvRUfKptkUNx4keIbYJlo65lPoprmtXsrrdyMhf91Dq6Q82Mp3bsvfIsM
+         8WaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=PaGS2uzZD7Kro0ekXrFmFn9ksemHuyaMEDFaP9+HbTs=;
+        b=TZp/W1o8AKk7T6wxxVMFToFXyhNChQVhd3JQQGCzcRZCyHZ+JdATrM91fSaRCk6QoR
+         CG3dcU6ziRpUHgOEzBYODqrveDC0Vr6Bz+n7KQYSmzwviDsX7ycrXFH/Vj/8TcgN51iP
+         qJdACxROZga7/kYayQWrRG6+Hf8164K2KvIEU89sAJtnfnr9wSwt+vw6N/J2aFgzkbHS
+         lcRTvKYyoq927Cne7UZQLL40aJFMnLC/S1yJFEYoBtdgghGQVxjM322pkS+wp39pDSQH
+         8lf6T1B7h/qZ/UGWh2Oy8rWXRpLHTbttG6XQHSc5ZojVfbAsIrEcsMY59+YDcX0U/3KI
+         WucA==
+X-Gm-Message-State: AOAM533067fLPmezfQqV7lvW3X4YprM7Knk+OyPlX9jyyIErir78OJJf
+        y/wf7NZqbf66bEn2TALfAZ4iaQ==
+X-Google-Smtp-Source: ABdhPJxl7Hyfd0zkkHCY81kxkFxx+yC3S6h+KZ79YUwFh9A3MjdXBXFG/oy7hPyTVIgBJNx4CMvGKw==
+X-Received: by 2002:a17:90a:764d:: with SMTP id s13mr611974pjl.58.1598898944292;
+        Mon, 31 Aug 2020 11:35:44 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id y1sm8088311pgr.3.2020.08.31.11.35.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 11:35:43 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-mmc@vger.kernel.org
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mmc: meson-gx: use wrapper to avoid accessing internal vars
+In-Reply-To: <20200831102324.12566-1-wsa+renesas@sang-engineering.com>
+References: <20200831102324.12566-1-wsa+renesas@sang-engineering.com>
+Date:   Mon, 31 Aug 2020 11:35:43 -0700
+Message-ID: <7hv9gy7jeo.fsf@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20200825124529.7b51d825.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-31_09:2020-08-31,2020-08-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 adultscore=0 mlxscore=0 priorityscore=1501 suspectscore=3
- spamscore=0 mlxlogscore=999 clxscore=1015 lowpriorityscore=0 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008310108
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Wolfram Sang <wsa+renesas@sang-engineering.com> writes:
 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-On 8/25/20 6:45 AM, Cornelia Huck wrote:
-> On Fri, 21 Aug 2020 15:56:16 -0400
-> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+
+> ---
 >
->> Update the documentation in vfio-ap.rst to include information about the
->> AP dynamic configuration support (i.e., hot plug of adapters, domains
->> and control domains via the matrix mediated device's sysfs assignment
->> attributes).
->>
->> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->> ---
->>   Documentation/s390/vfio-ap.rst | 362 ++++++++++++++++++++++++++-------
->>   1 file changed, 285 insertions(+), 77 deletions(-)
->>
->> diff --git a/Documentation/s390/vfio-ap.rst b/Documentation/s390/vfio-ap.rst
->> index e15436599086..8907aeca8fb7 100644
->> --- a/Documentation/s390/vfio-ap.rst
->> +++ b/Documentation/s390/vfio-ap.rst
->> @@ -253,7 +253,7 @@ The process for reserving an AP queue for use by a KVM guest is:
->>   1. The administrator loads the vfio_ap device driver
->>   2. The vfio-ap driver during its initialization will register a single 'matrix'
->>      device with the device core. This will serve as the parent device for
->> -   all mediated matrix devices used to configure an AP matrix for a guest.
->> +   all matrix mediated devices used to configure an AP matrix for a guest.
-> This (and many other changes here) seems to be unrelated to the new
-> feature. Split that out into a separate patch that can be applied right
-> away? That would make this patch smaller and easier to review; it's
-> hard to figure out which parts deal with the new feature, and which parts
-> simply got an update.
+> Only buildtested. Found while analyzing retune-handling in the core.
 >
-> Also, do you want to do similar wording changes in the QEMU
-> documentation for vfio-ap?
-
-Will do.
-
+>  drivers/mmc/host/meson-gx-mmc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
->>   3. The /sys/devices/vfio_ap/matrix device is created by the device core
->>   4. The vfio_ap device driver will register with the AP bus for AP queue devices
->>      of type 10 and higher (CEX4 and newer). The driver will provide the vfio_ap
-> (...)
->
->> @@ -435,6 +481,10 @@ available to a KVM guest via the following CPU model features:
->>      can be made available to the guest only if it is available on the host (i.e.,
->>      facility bit 12 is set).
->>   
->> +4. apqi: Indicates AP queue interrupts are available on the guest. This facility
->> +   can be made available to the guest only if it is available on the host (i.e.,
->> +   facility bit 65 is set).
->> +
->>   Note: If the user chooses to specify a CPU model different than the 'host'
->>   model to QEMU, the CPU model features and facilities need to be turned on
->>   explicitly; for example::
->> @@ -444,7 +494,7 @@ explicitly; for example::
->>   A guest can be precluded from using AP features/facilities by turning them off
->>   explicitly; for example::
->>   
->> -     /usr/bin/qemu-system-s390x ... -cpu host,ap=off,apqci=off,apft=off
->> +     /usr/bin/qemu-system-s390x ... -cpu host,ap=off,apqci=off,apft=off,apqi=off
-> Isn't that an already existing facility that was simply lacking
-> documentation? If yes, split it off?
-
-Yes and will do.
-
->
->>   
->>   Note: If the APFT facility is turned off (apft=off) for the guest, the guest
->>   will not see any AP devices. The zcrypt device drivers that register for type 10
-> (...)
->
-
+> diff --git a/drivers/mmc/host/meson-gx-mmc.c b/drivers/mmc/host/meson-gx-mmc.c
+> index 08a3b1c05acb..a1db8685e30e 100644
+> --- a/drivers/mmc/host/meson-gx-mmc.c
+> +++ b/drivers/mmc/host/meson-gx-mmc.c
+> @@ -521,7 +521,7 @@ static int meson_mmc_resampling_tuning(struct mmc_host *mmc, u32 opcode)
+>  	val |= ADJUST_ADJ_EN;
+>  	writel(val, host->regs + host->data->adjust);
+>  
+> -	if (mmc->doing_retune)
+> +	if (mmc_doing_retune(mmc))
+>  		dly = FIELD_GET(ADJUST_ADJ_DELAY_MASK, val) + 1;
+>  	else
+>  		dly = 0;
+> -- 
+> 2.20.1
