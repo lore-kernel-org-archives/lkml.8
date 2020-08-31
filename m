@@ -2,53 +2,55 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB7BC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8331C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1EBA2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2BAE2151B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598856446;
-	bh=s6E5dk62F/7tkZOxFbrZuEem/3lQqvI4/Tqsfx9toRY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=F39bRa+qXfacTDfQwSAVoGvDjoB2w765bgXeybnWSzdOOb398/to4MI5Ly8/r+7cg
-	 UYYGaKyzRm8JITlpk1tAqN/+KaG5PmHPGpPoq+SREUyWE7JW306jM9epJ9F1Asat2G
-	 zibJVvNW43yW7klYgvucRYg87WyUWbNVrolRzHvw=
+	s=default; t=1598856449;
+	bh=4aWGNgBJAoBl8QYtMHd09gshebtS7Lgr8i8tu8FJl+A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ep8qaIRzYaRoY2jGoad8d1dKP74DHruQXYwwWZKqGdj/MPuG+kdi3X5U0UiUQfbyI
+	 hs4OIVLleSWzAV7PjFahh4GhcpfCFz9e4/Awlz0pZpigg8Xf5198SW5pvgnA3qsAfV
+	 6Q0fhsM9+4bZ771wxxv2ZcD4+eVbSHEJgX3VdF5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbgHaGrV (ORCPT
+        id S1726814AbgHaGr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 02:47:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51186 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 02:47:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbgHaGrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 02:47:20 -0400
+        id S1725829AbgHaGrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 02:47:22 -0400
 Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31FD42072D;
-        Mon, 31 Aug 2020 06:47:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EF5B208DB;
+        Mon, 31 Aug 2020 06:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598856440;
-        bh=s6E5dk62F/7tkZOxFbrZuEem/3lQqvI4/Tqsfx9toRY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=pymHDF1fBg8yfx6PAVz2IaxBvAtw/ssY3kRW7rngUMVuKBv0R81LSCghvTmpLikhh
-         YI4JyMU7M+1fkeNgqj0V055RXTx46A256q2xujr1KGwPMXaCe+rFVi4Ygnt6xms6be
-         9GT5j4qKwJyRrND1qSVBiN22fJ2pj7nDjZFcAUA4=
+        s=default; t=1598856442;
+        bh=4aWGNgBJAoBl8QYtMHd09gshebtS7Lgr8i8tu8FJl+A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=y7aR/1qbGDGINVnJAGUUaJmKKGEEbvywsT3prxYzuYju2Io/LF+83Bajiw7XrmKM9
+         c0zNRhHO+DMV6/iLGtGPsbYvKILf3YPC+FoZuQsaOEEbHtgYtGFlSdJ5R3t2gnQohM
+         KdJjXRmbbj0xXpB/fDr7ggSdBeETwSeE230j65zo=
 From:   Mike Rapoport <rppt@kernel.org>
 To:     Vineet Gupta <vgupta@synopsys.com>
 Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
         Mike Rapoport <rppt@kernel.org>,
         linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mike Rapoport <rppt@linux.ibm.com>
-Subject: [RFC/RFT PATCH v3 0/1] arc: add sparsemem support
-Date:   Mon, 31 Aug 2020 09:47:13 +0300
-Message-Id: <20200831064714.16562-1-rppt@kernel.org>
+Subject: [RFC/RFT PATCH v3 1/1] arc: add sparsemem support
+Date:   Mon, 31 Aug 2020 09:47:14 +0300
+Message-Id: <20200831064714.16562-2-rppt@kernel.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200831064714.16562-1-rppt@kernel.org>
+References: <20200831064714.16562-1-rppt@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,92 +60,95 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mike Rapoport <rppt@linux.ibm.com>
 
-Hi,
-
-This is yet another attempt to enable SPARSEMEM on ARC.
-
-I've boot tested it on nSIM with haps_hs_defconfig with highmem and
-sparsemem enabled.
-
-With sparsemem the kernel text becomes a bit smaller, but bss and data are
-slightly increased:
-
-$ size discontig/vmlinux sparse/vmlinux
-   text	   data	    bss	    dec	    hex	filename
-4429390	 785456	 244580	5459426	 534de2	discontig/vmlinux
-4415099	 786224	 244844	5446167	 531a17	sparse/vmlinux
-
-I've also added a dummy global functions to wrap pfn_valid(), page_to_pfn()
-and pfn_to_page(). Judging by objdump, sparsemem is a bit more efficient:
-
-	DISCONTIGMEM			SPARSEMEM
-<pfn_to_page>:
-	seths	r2,0x3ffff,r0		lsr	r2,r0,0xe
-	mpy	r2,r2,1896		mpy	r0,r0,0x24
-	add	r3,r2,0x8050066c	add3	r2,0x80529d1c,r2
-	add_s	r2,r2,0x80500668	ld_s	r2,[r2,0]
-	ld_s	r3,[r3,0]		bmskn	r2,r2,0x3
-	sub_s	r0,r0,r3		j_s.d	[blink]
-	ld_s	r2,[r2,0]		add_s	r0,r0,r2
-	mpy	r0,r0,0x24		nop_s
-	j_s.d	[blink]
-	add_s	r0,r0,r2
-
-<page_to_pfn>:
-	ld_s	r2,[r0,0]		ld_s	r2,[r0,0]
-	lsr_s	r2,r2,0x1f	 	lsr_s	r2,r2,0x1b
-	mpy	r2,r2,1896	 	add3	r2,0x80529d1c,r2
-	add	r3,r2,0x80500668 	ld_s	r2,[r2,0]
-	add_s	r2,r2,0x8050066c 	bmskn	r2,r2,0x3
-	ld_s	r3,[r3,0]	 	sub_s	r0,r0,r2
-	sub_s	r0,r0,r3	 	asr_s	r0,r0,0x2
-	ld_s	r2,[r2,0]	 	mpy	r0,r0,0x38e38e39
-	asr_s	r0,r0,0x2	 	j_s	[blink]
-	mpy	r0,r0,0x38e38e39
-	j_s.d	[blink]
-	add_s	r0,r0,r2
-	nop_s
-
-<pfn_valid>:
-	cmp_s	r0,0x3ffff		lsr_s	r0,r0,0xe
-	mov_s	r2,0			brhs.nt	r0,0x20,24
-	mov.ls	r2,0x768		add3	r0,0x80529d1c,r0
-	add_s	r2,r2,0x80500814	breq_s	r0,0,12
-	ld.as	r3,[r2,-106]		ld_s	r0,[r0,0]
-	ld.as	r2,[r2,-104]		j_s.d	[blink]
-	add_s	r2,r2,r3		xbfu	r0,r0,0x1
-	j_s.d	[blink]			j_s.d	[blink]
-	seths	r0,r2,r0		mov_s	r0,0
-	nop_s
-
-Still, SPARSEMEM has an issue with potentially wasted memory allocated for
-the memory map. The memory maps are allocated for each present section,
-which means that if part of the section is not populated we'll have a bunch
-of unused 'struct page' objects. The smaller the section size, the smaller
-is memory overhead, but the section size cannot be much smaller than the
-physical address because 
-
-	MAX_PHYSMEM_BITS - SECTION_SIZE_BITS
-
-has to fit into page flags and the room there is limited.
-
-There is yet another possibility to support separate banks. It is possible
-to use FLATMEM and free the memmap allocated for the hole, like, for
-instance, ARM does [1]. This will require ARC's override for pfn_valid()
-that takes into account the actual memory configuration rather than relies
-on the memmap.
-
-[1] https://elixir.bootlin.com/linux/latest/source/arch/arm/mm/init.c#L305
-
-Mike Rapoport (1):
-  arc: add sparsemem support
-
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
  arch/arc/Kconfig                 | 10 ++++++++++
  arch/arc/include/asm/sparsemem.h | 13 +++++++++++++
  arch/arc/mm/init.c               |  6 +++++-
  3 files changed, 28 insertions(+), 1 deletion(-)
  create mode 100644 arch/arc/include/asm/sparsemem.h
 
+diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
+index ba00c4e1e1c2..2e3c02e9b657 100644
+--- a/arch/arc/Kconfig
++++ b/arch/arc/Kconfig
+@@ -48,6 +48,7 @@ config ARC
+ 	select PCI_SYSCALL if PCI
+ 	select PERF_USE_VMALLOC if ARC_CACHE_VIPT_ALIASING
+ 	select HAVE_ARCH_JUMP_LABEL if ISA_ARCV2 && !CPU_ENDIAN_BE32
++	select SPARSEMEM_STATIC if SPARSEMEM
+ 
+ config ARCH_HAS_CACHE_LINE_SIZE
+ 	def_bool y
+@@ -67,8 +68,15 @@ config GENERIC_CSUM
+ config ARCH_DISCONTIGMEM_ENABLE
+ 	def_bool n
+ 
++config ARCH_SPARSEMEM_ENABLE
++	def_bool n
++
+ config ARCH_FLATMEM_ENABLE
+ 	def_bool y
++	depends on !HIGHMEM
++
++config ARCH_SELECT_MEMORY_MODEL
++	def_bool n
+ 
+ config MMU
+ 	def_bool y
+@@ -508,6 +516,8 @@ config LINUX_RAM_BASE
+ config HIGHMEM
+ 	bool "High Memory Support"
+ 	select ARCH_DISCONTIGMEM_ENABLE
++	select ARCH_SPARSEMEM_ENABLE
++	select ARCH_SELECT_MEMORY_MODEL
+ 	help
+ 	  With ARC 2G:2G address split, only upper 2G is directly addressable by
+ 	  kernel. Enable this to potentially allow access to rest of 2G and PAE
+diff --git a/arch/arc/include/asm/sparsemem.h b/arch/arc/include/asm/sparsemem.h
+new file mode 100644
+index 000000000000..1156b9934c74
+--- /dev/null
++++ b/arch/arc/include/asm/sparsemem.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_ARC_SPARSEMEM_H
++#define _ASM_ARC_SPARSEMEM_H
++
++#ifdef CONFIG_ARC_HAS_PAE40
++#define MAX_PHYSMEM_BITS	40
++#define SECTION_SIZE_BITS	32
++#else
++#define MAX_PHYSMEM_BITS	32
++#define SECTION_SIZE_BITS	27
++#endif
++
++#endif /* _ASM_ARC_SPARSEMEM_H */
+diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
+index 3a35b82a718e..60e3808a4e19 100644
+--- a/arch/arc/mm/init.c
++++ b/arch/arc/mm/init.c
+@@ -153,7 +153,11 @@ void __init setup_arch_memory(void)
+ 	 * DISCONTIGMEM in turns requires multiple nodes. node 0 above is
+ 	 * populated with normal memory zone while node 1 only has highmem
+ 	 */
++#ifdef CONFIG_DISCONTIGMEM
+ 	node_set_online(1);
++#elif defined(CONFIG_SPARSEMEM)
++	sparse_init();
++#endif
+ 
+ 	min_high_pfn = PFN_DOWN(high_mem_start);
+ 	max_high_pfn = PFN_DOWN(high_mem_start + high_mem_sz);
+@@ -162,7 +166,7 @@ void __init setup_arch_memory(void)
+ 
+ 	high_memory = (void *)(min_high_pfn << PAGE_SHIFT);
+ 	kmap_init();
+-#endif
++#endif /* CONFIG_HIGHMEM */
+ 
+ 	free_area_init(max_zone_pfn);
+ }
 -- 
 2.26.2
 
