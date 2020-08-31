@@ -2,182 +2,172 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 751C9C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A9EC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55E562071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uZbSprfE"
+	by mail.kernel.org (Postfix) with ESMTP id B88EC2071B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598897971;
+	bh=+RXrssZAOzQNHzoPuMEErrLqNVzDGlCdVjn9K4tvDus=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tJq+fyQ5W2Zcv/Sa8f8C+PTfacENPHVTj0fb031OEZxkG831j1CoiZZlPGmN2Vuvf
+	 hTdhYllMN1F59mN4P37MhDd358OlxhwSvoBGCNH8ZY3BKzaiS4HWjLRh/q8TjfE8Am
+	 UtSACXy/l6+jOLdjGhz8ppGoSljfYC8KrWuJNpm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbgHaSTI (ORCPT
+        id S1729727AbgHaSTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:19:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729599AbgHaSSM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:18:12 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 735CDC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:18:12 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d19so1051957pgl.10
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:18:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=hFUA2EodpJe3a9+C7aWrHwYTMpFRcWcG5EO2y8L7QQ4=;
-        b=uZbSprfEAY6FPBtwjeW9/UdVkQ5RQpr4QDEXPg/0ad4BYpvgNmuj3JfhbBCaMHa+XN
-         1vlKD9p403TA7Q92D3RU94wO6kfO8Cpe8DqCf8qtoMEYuAduGaeDf9JoGS2ERC1EK24s
-         bVX0HsjmrOLxTaeCx+N7FqY5I92TvL3GO7sVAMjAD73IfgwCUe5kR0kGaKlUfED5u7ee
-         E6jiZGzZMeD23ktw9D6d1mBFCoSnHqiG4xnheDYJQydOVNC3V6CUZeSYtDncQLa0qUhd
-         wk3cL0dYv5XMAIDJgsT7iPZ0NZ/ByX3mpphtsLiMuTIZE+4M/E5jZEBPUpmAELHfZ7FX
-         1CmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=hFUA2EodpJe3a9+C7aWrHwYTMpFRcWcG5EO2y8L7QQ4=;
-        b=DabcT2FOHpOCU7vbwwksTDsaG22hCIxYfSmDIpoFIp1V3H80SzTziRGgFPdyOR61Ud
-         AucWpQEy3Vtdy/xBzmjQ7iyP3UGg8IaS/I6DiXIiiSQt9m/F3XrCRupaQCToUpU8PDXH
-         T2f9uWwz1coS0uECW+ObwDnjWEkAVFumkupgT3AGQ1DVJ424KOkbxFJcNT6MLvQGmeao
-         8C1Yw7/TYNm50r0tJ8v5+1nAynPZ3xWK/EI3hwM3v3m/w/rQSjCooL4Uw5OyH0t6vpQu
-         V+nBhHi00s5lsrRrZw2xkZacGP7+tbg9+O5zpAmcykCEJx4ESL5l9aV4vusxVfIrTHrV
-         wHLQ==
-X-Gm-Message-State: AOAM532eRbBzJCnCVk+Pe6uvsxfogI1TF9LD8kjWBYxzZf4GMBCtcn64
-        rqHLcGq7ucg8kOc7+9dtmOQ=
-X-Google-Smtp-Source: ABdhPJxQBwvR9BKUGis/rKaBNzrI0wfOo7zB8WpCUtfKi0Zhd4YivgE/lPvf2Oz2znhx8QBbncXkuw==
-X-Received: by 2002:a63:e907:: with SMTP id i7mr2276694pgh.210.1598897891294;
-        Mon, 31 Aug 2020 11:18:11 -0700 (PDT)
-Received: from jacob-builder.jf.intel.com (jfdmzpr04-ext.jf.intel.com. [134.134.137.73])
-        by smtp.gmail.com with ESMTPSA id y128sm8672547pfy.74.2020.08.31.11.18.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 31 Aug 2020 11:18:10 -0700 (PDT)
-From:   Jacob Pan <jacob.pan.linux@gmail.com>
-X-Google-Original-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     "Lu Baolu" <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v8 2/7] iommu/uapi: Add argsz for user filled data
-Date:   Mon, 31 Aug 2020 11:24:55 -0700
-Message-Id: <1598898300-65475-3-git-send-email-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598898300-65475-1-git-send-email-jacob.jun.pan@linux.intel.com>
-References: <1598898300-65475-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        Mon, 31 Aug 2020 14:19:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51972 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729541AbgHaSSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:18:10 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 415312176B;
+        Mon, 31 Aug 2020 18:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598897889;
+        bh=+RXrssZAOzQNHzoPuMEErrLqNVzDGlCdVjn9K4tvDus=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DOo6nvQC6/b6mhXP4lieR1op8GcJcGtSa1jOcI578m3x8rHgWCnTpAm8OEmg/4Dah
+         z04zUp7KJnuJ2aLvy9ToAXwtUlAWHVxorOyEipP1OkDrcbSOpsfEuBgweGyMX1IMXH
+         JTqbt/VWXIQYlrDsQMhKbeuD+nIowNlIwtjgnDfs=
+From:   paulmck@kernel.org
+To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        kernel-team@fb.com, mingo@kernel.org
+Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
+        dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH kcsan 19/19] kcsan: Use tracing-safe version of prandom
+Date:   Mon, 31 Aug 2020 11:18:05 -0700
+Message-Id: <20200831181805.1833-19-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200831181715.GA1530@paulmck-ThinkPad-P72>
+References: <20200831181715.GA1530@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As IOMMU UAPI gets extended, user data size may increase. To support
-backward compatibiliy, this patch introduces a size field to each UAPI
-data structures. It is *always* the responsibility for the user to fill in
-the correct size. Padding fields are adjusted to ensure 8 byte alignment.
+From: Marco Elver <elver@google.com>
 
-Specific scenarios for user data handling are documented in:
-Documentation/userspace-api/iommu.rst
+In the core runtime, we must minimize any calls to external library
+functions to avoid any kind of recursion. This can happen even though
+instrumentation is disabled for called functions, but tracing is
+enabled.
 
-As there is no current users of the API, struct version is not
-incremented.
+Most recently, prandom_u32() added a tracepoint, which can cause
+problems for KCSAN even if the rcuidle variant is used. For example:
+	kcsan -> prandom_u32() -> trace_prandom_u32_rcuidle ->
+	srcu_read_lock_notrace -> __srcu_read_lock -> kcsan ...
 
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+While we could disable KCSAN in kcsan_setup_watchpoint(), this does not
+solve other unexpected behaviour we may get due recursing into functions
+that may not be tolerant to such recursion:
+	__srcu_read_lock -> kcsan -> ... -> __srcu_read_lock
+
+Therefore, switch to using prandom_u32_state(), which is uninstrumented,
+and does not have a tracepoint.
+
+Link: https://lkml.kernel.org/r/20200821063043.1949509-1-elver@google.com
+Link: https://lkml.kernel.org/r/20200820172046.GA177701@elver.google.com
+Signed-off-by: Marco Elver <elver@google.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/uapi/linux/iommu.h | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ kernel/kcsan/core.c | 35 +++++++++++++++++++++++++++++------
+ 1 file changed, 29 insertions(+), 6 deletions(-)
 
-diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-index c2b2caf9ed41..b42acc8fe007 100644
---- a/include/uapi/linux/iommu.h
-+++ b/include/uapi/linux/iommu.h
-@@ -139,6 +139,7 @@ enum iommu_page_response_code {
+diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+index 8a1ff605..3994a21 100644
+--- a/kernel/kcsan/core.c
++++ b/kernel/kcsan/core.c
+@@ -100,6 +100,9 @@ static atomic_long_t watchpoints[CONFIG_KCSAN_NUM_WATCHPOINTS + NUM_SLOTS-1];
+  */
+ static DEFINE_PER_CPU(long, kcsan_skip);
  
- /**
-  * struct iommu_page_response - Generic page response information
-+ * @argsz: User filled size of this data
-  * @version: API version of this structure
-  * @flags: encodes whether the corresponding fields are valid
-  *         (IOMMU_FAULT_PAGE_RESPONSE_* values)
-@@ -147,6 +148,7 @@ enum iommu_page_response_code {
-  * @code: response code from &enum iommu_page_response_code
-  */
- struct iommu_page_response {
-+	__u32	argsz;
- #define IOMMU_PAGE_RESP_VERSION_1	1
- 	__u32	version;
- #define IOMMU_PAGE_RESP_PASID_VALID	(1 << 0)
-@@ -222,6 +224,7 @@ struct iommu_inv_pasid_info {
- /**
-  * struct iommu_cache_invalidate_info - First level/stage invalidation
-  *     information
-+ * @argsz: User filled size of this data
-  * @version: API version of this structure
-  * @cache: bitfield that allows to select which caches to invalidate
-  * @granularity: defines the lowest granularity used for the invalidation:
-@@ -250,6 +253,7 @@ struct iommu_inv_pasid_info {
-  * must support the used granularity.
-  */
- struct iommu_cache_invalidate_info {
-+	__u32	argsz;
- #define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
- 	__u32	version;
- /* IOMMU paging structure cache */
-@@ -259,7 +263,7 @@ struct iommu_cache_invalidate_info {
- #define IOMMU_CACHE_INV_TYPE_NR		(3)
- 	__u8	cache;
- 	__u8	granularity;
--	__u8	padding[2];
-+	__u8	padding[6];
- 	union {
- 		struct iommu_inv_pasid_info pasid_info;
- 		struct iommu_inv_addr_info addr_info;
-@@ -296,6 +300,7 @@ struct iommu_gpasid_bind_data_vtd {
++/* For kcsan_prandom_u32_max(). */
++static DEFINE_PER_CPU(struct rnd_state, kcsan_rand_state);
++
+ static __always_inline atomic_long_t *find_watchpoint(unsigned long addr,
+ 						      size_t size,
+ 						      bool expect_write,
+@@ -271,11 +274,28 @@ should_watch(const volatile void *ptr, size_t size, int type, struct kcsan_ctx *
+ 	return true;
+ }
  
- /**
-  * struct iommu_gpasid_bind_data - Information about device and guest PASID binding
-+ * @argsz:	User filled size of this data
-  * @version:	Version of this data structure
-  * @format:	PASID table entry format
-  * @flags:	Additional information on guest bind request
-@@ -313,17 +318,18 @@ struct iommu_gpasid_bind_data_vtd {
-  * PASID to host PASID based on this bind data.
-  */
- struct iommu_gpasid_bind_data {
-+	__u32 argsz;
- #define IOMMU_GPASID_BIND_VERSION_1	1
- 	__u32 version;
- #define IOMMU_PASID_FORMAT_INTEL_VTD	1
- 	__u32 format;
-+	__u32 addr_width;
- #define IOMMU_SVA_GPASID_VAL	(1 << 0) /* guest PASID valid */
- 	__u64 flags;
- 	__u64 gpgd;
- 	__u64 hpasid;
- 	__u64 gpasid;
--	__u32 addr_width;
--	__u8  padding[12];
-+	__u8  padding[8];
- 	/* Vendor specific data */
- 	union {
- 		struct iommu_gpasid_bind_data_vtd vtd;
++/*
++ * Returns a pseudo-random number in interval [0, ep_ro). See prandom_u32_max()
++ * for more details.
++ *
++ * The open-coded version here is using only safe primitives for all contexts
++ * where we can have KCSAN instrumentation. In particular, we cannot use
++ * prandom_u32() directly, as its tracepoint could cause recursion.
++ */
++static u32 kcsan_prandom_u32_max(u32 ep_ro)
++{
++	struct rnd_state *state = &get_cpu_var(kcsan_rand_state);
++	const u32 res = prandom_u32_state(state);
++
++	put_cpu_var(kcsan_rand_state);
++	return (u32)(((u64) res * ep_ro) >> 32);
++}
++
+ static inline void reset_kcsan_skip(void)
+ {
+ 	long skip_count = kcsan_skip_watch -
+ 			  (IS_ENABLED(CONFIG_KCSAN_SKIP_WATCH_RANDOMIZE) ?
+-				   prandom_u32_max(kcsan_skip_watch) :
++				   kcsan_prandom_u32_max(kcsan_skip_watch) :
+ 				   0);
+ 	this_cpu_write(kcsan_skip, skip_count);
+ }
+@@ -285,16 +305,18 @@ static __always_inline bool kcsan_is_enabled(void)
+ 	return READ_ONCE(kcsan_enabled) && get_ctx()->disable_count == 0;
+ }
+ 
+-static inline unsigned int get_delay(int type)
++/* Introduce delay depending on context and configuration. */
++static void delay_access(int type)
+ {
+ 	unsigned int delay = in_task() ? kcsan_udelay_task : kcsan_udelay_interrupt;
+ 	/* For certain access types, skew the random delay to be longer. */
+ 	unsigned int skew_delay_order =
+ 		(type & (KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_ASSERT)) ? 1 : 0;
+ 
+-	return delay - (IS_ENABLED(CONFIG_KCSAN_DELAY_RANDOMIZE) ?
+-				prandom_u32_max(delay >> skew_delay_order) :
+-				0);
++	delay -= IS_ENABLED(CONFIG_KCSAN_DELAY_RANDOMIZE) ?
++			       kcsan_prandom_u32_max(delay >> skew_delay_order) :
++			       0;
++	udelay(delay);
+ }
+ 
+ void kcsan_save_irqtrace(struct task_struct *task)
+@@ -476,7 +498,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
+ 	 * Delay this thread, to increase probability of observing a racy
+ 	 * conflicting access.
+ 	 */
+-	udelay(get_delay(type));
++	delay_access(type);
+ 
+ 	/*
+ 	 * Re-read value, and check if it is as expected; if not, we infer a
+@@ -620,6 +642,7 @@ void __init kcsan_init(void)
+ 	BUG_ON(!in_task());
+ 
+ 	kcsan_debugfs_init();
++	prandom_seed_full_state(&kcsan_rand_state);
+ 
+ 	/*
+ 	 * We are in the init task, and no other tasks should be running;
 -- 
-2.7.4
+2.9.5
 
