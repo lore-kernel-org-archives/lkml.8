@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C234C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED33C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5054820FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04DBA2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598897496;
-	bh=Pc4xELlIewnQVLl8AuOOtULOmaWAGKvPWQaIu3f7uYI=;
+	s=default; t=1598897497;
+	bh=BrvLViBsThaXkvt7qUFESDZ3SWqAijf66Epo+FLqfRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nOQHvxQtSm8tl+MvQ3lyQ63ZpFE1tGSgMgOtLw5uoez7hbyU10ObO7j4Nv3zgK2mU
-	 xTIy8wrhzCLoY33fB2CUCZuZdmRi65aSw112CVZrNAAj//vYnFkvHvWrtUak2PwQNO
-	 YVDlc6P0XpV0LjPBqA3DRTctjYr9rTEM/6ziOL20=
+	b=c2m5zulj+x5qLbWo0tJ1WuClRxOX8xDC4D35Ltc70auxNLvMfH5cI4dqmYL5vB8TQ
+	 5uxi6/1gFa0mVfQii/t1JhtqfDEHBqvLxEFqz1Socvxn9tH2f2Y7cdJtEeTeI2e3X3
+	 6jPUEFPEoNpOq3bYXRQMomN3evviIJ++StDWn8oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbgHaSLd (ORCPT
+        id S1729529AbgHaSLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:11:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35718 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:11:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728376AbgHaSLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:11:22 -0400
+        id S1728973AbgHaSLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:11:23 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 066532068E;
+        by mail.kernel.org (Postfix) with ESMTPSA id 968FD21527;
         Mon, 31 Aug 2020 18:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1598897482;
-        bh=Pc4xELlIewnQVLl8AuOOtULOmaWAGKvPWQaIu3f7uYI=;
+        bh=BrvLViBsThaXkvt7qUFESDZ3SWqAijf66Epo+FLqfRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kUJBlqaqa7SF2T5Mz421IkNJgJYx2HN3pOQjN+Fj2qNZj7lR4htrCskMtprVsI/EY
-         26AeOPLZoUAhpxNcD/SZTUcPvu+KGYDA1dvrzPOIgigC1BVyeFadpD2YSgiy6hNjpj
-         h34V7ZOcdExG0eTXDY8i5jFb80TEAFUsb3KAwXdg=
+        b=uRXQyfBl7ufLW4JZc5lugfOqhqVasBvOlpmFo7YnGNUucqh74XfB9spFuD8qm73kD
+         n7v45sKwgu0EVy8VhDElHXl/Dsaqifct5Z5yKk3jtAz8Z0YVrSaE+eywtF5W9SpKHn
+         jmPuUX9yN91y2wuOGP9z2g34egKFbTBR3CSQDnw8=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 01/13] rcu: Add Kconfig option for strict RCU grace periods
-Date:   Mon, 31 Aug 2020 11:11:08 -0700
-Message-Id: <20200831181120.1044-1-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 04/13] rcu: Force DEFAULT_RCU_BLIMIT to 1000 for strict RCU GPs
+Date:   Mon, 31 Aug 2020 11:11:11 -0700
+Message-Id: <20200831181120.1044-4-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831181101.GA950@paulmck-ThinkPad-P72>
 References: <20200831181101.GA950@paulmck-ThinkPad-P72>
@@ -61,73 +61,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-People running automated tests have asked for a way to make RCU minimize
-grace-period duration in order to increase the probability of KASAN
-detecting a pointer being improperly leaked from an RCU read-side critical
-section, for example, like this:
-
-	rcu_read_lock();
-	p = rcu_dereference(gp);
-	do_something_with(p); // OK
-	rcu_read_unlock();
-	do_something_else_with(p); // BUG!!!
-
-The rcupdate.rcu_expedited boot parameter is a start in this direction,
-given that it makes calls to synchronize_rcu() instead invoke the faster
-(and more wasteful) synchronize_rcu_expedited().  However, this does
-nothing to shorten RCU grace periods that are instead initiated by
-call_rcu(), and RCU pointer-leak bugs can involve call_rcu() just as
-surely as they can synchronize_rcu().
-
-This commit therefore adds a RCU_STRICT_GRACE_PERIOD Kconfig option
-that will be used to shorten normal (non-expedited) RCU grace periods.
-This commit also dumps out a message when this option is in effect.
-Later commits will actually shorten grace periods.
+The value of DEFAULT_RCU_BLIMIT is normally set to 10, the idea being to
+avoid needless response-time degradation due to RCU callback invocation.
+However, when CONFIG_RCU_STRICT_GRACE_PERIOD=y it is better to avoid
+throttling callback execution in order to better detect pointer
+leaks from RCU read-side critical sections.  This commit therefore
+sets the value of DEFAULT_RCU_BLIMIT to 1000 in kernels built with
+CONFIG_RCU_STRICT_GRACE_PERIOD=y.
 
 Reported-by Jann Horn <jannh@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/Kconfig.debug | 15 +++++++++++++++
- kernel/rcu/tree_plugin.h |  2 ++
- 2 files changed, 17 insertions(+)
+ kernel/rcu/tree.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/rcu/Kconfig.debug b/kernel/rcu/Kconfig.debug
-index 3cf6132..cab5a4b 100644
---- a/kernel/rcu/Kconfig.debug
-+++ b/kernel/rcu/Kconfig.debug
-@@ -114,4 +114,19 @@ config RCU_EQS_DEBUG
- 	  Say N here if you need ultimate kernel/user switch latencies
- 	  Say Y if you are unsure
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 8551159..4436857 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -468,17 +468,18 @@ static int rcu_is_cpu_rrupt_from_idle(void)
+ 	return __this_cpu_read(rcu_data.dynticks_nesting) == 0;
+ }
  
-+config RCU_STRICT_GRACE_PERIOD
-+	bool "Provide debug RCU implementation with short grace periods"
-+	depends on DEBUG_KERNEL && RCU_EXPERT
-+	default n
-+	select PREEMPT_COUNT if PREEMPT=n
-+	help
-+	  Select this option to build an RCU variant that is strict about
-+	  grace periods, making them as short as it can.  This limits
-+	  scalability, destroys real-time response, degrades battery
-+	  lifetime and kills performance.  Don't try this on large
-+	  machines, as in systems with more than about 10 or 20 CPUs.
-+	  But in conjunction with tools like KASAN, it can be helpful
-+	  when looking for certain types of RCU usage bugs, for example,
-+	  too-short RCU read-side critical sections.
-+
- endmenu # "RCU Debugging"
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 982fc5b..44cf77d 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -36,6 +36,8 @@ static void __init rcu_bootup_announce_oddness(void)
- 		pr_info("\tRCU dyntick-idle grace-period acceleration is enabled.\n");
- 	if (IS_ENABLED(CONFIG_PROVE_RCU))
- 		pr_info("\tRCU lockdep checking is enabled.\n");
-+	if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD))
-+		pr_info("\tRCU strict (and thus non-scalable) grace periods enabled.\n");
- 	if (RCU_NUM_LVLS >= 4)
- 		pr_info("\tFour(or more)-level hierarchy is enabled.\n");
- 	if (RCU_FANOUT_LEAF != 16)
+-#define DEFAULT_RCU_BLIMIT 10     /* Maximum callbacks per rcu_do_batch ... */
+-#define DEFAULT_MAX_RCU_BLIMIT 10000 /* ... even during callback flood. */
++#define DEFAULT_RCU_BLIMIT (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) ? 1000 : 10)
++				// Maximum callbacks per rcu_do_batch ...
++#define DEFAULT_MAX_RCU_BLIMIT 10000 // ... even during callback flood.
+ static long blimit = DEFAULT_RCU_BLIMIT;
+-#define DEFAULT_RCU_QHIMARK 10000 /* If this many pending, ignore blimit. */
++#define DEFAULT_RCU_QHIMARK 10000 // If this many pending, ignore blimit.
+ static long qhimark = DEFAULT_RCU_QHIMARK;
+-#define DEFAULT_RCU_QLOMARK 100   /* Once only this many pending, use blimit. */
++#define DEFAULT_RCU_QLOMARK 100   // Once only this many pending, use blimit.
+ static long qlowmark = DEFAULT_RCU_QLOMARK;
+ #define DEFAULT_RCU_QOVLD_MULT 2
+ #define DEFAULT_RCU_QOVLD (DEFAULT_RCU_QOVLD_MULT * DEFAULT_RCU_QHIMARK)
+-static long qovld = DEFAULT_RCU_QOVLD; /* If this many pending, hammer QS. */
+-static long qovld_calc = -1;	  /* No pre-initialization lock acquisitions! */
++static long qovld = DEFAULT_RCU_QOVLD; // If this many pending, hammer QS.
++static long qovld_calc = -1;	  // No pre-initialization lock acquisitions!
+ 
+ module_param(blimit, long, 0444);
+ module_param(qhimark, long, 0444);
 -- 
 2.9.5
 
