@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69246C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9E1C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39B0E20866
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C3802083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598897103;
-	bh=Y4u7+yEwfUJyhrxlRG76fKoW2V808QAbTnyJicDP4tA=;
+	s=default; t=1598897126;
+	bh=X+Gfo49GgR55lBjvGR+id3dRzylSAtZ6yU+i1JNWHCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vJmGHeYciI5z0fo9JjGTorCO9x7MkerNn/6Yebwvkmg+3DUhNyJ7Hzr2oGuVzR/yQ
-	 6/gsrw5NK1gBg2HBZoigc4mzbqvRTa53DbE4zLEVTgy7L3ATq2qdJS45Z+gTDWnUkl
-	 k+8fAAC9ygz86XvD4Ihxo6F/asbz2/BmhetbaWUY=
+	b=KrOvNbBax5jPCc2qCvbhNRnFgozHv6fJoXTNpT7dDDF1kCVXCyNyXNi/4b0XAgCpe
+	 TNTj2as0dXz94XDSqYWDucdfrc3nC9sxQkUkf8mVSgx18Uo9xpw1Dc/CRjIK3lUnNM
+	 +nZdlcJbBDyJ1xeWxzA9OpzG+eGIC/2dxOoQ/wo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729463AbgHaSFA (ORCPT
+        id S1729458AbgHaSFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:05:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44384 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:05:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729360AbgHaSEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:04:10 -0400
+        id S1728375AbgHaSEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:04:09 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1766D2166E;
-        Mon, 31 Aug 2020 18:04:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8871021527;
+        Mon, 31 Aug 2020 18:04:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598897050;
-        bh=Y4u7+yEwfUJyhrxlRG76fKoW2V808QAbTnyJicDP4tA=;
+        s=default; t=1598897048;
+        bh=X+Gfo49GgR55lBjvGR+id3dRzylSAtZ6yU+i1JNWHCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JFHjdAdxDepHfLQCT51IeamWbZH03th2cAxP0vyHpoDjMG9xtexvMnrZ3DBabkre1
-         5V1bPMJGl9W4pHK3QBElcdoU2UQpr7jNYwADzwYNlaP8IoQDluiNz4Td2wWFHC+amL
-         dWNiJDpnEk2OWxGpT1eLhQavmJ5n/WD4UubYi0iY=
+        b=FGfPICwUz4+G3P6HuIc8g6oQIYpPPRxLr1koyqq9yyHkh2hF8nO/3NeLj9R0MuKWg
+         49K41DeA4hoe2i/KOXJwfasEvevM6cIITLvsZBOuC1vdwPGv2hVPQIYxkMxSx30mW7
+         Wt6vZcO24Eo0pzCaWyoTfqtBHH9EhoDat9O2LSTY=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,11 +47,11 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH tip/core/rcu 07/14] rcutorture: Add CONFIG_PROVE_RCU_LIST to TREE05
-Date:   Mon, 31 Aug 2020 11:03:59 -0700
-Message-Id: <20200831180406.494-7-paulmck@kernel.org>
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 03/14] torture: document --allcpus argument added to the kvm.sh script
+Date:   Mon, 31 Aug 2020 11:03:55 -0700
+Message-Id: <20200831180406.494-3-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831180348.GA416@paulmck-ThinkPad-P72>
 References: <20200831180348.GA416@paulmck-ThinkPad-P72>
@@ -60,29 +60,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
 
-Currently, the CONFIG_PROVE_RCU_LIST=y case is untested.  This commit
-therefore adds CONFIG_PROVE_RCU_LIST=y to rcutorture's TREE05 scenario.
-
-Cc: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- tools/testing/selftests/rcutorture/configs/rcu/TREE05 | 1 +
+ tools/testing/selftests/rcutorture/bin/kvm.sh | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/rcutorture/configs/rcu/TREE05 b/tools/testing/selftests/rcutorture/configs/rcu/TREE05
-index 2dde0d9..4f95f85 100644
---- a/tools/testing/selftests/rcutorture/configs/rcu/TREE05
-+++ b/tools/testing/selftests/rcutorture/configs/rcu/TREE05
-@@ -16,5 +16,6 @@ CONFIG_RCU_NOCB_CPU=y
- CONFIG_DEBUG_LOCK_ALLOC=y
- CONFIG_PROVE_LOCKING=y
- #CHECK#CONFIG_PROVE_RCU=y
-+CONFIG_PROVE_RCU_LIST=y
- CONFIG_DEBUG_OBJECTS_RCU_HEAD=n
- CONFIG_RCU_EXPERT=y
+diff --git a/tools/testing/selftests/rcutorture/bin/kvm.sh b/tools/testing/selftests/rcutorture/bin/kvm.sh
+index e655983..0a08463 100755
+--- a/tools/testing/selftests/rcutorture/bin/kvm.sh
++++ b/tools/testing/selftests/rcutorture/bin/kvm.sh
+@@ -46,6 +46,7 @@ jitter="-1"
+ 
+ usage () {
+ 	echo "Usage: $scriptname optional arguments:"
++	echo "       --allcpus"
+ 	echo "       --bootargs kernel-boot-arguments"
+ 	echo "       --bootimage relative-path-to-kernel-boot-image"
+ 	echo "       --buildonly"
 -- 
 2.9.5
 
