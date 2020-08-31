@@ -2,79 +2,90 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D357CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F41C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFE992073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37C222073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:19:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgHaQSf (ORCPT
+        id S1728675AbgHaQT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 12:18:35 -0400
-Received: from mga09.intel.com ([134.134.136.24]:42417 "EHLO mga09.intel.com"
+        Mon, 31 Aug 2020 12:19:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45878 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726167AbgHaQSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 12:18:34 -0400
-IronPort-SDR: bHNKhcgWCCKC8BbIRaXN9obBSEbarAz8TN2nfOeaWcPUlvwQ4vtBJfH+Fv0PGKu9x/K8Ex2k8X
- buURgs6+ZrCg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="158017172"
-X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
-   d="scan'208";a="158017172"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 09:18:29 -0700
-IronPort-SDR: JoD+LXH8r7nIR9pwizZhL0agboDTc4CQEfMSnL4q/visw3TuQO2aHUiDeN6aH8q8IhryEh744W
- 7jnVukwpeuhQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
-   d="scan'208";a="296978887"
-Received: from fmsmsx604.amr.corp.intel.com ([10.18.126.84])
-  by orsmga003.jf.intel.com with ESMTP; 31 Aug 2020 09:18:28 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 31 Aug 2020 09:17:37 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 31 Aug 2020 09:17:37 -0700
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
- Mon, 31 Aug 2020 09:17:37 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>
-Subject: RE: [PATCH] MAINTAINERS: IA64: mark Status as Odd Fixes only
-Thread-Topic: [PATCH] MAINTAINERS: IA64: mark Status as Odd Fixes only
-Thread-Index: AQHWfmUDEdRyqneU9UeJF3APC1yQGalSZ4Iw
-Date:   Mon, 31 Aug 2020 16:17:36 +0000
-Message-ID: <331482a4b3b9437f9282b9fc05b9739d@intel.com>
-References: <7e719139-450f-52c2-59a2-7964a34eda1f@infradead.org>
-In-Reply-To: <7e719139-450f-52c2-59a2-7964a34eda1f@infradead.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        id S1728384AbgHaQTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 12:19:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 82578AD7A;
+        Mon, 31 Aug 2020 16:19:19 +0000 (UTC)
+From:   Daniel Wagner <dwagner@suse.de>
+To:     linux-scsi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Nilesh Javali <njavali@marvell.com>,
+        Martin Wilck <mwilck@suse.com>, Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH v2 2/4] qla2xxx: Simplify return value logic in qla2x00_get_sp_from_handle()
+Date:   Mon, 31 Aug 2020 18:18:52 +0200
+Message-Id: <20200831161854.70879-3-dwagner@suse.de>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20200831161854.70879-1-dwagner@suse.de>
+References: <20200831161854.70879-1-dwagner@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBJQTY0IGlzbid0IHJlYWxseSBiZWluZyBtYWludGFpbmVkLCBzbyBtYXJrIGl0IGFzDQo+IE9k
-ZCBGaXhlcyBvbmx5Lg0KDQpBY2tlZC1ieTogVG9ueSBMdWNrIDx0b255Lmx1Y2tAaW50ZWwuY29t
-Pg0KDQo=
+Refactor qla2x00_get_sp_from_handle() to avoid the unecessary
+goto if early returns are used. With this we can also avoid
+preinitilzing the sp pointer.
+
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+---
+ drivers/scsi/qla2xxx/qla_isr.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+index 27bcd346af7c..5d278155e4e7 100644
+--- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -1716,7 +1716,7 @@ qla2x00_get_sp_from_handle(scsi_qla_host_t *vha, const char *func,
+ {
+ 	struct qla_hw_data *ha = vha->hw;
+ 	sts_entry_t *pkt = iocb;
+-	srb_t *sp = NULL;
++	srb_t *sp;
+ 	uint16_t index;
+ 
+ 	index = LSW(pkt->handle);
+@@ -1728,13 +1728,13 @@ qla2x00_get_sp_from_handle(scsi_qla_host_t *vha, const char *func,
+ 			set_bit(FCOE_CTX_RESET_NEEDED, &vha->dpc_flags);
+ 		else
+ 			set_bit(ISP_ABORT_NEEDED, &vha->dpc_flags);
+-		goto done;
++		return NULL;
+ 	}
+ 	sp = req->outstanding_cmds[index];
+ 	if (!sp) {
+ 		ql_log(ql_log_warn, vha, 0x5032,
+ 		    "Invalid completion handle (%x) -- timed-out.\n", index);
+-		return sp;
++		return NULL;
+ 	}
+ 	if (sp->handle != index) {
+ 		ql_log(ql_log_warn, vha, 0x5033,
+@@ -1743,8 +1743,6 @@ qla2x00_get_sp_from_handle(scsi_qla_host_t *vha, const char *func,
+ 	}
+ 
+ 	req->outstanding_cmds[index] = NULL;
+-
+-done:
+ 	return sp;
+ }
+ 
+-- 
+2.16.4
+
