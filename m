@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A99AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43047C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD3092145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0850D2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598896895;
-	bh=e5OVjDPCTjZITnNtmjYNGHWadL20w+j7fy1feGBNUyc=;
+	s=default; t=1598896901;
+	bh=/yTUs0FVay3sAqB0eTJiMOJcG5gY0G1ZMAr1sjY9mug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XFjSSjTrit1czH/HeYN1qg0ky8lYSrczimEbjyuSJr9Zuo1Od0q+8Cp3sBkKj1Tuv
-	 imZWkBEvSEwl0hf7fHJ9quPzInIhW0Rg1d73eVZO4a7W8vLwmkFqo3mxmzKLGv4VVp
-	 7U6CTqA3r2yOap3ZozVpzTPbBbO8ewGWEElc9q1g=
+	b=YkpBV6n7lRvFMCATbuNSQPMT07MRVze4deF0K7mE96vfz45VFyuOcjwaOkO8hKbHw
+	 2R+8sKKJ2Tnt6farF9fw2ioDYPs2DlWDqU5JYFl8loFTRA9L3kPaCwmhgk5o9CrwBw
+	 YzlYiY+NWHcbEPcgZ7gWj+1IA2qgpXJ5qmBR3pIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbgHaSBd (ORCPT
+        id S1729007AbgHaSBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:01:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35664 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:01:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728341AbgHaSBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:01:20 -0400
+        id S1728348AbgHaSBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:01:22 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8911214D8;
-        Mon, 31 Aug 2020 18:01:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B87B421534;
+        Mon, 31 Aug 2020 18:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598896880;
-        bh=e5OVjDPCTjZITnNtmjYNGHWadL20w+j7fy1feGBNUyc=;
+        s=default; t=1598896882;
+        bh=/yTUs0FVay3sAqB0eTJiMOJcG5gY0G1ZMAr1sjY9mug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EvGgoRcxQ3yYoC52csDD4CB6grrqtbTsl7DOWNaLh+pRvwvKbZ+UDflHmmD+vBbv+
-         Ou4ea+kTdXYkWMfsVt64YX8ezb9kHYPg6nZPp/uac2VG8S7eS8SHm8puk0JpaCQyLI
-         aytnQnlecndrheS40UGybw6dOM4Y2kbrUmodqQe8=
+        b=qnwei98lujhVttzUCeKUU0xGi31zidZO/Lm2XPrwytbawfMewQLxQfdY6OMCInimR
+         XFXFquMbwxTfPS1jIEqR745GejCR+25BcsaTtSdpuUA2sTX2JIvzDCELIqaSQD2cN4
+         eb3rGjzN8wAItKpFxpOqNZiJ+LpDNbfvtfJSYpoY=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,10 +47,11 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 03/24] srcu: Remove KCSAN stubs
-Date:   Mon, 31 Aug 2020 11:00:55 -0700
-Message-Id: <20200831180116.32690-3-paulmck@kernel.org>
+        Neeraj Upadhyay <neeraju@codeaurora.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 08/24] rcu/tree: Force quiescent state on callback overload
+Date:   Mon, 31 Aug 2020 11:01:00 -0700
+Message-Id: <20200831180116.32690-8-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831180050.GA32590@paulmck-ThinkPad-P72>
 References: <20200831180050.GA32590@paulmck-ThinkPad-P72>
@@ -59,41 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+From: Neeraj Upadhyay <neeraju@codeaurora.org>
 
-KCSAN is now in mainline, so this commit removes the stubs for the
-data_race(), ASSERT_EXCLUSIVE_WRITER(), and ASSERT_EXCLUSIVE_ACCESS()
-macros.
+On callback overload, it is necessary to quickly detect idle CPUs,
+and rcu_gp_fqs_check_wake() checks for this condition.  Unfortunately,
+the code following the call to this function does not repeat this check,
+which means that in reality no actual quiescent-state forcing, instead
+only a couple of quick and pointless wakeups at the beginning of the
+grace period.
 
+This commit therefore adds a check for the RCU_GP_FLAG_OVLD flag in
+the post-wakeup "if" statement in rcu_gp_fqs_loop().
+
+Fixes: 1fca4d12f4637 ("rcu: Expedite first two FQS scans under callback-overload conditions")
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/srcutree.c | 13 -------------
- 1 file changed, 13 deletions(-)
+ kernel/rcu/tree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-index c100acf..c13348e 100644
---- a/kernel/rcu/srcutree.c
-+++ b/kernel/rcu/srcutree.c
-@@ -29,19 +29,6 @@
- #include "rcu.h"
- #include "rcu_segcblist.h"
- 
--#ifndef data_race
--#define data_race(expr)							\
--	({								\
--		expr;							\
--	})
--#endif
--#ifndef ASSERT_EXCLUSIVE_WRITER
--#define ASSERT_EXCLUSIVE_WRITER(var) do { } while (0)
--#endif
--#ifndef ASSERT_EXCLUSIVE_ACCESS
--#define ASSERT_EXCLUSIVE_ACCESS(var) do { } while (0)
--#endif
--
- /* Holdoff in nanoseconds for auto-expediting. */
- #define DEFAULT_SRCU_EXP_HOLDOFF (25 * 1000)
- static ulong exp_holdoff = DEFAULT_SRCU_EXP_HOLDOFF;
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 8969120..4770d77 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -1884,7 +1884,7 @@ static void rcu_gp_fqs_loop(void)
+ 			break;
+ 		/* If time for quiescent-state forcing, do it. */
+ 		if (!time_after(rcu_state.jiffies_force_qs, jiffies) ||
+-		    (gf & RCU_GP_FLAG_FQS)) {
++		    (gf & (RCU_GP_FLAG_FQS | RCU_GP_FLAG_OVLD))) {
+ 			trace_rcu_grace_period(rcu_state.name, rcu_state.gp_seq,
+ 					       TPS("fqsstart"));
+ 			rcu_gp_fqs(first_gp_fqs);
 -- 
 2.9.5
 
