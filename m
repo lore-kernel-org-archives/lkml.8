@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7F8C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB13C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 209CB20EDD
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:55:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A53120EDD
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598896502;
-	bh=i75OvD9EoRcIr5Io3wLC+xC5GgIiF+qGDlv+KiQ85L4=;
+	s=default; t=1598896507;
+	bh=XYZ5OlzazNfJ+PLESdELLC4jtpXCFsDdXwR3nL+c5fk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=McTAn4YISelzoVb9wq9r/YidGhWDNPfXSHg/6WhSlu7jYx77X102NXfW6bqzqE2m2
-	 GNTzIIfLwNJKnazbfdkvOuPs0cvC8oSRul6by6l99MP+la/VKTXa2hf2MCGUrWWYjH
-	 9wcTyTfp8JTSOdHvO0qLmbSmAgnAUO6eW3fhbdxw=
+	b=qHU2gfvSn4hck5xUbfq1fCDMg1SfYhPpY2Gr8oJOhMnjTHIfT5ZgifTZ68/cWwowf
+	 r1r5eqyCUg5fvrbyzZOldIbVw50cozjTDQ0dhiU1AKs5AMqJu+vZtFJp1D3rQ0swLu
+	 dlxpgn3D1Zyxj8Hit7PTAXhSRDRwVRpGIhO/aL8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgHaRzA (ORCPT
+        id S1728353AbgHaRzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 13:55:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46394 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 13:55:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728090AbgHaRy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 13:54:57 -0400
+        id S1726204AbgHaRy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 13:54:56 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4839C21527;
-        Mon, 31 Aug 2020 17:54:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD818214D8;
+        Mon, 31 Aug 2020 17:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1598896496;
-        bh=i75OvD9EoRcIr5Io3wLC+xC5GgIiF+qGDlv+KiQ85L4=;
+        bh=XYZ5OlzazNfJ+PLESdELLC4jtpXCFsDdXwR3nL+c5fk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NStNTMD+JndnMAKJObOlgpnZPaQwSl+RNJBfFjUeQeUYzqmaBbmnzvO2T6ByOpTMN
-         Sjx26MNurvC2sJgREFv4Kaslwn1r4PIBxrcNYYdpwnF8ngpd0OHKvU3XeFDHeCHOhK
-         Kc6EMG81JshlviI42Sn/FfUVZKkuf2vPfJfADIvI=
+        b=faC5HXtQQeWHwSAHyydELC+PIvoWp/Y7EMDmrgnw9ti2l/zk6PoGLsbpi5Qi3sAkM
+         p6fKtXZ8ZGrd8EMEeM52otRYJ2bdNX/9mFAXfCfdjjXHzv/R8LvkYkvnnomb4NuSEI
+         PwSy22BvLoP43MRccCaANtIwf9b5nFW7nNFjCWyw=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -50,15 +50,12 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         Randy Dunlap <rdunlap@infradead.org>,
         Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 3/3] doc: Drop doubled words from RCU requirements documentation
-Date:   Mon, 31 Aug 2020 10:54:52 -0700
-Message-Id: <20200831175452.32381-3-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 2/3] doc: Drop doubled words from RCU Data-Structures.rst
+Date:   Mon, 31 Aug 2020 10:54:51 -0700
+Message-Id: <20200831175452.32381-2-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831175419.GA31013@paulmck-ThinkPad-P72>
 References: <20200831175419.GA31013@paulmck-ThinkPad-P72>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +63,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Randy Dunlap <rdunlap@infradead.org>
 
-Drop the doubled words "to" and "for".
+Drop the doubled word "the".
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: Jonathan Corbet <corbet@lwn.net>
@@ -80,31 +77,22 @@ Cc: Joel Fernandes <joel@joelfernandes.org>
 Cc: rcu@vger.kernel.org
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- Documentation/RCU/Design/Requirements/Requirements.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/RCU/Design/Data-Structures/Data-Structures.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/RCU/Design/Requirements/Requirements.rst b/Documentation/RCU/Design/Requirements/Requirements.rst
-index 8f41ad0..1ae79a1 100644
---- a/Documentation/RCU/Design/Requirements/Requirements.rst
-+++ b/Documentation/RCU/Design/Requirements/Requirements.rst
-@@ -2162,7 +2162,7 @@ scheduling-clock interrupt be enabled when RCU needs it to be:
-    this sort of thing.
- #. If a CPU is in a portion of the kernel that is absolutely positively
-    no-joking guaranteed to never execute any RCU read-side critical
--   sections, and RCU believes this CPU to to be idle, no problem. This
-+   sections, and RCU believes this CPU to be idle, no problem. This
-    sort of thing is used by some architectures for light-weight
-    exception handlers, which can then avoid the overhead of
-    ``rcu_irq_enter()`` and ``rcu_irq_exit()`` at exception entry and
-@@ -2431,7 +2431,7 @@ However, there are legitimate preemptible-RCU implementations that do
- not have this property, given that any point in the code outside of an
- RCU read-side critical section can be a quiescent state. Therefore,
- *RCU-sched* was created, which follows “classic” RCU in that an
--RCU-sched grace period waits for for pre-existing interrupt and NMI
-+RCU-sched grace period waits for pre-existing interrupt and NMI
- handlers. In kernels built with ``CONFIG_PREEMPT=n``, the RCU and
- RCU-sched APIs have identical implementations, while kernels built with
- ``CONFIG_PREEMPT=y`` provide a separate implementation for each.
+diff --git a/Documentation/RCU/Design/Data-Structures/Data-Structures.rst b/Documentation/RCU/Design/Data-Structures/Data-Structures.rst
+index 4a48e20..f4efd68 100644
+--- a/Documentation/RCU/Design/Data-Structures/Data-Structures.rst
++++ b/Documentation/RCU/Design/Data-Structures/Data-Structures.rst
+@@ -963,7 +963,7 @@ exit and perhaps also vice versa. Therefore, whenever the
+ ``->dynticks_nesting`` field is incremented up from zero, the
+ ``->dynticks_nmi_nesting`` field is set to a large positive number, and
+ whenever the ``->dynticks_nesting`` field is decremented down to zero,
+-the the ``->dynticks_nmi_nesting`` field is set to zero. Assuming that
++the ``->dynticks_nmi_nesting`` field is set to zero. Assuming that
+ the number of misnested interrupts is not sufficient to overflow the
+ counter, this approach corrects the ``->dynticks_nmi_nesting`` field
+ every time the corresponding CPU enters the idle loop from process
 -- 
 2.9.5
 
