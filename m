@@ -2,100 +2,93 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C375EC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94ED9C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 813E620738
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:43:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xLz/MI7z"
+	by mail.kernel.org (Postfix) with ESMTP id 5F88120936
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:48:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598860112;
+	bh=bzCEwJwBzyL8mUKGPxv8akcTe2V/jC3XhEh2aWcfKbQ=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=eO0Vo+JMqnB7rr/gDEEfqYbSbbdysElVCsTykhqn/AG1t5LPKHS+snQUSV1zztuSC
+	 tKST+WQJ/91MqdkZR5aWR5SlBV9ZQDOdA98RKb9qsDByAeNW6bDSxezz5wi+4eBUhS
+	 s53l1DWLaJ4loG4Ugbm3inDj0enS0mzipzqxXE8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgHaHn5 (ORCPT
+        id S1727111AbgHaHs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 03:43:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgHaHno (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:43:44 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12398C061573;
-        Mon, 31 Aug 2020 00:43:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=bfowcr23SYGjmFeTw4H76pW95oh2o32vfH0LetHgQjc=; b=xLz/MI7zWVACfq30X1AW+abMBo
-        HeCMQDoRVE1SlW/H4dbBPUuhXK+uepKoxfrpNEYosAevt2YY6IdEHuNPjZeLgUA+mrzGaDCLbjRZk
-        LzcfoH7V0pTifpM9/SM+fW9zPoSBjnzD8npqlgh6L2TjrUMHe55X8Pdzrdgna/V5ee7K+Etp5lRQ2
-        YuZxEL4vVRmAIhQcCsK18rgc8wq1/ICKA4Ny8OV84pU8+jf5qP5okxyX1fbPuJdWYa2oIARKKhp/0
-        TVzWTBIa+pyKpF1FQfb/M9HMF3jjLLoC4zwf1gm93SyasbdrwMgeYV0PqlDtv26/WZIddhBKRGKha
-        JDCtQ6Vw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kCeTS-0001Ar-IH; Mon, 31 Aug 2020 07:43:30 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Mon, 31 Aug 2020 03:48:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbgHaHsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 03:48:23 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7B9323003E5;
-        Mon, 31 Aug 2020 09:43:28 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 60BD7202A3F54; Mon, 31 Aug 2020 09:43:28 +0200 (CEST)
-Date:   Mon, 31 Aug 2020 09:43:28 +0200
-From:   peterz@infradead.org
-To:     ebiederm@xmission.com (Eric W. Biederman)
-Cc:     syzbot <syzbot+db9cdf3dd1f64252c6ef@syzkaller.appspotmail.com>,
-        adobriyan@gmail.com, akpm@linux-foundation.org, avagin@gmail.com,
-        christian@brauner.io, gladkov.alexey@gmail.com,
-        keescook@chromium.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        walken@google.com, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>, jannh@google.com
-Subject: Re: possible deadlock in proc_pid_syscall (2)
-Message-ID: <20200831074328.GN1362448@hirez.programming.kicks-ass.net>
-References: <00000000000063640c05ade8e3de@google.com>
- <87mu2fj7xu.fsf@x220.int.ebiederm.org>
- <20200828123720.GZ1362448@hirez.programming.kicks-ass.net>
- <87v9h0gvro.fsf@x220.int.ebiederm.org>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0A8020738;
+        Mon, 31 Aug 2020 07:48:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598860103;
+        bh=bzCEwJwBzyL8mUKGPxv8akcTe2V/jC3XhEh2aWcfKbQ=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=eYlAGf5W8IFyry5inhks7nPA7dexSMHcPKmFMA9JUuu5Ja48tnVeXw10lD28Favtf
+         QyzmqDyOFM3IBXYj17Hip75dMDGK9d+UdArlhZyuGcR9FyVxcNI3V45chDF64WeX66
+         vc9EJs7ogjcUKnGoEAanNm8bjviU9VSeAnXjVMS8=
+Date:   Mon, 31 Aug 2020 09:48:19 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+cc:     kjlu@umn.edu, Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Alexandrov Stansilav <neko@nya.ai>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] HID: elan: Fix memleak in elan_input_configured
+In-Reply-To: <20200824072400.9612-1-dinghao.liu@zju.edu.cn>
+Message-ID: <nycvar.YFH.7.76.2008310947070.27422@cbobk.fhfr.pm>
+References: <20200824072400.9612-1-dinghao.liu@zju.edu.cn>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87v9h0gvro.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 07:31:39AM -0500, Eric W. Biederman wrote:
+On Mon, 24 Aug 2020, Dinghao Liu wrote:
 
-> I am thinking that for cases where we want to do significant work it
-> might be better to ask the process to pause at someplace safe (probably
-> get_signal) and then do all of the work when we know nothing is changing
-> in the process.
+> When input_mt_init_slots() fails, input should be
+> freed to prevent memleak.
 > 
-> I don't really like the idea of checking and then checking again.  We
-> might have to do it but it feels like the model is wrong somewhere.
+> Fixes: 9a6a4193d65b8 ("HID: Add driver for USB ELAN Touchpad")
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>  drivers/hid/hid-elan.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Given that this is tricky to hit in practice, and given that I am
-> already working the general problem of how to sort out the locking I am
-> going to work this with the rest of the thorny issues of in exec.  This
-> feels like a case where the proper solution is that we simply need
-> something better than a mutex.
+> diff --git a/drivers/hid/hid-elan.c b/drivers/hid/hid-elan.c
+> index 45c4f888b7c4..858442004258 100644
+> --- a/drivers/hid/hid-elan.c
+> +++ b/drivers/hid/hid-elan.c
+> @@ -188,6 +188,7 @@ static int elan_input_configured(struct hid_device *hdev, struct hid_input *hi)
+>  	ret = input_mt_init_slots(input, ELAN_MAX_FINGERS, INPUT_MT_POINTER);
+>  	if (ret) {
+>  		hid_err(hdev, "Failed to init elan MT slots: %d\n", ret);
+> +		input_free_device(input);
+>  		return ret;
 
-One possible alternative would be something RCU-like, surround the thing
-with get_task_cred() / put_cred() and then have commit_creds() wait for
-the usage of the old creds to drop to 0 before continuing.
+Good catch, but apparently it's not the only memleak there -- 
+input_mt_init_slots() allocates the input_mt slots and friends, so we need 
+input_mt_destroy_slots() there as well.
 
-(Also, get_cred_rcu() is disgusting for casting away const)
+Could you please add this to your patch too, while you are at fixing this 
+error codepath anyway, and resubmit?
 
-But this could be complete garbage, I'm not much familiar with any of
-thise code.
+Thanks!
+
+-- 
+Jiri Kosina
+SUSE Labs
+
