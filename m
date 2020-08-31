@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD444C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE3AC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83B6D2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2222B21473
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598877950;
-	bh=SwrJXfeH/9hOrMi7XyK/W+RmfZgE720J1M//fWtouGY=;
+	s=default; t=1598877960;
+	bh=8rOIdZ6wqgc1jq2tHq0/nusm6CFDfSurOY8zud5UQN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vUgKN6Q97lx6EkJPed1lpzL4fe52CZTczZOTesPKfwHbPobIRHVPI7ZFaCJOi6ikU
-	 ERDJ4Xie6Rexp9C6Q+gn1Tjd5/JvXWOti03QQLE3uvqTJ4VF2ZTL5IQjEhQ9fO0utb
-	 uWGQIkFMSG7Td+760QwBRTWWTXMM7eGCnajX4yAw=
+	b=rWYOYNMlplOw7xMnjl7SQ7K1FR/WdGArKaQSz5spOeBM83DyuR7oazAwaDS5wGnUr
+	 5HDpwQnzoAAb5eu+01e1WRXcsjGDtd7PW6hh9DaJt10nzUI0UwBQKoDDV1x5vY53Lm
+	 gyZKUDjdxxSDYEPVqVNF65iaMgDJ6tB3yqPMu98k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgHaMps (ORCPT
+        id S1727846AbgHaMp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 08:45:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46626 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 08:45:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgHaMpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 08:45:47 -0400
+        id S1726144AbgHaMp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 08:45:56 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADE5E206E3;
-        Mon, 31 Aug 2020 12:45:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B14342073A;
+        Mon, 31 Aug 2020 12:45:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598877947;
-        bh=SwrJXfeH/9hOrMi7XyK/W+RmfZgE720J1M//fWtouGY=;
+        s=default; t=1598877956;
+        bh=8rOIdZ6wqgc1jq2tHq0/nusm6CFDfSurOY8zud5UQN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G1M7zimJLKJt/ngB+PrPt0FfIY7YRHels+8CoUmF8Hj8JMF1MROZSEd8qzDtk/hxY
-         +JKHSw++Et6m7gj4hQygTNv4gWAr2Rt52db1807CJ3xh/4n8S1TpccB+WN7BTd5WRX
-         YKoQnLMHemrmdVYNgegt8sdRPhheGR1bNyAKRsg0=
+        b=TSvjY00nngC1TPHjSpUATD6l8D/Sl2/MzPfM50BAfgXg+ZlHq6JZ3nihC/s9Rw56b
+         YDEGy92KSAzXPL8RG2kur8aqSw+5HbXZdz6lBgXIxbOcllF9r4BTQpoiaNhLBLJ3Z1
+         b6GFmfGPWZx4/HqYvExo86YzuVRcRnWSKhbCo4Ko=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Jonathan Corbet <corbet@lwn.net>
 Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org
-Subject: [PATCH 2/6] tracing/boot: Add per-instance tracing_on option support
-Date:   Mon, 31 Aug 2020 21:45:43 +0900
-Message-Id: <159887794308.1330989.3468705671672127016.stgit@devnote2>
+Subject: [PATCH 3/6] Documentation: tracing: Add tracing_on option to boot-time tracer
+Date:   Mon, 31 Aug 2020 21:45:52 +0900
+Message-Id: <159887795239.1330989.17724824075048692028.stgit@devnote2>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <159887792384.1330989.5993224243767476896.stgit@devnote2>
 References: <159887792384.1330989.5993224243767476896.stgit@devnote2>
@@ -59,36 +59,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add per-instance tracing_on option, which will be useful with
-traceon/traceoff event trigger actions. For example, if we
-disable tracing_on by default and set traceon and traceoff on
-a pair of events, we can trace functions between the pair of
-events.
+Add tracing_on option description to the boot-time tracer.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- kernel/trace/trace_boot.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ Documentation/trace/boottime-trace.rst |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index fa0fc08c6ef8..d52d441a17e8 100644
---- a/kernel/trace/trace_boot.c
-+++ b/kernel/trace/trace_boot.c
-@@ -40,6 +40,16 @@ trace_boot_set_instance_options(struct trace_array *tr, struct xbc_node *node)
- 			pr_err("Failed to set option: %s\n", buf);
- 	}
+diff --git a/Documentation/trace/boottime-trace.rst b/Documentation/trace/boottime-trace.rst
+index dcb390075ca1..1341b449acaa 100644
+--- a/Documentation/trace/boottime-trace.rst
++++ b/Documentation/trace/boottime-trace.rst
+@@ -61,6 +61,10 @@ These options can be used for each instance including global ftrace node.
+ ftrace.[instance.INSTANCE.]options = OPT1[, OPT2[...]]
+    Enable given ftrace options.
  
-+	p = xbc_node_find_value(node, "tracing_on", NULL);
-+	if (p && *p != '\0') {
-+		if (kstrtoul(p, 10, &v))
-+			pr_err("Failed to set tracing on: %s\n", p);
-+		if (v)
-+			tracer_tracing_on(tr);
-+		else
-+			tracer_tracing_off(tr);
-+	}
++ftrace.[instance.INSTANCE.]tracing_on = 0|1
++   Enable/Disable tracing on this instance when boot.
++   (you can enable it by the "traceon" event trigger action)
 +
- 	p = xbc_node_find_value(node, "trace_clock", NULL);
- 	if (p && *p != '\0') {
- 		if (tracing_set_clock(tr, p) < 0)
+ ftrace.[instance.INSTANCE.]trace_clock = CLOCK
+    Set given CLOCK to ftrace's trace_clock.
+ 
 
