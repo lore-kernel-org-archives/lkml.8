@@ -2,164 +2,549 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02950C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9CAC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D609F2145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECAB52158C
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:31:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YRWrwRgV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="eKNhIPTc";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="SavzG9rW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgHaMbh (ORCPT
+        id S1728018AbgHaMbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 08:31:37 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:37673 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbgHaMbA (ORCPT
+        Mon, 31 Aug 2020 08:31:48 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:45671 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726903AbgHaMbM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 08:31:00 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200831123056euoutp028a21f32a27b31211a7a67390ba063d8b~wWjYmpQcD2214022140euoutp02q
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 12:30:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200831123056euoutp028a21f32a27b31211a7a67390ba063d8b~wWjYmpQcD2214022140euoutp02q
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598877056;
-        bh=aAdNm/dzVaND4IVjQoOGhc1gHHOhMrELO0GWHWLYSRw=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=YRWrwRgVptW1I2wULNLtJ/GQQ8lqLvb1HVvYZxXXTX9E7uJSzXrDNJKc/1IPAxPh9
-         rh5GyZutXUlgpadt0ea71octNj4Z2OI08pTYJFpCA4afar+Lgigl/AGF1KLecFJ3/b
-         o6IgTqasvjFqQ05l6b0g/gDFykGUjK7DrrHkDskU=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200831123055eucas1p266684932dbf9db192710f35b46fd643d~wWjX-AKXc1299512995eucas1p2s;
-        Mon, 31 Aug 2020 12:30:55 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id B1.DE.05997.F7DEC4F5; Mon, 31
-        Aug 2020 13:30:55 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200831123054eucas1p14913acf89e94842b48d8e005b5e01d7e~wWjXT2kzy1358313583eucas1p1i;
-        Mon, 31 Aug 2020 12:30:54 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200831123054eusmtrp161f6cfc6de50ed8de4d8c5ad763ba97d~wWjXS9rJy0520905209eusmtrp1d;
-        Mon, 31 Aug 2020 12:30:54 +0000 (GMT)
-X-AuditID: cbfec7f4-677ff7000000176d-c3-5f4ced7f7ef1
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id CF.5E.06314.E7DEC4F5; Mon, 31
-        Aug 2020 13:30:54 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200831123053eusmtip266f3538f6634be0eee709dcabfb9b647~wWjVj4NFe0780707807eusmtip2X;
-        Mon, 31 Aug 2020 12:30:53 +0000 (GMT)
-Subject: Re: [PATCH 04/10] dt-bindings: mfd: syscon: Document Samsung Exynos
- compatibles
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        alsa-devel@alsa-project.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <8b0a42a3-e014-c2ed-7403-021f9a476fc8@samsung.com>
-Date:   Mon, 31 Aug 2020 14:30:52 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.11.0
+        Mon, 31 Aug 2020 08:31:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1598877071; x=1630413071;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=yrAiTXBm0yX+I4wim9zJ1EqhZZPxP9gTtngTuqTywEw=;
+  b=eKNhIPTc0dg1lsKY3fea5PMOFYXiS/m6SlfEwRfvDQCZ8DJKilAyX+wy
+   lBXnDt3MO9NocTP1bupQg2c9DOFKSlXbOE1dWpZ3Jfw5BO3uuimLtU+u6
+   qD/C81zMUbm7wVk7qe8Rb7PzGoxJSAi6zra+bJDnIypYtMIvfBO+duTY6
+   QMKlsMeFVdQ8OMWrgY+92kIW8O8RnaetBtoNvs9N6pVjqPRn8cqPOElo9
+   SjphmLtUjVuy1/OjLFTR6zqd9/s0eov3U0MY0kumIwTJ/l5azDYOY62ab
+   jtEusetBRUTEcbSHB4xf7SzUeWG1f3EOna0fiVhqoO9X9C0C1tkzFLq3u
+   w==;
+IronPort-SDR: RSq/BUNdheoIgqyNrA9hr30t+kZuh1WBjJo+nH3Y5WA3u7Zpl7KLFGwM2eZqNTYmhs9dcMoVvf
+ cyH7/swZg81X50haUtL8jaxxjduluAkyABKb3P+jUIM4RUiP1rM4tqHShKYYLPVjE4MH+54Zof
+ F+E9j73s4IgeTC4TnnTv+zz3FAOCr3kyrTG9ZbXx+Vvzhm2+tlV73CyII1SIX4N3sSgTwvtTE4
+ jOyiX65S3lQ0OsKZAtE3S0Pot34313GBsBxBpwV8kC38u6U0SVK/aDW9GRX2LLE1/J6RVTT2zf
+ o2Q=
+X-IronPort-AV: E=Sophos;i="5.76,375,1592841600"; 
+   d="scan'208";a="255743338"
+Received: from mail-sn1nam02lp2052.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.52])
+  by ob1.hgst.iphmx.com with ESMTP; 31 Aug 2020 20:31:10 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hwbEMdFsgljrxHg2qxnyd08Nnia+fVbQtBf4mg2BbMbdzLxhMETBjdFyA23KmIfLTmT2j8ar6OgvM3KEk65kIDicKuN2AbtPZEmzVE6aK97MAMc0AnL+3qsrdg3jtOONA2b3pYyIsWUykstEXwX03vbv5GzXu+HNqzVspG/knPi1y0zl1QJ9c0knv6CT4ujSr9gA8n1RKmyseh3OWHHRcF+9if4f6NfnoPFZncFj76mqnB3TU64TYRGJbGvqPKH7RJN2O6eS/ddkMwO/pT6/t2kYL9L0Ms+oyDtuRHo3G96tCVvszaHk0Vin/Ub2yAMqz6cMm55XZ1H1VFBYrOt4ww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qsNEFrlhdM0P+GxTagvhNugZJ+qLn/xtCZf5nFxwEeE=;
+ b=KkxlAUm4msgXZXtfUPbmBQEcEBwH7Y408GZ6bLOiGQhY3kLaIZvhPjZXncbY3UjeonfLLCIHJ+u7GYBgD26Xcc6QCzf6YqBPu9lXpyHqYZVJzrU8P5lHR+gQgCdJcojVMNqpOQj3E8Wiwr4kKW6bURGMYtUHVl0ls5Bp2rAH96FIyYxYxnBwVhHaZJcqYwWtse7kVNAn1xFeLTxwBPSumABbAe2X7R082oKH3tJoqfuj0YhDPp4M6WYPH3In3rcvFPhJJBH5Hg8fNgWW1gGTmjdNJFt2bKv4vcB0KUoUKKLboqsmmR2fkTZHkgTLA7V1qotvmS/OBV3Nvb5v9FB8Iw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qsNEFrlhdM0P+GxTagvhNugZJ+qLn/xtCZf5nFxwEeE=;
+ b=SavzG9rWvgOm0F3gH1oUx1jlapGKnTTXODcEfEl8J1hDcVK/NGGHOnsV/GyTla474iFcocQwj3n6T9zQ9Fb0wmIvWDENrtyVugn8l8eiim29yw2wswUlmlkGkvWzuiRpjlpXJslBf4BDA9/Ya63eC0bJ9lyyk4fzyrU7zaOtCR4=
+Authentication-Results: dabbelt.com; dkim=none (message not signed)
+ header.d=none;dabbelt.com; dmarc=none action=none header.from=wdc.com;
+Received: from DM6PR04MB6201.namprd04.prod.outlook.com (2603:10b6:5:127::32)
+ by DM6PR04MB6092.namprd04.prod.outlook.com (2603:10b6:5:12b::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Mon, 31 Aug
+ 2020 12:31:09 +0000
+Received: from DM6PR04MB6201.namprd04.prod.outlook.com
+ ([fe80::607a:44ed:1477:83e]) by DM6PR04MB6201.namprd04.prod.outlook.com
+ ([fe80::607a:44ed:1477:83e%7]) with mapi id 15.20.3326.025; Mon, 31 Aug 2020
+ 12:31:09 +0000
+From:   Anup Patel <anup.patel@wdc.com>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Alexander Graf <graf@amazon.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Anup Patel <anup@brainfault.org>, kvm@vger.kernel.org,
+        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Anup Patel <anup.patel@wdc.com>
+Subject: [PATCH v14 06/17] RISC-V: KVM: Implement VCPU world-switch
+Date:   Mon, 31 Aug 2020 18:00:04 +0530
+Message-Id: <20200831123015.336047-7-anup.patel@wdc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200831123015.336047-1-anup.patel@wdc.com>
+References: <20200831123015.336047-1-anup.patel@wdc.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BM1PR0101CA0046.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:1a::32) To DM6PR04MB6201.namprd04.prod.outlook.com
+ (2603:10b6:5:127::32)
 MIME-Version: 1.0
-In-Reply-To: <20200829142501.31478-4-krzk@kernel.org>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa1BMYRjHvee2p3KaY2l6JtdZucQoub4zjHH7cMQHfDLNVDYdLWprdiuX
-        D4oG0VWYsqKGsDYqW0Ikk7bVxK4uqkkXscPExKhtXSq0ezL69nv+z/O8z/8/87KkPJXxYfep
-        40SNWhmlYNypirqfliWJ/dvClt42+eJ0Sz2BWxprCHw3t4TGF3ptDG6zf6TxlcGZ+E/FWRLn
-        11po3DL0lcHZPVkUznz/mcRWa6kM9wyZEHa0pBDY+L6Vxs2VeQzOtT4h8J3aLhk+UVUrw416
-        O4HLjBfI9V5C6eBxRqhyFFDCQ12XTDAaTjNCZ+tjRvhisciE+463tNCTaiaEssJEIaPcgIRB
-        46ztHsHuayPEqH0JoiZg3W53VVPhcyp2lD3UnDdAJ6F02RnkxgK/Al4k1yMny3k9gtN1m84g
-        9zG2IzBnfqalYhCBtfMY+W8jLSeNkDZuIhgoWiwNfUNQXFztakzlgyGjv5l28jTeD9pGv7te
-        Ivl3NOgv2Rhng+EDId2UMXabZTl+HVy+oXLKFD8Pvlb0uSx58aFwz/za9SbHT4H6izbKyW78
-        SnC8yXdFIHlv6LDlExLPhvv9eeNGn7MwUg0Sb4ayH1ZC4qnwyVw+Hn8GNJxLo5zegE9GkPbo
-        jUwqshD0mAuQNLUGOi2/GKdRcixNSWWAJG+AwnPJpFMG3hPa+6dIHjwhuyJnXOYg5aRcmvaF
-        YUPOuAUfSLX9obKQQjchmW5CGt2ENLr/dwsQZUDeYrw2OlLULlOLB/21ymhtvDrSf09MtBGN
-        fdGG32b7A1Q5El6DeBYpJnM/TFvD5LQyQXs4ugYBSyqmcRtfNoTKuQjl4SOiJiZMEx8lamvQ
-        dJZSeHPLr/aFyPlIZZx4QBRjRc2/LsG6+SShLbPm3FH3vjqlSo8gd1WLXrnTkUfxjqa+gq41
-        Jj/CK3vZqbZhLnFk0fxczy8dKyM+6Nsd5TE7447Gpjy9FWQIHh5YeKRu9dyH4aGJVHv4eblf
-        iGqph/C4yrhXv2eIm9R9PKjbTiVcb9ufN6/o2WhjUFLYtYD42gU5Hvqdcf6OzFWTFZRWpQxc
-        RGq0yr94lNVNngMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHKsWRmVeSWpSXmKPExsVy+t/xe7p1b33iDbrvmFr0njvJZHHl4iEm
-        i40z1rNaTH34hM3i+pfnrBbzPsta/N82kdli/pFzrBZXvr5ns5h0fwKLRf/j18wW589vYLe4
-        //Uoo8W3Kx1MFpseX2O1uLxrDpvFjPP7mCzWHrnLbtG69wi7xcUVX5gsNm+ayuwg6rHhcxOb
-        x95vC1g8ds66y+6xaVUnm8eda3vYPN6dO8fusf3bA1aP+93HmTw2L6n36NuyitHj8ya5AO4o
-        PZui/NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYxLS06w
-        FPzlqLg85xNrA2MvexcjJ4eEgIlEz/Qepi5GLg4hgaWMEl/XzwZKcAAlpCTmtyhB1AhL/LnW
-        xQZR855R4sH8/YwgCWGBKIm+t5dZQWwRAU2J63+/g9nMAo9YJT7NqoJo2Mwo8XjZT7BtbAKG
-        Er1H+xhBFvAK2EnMXZYBEmYRUJV4v+0l2ExRgTiJx73/mUFsXgFBiZMzn7CA2JwCphLfbs9n
-        h5ivLvFn3iVmCFtc4taT+UwQtrzE9rdzmCcwCs1C0j4LScssJC2zkLQsYGRZxSiSWlqcm55b
-        bKhXnJhbXJqXrpecn7uJEZg2th37uXkH46WNwYcYBTgYlXh4fxz1jhdiTSwrrsw9xCjBwawk
-        wut09nScEG9KYmVValF+fFFpTmrxIUZToOcmMkuJJucDU1peSbyhqaG5haWhubG5sZmFkjhv
-        h8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQbGdvej/55ybXj8s2mR123OyEKxS0H/v6eedpQ04F/V
-        IWwT6vbQ9m/BW+7uhvbbdttOHD25yTHN3pZ1QmTvweuqj201ut56Ss48etmwTH3S7rhlZsec
-        LD5tm1Gfbr3tTq+k8+7f727OXH/mQuDPwszmw/a/jrp4vXFsujv1uZTTDp8vAkLZp7zalViK
-        MxINtZiLihMBD3yhmDEDAAA=
-X-CMS-MailID: 20200831123054eucas1p14913acf89e94842b48d8e005b5e01d7e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200829142536eucas1p12c539f1cd45195adef96f8b752778fcf
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200829142536eucas1p12c539f1cd45195adef96f8b752778fcf
-References: <20200829142501.31478-1-krzk@kernel.org>
-        <CGME20200829142536eucas1p12c539f1cd45195adef96f8b752778fcf@eucas1p1.samsung.com>
-        <20200829142501.31478-4-krzk@kernel.org>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by BM1PR0101CA0046.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:1a::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Mon, 31 Aug 2020 12:31:05 +0000
+X-Mailer: git-send-email 2.25.1
+X-Originating-IP: [103.15.57.192]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 7a7c91ee-cbe4-4f90-3b06-08d84da9bd3c
+X-MS-TrafficTypeDiagnostic: DM6PR04MB6092:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR04MB609233059E25742FBE3FBC2C8D510@DM6PR04MB6092.namprd04.prod.outlook.com>
+WDCIPOUTBOUND: EOP-TRUE
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: SDcDoNkLN9QAuP582133Sk1ayCYdX5aY7BILx3K38k70nn4+XQOpFjbf2V30WtQ5J82BYiOP1a9ZtjqMLZZhQC9VZuSl9mNNZh/J9iHmtT1DEXJgq6zXRLYxAdoAzoGBxe1cs79hHtOpJMkxwY76nRrZzeZNGYRlsYxGyCAR3fxihzO+kMMCu0CSLs0O+JKP6hO6JuoGoqyPSqVfDvB+Btu1kTb12F3/n1gwhoTFrIP026tmZqJGlRWMo1x8fMMdUnPsjMZ1iQ617+kQH8Pe2GzX8QNRxrKe70KT11awi+Yi55dQCLQ1IbuQ/M/vXrHg
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(366004)(39860400002)(346002)(376002)(44832011)(52116002)(8676002)(86362001)(36756003)(478600001)(6486002)(7416002)(30864003)(110136005)(8936002)(54906003)(83380400001)(66946007)(1076003)(66556008)(2906002)(26005)(186003)(66476007)(956004)(316002)(16576012)(4326008)(5660300002)(2616005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: /NL9QeXCuN6hwiZmkxWvToq9mUWYLYcWgU4XRLRgNa9xX9iqx70RJqaBjSkrOQEYSbTwelx3XiI/zcY6a8tk3tuObfPn0SaNkqx1v9Lj15Wbhzut/fXRGkfMBnwB30CplZm1ula+v6wuwGQxv3ad9HvsxsVWfSlqr9+FTLA16mXVj3wXSv6ASEHDXd9dRpPiA6ujPhk/1EPUPNxgPno05zfmlCb43xz5OO+/a/o3cCzZ7cfUMnj3tHsK9BQuDvDCMFbpwscMgFlvzw/h/bbXIsqsLb4ilIiVwMWh9bBIQD70jzRtoAi0ZA+uutFlGgzPB5edxfG/0RrtCPMydXWtLA70ofktNh86d0J8qKGfVpWKNpMJj83/uLO4eEsFlN6LPJ0IfovvxLa2iUL2s4vKbi1u+BZhupcDdn4NxDBBc5Je879YtRpVI1fiCLMqANB0aVB2rvrKZZ9BpUkh8RsUScdty1jf8pOMFAZhYYmIJDrIInusoFSoL4PXxh5JxIWXtMSQHvU+28mjZjVJE7QKRAlaVq+LFxsjI8Bl7I2GE6+doTRiYrwx3Wmi27nPJeiBTSGYoKQCy3+fPMl4ZWHHdA271GoYHE8xqD1jvnZxdrAz35fn6yLdw/7DC1x5jmJ2kjeQuUvk/8frnFm7Tr2nlw==
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a7c91ee-cbe4-4f90-3b06-08d84da9bd3c
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR04MB6201.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2020 12:31:09.6725
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: WZxcS+udJ3c4MKo3itLLUfkAeV7d+Rb9rEXwqluJwfhuDBt7tZ4T2vEWiM1o0iIqLQKjMmTBgVlBs7JbwamrAQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB6092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.08.2020 16:24, Krzysztof Kozlowski wrote:
-> Samsung Exynos SoCs use syscon for system registers so document its
-> compatibles.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  Documentation/devicetree/bindings/mfd/syscon.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
-> index 049ec2ffc7f9..0f21943dea28 100644
-> --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
-> +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
-> @@ -40,6 +40,10 @@ properties:
->                - allwinner,sun50i-a64-system-controller
->                - microchip,sparx5-cpu-syscon
->                - mstar,msc313-pmsleep
-> +              - samsung,exynos3-sysreg
-> +              - samsung,exynos4-sysreg
-> +              - samsung,exynos5-sysreg
-> +              - samsung,exynos5433-sysreg
+This patch implements the VCPU world-switch for KVM RISC-V.
 
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+The KVM RISC-V world-switch (i.e. __kvm_riscv_switch_to()) mostly
+switches general purpose registers, SSTATUS, STVEC, SSCRATCH and
+HSTATUS CSRs. Other CSRs are switched via vcpu_load() and vcpu_put()
+interface in kvm_arch_vcpu_load() and kvm_arch_vcpu_put() functions
+respectively.
 
-Do you also have a patch updating Documentation/devicetree/
-bindings/arm/samsung/sysreg.yaml with new compatibles?
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Alexander Graf <graf@amazon.com>
+---
+ arch/riscv/include/asm/kvm_host.h |  10 +-
+ arch/riscv/kernel/asm-offsets.c   |  78 ++++++++++++
+ arch/riscv/kvm/Makefile           |   2 +-
+ arch/riscv/kvm/vcpu.c             |  30 ++++-
+ arch/riscv/kvm/vcpu_switch.S      | 203 ++++++++++++++++++++++++++++++
+ 5 files changed, 319 insertions(+), 4 deletions(-)
+ create mode 100644 arch/riscv/kvm/vcpu_switch.S
 
+diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+index 8829bed4517f..e2f5523e26de 100644
+--- a/arch/riscv/include/asm/kvm_host.h
++++ b/arch/riscv/include/asm/kvm_host.h
+@@ -121,6 +121,14 @@ struct kvm_vcpu_arch {
+ 	/* ISA feature bits (similar to MISA) */
+ 	unsigned long isa;
+ 
++	/* SSCRATCH, STVEC, and SCOUNTEREN of Host */
++	unsigned long host_sscratch;
++	unsigned long host_stvec;
++	unsigned long host_scounteren;
++
++	/* CPU context of Host */
++	struct kvm_cpu_context host_context;
++
+ 	/* CPU context of Guest VCPU */
+ 	struct kvm_cpu_context guest_context;
+ 
+@@ -170,7 +178,7 @@ int kvm_riscv_vcpu_mmio_return(struct kvm_vcpu *vcpu, struct kvm_run *run);
+ int kvm_riscv_vcpu_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
+ 			struct kvm_cpu_trap *trap);
+ 
+-static inline void __kvm_riscv_switch_to(struct kvm_vcpu_arch *vcpu_arch) {}
++void __kvm_riscv_switch_to(struct kvm_vcpu_arch *vcpu_arch);
+ 
+ int kvm_riscv_vcpu_set_interrupt(struct kvm_vcpu *vcpu, unsigned int irq);
+ int kvm_riscv_vcpu_unset_interrupt(struct kvm_vcpu *vcpu, unsigned int irq);
+diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
+index db203442c08f..83425ce20804 100644
+--- a/arch/riscv/kernel/asm-offsets.c
++++ b/arch/riscv/kernel/asm-offsets.c
+@@ -7,7 +7,9 @@
+ #define GENERATING_ASM_OFFSETS
+ 
+ #include <linux/kbuild.h>
++#include <linux/mm.h>
+ #include <linux/sched.h>
++#include <asm/kvm_host.h>
+ #include <asm/thread_info.h>
+ #include <asm/ptrace.h>
+ 
+@@ -106,6 +108,82 @@ void asm_offsets(void)
+ 	OFFSET(PT_BADADDR, pt_regs, badaddr);
+ 	OFFSET(PT_CAUSE, pt_regs, cause);
+ 
++	OFFSET(KVM_ARCH_GUEST_ZERO, kvm_vcpu_arch, guest_context.zero);
++	OFFSET(KVM_ARCH_GUEST_RA, kvm_vcpu_arch, guest_context.ra);
++	OFFSET(KVM_ARCH_GUEST_SP, kvm_vcpu_arch, guest_context.sp);
++	OFFSET(KVM_ARCH_GUEST_GP, kvm_vcpu_arch, guest_context.gp);
++	OFFSET(KVM_ARCH_GUEST_TP, kvm_vcpu_arch, guest_context.tp);
++	OFFSET(KVM_ARCH_GUEST_T0, kvm_vcpu_arch, guest_context.t0);
++	OFFSET(KVM_ARCH_GUEST_T1, kvm_vcpu_arch, guest_context.t1);
++	OFFSET(KVM_ARCH_GUEST_T2, kvm_vcpu_arch, guest_context.t2);
++	OFFSET(KVM_ARCH_GUEST_S0, kvm_vcpu_arch, guest_context.s0);
++	OFFSET(KVM_ARCH_GUEST_S1, kvm_vcpu_arch, guest_context.s1);
++	OFFSET(KVM_ARCH_GUEST_A0, kvm_vcpu_arch, guest_context.a0);
++	OFFSET(KVM_ARCH_GUEST_A1, kvm_vcpu_arch, guest_context.a1);
++	OFFSET(KVM_ARCH_GUEST_A2, kvm_vcpu_arch, guest_context.a2);
++	OFFSET(KVM_ARCH_GUEST_A3, kvm_vcpu_arch, guest_context.a3);
++	OFFSET(KVM_ARCH_GUEST_A4, kvm_vcpu_arch, guest_context.a4);
++	OFFSET(KVM_ARCH_GUEST_A5, kvm_vcpu_arch, guest_context.a5);
++	OFFSET(KVM_ARCH_GUEST_A6, kvm_vcpu_arch, guest_context.a6);
++	OFFSET(KVM_ARCH_GUEST_A7, kvm_vcpu_arch, guest_context.a7);
++	OFFSET(KVM_ARCH_GUEST_S2, kvm_vcpu_arch, guest_context.s2);
++	OFFSET(KVM_ARCH_GUEST_S3, kvm_vcpu_arch, guest_context.s3);
++	OFFSET(KVM_ARCH_GUEST_S4, kvm_vcpu_arch, guest_context.s4);
++	OFFSET(KVM_ARCH_GUEST_S5, kvm_vcpu_arch, guest_context.s5);
++	OFFSET(KVM_ARCH_GUEST_S6, kvm_vcpu_arch, guest_context.s6);
++	OFFSET(KVM_ARCH_GUEST_S7, kvm_vcpu_arch, guest_context.s7);
++	OFFSET(KVM_ARCH_GUEST_S8, kvm_vcpu_arch, guest_context.s8);
++	OFFSET(KVM_ARCH_GUEST_S9, kvm_vcpu_arch, guest_context.s9);
++	OFFSET(KVM_ARCH_GUEST_S10, kvm_vcpu_arch, guest_context.s10);
++	OFFSET(KVM_ARCH_GUEST_S11, kvm_vcpu_arch, guest_context.s11);
++	OFFSET(KVM_ARCH_GUEST_T3, kvm_vcpu_arch, guest_context.t3);
++	OFFSET(KVM_ARCH_GUEST_T4, kvm_vcpu_arch, guest_context.t4);
++	OFFSET(KVM_ARCH_GUEST_T5, kvm_vcpu_arch, guest_context.t5);
++	OFFSET(KVM_ARCH_GUEST_T6, kvm_vcpu_arch, guest_context.t6);
++	OFFSET(KVM_ARCH_GUEST_SEPC, kvm_vcpu_arch, guest_context.sepc);
++	OFFSET(KVM_ARCH_GUEST_SSTATUS, kvm_vcpu_arch, guest_context.sstatus);
++	OFFSET(KVM_ARCH_GUEST_HSTATUS, kvm_vcpu_arch, guest_context.hstatus);
++	OFFSET(KVM_ARCH_GUEST_SCOUNTEREN, kvm_vcpu_arch, guest_csr.scounteren);
++
++	OFFSET(KVM_ARCH_HOST_ZERO, kvm_vcpu_arch, host_context.zero);
++	OFFSET(KVM_ARCH_HOST_RA, kvm_vcpu_arch, host_context.ra);
++	OFFSET(KVM_ARCH_HOST_SP, kvm_vcpu_arch, host_context.sp);
++	OFFSET(KVM_ARCH_HOST_GP, kvm_vcpu_arch, host_context.gp);
++	OFFSET(KVM_ARCH_HOST_TP, kvm_vcpu_arch, host_context.tp);
++	OFFSET(KVM_ARCH_HOST_T0, kvm_vcpu_arch, host_context.t0);
++	OFFSET(KVM_ARCH_HOST_T1, kvm_vcpu_arch, host_context.t1);
++	OFFSET(KVM_ARCH_HOST_T2, kvm_vcpu_arch, host_context.t2);
++	OFFSET(KVM_ARCH_HOST_S0, kvm_vcpu_arch, host_context.s0);
++	OFFSET(KVM_ARCH_HOST_S1, kvm_vcpu_arch, host_context.s1);
++	OFFSET(KVM_ARCH_HOST_A0, kvm_vcpu_arch, host_context.a0);
++	OFFSET(KVM_ARCH_HOST_A1, kvm_vcpu_arch, host_context.a1);
++	OFFSET(KVM_ARCH_HOST_A2, kvm_vcpu_arch, host_context.a2);
++	OFFSET(KVM_ARCH_HOST_A3, kvm_vcpu_arch, host_context.a3);
++	OFFSET(KVM_ARCH_HOST_A4, kvm_vcpu_arch, host_context.a4);
++	OFFSET(KVM_ARCH_HOST_A5, kvm_vcpu_arch, host_context.a5);
++	OFFSET(KVM_ARCH_HOST_A6, kvm_vcpu_arch, host_context.a6);
++	OFFSET(KVM_ARCH_HOST_A7, kvm_vcpu_arch, host_context.a7);
++	OFFSET(KVM_ARCH_HOST_S2, kvm_vcpu_arch, host_context.s2);
++	OFFSET(KVM_ARCH_HOST_S3, kvm_vcpu_arch, host_context.s3);
++	OFFSET(KVM_ARCH_HOST_S4, kvm_vcpu_arch, host_context.s4);
++	OFFSET(KVM_ARCH_HOST_S5, kvm_vcpu_arch, host_context.s5);
++	OFFSET(KVM_ARCH_HOST_S6, kvm_vcpu_arch, host_context.s6);
++	OFFSET(KVM_ARCH_HOST_S7, kvm_vcpu_arch, host_context.s7);
++	OFFSET(KVM_ARCH_HOST_S8, kvm_vcpu_arch, host_context.s8);
++	OFFSET(KVM_ARCH_HOST_S9, kvm_vcpu_arch, host_context.s9);
++	OFFSET(KVM_ARCH_HOST_S10, kvm_vcpu_arch, host_context.s10);
++	OFFSET(KVM_ARCH_HOST_S11, kvm_vcpu_arch, host_context.s11);
++	OFFSET(KVM_ARCH_HOST_T3, kvm_vcpu_arch, host_context.t3);
++	OFFSET(KVM_ARCH_HOST_T4, kvm_vcpu_arch, host_context.t4);
++	OFFSET(KVM_ARCH_HOST_T5, kvm_vcpu_arch, host_context.t5);
++	OFFSET(KVM_ARCH_HOST_T6, kvm_vcpu_arch, host_context.t6);
++	OFFSET(KVM_ARCH_HOST_SEPC, kvm_vcpu_arch, host_context.sepc);
++	OFFSET(KVM_ARCH_HOST_SSTATUS, kvm_vcpu_arch, host_context.sstatus);
++	OFFSET(KVM_ARCH_HOST_HSTATUS, kvm_vcpu_arch, host_context.hstatus);
++	OFFSET(KVM_ARCH_HOST_SSCRATCH, kvm_vcpu_arch, host_sscratch);
++	OFFSET(KVM_ARCH_HOST_STVEC, kvm_vcpu_arch, host_stvec);
++	OFFSET(KVM_ARCH_HOST_SCOUNTEREN, kvm_vcpu_arch, host_scounteren);
++
+ 	/*
+ 	 * THREAD_{F,X}* might be larger than a S-type offset can handle, but
+ 	 * these are used in performance-sensitive assembly so we can't resort
+diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
+index 37b5a59d4f4f..845579273727 100644
+--- a/arch/riscv/kvm/Makefile
++++ b/arch/riscv/kvm/Makefile
+@@ -8,6 +8,6 @@ ccflags-y := -Ivirt/kvm -Iarch/riscv/kvm
+ 
+ kvm-objs := $(common-objs-y)
+ 
+-kvm-objs += main.o vm.o mmu.o vcpu.o vcpu_exit.o
++kvm-objs += main.o vm.o mmu.o vcpu.o vcpu_exit.o vcpu_switch.o
+ 
+ obj-$(CONFIG_KVM)	+= kvm.o
+diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+index e38eedc784a7..43962a25fa55 100644
+--- a/arch/riscv/kvm/vcpu.c
++++ b/arch/riscv/kvm/vcpu.c
+@@ -580,14 +580,40 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+ 
+ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ {
+-	/* TODO: */
++	struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
++
++	csr_write(CSR_VSSTATUS, csr->vsstatus);
++	csr_write(CSR_HIE, csr->hie);
++	csr_write(CSR_VSTVEC, csr->vstvec);
++	csr_write(CSR_VSSCRATCH, csr->vsscratch);
++	csr_write(CSR_VSEPC, csr->vsepc);
++	csr_write(CSR_VSCAUSE, csr->vscause);
++	csr_write(CSR_VSTVAL, csr->vstval);
++	csr_write(CSR_HVIP, csr->hvip);
++	csr_write(CSR_VSATP, csr->vsatp);
+ 
+ 	kvm_riscv_stage2_update_hgatp(vcpu);
++
++	vcpu->cpu = cpu;
+ }
+ 
+ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
+ {
+-	/* TODO: */
++	struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
++
++	vcpu->cpu = -1;
++
++	csr_write(CSR_HGATP, 0);
++
++	csr->vsstatus = csr_read(CSR_VSSTATUS);
++	csr->hie = csr_read(CSR_HIE);
++	csr->vstvec = csr_read(CSR_VSTVEC);
++	csr->vsscratch = csr_read(CSR_VSSCRATCH);
++	csr->vsepc = csr_read(CSR_VSEPC);
++	csr->vscause = csr_read(CSR_VSCAUSE);
++	csr->vstval = csr_read(CSR_VSTVAL);
++	csr->hvip = csr_read(CSR_HVIP);
++	csr->vsatp = csr_read(CSR_VSATP);
+ }
+ 
+ static void kvm_riscv_check_vcpu_requests(struct kvm_vcpu *vcpu)
+diff --git a/arch/riscv/kvm/vcpu_switch.S b/arch/riscv/kvm/vcpu_switch.S
+new file mode 100644
+index 000000000000..5174b025ff4e
+--- /dev/null
++++ b/arch/riscv/kvm/vcpu_switch.S
+@@ -0,0 +1,203 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2019 Western Digital Corporation or its affiliates.
++ *
++ * Authors:
++ *     Anup Patel <anup.patel@wdc.com>
++ */
++
++#include <linux/linkage.h>
++#include <asm/asm.h>
++#include <asm/asm-offsets.h>
++#include <asm/csr.h>
++
++	.text
++	.altmacro
++	.option norelax
++
++ENTRY(__kvm_riscv_switch_to)
++	/* Save Host GPRs (except A0 and T0-T6) */
++	REG_S	ra, (KVM_ARCH_HOST_RA)(a0)
++	REG_S	sp, (KVM_ARCH_HOST_SP)(a0)
++	REG_S	gp, (KVM_ARCH_HOST_GP)(a0)
++	REG_S	tp, (KVM_ARCH_HOST_TP)(a0)
++	REG_S	s0, (KVM_ARCH_HOST_S0)(a0)
++	REG_S	s1, (KVM_ARCH_HOST_S1)(a0)
++	REG_S	a1, (KVM_ARCH_HOST_A1)(a0)
++	REG_S	a2, (KVM_ARCH_HOST_A2)(a0)
++	REG_S	a3, (KVM_ARCH_HOST_A3)(a0)
++	REG_S	a4, (KVM_ARCH_HOST_A4)(a0)
++	REG_S	a5, (KVM_ARCH_HOST_A5)(a0)
++	REG_S	a6, (KVM_ARCH_HOST_A6)(a0)
++	REG_S	a7, (KVM_ARCH_HOST_A7)(a0)
++	REG_S	s2, (KVM_ARCH_HOST_S2)(a0)
++	REG_S	s3, (KVM_ARCH_HOST_S3)(a0)
++	REG_S	s4, (KVM_ARCH_HOST_S4)(a0)
++	REG_S	s5, (KVM_ARCH_HOST_S5)(a0)
++	REG_S	s6, (KVM_ARCH_HOST_S6)(a0)
++	REG_S	s7, (KVM_ARCH_HOST_S7)(a0)
++	REG_S	s8, (KVM_ARCH_HOST_S8)(a0)
++	REG_S	s9, (KVM_ARCH_HOST_S9)(a0)
++	REG_S	s10, (KVM_ARCH_HOST_S10)(a0)
++	REG_S	s11, (KVM_ARCH_HOST_S11)(a0)
++
++	/* Save Host and Restore Guest SSTATUS */
++	REG_L	t0, (KVM_ARCH_GUEST_SSTATUS)(a0)
++	csrrw	t0, CSR_SSTATUS, t0
++	REG_S	t0, (KVM_ARCH_HOST_SSTATUS)(a0)
++
++	/* Save Host and Restore Guest HSTATUS */
++	REG_L	t1, (KVM_ARCH_GUEST_HSTATUS)(a0)
++	csrrw	t1, CSR_HSTATUS, t1
++	REG_S	t1, (KVM_ARCH_HOST_HSTATUS)(a0)
++
++	/* Save Host and Restore Guest SCOUNTEREN */
++	REG_L	t2, (KVM_ARCH_GUEST_SCOUNTEREN)(a0)
++	csrrw	t2, CSR_SCOUNTEREN, t2
++	REG_S	t2, (KVM_ARCH_HOST_SCOUNTEREN)(a0)
++
++	/* Save Host SSCRATCH and change it to struct kvm_vcpu_arch pointer */
++	csrrw	t3, CSR_SSCRATCH, a0
++	REG_S	t3, (KVM_ARCH_HOST_SSCRATCH)(a0)
++
++	/* Save Host STVEC and change it to return path */
++	la	t4, __kvm_switch_return
++	csrrw	t4, CSR_STVEC, t4
++	REG_S	t4, (KVM_ARCH_HOST_STVEC)(a0)
++
++	/* Restore Guest SEPC */
++	REG_L	t0, (KVM_ARCH_GUEST_SEPC)(a0)
++	csrw	CSR_SEPC, t0
++
++	/* Restore Guest GPRs (except A0) */
++	REG_L	ra, (KVM_ARCH_GUEST_RA)(a0)
++	REG_L	sp, (KVM_ARCH_GUEST_SP)(a0)
++	REG_L	gp, (KVM_ARCH_GUEST_GP)(a0)
++	REG_L	tp, (KVM_ARCH_GUEST_TP)(a0)
++	REG_L	t0, (KVM_ARCH_GUEST_T0)(a0)
++	REG_L	t1, (KVM_ARCH_GUEST_T1)(a0)
++	REG_L	t2, (KVM_ARCH_GUEST_T2)(a0)
++	REG_L	s0, (KVM_ARCH_GUEST_S0)(a0)
++	REG_L	s1, (KVM_ARCH_GUEST_S1)(a0)
++	REG_L	a1, (KVM_ARCH_GUEST_A1)(a0)
++	REG_L	a2, (KVM_ARCH_GUEST_A2)(a0)
++	REG_L	a3, (KVM_ARCH_GUEST_A3)(a0)
++	REG_L	a4, (KVM_ARCH_GUEST_A4)(a0)
++	REG_L	a5, (KVM_ARCH_GUEST_A5)(a0)
++	REG_L	a6, (KVM_ARCH_GUEST_A6)(a0)
++	REG_L	a7, (KVM_ARCH_GUEST_A7)(a0)
++	REG_L	s2, (KVM_ARCH_GUEST_S2)(a0)
++	REG_L	s3, (KVM_ARCH_GUEST_S3)(a0)
++	REG_L	s4, (KVM_ARCH_GUEST_S4)(a0)
++	REG_L	s5, (KVM_ARCH_GUEST_S5)(a0)
++	REG_L	s6, (KVM_ARCH_GUEST_S6)(a0)
++	REG_L	s7, (KVM_ARCH_GUEST_S7)(a0)
++	REG_L	s8, (KVM_ARCH_GUEST_S8)(a0)
++	REG_L	s9, (KVM_ARCH_GUEST_S9)(a0)
++	REG_L	s10, (KVM_ARCH_GUEST_S10)(a0)
++	REG_L	s11, (KVM_ARCH_GUEST_S11)(a0)
++	REG_L	t3, (KVM_ARCH_GUEST_T3)(a0)
++	REG_L	t4, (KVM_ARCH_GUEST_T4)(a0)
++	REG_L	t5, (KVM_ARCH_GUEST_T5)(a0)
++	REG_L	t6, (KVM_ARCH_GUEST_T6)(a0)
++
++	/* Restore Guest A0 */
++	REG_L	a0, (KVM_ARCH_GUEST_A0)(a0)
++
++	/* Resume Guest */
++	sret
++
++	/* Back to Host */
++	.align 2
++__kvm_switch_return:
++	/* Swap Guest A0 with SSCRATCH */
++	csrrw	a0, CSR_SSCRATCH, a0
++
++	/* Save Guest GPRs (except A0) */
++	REG_S	ra, (KVM_ARCH_GUEST_RA)(a0)
++	REG_S	sp, (KVM_ARCH_GUEST_SP)(a0)
++	REG_S	gp, (KVM_ARCH_GUEST_GP)(a0)
++	REG_S	tp, (KVM_ARCH_GUEST_TP)(a0)
++	REG_S	t0, (KVM_ARCH_GUEST_T0)(a0)
++	REG_S	t1, (KVM_ARCH_GUEST_T1)(a0)
++	REG_S	t2, (KVM_ARCH_GUEST_T2)(a0)
++	REG_S	s0, (KVM_ARCH_GUEST_S0)(a0)
++	REG_S	s1, (KVM_ARCH_GUEST_S1)(a0)
++	REG_S	a1, (KVM_ARCH_GUEST_A1)(a0)
++	REG_S	a2, (KVM_ARCH_GUEST_A2)(a0)
++	REG_S	a3, (KVM_ARCH_GUEST_A3)(a0)
++	REG_S	a4, (KVM_ARCH_GUEST_A4)(a0)
++	REG_S	a5, (KVM_ARCH_GUEST_A5)(a0)
++	REG_S	a6, (KVM_ARCH_GUEST_A6)(a0)
++	REG_S	a7, (KVM_ARCH_GUEST_A7)(a0)
++	REG_S	s2, (KVM_ARCH_GUEST_S2)(a0)
++	REG_S	s3, (KVM_ARCH_GUEST_S3)(a0)
++	REG_S	s4, (KVM_ARCH_GUEST_S4)(a0)
++	REG_S	s5, (KVM_ARCH_GUEST_S5)(a0)
++	REG_S	s6, (KVM_ARCH_GUEST_S6)(a0)
++	REG_S	s7, (KVM_ARCH_GUEST_S7)(a0)
++	REG_S	s8, (KVM_ARCH_GUEST_S8)(a0)
++	REG_S	s9, (KVM_ARCH_GUEST_S9)(a0)
++	REG_S	s10, (KVM_ARCH_GUEST_S10)(a0)
++	REG_S	s11, (KVM_ARCH_GUEST_S11)(a0)
++	REG_S	t3, (KVM_ARCH_GUEST_T3)(a0)
++	REG_S	t4, (KVM_ARCH_GUEST_T4)(a0)
++	REG_S	t5, (KVM_ARCH_GUEST_T5)(a0)
++	REG_S	t6, (KVM_ARCH_GUEST_T6)(a0)
++
++	/* Save Guest SEPC */
++	csrr	t0, CSR_SEPC
++	REG_S	t0, (KVM_ARCH_GUEST_SEPC)(a0)
++
++	/* Restore Host STVEC */
++	REG_L	t1, (KVM_ARCH_HOST_STVEC)(a0)
++	csrw	CSR_STVEC, t1
++
++	/* Save Guest A0 and Restore Host SSCRATCH */
++	REG_L	t2, (KVM_ARCH_HOST_SSCRATCH)(a0)
++	csrrw	t2, CSR_SSCRATCH, t2
++	REG_S	t2, (KVM_ARCH_GUEST_A0)(a0)
++
++	/* Save Guest and Restore Host SCOUNTEREN */
++	REG_L	t3, (KVM_ARCH_HOST_SCOUNTEREN)(a0)
++	csrrw	t3, CSR_SCOUNTEREN, t3
++	REG_S	t3, (KVM_ARCH_GUEST_SCOUNTEREN)(a0)
++
++	/* Save Guest and Restore Host HSTATUS */
++	REG_L	t4, (KVM_ARCH_HOST_HSTATUS)(a0)
++	csrrw	t4, CSR_HSTATUS, t4
++	REG_S	t4, (KVM_ARCH_GUEST_HSTATUS)(a0)
++
++	/* Save Guest and Restore Host SSTATUS */
++	REG_L	t5, (KVM_ARCH_HOST_SSTATUS)(a0)
++	csrrw	t5, CSR_SSTATUS, t5
++	REG_S	t5, (KVM_ARCH_GUEST_SSTATUS)(a0)
++
++	/* Restore Host GPRs (except A0 and T0-T6) */
++	REG_L	ra, (KVM_ARCH_HOST_RA)(a0)
++	REG_L	sp, (KVM_ARCH_HOST_SP)(a0)
++	REG_L	gp, (KVM_ARCH_HOST_GP)(a0)
++	REG_L	tp, (KVM_ARCH_HOST_TP)(a0)
++	REG_L	s0, (KVM_ARCH_HOST_S0)(a0)
++	REG_L	s1, (KVM_ARCH_HOST_S1)(a0)
++	REG_L	a1, (KVM_ARCH_HOST_A1)(a0)
++	REG_L	a2, (KVM_ARCH_HOST_A2)(a0)
++	REG_L	a3, (KVM_ARCH_HOST_A3)(a0)
++	REG_L	a4, (KVM_ARCH_HOST_A4)(a0)
++	REG_L	a5, (KVM_ARCH_HOST_A5)(a0)
++	REG_L	a6, (KVM_ARCH_HOST_A6)(a0)
++	REG_L	a7, (KVM_ARCH_HOST_A7)(a0)
++	REG_L	s2, (KVM_ARCH_HOST_S2)(a0)
++	REG_L	s3, (KVM_ARCH_HOST_S3)(a0)
++	REG_L	s4, (KVM_ARCH_HOST_S4)(a0)
++	REG_L	s5, (KVM_ARCH_HOST_S5)(a0)
++	REG_L	s6, (KVM_ARCH_HOST_S6)(a0)
++	REG_L	s7, (KVM_ARCH_HOST_S7)(a0)
++	REG_L	s8, (KVM_ARCH_HOST_S8)(a0)
++	REG_L	s9, (KVM_ARCH_HOST_S9)(a0)
++	REG_L	s10, (KVM_ARCH_HOST_S10)(a0)
++	REG_L	s11, (KVM_ARCH_HOST_S11)(a0)
++
++	/* Return to C code */
++	ret
++ENDPROC(__kvm_riscv_switch_to)
 -- 
-Regards,
-Sylwester
+2.25.1
+
