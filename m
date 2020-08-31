@@ -2,136 +2,83 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C87EC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3B4C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8952071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F3DE20936
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:34:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QGGOZ4O0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgHaNdQ (ORCPT
+        id S1726928AbgHaNek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 09:33:16 -0400
-Received: from mga05.intel.com ([192.55.52.43]:25348 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbgHaN2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 09:28:40 -0400
-IronPort-SDR: 30MqgE3vaJIDvUvR0a/xUyIm60Gs1ocCEKZuaoeOwovJWINkzSGF48pADUGA9/jbguT7sHq1lg
- 3Q98Rtk5wBuA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="241777786"
-X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
-   d="scan'208";a="241777786"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 06:28:31 -0700
-IronPort-SDR: 0a6RGUdFd+sq21CVvn9Wa8r3qdq8zINIwWTh3WaR5k6tS+7E1dxa8yrM/u9Ep82tNl+279rtDx
- B7Fxos0AYCww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
-   d="scan'208";a="476726708"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
-  by orsmga005.jf.intel.com with ESMTP; 31 Aug 2020 06:28:28 -0700
-Subject: Re: [PATCH 4/6] perf tools: Add FIFO file names as alternative
- options to --control
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20200829105015.10800-1-adrian.hunter@intel.com>
- <20200829105015.10800-5-adrian.hunter@intel.com>
- <20200831131927.GD406859@krava>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <660d6f71-f34d-dd3d-bc3d-3d2b9e868267@intel.com>
-Date:   Mon, 31 Aug 2020 16:27:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 31 Aug 2020 09:34:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgHaNei (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 09:34:38 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE1C7C061573;
+        Mon, 31 Aug 2020 06:34:37 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id d11so8455854ejt.13;
+        Mon, 31 Aug 2020 06:34:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=8GcnX02giYXdZ/RxHybOYa4+sVruRRxorMeqsk/TQCk=;
+        b=QGGOZ4O0RRDhLLBhcIWkF4selDYedgjgBwmFZefkhwkgFPW69QApZd6Xe9lEi3z3Wu
+         qlunSZr4e4pnvgwQyOzm18Gf83nQlTifrQUajZaREdHEgkpCB4NlyBAdtmxnwcnFi5ea
+         NJXv9bGN1DnpYoUqTx5Uaodao9fUNh03Pw6wOQBew+6hC6gfkRWkvJmBsL/e5yTMxvxn
+         wq2OVbv61Jp5NkmX6DRTksPy2GKxh4Vg6CJ3O5gCgalulhh3dkk45I0a9nCF+h+wSD1w
+         malhRijnmH8jh6ypRaBmucO9s6QjNbmfcN/k/+V2s2/EsBGF1/tbNhAittIflALlUDkO
+         nu/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=8GcnX02giYXdZ/RxHybOYa4+sVruRRxorMeqsk/TQCk=;
+        b=tXjEUK2eCTYWqGweCmIz704FBcxh0MWXP8K8KWsSHH4XdeJv2klrZWfuA39ZgFtmyl
+         vlsQygR5o8xtObfwuhJdaOfzIKOf57GmRjxyb4zsmK40fzBuZIK8RF/nRpgsj4AkAJRZ
+         fyrhhxfedoWrmo9XODeYzuOMOKZjKlq5QMEyyNbVLMwQn2zqo/k1SCIee7MZTJ0EruG0
+         zysRwIZ7a88UOX07kKNBN9kcgsn7hXWappDR6RjKGS7BOJMEqNdAABgQjfWV4w4VFJw5
+         qO31SPjgYGRYSHTD4O5swCbs8xRxauojZafXBsCITZNnZptMrPC3MDdm+ZOIpRg0nXzg
+         JuTA==
+X-Gm-Message-State: AOAM530VMylLstYX5veHv/cEab1MQc8A4Y8L7XmaJ5kJw8IOOy/I1NsR
+        8b0OeLD7oR991xGt7dP4VwXW9qcZY1tS24ia5iunDlqrX3SARg==
+X-Google-Smtp-Source: ABdhPJzGS7uMIR2j5ikMu1m2rX3E0IdVw7LkXrZ5SBIV6NJs9csiD8cvFJr3MYcyv27oEKFz6BkTrZYO3ReoslJUcvw=
+X-Received: by 2002:a17:907:205c:: with SMTP id pg28mr1163295ejb.22.1598880876175;
+ Mon, 31 Aug 2020 06:34:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200831131927.GD406859@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Marc Dionne <marc.c.dionne@gmail.com>
+Date:   Mon, 31 Aug 2020 10:34:24 -0300
+Message-ID: <CAB9dFdtALXb_51QiY1t1Tbng34gA4wBHQGwk4w8Fttw-ko05Ng@mail.gmail.com>
+Subject: "scheduling while atomic" BUG in iscsid since commit 1b66d253610c7
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        open-iscsi@googlegroups.com, linux-scsi@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/08/20 4:19 pm, Jiri Olsa wrote:
-> On Sat, Aug 29, 2020 at 01:50:13PM +0300, Adrian Hunter wrote:
-> 
-> SNIP
-> 
->> +		*p = '\0';
->> +
->> +	/*
->> +	 * O_RDWR avoids POLLHUPs which is necessary to allow the other
->> +	 * end of a FIFO to be repeatedly opened and closed.
->> +	 */
->> +	fd = open(s, O_RDWR | O_NONBLOCK | O_CLOEXEC);
->> +	if (fd < 0) {
->> +		pr_err("Failed to open '%s'\n", s);
->> +		ret = -errno;
->> +		goto out_free;
->> +	}
->> +	*ctl_fd = fd;
->> +	*ctl_fd_close = true;
->> +
->> +	if (p && *++p) {
->> +		/* O_RDWR | O_NONBLOCK means the other end need not be open */
->> +		fd = open(p, O_RDWR | O_NONBLOCK | O_CLOEXEC);
->> +		if (fd < 0) {
->> +			pr_err("Failed to open '%s'\n", p);
->> +			ret = -errno;
->> +			goto out_free;
->> +		}
->> +		*ctl_fd_ack = fd;
->> +	}
->> +
->> +out_free:
->> +	free(s);
->> +	return ret;
->> +}
->> +
->> +int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *ctl_fd_close)
->>  {
->>  	char *comma = NULL, *endptr = NULL;
->>  
->>  	if (strncmp(str, "fd:", 3))
->> -		return -EINVAL;
->> +		return evlist__parse_control_names(str, ctl_fd, ctl_fd_ack, ctl_fd_close);
-> 
-> do we want to mention somewhere that the fifo name is everything
-> except for 'fd:' ?
+The issue reported here:
+    https://lkml.org/lkml/2020/7/28/1085
+is still present as of 5.9-rc3; it was introduced in the 5.8 cycle.
 
-It is only mentioned in the documentation i.e.
+When the problem occurs, iscsid crashes and iscsi volumes fail to come
+up, which makes the machine quite sad if the volumes are critical to
+its function.
 
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -627,7 +627,9 @@ option. The -e option and this one can be mixed and matched.  Events
- can be grouped using the {} notation.
- endif::HAVE_LIBPFM[]
- 
-+--control=ctl-fifo[,ack-fifo]::
- --control=fd:ctl-fd[,ack-fd]::
-+ctl-fifo / ack-fifo are opened and used as ctl-fd / ack-fd as follows.
- Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
- 'disable': disable events). Measurements can be started with events disabled using
- --delay=-1 option. Optionally send control command completion ('ack\n') to ack-fd descriptor
+Added CCs for iscsi related maintainers and lists suggested by get_maintainer.
 
-> 
-> also how likely is that we will add another channel type that
-> will need another keyword (likd 'fd:')? I originaly thought
-> we'd use 'fifo:filename' for this ... would be great to somehow
-> avoid future confusions
-
-Sure, I will add fifo: in V2
-
-
-
+Thanks,
+Marc
