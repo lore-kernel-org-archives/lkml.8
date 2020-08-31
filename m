@@ -2,73 +2,75 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 007E3C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8BBC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D012620707
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:04:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598853858;
-	bh=NnBomJF+P1hXnoeqT9DRySTqDwl2STtl3QF9ZCVzzoM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xua6EDvrKKayi7tKVGfoxyYzYngtdMu0IkPkPwD29MS95tl/ZZNyW4XnZMprKEtF7
-	 lXLo5i2P91yzq/e9QdzYIdOnd734Fwl9st0S5WF7LJvQcKNgrByr2nO++Uxqlmkl0v
-	 C1Yp6HBV8b8AyQuwL795GoVqfJTEyZtclQUQQbYQ=
+	by mail.kernel.org (Postfix) with ESMTP id A5B8620707
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:06:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgHaGEO (ORCPT
+        id S1726048AbgHaGGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 02:04:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725835AbgHaGEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 02:04:07 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B544620707;
-        Mon, 31 Aug 2020 06:04:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598853847;
-        bh=NnBomJF+P1hXnoeqT9DRySTqDwl2STtl3QF9ZCVzzoM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S2+rh1rSWRWop5yL3AjWw91anQTqK3JTMTcf3tGTt+tVbB6O1ZZ30CXitQV7lDP8Y
-         P4qCiRnSx3gA5lr2s1LHQyeivoTDFCa+hEhrse98rs+a34CyyiopIKmTf97COR82XS
-         m9qBCM6ycq9nv0juFgZtaChYWlBUc6VLJa5deJjQ=
-Date:   Mon, 31 Aug 2020 14:04:01 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: imx8mq: Fix TMU interrupt property
-Message-ID: <20200831060401.GN4488@dragon>
-References: <20200829111248.321-1-krzk@kernel.org>
+        Mon, 31 Aug 2020 02:06:50 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10350 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725794AbgHaGGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 02:06:50 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 3C9F8B21441495282C45;
+        Mon, 31 Aug 2020 14:06:48 +0800 (CST)
+Received: from [10.136.114.67] (10.136.114.67) by smtp.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 31 Aug
+ 2020 14:06:46 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: prevent compressed file from being
+ disabled after releasing cblocks
+To:     Daeho Jeong <daeho43@gmail.com>
+CC:     Chao Yu <chao@kernel.org>, Daeho Jeong <daehojeong@google.com>,
+        <kernel-team@android.com>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20200828054629.583577-1-daeho43@gmail.com>
+ <61996dcd-6db1-13fc-8239-7e684f3ec49e@kernel.org>
+ <CACOAw_wc29AROzFhcGyC73i_vYZC1NmHP60uQfP7X-j6y6=kSA@mail.gmail.com>
+ <bd1a8ffa-83ff-b774-9bed-ed68025d0c7a@huawei.com>
+ <CACOAw_y=O35_SFxdfsVER4+a+n-eE6f48NXF6CsAnj=Ms-dgkA@mail.gmail.com>
+ <c4f58675-9df5-e3af-45fc-6fa924e3ee68@huawei.com>
+ <CACOAw_wZFAyyt8qPCFd-LQKpMGa1moyOqSBpUnaeM0z2Y5Z+cA@mail.gmail.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <78ffaf17-56a0-32bd-0bcf-212333b52f06@huawei.com>
+Date:   Mon, 31 Aug 2020 14:06:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200829111248.321-1-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CACOAw_wZFAyyt8qPCFd-LQKpMGa1moyOqSBpUnaeM0z2Y5Z+cA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.136.114.67]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 01:12:48PM +0200, Krzysztof Kozlowski wrote:
-> "interrupt" is not a valid property.  Using proper name fixes dtbs_check
-> warning:
+On 2020/8/31 11:55, Daeho Jeong wrote:
+>> - open(O_RDWR)
+>> - ioctl(FS_IOC_SETFLAGS, F2FS_COMPR_FL)
+>> - write()
+>> - ioctl(RELEASE_COMPRESS_BLOCKS) -- inode is immutable now
+>> - ioctl(FS_IOC_SETFLAGS, ~F2FS_COMPR_FL) -- Should we allow to update immutable inode?
+>> as we know, normally, immutable inode should deny open(O_WRONLY or O_RDWR) and later update.
+>>
 > 
->   arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-zest.dt.yaml: tmu@30260000: 'interrupts' is a required property
-> 
-> Fixes: e464fd2ba4d4 ("arm64: dts: imx8mq: enable the multi sensor TMU")
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> For this case, with this patch we'll return -EINVAL for
+> ioctl(FS_IOC_SETFLAGS, ~F2FS_COMPR_FL).
+> I thought RESERVE_COMPRESS_BLOCKS ioctl is always required to get the
+> file to normal mode after RELEASE_COMPRESS_BLOCKS is called.
 
-Applied, thanks.
+That's an example, after compressed block release, shouldn't we disallow other ioctl
+interface which updates immutable inode?
+
+> .
+> 
