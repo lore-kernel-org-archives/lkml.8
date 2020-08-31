@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB9DC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 01:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE66C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 01:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59E282064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 01:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFA992064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 01:37:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgIABhL (ORCPT
+        id S1726400AbgIABhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 21:37:11 -0400
+        Mon, 31 Aug 2020 21:37:15 -0400
 Received: from mga12.intel.com ([192.55.52.136]:54001 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbgIABhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 21:37:10 -0400
-IronPort-SDR: 1AJYcxjdMTiduitSLihIpbuEBh9CSol6nNLURvicYsJIOUSSP6/i6mq+rqrfhIfD2TFr7QpTRz
- DbjeH83oyfUg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="136608955"
+        id S1725941AbgIABhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 21:37:14 -0400
+IronPort-SDR: b1TQQjaBQDSDWRwOfQYVc1fJaYIEVc98c0Mxmylulg5dmTOC1m2KZcPA32CzRBCEsZAGQEAA2+
+ tYiDr5l/1/TQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="136608966"
 X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
-   d="scan'208";a="136608955"
+   d="scan'208";a="136608966"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 18:37:09 -0700
-IronPort-SDR: RQC9SIDPAchTniEYKy2+rhW87zy1XH1PiVe8qO79TuSbA8KDY5dwHDPxqvVoVyXdsOMznx1rvc
- egEv1ctohclA==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 18:37:13 -0700
+IronPort-SDR: jL5ldI/3OnHsq+A4LgqWDrckXyvBnGayk4IFMzysijZaWM6obnU4j2m5Lcu6QUU45RCELEWOL8
+ mJKvLwlQZLWA==
 X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
-   d="scan'208";a="476984112"
+   d="scan'208";a="476984142"
 Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 18:37:04 -0700
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 18:37:09 -0700
 From:   Bard Liao <yung-chuan.liao@linux.intel.com>
 To:     alsa-devel@alsa-project.org, vkoul@kernel.org
 Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
@@ -43,9 +43,9 @@ Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
         ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
         pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
         mengdong.lin@intel.com, bard.liao@intel.com
-Subject: [PATCH v4 1/3] ASoC: codecs: soundwire: remove port_ready[] usage from codecs.
-Date:   Mon, 31 Aug 2020 21:43:16 +0800
-Message-Id: <20200831134318.11443-2-yung-chuan.liao@linux.intel.com>
+Subject: [PATCH v4 2/3] soundwire: add definition for maximum number of ports
+Date:   Mon, 31 Aug 2020 21:43:17 +0800
+Message-Id: <20200831134318.11443-3-yung-chuan.liao@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200831134318.11443-1-yung-chuan.liao@linux.intel.com>
 References: <20200831134318.11443-1-yung-chuan.liao@linux.intel.com>
@@ -56,308 +56,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-port_ready will be changed to a fixed array in sdw.h and all initialization
-work will be done at soundwire side in the following patch. So remove them
-from codec drivers.
+A Device may have at most 15 physical ports (DP0, DP1..DP14).
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
 Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
 Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
 ---
- sound/soc/codecs/max98373-sdw.c | 15 +--------------
- sound/soc/codecs/rt1308-sdw.c   | 14 +-------------
- sound/soc/codecs/rt5682-sdw.c   | 15 +--------------
- sound/soc/codecs/rt700-sdw.c    | 15 +--------------
- sound/soc/codecs/rt711-sdw.c    | 15 +--------------
- sound/soc/codecs/rt715-sdw.c    | 33 +--------------------------------
- 6 files changed, 6 insertions(+), 101 deletions(-)
+ include/linux/soundwire/sdw.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/max98373-sdw.c b/sound/soc/codecs/max98373-sdw.c
-index 5fe724728e84..a3ec92775ea7 100644
---- a/sound/soc/codecs/max98373-sdw.c
-+++ b/sound/soc/codecs/max98373-sdw.c
-@@ -282,7 +282,7 @@ static const struct dev_pm_ops max98373_pm = {
- static int max98373_read_prop(struct sdw_slave *slave)
- {
- 	struct sdw_slave_prop *prop = &slave->prop;
--	int nval, i, num_of_ports;
-+	int nval, i;
- 	u32 bit;
- 	unsigned long addr;
- 	struct sdw_dpn_prop *dpn;
-@@ -295,7 +295,6 @@ static int max98373_read_prop(struct sdw_slave *slave)
- 	prop->clk_stop_timeout = 20;
+diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
+index 76052f12c9f7..0aa4c6af7554 100644
+--- a/include/linux/soundwire/sdw.h
++++ b/include/linux/soundwire/sdw.h
+@@ -38,7 +38,8 @@ struct sdw_slave;
+ #define SDW_FRAME_CTRL_BITS		48
+ #define SDW_MAX_DEVICES			11
  
- 	nval = hweight32(prop->source_ports);
--	num_of_ports = nval;
- 	prop->src_dpn_prop = devm_kcalloc(&slave->dev, nval,
- 					  sizeof(*prop->src_dpn_prop),
- 					  GFP_KERNEL);
-@@ -315,7 +314,6 @@ static int max98373_read_prop(struct sdw_slave *slave)
+-#define SDW_VALID_PORT_RANGE(n)		((n) <= 14 && (n) >= 1)
++#define SDW_MAX_PORTS			15
++#define SDW_VALID_PORT_RANGE(n)		((n) < SDW_MAX_PORTS && (n) >= 1)
  
- 	/* do this again for sink now */
- 	nval = hweight32(prop->sink_ports);
--	num_of_ports += nval;
- 	prop->sink_dpn_prop = devm_kcalloc(&slave->dev, nval,
- 					   sizeof(*prop->sink_dpn_prop),
- 					   GFP_KERNEL);
-@@ -333,17 +331,6 @@ static int max98373_read_prop(struct sdw_slave *slave)
- 		i++;
- 	}
- 
--	/* Allocate port_ready based on num_of_ports */
--	slave->port_ready = devm_kcalloc(&slave->dev, num_of_ports,
--					 sizeof(*slave->port_ready),
--					 GFP_KERNEL);
--	if (!slave->port_ready)
--		return -ENOMEM;
--
--	/* Initialize completion */
--	for (i = 0; i < num_of_ports; i++)
--		init_completion(&slave->port_ready[i]);
--
- 	/* set the timeout values */
- 	prop->clk_stop_timeout = 20;
- 
-diff --git a/sound/soc/codecs/rt1308-sdw.c b/sound/soc/codecs/rt1308-sdw.c
-index b0ba0d2acbdd..09c69dbab12a 100644
---- a/sound/soc/codecs/rt1308-sdw.c
-+++ b/sound/soc/codecs/rt1308-sdw.c
-@@ -118,7 +118,7 @@ static int rt1308_clock_config(struct device *dev)
- static int rt1308_read_prop(struct sdw_slave *slave)
- {
- 	struct sdw_slave_prop *prop = &slave->prop;
--	int nval, i, num_of_ports = 1;
-+	int nval, i;
- 	u32 bit;
- 	unsigned long addr;
- 	struct sdw_dpn_prop *dpn;
-@@ -131,7 +131,6 @@ static int rt1308_read_prop(struct sdw_slave *slave)
- 
- 	/* for sink */
- 	nval = hweight32(prop->sink_ports);
--	num_of_ports += nval;
- 	prop->sink_dpn_prop = devm_kcalloc(&slave->dev, nval,
- 						sizeof(*prop->sink_dpn_prop),
- 						GFP_KERNEL);
-@@ -149,17 +148,6 @@ static int rt1308_read_prop(struct sdw_slave *slave)
- 		i++;
- 	}
- 
--	/* Allocate port_ready based on num_of_ports */
--	slave->port_ready = devm_kcalloc(&slave->dev, num_of_ports,
--					sizeof(*slave->port_ready),
--					GFP_KERNEL);
--	if (!slave->port_ready)
--		return -ENOMEM;
--
--	/* Initialize completion */
--	for (i = 0; i < num_of_ports; i++)
--		init_completion(&slave->port_ready[i]);
--
- 	/* set the timeout values */
- 	prop->clk_stop_timeout = 20;
- 
-diff --git a/sound/soc/codecs/rt5682-sdw.c b/sound/soc/codecs/rt5682-sdw.c
-index 94bf6bee78e6..b7c97aba7f17 100644
---- a/sound/soc/codecs/rt5682-sdw.c
-+++ b/sound/soc/codecs/rt5682-sdw.c
-@@ -537,7 +537,7 @@ static int rt5682_update_status(struct sdw_slave *slave,
- static int rt5682_read_prop(struct sdw_slave *slave)
- {
- 	struct sdw_slave_prop *prop = &slave->prop;
--	int nval, i, num_of_ports = 1;
-+	int nval, i;
- 	u32 bit;
- 	unsigned long addr;
- 	struct sdw_dpn_prop *dpn;
-@@ -549,7 +549,6 @@ static int rt5682_read_prop(struct sdw_slave *slave)
- 	prop->sink_ports = 0x2;		/* BITMAP: 00000010 */
- 
- 	nval = hweight32(prop->source_ports);
--	num_of_ports += nval;
- 	prop->src_dpn_prop = devm_kcalloc(&slave->dev, nval,
- 					  sizeof(*prop->src_dpn_prop),
- 					  GFP_KERNEL);
-@@ -569,7 +568,6 @@ static int rt5682_read_prop(struct sdw_slave *slave)
- 
- 	/* do this again for sink now */
- 	nval = hweight32(prop->sink_ports);
--	num_of_ports += nval;
- 	prop->sink_dpn_prop = devm_kcalloc(&slave->dev, nval,
- 					   sizeof(*prop->sink_dpn_prop),
- 					   GFP_KERNEL);
-@@ -587,17 +585,6 @@ static int rt5682_read_prop(struct sdw_slave *slave)
- 		i++;
- 	}
- 
--	/* Allocate port_ready based on num_of_ports */
--	slave->port_ready = devm_kcalloc(&slave->dev, num_of_ports,
--					 sizeof(*slave->port_ready),
--					 GFP_KERNEL);
--	if (!slave->port_ready)
--		return -ENOMEM;
--
--	/* Initialize completion */
--	for (i = 0; i < num_of_ports; i++)
--		init_completion(&slave->port_ready[i]);
--
- 	/* set the timeout values */
- 	prop->clk_stop_timeout = 20;
- 
-diff --git a/sound/soc/codecs/rt700-sdw.c b/sound/soc/codecs/rt700-sdw.c
-index 4d14048d1197..b19fbcc12c69 100644
---- a/sound/soc/codecs/rt700-sdw.c
-+++ b/sound/soc/codecs/rt700-sdw.c
-@@ -333,7 +333,7 @@ static int rt700_update_status(struct sdw_slave *slave,
- static int rt700_read_prop(struct sdw_slave *slave)
- {
- 	struct sdw_slave_prop *prop = &slave->prop;
--	int nval, i, num_of_ports = 1;
-+	int nval, i;
- 	u32 bit;
- 	unsigned long addr;
- 	struct sdw_dpn_prop *dpn;
-@@ -345,7 +345,6 @@ static int rt700_read_prop(struct sdw_slave *slave)
- 	prop->sink_ports = 0xA; /* BITMAP:  00001010 */
- 
- 	nval = hweight32(prop->source_ports);
--	num_of_ports += nval;
- 	prop->src_dpn_prop = devm_kcalloc(&slave->dev, nval,
- 						sizeof(*prop->src_dpn_prop),
- 						GFP_KERNEL);
-@@ -365,7 +364,6 @@ static int rt700_read_prop(struct sdw_slave *slave)
- 
- 	/* do this again for sink now */
- 	nval = hweight32(prop->sink_ports);
--	num_of_ports += nval;
- 	prop->sink_dpn_prop = devm_kcalloc(&slave->dev, nval,
- 						sizeof(*prop->sink_dpn_prop),
- 						GFP_KERNEL);
-@@ -383,17 +381,6 @@ static int rt700_read_prop(struct sdw_slave *slave)
- 		i++;
- 	}
- 
--	/* Allocate port_ready based on num_of_ports */
--	slave->port_ready = devm_kcalloc(&slave->dev, num_of_ports,
--					sizeof(*slave->port_ready),
--					GFP_KERNEL);
--	if (!slave->port_ready)
--		return -ENOMEM;
--
--	/* Initialize completion */
--	for (i = 0; i < num_of_ports; i++)
--		init_completion(&slave->port_ready[i]);
--
- 	/* set the timeout values */
- 	prop->clk_stop_timeout = 20;
- 
-diff --git a/sound/soc/codecs/rt711-sdw.c b/sound/soc/codecs/rt711-sdw.c
-index 45b928954b58..dc4a2b482462 100644
---- a/sound/soc/codecs/rt711-sdw.c
-+++ b/sound/soc/codecs/rt711-sdw.c
-@@ -337,7 +337,7 @@ static int rt711_update_status(struct sdw_slave *slave,
- static int rt711_read_prop(struct sdw_slave *slave)
- {
- 	struct sdw_slave_prop *prop = &slave->prop;
--	int nval, i, num_of_ports = 1;
-+	int nval, i;
- 	u32 bit;
- 	unsigned long addr;
- 	struct sdw_dpn_prop *dpn;
-@@ -349,7 +349,6 @@ static int rt711_read_prop(struct sdw_slave *slave)
- 	prop->sink_ports = 0x8; /* BITMAP:  00001000 */
- 
- 	nval = hweight32(prop->source_ports);
--	num_of_ports += nval;
- 	prop->src_dpn_prop = devm_kcalloc(&slave->dev, nval,
- 						sizeof(*prop->src_dpn_prop),
- 						GFP_KERNEL);
-@@ -369,7 +368,6 @@ static int rt711_read_prop(struct sdw_slave *slave)
- 
- 	/* do this again for sink now */
- 	nval = hweight32(prop->sink_ports);
--	num_of_ports += nval;
- 	prop->sink_dpn_prop = devm_kcalloc(&slave->dev, nval,
- 						sizeof(*prop->sink_dpn_prop),
- 						GFP_KERNEL);
-@@ -387,17 +385,6 @@ static int rt711_read_prop(struct sdw_slave *slave)
- 		i++;
- 	}
- 
--	/* Allocate port_ready based on num_of_ports */
--	slave->port_ready = devm_kcalloc(&slave->dev, num_of_ports,
--					sizeof(*slave->port_ready),
--					GFP_KERNEL);
--	if (!slave->port_ready)
--		return -ENOMEM;
--
--	/* Initialize completion */
--	for (i = 0; i < num_of_ports; i++)
--		init_completion(&slave->port_ready[i]);
--
- 	/* set the timeout values */
- 	prop->clk_stop_timeout = 20;
- 
-diff --git a/sound/soc/codecs/rt715-sdw.c b/sound/soc/codecs/rt715-sdw.c
-index d11b23d6b240..d8ed07305ffc 100644
---- a/sound/soc/codecs/rt715-sdw.c
-+++ b/sound/soc/codecs/rt715-sdw.c
-@@ -431,7 +431,7 @@ static int rt715_update_status(struct sdw_slave *slave,
- static int rt715_read_prop(struct sdw_slave *slave)
- {
- 	struct sdw_slave_prop *prop = &slave->prop;
--	int nval, i, num_of_ports = 1;
-+	int nval, i;
- 	u32 bit;
- 	unsigned long addr;
- 	struct sdw_dpn_prop *dpn;
-@@ -443,7 +443,6 @@ static int rt715_read_prop(struct sdw_slave *slave)
- 	prop->sink_ports = 0x0;	/* BITMAP:  00000000 */
- 
- 	nval = hweight32(prop->source_ports);
--	num_of_ports += nval;
- 	prop->src_dpn_prop = devm_kcalloc(&slave->dev, nval,
- 					sizeof(*prop->src_dpn_prop),
- 					GFP_KERNEL);
-@@ -460,36 +459,6 @@ static int rt715_read_prop(struct sdw_slave *slave)
- 		i++;
- 	}
- 
--	/* do this again for sink now */
--	nval = hweight32(prop->sink_ports);
--	num_of_ports += nval;
--	prop->sink_dpn_prop = devm_kcalloc(&slave->dev, nval,
--					sizeof(*prop->sink_dpn_prop),
--					GFP_KERNEL);
--	if (!prop->sink_dpn_prop)
--		return -ENOMEM;
--
--	dpn = prop->sink_dpn_prop;
--	i = 0;
--	addr = prop->sink_ports;
--	for_each_set_bit(bit, &addr, 32) {
--		dpn[i].num = bit;
--		dpn[i].simple_ch_prep_sm = true;
--		dpn[i].ch_prep_timeout = 10;
--		i++;
--	}
--
--	/* Allocate port_ready based on num_of_ports */
--	slave->port_ready = devm_kcalloc(&slave->dev, num_of_ports,
--					sizeof(*slave->port_ready),
--					GFP_KERNEL);
--	if (!slave->port_ready)
--		return -ENOMEM;
--
--	/* Initialize completion */
--	for (i = 0; i < num_of_ports; i++)
--		init_completion(&slave->port_ready[i]);
--
- 	/* set the timeout values */
- 	prop->clk_stop_timeout = 20;
- 
+ enum {
+ 	SDW_PORT_DIRN_SINK = 0,
 -- 
 2.17.1
 
