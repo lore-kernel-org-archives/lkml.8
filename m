@@ -2,109 +2,124 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7274C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE12C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8BDC2098B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3392098B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:54:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kurhuhNu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgHaJyc (ORCPT
+        id S1726540AbgHaJyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 05:54:32 -0400
-Received: from mga18.intel.com ([134.134.136.126]:8673 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbgHaJyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 05:54:23 -0400
-IronPort-SDR: YlDNsN4uMJlydttRXC4rH0cd0bCi3szeHTQgUt9xBwMigpYvDrIgiQshQPgfnYVHxTm7DZ9aoH
- U23Kor91b3lw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="144618033"
-X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
-   d="scan'208";a="144618033"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 02:54:21 -0700
-IronPort-SDR: d5gLELt2lTQRUIXEBSdc6fdcZ5b13vzz31me6iNf44HTYjNYlHivhJ5Z9cNkWZ8I1LumS8y7q8
- I+qRufJk6oXA==
-X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
-   d="scan'208";a="314297172"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 02:54:18 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id DFC1B204F9; Mon, 31 Aug 2020 12:54:15 +0300 (EEST)
-Date:   Mon, 31 Aug 2020 12:54:15 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        linux-media@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
-        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
-Subject: Re: [PATCH v6 1/6] i2c: Allow an ACPI driver to manage the device's
- power state during probe
-Message-ID: <20200831095415.GG31019@paasikivi.fi.intel.com>
-References: <20200826115432.6103-1-sakari.ailus@linux.intel.com>
- <20200826115432.6103-2-sakari.ailus@linux.intel.com>
- <20200828083832.GE1343@ninjato>
- <20200831082305.GD31019@paasikivi.fi.intel.com>
- <20200831093109.GA4632@kunai>
+        Mon, 31 Aug 2020 05:54:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59048 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726334AbgHaJyl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 05:54:41 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D6A2C061573;
+        Mon, 31 Aug 2020 02:54:22 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id g6so5882570ljn.11;
+        Mon, 31 Aug 2020 02:54:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TSm8Xir2qHLM4KnvUNa9QAiKGDLz5dH6Zq6NNkg0IXQ=;
+        b=kurhuhNueqi6Go7ZBSzHHlC2VATfsEJ18kcOG0TtB7QnuhDk2JAqZNyWAev7TBzYkz
+         CiP5BBA5nDhYGxWPvdTHEM3NhEE76P/YLA+6sVzE9ptTSR4lvQ6U9Fz3VCaIPnv32BAL
+         FZ6kHKgDbxvcOlstFWUomxLz9Gs2BNXfsfP9Gg6Z0voNpQrkTh1RmAnL5VAwZthtO2fg
+         I1B/orxzR62QrpHX62BXGDknIrnk2A7vD1sCjZnI8chUENqi6RoZGQ8FvyKNJPYkZ+bb
+         OKa9i4zJ4xkwbKdT3lpLqL/M4W2gl+hmPOVXCmvkZ8ZiSG9OYoJIcawMs5XiuHyCSFjy
+         7Aug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TSm8Xir2qHLM4KnvUNa9QAiKGDLz5dH6Zq6NNkg0IXQ=;
+        b=SnN6pldGoJQInx/m1zeGmteApodgzbnlZJmK2f5pYudoBhyVOdvKvoFg5N5sdS4S5S
+         D6dsnbGmgY4ooudUKVMW/uocyfaW70OwF9D6Fhw53GrvqTRp+h2OTlvuArTqcg6Lo8vz
+         AZmhBvGagNx3BG8kLa6zUqcTzVae0P4hmRYF8SJNVFOwGlA5Di12RkqW606ie/revFGw
+         20/myo5p31UNvdfJoCQdnPNAg66jIsz5Vn9IJXW7lPjwuCFKijKEXUjnSUhM8TrSktZK
+         uUOGyf9DEAcs1pvdPnsvbR1hdy2Q05LAKhQhTsQLaBgutc7C4CKQbvXZtXju4gk3IBbI
+         PVxA==
+X-Gm-Message-State: AOAM5333RUoiFysFOzYMo0KGwZH15LB0KdqOXgTW3trd1BSiNIzey+Z5
+        6C1Jx9rtFr2IIaTtg33URT8oxyTUPKM=
+X-Google-Smtp-Source: ABdhPJy8KZjk72a5eEDT0IuSYdmnLR/C/55LTP2RBCq87JBLCuN6xfMUdvGBtMMHsODr7dV4jftXMg==
+X-Received: by 2002:a2e:b4f4:: with SMTP id s20mr251794ljm.339.1598867660906;
+        Mon, 31 Aug 2020 02:54:20 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id f20sm1863068lfk.70.2020.08.31.02.54.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Aug 2020 02:54:20 -0700 (PDT)
+Subject: Re: [PATCH 3/3] ARM: tegra: Pass multiple versions in
+ opp-supported-hw property
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1598442485.git.viresh.kumar@linaro.org>
+ <b13f1b112532fe0189d1f7bbb50903d9e1defb07.1598442485.git.viresh.kumar@linaro.org>
+ <b0763074-859f-fccb-dde4-03d1a50ea021@gmail.com>
+ <20200831043908.mtw4dglybcmcabjb@vireshk-i7>
+ <0da380c2-9161-d450-afd2-4b159c8cfb7d@gmail.com>
+ <20200831084111.6udzvrdonxgzju4l@vireshk-i7>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <cbfa012b-8f50-e460-972c-c51fa52bb858@gmail.com>
+Date:   Mon, 31 Aug 2020 12:54:19 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20200831084111.6udzvrdonxgzju4l@vireshk-i7>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200831093109.GA4632@kunai>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 11:31:09AM +0200, Wolfram Sang wrote:
+31.08.2020 11:41, Viresh Kumar пишет:
+> On 31-08-20, 10:54, Dmitry Osipenko wrote:
+>> 31.08.2020 07:39, Viresh Kumar пишет:
+>> ...
+>>>>> Dmitry, I think there is further scope of simplifying stuff here by
+>>>>> using the opp-microvolt-<name> property and corresponding
+>>>>> dev_pm_opp_set_prop_name() call.
+>>>
+>>> Any inputs on this Dmitry ?
+>>
+>> Could you please give an example?
 > 
-> > This patchset is really about changing the default of ACPI powering up I�C
-> > devices. On OF the drivers are indeed responsible for that.
+> There are many users of it in the kernel. grep for "opp-microvolt-" in
+> the DT files and you will see.
 > 
-> So, maybe it makes sense then to move from 'device_property_present()'
-> to 'acpi_dev_get_property()' or something alike? To clearly tell this
-
-I'll do that for v7 soon.
-
-> binding is expected to be used with ACPI only. Then, we can skip this
-> discussion now and postpone it to when someone wants to use it with DT.
-> Which is hopefully never. Or does this approach have drawbacks?
-
-The same issue in principle could be there on DT, too, as the cameras are
-the same. There are a few sensor drivers supporting DT that currently don't
-access the device in probe to avoid having to power it on. For cameras I
-suppose that's just fine but I'd be hesitant changing the behaviour of e.g.
-the at24 driver to support that use case without making it somehow
-configurable.
-
+> The use of this property is to specific multiple microvolt properties
+> to the same frequency without a need to create separate nodes for them
+> all. The right microvolt property will be selected based on the call
+> made to dev_pm_opp_set_prop_name(), search for that too in kernel.
 > 
-> > My original series had a field in struct device_driver for this purpose but
-> > Greg K-H suggested moving it to I�C instead:
-> > 
-> > <URL:https://lore.kernel.org/linux-acpi/20190826084343.GA1095@kroah.com/>
-> 
-> Ok, we can still factor it out in the unlikely case it needs to be done
-> again.
-> 
-> I still have the question via which tree this should go upstream?
-> It is probably more I2C than ACPI?
 
-I think so.
+It's not clear to me how it could be applicable to the Tegra CPU OPP
+because Tegra depends on a combination of SPEEDO + PROCESS versions.
 
-Rafael, would you be fine with this set being merged through the I�C tree?
-There's a single patch adding an ACPI function there.
-
--- 
-Sakari Ailus
+It's not like all voltages are the same for all OPPs that have the same
+PROCESS ID, otherwise it indeed would be nice to have
+"opp-microvolt-process0", but unfortunately this variant is not suitable
+for Tegra because some freqs have different voltages using the same
+PROCESS ID and the same applies to the SPEEDO ID.
