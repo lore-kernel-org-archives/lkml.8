@@ -2,124 +2,127 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D64C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 05:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC408C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E41A520719
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 05:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9803720707
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:00:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hzSoGJdV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t3rUgXe/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbgHaF6l (ORCPT
+        id S1726467AbgHaGAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 01:58:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50758 "EHLO
+        Mon, 31 Aug 2020 02:00:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgHaF6h (ORCPT
+        with ESMTP id S1725891AbgHaGAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 01:58:37 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D3DC061575
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 22:58:36 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id d19so31840pgl.10
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 22:58:36 -0700 (PDT)
+        Mon, 31 Aug 2020 02:00:21 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5838C061573
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 23:00:20 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id x2so2597047vsp.13
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 23:00:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=H6AsLRpDHwakDmuXrbGWlIm7s+3UR/W0JknRh2YDfh4=;
-        b=hzSoGJdVJFRfVadzVGFkdQzGa0rAgCZxrxlqYLE051aqDUx0LJxBy0I2Pdmv8pwHuU
-         DwNzkona5VKhZ46ENMuGjoCwsHU1v+yBSm3P24B8YKXx50N9bsqT2VCenkt1U/SDNjeE
-         D3yzzwbTd2L0AIUT51McE3J0pNiuKL59rLHRMGYtgBj8rG37ySSCvzlQlriOHSkUn8tp
-         waJG/BfzTpgOkzohwxav2k4ItlgCPwbed2qxlSDRkyC6/fKLJxKQ+2523ymDD10YNddZ
-         P4SB4dZYGkgjdMCYUlcOAnFURre+mHzZ1WB45GdpsnN7CgBJdXkYMa6ntYlCcJyuRZA5
-         TkgQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jPR6E22q3UvNsEW0qxCDu2FmZX7UARU+hYhcDGZGweA=;
+        b=t3rUgXe/X9VtlQzwBgCEyPm7ABnuByKRqwNbksXDycnu+HFH/DK7iXQgNZxmIbPWLE
+         TZdz75AD0/N1v06ZgeKjXZ5yRHjb6Mehm39GJIZ4E8jaB9syZeEBBSgWMghzPZPatTi1
+         QMucj1c4u1eveuP3kgRLsTqFdI8CiXA9x8LzpUw66pUgg78FPuEEQsKzJASpDiSdlVKL
+         cPn0omDEIwOipWkmNGwYj4muoYZBvyb1aZb/h3hfyYtNXsJlrUye8xiDkE59HHI6sGTg
+         U9eEsGA/yuEf9HAxc0t8OQITM0/PBD/CFf2NABRFisOMPKF5WDx0a6RNmRkTkZdFv4dR
+         bHFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=H6AsLRpDHwakDmuXrbGWlIm7s+3UR/W0JknRh2YDfh4=;
-        b=P71vSIou+AVwvpl4cH17Oya7WimSaPunSbH4U9wH3JCaPKK01TDZjfVEdECdyAXqLr
-         SqNHdI3kzb8HX0ftG8YJM/mbLrKU1Aym2IqR8yda0awSjgoNulR2jl6p43yDio2IKcDO
-         HuU6nCn6ZJ9Y0sHwUxEEjLzhBjPNbw+BzahsNZ87zEcYYGnqIeGpudz/qW4YNcGZrTlZ
-         QrtoImkLzoPSO0Zc32NIzZyH/xYS+i4cPQLd0FUWTqY47aeZkFiXSKG2OaRtY4fIuKIJ
-         PV+/jSiVPKpBKN4F8MEx7rBk9CqDCfjzd7jikSrh9aSermpe1ymWfCEZnCsmyndFFMOO
-         EGdQ==
-X-Gm-Message-State: AOAM530h52llVQ3/08CQDgCWiacqoO8fGlS/9MwCD1EtjyxqvuBrwWS6
-        0Ov5XHXZkXj40ptSBjnZMZlnpg==
-X-Google-Smtp-Source: ABdhPJwGXbHMsM66b23MXrHGO0zax4LzzRWevubMgGap8kSljvyXheQp6cNZ81GCwAXsKxIxJRe9dg==
-X-Received: by 2002:a63:5161:: with SMTP id r33mr91670pgl.242.1598853516288;
-        Sun, 30 Aug 2020 22:58:36 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id 79sm6549290pfw.97.2020.08.30.22.58.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 30 Aug 2020 22:58:35 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] opp: Prevent memory leak in dev_pm_opp_attach_genpd()
-Date:   Mon, 31 Aug 2020 11:28:28 +0530
-Message-Id: <1cadaccf3728ce84d5d0af50a48ce8caaa29eb53.1598853505.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jPR6E22q3UvNsEW0qxCDu2FmZX7UARU+hYhcDGZGweA=;
+        b=tgfxg8T6BPLufK0c31Ajoa9Oj2MSIiJ36wrWPDnkVUJrs+vrooxoSMr1tq1/WlmQ/0
+         kM5OFOW68v5l/lrIERu9F4AcfieWX2arqL7U2e3XkODj4gQiHf2oxyvXd1pCVHnNISpX
+         tcHzbDTSEfkOMDFf0YtFohXTXfGxbKZREAnMrfJaW2kVpkxFACS3D6pr/rvP4vsN47wp
+         kbJARITGPaBB/x1jO25U8WmE3Jl8628u/GKiSBZc80lM8Iol86eWqDR7FUn4NbctmuE7
+         20v1fRqpjSLDRGMrV55lnOjeEzaXPnmSosNlWIa4lRgBe3CBgLBHJTWRA93Sry6JuzNJ
+         E0og==
+X-Gm-Message-State: AOAM530Erq1xFPqqrulFdjwcXG5nnRB5S2DwyGrsvnSdyuiIm68FvcEo
+        j5P51KEl6tj86j0fuSEriJDRh7/LojOxwBwxSi+Pmw==
+X-Google-Smtp-Source: ABdhPJzabAOw5f4M98Uk3VeYnZHKFFd23UucsW7AqrMhZATJGgyPECIanekf0eYeVulibqH5Joiez/O1Hix+DfthbT0=
+X-Received: by 2002:a67:e3cc:: with SMTP id k12mr1468vsm.173.1598853619997;
+ Sun, 30 Aug 2020 23:00:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CA+G9fYvK5UkERLuBSRH5t2=j5==dbtw45GTMta9MafyJDqFsFA@mail.gmail.com>
+ <20200827094651.3grvs6ungv3dh7y3@vireshk-i7> <20200827211832.3ebeda8a@canb.auug.org.au>
+ <20200828045128.y7ybkd7dnvn4h6dt@vireshk-i7> <CA+G9fYsn1S-SieuP85-Z4qKO+aNyqJarrBR0xx0X-YbtF9eo0g@mail.gmail.com>
+ <20200831044132.jb7aflr2sfbart2z@vireshk-i7>
+In-Reply-To: <20200831044132.jb7aflr2sfbart2z@vireshk-i7>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 31 Aug 2020 11:30:08 +0530
+Message-ID: <CA+G9fYsLd77Wuz6Fdwr0w4eFvs=rX5ooewrztFtSe7MeyRJeGQ@mail.gmail.com>
+Subject: Re: WARNING: at drivers/opp/core.c:678 dev_pm_opp_set_rate+0x4cc/0x5d4
+ - on arm x15
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>, sbhanu@codeaurora.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>, nm@ti.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If dev_pm_opp_attach_genpd() is called multiple times (once for each CPU
-sharing the table), then it would result in unwanted behavior like
-memory leak, attaching the domain multiple times, etc.
+On Mon, 31 Aug 2020 at 10:11, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 28-08-20, 15:42, Naresh Kamboju wrote:
+> > Viresh,
+> > I have applied the v2 patch series on top of linux next-20200824.
+> > and tested again the reported kernel warning is fixed [1]
+> >
+> > [1] https://lkft.validation.linaro.org/scheduler/job/1717615#L1881
+>
+> Hi Naresh,
+>
+> You meant this one ?
+>
+> [PATCH V2 4/8] mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()
 
-Handle that by checking and returning earlier if the domains are already
-attached. Now that dev_pm_opp_detach_genpd() can get called multiple
-times as well, we need to protect that too.
+I have not tested individual patches instead applied all v2 of 8 patches
+and tested.
 
-Note that the virtual device pointers aren't returned in this case, as
-they may become unavailable to some callers during the middle of the
-operation.
+This is from my tree.
+$ git log --oneline | head -8
+574dafbe5e8a qcom-geni-se: remove has_opp_table
+6680f35d0cca tty: serial: qcom_geni_serial: Unconditionally call
+dev_pm_opp_of_remove_table()
+2a3929d0d5e0 spi: spi-qcom-qspi: Unconditionally call
+dev_pm_opp_of_remove_table()
+617b65175370 spi: spi-geni-qcom: Unconditionally call
+dev_pm_opp_of_remove_table()
+e736706a4914 mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()
+afdd91145686 drm/msm: Unconditionally call dev_pm_opp_of_remove_table()
+b85668862d92 drm/lima: Unconditionally call dev_pm_opp_of_remove_table()
+3ac057e88c7c cpufreq: imx6q: Unconditionally call dev_pm_opp_of_remove_table()
 
-Reported-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/opp/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+>
+> Great, thanks a lot for testing these.
+Anytime testing  :)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 000d0fcb4680..e65174725a4d 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -1960,6 +1960,9 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
- {
- 	int index;
- 
-+	if (!opp_table->genpd_virt_devs)
-+		return;
-+
- 	for (index = 0; index < opp_table->required_opp_count; index++) {
- 		if (!opp_table->genpd_virt_devs[index])
- 			continue;
-@@ -2006,6 +2009,9 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
- 	if (IS_ERR(opp_table))
- 		return opp_table;
- 
-+	if (opp_table->genpd_virt_devs)
-+		return opp_table;
-+
- 	/*
- 	 * If the genpd's OPP table isn't already initialized, parsing of the
- 	 * required-opps fail for dev. We should retry this after genpd's OPP
--- 
-2.25.0.rc1.19.g042ed3e048af
+>
+> --
+> viresh
 
+- Naresh
