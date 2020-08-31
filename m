@@ -2,87 +2,95 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E367C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D52AC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00EA22098B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA3242073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:58:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cj+8D5tQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgHaH5H (ORCPT
+        id S1728058AbgHaH6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 03:57:07 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:18554 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726573AbgHaH46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:56:58 -0400
-Received: by ajax-webmail-mail-app2 (Coremail) ; Mon, 31 Aug 2020 15:56:42
- +0800 (GMT+08:00)
-X-Originating-IP: [10.192.85.18]
-Date:   Mon, 31 Aug 2020 15:56:42 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Jiri Kosina" <jikos@kernel.org>
-Cc:     kjlu@umn.edu, "Benjamin Tissoires" <benjamin.tissoires@redhat.com>,
-        "Alexandrov Stansilav" <neko@nya.ai>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] HID: elan: Fix memleak in elan_input_configured
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.12 build 20200616(0f5d8152)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <nycvar.YFH.7.76.2008310947070.27422@cbobk.fhfr.pm>
-References: <20200824072400.9612-1-dinghao.liu@zju.edu.cn>
- <nycvar.YFH.7.76.2008310947070.27422@cbobk.fhfr.pm>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Mon, 31 Aug 2020 03:58:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbgHaH6R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 03:58:17 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C41CC061573;
+        Mon, 31 Aug 2020 00:58:16 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id l21so4519979eds.7;
+        Mon, 31 Aug 2020 00:58:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=huQdyM+q9reHAMotsMXMrR+uvxt0zB89ISm5NsTKcqY=;
+        b=cj+8D5tQCSmxfAdRNPAPmuTudMTpVoAPeOSrZRptzQ9EhDEPiOuSrmIXydsDMC+IeB
+         KiWnCQxbIr9VmNhmjBuWIJNcYSz0fR7DGnIqjOs89G7ZOSCNSd4uUdBC/+VoIYOCm2Ug
+         bag1Qks2Ap1zSsyUVQwE6/t2STKAtjsFe4VxvfYryowvEC6R/zSSoasSY0gBbLtpdOWI
+         V9V/LvGoRfx9PsVevepeL/OpGnrrSmB8c3+pKeIPMwAQBzJp9EGr45gCIG7Z8rB3mx7a
+         oaJm6l+/FCsoGio3O55Cy9zRlcqCOZ9rzgHzEcMtCww4c7Z8OoLasFoK7bMVvoJi4/0f
+         sRDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=huQdyM+q9reHAMotsMXMrR+uvxt0zB89ISm5NsTKcqY=;
+        b=cUERPBR8WsfrdQpqm04iC4r6PVteMRJojU2nVlbbadms8SRvRcLoVJtSUJwUYmL5OB
+         +XpN6fLWydUSK5vJgHuh1U4XB6e9PDZzkB4iIBu1foLR5TFN8j+lhZCKOk6QxgAYLYKB
+         Q8oEQ+PxH7N8JxmUG3bAS9nFnlwMGKBjiNjAxd6qFSm3H1GeLJLbvNr2Za56s2sLFeO0
+         foqbXMe4O7ofT9RJm64O5o870bYQJ84odtc++k+8Anvn6WeUz9TIgdJyjQiyijPshqBf
+         Df2XkUZ2/B4b3KRjsdcDAxLOpIzGIZS6G66QK4FPjqeANzW80ersPknljGjiENqft6QW
+         xadw==
+X-Gm-Message-State: AOAM5310vQSiTVb/repF31VCITzsAjeJC19+RyRd6jozIzXtVMqt5nSx
+        b2nvjhEPZ9KY/E0jBQMuIAaf3YESi1/EI7eH4NrEVIiA5EM=
+X-Google-Smtp-Source: ABdhPJyYEmEjgTlSTI3u2NEAheWGVf1siQ0TfcnMk8UQJ0LD/ssFBMKoiOcwk2Zx1mkLhm0A/hOUiN2gs3xnvJ0Zz2M=
+X-Received: by 2002:aa7:c4c8:: with SMTP id p8mr59745edr.231.1598860695181;
+ Mon, 31 Aug 2020 00:58:15 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <16ff9408.14137.1744384ac0b.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: by_KCgD3n506rUxfDNhaAg--.58009W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0EBlZdtPrBDAA7s+
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUblvS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
-        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
-        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
-        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r1j6r4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
-        Gr1lV2xY6x02cVAKzwCS07vEc2IjII80xcxEwVAKI48JMIAIbVCF04k20xvE74AGY7Cv6c
-        x26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCFs4IE7xkEbVWUJVW8JwCS07vE
-        x2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwVAFwI0_JrI_JrWlV2xY6I8E67
-        AF67kF1VAFwI0_JF0_Jw1lV2xY6IIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lV2xY6IIF0xvE
-        2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCS07vEIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s
-        1lV2xY6IIF0xvEx4A2jsIE14v26r1j6r4UMIAIbVCI42IY6I8E87Iv6xkF7I0E14v26r1j
-        6r4UYxBIdaVFxhVjvjDU=
+References: <1598851448-5493-1-git-send-email-amit.pundir@linaro.org> <CAMi1Hd3n2rfr+k09L8WO1S1Tn1s3xJencmr1q3a6e-FOgXr5Qg@mail.gmail.com>
+In-Reply-To: <CAMi1Hd3n2rfr+k09L8WO1S1Tn1s3xJencmr1q3a6e-FOgXr5Qg@mail.gmail.com>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Mon, 31 Aug 2020 09:57:39 +0200
+Message-ID: <CAMS8qEXcANkb-HoTk8zrXQEzkQO4cnFw4hj5tMp82UEVKd+eHQ@mail.gmail.com>
+Subject: Re: [PATCH v6] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
+To:     Amit Pundir <amit.pundir@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dt <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBNb24sIDI0IEF1ZyAyMDIwLCBEaW5naGFvIExpdSB3cm90ZToKPiAKPiA+IFdoZW4gaW5w
-dXRfbXRfaW5pdF9zbG90cygpIGZhaWxzLCBpbnB1dCBzaG91bGQgYmUKPiA+IGZyZWVkIHRvIHBy
-ZXZlbnQgbWVtbGVhay4KPiA+IAo+ID4gRml4ZXM6IDlhNmE0MTkzZDY1YjggKCJISUQ6IEFkZCBk
-cml2ZXIgZm9yIFVTQiBFTEFOIFRvdWNocGFkIikKPiA+IFNpZ25lZC1vZmYtYnk6IERpbmdoYW8g
-TGl1IDxkaW5naGFvLmxpdUB6anUuZWR1LmNuPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9oaWQvaGlk
-LWVsYW4uYyB8IDEgKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+ID4gCj4g
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9oaWQvaGlkLWVsYW4uYyBiL2RyaXZlcnMvaGlkL2hpZC1l
-bGFuLmMKPiA+IGluZGV4IDQ1YzRmODg4YjdjNC4uODU4NDQyMDA0MjU4IDEwMDY0NAo+ID4gLS0t
-IGEvZHJpdmVycy9oaWQvaGlkLWVsYW4uYwo+ID4gKysrIGIvZHJpdmVycy9oaWQvaGlkLWVsYW4u
-Ywo+ID4gQEAgLTE4OCw2ICsxODgsNyBAQCBzdGF0aWMgaW50IGVsYW5faW5wdXRfY29uZmlndXJl
-ZChzdHJ1Y3QgaGlkX2RldmljZSAqaGRldiwgc3RydWN0IGhpZF9pbnB1dCAqaGkpCj4gPiAgCXJl
-dCA9IGlucHV0X210X2luaXRfc2xvdHMoaW5wdXQsIEVMQU5fTUFYX0ZJTkdFUlMsIElOUFVUX01U
-X1BPSU5URVIpOwo+ID4gIAlpZiAocmV0KSB7Cj4gPiAgCQloaWRfZXJyKGhkZXYsICJGYWlsZWQg
-dG8gaW5pdCBlbGFuIE1UIHNsb3RzOiAlZFxuIiwgcmV0KTsKPiA+ICsJCWlucHV0X2ZyZWVfZGV2
-aWNlKGlucHV0KTsKPiA+ICAJCXJldHVybiByZXQ7Cj4gCj4gR29vZCBjYXRjaCwgYnV0IGFwcGFy
-ZW50bHkgaXQncyBub3QgdGhlIG9ubHkgbWVtbGVhayB0aGVyZSAtLSAKPiBpbnB1dF9tdF9pbml0
-X3Nsb3RzKCkgYWxsb2NhdGVzIHRoZSBpbnB1dF9tdCBzbG90cyBhbmQgZnJpZW5kcywgc28gd2Ug
-bmVlZCAKPiBpbnB1dF9tdF9kZXN0cm95X3Nsb3RzKCkgdGhlcmUgYXMgd2VsbC4KPiAKPiBDb3Vs
-ZCB5b3UgcGxlYXNlIGFkZCB0aGlzIHRvIHlvdXIgcGF0Y2ggdG9vLCB3aGlsZSB5b3UgYXJlIGF0
-IGZpeGluZyB0aGlzIAo+IGVycm9yIGNvZGVwYXRoIGFueXdheSwgYW5kIHJlc3VibWl0Pwo+IAoK
-VGhhbmsgeW91IGZvciB5b3VyIGFkdmljZSEgSSB3aWxsIGZpeCB0aGlzIGFuZCByZXNlbmQgdGhl
-IHBhdGNoIHNvb24uCgpSZWdhcmRzLApEaW5naGFvCg==
+> Hi Konrad,
+>
+> I couldn't find answer to your question around missing
+> (regulatorname)-supply properties. Need help in figuring out that
+> part.
+
+When the phone boots up and RPM(H) kicks in, you should see regulators
+probing like "s1 supplied by foo". Without the *-supply stuff, you
+will likely get "supplied by regulator-dummy". This happens here [1]
+and to my knowledge it is the "eletrical wiring" for Linux, as in it
+makes Linux aware of which regulators are connected electrically to
+the same supply (so that kernel knows when the supply is on and what
+voltage it's at). For qcom platforms, this is common per-pmic (afaik,
+please check if you are able to!), so you can likely just copy-paste
+that part from msm8998-mtp.dtsi, which also uses pm(i)8998.
+
+Konrad
