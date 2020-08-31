@@ -2,167 +2,170 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03741C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4000BC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2EBC2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F0302073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:27:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GgnV7T2z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EpoiQoXc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgHaJ1C (ORCPT
+        id S1726253AbgHaJ1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 05:27:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54810 "EHLO
+        Mon, 31 Aug 2020 05:27:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726117AbgHaJ05 (ORCPT
+        with ESMTP id S1725964AbgHaJ1O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 05:26:57 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D9F7C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:26:57 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t11so2749451plr.5
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:26:57 -0700 (PDT)
+        Mon, 31 Aug 2020 05:27:14 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D1BCC061575
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:27:14 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id mm21so323902pjb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:27:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cE6tbCI2FK1spDu2EWGHl52dUoomgzZk3UG4ySpVivk=;
-        b=GgnV7T2zwkVAz2Ck+rOkM0vrXa0VA5BB7eyoHuXsIJ9gtCMP0LsEc0J9ZJR2WNMqRd
-         VvwPJu3iU7wa0IFHaQsgwj2RjanOo/8qWnALRAnUhzLOJadHxMlPDEEQIi4BD2fzO30N
-         dhDfm2lZgMU0/QPsqMRJkjKtU6GGU6csI7W5ebXGDaOz/DK/F5V26NKS9FW6SNvpdxVZ
-         +eHR+mgRlpEU5eDJv3zHozBrz7YV8F5J0Uzt7jFCz/YScys08QI/WJ8Ob+8b1vVHejAP
-         Ygjj+q934ElRMl8dutFwwUB+0rbpbqTACM6MKUVj/lpcfRdzXDHxl2ZAuFT+Uk6a3GHS
-         Y9cQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zU+ye3DFPZbAV6pQiN8wFPJa6aARNezf++/kyW/uVuI=;
+        b=EpoiQoXcv7ag2BZboESNDV8ueXVg7gPRhJwh0HJmK0jjxVOplU9RU+KzVm9W9WqBC9
+         JHHOX0WWO9bODH9Di16FMFHq8OzWErkqnpA9HXxWGtiN+LyEjiMmfESPZ+kv+Do6OqVX
+         ifi6XiPNhiW9ZYjFRCo6WupZEH13dMoZ4x4+Y4VBrmhcq/1SAN4c6raMNNuV0n8rqLrR
+         RPONK2LGjM13mM60e+GgF6Vl5vCeZJw5JbuMxChUkW5ixwPuVph9G2oEQpUYvLEuxAKh
+         W7GxKOLwkKM/AuTgHjiG0ZocABjLNggfN5OauAJ0iUnqFcmhtB7mGUUisQm65OcULL5R
+         qhCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cE6tbCI2FK1spDu2EWGHl52dUoomgzZk3UG4ySpVivk=;
-        b=tG9B+6BKGGIpRkl8CmyA3NAmAcuWC1nQOkrh+6oeXvz8rbBDQdla3lUYHqfJTJidzY
-         S409OzMLuTIkDULAZ5PE5KkqMI6QfHaTnZPr+c0tS0DbqEvnn4GhMbJuOUE+f+WB4W0a
-         1M+ykiUEL+bYMaQFmuKe0JGyuhnGt4iXLLX3p0DGGTBAmiv/7RKBPc/Ry85ZWiSIRxE7
-         28f8Kqyej0A3XeOAi87oR18plu6pskN8KWGaXRYodbnbUdW0a+DE3F2nM912LaVJy1+j
-         vhkDSVwv0l3kyrNwXPM3lfUdnReW7jHhtlN4Rtp0LzTZ3L5dh0kLsxyz7WHjV83z5G3T
-         wXVA==
-X-Gm-Message-State: AOAM5327RYaiqEtqtteyUDbHHZSdjFCs3h+32sg2g9vBMSBBLmwjJBKY
-        jdm6cyw/1Ob0S9+obM6XoE3n
-X-Google-Smtp-Source: ABdhPJyukiMgta+UgmTqi9LwaARd2wmCD0A9V+10E/aJgrh4r5nu3wI16YpE31+xthJA7ak5I3A5mQ==
-X-Received: by 2002:a17:902:a60e:: with SMTP id u14mr393643plq.179.1598866016646;
-        Mon, 31 Aug 2020 02:26:56 -0700 (PDT)
-Received: from mani ([2409:4072:70f:fdfa:1d6f:524d:c4d3:917e])
-        by smtp.gmail.com with ESMTPSA id 128sm7234595pfy.132.2020.08.31.02.26.52
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 31 Aug 2020 02:26:56 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 14:56:48 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
-Subject: Re: [PATCH v2 4/4] arm: dts: owl-s500: Add RoseapplePi
-Message-ID: <20200831092648.GD4154@mani>
-References: <cover.1598621459.git.cristian.ciocaltea@gmail.com>
- <5a6fc55341b346439ba32b5a3e14087edbaa6226.1598621459.git.cristian.ciocaltea@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zU+ye3DFPZbAV6pQiN8wFPJa6aARNezf++/kyW/uVuI=;
+        b=CuTL+KqdIx9zljqmwZkXqZydBg8tyxoG+TGWv3LwQdzTJ3S2YWjYG9IrP1hGsTOAVD
+         ruFwDRJZi+8hqprebnOiUQr4tlbXqsrT4arjfCtOrHwOXcdVK8az7hVxPc7EdVTWzMSC
+         +G3lhr3UGvDKfsJ/gfnMXDjWwc19XLZYsBkudFVXALQkdowCEnYwzse4QX8mf+TSCo9f
+         eI2H4Vn95QhAwR4LCODxpmINMtKI4LUfPVU8tcyNLjh8/iMcaaWjC4I8U1UYrht8g8aR
+         pAWkreMGTeyJMWkibcM4cK9fe9/6wnoVMYYPaCfGEN6jgI7WzUn7bOFP+izc0jHM5kZE
+         EPRA==
+X-Gm-Message-State: AOAM5312k22v3DL0SK3aN8KS3jvwcUZ+uuYpFpJ5Ap1v5c07T3hbGjx0
+        3ix78Q2udg1P67rJBNpxBZKsFA==
+X-Google-Smtp-Source: ABdhPJwMKSI/DxgWWVduGT7bfBgazAzmC0cUQbGNmOrklC5B/CSMw6tk2YWg7AIdKXeKpPRtr5YA9Q==
+X-Received: by 2002:a17:902:8a93:: with SMTP id p19mr426722plo.320.1598866033880;
+        Mon, 31 Aug 2020 02:27:13 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id h5sm7865081pfk.0.2020.08.31.02.27.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 31 Aug 2020 02:27:13 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] opp: Don't drop reference for an OPP table that was never parsed
+Date:   Mon, 31 Aug 2020 14:56:56 +0530
+Message-Id: <922ff0759a16299e24cacfc981ac07914d8f1826.1598865786.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5a6fc55341b346439ba32b5a3e14087edbaa6226.1598621459.git.cristian.ciocaltea@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 0828, Cristian Ciocaltea wrote:
-> Add a Device Tree for the RoseapplePi SBC.
-> 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> Reviewed-by: Peter Korsgaard <peter@korsgaard.com>
+dev_pm_opp_remove_table() should drop a reference to the OPP table only
+if the DT OPP table was parsed earlier with a call to
+dev_pm_opp_of_add_table() earlier. Else it may end up dropping the
+reference to the OPP table, which was added as a result of other calls
+like dev_pm_opp_set_clkname(). And would hence result in undesirable
+behavior later on when caller would try to free the resource again.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Fixes: 03758d60265c ("opp: Replace list_kref with a local counter")
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/opp/core.c | 22 ++++++++++++++++------
+ drivers/opp/opp.h  |  2 +-
+ 2 files changed, 17 insertions(+), 7 deletions(-)
 
-Thanks,
-Mani
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index 9d7fb45b1786..31ce5d19ee9e 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -1291,13 +1291,19 @@ void dev_pm_opp_remove(struct device *dev, unsigned long freq)
+ }
+ EXPORT_SYMBOL_GPL(dev_pm_opp_remove);
+ 
+-void _opp_remove_all_static(struct opp_table *opp_table)
++bool _opp_remove_all_static(struct opp_table *opp_table)
+ {
+ 	struct dev_pm_opp *opp, *tmp;
++	bool ret = true;
+ 
+ 	mutex_lock(&opp_table->lock);
+ 
+-	if (!opp_table->parsed_static_opps || --opp_table->parsed_static_opps)
++	if (!opp_table->parsed_static_opps) {
++		ret = false;
++		goto unlock;
++	}
++
++	if (--opp_table->parsed_static_opps)
+ 		goto unlock;
+ 
+ 	list_for_each_entry_safe(opp, tmp, &opp_table->opp_list, node) {
+@@ -1307,6 +1313,8 @@ void _opp_remove_all_static(struct opp_table *opp_table)
+ 
+ unlock:
+ 	mutex_unlock(&opp_table->lock);
++
++	return ret;
+ }
+ 
+ /**
+@@ -2409,13 +2417,15 @@ void _dev_pm_opp_find_and_remove_table(struct device *dev)
+ 		return;
+ 	}
+ 
+-	_opp_remove_all_static(opp_table);
++	/*
++	 * Drop the extra reference only if the OPP table was successfully added
++	 * with dev_pm_opp_of_add_table() earlier.
++	 **/
++	if (_opp_remove_all_static(opp_table))
++		dev_pm_opp_put_opp_table(opp_table);
+ 
+ 	/* Drop reference taken by _find_opp_table() */
+ 	dev_pm_opp_put_opp_table(opp_table);
+-
+-	/* Drop reference taken while the OPP table was added */
+-	dev_pm_opp_put_opp_table(opp_table);
+ }
+ 
+ /**
+diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
+index e51646ff279e..c3fcd571e446 100644
+--- a/drivers/opp/opp.h
++++ b/drivers/opp/opp.h
+@@ -212,7 +212,7 @@ struct opp_table {
+ 
+ /* Routines internal to opp core */
+ void dev_pm_opp_get(struct dev_pm_opp *opp);
+-void _opp_remove_all_static(struct opp_table *opp_table);
++bool _opp_remove_all_static(struct opp_table *opp_table);
+ void _get_opp_table_kref(struct opp_table *opp_table);
+ int _get_opp_count(struct opp_table *opp_table);
+ struct opp_table *_find_opp_table(struct device *dev);
+-- 
+2.25.0.rc1.19.g042ed3e048af
 
-> ---
->  arch/arm/boot/dts/Makefile                 |  1 +
->  arch/arm/boot/dts/owl-s500-roseapplepi.dts | 47 ++++++++++++++++++++++
->  2 files changed, 48 insertions(+)
->  create mode 100644 arch/arm/boot/dts/owl-s500-roseapplepi.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 4572db3fa5ae..bff9ef996fbb 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -868,6 +868,7 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
->  dtb-$(CONFIG_ARCH_ACTIONS) += \
->  	owl-s500-cubieboard6.dtb \
->  	owl-s500-guitar-bb-rev-b.dtb \
-> +	owl-s500-roseapplepi.dtb \
->  	owl-s500-sparky.dtb
->  dtb-$(CONFIG_ARCH_PRIMA2) += \
->  	prima2-evb.dtb
-> diff --git a/arch/arm/boot/dts/owl-s500-roseapplepi.dts b/arch/arm/boot/dts/owl-s500-roseapplepi.dts
-> new file mode 100644
-> index 000000000000..a2087e617cb2
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/owl-s500-roseapplepi.dts
-> @@ -0,0 +1,47 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Roseapple Pi
-> + *
-> + * Copyright (C) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "owl-s500.dtsi"
-> +
-> +/ {
-> +	compatible = "roseapplepi,roseapplepi", "actions,s500";
-> +	model = "Roseapple Pi";
-> +
-> +	aliases {
-> +		serial2 = &uart2;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial2:115200n8";
-> +	};
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x80000000>; /* 2GB */
-> +	};
-> +
-> +	uart2_clk: uart2-clk {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <921600>;
-> +		#clock-cells = <0>;
-> +	};
-> +};
-> +
-> +&twd_timer {
-> +	status = "okay";
-> +};
-> +
-> +&timer {
-> +	clocks = <&hosc>;
-> +};
-> +
-> +&uart2 {
-> +	status = "okay";
-> +	clocks = <&uart2_clk>;
-> +};
-> -- 
-> 2.28.0
-> 
