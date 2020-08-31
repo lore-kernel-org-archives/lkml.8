@@ -2,172 +2,132 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A9EC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F15C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B88EC2071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598897971;
-	bh=+RXrssZAOzQNHzoPuMEErrLqNVzDGlCdVjn9K4tvDus=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tJq+fyQ5W2Zcv/Sa8f8C+PTfacENPHVTj0fb031OEZxkG831j1CoiZZlPGmN2Vuvf
-	 hTdhYllMN1F59mN4P37MhDd358OlxhwSvoBGCNH8ZY3BKzaiS4HWjLRh/q8TjfE8Am
-	 UtSACXy/l6+jOLdjGhz8ppGoSljfYC8KrWuJNpm4=
+	by mail.kernel.org (Postfix) with ESMTP id 66C99208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tbpDwtgB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbgHaSTa (ORCPT
+        id S1729737AbgHaSTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:19:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51972 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729541AbgHaSSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:18:10 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 415312176B;
-        Mon, 31 Aug 2020 18:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598897889;
-        bh=+RXrssZAOzQNHzoPuMEErrLqNVzDGlCdVjn9K4tvDus=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DOo6nvQC6/b6mhXP4lieR1op8GcJcGtSa1jOcI578m3x8rHgWCnTpAm8OEmg/4Dah
-         z04zUp7KJnuJ2aLvy9ToAXwtUlAWHVxorOyEipP1OkDrcbSOpsfEuBgweGyMX1IMXH
-         JTqbt/VWXIQYlrDsQMhKbeuD+nIowNlIwtjgnDfs=
-From:   paulmck@kernel.org
-To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        kernel-team@fb.com, mingo@kernel.org
-Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH kcsan 19/19] kcsan: Use tracing-safe version of prandom
-Date:   Mon, 31 Aug 2020 11:18:05 -0700
-Message-Id: <20200831181805.1833-19-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200831181715.GA1530@paulmck-ThinkPad-P72>
-References: <20200831181715.GA1530@paulmck-ThinkPad-P72>
+        Mon, 31 Aug 2020 14:19:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729723AbgHaSTV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:19:21 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EB5BC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:19:21 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id h1so1547710qvo.9
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:19:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=t1/Tbd4L56MeL2p75ATvjZTyO/Tm7hkvDW3bz/swotc=;
+        b=tbpDwtgB2fMMtc4DXh027u/wFKzMbJ5Cc2upysoNYoY31SkshSdvfrxDYT0KcTGXs8
+         SdJi7cdl3ZoRuz1ubGq96Q2TCNMgbhleQUqjnDvd8ssXP9zG4sJ2imOZ4MdfaqZU21n9
+         Nzdy4NYs4tE4HoT/Qh1Z6Q3bT9/C+wOwGwrMoBMa6hmVI3L0EP0/j5jjNTPeD2upOUey
+         GOTXlbG90X/p9ebnC4jR3xIMb1eacEQv8Ablpd1UumiQpwKdi67PuHMMTk8B4eiJ67qt
+         +1nYSFsWkV+Y4G3YZLhcyJHeQrM+1v0U6SPfSwxCbVeysov157C49u18RjgaDTsooHks
+         sSrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=t1/Tbd4L56MeL2p75ATvjZTyO/Tm7hkvDW3bz/swotc=;
+        b=owsxZMT9vX90yTj3cXaJ8V17FjCP3JbVmJOsD3sUS2rL1vU+/ADR++Bsp/c5pYKu59
+         5CvOmhehza/TLxP0630tu0TvfjC7m/K/74UsEqcMPhIpe7GI3d/CK8Fik/EK+XKLugM9
+         cOAUpiy0rnmRSilW9vkXpt1Jq5E/1GQYmMhomSEczLbqnZTdUF7bimjfSkXtlawiPaOf
+         r6cm1NGKKsy8mcfyRIL4HdyQvKGlUfDYPcqplBxhduLzNQQxScn/gkeGiA80OTYDn2+S
+         hWq1Q1vfZ2rHt8aFvF/8WXmI9hBAv+076+TEsz6DEOe5GN4FvQjEvoa872uMAeyG5p23
+         eTwQ==
+X-Gm-Message-State: AOAM530WmLdEVZ70Pp1Oh9wGw3Nz///iePzWrJQfrF692tgn7uywC2pf
+        GziZxxjWo4G6U36qrtDHgWaIhw==
+X-Google-Smtp-Source: ABdhPJyuyZ+ucI3w1yI15tL5bKSeQjAjW64aQ4RSO5hao4Rhp3pGVjo+MhwR7XDy8TnVcv+62efXEQ==
+X-Received: by 2002:a05:6214:d46:: with SMTP id 6mr2364472qvr.240.1598897960345;
+        Mon, 31 Aug 2020 11:19:20 -0700 (PDT)
+Received: from uller (ec2-34-197-84-77.compute-1.amazonaws.com. [34.197.84.77])
+        by smtp.gmail.com with ESMTPSA id y73sm10600006qkb.23.2020.08.31.11.19.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 11:19:19 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 18:19:18 +0000
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     maz@kernel.org, linus.walleij@linaro.org, swboyd@chromium.org,
+        evgreen@chromium.org, mka@chromium.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+Subject: Re: [PATCH v5 2/6] pinctrl: qcom: Use return value from
+ irq_set_wake() call
+Message-ID: <20200831181918.GB468@uller>
+References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
+ <1598113021-4149-3-git-send-email-mkshah@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1598113021-4149-3-git-send-email-mkshah@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Elver <elver@google.com>
+On Sat 22 Aug 16:16 UTC 2020, Maulik Shah wrote:
 
-In the core runtime, we must minimize any calls to external library
-functions to avoid any kind of recursion. This can happen even though
-instrumentation is disabled for called functions, but tracing is
-enabled.
+> msmgpio irqchip was not using return value of irq_set_irq_wake() callback
+> since previously GIC-v3 irqchip neither had IRQCHIP_SKIP_SET_WAKE flag nor
+> it implemented .irq_set_wake callback. This lead to irq_set_irq_wake()
+> return error -ENXIO.
+> 
+> However from 'commit 4110b5cbb014 ("irqchip/gic-v3: Allow interrupt to be
+> configured as wake-up sources")' GIC irqchip has IRQCHIP_SKIP_SET_WAKE
+> flag.
+> 
+> Use return value from irq_set_irq_wake() and irq_chip_set_wake_parent()
+> instead of always returning success.
+> 
+> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-Most recently, prandom_u32() added a tracepoint, which can cause
-problems for KCSAN even if the rcuidle variant is used. For example:
-	kcsan -> prandom_u32() -> trace_prandom_u32_rcuidle ->
-	srcu_read_lock_notrace -> __srcu_read_lock -> kcsan ...
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-While we could disable KCSAN in kcsan_setup_watchpoint(), this does not
-solve other unexpected behaviour we may get due recursing into functions
-that may not be tolerant to such recursion:
-	__srcu_read_lock -> kcsan -> ... -> __srcu_read_lock
-
-Therefore, switch to using prandom_u32_state(), which is uninstrumented,
-and does not have a tracepoint.
-
-Link: https://lkml.kernel.org/r/20200821063043.1949509-1-elver@google.com
-Link: https://lkml.kernel.org/r/20200820172046.GA177701@elver.google.com
-Signed-off-by: Marco Elver <elver@google.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- kernel/kcsan/core.c | 35 +++++++++++++++++++++++++++++------
- 1 file changed, 29 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 8a1ff605..3994a21 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -100,6 +100,9 @@ static atomic_long_t watchpoints[CONFIG_KCSAN_NUM_WATCHPOINTS + NUM_SLOTS-1];
-  */
- static DEFINE_PER_CPU(long, kcsan_skip);
- 
-+/* For kcsan_prandom_u32_max(). */
-+static DEFINE_PER_CPU(struct rnd_state, kcsan_rand_state);
-+
- static __always_inline atomic_long_t *find_watchpoint(unsigned long addr,
- 						      size_t size,
- 						      bool expect_write,
-@@ -271,11 +274,28 @@ should_watch(const volatile void *ptr, size_t size, int type, struct kcsan_ctx *
- 	return true;
- }
- 
-+/*
-+ * Returns a pseudo-random number in interval [0, ep_ro). See prandom_u32_max()
-+ * for more details.
-+ *
-+ * The open-coded version here is using only safe primitives for all contexts
-+ * where we can have KCSAN instrumentation. In particular, we cannot use
-+ * prandom_u32() directly, as its tracepoint could cause recursion.
-+ */
-+static u32 kcsan_prandom_u32_max(u32 ep_ro)
-+{
-+	struct rnd_state *state = &get_cpu_var(kcsan_rand_state);
-+	const u32 res = prandom_u32_state(state);
-+
-+	put_cpu_var(kcsan_rand_state);
-+	return (u32)(((u64) res * ep_ro) >> 32);
-+}
-+
- static inline void reset_kcsan_skip(void)
- {
- 	long skip_count = kcsan_skip_watch -
- 			  (IS_ENABLED(CONFIG_KCSAN_SKIP_WATCH_RANDOMIZE) ?
--				   prandom_u32_max(kcsan_skip_watch) :
-+				   kcsan_prandom_u32_max(kcsan_skip_watch) :
- 				   0);
- 	this_cpu_write(kcsan_skip, skip_count);
- }
-@@ -285,16 +305,18 @@ static __always_inline bool kcsan_is_enabled(void)
- 	return READ_ONCE(kcsan_enabled) && get_ctx()->disable_count == 0;
- }
- 
--static inline unsigned int get_delay(int type)
-+/* Introduce delay depending on context and configuration. */
-+static void delay_access(int type)
- {
- 	unsigned int delay = in_task() ? kcsan_udelay_task : kcsan_udelay_interrupt;
- 	/* For certain access types, skew the random delay to be longer. */
- 	unsigned int skew_delay_order =
- 		(type & (KCSAN_ACCESS_COMPOUND | KCSAN_ACCESS_ASSERT)) ? 1 : 0;
- 
--	return delay - (IS_ENABLED(CONFIG_KCSAN_DELAY_RANDOMIZE) ?
--				prandom_u32_max(delay >> skew_delay_order) :
--				0);
-+	delay -= IS_ENABLED(CONFIG_KCSAN_DELAY_RANDOMIZE) ?
-+			       kcsan_prandom_u32_max(delay >> skew_delay_order) :
-+			       0;
-+	udelay(delay);
- }
- 
- void kcsan_save_irqtrace(struct task_struct *task)
-@@ -476,7 +498,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 	 * Delay this thread, to increase probability of observing a racy
- 	 * conflicting access.
- 	 */
--	udelay(get_delay(type));
-+	delay_access(type);
- 
- 	/*
- 	 * Re-read value, and check if it is as expected; if not, we infer a
-@@ -620,6 +642,7 @@ void __init kcsan_init(void)
- 	BUG_ON(!in_task());
- 
- 	kcsan_debugfs_init();
-+	prandom_seed_full_state(&kcsan_rand_state);
- 
- 	/*
- 	 * We are in the init task, and no other tasks should be running;
--- 
-2.9.5
-
+> ---
+>  drivers/pinctrl/qcom/pinctrl-msm.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+> index 1c23f5c..1df2322 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+> @@ -1077,12 +1077,10 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
+>  	 * when TLMM is powered on. To allow that, enable the GPIO
+>  	 * summary line to be wakeup capable at GIC.
+>  	 */
+> -	if (d->parent_data)
+> -		irq_chip_set_wake_parent(d, on);
+> -
+> -	irq_set_irq_wake(pctrl->irq, on);
+> +	if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
+> +		return irq_chip_set_wake_parent(d, on);
+>  
+> -	return 0;
+> +	return irq_set_irq_wake(pctrl->irq, on);
+>  }
+>  
+>  static int msm_gpio_irq_reqres(struct irq_data *d)
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
