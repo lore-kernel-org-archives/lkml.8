@@ -2,246 +2,168 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D828CC43461
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7490C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5C702071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C123820757
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgHaA50 (ORCPT
+        id S1726517AbgHaBB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 20:57:26 -0400
-Received: from mga18.intel.com ([134.134.136.126]:31483 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgHaA5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 20:57:25 -0400
-IronPort-SDR: LMVVoNf0iznGZIBhZVVgsRhCO0SOazjzamZ4e/+ob68CMfwJzwOD93a43fx7QzhM0cIkFPB49R
- O6RAWQ6QBIVg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="144575002"
-X-IronPort-AV: E=Sophos;i="5.76,373,1592895600"; 
-   d="scan'208";a="144575002"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2020 17:57:22 -0700
-IronPort-SDR: 4OdmrwWzHpxy5SU28G19puRzaUVrwQ6SaYDcVYtCuqXECE/O82FD21j5tLXsYl1EtHADFe5kjw
- 371F55ZZl/MQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,373,1592895600"; 
-   d="scan'208";a="324738088"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by fmsmga004.fm.intel.com with ESMTP; 30 Aug 2020 17:57:15 -0700
-Cc:     baolu.lu@linux.intel.com, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare for device
- MSI
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200826111628.794979401@linutronix.de>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <02e30654-714b-520a-0d20-fca20794df93@linux.intel.com>
-Date:   Mon, 31 Aug 2020 08:51:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 30 Aug 2020 21:01:27 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56024 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726436AbgHaBBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 21:01:25 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C5C0813A7F13B3FC75BD;
+        Mon, 31 Aug 2020 09:01:21 +0800 (CST)
+Received: from [127.0.0.1] (10.67.102.197) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Mon, 31 Aug 2020
+ 09:01:13 +0800
+Subject: ping//Re: [PATCH] security: fix some spelling mistakes in the
+ comments by codespell
+To:     <serge@hallyn.com>, <jmorris@namei.org>, <zohar@linux.ibm.com>,
+        <dmitry.kasatkin@gmail.com>, <casey@schaufler-ca.com>,
+        <takedakn@nttdata.co.jp>, <penguin-kernel@I-love.SAKURA.ne.jp>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-integrity@vger.kernel.org>
+CC:     <wangle6@huawei.com>
+References: <20200822030534.2577-1-nixiaoming@huawei.com>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <e7fde679-bebf-bf20-d402-98efd13b67cf@huawei.com>
+Date:   Mon, 31 Aug 2020 09:01:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.0.1
 MIME-Version: 1.0
-In-Reply-To: <20200826111628.794979401@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200822030534.2577-1-nixiaoming@huawei.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.197]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+ping
 
-On 8/26/20 7:16 PM, Thomas Gleixner wrote:
-> This is the second version of providing a base to support device MSI (non
-> PCI based) and on top of that support for IMS (Interrupt Message Storm)
-> based devices in a halfways architecture independent way.
-
-After applying this patch series, the dmar_alloc_hwirq() helper doesn't
-work anymore during boot. This causes the IOMMU driver to fail to
-register the DMA fault handler and abort the IOMMU probe processing.
-Is this a known issue?
-
-Best regards,
-baolu
-
+On 2020/8/22 11:05, Xiaoming Ni wrote:
+> ecurity/commoncap.c: capabilties ==> capabilities
+> security/lsm_audit.c: programers ==> programmers
+> security/tomoyo/audit.c: stuct ==> struct
+> security/tomoyo/common.c: Poiter ==> Pointer
+> security/smack/smack_lsm.c: overriden ==> overridden overridden
+> security/smack/smackfs.c: overriden ==> overridden
+> security/integrity/ima/ima_template_lib.c: algoritm ==> algorithm
 > 
-> The first version can be found here:
+> Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+> ---
+>   security/commoncap.c                      | 2 +-
+>   security/integrity/ima/ima_template_lib.c | 2 +-
+>   security/lsm_audit.c                      | 2 +-
+>   security/smack/smack_lsm.c                | 2 +-
+>   security/smack/smackfs.c                  | 2 +-
+>   security/tomoyo/audit.c                   | 2 +-
+>   security/tomoyo/common.c                  | 2 +-
+>   7 files changed, 7 insertions(+), 7 deletions(-)
 > 
->      https://lore.kernel.org/r/20200821002424.119492231@linutronix.de
-> 
-> It's still a mixed bag of bug fixes, cleanups and general improvements
-> which are worthwhile independent of device MSI.
-> 
-> There are quite a bunch of issues to solve:
-> 
->    - X86 does not use the device::msi_domain pointer for historical reasons
->      and due to XEN, which makes it impossible to create an architecture
->      agnostic device MSI infrastructure.
-> 
->    - X86 has it's own msi_alloc_info data type which is pointlessly
->      different from the generic version and does not allow to share code.
-> 
->    - The logic of composing MSI messages in an hierarchy is busted at the
->      core level and of course some (x86) drivers depend on that.
-> 
->    - A few minor shortcomings as usual
-> 
-> This series addresses that in several steps:
-> 
->   1) Accidental bug fixes
-> 
->        iommu/amd: Prevent NULL pointer dereference
-> 
->   2) Janitoring
-> 
->        x86/init: Remove unused init ops
->        PCI: vmd: Dont abuse vector irqomain as parent
->        x86/msi: Remove pointless vcpu_affinity callback
-> 
->   3) Sanitizing the composition of MSI messages in a hierarchy
+> diff --git a/security/commoncap.c b/security/commoncap.c
+> index 59bf3c1674c8..2c3a0f1b6876 100644
+> --- a/security/commoncap.c
+> +++ b/security/commoncap.c
+> @@ -1046,7 +1046,7 @@ int cap_task_fix_setuid(struct cred *new, const struct cred *old, int flags)
+>   		break;
 >   
->        genirq/chip: Use the first chip in irq_chip_compose_msi_msg()
->        x86/msi: Move compose message callback where it belongs
+>   	case LSM_SETID_FS:
+> -		/* juggle the capabilties to follow FSUID changes, unless
+> +		/* juggle the capabilities to follow FSUID changes, unless
+>   		 * otherwise suppressed
+>   		 *
+>   		 * FIXME - is fsuser used for all CAP_FS_MASK capabilities?
+> diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
+> index c022ee9e2a4e..9513564ee0b2 100644
+> --- a/security/integrity/ima/ima_template_lib.c
+> +++ b/security/integrity/ima/ima_template_lib.c
+> @@ -231,7 +231,7 @@ static int ima_eventdigest_init_common(const u8 *digest, u32 digestsize,
+>   	 * digest formats:
+>   	 *  - DATA_FMT_DIGEST: digest
+>   	 *  - DATA_FMT_DIGEST_WITH_ALGO: [<hash algo>] + ':' + '\0' + digest,
+> -	 *    where <hash algo> is provided if the hash algoritm is not
+> +	 *    where <hash algo> is provided if the hash algorithm is not
+>   	 *    SHA1 or MD5
+>   	 */
+>   	u8 buffer[CRYPTO_MAX_ALG_NAME + 2 + IMA_MAX_DIGEST_SIZE] = { 0 };
+> diff --git a/security/lsm_audit.c b/security/lsm_audit.c
+> index 53d0d183db8f..a0ff2e441069 100644
+> --- a/security/lsm_audit.c
+> +++ b/security/lsm_audit.c
+> @@ -212,7 +212,7 @@ static void dump_common_audit_data(struct audit_buffer *ab,
+>   	char comm[sizeof(current->comm)];
+>   
+>   	/*
+> -	 * To keep stack sizes in check force programers to notice if they
+> +	 * To keep stack sizes in check force programmers to notice if they
+>   	 * start making this union too large!  See struct lsm_network_audit
+>   	 * as an example of how to deal with large data.
+>   	 */
+> diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+> index 8c0893eb5aa8..960d4641239c 100644
+> --- a/security/smack/smack_lsm.c
+> +++ b/security/smack/smack_lsm.c
+> @@ -1784,7 +1784,7 @@ static int smack_file_send_sigiotask(struct task_struct *tsk,
+>   	 */
+>   	file = container_of(fown, struct file, f_owner);
+>   
+> -	/* we don't log here as rc can be overriden */
+> +	/* we don't log here as rc can be overridden */
+>   	blob = smack_file(file);
+>   	skp = *blob;
+>   	rc = smk_access(skp, tkp, MAY_DELIVER, NULL);
+> diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
+> index 9c4308077574..5c581ec814ac 100644
+> --- a/security/smack/smackfs.c
+> +++ b/security/smack/smackfs.c
+> @@ -111,7 +111,7 @@ struct smack_known *smack_syslog_label;
+>   /*
+>    * Ptrace current rule
+>    * SMACK_PTRACE_DEFAULT    regular smack ptrace rules (/proc based)
+> - * SMACK_PTRACE_EXACT      labels must match, but can be overriden with
+> + * SMACK_PTRACE_EXACT      labels must match, but can be overridden with
+>    *			   CAP_SYS_PTRACE
+>    * SMACK_PTRACE_DRACONIAN  lables must match, CAP_SYS_PTRACE has no effect
+>    */
+> diff --git a/security/tomoyo/audit.c b/security/tomoyo/audit.c
+> index 3c96e8402e94..b51bad121c11 100644
+> --- a/security/tomoyo/audit.c
+> +++ b/security/tomoyo/audit.c
+> @@ -311,7 +311,7 @@ static LIST_HEAD(tomoyo_log);
+>   /* Lock for "struct list_head tomoyo_log". */
+>   static DEFINE_SPINLOCK(tomoyo_log_lock);
+>   
+> -/* Length of "stuct list_head tomoyo_log". */
+> +/* Length of "struct list_head tomoyo_log". */
+>   static unsigned int tomoyo_log_count;
+>   
+>   /**
+> diff --git a/security/tomoyo/common.c b/security/tomoyo/common.c
+> index 4bee32bfe16d..38bdc0ffc312 100644
+> --- a/security/tomoyo/common.c
+> +++ b/security/tomoyo/common.c
+> @@ -2608,7 +2608,7 @@ ssize_t tomoyo_read_control(struct tomoyo_io_buffer *head, char __user *buffer,
+>   /**
+>    * tomoyo_parse_policy - Parse a policy line.
+>    *
+> - * @head: Poiter to "struct tomoyo_io_buffer".
+> + * @head: Pointer to "struct tomoyo_io_buffer".
+>    * @line: Line to parse.
+>    *
+>    * Returns 0 on success, negative value otherwise.
 > 
->   4) Simplification of the x86 specific interrupt allocation mechanism
-> 
->        x86/irq: Rename X86_IRQ_ALLOC_TYPE_MSI* to reflect PCI dependency
->        x86/irq: Add allocation type for parent domain retrieval
->        iommu/vt-d: Consolidate irq domain getter
->        iommu/amd: Consolidate irq domain getter
->        iommu/irq_remapping: Consolidate irq domain lookup
-> 
->   5) Consolidation of the X86 specific interrupt allocation mechanism to be as close
->      as possible to the generic MSI allocation mechanism which allows to get rid
->      of quite a bunch of x86'isms which are pointless
-> 
->        x86/irq: Prepare consolidation of irq_alloc_info
->        x86/msi: Consolidate HPET allocation
->        x86/ioapic: Consolidate IOAPIC allocation
->        x86/irq: Consolidate DMAR irq allocation
->        x86/irq: Consolidate UV domain allocation
->        PCI/MSI: Rework pci_msi_domain_calc_hwirq()
->        x86/msi: Consolidate MSI allocation
->        x86/msi: Use generic MSI domain ops
-> 
->    6) x86 specific cleanups to remove the dependency on arch_*_msi_irqs()
-> 
->        x86/irq: Move apic_post_init() invocation to one place
->        x86/pci: Reducde #ifdeffery in PCI init code
->        x86/irq: Initialize PCI/MSI domain at PCI init time
->        irqdomain/msi: Provide DOMAIN_BUS_VMD_MSI
->        PCI: vmd: Mark VMD irqdomain with DOMAIN_BUS_VMD_MSI
->        PCI/MSI: Provide pci_dev_has_special_msi_domain() helper
->        x86/xen: Make xen_msi_init() static and rename it to xen_hvm_msi_init()
->        x86/xen: Rework MSI teardown
->        x86/xen: Consolidate XEN-MSI init
->        irqdomain/msi: Allow to override msi_domain_alloc/free_irqs()
->        x86/xen: Wrap XEN MSI management into irqdomain
->        iommm/vt-d: Store irq domain in struct device
->        iommm/amd: Store irq domain in struct device
->        x86/pci: Set default irq domain in pcibios_add_device()
->        PCI/MSI: Make arch_.*_msi_irq[s] fallbacks selectable
->        x86/irq: Cleanup the arch_*_msi_irqs() leftovers
->        x86/irq: Make most MSI ops XEN private
->        iommu/vt-d: Remove domain search for PCI/MSI[X]
->        iommu/amd: Remove domain search for PCI/MSI
-> 
->    7) X86 specific preparation for device MSI
-> 
->        x86/irq: Add DEV_MSI allocation type
->        x86/msi: Rename and rework pci_msi_prepare() to cover non-PCI MSI
-> 
->    8) Generic device MSI infrastructure
->        platform-msi: Provide default irq_chip:: Ack
->        genirq/proc: Take buslock on affinity write
->        genirq/msi: Provide and use msi_domain_set_default_info_flags()
->        platform-msi: Add device MSI infrastructure
->        irqdomain/msi: Provide msi_alloc/free_store() callbacks
-> 
->    9) POC of IMS (Interrupt Message Storm) irq domain and irqchip
->       implementations for both device array and queue storage.
-> 
->        irqchip: Add IMS (Interrupt Message Storm) driver - NOT FOR MERGING
-> 
-> Changes vs. V1:
-> 
->     - Addressed various review comments and addressed the 0day fallout.
->       - Corrected the XEN logic (Jürgen)
->       - Make the arch fallback in PCI/MSI opt-in not opt-out (Bjorn)
-> 
->     - Fixed the compose MSI message inconsistency
-> 
->     - Ensure that the necessary flags are set for device SMI
-> 
->     - Make the irq bus logic work for affinity setting to prepare
->       support for IMS storage in queue memory. It turned out to be
->       less scary than I feared.
-> 
->     - Remove leftovers in iommu/intel|amd
-> 
->     - Reworked the IMS POC driver to cover queue storage so Jason can have a
->       look whether that fits the needs of MLX devices.
-> 
-> The whole lot is also available from git:
-> 
->     git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git device-msi
-> 
-> This has been tested on Intel/AMD/KVM but lacks testing on:
-> 
->      - HYPERV (-ENODEV)
->      - VMD enabled systems (-ENODEV)
->      - XEN (-ENOCLUE)
->      - IMS (-ENODEV)
-> 
->      - Any non-X86 code which might depend on the broken compose MSI message
->        logic. Marc excpects not much fallout, but agrees that we need to fix
->        it anyway.
-> 
-> #1 - #3 should be applied unconditionally for obvious reasons
-> #4 - #6 are wortwhile cleanups which should be done independent of device MSI
-> 
-> #7 - #8 look promising to cleanup the platform MSI implementation
->       	independent of #8, but I neither had cycles nor the stomach to
->       	tackle that.
-> 
-> #9	is obviously just for the folks interested in IMS
-> 
-> Thanks,
-> 
-> 	tglx
-> 
+
+
