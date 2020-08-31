@@ -2,172 +2,182 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E34C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 751C9C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 979002071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598897960;
-	bh=hBoTCY3wufyykmsMzLAZBTAUqq6AkK7/XOgebGts+Z4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vDbqEnZ5hSXnD59GezvXFpxuzLSjyw7IzMyNwt0eHQ8s+ohtie/V84NSALHZBBrQ2
-	 aCJqLEVhMICnqIPWUulZg4y+FzDRxgii1VYiYpHIudR5aWYh8/uugc+Orh16trS8aa
-	 6yJOy+fUKRZl2HahUst3z4C4jXboqWVX4ytPfY6Q=
+	by mail.kernel.org (Postfix) with ESMTP id 55E562071B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uZbSprfE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbgHaSTR (ORCPT
+        id S1729605AbgHaSTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:19:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729535AbgHaSSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:18:10 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15A0621527;
-        Mon, 31 Aug 2020 18:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598897889;
-        bh=hBoTCY3wufyykmsMzLAZBTAUqq6AkK7/XOgebGts+Z4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fn8Jyr95jYbB/aSvYoFkJhECOdjtkbUR67dWEJCAszFbK0qZlLKzT9LfNUc8EReF6
-         YFvYxhdkZls1FCZuEgh2G50j21JPhyl025W3jaKOdTKUwLwfYn4mUMNMfXtrhrLoVw
-         raPCgDFHA/FTiJ2s7zm8TP6FSPBPllieZFlEcD94=
-From:   paulmck@kernel.org
-To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        kernel-team@fb.com, mingo@kernel.org
-Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-arch@vger.kernel.org
-Subject: [PATCH kcsan 18/19] bitops, kcsan: Partially revert instrumentation for non-atomic bitops
-Date:   Mon, 31 Aug 2020 11:18:04 -0700
-Message-Id: <20200831181805.1833-18-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200831181715.GA1530@paulmck-ThinkPad-P72>
-References: <20200831181715.GA1530@paulmck-ThinkPad-P72>
+        Mon, 31 Aug 2020 14:19:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729599AbgHaSSM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:18:12 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 735CDC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:18:12 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d19so1051957pgl.10
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:18:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=hFUA2EodpJe3a9+C7aWrHwYTMpFRcWcG5EO2y8L7QQ4=;
+        b=uZbSprfEAY6FPBtwjeW9/UdVkQ5RQpr4QDEXPg/0ad4BYpvgNmuj3JfhbBCaMHa+XN
+         1vlKD9p403TA7Q92D3RU94wO6kfO8Cpe8DqCf8qtoMEYuAduGaeDf9JoGS2ERC1EK24s
+         bVX0HsjmrOLxTaeCx+N7FqY5I92TvL3GO7sVAMjAD73IfgwCUe5kR0kGaKlUfED5u7ee
+         E6jiZGzZMeD23ktw9D6d1mBFCoSnHqiG4xnheDYJQydOVNC3V6CUZeSYtDncQLa0qUhd
+         wk3cL0dYv5XMAIDJgsT7iPZ0NZ/ByX3mpphtsLiMuTIZE+4M/E5jZEBPUpmAELHfZ7FX
+         1CmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=hFUA2EodpJe3a9+C7aWrHwYTMpFRcWcG5EO2y8L7QQ4=;
+        b=DabcT2FOHpOCU7vbwwksTDsaG22hCIxYfSmDIpoFIp1V3H80SzTziRGgFPdyOR61Ud
+         AucWpQEy3Vtdy/xBzmjQ7iyP3UGg8IaS/I6DiXIiiSQt9m/F3XrCRupaQCToUpU8PDXH
+         T2f9uWwz1coS0uECW+ObwDnjWEkAVFumkupgT3AGQ1DVJ424KOkbxFJcNT6MLvQGmeao
+         8C1Yw7/TYNm50r0tJ8v5+1nAynPZ3xWK/EI3hwM3v3m/w/rQSjCooL4Uw5OyH0t6vpQu
+         V+nBhHi00s5lsrRrZw2xkZacGP7+tbg9+O5zpAmcykCEJx4ESL5l9aV4vusxVfIrTHrV
+         wHLQ==
+X-Gm-Message-State: AOAM532eRbBzJCnCVk+Pe6uvsxfogI1TF9LD8kjWBYxzZf4GMBCtcn64
+        rqHLcGq7ucg8kOc7+9dtmOQ=
+X-Google-Smtp-Source: ABdhPJxQBwvR9BKUGis/rKaBNzrI0wfOo7zB8WpCUtfKi0Zhd4YivgE/lPvf2Oz2znhx8QBbncXkuw==
+X-Received: by 2002:a63:e907:: with SMTP id i7mr2276694pgh.210.1598897891294;
+        Mon, 31 Aug 2020 11:18:11 -0700 (PDT)
+Received: from jacob-builder.jf.intel.com (jfdmzpr04-ext.jf.intel.com. [134.134.137.73])
+        by smtp.gmail.com with ESMTPSA id y128sm8672547pfy.74.2020.08.31.11.18.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 31 Aug 2020 11:18:10 -0700 (PDT)
+From:   Jacob Pan <jacob.pan.linux@gmail.com>
+X-Google-Original-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Lu Baolu" <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v8 2/7] iommu/uapi: Add argsz for user filled data
+Date:   Mon, 31 Aug 2020 11:24:55 -0700
+Message-Id: <1598898300-65475-3-git-send-email-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1598898300-65475-1-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1598898300-65475-1-git-send-email-jacob.jun.pan@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Elver <elver@google.com>
+As IOMMU UAPI gets extended, user data size may increase. To support
+backward compatibiliy, this patch introduces a size field to each UAPI
+data structures. It is *always* the responsibility for the user to fill in
+the correct size. Padding fields are adjusted to ensure 8 byte alignment.
 
-Previous to the change to distinguish read-write accesses, when
-CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC=y is set, KCSAN would consider
-the non-atomic bitops as atomic. We want to partially revert to this
-behaviour, but with one important distinction: report racing
-modifications, since lost bits due to non-atomicity are certainly
-possible.
+Specific scenarios for user data handling are documented in:
+Documentation/userspace-api/iommu.rst
 
-Given the operations here only modify a single bit, assuming
-non-atomicity of the writer is sufficient may be reasonable for certain
-usage (and follows the permissible nature of the "assume plain writes
-atomic" rule). In other words:
+As there is no current users of the API, struct version is not
+incremented.
 
-	1. We want non-atomic read-modify-write races to be reported;
-	   this is accomplished by kcsan_check_read(), where any
-	   concurrent write (atomic or not) will generate a report.
-
-	2. We do not want to report races with marked readers, but -do-
-	   want to report races with unmarked readers; this is
-	   accomplished by the instrument_write() ("assume atomic
-	   write" with Kconfig option set).
-
-With the above rules, when KCSAN_ASSUME_PLAIN_WRITES_ATOMIC is selected,
-it is hoped that KCSAN's reporting behaviour is better aligned with
-current expected permissible usage for non-atomic bitops.
-
-Note that, a side-effect of not telling KCSAN that the accesses are
-read-writes, is that this information is not displayed in the access
-summary in the report. It is, however, visible in inline-expanded stack
-traces. For now, it does not make sense to introduce yet another special
-case to KCSAN's runtime, only to cater to the case here.
-
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Daniel Axtens <dja@axtens.net>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: <linux-arch@vger.kernel.org>
-Signed-off-by: Marco Elver <elver@google.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
- .../asm-generic/bitops/instrumented-non-atomic.h   | 30 +++++++++++++++++++---
- 1 file changed, 27 insertions(+), 3 deletions(-)
+ include/uapi/linux/iommu.h | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/include/asm-generic/bitops/instrumented-non-atomic.h b/include/asm-generic/bitops/instrumented-non-atomic.h
-index f86234c..37363d5 100644
---- a/include/asm-generic/bitops/instrumented-non-atomic.h
-+++ b/include/asm-generic/bitops/instrumented-non-atomic.h
-@@ -58,6 +58,30 @@ static inline void __change_bit(long nr, volatile unsigned long *addr)
- 	arch___change_bit(nr, addr);
- }
+diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+index c2b2caf9ed41..b42acc8fe007 100644
+--- a/include/uapi/linux/iommu.h
++++ b/include/uapi/linux/iommu.h
+@@ -139,6 +139,7 @@ enum iommu_page_response_code {
  
-+static inline void __instrument_read_write_bitop(long nr, volatile unsigned long *addr)
-+{
-+	if (IS_ENABLED(CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC)) {
-+		/*
-+		 * We treat non-atomic read-write bitops a little more special.
-+		 * Given the operations here only modify a single bit, assuming
-+		 * non-atomicity of the writer is sufficient may be reasonable
-+		 * for certain usage (and follows the permissible nature of the
-+		 * assume-plain-writes-atomic rule):
-+		 * 1. report read-modify-write races -> check read;
-+		 * 2. do not report races with marked readers, but do report
-+		 *    races with unmarked readers -> check "atomic" write.
-+		 */
-+		kcsan_check_read(addr + BIT_WORD(nr), sizeof(long));
-+		/*
-+		 * Use generic write instrumentation, in case other sanitizers
-+		 * or tools are enabled alongside KCSAN.
-+		 */
-+		instrument_write(addr + BIT_WORD(nr), sizeof(long));
-+	} else {
-+		instrument_read_write(addr + BIT_WORD(nr), sizeof(long));
-+	}
-+}
-+
  /**
-  * __test_and_set_bit - Set a bit and return its old value
-  * @nr: Bit to set
-@@ -68,7 +92,7 @@ static inline void __change_bit(long nr, volatile unsigned long *addr)
+  * struct iommu_page_response - Generic page response information
++ * @argsz: User filled size of this data
+  * @version: API version of this structure
+  * @flags: encodes whether the corresponding fields are valid
+  *         (IOMMU_FAULT_PAGE_RESPONSE_* values)
+@@ -147,6 +148,7 @@ enum iommu_page_response_code {
+  * @code: response code from &enum iommu_page_response_code
   */
- static inline bool __test_and_set_bit(long nr, volatile unsigned long *addr)
- {
--	instrument_read_write(addr + BIT_WORD(nr), sizeof(long));
-+	__instrument_read_write_bitop(nr, addr);
- 	return arch___test_and_set_bit(nr, addr);
- }
- 
-@@ -82,7 +106,7 @@ static inline bool __test_and_set_bit(long nr, volatile unsigned long *addr)
+ struct iommu_page_response {
++	__u32	argsz;
+ #define IOMMU_PAGE_RESP_VERSION_1	1
+ 	__u32	version;
+ #define IOMMU_PAGE_RESP_PASID_VALID	(1 << 0)
+@@ -222,6 +224,7 @@ struct iommu_inv_pasid_info {
+ /**
+  * struct iommu_cache_invalidate_info - First level/stage invalidation
+  *     information
++ * @argsz: User filled size of this data
+  * @version: API version of this structure
+  * @cache: bitfield that allows to select which caches to invalidate
+  * @granularity: defines the lowest granularity used for the invalidation:
+@@ -250,6 +253,7 @@ struct iommu_inv_pasid_info {
+  * must support the used granularity.
   */
- static inline bool __test_and_clear_bit(long nr, volatile unsigned long *addr)
- {
--	instrument_read_write(addr + BIT_WORD(nr), sizeof(long));
-+	__instrument_read_write_bitop(nr, addr);
- 	return arch___test_and_clear_bit(nr, addr);
- }
+ struct iommu_cache_invalidate_info {
++	__u32	argsz;
+ #define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
+ 	__u32	version;
+ /* IOMMU paging structure cache */
+@@ -259,7 +263,7 @@ struct iommu_cache_invalidate_info {
+ #define IOMMU_CACHE_INV_TYPE_NR		(3)
+ 	__u8	cache;
+ 	__u8	granularity;
+-	__u8	padding[2];
++	__u8	padding[6];
+ 	union {
+ 		struct iommu_inv_pasid_info pasid_info;
+ 		struct iommu_inv_addr_info addr_info;
+@@ -296,6 +300,7 @@ struct iommu_gpasid_bind_data_vtd {
  
-@@ -96,7 +120,7 @@ static inline bool __test_and_clear_bit(long nr, volatile unsigned long *addr)
+ /**
+  * struct iommu_gpasid_bind_data - Information about device and guest PASID binding
++ * @argsz:	User filled size of this data
+  * @version:	Version of this data structure
+  * @format:	PASID table entry format
+  * @flags:	Additional information on guest bind request
+@@ -313,17 +318,18 @@ struct iommu_gpasid_bind_data_vtd {
+  * PASID to host PASID based on this bind data.
   */
- static inline bool __test_and_change_bit(long nr, volatile unsigned long *addr)
- {
--	instrument_read_write(addr + BIT_WORD(nr), sizeof(long));
-+	__instrument_read_write_bitop(nr, addr);
- 	return arch___test_and_change_bit(nr, addr);
- }
- 
+ struct iommu_gpasid_bind_data {
++	__u32 argsz;
+ #define IOMMU_GPASID_BIND_VERSION_1	1
+ 	__u32 version;
+ #define IOMMU_PASID_FORMAT_INTEL_VTD	1
+ 	__u32 format;
++	__u32 addr_width;
+ #define IOMMU_SVA_GPASID_VAL	(1 << 0) /* guest PASID valid */
+ 	__u64 flags;
+ 	__u64 gpgd;
+ 	__u64 hpasid;
+ 	__u64 gpasid;
+-	__u32 addr_width;
+-	__u8  padding[12];
++	__u8  padding[8];
+ 	/* Vendor specific data */
+ 	union {
+ 		struct iommu_gpasid_bind_data_vtd vtd;
 -- 
-2.9.5
+2.7.4
 
