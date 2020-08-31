@@ -2,128 +2,157 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5CAC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C281C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76A282073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB4E2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:25:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qu9xuHsi"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="gtCyhoxN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgHaLXL (ORCPT
+        id S1726467AbgHaLZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 07:23:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgHaLEl (ORCPT
+        Mon, 31 Aug 2020 07:25:16 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:39878 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbgHaLXQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 07:04:41 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC7C1C06123C
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 04:04:14 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id 5so412611pgl.4
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 04:04:14 -0700 (PDT)
+        Mon, 31 Aug 2020 07:23:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SQHLmew/+Uw02hOPwl2KHpbtxwjKEHifcexkv1FCU6c=;
-        b=qu9xuHsiVO1/lhFmOB3Y3peMVj53ZshahjOB6elhp66R5CgK9whhOLPoUy9hJDwOml
-         Xx52NED74g9DEWtob9uJW3arR10F4ZGioAyQqYEs5SvJ1RjzcZA2QrePfX+NC69hXOpx
-         T2ZqORq8P48EJWSjC8u3HyAakTJWOPBND8tw/CDs4nTIDPYu0fE46kWrXoL+o5XVsLiq
-         ztj4QCcWejcIcr3s62PLOOcoR4zkUTdUUajQzYFsgdxoSYCfFfbcUWznqhF0ABqFnXPE
-         OHlJ3s1cAKonQKGi4+iTZ+TeuRQIbX3NmSxTqk9xxswBLaw7kbqZlhRogYMkOY2qzObd
-         Qt+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SQHLmew/+Uw02hOPwl2KHpbtxwjKEHifcexkv1FCU6c=;
-        b=pEzzDvDHdRY6wgFgPJ8BG5Rylbe6Tas1ilIXFsYbMX4RlLvLrr+bu/JOBw9RiQMila
-         JFtpVranP7KYFVkfWzIH+ApIf7ofPqE+UTR1xkqBs7v539CzRss77euu/hRE79sKN3vd
-         HkKQWt2A2cL5pZJXr9R4Unbg6vHXQcR+OkUrsEUtG9LGiKulsY/F0yuD4oCMjovJz1jz
-         sZjqbu3+0K6zxz0UEw9T9zWlZWNMazt4eF/O4o6MgtT4/zw+I9jz7VTxuMyx578z0Trn
-         JffsPJ/v0u1ZbhlBxmhgvQDbCwa+3UTPLwGsRjMd/R18l5ZJGzo9l+8gQGLhDndbwFay
-         03LQ==
-X-Gm-Message-State: AOAM533jpnvSQnD74il+d4Gy9GooeMw+Sgo7FS1nAAgAZpYcRIYbKnZB
-        FqV//lQm5VGKfg5pryOvCKSARhJPbRQUKA==
-X-Google-Smtp-Source: ABdhPJxeSefAgzvdXk9S266/E7KO0kwk+YEMEr+ulK04bFCe5SCH5jaiI2wePURUQh3DPfX154nn+A==
-X-Received: by 2002:a05:6a00:14d0:: with SMTP id w16mr833159pfu.39.1598871854010;
-        Mon, 31 Aug 2020 04:04:14 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id w16sm7665688pfq.13.2020.08.31.04.04.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 31 Aug 2020 04:04:13 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 16:34:08 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] ARM: tegra: Pass multiple versions in
- opp-supported-hw property
-Message-ID: <20200831110408.a6lwivim4w4jtkdc@vireshk-i7>
-References: <cover.1598442485.git.viresh.kumar@linaro.org>
- <b13f1b112532fe0189d1f7bbb50903d9e1defb07.1598442485.git.viresh.kumar@linaro.org>
- <b0763074-859f-fccb-dde4-03d1a50ea021@gmail.com>
- <20200831043908.mtw4dglybcmcabjb@vireshk-i7>
- <0da380c2-9161-d450-afd2-4b159c8cfb7d@gmail.com>
- <20200831084111.6udzvrdonxgzju4l@vireshk-i7>
- <cbfa012b-8f50-e460-972c-c51fa52bb858@gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1598872995; x=1630408995;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=m6n6EuRTnJI3OIEU5O1Jd/703628N4sI9qEt+Ut99Lc=;
+  b=gtCyhoxN4DgkQ4CUAk4AdZtzdFeiTSrcpQAQy+Ch/wHQ42ieto/ACc5Q
+   WZ13pvumd4XfXpASADwJRwucmcDS/LggddGs6YVQm66VIPuBINkMBLNro
+   cqv11fSbxxrE8B83HPJ11vooBmd4eBWtoWBTyJNFYb9tYbHsROp0Pktj7
+   M=;
+X-IronPort-AV: E=Sophos;i="5.76,375,1592870400"; 
+   d="scan'208";a="64185476"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 31 Aug 2020 11:23:11 +0000
+Received: from EX13D31EUB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 6425EA20E5;
+        Mon, 31 Aug 2020 11:23:08 +0000 (UTC)
+Received: from u3f2cd687b01c55.ant.amazon.com (10.43.161.71) by
+ EX13D31EUB001.ant.amazon.com (10.43.166.210) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 31 Aug 2020 11:22:51 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     SeongJae Park <sjpark@amazon.com>
+CC:     <Jonathan.Cameron@Huawei.com>, <aarcange@redhat.com>,
+        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <amit@kernel.org>, <benh@kernel.crashing.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <david@redhat.com>, <dwmw@amazon.com>, <fan.du@intel.com>,
+        <foersleo@amazon.de>, <gthelen@google.com>, <irogers@google.com>,
+        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
+        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <rppt@kernel.org>, <sblbir@amazon.com>,
+        <shakeelb@google.com>, <shuah@kernel.org>, <sj38.park@gmail.com>,
+        <snu@amazon.de>, <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <zgf574564920@gmail.com>, <linux-damon@amazon.com>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v20 00/15] Introduce Data Access MONitor (DAMON)
+Date:   Mon, 31 Aug 2020 13:22:35 +0200
+Message-ID: <20200831112235.2675-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200820072738.27602-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cbfa012b-8f50-e460-972c-c51fa52bb858@gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.71]
+X-ClientProxiedBy: EX13D16UWB002.ant.amazon.com (10.43.161.234) To
+ EX13D31EUB001.ant.amazon.com (10.43.166.210)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31-08-20, 12:54, Dmitry Osipenko wrote:
-> It's not clear to me how it could be applicable to the Tegra CPU OPP
-> because Tegra depends on a combination of SPEEDO + PROCESS versions.
+On Thu, 20 Aug 2020 09:27:38 +0200 SeongJae Park <sjpark@amazon.com> wrote:
+
+> On Mon, 17 Aug 2020 12:51:22 +0200 SeongJae Park <sjpark@amazon.com> wrote:
 > 
-> It's not like all voltages are the same for all OPPs that have the same
-> PROCESS ID, otherwise it indeed would be nice to have
-> "opp-microvolt-process0", but unfortunately this variant is not suitable
-> for Tegra because some freqs have different voltages using the same
-> PROCESS ID and the same applies to the SPEEDO ID.
+> > From: SeongJae Park <sjpark@amazon.de>
+> > 
+> > Changes from Previous Version
+> > =============================
+> > 
+> > - Place 'CREATE_TRACE_POINTS' after '#include' statements (Steven Rostedt)
+> > - Support large record file (Alkaid)
+> > - Place 'put_pid()' of virtual monitoring targets in 'cleanup' callback
+> > - Avoid conflict between concurrent DAMON users
+> > - Update evaluation result document
+> > 
+> > Introduction
+> > ============
+> > 
+> > DAMON is a data access monitoring framework subsystem for the Linux kernel.
+> > The core mechanisms of DAMON called 'region based sampling' and 'adaptive
+> > regions adjustment' (refer to 'mechanisms.rst' in the 11th patch of this
+> > patchset for the detail) make it
+> > 
+> >  - accurate (The monitored information is useful for DRAM level memory
+> >    management. It might not appropriate for Cache-level accuracy, though.),
+> >  - light-weight (The monitoring overhead is low enough to be applied online
+> >    while making no impact on the performance of the target workloads.), and
+> >  - scalable (the upper-bound of the instrumentation overhead is controllable
+> >    regardless of the size of target workloads.).
+> > 
+> > Using this framework, therefore, the kernel's core memory management mechanisms
+> > such as reclamation and THP can be optimized for better memory management.  The
+> > experimental memory management optimization works that incurring high
+> > instrumentation overhead will be able to have another try.  In user space,
+> > meanwhile, users who have some special workloads will be able to write
+> > personalized tools or applications for deeper understanding and specialized
+> > optimizations of their systems.
+> 
+> DAMON will be presented in the next week LPC[1].  To be prepared for a screen
+> sharing error (if I get no such error, I will do a live-demo), I recorded a
+> simple demo video.  I would like to share it here to help your easier
+> understanding of DAMON.
+> 
+>     https://youtu.be/l63eqbVBZRY
+> 
+> [1] https://linuxplumbersconf.org/event/7/contributions/659/
 
-How exactly do you know what voltage belongs to a particular OPP ?
+During the session, I introduced the list of future works and asked the
+audiences to vote for the priority of the tasks:
+https://youtu.be/jOBkKMA0uF0?t=13253
 
-		opp@216000000 {
-			clock-latency-ns = <400000>;
-			opp-supported-hw = <0x0F 0x0003>;
-			opp-hz = /bits/ 64 <216000000>;
-			opp-microvolt-fast-process0 = <750000 750000 1125000>;
-			opp-microvolt-slow-process0 = <750000 850000 1125000>;
+To summarize here, the tasks are (highest priority first):
 
-		};
+1. Make current DAMON patchset series merged in the mainline (6 votes)
+2. User space interface improvement (4 votes)
+ - Multiple monitoring contexts
+ - Charging of the monitoring threads' CPU usage
+3. Support more address spaces (2 votes)
+ - Cgroups, cached pages, specific file-backed pages, swap slots, ...
+3. DAMON-based MM optimizations (2 votes)
+ - Page reclaim, THP, compaction, NUMA balancing, ...
+4. Optimize for special use-cases (1 vote)
+ - Page granularity monitoring, accessed-or-not monitoring, ...
 
-		opp@312000000 {
-			clock-latency-ns = <400000>;
-			opp-supported-hw = <0x0F 0x0003>;
-			opp-hz = /bits/ 64 <312000000>;
-			opp-microvolt-fast-process0 = <750000 750000 1125000>;
-			opp-microvolt-slow-process0 = <750000 850000 1125000>;
-		};
+So, I'd like to focus on polishing current patchset so that it could be merged
+in.  For that, I'd like to ask your more reviews.
 
-You can make any combinations of such names that come from speedo,
-process, or something else. If you can get this done as a fixed
-formula then it is workable.
+While waiting for the reviews, I will start implementing other future features
+that received many votes.  The support of multiple monitoring contexts for the
+user space would be the first one.  Once the implementation is finished, I will
+post it as separated RFC patchset (the user space interface will be compatible
+with current one).
 
--- 
-viresh
+Any comment is welcome.
+
+
+Thanks,
+SeongJae Park
