@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C77EDC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1352C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C93A20EDD
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB4F207EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598888219;
-	bh=eDLK48bT73nERhUd4Rq9S2uiOR78bsJN6ZeA5PmgfgU=;
+	s=default; t=1598888223;
+	bh=fT+Gl91n+3w+s/Fj+AVwPmeQvf8Pt8+tmLBCik5m63s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YYVz61kofVXki9RSM54d9Q4ov1TJFyLgLIvA0MB3doVpQQChTkIj1wDetDCuaL7mG
-	 7e5exDc5AV2pqb4SakRky/eujkMTn5V+2sziHTyp0d3xAidOZYTB3Clu0znkTO25Hf
-	 3lQr6vVXjU+iI0nVgF1zigq/t83PxNTHieGJP9z4=
+	b=aTGBngDmB28HtEladuU5S+EWnMlY+Rsk+LIa//bU/8ewXKSNXKawNMJ/c9Po1+sBK
+	 nM3709aQ2ECei534vGhLD+7+PIvCwt3sgFlUoOovmN957R6Z5BI0hNdDBKWgzid2Na
+	 ZKad/rsyrGBuXqnBT7d1/g8D9b9XZLPEZAH6LuiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgHaPg4 (ORCPT
+        id S1729158AbgHaPhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:36:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40160 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728666AbgHaPad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:30:33 -0400
+        id S1728661AbgHaPac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:30:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 801CB21527;
-        Mon, 31 Aug 2020 15:30:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 047D8214D8;
+        Mon, 31 Aug 2020 15:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887833;
-        bh=eDLK48bT73nERhUd4Rq9S2uiOR78bsJN6ZeA5PmgfgU=;
+        s=default; t=1598887832;
+        bh=fT+Gl91n+3w+s/Fj+AVwPmeQvf8Pt8+tmLBCik5m63s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HmgoYRkPwwYRAvvTUCCwnUhZaBj2mRFLJOJqSL8Q5veK/IPo3xgnEliuIhutcOxMC
-         dh9WtKd8tmgWOtAylDCmrQ97KKB5+dwpIaVbEPsx4IyTQ+y+qxjrb2nMHPz5iJB96U
-         1fU+8LBd17VN5rmnp+BQDtebKOTzP+yUTZvXJ8pE=
+        b=MbuBf1gTQpvKxmyBrV+3qFgBJoArJzSYAyxyZSQArBZH77bI36mvJVm1KSAS91Qs8
+         9/2k1yrbzKcvFe1ZdIyjxAPTWWSo1lx9MTirID4mmf0VtgBGDukw1Rve2tnrHRcwRU
+         8gfRiJQJUbylSy4kBT7+6FrX1dF0c01wXeE4oV5o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wayne Lin <Wayne.Lin@amd.com>, Hersen Wu <hersenxs.wu@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+Cc:     Brandon Syu <Brandon.Syu@amd.com>,
+        Josip Pavic <Josip.Pavic@amd.com>,
+        Eryk Brol <eryk.brol@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.8 39/42] drm/amd/display: Retry AUX write when fail occurs
-Date:   Mon, 31 Aug 2020 11:29:31 -0400
-Message-Id: <20200831152934.1023912-39-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 38/42] drm/amd/display: Keep current gain when ABM disable immediately
+Date:   Mon, 31 Aug 2020 11:29:30 -0400
+Message-Id: <20200831152934.1023912-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831152934.1023912-1-sashal@kernel.org>
 References: <20200831152934.1023912-1-sashal@kernel.org>
@@ -61,40 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wayne Lin <Wayne.Lin@amd.com>
+From: Brandon Syu <Brandon.Syu@amd.com>
 
-[ Upstream commit ef67d792a2fc578319399f605fbec2f99ecc06ea ]
+[ Upstream commit cba4b52e431e5de3d8012281cfe194f1c39a9052 ]
 
 [Why]
-In dm_dp_aux_transfer() now, we forget to handle AUX_WR fail cases. We
-suppose every write wil get done successfully and hence some AUX
-commands might not sent out indeed.
+When system enters s3/s0i3, backlight PWM would set user level.
 
 [How]
-Check if AUX_WR success. If not, retry it.
+ABM disable function add keep current gain to avoid it.
 
-Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
-Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Signed-off-by: Brandon Syu <Brandon.Syu@amd.com>
+Reviewed-by: Josip Pavic <Josip.Pavic@amd.com>
+Acked-by: Eryk Brol <eryk.brol@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c | 2 +-
+ drivers/gpu/drm/amd/display/dc/dc_stream.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-index e5ecc5affa1eb..5098fc98cc255 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-@@ -67,7 +67,7 @@ static ssize_t dm_dp_aux_transfer(struct drm_dp_aux *aux,
- 	result = dc_link_aux_transfer_raw(TO_DM_AUX(aux)->ddc_service, &payload,
- 				      &operation_result);
+diff --git a/drivers/gpu/drm/amd/display/dc/dc_stream.h b/drivers/gpu/drm/amd/display/dc/dc_stream.h
+index 49aad691e687e..ccac2315a903a 100644
+--- a/drivers/gpu/drm/amd/display/dc/dc_stream.h
++++ b/drivers/gpu/drm/amd/display/dc/dc_stream.h
+@@ -222,7 +222,7 @@ struct dc_stream_state {
+ 	union stream_update_flags update_flags;
+ };
  
--	if (payload.write)
-+	if (payload.write && result >= 0)
- 		result = msg->size;
+-#define ABM_LEVEL_IMMEDIATE_DISABLE 0xFFFFFFFF
++#define ABM_LEVEL_IMMEDIATE_DISABLE 255
  
- 	if (result < 0)
+ struct dc_stream_update {
+ 	struct dc_stream_state *stream;
 -- 
 2.25.1
 
