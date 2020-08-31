@@ -2,291 +2,102 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4801AC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C357C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0E620719
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E78CA2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:38:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OoSQtxW0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730314AbgHaVbt (ORCPT
+        id S1730274AbgHaViC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 17:31:49 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:44145 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbgHaVbr (ORCPT
+        Mon, 31 Aug 2020 17:38:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726490AbgHaViC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 17:31:47 -0400
-Received: from methusalix.internal.home.lespocky.de ([92.117.54.199]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1Mj8iJ-1kpEcF1hWn-00fF1f; Mon, 31 Aug 2020 23:31:34 +0200
-Received: from falbala.internal.home.lespocky.de ([192.168.243.94])
-        by methusalix.internal.home.lespocky.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94)
-        (envelope-from <post@lespocky.de>)
-        id 1kCrOl-0004Dq-PT; Mon, 31 Aug 2020 23:31:32 +0200
-Date:   Mon, 31 Aug 2020 23:31:30 +0200
-From:   Alexander Dahl <post@lespocky.de>
-To:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Alexander Dahl <ada@thorsis.com>,
-        Alexander Dahl <post@lespocky.de>
-Subject: Re: [PATCH v2 2/2] dt-bindings: leds: Convert pwm to yaml
-Message-ID: <20200831213129.6o4nuqgh7aurantv@falbala.internal.home.lespocky.de>
-Mail-Followup-To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Alexander Dahl <ada@thorsis.com>
-References: <20200831210232.28052-1-post@lespocky.de>
- <20200831210232.28052-3-post@lespocky.de>
+        Mon, 31 Aug 2020 17:38:02 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94128C061575
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 14:38:01 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id 2so600359pjx.5
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 14:38:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hv3iIpISK+Eauvn2X+pBHs6mFWEi7dy0S6XImcuWXSA=;
+        b=OoSQtxW0+3StDvjlRlEx76r1riZgAyXM6VLcswEInCWblGV3xuGwJyaBg0whjjotcM
+         wbH5LSI2btvaYWjdAMl8iD8+jfMtNajn/k+jdCapSLxs2PUL9hFiwcbCyWlG2CEiNyuE
+         imvA+k5Cp1q54kbpN6IFAXldiwPGnNiDWDg19+L1/3R7QHHB5U7xuReYGKicSFPbD3vu
+         T10liVf2z2TtjFiLG9Ie/jgxDwgxN7vRdpL2r99IO5n4U0S6pPseE5xhSbb6AJU/JT3q
+         e47+qDo+iusgo3/v0drWT23NdWz5Cb7f8ftbffL7SD4KUSm1r5UVc66381v8afJ6BXnB
+         uPpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hv3iIpISK+Eauvn2X+pBHs6mFWEi7dy0S6XImcuWXSA=;
+        b=D6Pv3vOs/muLSciD9ZSNvUBUc65W8XNTMw0ZGxUAsPJWDtXvEOyCuJSKew5Ygkg9Zf
+         SEhGijfJLoFYQ0hXxbHsKo9jSudUS4L2QhPI3eIyLlh8lPJJcT8hZzyL6etU6ZMlNAYz
+         aeS994Tq5PPu1ELgqDZlH18riGgBc1o4rorAkAuzKuAVwmFp8kkS13vEb0GbRRcYw7MH
+         dqwmvKuoilgRBg1cu2ghuyoGYi6RYBvgtnauwDmdzZKkrtXOwqSsQXupx/MepPFkdBc+
+         M7uFynGHwWdzcADaXpNvy35TyGUknWt6aNXeDNhynkzY1EKH7fPatjjiBwj5cdxWCjS1
+         J5iA==
+X-Gm-Message-State: AOAM532iSl1QFS8bwCUvG7uF1ron0Hz4wmUJyA+ea6n28NFqCTkeMi1N
+        cLkdUi6LBmuybY6hmkoSdPFasE/UooPB8w==
+X-Google-Smtp-Source: ABdhPJwOasYqywsqH/gXmdcdXJCqpia6QSc5UMEsjUUKJTmBkUyNf87L6K0ndjbpJfKkGCtLXdwLyg==
+X-Received: by 2002:a17:90a:fe04:: with SMTP id ck4mr1235872pjb.210.1598909880687;
+        Mon, 31 Aug 2020 14:38:00 -0700 (PDT)
+Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id m24sm8525514pgn.44.2020.08.31.14.37.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 14:37:59 -0700 (PDT)
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
+Cc:     linux-remoteproc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] remoteproc: stm32: Fix pointer assignement
+Date:   Mon, 31 Aug 2020 15:37:58 -0600
+Message-Id: <20200831213758.206690-1-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bqxk4ppyznh6xyvt"
-Content-Disposition: inline
-In-Reply-To: <20200831210232.28052-3-post@lespocky.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Scan-Signature: f41cc761d791b9a06623163ee6e33981
-X-Provags-ID: V03:K1:1RiyH8glb6y88EbhRcg8mn5lxJ1wnZN5zb0xJnDZZQpZLgMl3Ji
- qDESUgAKrXFv4bFRhlhKURaVcSLGLlSV2O0NrRk4huZIiHMwXG6qbAwE0Dm77OkOuFqPSqh
- bfQDg/OHYX9D6DNXUuv3uNqevjlHa0euwDKO8YMiBzpMhk1ZxM/cUW2Xr8Iy4dJ8LZ/jJCX
- /36hLeXs76XhlYIq8aGfg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GTlt4jacSxY=:lyFoUefKyl6tpG54hfVTRy
- FLP3KEkJIY4niTv/NKdU87Wb73oVmTDp79FJjEFn4TqqcruFqyTcZNV8WXZESNzWy1ZnXI91f
- AJHcQ0Mnv4jKW710RhxAblV5UOwBn1ZNkSocHiGArS5j2AtSsu3V4354q7DU6/XzDKXAPI8Ev
- PWdwxxs9STjgiX5D2pw9sYyRbOfuGzbtJn89nJpITdosJWz5XHEF/X3wMFMoyiD0cOYv3O9rN
- 9Q1yQwiaGWDRn6ZKdhgR+iutNjxkfQzuZmIADTnQ+G5VxalKfhMz1zaSc6IrEZo9/sM/inXad
- U1ihErOmE1Phr5uIvF3BOU3CwKVRuJTF9x9DkMhiypiceiZvKK6wT8g1QkzI9ZvgVphQJjPeF
- mY20k5Yv9bggSmM5xVDSavWm4dcG+TsNbzjzI6b5tbT+FB4UGS+QPMpleZlw1fXTiuHLbRzH+
- y4c1p8g3QOd9FotPS0gJaJH+dsDjzENs9x5WVHMb8OpeG7PsXuVCBIKDehl1BQoKIHrezVMmt
- LD4eDHdk2qej12s8EqWVWPaq10XfuQK4gtP87ZwQXtQgYmytMgjSy9cXv3odv88vkBZ5Aworu
- +7jKeZWe06FDAh4nSLJQJi6voKMFKPcU4fnhYaGhzzSutk7UZpwq6HoXZGaerw61U/07/yDn8
- K0/bBlT7JD1R2qBf0tr/P7z/emKDG4383sjweWSlJyu23yay96vdIfl8EFJFgkAXsONJE5KW3
- tTpWnQ4BXZd5Z8PaaOJ4805xldvja1Mm9dSQ3f6I0k2LXi/2q41WmD4sZ5jlWdc8eQFxlbDbp
- 5QhbcWuSedxAsQfbcxzEnUXVghLrMeyz+Ni9CBm0QIxN14CLiu9gzoiYomVNI5C6W4GrCqn
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix the assignment of the @state pointer - it is obviously wrong.
 
---bqxk4ppyznh6xyvt
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: 376ffdc04456 ("remoteproc: stm32: Properly set co-processor state when attaching")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+---
+ drivers/remoteproc/stm32_rproc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hei hei,
+diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+index f4da42fc0eeb..d2414cc1d90d 100644
+--- a/drivers/remoteproc/stm32_rproc.c
++++ b/drivers/remoteproc/stm32_rproc.c
+@@ -685,7 +685,7 @@ static int stm32_rproc_get_m4_status(struct stm32_rproc *ddata,
+ 		 * We couldn't get the coprocessor's state, assume
+ 		 * it is not running.
+ 		 */
+-		state = M4_STATE_OFF;
++		*state = M4_STATE_OFF;
+ 		return 0;
+ 	}
+ 
+-- 
+2.25.1
 
-I forgot to run checkpatch (it's late today already), and it warns:
-
-  WARNING: DT binding documents should be licensed (GPL-2.0-only OR BSD-2-C=
-lause)
-  #80: FILE: Documentation/devicetree/bindings/leds/leds-pwm.yaml:1:
-  +# SPDX-License-Identifier: GPL-2.0-only
-
-tbh, I just copied that line from leds-gpio.yaml, can be changed in a
-v3 of course.
-
-Greets
-Alex
-
-On Mon, Aug 31, 2020 at 11:02:31PM +0200, Alexander Dahl wrote:
-> The example was adapted slightly to make use of the 'function' and
-> 'color' properties.
->=20
-> Suggested-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Signed-off-by: Alexander Dahl <post@lespocky.de>
-> ---
->  .../devicetree/bindings/leds/leds-pwm.txt     | 50 -----------
->  .../devicetree/bindings/leds/leds-pwm.yaml    | 85 +++++++++++++++++++
->  2 files changed, 85 insertions(+), 50 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.txt
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Docume=
-ntation/devicetree/bindings/leds/leds-pwm.txt
-> deleted file mode 100644
-> index 6c6583c35f2f..000000000000
-> --- a/Documentation/devicetree/bindings/leds/leds-pwm.txt
-> +++ /dev/null
-> @@ -1,50 +0,0 @@
-> -LED connected to PWM
-> -
-> -Required properties:
-> -- compatible : should be "pwm-leds".
-> -
-> -Each LED is represented as a sub-node of the pwm-leds device.  Each
-> -node's name represents the name of the corresponding LED.
-> -
-> -LED sub-node properties:
-> -- pwms : PWM property to point to the PWM device (phandle)/port (id) and=
- to
-> -  specify the period time to be used: <&phandle id period_ns>;
-> -- pwm-names : (optional) Name to be used by the PWM subsystem for the PW=
-M device
-> -  For the pwms and pwm-names property please refer to:
-> -  Documentation/devicetree/bindings/pwm/pwm.txt
-> -- max-brightness : Maximum brightness possible for the LED
-> -- active-low : (optional) For PWMs where the LED is wired to supply
-> -  rather than ground.
-> -- label :  (optional)
-> -  see Documentation/devicetree/bindings/leds/common.txt
-> -- linux,default-trigger :  (optional)
-> -  see Documentation/devicetree/bindings/leds/common.txt
-> -
-> -Example:
-> -
-> -twl_pwm: pwm {
-> -	/* provides two PWMs (id 0, 1 for PWM1 and PWM2) */
-> -	compatible =3D "ti,twl6030-pwm";
-> -	#pwm-cells =3D <2>;
-> -};
-> -
-> -twl_pwmled: pwmled {
-> -	/* provides one PWM (id 0 for Charing indicator LED) */
-> -	compatible =3D "ti,twl6030-pwmled";
-> -	#pwm-cells =3D <2>;
-> -};
-> -
-> -pwmleds {
-> -	compatible =3D "pwm-leds";
-> -	kpad {
-> -		label =3D "omap4::keypad";
-> -		pwms =3D <&twl_pwm 0 7812500>;
-> -		max-brightness =3D <127>;
-> -	};
-> -
-> -	charging {
-> -		label =3D "omap4:green:chrg";
-> -		pwms =3D <&twl_pwmled 0 7812500>;
-> -		max-brightness =3D <255>;
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.yaml b/Docum=
-entation/devicetree/bindings/leds/leds-pwm.yaml
-> new file mode 100644
-> index 000000000000..8c5217f2a9f7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-pwm.yaml
-> @@ -0,0 +1,85 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-pwm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: LEDs connected to PWM
-> +
-> +maintainers:
-> +  - Pavel Machek <pavel@ucw.cz>
-> +
-> +description:
-> +  Each LED is represented as a sub-node of the pwm-leds device.  Each
-> +  node's name represents the name of the corresponding LED.
-> +
-> +properties:
-> +  compatible:
-> +    const: pwm-leds
-> +
-> +patternProperties:
-> +  "^pwm-led-([0-9a-f])$":
-> +    type: object
-> +
-> +    $ref: common.yaml#
-> +
-> +    properties:
-> +      pwms:
-> +        description:
-> +          "PWM property to point to the PWM device (phandle)/port (id)
-> +          and to specify the period time to be used:
-> +          <&phandle id period_ns>;"
-> +
-> +      pwm-names:
-> +        description:
-> +          "Name to be used by the PWM subsystem for the PWM device For
-> +          the pwms and pwm-names property please refer to:
-> +          Documentation/devicetree/bindings/pwm/pwm.txt"
-> +
-> +      max-brightness:
-> +        description:
-> +          Maximum brightness possible for the LED
-> +
-> +      active-low:
-> +        description:
-> +          For PWMs where the LED is wired to supply rather than ground.
-> +
-> +    required:
-> +      - pwms
-> +      - max-brightness
-> +
-> +examples:
-> +  - |
-> +
-> +    #include <dt-bindings/leds/common.h>
-> +
-> +    twl_pwm: pwm {
-> +        /* provides two PWMs (id 0, 1 for PWM1 and PWM2) */
-> +        compatible =3D "ti,twl6030-pwm";
-> +        #pwm-cells =3D <2>;
-> +    };
-> +
-> +    twl_pwmled: pwmled {
-> +        /* provides one PWM (id 0 for Charing indicator LED) */
-> +        compatible =3D "ti,twl6030-pwmled";
-> +        #pwm-cells =3D <2>;
-> +    };
-> +
-> +    pwm_leds {
-> +        compatible =3D "pwm-leds";
-> +
-> +        pwm-led-1 {
-> +            label =3D "omap4::keypad";
-> +            pwms =3D <&twl_pwm 0 7812500>;
-> +            max-brightness =3D <127>;
-> +        };
-> +
-> +        pwm-led-2 {
-> +            color =3D <LED_COLOR_ID_GREEN>;
-> +            function =3D LED_FUNCTION_CHARGING;
-> +            pwms =3D <&twl_pwmled 0 7812500>;
-> +            max-brightness =3D <255>;
-> +        };
-> +    };
-> +
-> +...
-> --=20
-> 2.20.1
-
---=20
-/"\ ASCII RIBBON | =BBWith the first link, the chain is forged. The first
-\ / CAMPAIGN     | speech censured, the first thought forbidden, the
- X  AGAINST      | first freedom denied, chains us all irrevocably.=AB
-/ \ HTML MAIL    | (Jean-Luc Picard, quoting Judge Aaron Satie)
-
---bqxk4ppyznh6xyvt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEwo7muQJjlc+Prwj6NK3NAHIhXMYFAl9NbC4ACgkQNK3NAHIh
-XMbWLRAAyKU2FTkPnTkZ0P8+VmB5alCBONQnPfxB5lkluokR4N1WOJYv0fyPcQJ4
-Vh+g8YWQxiAKh/kfHF4R5TxJeDkgMsg4/cVuL73Vh9q3q6uMgeARImJj8rEzFwMT
-44XhIS1aMQnqjbxMNojSVRQIZ7gCaCKkZ6I1UH8tZnEF9UzNxG2/+1GwKpaxBHz7
-1UiwedKuw9wjiHx8FFvSZY+Hs2rospNpBiNxUMd4/3nuRP/s3b54BOt0H6gf7fRC
-F77KbUhtmIgO2EOlGXZWD/U2UEw6oZ3loZXPYcR3CyQLXVwKJDExG9hUyyYkH3tx
-Hk6I3dl/c8/7+eM5oe34woOtFCiiP2k3YlXjKrY+LEqcFOnC+WN+RqDf25RahPIi
-RA/niLGbg80g0YTaIn+ZoCatAov2FdhRU9hgj8nNFOhQ5bpQ8yXPPJBIWcs+cqv9
-Fbpxv93OvyrnlY31VHvr13spqqmCbtG3hWs42DkY9OiqoUcFy8oWxu/rJwtJsqyc
-Bpp50w9NhhKkN2h/GqdzUgDlG/QAeI0iv2ofaJdB+nHNsRPKxUhwLjn4E2ZnbbaO
-Nz3PPTeNOBaKuTccJ4T4KMKJAFqnimqrUIfExrhqQ4LVPPrqd2DRVS3/zq5EPqYq
-ar03oJwDg5ljaBKZ6gD3k8QtKb5FWTcngocKembWfXtYb5ddN4Y=
-=9aT3
------END PGP SIGNATURE-----
-
---bqxk4ppyznh6xyvt--
