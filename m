@@ -2,146 +2,152 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F21CC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22935C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7DA2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE905206CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FVnP0RXJ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cJmyMcYN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727824AbgHaNBe (ORCPT
+        id S1727042AbgHaNCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 09:01:34 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:51607 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgHaNA5 (ORCPT
+        Mon, 31 Aug 2020 09:02:03 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:34280 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726928AbgHaNBZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 09:00:57 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200831130055euoutp01c82a26c06e04c61cc40168bd50917661~wW9kI91NI2170421704euoutp01_
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 13:00:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200831130055euoutp01c82a26c06e04c61cc40168bd50917661~wW9kI91NI2170421704euoutp01_
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598878855;
-        bh=f/rWok6CJ7/IYjKn1cpZQvn31jSua31cQD97YIm0q8Q=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=FVnP0RXJlfY2ZvA5nG7Pgx9A/IX08DF7NCMbuZUdk+I0a2CKjDwrkbErVDYiSg0rI
-         GztQKaB6VQpx3rGgwaeug1WKBIggyv69Q0uQNKCRX1PzdfEWnxTHegFcs0PZOy1ggg
-         Fp309Oo0wX7vxDLW6rasaIxZteXOr6BY8SaMPDlI=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200831130054eucas1p2328868ab157425b00cef2b6247f73897~wW9jleBVl2410024100eucas1p2p;
-        Mon, 31 Aug 2020 13:00:54 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 5D.B3.05997.684FC4F5; Mon, 31
-        Aug 2020 14:00:54 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200831130054eucas1p235cdcf361f5474a0871c51129d12541c~wW9jP3-qD2812528125eucas1p2C;
-        Mon, 31 Aug 2020 13:00:54 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200831130054eusmtrp1f69895d85ce6af64b2b57b067f199817~wW9jO3Rrl2421924219eusmtrp1Y;
-        Mon, 31 Aug 2020 13:00:54 +0000 (GMT)
-X-AuditID: cbfec7f4-65dff7000000176d-16-5f4cf4867686
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 7F.B2.06314.684FC4F5; Mon, 31
-        Aug 2020 14:00:54 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200831130052eusmtip25eaef84dfc2e904b6394d553b241f70c~wW9hx00Mp2992729927eusmtip2N;
-        Mon, 31 Aug 2020 13:00:52 +0000 (GMT)
-Subject: Re: [PATCH 08/10] arm64: dts: exynos: Add compatibles to sysreg
- nodes
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        alsa-devel@alsa-project.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <0e2b595a-eacc-bddb-617b-d22c908212fc@samsung.com>
-Date:   Mon, 31 Aug 2020 15:00:51 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.11.0
+        Mon, 31 Aug 2020 09:01:25 -0400
+Received: from [192.168.86.25] (c-73-38-52-84.hsd1.vt.comcast.net [73.38.52.84])
+        by linux.microsoft.com (Postfix) with ESMTPSA id B0E8420B7178;
+        Mon, 31 Aug 2020 06:01:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B0E8420B7178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598878876;
+        bh=82LtjhN5/d8zA/bah1Xd5Gq7LKso+a4Fr6DKdpp4Jsw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=cJmyMcYNOIWM34hQRWPbwulPTrLB0paD5yqtCotmQCIxb4Qt9ukLG+Of4MDjVgEhI
+         kwKF7S4a7aHdXMvbhanZ48b2bhGp/2ySRDSordHsbKfGsHun2M505JD0Pbql2ZO3YN
+         /5kogbJNw9UzrDjva9OxfySDTz1vM/hr6ip2sej0=
+Subject: Re: [RFC PATCH v7 08/23] sched: Add core wide task selection and
+ scheduling.
+To:     peterz@infradead.org
+Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Dhaval Giani <dhaval.giani@oracle.com>,
+        Chris Hyser <chris.hyser@oracle.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        mingo@kernel.org, tglx@linutronix.de, pjt@google.com,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, joel@joelfernandes.org,
+        vineeth@bitbyteword.org, Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Agata Gruza <agata.gruza@intel.com>,
+        Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>,
+        graf@amazon.com, konrad.wilk@oracle.com, dfaggioli@suse.com,
+        rostedt@goodmis.org, derkling@google.com, benbjiang@tencent.com,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Aaron Lu <aaron.lu@linux.alibaba.com>
+References: <cover.1598643276.git.jdesfossez@digitalocean.com>
+ <df3af13cc820a3c2397b85cb7de08cb6a0780e1d.1598643276.git.jdesfossez@digitalocean.com>
+ <20200828205154.GB29142@worktop.programming.kicks-ass.net>
+ <381e6ea5-a48c-9882-4c0d-49cfa92d21cc@linux.microsoft.com>
+ <20200829074719.GJ1362448@hirez.programming.kicks-ass.net>
+From:   Vineeth Pillai <viremana@linux.microsoft.com>
+Message-ID: <c251dcde-6c01-65a7-5745-c16a10d5fe1f@linux.microsoft.com>
+Date:   Mon, 31 Aug 2020 09:01:11 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200829142501.31478-8-krzk@kernel.org>
-Content-Language: en-US
+In-Reply-To: <20200829074719.GJ1362448@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUhUYRTle7vayGu0vFlWDEaMmEvrF4W0/XjQQgWCtOlUD1scqxmtlLAs
-        UlNT02wZwoZIMq200dHSxsi0UdRnmllkMoaWlJSJo7RaPZ+S/86599zv3nP4OFJ9kfHm9kfH
-        iIZoXZSGcaXKn32XFiQ5N4QH3S4JwuelBgK3t9YQ+P6VYhrnvutl8CtnH43zhnzwn/ILJL5e
-        K9G4fXiAwdmOLApn9vSTuKWlhMWO4TqER9pTCGzp6aDxi8prDL7SUk3gu7VdLD5rq2Vxa4GT
-        wMnvP5K41JJLrpoulAydZgTbiJkSHpq6WMFSeI4R3nY8YoQvksQKFSPdtOBIsxNC6c2TQkZZ
-        IRKGLLM3u21zXblXjNp/VDQEhkS47nM4cujD1eTx+vyn7Cn0g0hFLhzwi+HroJVKRa6cmi9A
-        UPn4A60QJ4K2J9WEQoYQDCbWk6mIGxuxtc1R6rcQlBcnjYsGESS3mVn5XQ9+M5SlVJFyw5Pv
-        pMCZWsLKhOQ7EXzrHxhTMXwwnK/LQDJW8SGQmXeGkTHFz4PMJ5doGU/jd4HV/pJQNFOh4Wov
-        JWMXfgnYHplIGZO8F7zpvU4oeA5UfL42thn4Jg6KWstYxeo6GC66N4494JN9oj4LGnPSKWXg
-        DIL0qk5WIVkIHHYzUlQr4K30g5ETIHktFFcGKuXV0P3TRinBuMPrz1OVI9whu/zyeF4qSElS
-        K2pf+Fl4eTx5b0jr/UNlIY1pkjXTJDumSXZM//eaEVWIvMRYoz5SNC6MFo8FGHV6Y2x0ZMCe
-        Q3oL+vdXG0ftzgeo8tfuGsRzSDNF9a1ufbia1h01xulrEHCkxlO1prlxl1q1VxcXLxoOhRti
-        o0RjDZrJURov1aIbH3eq+UhdjHhQFA+Lhokuwbl4n0IRfagd5ehjMr4XpM932R7iltQV5Dsa
-        t3ErO8P9yHNzyEAyOeqsCo5o8VtGBHtYE/P1Xf7SK0/P5ng3SZVmzdujPaHV972ZNbPZkFvv
-        s+lS6LGOX3cSQldoE+cGLV86t9G/bP7g7x2aTXTTlnzfd9ri8DDpxtrn1VcTYg8eyA6zumko
-        4z5dsB9pMOr+Aj1XheKnAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCKsWRmVeSWpSXmKPExsVy+t/xe7ptX3ziDc5ckrToPXeSyeLKxUNM
-        FhtnrGe1mPrwCZvF9S/PWS3mfZa1+L9tIrPF/CPnWC2ufH3PZjHp/gQWi/7Hr5ktzp/fwG5x
-        /+tRRotvVzqYLDY9vsZqcXnXHDaLGef3MVmsPXKX3aJ17xF2i4srvjBZtD99yWyxedNUZgcx
-        jw2fm9g89n5bwOKxc9Zddo9NqzrZPO5c28Pm8e7cOXaP7d8esHrc7z7O5LF5Sb1H35ZVjB6f
-        N8kFcEfp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXo
-        Zdy/P5m1YB9zxYmlh9kbGH8xdTFycEgImEjsvSTfxcjFISSwlFHi8JftzBBxKYn5LUpdjJxA
-        prDEn2tdbBA17xklXuy5wwSSEBbwk5j18SUzSEJE4DaLxIubz5hBEswCdxklzs6XgujYzChx
-        4fhusASbgKFE79E+RhCbV8BOon9eMxuIzSKgKtF/cBoriC0qECfxuPc/M0SNoMTJmU9YQGxO
-        AVOJvXtmQS1Ql/gz7xKULS5x68l8JghbXmL72znMExiFZiFpn4WkZRaSlllIWhYwsqxiFEkt
-        Lc5Nzy021CtOzC0uzUvXS87P3cQITCHbjv3cvIPx0sbgQ4wCHIxKPLwBwNQixJpYVlyZe4hR
-        goNZSYTX6ezpOCHelMTKqtSi/Pii0pzU4kOMpkDPTWSWEk3OB6a3vJJ4Q1NDcwtLQ3Njc2Mz
-        CyVx3g6BgzFCAumJJanZqakFqUUwfUwcnFINjByLBItUCn4883whE6ugtt4n6NFFvQKvF52f
-        w7lnX6vV43q4xt72ZtF6f+eag7K6M6ftknKMucbxNuRetotdZuWEotmSv+t+BPJ7TFg4M1mr
-        7euuDTWfEjovnG4SFbjv0LhOP/LXAjvjCwVb7xT/0P/7bdrKGNeGR59k5z6PiLs2/7XehX9T
-        W5RYijMSDbWYi4oTAchKo7k3AwAA
-X-CMS-MailID: 20200831130054eucas1p235cdcf361f5474a0871c51129d12541c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200829142557eucas1p2a9613c8ba9a57ee4842f8ec24b0c5450
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200829142557eucas1p2a9613c8ba9a57ee4842f8ec24b0c5450
-References: <20200829142501.31478-1-krzk@kernel.org>
-        <CGME20200829142557eucas1p2a9613c8ba9a57ee4842f8ec24b0c5450@eucas1p2.samsung.com>
-        <20200829142501.31478-8-krzk@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.08.2020 16:24, Krzysztof Kozlowski wrote:
-> System register nodes, implementing syscon binding, should use
-> appropriate compatible.  This fixes dtbs_check warnings:
-> 
->   arch/arm64/boot/dts/exynos/exynos5433-tm2.dt.yaml: syscon@13b80000:
->     compatible: ['syscon'] is not valid under any of the given schemas
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+
+On 8/29/20 3:47 AM, peterz@infradead.org wrote:
+>> During hotplug stress test, we have noticed that while a sibling is in
+>> pick_next_task, another sibling can go offline or come online. What
+>> we have observed is smt_mask get updated underneath us even if
+>> we hold the lock. From reading the code, looks like we don't hold the
+>> rq lock when the mask is updated. This extra logic was to take care of that.
+> Sure, the mask is updated async, but _where_ is the actual problem with
+> that?
+One issue that we observed was with the inconsistent view of smt_mask
+in the three loops in pick_next_task can lead to corner cases. The first 
+loop
+resets all coresched fields, second loop picks the task for each 
+siblings and
+then if the sibling came online in the third loop, we IPI it and it 
+crashes for a
+NULL core_pick. Similarly I think we might have issues if the sibling goes
+offline in the last loop or sibling is offline/online in the pick loop.
+
+It might be possible to do specific checks for core_pick in the loops to 
+fix the
+corner cases above. But I was not sure if there were more and hence took 
+this
+approach. I understand that cpumask_weight is expensive and will try to 
+fix it
+using core_pick to fix the corner cases.
+
+>
+> On Fri, Aug 28, 2020 at 06:23:55PM -0400, Joel Fernandes wrote:
+>> Thanks Vineeth. Peter, also the "v6+" series (which were some addons on v6)
+>> detail the individual hotplug changes squashed into this patch:
+>> https://lore.kernel.org/lkml/20200815031908.1015049-9-joel@joelfernandes.org/
+>> https://lore.kernel.org/lkml/20200815031908.1015049-11-joel@joelfernandes.org/
+> That one looks fishy, the pick is core wide, making that pick_seq per rq
+> just doesn't make sense.
+I think there are couple of scenarios where pick_seq per sibling will be
+useful. One is this hotplug case, where you need to pick only for the online
+siblings and the offline siblings can come online async. Second case that
+we have seen is, we don't need to mark pick for siblings when we pick a task
+which is currently running. Marking the pick core wide will make the sibling
+take the fast path and re-select the same task during a schedule event
+due to preemption or its time slice expiry.
+
+>> https://lore.kernel.org/lkml/20200815031908.1015049-12-joel@joelfernandes.org/
+> This one reads like tinkering, there is no description of the actual
+> problem just some code that makes a symptom go away.
+>
+> Sure, on hotplug the smt mask can change, but only for a CPU that isn't
+> actually scheduling, so who cares.
+>
+> /me re-reads the hotplug code...
+>
+> ..ooOO is the problem that we clear the cpumasks on take_cpu_down()
+> instead of play_dead() ?! That should be fixable.
+Yes, we get called into schedule(for going idle) for an offline cpu and 
+it gets
+confused. Also I think there could be problems while it comes online as 
+well,
+like I mentioned above. We might IPI a sibling which just came online 
+with a
+NULL core_pick. But I think we can fix it with specific checks for 
+core_pick.
+
+I shall look into the smt mask update side of the hotplug again and see
+if corner cases could be better handled there.
+
+Thanks,
+Vineeth
+
