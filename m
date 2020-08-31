@@ -2,98 +2,113 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BD6C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3AEC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFED720866
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C50321527
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:11:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgHaTKP (ORCPT
+        id S1729478AbgHaTLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 15:10:15 -0400
-Received: from ms.lwn.net ([45.79.88.28]:38314 "EHLO ms.lwn.net"
+        Mon, 31 Aug 2020 15:11:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47662 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727993AbgHaTKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 15:10:15 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 0B3767C0;
-        Mon, 31 Aug 2020 19:10:14 +0000 (UTC)
-Date:   Mon, 31 Aug 2020 13:10:14 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Documentation fixes
-Message-ID: <20200831131014.34bd1367@lwn.net>
-Organization: LWN.net
+        id S1727993AbgHaTLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 15:11:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 09F9DAE1C;
+        Mon, 31 Aug 2020 19:11:52 +0000 (UTC)
+Message-ID: <a5a256d116dfa19e0666ae6ef128b5dea6596547.camel@suse.com>
+Subject: Re: [PATCH v2 0/4] qla2xxx: A couple crash fixes
+From:   Martin Wilck <mwilck@suse.com>
+To:     Daniel Wagner <dwagner@suse.de>, linux-scsi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Nilesh Javali <njavali@marvell.com>
+Date:   Mon, 31 Aug 2020 21:11:51 +0200
+In-Reply-To: <20200831161854.70879-1-dwagner@suse.de>
+References: <20200831161854.70879-1-dwagner@suse.de>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.36.5 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit
-9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
+On Mon, 2020-08-31 at 18:18 +0200, Daniel Wagner wrote:
+> changes since v1:
+> 
+>  - added dummy warn function to patch#1
+>  - added log entry to patch#4
+> 
+> as suggested by Martin
+> 
+> 
+> 
+> Initial cover letter:
+> 
+> The first crash we observed is due memory corruption in the srb
+> memory
+> pool. Unforuntatly, I couldn't find the source of the problem but the
+> workaround by resetting the cleanup callbacks 'fixes' this problem
+> (patch #1). I think as intermeditate step this should be merged until
+> the real cause can be identified.
+> 
+> The second crash is due a race condition(?) in the firmware. The sts
+> entries are not updated in time which leads to this crash pattern
+> which several customers have reported:
+> 
+>  #0 [c00000ffffd1bb80] scsi_dma_unmap at d00000001e4904d4 [scsi_mod]
+>  #1 [c00000ffffd1bbe0] qla2x00_sp_compl at d0000000204803cc [qla2xxx]
+>  #2 [c00000ffffd1bc20] qla24xx_process_response_queue at
+> d0000000204c5810 [qla2xxx]
+>  #3 [c00000ffffd1bd50] qla24xx_msix_rsp_q at d0000000204c8fd8
+> [qla2xxx]
+>  #4 [c00000ffffd1bde0] __handle_irq_event_percpu at c000000000189510
+>  #5 [c00000ffffd1bea0] handle_irq_event_percpu at c00000000018978c
+>  #6 [c00000ffffd1bee0] handle_irq_event at c00000000018984c
+>  #7 [c00000ffffd1bf10] handle_fasteoi_irq at c00000000018efc0
+>  #8 [c00000ffffd1bf40] generic_handle_irq at c000000000187f10
+>  #9 [c00000ffffd1bf60] __do_irq at c000000000018784
+>  #10 [c00000ffffd1bf90] call_do_irq at c00000000002caa4
+>  #11 [c00000ecca417a00] do_IRQ at c000000000018970
+>  #12 [c00000ecca417a50] restore_check_irq_replay at c00000000000de98
+> 
+> From analyzing the crash dump it was clear that
+> qla24xx_mbx_iocb_entry() calls sp->done (qla2x00_sp_compl) which
+> crashes because the response is not a mailbox entry, it is a status
+> entry. Patch #4 changes the process logic for mailbox commands so
+> that
+> the sp is parsed before calling the correct proccess function.
+> 
+> Thanks,
+> Daniel
+> 
+> Daniel Wagner (4):
+>   qla2xxx: Warn if done() or free() are called on an already freed
+> srb
+>   qla2xxx: Simplify return value logic in
+> qla2x00_get_sp_from_handle()
+>   qla2xxx: Drop unused function argument from
+>     qla2x00_get_sp_from_handle()
+>   qla2xxx: Handle incorrect entry_type entries
+> 
+>  drivers/scsi/qla2xxx/qla_gbl.h    |  3 +-
+>  drivers/scsi/qla2xxx/qla_init.c   | 10 ++++++
+>  drivers/scsi/qla2xxx/qla_inline.h |  5 +++
+>  drivers/scsi/qla2xxx/qla_isr.c    | 74 +++++++++++++++++++++++----
+> ------------
+>  drivers/scsi/qla2xxx/qla_mr.c     |  9 ++---
+>  5 files changed, 62 insertions(+), 39 deletions(-)
+> 
 
-  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
+For the set:
+Reviewed-by: Martin Wilck <mwilck@suse.com>
 
-are available in the Git repository at:
 
-  git://git.lwn.net/linux.git tags/docs-5.9-3
 
-for you to fetch changes up to 92001bc0365a144783f8f3108be94e74baf61011:
-
-  Documentation: laptops: thinkpad-acpi: fix underline length build warning (2020-08-24 17:19:07 -0600)
-
-----------------------------------------------------------------
-A handful of documentation fixes for 5.9.
-
-----------------------------------------------------------------
-Brandon Jiang (1):
-      Documentation: fix typo for abituguru documentation
-
-Kees Cook (1):
-      docs: Fix function name trailing double-()s
-
-Lukas Bulwahn (2):
-      MAINTAINERS: mention documentation maintainer entry profile
-      Documentation: add riscv entry in list of existing profiles
-
-Marta Rybczynska (1):
-      Documentation/locking/locktypes: fix local_locks documentation
-
-Puranjay Mohan (2):
-      IIO: Documentation: Replace deprecated :c:func: Usage
-      Fpga: Documentation: Replace deprecated :c:func: Usage
-
-Randy Dunlap (1):
-      Documentation: laptops: thinkpad-acpi: fix underline length build warning
-
-Theodore Dubois (1):
-      devices.txt: fix typo of "ubd" as "udb"
-
- Documentation/RCU/lockdep.rst                      |  2 +-
- Documentation/admin-guide/devices.txt              |  2 +-
- .../admin-guide/laptops/thinkpad-acpi.rst          |  2 +-
- Documentation/driver-api/fpga/fpga-bridge.rst      |  6 +++---
- Documentation/driver-api/fpga/fpga-mgr.rst         |  6 +++---
- Documentation/driver-api/fpga/fpga-programming.rst | 16 +++++++--------
- Documentation/driver-api/fpga/fpga-region.rst      | 18 ++++++++--------
- Documentation/driver-api/iio/core.rst              | 16 +++++++--------
- Documentation/hwmon/abituguru-datasheet.rst        |  6 +++---
- Documentation/hwmon/abituguru.rst                  |  4 ++--
- Documentation/hwmon/abituguru3.rst                 |  4 ++--
- Documentation/locking/locktypes.rst                | 24 +++++++++++-----------
- .../maintainer/maintainer-entry-profile.rst        |  1 +
- Documentation/process/deprecated.rst               |  2 +-
- .../translations/it_IT/process/deprecated.rst      |  2 +-
- MAINTAINERS                                        |  1 +
- 16 files changed, 57 insertions(+), 55 deletions(-)
