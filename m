@@ -2,153 +2,94 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B26C9C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14847C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 914152073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD64F2078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598915563;
-	bh=OYx4gWy0INzeUxyzwos2MBa9BzopDIOMq38s9ZL0LxE=;
+	s=default; t=1598916093;
+	bh=K67KYwM93/LUPOUt+CVB+SxKRu4sFouQt0tEFmBotfY=;
 	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
 	 From;
-	b=a5/5KO/S4+rwqqYYEYFKl/lkzaa7cMGXRJ1rmnWypg+ZuiBvlu/I5rFEpyETd6SRV
-	 6Iu9nD+hPe2x9R5ZLHLuLcwRqFBz6RVW5ho2saBnw9C3tzRwABtMO2Lw7msbjM0tFw
-	 fiu2DxwH2VykS0Is4rHIJA/TEEak3cetI7R7vd1c=
+	b=zsm6I1UOQXLvTWFLXwX9ak4I+8kkjMhFCJUtAZc4f6DPnVMTgb6rglaoXqVAXNpie
+	 m6n/o4wQhbsACAdo4bBSNLSzycuskm5VOGvfy+jCPyZsA+jhPKE/0RWcI8k6ZgBR8D
+	 M6r8DhtwGlTZEtbU+56kCJMOEvM4eoC+fzdzWegE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbgHaXMl (ORCPT
+        id S1726226AbgHaXVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 19:12:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55268 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 19:21:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725814AbgHaXMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 19:12:41 -0400
+        id S1725987AbgHaXVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 19:21:31 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97CD82064B;
-        Mon, 31 Aug 2020 23:12:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D42A2078B;
+        Mon, 31 Aug 2020 23:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598915560;
-        bh=OYx4gWy0INzeUxyzwos2MBa9BzopDIOMq38s9ZL0LxE=;
+        s=default; t=1598916091;
+        bh=K67KYwM93/LUPOUt+CVB+SxKRu4sFouQt0tEFmBotfY=;
         h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Pmj09cjbzIDHktRbdLtunZYruAU7xs8CUARjslGhZo0wPCacthFKZtoc2Ip8GAAXI
-         DAOr9tTrFgwlg0sz+fdqz5WGw1x8KKOPj+3cqQ+7AO+ZzFLu7ucbNaq17OnVUtfzM1
-         fhpWjrmCnqtd6P5l/d2Jnx3KblMFrBFFAOhrbWPU=
+        b=ZRvtcNDB4PT11KKs7GLKPPLkXGXlnTswB8GnQrOXRcozDIOLP05NFL9SombeodfCy
+         b9Y1wtkW7eMPObr+xRYXCbEAn5/A17/CVupF3DeTvCAQqaAsl/V+VOumyPEVBFXVtk
+         2dMxCxCXrtf57T6gEczXeMD0jZI3J9IeCnjXQKJ4=
 Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 6F7ED35230F1; Mon, 31 Aug 2020 16:12:40 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 16:12:40 -0700
+        id DC4B735230F1; Mon, 31 Aug 2020 16:21:30 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 16:21:30 -0700
 From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Akira Yokosawa <akiyks@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, stern@rowland.harvard.edu,
-        parri.andrea@gmail.com, will@kernel.org, peterz@infradead.org,
-        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
-        j.alglave@ucl.ac.uk, luc.maranget@inria.fr
-Subject: Re: [PATCH kcsan 8/9] tools/memory-model: Document categories of
- ordering primitives
-Message-ID: <20200831231240.GG2855@paulmck-ThinkPad-P72>
+To:     peterz@infradead.org, mingo@redhat.com, will@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Question on task_blocks_on_rt_mutex()
+Message-ID: <20200831232130.GA28456@paulmck-ThinkPad-P72>
 Reply-To: paulmck@kernel.org
-References: <20200831182012.GA1965@paulmck-ThinkPad-P72>
- <20200831182037.2034-8-paulmck@kernel.org>
- <48f1fcd2-de89-b21e-f5a6-96c8e8861706@gmail.com>
+References: <20200831224911.GA13114@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <48f1fcd2-de89-b21e-f5a6-96c8e8861706@gmail.com>
+In-Reply-To: <20200831224911.GA13114@paulmck-ThinkPad-P72>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 07:34:20AM +0900, Akira Yokosawa wrote:
-> On Mon, 31 Aug 2020 11:20:36 -0700, paulmck@kernel.org wrote:
-> > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > 
-> > The Linux kernel has a number of categories of ordering primitives, which
-> > are recorded in the LKMM implementation and hinted at by cheatsheet.txt.
-> > But there is no overview of these categories, and such an overview
-> > is needed in order to understand multithreaded LKMM litmus tests.
-> > This commit therefore adds an ordering.txt as well as extracting a
-> > control-dependencies.txt from memory-barriers.txt.  It also updates the
-> > README file.
-> > 
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > ---
-> >  tools/memory-model/Documentation/README       |  24 +-
-> >  tools/memory-model/Documentation/ordering.txt | 462 ++++++++++++++++++++++++++
-> >  tools/memory-model/control-dependencies.txt   | 256 ++++++++++++++
-> >  3 files changed, 740 insertions(+), 2 deletions(-)
-> >  create mode 100644 tools/memory-model/Documentation/ordering.txt
-> >  create mode 100644 tools/memory-model/control-dependencies.txt
+On Mon, Aug 31, 2020 at 03:49:11PM -0700, Paul E. McKenney wrote:
+> Hello!
 > 
-> Hi Paul,
+> The task_blocks_on_rt_mutex() function uses rt_mutex_owner() to
+> take a snapshot of the lock owner right up front.  At this point,
+> the ->wait_lock is held, which at first glance prevents the owner
+> from leaving.  Except that if there are not yet any waiters (that is,
+> the low-order bit of ->owner is zero), rt_mutex_fastunlock() might
+> locklessly clear the ->owner field.  And in that case, it looks like
+> task_blocks_on_rt_mutex() will blithely continue using the ex-owner's
+> task_struct structure, without anything that I can see that prevents
+> the ex-owner from exiting.
 > 
-> Didn't you mean to put control-dependencies.txt under tools/memory-model/Documentation/ ?
+> What am I missing here?
 
-Indeed I did, good catch, thank you!
+One thing I missed is that the low-order bit of ->owner would already
+be set by this point.
+
+> The reason that I am looking into this is that locktorture scenario LOCK05
+> hangs, and does so leaving the torture_rtmutex.waiters field equal to 0x1.
+> This is of course a legal transitional state, but I would not expect it
+> to persist for more than three minutes.  Yet it often does.
+> 
+> This leads me to believe that there is a way for an unlock to fail to wake
+> up a task concurrently acquiring the lock.  This seems to be repaired
+> by later lock acquisitions, and in fact setting the locktorture.stutter
+> module parameter to zero avoids the hang.  Except that I first found the
+> above apparently unprotected access to what was recently the owner task.
+> 
+> Thoughts?
+
+Some breakage elsewhere, presumably...
 
 							Thanx, Paul
-
->         Thanks, Akira
-> 
-> > 
-> > diff --git a/tools/memory-model/Documentation/README b/tools/memory-model/Documentation/README
-> > index 4326603..16177aa 100644
-> > --- a/tools/memory-model/Documentation/README
-> > +++ b/tools/memory-model/Documentation/README
-> > @@ -8,10 +8,19 @@ number of places.
-> >  
-> >  This document therefore describes a number of places to start reading
-> >  the documentation in this directory, depending on what you know and what
-> > -you would like to learn:
-> > +you would like to learn.  These are cumulative, that is, understanding
-> > +of the documents earlier in this list is required by the documents later
-> > +in this list.
-> >  
-> >  o	You are new to Linux-kernel concurrency: simple.txt
-> >  
-> > +o	You have some background in Linux-kernel concurrency, and would
-> > +	like an overview of the types of low-level concurrency primitives
-> > +	that are provided:  ordering.txt
-> > +
-> > +	Here, "low level" means atomic operations to single locations in
-> > +	memory.
-> > +
-> >  o	You are familiar with the concurrency facilities that you
-> >  	need, and just want to get started with LKMM litmus tests:
-> >  	litmus-tests.txt
-> > @@ -20,6 +29,9 @@ o	You are familiar with Linux-kernel concurrency, and would
-> >  	like a detailed intuitive understanding of LKMM, including
-> >  	situations involving more than two threads: recipes.txt
-> >  
-> > +o	You would like a detailed understanding of what your compiler can
-> > +	and cannot do to control dependencies: control-dependencies.txt
-> > +
-> >  o	You are familiar with Linux-kernel concurrency and the
-> >  	use of LKMM, and would like a cheat sheet to remind you
-> >  	of LKMM's guarantees: cheatsheet.txt
-> > @@ -37,12 +49,16 @@ o	You are interested in the publications related to LKMM, including
-> >  DESCRIPTION OF FILES
-> >  ====================
-> >  
-> > -Documentation/README
-> > +README
-> >  	This file.
-> >  
-> >  Documentation/cheatsheet.txt
-> >  	Quick-reference guide to the Linux-kernel memory model.
-> >  
-> > +Documentation/control-dependencies.txt
-> > +	A guide to preventing compiler optimizations from destroying
-> > +	your control dependencies.
-> > +
-> >  Documentation/explanation.txt
-> >  	Describes the memory model in detail.
-> [...]
