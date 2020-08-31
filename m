@@ -2,135 +2,84 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AADC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6922FC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 355E12073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A4C7206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:00:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AOdCeQxT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HG/qEiyC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbgHaH7J (ORCPT
+        id S1728067AbgHaIAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 03:59:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41116 "EHLO
+        Mon, 31 Aug 2020 04:00:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728197AbgHaH6z (ORCPT
+        with ESMTP id S1726244AbgHaIAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:58:55 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A17BCC061573;
-        Mon, 31 Aug 2020 00:58:53 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id g128so4902639iof.11;
-        Mon, 31 Aug 2020 00:58:53 -0700 (PDT)
+        Mon, 31 Aug 2020 04:00:45 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E641BC061573;
+        Mon, 31 Aug 2020 01:00:44 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id o18so7226657eje.7;
+        Mon, 31 Aug 2020 01:00:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ZGpi+5qwZTXlfGi+xb+oDjdA7kPA3G9h6znjI9BQew0=;
-        b=AOdCeQxT2jAza4/PKUwlGY32t9Nu7VJ5ktqVkH9a1b+k0F12J3MfmkECzbTg4jufCA
-         jCLvQ2XJtHbIS7gI8U9W7STv4m4hPisAQzGqLu7M/q/P0enBWtyOWHIHtgGAufrSB7dg
-         tBqkJuASBrVp+c5X0GQPi5qcvxUNK7P/wxe4Vkx+HCr6visW3UrptXnjGezadJCgGNwe
-         /W6hhR4r5K9nnR3Rvj9IhbSYddF5UfI0wyYgXi4vjl5iID0mdpVHCiB82Z9WXdLmZvhQ
-         eP8hGLezFV+mc0u9s8IQQdaMS43NOxx+B/DkjqKmXCoN3P2VLa1bEwwm+iD/z9qZ3DP+
-         d0Ww==
+        bh=RLyGY7skttPgNOsTkC5qujmdsaHTNBsI9n0BA8OjV9c=;
+        b=HG/qEiyC9awhcfnIgmgt/osngCjseQB57TpCrwAGZejnh63dA8FdDNWc6FjG7hZiQd
+         pu/iQpRptYlTZuSWbuZHQr1G47yxwjXrBlvWve2A/c4nHYaWMUnIQ2Bju4WnbFsn69bl
+         ASNtOvqRCE71Y/djLTEqpmrDm9ZHT6vECvGdBKWhfnWFPTNFBkpKFscAtbW47Ecgt0Lk
+         YnU6FomqRWLxTxRqBLK9rqwLHQini05Q20EbNGOzYAWg2IULEYTkMj5LH74pbtzml1sA
+         8OUWhSA39tpycMgWQegyiCX9PxJGm4Om9QCKUnEqz5o980mepwoyD14sSiIzK1a6DcVZ
+         5fBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZGpi+5qwZTXlfGi+xb+oDjdA7kPA3G9h6znjI9BQew0=;
-        b=tsoctX4Z9NqCE3TYx8pMoknJpAwrcbDBHX2QajuwKxOMB+OhfkNhawsmi8RyQsgPjp
-         dYTCAwH1+of1cZnFTEtWEQsu64pJ1PKoiHCnWOvFWqEJJLh9FS/Y5K0SeBsz5Btb6He7
-         jbZw0XZeR5hCVQQLis0WljOBxuI6thvPaIcy3ePbkcjRh2WUUIvMyBM6HmxTm14/dLAd
-         C1oYPmcqzj95ftChu3koiwvyZiEtLa2bYESNRJTDmLx025OLlJoSFYrS8P7IkhOVmfZ+
-         S8P49pPUcKK4ruiLHLaBgE6Jc2aVCGuhg4fRwNI4MihBNCJrj26t/ygaEklBSnMv4LDU
-         KvJA==
-X-Gm-Message-State: AOAM530K5ffCsnWUyq6d7FEIadEEmFo6pKPAGAyv6xb9h0NONuBihbSe
-        /OzqUs60B3Yrr1dA3w3ACa51qJOU8hZGtYyol2fnV6nMcg==
-X-Google-Smtp-Source: ABdhPJyzPNmQVuqnQsiy0uTVTWNT0Qbgcw6B7+74VyKPKvBv+1lPzo8yJnHlFDeW92m9d2egkd4N7kv/NrWlfHp+aTI=
-X-Received: by 2002:a5d:954f:: with SMTP id a15mr361144ios.53.1598860733041;
- Mon, 31 Aug 2020 00:58:53 -0700 (PDT)
+        bh=RLyGY7skttPgNOsTkC5qujmdsaHTNBsI9n0BA8OjV9c=;
+        b=dESKyW/CujOgRxnm9NgLGHVlv8H71Ano1hMI3K6tFyb/xCy1jLKGNF7jbFbJ93Asdr
+         qV7GDU0hISWnETs63Z8vVzs6mN9+Y8p81t32oM0cSC6Vt5J4bxwoYMIPwLV3mGXGd8p0
+         M0SxOQTdp0ZEbLF7IwDBOh536TCeXlnjE1r2p2mJ3igTSwjA+DCbo8A0R8i6aQdd0PHv
+         6JNu7CgVsqT9ozmoFRAdJZTGkGnjr+HXVOIVL78+ISSJ4R4SldSY1GtszGFIEqP04THD
+         eEbmCY3TVXZgfXNJ4UldUjnTZTwkzBmoZ8ooMvUrWDQI7nwaD3agG9fkbBtS9s/EyLq0
+         SExg==
+X-Gm-Message-State: AOAM5332AoXEvF4TVfVNa9avcDhqpPxSuUcEvmQQB1ERaJzYTbnv9RvM
+        6UHmXfe58xfAsb0p2UYDG/0O3qyJ/BtFh/is6aGBbvmmDtc=
+X-Google-Smtp-Source: ABdhPJxBfcSDn6XcN2nGEofMVxqRw1qOv9l16bC+TFGmq4avPtJ4PxuJPRshQlSxWv+9zqsmzKmIoTWzzX1k/DKUVC8=
+X-Received: by 2002:a17:906:5812:: with SMTP id m18mr38190ejq.66.1598860843635;
+ Mon, 31 Aug 2020 01:00:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200830122051.197892-1-tali.perry1@gmail.com> <CAHp75VeX7OUeF=K_NmtXU4LACS9MxN1=nbSn01rvy-1MXoBL3Q@mail.gmail.com>
-In-Reply-To: <CAHp75VeX7OUeF=K_NmtXU4LACS9MxN1=nbSn01rvy-1MXoBL3Q@mail.gmail.com>
-From:   Avi Fishman <avifishman70@gmail.com>
-Date:   Mon, 31 Aug 2020 10:57:31 +0300
-Message-ID: <CAKKbWA46wSmvRshtMcShg8ka6aR2rYaB9b70EEYdQAHzJ=700g@mail.gmail.com>
-Subject: Re: [PATCH v2] i2c: npcm7xx: bug fix timeout (usec instead of msec)
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Tali Perry <tali.perry1@gmail.com>, kunyi@google.com,
-        xqiu@google.com, Benjamin Fair <benjaminfair@google.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1598851448-5493-1-git-send-email-amit.pundir@linaro.org>
+ <CAMi1Hd3n2rfr+k09L8WO1S1Tn1s3xJencmr1q3a6e-FOgXr5Qg@mail.gmail.com> <CAMS8qEXcANkb-HoTk8zrXQEzkQO4cnFw4hj5tMp82UEVKd+eHQ@mail.gmail.com>
+In-Reply-To: <CAMS8qEXcANkb-HoTk8zrXQEzkQO4cnFw4hj5tMp82UEVKd+eHQ@mail.gmail.com>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Mon, 31 Aug 2020 10:00:07 +0200
+Message-ID: <CAMS8qEW=EbKpBPSp10PgnuGY-rcqtrdhRs0ObYym5vrbqTtb-w@mail.gmail.com>
+Subject: Re: [PATCH v6] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
+To:     Amit Pundir <amit.pundir@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dt <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 9:01 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Sun, Aug 30, 2020 at 3:23 PM Tali Perry <tali.perry1@gmail.com> wrote:
->
-> >
-> > i2c: npcm7xx: bug fix timeout (usec instead of msec)
->
-> This commit message is awful. Please read [1] as a tutorial how to
-> write a commit messages.
->
+>This happens here
 
-Would this be better:
-i2c: npcm7xx: Fix microsecond timeout calculation
+Forgot this part
 
-Inside npcm_i2c_master_xfer() we calculate a timeout for the entire
-transaction in microseconds, the calculation was wrong so big i2c
-massages would timeout before they ended.
-This commit fix that.
-
-> [1]: https://chris.beams.io/posts/git-commit/
->
-> ...
->
-> > -       /* Adaptive TimeOut: astimated time in usec + 100% margin */
-> > -       timeout_usec = (2 * 10000 / bus->bus_freq) * (2 + nread + nwrite);
-> > +       /*
-> > +        * Adaptive TimeOut: estimated time in usec + 100% margin:
-> > +        * 2: double the timeout for clock stretching case
-> > +        * 9: bits per transaction (including the ack/nack)
->
-> > +        * 1000000: micro second in a second
->
-> No need. See below.
->
-> > +        */
->
-> > +       timeout_usec = (2 * 9 * 1000000 / bus->bus_freq) * (2 + nread + nwrite);
->
-> USEC_PER_SEC
-
-OK
-
->
-> >         timeout = max(msecs_to_jiffies(35), usecs_to_jiffies(timeout_usec));
-> >         if (nwrite >= 32 * 1024 || nread >= 32 * 1024) {
-> >                 dev_err(bus->dev, "i2c%d buffer too big\n", bus->num);
->
-> --
-> With Best Regards,
-> Andy Shevchenko
-
-
-
--- 
-Regards,
-Avi
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/regulator/core.c?h=v5.9-rc3#n398
