@@ -2,232 +2,250 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A9CC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E543C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0FB620866
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4902C208A9
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:08:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U7r4m9+E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgHaXIT (ORCPT
+        id S1726266AbgHaXI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 19:08:19 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:34887 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbgHaXIR (ORCPT
+        Mon, 31 Aug 2020 19:08:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725814AbgHaXIz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 19:08:17 -0400
-Received: by mail-il1-f200.google.com with SMTP id p16so3216961ilp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 16:08:16 -0700 (PDT)
+        Mon, 31 Aug 2020 19:08:55 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 393A6C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 16:08:55 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id w11so2455311lfn.2
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 16:08:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oFOwZqPQy+End9TmkGk8//KnSSeYvzkG/gwOBN2yU+c=;
+        b=U7r4m9+EyjAb37Q9nfGOYH+65wJydKc9ZpUlzQSMbBhUrAO638rRw1OfoJo38Y7i0w
+         ILyY7Go+C0LtWzuH3KBIhwk+blaoPglXMgiPj6rt9k6gF5wBqjQJt1rc1CvsioG1SlyZ
+         TaiJH98zhI5O68YC8POrADP3vwxkml9G2gfY3jCU+pS/zgmX8Tn0ZPaMCvz7pMIefET+
+         z4LrBHiJ61leUHbIhOO/PvQzDLJ6OvJd2lsYldtxJbLNcR/0JF5p+1S+lNngBvioBH3u
+         oH+sy3bbcDCg1trAaU9et2yI24KVRnpGTbZYOEZFmmYyAqfYaa0sRKdtspsLQV+VYi7K
+         YSPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=VznC8MyQYOV7sK4ysThHXxJPTpVh7KNJwv4KURO37GY=;
-        b=sEkbTvUeMUc8NLqqDK0BMtHYq8e1sUEMPN7/ahklEuqlNSLfwiuJQspSGdl6bUURoO
-         H8LEWc5HCy/gL8ogKmBDwis5mYaqk9fsbD07fSAcuLRjarPBpSeskkapWttzxjgCqgO2
-         W/e3Ur3FqwLdj7FtEzWWfRYIplmXdlEdrPyAJRWfUAdktCjfK3esMuPbmZcT7DWhxbbP
-         8wC0Er8aB5w+OXCrHGAf4CwTT8YQzSAEYW/CnEBgvgZ980m5g905UtF25GhEpCBI2h5k
-         2RpiFK+RLwVnge255b5mBa5h1kCK2v39yuabaO8MMK7HgiRtR7SPP6sg1BDcizW4GP9F
-         5vMQ==
-X-Gm-Message-State: AOAM532R8CMOifPEcbvmIwXObILkKi8jVi43wsJz3erY2YwRjHdZtcft
-        UblaZdtL+u15eBxiU3v68bmtWEuNBo1uZ1+wjHj0PtDNTNWr
-X-Google-Smtp-Source: ABdhPJyS0xQLu2WkBe1RFTdpEJI15WPbVkevBff7OUnFXtFWo+aPHmXbWRwd22EsZ/ecKnLV+kuwSubkH8cUqa9MXEYlbIttUkMx
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oFOwZqPQy+End9TmkGk8//KnSSeYvzkG/gwOBN2yU+c=;
+        b=rFAkd8R8wE5c98YcElQHBC+7EiqTMYG3eo+CRrbchcemmsu6CvH89I1eoKDlrEIfEg
+         gCr+hM2grLBg56jDnoZo09NvTRXuWBtG9K1lmJHUEeyNwlo4OLJUMLFXakBLTM2+NArc
+         4uZ5Cv3/iw0KYhyYma8gYqUywfv8lVAC4I5m9SmCDP/2JrkWvt7QH1LK7M4JRwz8vMaK
+         JF6ncwJIW3Jhc5YUxdq2eRUv/j05QfvXeM8tdR3ixW2XklKaTIuCNbY2TbVFZ0/gVRTf
+         RdyC8U6YpqxRwFbkET2L+MryuqrRwFUg1YcBn2xcvQq4+ZzPbBcSv7BXXwZF6rO2znhO
+         gzcA==
+X-Gm-Message-State: AOAM532xQqY1b79gAbB0fr599qw32ZSyOO/XzHGw6qI4csu4LKQU3mRP
+        CBjtpSnRM/FjW2qRUrQIbhSDmqf5cq4Ztrzp8UW0kjbDreQ=
+X-Google-Smtp-Source: ABdhPJwcC+K8YjkWSdaZ0phbx58pLddBVpuLH4E99ms1abUprg6Tf8kQ16VTRgNyVRvhx0TxwXc1bfsHzxWt/xCrQYA=
+X-Received: by 2002:a05:6512:1048:: with SMTP id c8mr1663540lfb.101.1598915333216;
+ Mon, 31 Aug 2020 16:08:53 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9a86:: with SMTP id c6mr3294483iom.27.1598915296330;
- Mon, 31 Aug 2020 16:08:16 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 16:08:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000438ab305ae347ac4@google.com>
-Subject: KASAN: use-after-free Read in __fput (3)
-From:   syzbot <syzbot+c282923e5da93549fa27@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maz@kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
+References: <20200826230225.3782486-1-posk@google.com> <2086453141.23738.1598888098693.JavaMail.zimbra@efficios.com>
+In-Reply-To: <2086453141.23738.1598888098693.JavaMail.zimbra@efficios.com>
+From:   Peter Oskolkov <posk@google.com>
+Date:   Mon, 31 Aug 2020 16:08:41 -0700
+Message-ID: <CAPNVh5fWuEjyc9SxGt+Ex+bUrbLjUJt4bDhg=03y4jtSAh1igA@mail.gmail.com>
+Subject: Re: [PATCH 1/2 v5] rseq/membarrier: add MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     paulmck <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Turner <pjt@google.com>,
+        Chris Kennelly <ckennelly@google.com>,
+        Peter Oskolkov <posk@posk.io>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Aug 31, 2020 at 8:35 AM Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
+>
 
-syzbot found the following issue on:
+Thanks for the review!
 
-HEAD commit:    15bc20c6 Merge tag 'tty-5.9-rc3' of git://git.kernel.org/p..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10b440d1900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=978db74cb30aa994
-dashboard link: https://syzkaller.appspot.com/bug?extid=c282923e5da93549fa27
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16a5452e900000
+>
+> ----- On Aug 26, 2020, at 7:02 PM, Peter Oskolkov posk@google.com wrote:
+> [...]
+> >
+> > static void ipi_mb(void *info)
+> > {
+> > +#ifdef CONFIG_RSEQ
+> > +     int *flags = info;
+> > +
+> > +     if (flags && (*flags == MEMBARRIER_FLAG_RSEQ))
+> > +             rseq_preempt(current);
+> > +#endif
+>
+> Please lift this into a new ipi_rseq(), which will be defined as an empty function
+> if RSEQ is not defined.
 
-The issue was bisected to:
+Done.
 
-commit a9ed4a6560b8562b7e2e2bed9527e88001f7b682
-Author: Marc Zyngier <maz@kernel.org>
-Date:   Wed Aug 19 16:12:17 2020 +0000
+>
+>
+> >       smp_mb();       /* IPIs should be serializing but paranoid. */
+> > }
+> >
+> > @@ -129,19 +143,26 @@ static int membarrier_global_expedited(void)
+> >       return 0;
+> > }
+> >
+> > -static int membarrier_private_expedited(int flags)
+> > +static int membarrier_private_expedited(int flags, int cpu_id)
+> > {
+> >       int cpu;
+> >       cpumask_var_t tmpmask;
+> >       struct mm_struct *mm = current->mm;
+> >
+> > -     if (flags & MEMBARRIER_FLAG_SYNC_CORE) {
+> > +     if (flags == MEMBARRIER_FLAG_SYNC_CORE) {
+>
+> I'm not sure why we need to change the behavior from a mask on flags to
+> an equality, which means this behaves more like a list of items rather
+> than flags.
+>
+> It's one thing to disallow combining things like SYNC_CORE and RSEQ in the
+> ABI, but I wonder why we need to change the flags behavior to an equality
+> for the internal flags.
 
-    epoll: Keep a reference on files added to the check list
+I do not feel too strongly about this, but using "flags & XXX" implies
+that flags is a bitmask that can have more than one bit set. I was actually
+confused initially by this and was trying to figure out where / how more than
+one bit can be set, and where / how this is handled. By explicitly using "=="
+the code indicates that (at the moment) this is not a bitmask.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=147a02f2900000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=167a02f2900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=127a02f2900000
+I can revert the change back to "&" if you think it is better than having "==".
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c282923e5da93549fa27@syzkaller.appspotmail.com
-Fixes: a9ed4a6560b8 ("epoll: Keep a reference on files added to the check list")
+>
+> >               if (!IS_ENABLED(CONFIG_ARCH_HAS_MEMBARRIER_SYNC_CORE))
+> >                       return -EINVAL;
+> >               if (!(atomic_read(&mm->membarrier_state) &
+> >                     MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE_READY))
+> >                       return -EPERM;
+> > +     } else if (flags == MEMBARRIER_FLAG_RSEQ) {
+> > +             if (!IS_ENABLED(CONFIG_RSEQ))
+> > +                     return -EINVAL;
+> > +             if (!(atomic_read(&mm->membarrier_state) &
+> > +                   MEMBARRIER_STATE_PRIVATE_EXPEDITED_RSEQ_READY))
+> > +                     return -EPERM;
+> >       } else {
+> > +             BUG_ON(flags != 0);
+> >               if (!(atomic_read(&mm->membarrier_state) &
+> >                     MEMBARRIER_STATE_PRIVATE_EXPEDITED_READY))
+> >                       return -EPERM;
+> > @@ -174,6 +195,8 @@ static int membarrier_private_expedited(int flags)
+> >                */
+> >               if (cpu == raw_smp_processor_id())
+> >                       continue;
+> > +             if (cpu_id >= 0 && cpu != cpu_id)
+> > +                     continue;
+>
+> When the cpu is specified, it seems rather inefficient to iterate on all
+> cpus to skip all but the one we are looking for. I suspect we don't want
+> to go through the loop in that case.
 
-==================================================================
-BUG: KASAN: use-after-free in d_inode include/linux/dcache.h:522 [inline]
-BUG: KASAN: use-after-free in fsnotify_parent include/linux/fsnotify.h:54 [inline]
-BUG: KASAN: use-after-free in fsnotify_file include/linux/fsnotify.h:90 [inline]
-BUG: KASAN: use-after-free in fsnotify_close include/linux/fsnotify.h:279 [inline]
-BUG: KASAN: use-after-free in __fput+0x8ac/0x920 fs/file_table.c:267
-Read of size 8 at addr ffff888087a020a8 by task syz-executor.2/11261
+Done. The code is a bit more complicated now, but definitely more
+efficient.
 
-CPU: 0 PID: 11261 Comm: syz-executor.2 Not tainted 5.9.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- d_inode include/linux/dcache.h:522 [inline]
- fsnotify_parent include/linux/fsnotify.h:54 [inline]
- fsnotify_file include/linux/fsnotify.h:90 [inline]
- fsnotify_close include/linux/fsnotify.h:279 [inline]
- __fput+0x8ac/0x920 fs/file_table.c:267
- task_work_run+0xdd/0x190 kernel/task_work.c:141
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
- exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:167
- syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:242
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x416f01
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007fff215c6f90 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000416f01
-RDX: 00000000000f4240 RSI: 0000000000000081 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000001190358 R09: 0000000000000000
-R10: 00007fff215c7070 R11: 0000000000000293 R12: 0000000001190360
-R13: 0000000000000000 R14: ffffffffffffffff R15: 000000000118cf4c
+>
+> >               p = rcu_dereference(cpu_rq(cpu)->curr);
+> >               if (p && p->mm == mm)
+> >                       __cpumask_set_cpu(cpu, tmpmask);
+> > @@ -181,7 +204,7 @@ static int membarrier_private_expedited(int flags)
+> >       rcu_read_unlock();
+> >
+> >       preempt_disable();
+> > -     smp_call_function_many(tmpmask, ipi_mb, NULL, 1);
+> > +     smp_call_function_many(tmpmask, ipi_mb, &flags, 1);
+> >       preempt_enable();
+> >
+> >       free_cpumask_var(tmpmask);
+> > @@ -283,11 +306,18 @@ static int membarrier_register_private_expedited(int
+> > flags)
+> >           set_state = MEMBARRIER_STATE_PRIVATE_EXPEDITED,
+> >           ret;
+> >
+> > -     if (flags & MEMBARRIER_FLAG_SYNC_CORE) {
+> > +     if (flags == MEMBARRIER_FLAG_SYNC_CORE) {
+>
+> Same comment about changing this internal flags behavior from mask to equality.
 
-Allocated by task 11262:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
- slab_post_alloc_hook mm/slab.h:518 [inline]
- slab_alloc mm/slab.c:3312 [inline]
- kmem_cache_alloc+0x138/0x3a0 mm/slab.c:3482
- __d_alloc+0x2a/0x950 fs/dcache.c:1709
- d_alloc_pseudo+0x19/0x70 fs/dcache.c:1838
- alloc_file_pseudo+0xc6/0x250 fs/file_table.c:226
- sock_alloc_file+0x4f/0x190 net/socket.c:411
- sock_map_fd net/socket.c:435 [inline]
- __sys_socket+0x13d/0x200 net/socket.c:1524
- __do_sys_socket net/socket.c:1529 [inline]
- __se_sys_socket net/socket.c:1527 [inline]
- __x64_sys_socket+0x6f/0xb0 net/socket.c:1527
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Same reply :)
 
-Freed by task 11262:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
- kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
- __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
- __cache_free mm/slab.c:3418 [inline]
- kmem_cache_free.part.0+0x67/0x1f0 mm/slab.c:3693
- __d_free fs/dcache.c:271 [inline]
- dentry_free+0xde/0x160 fs/dcache.c:348
- __dentry_kill+0x4c6/0x640 fs/dcache.c:593
- dentry_kill fs/dcache.c:705 [inline]
- dput+0x725/0xbc0 fs/dcache.c:878
- __fput+0x3ab/0x920 fs/file_table.c:294
- task_work_run+0xdd/0x190 kernel/task_work.c:141
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
- exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:167
- syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:242
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+I can revert the change, but it will look weird, imho - the code does not
+treat flags as a bitmask, and changing it to actually work with flags a bitmask
+will make it more complicated without a real use case at the moment.
 
-Last call_rcu():
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_record_aux_stack+0x82/0xb0 mm/kasan/generic.c:346
- __call_rcu kernel/rcu/tree.c:2894 [inline]
- call_rcu+0x14f/0x7e0 kernel/rcu/tree.c:2968
- dentry_free+0xc3/0x160 fs/dcache.c:350
- __dentry_kill+0x4c6/0x640 fs/dcache.c:593
- shrink_dentry_list+0x144/0x480 fs/dcache.c:1141
- shrink_dcache_parent+0x219/0x3c0 fs/dcache.c:1568
- d_invalidate fs/dcache.c:1677 [inline]
- d_invalidate+0x13f/0x280 fs/dcache.c:1662
- proc_invalidate_siblings_dcache+0x43b/0x600 fs/proc/inode.c:150
- release_task+0xc63/0x14d0 kernel/exit.c:221
- wait_task_zombie kernel/exit.c:1088 [inline]
- wait_consider_task+0x2fb3/0x3b20 kernel/exit.c:1315
- do_wait_thread kernel/exit.c:1378 [inline]
- do_wait+0x36a/0x9e0 kernel/exit.c:1449
- kernel_wait4+0x14c/0x260 kernel/exit.c:1621
- __do_sys_wait4+0x13f/0x150 kernel/exit.c:1649
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>
+> >               if (!IS_ENABLED(CONFIG_ARCH_HAS_MEMBARRIER_SYNC_CORE))
+> >                       return -EINVAL;
+> >               ready_state =
+> >                       MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE_READY;
+> > +     } else if (flags == MEMBARRIER_FLAG_RSEQ) {
+> > +             if (!IS_ENABLED(CONFIG_RSEQ))
+> > +                     return -EINVAL;
+> > +             ready_state =
+> > +                     MEMBARRIER_STATE_PRIVATE_EXPEDITED_RSEQ_READY;
+> > +     } else {
+> > +             BUG_ON(flags != 0);
+> >       }
+> >
+> >       /*
+> > @@ -299,6 +329,8 @@ static int membarrier_register_private_expedited(int flags)
+> >               return 0;
+> >       if (flags & MEMBARRIER_FLAG_SYNC_CORE)
+> >               set_state |= MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE;
+> > +     if (flags & MEMBARRIER_FLAG_RSEQ)
+> > +             set_state |= MEMBARRIER_STATE_PRIVATE_EXPEDITED_RSEQ;
+>
+> This one still behaves like a mask, so there is a discrepancy between registration
+> and action functions.
 
-Second to last call_rcu():
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_record_aux_stack+0x82/0xb0 mm/kasan/generic.c:346
- __call_rcu kernel/rcu/tree.c:2894 [inline]
- call_rcu+0x14f/0x7e0 kernel/rcu/tree.c:2968
- dentry_free+0xc3/0x160 fs/dcache.c:350
- __dentry_kill+0x4c6/0x640 fs/dcache.c:593
- dentry_kill fs/dcache.c:717 [inline]
- dput+0x635/0xbc0 fs/dcache.c:878
- handle_mounts fs/namei.c:1389 [inline]
- step_into+0xc43/0x1990 fs/namei.c:1690
- walk_component+0x171/0x6a0 fs/namei.c:1866
- link_path_walk.part.0+0x6b8/0xc20 fs/namei.c:2183
- link_path_walk fs/namei.c:2111 [inline]
- path_lookupat+0xb7/0x830 fs/namei.c:2332
- filename_lookup+0x19f/0x560 fs/namei.c:2366
- user_path_at include/linux/namei.h:59 [inline]
- do_faccessat+0x129/0x820 fs/open.c:423
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Yes, and I vaguely remember you saying that commands being distinct bits
+is for "discoverability", not for any "ORing" of commands at the moment.
 
-The buggy address belongs to the object at ffff888087a02040
- which belongs to the cache dentry of size 312
-The buggy address is located 104 bytes inside of
- 312-byte region [ffff888087a02040, ffff888087a02178)
-The buggy address belongs to the page:
-page:00000000b4e25e7c refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x87a02
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea000212a688 ffffea00021e6a48 ffff88821bc47f00
-raw: 0000000000000000 ffff888087a02040 000000010000000a 0000000000000000
-page dumped because: kasan: bad access detected
+[...]
 
-Memory state around the buggy address:
- ffff888087a01f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff888087a02000: fc fc fc fc fc fc fc fc fa fb fb fb fb fb fb fb
->ffff888087a02080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                  ^
- ffff888087a02100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fc
- ffff888087a02180: fc fc fc fc fc fc fc 00 00 00 00 00 00 00 00 00
-==================================================================
+> > +SYSCALL_DEFINE3(membarrier, int, cmd, int, flags, int, cpu_id)
+> > {
+> > -     if (unlikely(flags))
+> > +     if (unlikely(flags) && cmd != MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ)
+>
+> I would prefer that we deal with flags and cpu_id entirely here rather than
+> half here, half below, with e.g.:
+>
+> switch (cmd) {
+> case MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ:
+>     if (unlikely(flags && flags != MEMBARRIER_CMD_FLAG_CPU))
+>         return -EINVAL;
+>     break;
+> default:
+>     if (unlikely(flags))
+>         return -EINVAL;
+> }
+>
+> if (!(flags & MEMBARRIER_CMD_FLAG_CPU))
+>     cpu_id = -1;
 
+Done.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+[...]
