@@ -2,252 +2,125 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24319C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE695C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06BF720678
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9103D20767
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgHaIUc (ORCPT
+        id S1727806AbgHaIXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 04:20:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:55036 "EHLO foss.arm.com"
+        Mon, 31 Aug 2020 04:23:13 -0400
+Received: from mga17.intel.com ([192.55.52.151]:49946 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728147AbgHaIUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 04:20:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76AB831B;
-        Mon, 31 Aug 2020 01:20:22 -0700 (PDT)
-Received: from [10.57.6.112] (unknown [10.57.6.112])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D51DA3F68F;
-        Mon, 31 Aug 2020 01:20:19 -0700 (PDT)
-Subject: Re: [PATCH 4/4] kselftests/arm64: add PAuth tests for single threaded
- consistency and key uniqueness
-To:     Boyan Karatotev <boyan.karatotev@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     vincenzo.frascino@arm.com, boian4o1@gmail.com,
-        Shuah Khan <shuah@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-References: <20200828131606.7946-1-boyan.karatotev@arm.com>
- <20200828131606.7946-5-boyan.karatotev@arm.com>
-From:   Amit Kachhap <amit.kachhap@arm.com>
-Message-ID: <6ea1f31f-dda3-5e7d-126e-88590614b86f@arm.com>
-Date:   Mon, 31 Aug 2020 13:50:17 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1725954AbgHaIXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 04:23:12 -0400
+IronPort-SDR: w/Ddlo5YBPbKA5kgUZKsM16ZjbF+QXKtfgd38VLjCMGIcmijlRb8/12nu5TGFBDea2dwKGZv4l
+ BklQ9ERfNTlQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="136982856"
+X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
+   d="scan'208";a="136982856"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 01:23:11 -0700
+IronPort-SDR: 0XcECbqhepTeWhaHH7cPT1S65lvLXxd/ngfZDpOZcau/40oXzHnHQEvYW7gk1ZfSYC2iGgstNw
+ lRyp/qy+um6Q==
+X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
+   d="scan'208";a="476636607"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 01:23:09 -0700
+Date:   Mon, 31 Aug 2020 16:23:06 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Mel Gorman <mgorman@suse.com>
+Cc:     Borislav Petkov <bp@suse.de>, "Luck, Tony" <tony.luck@intel.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [LKP] Re: [x86/mce] 1de08dccd3: will-it-scale.per_process_ops
+ -14.1% regression
+Message-ID: <20200831082306.GA61340@shbuild999.sh.intel.com>
+References: <20200818200654.GA21494@agluck-desk2.amr.corp.intel.com>
+ <20200819020437.GA2605@shbuild999.sh.intel.com>
+ <20200821020259.GA90000@shbuild999.sh.intel.com>
+ <20200824151425.GF4794@zn.tnic>
+ <20200824153300.GA56944@shbuild999.sh.intel.com>
+ <20200824161238.GI4794@zn.tnic>
+ <20200825062305.GA83850@shbuild999.sh.intel.com>
+ <20200828174839.GD19448@zn.tnic>
+ <20200831021638.GB65971@shbuild999.sh.intel.com>
+ <20200831075611.GA2976@suse.com>
 MIME-Version: 1.0
-In-Reply-To: <20200828131606.7946-5-boyan.karatotev@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831075611.GA2976@suse.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 8/28/20 6:46 PM, Boyan Karatotev wrote:
-> PAuth adds 5 different keys that can be used to sign addresses.
+On Mon, Aug 31, 2020 at 08:56:11AM +0100, Mel Gorman wrote:
+> On Mon, Aug 31, 2020 at 10:16:38AM +0800, Feng Tang wrote:
+> > > So why don't you define both variables with DEFINE_PER_CPU_ALIGNED and
+> > > check if all your bad measurements go away this way?
+> > 
+> > For 'arch_freq_scale', there are other percpu variables in the same
+> > smpboot.c: 'arch_prev_aperf' and 'arch_prev_mperf', and in hot path
+> > arch_scale_freq_tick(), these 3 variables are all accessed, so I didn't 
+> > touch it. Or maybe we can align the first of these 3 variables, so
+> > that they sit in one cacheline.
+> > 
+> > > You'd also need to check whether there's no detrimental effect from
+> > > this change on other, i.e., !KNL platforms, and I think there won't
+> > > be because both variables will be in separate cachelines then and all
+> > > should be good.
+> > 
+> > Yes, these kind of changes should be verified on other platforms.
+> > 
+> > One thing still puzzles me, that the 2 variables are per-cpu things, and
+> > there is no case of many CPU contending, why the cacheline layout matters?
+> > I doubt it is due to the contention of the same cache set, and am trying
+> > to find some way to test it.
+> > 
 > 
-> Add a test that verifies that the kernel initializes them uniquely and
-> preserves them across context switches.
+> Because if you have two structures that are per-cpu and not cache-aligned
+> then a write in one can bounce the cache line in another due to
+> cache coherency protocol. It's generally called "false cache line
+> sharing". https://en.wikipedia.org/wiki/False_sharing has basic examples
+> (lets not get into whether wikipedia is a valid citation source, there
+> are books on the topic if someone really cared).
+
+For 'arch_freq_scale' and 'tsc_adjust' percpu variable, they are only
+accessed by their own CPU, and usually no other CPU will touch them, the
+hot node path only use this_cpu_read/write/ptr. And each CPU's static
+percpu variables are all packed together in one area (256KB for one CPU on
+this test box), so I don't think there is multiple CPUs accessing one cache
+line scenario, which is easy to trigger false sharing.
+
+Also our different test shows the test score is higher if 'arch_freq_scale'
+and 'tsc_adjust' are in 2 separate cachelines.
+
+
+> While it's in my imagination, this should happen with the page allocator
+> pcpu structures because the core structure is 1.5 cache lines on 64-bit
+> currently and not aligned.  That means that not only can two CPUs interfere
+> with each others lists and counters but that could happen cross-node.
 > 
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Signed-off-by: Boyan Karatotev <boyan.karatotev@arm.com>
-
-
-> ---
->   tools/testing/selftests/arm64/pauth/pac.c | 116 ++++++++++++++++++++++
->   1 file changed, 116 insertions(+)
+> The hypothesis can be tested with perf looking for abnormal cache
+> misses. In this case, an intense allocating process bound to one CPU
+> with intermittent allocations on the adjacent CPU should show unexpected
+> cache line bounces. It would not be perfect as collisions would happen
+> anyway when the pcpu lists spill over on either the alloc or free side
+> to the the buddy lists but in that case, the cache misses would happen
+> on different instructions.
 > 
-> diff --git a/tools/testing/selftests/arm64/pauth/pac.c b/tools/testing/selftests/arm64/pauth/pac.c
-> index 16dea47b11c7..718f49adc275 100644
-> --- a/tools/testing/selftests/arm64/pauth/pac.c
-> +++ b/tools/testing/selftests/arm64/pauth/pac.c
-> @@ -1,10 +1,13 @@
->   // SPDX-License-Identifier: GPL-2.0
->   // Copyright (C) 2020 ARM Limited
->   
-> +#define _GNU_SOURCE
-> +
->   #include <sys/auxv.h>
->   #include <sys/types.h>
->   #include <sys/wait.h>
->   #include <signal.h>
-> +#include <sched.h>
->   
->   #include "../../kselftest_harness.h"
->   #include "helper.h"
-> @@ -21,6 +24,7 @@
->    * The VA space size is 48 bits. Bigger is opt-in.
->    */
->   #define PAC_MASK (~0xff80ffffffffffff)
-> +#define ARBITRARY_VALUE (0x1234)
->   #define ASSERT_PAUTH_ENABLED() \
->   do { \
->   	unsigned long hwcaps = getauxval(AT_HWCAP); \
-> @@ -66,13 +70,36 @@ int are_same(struct signatures *old, struct signatures *new, int nkeys)
->   	return res;
->   }
->   
-> +int are_unique(struct signatures *sign, int nkeys)
-> +{
-> +	size_t vals[nkeys];
-> +
-> +	vals[0] = sign->keyia & PAC_MASK;
-> +	vals[1] = sign->keyib & PAC_MASK;
-> +	vals[2] = sign->keyda & PAC_MASK;
-> +	vals[3] = sign->keydb & PAC_MASK;
-> +
-> +	if (nkeys >= 4)
-> +		vals[4] = sign->keyg & PAC_MASK;
-> +
-> +	for (int i = 0; i < nkeys - 1; i++) {
-> +		for (int j = i + 1; j < nkeys; j++) {
-> +			if (vals[i] == vals[j])
-> +				return 0;
-> +		}
-> +	}
-> +	return 1;
-> +}
-> +
->   int exec_sign_all(struct signatures *signed_vals, size_t val)
->   {
->   	int new_stdin[2];
->   	int new_stdout[2];
->   	int status;
-> +	int i;
->   	ssize_t ret;
->   	pid_t pid;
-> +	cpu_set_t mask;
->   
->   	ret = pipe(new_stdin);
->   	if (ret == -1) {
-> @@ -86,6 +113,20 @@ int exec_sign_all(struct signatures *signed_vals, size_t val)
->   		return -1;
->   	}
->   
-> +	/*
-> +	 * pin this process and all its children to a single CPU, so it can also
-> +	 * guarantee a context switch with its child
-> +	 */
-> +	sched_getaffinity(0, sizeof(mask), &mask);
-> +
-> +	for (i = 0; i < sizeof(cpu_set_t); i++)
-> +		if (CPU_ISSET(i, &mask))
-> +			break;
-> +
-> +	CPU_ZERO(&mask);
-> +	CPU_SET(i, &mask);
-> +	sched_setaffinity(0, sizeof(mask), &mask);
-> +
->   	pid = fork();
->   	// child
->   	if (pid == 0) {
-> @@ -192,6 +233,38 @@ TEST(pac_instructions_not_nop_generic)
->   	ASSERT_NE(0, keyg)  TH_LOG("keyg instructions did nothing");
->   }
->   
-> +TEST(single_thread_unique_keys)
-> +{
-> +	int unique = 0;
-> +	int nkeys = NKEYS;
-> +	struct signatures signed_vals;
-> +	unsigned long hwcaps = getauxval(AT_HWCAP);
-> +
-> +	/* generic and data key instructions are not in NOP space. This prevents a SIGILL */
-> +	ASSERT_NE(0, hwcaps & HWCAP_PACA) TH_LOG("PAUTH not enabled");
-> +	if (!(hwcaps & HWCAP_PACG)) {
-> +		TH_LOG("WARNING: Generic PAUTH not enabled. Skipping generic key checks");
-> +		nkeys = NKEYS - 1;
-> +	}
-> +
-> +	/*
-> +	 * The PAC field is up to 7 bits. Even with unique keys there is about
-> +	 * 5% chance for a collision.  This chance rapidly increases the fewer
-> +	 * bits there are, a comparison of the keys directly will be more
+> -- 
+> Mel Gorman
+> SUSE Labs
 
-Can you please reframe the above sentence as it is not clear.
-The other changes look fine to me so please free to add,
-Reviewed-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
-
-//Amit
-
-
-> +	 * reliable All signed values need to be unique at least once out of n
-> +	 * attempts to be certain that the keys are unique
-> +	 */
-> +	for (int i = 0; i < PAC_COLLISION_ATTEMPTS; i++) {
-> +		if (nkeys == NKEYS)
-> +			sign_all(&signed_vals, i);
-> +		else
-> +			sign_specific(&signed_vals, i);
-> +		unique |= are_unique(&signed_vals, nkeys);
-> +	}
-> +
-> +	ASSERT_EQ(1, unique) TH_LOG("keys clashed every time");
-> +}
-> +
->   /*
->    * fork() does not change keys. Only exec() does so call a worker program.
->    * Its only job is to sign a value and report back the resutls
-> @@ -227,5 +300,48 @@ TEST(exec_unique_keys)
->   	ASSERT_EQ(1, different) TH_LOG("exec() did not change keys");
->   }
->   
-> +TEST(context_switch_keep_keys)
-> +{
-> +	int ret;
-> +	struct signatures trash;
-> +	struct signatures before;
-> +	struct signatures after;
-> +
-> +	ASSERT_PAUTH_ENABLED();
-> +
-> +	sign_specific(&before, ARBITRARY_VALUE);
-> +
-> +	/* will context switch with a process with different keys at least once */
-> +	ret = exec_sign_all(&trash, ARBITRARY_VALUE);
-> +	ASSERT_EQ(0, ret) TH_LOG("failed to run worker");
-> +
-> +	sign_specific(&after, ARBITRARY_VALUE);
-> +
-> +	ASSERT_EQ(before.keyia, after.keyia) TH_LOG("keyia changed after context switching");
-> +	ASSERT_EQ(before.keyib, after.keyib) TH_LOG("keyib changed after context switching");
-> +	ASSERT_EQ(before.keyda, after.keyda) TH_LOG("keyda changed after context switching");
-> +	ASSERT_EQ(before.keydb, after.keydb) TH_LOG("keydb changed after context switching");
-> +}
-> +
-> +TEST(context_switch_keep_keys_generic)
-> +{
-> +	int ret;
-> +	struct signatures trash;
-> +	size_t before;
-> +	size_t after;
-> +
-> +	ASSERT_GENERIC_PAUTH_ENABLED();
-> +
-> +	before = keyg_sign(ARBITRARY_VALUE);
-> +
-> +	/* will context switch with a process with different keys at least once */
-> +	ret = exec_sign_all(&trash, ARBITRARY_VALUE);
-> +	ASSERT_EQ(0, ret) TH_LOG("failed to run worker");
-> +
-> +	after = keyg_sign(ARBITRARY_VALUE);
-> +
-> +	ASSERT_EQ(before, after) TH_LOG("keyg changed after context switching");
-> +}
-> +
->   TEST_HARNESS_MAIN
->   
-> 
+Thanks,
+Feng
