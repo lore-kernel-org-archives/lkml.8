@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E8FC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AACC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD32A2168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E1220E65
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598898004;
-	bh=2RZpqf2ZGCxO2YXofpLTsUTyzZLebZ3Yth4DKgYwxHU=;
+	s=default; t=1598898007;
+	bh=/nk8YeCMjNJjnS7CPKyiXGuR1+ViXtq3As9PVWEq2iA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=STETZiPTqezFUF4hCcBlkRXphXQxspLAMHu9Dmin6ViB+Cc2edXCzBgIGozsLYuyR
-	 qKZgt9ArXtX6xisGVaB5LQRkkWex2JZ5h0UsbiK2bqz2lWx/7nEnNdv5xFUw51ASsr
-	 GOp5KbsMs/jSDUZ3tS2aRgi/gs3g8WcxcRmUMdfA=
+	b=zjLGuLnge+14Wpwz/ubpY43Zm3bShl+Z44H5rm4i6vClcPSP1z6PxngeJBTg84A2k
+	 uGSw39vH8fLcH/PjHUbJiHdZbI29S5jySxMaQhBqyuII3mpCeZxXuaAdgTxoR7xUXl
+	 DrdorvpvTR1TYL3ZI4m6rTbf3mGAwm7Vyl+DM97k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729785AbgHaSUC (ORCPT
+        id S1729762AbgHaST5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:20:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51700 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:19:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729492AbgHaSSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729508AbgHaSSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 31 Aug 2020 14:18:08 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23683215A4;
+        by mail.kernel.org (Postfix) with ESMTPSA id 92A81216C4;
         Mon, 31 Aug 2020 18:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1598897888;
-        bh=2RZpqf2ZGCxO2YXofpLTsUTyzZLebZ3Yth4DKgYwxHU=;
+        bh=/nk8YeCMjNJjnS7CPKyiXGuR1+ViXtq3As9PVWEq2iA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DxSc8+pgv/Btanp5JusLRnwOLXsQ4lo3MQ1HPXyykUcFh3UKTL9trjm3SxlJEkb0E
-         9tbqkO343mpLflGeh+uPqjNbyo0Gsgo4AslU/IgFwZrsYeM0ivjUxtzXkKNJaF/ZG+
-         YuhsUFi4pw0NWHLMoLmAYpxXpVzFjKf4ib1x8fso=
+        b=nJhWq4AE2njLfb8NxwnF6sJXDxwmbVo20kr1BMrtvAMY3yIM1cTRe4VECRo8rpOIj
+         7JxKammAUU7qA2pyK39nzLzMcMwDpfRBN+I48tmdr9/tfpU/HLjHBArBWwrwfYUgpv
+         D4Q92aEhyYStAAuZfi2Ve87TxQmSFsyCIv4e5Nis=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
         kernel-team@fb.com, mingo@kernel.org
 Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
         dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH kcsan 12/19] kcsan: Simplify debugfs counter to name mapping
-Date:   Mon, 31 Aug 2020 11:17:58 -0700
-Message-Id: <20200831181805.1833-12-paulmck@kernel.org>
+Subject: [PATCH kcsan 15/19] kcsan: Show message if enabled early
+Date:   Mon, 31 Aug 2020 11:18:01 -0700
+Message-Id: <20200831181805.1833-15-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831181715.GA1530@paulmck-ThinkPad-P72>
 References: <20200831181715.GA1530@paulmck-ThinkPad-P72>
@@ -58,76 +58,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marco Elver <elver@google.com>
 
-Simplify counter ID to name mapping by using an array with designated
-inits. This way, we can turn a run-time BUG() into a compile-time static
-assertion failure if a counter name is missing.
-
-No functional change intended.
+Show a message in the kernel log if KCSAN was enabled early.
 
 Signed-off-by: Marco Elver <elver@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/kcsan/debugfs.c | 33 +++++++++++++--------------------
- 1 file changed, 13 insertions(+), 20 deletions(-)
+ kernel/kcsan/core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/kcsan/debugfs.c b/kernel/kcsan/debugfs.c
-index 023e49c..3a9566a 100644
---- a/kernel/kcsan/debugfs.c
-+++ b/kernel/kcsan/debugfs.c
-@@ -19,6 +19,18 @@
-  * Statistics counters.
-  */
- static atomic_long_t counters[KCSAN_COUNTER_COUNT];
-+static const char *const counter_names[] = {
-+	[KCSAN_COUNTER_USED_WATCHPOINTS]		= "used_watchpoints",
-+	[KCSAN_COUNTER_SETUP_WATCHPOINTS]		= "setup_watchpoints",
-+	[KCSAN_COUNTER_DATA_RACES]			= "data_races",
-+	[KCSAN_COUNTER_ASSERT_FAILURES]			= "assert_failures",
-+	[KCSAN_COUNTER_NO_CAPACITY]			= "no_capacity",
-+	[KCSAN_COUNTER_REPORT_RACES]			= "report_races",
-+	[KCSAN_COUNTER_RACES_UNKNOWN_ORIGIN]		= "races_unknown_origin",
-+	[KCSAN_COUNTER_UNENCODABLE_ACCESSES]		= "unencodable_accesses",
-+	[KCSAN_COUNTER_ENCODING_FALSE_POSITIVES]	= "encoding_false_positives",
-+};
-+static_assert(ARRAY_SIZE(counter_names) == KCSAN_COUNTER_COUNT);
+diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+index 99e5044..b176400 100644
+--- a/kernel/kcsan/core.c
++++ b/kernel/kcsan/core.c
+@@ -1,5 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
  
- /*
-  * Addresses for filtering functions from reporting. This list can be used as a
-@@ -39,24 +51,6 @@ static struct {
- };
- static DEFINE_SPINLOCK(report_filterlist_lock);
++#define pr_fmt(fmt) "kcsan: " fmt
++
+ #include <linux/atomic.h>
+ #include <linux/bug.h>
+ #include <linux/delay.h>
+@@ -463,7 +465,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
  
--static const char *counter_to_name(enum kcsan_counter_id id)
--{
--	switch (id) {
--	case KCSAN_COUNTER_USED_WATCHPOINTS:		return "used_watchpoints";
--	case KCSAN_COUNTER_SETUP_WATCHPOINTS:		return "setup_watchpoints";
--	case KCSAN_COUNTER_DATA_RACES:			return "data_races";
--	case KCSAN_COUNTER_ASSERT_FAILURES:		return "assert_failures";
--	case KCSAN_COUNTER_NO_CAPACITY:			return "no_capacity";
--	case KCSAN_COUNTER_REPORT_RACES:		return "report_races";
--	case KCSAN_COUNTER_RACES_UNKNOWN_ORIGIN:	return "races_unknown_origin";
--	case KCSAN_COUNTER_UNENCODABLE_ACCESSES:	return "unencodable_accesses";
--	case KCSAN_COUNTER_ENCODING_FALSE_POSITIVES:	return "encoding_false_positives";
--	case KCSAN_COUNTER_COUNT:
--		BUG();
--	}
--	return NULL;
--}
--
- void kcsan_counter_inc(enum kcsan_counter_id id)
- {
- 	atomic_long_inc(&counters[id]);
-@@ -271,8 +265,7 @@ static int show_info(struct seq_file *file, void *v)
- 	/* show stats */
- 	seq_printf(file, "enabled: %i\n", READ_ONCE(kcsan_enabled));
- 	for (i = 0; i < KCSAN_COUNTER_COUNT; ++i)
--		seq_printf(file, "%s: %ld\n", counter_to_name(i),
--			   atomic_long_read(&counters[i]));
-+		seq_printf(file, "%s: %ld\n", counter_names[i], atomic_long_read(&counters[i]));
+ 	if (IS_ENABLED(CONFIG_KCSAN_DEBUG)) {
+ 		kcsan_disable_current();
+-		pr_err("KCSAN: watching %s, size: %zu, addr: %px [slot: %d, encoded: %lx]\n",
++		pr_err("watching %s, size: %zu, addr: %px [slot: %d, encoded: %lx]\n",
+ 		       is_write ? "write" : "read", size, ptr,
+ 		       watchpoint_slot((unsigned long)ptr),
+ 		       encode_watchpoint((unsigned long)ptr, size, is_write));
+@@ -623,8 +625,10 @@ void __init kcsan_init(void)
+ 	 * We are in the init task, and no other tasks should be running;
+ 	 * WRITE_ONCE without memory barrier is sufficient.
+ 	 */
+-	if (kcsan_early_enable)
++	if (kcsan_early_enable) {
++		pr_info("enabled early\n");
+ 		WRITE_ONCE(kcsan_enabled, true);
++	}
+ }
  
- 	/* show filter functions, and filter type */
- 	spin_lock_irqsave(&report_filterlist_lock, flags);
+ /* === Exported interface =================================================== */
 -- 
 2.9.5
 
