@@ -2,103 +2,135 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2508CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 004FDC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB8232071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:43:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="f7AlhIj3"
+	by mail.kernel.org (Postfix) with ESMTP id D1B9C20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgHaRng (ORCPT
+        id S1728090AbgHaRpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 13:43:36 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50348 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbgHaRn0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 13:43:26 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07VHSrDR072950;
-        Mon, 31 Aug 2020 17:43:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=LP7KEZhg+XKWxIs/BSczmC1OoPoZUx3aWNFf7jH3Qe0=;
- b=f7AlhIj3J5T8JIrf1EOms30exoVXSEO8Rp89z0EioZ6Os1wfucGbgafkD55k1jI46liZ
- iPnYwRp2AM/dNRcWETy6qlzaaacr09THXbQSp2Uuiy9QeowUU2DtZX3W0Wk7/q5piwsu
- DLesClTUL2hp9fqzYgydCRgD0C4PZ4NS2NG7AFbjew+sbRUbAAokGxmege+vLaroc3/O
- NtXAF2fDIwY/Ih90dXetEqK0ZmIEOpXH/VhR8lXrerAW9sNzqwEn9w8WGH/Tx62OsNa0
- 5rYpbdVBf0u0YxwyJIEtajDRr1MfksDqzNdNJiMGsJ2H+/eWZRvjH9ogWbkLnxDJFPFb 1Q== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 337eeqqms1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 31 Aug 2020 17:43:19 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07VHf8G9078432;
-        Mon, 31 Aug 2020 17:41:18 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 3380kkynmf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 31 Aug 2020 17:41:18 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07VHfGGH005072;
-        Mon, 31 Aug 2020 17:41:17 GMT
-Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 31 Aug 2020 10:41:16 -0700
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     QLogic-Storage-Upstream@qlogic.com, jejb@linux.ibm.com,
-        lalit.chandivade@qlogic.com,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        michaelc@cs.wisc.edu, vikas.chaudhary@qlogic.com,
-        JBottomley@Parallels.com
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        kernel-janitors@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: qla2xxx: Fix the size used in a 'dma_free_coherent()' call
-Date:   Mon, 31 Aug 2020 13:41:03 -0400
-Message-Id: <159889566023.22322.17846122781525526855.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200802110721.677707-1-christophe.jaillet@wanadoo.fr>
-References: <20200802110721.677707-1-christophe.jaillet@wanadoo.fr>
+        Mon, 31 Aug 2020 13:45:19 -0400
+Received: from mga01.intel.com ([192.55.52.88]:37338 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726446AbgHaRpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 13:45:19 -0400
+IronPort-SDR: 4+pOY6XgtJz5GIYqWemHHJG51ckVZTx8t55r7HcHahSnMeJlCPUMSgSnB8p0BbqbCr4XCcpe22
+ ytNZ8pEMs2BA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="175075718"
+X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
+   d="scan'208";a="175075718"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 10:45:18 -0700
+IronPort-SDR: 4V0HKjPMEFKjJ0dIOMZTyD7eACTRqRvtsa0jzkyZrLLFrCUNsnqyHPIMd+XP7P1heylDfFA6Ly
+ bRfswT/CRLSw==
+X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
+   d="scan'208";a="340728810"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 10:45:17 -0700
+Date:   Mon, 31 Aug 2020 10:52:24 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Jonathan Corbet <corbet@lwn.net>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v7 7/7] iommu/vt-d: Check UAPI data processed by IOMMU
+ core
+Message-ID: <20200831105224.7a90ba34@jacob-builder>
+In-Reply-To: <1b131401-a9a3-3641-99cc-430d9b51efa5@redhat.com>
+References: <1596068467-49322-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1596068467-49322-8-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1b131401-a9a3-3641-99cc-430d9b51efa5@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9730 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
- mlxscore=0 suspectscore=0 malwarescore=0 mlxlogscore=797 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008310105
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9730 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 impostorscore=0 mlxlogscore=787 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008310104
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2 Aug 2020 13:07:21 +0200, Christophe JAILLET wrote:
+On Thu, 13 Aug 2020 11:19:46 +0200
+Auger Eric <eric.auger@redhat.com> wrote:
 
-> Update the size used in 'dma_free_coherent()' in order to match the one
-> used in the corresponding 'dma_alloc_coherent()'.
+> Hi Jacob,
 > 
-> While at it, remove a memset after a call to 'dma_alloc_coherent()'.
-> This is useless since
-> commit 518a2f1925c3 ("dma-mapping: zero memory returned from dma_alloc_*")
+> On 7/30/20 2:21 AM, Jacob Pan wrote:
+> > IOMMU generic layer already does sanity checks UAPI data for version
+> > match and argsz range under generic information.
+> > Remove the redundant version check from VT-d driver and check for
+> > vendor specific data size.
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>  
+> 
+> > ---
+> >  drivers/iommu/intel/iommu.c | 3 +--
+> >  drivers/iommu/intel/svm.c   | 7 +++++--
+> >  2 files changed, 6 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/intel/iommu.c
+> > b/drivers/iommu/intel/iommu.c index 021f62078f52..7e03cca31a0e
+> > 100644 --- a/drivers/iommu/intel/iommu.c
+> > +++ b/drivers/iommu/intel/iommu.c
+> > @@ -5391,8 +5391,7 @@ intel_iommu_sva_invalidate(struct
+> > iommu_domain *domain, struct device *dev, int ret = 0;
+> >  	u64 size = 0;
+> >  
+> > -	if (!inv_info || !dmar_domain ||
+> > -	    inv_info->version !=
+> > IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
+> > +	if (!inv_info || !dmar_domain)
+> >  		return -EINVAL;
+> >  
+> >  	if (!dev || !dev_is_pci(dev))
+> > diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+> > index 713b3a218483..55ea11e9c0f5 100644
+> > --- a/drivers/iommu/intel/svm.c
+> > +++ b/drivers/iommu/intel/svm.c
+> > @@ -240,8 +240,11 @@ int intel_svm_bind_gpasid(struct iommu_domain
+> > *domain, struct device *dev, if (WARN_ON(!iommu) || !data)
+> >  		return -EINVAL;
+> >  
+> > -	if (data->version != IOMMU_GPASID_BIND_VERSION_1 ||
+> > -	    data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
+> > +	if (data->format != IOMMU_PASID_FORMAT_INTEL_VTD)
+> > +		return -EINVAL;
+> > +
+> > +	/* IOMMU core ensures argsz is more than the start of the
+> > union */
+> > +	if (data->argsz < offsetofend(struct
+> > iommu_gpasid_bind_data, vendor.vtd)) return -EINVAL;  
+> Shouldn't you test the vendor flags here?
+> intel_pasid_setup_bind_data() only checks valid ones but not ~mask.
+> 
+Yes, vendor flags should be tested to make sure there is no undefined
+flags being used.
 
-Applied to 5.10/scsi-queue, thanks!
+Thanks!
 
-[1/1] scsi: qla2xxx: Fix the size used in a 'dma_free_coherent()' call
-      https://git.kernel.org/mkp/scsi/c/650b323c8e7c
+> Thanks
+> 
+> Eric
+> >  
+> >  	if (!dev_is_pci(dev))
+> >   
+> 
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+[Jacob Pan]
