@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E204C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E233C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4552076D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B3292076D
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:49:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="YisBLVkB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IkQVEbgY"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="hQeLlKHi";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dR80+nW1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgHaDtr (ORCPT
+        id S1727995AbgHaDtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 23:49:47 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:53991 "EHLO
+        Sun, 30 Aug 2020 23:49:46 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:54339 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726411AbgHaDs7 (ORCPT
+        by vger.kernel.org with ESMTP id S1727092AbgHaDs5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 23:48:59 -0400
+        Sun, 30 Aug 2020 23:48:57 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 44ADB58055B;
-        Sun, 30 Aug 2020 23:48:57 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id D37B558054E;
+        Sun, 30 Aug 2020 23:48:55 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sun, 30 Aug 2020 23:48:57 -0400
+  by compute3.internal (MEProxy); Sun, 30 Aug 2020 23:48:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=7CWxrO6xNUhIK
-        /C5Oja7RYJCP9GppzvCcosOoPA19Mc=; b=YisBLVkB9UDkvdPp5J4DFa3sh2GDE
-        gfJQFzNaU8B+F0P9O3cwFUPtkd9+bgjPZC0EmyyZB7MzkLTFESyE01bQhTHxppeO
-        BYbNDvaAh6BCRIU24sf4tsqlu3UTg58qrS43WSYQvyjkfvcNT1BqJLIcQYgq+2i+
-        8D6r22oJENhqMQQ/OiH1JIMLTHLPtvg2jtQcwVs87Ivtgc17niu5NRliA4TRNr4J
-        FRfIqkTZPAuLgD419kx94QizpxnV/s4xnMw+8op4NrfIKrmQAas8XONhLI+O3cUp
-        TGQesfgyxpaNCZHABQRF7KPaBNiA1Tj7aaDiUUrzMdzGvlPNOsZz4DrcQ==
+        :mime-version:content-transfer-encoding; s=fm3; bh=vuHoEqUnlx/Z5
+        PQhy2y3P36C8JzS/AOw1EeZvaEYsUk=; b=hQeLlKHiSG0COlQZgbKfxOFyur2kz
+        cmsCZtMbGoKELzwPleO74JqS8+3CGmaVLhuGLpxzGJ0uiXQ08AH/VIZQonMi5vgp
+        kbsS0oykrS3cfhO+9Hp464wl0H0GmZmzropL4PCMeamaC5s0JAXtBEKxPJMpOfs2
+        LrZDWgR6HkADTCsejkhg9Sxxyhl9CkSRlc2RMQPAP92YxjRVjSBlA3UxTnRJNYid
+        hxrzjLA9k7TicD9FI9mBacok1xBPQ+hwIYM5SGDhxZCKCuRhgH8SPrejBtXEOAfA
+        32inhhUb0HtEqyb1nreS2xTOUujWyZbe68uz96RDdKkntHIkStvc3xmpA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=7CWxrO6xNUhIK/C5Oja7RYJCP9GppzvCcosOoPA19Mc=; b=IkQVEbgY
-        8QOtBuZU1CuOmXgSKUDtOPcwRXL5HLUD7LxZ4+LtQyW24Ofpoc+IhSbnSQNhvZXh
-        CiJY//d0LYzR9yJukQw66fFXiiuq++AnkdpZ3u/YjSS5WVIHXlq0pPTOCzjndkmj
-        IAb7ZfT8Ky4cuQgGoM7JHBD96x8jrwNuD0G7A/Zx+Rec6lK81qK2M3GWcuN0tsQK
-        ryCCpVyr2zOwDZHLQUNrdqVzMEsQz+ujiydvitm2q6t5LimWsaZMJJwLqN0AZ+jq
-        C44RvokeliPu4uPXTO4GYLoCY/6TJ18K43P1Su6YzxkbmIhhqqAj0lVj5pminhCb
-        7mViLeGAnjVLYw==
-X-ME-Sender: <xms:KXNMXz5Q1sPzHvlT50FAeWx_cT9wB9EDILvNT9Q8JbybYP3rC4H73A>
+        fm3; bh=vuHoEqUnlx/Z5PQhy2y3P36C8JzS/AOw1EeZvaEYsUk=; b=dR80+nW1
+        hr11+rlosEOyNZhj89Hy9CSpvsPTXbNAoDi/rH1JTytVa5XvmrZJGbI8lGvzl7BS
+        1IlL5kBYYfQ5hoAsIVkKthhhI17H/jc1xKtcaMitxdbOimWWHv2ujl2vRZ15v1ZR
+        99Id81fmN7/bgKpZPmNG4jUoJkR0GzqxDo4h9sfmTkU7qFH6Xhe/sPa88uBxydvq
+        2pC9xjYXHhGF47MZ9oW6nJW2NjxgIB3LidGWozai7RJcoQIgiqQUpgOuyHkY3P4u
+        k1uZppDqMShHeAFO10saakNwFug0Qogq77th9thc4oBDFHdWuCe5QpjsCZBYeJ85
+        g82fUPYwVONmEQ==
+X-ME-Sender: <xms:J3NMXzRJ2Uxsm8o69iJZgZK93na29E9BPTf0UUD3PI2a5XEKZkTagg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefgedgjeehucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -59,13 +59,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefgedgjeehucetufdoteggod
     gfejheeuieenucfkphepjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuih
     iivgepudenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghn
     ugdrohhrgh
-X-ME-Proxy: <xmx:KXNMX476dfN0udxnRqQhwu8cxp9AOD7TRmuC1GGQQnJ0G29DiEavtA>
-    <xmx:KXNMX6ean75SWk6Q3Bmd9wqm5XmexRVC6y5OkktsV3KbuBLkA1eaQQ>
-    <xmx:KXNMX0JPvjf7OOh2ufzBJB4oUr34Ov-pvpijQWs1jnEj86hXfMHrCA>
-    <xmx:KXNMX0pEq3eHuAEItbR_yHdmXidOAaJpZEelUB7QyudumU5qb4XAEQ>
+X-ME-Proxy: <xmx:J3NMX0z_LswX-2Qojpu8r6d2Em6ndQmHr7dytuYu6Pq2udE2BqBnaQ>
+    <xmx:J3NMX41T0WJT8YH2MnwTNvkdHt7LrY1Y4mjJpcNruTYYTmzbOZ8fmw>
+    <xmx:J3NMXzCtELVjlbjMmo5GvV7sWUMcSTZnm6nIflK1XFJp1Lf55T1mFg>
+    <xmx:J3NMX4j0xlaaZEUsuITrK0qJWeAPi84vxPmr-F8E4W-FApPnbRHqcQ>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A9D743280060;
-        Sun, 30 Aug 2020 23:48:56 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id D1C26328005D;
+        Sun, 30 Aug 2020 23:48:54 -0400 (EDT)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
@@ -75,9 +75,9 @@ To:     Mark Brown <broonie@kernel.org>,
 Cc:     Ondrej Jirman <megous@megous.com>, alsa-devel@alsa-project.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Samuel Holland <samuel@sholland.org>
-Subject: [PATCH 6/9] ASoC: sun8i-codec: Fix field bit number indentation
-Date:   Sun, 30 Aug 2020 22:48:49 -0500
-Message-Id: <20200831034852.18841-7-samuel@sholland.org>
+Subject: [PATCH 2/9] ASoC: sun8i-codec: Fix AIF1 MODCLK widget name
+Date:   Sun, 30 Aug 2020 22:48:45 -0500
+Message-Id: <20200831034852.18841-3-samuel@sholland.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200831034852.18841-1-samuel@sholland.org>
 References: <20200831034852.18841-1-samuel@sholland.org>
@@ -88,43 +88,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Several fields have inconsistent indentation, presumably because the
-patch "looked correct" due to the additional "+" character at the
-beginning of the line.
+The name should reference "AIF1", not "AFI1".
 
 Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- sound/soc/sunxi/sun8i-codec.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ sound/soc/sunxi/sun8i-codec.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
-index 4218a00a9aba..62d4b1b44e76 100644
+index 52ef0f9ec79e..263c1e7c3cc2 100644
 --- a/sound/soc/sunxi/sun8i-codec.c
 +++ b/sound/soc/sunxi/sun8i-codec.c
-@@ -68,15 +68,15 @@
- #define SUN8I_ADC_DIG_CTRL_ADOUT_DTS			2
- #define SUN8I_ADC_DIG_CTRL_ADOUT_DLY			1
- #define SUN8I_DAC_DIG_CTRL				0x120
--#define SUN8I_DAC_DIG_CTRL_ENDA			15
-+#define SUN8I_DAC_DIG_CTRL_ENDA				15
- #define SUN8I_DAC_MXR_SRC				0x130
--#define SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_AIF1DA0L	15
--#define SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_AIF1DA1L	14
--#define SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_AIF2DACL	13
-+#define SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_AIF1DA0L		15
-+#define SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_AIF1DA1L		14
-+#define SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_AIF2DACL		13
- #define SUN8I_DAC_MXR_SRC_DACL_MXR_SRC_ADCL		12
--#define SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_AIF1DA0R	11
--#define SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_AIF1DA1R	10
--#define SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_AIF2DACR	9
-+#define SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_AIF1DA0R		11
-+#define SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_AIF1DA1R		10
-+#define SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_AIF2DACR		9
- #define SUN8I_DAC_MXR_SRC_DACR_MXR_SRC_ADCR		8
+@@ -431,7 +431,7 @@ static const struct snd_soc_dapm_widget sun8i_codec_dapm_widgets[] = {
+ 			sun8i_input_mixer_controls),
  
- #define SUN8I_SYS_SR_CTRL_AIF1_FS_MASK		GENMASK(15, 12)
+ 	/* Clocks */
+-	SND_SOC_DAPM_SUPPLY("MODCLK AFI1", SUN8I_MOD_CLK_ENA,
++	SND_SOC_DAPM_SUPPLY("MODCLK AIF1", SUN8I_MOD_CLK_ENA,
+ 			    SUN8I_MOD_CLK_ENA_AIF1, 0, NULL, 0),
+ 	SND_SOC_DAPM_SUPPLY("MODCLK DAC", SUN8I_MOD_CLK_ENA,
+ 			    SUN8I_MOD_CLK_ENA_DAC, 0, NULL, 0),
+@@ -464,11 +464,11 @@ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
+ 	{ "SYSCLK", NULL, "AIF1 PLL" },
+ 
+ 	{ "RST AIF1", NULL, "SYSCLK" },
+-	{ "MODCLK AFI1", NULL, "RST AIF1" },
+-	{ "AIF1 AD0L", NULL, "MODCLK AFI1" },
+-	{ "AIF1 AD0R", NULL, "MODCLK AFI1" },
+-	{ "AIF1 DA0L", NULL, "MODCLK AFI1" },
+-	{ "AIF1 DA0R", NULL, "MODCLK AFI1" },
++	{ "MODCLK AIF1", NULL, "RST AIF1" },
++	{ "AIF1 AD0L", NULL, "MODCLK AIF1" },
++	{ "AIF1 AD0R", NULL, "MODCLK AIF1" },
++	{ "AIF1 DA0L", NULL, "MODCLK AIF1" },
++	{ "AIF1 DA0R", NULL, "MODCLK AIF1" },
+ 
+ 	{ "RST DAC", NULL, "SYSCLK" },
+ 	{ "MODCLK DAC", NULL, "RST DAC" },
 -- 
 2.26.2
 
