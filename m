@@ -2,122 +2,315 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EAAC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 792F1C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77C8B208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:08:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uQItU2Fe"
+	by mail.kernel.org (Postfix) with ESMTP id 4A1CA208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:09:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbgHaJIm (ORCPT
+        id S1728381AbgHaJJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 05:08:42 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45342 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728290AbgHaJIk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 05:08:40 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07V98a5r063080;
-        Mon, 31 Aug 2020 04:08:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598864916;
-        bh=MjsvdfEMy6GjtTN6j2sOW8wOL0kqR2f7yz1NLZ13fG8=;
-        h=From:To:CC:Subject:Date;
-        b=uQItU2FeegecNeaODB/TbUPNavPcfSh+ygM/pNQ3BdiZux/mjn8VnkFJn/oLMfeGt
-         rkXIrEGe6JkLjZFJqlqiO0/ree4ktyxwAoTARfBrpYaJfonQwH7A6axe2plSWMVmo/
-         mwJAclWTkuMbCsoJ50XyziBArbyMMT1a7aKzT5eo=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07V98awq052252;
-        Mon, 31 Aug 2020 04:08:36 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 31
- Aug 2020 04:08:36 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 31 Aug 2020 04:08:36 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07V98YWk026158;
-        Mon, 31 Aug 2020 04:08:34 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <linux-kernel@vger.kernel.org>, <lokeshvutla@ti.com>, <nm@ti.com>
-Subject: [PATCH] dmaengine: ti: k3-udma: Update rchan_oes_offset for am654 SYSFW ABI 3.0
-Date:   Mon, 31 Aug 2020 12:10:19 +0300
-Message-ID: <20200831091019.25273-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.28.0
+        Mon, 31 Aug 2020 05:09:10 -0400
+Received: from mga17.intel.com ([192.55.52.151]:53146 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727979AbgHaJJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 05:09:10 -0400
+IronPort-SDR: D6zlpddwxtVDG3zQ0HRKGNe7bYCF2dDqiSdeeKwq5vWaGMvEGyZpwEMarni7acYfIPWaSwbmkU
+ l2NBQZAzCaxw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="136987660"
+X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
+   d="scan'208";a="136987660"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 02:09:05 -0700
+IronPort-SDR: jixwEQRidF76KpFfUpVyD4e/NMvaG5C6P8VqUv0jvnsAoM6u3tBu2har0K4ncX7ynHHeAI7h7x
+ j4GdB1knWwxQ==
+X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
+   d="scan'208";a="340588964"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 02:09:01 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id D20AB204F9; Mon, 31 Aug 2020 12:08:59 +0300 (EEST)
+Date:   Mon, 31 Aug 2020 12:08:59 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Yeh, Andy" <andy.yeh@intel.com>,
+        "Chiang, Alan" <alanx.chiang@intel.com>,
+        "Chen, Jason" <jasonx.z.chen@intel.com>
+Subject: Re: [PATCH 3/3] media: imx258: Get clock from device properties and
+ enable it
+Message-ID: <20200831090859.GF31019@paasikivi.fi.intel.com>
+References: <20200828160053.6064-1-krzk@kernel.org>
+ <20200828160053.6064-3-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828160053.6064-3-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SYSFW ABI 3.0 has changed the rchan_oes_offset value for am654 to support
-SR2.
+Hi Krzysztof,
 
-Since the kernel now needs SYSFW API 3.0 to work because the merged irqchip
-update, we need to also update the am654 rchan_oes_offset.
+Thanks for the patchset.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
-Hi Vinod,
+On Fri, Aug 28, 2020 at 06:00:53PM +0200, Krzysztof Kozlowski wrote:
+> The IMX258 sensor driver checked in device properties for a
+> clock-frequency property which actually does not mean that the clock is
+> really running such frequency or is it even enabled.
+> 
+> Get the provided clock and check it frequency.  If none is provided,
+> fall back to old property.
+> 
+> Enable the clock when accessing the IMX258 registers and when streaming
+> starts.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/media/i2c/imx258.c | 107 ++++++++++++++++++++++++++++++-------
+>  1 file changed, 87 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
+> index c20bac9b00ec..4d763dcabb1d 100644
+> --- a/drivers/media/i2c/imx258.c
+> +++ b/drivers/media/i2c/imx258.c
+> @@ -2,6 +2,7 @@
+>  // Copyright (C) 2018 Intel Corporation
+>  
+>  #include <linux/acpi.h>
+> +#include <linux/clk.h>
+>  #include <linux/delay.h>
+>  #include <linux/i2c.h>
+>  #include <linux/module.h>
+> @@ -68,6 +69,9 @@
+>  #define REG_CONFIG_MIRROR_FLIP		0x03
+>  #define REG_CONFIG_FLIP_TEST_PATTERN	0x02
+>  
+> +/* Input clock frequency in Hz */
+> +#define IMX258_INPUT_CLOCK_FREQ		19200000
+> +
+>  struct imx258_reg {
+>  	u16 address;
+>  	u8 val;
+> @@ -610,6 +614,8 @@ struct imx258 {
+>  
+>  	/* Streaming on/off */
+>  	bool streaming;
+> +
+> +	struct clk *clk;
+>  };
+>  
+>  static inline struct imx258 *to_imx258(struct v4l2_subdev *_sd)
+> @@ -747,6 +753,12 @@ static int imx258_set_ctrl(struct v4l2_ctrl *ctrl)
+>  	if (pm_runtime_get_if_in_use(&client->dev) == 0)
+>  		return 0;
+>  
+> +	ret = clk_prepare_enable(imx258->clk);
+> +	if (ret) {
+> +		dev_err(&client->dev, "failed to enable clock\n");
+> +		goto out;
+> +	}
+> +
+>  	switch (ctrl->id) {
+>  	case V4L2_CID_ANALOGUE_GAIN:
+>  		ret = imx258_write_reg(imx258, IMX258_REG_ANALOG_GAIN,
+> @@ -779,6 +791,8 @@ static int imx258_set_ctrl(struct v4l2_ctrl *ctrl)
+>  		break;
+>  	}
+>  
+> +out:
+> +	clk_disable_unprepare(imx258->clk);
+>  	pm_runtime_put(&client->dev);
+>  
+>  	return ret;
+> @@ -972,10 +986,40 @@ static int imx258_stop_streaming(struct imx258 *imx258)
+>  	return 0;
+>  }
+>  
+> +static int imx258_power_on(struct imx258 *imx258)
+> +{
+> +	struct i2c_client *client = v4l2_get_subdevdata(&imx258->sd);
+> +	int ret;
+> +
+> +	ret = pm_runtime_get_sync(&client->dev);
+> +	if (ret < 0)
+> +		goto err;
 
-A series from Lokesh to support sysfw ABI 3.0 and newer is now in mainline
-under v5.9-rc3 tag.
-With his series Linux can not really boot into a usable state with older sysfw
-and the ABI 3.0 have additional changes affecting UDMA on am654:
-the rchan_oes_offset number is changed to better align with j72xx and to be able
-to support both SR1 and SR2 of am654.
+Please continue to use runtime PM directly, and move the clock control to
+runtime PM callbacks (apart from probe and remove).
 
-Can you send this patch for -rc4 to fix the regression now in mainline?
-The regression is that one can not request TR mode channel to service a
-peripheral.
+> +
+> +	ret = clk_prepare_enable(imx258->clk);
+> +	if (ret) {
+> +		dev_err(&client->dev, "failed to enable clock\n");
+> +		goto err;
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	pm_runtime_put_noidle(&client->dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static void imx258_power_off(struct imx258 *imx258)
+> +{
+> +	struct i2c_client *client = v4l2_get_subdevdata(&imx258->sd);
+> +
+> +	clk_disable_unprepare(imx258->clk);
+> +	pm_runtime_put(&client->dev);
+> +}
+> +
+>  static int imx258_set_stream(struct v4l2_subdev *sd, int enable)
+>  {
+>  	struct imx258 *imx258 = to_imx258(sd);
+> -	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>  	int ret = 0;
+>  
+>  	mutex_lock(&imx258->mutex);
+> @@ -985,11 +1029,9 @@ static int imx258_set_stream(struct v4l2_subdev *sd, int enable)
+>  	}
+>  
+>  	if (enable) {
+> -		ret = pm_runtime_get_sync(&client->dev);
+> -		if (ret < 0) {
+> -			pm_runtime_put_noidle(&client->dev);
+> +		ret = imx258_power_on(imx258);
+> +		if (ret < 0)
+>  			goto err_unlock;
+> -		}
+>  
+>  		/*
+>  		 * Apply default & customized values
+> @@ -997,10 +1039,10 @@ static int imx258_set_stream(struct v4l2_subdev *sd, int enable)
+>  		 */
+>  		ret = imx258_start_streaming(imx258);
+>  		if (ret)
+> -			goto err_rpm_put;
+> +			goto err_power_off;
+>  	} else {
+>  		imx258_stop_streaming(imx258);
+> -		pm_runtime_put(&client->dev);
+> +		imx258_power_off(imx258);
+>  	}
+>  
+>  	imx258->streaming = enable;
+> @@ -1008,8 +1050,8 @@ static int imx258_set_stream(struct v4l2_subdev *sd, int enable)
+>  
+>  	return ret;
+>  
+> -err_rpm_put:
+> -	pm_runtime_put(&client->dev);
+> +err_power_off:
+> +	imx258_power_off(imx258);
+>  err_unlock:
+>  	mutex_unlock(&imx258->mutex);
+>  
+> @@ -1201,21 +1243,41 @@ static int imx258_probe(struct i2c_client *client)
+>  	int ret;
+>  	u32 val = 0;
+>  
+> -	device_property_read_u32(&client->dev, "clock-frequency", &val);
+> -	if (val != 19200000)
+> -		return -EINVAL;
+> +	imx258 = devm_kzalloc(&client->dev, sizeof(*imx258), GFP_KERNEL);
+> +	if (!imx258)
+> +		return -ENOMEM;
+> +
+> +	imx258->clk = devm_clk_get_optional(&client->dev, NULL);
+> +	if (!imx258->clk) {
+> +		dev_info(&client->dev, "no clock provided, using clock-frequency property\n");
+> +
+> +		device_property_read_u32(&client->dev, "clock-frequency", &val);
+> +		if (val != IMX258_INPUT_CLOCK_FREQ)
+> +			return -EINVAL;
+> +	} else if (IS_ERR(imx258->clk)) {
+> +		return dev_err_probe(&client->dev, PTR_ERR(imx258->clk), "error getting clock\n");
+> +	} else {
+> +		if (clk_get_rate(imx258->clk) != IMX258_INPUT_CLOCK_FREQ) {
+> +			dev_err(&client->dev, "input clock frequency not supported\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		ret = clk_prepare_enable(imx258->clk);
+> +		if (ret) {
+> +			dev_err(&client->dev, "failed to enable clock\n");
+> +			return ret;
+> +		}
+> +	}
+>  
+>  	/*
+>  	 * Check that the device is mounted upside down. The driver only
+>  	 * supports a single pixel order right now.
+>  	 */
+>  	ret = device_property_read_u32(&client->dev, "rotation", &val);
+> -	if (ret || val != 180)
+> -		return -EINVAL;
+> -
+> -	imx258 = devm_kzalloc(&client->dev, sizeof(*imx258), GFP_KERNEL);
+> -	if (!imx258)
+> -		return -ENOMEM;
+> +	if (ret || val != 180) {
+> +		ret = -EINVAL;
+> +		goto error_prop_read;
+> +	}
+>  
+>  	/* Initialize subdev */
+>  	v4l2_i2c_subdev_init(&imx258->sd, client, &imx258_subdev_ops);
+> @@ -1223,14 +1285,14 @@ static int imx258_probe(struct i2c_client *client)
+>  	/* Check module identity */
+>  	ret = imx258_identify_module(imx258);
+>  	if (ret)
+> -		return ret;
+> +		goto error_prop_read;
+>  
+>  	/* Set default mode to max resolution */
+>  	imx258->cur_mode = &supported_modes[0];
+>  
+>  	ret = imx258_init_controls(imx258);
+>  	if (ret)
+> -		return ret;
+> +		goto error_prop_read;
+>  
+>  	/* Initialize subdev */
+>  	imx258->sd.internal_ops = &imx258_internal_ops;
+> @@ -1252,8 +1314,13 @@ static int imx258_probe(struct i2c_client *client)
+>  	pm_runtime_enable(&client->dev);
+>  	pm_runtime_idle(&client->dev);
+>  
+> +	clk_disable_unprepare(imx258->clk);
+> +
+>  	return 0;
+>  
+> +error_prop_read:
+> +	clk_disable_unprepare(imx258->clk);
 
-We do not have users upstream depending on this, but I do have out of tree audio
-support and cutomers might pick up 5.9 from mainline when it is released.
+How about remove? Think of how this works when runtime PM is disabled.
 
-Thank you,
-Peter
+> +
+>  error_media_entity:
+>  	media_entity_cleanup(&imx258->sd.entity);
+>  
 
- drivers/dma/ti/k3-udma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 989998b6e078..9a7048bcf0f1 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -3091,14 +3091,14 @@ static struct udma_match_data am654_main_data = {
- 	.psil_base = 0x1000,
- 	.enable_memcpy_support = true,
- 	.statictr_z_mask = GENMASK(11, 0),
--	.rchan_oes_offset = 0x2000,
-+	.rchan_oes_offset = 0x200,
- };
- 
- static struct udma_match_data am654_mcu_data = {
- 	.psil_base = 0x6000,
- 	.enable_memcpy_support = false,
- 	.statictr_z_mask = GENMASK(11, 0),
--	.rchan_oes_offset = 0x2000,
-+	.rchan_oes_offset = 0x200,
- };
- 
- static struct udma_match_data j721e_main_data = {
 -- 
-Peter
+Kind regards,
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Sakari Ailus
