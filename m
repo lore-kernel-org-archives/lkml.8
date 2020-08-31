@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC9A7C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE75CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB2F2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 879C82083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598896930;
-	bh=Vpctbcz91EPQKPK/qQzLu3zabu/JJYgSbl7lkU+PAQw=;
+	s=default; t=1598896933;
+	bh=WQvxHjrMr7Wy1mM1Q9O6pBb2oem88hcom7Xn7VGv8vA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rgaeWG69J9yKmNEs9A1BlZW5aUIXMVFtO59py4e9Z51OjYaNwtq55hQ6Xyi2prfZk
-	 vAbVkPkSSGB9ot2Sv7V71tbMvEpGf5M2nh4RcGtkCeob4KFzKA4/notDWwFQunZWzc
-	 qGdLcbkfhs3ecztUHqqO7ony91r3AnJv7Uzf1pm4=
+	b=CZs0wkgIs3gpukbuidyoBVMq+Q3g+xmmemlrKk/+BdErncCydAg07DKX/UPDOvQD2
+	 l/CMp+yuaL8sMPiOw5KVn9zyhfddoIHOc9MKkonA4Ozfj1GZWaXgrZ6+AFt3p3QtMU
+	 oXSzT8zYld9g35prbTmZl0MvPzmgj0oOC9Gw2f0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729046AbgHaSCG (ORCPT
+        id S1729129AbgHaSCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:02:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35776 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:02:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728845AbgHaSB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:01:27 -0400
+        id S1728856AbgHaSB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:01:28 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F14DB2176B;
-        Mon, 31 Aug 2020 18:01:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BD052177B;
+        Mon, 31 Aug 2020 18:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1598896887;
-        bh=Vpctbcz91EPQKPK/qQzLu3zabu/JJYgSbl7lkU+PAQw=;
+        bh=WQvxHjrMr7Wy1mM1Q9O6pBb2oem88hcom7Xn7VGv8vA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sKa2exXWTCXoVOhpueE/EFMwdsuqmcF/yxZmvlLvlUuFVgzgXKOQckgYMLle2IlSF
-         tRy3xenqLhqIizipDix4pizP1ywWcJtyoV6R8vnzn3Gu3PAoZPGqoQJIQ0a6g1uFB7
-         BMlqQseZ0Rx8ANg1OeJJ2Hk882UaM+6rZefvszGo=
+        b=E1XE8aLZE3u0Zn5cC+qugfbR65bAwSIpUsQ+aJhgXiSoa6Wi7noX3BKTKnPwpGQgX
+         Vs2gbyRaqccUalEojdxQ0PuTSs4FnU9GD3k14inWZDK2BTc9laL6n2fOn8o8y6qMpt
+         FoMBdgnMEqSXX7UTnG2jOZFPkxS9XpBhLhFmgsow=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,10 +47,13 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 21/24] rcu: Make FQS more aggressive in complaining about offline CPUs
-Date:   Mon, 31 Aug 2020 11:01:13 -0700
-Message-Id: <20200831180116.32690-21-paulmck@kernel.org>
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: [PATCH tip/core/rcu 22/24] rcu: Remove unused __rcu_is_watching() function
+Date:   Mon, 31 Aug 2020 11:01:14 -0700
+Message-Id: <20200831180116.32690-22-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831180050.GA32590@paulmck-ThinkPad-P72>
 References: <20200831180050.GA32590@paulmck-ThinkPad-P72>
@@ -59,69 +62,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-The RCU grace-period kthread's force-quiescent state (FQS) loop should
-never see an offline CPU that has not yet reported a quiescent state.
-After all, the offline CPU should have reported a quiescent state
-during the CPU-offline process, or, failing that, by rcu_gp_init()
-if it ran concurrently with either the CPU going offline or the last
-task on a leaf rcu_node structure exiting its RCU read-side critical
-section while all CPUs corresponding to that structure are offline.
-The FQS loop should therefore complain if it does see an offline CPU
-that has not yet reported a quiescent state.
+The x86/entry work removed all uses of __rcu_is_watching(), therefore
+this commit removes it entirely.
 
-And it does, but only once the grace period has been in force for a
-full second.  This commit therefore makes this warning more aggressive,
-so that it will trigger as soon as the condition makes its appearance.
-
-Light testing with TREE03 and hotplug shows no warnings.  This commit
-also converts the warning to WARN_ON_ONCE() in order to stave off possible
-log spam.
-
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: <x86@kernel.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ include/linux/rcutiny.h | 1 -
+ include/linux/rcutree.h | 1 -
+ kernel/entry/common.c   | 2 +-
+ kernel/rcu/tree.c       | 5 -----
+ 4 files changed, 1 insertion(+), 8 deletions(-)
 
+diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
+index 5cc9637..7c1ecdb 100644
+--- a/include/linux/rcutiny.h
++++ b/include/linux/rcutiny.h
+@@ -103,7 +103,6 @@ static inline void rcu_scheduler_starting(void) { }
+ static inline void rcu_end_inkernel_boot(void) { }
+ static inline bool rcu_inkernel_boot_has_ended(void) { return true; }
+ static inline bool rcu_is_watching(void) { return true; }
+-static inline bool __rcu_is_watching(void) { return true; }
+ static inline void rcu_momentary_dyntick_idle(void) { }
+ static inline void kfree_rcu_scheduler_running(void) { }
+ static inline bool rcu_gp_might_be_stalled(void) { return false; }
+diff --git a/include/linux/rcutree.h b/include/linux/rcutree.h
+index d2f4064..59eb5cd 100644
+--- a/include/linux/rcutree.h
++++ b/include/linux/rcutree.h
+@@ -64,7 +64,6 @@ extern int rcu_scheduler_active __read_mostly;
+ void rcu_end_inkernel_boot(void);
+ bool rcu_inkernel_boot_has_ended(void);
+ bool rcu_is_watching(void);
+-bool __rcu_is_watching(void);
+ #ifndef CONFIG_PREEMPTION
+ void rcu_all_qs(void);
+ #endif
+diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+index 9852e0d..ad794a1 100644
+--- a/kernel/entry/common.c
++++ b/kernel/entry/common.c
+@@ -278,7 +278,7 @@ noinstr irqentry_state_t irqentry_enter(struct pt_regs *regs)
+ 	 * terminate a grace period, if and only if the timer interrupt is
+ 	 * not nested into another interrupt.
+ 	 *
+-	 * Checking for __rcu_is_watching() here would prevent the nesting
++	 * Checking for rcu_is_watching() here would prevent the nesting
+ 	 * interrupt to invoke rcu_irq_enter(). If that nested interrupt is
+ 	 * the tick then rcu_flavor_sched_clock_irq() would wrongfully
+ 	 * assume that it is the first interupt and eventually claim
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 2c7afe4..396abe0 100644
+index 396abe0..2323622 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -1214,13 +1214,28 @@ static int rcu_implicit_dynticks_qs(struct rcu_data *rdp)
- 		return 1;
+@@ -1077,11 +1077,6 @@ static void rcu_disable_urgency_upon_qs(struct rcu_data *rdp)
  	}
+ }
  
--	/* If waiting too long on an offline CPU, complain. */
--	if (!(rdp->grpmask & rcu_rnp_online_cpus(rnp)) &&
--	    time_after(jiffies, rcu_state.gp_start + HZ)) {
-+	/*
-+	 * Complain if a CPU that is considered to be offline from RCU's
-+	 * perspective has not yet reported a quiescent state.  After all,
-+	 * the offline CPU should have reported a quiescent state during
-+	 * the CPU-offline process, or, failing that, by rcu_gp_init()
-+	 * if it ran concurrently with either the CPU going offline or the
-+	 * last task on a leaf rcu_node structure exiting its RCU read-side
-+	 * critical section while all CPUs corresponding to that structure
-+	 * are offline.  This added warning detects bugs in any of these
-+	 * code paths.
-+	 *
-+	 * The rcu_node structure's ->lock is held here, which excludes
-+	 * the relevant portions the CPU-hotplug code, the grace-period
-+	 * initialization code, and the rcu_read_unlock() code paths.
-+	 *
-+	 * For more detail, please refer to the "Hotplug CPU" section
-+	 * of RCU's Requirements documentation.
-+	 */
-+	if (WARN_ON_ONCE(!(rdp->grpmask & rcu_rnp_online_cpus(rnp)))) {
- 		bool onl;
- 		struct rcu_node *rnp1;
- 
--		WARN_ON(1);  /* Offline CPUs are supposed to report QS! */
- 		pr_info("%s: grp: %d-%d level: %d ->gp_seq %ld ->completedqs %ld\n",
- 			__func__, rnp->grplo, rnp->grphi, rnp->level,
- 			(long)rnp->gp_seq, (long)rnp->completedqs);
+-noinstr bool __rcu_is_watching(void)
+-{
+-	return !rcu_dynticks_curr_cpu_in_eqs();
+-}
+-
+ /**
+  * rcu_is_watching - see if RCU thinks that the current CPU is not idle
+  *
 -- 
 2.9.5
 
