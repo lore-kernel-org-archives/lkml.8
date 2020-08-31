@@ -2,129 +2,94 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA18C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4D6C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E28420719
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8FA820719
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:49:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="REVuEsg2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgHaPtC (ORCPT
+        id S1728211AbgHaPt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:49:02 -0400
-Received: from sandeen.net ([63.231.237.45]:39658 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726204AbgHaPtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:49:01 -0400
-Received: from liberator.sandeen.net (liberator.sandeen.net [10.0.0.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 1117A3248;
-        Mon, 31 Aug 2020 10:48:41 -0500 (CDT)
-To:     Qian Cai <cai@lca.pw>, darrick.wong@oracle.com
-Cc:     hch@infradead.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200831014511.17174-1-cai@lca.pw>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Subject: Re: [PATCH v2] iomap: Fix WARN_ON_ONCE() from unprivileged users
-Message-ID: <d34753a2-57bf-8013-015a-adeb3fe9447c@sandeen.net>
-Date:   Mon, 31 Aug 2020 10:48:59 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.2.0
+        Mon, 31 Aug 2020 11:49:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728103AbgHaPtW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:49:22 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC327C061575
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 08:49:21 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id o5so2547392wrn.13
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 08:49:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V1d2XOGj4/mQm0XIjmCNV1oewYnJg6EZTFcc9J+2cbQ=;
+        b=REVuEsg2CiN/qtSP5ghWobHHXBx5sr9ZVE7C/NuSXKhV/Xd7Pgzyr4SVn563uQXjGI
+         Eq5XEDoSWa0svg/5eG6tnrbMJgXXZoPwGMXyG5sbV2Km3PHMCETnnzx8qcNwyPs1khSq
+         cRcnMTckV8XPo0ktVdWLdXr2ct9RSKYAiE0xufkCrESiMa4TJBNJmTLn6Fdy8dFiglUs
+         O37bIvopoXLB7N36Owu79jonpk31lWDBrDWtmm+NOnUo89VmO/RngjUCO4Wc35VV9fMu
+         OPBpxB5pQxZE9lYtu6VREchdX5ne11FFpN15mkX3yDP8vGmORrv8G57zWMROdPY4i9W4
+         Zqpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V1d2XOGj4/mQm0XIjmCNV1oewYnJg6EZTFcc9J+2cbQ=;
+        b=PgtjsicDTHgxe4YYHi+224eHT8F9nJywjKw72DZLf0DY9k3lBSdEx4zkg70AF7wJZx
+         o1+AbRg3c+UQ/8awf7VQIZpzrwCm7+cL9Ofm2Zw3Aj4feKaXIURN7/iua3DDeEqjWnmm
+         eXVsNjuoNQobSc1HdYGdS0VVFwGLIACEUwQBqTvatCgn7PriHX36qMvwqod4Rp+QQLJ0
+         iX63m7wZxgLw2zkoUeTXC7XxE8NqIh2FQFtHu7EHlS21+H2CD0OjhcZPQIjGRJ3BgHl5
+         Lt6CdAGOJy9ZscP0q7J3Nbnx0jqDOHsd99htV2qQmf+Rh0EysJ/5/4Vb5yera/h674yS
+         m7XQ==
+X-Gm-Message-State: AOAM531kbkWxX6lrdWtAoXJ8iCiTYKSdNy/cL/mPMDPHIL4yrISRmmK1
+        PqUPx1EXD3MUM03zYwkINCz5UwKxHfXDrUseYduUEw==
+X-Google-Smtp-Source: ABdhPJxLWPETNyPnCiyjTDBC8XYVpbEbjCWK79OLmZWLx/OGDa49T6VAmNNs0loEizDKgyAsCush7FlOkIpOBlpST30=
+X-Received: by 2002:adf:f101:: with SMTP id r1mr2234529wro.314.1598888960087;
+ Mon, 31 Aug 2020 08:49:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200831014511.17174-1-cai@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200828141344.2277088-1-alinde@google.com> <CAC5umyiNw7FA__Y3HZ1UEG8Y6uQDgAWHTJpOVf7okERzpCjnRg@mail.gmail.com>
+In-Reply-To: <CAC5umyiNw7FA__Y3HZ1UEG8Y6uQDgAWHTJpOVf7okERzpCjnRg@mail.gmail.com>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Mon, 31 Aug 2020 17:49:08 +0200
+Message-ID: <CAG_fn=XDTWYbxb1Hy1p0hdOtOejZPWvDXfitysK7wUOsPAE_XQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] add fault injection to user memory access
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     Albert Linde <albert.linde@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Marco Elver <elver@google.com>, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Albert van der Linde <alinde@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/30/20 8:45 PM, Qian Cai wrote:
-> It is trivial to trigger a WARN_ON_ONCE(1) in iomap_dio_actor() by
-> unprivileged users which would taint the kernel, or worse - panic if
-> panic_on_warn or panic_on_taint is set. Hence, just convert it to
-> pr_warn_ratelimited() to let users know their workloads are racing.
-> Thanks Dave Chinner for the initial analysis of the racing reproducers.
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
-> 
-> v2: Record the path, pid and command as well.
-> 
->  fs/iomap/direct-io.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-> index c1aafb2ab990..66a4502ef675 100644
-> --- a/fs/iomap/direct-io.c
-> +++ b/fs/iomap/direct-io.c
-> @@ -374,6 +374,7 @@ iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
->  		void *data, struct iomap *iomap, struct iomap *srcmap)
->  {
->  	struct iomap_dio *dio = data;
-> +	char pathname[128], *path;
->  
->  	switch (iomap->type) {
->  	case IOMAP_HOLE:
-> @@ -389,7 +390,21 @@ iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
->  	case IOMAP_INLINE:
->  		return iomap_dio_inline_actor(inode, pos, length, dio, iomap);
->  	default:
-> -		WARN_ON_ONCE(1);
+> This series looks good to me.
 
-It seems like we should explicitly catch IOMAP_DELALLOC for this case, and leave the
-default: as a WARN_ON that is not user-triggerable? i.e.
+Great!
 
-case IOMAP_DELALLOC:
-	<all the fancy warnings>
-	return -EIO;
-default:
-	WARN_ON_ONCE(1);
-	return -EIO;
+Which tree do fault injection patches normally go to?
 
-> +		/*
-> +		 * DIO is not serialised against mmap() access at all, and so
-> +		 * if the page_mkwrite occurs between the writeback and the
-> +		 * iomap_apply() call in the DIO path, then it will see the
-> +		 * DELALLOC block that the page-mkwrite allocated.
-> +		 */
-> +		path = file_path(dio->iocb->ki_filp, pathname,
-> +				 sizeof(pathname));
-> +		if (IS_ERR(path))
-> +			path = "(unknown)";
-> +
-> +		pr_warn_ratelimited("page_mkwrite() is racing with DIO read (iomap->type = %u).\n"
-> +				    "File: %s PID: %d Comm: %.20s\n",
-> +				    iomap->type, path, current->pid,
-> +				    current->comm);
+> Reviewed-by: Akinobu Mita <akinobu.mita@gmail.com>
 
-This is very specific ...
-
-Do we know that mmap/page_mkwrite is (and will always be) the only way to reach this
-point?
-
-It seems to me that this message won't be very useful for the admin; "pg_mkwrite" may
-mean something to us, but doubtful for the general public.  And "type = 1" won't mean
-much to the reader, either.
-
-Maybe something like:
-
-"DIO encountered delayed allocation block, racing buffered+direct? File: %s Comm: %.20s\n"
-
-It just seems that a user-facing warning should be something the admin has a chance of
-acting on without needing to file a bug for analysis by the developers.
-
-(though TBH "delayed allocation" probably doesn't mean much to the admin, either)
-
--Eric
-
->  		return -EIO;
->  	}
->  }
-> 
+Reviewed-by: Alexander Potapenko <glider@google.com>
