@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99055C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 492E9C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 756772064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A24F2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598888143;
-	bh=5cTymgNOd6yMe07rM04lmyuuYPSuueVZ4FEQI/Htjg8=;
+	s=default; t=1598888151;
+	bh=Dcf93mKEgs5Nb0juHs3Z+zzdewK0LmOFRf8HwPR6m0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eKE+0YLCuOxgUGYmxmfoeHrBgAdyBHm7FXgmuGbn3/jREH+aamE34EfVeG036spTR
-	 7UmkS/xk3sbMHFTmRidaTsGA41nWPHMXSh/1NM0RcDRwqyGvVjfmuEjADl0YHRs8mH
-	 BN0rBxw3tGXmv0r6jQLMGpUFPDTwQMBzn813F2OA=
+	b=UCcUgZSRZcEiFaMnDGHhpVrLos9nX9lbEY5UzzkMJH8E0g5u1VjBP/6Al9HiLWkbv
+	 FFvmxHl2mvYsXxNiHg5qXWypVMHb+H69P6b+ol7/mngsgMbNAjlCb4V2yiFn03GVhp
+	 S2AV1B7UYCFhF8p+t4GX8rfRcm67gfYWliXzOEmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgHaPfm (ORCPT
+        id S1729278AbgHaPfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:35:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41570 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:35:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728806AbgHaPbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:31:09 -0400
+        id S1728782AbgHaPbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:31:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 957C9207EA;
-        Mon, 31 Aug 2020 15:31:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1AEC207EA;
+        Mon, 31 Aug 2020 15:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887868;
-        bh=5cTymgNOd6yMe07rM04lmyuuYPSuueVZ4FEQI/Htjg8=;
+        s=default; t=1598887860;
+        bh=Dcf93mKEgs5Nb0juHs3Z+zzdewK0LmOFRf8HwPR6m0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=smdiVUxvy2D2OsQb1dejShNpoqJ56v6XUj16HrEt+0RIcS2P3wq5xmYEXLefp3DOO
-         uI7KUcRwGBpGlYdHQgmkIRNn8Jt1MsQ5J5N7rhwNilg6yLEUzaNIIx+1G2EB4t8ump
-         goc0xwhQdN+ZtTyJg2LyaG5Ns4qKwmn2oeXt0e94=
+        b=wyZFp+OqcEkzumtQu17kvXxwjY/0SQAwHMRhGn4ai+oYaZyUC1NMVcUyxkbEGb/tr
+         YzIcFFXMW0c443jGDyy0o2IcOLp1nTyOsSgkShmd9irUSq3I3W013me7W/TglAMN8E
+         XzVD+uySuf7o2EJhCGhy4URa7BpZSw0OnL629Fds=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Hersen Wu <hersenxs.wu@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 18/23] drm/amd/display: Reject overlay plane configurations in multi-display scenarios
-Date:   Mon, 31 Aug 2020 11:30:34 -0400
-Message-Id: <20200831153039.1024302-18-sashal@kernel.org>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 13/23] ceph: don't allow setlease on cephfs
+Date:   Mon, 31 Aug 2020 11:30:29 -0400
+Message-Id: <20200831153039.1024302-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831153039.1024302-1-sashal@kernel.org>
 References: <20200831153039.1024302-1-sashal@kernel.org>
@@ -61,71 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Jeff Layton <jlayton@kernel.org>
 
-[ Upstream commit 168f09cdadbd547c2b202246ef9a8183da725f13 ]
+[ Upstream commit 496ceaf12432b3d136dcdec48424312e71359ea7 ]
 
-[Why]
-These aren't stable on some platform configurations when driving
-multiple displays, especially on higher resolution.
+Leases don't currently work correctly on kcephfs, as they are not broken
+when caps are revoked. They could eventually be implemented similarly to
+how we did them in libcephfs, but for now don't allow them.
 
-In particular the delay in asserting p-state and validating from
-x86 outweights any power or performance benefit from the hardware
-composition.
+[ idryomov: no need for simple_nosetlease() in ceph_dir_fops and
+  ceph_snapdir_fops ]
 
-Under some configurations this will manifest itself as extreme stutter
-or unresponsiveness especially when combined with cursor movement.
-
-[How]
-Disable these for now. Exposing overlays to userspace doesn't guarantee
-that they'll be able to use them in any and all configurations and it's
-part of the DRM contract to have userspace gracefully handle validation
-failures when they occur.
-
-Valdiation occurs as part of DC and this in particular affects RV, so
-disable this in dcn10_global_validation.
-
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/ceph/file.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
-index 1599bb9711111..e860ae05feda1 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
-@@ -1151,6 +1151,7 @@ static enum dc_status dcn10_validate_global(struct dc *dc, struct dc_state *cont
- 	bool video_large = false;
- 	bool desktop_large = false;
- 	bool dcc_disabled = false;
-+	bool mpo_enabled = false;
- 
- 	for (i = 0; i < context->stream_count; i++) {
- 		if (context->stream_status[i].plane_count == 0)
-@@ -1159,6 +1160,9 @@ static enum dc_status dcn10_validate_global(struct dc *dc, struct dc_state *cont
- 		if (context->stream_status[i].plane_count > 2)
- 			return DC_FAIL_UNSUPPORTED_1;
- 
-+		if (context->stream_status[i].plane_count > 1)
-+			mpo_enabled = true;
-+
- 		for (j = 0; j < context->stream_status[i].plane_count; j++) {
- 			struct dc_plane_state *plane =
- 				context->stream_status[i].plane_states[j];
-@@ -1182,6 +1186,10 @@ static enum dc_status dcn10_validate_global(struct dc *dc, struct dc_state *cont
- 		}
- 	}
- 
-+	/* Disable MPO in multi-display configurations. */
-+	if (context->stream_count > 1 && mpo_enabled)
-+		return DC_FAIL_UNSUPPORTED_1;
-+
- 	/*
- 	 * Workaround: On DCN10 there is UMC issue that causes underflow when
- 	 * playing 4k video on 4k desktop with video downscaled and single channel
+diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+index ce54a1b12819b..dc97a7fd81315 100644
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -2197,6 +2197,7 @@ const struct file_operations ceph_file_fops = {
+ 	.mmap = ceph_mmap,
+ 	.fsync = ceph_fsync,
+ 	.lock = ceph_lock,
++	.setlease = simple_nosetlease,
+ 	.flock = ceph_flock,
+ 	.splice_read = generic_file_splice_read,
+ 	.splice_write = iter_file_splice_write,
 -- 
 2.25.1
 
