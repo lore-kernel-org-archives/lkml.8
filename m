@@ -2,135 +2,100 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8553C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 255BCC43461
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 792E320707
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF77F208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:30:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bE/Yu3vp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J6Ke5RC+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgHaO0u (ORCPT
+        id S1727940AbgHaOaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 10:26:50 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58839 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726489AbgHaO0t (ORCPT
+        Mon, 31 Aug 2020 10:30:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbgHaOaF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 10:26:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598884007;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QvIU0poyjmCP79MUOcMNbyzo4r99Invwa1wgDE4TIrs=;
-        b=bE/Yu3vp8vRdtHE2A6gT4zHro6LcXTIfg20oAlrbTOeX3CdY9LztNIxSVqQQnZxK3Fj0Cp
-        a/x5u3jgLyt3x3MweKq+B6PEJt9sOSCupTe0KH0YDHOfqeN/p+zUGIYbpZcZx/li/zx7hl
-        Kier6HQa8KskjssOiyt2anbRk6D0+6k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-146-3fuUZUSdNBOe_dSmcoF2zg-1; Mon, 31 Aug 2020 10:26:31 -0400
-X-MC-Unique: 3fuUZUSdNBOe_dSmcoF2zg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6733E8015FD;
-        Mon, 31 Aug 2020 14:26:29 +0000 (UTC)
-Received: from starship (unknown [10.35.206.190])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8193D5D9D3;
-        Mon, 31 Aug 2020 14:26:18 +0000 (UTC)
-Message-ID: <9225b703c341f935a4ea529f3428345f6820f931.camel@redhat.com>
-Subject: Re: [PATCH 3/3] KVM: nSVM: more strict SMM checks when returning to
- nested guest
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>, kbuild@lists.01.org,
-        kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Date:   Mon, 31 Aug 2020 17:26:12 +0300
-In-Reply-To: <20200831120112.GH8299@kadam>
-References: <20200831120112.GH8299@kadam>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        Mon, 31 Aug 2020 10:30:05 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4330C061573;
+        Mon, 31 Aug 2020 07:30:04 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id m22so8745658eje.10;
+        Mon, 31 Aug 2020 07:30:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GsUtzJFOnvjviCxW2IjbStQvBGLGUPcyBXj6Cdtywt8=;
+        b=J6Ke5RC+m3g1nSBnNqPyMtumBUnXEruJri8HNZkz86liYmnV2q0HRxyDgJeF+6v9T9
+         4n4azliF11Ez2eEObZXMmtHD0FmbHx+7N9posUPy/zlOozzyLtbSvOE+nM60IREfw7FW
+         vI8Gg+dpC5KuXnXLBPmhXTFIaGsIG/vw9uq17gZ2ErjTWF89qH0PxVDrj201wh911bSK
+         QQlUSKnj6SwHECIMTl8fYRlABaTQX2wDevBhlW07ycZX5nIRg8jFqJI/x/9Uvo1P3EAC
+         tJ2KDKRGz7qplxNHR0+T3l4czwNFQZl2Pp3D4j7Rk71sQZxqBcsYhJIdqd69xMR/8wXp
+         5UAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GsUtzJFOnvjviCxW2IjbStQvBGLGUPcyBXj6Cdtywt8=;
+        b=UgszEvaSTc994HsML/7lUajcAQpTxvV+MKScjOzpvF5qi4JNVpBfwXCjkdjpxMaknf
+         AjuwVutjY63+oSnjuwjuUYLiujZS2ov9vHtXu5U5mvw+IclJy+IVLWGWijZoPRRUvmBk
+         zGTDSi0i3fqItnD70tSvkHC1HD9FQcZvrS/r9LLu1LGM4Tv4DpYSdOW1fov1D/p30e4c
+         wq0QO6/bOIU1ecQILzLAhUM+2+Z1Qe3OOPjQ484sffBIg2rwgqGUVm03gQYpEHBjkfvr
+         016TnaBPhwf9cqNbaXIfCUOfDbJAOJ6+jm9Hh2Vq+HqGcg3EZ2z/Rkzr3zCUK678gWbg
+         FXeg==
+X-Gm-Message-State: AOAM530L6AHIr0gch2yl1HbLYQW+eBbnUpASIlJ5kKBqAbmkNrw0HNuk
+        kjbMDuQ7xVWQw1xxXZ1Faef+8YS9QWF5pLdl65A=
+X-Google-Smtp-Source: ABdhPJyjPMgqhNVhFiUA4I3hTIZTzHOuaM4kG5ojHStRHxESukNTTW1UGb+Q1yubT4UmTTT2wlJTEVjFJ92AR9+xRdY=
+X-Received: by 2002:a17:906:656:: with SMTP id t22mr1363085ejb.392.1598884203426;
+ Mon, 31 Aug 2020 07:30:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200828141344.2277088-1-alinde@google.com>
+In-Reply-To: <20200828141344.2277088-1-alinde@google.com>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Mon, 31 Aug 2020 23:29:52 +0900
+Message-ID: <CAC5umyiNw7FA__Y3HZ1UEG8Y6uQDgAWHTJpOVf7okERzpCjnRg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] add fault injection to user memory access
+To:     albert.linde@gmail.com
+Cc:     Andrew Morton <akpm@linux-foundation.org>, bp@alien8.de,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>, glider@google.com,
+        andreyknvl@google.com, Dmitry Vyukov <dvyukov@google.com>,
+        elver@google.com, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>, x86@kernel.org,
+        Albert van der Linde <alinde@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-31 at 15:01 +0300, Dan Carpenter wrote:
-> Hi Maxim,
-> 
-> url:    https://github.com/0day-ci/linux/commits/Maxim-Levitsky/Few-nSVM-bugfixes/20200828-003025
-> base:   https://git.kernel.org/pub/scm/virt/kvm/kvm.git linux-next
-> config: x86_64-randconfig-m001-20200827 (attached as .config)
-> compiler: gcc-9 (Debian 9.3.0-15) 9.3.0
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> 
-> smatch warnings:
-> arch/x86/kvm/svm/svm.c:3915 svm_pre_leave_smm() warn: should this be a bitwise op?
-> 
-> # https://github.com/0day-ci/linux/commit/e2317f8eb1f0e9f731ddbe66ab175be19f3bdaf1
-> git remote add linux-review https://github.com/0day-ci/linux
-> git fetch --no-tags linux-review Maxim-Levitsky/Few-nSVM-bugfixes/20200828-003025
-> git checkout e2317f8eb1f0e9f731ddbe66ab175be19f3bdaf1
-> vim +3915 arch/x86/kvm/svm/svm.c
-> 
-> ed19321fb657121 arch/x86/kvm/svm.c     Sean Christopherson 2019-04-02  3900  static int svm_pre_leave_smm(struct kvm_vcpu *vcpu, const char *smstate)
-> 0234bf885236a41 arch/x86/kvm/svm.c     Ladi Prosek         2017-10-11  3901  {
-> 05cade71cf3b925 arch/x86/kvm/svm.c     Ladi Prosek         2017-10-11  3902  	struct vcpu_svm *svm = to_svm(vcpu);
-> 8c5fbf1a7231078 arch/x86/kvm/svm.c     KarimAllah Ahmed    2019-01-31  3903  	struct kvm_host_map map;
-> 59cd9bc5b03f0ba arch/x86/kvm/svm/svm.c Vitaly Kuznetsov    2020-07-10  3904  	int ret = 0;
-> 05cade71cf3b925 arch/x86/kvm/svm.c     Ladi Prosek         2017-10-11  3905  
-> e2317f8eb1f0e9f arch/x86/kvm/svm/svm.c Maxim Levitsky      2020-08-27  3906  	if (guest_cpuid_has(vcpu, X86_FEATURE_LM)) {
-> e2317f8eb1f0e9f arch/x86/kvm/svm/svm.c Maxim Levitsky      2020-08-27  3907  		u64 saved_efer = GET_SMSTATE(u64, smstate, 0x7ed0);
-> e2317f8eb1f0e9f arch/x86/kvm/svm/svm.c Maxim Levitsky      2020-08-27  3908  		u64 guest = GET_SMSTATE(u64, smstate, 0x7ed8);
-> e2317f8eb1f0e9f arch/x86/kvm/svm/svm.c Maxim Levitsky      2020-08-27  3909  		u64 vmcb = GET_SMSTATE(u64, smstate, 0x7ee0);
-> 05cade71cf3b925 arch/x86/kvm/svm.c     Ladi Prosek         2017-10-11  3910  
-> ed19321fb657121 arch/x86/kvm/svm.c     Sean Christopherson 2019-04-02  3911  		if (guest) {
-> e2317f8eb1f0e9f arch/x86/kvm/svm/svm.c Maxim Levitsky      2020-08-27  3912  			if (!guest_cpuid_has(vcpu, X86_FEATURE_SVM))
-> 9ec19493fb86d6d arch/x86/kvm/svm.c     Sean Christopherson 2019-04-02  3913  				return 1;
-> e2317f8eb1f0e9f arch/x86/kvm/svm/svm.c Maxim Levitsky      2020-08-27  3914  
-> e2317f8eb1f0e9f arch/x86/kvm/svm/svm.c Maxim Levitsky      2020-08-27 @3915  			if (!(saved_efer && EFER_SVME))
->                                                                                                                  ^^
-> It looks like bitwise AND was intended.
+2020=E5=B9=B48=E6=9C=8828=E6=97=A5(=E9=87=91) 23:14 <albert.linde@gmail.com=
+>:
+>
+> From: Albert van der Linde <alinde@google.com>
+>
+> The goal of this series is to improve testing of fault-tolerance in
+> usages of user memory access functions, by adding support for fault
+> injection.
+>
+> The first patch adds failure injection capability for usercopy
+> functions. The second changes usercopy functions to use this new failure
+> capability (copy_from_user, ...). The third patch adds
+> get/put/clear_user failures to x86.
 
-Oops. Thanks!
+This series looks good to me.
 
-Best regards,
-	Maxim Levitskky
-> 
-> e2317f8eb1f0e9f arch/x86/kvm/svm/svm.c Maxim Levitsky      2020-08-27  3916  				return 1;
-> e2317f8eb1f0e9f arch/x86/kvm/svm/svm.c Maxim Levitsky      2020-08-27  3917  
-> e2317f8eb1f0e9f arch/x86/kvm/svm/svm.c Maxim Levitsky      2020-08-27  3918  			if (kvm_vcpu_map(&svm->vcpu,
-> e2317f8eb1f0e9f arch/x86/kvm/svm/svm.c Maxim Levitsky      2020-08-27  3919  					 gpa_to_gfn(vmcb), &map) == -EINVAL)
-> e2317f8eb1f0e9f arch/x86/kvm/svm/svm.c Maxim Levitsky      2020-08-27  3920  				return 1;
-> e2317f8eb1f0e9f arch/x86/kvm/svm/svm.c Maxim Levitsky      2020-08-27  3921  
-> e2317f8eb1f0e9f arch/x86/kvm/svm/svm.c Maxim Levitsky      2020-08-27  3922  			ret = enter_svm_guest_mode(svm, vmcb, map.hva);
-> 69c9dfa24bb7bac arch/x86/kvm/svm/svm.c Paolo Bonzini       2020-05-13  3923  			kvm_vcpu_unmap(&svm->vcpu, &map, true);
-> 05cade71cf3b925 arch/x86/kvm/svm.c     Ladi Prosek         2017-10-11  3924  		}
-> e2317f8eb1f0e9f arch/x86/kvm/svm/svm.c Maxim Levitsky      2020-08-27  3925  	}
-> 59cd9bc5b03f0ba arch/x86/kvm/svm/svm.c Vitaly Kuznetsov    2020-07-10  3926  
-> 59cd9bc5b03f0ba arch/x86/kvm/svm/svm.c Vitaly Kuznetsov    2020-07-10  3927  	return ret;
-> 0234bf885236a41 arch/x86/kvm/svm.c     Ladi Prosek         2017-10-11  3928  }
-> 
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
-
+Reviewed-by: Akinobu Mita <akinobu.mita@gmail.com>
