@@ -2,163 +2,112 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23738C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 05:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACA0C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 05:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 082D920707
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 05:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF0320782
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 05:28:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TlUIzJjH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbgHaF2C (ORCPT
+        id S1726522AbgHaF2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 01:28:02 -0400
-Received: from mo-csw-fb1516.securemx.jp ([210.130.202.172]:36154 "EHLO
-        mo-csw-fb.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgHaF2A (ORCPT
+        Mon, 31 Aug 2020 01:28:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbgHaF2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 01:28:00 -0400
-X-Greylist: delayed 1319 seconds by postgrey-1.27 at vger.kernel.org; Mon, 31 Aug 2020 01:27:58 EDT
-Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1516) id 07V55xjM028905; Mon, 31 Aug 2020 14:06:00 +0900
-Received: by mo-csw.securemx.jp (mx-mo-csw1516) id 07V55N5u031198; Mon, 31 Aug 2020 14:05:24 +0900
-X-Iguazu-Qid: 34tMd2lTgy70XwD4cl
-X-Iguazu-QSIG: v=2; s=0; t=1598850323; q=34tMd2lTgy70XwD4cl; m=Eo+lI7ZGnqBRi8KYw8EQ/Q4YFSXKrGQSVifG045e3U8=
-Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
-        by relay.securemx.jp (mx-mr1511) id 07V55LQQ032861;
-        Mon, 31 Aug 2020 14:05:21 +0900
-Received: from enc02.toshiba.co.jp ([61.202.160.51])
-        by imx12.toshiba.co.jp  with ESMTP id 07V55K93009887;
-        Mon, 31 Aug 2020 14:05:20 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id 07V55Krc022628;
-        Mon, 31 Aug 2020 14:05:20 +0900
-From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Cc:     <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-        <linux-efi@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <devel@acpica.org>, Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        "Ard Biesheuvel" <ardb@kernel.org>,
-        Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: Re: [PATCH v2 1/2] cper, apei, mce: Pass x86 CPER through the MCA handling chain
-References: <20200828203332.11129-1-Smita.KoralahalliChannabasappa@amd.com>
-        <20200828203332.11129-2-Smita.KoralahalliChannabasappa@amd.com>
-Date:   Mon, 31 Aug 2020 14:05:18 +0900
-In-Reply-To: <20200828203332.11129-2-Smita.KoralahalliChannabasappa@amd.com>
-        (Smita Koralahalli's message of "Fri, 28 Aug 2020 15:33:31 -0500")
-X-TSB-HOP: ON
-Message-ID: <878sdvv20h.fsf@kokedama.swc.toshiba.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Mon, 31 Aug 2020 01:28:31 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55C72C061573
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 22:28:30 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id n3so1742547pjq.1
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 22:28:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tLWtD+wuuRp1aiLM/sqC5p8ibdIf7AwldZEs7jvXZcs=;
+        b=TlUIzJjHY6Dpk8b4Z6uQnnJJ9OyqXy/dw2h3ICbORzJRb6N1o+WsM1rStNZ54u47uB
+         a+QAu1F7BzxZGEVH2WIhwQrxRHmUATMtNmNwKv7cL2lsS7s3nPXoSFRknkoEwgZ4m4nO
+         y4qORtJKEjyP+DDhw0ewws1uOZbaGo8s0GVzk7rO3hq6rsmO3tJ/1m6a/VoB3Ikn2Iqu
+         G46scuvw/Sj1FNZwUN0fQZsJlm8kZnaND9Njja/9bP8NirCe2PWAxmOVbr/DWv2+8MuT
+         inlrSUnmwiBgYL3n+GEWM8MO0IDU/pAvU+EtbNv0vtm7edZuO9u1N0/zgWx0QzYTHUFZ
+         D4Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tLWtD+wuuRp1aiLM/sqC5p8ibdIf7AwldZEs7jvXZcs=;
+        b=Pm4Pny5Wvsp5QRMgS3vE9B3opdMwrZes4FZDbdaz0+Bs0QG5hiPfNKwyRuedXv/5id
+         9kHusui11KPyaQcN0AOiq/DE45sJZ736VTAQYAar/D6g9Br29FmMZPOqn2xkfpwXoRcA
+         KPe3GUO6sxWUK/0Vwq68Rlgn6IDN6xxwF+Jt45bhIGxz168nhns3LedSMasOWaYQP10S
+         5XBzaplceXlgePNQgB1cXQ0dbHXM4ujtxKvuLCNTcT5mMkXGTbaeMAJHN1Hz0aJa0L+V
+         uJ5looNsF+RQf2QqS8JenXTWd4r0Z/he4AMvjbM/0j42k+KOFuH7SpG8j3ajmtP/L4lR
+         SnpA==
+X-Gm-Message-State: AOAM532lVUU5AKGRfuXwSvLTsPq2y+Ob46/md6p+8+ifofx1pjxGrlJX
+        cm0BGuwSykph5z0GDY5l8rfYWw==
+X-Google-Smtp-Source: ABdhPJz9JcfzTlWfMFwenjNQr2tWTTmECGqopiTNS9/UzC5fEVmndWK+6vQb2WWep2RtbJ6/401k/w==
+X-Received: by 2002:a17:90a:2d82:: with SMTP id p2mr97869pjd.166.1598851709756;
+        Sun, 30 Aug 2020 22:28:29 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id n67sm2075913pgn.14.2020.08.30.22.28.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 30 Aug 2020 22:28:28 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 10:58:17 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chanho Min <chanho.min@lge.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH 01/10] dt-bindings: watchdog: sp-805: Convert to
+ Json-schema
+Message-ID: <20200831052817.azrovfs2khm4yitj@vireshk-i7>
+References: <20200828130602.42203-1-andre.przywara@arm.com>
+ <20200828130602.42203-2-andre.przywara@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828130602.42203-2-andre.przywara@arm.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Smita,
-
-A couple of comments below -
-
-Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com> writes:
-
-> Linux Kernel uses ACPI Boot Error Record Table (BERT) to report fatal
-> errors that occurred in a previous boot. The MCA errors in the BERT are
-> reported using the x86 Processor Error Common Platform Error Record (CPER)
-> format. Currently, the record prints out the raw MSR values and AMD relies
-> on the raw record to provide MCA information.
->
-> Extract the raw MSR values of MCA registers from the BERT and feed it into
-> the standard mce_log() function through the existing x86/MCA RAS
-> infrastructure. This will result in better decoding from the EDAC MCE
-> decoder or the default notifier.
->
-> The implementation is SMCA specific as the raw MCA register values are
-> given in the register offset order of the MCAX address space.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+On 28-08-20, 14:05, Andre Przywara wrote:
+> Convert the ARM SP-805 watchdog IP DT binding over to Json-schema.
+> 
+> A straight-forward conversion, but the requirement for providing two
+> clocks got strengthened from "should" to "must".
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 > ---
+>  .../bindings/watchdog/arm,sp805.txt           | 32 --------
+>  .../bindings/watchdog/arm,sp805.yaml          | 75 +++++++++++++++++++
+>  2 files changed, 75 insertions(+), 32 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/arm,sp805.txt
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/arm,sp805.yaml
 
-[...]
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-
-> diff --git a/drivers/firmware/efi/cper-x86.c b/drivers/firmware/efi/cper-x86.c
-> index 2531de49f56c..374b8e18552a 100644
-> --- a/drivers/firmware/efi/cper-x86.c
-> +++ b/drivers/firmware/efi/cper-x86.c
-> @@ -1,7 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  // Copyright (C) 2018, Advanced Micro Devices, Inc.
->  
-> -#include <linux/cper.h>
-
-Why is the include dropped? AFAICT, the definitions from there are still
-being used after this patch.
-
-> +#include <acpi/apei.h>
->  
->  /*
->   * We don't need a "CPER_IA" prefix since these are all locally defined.
-> @@ -347,9 +347,11 @@ void cper_print_proc_ia(const char *pfx, const struct cper_sec_proc_ia *proc)
->  			       ctx_info->mm_reg_addr);
->  		}
->  
-> -		printk("%sRegister Array:\n", newpfx);
-> -		print_hex_dump(newpfx, "", DUMP_PREFIX_OFFSET, 16, groupsize,
-> -			       (ctx_info + 1), ctx_info->reg_arr_size, 0);
-> +		if (arch_apei_report_x86_error(ctx_info, proc->lapic_id)) {
-> +			printk("%sRegister Array:\n", newpfx);
-> +			print_hex_dump(newpfx, "", DUMP_PREFIX_OFFSET, 16, groupsize,
-> +				       (ctx_info + 1), ctx_info->reg_arr_size, 0);
-> +		}
->  
->  		ctx_info = (struct cper_ia_proc_ctx *)((long)ctx_info + size);
->  	}
-> diff --git a/include/acpi/apei.h b/include/acpi/apei.h
-> index 680f80960c3d..44d4d08acce0 100644
-> --- a/include/acpi/apei.h
-> +++ b/include/acpi/apei.h
-> @@ -33,8 +33,15 @@ extern bool ghes_disable;
->  
->  #ifdef CONFIG_ACPI_APEI
->  void __init acpi_hest_init(void);
-> +int arch_apei_report_x86_error(struct cper_ia_proc_ctx *ctx_info,
-> +			       u64 lapic_id);
->  #else
->  static inline void acpi_hest_init(void) { return; }
-> +static inline int arch_apei_report_x86_error(struct cper_ia_proc_ctx *ctx_info,
-> +					     u64 lapic_id)
-> +{
-> +	return -EINVAL;
-> +}
->  #endif
-
-Adding the declaration to this include violates the separation of
-generic and architecture specific code.
-
-Can this be moved to the appropriate architecture specific header?
-Perhaps arch/x86/include/asm/apei.h.
-
->  typedef int (*apei_hest_func_t)(struct acpi_hest_header *hest_hdr, void *data);
-> @@ -51,6 +58,8 @@ int erst_clear(u64 record_id);
->  
->  int arch_apei_enable_cmcff(struct acpi_hest_header *hest_hdr, void *data);
->  void arch_apei_report_mem_error(int sev, struct cper_sec_mem_err *mem_err);
-> +int arch_apei_report_x86_error(struct cper_ia_proc_ctx *ctx_info,
-> +			       u64 lapic_id);
-
-
-Why is the additional declaration needed?
-
-Thanks,
-Punit
-
->  
->  #endif
->  #endif
+-- 
+viresh
