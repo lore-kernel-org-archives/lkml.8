@@ -2,113 +2,170 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A6EC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2B8C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4D9720678
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:21:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598898094;
-	bh=SAhAZUtzH0cBxplGAiQtrOEz8wzNJYljnan7d2lUgLY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SUVv3ntrMsaU+iGFMtOtWoT2xP8miWPiXrjF5aDzzzvokpyt9YsdR6TcCJFjPuNDj
-	 RAL6+E9Ob4x0UexyZDp2iHHQcls4M8ZytgN8gdTHcqAOkTL02YIimSPXabIMCDkcHR
-	 9rAxoNUTgaIHgcVCT8ISEwP+iPlJO0yFmV4KDo08=
+	by mail.kernel.org (Postfix) with ESMTP id 4CA9120678
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:21:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NZoNODsK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729882AbgHaSVc (ORCPT
+        id S1729886AbgHaSVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:21:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729820AbgHaSUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:20:41 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF28D20EDD;
-        Mon, 31 Aug 2020 18:20:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598898040;
-        bh=SAhAZUtzH0cBxplGAiQtrOEz8wzNJYljnan7d2lUgLY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0saRHrYD22aE9Hc4KkJyuCQ4fUQZVN2dEC++p0Je9DWUE7AxJDBXULMBMjtSlIXv9
-         uvRtQIaGiKCr+JW4vX80RtThdH6wugeCO1ypB2N6jB2aAsc/Xv8kOjMOkRd36M1f5x
-         bMGyEFl0Xzv0p6ASoJfhDG/vfn6MI7pruz7/i2CY=
-From:   paulmck@kernel.org
-To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org
-Cc:     stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
-        peterz@infradead.org, boqun.feng@gmail.com, npiggin@gmail.com,
-        dhowells@redhat.com, j.alglave@ucl.ac.uk, luc.maranget@inria.fr,
-        akiyks@gmail.com, "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH kcsan 6/9] tools/memory-model: Expand the cheatsheet.txt notion of relaxed
-Date:   Mon, 31 Aug 2020 11:20:34 -0700
-Message-Id: <20200831182037.2034-6-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200831182012.GA1965@paulmck-ThinkPad-P72>
-References: <20200831182012.GA1965@paulmck-ThinkPad-P72>
+        Mon, 31 Aug 2020 14:21:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729043AbgHaSVu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:21:50 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28C98C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:21:50 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id t13so2009486ile.9
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:21:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X3QYc0qUilro/bdxtUXo+KBifJgEgJArvSnQjd2oRO8=;
+        b=NZoNODsK62AWX3XXgbhwvgj4xsKlN9RPyEndc3heBWH5oSQ/yEgPaopAIO0pasJJGY
+         yeJNE1m+q4C7SdJzMSXi32IxZ5pVi8nfRpfDxwUOS5ZLMJ7CP/rRwt62wt1XKtYJEi5w
+         00U3QRrHeVbHgln2joAZuwCq4otiompg1Q6EHjWNwCreW+6wxPJkMVIV8PAmvbErZug0
+         8pUgvFzg5hW4fZQKAr7clfdnAa6Cxli4+k3gIiS6WuZVj9z9JF2UaiJ7cPbsyji1wRQM
+         fCgsBDhfO2fZa0IooKzzN4Ub4/ywDnMfAEaj4AyAVWv8fiSMuF9kSLuFxGMjged+Jk4t
+         WgAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X3QYc0qUilro/bdxtUXo+KBifJgEgJArvSnQjd2oRO8=;
+        b=iEJ6SR+MqUQAk+lpW9u9KUo67z8+HJ0mRFjdaph0nP3MRWdVnQYuw+Yx8kf68O0SPa
+         D7OcnpJ4AhsLNHH+WG+ETBkKLe3OZufL6hlVy8vQOWs3TBLW9HYhh6fIVQr+J9SDoeF/
+         0KusXgqbXchFYPawoCMfbxenZ8+1arGC0yLO1f7Uf+S8vbGxF3atFszFj8+si6NFKsuS
+         xbnHUoOtwF6NNtuR6XjA4CtB/d7LyBzmkeGTaxoN28N8fUekcfpopEezIaluevtZbZdL
+         toNeMgSZom/NM4uWFaciJGlkvbPX0r2vfWYOztu7ll1vbsC/sSoNP8uBtGyb2hKLPiB6
+         gzxg==
+X-Gm-Message-State: AOAM533WDlztVWrMqvqa6EgP5Nzw3usfHoXLNi5On7LVhI93sw4M1bD6
+        fzshYM3gSCmAZig/qnpeBZqJa8LJGmXO0dpF+jSAyA==
+X-Google-Smtp-Source: ABdhPJwzKJOJjZ60iNa61GaWBeT9+To763ExbTMXN2HmKulBGL0DIYAj65AkWG0zSOkuEi4Jw1feSDJ/wfLDRHCHlVI=
+X-Received: by 2002:a92:c5ac:: with SMTP id r12mr2298152ilt.274.1598898109167;
+ Mon, 31 Aug 2020 11:21:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200827063522.2563293-1-lokeshgidra@google.com>
+ <20200827063522.2563293-3-lokeshgidra@google.com> <CAEjxPJ7rsyw=AkRUmnshF5gWygHEN1ahKi5uD9FtYovz0JRKCQ@mail.gmail.com>
+In-Reply-To: <CAEjxPJ7rsyw=AkRUmnshF5gWygHEN1ahKi5uD9FtYovz0JRKCQ@mail.gmail.com>
+From:   Lokesh Gidra <lokeshgidra@google.com>
+Date:   Mon, 31 Aug 2020 11:21:38 -0700
+Message-ID: <CA+EESO7Rc5qKjPQ3Vh9=mJS+b2fJLnEY4_Zr06PWZJ-apC4Vfw@mail.gmail.com>
+Subject: Re: [PATCH v8 2/3] Teach SELinux about anonymous inodes
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        James Morris <jmorris@namei.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Daniel Colascione <dancol@dancol.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        KP Singh <kpsingh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Thomas Cedeno <thomascedeno@google.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Aaron Goidel <acgoide@tycho.nsa.gov>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Adrian Reber <areber@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Calin Juravle <calin@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        kernel-team@android.com, Daniel Colascione <dancol@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+On Mon, Aug 31, 2020 at 11:05 AM Stephen Smalley
+<stephen.smalley.work@gmail.com> wrote:
+>
+> On Thu, Aug 27, 2020 at 2:35 AM Lokesh Gidra <lokeshgidra@google.com> wrote:
+> >
+> > From: Daniel Colascione <dancol@google.com>
+> >
+> > This change uses the anon_inodes and LSM infrastructure introduced in
+> > the previous patch to give SELinux the ability to control
+> > anonymous-inode files that are created using the new anon_inode_getfd_secure()
+> > function.
+> >
+> > A SELinux policy author detects and controls these anonymous inodes by
+> > adding a name-based type_transition rule that assigns a new security
+> > type to anonymous-inode files created in some domain. The name used
+> > for the name-based transition is the name associated with the
+> > anonymous inode for file listings --- e.g., "[userfaultfd]" or
+> > "[perf_event]".
+> >
+> > Example:
+> >
+> > type uffd_t;
+> > type_transition sysadm_t sysadm_t : anon_inode uffd_t "[userfaultfd]";
+> > allow sysadm_t uffd_t:anon_inode { create };
+> >
+> > (The next patch in this series is necessary for making userfaultfd
+> > support this new interface.  The example above is just
+> > for exposition.)
+> >
+> > Signed-off-by: Daniel Colascione <dancol@google.com>
+> > Acked-by: Casey Schaufler <casey@schaufler-ca.com>
+> > Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> > Cc: Al Viro <viro@zeniv.linux.org.uk>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > ---
+> >  security/selinux/hooks.c            | 53 +++++++++++++++++++++++++++++
+> >  security/selinux/include/classmap.h |  2 ++
+> >  2 files changed, 55 insertions(+)
+> >
+> > diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> > index a340986aa92e..b83f56e5ef40 100644
+> > --- a/security/selinux/hooks.c
+> > +++ b/security/selinux/hooks.c
+> > @@ -2926,6 +2926,58 @@ static int selinux_inode_init_security(struct inode *inode, struct inode *dir,
+> >         return 0;
+> >  }
+> >
+> > +static int selinux_inode_init_security_anon(struct inode *inode,
+> > +                                           const struct qstr *name,
+> > +                                           const struct inode *context_inode)
+> > +{
+> > +       const struct task_security_struct *tsec = selinux_cred(current_cred());
+> > +       struct common_audit_data ad;
+> > +       struct inode_security_struct *isec;
+> > +       int rc;
+> > +
+> > +       if (unlikely(!selinux_state.initialized))
+>
+> This should use selinux_initialized(&selinux_state) instead.
 
-This commit adds a key entry enumerating the various types of relaxed
-operations.
+Thanks for the review. I'll make the change in the next version.
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- tools/memory-model/Documentation/cheatsheet.txt | 27 ++++++++++++++-----------
- 1 file changed, 15 insertions(+), 12 deletions(-)
-
-diff --git a/tools/memory-model/Documentation/cheatsheet.txt b/tools/memory-model/Documentation/cheatsheet.txt
-index 33ba98d..31b814d 100644
---- a/tools/memory-model/Documentation/cheatsheet.txt
-+++ b/tools/memory-model/Documentation/cheatsheet.txt
-@@ -5,7 +5,7 @@
- 
- Store, e.g., WRITE_ONCE()            Y                                       Y
- Load, e.g., READ_ONCE()              Y                          Y   Y        Y
--Unsuccessful RMW operation           Y                          Y   Y        Y
-+Relaxed operation                    Y                          Y   Y        Y
- rcu_dereference()                    Y                          Y   Y        Y
- Successful *_acquire()               R                   Y  Y   Y   Y    Y   Y
- Successful *_release()         C        Y  Y    Y     W                      Y
-@@ -17,14 +17,17 @@ smp_mb__before_atomic()       CP        Y  Y    Y        a  a   a   a    Y
- smp_mb__after_atomic()        CP        a  a    Y        Y  Y   Y   Y    Y
- 
- 
--Key:	C:	Ordering is cumulative
--	P:	Ordering propagates
--	R:	Read, for example, READ_ONCE(), or read portion of RMW
--	W:	Write, for example, WRITE_ONCE(), or write portion of RMW
--	Y:	Provides ordering
--	a:	Provides ordering given intervening RMW atomic operation
--	DR:	Dependent read (address dependency)
--	DW:	Dependent write (address, data, or control dependency)
--	RMW:	Atomic read-modify-write operation
--	SELF:	Orders self, as opposed to accesses before and/or after
--	SV:	Orders later accesses to the same variable
-+Key:	Relaxed:  A relaxed operation is either a *_relaxed() RMW
-+		  operation, an unsuccessful RMW operation, or one of
-+		  the atomic_read() and atomic_set() family of operations.
-+	C:	  Ordering is cumulative
-+	P:	  Ordering propagates
-+	R:	  Read, for example, READ_ONCE(), or read portion of RMW
-+	W:	  Write, for example, WRITE_ONCE(), or write portion of RMW
-+	Y:	  Provides ordering
-+	a:	  Provides ordering given intervening RMW atomic operation
-+	DR:	  Dependent read (address dependency)
-+	DW:	  Dependent write (address, data, or control dependency)
-+	RMW:	  Atomic read-modify-write operation
-+	SELF:	  Orders self, as opposed to accesses before and/or after
-+	SV:	  Orders later accesses to the same variable
--- 
-2.9.5
-
+Kindly have a look at other patches in the series as well.
