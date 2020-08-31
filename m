@@ -2,137 +2,137 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED72C43461
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA002C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9A3C20767
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A568A2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:31:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598862692;
+	bh=Y31qLhzOdm0QS1k1AaucABODVmh6t8hYuU8gVesZH10=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E0wyDpj28bPx5LrlRa8jVXXdvsi7rnB2o+1q7D2UMb4LHgjzwLA2V4KzXZXuc8nJm
+	 yAvGknaw3RLat+F4q9+rAd/HcP84BhVr3xnHRohVPJMFFSFmBTxyN2W7oTuh7cpPGn
+	 lh8Gp+DUXBVMjmDmV+iYr1mtxcQ29DMEgt34JztA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgHaIau (ORCPT
+        id S1728411AbgHaIbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 04:30:50 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:17519 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728083AbgHaIar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 04:30:47 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4Bg3LR36qlz9v477;
-        Mon, 31 Aug 2020 10:30:39 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id K6lQaRa8maTz; Mon, 31 Aug 2020 10:30:39 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bg3LR1m3Hz9v470;
-        Mon, 31 Aug 2020 10:30:39 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 49AD48B79B;
-        Mon, 31 Aug 2020 10:30:44 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id zLN717HQK_Vm; Mon, 31 Aug 2020 10:30:44 +0200 (CEST)
-Received: from po17688vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.104])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0F8548B799;
-        Mon, 31 Aug 2020 10:30:44 +0200 (CEST)
-Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 7D05B65D48; Mon, 31 Aug 2020 08:30:43 +0000 (UTC)
-Message-Id: <f6ea2483c2c389567b007945948f704d18cfaeea.1598862623.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH 1/2] powerpc/8xx: Refactor calculation of number of entries
- per PTE in page tables
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 31 Aug 2020 08:30:43 +0000 (UTC)
+        Mon, 31 Aug 2020 04:31:31 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:43196 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgHaIb2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 04:31:28 -0400
+Received: by mail-ej1-f67.google.com with SMTP id m22so7302843eje.10;
+        Mon, 31 Aug 2020 01:31:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=I8c8PT+GX2bdj4Es9cku2hg+l1WawbuG/Qnvn+DarqU=;
+        b=srYh+chfqEqOFiiup/4HDw5LqErEERrIt+bYeGKL8QkkRmYEmSdVKuKHoypnBikqPZ
+         Oy+sn98nWOTDut33YDk+lJ830xxTnClmr/Td0215HqHAPuOdPHFYs2F1T115STV4fQWe
+         TQwiEyFXYeymYfsXGYsKu9wDT7QlzB7GaIM4JukDfcO/c1CbdkcOi76HsFJGdTPu7bMx
+         FvaYvPpbRC6Xp4/QJbK1mNDzy8AXt7zkXST2CHug66LGrzzniqYz9h1gbTSKZASdnac1
+         d61r4TJGjfJznlZOc6aA3lhz/UmM5tDXqyBsQI7m3ZMhwaGBc7CE9VCNu32kF/4YBuoY
+         5gow==
+X-Gm-Message-State: AOAM530WCZ7nJM/nQshvUXxHPZ+jkqrlO7mz0xvhqk5xgl+wHLFLIPVx
+        sWfNKul0DiRXbzgfRknKBXI=
+X-Google-Smtp-Source: ABdhPJz7Onk9KEruHrJQU0MEdyIWElLR9/8+aU3k59m6nJC8T34rrg/1FhfXtV9j8V8Vp+1IL4ozAQ==
+X-Received: by 2002:a17:906:b09a:: with SMTP id x26mr116036ejy.162.1598862685674;
+        Mon, 31 Aug 2020 01:31:25 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id z18sm1172814ejw.94.2020.08.31.01.31.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 31 Aug 2020 01:31:25 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 10:31:22 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>
+Subject: Re: [RFT 3/4] ARM: dts: exynos: Move CMU assigned ISP clocks to
+ buses in Exynos3250
+Message-ID: <20200831083122.GA12874@kozik-lap>
+References: <20200829172532.29358-1-krzk@kernel.org>
+ <CGME20200829172553eucas1p1b62ad1cac6e0eea1dbb4669f09949419@eucas1p1.samsung.com>
+ <20200829172532.29358-3-krzk@kernel.org>
+ <6ed67a82-0f29-7384-203d-dcb2e58c5a8d@samsung.com>
+ <20200831081906.GA11513@kozik-lap>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200831081906.GA11513@kozik-lap>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8xx, the number of entries occupied by a PTE in the page tables
-depends on the size of the page. At the time being, this calculation
-is done in two places: in pte_update() and in set_huge_pte_at()
+On Mon, Aug 31, 2020 at 10:19:06AM +0200, Krzysztof Kozlowski wrote:
+> On Mon, Aug 31, 2020 at 10:11:02AM +0200, Marek Szyprowski wrote:
+> > Hi Krzysztof,
+> > 
+> > On 29.08.2020 19:25, Krzysztof Kozlowski wrote:
+> > > Commit 52005dece527 ("ARM: dts: Add assigned clock parents to CMU node
+> > > for exynos3250") added assigned clocks under Clock Management Unit to
+> > > fix hangs when accessing ISP registers.
+> > >
+> > > This is not the place for it as CMU does not have a required "clocks"
+> > > property:
+> > >
+> > >    arch/arm/boot/dts/exynos3250-artik5-eval.dt.yaml: clock-controller@10030000: 'clocks' is a dependency of 'assigned-clocks'
+> > >
+> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > >
+> > > ---
+> > >
+> > > Not tested and I wonder whether actually correct. For example, what will
+> > > happen if devfreq (exynos-bus) is not built in?
+> > >
+> > > Could someone verify it?
+> > 
+> > Sorry, but this patch is not correct. Those clocks has noting with 
+> > bus-freq. The assigned clocks property should stay where it is. Maybe 
+> > one need to fix the schemas for dts verification. Those clocks has to be 
+> > set (and so generic clock framework does) according to the assigned 
+> > clocks properties once the clock controller is instantiated.
+> > 
+> > The only alternative would be to add exynos-subcmu variant to properly 
+> > link CMU with the ISP power domain, but assuming that there is no Exynos 
+> > 3250 ISP driver in mainline (and probably never will be), it is safe to 
+> > keep those clocks sourced from 24MHz crystal.
+> 
+> Thanks for the clarification.  Another solution to silence the warning
+> could be to add a "clocks" property for FIN_PLL, although the driver
+> actually does not take it.
+> 
+> This is the only remaining dtschema check warning on Exynos3250 so it
+> would be nice to at least silence it. My goal is to have all them
+> schema-correct, or as close as possible (for Exynos4 the camera node is
+> a trouble).
 
-Refactor this calculation into a helper called
-number_of_cells_per_pte(). For the time being, the val param is
-unused. It will be used by following patch.
+BTW, if you have some time, it would be awesome if you could test all
+the series (on Exynos3250 obviously with this patch reverted):
+https://github.com/krzk/linux/tree/for-next/dts-exynos-schema-cleanups
 
-Instead of opencoding is_hugepd(), use hugepd_ok() with a forward
-declaration.
+The Exynos5 cleanup is ongoing, so there will be more patches. But
+Exynos3 and Exynos4 I finished.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/include/asm/nohash/32/pgtable.h | 18 ++++++++++++------
- arch/powerpc/mm/pgtable.c                    |  6 ++++--
- 2 files changed, 16 insertions(+), 8 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/nohash/32/pgtable.h b/arch/powerpc/include/asm/nohash/32/pgtable.h
-index b9e134d0f03a..80bbc21b87f0 100644
---- a/arch/powerpc/include/asm/nohash/32/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/32/pgtable.h
-@@ -227,6 +227,17 @@ static inline void pmd_clear(pmd_t *pmdp)
-  */
- #ifdef CONFIG_PPC_8xx
- static pmd_t *pmd_off(struct mm_struct *mm, unsigned long addr);
-+static int hugepd_ok(hugepd_t hpd);
-+
-+static int number_of_cells_per_pte(pmd_t *pmd, pte_basic_t val, int huge)
-+{
-+	if (!huge)
-+		return PAGE_SIZE / SZ_4K;
-+	else if (hugepd_ok(*((hugepd_t *)pmd)))
-+		return 1;
-+	else
-+		return SZ_512K / SZ_4K;
-+}
- 
- static inline pte_basic_t pte_update(struct mm_struct *mm, unsigned long addr, pte_t *p,
- 				     unsigned long clr, unsigned long set, int huge)
-@@ -237,12 +248,7 @@ static inline pte_basic_t pte_update(struct mm_struct *mm, unsigned long addr, p
- 	int num, i;
- 	pmd_t *pmd = pmd_off(mm, addr);
- 
--	if (!huge)
--		num = PAGE_SIZE / SZ_4K;
--	else if ((pmd_val(*pmd) & _PMD_PAGE_MASK) != _PMD_PAGE_8M)
--		num = SZ_512K / SZ_4K;
--	else
--		num = 1;
-+	num = number_of_cells_per_pte(pmd, new, huge);
- 
- 	for (i = 0; i < num; i++, entry++, new += SZ_4K)
- 		*entry = new;
-diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
-index 9c0547d77af3..2dcad640b869 100644
---- a/arch/powerpc/mm/pgtable.c
-+++ b/arch/powerpc/mm/pgtable.c
-@@ -266,8 +266,7 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep, pte_
- 	pmd_t *pmd = pmd_off(mm, addr);
- 	pte_basic_t val;
- 	pte_basic_t *entry = &ptep->pte;
--	int num = is_hugepd(*((hugepd_t *)pmd)) ? 1 : SZ_512K / SZ_4K;
--	int i;
-+	int num, i;
- 
- 	/*
- 	 * Make sure hardware valid bit is not set. We don't do
-@@ -280,6 +279,9 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep, pte_
- 	pte = set_pte_filter(pte);
- 
- 	val = pte_val(pte);
-+
-+	num = number_of_cells_per_pte(pmd, val, 1);
-+
- 	for (i = 0; i < num; i++, entry++, val += SZ_4K)
- 		*entry = val;
- }
--- 
-2.25.0
+Best regards,
+Krzysztof
 
